@@ -83,11 +83,19 @@ class AccountMove(models.Model):
         # number for Vendor bank accounts:
         # - validation of format xx-yyyyy-c
         # - validation of checksum
-        self.ensure_one()
         return self.partner_bank_id.l10n_ch_postal or ''
 
     @api.depends('name', 'partner_bank_id.l10n_ch_postal')
     def _compute_l10n_ch_isr_number(self):
+        for record in self:
+            if (record.partner_bank_id.l10n_ch_qr_iban or record.l10n_ch_isr_subscription) and record.name:
+                invoice_ref = re.sub(r'\D', '', record.name)
+                record.l10n_ch_isr_number = record._compute_isr_number(invoice_ref)
+            else:
+                record.l10n_ch_isr_number = False
+
+    @api.model
+    def _compute_isr_number(self, invoice_ref):
         """Generates the ISR or QRR reference
 
         An ISR references are 27 characters long.
@@ -132,22 +140,18 @@ class AccountMove(models.Model):
                 (2) 12345678901234567890 | reference
                 (3) 1: control digit for identification number and reference
         """
-        for record in self:
-            if (record.partner_bank_id.l10n_ch_qr_iban or record.l10n_ch_isr_subscription) and record.name:
-                id_number = record._get_isrb_id_number()
-                if id_number:
-                    id_number = id_number.zfill(l10n_ch_ISR_ID_NUM_LENGTH)
-                invoice_ref = re.sub('[^\d]', '', record.name)
-                # keep only the last digits if it exceed boundaries
-                full_len = len(id_number) + len(invoice_ref)
-                ref_payload_len = l10n_ch_ISR_NUMBER_LENGTH - 1
-                extra = full_len - ref_payload_len
-                if extra > 0:
-                    invoice_ref = invoice_ref[extra:]
-                internal_ref = invoice_ref.zfill(ref_payload_len - len(id_number))
-                record.l10n_ch_isr_number = mod10r(id_number + internal_ref)
-            else:
-                record.l10n_ch_isr_number = False
+        id_number = self._get_isrb_id_number()
+        if id_number:
+            id_number = id_number.zfill(l10n_ch_ISR_ID_NUM_LENGTH)
+        # keep only the last digits if it exceed boundaries
+        full_len = len(id_number) + len(invoice_ref)
+        ref_payload_len = l10n_ch_ISR_NUMBER_LENGTH - 1
+        extra = full_len - ref_payload_len
+        if extra > 0:
+            invoice_ref = invoice_ref[extra:]
+        internal_ref = invoice_ref.zfill(ref_payload_len - len(id_number))
+
+        return mod10r(id_number + internal_ref)
 
     @api.depends('l10n_ch_isr_number')
     def _compute_l10n_ch_isr_number_spaced(self):

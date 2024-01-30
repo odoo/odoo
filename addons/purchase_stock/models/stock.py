@@ -89,7 +89,7 @@ class Orderpoint(models.Model):
     vendor_id = fields.Many2one(related='supplier_id.partner_id', string="Vendor", store=True)
     purchase_visibility_days = fields.Float(default=0.0, help="Visibility Days applied on the purchase routes.")
 
-    @api.depends('product_id.purchase_order_line_ids', 'product_id.purchase_order_line_ids.state')
+    @api.depends('product_id.purchase_order_line_ids.product_qty', 'product_id.purchase_order_line_ids.state')
     def _compute_qty(self):
         """ Extend to add more depends values """
         return super()._compute_qty()
@@ -186,12 +186,16 @@ class Orderpoint(models.Model):
         return res
 
     def _set_default_route_id(self):
-        route_id = self.env['stock.rule'].search([
+        route_ids = self.env['stock.rule'].search([
             ('action', '=', 'buy')
-        ], limit=1).route_id
-        orderpoint_wh_supplier = self.filtered(lambda o: o.product_id.seller_ids)
-        if route_id and orderpoint_wh_supplier and (not self.product_id.route_ids or route_id in self.product_id.route_ids):
-            orderpoint_wh_supplier.route_id = route_id[0].id
+        ]).route_id
+        for orderpoint in self:
+            route_id = orderpoint.rule_ids.route_id & route_ids
+            if not orderpoint.product_id.seller_ids:
+                continue
+            if not route_id:
+                continue
+            orderpoint.route_id = route_id[0].id
         return super()._set_default_route_id()
 
 

@@ -57,10 +57,10 @@
                     <t t-call="{{ props.buttonTemplate }}"/>
                 </t>
                 <t t-if="model.data">
-                    <t t-if="model.useSampleModel and props.info.noContentHelp" t-call="web.ActionHelper">
+                    <t t-if="!model.hasData() or model.useSampleModel and props.info.noContentHelp" t-call="web.ActionHelper">
                         <t t-set="noContentHelp" t-value="props.info.noContentHelp"/>
                     </t>
-                    <t t-component="props.Renderer" model="model" onGraphClicked="(domain) => this.onGraphClicked(domain)" />
+                    <t t-component="props.Renderer" model="model" onGraphClicked.bind="onGraphClicked" />
                 </t>
                 <t t-else="" t-call="web.NoContentHelper">
                     <t t-set="title">Invalid data</t>

@@ -403,7 +403,7 @@
                                 </div>
                                 <div class="o_setting_right_pane">
                                     <label for="pos_cash_rounding" string="Cash Rounding" />
-                                    <a href="https://www.odoo.com/documentation/16.0/applications/sales/point_of_sale/shop/cash_rounding.html"
+                                    <a href="https://www.odoo.com/documentation/16.0/applications/sales/point_of_sale/pricing/cash_rounding.html"
                                         title="Documentation" class="o_doc_link" target="_blank"></a>
                                     <div class="text-muted">
                                         Define the smallest coinage of the currency used to pay by cash
@@ -414,8 +414,10 @@
                                             <field name="pos_rounding_method" attrs="{'required' : [('pos_cash_rounding', '=', True)]}" domain="[('company_id', '=', company_id)]"/>
                                         </div>
                                         <div class="row mt16">
-                                            <label string="Only on cash methods" for="pos_only_round_cash_method" class="col-lg-3 o_light_label" />
-                                            <field name="pos_only_round_cash_method"/>
+                                            <div class="col">
+                                                <field name="pos_only_round_cash_method"/>
+                                                <label string="Only on cash methods" for="pos_only_round_cash_method" class="o_light_label" />
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="mt8">
@@ -511,7 +513,7 @@
                                 </div>
                                 <div class="o_setting_right_pane">
                                     <label for="module_pos_mercury" string="Vantiv (US &amp; Canada)"/>
-                                    <a href="https://www.odoo.com/documentation/16.0/applications/sales/point_of_sale/payment/vantiv.html" title="Documentation" class="o_doc_link" target="_blank"></a>
+                                    <a href="https://www.odoo.com/documentation/16.0/applications/sales/point_of_sale/payment_methods/terminals/vantiv.html" title="Documentation" class="o_doc_link" target="_blank"></a>
                                     <div class="text-muted">
                                         Accept payments with a Vantiv payment terminal
                                     </div>
@@ -527,7 +529,7 @@
                                 </div>
                                 <div class="o_setting_right_pane">
                                     <label for="module_pos_six" string="Six"/>
-                                    <a href="https://www.odoo.com/documentation/16.0/applications/sales/point_of_sale/payment/six.html" title="Documentation" class="o_doc_link" target="_blank"></a>
+                                    <a href="https://www.odoo.com/documentation/16.0/applications/sales/point_of_sale/payment_methods/terminals/six.html" title="Documentation" class="o_doc_link" target="_blank"></a>
                                     <div class="text-muted">
                                         Accept payments with a Six payment terminal
                                     </div>

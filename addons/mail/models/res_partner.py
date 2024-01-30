@@ -40,15 +40,6 @@ class Partner(models.Model):
             WHERE R.res_partner_id = %s AND (R.is_read = false OR R.is_read IS NULL)""", (self.id,))
         return self.env.cr.dictfetchall()[0].get('needaction_count')
 
-    def _get_starred_count(self):
-        """ compute the number of starred of the current partner """
-        self.ensure_one()
-        self.env.cr.execute("""
-            SELECT count(*) as starred_count
-            FROM mail_message_res_partner_starred_rel R
-            WHERE R.res_partner_id = %s """, (self.id,))
-        return self.env.cr.dictfetchall()[0].get('starred_count')
-
     # ------------------------------------------------------------
     # MESSAGING
     # ------------------------------------------------------------
@@ -75,6 +66,11 @@ class Partner(models.Model):
     # ------------------------------------------------------------
     # ORM
     # ------------------------------------------------------------
+    @api.model
+    def _get_view_cache_key(self, view_id=None, view_type='form', **options):
+        """Add context variable force_email in the key as _get_view depends on it."""
+        key = super()._get_view_cache_key(view_id, view_type, **options)
+        return key + (self._context.get('force_email'),)
 
     @api.model
     @api.returns('self', lambda value: value.id)
@@ -129,7 +125,7 @@ class Partner(models.Model):
                     "id": main_user.id,
                     "isInternalUser": not main_user.share,
                 } if main_user else [('clear',)]
-            if 'guest' in self.env.context or not self.env.user._is_internal():
+            if not self.env.user._is_internal():
                 data.pop('email', None)
             partners_format[partner] = data
         return partners_format

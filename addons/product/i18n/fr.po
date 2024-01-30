@@ -83,7 +83,7 @@ msgstr "'Étiquettes de produits - %s' % (object.name)"
 #. module: product
 #: model:ir.actions.report,print_report_name:product.report_product_packaging
 msgid "'Products packaging - %s' % (object.name)"
-msgstr "'Emballage des produits - %s' % (object.name)"
+msgstr "'Conditionnement des produits - %s' % (object.name)"
 
 #. module: product
 #. odoo-python
@@ -208,7 +208,7 @@ msgid ""
 "<strong>Save</strong> this page and come back\n"
 "                                    here to set up the feature."
 msgstr ""
-"<strong>Sauvegardez</strong> cette page et revenez ici\n"
+"<strong>Enregistrez</strong> cette page et revenez ici\n"
 "                                    pour configurer la fonctionnalité."
 
 #. module: product
@@ -225,7 +225,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_packaging_barcode_uniq
 msgid "A barcode can only be assigned to one packaging."
-msgstr "Un code-barres ne peut être attribué qu'à un seul emballage."
+msgstr "Un code-barres ne peut être attribué qu'à un seul conditionnement."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__description_sale
@@ -244,7 +244,7 @@ msgstr ""
 #: code:addons/product/models/product_product.py:0
 #, python-format
 msgid "A packaging already uses the barcode"
-msgstr "Un emballage utilise déjà le code-barres"
+msgstr "Un conditionnement utilise déjà le code-barres"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
@@ -277,7 +277,7 @@ msgstr ""
 #. module: product
 #: model:product.template,name:product.product_product_25_product_template
 msgid "Acoustic Bloc Screens"
-msgstr "Écrans ant-bruit"
+msgstr "Écrans anti-bruit"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__message_needaction
@@ -312,7 +312,7 @@ msgstr "Activités"
 #: model:ir.model.fields,field_description:product.field_product_product__activity_exception_decoration
 #: model:ir.model.fields,field_description:product.field_product_template__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Activité d'exception de décoration"
+msgstr "Activité exception décoration"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__activity_state
@@ -502,9 +502,9 @@ msgid ""
 "Barcode used for packaging identification. Scan this packaging barcode from "
 "a transfer in the Barcode app to move all the contained units"
 msgstr ""
-"Code à barres utilisé pour l'identification de l'emballage. Scannez ce code-"
-"barres d'emballage à partir d'un transfert dans l'application Code-barres "
-"pour déplacer toutes les unités contenues"
+"Code à barres utilisé pour l'identification du conditionnement. Scannez ce "
+"code-barres du conditionnement à partir d'un transfert dans l'application "
+"Code-barres pour déplacer toutes les unités contenues"
 
 #. module: product
 #. odoo-python
@@ -995,7 +995,7 @@ msgstr "Remises"
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_line__display_name
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__display_name
 msgid "Display Name"
-msgstr "Afficher le nom"
+msgstr "Nom d'affichage"
 
 #. module: product
 #. odoo-javascript
@@ -1752,8 +1752,8 @@ msgstr "Nombre d'erreurs"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__message_needaction_counter
 #: model:ir.model.fields,help:product.field_product_template__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Nombre de messages exigeant une action"
+msgid "Number of messages requiring action"
+msgstr "Nombre de messages nécessitant une action"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__message_has_error_counter
@@ -1846,7 +1846,7 @@ msgstr "Pourcentage du prix"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__pills
 msgid "Pills"
-msgstr "Pilules"
+msgstr "Boutons carrés"
 
 #. module: product
 #. odoo-javascript
@@ -2126,19 +2126,19 @@ msgstr "Nom du produit"
 #: model:ir.model.fields,field_description:product.field_product_product__packaging_ids
 #: model:ir.model.fields,field_description:product.field_product_template__packaging_ids
 msgid "Product Packages"
-msgstr "Emballages des produits"
+msgstr "Colis des produits"
 
 #. module: product
 #: model:ir.model,name:product.model_product_packaging
 #: model:ir.model.fields,field_description:product.field_product_packaging__name
 #: model_terms:ir.ui.view,arch_db:product.product_packaging_form_view
 msgid "Product Packaging"
-msgstr "Emballage des produits"
+msgstr "Conditionnement des produits"
 
 #. module: product
 #: model:ir.actions.report,name:product.report_product_packaging
 msgid "Product Packaging (PDF)"
-msgstr "Emballage des produits (PDF)"
+msgstr "Conditionnement des produits (PDF)"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.action_packaging_view
@@ -2350,7 +2350,7 @@ msgstr "La quantité est déjà présente (%d)."
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__qty
 msgid "Quantity of products contained in the packaging."
-msgstr "Quantité de produits contenus dans l'emballage."
+msgstr "Quantité de produits contenus dans le conditionnement."
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__radio
@@ -2746,6 +2746,13 @@ msgstr ""
 "La quantité à acheter auprès de ce fournisseur pour bénéficier du prix, "
 "exprimée dans l'unité de mesure du produit du fournisseur, sinon aucune "
 "unité n'est définie, dans l'unité de mesure par défaut du produit."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+#, python-format
+msgid "The rounding method must be strictly positive."
+msgstr "La méthode d'arrondi doit être strictement positive."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__lst_price
@@ -3299,10 +3306,12 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot delete the value %s because it is used on the following products:\n"
-"%s"
+"%s\n"
+" If the value has been associated to a product in the past, you will not be able to delete it."
 msgstr ""
-"Vous ne pouvez pas supprimer la valeur %s car elle est utilisée sur les produits suivants :\n"
-"%s"
+"Vous ne pouvez pas supprimer la valeur %s car elle est utilisée pour les produits suivants :\n"
+"%s\n"
+" Si la valeur a été associée à un produit dans le passé, vous ne pourrez pas la supprimer."
 
 #. module: product
 #. odoo-python
@@ -3328,6 +3337,15 @@ msgstr ""
 "(%s)\n"
 ", car elle est utilisée dans une ou d'autres listes de prix :\n"
 "%s"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_attribute.py:0
+#, python-format
+msgid "You cannot delete value %s because it was used in some products."
+msgstr ""
+"Vous ne pouvez pas supprimer la valeur %s, parce qu'elle était utilisée pour"
+" certains produits."
 
 #. module: product
 #. odoo-python

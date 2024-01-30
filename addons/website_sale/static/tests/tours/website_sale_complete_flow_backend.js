@@ -9,7 +9,6 @@ wTourUtils.registerWebsitePreviewTour('website_sale_tour_backend', {
 }, [
         {
             content: "open customize tab",
-            extra_trigger: '#oe_snippets.o_loaded',
             trigger: '.o_we_customize_snippet_btn',
         },
         {

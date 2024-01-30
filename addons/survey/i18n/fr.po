@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-14 05:51+0000\n"
+"POT-Creation-Date: 2023-05-23 08:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
 "Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
@@ -219,7 +219,7 @@ msgid ""
 "        <tbody>\n"
 "            <tr><td>\n"
 "                <!-- We use the logo of the company that created the survey (to handle multi company cases) -->\n"
-"                <a href=\"/\"><img t-attf-src=\"/logo.png?company={{ object.survey_id.create_uid.company_id.id }}\" style=\"vertical-align:baseline;max-width:100px;\"/></a>\n"
+"                <a href=\"/\"><img t-attf-src=\"/logo.png?company={{ object.survey_id.create_uid.company_id.id }}\" style=\"vertical-align:baseline;max-width:100px;\"></a>\n"
 "            </td><td style=\"text-align:right;vertical-align:middle;\">\n"
 "                    Certification: <t t-out=\"object.survey_id.display_name or ''\">Feedback Form</t>\n"
 "            </td></tr>\n"
@@ -234,7 +234,7 @@ msgid ""
 "                        <strong t-out=\"object.survey_id.display_name or ''\">Furniture Creation</strong>\n"
 "                    certification\n"
 "                </p>\n"
-"                <p>Congratulations for passing the test with a score of <strong t-out=\"object.scoring_percentage\"/>% !</p>\n"
+"                <p>Congratulations for passing the test with a score of <strong t-out=\"object.scoring_percentage\"></strong>% !</p>\n"
 "            </td></tr>\n"
 "        </tbody>\n"
 "    </table>\n"
@@ -245,10 +245,10 @@ msgstr ""
 "    <table style=\"width:600px;margin:5px auto;\">\n"
 "        <tbody>\n"
 "            <tr><td>\n"
-"                <!-- Nous utilisons le logo de l'entreprise qui a créé le sondage (pour gérer les cas multi-entreprises) -->\n"
-"                <a href=\"/\"><img t-attf-src=\"/logo.png?company={{ object.survey_id.create_uid.company_id.id }}\" style=\"vertical-align:baseline;max-width:100px;\"/></a>\n"
+"                <!-- Nous utilisons le logo de la société qui a créé le sondage (pour gérer le cas multi-entreprises) -->\n"
+"                <a href=\"/\"><img t-attf-src=\"/logo.png?company={{ object.survey_id.create_uid.company_id.id }}\" style=\"vertical-align:baseline;max-width:100px;\"></a>\n"
 "            </td><td style=\"text-align:right;vertical-align:middle;\">\n"
-"                    Certification : <t t-out=\"object.survey_id.display_name or ''\">Formulaire de retour d'expérience</t>\n"
+"                    Certification : <t t-out=\"object.survey_id.display_name or ''\">Formulaire de feedback</t>\n"
 "            </td></tr>\n"
 "        </tbody>\n"
 "    </table>\n"
@@ -257,11 +257,11 @@ msgstr ""
 "            <tr><td style=\"padding:15px 20px 10px 20px;\">\n"
 "                <p>Cher <span t-out=\"object.partner_id.name or 'participant'\">participant</span></p>\n"
 "                <p>\n"
-"                    Vous trouverez ci-joint votre\n"
-"                        certification pour\n"
-"<strong t-out=\"object.survey_id.display_name or ''\">La création de meubles</strong>\n"
-"                                    </p>\n"
-"                <p>Félicitations pour avoir réussi le test avec un score de <strong t-out=\"object.scoring_percentage\"/>% !</p>\n"
+"                    Veuillez trouver ci-joint votre certification\n"
+"                        <strong t-out=\"object.survey_id.display_name or ''\">Création de meubles</strong>\n"
+"                    \n"
+"                </p>\n"
+"                <p>Félicitations pour avoir réussi le test avec un score de <strong t-out=\"object.scoring_percentage\"></strong>% !</p>\n"
 "            </td></tr>\n"
 "        </tbody>\n"
 "    </table>\n"
@@ -273,7 +273,7 @@ msgstr ""
 msgid ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Dear <t t-out=\"object.partner_id.name or 'participant'\">participant</t><br/><br/>\n"
+"        Dear <t t-out=\"object.partner_id.name or 'participant'\">participant</t><br><br>\n"
 "        <t t-if=\"object.survey_id.certification\">\n"
 "            You have been invited to take a new certification.\n"
 "        </t>\n"
@@ -291,7 +291,7 @@ msgid ""
 "            </a>\n"
 "        </div>\n"
 "        <t t-if=\"object.deadline\">\n"
-"            Please answer the survey for <t t-out=\"format_date(object.deadline) or ''\">05/05/2021</t>.<br/><br/>\n"
+"            Please answer the survey for <t t-out=\"format_date(object.deadline) or ''\">05/05/2021</t>.<br><br>\n"
 "        </t>\n"
 "        <t t-if=\"object.survey_id.certification\">\n"
 "            We wish you good luck!\n"
@@ -305,9 +305,9 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Cher <t t-out=\"object.partner_id.name or 'participant'\">participant</t><br/><br/>\n"
+"        Cher <t t-out=\"object.partner_id.name or 'participant'\">participant</t><br><br>\n"
 "        <t t-if=\"object.survey_id.certification\">\n"
-"            Vous avez été invité à passer une nouvelle certification.\n"
+"            Vous avez été invité(e) à passer une nouvelle cetification.\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
 "            Nous avons lancé un sondage et votre retour serait apprécié.\n"
@@ -315,15 +315,15 @@ msgstr ""
 "        <div style=\"margin: 16px 0px 16px 0px;\">\n"
 "            <a t-att-href=\"(object.get_start_url())\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
 "                <t t-if=\"object.survey_id.certification\">\n"
-"                    Démarrer la certification\n"
+"                    Commencer la certification\n"
 "                </t>\n"
 "                <t t-else=\"\">\n"
-"                    Démarrer le sondage\n"
+"                    Commencer le sondage\n"
 "                </t>\n"
 "            </a>\n"
 "        </div>\n"
 "        <t t-if=\"object.deadline\">\n"
-"            Veuillez répondre au sondage avant le <t t-out=\"format_date(object.deadline) or ''\">05/05/2021</t>.<br/><br/>\n"
+"            Veuillez répondre au sondage avant le <t t-out=\"format_date(object.deadline) or ''\">05/05/2021</t>.<br><br>\n"
 "        </t>\n"
 "        <t t-if=\"object.survey_id.certification\">\n"
 "            Bonne chance !\n"
@@ -386,7 +386,7 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_button_form_view
 msgid "<i class=\"fa fa-fw fa-arrow-right\"/>Edit Survey"
-msgstr "<i class=\"fa fa-fw fa-arrow-right\"/>Éditer le sondage"
+msgstr "<i class=\"fa fa-fw fa-arrow-right\"/>Modifier le sondage"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_done
@@ -812,7 +812,7 @@ msgstr "Activités"
 #: model:ir.model.fields,field_description:survey.field_survey_survey__activity_exception_decoration
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Activité d'exception de décoration"
+msgstr "Activité exception décoration"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__activity_state
@@ -1193,7 +1193,7 @@ msgstr "Cactus"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__can_edit_body
 msgid "Can Edit Body"
-msgstr "Peut éditer le corps de l'email"
+msgstr "Peut modifier le corps de l'email"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_burger_quiz_p4_q3
@@ -1449,7 +1449,7 @@ msgstr "Chaise de conférence"
 msgid "Congratulations! You are now ready to collect feedback like a pro :-)"
 msgstr ""
 "Toutes nos félicitations ! Vous êtes maintenant prêt à recueillir des "
-"retours d'expérience comme un pro :-)"
+"feedbacks comme un pro :-)"
 
 #. module: survey
 #: model_terms:gamification.badge,description:survey.vendor_certification_badge
@@ -1749,7 +1749,7 @@ msgstr "Pas d'accord"
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__display_name
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__display_name
 msgid "Display Name"
-msgstr "Afficher le nom"
+msgstr "Nom d'affichage"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__progression_mode
@@ -1805,7 +1805,7 @@ msgstr "Menu déroulant"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
 msgid "Edit Survey"
-msgstr "Éditer un sondage"
+msgstr "Modifier un sondage"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_void_content
@@ -1899,7 +1899,7 @@ msgstr "Fanta"
 #: model_terms:ir.actions.act_window,help:survey.action_survey_form
 #, python-format
 msgid "Feedback Form"
-msgstr "Formulaire de retour d'expérience"
+msgstr "Formulaire de feedback"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p3_q5_row2
@@ -2428,7 +2428,7 @@ msgstr "Jeton d'invitation"
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__access_mode__token
 msgid "Invited people only"
-msgstr "Seulement les personnes invitées"
+msgstr "Seules les personnes invitées"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__is_mail_template_editor
@@ -3127,8 +3127,8 @@ msgstr "Nombre d'erreurs"
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__message_needaction_counter
 #: model:ir.model.fields,help:survey.field_survey_user_input__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Nombre de messages exigeant une action"
+msgid "Number of messages requiring action"
+msgstr "Nombre de messages nécessitant une action"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__message_has_error_counter
@@ -3769,7 +3769,7 @@ msgstr "Récompenser les réponses rapides"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.gamification_badge_form_view_simplified
 msgid "Rewards for challenges"
-msgstr "Récompenses pour les défis"
+msgstr "Récompenser les défis"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__matrix_row_id
@@ -3810,12 +3810,12 @@ msgstr "Salicacées"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__save_as_email
 msgid "Save as user email"
-msgstr "Sauvegarder comme email de l'utilisateur"
+msgstr "Enregistrer comme email de l'utilisateur"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__save_as_nickname
 msgid "Save as user nickname"
-msgstr "Sauvegarder comme surnom de l'utilisateur"
+msgstr "Enregistrer comme surnom de l'utilisateur"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_burger_quiz_p4
@@ -5329,6 +5329,16 @@ msgstr ""
 
 #. module: survey
 #. odoo-python
+#: code:addons/survey/models/survey_question.py:0
+#, python-format
+msgid ""
+"You cannot delete questions from surveys \"%(survey_names)s\" while live "
+"sessions are in progress."
+msgstr ""
+"Vous ne pouvez pas supprimer des questions des sondages \"%(survey_names)s\""
+" pendant les sessions en direct."
+
+#. module: survey
 #: code:addons/survey/models/survey_survey.py:0
 #, python-format
 msgid ""

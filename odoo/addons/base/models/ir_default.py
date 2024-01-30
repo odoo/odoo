@@ -12,6 +12,7 @@ class IrDefault(models.Model):
     _name = 'ir.default'
     _description = 'Default Values'
     _rec_name = 'field_id'
+    _allow_sudo_commands = False
 
     field_id = fields.Many2one('ir.model.fields', string="Field", required=True,
                                ondelete='cascade', index=True)
@@ -21,6 +22,14 @@ class IrDefault(models.Model):
                                  help="If set, action binding only applies for this company")
     condition = fields.Char('Condition', help="If set, applies the default upon condition.")
     json_value = fields.Char('Default Value (JSON format)', required=True)
+
+    @api.constrains('json_value')
+    def _check_json_format(self):
+        for record in self:
+            try:
+                json.loads(record.json_value)
+            except json.JSONDecodeError:
+                raise ValidationError(_('Invalid JSON format in Default Value field.'))
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -64,12 +73,14 @@ class IrDefault(models.Model):
         try:
             model = self.env[model_name]
             field = model._fields[field_name]
-            field.convert_to_cache(value, model)
+            parsed = field.convert_to_cache(value, model)
             json_value = json.dumps(value, ensure_ascii=False)
         except KeyError:
             raise ValidationError(_("Invalid field %s.%s") % (model_name, field_name))
         except Exception:
             raise ValidationError(_("Invalid value for %s.%s: %s") % (model_name, field_name, value))
+        if field.type == 'integer' and not (-2**31 < parsed < 2**31-1):
+            raise ValidationError(_("Invalid value for %s.%s: %s is out of bounds (integers should be between -2,147,483,648 and 2,147,483,647)", model_name, field_name, value))
 
         # update existing default for the same scope, or create one
         field = self.env['ir.model.fields']._get(model_name, field_name)

@@ -3,9 +3,11 @@
 # 	* hr_skills
 # 
 # Translators:
-# Lucia Pacheco <lpo@odoo.com>, 2022
+# Lucia Pacheco, 2022
 # Martin Trigaux, 2022
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2022
+# Óscar Fonseca <tecnico@pyming.com>, 2023
+# Larissa Manderfeld, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-23 08:02+0000\n"
 "PO-Revision-Date: 2022-09-22 05:52+0000\n"
-"Last-Translator: Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2022\n"
+"Last-Translator: Larissa Manderfeld, 2023\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -101,7 +103,7 @@ msgstr "Fecha inicial"
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill_level__default_level
 msgid "Default Level"
-msgstr ""
+msgstr "Nivel por defecto"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_log__department_id
@@ -130,7 +132,7 @@ msgstr "Nombre mostrado"
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line__display_type
 msgid "Display Type"
-msgstr "Tipo de pantalla"
+msgstr "Tipo de visualización"
 
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_hr_employee
@@ -156,17 +158,17 @@ msgstr "Habilidades del empleado"
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_hr_employee_skill_report
 msgid "Employee Skills Report"
-msgstr ""
+msgstr "Informe de habilidades del empleado"
 
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_report_view_search
 msgid "Employees with Skills"
-msgstr ""
+msgstr "Empleados con habilidades"
 
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_report_view_search
 msgid "Employees without Skills"
-msgstr ""
+msgstr "Empleados sin habilidades"
 
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_log_view_search
@@ -196,6 +198,8 @@ msgid ""
 "If checked, this level will be the default one selected when choosing this "
 "skill."
 msgstr ""
+"Si está marcado, este nivel será el seleccionado por defecto al elegir esta "
+"habilidad."
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill____last_update
@@ -233,7 +237,7 @@ msgstr "Última actualización el"
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_report__level_progress
 msgid "Level Progress"
-msgstr ""
+msgstr "Progreso de nivel"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill_type__skill_level_ids
@@ -244,7 +248,7 @@ msgstr "Niveles"
 #. module: hr_skills
 #: model:ir.ui.menu,name:hr_skills.hr_resume_line_type_menu
 msgid "Line Types"
-msgstr ""
+msgstr "Tipos de línea"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line__name
@@ -290,7 +294,7 @@ msgstr "Progreso desde cero (0%) a dominio total (100%)."
 #. module: hr_skills
 #: model:ir.model.constraint,message:hr_skills.constraint_hr_skill_level_check_level_progress
 msgid "Progress should be a number between 0 and 100."
-msgstr ""
+msgstr "El progreso debe ser un número entre 0 y 100"
 
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_hr_employee_public
@@ -328,12 +332,12 @@ msgstr "Líneas de currículo"
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_log_view_search
 msgid "Search Logs"
-msgstr ""
+msgstr "Buscar registros"
 
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_skill_view_search
 msgid "Search Skill"
-msgstr ""
+msgstr "Buscar habilidad"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line_type__sequence
@@ -364,7 +368,7 @@ msgstr "Habilidad"
 #: model:ir.actions.server,name:hr_skills.action_open_skills_log_department
 #: model:ir.actions.server,name:hr_skills.action_open_skills_log_employee
 msgid "Skill History Report"
-msgstr ""
+msgstr "Informe de historial de habilidades"
 
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_hr_skill_level
@@ -430,7 +434,7 @@ msgstr "Habilidades"
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_log_view_graph_employee
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_log_view_tree
 msgid "Skills History"
-msgstr ""
+msgstr "Historial de habilidades"
 
 #. module: hr_skills
 #: code:addons/hr_skills/models/hr_employee_skill.py:0
@@ -464,7 +468,7 @@ msgstr "No se permiten dos niveles para la misma habilidad"
 #. module: hr_skills
 #: model:ir.model.constraint,message:hr_skills.constraint_hr_employee_skill_log__unique_skill_log
 msgid "Two levels for the same skill on the same day is not allowed"
-msgstr ""
+msgstr "No se permiten dos niveles para la misma habilidad en el mismo día"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line__line_type_id
@@ -474,7 +478,7 @@ msgstr "Tipo"
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_hr_resume_line_type
 msgid "Type of a resume line"
-msgstr ""
+msgstr "Tipo de una línea de currículum"
 
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_res_users

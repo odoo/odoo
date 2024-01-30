@@ -9,7 +9,9 @@
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2022
 # Michal Veselý <michal@veselyberanek.net>, 2022
 # Jiří Podhorecký, 2022
-# Aleš Fiala <f.ales1@seznam.cz>, 2023
+# Tomáš Píšek, 2023
+# Jakub Smolka, 2023
+# Aleš Fiala <f.ales1@seznam.cz>, 2024
 # 
 msgid ""
 msgstr ""
@@ -17,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-11-03 16:41+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2023\n"
+"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2024\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -49,7 +51,7 @@ msgstr ""
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_short
 msgid "'. Showing results for '"
-msgstr ""
+msgstr "'. Zobrazeny výsledky pro '"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.date_selector
@@ -193,7 +195,7 @@ msgstr "<i class=\"fa fa-github text-github\" aria-label=\"Github\" title=\"Gith
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_view_kanban
 msgid "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_sidebar_blog_index_follow_us
@@ -585,7 +587,7 @@ msgstr "Název příspěvku na blogu"
 #: model:ir.ui.menu,name:website_blog.menu_blog_post_pages
 #: model_terms:ir.ui.view,arch_db:website_blog.website_blog
 msgid "Blog Posts"
-msgstr "Příspěvky blogu"
+msgstr "Blogové příspěvky"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__subtitle
@@ -597,12 +599,12 @@ msgstr "Podtitulek blogu"
 #. module: website_blog
 #: model:ir.model,name:website_blog.model_blog_tag
 msgid "Blog Tag"
-msgstr ""
+msgstr "Štítek blogu"
 
 #. module: website_blog
 #: model:ir.model,name:website_blog.model_blog_tag_category
 msgid "Blog Tag Category"
-msgstr ""
+msgstr "Kategorie štítku blogu"
 
 #. module: website_blog
 #: model:ir.actions.act_window,name:website_blog.action_tags
@@ -686,7 +688,7 @@ msgstr "Může publikovat"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
 msgid "Cards"
-msgstr ""
+msgstr "Karty"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag__category_id
@@ -1421,7 +1423,7 @@ msgstr ""
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_view_kanban
 msgid "Not Published"
-msgstr ""
+msgstr "Není zveřejněno"
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_5
@@ -1449,8 +1451,8 @@ msgstr "Počet chyb"
 #. module: website_blog
 #: model:ir.model.fields,help:website_blog.field_blog_blog__message_needaction_counter
 #: model:ir.model.fields,help:website_blog.field_blog_post__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Počet zpráv, které vyžadují akci"
+msgid "Number of messages requiring action"
+msgstr "Počet zpráv vyžadujících akci"
 
 #. module: website_blog
 #: model:ir.model.fields,help:website_blog.field_blog_blog__message_has_error_counter
@@ -1467,6 +1469,15 @@ msgid ""
 "the depth and scope of what you will be able to see will improve "
 "geometrically. For many amateur astronomers, we sometimes cannot get enough "
 "of what we can see on this our closest space object."
+msgstr ""
+
+#. module: website_blog
+#. odoo-python
+#: code:addons/website_blog/models/ir_qweb_fields.py:0
+#, python-format
+msgid ""
+"On your default language, empty the blog post description and save to get an"
+" automated (translated) summary."
 msgstr ""
 
 #. module: website_blog
@@ -1863,12 +1874,12 @@ msgstr "Podtitulek"
 #: model:ir.ui.menu,name:website_blog.menu_website_blog_tag_category_global
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_tag_category_tree
 msgid "Tag Categories"
-msgstr ""
+msgstr "Kategorie štítků"
 
 #. module: website_blog
 #: model:ir.actions.act_window,name:website_blog.action_tag_category
 msgid "Tag Category"
-msgstr ""
+msgstr "Kategorie štítku"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_tag_category_form
@@ -1903,7 +1914,7 @@ msgstr "Název značky již existuje!"
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_sidebar_blog_index_tags
 #: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
 msgid "Tags"
-msgstr "Tagy"
+msgstr "Štítky"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
@@ -2250,6 +2261,11 @@ msgstr "Viditelné na všech stránkách blogů"
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__website_published
 msgid "Visible on current website"
 msgstr "Viditelné na aktuální webstránce"
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_content
+msgid "WRITE HERE OR DRAG BUILDING BLOCKS"
+msgstr ""
 
 #. module: website_blog
 #: model:ir.model,name:website_blog.model_website

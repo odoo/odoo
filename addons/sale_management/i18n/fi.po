@@ -23,7 +23,7 @@ msgstr ""
 "POT-Creation-Date: 2022-10-04 09:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
 "Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
-"Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
+"Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -167,7 +167,7 @@ msgstr "Luotu"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_res_company__sale_order_template_id
 msgid "Default Sale Template"
-msgstr ""
+msgstr "Oletusmyyntimalli"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_res_config_settings__company_so_template_id
@@ -239,6 +239,8 @@ msgstr "Dokumentaatio"
 #: model:ir.model.constraint,message:sale_management.constraint_sale_order_template_line_non_accountable_fields_null
 msgid "Forbidden product, quantity and UoM on non-accountable sale quote line"
 msgstr ""
+"Kielletty tuote, määrä ja mittayksikkö ei-kirjanpitokelpoisen "
+"myyntitarjousrivin yhteydessä"
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_option__sequence
@@ -369,7 +371,7 @@ msgstr "Vaihtoehdot"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__is_present
 msgid "Present on Quotation"
-msgstr ""
+msgstr "Esitä tarjouksessa"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__product_id
@@ -520,6 +522,9 @@ msgid ""
 "and populate your orders with multiple quantities of each variant. This "
 "feature also exists in the Purchase application."
 msgstr ""
+"Myytkö samaa tuotetta eri koossa tai eri väreissä? Kokeile tuoteruudukkoa ja"
+" täytä tilauksesi useilla eri määrillä kutakin muunnelmaa. Tämä ominaisuus "
+"on myös Ostosovelluksessa."
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__sequence
@@ -534,6 +539,10 @@ msgid ""
 "to help sales configure a product with different options: colors, size, "
 "capacity, etc. Make sale orders encoding easier and error-proof."
 msgstr ""
+"Ongelmia monimutkaisen tuoteluettelon kanssa? Kokeile Tuotekonfiguraattoria,"
+" joka auttaa myyntiä tuotteen konfiguroinnissa eri vaihtoehdoilla: värit, "
+"koko, kapasiteetti jne. Helpota myyntitilausten koodausta ja tee siitä "
+"virheetöntä."
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
@@ -568,19 +577,19 @@ msgstr ""
 msgid ""
 "This field will be checked if the option line's product is already present "
 "in the quotation."
-msgstr ""
+msgstr "Tämä kenttä tarkistetaan, jos optiorivin tuote on jo tarjouksessa."
 
 #. module: sale_management
 #: model:digest.tip,name:sale_management.digest_tip_sale1_management_0
 #: model_terms:digest.tip,tip_description:sale_management.digest_tip_sale1_management_0
 msgid "Tip: Odoo supports configurable products"
-msgstr ""
+msgstr "Vinkki: Odoo tukee konfiguroitavia tuotteita"
 
 #. module: sale_management
 #: model:digest.tip,name:sale_management.digest_tip_sale_management_1
 #: model_terms:digest.tip,tip_description:sale_management.digest_tip_sale_management_1
 msgid "Tip: Sell or buy products in bulk with matrixes"
-msgstr ""
+msgstr "Vinkki: Myy tai osta suuria määriä tuotteita matriisien avulla"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__price_unit
@@ -647,7 +656,7 @@ msgstr ""
 #: code:addons/sale_management/models/sale_order_template.py:0
 #, python-format
 msgid "Your template cannot contain products from multiple companies."
-msgstr ""
+msgstr "Malli ei voi sisältää tuotteita useilta yrityksiltä."
 
 #. module: sale_management
 #: code:addons/sale_management/models/sale_order_template.py:0
@@ -656,6 +665,8 @@ msgid ""
 "Your template contains products from company %(product_company)s whereas your template belongs to company %(template_company)s. \n"
 " Please change the company of your template or remove the products from other companies."
 msgstr ""
+"Mallisi sisältää yrityksen %(product_company)s tuotteita, kun taas mallisi kuuluu yritykselle %(template_company)s.\n"
+" Vaihda mallisi yritys tai poista muiden yritysten tuotteet."
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
@@ -665,4 +676,4 @@ msgstr "päivää"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "e.g. Standard Consultancy Package"
-msgstr ""
+msgstr "esim. vakiokonsultointipaketti"

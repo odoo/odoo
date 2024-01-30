@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_move_form_l10n_pl" model="ir.ui.view">
+        <field name="name">account.move.form</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <field name="invoice_date" position="after">
+                <field name="l10n_pl_show_delivery_date" invisible="1"/>
+                <field name="l10n_pl_delivery_date" string="Delivery Date" attrs="{'invisible': [('l10n_pl_show_delivery_date', '=', False)]}"/>
+            </field>
+            <field name="qr_code_method" position="after">
+                <field name="l10n_pl_delivery_date" string="Delivery Date" attrs="{'invisible': [('country_code', '!=', 'PL')]}"/>
+            </field>
+            <notebook position="inside">
+                <page id="pl_extra" string="PL Extra" attrs="{'invisible': ['|', ('move_type', 'not in', ['out_invoice', 'out_refund']), ('country_code', '!=', 'PL')]}">
+                    <group>
+                        <group>
+                            <field name="l10n_pl_vat_b_spv_dostawa"/>
+                            <field name="l10n_pl_vat_b_mpv_prowizja"/>
+                        </group>
+                        <group>
+                            <field name="l10n_pl_vat_b_spv"/>
+                        </group>
+                    </group>
+                </page>
+            </notebook>
+        </field>
+    </record>
+</odoo>

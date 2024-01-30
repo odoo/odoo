@@ -64,7 +64,8 @@
                 <field name="product_id" context="{'default_detailed_type': 'product'}" required="1" attrs="{'readonly': [('id', '!=', False)]}"/>
                 <field name="picking_id" required="1" attrs="{'readonly': [('id', '!=', False)]}"
                     options="{'no_create_edit': True}" domain="[('id', 'in', parent.picking_ids)]"/>
-                <field name="lot_id" groups="stock.group_production_lot" attrs="{'readonly': [('tracking', 'not in', ['lot', 'serial'])]}"/>
+                <field name="lot_id" groups="stock.group_production_lot" attrs="{'column_invisible': [('parent.show_lots_text', '=', True)], 'readonly': [('tracking', 'not in', ['lot', 'serial'])]}"/>
+                <field name="lot_name" groups="stock.group_production_lot" attrs="{'column_invisible': [('parent.show_lots_text', '=', False)], 'readonly': [('tracking', 'not in', ['lot', 'serial'])]}"/>
                 <field name="location_id"/>
                 <field name="location_dest_id"/>
                 <field name="package_id" groups="stock.group_tracking_lot"/>
@@ -91,6 +92,7 @@
                 <field name="is_wave" invisible="1"/>
                 <field name="show_set_qty_button" invisible="1"/>
                 <field name="show_clear_qty_button" invisible="1"/>
+                <field name="show_lots_text" invisible="1"/>
                 <header>
                     <button name="action_confirm" states="draft" string="Confirm" type="object" class="oe_highlight"/>
                     <button name="action_done" string="Validate" type="object" class="oe_highlight"
@@ -225,7 +227,7 @@
                 <field name="name" string="Batch Transfer"/>
                 <field name="picking_type_id" invisible="1"/>
                 <field name="user_id"/>
-                <filter name="to_do_transfers" string="To Do" domain="[('user_id', 'in', [uid, False])]"/>
+                <filter name="to_do_transfers" string="To Do" domain="['&amp;',('user_id', 'in', [uid, False]),('state','not in',['done','cancel'])]"/>
                 <filter name="my_transfers" string="My Transfers" domain="[('user_id', '=', uid)]"/>
                 <separator/>
                 <filter name="draft" string="Draft" domain="[('state', '=', 'draft')]"/>

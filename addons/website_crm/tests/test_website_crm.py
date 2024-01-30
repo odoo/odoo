@@ -29,6 +29,10 @@ class TestWebsiteCrm(odoo.tests.HttpCase):
         self.assertEqual(record.campaign_id.name, 'New campaign', 'Name of the "on the fly" created campaign is wrong')
 
     def test_catch_logged_partner_info_tour(self):
+        self.env.ref('base.partner_admin').write({
+            'name': 'Mitchell Admin',
+            'company_name': 'YourCompany',
+        })
         user_login = 'admin'
         user_partner = self.env['res.users'].search([('login', '=', user_login)]).partner_id
         partner_email = user_partner.email

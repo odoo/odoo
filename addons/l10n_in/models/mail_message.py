@@ -24,8 +24,14 @@ class Message(models.Model):
                 title = message.subtype_id.display_name
             audit_log_preview = Markup("<div>%s</div>") % (title)
             for value in tracking_value_ids:
-                audit_log_preview += Markup("<li>%s <i class='o_TrackingValue_separator fa fa-long-arrow-rightmx-1 text-600' title='%s' role='img' aria-label='%s'></i>%s (%s)</li>") % (
-                    _("Changed"), _("Changed"), value._get_old_display_value()[0], value._get_new_display_value()[0], value.field.field_description)
+                audit_log_preview += Markup(
+                    "<li>%(old_value)s <i class='o_TrackingValue_separator fa fa-long-arrow-right mx-1 text-600' title='%(title)s' role='img' aria-label='%(title)s'></i>%(new_value)s (%(field)s)</li>"
+                ) % {
+                    'old_value': value._get_old_display_value()[0] or _("None"),
+                    'new_value': value._get_new_display_value()[0] or _("None"),
+                    'title': _("Changed"),
+                    'field': value.field.field_description,
+                }
             message.l10n_in_audit_log_preview = audit_log_preview
 
     @api.depends('model', 'res_id')

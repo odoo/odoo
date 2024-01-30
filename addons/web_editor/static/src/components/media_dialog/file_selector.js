@@ -260,7 +260,7 @@ export class FileSelector extends Component {
     }
 
     async onUploaded(attachment) {
-        this.state.attachments = [attachment, ...this.state.attachments];
+        this.state.attachments = [attachment, ...this.state.attachments.filter(attach => attach.id !== attachment.id)];
         this.selectAttachment(attachment);
         if (!this.props.multiSelect) {
             await this.props.save();

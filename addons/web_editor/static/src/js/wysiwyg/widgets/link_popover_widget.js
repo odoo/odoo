@@ -27,6 +27,21 @@ const LinkPopoverWidget = Widget.extend({
         this._dp = new DropPrevious();
     },
     /**
+     * @override
+     * @todo replace this hack in master. This is required to not listen to the
+     * DOM mutation of adding this widget inside the DOM (which is probably not
+     * even needed in the first place).
+     */
+    _widgetRenderAndInsert(insertCallback, ...rest) {
+        const patchedInsertCallback = (...args) => {
+            this.options.wysiwyg.odooEditor.observerUnactive();
+            const res = insertCallback(...args);
+            this.options.wysiwyg.odooEditor.observerActive();
+            return res;
+        };
+        return this._super(patchedInsertCallback, ...rest);
+    },
+    /**
      *
      * @override
      */
@@ -37,6 +52,14 @@ const LinkPopoverWidget = Widget.extend({
         this.$copyLink = this.$('.o_we_copy_link');
         this.$fullUrl = this.$('.o_we_full_url');
 
+        // Use the right ClipboardJS with respect to the prototype of this.el
+        // since, starting with Firefox 109, a widget element prototype that is
+        // adopted by an iframe will not be instanceof its original constructor.
+        // See: https://github.com/webcompat/web-bugs/issues/118350
+        const ClipboardJS =
+            this.el instanceof HTMLElement
+                ? window.ClipboardJS
+                : this.el.ownerDocument.defaultView.ClipboardJS;
         // Copy onclick handler
         // ClipboardJS uses "instanceof" to verify the elements passed to its
         // constructor. Unfortunately, when the element is within an iframe,
@@ -59,17 +82,10 @@ const LinkPopoverWidget = Widget.extend({
             this.popover.hide();
         });
 
-        // init tooltips & popovers
-        this.$('[data-bs-toggle="tooltip"]').tooltip({
-            delay: 0,
-            placement: 'bottom',
-            container: this.container,
-        });
+        // Init popover -> it is moved out of the link (and the savable area)
         const tooltips = [];
-        for (const el of this.$('[data-bs-toggle="tooltip"]').toArray()) {
-            tooltips.push(Tooltip.getOrCreateInstance(el));
-        }
         let popoverShown = true;
+        this.options.wysiwyg.odooEditor.observerUnactive();
         this.$target.popover({
             html: true,
             content: this.$el,
@@ -85,19 +101,13 @@ const LinkPopoverWidget = Widget.extend({
             container: this.container,
         })
         .on('show.bs.popover.link_popover', () => {
-            this.options.wysiwyg.odooEditor.observerUnactive('show.bs.popover');
             this._loadAsyncLinkPreview();
             popoverShown = true;
         })
-        .on('inserted.bs.popover', () => {
-            this.options.wysiwyg.odooEditor.observerActive('show.bs.popover');
-        })
         .on('hide.bs.popover.link_popover', () => {
-            this.options.wysiwyg.odooEditor.observerUnactive('hide.bs.popover');
             popoverShown = false;
         })
         .on('hidden.bs.popover.link_popover', () => {
-            this.options.wysiwyg.odooEditor.observerActive('hide.bs.popover');
             for (const tooltip of tooltips) {
                 tooltip.hide();
             }
@@ -107,7 +117,18 @@ const LinkPopoverWidget = Widget.extend({
             popover.tip.classList.add('o_edit_menu_popover');
         })
         .popover('show');
-
+        // Init popover inner tooltips (note that probably no need of observer
+        // unactive during this since out of the editable area but
+        // `this.container` is customizable so, not guaranteed). TODO improve.
+        this.$('[data-bs-toggle="tooltip"]').tooltip({
+            delay: 0,
+            placement: 'bottom',
+            container: this.container,
+        });
+        for (const el of this.$('[data-bs-toggle="tooltip"]').toArray()) {
+            tooltips.push(Tooltip.getOrCreateInstance(el));
+        }
+        this.options.wysiwyg.odooEditor.observerActive();
 
         this.popover = Popover.getInstance(this.target);
         this.$target.on('mousedown.link_popover', (e) => {
@@ -136,11 +157,29 @@ const LinkPopoverWidget = Widget.extend({
                     this.popover.hide();
                 }
             }
-        }
+        };
         $(document).on('mouseup.link_popover', onClickDocument);
         if (document !== this.options.wysiwyg.odooEditor.document) {
             $(this.options.wysiwyg.odooEditor.document).on('mouseup.link_popover', onClickDocument);
         }
+
+        // Update popover's content and position upon changes
+        // on the link's label or href.
+        this._observer = new MutationObserver(records => {
+            if (!popoverShown) {
+                return;
+            }
+            if (records.some(record => record.type === 'attributes')) {
+                this._loadAsyncLinkPreview();
+            }
+            this.$target.popover('update');
+        });
+        this._observer.observe(this.target, {
+            subtree: true,
+            characterData: true,
+            attributes: true,
+            attributeFilter: ['href'],
+        });
 
         return this._super(...arguments);
     },
@@ -156,6 +195,7 @@ const LinkPopoverWidget = Widget.extend({
         $(document).off('.link_popover');
         $(this.options.wysiwyg.odooEditor.document).off('.link_popover');
         this.$target.popover('dispose');
+        this._observer.disconnect();
         return this._super(...arguments);
     },
 
@@ -292,14 +332,7 @@ LinkPopoverWidget.createFor = async function (parent, targetEl, options) {
         return null;
     }
     const popoverWidget = new this(parent, targetEl, options);
-    const wysiwyg = options.wysiwyg;
-    if (wysiwyg) {
-        wysiwyg.odooEditor.observerUnactive('LinkPopoverWidget');
-    }
-    await popoverWidget.appendTo(targetEl)
-    if (wysiwyg) {
-        wysiwyg.odooEditor.observerActive('LinkPopoverWidget');
-    }
+    await popoverWidget.appendTo(targetEl);
     return popoverWidget;
 };
 

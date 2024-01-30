@@ -1,8 +1,8 @@
-from __future__ import print_function
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
-import sys
 import os
-from os.path import join as joinpath, isdir
+import sys
+from pathlib import Path
 
 import odoo
 from odoo.modules import get_modules, get_module_path, initialize_sys_path
@@ -14,17 +14,27 @@ class Command:
         cls.name = cls.name or cls.__name__.lower()
         commands[cls.name] = cls
 
+
+ODOO_HELP = """\
+Odoo CLI, use '{odoo_bin} --help' for regular server options.
+
+Available commands:
+    {command_list}
+
+Use '{odoo_bin} <command> --help' for individual command help."""
+
 class Help(Command):
-    """Display the list of available commands"""
+    """ Display the list of available commands """
     def run(self, args):
-        print("Available commands:\n")
-        names = list(commands)
-        padding = max([len(k) for k in names]) + 2
-        for k in sorted(names):
-            name = k.ljust(padding, ' ')
-            doc = (commands[k].__doc__ or '').strip()
-            print("    %s%s" % (name, doc))
-        print("\nUse '%s <command> --help' for individual command help." % sys.argv[0].split(os.path.sep)[-1])
+        padding = max([len(cmd) for cmd in commands]) + 2
+        command_list = "\n    ".join([
+            "    {}{}".format(name.ljust(padding), (command.__doc__ or "").strip())
+            for name, command in sorted(commands.items())
+        ])
+        print(ODOO_HELP.format(  # pylint: disable=bad-builtin
+            odoo_bin=Path(sys.argv[0]).name,
+            command_list=command_list
+        ))
 
 def main():
     args = sys.argv[1:]
@@ -45,7 +55,7 @@ def main():
         logging.disable(logging.CRITICAL)
         initialize_sys_path()
         for module in get_modules():
-            if isdir(joinpath(get_module_path(module), 'cli')):
+            if (Path(get_module_path(module)) / 'cli').is_dir():
                 __import__('odoo.addons.' + module)
         logging.disable(logging.NOTSET)
         command = args[0]

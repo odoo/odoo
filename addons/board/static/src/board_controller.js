@@ -10,33 +10,37 @@ import { useSortable } from "@web/core/utils/sortable";
 import { standardViewProps } from "@web/views/standard_view_props";
 import { BoardAction } from "./board_action";
 
-const { Component, useState, useRef } = owl;
+const { blockDom, Component, useState, useRef } = owl;
 
 export class BoardController extends Component {
     setup() {
         this.board = useState(this.props.board);
         this.rpc = useService("rpc");
         this.dialogService = useService("dialog");
-        const mainRef = useRef("main");
-        useSortable({
-            ref: mainRef,
-            elements: ".o-dashboard-action",
-            handle: ".o-dashboard-action-header",
-            cursor: "move",
-            groups: ".o-dashboard-column",
-            connectGroups: true,
-            onDrop: ({ element, previous, parent }) => {
-                const fromColIdx = parseInt(element.parentElement.dataset.idx, 10);
-                const fromActionIdx = parseInt(element.dataset.idx, 10);
-                const toColIdx = parseInt(parent.dataset.idx, 10);
-                const toActionIdx = previous ? parseInt(previous.dataset.idx, 10) + 1 : 0;
-                if (fromColIdx !== toColIdx) {
-                    // to reduce visual flickering
-                    element.classList.add("d-none");
-                }
-                this.moveAction(fromColIdx, fromActionIdx, toColIdx, toActionIdx);
-            },
-        });
+        if (this.env.isSmall) {
+            this.selectLayout("1", false);
+        } else {
+            const mainRef = useRef("main");
+            useSortable({
+                ref: mainRef,
+                elements: ".o-dashboard-action",
+                handle: ".o-dashboard-action-header",
+                cursor: "move",
+                groups: ".o-dashboard-column",
+                connectGroups: true,
+                onDrop: ({ element, previous, parent }) => {
+                    const fromColIdx = parseInt(element.parentElement.dataset.idx, 10);
+                    const fromActionIdx = parseInt(element.dataset.idx, 10);
+                    const toColIdx = parseInt(parent.dataset.idx, 10);
+                    const toActionIdx = previous ? parseInt(previous.dataset.idx, 10) + 1 : 0;
+                    if (fromColIdx !== toColIdx) {
+                        // to reduce visual flickering
+                        element.classList.add("d-none");
+                    }
+                    this.moveAction(fromColIdx, fromActionIdx, toColIdx, toActionIdx);
+                },
+            });
+        }
     }
 
     moveAction(fromColIdx, fromActionIdx, toColIdx, toActionIdx) {
@@ -62,7 +66,7 @@ export class BoardController extends Component {
         this.saveBoard();
     }
 
-    selectLayout(layout) {
+    selectLayout(layout, save = true) {
         const currentColNbr = this.board.colNumber;
         const nextColNbr = layout.split("-").length;
         if (nextColNbr < currentColNbr) {
@@ -76,7 +80,9 @@ export class BoardController extends Component {
         }
         this.board.layout = layout;
         this.board.colNumber = nextColNbr;
-        this.saveBoard();
+        if (save) {
+            this.saveBoard();
+        }
         if (document.querySelector("canvas")) {
             // horrible hack to force charts to be recreated so they pick up the
             // proper size. also, no idea why raf is needed :(
@@ -96,15 +102,24 @@ export class BoardController extends Component {
         });
     }
 
-    toggleAction(action) {
+    toggleAction(action, save = true) {
         action.isFolded = !action.isFolded;
-        this.saveBoard();
+        if (save) {
+            this.saveBoard();
+        }
     }
 
     saveBoard() {
+        const templateFn = renderToString.app.getTemplate("board.arch");
+        const bdom = templateFn(this.board, {});
+        const root = document.createElement("rendertostring");
+        blockDom.mount(bdom, root);
+        const result = xmlSerializer.serializeToString(root);
+        const arch = result.slice(result.indexOf("<", 1), result.indexOf("</rendertostring>"));
+
         this.rpc("/web/view/edit_custom", {
             custom_id: this.board.customViewId,
-            arch: renderToString("board.arch", this.board),
+            arch,
         });
         this.env.bus.trigger("CLEAR-CACHES");
     }
@@ -116,3 +131,5 @@ BoardController.props = {
     ...standardViewProps,
     board: Object,
 };
+
+const xmlSerializer = new XMLSerializer();

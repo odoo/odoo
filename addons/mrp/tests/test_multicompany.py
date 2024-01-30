@@ -10,6 +10,7 @@ class TestMrpMulticompany(common.TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.env.ref('base.group_user').write({'implied_ids': [(4, cls.env.ref('stock.group_production_lot').id)]})
 
         group_user = cls.env.ref('base.group_user')
         group_mrp_manager = cls.env.ref('mrp.group_mrp_manager')

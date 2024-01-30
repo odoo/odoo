@@ -3,14 +3,14 @@
 # 	* pos_stripe
 # 
 # Translators:
-# Martin Trigaux, 2022
+# Martin Trigaux, 2023
 # Larissa Manderfeld, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-02 10:33+0000\n"
+"POT-Creation-Date: 2023-05-23 08:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
 "Last-Translator: Larissa Manderfeld, 2023\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
@@ -24,8 +24,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/pos_stripe/models/pos_payment_method.py:0
 #, python-format
-msgid "Complete the Stripe onboarding."
-msgstr "Die Stripe-Einführungen abschließen"
+msgid "Complete the Stripe onboarding for company %s."
+msgstr "Die Stripe-Einführung für das Unternehmen %s abschließen."
 
 #. module: pos_stripe
 #. odoo-python
@@ -41,7 +41,7 @@ msgstr "Sie haben keinen Zugriff auf die Abfrage des Tokens von Stripe"
 msgid ""
 "Don't forget to complete Stripe connect before using this payment method."
 msgstr ""
-"Vergessen Sie nicht, die Stripe Connect abzuschließen, bevor Sie diese "
+"Vergessen Sie nicht, Stripe Connect abzuschließen, bevor Sie diese "
 "Zahlungsmethode verwenden."
 
 #. module: pos_stripe
@@ -49,7 +49,16 @@ msgstr ""
 #: code:addons/pos_stripe/static/src/js/payment_stripe.js:0
 #, python-format
 msgid "Failed to discover: %s"
+msgstr "Wurde nicht erkannt: %s"
+
+#. module: pos_stripe
+#. odoo-javascript
+#: code:addons/pos_stripe/static/src/js/payment_stripe.js:0
+#: code:addons/pos_stripe/static/src/js/payment_stripe.js:0
+#, python-format
+msgid "Failed to load resource: net::ERR_INTERNET_DISCONNECTED."
 msgstr ""
+"Ressource konnte nicht geladen werden: net::ERR_INTERNET_DISCONNECTED."
 
 #. module: pos_stripe
 #. odoo-javascript
@@ -63,17 +72,17 @@ msgstr "Keine verfügbaren Stripe-Lesegeräte."
 #: code:addons/pos_stripe/static/src/js/payment_stripe.js:0
 #, python-format
 msgid "Payment canceled because not reader connected"
-msgstr "Zahlung storniert, weil Lesegerät getrennt"
+msgstr "Zahlung abgebrochen, weil kein Lesegerät verbunden"
 
 #. module: pos_stripe
 #: model:ir.model,name:pos_stripe.model_pos_payment_method
 msgid "Point of Sale Payment Methods"
-msgstr "Point of Sale Zahlungsmethoden"
+msgstr "Zahlungsmethoden des Kassensystems"
 
 #. module: pos_stripe
 #: model:ir.model,name:pos_stripe.model_pos_session
 msgid "Point of Sale Session"
-msgstr "Point of Sale Sitzung"
+msgstr "Kassensitzung"
 
 #. module: pos_stripe
 #. odoo-javascript
@@ -105,8 +114,8 @@ msgstr "Stripe-Seriennummer"
 #. odoo-python
 #: code:addons/pos_stripe/models/pos_payment_method.py:0
 #, python-format
-msgid "Stripe payment provider is missing"
-msgstr "Stripe-Zahlungsanbieter fehlt"
+msgid "Stripe payment provider for company %s is missing"
+msgstr "Stripe-Zahlungsanbieter für Unternehmen %s fehlt"
 
 #. module: pos_stripe
 #. odoo-javascript
@@ -120,7 +129,7 @@ msgstr "Stripe-Lesegerät %s nicht in Ihrem Konto aufgelistet"
 #: code:addons/pos_stripe/models/pos_payment_method.py:0
 #, python-format
 msgid "Terminal %s is already used on payment method %s."
-msgstr "Terminal %s wird schon für Zahlungsmethode %sverwendet."
+msgstr "Terminal %s wird schon für Zahlungsmethode %s verwendet."
 
 #. module: pos_stripe
 #. odoo-python
@@ -129,8 +138,8 @@ msgstr "Terminal %s wird schon für Zahlungsmethode %sverwendet."
 #, python-format
 msgid "There are some issues between us and Stripe, try again later."
 msgstr ""
-"Es gibt einige Probleme zwischen uns und Stripe, versuchen Sie es später "
-"noch einmal."
+"Es gibt Probleme zwischen uns und Stripe, versuchen Sie es später noch "
+"einmal."
 
 #. module: pos_stripe
 #: model:ir.model.fields,help:pos_stripe.field_pos_payment_method__stripe_serial_number

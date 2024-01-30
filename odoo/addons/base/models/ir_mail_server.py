@@ -65,7 +65,7 @@ smtplib.stderr = WriteToLogger()
 def is_ascii(s):
     return all(ord(cp) < 128 for cp in s)
 
-address_pattern = re.compile(r'([^ ,<@]+@[^> ,]+)')
+address_pattern = re.compile(r'([^" ,<@]+@[^>" ,]+)')
 
 def extract_rfc2822_addresses(text):
     """Returns a list of valid RFC2822 addresses
@@ -89,6 +89,7 @@ class IrMailServer(models.Model):
     _name = "ir.mail_server"
     _description = 'Mail Server'
     _order = 'sequence'
+    _allow_sudo_commands = False
 
     NO_VALID_RECIPIENT = ("At least one valid recipient address should be "
                           "specified for outgoing emails (To/Cc/Bcc)")
@@ -721,6 +722,8 @@ class IrMailServer(models.Model):
 
         if mail_servers is None:
             mail_servers = self.sudo().search([], order='sequence')
+        # 0. Archived mail server should never be used
+        mail_servers = mail_servers.filtered('active')
 
         # 1. Try to find a mail server for the right mail from
         mail_server = mail_servers.filtered(lambda m: email_normalize(m.from_filter) == email_from_normalized)
@@ -743,14 +746,18 @@ class IrMailServer(models.Model):
 
         # 3. Take the first mail server without "from_filter" because
         # nothing else has been found... Will spoof the FROM because
-        # we have no other choices
+        # we have no other choices (will use the notification email if available
+        # otherwise we will use the user email)
         mail_server = mail_servers.filtered(lambda m: not m.from_filter)
         if mail_server:
-            return mail_server[0], email_from
+            return mail_server[0], notifications_email or email_from
 
         # 4. Return the first mail server even if it was configured for another domain
         if mail_servers:
-            return mail_servers[0], email_from
+            _logger.warning(
+                "No mail server matches the from_filter, using %s as fallback",
+                notifications_email or email_from)
+            return mail_servers[0], notifications_email or email_from
 
         # 5: SMTP config in odoo-bin arguments
         from_filter = self.env['ir.config_parameter'].sudo().get_param(
@@ -762,7 +769,11 @@ class IrMailServer(models.Model):
         if notifications_email and self._match_from_filter(notifications_email, from_filter):
             return None, notifications_email
 
-        return None, email_from
+        _logger.warning(
+            "The from filter of the CLI configuration does not match the notification email "
+            "or the user email, using %s as fallback",
+            notifications_email or email_from)
+        return None, notifications_email or email_from
 
     @api.model
     def _match_from_filter(self, email_from, from_filter):

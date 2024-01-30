@@ -22,14 +22,22 @@
 }
 
 html[lang] > body.editor_enable [data-oe-translation-state] {
-    background: rgba($o-we-content-to-translate-color, 0.5) !important;
-
-    &[data-oe-translation-state="translated"] {
-        background: rgba($o-we-translated-content-color, 0.5) !important;
+    &, .o_translation_select_option, &[data-oe-field="mega_menu_content"] * {
+        background: rgba($o-we-content-to-translate-color, 0.5) !important;
     }
 
-    &.o_dirty {
+    &[data-oe-translation-state="translated"] {
+        &, .o_translation_select_option, &[data-oe-field="mega_menu_content"] * {
+            background: rgba($o-we-translated-content-color, 0.5) !important;
+        }
+    }
+
+    &.o_dirty, &.oe_translated, .oe_translated {
         background: rgba($o-we-translated-content-color, 0.25) !important;
+
+        &[data-oe-field="mega_menu_content"] * {
+            background: rgba($o-we-translated-content-color, 0.25) !important;
+        }
     }
 }
 
@@ -44,6 +52,10 @@ html[data-edit_translations="1"] {
     opacity: 70%;
     position: relative;
 
+    &.d-lg-flex, &.d-md-flex, &.o_half_screen_height, &.o_full_screen_height {
+        // e.g. Useful if "Height" option (50% or 100%) is enabled.
+        display: flex !important;
+    }
     &::before {
         position: absolute;
         // Content is 0px wide => use available width.

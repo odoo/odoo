@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import collections
 from datetime import timedelta
 from itertools import groupby
 import operator as py_operator
@@ -32,11 +33,11 @@ class ProductTemplate(models.Model):
     produce_delay = fields.Float(
         'Manufacturing Lead Time', default=0.0,
         help="Average lead time in days to manufacture this product. In the case of multi-level BOM, the manufacturing lead times of the components will be added. In case the product is subcontracted, this can be used to determine the date at which components should be sent to the subcontractor.")
-    is_kits = fields.Boolean(compute='_compute_is_kits', compute_sudo=False)
+    is_kits = fields.Boolean(compute='_compute_is_kits', compute_sudo=True)
     days_to_prepare_mo = fields.Float(
         string="Days to prepare Manufacturing Order", default=0.0,
-        help="Create and confirm Manufacturing Orders these many days in advance, to have enough time to replenish components or manufacture semi-finished products.\n"
-             "Note that this does not affect the MO scheduled date, which still respects the just-in-time mechanism.")
+        help="Create and confirm Manufacturing Orders this many days in advance, to have enough time to replenish components or manufacture semi-finished products.\n"
+             "Note that security lead times will also be considered when appropriate.")
 
     def _compute_bom_count(self):
         for product in self:
@@ -93,7 +94,7 @@ class ProductTemplate(models.Model):
             return templates.mapped('product_variant_id').action_compute_bom_days()
 
     def action_archive(self):
-        filtered_products = self.env['mrp.bom.line'].search([('product_id', 'in', self.product_variant_ids.ids)]).product_id.mapped('display_name')
+        filtered_products = self.env['mrp.bom.line'].search([('product_id', 'in', self.product_variant_ids.ids), ('bom_id.active', '=', True)]).product_id.mapped('display_name')
         res = super().action_archive()
         if filtered_products:
             return {
@@ -120,7 +121,7 @@ class ProductProduct(models.Model):
         compute='_compute_used_in_bom_count', compute_sudo=False)
     mrp_product_qty = fields.Float('Manufactured', digits='Product Unit of Measure',
         compute='_compute_mrp_product_qty', compute_sudo=False)
-    is_kits = fields.Boolean(compute="_compute_is_kits", compute_sudo=False)
+    is_kits = fields.Boolean(compute="_compute_is_kits", compute_sudo=True)
 
     def _compute_bom_count(self):
         for product in self:
@@ -222,20 +223,27 @@ class ProductProduct(models.Model):
         # compute kit quantities
         for product in bom_kits:
             bom_sub_lines = bom_sub_lines_per_kit[product]
+            # group lines by component
+            bom_sub_lines_grouped = collections.defaultdict(list)
+            for info in bom_sub_lines:
+                bom_sub_lines_grouped[info[0].product_id].append(info)
             ratios_virtual_available = []
             ratios_qty_available = []
             ratios_incoming_qty = []
             ratios_outgoing_qty = []
             ratios_free_qty = []
-            for bom_line, bom_line_data in bom_sub_lines:
-                component = bom_line.product_id.with_context(mrp_compute_quantities=qties).with_prefetch(prefetch_component_ids)
-                if component.type != 'product' or float_is_zero(bom_line_data['qty'], precision_rounding=bom_line.product_uom_id.rounding):
-                    # As BoMs allow components with 0 qty, a.k.a. optionnal components, we simply skip those
-                    # to avoid a division by zero. The same logic is applied to non-storable products as those
-                    # products have 0 qty available.
-                    continue
-                uom_qty_per_kit = bom_line_data['qty'] / bom_line_data['original_qty']
-                qty_per_kit = bom_line.product_uom_id._compute_quantity(uom_qty_per_kit, bom_line.product_id.uom_id, round=False, raise_if_failure=False)
+
+            for component, bom_sub_lines in bom_sub_lines_grouped.items():
+                component = component.with_context(mrp_compute_quantities=qties).with_prefetch(prefetch_component_ids)
+                qty_per_kit = 0
+                for bom_line, bom_line_data in bom_sub_lines:
+                    if component.type != 'product' or float_is_zero(bom_line_data['qty'], precision_rounding=bom_line.product_uom_id.rounding):
+                        # As BoMs allow components with 0 qty, a.k.a. optionnal components, we simply skip those
+                        # to avoid a division by zero. The same logic is applied to non-storable products as those
+                        # products have 0 qty available.
+                        continue
+                    uom_qty_per_kit = bom_line_data['qty'] / bom_line_data['original_qty']
+                    qty_per_kit += bom_line.product_uom_id._compute_quantity(uom_qty_per_kit, bom_line.product_id.uom_id, round=False, raise_if_failure=False)
                 if not qty_per_kit:
                     continue
                 rounding = component.uom_id.rounding
@@ -280,7 +288,7 @@ class ProductProduct(models.Model):
         # bom specific to this variant or global to template or that contains the product as a byproduct
         action['context'] = {
             'default_product_tmpl_id': template_ids[0],
-            'default_product_id': self.ids[0],
+            'default_product_id': self.env.user.has_group('product.group_product_variant') and self.ids[0] or False,
         }
         action['domain'] = ['|', '|', ('byproduct_ids.product_id', 'in', self.ids), ('product_id', 'in', self.ids), '&', ('product_id', '=', False), ('product_tmpl_id', 'in', template_ids)]
         return action
@@ -352,7 +360,7 @@ class ProductProduct(models.Model):
         return list(set(product_ids))
 
     def action_archive(self):
-        filtered_products = self.env['mrp.bom.line'].search([('product_id', 'in', self.ids)]).product_id.mapped('display_name')
+        filtered_products = self.env['mrp.bom.line'].search([('product_id', 'in', self.ids), ('bom_id.active', '=', True)]).product_id.mapped('display_name')
         res = super().action_archive()
         if filtered_products:
             return {

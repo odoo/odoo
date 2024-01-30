@@ -79,7 +79,8 @@
             <field name="write_date" optional="hide"/>
             <field name="track" optional="hide"/>
 
-            <!-- website_id should be shown only in multi website environment
+            <!-- TODO: Remove in master, `PageRendererMixin` not needed anymore
+            website_id should be shown only in multi website environment
             when the group is enabled, but we need the field to be there all the
             time for `PageRendererMixin`'s `recordFilter' to be able to filter
             correctly. -->
@@ -100,6 +101,7 @@
             <field name="name"/>
             <field name="is_homepage"/>
             <field name="website_url"/>
+            <field name="website_id" invisible="1"/>
             <templates>
                 <t t-name="kanban-box">
                     <div class="d-flex flex-column">

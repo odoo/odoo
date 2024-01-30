@@ -334,7 +334,7 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.res_config_settings_view_form
 msgid "Ask questions to attendees when registering online"
-msgstr "Posez des questions aux participants lorsqu'il s'enregistre en ligne"
+msgstr "Poser des questions aux participants lorsqu'il s'enregistre en ligne"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_speaker_bio
@@ -470,7 +470,7 @@ msgstr "Description"
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_website_event_menu__display_name
 msgid "Display Name"
-msgstr "Afficher le nom"
+msgstr "Nom d'affichage"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_type__website_menu
@@ -489,7 +489,7 @@ msgstr "Afficher l'onglet communauté sur le site web"
 #, python-format
 msgid "Don't forget to click <b>save</b> when you're done."
 msgstr ""
-"N'oubliez pas de cliquer sur <b>sauvegarder</b> lorsque vous avez terminé."
+"N'oubliez pas de cliquer sur <b>enregistrer</b> lorsque vous avez terminé."
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
@@ -601,6 +601,7 @@ msgstr "Événement non publié"
 #: model:ir.ui.menu,name:website_event.menu_event_pages
 #: model:website.menu,name:website_event.menu_events
 #: model_terms:ir.ui.view,arch_db:website_event.event_searchbar_input_snippet_options
+#: model_terms:ir.ui.view,arch_db:website_event.snippets
 #, python-format
 msgid "Events"
 msgstr "Événements"
@@ -1098,6 +1099,13 @@ msgstr "L'URL complète pour accéder au document à travers le site web."
 #. odoo-python
 #: code:addons/website_event/models/event_event.py:0
 #, python-format
+msgid "The website must be from the same company as the event."
+msgstr "Le site web doit appartenir à la même société que l'événement."
+
+#. module: website_event
+#. odoo-python
+#: code:addons/website_event/models/event_event.py:0
+#, python-format
 msgid "This month"
 msgstr "Ce mois"
 
@@ -1298,8 +1306,8 @@ msgid ""
 "With the Edit button, you can <b>customize</b> the web page visitors will "
 "see when registering."
 msgstr ""
-"Avec le bouton Éditer, vous pouvez <b>personnaliser</b>la page web que les "
-"visiteurs verront lors de leur inscription."
+"Avec le bouton Modifier, vous pouvez <b>personnaliser</b>la page web que les"
+" visiteurs verront lors de leur inscription."
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template

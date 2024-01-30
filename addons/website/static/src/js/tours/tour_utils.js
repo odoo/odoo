@@ -20,7 +20,7 @@ function assertCssVariable(variableName, variableValue, trigger = 'iframe body')
         auto: true,
         run: function () {
             const styleValue = getComputedStyle(this.$anchor[0]).getPropertyValue(variableName);
-            if ((styleValue && styleValue.trim()) !== variableValue.trim()) {
+            if ((styleValue && styleValue.trim().replace(/["']/g, '')) !== variableValue.trim().replace(/["']/g, '')) {
                 throw new Error(`Failed precondition: ${variableName}=${styleValue} (should be ${variableValue})`);
             }
         },
@@ -141,7 +141,8 @@ function changePaddingSize(direction) {
 
 /**
  * Click on the top right edit button
- * @param {*} position Where the purple arrow will show up
+ *
+ * @deprecated use `clickOnEditAndWaitEditMode` instead to avoid race condition
  */
 function clickOnEdit(position = "bottom") {
     return {
@@ -164,6 +165,23 @@ function clickOnElement(elementName, selector) {
         trigger: selector,
         run: 'click'
     };
+}
+
+/**
+ * Click on the top right edit button and wait for the edit mode
+ *
+ * @param {string} position Where the purple arrow will show up
+ */
+function clickOnEditAndWaitEditMode(position = "bottom") {
+    return [{
+        content: _t("<b>Click Edit</b> to start designing your homepage."),
+        trigger: ".o_menu_systray .o_edit_website_container a",
+        position: position,
+    }, {
+        content: "Check that we are in edit mode",
+        trigger: ".o_website_preview.editor_enable.editor_has_snippets",
+        run: () => null, // it's a check
+    }];
 }
 
 /**
@@ -285,7 +303,10 @@ function prepend_trigger(steps, prepend_text='') {
 }
 
 function getClientActionUrl(path, edition) {
-    let url = `/web#action=website.website_preview&path=${encodeURIComponent(path)}`;
+    let url = `/web#action=website.website_preview`;
+    if (path) {
+        url += `&path=${encodeURIComponent(path)}`;
+    }
     if (edition) {
         url += '&enable_editor=1';
     }
@@ -391,6 +412,31 @@ function selectElementInWeSelectWidget(widgetName, elementName, searchNeeded = f
     return steps;
 }
 
+/**
+ * Switches to a different website by clicking on the website switcher.
+ *
+ * @param {number} websiteId - The ID of the website to switch to.
+ * @param {string} websiteName - The name of the website to switch to.
+ * @returns {Array} - The steps required to perform the website switch.
+ */
+function switchWebsite(websiteId, websiteName) {
+    return [{
+        content: `Click on the website switch to switch to website '${websiteName}'`,
+        trigger: '.o_website_switcher_container button',
+    }, {
+        content: `Switch to website '${websiteName}'`,
+        extra_trigger: `iframe html:not([data-website-id="${websiteId}"])`,
+        trigger: `.o_website_switcher_container .dropdown-item:contains("${websiteName}")`,
+    }, {
+        content: "Wait for the iframe to be loaded",
+        // The page reload generates assets for the new website, it may take
+        // some time
+        timeout: 20000,
+        trigger: `iframe html[data-website-id="${websiteId}"]`,
+        isCheck: true,
+    }];
+}
+
 return {
     addMedia,
     assertCssVariable,
@@ -403,22 +449,24 @@ return {
     changeOption,
     changePaddingSize,
     clickOnEdit,
+    clickOnEditAndWaitEditMode,
     clickOnElement,
+    clickOnExtraMenuItem,
     clickOnSave,
     clickOnSnippet,
     clickOnText,
     dragNDrop,
+    getClientActionUrl,
     goBackToBlocks,
     goToTheme,
+    registerBackendAndFrontendTour,
+    registerThemeHomepageTour,
+    registerWebsitePreviewTour,
     selectColorPalette,
+    selectElementInWeSelectWidget,
     selectHeader,
     selectNested,
     selectSnippetColumn,
-    getClientActionUrl,
-    registerThemeHomepageTour,
-    clickOnExtraMenuItem,
-    registerWebsitePreviewTour,
-    registerBackendAndFrontendTour,
-    selectElementInWeSelectWidget,
+    switchWebsite,
 };
 });

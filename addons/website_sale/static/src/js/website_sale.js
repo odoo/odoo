@@ -9,7 +9,7 @@ var timeout;
 
 publicWidget.registry.websiteSaleCartLink = publicWidget.Widget.extend({
     // TODO in master: remove the second selector.
-    selector: '#top a[href$="/shop/cart"], #top_menu a[href$="/shop/cart"]',
+    selector: '#top a[href$="/shop/cart"]:not(.js_change_lang), #top_menu a[href$="/shop/cart"]:not(.js_change_lang)',
     events: {
         'mouseenter': '_onMouseEnter',
         'mouseleave': '_onMouseLeave',
@@ -141,7 +141,7 @@ publicWidget.registry.websiteSaleCartLink = publicWidget.Widget.extend({
         if ('website_sale_cart_quantity' in sessionStorage) {
             this.cartQty = sessionStorage.getItem('website_sale_cart_quantity');
         }
-        if (this.el.querySelector('.my_cart_quantity').innerText != this.cartQty) {
+        if (this.el.querySelector('.my_cart_quantity') && this.el.querySelector('.my_cart_quantity').innerText != this.cartQty) {
             return this._rpc({route: "/shop/cart/quantity"}).then((cartQty) => {
                 this.cartQty = cartQty;
                 sessionStorage.setItem('website_sale_cart_quantity', this.cartQty);
@@ -152,7 +152,7 @@ publicWidget.registry.websiteSaleCartLink = publicWidget.Widget.extend({
      * @private
      */
     _updateCartQuantityText() {
-        if (this.cartQty !== undefined) {
+        if (this.cartQty !== undefined && this.el.querySelector('.my_cart_quantity')) {
             this.el.querySelector('.my_cart_quantity').innerText = this.cartQty;
         }
     }
@@ -203,7 +203,6 @@ const cartHandlerMixin = wSaleUtils.cartHandlerMixin;
 require("web.zoomodoo");
 const {extraMenuUpdateCallbacks} = require('website.content.menu');
 const dom = require('web.dom');
-const { cartesian } = require('@web/core/utils/arrays');
 const { ComponentWrapper } = require('web.OwlCompatibility');
 const { ProductImageViewerWrapper } = require("@website_sale/js/components/website_sale_image_viewer");
 
@@ -230,6 +229,12 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
         'change .js_main_product [data-attribute_exclusions]': 'onChangeVariant',
         'change oe_advanced_configurator_modal [data-attribute_exclusions]': 'onChangeVariant',
         'click .o_product_page_reviews_link': '_onClickReviewsLink',
+        'submit': '_onClickConfirmOrder',
+        'mousedown .o_wsale_filmstip_wrapper': '_onMouseDown',
+        'mouseleave .o_wsale_filmstip_wrapper': '_onMouseLeave',
+        'mouseup .o_wsale_filmstip_wrapper': '_onMouseUp',
+        'mousemove .o_wsale_filmstip_wrapper': '_onMouseMove',
+        'click .o_wsale_filmstip_wrapper' : '_onClickHandler',
     }),
 
     /**
@@ -242,6 +247,10 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
         this._changeCountry = _.debounce(this._changeCountry.bind(this), 500);
 
         this.isWebsite = true;
+        this.filmStripStartX = 0;
+        this.filmStripIsDown = false;
+        this.filmStripScrollLeft = 0;
+        this.filmStripMoved = false;
 
         delete this.events['change .main_product:not(.in_cart) input.js_quantity'];
         delete this.events['change [data-attribute_exclusions]'];
@@ -302,6 +311,41 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
     // Private
     //--------------------------------------------------------------------------
 
+    _onMouseDown: function (ev) {
+        this.filmStripIsDown = true;
+        this.filmStripStartX = ev.pageX - ev.currentTarget.offsetLeft;
+        this.filmStripScrollLeft = ev.currentTarget.scrollLeft;
+        this.formerTarget = ev.target;
+        this.filmStripMoved = false;
+    },
+    _onMouseLeave: function (ev) {
+        if (!this.filmStripIsDown) {
+            return;
+        }
+        ev.currentTarget.classList.remove('activeDrag');
+        this.filmStripIsDown = false
+    },
+    _onMouseUp: function (ev) {
+        this.filmStripIsDown = false;
+        ev.currentTarget.classList.remove('activeDrag');
+    },
+    _onMouseMove: function (ev) {
+        if (!this.filmStripIsDown) {
+            return;
+        }
+        ev.preventDefault();
+        ev.currentTarget.classList.add('activeDrag');
+        this.filmStripMoved = true;
+        const x = ev.pageX - ev.currentTarget.offsetLeft;
+        const walk = (x - this.filmStripStartX) * 2;
+        ev.currentTarget.scrollLeft = this.filmStripScrollLeft - walk;
+    },
+    _onClickHandler: function(ev) {
+        if(this.filmStripMoved) {
+            ev.stopPropagation();
+            ev.preventDefault();
+        }
+    },
     _applyHash: function () {
         var hash = window.location.hash.substring(1);
         if (hash) {
@@ -847,58 +891,20 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
     /**
      * @private
      */
-    _isValidCombination(combination, attributeExclusions) {
-        if (attributeExclusions.exclusions) {
-            for (const attribute of combination) {
-                if (!attributeExclusions.exclusions.hasOwnProperty(attribute)) {
-                    continue;
-                }
-                for (const excludedAttribute of attributeExclusions.exclusions[attribute]) {
-                    if (combination.includes(excludedAttribute)) {
-                        return false;
-                    }
-                }
-            }
-        }
-        if (attributeExclusions.archived_combination) {
-            for (const archivedCombination of attributeExclusions.archived_combination) {
-                if (archivedCombination.length !== combination.length) {
-                    continue;
-                }
-                if (archivedCombination.filter((attr) => combination.includes(attr)).length === combination.length) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    },
-    /**
-     * @private
-     */
     _applyHashFromSearch() {
         const params = $.deparam(window.location.search.slice(1));
         if (params.attrib) {
-            const attributeValuesPerAttribute = {};
-            for (const attrib of params.attrib) {
-                const [ptalId, ptavId] = attrib.split('-');
-                const attribValueSelector = `.js_variant_change[name="ptal-${ptalId}"][value="${ptavId}"]`;
+            const dataValueIds = [];
+            for (const attrib of [].concat(params.attrib)) {
+                const attribSplit = attrib.split('-');
+                const attribValueSelector = `.js_variant_change[name="ptal-${attribSplit[0]}"][value="${attribSplit[1]}"]`;
                 const attribValue = this.el.querySelector(attribValueSelector);
                 if (attribValue !== null) {
-                    if (!attributeValuesPerAttribute[ptalId]) {
-                        attributeValuesPerAttribute[ptalId] = [];
-                    }
-                    attributeValuesPerAttribute[ptalId].push(ptavId);
+                    dataValueIds.push(attribValue.dataset.value_id);
                 }
             }
-            const attributeSelection = this.el.querySelector('.js_add_cart_variants');
-            const attributeExclusions = attributeSelection && JSON.parse(attributeSelection.dataset.attribute_exclusions);
-            if (attributeExclusions && Object.values(attributeValuesPerAttribute).length > 1) {
-                const allCombinations = cartesian(...Object.values(attributeValuesPerAttribute));
-                const selectedCombination = allCombinations.find(c => this._isValidCombination(c, attributeExclusions));
-
-                if (selectedCombination && selectedCombination.length) {
-                    window.location.replace('#attr=' + selectedCombination.join(','));
-                }
+            if (dataValueIds.length) {
+                window.location.hash = `attr=${dataValueIds.join(',')}`;
             }
         }
         this._applyHash();
@@ -908,6 +914,16 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
      */
     _onClickReviewsLink: function () {
         $('#o_product_page_reviews_content').collapse('show');
+    },
+    /**
+     * Prevent multiclicks on confirm button when the form is submitted
+     *
+     * @private
+     */
+    _onClickConfirmOrder: function () {
+        const submitFormButton = $('form[name="o_wsale_confirm_order"]').find('button[type="submit"]');
+        submitFormButton.attr('disabled', true);
+        setTimeout(() => submitFormButton.attr('disabled', false), 5000);
     },
 
     // -------------------------------------
@@ -1189,20 +1205,20 @@ publicWidget.registry.multirangePriceSelector = publicWidget.Widget.extend({
      */
     _onPriceRangeSelected(ev) {
         const range = ev.currentTarget;
-        const search = $.deparam(window.location.search.substring(1));
-        delete search.min_price;
-        delete search.max_price;
+        const searchParams = new URLSearchParams(window.location.search);
+        searchParams.delete("min_price");
+        searchParams.delete("max_price");
         if (parseFloat(range.min) !== range.valueLow) {
-            search['min_price'] = range.valueLow;
+            searchParams.set("min_price", range.valueLow);
         }
         if (parseFloat(range.max) !== range.valueHigh) {
-            search['max_price'] = range.valueHigh;
+            searchParams.set("max_price", range.valueHigh);
         }
         let product_list_div = this.el.querySelector('.o_wsale_products_grid_table_wrapper');
         if (product_list_div) {
             product_list_div.classList.add('opacity-50');
         }
-        window.location.search = $.param(search);
+        window.location.search = searchParams.toString();
     },
 });
 });

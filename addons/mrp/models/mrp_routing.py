@@ -75,7 +75,7 @@ class MrpRoutingWorkcenter(models.Model):
                 ('qty_produced', '>', 0),
                 ('state', '=', 'done')],
                 limit=operation.time_mode_batch,
-                order="date_finished desc")
+                order="date_finished desc, id desc")
             # To compute the time_cycle, we can take the total duration of previous operations
             # but for the quantity, we will take in consideration the qty_produced like if the capacity was 1.
             # So producing 50 in 00:10 with capacity 2, for the time_cycle, we assume it is 25 in 00:10

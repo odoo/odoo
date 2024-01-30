@@ -42,12 +42,10 @@ wTourUtils.registerWebsitePreviewTour('course_publisher', {
 }, {
     content: 'eLearning: seems cool, create it',
     trigger: 'button:contains("Save")',
-}, {
-    content: 'eLearning: launch course edition',
-    trigger: '.o_edit_website_container a',
-}, {
+},
+...wTourUtils.clickOnEditAndWaitEditMode(),
+{
     content: 'eLearning: double click image to edit it',
-    extra_trigger: 'iframe body.editor_enable',
     trigger: 'iframe img.o_wslides_course_pict',
     run: 'dblclick',
 }, {

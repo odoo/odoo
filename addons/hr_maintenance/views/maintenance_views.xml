@@ -26,7 +26,13 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='owner_user_id']" position="replace">
                 <field name="employee_id" string="Created By"
-                       options="{'no_create_edit': True, 'no_open': True}"/>
+                       widget="many2one_avatar_employee"
+                       options="{'no_create_edit': True, 'no_open': True, 'relation': 'hr.employee.public'}"
+                       groups="!hr.group_hr_user"/>
+                <field name="employee_id" string="Created By"
+                       widget="many2one_avatar_employee"
+                       options="{'no_create_edit': True, 'no_open': True, 'relation': 'hr.employee'}"
+                       groups="hr.group_hr_user"/>
             </xpath>
         </field>
     </record>

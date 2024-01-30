@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux, 2022
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2022
+# Fernanda Alvarez, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-20 09:01+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2022\n"
+"Last-Translator: Fernanda Alvarez, 2023\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,7 +33,7 @@ msgid ""
 "API key for GeoCoding (Places) required.\n"
 "Visit https://developers.google.com/maps/documentation/geocoding/get-api-key for more information."
 msgstr ""
-"Se requiere la clave API para GeoCoding (Lugares).\n"
+"Se requiere la clave API para GeoCoding (Places).\n"
 "Visite https://developers.google.com/maps/documentation/geocoding/get-api-key para más información."
 
 #. module: base_geolocalize
@@ -110,7 +111,7 @@ msgstr "Fecha de geolocalización"
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_config_settings__geoloc_provider_googlemap_key
 msgid "Google Map API Key"
-msgstr "Clave de la API de Google Map"
+msgstr "Clave de la API de Google Maps"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__id
@@ -120,7 +121,7 @@ msgstr "ID"
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.res_config_settings_view_form
 msgid "Key:"
-msgstr "Llave:"
+msgstr "Clave:"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider____last_update
@@ -157,12 +158,12 @@ msgstr "Nombre"
 #, python-format
 msgid "No match found for %(partner_names)s address(es)."
 msgstr ""
-"No se encontró coincidencia para la(s) dirección(es) de %(partner_names)s."
+"No se encontró coincidencia para las direcciones de %(partner_names)s."
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Partner Assignment"
-msgstr "Asignar un partner"
+msgstr "Asignación de contacto"
 
 #. module: base_geolocalize
 #: code:addons/base_geolocalize/models/base_geocoder.py:0
@@ -179,7 +180,7 @@ msgstr "Actualizar"
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Refresh Localization"
-msgstr "Recargar localización"
+msgstr "Actualizar ubicación"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__tech_name
@@ -199,7 +200,7 @@ msgid ""
 "Then, go to Developer Console, and enable the APIs:\n"
 "Geocoding, Maps Static, Maps Javascript.\n"
 msgstr ""
-"Fue imposible de geolocalizar. Error recibido:\n"
+"No fue posible geolocalizar, ocurrió el siguiente error:\n"
 "%s\n"
 "\n"
 "Google convirtió esta función en una función de paga.\n"
@@ -219,7 +220,7 @@ msgid ""
 " for more information."
 msgstr ""
 "Visite https://developers.google.com/maps/documentation/geocoding/get-api-"
-"key for more information."
+"key para obtener más información."
 
 #. module: base_geolocalize
 #: code:addons/base_geolocalize/models/res_partner.py:0

@@ -25,6 +25,13 @@ export class TimeOffCalendarController extends CalendarController {
         return this.model.employeeId;
     }
 
+    get filterPanelProps() {
+        return {
+            ...super.filterPanelProps,
+            employee_id: this.employeeId,
+        };
+    }
+
     newTimeOffRequest() {
         const context = {};
         if (this.employeeId) {
@@ -99,7 +106,7 @@ export class TimeOffCalendarController extends CalendarController {
                     resModel: this.model.resModel,
                     resId: record.id || false,
                     context,
-                    title: record.title,
+                    title: this.env._t("Time Off Request"),
                     viewId: this.model.formViewId,
                     onRecordSaved: onDialogClosed,
                     onRecordDeleted: (record) => this.deleteRecord(record),

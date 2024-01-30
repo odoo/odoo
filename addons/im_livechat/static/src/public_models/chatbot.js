@@ -43,6 +43,7 @@ registerModel({
                 return;
             }
             this.messaging.publicLivechatGlobal.chatWindow.widget.$('.o_composer_text_field').addClass('d-none');
+            this.messaging.publicLivechatGlobal.chatWindow.widget.$('.o_livechat_chatbot_main_restart').show();
             this.messaging.publicLivechatGlobal.chatWindow.widget.$('.o_livechat_chatbot_end').show();
             this.messaging.publicLivechatGlobal.chatWindow.widget.$('.o_livechat_chatbot_restart').one('click', this.messaging.publicLivechatGlobal.livechatButtonView.onChatbotRestartScript);
         },
@@ -179,7 +180,7 @@ registerModel({
             }
 
             if (!this.hasRestartButton) {
-                this.messaging.publicLivechatGlobal.chatWindow.widget.$('.o_livechat_chatbot_main_restart').addClass('d-none');
+                this.messaging.publicLivechatGlobal.chatWindow.widget.$('.o_livechat_chatbot_main_restart').hide();
             }
         },
         /**
@@ -238,9 +239,10 @@ registerModel({
                         }
                         this.messaging.publicLivechatGlobal.chatWindow.widget.$('.o_mail_thread_content').append(
                             $(qweb.render('im_livechat.legacy.chatbot.is_typing_message', {
-                                'chatbotImageSrc': `/im_livechat/operator/${
+                                'chatbotImageSrc': this.messaging.publicLivechatGlobal.serverUrl + `/im_livechat/operator/${
                                     this.messaging.publicLivechatGlobal.publicLivechat.operator.id
                                 }/avatar`,
+                                'chatbotIsTypingImageSrc': this.messaging.publicLivechatGlobal.serverUrl + '/im_livechat/static/src/img/chatbot_is_typing.gif',
                                 'chatbotName': this.name,
                                 'isWelcomeMessage': isWelcomeMessage,
                             }))
@@ -406,6 +408,12 @@ registerModel({
             compute() {
                 const { publicLivechat } = this.messaging.publicLivechatGlobal;
                 if (publicLivechat && !publicLivechat.operator) {
+                    return false;
+                }
+                if (
+                    !this.messaging.publicLivechatGlobal.publicLivechat ||
+                    !this.messaging.publicLivechatGlobal.publicLivechat.uuid
+                ) {
                     return false;
                 }
                 if (publicLivechat && !publicLivechat.data.chatbot_script_id) {

@@ -30,13 +30,13 @@ msgid ""
 "                        Connect your Gmail account"
 msgstr ""
 "<i class=\"fa fa-arrow-right\"/>\n"
-"                        Connectez-vous à votre compte Gmail"
+"                        Connecter votre compte Gmail"
 
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.fetchmail_server_view_form
 #: model_terms:ir.ui.view,arch_db:google_gmail.ir_mail_server_view_form
 msgid "<i class=\"fa fa-cog\" title=\"Edit Settings\"/>"
-msgstr "<i class=\"fa fa-cog\" title=\"Éditer les paramètres\"/>"
+msgstr "<i class=\"fa fa-cog\" title=\"Modifier les paramètres\"/>"
 
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.fetchmail_server_view_form
@@ -111,7 +111,7 @@ msgid ""
 "Connect your Gmail account with the OAuth Authentication process. \n"
 "You will be redirected to the Gmail login page where you will need to accept the permission."
 msgstr ""
-"Connectez-vous à votre compte Gmail grâce au processus d'authentification OAuth.\n"
+"Connectez votre compte Gmail grâce au processus d'authentification OAuth.\n"
 "Vous serez redirigé vers la page de connexion Gmail où vous devrez accepter l'autorisation."
 
 #. module: google_gmail
@@ -121,7 +121,7 @@ msgid ""
 "Connect your Gmail account with the OAuth Authentication process.  \n"
 "By default, only a user with a matching email address will be able to use this server. To extend its use, you should set a \"mail.default.from\" system parameter."
 msgstr ""
-"Connectez-vous à votre compte Gmail grâce au processus d'authentification OAuth.\n"
+"Connectez votre compte Gmail grâce au processus d'authentification OAuth.\n"
 "Par défaut, seul un utilisateur avec une adresse email correspondante pourra utiliser ce serveur. Pour étendre son utilisation, vous devriez définir un paramètre système \"mail.default.from\"."
 
 #. module: google_gmail
@@ -186,6 +186,18 @@ msgstr "Seul l'administrateur peut lier un serveur de messagerie Gmail."
 #, python-format
 msgid "Please configure your Gmail credentials."
 msgstr "Veuillez configurer vos identifiants Gmail."
+
+#. module: google_gmail
+#: code:addons/google_gmail/models/ir_mail_server.py:0
+#, python-format
+msgid ""
+"Please fill the \"Username\" field with your Gmail username (your email "
+"address). This should be the same account as the one used for the Gmail "
+"OAuthentication Token."
+msgstr ""
+"Veuillez compléter votre nom d'utilisateur Gmail (votre adresse email) dans "
+"le champ \"Nom d'utilisateur\". Ceci devrait être le même compte que celui "
+"utilisé pour le jeton OAuthentification Gmail."
 
 #. module: google_gmail
 #: code:addons/google_gmail/models/ir_mail_server.py:0

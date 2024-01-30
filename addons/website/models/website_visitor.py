@@ -6,10 +6,12 @@ from psycopg2 import sql
 
 import hashlib
 import pytz
+import threading
 
 from odoo import fields, models, api, _
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import UserError
+from odoo.tools import split_every
 from odoo.tools.misc import _format_time_ago
 from odoo.http import request
 from odoo.osv import expression
@@ -60,8 +62,8 @@ class WebsiteVisitor(models.Model):
     country_flag = fields.Char(related="country_id.image_url", string="Country Flag")
     lang_id = fields.Many2one('res.lang', string='Language', help="Language from the website when visitor has been created")
     timezone = fields.Selection(_tz_get, string='Timezone')
-    email = fields.Char(string='Email', compute='_compute_email_phone')
-    mobile = fields.Char(string='Mobile', compute='_compute_email_phone')
+    email = fields.Char(string='Email', compute='_compute_email_phone', compute_sudo=True)
+    mobile = fields.Char(string='Mobile', compute='_compute_email_phone', compute_sudo=True)
 
     # Visit fields
     visit_count = fields.Integer('# Visits', default=1, readonly=True, help="A new visit is considered if last connection was more than 8 hours ago.")
@@ -85,9 +87,11 @@ class WebsiteVisitor(models.Model):
     def name_get(self):
         res = []
         for record in self:
+            # Accessing name of partner through sudo to avoid infringing
+            # record rule if partner belongs to another company.
             res.append((
                 record.id,
-                record.partner_id.name or _('Website Visitor #%s', record.id)
+                record.partner_id.sudo().name or _('Website Visitor #%s', record.id)
             ))
         return res
 
@@ -339,8 +343,16 @@ class WebsiteVisitor(models.Model):
         Visitors were previously archived but we came to the conclusion that
         archived visitors have very little value and bloat the database for no
         reason. """
-
-        self.env['website.visitor'].sudo().search(self._inactive_visitors_domain()).unlink()
+        auto_commit = not getattr(threading.current_thread(), 'testing', False)
+        visitor_model = self.env['website.visitor']
+        for inactive_visitors_batch in split_every(
+            1000,
+            visitor_model.sudo().search(self._inactive_visitors_domain()).ids,
+            visitor_model.browse,
+        ):
+            inactive_visitors_batch.unlink()
+            if auto_commit:
+                self.env.cr.commit()
 
     def _inactive_visitors_domain(self):
         """ This method defines the domain of visitors that can be cleaned. By

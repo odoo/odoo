@@ -3,15 +3,15 @@
 # 	* payment
 # 
 # Translators:
-# Cécile Collart <cco@odoo.com>, 2022
 # Martin Trigaux, 2022
+# Cécile Collart <cco@odoo.com>, 2022
 # Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-14 05:52+0000\n"
+"POT-Creation-Date: 2023-11-07 12:37+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
 "Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
@@ -66,7 +66,7 @@ msgstr "<i class=\"fa fa-trash\"/> Supprimer"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.view_partners_form_payment_defaultcreditcard
 msgid "<span class=\"o_stat_text\">Saved Payment Methods</span>"
-msgstr "<span class=\"o_stat_text\">Modes de paiement sauvegardés</span>"
+msgstr "<span class=\"o_stat_text\">Modes de paiement enregistrés</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -238,7 +238,7 @@ msgstr "Autoriser l'enregistrement des modes de paiement"
 #: model:payment.provider,display_as:payment.payment_provider_aps
 #: model:payment.provider,name:payment.payment_provider_aps
 msgid "Amazon Payment Services"
-msgstr "Services de paiement Amazon"
+msgstr "Amazon Payment Services"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__amount
@@ -324,11 +324,6 @@ msgid "Bank"
 msgstr "Banque"
 
 #. module: payment
-#: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
-msgid "Bank Account"
-msgstr "Compte bancaire"
-
-#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__journal_name
 msgid "Bank Name"
 msgstr "Nom de la banque"
@@ -351,7 +346,7 @@ msgstr "Rappel effectué"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_hash
 msgid "Callback Hash"
-msgstr "Hash de rappel"
+msgstr "Hachage de rappel"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_method
@@ -391,12 +386,12 @@ msgstr "Opérations annulées"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__capture_manually
 msgid "Capture Amount Manually"
-msgstr "Saisir le montant manuellement"
+msgstr "Capturer le montant manuellement"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "Capture Transaction"
-msgstr "Saisir la transaction"
+msgstr "Capturer la transaction"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__capture_manually
@@ -405,7 +400,7 @@ msgid ""
 "Use this if you want to charge your customers cards only when\n"
 "you are sure you can ship the goods to them."
 msgstr ""
-"Saisissez le montant depuis Odoo quand la livraison est effectuée.\n"
+"Capturez le montant depuis Odoo quand la livraison est effectuée.\n"
 "Utilisez-le si vous voulez débiter les cartes de vos clients uniquement quand\n"
 "vous êtes sûr de pouvoir leur livrer la marchandise."
 
@@ -450,11 +445,6 @@ msgstr "Code"
 #: model:ir.model.fields,field_description:payment.field_payment_provider__color
 msgid "Color"
 msgstr "Couleur"
-
-#. module: payment
-#: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
-msgid "Communication"
-msgstr "Communication"
 
 #. module: payment
 #: model:ir.model,name:payment.model_res_company
@@ -659,7 +649,7 @@ msgstr "Annuler"
 #: model:ir.model.fields,field_description:payment.field_payment_token__display_name
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__display_name
 msgid "Display Name"
-msgstr "Afficher le nom"
+msgstr "Nom d'affichage"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__display_as
@@ -768,14 +758,10 @@ msgid "Full Only"
 msgstr "Intégral uniquement"
 
 #. module: payment
+#: model:ir.model,name:payment.model_payment_link_wizard
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
 msgid "Generate Payment Link"
 msgstr "Générer un lien de paiement"
-
-#. module: payment
-#: model:ir.model,name:payment.model_payment_link_wizard
-msgid "Generate Sales Payment Link"
-msgstr "Générer le lien de paiement des ventes"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_search
@@ -991,7 +977,7 @@ msgstr "Manuel"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__support_manual_capture
 msgid "Manual Capture Supported"
-msgstr "Saisie manuelle prise en charge"
+msgstr "Capture manuelle prise en charge"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__maximum_amount
@@ -1129,7 +1115,7 @@ msgstr "Seul les administrateurs peuvent accéder à ces données."
 #: code:addons/payment/models/payment_transaction.py:0
 #, python-format
 msgid "Only authorized transactions can be captured."
-msgstr "Seules les transactions autorisées peuvent être saisies."
+msgstr "Seules les transactions autorisées peuvent être capturées."
 
 #. module: payment
 #. odoo-python
@@ -1304,7 +1290,7 @@ msgstr "Transactions de paiement liées au jeton"
 #: code:addons/payment/models/payment_token.py:0
 #, python-format
 msgid "Payment details saved on %(date)s"
-msgstr "Détails de paiement sauvegardés le %(date)s"
+msgstr "Détails de paiement enregistrés le %(date)s"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -1361,17 +1347,6 @@ msgstr "Veuillez sélectionner une seule option de paiement."
 #, python-format
 msgid "Please set an amount smaller than %s."
 msgstr "Veuillez définir un montant inférieur à %s."
-
-#. module: payment
-#: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
-msgid "Please use the following transfer details"
-msgstr ""
-"Veuillez utiliser les informations suivantes pour le transfert bancaire."
-
-#. module: payment
-#: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
-msgid "Please use the order name as communication reference."
-msgstr "Veuillez indiquer le numéro de commande comme communication."
 
 #. module: payment
 #. odoo-javascript
@@ -1875,8 +1850,8 @@ msgid ""
 "A payment token is an anonymous link to the payment method details saved in the\n"
 "provider's database, allowing the customer to reuse it for a next purchase."
 msgstr ""
-"Ceci permet de contrôler si les clients peuvent sauvegarder leurs modes de paiement comme des jetons de paiement.\n"
-"Un jeton de paiement est un lien anonyme aux détails du mode de paiement sauvegardé dans \n"
+"Ceci permet de contrôler si les clients peuvent enregistrer leurs modes de paiement comme des jetons de paiement.\n"
+"Un jeton de paiement est un lien anonyme aux détails du mode de paiement enregistré dans \n"
 "la base de donnée du fournisseur, permettant au client de le réutiliser pour un achat suivant."
 
 #. module: payment
@@ -2102,6 +2077,17 @@ msgstr "Virement bancaire"
 #. odoo-python
 #: code:addons/payment/models/payment_provider.py:0
 #, python-format
+msgid ""
+"You cannot delete the payment provider %s; disable it or uninstall it "
+"instead."
+msgstr ""
+"Vous ne pouvez pas supprimer le fournisseur de paiement %s ; désactivez-le "
+"ou désinstallez-le plutôt."
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_provider.py:0
+#, python-format
 msgid "You cannot publish a disabled provider."
 msgstr "Vous ne pouvez pas publier un fournisseur désactivé."
 
@@ -2211,6 +2197,7 @@ msgstr ""
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_sepa_direct_debit
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_sips
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_stripe
+#: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
 #, python-format
 msgid ""
 "Your payment has been successfully processed but is waiting for approval."

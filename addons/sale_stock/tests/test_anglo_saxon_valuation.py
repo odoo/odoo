@@ -672,8 +672,6 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
             # pylint: disable=bad-whitespace
             {'account_id': self.company_data['default_account_revenue'].id,     'debit': 0,     'credit': 12},
             {'account_id': self.company_data['default_account_receivable'].id,  'debit': 12,    'credit': 0},
-            {'account_id': self.company_data['default_account_stock_out'].id,   'debit': 0,     'credit': 0},
-            {'account_id': self.company_data['default_account_expense'].id,     'debit': 0,     'credit': 0},
         ])
 
     def test_avco_fully_owned_and_delivered_invoice_post_delivery(self):
@@ -700,8 +698,6 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
             # pylint: disable=bad-whitespace
             {'account_id': self.company_data['default_account_revenue'].id,     'debit': 0,     'credit': 24},
             {'account_id': self.company_data['default_account_receivable'].id,  'debit': 24,    'credit': 0},
-            {'account_id': self.company_data['default_account_stock_out'].id,   'debit': 0,     'credit': 0},
-            {'account_id': self.company_data['default_account_expense'].id,     'debit': 0,     'credit': 0},
         ])
 
     # -------------------------------------------------------------------------
@@ -1638,8 +1634,18 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         Post the invoice, add a credit note with option 'new draft inv'
         Post the second invoice
         COGS should be based on the delivered product
+
+        Note: This test will also ensure that a user who only has access to
+        account app can post such an invoice
         """
         self.product.categ_id.property_cost_method = 'fifo'
+
+        accountman = self.env['res.users'].create({
+            'name': 'Super Accountman',
+            'login': 'super_accountman',
+            'password': 'super_accountman',
+            'groups_id': [(6, 0, self.env.ref('account.group_account_invoice').ids)],
+        })
 
         in_moves = self.env['stock.move'].create([{
             'name': 'IN move @%s' % p,
@@ -1673,7 +1679,10 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         picking.button_validate()
 
         invoice01 = so._create_invoices()
-        invoice01.action_post()
+
+        # Clear the cache to ensure access rights
+        self.env.invalidate_all()
+        invoice01.with_user(accountman.id).action_post()
 
         move_reversal = self.env['account.move.reversal'].with_context(active_model="account.move", active_ids=invoice01.ids).create({
             'refund_method': 'modify',

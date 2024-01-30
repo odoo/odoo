@@ -85,7 +85,7 @@ wTourUtils.registerWebsitePreviewTour('rte_translator', {
     run: function () {
         $('iframe:not(.o_ignore_in_tour)').contents().find("#wrap p:first").replaceWith('<p>Write one or <font style="background-color: yellow;">two paragraphs <b>describing</b></font> your product or\
                 <font style="color: rgb(255, 0, 0);">services</font>. To be successful your content needs to be\
-                useful to your <a href="/999">readers</a>.</p> <input placeholder="test translate placeholder"/>\
+                useful to your <a href="/999">readers</a>.</p> <input value="test translate default value" placeholder="test translate placeholder"/>\
                 <p>&lt;b&gt;&lt;/b&gt; is an HTML&nbsp;tag &amp; is empty</p>');
         $('iframe:not(.o_ignore_in_tour)').contents().find("#wrap img").attr("title", "test translate image title");
     }
@@ -143,9 +143,17 @@ wTourUtils.registerWebsitePreviewTour('rte_translator', {
     trigger: '.modal-dialog input:first',
     run: 'text test Parseltongue placeholder',
 }, {
+    content: "translate default value",
+    trigger: '.modal-dialog input:last',
+    run: 'text test Parseltongue default value',
+}, {
     content: "close modal",
     trigger: '.modal-footer .btn-primary',
     extra_trigger: '.modal input:propValue(test Parseltongue placeholder)',
+}, {
+    content: "check: input marked as translated",
+    trigger: 'iframe input[placeholder="test Parseltongue placeholder"].oe_translated',
+    run: () => {},
 }, {
     content: "save translation",
     trigger: 'button[data-action=save]',
@@ -163,7 +171,10 @@ wTourUtils.registerWebsitePreviewTour('rte_translator', {
     content: "check: placeholder translation",
     trigger: 'iframe input[placeholder="test Parseltongue placeholder"]',
     run: function () {}, // it's a check
-
+}, {
+    content: "check: default value translation",
+    trigger: 'iframe input[value="test Parseltongue default value"]',
+    run: () => {},
 }, {
     content: "open language selector",
     trigger: 'iframe .js_language_selector button:first',

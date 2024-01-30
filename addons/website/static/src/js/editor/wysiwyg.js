@@ -77,6 +77,8 @@ const WebsiteWysiwyg = Wysiwyg.extend({
                         this._toggleMegaMenu($toggle[0]);
                     }
                 })
+                // FIXME this is not right, the observer should not be inactive
+                // for async periods of time.
                 .then(() => this.odooEditor.observerActive());
         });
 
@@ -254,6 +256,18 @@ const WebsiteWysiwyg = Wysiwyg.extend({
         return toggleDropdown($megaMenuToggles, false);
     },
     /**
+     * @override
+     */
+    _getRecordInfo: function (editable) {
+        const $editable = $(editable);
+        return {
+            resModel: $editable.data('oe-model'),
+            resId: $editable.data('oe-id'),
+            field: $editable.data('oe-field'),
+            type: $editable.data('oe-type'),
+        }
+      },
+    /**
      * Toggles the mega menu.
      *
      * @private
@@ -308,14 +322,28 @@ snippetsEditor.SnippetsMenu.include({
      * @override
      */
     async cleanForSave() {
+        const getFromEditable = selector => this.options.editable[0].querySelectorAll(selector);
         // Clean unstyled translations
         return this._super(...arguments).then(() => {
-            for (const el of this.options.editable[0].querySelectorAll('.o_translation_without_style')) {
+            for (const el of getFromEditable('.o_translation_without_style')) {
                 el.classList.remove('o_translation_without_style');
                 if (el.dataset.oeTranslationSaveSha) {
                     el.dataset.oeTranslationInitialSha = el.dataset.oeTranslationSaveSha;
                     delete el.dataset.oeTranslationSaveSha;
                 }
+            }
+            // Adapt translation values for `select` > `options`s and remove all
+            // temporary `.o_translation_select` elements.
+            for (const optionsEl of getFromEditable('.o_translation_select')) {
+                const selectEl = optionsEl.nextElementSibling;
+                const translatedOptions = optionsEl.children;
+                const selectOptions = selectEl.tagName === 'SELECT' ? [...selectEl.options] : [];
+                if (selectOptions.length === translatedOptions.length) {
+                    selectOptions.map((option, i) => {
+                        option.text = translatedOptions[i].textContent;
+                    });
+                }
+                optionsEl.remove();
             }
         });
     },

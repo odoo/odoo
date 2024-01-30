@@ -77,6 +77,18 @@ class TestHttpEchoReplyJsonNoDB(TestHttpBase):
         res = self.nodb_url_open('/test_http/echo-json', data={'race': 'Asgard'})  # POST
         self.assertIn("Bad Request", res.text)
 
+    def test_echojson3_bad_json(self):
+        payload = 'some non json garbage'
+        res = self.nodb_url_open("/test_http/echo-json", data=payload, headers=CT_JSON)
+        self.assertEqual(res.status_code, 400, res.text)
+        self.assertEqual(res.text, "Invalid JSON data")
+
+    def test_echojson4_bad_jsonrpc(self):
+        payload = '"I am a json string"'
+        res = self.nodb_url_open("/test_http/echo-json", data=payload, headers=CT_JSON)
+        self.assertEqual(res.status_code, 400, res.text)
+        self.assertEqual(res.text, "Invalid JSON-RPC data")
+
 
 @tagged('post_install', '-at_install')
 class TestHttpEchoReplyHttpWithDB(TestHttpBase):
@@ -131,9 +143,13 @@ class TestHttpEchoReplyHttpWithDB(TestHttpBase):
 
 @tagged('post_install', '-at_install')
 class TestHttpEchoReplyJsonWithDB(TestHttpBase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.jackoneill = new_test_user(cls.env, 'jackoneill', context={'lang': 'en_US'})
+
     def setUp(self):
         super().setUp()
-        self.jackoneill = new_test_user(self.env, 'jackoneill', context={'lang': 'en_US'})
         self.authenticate('jackoneill', 'jackoneill')
 
     def test_echojson0_qs_json_db(self):
@@ -173,3 +189,15 @@ class TestHttpEchoReplyJsonWithDB(TestHttpBase):
         self.assertEqual(res.text, '{"jsonrpc": "2.0", "id": 0, "result": '
             f'{{"lang": "en_US", "tz": false, "uid": {self.jackoneill.id}, "name": "Thor"}}'
             '}')
+
+    def test_echojson3_bad_json(self):
+        payload = 'some non json garbage'
+        res = self.db_url_open("/test_http/echo-json", data=payload, headers=CT_JSON)
+        self.assertEqual(res.status_code, 400, res.text)
+        self.assertEqual(res.text, "Invalid JSON data")
+
+    def test_echojson4_bad_jsonrpc(self):
+        payload = '"I am a json string"'
+        res = self.db_url_open("/test_http/echo-json", data=payload, headers=CT_JSON)
+        self.assertEqual(res.status_code, 400, res.text)
+        self.assertEqual(res.text, "Invalid JSON-RPC data")

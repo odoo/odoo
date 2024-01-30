@@ -46,16 +46,19 @@ def update_taxes_from_templates(cr, chart_template_xmlid):
     This method is mainly used as a local upgrade script.
     Returns a list of tuple (template_id, tax_id) of newly created records.
     """
-    def _create_tax_from_template(company, template, old_tax=None):
-        """ Create a new tax from template with template xmlid, if there was already an old tax with that xmlid we
+    def _create_taxes_from_template(company, template2tax_mapping, template2tax_to_update=None):
+        """ Create a new taxes from templates. If an old tax already used the same xmlid, we
         remove the xmlid from it but don't modify anything else.
+        :param company: the company of the tax to instantiate
+        :param template2tax_mapping: a list of tuples (template, existing_tax) where existing_tax can be None
+        :return: a list of tuples of ids (template.id, newly_created_tax.id)
         """
         def _remove_xml_id(xml_id):
             module, name = xml_id.split('.', 1)
             env['ir.model.data'].search([('module', '=', module), ('name', '=', name)]).unlink()
 
-        def _avoid_name_conflict():
-            conflict_taxes = env['account.tax'].search([
+        def _avoid_name_conflict(company, template):
+            conflict_taxes = env['account.tax'].with_context(active_test=False).search([
                 ('name', '=', template.name), ('company_id', '=', company.id),
                 ('type_tax_use', '=', template.type_tax_use), ('tax_scope', '=', template.tax_scope)
             ])
@@ -63,23 +66,32 @@ def update_taxes_from_templates(cr, chart_template_xmlid):
                 for index, conflict_taxes in enumerate(conflict_taxes):
                     conflict_taxes.name = f"[old{index if index > 0 else ''}] {conflict_taxes.name}"
 
-        if old_tax:
-            xml_id = old_tax.get_external_id().get(old_tax.id)
-            if xml_id:
-                _remove_xml_id(xml_id)
-        _avoid_name_conflict()
-        template._generate_tax(company)
+        templates_to_create = env['account.tax.template'].with_context(active_test=False)
+        for template, old_tax in template2tax_mapping:
+            if old_tax:
+                xml_id = old_tax.get_external_id().get(old_tax.id)
+                if xml_id:
+                    _remove_xml_id(xml_id)
+            _avoid_name_conflict(company, template)
+            templates_to_create += template
+        new_template2tax_company = templates_to_create._generate_tax(
+            company, accounts_exist=True, existing_template_to_tax=template2tax_to_update
+        )['tax_template_to_tax']
+        return [(template.id, tax.id) for template, tax in new_template2tax_company.items()]
 
-    def _update_tax_from_template(template, tax):
-        """ Update the tax's tags (and only tags!) based on template values. """
-        tax_rep_lines = tax.invoice_repartition_line_ids + tax.refund_repartition_line_ids
-        template_rep_lines = template.invoice_repartition_line_ids + template.refund_repartition_line_ids
-        for tax_line, template_line in zip(tax_rep_lines, template_rep_lines):
-            tags_to_add = template_line._get_tags_to_add()
-            tags_to_unlink = tax_line.tag_ids
-            if tags_to_add != tags_to_unlink:
-                tax_line.write({'tag_ids': [Command.set(tags_to_add.ids)]})
-                _cleanup_tags(tags_to_unlink)
+    def _update_taxes_from_template(template2tax_mapping):
+        """ Update the taxes' tags (and only tags!) based on their corresponding template values.
+        :param template2tax_mapping: a list of tuples (template, existing_taxes)
+        """
+        for template, existing_tax in template2tax_mapping:
+            tax_rep_lines = existing_tax.invoice_repartition_line_ids + existing_tax.refund_repartition_line_ids
+            template_rep_lines = template.invoice_repartition_line_ids + template.refund_repartition_line_ids
+            for tax_line, template_line in zip(tax_rep_lines, template_rep_lines):
+                tags_to_add = template_line._get_tags_to_add()
+                tags_to_unlink = tax_line.tag_ids
+                if tags_to_add != tags_to_unlink:
+                    tax_line.write({'tag_ids': [(6, 0, tags_to_add.ids)]})
+                    _cleanup_tags(tags_to_unlink)
 
     def _get_template_to_real_xmlid_mapping(model, templates):
         """ This function uses ir_model_data to return a mapping between the templates and the data, using their xmlid
@@ -118,17 +130,23 @@ def update_taxes_from_templates(cr, chart_template_xmlid):
             - amount
             - repartition lines percentages in the same order
         """
-        tax_rep_lines = tax.invoice_repartition_line_ids + tax.refund_repartition_line_ids
-        template_rep_lines = template.invoice_repartition_line_ids + template.refund_repartition_line_ids
-        return (
-                tax.amount_type == template.amount_type
-                and tax.amount == template.amount
-                and len(tax_rep_lines) == len(template_rep_lines)
-                and all(
-                    rep_line_tax.factor_percent == rep_line_template.factor_percent
-                    for rep_line_tax, rep_line_template in zip(tax_rep_lines, template_rep_lines)
-                )
-        )
+        if tax.amount_type == 'group':
+            # if the amount_type is group we don't do checks on rep. lines nor amount
+            return tax.amount_type == template.amount_type
+        else:
+            tax_rep_lines = tax.invoice_repartition_line_ids + tax.refund_repartition_line_ids
+            template_rep_lines = template.invoice_repartition_line_ids + template.refund_repartition_line_ids
+            return (
+                    tax.amount_type == template.amount_type
+                    and tax.amount == template.amount
+                    and (
+                         len(tax_rep_lines) == len(template_rep_lines)
+                         and all(
+                             rep_line_tax.factor_percent == rep_line_template.factor_percent
+                             for rep_line_tax, rep_line_template in zip(tax_rep_lines, template_rep_lines)
+                         )
+                    )
+            )
 
     def _cleanup_tags(tags):
         """ Checks if the tags are still used in taxes or move lines. If not we delete it. """
@@ -166,6 +184,23 @@ def update_taxes_from_templates(cr, chart_template_xmlid):
                             'position_id': fp.id,
                         }))
             chart_template._create_records_with_xmlid('account.fiscal.position.tax', fp_tax_template_vals, env['res.company'].browse(company_id))
+
+    def _process_taxes_translations(chart_template, new_template_x_taxes):
+        """
+        Retrieve translations for newly created taxes' name and description
+        for languages of the chart_template.
+        Those languages are the intersection of the spoken_languages of the chart_template
+        and installed languages.
+        """
+        if not new_template_x_taxes:
+            return
+        langs = chart_template._get_langs()
+        if langs:
+            template_ids, tax_ids = zip(*new_template_x_taxes)
+            in_ids = env['account.tax.template'].browse(template_ids)
+            out_ids = env['account.tax'].browse(tax_ids)
+            chart_template.process_translations(langs, 'name', in_ids, out_ids)
+            chart_template.process_translations(langs, 'description', in_ids, out_ids)
 
     def _notify_accountant_managers(taxes_to_check):
         accountant_manager_group = env.ref("account.group_account_manager")
@@ -207,23 +242,32 @@ def update_taxes_from_templates(cr, chart_template_xmlid):
     # adds companies that use the chart_template through fiscal position system
     companies = companies.union(env['res.company'].browse(template2tax.keys()))
     outdated_taxes = env['account.tax']
-    new_tax_template_by_company = defaultdict(env['account.tax.template'].browse)
+    new_tax_template_by_company = defaultdict(env['account.tax.template'].browse)  # only contains completely new taxes (not previous taxe had the xmlid)
+    new_template2tax = []  # contains all created taxes
     _validate_taxes_country(chart_template, template2tax)
     for company in companies:
-        template2tax_company = template2tax.get(company.id)
+        templates_to_tax_create = []
+        templates_to_tax_update = []
+        template2oldtax_company = template2tax.get(company.id)
         for template in templates:
-            tax = env['account.tax'].browse(template2tax_company.get(template.id)) if template2tax_company else None
+            tax = env['account.tax'].browse(template2oldtax_company.get(template.id)) if template2oldtax_company else None
             if not tax or not _is_tax_and_template_same(template, tax):
-                _create_tax_from_template(company, template, old_tax=tax)
+                templates_to_tax_create.append((template, tax))
                 if tax:
                     outdated_taxes += tax
                 else:
+                    # we only want to update fiscal position if there is no previous tax with the mapping
                     new_tax_template_by_company[company.id] += template
             else:
-                _update_tax_from_template(template, tax)
+                templates_to_tax_update.append((template, tax))
+        new_template2tax += _create_taxes_from_template(company, templates_to_tax_create, templates_to_tax_update)
+        _update_taxes_from_template(templates_to_tax_update)
     _update_fiscal_positions_from_templates(chart_template, new_tax_template_by_company, templates)
     if outdated_taxes:
         _notify_accountant_managers(outdated_taxes)
+    if hasattr(chart_template, 'spoken_languages') and chart_template.spoken_languages:
+        _process_taxes_translations(chart_template, new_template2tax)
+    return new_template2tax
 
 #  ---------------------------------------------------------------
 #   Account Templates: Account, Tax, Tax Code and chart. + Wizard
@@ -574,7 +618,7 @@ class AccountChartTemplate(models.Model):
             company.default_cash_difference_income_account_id = self.env['account.account'].create({
                 'name': _('Cash Difference Gain'),
                 'code': self.env['account.account']._search_new_account_code(company, self.code_digits, '999'),
-                'account_type': 'income',
+                'account_type': 'income_other',
                 'tag_ids': [(6, 0, self.env.ref('account.account_tag_investing').ids)],
                 'company_id': company.id,
             })
@@ -1325,17 +1369,15 @@ class AccountTaxTemplate(models.Model):
             val['tax_group_id'] = self.tax_group_id.id
         return val
 
-    def _get_tax_vals_complete(self, company):
+    def _get_tax_vals_complete(self, company, tax_template_to_tax):
         """
         Returns a dict of values to be used to create the tax corresponding to the template, assuming the
         account.account objects were already created.
         It differs from function _get_tax_vals because here, we replace the references to account.template by their
         corresponding account.account ids ('cash_basis_transition_account_id' and 'account_id' in the invoice and
         refund repartition lines)
-        (Used by upgrade/migrations/util/accounting)
         """
-        vals = self._get_tax_vals(company, {})
-        vals.pop("children_tax_ids", None)
+        vals = self._get_tax_vals(company, tax_template_to_tax)
 
         if self.cash_basis_transition_account_id.code:
             cash_basis_account_id = self.env['account.account'].search([
@@ -1351,10 +1393,12 @@ class AccountTaxTemplate(models.Model):
         })
         return vals
 
-    def _generate_tax(self, company):
+    def _generate_tax(self, company, accounts_exist=False, existing_template_to_tax=None):
         """ This method generate taxes from templates.
 
             :param company: the company for which the taxes should be created from templates in self
+            :account_exist: whether accounts have already been created
+            :existing_template_to_tax: mapping of already existing templates to taxes [(template, tax), ...]
             :returns: {
                 'tax_template_to_tax': mapping between tax template and the newly generated taxes corresponding,
                 'account_dict': dictionary containing a to-do list with all the accounts to assign on new taxes
@@ -1364,7 +1408,9 @@ class AccountTaxTemplate(models.Model):
         # repartition lines on taxes
         ChartTemplate = self.env['account.chart.template'].with_context(default_company_id=company.id)
         todo_dict = {'account.tax': {}, 'account.tax.repartition.line': {}}
-        tax_template_to_tax = {}
+        if not existing_template_to_tax:
+            existing_template_to_tax = []
+        tax_template_to_tax = {template: tax for (template, tax) in existing_template_to_tax}
 
         templates_todo = list(self)
         while templates_todo:
@@ -1375,7 +1421,10 @@ class AccountTaxTemplate(models.Model):
             tax_template_vals = []
             for template in templates:
                 if all(child in tax_template_to_tax for child in template.children_tax_ids):
-                    vals = template._get_tax_vals(company, tax_template_to_tax)
+                    if accounts_exist:
+                        vals = template._get_tax_vals_complete(company, tax_template_to_tax)
+                    else:
+                        vals = template._get_tax_vals(company, tax_template_to_tax)
 
                     if self.chart_template_id.country_id:
                         vals['country_id'] = self.chart_template_id.country_id.id
@@ -1398,21 +1447,25 @@ class AccountTaxTemplate(models.Model):
                 todo_dict['account.tax'][tax] = {
                     'cash_basis_transition_account_id': template.cash_basis_transition_account_id,
                 }
+                for existing_template, existing_tax in existing_template_to_tax:
+                    if template in existing_template.children_tax_ids and tax not in existing_tax.children_tax_ids:
+                        existing_tax.write({'children_tax_ids': [(4, tax.id, False)]})
 
-                # We also have to delay the assignation of accounts to repartition lines
-                # The below code assigns the account_id to the repartition lines according
-                # to the corresponding repartition line in the template, based on the order.
-                # As we just created the repartition lines, tax.invoice_repartition_line_ids is not well sorted.
-                # But we can force the sort by calling sort()
-                all_tax_rep_lines = tax.invoice_repartition_line_ids.sorted() + tax.refund_repartition_line_ids.sorted()
-                all_template_rep_lines = template.invoice_repartition_line_ids + template.refund_repartition_line_ids
-                for i in range(0, len(all_template_rep_lines)):
-                    # We assume template and tax repartition lines are in the same order
-                    template_account = all_template_rep_lines[i].account_id
-                    if template_account:
-                        todo_dict['account.tax.repartition.line'][all_tax_rep_lines[i]] = {
-                            'account_id': template_account,
-                        }
+                if not accounts_exist:
+                    # We also have to delay the assignation of accounts to repartition lines
+                    # The below code assigns the account_id to the repartition lines according
+                    # to the corresponding repartition line in the template, based on the order.
+                    # As we just created the repartition lines, tax.invoice_repartition_line_ids is not well sorted.
+                    # But we can force the sort by calling sort()
+                    all_tax_rep_lines = tax.invoice_repartition_line_ids.sorted() + tax.refund_repartition_line_ids.sorted()
+                    all_template_rep_lines = template.invoice_repartition_line_ids + template.refund_repartition_line_ids
+                    for index, template_rep_line in enumerate(all_template_rep_lines):
+                        # We assume template and tax repartition lines are in the same order
+                        template_account = template_rep_line.account_id
+                        if template_account:
+                            todo_dict['account.tax.repartition.line'][all_tax_rep_lines[index]] = {
+                                'account_id': template_account,
+                            }
 
         if any(template.tax_exigibility == 'on_payment' for template in self):
             # When a CoA is being installed automatically and if it is creating account tax(es) whose field `Use Cash Basis`(tax_exigibility) is set to True by default

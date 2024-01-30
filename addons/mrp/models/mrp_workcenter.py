@@ -359,11 +359,14 @@ class MrpWorkcenterProductivityLoss(models.Model):
         and the workcenter has a calendar, convert the dates into a duration based on
         working hours.
         """
-        if (self.loss_type not in ('productive', 'performance')) and workcenter and workcenter.resource_calendar_id:
-            r = workcenter._get_work_days_data_batch(date_start, date_stop)[workcenter.id]['hours']
-            return round(r * 60, 2)
-        else:
-            return round((date_stop - date_start).total_seconds() / 60.0, 2)
+        duration = 0
+        for productivity_loss in self:
+            if (productivity_loss.loss_type not in ('productive', 'performance')) and workcenter and workcenter.resource_calendar_id:
+                r = workcenter._get_work_days_data_batch(date_start, date_stop)[workcenter.id]['hours']
+                duration = max(duration, r * 60)
+            else:
+                duration = max(duration, (date_stop - date_start).total_seconds() / 60.0)
+        return round(duration, 2)
 
 class MrpWorkcenterProductivity(models.Model):
     _name = "mrp.workcenter.productivity"
@@ -409,7 +412,7 @@ class MrpWorkcenterProductivity(models.Model):
     def _compute_duration(self):
         for blocktime in self:
             if blocktime.date_start and blocktime.date_end:
-                blocktime.duration = blocktime.loss_id._convert_to_duration(blocktime.date_start, blocktime.date_end, blocktime.workcenter_id)
+                blocktime.duration = blocktime.loss_id._convert_to_duration(blocktime.date_start.replace(microsecond=0), blocktime.date_end.replace(microsecond=0), blocktime.workcenter_id)
             else:
                 blocktime.duration = 0.0
 
@@ -428,7 +431,7 @@ class MrpWorkcenterProductivity(models.Model):
         underperformance_timers = self.env['mrp.workcenter.productivity']
         for timer in self:
             wo = timer.workorder_id
-            timer.write({'date_end': datetime.now()})
+            timer.write({'date_end': fields.Datetime.now()})
             if wo.duration > wo.duration_expected:
                 productive_date_end = timer.date_end - relativedelta.relativedelta(minutes=wo.duration - wo.duration_expected)
                 if productive_date_end <= timer.date_start:
@@ -452,8 +455,8 @@ class MrpWorkCenterCapacity(models.Model):
     product_id = fields.Many2one('product.product', string='Product', required=True)
     product_uom_id = fields.Many2one('uom.uom', string='Product UoM', related='product_id.uom_id')
     capacity = fields.Float('Capacity', default=1.0, help="Number of pieces that can be produced in parallel for this product.")
-    time_start = fields.Float('Setup Time (minutes)', help="Time in minutes for the setup.")
-    time_stop = fields.Float('Cleanup Time (minutes)', help="Time in minutes for the cleaning.")
+    time_start = fields.Float('Setup Time (minutes)', help="Additional time in minutes for the setup.")
+    time_stop = fields.Float('Cleanup Time (minutes)', help="Additional time in minutes for the cleaning.")
 
     _sql_constraints = [
         ('positive_capacity', 'CHECK(capacity > 0)', 'Capacity should be a positive number.'),

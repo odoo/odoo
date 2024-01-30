@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests.common import TransactionCase, users
+from odoo import Command
+from odoo.tests.common import users
+from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 
 
-class TestSaleProject(TransactionCase):
+class TestSaleProject(TransactionCaseWithUserDemo):
 
     @classmethod
     def setUpClass(cls):
@@ -173,7 +175,8 @@ class TestSaleProject(TransactionCase):
 
         sale_order_lines = sale_order.order_line + sale_line_1_order_2  # exclude the Section and Note Sales Order Items
         sale_items_data = self.project_global._get_sale_items(with_action=False)
-        self.assertEqual(sale_items_data['total'], len(sale_order_lines))
+        self.assertEqual(sale_items_data['total'], len(sale_order_lines - so_line_order_new_task_new_project - so_line_order_only_project),
+                         "Should be all the sale items linked to the global project.")
         expected_sale_line_dict = {
             sol_read['id']: sol_read
             for sol_read in sale_order_lines.read(['display_name', 'product_uom_qty', 'qty_delivered', 'qty_invoiced', 'product_uom'])
@@ -234,3 +237,98 @@ class TestSaleProject(TransactionCase):
         self.project_global.sale_line_id = sale_order_line
         sale_order.with_context({'disable_cancel_warning': True}).action_cancel()
         self.assertFalse(self.project_global.sale_line_id, "The project should not be linked to the SOL anymore")
+
+    def test_create_task_from_template_line(self):
+        """
+        When we add an SOL from a template that is a service that has a service_policy that will generate a task,
+        even if default_task_id is present in the context, a new task should be created when confirming the SO.
+        """
+        default_task = self.env['project.task'].with_context(tracking_disable=True).create({
+            'name': 'Task',
+            'project_id': self.project_global.id
+        })
+        sale_order = self.env['sale.order'].with_context(tracking_disable=True, default_task_id=default_task.id).create({
+            'partner_id': self.partner.id,
+        })
+        quotation_template = self.env['sale.order.template'].create({
+            'name': 'Test quotation',
+        })
+        quotation_template.write({
+            'sale_order_template_line_ids': [
+                Command.set(
+                    self.env['sale.order.template.line'].create([{
+                        'name': self.product_order_service2.display_name,
+                        'sale_order_template_id': quotation_template.id,
+                        'product_id': self.product_order_service2.id,
+                        'product_uom_id': self.product_order_service2.uom_id.id,
+                    }, {
+                        'name': self.product_order_service3.display_name,
+                        'sale_order_template_id': quotation_template.id,
+                        'product_id': self.product_order_service3.id,
+                        'product_uom_id': self.product_order_service3.uom_id.id,
+                    }]).ids
+                )
+            ]
+        })
+        sale_order.with_context(default_task_id=default_task.id).write({
+            'sale_order_template_id': quotation_template.id,
+        })
+        sale_order.with_context(default_task_id=default_task.id)._onchange_sale_order_template_id()
+        self.assertFalse(sale_order.order_line.mapped('task_id'),
+                         "SOL should have no related tasks, because they are from services that generates a task")
+        sale_order.action_confirm()
+        self.assertEqual(sale_order.tasks_count, 2, "SO should have 2 related tasks")
+        self.assertNotIn(default_task, sale_order.tasks_ids, "SO should link to the default task from the context")
+
+
+    def test_include_archived_projects_in_stat_btn_related_view(self):
+        """Checks if the project stat-button action includes both archived and active projects."""
+        # Setup
+        project_A = self.env['project.project'].create({'name': 'Project_A'})
+        project_B = self.env['project.project'].create({'name': 'Project_B'})
+
+        product_A = self.env['product.product'].create({
+            'name': 'product A',
+            'list_price': 1.0,
+            'type': 'service',
+            'service_tracking': 'task_global_project',
+            'project_id':project_A.id,
+        })
+        product_B = self.env['product.product'].create({
+            'name': 'product B',
+            'list_price': 2.0,
+            'type': 'service',
+            'service_tracking': 'task_global_project',
+            'project_id':project_B.id,
+        })
+
+        sale_order = self.env['sale.order'].with_context(tracking_disable=True).create({
+            'partner_id': self.partner.id,
+            'partner_invoice_id': self.partner.id,
+            'partner_shipping_id': self.partner.id,
+        })
+
+        SaleOrderLine = self.env['sale.order.line'].with_context(tracking_disable=True)
+        SaleOrderLine.create({
+            'name': product_A.name,
+            'product_id': product_A.id,
+            'product_uom_qty': 10,
+            'price_unit': product_A.list_price,
+            'order_id': sale_order.id,
+        })
+        SaleOrderLine.create({
+            'name': product_B.name,
+            'product_id': product_B.id,
+            'product_uom_qty': 10,
+            'price_unit': product_B.list_price,
+            'order_id': sale_order.id,
+        })
+
+        # Check if button action includes both projects BEFORE archivization
+        action = sale_order.action_view_project_ids()
+        self.assertEqual(len(action['domain'][0][2]), 2, "Domain should contain 2 projects.")
+
+        # Check if button action includes both projects AFTER archivization
+        project_B.write({'active': False})
+        action = sale_order.action_view_project_ids()
+        self.assertEqual(len(action['domain'][0][2]), 2, "Domain should contain 2 projects. (one archived, one not)")

@@ -139,6 +139,11 @@ export function parseInteger(value) {
             throw new InvalidNumberError(`"${value}" is not a correct number`);
         }
     }
+    if (parsed < -2147483648 || parsed > 2147483647) {
+        throw new InvalidNumberError(
+            `"${value}" is out of bounds (integers should be between -2,147,483,648 and 2,147,483,647)`
+        );
+    }
     return parsed;
 }
 
@@ -159,20 +164,26 @@ export function parsePercentage(value) {
 
 /**
  * Try to extract a monetary value from a string. The localization is considered in the process.
- * This is a very lenient function such that it just strips non-numeric characters at the
- * beginning and end of the string, and then tries to parse the remaining string as a float.
+ * This is a very lenient function such that it ignores everything before we encounter a substring consisting of either
+ * - a sign (- or +)
+ * - an equals sign (signaling the start of a mathematical expression)
+ * - a decimal point
+ * - a number
+ * We then remove any non-numeric characters at the end
+ *
  *
  * @param {string} value
  * @returns {number}
  */
 export function parseMonetary(value) {
     value = value.trim();
-    const regex = new RegExp(`^[^\\d\\-+=]*(?<strToParse>.*?)[^\\d]*$`);
-    const match = value.match(regex);
-    if (!match) {
-        throw new InvalidNumberError(`"${value}" is not a valid number.`);
+    const startMatch = value.match(
+        new RegExp(`[\\d\\-+=]|${escapeRegExp(localization.decimalPoint)}`)
+    );
+    if (startMatch) {
+        value = value.substring(startMatch.index);
     }
-    value = match.groups.strToParse;
+    value = value.replace(/\D*$/, "");
     return parseFloat(value);
 }
 

@@ -11,6 +11,7 @@ from odoo import _, api, fields, models
 from odoo.addons.base.models.res_users import check_identity
 from odoo.exceptions import AccessDenied, UserError
 from odoo.http import request
+from odoo.tools import sql
 
 from odoo.addons.auth_totp.models.totp import TOTP, TOTP_SECRET_SIZE
 
@@ -20,13 +21,19 @@ compress = functools.partial(re.sub, r'\s', '')
 class Users(models.Model):
     _inherit = 'res.users'
 
-    totp_secret = fields.Char(copy=False, groups=fields.NO_ACCESS)
-    totp_enabled = fields.Boolean(string="Two-factor authentication", compute='_compute_totp_enabled')
+    totp_secret = fields.Char(copy=False, groups=fields.NO_ACCESS, compute='_compute_totp_secret', inverse='_inverse_totp_secret', search='_search_totp_enable')
+    totp_enabled = fields.Boolean(string="Two-factor authentication", compute='_compute_totp_enabled', search='_search_totp_enable')
     totp_trusted_device_ids = fields.One2many('auth_totp.device', 'user_id', string="Trusted Devices")
 
     @property
     def SELF_READABLE_FIELDS(self):
         return super().SELF_READABLE_FIELDS + ['totp_enabled', 'totp_trusted_device_ids']
+
+    def init(self):
+        init_res = super().init()
+        if not sql.column_exists(self.env.cr, self._table, "totp_secret"):
+            self.env.cr.execute("ALTER TABLE res_users ADD COLUMN totp_secret varchar")
+        return init_res
 
     def _mfa_type(self):
         r = super()._mfa_type()
@@ -60,9 +67,9 @@ class Users(models.Model):
         key = base64.b32decode(sudo.totp_secret)
         match = TOTP(key).match(code)
         if match is None:
-            _logger.info("2FA check: FAIL for %s %r", self, self.login)
+            _logger.info("2FA check: FAIL for %s %r", self, sudo.login)
             raise AccessDenied(_("Verification failed, please double-check the 6-digit code"))
-        _logger.info("2FA check: SUCCESS for %s %r", self, self.login)
+        _logger.info("2FA check: SUCCESS for %s %r", self, sudo.login)
 
     def _totp_try_setting(self, secret, code):
         if self.totp_enabled or self != self.env.user:
@@ -149,3 +156,22 @@ class Users(models.Model):
     def change_password(self, old_passwd, new_passwd):
         self.env.user._revoke_all_devices()
         return super().change_password(old_passwd, new_passwd)
+
+    def _compute_totp_secret(self):
+        for user in self.filtered('id'):
+            self.env.cr.execute('SELECT totp_secret FROM res_users WHERE id=%s', (user.id,))
+            user.totp_secret = self.env.cr.fetchone()[0]
+
+    def _inverse_totp_secret(self):
+        for user in self.filtered('id'):
+            secret = user.totp_secret if user.totp_secret else None
+            self.env.cr.execute('UPDATE res_users SET totp_secret = %s WHERE id=%s', (secret, user.id))
+
+    def _search_totp_enable(self, operator, value):
+        value = not value if operator == '!=' else value
+        if value:
+            self.env.cr.execute("SELECT id FROM res_users WHERE totp_secret IS NOT NULL")
+        else:
+            self.env.cr.execute("SELECT id FROM res_users WHERE totp_secret IS NULL OR totp_secret='false'")
+        result = self.env.cr.fetchall()
+        return [('id', 'in', [x[0] for x in result])]

@@ -3,6 +3,7 @@
 # 	* website_event
 # 
 # Translators:
+# Nikhil Krishnan, 2023
 # Niyas Raphy, 2023
 # 
 msgid ""
@@ -305,7 +306,7 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
 msgid "Attendees"
-msgstr ""
+msgstr "പങ്കെടുക്കുന്നവർ"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_quotes
@@ -481,7 +482,7 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form_add
 msgid "Event Name"
-msgstr ""
+msgstr "ഇവന്റിന്റെ പേര്"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
@@ -496,7 +497,7 @@ msgstr ""
 #. module: website_event
 #: model:ir.model,name:website_event.model_event_registration
 msgid "Event Registration"
-msgstr ""
+msgstr "ഇവന്റ് രജിസ്ട്രേഷൻ"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_website_visitor__event_registration_ids
@@ -870,7 +871,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 #, python-format
 msgid "Register"
-msgstr ""
+msgstr "രജിസ്റ്റർ"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_type_view_form
@@ -1041,6 +1042,13 @@ msgstr "ടെംപ്ലേറ്റുകൾ"
 #: model:ir.model.fields,help:website_event.field_event_tag_category__website_url
 msgid "The full URL to access the document through the website."
 msgstr "വെബ്‌സൈറ്റ് വഴി ഡോക്യുമെന്റ് ആക്‌സസ് ചെയ്യാനുള്ള പൂർണ്ണ URL."
+
+#. module: website_event
+#. odoo-python
+#: code:addons/website_event/models/event_event.py:0
+#, python-format
+msgid "The website must be from the same company as the event."
+msgstr ""
 
 #. module: website_event
 #. odoo-python
@@ -1226,7 +1234,7 @@ msgstr "വെബ്‌സൈറ്റ് ഓപ്പൺഗ്രാഫ് ച�
 #. module: website_event
 #: model:ir.model.fields,help:website_event.field_event_event__is_ongoing
 msgid "Whether event has begun"
-msgstr ""
+msgstr "ഇവന്റ് തുടങ്ങിയോ"
 
 #. module: website_event
 #: model:ir.model.fields,help:website_event.field_event_event__start_today

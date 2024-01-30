@@ -13,7 +13,9 @@
 # Jaroslav Helemik Nemec <nemec@helemik.cz>, 2022
 # Michal Veselý <michal@veselyberanek.net>, 2022
 # Jiří Podhorecký, 2022
-# Aleš Fiala <f.ales1@seznam.cz>, 2023
+# Ivana Bartonkova, 2023
+# Aleš Fiala <f.ales1@seznam.cz>, 2024
+# Jakub Smolka, 2024
 # 
 msgid ""
 msgstr ""
@@ -21,8 +23,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-15 12:49+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2023\n"
-"Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
+"Last-Translator: Jakub Smolka, 2024\n"
+"Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -51,7 +53,7 @@ msgstr "Počet zpráv"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__rating_count
 msgid "# Ratings"
-msgstr ""
+msgstr "# Hodnocení"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator__nbr_channel
@@ -283,12 +285,12 @@ msgstr "Avatar"
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__rating_avg
 #: model:ir.model.fields,field_description:im_livechat.field_mail_channel__rating_avg
 msgid "Average Rating"
-msgstr ""
+msgstr "Průměrné hodnocení"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__rating_avg_percentage
 msgid "Average Rating (%)"
-msgstr ""
+msgstr "Průměrné hodnocení (%)"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__duration
@@ -338,7 +340,7 @@ msgstr "Barva textu tlačítka"
 #: model:ir.actions.act_window,name:im_livechat.im_livechat_canned_response_action
 #: model:ir.ui.menu,name:im_livechat.canned_responses
 msgid "Canned Responses"
-msgstr "Uchované odpovědi"
+msgstr "Předpřipravené odpovědi"
 
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.im_livechat_canned_response_action
@@ -414,7 +416,7 @@ msgstr ""
 #: code:addons/im_livechat/static/src/public_models/livechat_button_view.js:0
 #, python-format
 msgid "Chat with one of our collaborators"
-msgstr ""
+msgstr "Chatujte s jedním z našich spolupracovníků"
 
 #. module: im_livechat
 #: model:ir.actions.act_window,name:im_livechat.chatbot_script_action
@@ -433,7 +435,7 @@ msgstr ""
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_chatbot_message
 msgid "Chatbot Message"
-msgstr ""
+msgstr "Chatbot zpráva"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_mail_channel__chatbot_message_ids
@@ -448,17 +450,17 @@ msgstr ""
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_chatbot_script
 msgid "Chatbot Script"
-msgstr ""
+msgstr "Chatbot skript"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_chatbot_script_answer
 msgid "Chatbot Script Answer"
-msgstr ""
+msgstr "Chatbot odpověď skriptu"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_chatbot_script_step
 msgid "Chatbot Script Step"
-msgstr ""
+msgstr "Chatbot krok skriptu"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_message__script_step_id
@@ -469,7 +471,7 @@ msgstr ""
 #: model:ir.ui.menu,name:im_livechat.chatbot_config
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Chatbots"
-msgstr ""
+msgstr "Chatboti"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_test_script_page
@@ -1274,7 +1276,7 @@ msgstr "Operátor"
 #: model:ir.actions.act_window,name:im_livechat.im_livechat_report_operator_action
 #: model:ir.ui.menu,name:im_livechat.menu_reporting_livechat_operator
 msgid "Operator Analysis"
-msgstr "Analýza operátora"
+msgstr "Analýza operátorů"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__user_ids
@@ -1332,7 +1334,7 @@ msgstr ""
 #: code:addons/im_livechat/static/src/legacy/widgets/feedback/feedback.xml:0
 #, python-format
 msgid "Please check your internet connection."
-msgstr ""
+msgstr "Zkontrolujte prosím připojení k internetu."
 
 #. module: im_livechat
 #. odoo-python
@@ -1382,7 +1384,7 @@ msgstr "Hodnocení"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_mail_channel__rating_avg_text
 msgid "Rating Avg Text"
-msgstr ""
+msgstr "Hodnocení prům. textu"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_mail_channel__rating_last_feedback
@@ -1408,7 +1410,7 @@ msgstr "Hodnocení spokojenosti"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_mail_channel__rating_last_text
 msgid "Rating Text"
-msgstr ""
+msgstr "Text hodnocení"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_mail_channel__rating_count
@@ -1437,7 +1439,7 @@ msgstr "Hodnocení kanálu živý chat"
 #: code:addons/im_livechat/static/src/legacy/widgets/feedback/feedback.xml:0
 #, python-format
 msgid "Receive a copy of this conversation"
-msgstr ""
+msgstr "Získejte kopii této konzervace"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_answer__redirect_link
@@ -1460,7 +1462,7 @@ msgstr ""
 #. module: im_livechat
 #: model:ir.ui.menu,name:im_livechat.menu_reporting_livechat
 msgid "Report"
-msgstr "Sestava"
+msgstr "Výkazy"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1561,6 +1563,13 @@ msgid "Select an option above"
 msgstr ""
 
 #. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/widgets/feedback.xml:0
+#, python-format
+msgid "Send"
+msgstr "Odchozí"
+
+#. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_answer__sequence
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_step__sequence
 msgid "Sequence"
@@ -1582,7 +1591,7 @@ msgstr "Formulář sezení"
 #: model:ir.actions.act_window,name:im_livechat.im_livechat_report_channel_time_to_answer_action
 #: model:ir.ui.menu,name:im_livechat.menu_reporting_livechat_channel
 msgid "Session Statistics"
-msgstr "Statistiky relace"
+msgstr "Statistiky relací"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1618,7 +1627,7 @@ msgstr "Historie relací"
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_rule__action__display_button
 msgid "Show"
-msgstr "Šou"
+msgstr "Zobrazit"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_chatbot_script_step__triggering_answer_ids
@@ -1671,7 +1680,7 @@ msgstr "Text, který vyzve uživatele na začátku chatu."
 #: code:addons/im_livechat/static/src/legacy/widgets/feedback/feedback.js:0
 #, python-format
 msgid "Thank you for your feedback"
-msgstr ""
+msgstr "Děkujeme vám za vaši reakci"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__channel_id
@@ -1826,7 +1835,7 @@ msgstr ""
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_res_users_settings
 msgid "User Settings"
-msgstr ""
+msgstr "Uživatelské nastavení"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_message__user_script_answer_id

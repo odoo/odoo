@@ -26,7 +26,7 @@
                             onActionExecuted="() => model.load()"/>
                     </t>
                 </t>
-                <t t-component="props.Renderer" list="model.root" activeActions="activeActions" archInfo="archInfo" allowSelectors="props.allowSelectors" editable="editable" openRecord.bind="openRecord" noContentHelp="props.info.noContentHelp" onAdd.bind="createRecord"/>
+                <t t-component="props.Renderer" list="model.root" activeActions="activeActions" archInfo="archInfo" allowSelectors="props.allowSelectors" editable="editable" openRecord.bind="openRecord" noContentHelp="props.info.noContentHelp" onAdd.bind="createRecord" onOptionalFieldsChanged.bind="onOptionalFieldsChanged"/>
             </Layout>
         </div>
     </t>
@@ -42,7 +42,7 @@
                         Discard
                     </button>
                 </t>
-                <t t-elif="activeActions.create and (!model.root.isGrouped or !editable)">
+                <t t-elif="activeActions.create">
                     <button type="button" class="btn btn-primary o_list_button_add" data-hotkey="c" t-on-click="onClickCreate" data-bounce-button="">
                         New
                     </button>

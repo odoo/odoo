@@ -91,8 +91,15 @@ class PaymentPortal(payment_portal.PaymentPortal):
 
         return tx_sudo._get_processing_values()
 
-    def _get_custom_rendering_context_values(self, donation_options=None, donation_descriptions=None, is_donation=False, **kwargs):
-        rendering_context = super()._get_custom_rendering_context_values(**kwargs)
+    def _get_custom_rendering_context_values(
+        self, donation_options=None, donation_descriptions=None, is_donation=False, **kwargs
+    ):
+        rendering_context = super()._get_custom_rendering_context_values(
+            donation_options=donation_options,
+            donation_descriptions=donation_descriptions,
+            is_donation=is_donation,
+            **kwargs,
+        )
         if is_donation:
             user_sudo = request.env.user
             logged_in = not user_sudo._is_public()

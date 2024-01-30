@@ -318,7 +318,7 @@ class AccountJournal(models.Model):
         These will be then used to display or not payment method specific fields in the view.
         """
         for journal in self:
-            codes = [line.code for line in journal.inbound_payment_method_line_ids + journal.outbound_payment_method_line_ids]
+            codes = [line.code for line in journal.inbound_payment_method_line_ids + journal.outbound_payment_method_line_ids if line.code]
             journal.selected_payment_method_codes = ',' + ','.join(codes) + ','
 
     @api.depends('company_id', 'type')
@@ -571,13 +571,14 @@ class AccountJournal(models.Model):
         return result
 
     @api.model
-    def get_next_bank_cash_default_code(self, journal_type, company):
-        journal_code_base = (journal_type == 'cash' and 'CSH' or 'BNK')
+    def get_next_bank_cash_default_code(self, journal_type, company, protected_codes=False):
+        prefix_map = {'cash': 'CSH', 'general': 'GEN', 'bank': 'BNK'}
+        journal_code_base = prefix_map.get(journal_type)
         journals = self.env['account.journal'].with_context(active_test=False).search([('code', 'like', journal_code_base + '%'), ('company_id', '=', company.id)])
         for num in range(1, 100):
             # journal_code has a maximal size of 5, hence we can enforce the boundary num < 100
             journal_code = journal_code_base + str(num)
-            if journal_code not in journals.mapped('code'):
+            if journal_code not in journals.mapped('code') and (protected_codes and journal_code not in protected_codes or not protected_codes):
                 return journal_code
 
     @api.model
@@ -591,12 +592,11 @@ class AccountJournal(models.Model):
         }
 
     @api.model
-    def _fill_missing_values(self, vals):
+    def _fill_missing_values(self, vals, protected_codes=False):
         journal_type = vals.get('type')
-        if 'import_file' in self.env.context and not journal_type:
-            vals['type'] = 'general'
-            if not vals.get('code'):
-                vals['code'] = vals.get('name')
+        is_import = 'import_file' in self.env.context
+        if is_import and not journal_type:
+            vals['type'] = journal_type = 'general'
 
         # 'type' field is required.
         if not journal_type:
@@ -639,6 +639,12 @@ class AccountJournal(models.Model):
             if journal_type in ('cash', 'bank') and not has_loss_account:
                 vals['loss_account_id'] = company.default_cash_difference_expense_account_id.id
 
+        if is_import and not vals.get('code'):
+            code = vals['name'][:5]
+            vals['code'] = code if not protected_codes or code not in protected_codes else self.get_next_bank_cash_default_code(journal_type, company, protected_codes)
+            if not vals['code']:
+                raise UserError(_("Cannot generate an unused journal code. Please change the name for journal %s.", vals['name']))
+
         # === Fill missing refund_sequence ===
         if 'refund_sequence' not in vals:
             vals['refund_sequence'] = vals['type'] in ('sale', 'purchase')
@@ -646,7 +652,9 @@ class AccountJournal(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            self._fill_missing_values(vals)
+            # have to keep track of new journal codes when importing
+            codes = [vals['code'] for vals in vals_list if 'code' in vals] if 'import_file' in self.env.context else False
+            self._fill_missing_values(vals, protected_codes=codes)
 
         journals = super(AccountJournal, self.with_context(mail_create_nolog=True)).create(vals_list)
 
@@ -929,3 +937,11 @@ class AccountJournal(models.Model):
         """ Check if the payment method is available on this journal. """
         self.ensure_one()
         return self.filtered_domain(self.env['account.payment.method']._get_payment_method_domain(payment_method_code))
+
+    def _process_reference_for_sale_order(self, order_reference):
+        '''
+        returns the order reference to be used for the payment.
+        Hook to be overriden: see l10n_ch for an example.
+        '''
+        self.ensure_one()
+        return order_reference

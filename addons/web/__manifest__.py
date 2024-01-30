@@ -287,6 +287,8 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/xml/kanban.xml',
             'web/static/src/legacy/xml/search_panel.xml',
             'web/static/src/legacy/xml/week_days.xml',
+            # Don't include dark mode files in light mode
+            ('remove', 'web/static/src/**/*.dark.scss'),
         ],
         "web.assets_backend_legacy_lazy": [
             ("include", "web._assets_helpers"),
@@ -508,6 +510,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/js/public/public_root.js',
             'web/static/src/legacy/js/public/public_root_instance.js',
             'web/static/src/legacy/js/public/public_widget.js',
+            'web/static/src/legacy/js/report/report.js',
         ],
         'web.report_assets_pdf': [
             'web/static/src/webclient/actions/reports/reset.min.css',
@@ -521,6 +524,7 @@ This module provides the core of the Odoo Web Client.
         ],
         "web.dark_mode_assets_backend": [
             ('include', 'web.assets_backend'),
+            'web/static/src/**/*.dark.scss',
         ],
         "web.dark_mode_variables": [
             ('before', 'base/static/src/scss/onboarding.variables.scss', 'base/static/src/scss/onboarding.variables.dark.scss'),
@@ -584,7 +588,10 @@ This module provides the core of the Odoo Web Client.
         'web.assets_tests': [
             # No tours are defined in web, but the bundle "assets_tests" is
             # first called in web.
-            'web/static/tests/legacy/helpers/test_utils_file.js'
+            'web/static/tests/legacy/helpers/test_utils_file.js',
+            'web/static/tests/helpers/cleanup.js',
+            'web/static/tests/helpers/utils.js',
+            'web/static/tests/utils.js',
         ],
         # remove this bundle alongside the owl2 compatibility layer
         'web.tests_assets_common': [
@@ -610,6 +617,8 @@ This module provides the core of the Odoo Web Client.
             'web/static/lib/fullcalendar/list/main.js',
             'web/static/lib/fullcalendar/luxon/main.js',
 
+            'web/static/lib/zxing-library/zxing-library.js',
+
             'web/static/lib/ace/ace.js',
             'web/static/lib/ace/javascript_highlight_rules.js',
             'web/static/lib/ace/mode-python.js',
@@ -626,6 +635,7 @@ This module provides the core of the Odoo Web Client.
 
             # 'web/static/tests/legacy/main_tests.js',
             'web/static/tests/helpers/**/*.js',
+            'web/static/tests/utils.js',
             'web/static/tests/views/helpers.js',
             'web/static/tests/search/helpers.js',
             'web/static/tests/views/calendar/helpers.js',

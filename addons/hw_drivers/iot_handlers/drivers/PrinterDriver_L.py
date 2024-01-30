@@ -194,7 +194,8 @@ class PrinterDriver(Driver):
 
         return raster_init + raster_page_length + raster_data + raster_close
 
-    def format_escpos(self, im):
+    def format_escpos_bit_image_raster(self, im):
+        """ prints with the `GS v 0`-command """
         width = int((im.width + 7) / 8)
 
         raster_send = b'\x1d\x76\x30\x00'
@@ -208,7 +209,111 @@ class PrinterDriver(Driver):
             raster_data += raster_send + width.to_bytes(2, 'little') + slice_height.to_bytes(2, 'little') + im_slice
             dots = dots[width*max_slice_height:]
 
-        return raster_data + RECEIPT_PRINTER_COMMANDS['escpos']['cut']
+        return raster_data
+
+    def extract_columns_from_picture(self, im, line_height):
+        # Code inspired from python esc pos library:
+        # https://github.com/python-escpos/python-escpos/blob/4a0f5855ef118a2009b843a3a106874701d8eddf/src/escpos/image.py#L73-L89
+        width_pixels, height_pixels = im.size
+        for left in range(0, width_pixels, line_height):
+            box = (left, 0, left + line_height, height_pixels)
+            im_chunk = im.transform(
+                (line_height, height_pixels),
+                Image.EXTENT,
+                box
+            )
+            yield im_chunk.tobytes()
+
+    def format_escpos_bit_image_column(self, im, high_density_vertical=True,
+                                       high_density_horizontal=True,
+                                       size_scale=100):
+        """ prints with the `ESC *`-command
+        reference: https://reference.epson-biz.com/modules/ref_escpos/index.php?content_id=88
+
+        :param im: PIL image to print
+        :param high_density_vertical: print in high density in vertical direction
+        :param high_density_horizontal: print in high density in horizontal direction
+        :param size_scale: picture scale in percentage,
+        e.g: 50 -> half the size (horizontally and vertically)
+        """
+        size_scale_ratio = size_scale / 100
+        size_scale_width = int(im.width * size_scale_ratio)
+        size_scale_height = int(im.height * size_scale_ratio)
+        im = im.resize((size_scale_width, size_scale_height))
+        # escpos ESC * command print column per column
+        # (instead of usual row by row).
+        # So we transpose the picture to ease the calculations
+        im = im.transpose(Image.ROTATE_270).transpose(Image.FLIP_LEFT_RIGHT)
+
+        # Most of the code here is inspired from python escpos library
+        # https://github.com/python-escpos/python-escpos/blob/4a0f5855ef118a2009b843a3a106874701d8eddf/src/escpos/escpos.py#L237C9-L251
+        ESC = b'\x1b'
+        density_byte = (1 if high_density_horizontal else 0) + \
+                       (32 if high_density_vertical else 0)
+        nL = im.height & 0xFF
+        nH = (im.height >> 8) & 0xFF
+        HEADER = ESC + b'*' + bytes([density_byte, nL, nH])
+
+        raster_data = ESC + b'3\x10'  # Adjust line-feed size
+        line_height = 24 if high_density_vertical else 8
+        for column in self.extract_columns_from_picture(im, line_height):
+            raster_data += HEADER + column + b'\n'
+        raster_data += ESC + b'2'  # Reset line-feed size
+        return raster_data
+
+    def format_escpos(self, im):
+        # Epson support different command to print pictures.
+        # We use by default "GS v 0", but it  is incompatible with certain
+        # printer models (like TM-U2x0)
+        # As we are pretty limited in the information that we have, we will
+        # use the printer name to parse some configuration value
+        # Printer name examples:
+        # EpsonTMM30
+        #  -> Print using raster mode
+        # TM-U220__IMC_LDV_LDH_SCALE70__
+        #  -> Print using column bit image mode (without vertical and
+        #  horizontal density and a scale of 70%)
+
+        # Default image printing mode
+        image_mode = 'raster'
+
+        options_str = self.device_name.split('__')
+        option_str = ""
+        if len(options_str) > 2:
+            option_str = options_str[1].upper()
+            if option_str.startswith('IMC'):
+                image_mode = 'column'
+
+        if image_mode == 'column':
+            # Default printing mode parameters
+            high_density_vertical = True
+            high_density_horizontal = True
+            scale = 100
+
+            # Parse the printer name to get the needed parameters
+            # The separator need to not be filtered by `get_identifier`
+            options = option_str.split('_')
+            for option in options:
+                if option == 'LDV':
+                    high_density_vertical = False
+                elif option == 'LDH':
+                    high_density_horizontal = False
+                elif option.startswith('SCALE'):
+                    scale_value_str = re.search(r'\d+$', option)
+                    if scale_value_str is not None:
+                        scale = int(scale_value_str.group())
+                    else:
+                        raise ValueError(
+                            "Missing printer SCALE parameter integer "
+                            "value in option: " + option)
+
+            res = self.format_escpos_bit_image_column(im,
+                                                      high_density_vertical,
+                                                      high_density_horizontal,
+                                                      scale)
+        else:
+            res = self.format_escpos_bit_image_raster(im)
+        return res + RECEIPT_PRINTER_COMMANDS['escpos']['cut']
 
     def print_status(self):
         """Prints the status ticket of the IoTBox on the current printer."""

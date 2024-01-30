@@ -34,7 +34,7 @@ export const WEBSOCKET_CLOSE_CODES = Object.freeze({
 });
 // Should be incremented on every worker update in order to force
 // update of the worker in browser cache.
-export const WORKER_VERSION = '1.0.4';
+export const WORKER_VERSION = '1.0.5';
 const INITIAL_RECONNECT_DELAY = 1000;
 const MAXIMUM_RECONNECT_DELAY = 60000;
 
@@ -47,6 +47,8 @@ const MAXIMUM_RECONNECT_DELAY = 60000;
  */
 export class WebsocketWorker {
     constructor() {
+        // Timestamp of start of most recent bus service sender
+        this.newestStartTs = undefined;
         this.websocketURL = "";
         this.currentUID = null;
         this.isWaitingForNewUID = true;
@@ -214,8 +216,16 @@ export class WebsocketWorker {
      *     - Number: user is logged whether on the frontend/backend.
      *     - false: user is not logged.
      *     - undefined: not available (e.g. livechat support page)
+     * @param {Number} param0.startTs Timestamp of start of bus service sender.
      */
-    _initializeConnection(client, { debug, lastNotificationId, uid, websocketURL }) {
+    _initializeConnection(client, { debug, lastNotificationId, uid, websocketURL, startTs }) {
+        if (this.newestStartTs && this.newestStartTs > startTs) {
+            this.debugModeByClient[client] = debug;
+            this.isDebug = Object.values(this.debugModeByClient).some(debugValue => debugValue !== '');
+            this.sendToClient(client, "initialized");
+            return;
+        }
+        this.newestStartTs = startTs;
         this.websocketURL = websocketURL;
         this.lastNotificationId = lastNotificationId;
         this.debugModeByClient[client] = debug;

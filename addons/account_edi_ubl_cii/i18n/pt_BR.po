@@ -6,14 +6,16 @@
 # Mateus Lopes <mateus1@gmail.com>, 2022
 # Luis Felipe Miléo <mileo@kmee.com.br>, 2022
 # Martin Trigaux, 2022
+# Layna Nascimento, 2023
+# Maitê Dietze, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-14 05:51+0000\n"
+"POT-Creation-Date: 2023-05-23 08:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Maitê Dietze, 2023\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,7 +26,7 @@ msgstr ""
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "1.0"
-msgstr ""
+msgstr "1.0"
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_facturx_export_22
@@ -47,9 +49,16 @@ msgid ""
 msgstr ""
 
 #. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+#, python-format
+msgid "A payment of %s was detected."
+msgstr "Um pagamento no valor de %s foi detectado."
+
+#. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_a_nz
 msgid "A-NZ BIS Billing 3.0"
-msgstr ""
+msgstr "A-NZ BIS Billing 3.0"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -57,25 +66,34 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Articles 226 items 11 to 15 Directive 2006/112/EN"
-msgstr ""
+msgstr "Articles 226 items 11 to 15 Directive 2006/112/EN"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "At least one of the following fields %s is required on %s."
-msgstr ""
+msgstr "Ao menos um dos seguintes campos %s é necessário em %s."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_de
 msgid "BIS3 DE (XRechnung)"
-msgstr ""
+msgstr "BIS3 DE (XRechnung)"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_common
 msgid ""
 "Common functions for EDI documents: generate the data, the constraints, etc"
 msgstr ""
+"Funções comuns para documentos de EDI: gerar os dados, as restrições, etc."
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
+#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
+#, python-format
+msgid "Conditional cash/payment discount"
+msgstr "Desconto condicional de pagamento à vista"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -93,7 +111,7 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Could not retrieve the tax: %s %% for line '%s'."
-msgstr ""
+msgstr "Não foi possível buscar o imposto: %s %% para a linha '%s'."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -101,49 +119,56 @@ msgstr ""
 #, python-format
 msgid "Could not retrieve the unit of measure for line with label '%s'."
 msgstr ""
+"Não foi possível buscar a unidade de medida para a linha com rótulo '%s'."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Down Payment"
-msgstr "Baixar Pagamento"
+msgstr "Pagamento de entrada"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Down Payments"
-msgstr "Baixar Pagamentos"
+msgstr "Pagamentos de entrada"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_efff
 msgid "E-FFF (BE)"
-msgstr ""
+msgstr "E-FFF (BE)"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_format
 msgid "EDI format"
-msgstr ""
+msgstr "Formato para EDI"
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "EN 16931"
-msgstr ""
+msgstr "EN 16931"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 #, python-format
 msgid "Each invoice line shall have one and only one tax."
-msgstr ""
+msgstr "Cada linha da fatura deve ter somente um imposto."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
+#, python-format
+msgid "Each invoice line should have a product or a label."
+msgstr "Cada linha de fatura deve ter um produto ou uma etiqueta."
+
+#. module: account_edi_ubl_cii
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Each invoice line should have at least one tax."
-msgstr ""
+msgstr "Cada linha da fatura deve ter pelo menos um imposto."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_mail_template
@@ -164,12 +189,12 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Export outside the EU"
-msgstr ""
+msgstr "Exportar fora da UE"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_cii
 msgid "Factur-x/XRechnung CII 2.2.0"
-msgstr ""
+msgstr "Factur-x/XRechnung CII 2.2.0"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -180,6 +205,8 @@ msgid ""
 "For intracommunity supply, the actual delivery date or the invoicing period "
 "should be included."
 msgstr ""
+"Para o fornecimento intracomunitário, deve ser incluída a data de entrega "
+"real ou o período de faturamento."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -187,18 +214,19 @@ msgstr ""
 #, python-format
 msgid "For intracommunity supply, the delivery address should be included."
 msgstr ""
+"Para fornecimento intracomunitário, o endereço de entrega deve ser incluído."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Intra-Community supply"
-msgstr ""
+msgstr "Fornecimento intracomunitário"
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "Invoice generated by Odoo"
-msgstr ""
+msgstr "Fatura gerada pelo Odoo"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -212,8 +240,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
-msgid "No gross price nor net price found for line in xml"
+msgid ""
+"No gross price, net price nor line subtotal amount found for line in xml"
 msgstr ""
+"Nenhum preço bruto, preço líquido ou valor de subtotal de linha foi "
+"encontrado para a linha no XML"
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
@@ -225,28 +256,28 @@ msgstr "Odoo"
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Output VAT, reduced rate, low"
-msgstr ""
+msgstr "Output VAT, reduced rate, low"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Output VAT, reduced rate, middle"
-msgstr ""
+msgstr "Output VAT, reduced rate, middle"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Output VAT, reduced rate, raw fish"
-msgstr ""
+msgstr "Output VAT, reduced rate, raw fish"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Output VAT, regular rate"
-msgstr ""
+msgstr "Output VAT, regular rate"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_ir_actions_report
@@ -256,19 +287,19 @@ msgstr "Reportar Ação"
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_sg
 msgid "SG BIS Billing 3.0"
-msgstr ""
+msgstr "SG BIS Billing 3.0"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_nl
 msgid "SI-UBL 2.0 (NLCIUS)"
-msgstr ""
+msgstr "SI-UBL 2.0 (NLCIUS)"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Tax '%s' is invalid: %s"
-msgstr ""
+msgstr "O imposto '%s' é inválido: %s"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -278,6 +309,8 @@ msgid ""
 "The VAT number of the supplier does not seem to be valid. It should be of "
 "the form: NO179728982MVA."
 msgstr ""
+"The VAT number of the supplier does not seem to be valid. It should be of "
+"the form: NO179728982MVA."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -285,7 +318,7 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
 #, python-format
 msgid "The currency '%s' is not active."
-msgstr ""
+msgstr "A moeda '%s' não está ativa."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -300,14 +333,14 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "The element %s is required on %s."
-msgstr ""
+msgstr "O elemento %s é necessário em %s."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "The field %s is required on %s."
-msgstr ""
+msgstr "O campo %s é necessário em %s."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -316,6 +349,18 @@ msgstr ""
 msgid ""
 "The field 'Sanitized Account Number' is required on the Recipient Bank."
 msgstr ""
+"O campo 'Número da conta uniformizado' é obrigatório no banco destinatário."
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
+#, python-format
+msgid ""
+"The invoice contains line(s) with a negative unit price, which is not "
+"allowed. You might need to set a negative quantity instead."
+msgstr ""
+"A fatura contém linha(s) com preço unitário negativo, o que não é permitido."
+" Em vez disso, talvez seja necessário definir uma quantidade negativa."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -326,6 +371,8 @@ msgid ""
 "The invoice has been converted into a credit note and the quantities have "
 "been reverted."
 msgstr ""
+"A fatura foi convertida em uma nota de crédito e as quantidades foram "
+"revertidas."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -342,7 +389,7 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 #, python-format
 msgid "The supplier %s must have a Bronnoysund company registry."
-msgstr ""
+msgstr "The supplier %s must have a Bronnoysund company registry."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -354,17 +401,17 @@ msgstr ""
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_20
 msgid "UBL 2.0"
-msgstr ""
+msgstr "UBL 2.0"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_21
 msgid "UBL 2.1"
-msgstr ""
+msgstr "UBL 2.1"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_bis3
 msgid "UBL BIS Billing 3.0.12"
-msgstr ""
+msgstr "UBL BIS Billing 3.0.12"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -374,6 +421,8 @@ msgid ""
 "When the Canary Island General Indirect Tax (IGIC) applies, the tax rate on "
 "each invoice line should be greater than 0."
 msgstr ""
+"When the Canary Island General Indirect Tax (IGIC) applies, the tax rate on "
+"each invoice line should be greater than 0."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -384,11 +433,14 @@ msgid ""
 "Invoice line (BG-25) shall be categorized with an Invoiced item VAT category"
 " code (BT-151)."
 msgstr ""
+"You should include at least one tax per invoice line. [BR-CO-04]-Each "
+"Invoice line (BG-25) shall be categorized with an Invoiced item VAT category"
+" code (BT-151)."
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "factur-x.xml"
-msgstr ""
+msgstr "factur-x.xml"
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_line_facturx_export_22
@@ -398,9 +450,9 @@ msgstr "falso"
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "fx"
-msgstr ""
+msgstr "fx"
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"
-msgstr ""
+msgstr "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"

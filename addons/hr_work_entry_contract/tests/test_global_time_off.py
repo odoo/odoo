@@ -28,13 +28,13 @@ class TestGlobalTimeOff(TestWorkEntryBase):
         contract.state = 'open'
         contract.date_generated_from = start
         contract.date_generated_to = start
-        work_entries = contract._generate_work_entries(start, end)
+        work_entries = contract.generate_work_entries(start.date(), end.date())
         self.assertEqual(work_entries.work_entry_type_id, contract._get_default_work_entry_type())
         work_entries.unlink()
         contract.date_generated_from = start
         contract.date_generated_to = start
         leave.calendar_id = contract.resource_calendar_id
-        work_entries = contract._generate_work_entries(start, end)
+        work_entries = contract.generate_work_entries(start.date(), end.date())
         self.assertEqual(work_entries.work_entry_type_id, leave.work_entry_type_id)
 
     def test_gto_no_calendar(self):
@@ -49,5 +49,5 @@ class TestGlobalTimeOff(TestWorkEntryBase):
         contract.state = 'open'
         contract.date_generated_from = start
         contract.date_generated_to = start
-        work_entries = contract._generate_work_entries(start, end)
+        work_entries = contract.generate_work_entries(start.date(), end.date())
         self.assertEqual(work_entries.work_entry_type_id, leave.work_entry_type_id)

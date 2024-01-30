@@ -15,10 +15,11 @@
         <field name="line_ids">
             <record id="total_vat_payable" model="account.report.line">
                 <field name="name">[20] VAT PAYABLE/REFUNDABLE (Total A - Total B)</field>
-                <field name="aggregation_formula">(VAT4.balance + VAT4A.balance + (SEC6.balance * 0.6 + SEC7.balance) + VAT11.balance + VAT12.balance) - (VAT14.balance + VAT14A.balance + VAT15.balance + VAT16.balance + VAT17.balance + VAT18.balance)</field>
+                <field name="aggregation_formula">TotalA.balance - TotalB.balance</field>
                 <field name="children_ids">
                     <record id="total_output_tax" model="account.report.line">
                         <field name="name">[13] Total A: TOTAL OUTPUT TAX (4 + 4A + 9 + 11 + 12)</field>
+                        <field name="code">TotalA</field>
                         <field name="aggregation_formula">VAT4.balance + VAT4A.balance + (SEC6.balance * 0.6 + SEC7.balance) + VAT11.balance + VAT12.balance</field>
                         <field name="children_ids">
                             <record id="standard_rate_exclude_capital_goods_service" model="account.report.line">
@@ -199,6 +200,7 @@
                     </record>
                     <record id="total_input_tax" model="account.report.line">
                         <field name="name">[19] Total B: TOTAL INPUT TAX (14 + 14A + 15 + 15A + 16 + 17 + 18)</field>
+                        <field name="code">TotalB</field>
                         <field name="aggregation_formula">VAT14.balance + VAT14A.balance + VAT15.balance + VAT15A.balance + VAT16.balance + VAT17.balance + VAT18.balance</field>
                         <field name="children_ids">
                             <record id="capital_goods_services_supplied" model="account.report.line">

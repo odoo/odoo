@@ -113,7 +113,7 @@ class TestWorkEntryHolidaysPerformancesBigData(TestWorkEntryHolidaysBase):
         # Test Case 7: Try to generate work entries for
         # a hundred employees over a month
         with self.assertQueryCount(__system__=2607, admin=2807):
-            work_entries = self.contracts._generate_work_entries(date(2020, 7, 1), date(2020, 8, 31))
+            work_entries = self.contracts.generate_work_entries(date(2020, 7, 1), date(2020, 8, 31))
 
         # Original work entries to generate when we don't adapt date_generated_from and
         # date_generated_to when they are equal for old contracts: 138300

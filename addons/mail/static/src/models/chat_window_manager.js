@@ -239,7 +239,7 @@ registerModel({
                 );
                 let amount = 0;
                 for (const chatWindow of allHiddenWithThread) {
-                    if (chatWindow.thread.channel.localMessageUnreadCounter > 0) {
+                    if (chatWindow.thread.channel && chatWindow.thread.channel.localMessageUnreadCounter > 0) {
                         amount++;
                     }
                 }
@@ -252,7 +252,10 @@ registerModel({
                 if (!this.messaging || !this.messaging.device) {
                     return visual;
                 }
-                if (!this.messaging.device.isSmall && this.messaging.discuss.discussView) {
+                if (
+                    (!this.messaging.device.isSmall && this.messaging.discuss.discussView) ||
+                    this.messaging.discussPublicView
+                ) {
                     return visual;
                 }
                 if (!this.chatWindows.length) {

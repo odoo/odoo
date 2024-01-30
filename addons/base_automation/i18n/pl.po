@@ -232,6 +232,9 @@ msgid ""
 "        You can put a negative number if you need a delay before the\n"
 "        trigger date, like sending a reminder 15 minutes before a meeting."
 msgstr ""
+"Opóźnienie po dacie wyzwolenia.\n"
+"Możesz wprowadzić liczbę ujemną, jeśli potrzebujesz opóźnienia przed datą wyzwalacza.\n"
+"na przykład wysłanie przypomnienia 15 minut przed spotkaniem."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_range
@@ -615,6 +618,15 @@ msgid ""
 "- 'Create Next Activity': create an activity (Discuss)\n"
 "- 'Send SMS Text Message': send SMS, log them on documents (SMS)"
 msgstr ""
+"Typ działania serwera. Dostępne są następujące wartości:\n"
+"- 'Wykonaj kod Python': blok kodu python, który zostanie wykonany\n"
+"- \"Utwórz nowy rekord\": utworzenie nowego rekordu z nowymi wartościami\n"
+"- \"Aktualizacja rekordu\": aktualizacja wartości rekordu\n"
+"- \"Wykonaj kilka działań\": zdefiniowanie akcji, która uruchamia kilka innych akcji serwera\n"
+"- \"Wyślij Email': umieść wiadomość, notatkę lub wyślij email (Discuss)\n"
+"- 'Dodaj followersów': dodawanie followersów do rekordu (dyskusja)\n"
+"- Tworzenie następnej aktywności': tworzenie aktywności (Dyskusja)\n"
+"- 'Wyślij wiadomość SMS': wyślij SMS, zaloguj je na dokumentach (SMS)"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__usage
@@ -648,6 +660,11 @@ msgid ""
 "                opportunity which still has status pending after 14 days might\n"
 "                trigger an automatic reminder email."
 msgstr ""
+"Używaj automatycznych akcji do automatycznego wyzwalania akcji dla\n"
+"różnych ekranów. Przykład: sygnał utworzony przez określonego użytkownika może\n"
+"może zostać automatycznie przypisany do określonego zespołu sprzedaży, lub\n"
+"szansa, która nadal ma status oczekującej po 14 dniach, może\n"
+"wyzwolić automatyczną wiadomość e-mail z przypomnieniem."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_user_field_name

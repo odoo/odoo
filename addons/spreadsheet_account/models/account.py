@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import date
+import calendar
 from dateutil.relativedelta import relativedelta
 
 from odoo import models, api, _
@@ -24,7 +25,8 @@ class AccountMove(models.Model):
             fiscal_month = int(company.fiscalyear_last_month)
             if not (fiscal_day == 31 and fiscal_month == 12):
                 year += 1
-            current = date(year, fiscal_month, fiscal_day)
+            max_day = calendar.monthrange(year, fiscal_month)[1]
+            current = date(year, fiscal_month, min(fiscal_day, max_day))
             start, end = date_utils.get_fiscal_year(current, fiscal_day, fiscal_month)
         elif period_type == "month":
             start = date(year, month, 1)
@@ -58,16 +60,17 @@ class AccountMove(models.Model):
             ("date", ">=", start),
             ("date", "<=", end),
         ]
+        # It is more optimized to (like) search for code directly in account.account than in account_move_line
         code_domain = expression.OR(
             [
-                expression.AND([
-                    [("account_id.code", "=like", f"{code}%")],
-                    expression.OR([balance_domain, pnl_domain]),
-                ])
-                for code in codes
+                ("code", "=like", f"{code}%"),
             ]
+            for code in codes
         )
-        domain = expression.AND([code_domain, [("company_id", "=", company_id)]])
+        account_ids = self.env["account.account"].search(code_domain).ids
+        code_domain = [("account_id", "in", account_ids)]
+        period_domain = expression.OR([balance_domain, pnl_domain])
+        domain = expression.AND([code_domain, period_domain, [("company_id", "=", company_id)]])
         if formula_params["include_unposted"]:
             domain = expression.AND(
                 [domain, [("move_id.state", "!=", "cancel")]]

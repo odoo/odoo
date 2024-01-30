@@ -5,7 +5,7 @@
 # Translators:
 # Mustafa Rawi <mustafa@cubexco.com>, 2022
 # Martin Trigaux, 2022
-# Niyas Raphy, 2022
+# Niyas Raphy, 2023
 # Malaz Abuidris <msea@odoo.com>, 2023
 # 
 msgid ""
@@ -296,7 +296,7 @@ msgstr "نشط"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_search_view
 msgid "Active Products"
-msgstr "نشط منتجات"
+msgstr "المنتجات النشطة "
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__activity_ids
@@ -1736,8 +1736,8 @@ msgstr "عدد الاخطاء"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__message_needaction_counter
 #: model:ir.model.fields,help:product.field_product_template__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "عدد الرسائل التي تتطلب اتخاذ إجراء "
+msgid "Number of messages requiring action"
+msgstr "عدد الرسائل التي تتطلب اتخاذ إجراء"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__message_has_error_counter
@@ -2330,7 +2330,7 @@ msgstr "كمية المنتجات المحتواة في التعبئة. "
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__radio
 msgid "Radio"
-msgstr "اختيار "
+msgstr "راديو "
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__code
@@ -2712,6 +2712,13 @@ msgstr ""
 "الكمية لشرائها من هذا المورد للاستفادة من السعر، معبر عنها بوحدة قياس منتَج "
 "المورّد، وإذا لم تكن هناك وحدة قياس أخرى، تُستخدم وحدة القياس الافتراضية "
 "للمنتج. "
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+#, python-format
+msgid "The rounding method must be strictly positive."
+msgstr "يجب أن تكون طريقة التقريب إلى قيمة موجبة فقط لا غير. "
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__lst_price
@@ -3250,10 +3257,12 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot delete the value %s because it is used on the following products:\n"
-"%s"
+"%s\n"
+" If the value has been associated to a product in the past, you will not be able to delete it."
 msgstr ""
 "لا يمكنك حذف القيمة %s لأنها مستخدَمة في المنتجات التالية: \n"
-"%s "
+"%s\n"
+"إذا كانت القيمة مرتبطة بمنتج في الماضي، لن تكون قادراً على حذفها. "
 
 #. module: product
 #. odoo-python
@@ -3277,6 +3286,13 @@ msgstr ""
 "(%s)\n"
 "إنها مستخدمة في قائمة (قوائم) أسعار أخرى:\n"
 "%s "
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_attribute.py:0
+#, python-format
+msgid "You cannot delete value %s because it was used in some products."
+msgstr "لا يمكنك حذف القيمة %s لأنها مستخدَمة في بعض المنتجات. "
 
 #. module: product
 #. odoo-python

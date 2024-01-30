@@ -44,7 +44,7 @@ class IrActionsReport(models.Model):
 
                 anchor_index = tree.index(anchor_elements[0])
                 tree.insert(anchor_index, etree.fromstring(to_inject))
-                new_xml = etree.tostring(cleanup_xml_node(tree))
+                new_xml = etree.tostring(cleanup_xml_node(tree), xml_declaration=True, encoding='UTF-8')
                 edi_attachment.sudo().write({
                     'res_model': 'account.move',
                     'res_id': invoice.id,
@@ -59,7 +59,7 @@ class IrActionsReport(models.Model):
 
         if collected_streams \
                 and res_ids \
-                and self._get_report(report_ref).report_name in ('account.report_invoice_with_payments', 'account.report_invoice'):
+                and self._is_invoice_report(report_ref):
             for res_id, stream_data in collected_streams.items():
                 invoice = self.env['account.move'].browse(res_id)
                 self._add_pdf_into_invoice_xml(invoice, stream_data)

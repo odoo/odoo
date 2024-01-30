@@ -5,11 +5,13 @@ var concurrency = require('web.concurrency');
 var core = require('web.core');
 var utils = require('web.utils');
 var ajax = require('web.ajax');
+var session = require('web.session');
 var _t = core._t;
 
 var VariantMixin = {
     events: {
         'change .css_attribute_color input': '_onChangeColorAttribute',
+        'change .o_variant_pills input' :'_onChangePillsAttribute',
         'change .main_product:not(.in_cart) input.js_quantity': 'onChangeAddQuantity',
         'change [data-attribute_exclusions]': 'onChangeVariant'
     },
@@ -54,6 +56,9 @@ var VariantMixin = {
         }
 
         const $parent = $(ev.target).closest('.js_product');
+        if(!$parent.length){
+            return Promise.resolve();
+        }
         const combination = this.getSelectedVariantValues($parent);
         let parentCombination;
 
@@ -72,6 +77,7 @@ var VariantMixin = {
                     'add_qty': parseInt($currentOptionalProduct.find('input[name="add_qty"]').val()),
                     'pricelist_id': this.pricelistId || false,
                     'parent_combination': combination,
+                    'context': session.user_context,
                     ...this._getOptionalCombinationInfoParam($currentOptionalProduct),
                 }).then((combinationData) => {
                     this._onChangeCombination(ev, $currentOptionalProduct, combinationData);
@@ -91,6 +97,7 @@ var VariantMixin = {
             'add_qty': parseInt($parent.find('input[name="add_qty"]').val()),
             'pricelist_id': this.pricelistId || false,
             'parent_combination': parentCombination,
+            'context': session.user_context,
             ...this._getOptionalCombinationInfoParam($parent),
         }).then((combinationData) => {
             this._onChangeCombination(ev, $parent, combinationData);
@@ -405,7 +412,11 @@ var VariantMixin = {
         if (combinationData.archived_combinations) {
             combinationData.archived_combinations.forEach((excludedCombination) => {
                 const ptavCommon = excludedCombination.filter((ptav) => combination.includes(ptav));
-                if (ptavCommon.length === combination.length) {
+                if (
+                    !!ptavCommon
+                    && (combination.length === excludedCombination.length)
+                    && (ptavCommon.length === combination.length)
+                ) {
                     // Selected combination is archived, all attributes must be disabled from each other
                     combination.forEach((ptav) => {
                         combination.forEach((ptavOther) => {
@@ -420,7 +431,11 @@ var VariantMixin = {
                             );
                         })
                     })
-                } else if (ptavCommon.length === (combination.length - 1)) {
+                } else if (
+                    !!ptavCommon
+                    && (combination.length === excludedCombination.length)
+                    && (ptavCommon.length === (combination.length - 1))
+                ) {
                     // In this case we only need to disable the remaining ptav
                     const disabledPtav = excludedCombination.find((ptav) => !combination.includes(ptav));
                     excludedCombination.forEach((ptav) => {
@@ -694,6 +709,14 @@ var VariantMixin = {
     _onChangeColorAttribute: function (ev) {
         var $parent = $(ev.target).closest('.js_product');
         $parent.find('.css_attribute_color')
+            .removeClass("active")
+            .filter(':has(input:checked)')
+            .addClass("active");
+    },
+
+    _onChangePillsAttribute: function (ev) {
+        var $parent = $(ev.target).closest('.js_product');
+        $parent.find('.o_variant_pills')
             .removeClass("active")
             .filter(':has(input:checked)')
             .addClass("active");

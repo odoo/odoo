@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
 from odoo import models, _
-from odoo.osv import expression
 from odoo.tools import html2plaintext, cleanup_xml_node
 from lxml import etree
+from collections import defaultdict
 
 
 class AccountEdiXmlUBL20(models.AbstractModel):
@@ -67,10 +67,11 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         }]
 
     def _get_partner_contact_vals(self, partner):
+        phone = partner.phone or partner.mobile
         return {
             'id': partner.id,
             'name': partner.name,
-            'telephone': partner.phone or partner.mobile,
+            'telephone': phone and phone.strip(),
             'electronic_mail': partner.email,
         }
 
@@ -165,24 +166,43 @@ class AccountEdiXmlUBL20(models.AbstractModel):
     def _get_invoice_payment_terms_vals_list(self, invoice):
         payment_term = invoice.invoice_payment_term_id
         if payment_term:
-            return [{'note_vals': [payment_term.name]}]
+            # The payment term's note is automatically embedded in a <p> tag in Odoo
+            return [{'note_vals': [html2plaintext(payment_term.note)]}]
         else:
             return []
 
     def _get_invoice_tax_totals_vals_list(self, invoice, taxes_vals):
-        return [{
+        tax_totals_vals = {
             'currency': invoice.currency_id,
             'currency_dp': invoice.currency_id.decimal_places,
             'tax_amount': taxes_vals['tax_amount_currency'],
-            'tax_subtotal_vals': [{
-                'currency': invoice.currency_id,
-                'currency_dp': invoice.currency_id.decimal_places,
-                'taxable_amount': vals['base_amount_currency'],
-                'tax_amount': vals['tax_amount_currency'],
-                'percent': vals['_tax_category_vals_']['percent'],
-                'tax_category_vals': vals['_tax_category_vals_'],
-            } for vals in taxes_vals['tax_details'].values()],
-        }]
+            'tax_subtotal_vals': [],
+        }
+        epd_tax_to_discount = self._get_early_payment_discount_grouped_by_tax_rate(invoice)
+        for grouping_key, vals in taxes_vals['tax_details'].items():
+            if grouping_key['tax_amount_type'] != 'fixed':
+                subtotal = {
+                    'currency': invoice.currency_id,
+                    'currency_dp': invoice.currency_id.decimal_places,
+                    'taxable_amount': vals['base_amount_currency'],
+                    'tax_amount': vals['tax_amount_currency'],
+                    'percent': vals['_tax_category_vals_']['percent'],
+                    'tax_category_vals': vals['_tax_category_vals_'],
+                }
+                if epd_tax_to_discount:
+                    # early payment discounts: need to recompute the tax/taxable amounts
+                    taxable_amount_after_epd = subtotal['taxable_amount'] - epd_tax_to_discount.get(subtotal['percent'], 0)
+                    tax_amount_after_epd = taxable_amount_after_epd * subtotal['tax_category_vals']['percent'] / 100
+                    subtotal.update({
+                        'taxable_amount': taxable_amount_after_epd,
+                        'tax_amount': tax_amount_after_epd,
+                    })
+                tax_totals_vals['tax_subtotal_vals'].append(subtotal)
+
+        if epd_tax_to_discount:
+            # early payment discounts: hence, need to recompute the total tax amount
+            tax_totals_vals['tax_amount'] = sum([subtot['tax_amount'] for subtot in tax_totals_vals['tax_subtotal_vals']])
+        return [tax_totals_vals]
 
     def _get_invoice_line_item_vals(self, line, taxes_vals):
         """ Method used to fill the cac:InvoiceLine/cac:Item node.
@@ -191,50 +211,62 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         :param line:        An invoice line.
         :param taxes_vals:  The tax details for the current invoice line.
         :return:            A python dictionary.
-
         """
         product = line.product_id
-        taxes = line.tax_ids.flatten_taxes_hierarchy()
+        taxes = line.tax_ids.flatten_taxes_hierarchy().filtered(lambda t: t.amount_type != 'fixed')
         tax_category_vals_list = self._get_tax_category_list(line.move_id, taxes)
         description = line.name and line.name.replace('\n', ', ')
-
         return {
-            # Simple description about what you are selling.
             'description': description,
-
-            # The name of the item.
-            'name': product.name,
-
-            # Identifier of the product.
+            'name': product.name or description,
             'sellers_item_identification_vals': {'id': product.code},
-
-            # The main tax applied. Only one is allowed.
             'classified_tax_category_vals': tax_category_vals_list,
         }
 
     def _get_document_allowance_charge_vals_list(self, invoice):
         """
         https://docs.peppol.eu/poacc/billing/3.0/bis/#_document_level_allowance_or_charge
-        The aim is to transform the ecotax/récupel into a charge at the document level.
-        Warning, as the charge is transformed into an allowance, we have to make sure no tax is created on the line
-        level, otherwise, the TaxInclusiveAmount, will be wrong.
+        Usage for early payment discounts:
+        * Add one document level Allowance per tax rate (VAT included)
+        * Add one document level Charge (VAT excluded) with amount = the total sum of the early payment discount
+        The difference between these is the cash discount in case of early payment.
         """
         vals_list = []
-        #for line in invoice.line_ids:
-        #    for tax in line.tax_ids:
-        #        if tax.amount_type == 'fixed':
-        #            total_amount += tax.amount
-        #            vals_list.append({
-        #                'charge_indicator': 'true',
-        #                'allowance_charge_reason_code': 'AEO',  # "Collection and recycling"
-        #                'allowance_charge_reason': 'Collection and recycling',
-        #                'amount': float(tax.amount),
-        #                'currency_name': line.currency_id.name,
-        #                'currency_dp': line.currency_id.decimal_places,
-        #            })
+        # Early Payment Discount
+        epd_tax_to_discount = self._get_early_payment_discount_grouped_by_tax_rate(invoice)
+        if epd_tax_to_discount:
+            # One Allowance per tax rate (VAT included)
+            for tax_amount, discount_amount in epd_tax_to_discount.items():
+                vals_list.append({
+                    'charge_indicator': 'false',
+                    'allowance_charge_reason_code': '66',
+                    'allowance_charge_reason': _("Conditional cash/payment discount"),
+                    'amount': discount_amount,
+                    'currency_dp': 2,
+                    'currency_name': invoice.currency_id.name,
+                    'tax_category_vals': [{
+                        'id': 'S',
+                        'percent': tax_amount,
+                        'tax_scheme_id': 'VAT',
+                    }],
+                })
+            # ne global Charge (VAT exempted)
+            vals_list.append({
+                'charge_indicator': 'true',
+                'allowance_charge_reason_code': 'ZZZ',
+                'allowance_charge_reason': _("Conditional cash/payment discount"),
+                'amount': sum(epd_tax_to_discount.values()),
+                'currency_dp': 2,
+                'currency_name': invoice.currency_id.name,
+                'tax_category_vals': [{
+                    'id': 'E',
+                    'percent': 0.0,
+                    'tax_scheme_id': 'VAT',
+                }],
+            })
         return vals_list
 
-    def _get_invoice_line_allowance_vals_list(self, line):
+    def _get_invoice_line_allowance_vals_list(self, line, tax_values_list=None):
         """ Method used to fill the cac:InvoiceLine>cac:AllowanceCharge node.
 
         Allowances are distinguished from charges using the ChargeIndicator node with 'false' as value.
@@ -245,8 +277,20 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         :param line:    An invoice line.
         :return:        A list of python dictionaries.
         """
+        fixed_tax_charge_vals_list = []
+        for grouping_key, tax_details in tax_values_list['tax_details'].items():
+            if grouping_key['tax_amount_type'] == 'fixed':
+                fixed_tax_charge_vals_list.append({
+                    'currency_name': line.currency_id.name,
+                    'currency_dp': line.currency_id.decimal_places,
+                    'charge_indicator': 'true',
+                    'allowance_charge_reason_code': 'AEO',
+                    'allowance_charge_reason': tax_details['tax_name'],
+                    'amount': tax_details['tax_amount_currency'],
+                })
+
         if not line.discount:
-            return []
+            return fixed_tax_charge_vals_list
 
         # Price subtotal without discount:
         net_price_subtotal = line.price_subtotal
@@ -272,7 +316,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             'amount': gross_price_subtotal - net_price_subtotal,
         }
 
-        return [allowance_vals]
+        return [allowance_vals] + fixed_tax_charge_vals_list
 
     def _get_invoice_line_price_vals(self, line):
         """ Method used to fill the cac:InvoiceLine/cac:Price node.
@@ -289,7 +333,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         else:
             gross_price_subtotal = net_price_subtotal / (1.0 - (line.discount or 0.0) / 100.0)
         # Price subtotal with discount / quantity:
-        gross_price_unit = line.currency_id.round((gross_price_subtotal / line.quantity) if line.quantity else 0.0)
+        gross_price_unit = gross_price_subtotal / line.quantity if line.quantity else 0.0
 
         uom = super()._get_uom_unece_code(line)
 
@@ -299,6 +343,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
 
             # The price of an item, exclusive of VAT, after subtracting item price discount.
             'price_amount': gross_price_unit,
+            'product_price_dp': self.env['decimal.precision'].precision_get('Product Price'),
 
             # The number of item units to which the price applies.
             # setting to None -> the xml will not comprise the BaseQuantity (it's not mandatory)
@@ -313,43 +358,87 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         :param line:    An invoice line.
         :return:        A python dictionary.
         """
-        allowance_charge_vals_list = self._get_invoice_line_allowance_vals_list(line)
+        allowance_charge_vals_list = self._get_invoice_line_allowance_vals_list(line, tax_values_list=taxes_vals)
 
         uom = super()._get_uom_unece_code(line)
-
+        total_fixed_tax_amount = sum(
+            vals['amount']
+            for vals in allowance_charge_vals_list
+            if vals['allowance_charge_reason_code'] == 'AEO'
+        )
         return {
             'currency': line.currency_id,
             'currency_dp': line.currency_id.decimal_places,
-
-            # The requirement is the id has to be unique by invoice line.
-            'id': line.id,
-
             'invoiced_quantity': line.quantity,
             'invoiced_quantity_attrs': {'unitCode': uom},
-
-            'line_extension_amount': line.price_subtotal,
-
+            'line_extension_amount': line.price_subtotal + total_fixed_tax_amount,
             'allowance_charge_vals': allowance_charge_vals_list,
             'tax_total_vals': self._get_invoice_tax_totals_vals_list(line.move_id, taxes_vals),
             'item_vals': self._get_invoice_line_item_vals(line, taxes_vals),
             'price_vals': self._get_invoice_line_price_vals(line),
         }
 
+    def _apply_invoice_tax_filter(self, base_line, tax_values):
+        """
+            To be overridden to apply a specific tax filter
+        """
+        return True
+
+
+    def _apply_invoice_line_filter(self, invoice_line):
+        """
+            To be overridden to apply a specific invoice line filter
+        """
+        return True
+
+    def _get_early_payment_discount_grouped_by_tax_rate(self, invoice):
+        """
+        Get the early payment discounts grouped by the tax rate of the product it is linked to
+        :returns {float: float}: mapping tax amounts to early payment discount amounts
+        """
+        if invoice.company_id.early_pay_discount_computation != 'mixed':
+            return {}
+        tax_to_discount = defaultdict(lambda: 0)
+        for line in invoice.line_ids.filtered(lambda l: l.display_type == 'epd'):
+            for tax in line.tax_ids:
+                tax_to_discount[tax.amount] += line.amount_currency
+        return tax_to_discount
+
     def _export_invoice_vals(self, invoice):
         def grouping_key_generator(base_line, tax_values):
             tax = tax_values['tax_repartition_line'].tax_id
             tax_category_vals = self._get_tax_category_list(invoice, tax)[0]
-            return {
+            grouping_key = {
                 'tax_category_id': tax_category_vals['id'],
                 'tax_category_percent': tax_category_vals['percent'],
                 '_tax_category_vals_': tax_category_vals,
+                'tax_amount_type': tax.amount_type,
             }
+            # If the tax is fixed, we want to have one group per tax
+            # s.t. when the invoice is imported, we can try to guess the fixed taxes
+            if tax.amount_type == 'fixed':
+                grouping_key['tax_name'] = tax.name
+            return grouping_key
 
         # Validate the structure of the taxes
         self._validate_taxes(invoice)
 
         # Compute the tax details for the whole invoice and each invoice line separately.
-        taxes_vals = invoice._prepare_edi_tax_details(grouping_key_generator=grouping_key_generator)
+        taxes_vals = invoice._prepare_edi_tax_details(grouping_key_generator=grouping_key_generator,
+                                                      filter_to_apply=self._apply_invoice_tax_filter,
+                                                      filter_invl_to_apply=self._apply_invoice_line_filter)
+
+        # Fixed Taxes: filter them on the document level, and adapt the totals
+        # Fixed taxes are not supposed to be taxes in real live. However, this is the way in Odoo to manage recupel
+        # taxes in Belgium. Since only one tax is allowed, the fixed tax is removed from totals of lines but added
+        # as an extra charge/allowance.
+        fixed_taxes_keys = [k for k in taxes_vals['tax_details'] if k['tax_amount_type'] == 'fixed']
+        for key in fixed_taxes_keys:
+            fixed_tax_details = taxes_vals['tax_details'].pop(key)
+            taxes_vals['tax_amount_currency'] -= fixed_tax_details['tax_amount_currency']
+            taxes_vals['tax_amount'] -= fixed_tax_details['tax_amount']
+            taxes_vals['base_amount_currency'] += fixed_tax_details['tax_amount_currency']
+            taxes_vals['base_amount'] += fixed_tax_details['tax_amount']
 
         # Compute values for invoice lines.
         line_extension_amount = 0.0
@@ -357,18 +446,23 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         invoice_lines = invoice.invoice_line_ids.filtered(lambda line: line.display_type not in ('line_note', 'line_section'))
         document_allowance_charge_vals_list = self._get_document_allowance_charge_vals_list(invoice)
         invoice_line_vals_list = []
-        for line in invoice_lines:
+        for line_id, line in enumerate(invoice_lines):
             line_taxes_vals = taxes_vals['tax_details_per_record'][line]
             line_vals = self._get_invoice_line_vals(line, line_taxes_vals)
+            if not line_vals.get('id'):
+                line_vals['id'] = line_id + 1
             invoice_line_vals_list.append(line_vals)
 
             line_extension_amount += line_vals['line_extension_amount']
 
         # Compute the total allowance/charge amounts.
         allowance_total_amount = 0.0
+        charge_total_amount = 0.0
         for allowance_charge_vals in document_allowance_charge_vals_list:
             if allowance_charge_vals['charge_indicator'] == 'false':
                 allowance_total_amount += allowance_charge_vals['amount']
+            else:
+                charge_total_amount += allowance_charge_vals['amount']
 
         supplier = invoice.company_id.partner_id.commercial_partner_id
         customer = invoice.commercial_partner_id
@@ -423,9 +517,10 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                     'currency': invoice.currency_id,
                     'currency_dp': invoice.currency_id.decimal_places,
                     'line_extension_amount': line_extension_amount,
-                    'tax_exclusive_amount': invoice.amount_untaxed,
+                    'tax_exclusive_amount': taxes_vals['base_amount_currency'],
                     'tax_inclusive_amount': invoice.amount_total,
                     'allowance_total_amount': allowance_total_amount or None,
+                    'charge_total_amount': charge_total_amount or None,
                     'prepaid_amount': invoice.amount_total - invoice.amount_residual,
                     'payable_amount': invoice.amount_residual,
                 },
@@ -458,20 +553,13 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         vals = self._export_invoice_vals(invoice)
         errors = [constraint for constraint in self._export_invoice_constraints(invoice, vals).values() if constraint]
         xml_content = self.env['ir.qweb']._render(vals['main_template'], vals)
-        xml_content = b"<?xml version='1.0' encoding='UTF-8'?>\n" + etree.tostring(cleanup_xml_node(xml_content))
-        return xml_content, set(errors)
+        return etree.tostring(cleanup_xml_node(xml_content), xml_declaration=True, encoding='UTF-8'), set(errors)
 
     # -------------------------------------------------------------------------
     # IMPORT
     # -------------------------------------------------------------------------
 
     def _import_fill_invoice_form(self, journal, tree, invoice, qty_factor):
-
-        def _find_value(xpath, element=tree):
-            # avoid 'TypeError: empty namespace prefix is not supported in XPath'
-            nsmap = {k: v for k, v in tree.nsmap.items() if k is not None}
-            return self.env['account.edi.format']._find_value(xpath, element, nsmap)
-
         logs = []
 
         if qty_factor == -1:
@@ -480,11 +568,12 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         # ==== partner_id ====
 
         role = "Customer" if invoice.journal_id.type == 'sale' else "Supplier"
-        vat = _find_value(f'//cac:Accounting{role}Party/cac:Party//cbc:CompanyID')
-        phone = _find_value(f'//cac:Accounting{role}Party/cac:Party//cbc:Telephone')
-        mail = _find_value(f'//cac:Accounting{role}Party/cac:Party//cbc:ElectronicMail')
-        name = _find_value(f'//cac:Accounting{role}Party/cac:Party//cbc:Name')
-        self._import_retrieve_and_fill_partner(invoice, name=name, phone=phone, mail=mail, vat=vat)
+        vat = self._find_value(f'//cac:Accounting{role}Party/cac:Party//cbc:CompanyID[string-length(text()) > 5]', tree)
+        phone = self._find_value(f'//cac:Accounting{role}Party/cac:Party//cbc:Telephone', tree)
+        mail = self._find_value(f'//cac:Accounting{role}Party/cac:Party//cbc:ElectronicMail', tree)
+        name = self._find_value(f'//cac:Accounting{role}Party/cac:Party//cbc:Name', tree)
+        country_code = self._find_value(f'//cac:Accounting{role}Party/cac:Party//cac:Country//cbc:IdentificationCode', tree)
+        self._import_retrieve_and_fill_partner(invoice, name=name, phone=phone, mail=mail, vat=vat, country_code=country_code)
 
         # ==== currency_id ====
 
@@ -535,11 +624,11 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         narration = ""
         note_node = tree.find('./{*}Note')
         if note_node is not None and note_node.text:
-            narration += note_node.text + "\n"
+            narration += f"<p>{note_node.text}</p>"
 
         payment_terms_node = tree.find('./{*}PaymentTerms/{*}Note')  # e.g. 'Payment within 10 days, 2% discount'
         if payment_terms_node is not None and payment_terms_node.text:
-            narration += payment_terms_node.text + "\n"
+            narration += f"<p>{payment_terms_node.text}</p>"
 
         invoice.narration = narration
 
@@ -561,10 +650,10 @@ class AccountEdiXmlUBL20(models.AbstractModel):
 
         logs += self._import_fill_invoice_allowance_charge(tree, invoice, journal, qty_factor)
 
-        # ==== Down Payment (prepaid amount) ====
+        # ==== Prepaid amount ====
 
         prepaid_node = tree.find('./{*}LegalMonetaryTotal/{*}PrepaidAmount')
-        self._import_fill_invoice_down_payment(invoice, prepaid_node, qty_factor)
+        logs += self._import_log_prepaid_amount(invoice, prepaid_node, qty_factor)
 
         # ==== invoice_line_ids: InvoiceLine/CreditNoteLine ====
 
@@ -579,10 +668,12 @@ class AccountEdiXmlUBL20(models.AbstractModel):
     def _import_fill_invoice_line_form(self, journal, tree, invoice, invoice_line, qty_factor):
         logs = []
 
-        # Product
-        product = self._import_retrieve_info_from_map(
-            tree,
-            self._import_retrieve_product_map(journal),
+        # Product.
+        name = self._find_value('./cac:Item/cbc:Name', tree)
+        product = self.env['account.edi.format']._retrieve_product(
+            default_code=self._find_value('./cac:Item/cac:SellersItemIdentification/cbc:ID', tree),
+            name=name,
+            barcode=self._find_value("./cac:Item/cac:StandardItemIdentification/cbc:ID[@schemeID='0160']", tree),
         )
         if product is not None:
             invoice_line.product_id = product
@@ -604,11 +695,12 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             'net_price_unit': './{*}Price/{*}PriceAmount',
             'billed_qty':  './{*}InvoicedQuantity' if invoice.move_type in ('in_invoice', 'out_invoice') or qty_factor == -1 else './{*}CreditedQuantity',
             'allowance_charge': './/{*}AllowanceCharge',
-            'allowance_charge_indicator': './{*}ChargeIndicator',  # below allowance_charge node
-            'allowance_charge_amount': './{*}Amount',  # below allowance_charge node
+            'allowance_charge_indicator': './{*}ChargeIndicator',
+            'allowance_charge_amount': './{*}Amount',
+            'allowance_charge_reason': './{*}AllowanceChargeReason',
+            'allowance_charge_reason_code': './{*}AllowanceChargeReasonCode',
             'line_total_amount': './{*}LineExtensionAmount',
         }
-        self._import_fill_invoice_line_values(tree, xpath_dict, invoice_line, qty_factor)
 
         # Taxes
         inv_line_vals = self._import_fill_invoice_line_values(tree, xpath_dict, invoice_line, qty_factor)
@@ -616,7 +708,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         tax_nodes = tree.findall('.//{*}Item/{*}ClassifiedTaxCategory/{*}Percent')
         if not tax_nodes:
             for elem in tree.findall('.//{*}TaxTotal'):
-                tax_nodes += elem.findall('.//{*}TaxSubtotal/{*}Percent')
+                tax_nodes += elem.findall('.//{*}TaxSubtotal/{*}TaxCategory/{*}Percent')
         return self._import_fill_invoice_line_taxes(journal, tax_nodes, invoice_line, inv_line_vals, logs)
 
     def _correct_invoice_tax_amount(self, tree, invoice):
@@ -659,74 +751,3 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         if tree.tag == '{urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2}CreditNote':
             return ('in_refund', 'out_refund'), 1
         return None, None
-
-    def _import_retrieve_partner_map(self, company, move_type='purchase'):
-        role = "Customer" if move_type == 'sale' else "Supplier"
-
-        def with_vat(tree, extra_domain):
-            vat_node = tree.find(f'.//{{*}}Accounting{role}Party/{{*}}Party//{{*}}CompanyID')
-            vat = None if vat_node is None else vat_node.text
-            return self.env['account.edi.format']._retrieve_partner_with_vat(vat, extra_domain)
-
-        def with_phone_mail(tree, extra_domain):
-            phone_node = tree.find(f'.//{{*}}Accounting{role}Party/{{*}}Party//{{*}}Telephone')
-            mail_node = tree.find(f'.//{{*}}Accounting{role}Party/{{*}}Party//{{*}}ElectronicMail')
-
-            phone = None if phone_node is None else phone_node.text
-            mail = None if mail_node is None else mail_node.text
-            return self.env['account.edi.format']._retrieve_partner_with_phone_mail(phone, mail, extra_domain)
-
-        def with_name(tree, extra_domain):
-            name_node = tree.find(f'.//{{*}}Accounting{role}Party/{{*}}Party//{{*}}Name')
-            name = None if name_node is None else name_node.text
-            return self.env['account.edi.format']._retrieve_partner_with_name(name, extra_domain)
-
-        return {
-            10: lambda tree: with_vat(tree, [('company_id', '=', company.id)]),
-            20: lambda tree: with_vat(tree, []),
-            30: lambda tree: with_phone_mail(tree, [('company_id', '=', company.id)]),
-            40: lambda tree: with_phone_mail(tree, []),
-            50: lambda tree: with_name(tree, [('company_id', '=', company.id)]),
-            60: lambda tree: with_name(tree, []),
-        }
-
-    def _import_retrieve_product_map(self, company):
-
-        def with_code_barcode(tree, extra_domain):
-            domains = []
-
-            default_code_node = tree.find('./{*}Item/{*}SellersItemIdentification/{*}ID')
-            if default_code_node is not None:
-                domains.append([('default_code', '=', default_code_node.text)])
-
-            barcode_node = tree.find("./{*}Item/{*}StandardItemIdentification/{*}ID[@schemeID='0160']")
-            if barcode_node is not None:
-                domains.append([('barcode', '=', barcode_node.text)])
-
-            if not domains:
-                return None
-
-            return self.env['product.product'].search(extra_domain + expression.OR(domains), limit=1)
-
-        def with_name(tree, extra_domain):
-            name_node = tree.find('./{*}Item/{*}Name')
-
-            if name_node is None:
-                return None
-
-            return self.env['product.product'].search(extra_domain + [('name', 'ilike', name_node.text)], limit=1)
-
-        return {
-            10: lambda tree: with_code_barcode(tree, [('company_id', '=', company.id)]),
-            20: lambda tree: with_code_barcode(tree, []),
-            30: lambda tree: with_name(tree, [('company_id', '=', company.id)]),
-            40: lambda tree: with_name(tree, []),
-        }
-
-    def _import_retrieve_info_from_map(self, tree, import_method_map):
-        for key in sorted(import_method_map.keys()):
-            record = import_method_map[key](tree)
-            if record:
-                return record
-
-        return None

@@ -10,10 +10,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-02 10:33+0000\n"
+"POT-Creation-Date: 2023-05-23 08:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
 "Last-Translator: Jolien De Paepe, 2023\n"
-"Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
+"Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -24,8 +24,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/pos_stripe/models/pos_payment_method.py:0
 #, python-format
-msgid "Complete the Stripe onboarding."
-msgstr "Terminer l'intégration de Stripe."
+msgid "Complete the Stripe onboarding for company %s."
+msgstr "Terminez le parcours d'intégration de Stripe pour la société %s."
 
 #. module: pos_stripe
 #. odoo-python
@@ -50,6 +50,14 @@ msgstr ""
 #, python-format
 msgid "Failed to discover: %s"
 msgstr "Impossible à découvrir : %s"
+
+#. module: pos_stripe
+#. odoo-javascript
+#: code:addons/pos_stripe/static/src/js/payment_stripe.js:0
+#: code:addons/pos_stripe/static/src/js/payment_stripe.js:0
+#, python-format
+msgid "Failed to load resource: net::ERR_INTERNET_DISCONNECTED."
+msgstr "Échec du chargement de la ressource : net::ERR_INTERNET_DISCONNECTED."
 
 #. module: pos_stripe
 #. odoo-javascript
@@ -105,8 +113,8 @@ msgstr "Numéro de série Stripe"
 #. odoo-python
 #: code:addons/pos_stripe/models/pos_payment_method.py:0
 #, python-format
-msgid "Stripe payment provider is missing"
-msgstr "Le fournisseur de paiement Stripe manque"
+msgid "Stripe payment provider for company %s is missing"
+msgstr "Le fournisseur de paiement Stripe manque pour la société %s"
 
 #. module: pos_stripe
 #. odoo-javascript

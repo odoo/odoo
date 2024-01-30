@@ -7,7 +7,7 @@
 
 {
     'name': 'Luxembourg - Accounting',
-    'version': '2.1',
+    'version': '2.2',
     'category': 'Accounting/Localizations/Account Charts',
     'description': """
 This is the base module to manage the accounting chart for Luxembourg.

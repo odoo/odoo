@@ -4,12 +4,23 @@
 from collections import defaultdict
 from datetime import timedelta
 from itertools import groupby
+from markupsafe import Markup
+from traceback import format_exception
+from typing import Optional
+
+import json
+import logging
+
+from ..tools.pos_order_data import PoSOrderData
 
 from odoo import api, fields, models, _, Command
 from odoo.exceptions import AccessError, UserError, ValidationError
-from odoo.tools import float_is_zero, float_compare
 from odoo.osv.expression import AND, OR
 from odoo.service.common import exp_version
+from odoo.tools import float_is_zero, float_compare
+from odoo.tools.misc import str2bool
+
+_logger = logging.getLogger(__name__)
 
 
 class PosSession(models.Model):
@@ -76,6 +87,8 @@ class PosSession(models.Model):
         string='Before Closing Difference',
         help="Difference between the theoretical closing balance and the real closing balance.",
         readonly=True)
+
+    # Total Cash In/Out
     cash_real_transaction = fields.Monetary(string='Transaction', readonly=True)
 
     order_ids = fields.One2many('pos.order', 'session_id',  string='Orders')
@@ -108,13 +121,16 @@ class PosSession(models.Model):
             cash_payment_method = session.payment_method_ids.filtered('is_cash_count')[:1]
             if cash_payment_method:
                 total_cash_payment = 0.0
-                last_session = session.search([('config_id', '=', session.config_id.id), ('id', '!=', session.id)], limit=1)
+                last_session = session.search([('config_id', '=', session.config_id.id), ('id', '<', session.id)], limit=1)
                 result = self.env['pos.payment']._read_group([('session_id', '=', session.id), ('payment_method_id', '=', cash_payment_method.id)], ['amount'], ['session_id'])
                 if result:
                     total_cash_payment = result[0]['amount']
-                session.cash_register_total_entry_encoding = sum(session.statement_line_ids.mapped('amount')) + (
-                    0.0 if session.state == 'closed' else total_cash_payment
-                )
+
+                if session.state == 'closed':
+                    session.cash_register_total_entry_encoding = session.cash_real_transaction + total_cash_payment
+                else:
+                    session.cash_register_total_entry_encoding = sum(session.statement_line_ids.mapped('amount')) + total_cash_payment
+
                 session.cash_register_balance_end = last_session.cash_register_balance_end_real + session.cash_register_total_entry_encoding
                 session.cash_register_difference = session.cash_register_balance_end_real - session.cash_register_balance_end
             else:
@@ -282,6 +298,7 @@ class PosSession(models.Model):
     def _validate_session(self, balancing_account=False, amount_to_balance=0, bank_payment_method_diffs=None):
         bank_payment_method_diffs = bank_payment_method_diffs or {}
         self.ensure_one()
+        data = {}
         sudo = self.user_has_groups('point_of_sale.group_pos_user')
         if self.order_ids or self.sudo().statement_line_ids:
             self.cash_real_transaction = sum(self.sudo().statement_line_ids.mapped('amount'))
@@ -317,21 +334,27 @@ class PosSession(models.Model):
                 self.env.cr.rollback()
                 return self._close_session_action(balance)
 
-            self.sudo()._post_statement_difference(cash_difference_before_statements)
+            self.sudo()._post_statement_difference(cash_difference_before_statements, False)
             if self.move_id.line_ids:
                 self.move_id.sudo().with_company(self.company_id)._post()
+                #We need to write the price_subtotal and price_total here because if we do it earlier the compute functions will overwrite it here /account/models/account_move_line.py _compute_totals
+                for dummy, amount_data in data['sales'].items():
+                    self.env['account.move.line'].browse(amount_data['move_line_id']).sudo().with_company(self.company_id).write({
+                        'price_subtotal': abs(amount_data['amount_converted']),
+                        'price_total': abs(amount_data['amount_converted']) + abs(amount_data['tax_amount']),
+                    })
                 # Set the uninvoiced orders' state to 'done'
                 self.env['pos.order'].search([('session_id', '=', self.id), ('state', '=', 'paid')]).write({'state': 'done'})
             else:
                 self.move_id.sudo().unlink()
             self.sudo().with_company(self.company_id)._reconcile_account_move_lines(data)
         else:
-            self.sudo()._post_statement_difference(self.cash_register_difference)
+            self.sudo()._post_statement_difference(self.cash_register_difference, False)
 
         self.write({'state': 'closed'})
         return True
 
-    def _post_statement_difference(self, amount):
+    def _post_statement_difference(self, amount, is_opening):
         if amount:
             if self.config_id.cash_control:
                 st_line_vals = {
@@ -347,8 +370,9 @@ class PosSession(models.Model):
                         _('Please go on the %s journal and define a Loss Account. This account will be used to record cash difference.',
                           self.cash_journal_id.name))
 
-                st_line_vals['payment_ref'] = _("Cash difference observed during the counting (Loss)")
-                st_line_vals['counterpart_account_id'] = self.cash_journal_id.loss_account_id.id
+                st_line_vals['payment_ref'] = _("Cash difference observed during the counting (Loss)") + (_(' - opening') if is_opening else _(' - closing'))
+                if not is_opening:
+                    st_line_vals['counterpart_account_id'] = self.cash_journal_id.loss_account_id.id
             else:
                 # self.cash_register_difference  > 0.0
                 if not self.cash_journal_id.profit_account_id:
@@ -356,8 +380,9 @@ class PosSession(models.Model):
                         _('Please go on the %s journal and define a Profit Account. This account will be used to record cash difference.',
                           self.cash_journal_id.name))
 
-                st_line_vals['payment_ref'] = _("Cash difference observed during the counting (Profit)")
-                st_line_vals['counterpart_account_id'] = self.cash_journal_id.profit_account_id.id
+                st_line_vals['payment_ref'] = _("Cash difference observed during the counting (Profit)") + (_(' - opening') if is_opening else _(' - closing'))
+                if not is_opening:
+                    st_line_vals['counterpart_account_id'] = self.cash_journal_id.profit_account_id.id
 
             self.env['account.bank.statement.line'].create(st_line_vals)
 
@@ -734,10 +759,12 @@ class PosSession(models.Model):
                         tuple((tax['id'], tax['account_id'], tax['tax_repartition_line_id']) for tax in line['taxes']),
                         line['base_tags'],
                     )
-                    sales[sale_key] = self._update_amounts(sales[sale_key], {'amount': line['amount']}, line['date_order'])
+                    sales[sale_key] = self._update_amounts(sales[sale_key], {'amount': line['amount']}, line['date_order'], round=False)
+                    sales[sale_key].setdefault('tax_amount', 0.0)
                     # Combine tax lines
                     for tax in line['taxes']:
                         tax_key = (tax['account_id'] or line['income_account_id'], tax['tax_repartition_line_id'], tax['id'], tuple(tax['tag_ids']))
+                        sales[sale_key]['tax_amount'] += tax['amount']
                         order_taxes[tax_key] = self._update_amounts(
                             order_taxes[tax_key],
                             {'amount': tax['amount'], 'base_amount': tax['base']},
@@ -848,12 +875,15 @@ class PosSession(models.Model):
         if not float_is_zero(rounding_difference['amount'], precision_rounding=self.currency_id.rounding) or not float_is_zero(rounding_difference['amount_converted'], precision_rounding=self.currency_id.rounding):
             rounding_vals = [self._get_rounding_difference_vals(rounding_difference['amount'], rounding_difference['amount_converted'])]
 
+        MoveLine.create(tax_vals)
+        move_line_ids = MoveLine.create([self._get_sale_vals(key, amounts['amount'], amounts['amount_converted']) for key, amounts in sales.items()])
+        for key, ml_id in zip(sales.keys(), move_line_ids.ids):
+            sales[key]['move_line_id'] = ml_id
         MoveLine.create(
-            tax_vals
-            + [self._get_sale_vals(key, amounts['amount'], amounts['amount_converted']) for key, amounts in sales.items()]
-            + [self._get_stock_expense_vals(key, amounts['amount'], amounts['amount_converted']) for key, amounts in stock_expense.items()]
+            [self._get_stock_expense_vals(key, amounts['amount'], amounts['amount_converted']) for key, amounts in stock_expense.items()]
             + rounding_vals
         )
+
         return data
 
     def _create_bank_payment_moves(self, data):
@@ -1436,7 +1466,8 @@ class PosSession(models.Model):
         # we are querying over the account.move.line because its 'ref' is indexed.
         # And yes, we are only concern for split bank payment methods.
         diff_lines_ref = [self._get_diff_account_move_ref(pm) for pm in self.payment_method_ids if pm.type == 'bank' and pm.split_transactions]
-        return self.env['account.move.line'].search([('ref', 'in', diff_lines_ref)]).mapped('move_id')
+        cost_move_lines = ['pos_order_'+str(rec.id) for rec in self.order_ids]
+        return self.env['account.move.line'].search([('ref', 'in', diff_lines_ref + cost_move_lines)]).mapped('move_id')
 
     def _get_related_account_moves(self):
         pickings = self.picking_ids | self.order_ids.mapped('picking_ids')
@@ -1479,7 +1510,7 @@ class PosSession(models.Model):
         self.opening_notes = notes
         difference = cashbox_value - self.cash_register_balance_start
         self.cash_register_balance_start = cashbox_value
-        self.sudo()._post_statement_difference(difference)
+        self.sudo()._post_statement_difference(difference, True)
         self._post_cash_details_message('Opening', difference, notes)
 
     def _post_cash_details_message(self, state, difference, notes):
@@ -1639,10 +1670,10 @@ class PosSession(models.Model):
             'res.partner',
             'stock.picking.type',
             'res.users',
+            'product.product',
             'product.pricelist',
             'res.currency',
             'pos.category',
-            'product.product',
             'product.packaging',
             'account.cash.rounding',
             'pos.payment.method',
@@ -1672,7 +1703,42 @@ class PosSession(models.Model):
         else:
             company['country'] = None
 
+        company['fallback_nomenclature_id'] = self._get_pos_fallback_nomenclature()
         return company
+
+    def _get_pos_fallback_nomenclature(self):
+        """
+        Retrieve the fallback barcode nomenclature.
+        If a fallback_nomenclature_id is specified in the config parameters,
+        it retrieves the nomenclature with that ID. Otherwise, it retrieves
+        the first non-GS1 nomenclature if the main nomenclature is GS1.
+        """
+        def convert_to_int(string_value):
+            try:
+                return int(string_value)
+            except (TypeError, ValueError, OverflowError):
+                return None
+
+        fallback_nomenclature_id = self.env['ir.config_parameter'].sudo().get_param('point_of_sale.fallback_nomenclature_id')
+
+        if not self.company_id.nomenclature_id.is_gs1_nomenclature and not fallback_nomenclature_id:
+            return None
+
+        if fallback_nomenclature_id:
+            fallback_nomenclature_id = convert_to_int(fallback_nomenclature_id)
+            if not fallback_nomenclature_id or self.company_id.nomenclature_id.id == fallback_nomenclature_id:
+                return None
+            domain = [('id', '=', fallback_nomenclature_id)]
+        else:
+            domain = [('is_gs1_nomenclature', '=', False)]
+
+        records = self.env['barcode.nomenclature'].search_read(
+            domain=domain,
+            fields=['name'],
+            limit=1
+        )
+
+        return (records[0]['id'], records[0]['name']) if records else None
 
     def _loader_params_decimal_precision(self):
         return {'search_params': {'domain': [], 'fields': ['name', 'digits']}}
@@ -1745,6 +1811,7 @@ class PosSession(models.Model):
         config = self.env['pos.config'].search_read(**params['search_params'])[0]
         config['use_proxy'] = config['is_posbox'] and (config['iface_electronic_scale'] or config['iface_print_via_proxy']
                                                        or config['iface_scan_via_proxy'] or config['iface_customer_facing_display_via_proxy'])
+        config['has_cash_move_permission'] = self.user_has_groups('account.group_account_invoice')
         return config
 
     def _loader_params_pos_bill(self):
@@ -1753,10 +1820,13 @@ class PosSession(models.Model):
     def _get_pos_ui_pos_bill(self, params):
         return self.env['pos.bill'].search_read(**params['search_params'])
 
+    def _get_partners_domain(self):
+        return []
+
     def _loader_params_res_partner(self):
         return {
             'search_params': {
-                'domain': [],
+                'domain': self._get_partners_domain(),
                 'fields': [
                     'name', 'street', 'city', 'state_id', 'country_id', 'vat', 'lang', 'phone', 'zip', 'mobile', 'email',
                     'barcode', 'write_date', 'property_account_position_id', 'property_product_pricelist', 'parent_name'
@@ -1829,6 +1899,13 @@ class PosSession(models.Model):
                 'min_quantity',
                 ]
 
+    def _product_pricelist_item_domain_by_product(self, product_tmpl_ids, product_ids, pricelists):
+        return [
+            ('pricelist_id', 'in', [p['id'] for p in pricelists]),
+            '|', ('product_tmpl_id', '=', False), ('product_tmpl_id', 'in', product_tmpl_ids),
+            '|', ('product_id', '=', False), ('product_id', 'in', product_ids),
+        ]
+
     def _get_pos_ui_product_pricelist(self, params):
         pricelists = self.env['product.pricelist'].search_read(**params['search_params'])
         for pricelist in pricelists:
@@ -1836,6 +1913,14 @@ class PosSession(models.Model):
 
         pricelist_by_id = {pricelist['id']: pricelist for pricelist in pricelists}
         pricelist_item_domain = [('pricelist_id', 'in', [p['id'] for p in pricelists])]
+
+        loaded_data = self._context.get('loaded_data')
+        if loaded_data and self.config_id.limited_products_loading:
+            pricelist_item_domain = self._product_pricelist_item_domain_by_product(
+                [p['product_tmpl_id'][0] for p in loaded_data['product.product']],
+                [p['id'] for p in loaded_data['product.product']],
+                pricelists)
+
         for item in self.env['product.pricelist.item'].search_read(pricelist_item_domain, self._product_pricelist_item_fields()):
             pricelist_by_id[item['pricelist_id'][0]]['items'].append(item)
 
@@ -1888,7 +1973,7 @@ class PosSession(models.Model):
                 'fields': [
                     'display_name', 'lst_price', 'standard_price', 'categ_id', 'pos_categ_id', 'taxes_id', 'barcode',
                     'default_code', 'to_weight', 'uom_id', 'description_sale', 'description', 'product_tmpl_id', 'tracking',
-                    'available_in_pos', 'attribute_line_ids', 'active', '__last_update'
+                    'available_in_pos', 'attribute_line_ids', 'active', '__last_update', 'image_128'
                 ],
                 'order': 'sequence,default_code,name',
             },
@@ -1908,6 +1993,7 @@ class PosSession(models.Model):
         product_category_by_id = {category['id']: category for category in categories}
         for product in products:
             product['categ'] = product_category_by_id[product['categ_id'][0]]
+            product['image_128'] = bool(product['image_128'])
 
     def _get_pos_ui_product_product(self, params):
         self = self.with_context(**params['context'])
@@ -1920,9 +2006,15 @@ class PosSession(models.Model):
         return products
 
     def _loader_params_product_packaging(self):
+        domain = [('barcode', 'not in', ['', False])]
+        loaded_data = self._context.get('loaded_data')
+        if loaded_data and self.config_id.limited_products_loading:
+            loaded_product_ids = [x['id'] for x in loaded_data['product.product']]
+            domain = AND([domain, [('product_id', 'in', loaded_product_ids)]])
+
         return {
             'search_params': {
-                'domain': [('barcode', 'not in', ['', False])],
+                'domain': domain,
                 'fields': ['name', 'barcode', 'product_id', 'qty'],
             },
         }
@@ -1973,6 +2065,7 @@ class PosSession(models.Model):
         :param custom_search_params: a dictionary containing params of a search_read()
         """
         params = self._loader_params_product_product()
+        self = self.with_context(**params['context'])
         # custom_search_params will take priority
         params['search_params'] = {**params['search_params'], **custom_search_params}
         products = self.env['product.product'].with_context(active_test=False).search_read(**params['search_params'])
@@ -1990,6 +2083,139 @@ class PosSession(models.Model):
         partners = self.env['res.partner'].search_read(**params['search_params'])
         return partners
 
+    def find_product_by_barcode(self, barcode):
+        product = self.env['product.product'].search([
+            ('barcode', '=', barcode),
+            ('sale_ok', '=', True),
+            ('available_in_pos', '=', True),
+        ])
+        if product:
+            return {'product_id': [product.id]}
+
+        packaging_params = self._loader_params_product_packaging()
+        packaging_params['search_params']['domain'] = [['barcode', '=', barcode]]
+        packaging = self.env['product.packaging'].search_read(**packaging_params['search_params'])
+        if packaging:
+            product_id = packaging[0]['product_id']
+            if product_id:
+                return {'product_id': [product_id[0]], 'packaging': packaging}
+        return {}
+
+    def get_pos_ui_product_pricelist_item_by_product(self, product_tmpl_ids, product_ids):
+        pricelists = self.env['product.pricelist'].search_read(**self._loader_params_product_pricelist()['search_params'])
+        pricelist_item_domain = [
+            ('pricelist_id', 'in', [p['id'] for p in pricelists]),
+            '|',
+            '&', ('product_id', '=', False), ('product_tmpl_id', 'in', product_tmpl_ids),
+            ('product_id', 'in', product_ids)]
+        return self.env['product.pricelist.item'].search_read(pricelist_item_domain, self._product_pricelist_item_fields())
+
+    def _is_capture_system_activated(self):
+        # Enabled by default, but can be disabled manually if needed (error, crashs, storage issue due to number of attachments)
+        return str2bool(self.env['ir.config_parameter'].sudo().get_param('point_of_sale.capture_unprocessed_order', True))
+
+    def _handle_order_process_fail(self, order: dict, exception: Exception, draft: bool):
+        if not self._is_capture_system_activated():
+            return
+
+        if draft:
+            # draft will be set when we receive a restaurant order that was not validated yet
+            # if we capture it, it will create tons of (a priori) irrelevant attachments
+            # So we capture only restaurant order that are validated
+            _logger.info("order '%s' was not captured as it is draft", order['data']['name'])
+            return
+
+        self.env.cr.rollback()  # It would have rollback anyway as it was raising an exception
+        self.sudo()._process_order_process_fail(order, exception, self.env.user.id)
+        self.env.cr.commit()  # Make sure that our created records are stored
+
+    def _process_order_process_fail(self, order: dict, exception: Exception, uid: int = False):
+        current_pos_order_data_hash = hash(PoSOrderData(order['data']))
+        self._get_unprocessed_pos_order_scheduled_activity(
+            order['data']['name'],
+            current_pos_order_data_hash,
+            uid or self.env.user.id,
+            create=True,
+        )
+        self._capture_order_data(order, exception, current_pos_order_data_hash)
+
+    def _shorten_pos_order_data_hash(self, pos_order_data_hash: int):
+        # The bigger the value, the less likely a hash collision will occur
+        # but a bigger value also means a longer name in the attachment
+        return str(pos_order_data_hash)[:6]
+
+    def _get_unprocessed_pos_order_scheduled_activity(self, order_ref: str, pos_order_data_hash: int, assigned_user_id: Optional[int] = None, create: bool = True):
+        if create:
+            assert assigned_user_id, "if in creation mode, assigned_user_id value is needed"
+        xml_id_module = '__support__'  # purposefully not using point.of.sale as otherwise the activity is removed on PoS app update
+        order_ref = order_ref.replace(' ', '_')
+        activity_xid_name = f"activity_pos_unprocessed_{order_ref}_{pos_order_data_hash}"
+        scheduled_activity = self.env.ref(f"{xml_id_module}.{activity_xid_name}", raise_if_not_found=False)
+        if create and not scheduled_activity:
+            scheduled_activity = self.activity_schedule(
+                act_type_xmlid='mail.mail_activity_data_warning',
+                summary=_("PoS order %s can not be processed", order_ref),
+                note=_("The Point of Sale order with the following reference %s was received by the Odoo server, "
+                       "but the order processing phase failed.<br/>"
+                       "The datas received from the point of sale has been saved in the attachments.<br/>"
+                       "Please contact your support service to assist you on restoring it",
+                       Markup("<code>%s #%s</code>") % (order_ref, self._shorten_pos_order_data_hash(pos_order_data_hash))),
+                user_id=assigned_user_id,
+            )
+            # and set it an XID
+            self.env['ir.model.data'].create({
+                'name': activity_xid_name,
+                'module': xml_id_module,
+                'model': scheduled_activity._name,
+                'res_id': scheduled_activity.id,
+            })
+        return scheduled_activity
+
+    def _capture_order_data_attachment_name(self, order_ref: str, pos_order_data_hash: int):
+        return f"pos_order_save_{order_ref}_{self._shorten_pos_order_data_hash(pos_order_data_hash)}.json"
+
+    def _get_captured_order_attachment(self, pos_order_ref: str, pos_order_data_hash: int):
+        return self.env['ir.attachment'].search([
+            ['res_model', '=', self._name],
+            ['name', '=', self._capture_order_data_attachment_name(pos_order_ref, pos_order_data_hash)],
+        ])
+
+    def _capture_order_data(self, order: dict, exception: Exception, pos_order_data_hash: int):
+        order_name = order['data']['name']
+
+        # Create an attachment with the order data content IF the content received is different from the ones already captured
+        existing_captured_attachment = self._get_captured_order_attachment(order_name, pos_order_data_hash)
+        if existing_captured_attachment:
+            _logger.info("order '%s' was not captured as the content is the same as in attachment %s #%d",
+                         order_name, existing_captured_attachment.name, existing_captured_attachment.id)
+            return
+
+        if exception:
+            # Store the traceback on the attachment in order to more easily investigate the cause of the issue
+            order["traceback"] = format_exception(
+                type(exception), exception, exception.__traceback__  # ! compatibility with python > 3.7
+            )
+
+        attachment = self.env['ir.attachment'].create({
+            "name": self._capture_order_data_attachment_name(order_name, pos_order_data_hash),
+            "raw": json.dumps(order, indent=2),
+            "res_model": self._name,
+            "res_id": self.id,
+            "type": 'binary',
+        })
+        _logger.info("order '%s' was captured in attachment %s #%d", order_name, attachment.name, attachment.id)
+        return attachment
+
+    def _remove_capture_content(self, order_data):
+        current_order_data_obj_hash = hash(PoSOrderData(order_data))
+        pos_reference = order_data['name']
+        # Remove the scheduled activity if there is any
+        unprocessed_pos_order_scheduled_activity = self.sudo()._get_unprocessed_pos_order_scheduled_activity(pos_reference, current_order_data_obj_hash, create=False)
+        if unprocessed_pos_order_scheduled_activity:
+            unprocessed_pos_order_scheduled_activity.unlink()
+
+        # Remove the attachments that have different datas
+        self.sudo()._get_captured_order_attachment(pos_reference, current_order_data_obj_hash).unlink()
 
 class ProcurementGroup(models.Model):
     _inherit = 'procurement.group'

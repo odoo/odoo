@@ -177,9 +177,9 @@ var BarcodeParser = Class.extend({
             match.base_code = base_code.join('');
         }
 
-        if (base_pattern[0] !== '^') {
-            base_pattern = "^" + base_pattern;
-        }
+        base_pattern = base_pattern.split('|')
+            .map(part => part.startsWith('^') ? part : '^' + part)
+            .join('|');
         match.match = match.base_code.match(base_pattern);
 
         return match;
@@ -220,7 +220,7 @@ var BarcodeParser = Class.extend({
             } else if (rule.encoding === 'upca' &&
                     this.check_encoding(barcode,'ean13') &&
                     barcode[0] === '0' &&
-                    this.upc_ean_conv in {'ean2upc':'','always':''} ){
+                    this.nomenclature.upc_ean_conv in {'ean2upc':'','always':''} ){
                 cur_barcode = cur_barcode.substr(1,12);
             }
 

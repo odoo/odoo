@@ -21,7 +21,7 @@ from markupsafe import Markup
 from odoo import api, fields, models, tools, http, release, registry
 from odoo.addons.http_routing.models.ir_http import RequestUID, slugify, url_for
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
-from odoo.addons.website.tools import similarity_score, text_from_html
+from odoo.addons.website.tools import similarity_score, text_from_html, get_base_domain
 from odoo.addons.portal.controllers.portal import pager
 from odoo.addons.iap.tools import iap_tools
 from odoo.exceptions import AccessError, MissingError, UserError, ValidationError
@@ -322,6 +322,20 @@ class Website(models.Model):
         configurator_action_todo = self.env.ref('website.website_configurator_todo')
         return configurator_action_todo.action_launch()
 
+    def _is_indexable_url(self, url):
+        """
+        Returns True if the given url has to be indexed by search engines.
+        It is considered that the website must be indexed if the domain name
+        matches the URL. We check if they are equal while ignoring the www. and
+        http(s). This is to index the site even if the user put the www. in the
+        settings while he has a configuration that redirects the www. to the
+        naked domain for example (same thing for http and https).
+
+        :param url: the url to check
+        :return: True if the url has to be indexed, False otherwise
+        """
+        return get_base_domain(url, True) == get_base_domain(self.domain, True)
+
     # ----------------------------------------------------------
     # Configurator
     # ----------------------------------------------------------
@@ -493,10 +507,19 @@ class Website(models.Model):
                         rendered_snippets.append(rendered_snippet)
                 except ValueError as e:
                     logger.warning(e)
-            page_view_id.save(value=''.join(rendered_snippets), xpath="(//div[hasclass('oe_structure')])[last()]")
+            page_view_id.save(value=f'<div class="oe_structure">{"".join(rendered_snippets)}</div>',
+                              xpath="(//div[hasclass('oe_structure')])[last()]")
 
         def set_images(images):
+            names = self.env['ir.model.data'].search([
+                ('name', '=ilike', f'configurator\\_{website.id}\\_%'),
+                ('module', '=', 'website'),
+                ('model', '=', 'ir.attachment')
+            ]).mapped('name')
             for name, url in images.items():
+                extn_identifier = 'configurator_%s_%s' % (website.id, name.split('.')[1])
+                if extn_identifier in names:
+                    continue
                 try:
                     response = requests.get(url, timeout=3)
                     response.raise_for_status()
@@ -512,7 +535,7 @@ class Website(models.Model):
                         'public': True,
                     })
                     self.env['ir.model.data'].create({
-                        'name': 'configurator_%s_%s' % (website.id, name.split('.')[1]),
+                        'name': extn_identifier,
                         'module': 'website',
                         'model': 'ir.attachment',
                         'res_id': attachment.id,
@@ -799,7 +822,7 @@ class Website(models.Model):
         website_id = self.env.context.get('website_id', False)
         if website_id:
             domain_static = [('website_id', 'in', (False, website_id))]
-        while self.env['website.page'].with_context(active_test=False).sudo().search([('key', '=', key_copy)] + domain_static):
+        while self.env['ir.ui.view'].with_context(active_test=False).sudo().search([('key', '=', key_copy)] + domain_static):
             inc += 1
             key_copy = string + (inc and "-%s" % inc or "")
         return key_copy
@@ -843,6 +866,9 @@ class Website(models.Model):
         ]
         for model, _table, column, _translate in html_fields_attributes:
             Model = self.env[model]
+            if not Model.check_access_rights('read', raise_exception=False):
+                continue
+
             # Generate the exact domain to search for the URL in this field
             domains = []
             for url, website_domain in search_criteria:
@@ -915,6 +941,15 @@ class Website(models.Model):
 
     @api.model
     def get_current_website(self, fallback=True):
+        """ The current website is returned in the following order:
+        - the website forced in session `force_website_id`
+        - the website set in context
+        - (if frontend or fallback) the website matching the request's "domain"
+        - arbitrary the first website found in the database if `fallback` is set
+          to `True`
+        - empty browse record
+        """
+        is_frontend_request = request and getattr(request, 'is_frontend', False)
         if request and request.session.get('force_website_id'):
             website_id = self.browse(request.session['force_website_id']).exists()
             if not website_id:
@@ -927,16 +962,26 @@ class Website(models.Model):
         if website_id:
             return self.browse(website_id)
 
-        if not request and not fallback:
+        if not is_frontend_request and not fallback:
+            # It's important than backend requests with no fallback requested
+            # don't go through
             return self.browse(False)
+
+        # Reaching this point means that:
+        # - We didn't find a website in the session or in the context.
+        # - And we are either:
+        #   - in a frontend context
+        #   - in a backend context (or early in the dispatch stack) and a
+        #     fallback website is requested.
+        # We will now try to find a website matching the request host/domain (if
+        # there is one on request) or return a random one.
 
         # The format of `httprequest.host` is `domain:port`
         domain_name = request and request.httprequest.host or ''
-
         website_id = self._get_current_website_id(domain_name, fallback=fallback)
         return self.browse(website_id)
 
-    @tools.cache('domain_name', 'fallback')
+    @tools.ormcache('domain_name', 'fallback')
     @api.model
     def _get_current_website_id(self, domain_name, fallback=True):
         """Get the current website id.
@@ -970,7 +1015,7 @@ class Website(models.Model):
         def _filter_domain(website, domain_name, ignore_port=False):
             """Ignore `scheme` from the `domain`, just match the `netloc` which
             is host:port in the version of `url_parse` we use."""
-            website_domain = urls.url_parse(website.domain or '').netloc
+            website_domain = get_base_domain(website.domain)
             if ignore_port:
                 website_domain = _remove_port(website_domain)
                 domain_name = _remove_port(domain_name)
@@ -1192,10 +1237,30 @@ class Website(models.Model):
                 record['lastmod'] = page['write_date'].date()
             yield record
 
+    def get_website_page_ids(self):
+        if not self.env.user.has_group('website.group_website_restricted_editor'):
+            # Note that `website.pages` have `0,0,0,0` ACL rights by default for
+            # everyone except for the website designer which receive `1,0,0,0`.
+            # So the "Website/Site/Content/Pages" menu to reach the page manager
+            # is not shown to the restricted users, as the action linked model
+            # (website.page) can't be access. It's how the Odoo framework works.
+            # Still, we let the restricted editor access this resource for
+            # custos granting them read and/or write access on page.
+            raise AccessError(_("Access Denied"))
+
+        domain = [('url', '!=', False)]
+        if self:
+            domain = AND([domain, self.website_domain()])
+        pages = self.env['website.page'].sudo().search(domain)
+        if self:
+            pages = pages._get_most_specific_pages()
+        return pages.ids
+
     def _get_website_pages(self, domain=None, order='name', limit=None):
         if domain is None:
             domain = []
         domain += self.get_current_website().website_domain()
+        domain = AND([domain, [('url', '!=', False)]])
         pages = self.env['website.page'].sudo().search(domain, order=order, limit=limit)
         pages = pages._get_most_specific_pages()
         return pages
@@ -1534,16 +1599,15 @@ class Website(models.Model):
         """
         fuzzy_term = False
         search_details = self._search_get_details(search_type, order, options)
+        count, results = self._search_exact(search_details, search, limit, order)
+        if count > 0:
+            return count, results, fuzzy_term
         if search and options.get('allowFuzzy', True):
             fuzzy_term = self._search_find_fuzzy_term(search_details, search)
             if fuzzy_term:
                 count, results = self._search_exact(search_details, fuzzy_term, limit, order)
                 if fuzzy_term.lower() == search.lower():
                     fuzzy_term = False
-            else:
-                count, results = self._search_exact(search_details, search, limit, order)
-        else:
-            count, results = self._search_exact(search_details, search, limit, order)
         return count, results, fuzzy_term
 
     def _search_exact(self, search_details, search, limit, order):
@@ -1634,7 +1698,7 @@ class Website(models.Model):
         :param limit: maximum number of records fetched per model to build the word list
         :return: yields words
         """
-        match_pattern = r'[\w-]{%s,}' % min(4, len(search) - 3)
+        match_pattern = r'[\w./-]{%s,}' % min(4, len(search) - 3)
         similarity_threshold = 0.3
         lang = self.env.lang or 'en_US'
         for search_detail in search_details:
@@ -1698,6 +1762,18 @@ class Website(models.Model):
                 similarities=sql.SQL(', ').join(similarities)
             )
 
+            where_clause = sql.SQL("")
+            # Filter unpublished records for portal and public user for
+            # performance.
+            # TODO: Same for `active` field?
+            filter_is_published = (
+                'is_published' in model._fields
+                and model._fields['is_published'].base_field.model_name == model_name
+                and not self.env.user.has_group('base.group_user')
+            )
+            if filter_is_published:
+                where_clause = sql.SQL("WHERE is_published")
+
             from_clause = sql.SQL("FROM {table}").format(table=sql.Identifier(model._table))
             # Specific handling for fields being actually part of another model
             # through the `inherits` mechanism.
@@ -1716,12 +1792,14 @@ class Website(models.Model):
             query = sql.SQL("""
                 SELECT {table}.id, {best_similarity} AS _best_similarity
                 {from_clause}
+                {where_clause}
                 ORDER BY _best_similarity desc
                 LIMIT 1000
             """).format(
                 table=sql.Identifier(model._table),
                 best_similarity=best_similarity,
                 from_clause=from_clause,
+                where_clause=where_clause,
             )
             self.env.cr.execute(query, {'search': search})
             ids = {row[0] for row in self.env.cr.fetchall() if row[1] and row[1] >= similarity_threshold}
@@ -1744,7 +1822,7 @@ class Website(models.Model):
         :param limit: maximum number of records fetched per model to build the word list
         :return: yields words
         """
-        match_pattern = r'[\w-]{%s,}' % min(4, len(search) - 3)
+        match_pattern = r'[\w./-]{%s,}' % min(4, len(search) - 3)
         first = escape_psql(search[0])
         for search_detail in search_details:
             model_name, fields = search_detail['model'], search_detail['search_fields']

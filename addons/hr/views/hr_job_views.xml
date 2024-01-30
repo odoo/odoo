@@ -19,15 +19,15 @@
                             <page string="Recruitment" name="recruitment_page">
                                 <group>
                                     <group name="recruitment">
-                                        <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                                        <field name="company_id" options="{'no_create': True}" invisible="1" groups="base.group_multi_company"/>
                                         <field name="department_id"/>
                                         <field name="contract_type_id"/>
                                     </group>
                                     <group name="recruitment2">
                                         <label for="no_of_recruitment"/>
                                         <div class="o_row" name="recruitment_target">
-                                            <field name="no_of_recruitment" class="col-3 ps-0"/>
-                                            <span class="ps-1">new Employees</span>
+                                            <field name="no_of_recruitment" class="o_hr_narrow_field"/>
+                                            <span>new Employees</span>
                                         </div>
                                     </group>
                                 </group>

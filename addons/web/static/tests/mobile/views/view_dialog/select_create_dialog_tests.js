@@ -102,4 +102,50 @@ QUnit.module("ViewDialogs", (hooks) => {
 
         await click(target, ".o_form_button_save");
     });
+
+    QUnit.test("SelectCreateDialog: selection_mode should be true", async function (assert) {
+        assert.expect(3);
+
+        serverData.views["product,false,kanban"] = `
+            <kanban>
+                <templates>
+                    <t t-name="kanban-box">
+                         <div class="o_primary" t-if="!selection_mode">
+                            <a type="object" name="some_action">
+                                <field name="name"/>
+                            </a>
+                         </div>
+                         <div class="o_primary" t-if="selection_mode">
+                             <field name="name"/>
+                         </div>
+                    </t>
+                </templates>
+            </kanban>`;
+
+        await makeView({
+            type: "form",
+            resModel: "sale_order_line",
+            serverData,
+            arch: `
+                <form>
+                    <field name="product_id"/>
+                    <field name="linked_sale_order_line" widget="many2many_tags"/>
+                </form>`,
+            async mockRPC(route, args) {
+                if (args.method === "create" && args.model === "sale_order_line") {
+                    const { product_id: selectedId } = args.args[0];
+                    assert.strictEqual(selectedId, 111, `the product should be selected`);
+                }
+                if (args.method === "some_action") {
+                    assert.step("action should not be called");
+                }
+            },
+        });
+
+        await click(target, '.o_field_widget[name="product_id"] input');
+        await click(target, ".modal-dialog.modal-lg .o_kanban_record:nth-child(1) .o_primary span");
+        assert.containsNone(target, ".modal-dialog.modal-lg");
+        await click(target, ".o_form_button_save");
+        assert.verifySteps([]);
+    });
 });

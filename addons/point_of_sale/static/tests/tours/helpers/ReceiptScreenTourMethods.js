@@ -90,6 +90,23 @@ odoo.define('point_of_sale.tour.ReceiptScreenTourMethods', function (require) {
                 },
             ];
         }
+        noOrderlineContainsDiscount() {
+            return [
+                {
+                    trigger: `.orderlines:not(:contains('->'))`,
+                    run: () => { },
+                },
+            ];
+        }
+        trackingMethodIsLot() {
+            return [
+                {
+                    content: `tracking method is Lot`,
+                    trigger: `li:contains("Lot Number")`,
+                    run: () => {},
+                },
+            ];
+        }
     }
 
     class Execute {

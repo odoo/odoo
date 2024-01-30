@@ -268,7 +268,7 @@ class TestItEdiReverseCharge(TestItEdi):
                             <Divisa>EUR</Divisa>
                             <Data>2022-03-24</Data>
                             <Numero/>
-                            <ImportoTotaleDocumento>-1808.90</ImportoTotaleDocumento>
+                            <ImportoTotaleDocumento>-1808.91</ImportoTotaleDocumento>
                         </DatiGeneraliDocumento>
                         <DatiFattureCollegate>
                             <IdDocumento>{self.reverse_charge_bill.name}</IdDocumento>

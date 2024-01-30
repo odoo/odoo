@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 from odoo import api, models, fields
+from odoo.osv import expression
 
 
 class StockRule(models.Model):
@@ -47,3 +47,33 @@ class StockPickingType(models.Model):
         super()._compute_warehouse_id()
         if self.default_location_src_id.usage == 'supplier' and self.default_location_dest_id.usage == 'customer':
             self.warehouse_id = False
+
+
+class StockLot(models.Model):
+    _inherit = 'stock.lot'
+
+    def _compute_last_delivery_partner_id(self):
+        super()._compute_last_delivery_partner_id()
+        for lot in self:
+            if lot.delivery_count > 0:
+                last_delivery = max(lot.delivery_ids, key=lambda d: d.date_done)
+                if last_delivery.is_dropship:
+                    lot.last_delivery_partner_id = last_delivery.sale_id.partner_id
+
+    def _get_delivery_ids_by_lot_domain(self):
+        # TODO master: delete (dead code)
+        return [
+            ('lot_id', 'in', self.ids),
+            ('state', '=', 'done'),
+            '|',
+            '|', ('picking_code', '=', 'outgoing'), ('produce_line_ids', '!=', False),
+            # dropship transfers have an incoming picking_code but should be considered as well
+            ('location_dest_id.usage', '=', 'customer'), ('location_id.usage', '=', 'supplier')
+        ]
+
+    def _get_outgoing_domain(self):
+        res = super()._get_outgoing_domain()
+        return expression.OR([res, [
+            ('location_dest_id.usage', '=', 'customer'),
+            ('location_id.usage', '=', 'supplier'),
+        ]])

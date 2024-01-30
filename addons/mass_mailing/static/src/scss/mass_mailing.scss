@@ -1,15 +1,15 @@
 .o_form_view .o_mass_mailing_mailing_form,
 .o_legacy_form_view.o_mass_mailing_mailing_form {
-    input.o_field_char.o_field_widget {
-        padding-right: 40px; // Avoid overlapping subject text on emoji widget
-    }
-
     .o_notebook .tab-content .tab-pane .o_mail_body {
         // cancel the padding of the form_sheet
         margin-top: -$o-sheet-cancel-hpadding;
         margin-left: -$o-sheet-cancel-hpadding;
         margin-right: -$o-sheet-cancel-hpadding;
         margin-bottom: -40px;
+    }
+
+    .o_notebook .o_notebook_headers .nav-link[name="mail_debug"] {
+        display: none;
     }
 }
 
@@ -218,11 +218,6 @@
     .o_sms_container ~ .o_mail_add_emoji{
         bottom: 55px;
     }
-}
-
-
-.o_mailing_contact_import_list {
-    min-height: 150px;
 }
 
 .o_field_mass_mailing_html {

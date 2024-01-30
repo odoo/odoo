@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import models, fields, api
+from odoo.addons.account.models.account_move import PAYMENT_STATE_SELECTION
 
 from functools import lru_cache
 
@@ -32,11 +33,7 @@ class AccountInvoiceReport(models.Model):
         ('posted', 'Open'),
         ('cancel', 'Cancelled')
         ], string='Invoice Status', readonly=True)
-    payment_state = fields.Selection(selection=[
-        ('not_paid', 'Not Paid'),
-        ('in_payment', 'In Payment'),
-        ('paid', 'paid')
-    ], string='Payment Status', readonly=True)
+    payment_state = fields.Selection(selection=PAYMENT_STATE_SELECTION, string='Payment Status', readonly=True)
     fiscal_position_id = fields.Many2one('account.fiscal.position', string='Fiscal Position', readonly=True)
     invoice_date = fields.Date(readonly=True, string="Invoice Date")
 
@@ -48,8 +45,9 @@ class AccountInvoiceReport(models.Model):
     invoice_date_due = fields.Date(string='Due Date', readonly=True)
     account_id = fields.Many2one('account.account', string='Revenue/Expense Account', readonly=True, domain=[('deprecated', '=', False)])
     price_subtotal = fields.Float(string='Untaxed Total', readonly=True)
-    price_total = fields.Float(string='Total', readonly=True)
+    price_total = fields.Float(string='Total in Currency', readonly=True)
     price_average = fields.Float(string='Average Price', readonly=True, group_operator="avg")
+    currency_id = fields.Many2one('res.currency', string='Currency', readonly=True)
 
     _depends = {
         'account.move': [
@@ -106,7 +104,8 @@ class AccountInvoiceReport(models.Model):
                    -- convert to template uom
                    * (NULLIF(COALESCE(uom_line.factor, 1), 0.0) / NULLIF(COALESCE(uom_template.factor, 1), 0.0)),
                    0.0) * currency_table.rate                               AS price_average,
-                COALESCE(partner.country_id, commercial_partner.country_id) AS country_id
+                COALESCE(partner.country_id, commercial_partner.country_id) AS country_id,
+                line.currency_id                                            AS currency_id
         '''
 
     @api.model

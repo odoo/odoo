@@ -3,7 +3,7 @@
 import { Popover } from "@web/core/popover/popover";
 import { usePosition } from "@web/core/position_hook";
 import { registerCleanup } from "../../helpers/cleanup";
-import { getFixture, mount, nextTick, triggerEvent } from "../../helpers/utils";
+import { getFixture, makeDeferred, mount, nextTick, triggerEvent } from "../../helpers/utils";
 
 let fixture;
 let popoverTarget;
@@ -157,4 +157,33 @@ QUnit.test("reposition popover should properly change classNames", async (assert
         "o_popover popover mw-100 shadow-sm bs-popover-end o-popover-right o-popover--re"
     );
     assert.strictEqual(arrow.className, "popover-arrow top-auto");
+});
+
+QUnit.test("within iframe", async (assert) => {
+    const iframe = document.createElement("iframe");
+    iframe.style.height = "200px";
+    iframe.srcdoc = `<div id="target" style="height:400px;">Within iframe</div>`;
+    const def = makeDeferred();
+    iframe.onload = def.resolve;
+    fixture.appendChild(iframe);
+    await def;
+
+    const TestPopover = class extends Popover {
+        onPositioned(el, { direction }) {
+            assert.step(direction);
+        }
+    };
+
+    popoverTarget = iframe.contentDocument.getElementById("target");
+    await mount(TestPopover, fixture, {
+        props: { target: popoverTarget },
+    });
+    assert.verifySteps(["bottom"]);
+
+    // The popover should be rendered outside the iframe
+    assert.containsOnce(fixture, ".o_popover");
+    assert.strictEqual(
+        iframe.contentDocument.documentElement.querySelectorAll(".o_popover").length,
+        0
+    );
 });

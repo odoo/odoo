@@ -7,7 +7,7 @@ import { registry } from "../registry";
 import { useService } from "@web/core/utils/hooks";
 import { capitalize } from "../utils/strings";
 
-import { Component, useState } from "@odoo/owl";
+import { Component, useState, markup } from "@odoo/owl";
 
 export const odooExceptionTitleMap = new Map(
     Object.entries({
@@ -137,6 +137,9 @@ export class RedirectWarningDialog extends Component {
         const options = {};
         if (this.additionalContext) {
             options.additionalContext = this.additionalContext;
+        }
+        if (this.actionId.help) {
+            this.actionId.help = markup(this.actionId.help);
         }
         await this.actionService.doAction(this.actionId, options);
         this.props.close();

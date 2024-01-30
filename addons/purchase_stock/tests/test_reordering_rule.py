@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime as dt
+from datetime import datetime as dt, time
 from datetime import timedelta as td
 from freezegun import freeze_time
 
@@ -252,6 +252,64 @@ class TestReorderingRule(TransactionCase):
         self.assertTrue(purchase_order, 'No purchase order created.')
         self.assertEqual(len(purchase_order.order_line), 1, 'Not enough purchase order lines created.')
         purchase_order.button_confirm()
+
+    def test_reordering_rule_triggered_two_times(self):
+        """
+        A product P wth RR 0-0-1.
+        Confirm a delivery with 1 x P -> PO created for it.
+        Confirm a second delivery, with 1 x P again:
+        - The PO should be updated
+        - The qty to order of the RR should be zero
+        """
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
+        stock_location = warehouse.lot_stock_id
+        out_type = warehouse.out_type_id
+        customer_location = self.env.ref('stock.stock_location_customers')
+
+        rr = self.env['stock.warehouse.orderpoint'].create({
+            'location_id': stock_location.id,
+            'product_id': self.product_01.id,
+            'product_min_qty': 0,
+            'product_max_qty': 0,
+            'qty_multiple': 1,
+        })
+
+        delivery = self.env['stock.picking'].create({
+            'picking_type_id': out_type.id,
+            'location_id': stock_location.id,
+            'location_dest_id': customer_location.id,
+            'move_ids': [(0, 0, {
+                'name': self.product_01.name,
+                'product_id': self.product_01.id,
+                'product_uom_qty': 1,
+                'product_uom': self.product_01.uom_id.id,
+                'location_id': stock_location.id,
+                'location_dest_id': customer_location.id,
+            })]
+        })
+        delivery.action_confirm()
+
+        pol = self.env['purchase.order.line'].search([('product_id', '=', self.product_01.id)])
+        self.assertEqual(pol.product_qty, 1.0)
+        self.assertEqual(rr.qty_to_order, 0.0)
+
+        delivery = self.env['stock.picking'].create({
+            'picking_type_id': out_type.id,
+            'location_id': stock_location.id,
+            'location_dest_id': customer_location.id,
+            'move_ids': [(0, 0, {
+                'name': self.product_01.name,
+                'product_id': self.product_01.id,
+                'product_uom_qty': 1,
+                'product_uom': self.product_01.uom_id.id,
+                'location_id': stock_location.id,
+                'location_dest_id': customer_location.id,
+            })]
+        })
+        delivery.action_confirm()
+
+        self.assertEqual(pol.product_qty, 2.0)
+        self.assertEqual(rr.qty_to_order, 0.0)
 
     def test_replenish_report_1(self):
         """Tests the auto generation of manual orderpoints.
@@ -821,8 +879,9 @@ class TestReorderingRule(TransactionCase):
 
         moves = self.env['stock.move'].search([('product_id', '=', self.product_01.id)], order='id desc')
         self.assertRecordValues(moves, [
-            {'location_id': supplier_location_id, 'location_dest_id': input_location_id, 'product_qty': 1},
             {'location_id': input_location_id, 'location_dest_id': stock_location_id, 'product_qty': 1},
+            {'location_id': supplier_location_id, 'location_dest_id': input_location_id, 'product_qty': 1},
+            {'location_id': input_location_id, 'location_dest_id': stock_location_id, 'product_qty': 0},
         ])
 
     def test_add_line_to_existing_draft_po(self):
@@ -835,9 +894,8 @@ class TestReorderingRule(TransactionCase):
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
 
         self.env.company.days_to_purchase = 10
-        expected_order_date = dt.combine(dt.today() + td(days=10), dt.min.time())
+        expected_order_date = dt.combine(dt.today() + td(days=10), time(12))
         expected_delivery_date = expected_order_date + td(days=1.0)
-        # expected_delivery_date = expected_delivery_date.replace(hour=12, minute=0, second=0)
 
         product_02 = self.env['product.product'].create({
             'name': 'Super Product',
@@ -910,3 +968,48 @@ class TestReorderingRule(TransactionCase):
             po05 = self.env['purchase.order'].search([], order='id desc', limit=1)
             self.assertNotEqual(po05, po04, 'A new PO should be generated')
             self.assertEqual(po05.order_line.product_id, product_02)
+
+    def test_update_po_line_without_purchase_access_right(self):
+        """ Test that a user without purchase access right can update a PO line from picking."""
+        # create a user with only inventory access right
+        user = self.env['res.users'].create({
+            'name': 'Inventory Manager',
+            'login': 'inv_manager',
+            'groups_id': [(6, 0, [self.env.ref('stock.group_stock_user').id])]
+        })
+        product = self.env['product.product'].create({
+            'name': 'Storable Product',
+            'type': 'product',
+            'seller_ids': [(0, 0, {'partner_id': self.partner.id})],
+        })
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        self.env['stock.warehouse.orderpoint'].create({
+            'warehouse_id': warehouse.id,
+            'location_id': warehouse.lot_stock_id.id,
+            'product_id': product.id,
+            'product_min_qty': 5,
+            'product_max_qty': 0,
+        })
+        # run the scheduler
+        self.env['procurement.group'].run_scheduler()
+        # check that the PO line is created
+        po_line = self.env['purchase.order.line'].search([('product_id', '=', product.id)])
+        self.assertEqual(len(po_line), 1, 'There should be only one PO line')
+        self.assertEqual(po_line.product_qty, 5, 'The PO line quantity should be 5')
+        # Update the po line from the picking
+        picking = self.env['stock.picking'].with_user(user).create({
+            'location_id': warehouse.lot_stock_id.id,
+            'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+            'picking_type_id': warehouse.out_type_id.id,
+            'move_ids': [(0, 0, {
+                'name': product.name,
+                'product_id': product.id,
+                'product_uom': product.uom_id.id,
+                'product_uom_qty': 1,
+                'location_id': warehouse.lot_stock_id.id,
+                'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+            })]
+        })
+        picking.with_user(user).action_assign()
+        # check that the PO line quantity has been updated
+        self.assertEqual(po_line.product_qty, 6, 'The PO line quantity should be 6')

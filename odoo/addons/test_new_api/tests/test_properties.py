@@ -133,6 +133,25 @@ class PropertiesCase(TransactionCase):
         self.assertEqual(self.message_3.read(['attributes'])[0]['attributes'], expected)
         self.assertEqual(self.message_3.attributes, expected)
 
+    def test_properties_field_parameters_cleanup(self):
+        # check that the keys not valid for the given type are removed
+        self.message_1.attributes = [{
+            'name': 'discussion_color_code',
+            'string': 'Color Code',
+            'type': 'char',
+            'default': 'blue',
+            'value': 'Test',
+            'definition_changed': True,
+            'selection': [['a', 'A']],  # selection key is not valid for char type
+        }]
+        values = self._get_sql_definition(self.message_1.discussion)
+        self.assertEqual(values, [{
+            'name': 'discussion_color_code',
+            'string': 'Color Code',
+            'type': 'char',
+            'default': 'blue',
+        }])
+
     @mute_logger('odoo.fields')
     def test_properties_field_write_batch(self):
         """Test the behavior of the write called in batch.
@@ -175,7 +194,7 @@ class PropertiesCase(TransactionCase):
         expected_queries = [
             # read the properties field value
             'SELECT "test_new_api_message"."id" AS "id", "test_new_api_message"."attributes" AS "attributes" FROM "test_new_api_message" WHERE "test_new_api_message".id IN %s',
-            'SELECT "test_new_api_message"."id" AS "id", "test_new_api_message"."discussion" AS "discussion", "test_new_api_message"."body" AS "body", "test_new_api_message"."author" AS "author", "test_new_api_message"."name" AS "name", "test_new_api_message"."important" AS "important", "test_new_api_message"."label"->>\'en_US\' AS "label", "test_new_api_message"."priority" AS "priority", "test_new_api_message"."create_uid" AS "create_uid", "test_new_api_message"."create_date" AS "create_date", "test_new_api_message"."write_uid" AS "write_uid", "test_new_api_message"."write_date" AS "write_date" FROM "test_new_api_message" WHERE "test_new_api_message".id IN %s',
+            'SELECT "test_new_api_message"."id" AS "id", "test_new_api_message"."discussion" AS "discussion", "test_new_api_message"."body" AS "body", "test_new_api_message"."author" AS "author", "test_new_api_message"."name" AS "name", "test_new_api_message"."important" AS "important", "test_new_api_message"."label"->>\'en_US\' AS "label", "test_new_api_message"."priority" AS "priority", "test_new_api_message"."active" AS "active", "test_new_api_message"."create_uid" AS "create_uid", "test_new_api_message"."create_date" AS "create_date", "test_new_api_message"."write_uid" AS "write_uid", "test_new_api_message"."write_date" AS "write_date" FROM "test_new_api_message" WHERE "test_new_api_message".id IN %s',
             # read the definition on the definition record
             'SELECT "test_new_api_discussion"."id" AS "id", "test_new_api_discussion"."name" AS "name", "test_new_api_discussion"."moderator" AS "moderator", "test_new_api_discussion"."message_concat" AS "message_concat", "test_new_api_discussion"."history" AS "history", "test_new_api_discussion"."attributes_definition" AS "attributes_definition", "test_new_api_discussion"."create_uid" AS "create_uid", "test_new_api_discussion"."create_date" AS "create_date", "test_new_api_discussion"."write_uid" AS "write_uid", "test_new_api_discussion"."write_date" AS "write_date" FROM "test_new_api_discussion" WHERE "test_new_api_discussion".id IN %s',
             # check the many2one existence
@@ -1395,3 +1414,20 @@ class PropertiesCase(TransactionCase):
         value = self.env.cr.fetchone()
         self.assertTrue(value and value[0])
         return value[0]
+
+    def test_properties_inherits(self):
+        email = self.env['test_new_api.emailmessage'].create({
+            'discussion': self.discussion_1.id,
+            'attributes': [{
+                'name': 'discussion_color_code',
+                'type': 'char',
+                'string': 'Color Code',
+                'default': 'blue',
+                'value': 'red',
+            }],
+        })
+
+        values = email.read(['attributes'])
+        self.assertEqual(values[0]['attributes'][0]['value'], 'red')
+        values = email.message.read(['attributes'])
+        self.assertEqual(values[0]['attributes'][0]['value'], 'red')

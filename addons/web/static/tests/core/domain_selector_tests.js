@@ -285,8 +285,6 @@ QUnit.module("Components", (hooks) => {
     });
 
     QUnit.test("editing a domain with `parent` key", async (assert) => {
-        assert.expect(1);
-
         // Create the domain selector and its mock environment
         await mountComponent(DomainSelector, {
             props: {
@@ -297,10 +295,11 @@ QUnit.module("Components", (hooks) => {
             },
         });
         assert.strictEqual(
-            target.lastElementChild.innerHTML,
-            "This domain is not supported.",
+            target.lastElementChild.textContent,
+            " This domain is not supported. Reset domain",
             "an error message should be displayed because of the `parent` key"
         );
+        assert.containsOnce(target, "button:contains(Reset domain)");
     });
 
     QUnit.test("creating a domain with a default option", async (assert) => {
@@ -619,5 +618,33 @@ QUnit.module("Components", (hooks) => {
 
         await editInput(target, ".o_domain_leaf_value_input", `["b"]`);
         assert.strictEqual(comp.value, `[("state", "in", ["b"])]`);
+    });
+
+    QUnit.test("updating path should also update operator if invalid", async (assert) => {
+        await mountComponent(DomainSelector, {
+            props: {
+                resModel: "partner",
+                value: `[("id", "<", 0)]`,
+                readonly: false,
+                update: (domain) => {
+                    assert.strictEqual(domain, `[("foo", "=", "")]`);
+                },
+            },
+        });
+
+        await click(target, ".o_field_selector");
+        await click(target, ".o_field_selector_popover .o_field_selector_item[data-name=foo]");
+    });
+
+    QUnit.test("do not crash with connector '!'", async (assert) => {
+        class Parent extends Component {
+            setup() {
+                this.domain = `["!", ("foo", "=", "abc")]`;
+            }
+        }
+        Parent.components = { DomainSelector };
+        Parent.template = xml`<DomainSelector resModel="'partner'" value="domain" readonly="false"/>`;
+        await mountComponent(Parent);
+        assert.containsOnce(target, ".o_domain_node.o_domain_leaf");
     });
 });

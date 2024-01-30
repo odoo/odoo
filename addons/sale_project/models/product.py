@@ -194,6 +194,12 @@ class ProductProduct(models.Model):
         elif self.service_tracking in ['task_in_project', 'project_only']:
             self.project_id = False
 
+    def _inverse_service_policy(self):
+        for product in self:
+            if product.service_policy:
+
+                product.invoice_policy, product.service_type = self.product_tmpl_id._get_service_to_general(product.service_policy)
+
     @api.onchange('type')
     def _onchange_type(self):
         res = super(ProductProduct, self)._onchange_type()

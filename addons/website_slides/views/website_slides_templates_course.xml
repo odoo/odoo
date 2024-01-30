@@ -8,13 +8,13 @@
             <div class="row align-items-center justify-content-between">
                 <!-- Desktop Mode -->
                 <nav aria-label="breadcrumb" class="col-md-8 d-none d-md-flex">
-                    <ol class="breadcrumb bg-transparent mb-0 ps-0 py-0">
+                    <ol class="breadcrumb bg-transparent mb-0 ps-0 py-0 overflow-hidden">
                         <li class="breadcrumb-item">
                             <a href="/slides">Courses</a>
                         </li>
                         <t t-set="breadcrumb_class" t-value="'breadcrumb-item %s' % ('fw-bold' if not slide else '')" />
-                        <li t-att-class="'breadcrumb-item %s' % ('fw-bold' if not search_category and not search_tag and not search_slide_category and not slide else '')">
-                            <a t-att-href="'/slides/%s' % slug(channel)"><span t-esc="channel.name"/></a>
+                        <li t-att-class="'breadcrumb-item w-25 %s' % ('fw-bold' if not search_category and not search_tag and not search_slide_category and not slide else '')">
+                            <a t-att-href="'/slides/%s' % slug(channel)" class="text-truncate d-block"><span t-esc="channel.name"/></a>
                         </li>
                         <li t-att-class="breadcrumb_class" t-att-aria-current="'page' and search_category" t-if="search_category">
                             <a t-att-href="'/slides/%s/category/%s' % (slug(channel), slug(search_category))"><span t-esc="search_category.name"/></a>

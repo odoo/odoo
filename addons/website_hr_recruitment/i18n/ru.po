@@ -7,15 +7,15 @@
 # Vladimir Lukianov <lvm.mobile@gmail.com>, 2022
 # Sergey Vilizhanin, 2022
 # Max Belyanin <maxbelyanin@gmail.com>, 2022
-# ILMIR <karamov@it-projects.info>, 2022
 # Максим Дронь <dronmax@gmail.com>, 2022
 # Irina Fedulova <istartlin@gmail.com>, 2022
 # Сергей Шебанин <sergey@shebanin.ru>, 2022
 # Ivan Kropotkin <yelizariev@itpp.dev>, 2022
 # Evgeniia Kotova, 2022
-# Martin Trigaux, 2022
 # Collex100, 2022
-# Alena Vlasova, 2022
+# Alena Vlasova, 2023
+# ILMIR <karamov@it-projects.info>, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
@@ -23,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-04 09:24+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Alena Vlasova, 2022\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -247,7 +247,7 @@ msgid "Applicant"
 msgstr "Соискатель"
 
 #. module: website_hr_recruitment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.js:0
 #, python-format
 msgid "Applied Job"
@@ -349,7 +349,7 @@ msgid "Customer Relationship"
 msgstr "Отношения с клиентами"
 
 #. module: website_hr_recruitment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.js:0
 #: model:ir.model,name:website_hr_recruitment.model_hr_department
 #, python-format
@@ -500,6 +500,13 @@ msgid "Lead the entire sales cycle"
 msgstr "Ведение всего цикла продаж"
 
 #. module: website_hr_recruitment
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.js:0
+#, python-format
+msgid "LinkedIn Profile"
+msgstr "Профиль LinkedIn"
+
+#. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
 #: model_terms:website.page,arch_db:website_hr_recruitment.thankyou
 msgid "Look around on our website:"
@@ -586,6 +593,13 @@ msgid "Personal Evolution"
 msgstr "Персональное развитие"
 
 #. module: website_hr_recruitment
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.js:0
+#, python-format
+msgid "Phone Number"
+msgstr "Номер телефона"
+
+#. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "Play any sport with colleagues, <br/>the bill is covered."
 msgstr "Занимайтесь любым видом спорта с коллегами<br/> за счет компании."
@@ -641,6 +655,13 @@ msgstr "Seo имя"
 #: model:ir.model.fields,help:website_hr_recruitment.field_hr_job__website_published
 msgid "Set if the application is published on the website of the company."
 msgstr "Установлен, если вакансия опубликована на сайте компании."
+
+#. module: website_hr_recruitment
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.js:0
+#, python-format
+msgid "Short Introduction"
+msgstr ""
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.snippet_options
@@ -762,6 +783,27 @@ msgstr ""
 "отображаться на главной странице списка вакансий."
 
 #. module: website_hr_recruitment
+#. odoo-python
+#: code:addons/website_hr_recruitment/models/hr_recruitment.py:0
+#, python-format
+msgid "You cannot apply for this job."
+msgstr ""
+
+#. module: website_hr_recruitment
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.js:0
+#, python-format
+msgid "Your Email"
+msgstr "Ваш электронный адрес"
+
+#. module: website_hr_recruitment
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.js:0
+#, python-format
+msgid "Your Name"
+msgstr "Ваше имя"
+
+#. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
 #: model_terms:website.page,arch_db:website_hr_recruitment.thankyou
 msgid "Your application has been posted successfully."
@@ -803,3 +845,8 @@ msgstr "поделиться"
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
 msgid "unpublished"
 msgstr "неопубликовано"
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
+msgid "Optional if you provided a Linkedin profile"
+msgstr ""

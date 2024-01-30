@@ -82,10 +82,14 @@ class WebsiteRewrite(models.Model):
     @api.constrains('url_to', 'url_from', 'redirect_type')
     def _check_url_to(self):
         for rewrite in self:
-            if rewrite.redirect_type == '308':
+            if rewrite.redirect_type in ['301', '302', '308']:
                 if not rewrite.url_to:
                     raise ValidationError(_('"URL to" can not be empty.'))
-                elif not rewrite.url_to.startswith('/'):
+                if not rewrite.url_from:
+                    raise ValidationError(_('"URL from" can not be empty.'))
+
+            if rewrite.redirect_type == '308':
+                if not rewrite.url_to.startswith('/'):
                     raise ValidationError(_('"URL to" must start with a leading slash.'))
                 for param in re.findall('/<.*?>', rewrite.url_from):
                     if param not in rewrite.url_to:
@@ -111,21 +115,31 @@ class WebsiteRewrite(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         rewrites = super().create(vals_list)
-        self._invalidate_routing()
+        if set(rewrites.mapped('redirect_type')) & {'308', '404'}:
+            self._invalidate_routing()
         return rewrites
 
     def write(self, vals):
+        need_invalidate = set(self.mapped('redirect_type')) & {'308', '404'}
         res = super(WebsiteRewrite, self).write(vals)
-        self._invalidate_routing()
+        need_invalidate |= set(self.mapped('redirect_type')) & {'308', '404'}
+        if need_invalidate:
+            self._invalidate_routing()
         return res
 
     def unlink(self):
+        need_invalidate = set(self.mapped('redirect_type')) & {'308', '404'}
         res = super(WebsiteRewrite, self).unlink()
-        self._invalidate_routing()
+        if need_invalidate:
+            self._invalidate_routing()
         return res
 
     def _invalidate_routing(self):
-        # call clear_caches on this worker to reload routing table
+        # Call clear_caches on this worker to reload routing table.
+        # Note that only 404 and 308 redirection alter the routing map:
+        # - 404: remove entry from routing map
+        # - 301/302: served as fallback later if path not found in routing map
+        # - 308: add "alias" (`redirect_to`) in routing map
         self.env['ir.http'].clear_caches()
 
     def refresh_routes(self):

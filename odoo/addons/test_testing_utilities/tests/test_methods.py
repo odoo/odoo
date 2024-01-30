@@ -51,7 +51,7 @@ class TestBasic(common.TransactionCase):
         self.env.cr.execute("SHOW test_testing_utilities.a_flag")
         self.assertEqual(self.env.cr.fetchone(), ('',))
 
-    def test_assertRaises_error(self):
+    def test_assertRaises_error_at_setup(self):
         """Checks that an exception raised during the *setup* of assertRaises
         bubbles up correctly.
 
@@ -62,6 +62,19 @@ class TestBasic(common.TransactionCase):
              TestCase.assertRaises(self, CustomError):
             with self.assertRaises(CustomError):
                 raise NotImplementedError
+
+    def test_assertRaises_error_at_exit(self):
+        """Checks that a "correctly" executing assertRaises (where the expected
+        exception has been raised and caught) will properly rollback when the
+        error is raised by flush() while exiting the savepoint.
+        """
+        self.env.cr.execute("SET LOCAL test_testing_utilities.a_flag = ''")
+        with mock.patch.object(BaseCursor, 'flush', side_effect=[None, CustomError]):
+            with self.assertRaises(CustomError):
+                self.env.cr.execute("SET LOCAL test_testing_utilities.a_flag = 'yes'")
+
+        self.env.cr.execute("SHOW test_testing_utilities.a_flag")
+        self.assertEqual(self.env.cr.fetchone(), ('',))
 
     @mute_logger('odoo.sql_db')
     def test_assertRaises_clear_recovery(self):

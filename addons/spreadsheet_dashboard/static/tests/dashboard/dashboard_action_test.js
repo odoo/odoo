@@ -1,9 +1,18 @@
 /** @odoo-module */
 
-import { getFixture, click, legacyExtraNextTick, nextTick, editInput } from "@web/../tests/helpers/utils";
+import {
+    getFixture,
+    click,
+    legacyExtraNextTick,
+    nextTick,
+    editInput,
+} from "@web/../tests/helpers/utils";
 import { getDashboardServerData } from "../utils/data";
 import { getBasicData, getBasicListArchs } from "@spreadsheet/../tests/utils/data";
 import { createSpreadsheetDashboard } from "../utils/dashboard_action";
+import { registry } from "@web/core/registry";
+import { errorService } from "@web/core/errors/error_service";
+import { RPCError } from "@web/core/network/rpc_service";
 
 QUnit.module("spreadsheet_dashboard > Dashboard > Dashboard action");
 
@@ -86,6 +95,7 @@ QUnit.test("display no dashboard message", async (assert) => {
 });
 
 QUnit.test("display error message", async (assert) => {
+    registry.category("services").add("error", errorService);
     await createSpreadsheetDashboard({
         mockRPC: function (route, args) {
             if (
@@ -95,7 +105,9 @@ QUnit.test("display error message", async (assert) => {
                     // to pass when `spreadsheet_dashboard_edition` module is installed
                     (args.method === "join_spreadsheet_session" && args.args[0] === 2))
             ) {
-                throw new Error("Bip");
+                const error = new RPCError();
+                error.data = {};
+                throw error;
             }
         },
     });
@@ -111,6 +123,19 @@ QUnit.test("display error message", async (assert) => {
     await click(spreadsheets[0]);
     assert.containsOnce(fixture, ".o-spreadsheet", "It should display the spreadsheet");
     assert.containsNone(fixture, ".o_renderer .error", "It should not display an error");
+});
+
+QUnit.test("load dashboard that doesn't exist", async (assert) => {
+    registry.category("services").add("error", errorService);
+    await createSpreadsheetDashboard({
+        spreadsheetId: 999,
+    });
+    const fixture = getFixture();
+    assert.containsOnce(
+        fixture,
+        ".o_spreadsheet_dashboard_action .dashboard-loading-status.error",
+        "It should display an error"
+    );
 });
 
 QUnit.test(
@@ -181,6 +206,6 @@ QUnit.test(
         await click(fixture.querySelector(".o_cp_top_right .fa-times"));
 
         assert.containsNone(fixture, ".o_cp_top_right .fa-times");
-        assert.equal(year.value, "Select year...");
+        assert.equal(year.value, "");
     }
 );

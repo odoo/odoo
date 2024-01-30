@@ -5,15 +5,15 @@
 # Translators:
 # Martin Trigaux, 2022
 # Niyas Raphy, 2022
-# Malaz Abuidris <msea@odoo.com>, 2022
+# Malaz Abuidris <msea@odoo.com>, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:49+0000\n"
+"POT-Creation-Date: 2023-05-23 08:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2022\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2024\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -57,6 +57,13 @@ msgid "A better global discount is already applied."
 msgstr "تم تطبيق خصم شامل أفضل بالفعل. "
 
 #. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/js/Loyalty.js:0
+#, python-format
+msgid "A reward could not be loaded"
+msgstr "تعذر تحميل المكافأة "
+
+#. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_loyalty_rule__promo_barcode
 msgid ""
 "A technical field used as an alternative to the promo code. This is "
@@ -64,27 +71,6 @@ msgid ""
 msgstr ""
 "حقل تقني يستخدم كبديل للكود الترويجي. يتم إنشاؤه تلقائياً عندما يتغير الكود "
 "الترويجي. "
-
-#. module: pos_loyalty
-#. odoo-javascript
-#: code:addons/pos_loyalty/static/src/xml/OrderWidget.xml:0
-#, python-format
-msgid "Active Coupons"
-msgstr "الكوبونات النشطة "
-
-#. module: pos_loyalty
-#. odoo-javascript
-#: code:addons/pos_loyalty/static/src/xml/OrderWidget.xml:0
-#, python-format
-msgid "Active Programs"
-msgstr "البرامج النشطة "
-
-#. module: pos_loyalty
-#. odoo-javascript
-#: code:addons/pos_loyalty/static/src/xml/OrderWidget.xml:0
-#, python-format
-msgid "Active Rewards"
-msgstr "المكافآت النشطة "
 
 #. module: pos_loyalty
 #: model_terms:ir.ui.view,arch_db:pos_loyalty.loyalty_program_view_form_inherit_pos_loyalty
@@ -342,6 +328,13 @@ msgstr "لا توجد مكافآت متاحة."
 
 #. module: pos_loyalty
 #. odoo-javascript
+#: code:addons/pos_loyalty/static/src/js/ControlButtons/eWalletButton.js:0
+#, python-format
+msgid "No valid eWallet found"
+msgstr "لم يتم العثور على محفظة إلكترونية صالحة "
+
+#. module: pos_loyalty
+#. odoo-javascript
 #: code:addons/pos_loyalty/static/src/js/ControlButtons/RewardButton.js:0
 #, python-format
 msgid "Please select a product for this reward"
@@ -562,6 +555,17 @@ msgstr ""
 "البيع. "
 
 #. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/js/Loyalty.js:0
+#, python-format
+msgid ""
+"The reward \"%s\" contain an error in its domain, your domain must be "
+"compatible with the PoS client"
+msgstr ""
+"المكافأة \"%s\" تحتوي على خطأ في نطاقها. يجب أن يكون نطاقك متوافقاً مع عميل "
+"نقطة البيع. "
+
+#. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_pos_order_line__reward_id
 msgid "The reward associated with this line."
 msgstr "المكافأة المرتبطة بهذا البند. "
@@ -749,6 +753,16 @@ msgstr "لا يمكنك بيع بطاقة هدايا قد تم بيعها بال
 msgid "You cannot set negative quantity or price to gift card or ewallet."
 msgstr ""
 "لا يمكنك تعيين سعر أو كمية سالبة لبطاقة هدايا أو المحفظة الإلكترونية. "
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/js/ControlButtons/eWalletButton.js:0
+#, python-format
+msgid ""
+"You either have not created an eWallet or all your eWallets have expired."
+msgstr ""
+"إما أنك لم تقم بإنشاء محفظة إلكترونية أو أن كافة محافظك الإلكترونية قد انتهت"
+" مدة صلاحيتها. "
 
 #. module: pos_loyalty
 #. odoo-python

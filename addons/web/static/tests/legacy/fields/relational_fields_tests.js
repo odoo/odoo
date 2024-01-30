@@ -1067,6 +1067,49 @@ QUnit.module('Legacy relational_fields', {
         await click(target, "#o_command_2")
     });
 
+    QUnit.test('clickable statusbar with readonly modifier set to false is editable', async function (assert) {
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `<form string="Partners">
+                    <header><field name="product_id" widget="statusbar" options="{'clickable': true}" attrs="{'readonly': false}"/></header>
+                </form>`,
+        });
+
+        assert.containsN(form, '.o_statusbar_status button', 2);
+        assert.containsNone(form, '.o_statusbar_status button.disabled');
+        form.destroy();
+    });
+
+    QUnit.test('clickable statusbar with readonly modifier set to true is not editable', async function (assert) {
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `<form string="Partners">
+                    <header><field name="product_id" widget="statusbar" options="{'clickable': true}" attrs="{'readonly': true}"/></header>
+                </form>`,
+        });
+
+        assert.containsN(form, '.o_statusbar_status button.disabled', 2);
+        form.destroy();
+    });
+
+    QUnit.test('non-clickable statusbar with readonly modifier set to false is not editable', async function (assert) {
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `<form string="Partners">
+                    <header><field name="product_id" widget="statusbar" options="{'clickable': false}" attrs="{'readonly': false}"/></header>
+                </form>`,
+        });
+
+        assert.containsN(form, '.o_statusbar_status button.disabled', 2);
+        form.destroy();
+    });
+
     QUnit.module('FieldSelection');
 
     QUnit.test('widget selection in a list view', async function (assert) {

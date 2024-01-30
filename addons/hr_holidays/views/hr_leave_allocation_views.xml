@@ -172,11 +172,13 @@
                 <field name="multi_employee" invisible="1" force_save="1"/>
                 <!-- Employee id is only visible if the allocation is created specifically for that user in `_action_validate_create_childs` -->
                 <field name="employee_id" groups="hr_holidays.group_hr_holidays_user"
-                    attrs="{'invisible': ['|', '|', ('holiday_type', '!=', 'employee'), ('employee_id', '=', False), ('state', 'in', ('draft', 'cancel', 'confirm'))]}"/>
-                <field name="employee_ids" widget="many2many_tags"
+                    attrs="{'invisible': ['|', '|', ('holiday_type', '!=', 'employee'), ('employee_id', '=', False), ('state', 'in', ('draft', 'cancel', 'confirm'))]}"
+                    options="{'relation': 'hr.employee.public'}" widget="many2one_avatar_employee"/>
+                <field name="employee_ids" widget="many2many_avatar_employee"
                     groups="hr_holidays.group_hr_holidays_user"
                     attrs="{'required': [('holiday_type', '=', 'employee'), ('state', 'in', ('draft', 'cancel', 'confirm'))],
-                    'invisible': ['|', ('holiday_type', '!=', 'employee'), '&amp;', ('state', 'not in', ('draft', 'cancel', 'confirm')), ('employee_id', '!=', False)]}"/>
+                    'invisible': ['|', ('holiday_type', '!=', 'employee'), '&amp;', ('state', 'not in', ('draft', 'cancel', 'confirm')), ('employee_id', '!=', False)]}"
+                    options="{'relation': 'hr.employee.public'}"/>
             </xpath>
             <xpath expr="//field[@name='employee_id']" position="after">
                 <field name="category_id"

@@ -261,9 +261,10 @@ if parse_version(werkzeug.__version__) >= parse_version('2.0.2'):
     # let's add the websocket key only when appropriate.
     ROUTING_KEYS.add('websocket')
 
-# The duration of a user session before it is considered expired,
-# three months.
-SESSION_LIFETIME = 60 * 60 * 24 * 90
+# The default duration of a user session cookie. Inactive sessions are reaped
+# server-side as well with a threshold that can be set via an optional
+# config parameter `sessions.max_inactivity_seconds` (default: SESSION_LIFETIME)
+SESSION_LIFETIME = 60 * 60 * 24 * 7
 
 # The cache duration for static content from the filesystem, one week.
 STATIC_CACHE = 60 * 60 * 24 * 7
@@ -282,7 +283,7 @@ class SessionExpiredException(Exception):
 
 def content_disposition(filename):
     return "attachment; filename*=UTF-8''{}".format(
-        url_quote(filename, safe='')
+        url_quote(filename, safe='', unsafe='()<>@,;:"/[]?={}\\*\'%') # RFC6266
     )
 
 def db_list(force=False, host=None):
@@ -858,8 +859,8 @@ class FilesystemSessionStore(sessions.FilesystemSessionStore):
         session.should_rotate = False
         self.save(session)
 
-    def vacuum(self):
-        threshold = time.time() - SESSION_LIFETIME
+    def vacuum(self, max_lifetime=SESSION_LIFETIME):
+        threshold = time.time() - max_lifetime
         for fname in glob.iglob(os.path.join(root.session_store.path, '*', '*')):
             path = os.path.join(root.session_store.path, fname)
             with contextlib.suppress(OSError):
@@ -979,6 +980,7 @@ class Session(collections.abc.MutableMapping):
 
         self.should_rotate = True
         self.update({
+            'db': env.registry.db_name,
             'login': login,
             'uid': uid,
             'context': user_context,
@@ -1116,6 +1118,10 @@ class FutureResponse:
 
     def __init__(self):
         self.headers = werkzeug.datastructures.Headers()
+
+    @property
+    def _charset(self):
+        return self.charset
 
     @functools.wraps(werkzeug.Response.set_cookie)
     def set_cookie(self, key, value='', max_age=None, expires=None, path='/', domain=None, secure=False, httponly=False, samesite=None, cookie_type='required'):
@@ -1532,9 +1538,11 @@ class Request:
         try:
             directory = root.statics[module]
             filepath = werkzeug.security.safe_join(directory, path)
-            return Stream.from_path(filepath).get_response(
+            res = Stream.from_path(filepath).get_response(
                 max_age=0 if 'assets' in self.session.debug else STATIC_CACHE,
             )
+            root.set_csp(res)
+            return res
         except KeyError:
             raise NotFound(f'Module "{module}" not found.\n')
         except OSError:  # cover both missing file and invalid permissions
@@ -1608,7 +1616,8 @@ class Request:
         ir_http._authenticate(rule.endpoint)
         ir_http._pre_dispatch(rule, args)
         response = self.dispatcher.dispatch(rule.endpoint, args)
-        ir_http._post_dispatch(response)
+        # the registry can have been reniewed by dispatch
+        self.registry['ir.http']._post_dispatch(response)
         return response
 
 
@@ -1758,6 +1767,7 @@ class JsonRPCDispatcher(Dispatcher):
     def __init__(self, request):
         super().__init__(request)
         self.jsonrequest = {}
+        self.request_id = None
 
     @classmethod
     def is_compatible_with(cls, request):
@@ -1795,8 +1805,13 @@ class JsonRPCDispatcher(Dispatcher):
         """
         try:
             self.jsonrequest = self.request.get_json_data()
+            self.request_id = self.jsonrequest.get('id')
         except ValueError as exc:
-            raise BadRequest("Invalid JSON data") from exc
+            # must use abort+Response to bypass handle_error
+            werkzeug.exceptions.abort(Response("Invalid JSON data", status=400))
+        except AttributeError as exc:
+            # must use abort+Response to bypass handle_error
+            werkzeug.exceptions.abort(Response("Invalid JSON-RPC data", status=400))
 
         self.request.params = dict(self.jsonrequest.get('params', {}), **args)
         ctx = self.request.params.pop('context', None)
@@ -1837,8 +1852,7 @@ class JsonRPCDispatcher(Dispatcher):
         return self._response(error=error)
 
     def _response(self, result=None, error=None):
-        request_id = self.jsonrequest.get('id')
-        response = {'jsonrpc': '2.0', 'id': request_id}
+        response = {'jsonrpc': '2.0', 'id': self.request_id}
         if error is not None:
             response['error'] = error
         if result is not None:
@@ -1960,6 +1974,10 @@ class Application:
         current_thread.query_count = 0
         current_thread.query_time = 0
         current_thread.perf_t0 = time.time()
+        if hasattr(current_thread, 'dbname'):
+            del current_thread.dbname
+        if hasattr(current_thread, 'uid'):
+            del current_thread.uid
 
         if odoo.tools.config['proxy_mode'] and environ.get("HTTP_X_FORWARDED_HOST"):
             # The ProxyFix middleware has a side effect of updating the
@@ -1970,52 +1988,52 @@ class Application:
                 return
             ProxyFix(fake_app)(environ, fake_start_response)
 
-        httprequest = werkzeug.wrappers.Request(environ)
-        httprequest.user_agent_class = UserAgent  # use vendored userAgent since it will be removed in 2.1
-        httprequest.parameter_storage_class = (
-            werkzeug.datastructures.ImmutableOrderedMultiDict)
-        request = Request(httprequest)
-        _request_stack.push(request)
-        request._post_init()
-        current_thread.url = httprequest.url
+        with werkzeug.wrappers.Request(environ) as httprequest:
+            httprequest.user_agent_class = UserAgent  # use vendored userAgent since it will be removed in 2.1
+            httprequest.parameter_storage_class = (
+                werkzeug.datastructures.ImmutableOrderedMultiDict)
+            request = Request(httprequest)
+            _request_stack.push(request)
+            request._post_init()
+            current_thread.url = httprequest.url
 
-        try:
-            if self.get_static_file(httprequest.path):
-                response = request._serve_static()
-            elif request.db:
-                with request._get_profiler_context_manager():
-                    response = request._serve_db()
-            else:
-                response = request._serve_nodb()
-            return response(environ, start_response)
-
-        except Exception as exc:
-            # Valid (2xx/3xx) response returned via werkzeug.exceptions.abort.
-            if isinstance(exc, HTTPException) and exc.code is None:
-                response = exc.get_response()
-                HttpDispatcher(request).post_dispatch(response)
+            try:
+                if self.get_static_file(httprequest.path):
+                    response = request._serve_static()
+                elif request.db:
+                    with request._get_profiler_context_manager():
+                        response = request._serve_db()
+                else:
+                    response = request._serve_nodb()
                 return response(environ, start_response)
 
-            # Logs the error here so the traceback starts with ``__call__``.
-            if hasattr(exc, 'loglevel'):
-                _logger.log(exc.loglevel, exc, exc_info=getattr(exc, 'exc_info', None))
-            elif isinstance(exc, HTTPException):
-                pass
-            elif isinstance(exc, SessionExpiredException):
-                _logger.info(exc)
-            elif isinstance(exc, (UserError, AccessError, NotFound)):
-                _logger.warning(exc)
-            else:
-                _logger.error("Exception during request handling.", exc_info=True)
+            except Exception as exc:
+                # Valid (2xx/3xx) response returned via werkzeug.exceptions.abort.
+                if isinstance(exc, HTTPException) and exc.code is None:
+                    response = exc.get_response()
+                    HttpDispatcher(request).post_dispatch(response)
+                    return response(environ, start_response)
 
-            # Ensure there is always a WSGI handler attached to the exception.
-            if not hasattr(exc, 'error_response'):
-                exc.error_response = request.dispatcher.handle_error(exc)
+                # Logs the error here so the traceback starts with ``__call__``.
+                if hasattr(exc, 'loglevel'):
+                    _logger.log(exc.loglevel, exc, exc_info=getattr(exc, 'exc_info', None))
+                elif isinstance(exc, HTTPException):
+                    pass
+                elif isinstance(exc, SessionExpiredException):
+                    _logger.info(exc)
+                elif isinstance(exc, (UserError, AccessError, NotFound)):
+                    _logger.warning(exc)
+                else:
+                    _logger.error("Exception during request handling.", exc_info=True)
 
-            return exc.error_response(environ, start_response)
+                # Ensure there is always a WSGI handler attached to the exception.
+                if not hasattr(exc, 'error_response'):
+                    exc.error_response = request.dispatcher.handle_error(exc)
 
-        finally:
-            _request_stack.pop()
+                return exc.error_response(environ, start_response)
+
+            finally:
+                _request_stack.pop()
 
 
 root = Application()

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import Command
 from odoo.addons.sale_loyalty.tests.common import TestSaleCouponCommon
 from odoo.tests import Form, tagged
 
@@ -277,3 +278,82 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
         self._auto_rewards(order, programs)
         # 872.73 - (20% of 1 iPad) = 872.73 - 58.18 = 814.55
         self.assertAlmostEqual(order.amount_untaxed, 1105.46, 2, "One large cabinet should be discounted by 20%")
+
+    def test_free_shipping_reward_last_line(self):
+        """
+            The free shipping reward cannot be removed if it is the last item in the sale order.
+            However, we calculate its sequence so that it is the last item in the sale order.
+            This can create an error if a default sequence is not determined.
+        """
+        self.immediate_promotion_program.active = False
+        # Create a loyalty program
+        loyalty_program = self.env['loyalty.program'].create({
+            'name': 'GIFT Free Shipping',
+            'program_type': 'loyalty',
+            'applies_on': 'both',
+            'trigger': 'auto',
+            'rule_ids': [(0, 0, {
+                    'reward_point_mode': 'money',
+                    'reward_point_amount': 1,
+                })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'shipping',
+                'required_points': 100,
+            })],
+        })
+        # Add points to a partner to trigger the promotion
+        loyalty_card = self.env['loyalty.card'].create({
+            'program_id': loyalty_program.id,
+            'partner_id': self.steve.id,
+            'points': 250,
+        })
+        order = self.env['sale.order'].create({
+            'partner_id': self.steve.id,
+        })
+        # Check if we can claim the free shipping reward
+        order._update_programs_and_rewards()
+        claimable_rewards = order._get_claimable_rewards()
+        self.assertEqual(len(claimable_rewards), 1)
+        # Try to apply the loyalty card to the sale order
+        self._apply_promo_code(order, loyalty_card.code)
+        # Check if there is an error in the sequence
+        # via `_apply_program_reward` in `apply_promo_code` method
+
+    def test_nothing_delivered_nothing_to_invoice(self):
+        program = self.env['loyalty.program'].create({
+            'name': '10% reduction on all orders',
+            'trigger': 'auto',
+            'program_type': 'promotion',
+            'rule_ids': [Command.create({
+                'minimum_amount': 50,
+            })],
+            'reward_ids': [Command.create({
+                'reward_type': 'discount',
+                'discount': 10,
+                'discount_mode': 'percent',
+                'discount_applicability': 'order',
+            })]
+        })
+        product = self.env['product.product'].create({
+            'name': 'Test product',
+            'type': 'product',
+            'list_price': 200.0,
+            'invoice_policy': 'delivery',
+        })
+        order = self.empty_order
+        self.env['sale.order.line'].create({
+            'product_id': product.id,
+            'order_id': order.id,
+        })
+        self._auto_rewards(order, program)
+        self.assertNotEqual(order.reward_amount, 0)
+        self.assertEqual(order.invoice_status, 'no')
+        delivery_wizard = Form(self.env['choose.delivery.carrier'].with_context({
+            'default_order_id': order.id,
+            'default_carrier_id': self.carrier.id
+        }))
+        choose_delivery_carrier = delivery_wizard.save()
+        choose_delivery_carrier.button_confirm()
+        order.action_confirm()
+        self.assertEqual(order.delivery_set, True)
+        self.assertEqual(order.invoice_status, 'no')

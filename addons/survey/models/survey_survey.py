@@ -247,12 +247,11 @@ class Survey(models.Model):
             survey.question_ids = survey.question_and_page_ids - survey.page_ids
             survey.question_count = len(survey.question_ids)
 
-    @api.depends('question_and_page_ids.is_conditional', 'users_login_required', 'access_mode')
+    @api.depends('users_login_required', 'access_mode')
     def _compute_is_attempts_limited(self):
         for survey in self:
             if not survey.is_attempts_limited or \
-               (survey.access_mode == 'public' and not survey.users_login_required) or \
-               any(question.is_conditional for question in survey.question_and_page_ids):
+               (survey.access_mode == 'public' and not survey.users_login_required):
                 survey.is_attempts_limited = False
 
     @api.depends('session_start_time', 'user_input_ids')
@@ -374,13 +373,19 @@ class Survey(models.Model):
         if default and 'question_ids' in default:
             return clone
 
-        questions_map = {src.id: dst.id for src, dst in zip(self.question_ids, clone.question_ids)}
+        src_questions = self.question_ids
+        dst_questions = clone.question_ids.sorted()
+
+        questions_map = {src.id: dst.id for src, dst in zip(src_questions, dst_questions)}
         answers_map = {
-            source_answer.id: copy_answer.id
-            for source_answer, copy_answer
-            in zip(self.question_ids.suggested_answer_ids, clone.question_ids.suggested_answer_ids)
+            src_answer.id: dst_answer.id
+            for src, dst
+            in zip(src_questions, dst_questions)
+            for src_answer, dst_answer
+            in zip(src.suggested_answer_ids, dst.suggested_answer_ids.sorted())
         }
-        for src, dst in zip(self.question_ids, clone.question_ids):
+
+        for src, dst in zip(src_questions, dst_questions):
             if src.is_conditional:
                 dst.triggering_question_id = questions_map.get(src.triggering_question_id.id)
                 dst.triggering_answer_id = answers_map.get(src.triggering_answer_id.id)
@@ -972,7 +977,7 @@ class Survey(models.Model):
         return {
             'type': 'ir.actions.act_url',
             'name': "Test Survey",
-            'target': 'self',
+            'target': 'new',
             'url': '/survey/test/%s' % self.access_token,
         }
 

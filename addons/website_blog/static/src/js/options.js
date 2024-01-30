@@ -40,10 +40,9 @@ options.registry.CoverProperties.include({
      * @override
      */
     updateUI: async function () {
-        await this._super(...arguments);
         const isBlogCover = this.$target[0].classList.contains('o_wblog_post_page_cover');
         if (!isBlogCover) {
-            return;
+            return this._super(...arguments);
         }
         var isRegularCover = this.$target.is('.o_wblog_post_page_cover_regular');
         var $coverFull = this.$el.find('[data-select-class*="o_full_screen_height"]');
@@ -55,6 +54,7 @@ options.registry.CoverProperties.include({
         $coverFull.children('div').text(isRegularCover ? _t("Large") : this._coverFullOriginalLabel);
         $coverMid.children('div').text(isRegularCover ? _t("Medium") : this._coverMidOriginalLabel);
         $coverAuto.children('div').text(isRegularCover ? _t("Tiny") : this._coverAutoOriginalLabel);
+        return this._super(...arguments);
     },
 });
 

@@ -18,18 +18,21 @@
 # Martin Trigaux, 2022
 # Triine Aavik <triine@avalah.ee>, 2022
 # Egon Raamat <egon@avalah.ee>, 2022
-# Eneli Õigus <enelioigus@gmail.com>, 2022
-# Anna, 2023
-# Leaanika Randmets, 2023
 # JanaAvalah, 2023
+# Marten, 2023
+# Leaanika Randmets, 2023
+# Mihkel avalah, 2023
+# Anna, 2023
+# Peeter Mark, 2024
+# Eneli Õigus <enelioigus@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-14 05:51+0000\n"
+"POT-Creation-Date: 2023-05-23 08:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: JanaAvalah, 2023\n"
+"Last-Translator: Eneli Õigus <enelioigus@gmail.com>, 2024\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1144,7 +1147,7 @@ msgstr "Tegevus"
 #: model:ir.model.fields,field_description:mail.field_res_partner__activity_exception_decoration
 #: model:ir.model.fields,field_description:mail.field_res_users__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Tegevuse erandlik kohendus"
+msgstr "Tegevuse erandi tüüp"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_activity_mixin
@@ -1405,6 +1408,13 @@ msgid ""
 msgstr ""
 "Ilmnes SSL-i erand. Kontrollige serveri pordi SSL/TLS konfiguratsiooni.\n"
 "%s"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid "An access token must be provided for each attachment."
+msgstr ""
 
 #. module: mail
 #. odoo-python
@@ -3064,6 +3074,7 @@ msgstr ""
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/components/thread_view_topbar/thread_view_topbar.xml:0
+#: code:addons/mail/static/src/models/discuss.js:0
 #: model:ir.actions.client,name:mail.action_discuss
 #: model:ir.ui.menu,name:mail.mail_menu_technical
 #: model:ir.ui.menu,name:mail.menu_root_discuss
@@ -3206,7 +3217,7 @@ msgstr "Tehtud ning käivtage järgmine"
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 #, python-format
 msgid "Done & Schedule Next"
-msgstr "Tehtud ning ajasta uus "
+msgstr "Märgi tehtuks ning ajasta uus"
 
 #. module: mail
 #. odoo-javascript
@@ -4064,13 +4075,6 @@ msgid "Gmail Credentials"
 msgstr "Gmaili volitused"
 
 #. module: mail
-#. odoo-python
-#: code:addons/mail/models/res_users.py:0
-#, python-format
-msgid "Go to the configuration panel"
-msgstr "Mine seadistuste paneelile"
-
-#. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_channel__channel_type__group
 msgid "Group"
 msgstr "Grupp"
@@ -4181,7 +4185,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_model__is_mail_thread
 msgid "Has Mail Thread"
-msgstr ""
+msgstr "On E-posti kirjavahetuse logi"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_message_search
@@ -5502,10 +5506,10 @@ msgstr "Lisa märkus"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/components/welcome_view/welcome_view.xml:0
+#: code:addons/mail/static/src/components/welcome_view/welcome_view.js:0
 #, python-format
-msgid "Logged as"
-msgstr "Logitud kui"
+msgid "Logged in as %s"
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
@@ -5766,6 +5770,13 @@ msgid "Mark as done"
 msgstr "Märgi lõpetatuks"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/models/call_settings_menu.js:0
+#, python-format
+msgid "Media devices unobtainable"
+msgstr ""
+
+#. module: mail
 #: model:mail.activity.type,name:mail.mail_activity_data_meeting
 msgid "Meeting"
 msgstr "Kalendrisse lisamine"
@@ -5981,7 +5992,7 @@ msgstr "Sõnumid"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_message_search
 msgid "Messages Search"
-msgstr ""
+msgstr "Sõnumite Otsing"
 
 #. module: mail
 #. odoo-javascript
@@ -6591,8 +6602,8 @@ msgstr "Veateadete arv"
 #: model:ir.model.fields,help:mail.field_mail_thread_cc__message_needaction_counter
 #: model:ir.model.fields,help:mail.field_res_partner__message_needaction_counter
 #: model:ir.model.fields,help:mail.field_res_users__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Tegutsemist nõudvate sõnumite arv"
+msgid "Number of messages requiring action"
+msgstr "Tegevust nõudvate sõnumite arv"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_blacklist__message_has_error_counter
@@ -7957,6 +7968,13 @@ msgid "SSL"
 msgstr "SSL"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/models/call_settings_menu.js:0
+#, python-format
+msgid "SSL might not be set up properly"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__is_ssl
 msgid "SSL/TLS"
 msgstr "SSL/TLS"
@@ -8017,7 +8035,7 @@ msgstr "Salvesta uue mallina"
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__delay_count
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 msgid "Schedule"
-msgstr "Graafik"
+msgstr "Planeeri"
 
 #. module: mail
 #. odoo-javascript
@@ -9018,6 +9036,21 @@ msgid ""
 msgstr ""
 
 #. module: mail
+#. odoo-python
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid ""
+"The attachment %s does not exist or you do not have the rights to access it."
+msgstr ""
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid "The attachment %s does not exist."
+msgstr ""
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models/blur_manager.js:0
 #, python-format
@@ -9489,7 +9522,7 @@ msgstr "Reisimine ja kohad"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__triggered_next_type_id
 msgid "Trigger"
-msgstr "Tellimise meetod"
+msgstr "Käivitaja"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__chaining_type__trigger
@@ -9941,6 +9974,14 @@ msgid ""
 msgstr ""
 
 #. module: mail
+#: code:addons/mail/models/mail_alias.py:0
+#, python-format
+msgid ""
+"Value for `mail.catchall.domain.allowed` cannot be validated.\n"
+"It should be a comma separated list of domains e.g. example.com,example.org."
+msgstr ""
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
@@ -10273,15 +10314,6 @@ msgstr "Saate avada ainult olemasolevate kanalite profiili."
 #, python-format
 msgid "You can only open the profile of existing users."
 msgstr "Saate avada ainult olemasolevate kasutajate profiili."
-
-#. module: mail
-#. odoo-python
-#: code:addons/mail/models/res_users.py:0
-#, python-format
-msgid ""
-"You cannot create a new user from here.\n"
-" To create new user please go to configuration panel."
-msgstr ""
 
 #. module: mail
 #. odoo-python

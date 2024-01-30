@@ -5,7 +5,7 @@ import { _lt } from "@web/core/l10n/translation";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { initializeDesignTabCss } from "mass_mailing.design_constants";
 import { toInline, getCSSRules } from "web_editor.convertInline";
-import { loadBundle, loadJS } from "@web/core/assets";
+import { loadBundle } from "@web/core/assets";
 import { qweb } from 'web.core';
 import { useService } from "@web/core/utils/hooks";
 import { buildQuery } from "web.rpc";
@@ -16,9 +16,9 @@ import { MassMailingMobilePreviewDialog } from "./mass_mailing_mobile_preview";
 import { getRangePosition } from '@web_editor/js/editor/odoo-editor/src/utils/utils';
 
 const {
-    onWillStart,
     useSubEnv,
     onWillUpdateProps,
+    status,
 } = owl;
 
 export class MassMailingHtmlField extends HtmlField {
@@ -31,9 +31,6 @@ export class MassMailingHtmlField extends HtmlField {
         this.action = useService('action');
         this.rpc = useService('rpc');
         this.dialog = useService('dialog');
-
-        // Load html2canvas for toInline.
-        onWillStart(() => loadJS('/web_editor/static/lib/html2canvas.js'));
 
         onWillUpdateProps(() => {
             if (this.props.record.data.mailing_model_id && this.wysiwyg) {
@@ -50,7 +47,10 @@ export class MassMailingHtmlField extends HtmlField {
             resizable: false,
             defaultDataForLinkTools: { isNewWindow: true },
             toolbarTemplate: 'mass_mailing.web_editor_toolbar',
-            onWysiwygBlur: () => this.wysiwyg.odooEditor.toolbarHide(),
+            onWysiwygBlur: () => {
+                this.commitChanges();
+                this.wysiwyg.odooEditor.toolbarHide();
+            },
             ...this.props.wysiwygOptions,
         };
     }
@@ -91,6 +91,11 @@ export class MassMailingHtmlField extends HtmlField {
         }
 
         this._pendingCommitChanges = (async () => {
+            const codeViewEl = this._getCodeViewEl();
+            if (codeViewEl) {
+                this.wysiwyg.setValue(this._getCodeViewValue(codeViewEl));
+            }
+
             if (this.wysiwyg.$iframeBody.find('.o_basic_theme').length) {
                 this.wysiwyg.$iframeBody.find('*').css('font-family', '');
             }
@@ -98,7 +103,6 @@ export class MassMailingHtmlField extends HtmlField {
             const $editable = this.wysiwyg.getEditable();
             this.wysiwyg.odooEditor.historyPauseSteps();
             await this.wysiwyg.cleanForSave();
-            await this.wysiwyg.saveModifiedImages(this.$content);
 
             await super.commitChanges();
 
@@ -152,6 +156,10 @@ export class MassMailingHtmlField extends HtmlField {
                 '/mass_mailing/static/src/snippets/s_rating/options.js',
             ],
         });
+
+        if (status(this) === "destroyed") {
+            return;
+        }
 
         await this._resetIframe();
     }
@@ -240,7 +248,7 @@ export class MassMailingHtmlField extends HtmlField {
             this.wysiwyg.odooEditor.observerActive();
 
             if ($codeview.hasClass('d-none')) {
-                this.wysiwyg.setValue($codeview.val());
+                this.wysiwyg.setValue(this._getCodeViewValue($codeview[0]));
             } else {
                 $codeview.val(this.wysiwyg.getValue());
             }
@@ -382,6 +390,7 @@ export class MassMailingHtmlField extends HtmlField {
                 }
                 // mark selection done for tour testing
                 $editable.addClass('theme_selection_done');
+                this.onIframeUpdated();
             }, 0);
         });
 
@@ -435,6 +444,24 @@ export class MassMailingHtmlField extends HtmlField {
             this.wysiwyg.$iframe &&
             this.wysiwyg.$iframe.contents().find('textarea.o_codeview')[0];
         return codeView && !codeView.classList.contains('d-none') && codeView;
+    }
+    /**
+     * The .o_mail_wrapper_td element is where snippets can be dropped into.
+     * This getter wraps the codeview value in such element in case it got
+     * removed during edition in the codeview, in order to preserve the snippets
+     * dropping functionality.
+     */
+    _getCodeViewValue(codeViewEl) {
+        const editable = this.wysiwyg.$editable[0];
+        const initialDropZone = editable.querySelector('.o_mail_wrapper_td');
+        if (initialDropZone) {
+            const parsedHtml = new DOMParser().parseFromString(codeViewEl.value, "text/html");
+            if (!parsedHtml.querySelector('.o_mail_wrapper_td')) {
+                initialDropZone.replaceChildren(...parsedHtml.body.childNodes);
+                return editable.innerHTML;
+            }
+        }
+        return codeViewEl.value;
     }
     /**
      * This method will take the model in argument and will hide all mailing template
@@ -598,6 +625,15 @@ export class MassMailingHtmlField extends HtmlField {
     async _getWysiwygClass() {
         return getWysiwygClass({moduleName: 'mass_mailing.wysiwyg'});
     }
+    /**
+     * @override
+     */
+    async _setupReadonlyIframe() {
+        if (!this.props.value.length) {
+            this.props.value = this.props.record.data.body_html;
+        }
+        await super._setupReadonlyIframe();
+    }
 }
 
 MassMailingHtmlField.props = {
@@ -618,6 +654,9 @@ MassMailingHtmlField.extractProps = (...args) => {
         inlineField: attrs.options['inline-field'],
         iframeHtmlClass: attrs['iframeHtmlClass'],
     };
+};
+MassMailingHtmlField.fieldDependencies = {
+    body_html: { type: 'html' },
 };
 
 registry.category("fields").add("mass_mailing_html", MassMailingHtmlField);

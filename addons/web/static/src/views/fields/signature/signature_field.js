@@ -8,7 +8,7 @@ import { isBinarySize } from "@web/core/utils/binary";
 import { fileTypeMagicWordMap, imageCacheKey } from "@web/views/fields/image/image_field";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
-import { Component, onWillUpdateProps, useState } from "@odoo/owl";
+import { Component, useState } from "@odoo/owl";
 
 const placeholder = "/web/static/img/placeholder.png";
 
@@ -20,15 +20,10 @@ export class SignatureField extends Component {
         this.state = useState({
             isValid: true,
         });
+    }
 
-        this.rawCacheKey = this.props.record.data.__last_update;
-        onWillUpdateProps((nextProps) => {
-            const { record } = this.props;
-            const { record: nextRecord } = nextProps;
-            if (record.resId !== nextRecord.resId || nextRecord.mode === "readonly") {
-                this.rawCacheKey = nextRecord.data.__last_update;
-            }
-        });
+    get rawCacheKey() {
+        return this.props.record.data.__last_update;
     }
 
     get getUrl() {
@@ -133,6 +128,11 @@ SignatureField.props = {
     previewImage: { type: String, optional: true },
     width: { type: Number, optional: true },
 };
+
+SignatureField.fieldDependencies = {
+    __last_update: { type: "datetime" },
+};
+
 SignatureField.extractProps = ({ attrs }) => {
     const { options, width, height } = attrs;
     return {

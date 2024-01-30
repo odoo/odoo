@@ -23,7 +23,10 @@ from inspect import signature
 from pprint import pformat
 from weakref import WeakSet
 
-from decorator import decorate
+try:
+    from decorator import decoratorx as decorator
+except ImportError:
+    from decorator import decorator
 
 from .exceptions import AccessError, CacheMiss
 from .tools import classproperty, frozendict, lazy_property, OrderedSet, Query, StackMap
@@ -381,6 +384,7 @@ def model(method):
 _create_logger = logging.getLogger(__name__ + '.create')
 
 
+@decorator
 def _model_create_single(create, self, arg):
     # 'create' expects a dict and returns a record
     if isinstance(arg, Mapping):
@@ -398,11 +402,12 @@ def model_create_single(method):
             records = model.create([vals, ...])
     """
     _create_logger.warning("The model %s is not overriding the create method in batch", method.__module__)
-    wrapper = decorate(method, _model_create_single)
+    wrapper = _model_create_single(method) # pylint: disable=no-value-for-parameter
     wrapper._api = 'model_create'
     return wrapper
 
 
+@decorator
 def _model_create_multi(create, self, arg):
     # 'create' expects a list of dicts and returns a recordset
     if isinstance(arg, Mapping):
@@ -418,7 +423,7 @@ def model_create_multi(method):
             record = model.create(vals)
             records = model.create([vals, ...])
     """
-    wrapper = decorate(method, _model_create_multi)
+    wrapper = _model_create_multi(method) # pylint: disable=no-value-for-parameter
     wrapper._api = 'model_create'
     return wrapper
 
@@ -451,7 +456,9 @@ def _call_kw_multi(method, self, args, kwargs):
 
 def call_kw(model, name, args, kwargs):
     """ Invoke the given method ``name`` on the recordset ``model``. """
-    method = getattr(type(model), name)
+    method = getattr(type(model), name, None)
+    if not method:
+        raise AttributeError(f"The method '{name}' does not exist on the model '{model._name}'")
     api = getattr(method, '_api', None)
     if api == 'model':
         result = _call_kw_model(method, model, args, kwargs)
@@ -495,11 +502,16 @@ class Environment(Mapping):
         """ Reset the transaction, see :meth:`Transaction.reset`. """
         self.transaction.reset()
 
-    def __new__(cls, cr, uid, context, su=False):
+    def __new__(cls, cr, uid, context, su=False, uid_origin=None):
         if uid == SUPERUSER_ID:
             su = True
+
+        # isinstance(uid, int) is to handle `RequestUID`
+        uid_origin = uid_origin or (uid if isinstance(uid, int) else None)
+        if uid_origin == SUPERUSER_ID:
+            uid_origin = None
+
         assert context is not None
-        args = (cr, uid, context, su)
 
         # determine transaction object
         transaction = cr.transaction
@@ -508,13 +520,13 @@ class Environment(Mapping):
 
         # if env already exists, return it
         for env in transaction.envs:
-            if env.args == args:
+            if (env.cr, env.uid, env.context, env.su, env.uid_origin) == (cr, uid, context, su, uid_origin):
                 return env
 
         # otherwise create environment, and add it in the set
         self = object.__new__(cls)
-        args = (cr, uid, frozendict(context), su)
-        self.cr, self.uid, self.context, self.su = self.args = args
+        self.cr, self.uid, self.context, self.su = self.args = (cr, uid, frozendict(context), su)
+        self.uid_origin = uid_origin
 
         self.transaction = self.all = transaction
         self.registry = transaction.registry
@@ -569,7 +581,7 @@ class Environment(Mapping):
         uid = self.uid if user is None else int(user)
         context = self.context if context is None else context
         su = (user is None and self.su) if su is None else su
-        return Environment(cr, uid, context, su)
+        return Environment(cr, uid, context, su, self.uid_origin)
 
     def ref(self, xml_id, raise_if_not_found=True):
         """ Return the record corresponding to the given ``xml_id``.
@@ -791,6 +803,7 @@ class Environment(Mapping):
         """ Mark ``field`` to be computed on ``records``. """
         if not records:
             return records
+        assert field.store and field.compute, "Cannot add to recompute no-store or no-computed field"
         self.all.tocompute[field].update(records._ids)
 
     def remove_to_compute(self, field, records):
@@ -928,14 +941,14 @@ class Cache(object):
             if field_cache and isinstance(next(iter(field_cache)), tuple):
                 data[field] = {
                     key: {
-                        Starred(id_) if id_ in dirty_ids else id_: val
+                        Starred(id_) if id_ in dirty_ids else id_: val if field.type != 'binary' else '<binary>'
                         for id_, val in key_cache.items()
                     }
                     for key, key_cache in field_cache.items()
                 }
             else:
                 data[field] = {
-                    Starred(id_) if id_ in dirty_ids else id_: val
+                    Starred(id_) if id_ in dirty_ids else id_: val if field.type != 'binary' else '<binary>'
                     for id_, val in field_cache.items()
                 }
         return repr(data)
@@ -1159,10 +1172,17 @@ class Cache(object):
             if name != 'id' and record.id in self._get_field_cache(record, field):
                 yield field
 
-    def get_records(self, model, field):
-        """ Return the records of ``model`` that have a value for ``field``. """
-        field_cache = self._get_field_cache(model, field)
-        return model.browse(field_cache)
+    def get_records(self, model, field, all_contexts=False):
+        """ Return the records of ``model`` that have a value for ``field``.
+        By default the method checks for values in the current context of ``model``.
+        But when ``all_contexts`` is true, it checks for values *in all contexts*.
+        """
+        if all_contexts and model.pool.field_depends_context[field]:
+            field_cache = self._data.get(field, EMPTY_DICT)
+            ids = OrderedSet(id_ for sub_cache in field_cache.values() for id_ in sub_cache)
+        else:
+            ids = self._get_field_cache(model, field)
+        return model.browse(ids)
 
     def get_missing_ids(self, records, field):
         """ Return the ids of ``records`` that have no value for ``field``. """

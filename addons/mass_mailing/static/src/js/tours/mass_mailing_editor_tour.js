@@ -72,7 +72,21 @@ odoo.define('mass_mailing.mass_mailing_editor_tour', function (require) {
             trigger: 'button.o_list_button_add',
         },
         {
-            content: "Wait for the theme selector to load and pick the basic theme.",
+            content: "Fill in Subject",
+            trigger: '#subject',
+            run: 'text Test Basic Theme',
+        },
+        {
+            content: "Fill in Mailing list",
+            trigger: '#contact_list_ids',
+            run: 'text Newsletter',
+        },
+        {
+            content: "Pick 'Newsletter' option",
+            trigger: '.o_input_dropdown a:contains(Newsletter)',
+        },
+        {
+            content: "Pick the basic theme",
             trigger: 'iframe #basic',
             extra_trigger: 'iframe .o_mail_theme_selector_new',
         },
@@ -80,6 +94,48 @@ odoo.define('mass_mailing.mass_mailing_editor_tour', function (require) {
             content: "Make sure the snippets menu is hidden",
             trigger: 'iframe html:has(#oe_snippets.d-none)',
             run: () => null, // no click, just check
+        },
+        {
+            content: "Click on the New button to create another mailing",
+            trigger: 'button.o_form_button_create',
+        },
+        {
+            content: "Fill in Subject",
+            trigger: '#subject',
+            extra_trigger: 'iframe .o_mail_theme_selector_new',
+            run: 'text Test Newsletter Theme',
+        },
+        {
+            content: "Fill in Mailing list",
+            trigger: '#contact_list_ids',
+            run: 'text Newsletter',
+        },
+        {
+            content: "Pick 'Newsletter' option",
+            trigger: '.o_input_dropdown a:contains(Newsletter)',
+        },
+        {
+            content: "Pick the newsletter theme",
+            trigger: 'iframe #newsletter',
+            // extra_trigger: 'iframe .o_mail_theme_selector_new',
+        },
+        {
+            content: "Make sure the snippets menu is displayed",
+            trigger: 'iframe #oe_snippets',
+            run: () => null, // no click, just check
+        },
+        {
+            content: 'Save form',
+            trigger: '.o_form_button_save',
+        },
+        {
+            content: 'Go back to previous mailing',
+            trigger: 'button.o_pager_previous',
+        },
+        {
+            content: "Make sure the snippets menu is hidden",
+            trigger: 'iframe html:has(#oe_snippets.d-none)',
+            run: () => null,
         },
         {
             content: "Add some content to be selected afterwards",
@@ -112,26 +168,16 @@ odoo.define('mass_mailing.mass_mailing_editor_tour', function (require) {
             run: () => null,
         },
         {
-            content: "Fill in Subject",
-            trigger: '#subject',
-            run: 'text Test',
+            content: 'Save changes',
+            trigger: '.o_form_button_save',
         },
         {
-            content: "Fill in Mailing list",
-            trigger: '#contact_list_ids',
-            run: 'text Newsletter',
-        },
-        {
-            content: "Pick 'Newsletter' option",
-            trigger: '.o_input_dropdown a:contains(Newsletter)',
-        },
-        {
-            content: "Save and go to 'Mailings' list view",
+            content: "Go to 'Mailings' list view",
             trigger: '.breadcrumb a:contains(Mailings)'
         },
         {
             content: "Open newly created mailing",
-            trigger: 'td:contains(Test)',
+            trigger: 'td:contains("Test Basic Theme")',
         },
         {
             content: "Make sure the snippets menu is hidden",
@@ -151,5 +197,61 @@ odoo.define('mass_mailing.mass_mailing_editor_tour', function (require) {
             run: () => null,
         },
         ...tour.stepUtils.discardForm(),
+    ]);
+
+    tour.register('mass_mailing_campaing_new_mailing', {
+        url: '/web',
+        test: true,
+    }, [
+        tour.stepUtils.showAppsMenuItem(),
+        {
+            content: 'Select the "Email Marketing" app',
+            trigger: '.o_app[data-menu-xmlid="mass_mailing.mass_mailing_menu_root"]',
+        },
+        {
+            content: 'Select "Campaings" Navbar item',
+            trigger: '.o_nav_entry[data-menu-xmlid="mass_mailing.menu_email_campaigns"]',
+        },
+        {
+            content: 'Select "Newsletter" campaign',
+            trigger: '.oe_kanban_card:contains("Test Newsletter")',
+        },
+        {
+            content: 'Add a line (create new mailing)',
+            trigger: '.o_field_x2many_list_row_add a',
+        },
+        {
+            content: 'Pick the basic theme',
+            trigger: 'iframe',
+            run(actions) {
+                // For some reason the selectors inside the iframe cannot be triggered.
+                const link = this.$anchor[0].contentDocument.querySelector('#basic');
+                actions.click(link);
+            }
+        },
+        {
+            content: 'Fill in Subject',
+            trigger: '#subject',
+            run: 'text Test',
+        },
+        {
+            content: 'Fill in Mailing list',
+            trigger: '#contact_list_ids',
+            run: 'text Test Newsletter',
+        },
+        {
+            content: 'Pick "Newsletter" option',
+            trigger: '.o_input_dropdown a:contains(Test Newsletter)',
+        },
+        {
+            content: 'Save form',
+            trigger: '.o_form_button_save',
+        },
+        {
+            content: 'Check that newly created record is on the list',
+            trigger: '[name="mailing_mail_ids"] td[name="subject"]:contains("Test")',
+            run: () => null,
+        },
+        ...tour.stepUtils.saveForm(),
     ]);
 });

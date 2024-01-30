@@ -85,7 +85,13 @@ Popover.props = {
         type: Function,
         optional: true,
     },
-    target: HTMLElement,
+    target: {
+        validate: (el) =>
+            el &&
+            typeof el === "object" &&
+            (el instanceof HTMLElement ||
+                (el.ownerDocument && el instanceof el.ownerDocument.defaultView.HTMLElement)),
+    },
     slots: {
         type: Object,
         optional: true,

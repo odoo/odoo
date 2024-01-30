@@ -8,6 +8,7 @@ import {
     mount,
     mouseEnter,
     triggerEvent,
+    triggerEvents,
 } from "@web/../tests/helpers/utils";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { notificationService } from "@web/core/notifications/notification_service";
@@ -18,6 +19,8 @@ import { WithSearch } from "@web/search/with_search/with_search";
 import { getDefaultConfig } from "@web/views/view";
 import { viewService } from "@web/views/view_service";
 import { actionService } from "@web/webclient/actions/action_service";
+import { dialogService } from "@web/core/dialog/dialog_service";
+import { MainComponentsContainer } from "@web/core/main_components_container";
 
 import { Component, xml } from "@odoo/owl";
 const serviceRegistry = registry.category("services");
@@ -29,6 +32,7 @@ export function setupControlPanelServiceRegistry() {
     serviceRegistry.add("notification", notificationService);
     serviceRegistry.add("orm", ormService);
     serviceRegistry.add("view", viewService);
+    serviceRegistry.add("dialog", dialogService);
 }
 
 export function setupControlPanelFavoriteMenuRegistry() {
@@ -75,8 +79,10 @@ export async function makeWithSearch(params) {
                 orderBy="search.orderBy"
                 comparison="search.comparison"
                 display="getDisplay(search.display)"/>
-        </WithSearch>`;
-    Parent.components = { Component: params.Component, WithSearch };
+        </WithSearch>
+        <MainComponentsContainer />
+    `;
+    Parent.components = { Component: params.Component, WithSearch, MainComponentsContainer };
 
     const env = await makeTestEnv({ serverData, mockRPC });
     const searchEnv = Object.assign(Object.create(env), { config });
@@ -179,7 +185,7 @@ export async function editConditionValue(el, index, value, valueIndex = 0) {
     const condition = findItem(el, `.o_filter_condition`, index);
     const target = findItem(
         condition,
-        ".o_generator_menu_value input,.o_generator_menu_value select",
+        ".o_generator_menu_value input:not([type=hidden]),.o_generator_menu_value select",
         valueIndex
     );
     target.value = value;
@@ -247,7 +253,7 @@ export async function editFavoriteName(el, name) {
         `.o_favorite_menu .o_add_favorite .dropdown-menu input[type="text"]`
     );
     input.value = name;
-    await triggerEvent(input, null, "input");
+    await triggerEvents(input, null, ["input", "change"]);
 }
 
 export async function saveFavorite(el) {

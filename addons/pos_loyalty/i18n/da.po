@@ -7,15 +7,16 @@
 # lhmflexerp <lhm@flexerp.dk>, 2022
 # Mads Søndergaard, 2022
 # Martin Trigaux, 2022
+# Sanne Kristensen <sanne@vkdata.dk>, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:49+0000\n"
+"POT-Creation-Date: 2023-05-23 08:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
-"Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
+"Last-Translator: Sanne Kristensen <sanne@vkdata.dk>, 2024\n"
+"Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -55,31 +56,17 @@ msgid "A better global discount is already applied."
 msgstr ""
 
 #. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/js/Loyalty.js:0
+#, python-format
+msgid "A reward could not be loaded"
+msgstr ""
+
+#. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_loyalty_rule__promo_barcode
 msgid ""
 "A technical field used as an alternative to the promo code. This is "
 "automatically generated when the promo code is changed."
-msgstr ""
-
-#. module: pos_loyalty
-#. odoo-javascript
-#: code:addons/pos_loyalty/static/src/xml/OrderWidget.xml:0
-#, python-format
-msgid "Active Coupons"
-msgstr ""
-
-#. module: pos_loyalty
-#. odoo-javascript
-#: code:addons/pos_loyalty/static/src/xml/OrderWidget.xml:0
-#, python-format
-msgid "Active Programs"
-msgstr "Aktive kampagner"
-
-#. module: pos_loyalty
-#. odoo-javascript
-#: code:addons/pos_loyalty/static/src/xml/OrderWidget.xml:0
-#, python-format
-msgid "Active Rewards"
 msgstr ""
 
 #. module: pos_loyalty
@@ -234,7 +221,7 @@ msgstr "Gavekort indstillinger"
 #: code:addons/pos_loyalty/static/src/js/ControlButtons/PromoCodeButton.js:0
 #, python-format
 msgid "Gift card or Discount code"
-msgstr ""
+msgstr "Gavekort eller rabatkode"
 
 #. module: pos_loyalty
 #: model:ir.ui.menu,name:pos_loyalty.menu_gift_ewallet_type_config
@@ -330,6 +317,13 @@ msgstr ""
 #: code:addons/pos_loyalty/static/src/js/ControlButtons/RewardButton.js:0
 #, python-format
 msgid "No rewards available."
+msgstr ""
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/js/ControlButtons/eWalletButton.js:0
+#, python-format
+msgid "No valid eWallet found"
 msgstr ""
 
 #. module: pos_loyalty
@@ -546,6 +540,15 @@ msgid ""
 msgstr ""
 
 #. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/js/Loyalty.js:0
+#, python-format
+msgid ""
+"The reward \"%s\" contain an error in its domain, your domain must be "
+"compatible with the PoS client"
+msgstr ""
+
+#. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_pos_order_line__reward_id
 msgid "The reward associated with this line."
 msgstr ""
@@ -727,6 +730,14 @@ msgstr ""
 #: code:addons/pos_loyalty/static/src/js/ProductScreen.js:0
 #, python-format
 msgid "You cannot set negative quantity or price to gift card or ewallet."
+msgstr ""
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/js/ControlButtons/eWalletButton.js:0
+#, python-format
+msgid ""
+"You either have not created an eWallet or all your eWallets have expired."
 msgstr ""
 
 #. module: pos_loyalty

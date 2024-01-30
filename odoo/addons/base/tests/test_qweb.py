@@ -709,7 +709,7 @@ class TestQWebBasic(TransactionCase):
             expr_namespace = IrQweb._compile_expr(expr)
 
             compiled = compile("""def test(values):\n  values['result'] = %s""" % expr_namespace, '<test>', 'exec')
-            globals_dict = IrQweb._prepare_globals()
+            globals_dict = IrQweb._IrQWeb__prepare_globals()
             values = {}
             unsafe_eval(compiled, globals_dict, values)
             test = values['test']

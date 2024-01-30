@@ -7,6 +7,7 @@ const options = require('web_editor.snippets.options');
 const Dialog = require('web.Dialog');
 const dom = require('web.dom');
 const {generateHTMLId} = require('web_editor.utils');
+const wUtils = require('website.utils');
 require('website.editor.snippets.options');
 
 const qweb = core.qweb;
@@ -102,6 +103,21 @@ const FormEditor = options.Class.extend({
         return this.$target[0].dataset.mark;
     },
     /**
+     * Replace all `"` character by `&quot;`, all `'` character by `&apos;` and
+     * all "`" character by `&lsquo;`. This is needed in order to be able to
+     * perform querySelector of this type: `querySelector(`[name="${name}"]`)`.
+     * It also encodes the "\\" sequence to avoid having to escape it when doing
+     * a `querySelector`.
+     *
+     * @param {string} name
+     */
+    _getQuotesEncodedName(name) {
+        return name.replaceAll(/"/g, character => `&quot;`)
+                   .replaceAll(/'/g, character => `&apos;`)
+                   .replaceAll(/`/g, character => `&lsquo;`)
+                   .replaceAll("\\", character => `&bsol;`);
+    },
+    /**
      * @private
      * @returns {boolean}
      */
@@ -130,6 +146,12 @@ const FormEditor = options.Class.extend({
             $(template.content.querySelector('.s_website_form_field_description')).replaceWith(field.description);
         }
         template.content.querySelectorAll('input.datetimepicker-input').forEach(el => el.value = field.propertyValue);
+        template.content.querySelectorAll("[name]").forEach(el => {
+            el.name = this._getQuotesEncodedName(el.name);
+        });
+        template.content.querySelectorAll("[data-name]").forEach(el => {
+            el.dataset.name = this._getQuotesEncodedName(el.dataset.name);
+        });
         return template.content.firstElementChild;
     },
 });
@@ -164,6 +186,7 @@ const FieldEditor = FormEditor.extend({
         } else {
             field = Object.assign({}, this.fields[this._getFieldName()]);
             field.string = labelText;
+            field.type = this._getFieldType();
         }
         if (!noRecords) {
             field.records = this._getListItems();
@@ -201,11 +224,12 @@ const FieldEditor = FormEditor.extend({
      * Returns the name of the field
      *
      * @private
+     * @param {HTMLElement} fieldEl
      * @returns {string}
      */
-    _getFieldName: function () {
-        const multipleName = this.$target[0].querySelector('.s_website_form_multiple');
-        return multipleName ? multipleName.dataset.name : this.$target[0].querySelector('.s_website_form_input').name;
+    _getFieldName: function (fieldEl = this.$target[0]) {
+        const multipleName = fieldEl.querySelector('.s_website_form_multiple');
+        return multipleName ? multipleName.dataset.name : fieldEl.querySelector('.s_website_form_input').name;
     },
     /**
      * Returns the type of the  field, can be used for both custom and existing fields
@@ -341,6 +365,14 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
         if (!this.$target[0].dataset.model_name) {
             proms.push(this._applyFormModel());
         }
+        // Get the email_to value from the data-for attribute if it exists. We
+        // use it if there is no value on the email_to input.
+        const formId = this.$target[0].id;
+        const dataForValues = wUtils.getParsedDataFor(formId, this.$target[0].ownerDocument);
+        if (dataForValues) {
+            this.dataForEmailTo = dataForValues['email_to'];
+        }
+        this.defaultEmailToValue = "info@yourcompany.example.com";
         return Promise.all(proms);
     },
     /**
@@ -549,6 +581,16 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
                 return this.activeForm.id;
             case 'addActionField': {
                 const value = this.$target.find(`.s_website_form_dnone input[name="${params.fieldName}"]`).val();
+                if (params.fieldName === 'email_to') {
+                    // For email_to, we try to find a value in this order:
+                    // 1. The current value of the input
+                    // 2. The data-for value if it exists
+                    // 3. The default value (`defaultEmailToValue`)
+                    if (value && value !== this.defaultEmailToValue) {
+                        return value;
+                    }
+                    return this.dataForEmailTo || this.defaultEmailToValue;
+                }
                 if (value) {
                     return value;
                 } else {
@@ -619,7 +661,12 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
      */
     _addHiddenField: function (value, fieldName) {
         this.$target.find(`.s_website_form_dnone:has(input[name="${fieldName}"])`).remove();
-        if (value) {
+        // For the email_to field, we keep the field even if it has no value so
+        // that the email is sent to data-for value or to the default email.
+        if (fieldName === 'email_to' && !value && !this.dataForEmailTo) {
+            value = this.defaultEmailToValue;
+        }
+        if (value || fieldName === 'email_to') {
             const hiddenField = qweb.render('website.form_field_hidden', {
                 field: {
                     name: fieldName,
@@ -951,6 +998,7 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
     setLabelText: function (previewMode, value, params) {
         this.$target.find('.s_website_form_label_content').text(value);
         if (this._isFieldCustom()) {
+            value = this._getQuotesEncodedName(value);
             const multiple = this.$target[0].querySelector('.s_website_form_multiple');
             if (multiple) {
                 multiple.dataset.name = value;
@@ -962,7 +1010,23 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
             // Synchronize the fields whose visibility depends on this field
             const dependentEls = this.formEl.querySelectorAll(`.s_website_form_field[data-visibility-dependency="${previousInputName}"]`);
             for (const dependentEl of dependentEls) {
-                dependentEl.dataset.visibilityDependency = value;
+                if (!previewMode && this._findCircular(this.$target[0], dependentEl)) {
+                    // For all the fields whose visibility depends on this
+                    // field, check if the new name creates a circular
+                    // dependency and remove the problematic conditional
+                    // visibility if it is the case. E.g. a field (A) depends on
+                    // another (B) and the user renames "B" by "A".
+                    this._deleteConditionalVisibility(dependentEl);
+                } else {
+                    dependentEl.dataset.visibilityDependency = value;
+                }
+            }
+
+            if (!previewMode) {
+                // As the field label changed, the list of available visibility
+                // dependencies needs to be updated in order to not propose a
+                // field that would create a circular dependency.
+                this.rerender = true;
             }
         }
     },
@@ -1192,20 +1256,50 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
         return this.formEl.querySelector(`.s_website_form_input[name="${dependencyName}"]`);
     },
     /**
+     * @param {HTMLElement} dependentFieldEl
+     * @param {HTMLElement} targetFieldEl
+     * @returns {boolean} "true" if adding "dependentFieldEl" or any other field
+     * with the same label in the conditional visibility of "targetFieldEl"
+     * would create a circular dependency involving "targetFieldEl".
+     */
+    _findCircular(dependentFieldEl, targetFieldEl = this.$target[0]) {
+        // Keep a register of the already visited fields to not enter an
+        // infinite check loop.
+        const visitedFields = new Set();
+        const recursiveFindCircular = (dependentFieldEl, targetFieldEl) => {
+            const dependentFieldName = this._getFieldName(dependentFieldEl);
+            // Get all the fields that have the same label as the dependent
+            // field.
+            let dependentFieldEls = Array.from(this.formEl
+                .querySelectorAll(`.s_website_form_input[name="${dependentFieldName}"]`))
+                .map((el) => el.closest(".s_website_form_field"));
+            // Remove the duplicated fields. This could happen if the field has
+            // multiple inputs ("Multiple Checkboxes" for example.)
+            dependentFieldEls = new Set(dependentFieldEls);
+            const fieldName = this._getFieldName(targetFieldEl);
+            for (const dependentFieldEl of dependentFieldEls) {
+                // Only check for circular dependencies on fields that do not
+                // already have been checked.
+                if (!(visitedFields.has(dependentFieldEl))) {
+                    // Add the dependentFieldEl in the set of checked field.
+                    visitedFields.add(dependentFieldEl);
+                    if (dependentFieldEl.dataset.visibilityDependency === fieldName) {
+                        return true;
+                    }
+                    const dependencyInputEl = this._getDependencyEl(dependentFieldEl);
+                    if (dependencyInputEl && recursiveFindCircular(dependencyInputEl.closest(".s_website_form_field"), targetFieldEl)) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        };
+        return recursiveFindCircular(dependentFieldEl, targetFieldEl);
+    },
+    /**
      * @override
      */
     _renderCustomXML: async function (uiFragment) {
-        const recursiveFindCircular = (el) => {
-            if (el.dataset.visibilityDependency === this._getFieldName()) {
-                return true;
-            }
-            const dependencyInputEl = this._getDependencyEl(el);
-            if (!dependencyInputEl) {
-                return false;
-            }
-            return recursiveFindCircular(dependencyInputEl.closest('.s_website_form_field'));
-        };
-
         // Update available visibility dependencies
         const selectDependencyEl = uiFragment.querySelector('we-select[data-name="hidden_condition_opt"]');
         const existingDependencyNames = [];
@@ -1213,7 +1307,7 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
             const inputEl = el.querySelector('.s_website_form_input');
             if (el.querySelector('.s_website_form_label_content') && inputEl && inputEl.name
                     && inputEl.name !== this.$target[0].querySelector('.s_website_form_input').name
-                    && !existingDependencyNames.includes(inputEl.name) && !recursiveFindCircular(el)) {
+                    && !existingDependencyNames.includes(inputEl.name) && !this._findCircular(el)) {
                 const button = document.createElement('we-button');
                 button.textContent = el.querySelector('.s_website_form_label_content').textContent;
                 button.dataset.setVisibilityDependency = inputEl.name;

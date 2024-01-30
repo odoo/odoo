@@ -10,6 +10,7 @@
                     type="text"
                     required=""
                     placeholder="Property Name"
+                    autocomplete="off"
                     t-model="state.propertyDefinition.string"
                     t-on-change="onPropertyLabelChange"
                     t-on-keypress="onPropertyLabelKeypress"
@@ -102,7 +103,7 @@
                             tags="state.propertyDefinition.tags || []"
                             readonly="props.readonly"
                             canChangeTags="props.canChangeDefinition"
-                            checkDefinitionWriteAccess.bind="props.checkDefinitionWriteAccess"
+                            checkDefinitionWriteAccess.bind="props.checkDefinitionWriteAccess ? props.checkDefinitionWriteAccess : () => {}"
                             deleteAction="'tags'"
                             onTagsChange.bind="onTagsChange"/>
                     </td>

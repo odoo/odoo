@@ -1,7 +1,8 @@
 odoo.define('point_of_sale.custom_hooks', function (require) {
     'use strict';
 
-    const { onMounted, onPatched, onWillUnmount, useComponent } = owl;
+    const { onMounted, onPatched, onWillUnmount, useComponent, useRef } = owl;
+    const { escapeRegExp } = require('@web/core/utils/strings');
 
     /**
      * Introduce error handlers in the component.
@@ -114,5 +115,63 @@ odoo.define('point_of_sale.custom_hooks', function (require) {
         });
     }
 
-    return { useErrorHandlers, useAutoFocusToLast, useBarcodeReader };
+    function useValidateCashInput(inputRef, startingValue) {
+        const cashInput = useRef(inputRef);
+        const current = useComponent();
+        const decimalPoint = current.env._t.database.parameters.decimal_point;
+        const thousandsSep = current.env._t.database.parameters.thousands_sep;
+        // Replace the thousands separator and decimal point with regex-escaped versions
+        const escapedDecimalPoint = escapeRegExp(decimalPoint);
+        let floatRegex;
+        if (thousandsSep) {
+            const escapedThousandsSep = escapeRegExp(thousandsSep);
+            floatRegex = new RegExp(`^-?(?:\\d+(${escapedThousandsSep}\\d+)*)?(?:${escapedDecimalPoint}\\d*)?$`);
+        } else {
+            floatRegex = new RegExp(`^-?(?:\\d+)?(?:${escapedDecimalPoint}\\d*)?$`);
+        }
+        function isValidFloat(inputValue) {
+            return ![decimalPoint, '-'].includes(inputValue) && floatRegex.test(inputValue);
+        }
+        function handleCashInputChange(event) {
+            let inputValue = (event.target.value || "").trim();
+
+            // Check if the current input value is a valid float
+            if (!isValidFloat(inputValue)) {
+                event.target.classList.add('invalid-cash-input');
+            } else {
+                event.target.classList.remove('invalid-cash-input');
+            }
+        }
+
+        onMounted(() => {
+            if (cashInput.el) {
+                cashInput.el.value = (startingValue || 0).toString().replace('.', decimalPoint);
+                cashInput.el.addEventListener("input", handleCashInputChange);
+            }
+        });
+
+        onWillUnmount(() => {
+            if (cashInput.el) {
+                cashInput.el.removeEventListener("input", handleCashInputChange);
+            }
+        })
+    }
+
+    function useAsyncLockedMethod(method) {
+        const component = useComponent();
+        let called = false;
+        return async (...args) => {
+            if (called) {
+                return;
+            }
+            try {
+                called = true;
+                await method.call(component, ...args);
+            } finally {
+                called = false;
+            }
+        };
+    }
+
+    return { useErrorHandlers, useAutoFocusToLast, useBarcodeReader, useValidateCashInput, useAsyncLockedMethod };
 });

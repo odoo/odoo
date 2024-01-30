@@ -41,8 +41,7 @@
 
     .o_kanban_group {
         &:not(.o_column_folded) {
-            width: 450px + 2*$o-kanban-group-padding;
-
+            --KanbanGroup-width: 450px;
             @include media-breakpoint-down(md) {
                 width: 100%;
             }

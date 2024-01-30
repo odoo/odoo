@@ -60,7 +60,7 @@
                 <t t-out="format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='EEEE', lang_code=object.env.lang) or ''">Tuesday</t>
             </div>
             <div style="font-size: 48px; min-height: auto; font-weight: bold; text-align: center; color: #5F5F5F; background-color: #F8F8F8; border: 1px solid #875A7B;">
-                <t t-out="str(object.event_id.start.day) or ''">4</t>
+                <t t-out="format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='d', lang_code=object.env.lang) or ''">4</t>
             </div>
             <div style='font-size: 12px; text-align: center; font-weight: bold; color: #ffffff; background-color: #875A7B;'>
                 <t t-out="format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='MMMM y', lang_code=object.env.lang) or ''">May 2021</t>
@@ -91,7 +91,7 @@
                     </li>
                 </t>
                 <t t-if="recurrent">
-                    <li>When: <t t-out="object.recurrence_id.name or ''">Every 1 Weeks, for 3 events</t></li>
+                    <li>When: <t t-out="object.recurrence_id.get_recurrence_name()">Every 1 Weeks, for 3 events</t></li>
                 </t>
                 <t t-if="not object.event_id.allday and object.event_id.duration">
                     <li>Duration: <t t-out="('%dH%02d' % (object.event_id.duration,round(object.event_id.duration*60)%60)) or ''">0H30</t></li>
@@ -194,7 +194,7 @@
                 <t t-out='format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format="EEEE", lang_code=object.env.lang) or ""'>Tuesday</t>
             </div>
             <div style="font-size: 48px; min-height: auto; font-weight: bold; text-align: center; color: #5F5F5F; background-color: #F8F8F8; border: 1px solid #875A7B;">
-                <t t-out="str(object.event_id.start.day) or ''">4</t>
+                <t t-out="format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='d', lang_code=object.env.lang) or ''">4</t>
             </div>
             <div style='font-size: 12px; text-align: center; font-weight: bold; color: #ffffff; background-color: #875A7B;'>
                 <t t-out='format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format="MMMM y", lang_code=object.env.lang) or ""'>May 2021</t>
@@ -222,7 +222,7 @@
                     </li>
                 </t>
                 <t t-if="recurrent">
-                    <li>When: <t t-out="object.recurrence_id.name or ''">Every 1 Weeks, for 3 events</t></li>
+                    <li>When: <t t-out="object.recurrence_id.get_recurrence_name()">Every 1 Weeks, for 3 events</t></li>
                 </t>
                 <t t-if="not object.event_id.allday and object.event_id.duration">
                     <li>Duration: <t t-out="('%dH%02d' % (object.event_id.duration,round(object.event_id.duration*60)%60)) or ''">0H30</t></li>
@@ -301,7 +301,7 @@
                 <t t-out='format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format="EEEE", lang_code=object.env.lang) or ""'>Tuesday</t>
             </div>
             <div style="font-size: 48px; min-height: auto; font-weight: bold; text-align: center; color: #5F5F5F; background-color: #F8F8F8; border: 1px solid #875A7B;">
-                <t t-out="str(object.event_id.start.day) or ''">4</t>
+                <t t-out="format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='d', lang_code=object.env.lang) or ''">4</t>
             </div>
             <div style='font-size: 12px; text-align: center; font-weight: bold; color: #ffffff; background-color: #875A7B;'>
                 <t t-out='format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format="MMMM y", lang_code=object.env.lang) or ""'>May 2021</t>
@@ -329,7 +329,7 @@
                     </li>
                 </t>
                 <t t-if="recurrent">
-                    <li>When: <t t-out="object.recurrence_id.name or ''">Every 1 Weeks, for 3 events</t></li>
+                    <li>When: <t t-out="object.recurrence_id.get_recurrence_name()">Every 1 Weeks, for 3 events</t></li>
                 </t>
                 <t t-if="not object.event_id.allday and object.event_id.duration">
                     <li>Duration: <t t-out="('%dH%02d' % (object.event_id.duration,round(object.event_id.duration*60)%60)) or ''">0H30</t></li>
@@ -440,7 +440,7 @@
                             </li>
                         </t>
                         <t t-if="recurrent">
-                            <li>When: <t t-out="object.recurrence_id.name or ''"></t></li>
+                            <li>When: <t t-out="object.recurrence_id.get_recurrence_name()"></t></li>
                         </t>
                         <t t-if="not object.allday and object.duration">
                             <li>Duration:

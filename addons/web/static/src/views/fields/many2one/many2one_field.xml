@@ -4,7 +4,7 @@
     <t t-name="web.Many2OneField.CreateConfirmationDialog" owl="1">
         <Dialog title="title" size="'md'">
             <div>
-                Create <strong t-esc="props.value"/> as a new <t t-esc="props.name"/>?
+                <t t-out="dialogContent"/>
             </div>
             <t t-set-slot="footer">
                 <button class="btn btn-primary" t-on-click="onCreate">Create</button>

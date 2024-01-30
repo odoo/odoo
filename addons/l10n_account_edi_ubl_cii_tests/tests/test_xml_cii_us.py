@@ -71,8 +71,8 @@ class TestCIIUS(TestUBLCommon):
         self._assert_imported_invoice_from_file(
             subfolder='tests/test_files/from_factur-x_doc',
             filename='facturx_invoice_negative_amounts.xml',
-            amount_total=90,
+            amount_total=100,
             amount_tax=0,
-            list_line_subtotals=[-5, 10, 60, 30, 5, 0, -10],
+            list_line_subtotals=[-5, 10, 60, 30, 5],
             move_type='in_refund'
         )

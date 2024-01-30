@@ -148,9 +148,8 @@ class WebsiteSlidesSurvey(WebsiteSlides):
         # 2. sort by granted users (done here, and not in search directly, because non stored field)
         certification_badges = certification_badges.sorted("granted_users_count", reverse=True)
 
-        # 3. Remove certification badge from badges and keep only certification badge linked to opened survey
+        # 3. Remove certification badge from badges
         badges = values['badges'] - certification_badges
-        certification_badges = certification_badges.filtered(lambda b: b.survey_id.state == 'open')
 
         # 4. Getting all course url for each badge
         certification_slides = request.env['slide.slide'].sudo().search([('survey_id', 'in', certification_badges.mapped('survey_id').ids)])

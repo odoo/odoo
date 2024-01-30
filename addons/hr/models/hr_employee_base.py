@@ -70,10 +70,25 @@ class HrEmployeeBase(models.AbstractModel):
         ], string='Employee Type', default='employee', required=True,
         help="The employee type. Although the primary purpose may seem to categorize employees, this field has also an impact in the Contract History. Only Employee type is supposed to be under contract and will have a Contract History.")
 
+
+    def _get_valid_employee_for_user(self):
+        user = self.env.user
+        # retrieve the employee of the current active company for the user
+        employee = user.employee_id
+        if not employee:
+            # search for all employees as superadmin to not get blocked by multi-company rules
+            user_employees = user.employee_id.sudo().search([
+                ('user_id', '=', user.id)
+            ])
+            # the default company employee is most likely the correct one, but fallback to the first if not available
+            employee = user_employees.filtered(lambda r: r.company_id == user.company_id) or user_employees[:1]
+        return employee
+
     @api.depends_context('uid', 'company')
     @api.depends('department_id')
     def _compute_part_of_department(self):
-        active_department = self.env.user.employee_id.department_id
+        user_employee = self._get_valid_employee_for_user()
+        active_department = user_employee.department_id
         if not active_department:
             self.member_of_department = False
         else:
@@ -90,12 +105,14 @@ class HrEmployeeBase(models.AbstractModel):
     def _search_part_of_department(self, operator, value):
         if operator not in ('=', '!=') or not isinstance(value, bool):
             raise UserError(_('Operation not supported'))
+
+        user_employee = self._get_valid_employee_for_user()
         # Double negation
         if not value:
             operator = '!=' if operator == '=' else '='
-        if not self.env.user.employee_id.department_id:
-            return [('id', operator, self.env.user.employee_id.id)]
-        return (['!'] if operator == '!=' else []) + [('department_id', 'child_of', self.env.user.employee_id.department_id.id)]
+        if not user_employee.department_id:
+            return [('id', operator, user_employee.id)]
+        return (['!'] if operator == '!=' else []) + [('department_id', 'child_of', user_employee.department_id.id)]
 
     @api.depends('user_id.im_status')
     def _compute_presence_state(self):

@@ -405,7 +405,7 @@ class WebsiteSlides(WebsiteProfile):
         }
         search = post.get('search')
         order = self._channel_order_by_criterion.get(post.get('sorting'))
-        _, details, fuzzy_search_term = request.website._search_with_fuzzy("slide_channels_only", search,
+        search_count, details, fuzzy_search_term = request.website._search_with_fuzzy("slide_channels_only", search,
             limit=1000, order=order, options=options)
         channels = details[0].get('results', request.env['slide.channel'])
 
@@ -428,6 +428,7 @@ class WebsiteSlides(WebsiteProfile):
             'search_slide_category': slide_category,
             'search_my': my,
             'search_tags': search_tags,
+            'search_count': search_count,
             'top3_users': self._get_top3_users(),
             'slugify_tags': self._slugify_tags,
             'slide_query_url': QueryURL('/slides/all', ['tag']),
@@ -615,12 +616,13 @@ class WebsiteSlides(WebsiteProfile):
         }
 
         if not request.env.user._is_public():
+            subtype_comment_id = request.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
             last_message = request.env['mail.message'].search([
                 ('model', '=', channel._name),
                 ('res_id', '=', channel.id),
                 ('author_id', '=', request.env.user.partner_id.id),
                 ('message_type', '=', 'comment'),
-                ('is_internal', '=', False)
+                ('subtype_id', '=', subtype_comment_id)
             ], order='write_date DESC', limit=1)
 
             if last_message:
@@ -737,7 +739,12 @@ class WebsiteSlides(WebsiteProfile):
 
     @http.route(['/slides/channel/subscribe'], type='json', auth='user', website=True)
     def slide_channel_subscribe(self, channel_id):
-        return request.env['slide.channel'].browse(channel_id).message_subscribe(partner_ids=[request.env.user.partner_id.id])
+        # Presentation Published subtype
+        subtype = request.env.ref("website_slides.mt_channel_slide_published", raise_if_not_found=False)
+        if subtype:
+            return request.env['slide.channel'].browse(channel_id).message_subscribe(
+                partner_ids=[request.env.user.partner_id.id], subtype_ids=subtype.ids)
+        return True
 
     @http.route(['/slides/channel/unsubscribe'], type='json', auth='user', website=True)
     def slide_channel_unsubscribe(self, channel_id):
@@ -757,7 +764,7 @@ class WebsiteSlides(WebsiteProfile):
             return request.redirect(slide.channel_id.website_url)
 
         if slide.can_self_mark_completed and not slide.user_has_completed \
-           and slide.channel_id.channel_type == 'training':
+           and slide.channel_id.channel_type == 'training' and slide.slide_category != 'video':
             self._slide_mark_completed(slide)
         else:
             self._set_viewed_slide(slide)
@@ -838,7 +845,7 @@ class WebsiteSlides(WebsiteProfile):
         if fetch_res.get('error'):
             return fetch_res
         return {
-            'html_content': fetch_res['slide'].html_content
+            'html_content': request.env['ir.qweb.field.html'].record_to_html(fetch_res['slide'], 'html_content', {'template_options': {}})
         }
 
     @http.route('/slides/slide/<model("slide.slide"):slide>/set_completed', website=True, type="http", auth="user")
@@ -1305,7 +1312,7 @@ class WebsiteSlides(WebsiteProfile):
 
         try:
             slide = request.env['slide.slide'].browse(slide_id)
-            if not slide.exists():
+            if not slide.exists() or not slide.sudo().active:
                 raise werkzeug.exceptions.NotFound()
 
             referer_url = request.httprequest.headers.get('Referer', '')

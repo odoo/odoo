@@ -5,6 +5,7 @@ import { registry } from "@web/core/registry";
 import { editView } from "@web/views/debug_items";
 import { clearUncommittedChanges } from "@web/webclient/actions/action_service";
 import { listView } from "@web/views/list/list_view";
+import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { useSetupAction } from "@web/webclient/actions/action_hook";
 import testUtils from "web.test_utils";
 import { session } from "@web/session";
@@ -615,6 +616,7 @@ QUnit.module("ActionManager", (hooks) => {
             action: 3,
             view_type: "form",
         });
+        await testUtils.nextTick();
         await legacyExtraNextTick();
 
         // Go back to the list view
@@ -623,7 +625,7 @@ QUnit.module("ActionManager", (hooks) => {
             action: 3,
             view_type: "list",
         });
-        await legacyExtraNextTick();
+        await testUtils.nextTick();
         await legacyExtraNextTick();
         assert.containsOnce(target, ".o_list_view", "should still display the list view");
 
@@ -2704,9 +2706,25 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsOnce(target, ".o_form_view");
         assert.deepEqual(getNodesTextContent(target.querySelectorAll(".breadcrumb-item")), [
             "Partners",
-            "First record",
+            "Partners",
             "Partners",
             "Second record",
         ]);
+    });
+
+    QUnit.test("executing an action closes dialogs", async function (assert) {
+        const webClient = await createWebClient({ serverData });
+        await doAction(webClient, 3);
+        assert.containsOnce(target, ".o_list_view");
+
+        webClient.env.services.dialog.add(FormViewDialog, { resModel: "partner", resId: 1 });
+        await nextTick();
+        assert.containsOnce(target, ".o_dialog .o_form_view");
+
+        await click(
+            target.querySelector(".o_dialog .o_form_view .o_statusbar_buttons button[name='4']")
+        );
+        assert.containsOnce(target, ".o_kanban_view");
+        assert.containsNone(target, ".o_dialog");
     });
 });

@@ -3188,6 +3188,9 @@ var FieldStatus = AbstractField.extend({
         } catch (_) {
             this.isClickable = !!this.nodeOptions.clickable;
         }
+
+        const isReadonly = this.record.evalModifiers(this.attrs.modifiers).readonly;
+        this.isClickable = this.isClickable && !isReadonly;
     },
 
     //--------------------------------------------------------------------------

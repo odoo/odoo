@@ -17,4 +17,5 @@ export class MrpProductionComponentsListRenderer extends ListRenderer {
 export class MrpProductionComponentsX2ManyField extends X2ManyField {}
 MrpProductionComponentsX2ManyField.components = { ...X2ManyField.components, ListRenderer: MrpProductionComponentsListRenderer };
 
+MrpProductionComponentsX2ManyField.additionalClasses = ['o_field_many2many'];
 registry.category("fields").add("mrp_production_components_x2many", MrpProductionComponentsX2ManyField);

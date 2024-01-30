@@ -1,13 +1,13 @@
 /*!
- * ZXing.js v0.18.6
+ * ZXing.js v0.19.2
  * https://github.com/zxing-js/library
  * (c) 2018 ZXing for JS Contributors
  * Released under the MIT License
  */
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
-    typeof define === 'function' && define.amd ? define(['exports'], factory) :
-    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.ZXing = {}));
+        typeof define === 'function' && define.amd ? define(['exports'], factory) :
+            (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.ZXing = {}));
 }(this, (function (exports) { 'use strict';
 
     /*! *****************************************************************************
@@ -66,7 +66,7 @@
             fixStack(_this);
             return _this;
         }
-        
+
         return CustomError;
     })(Error);
 
@@ -3490,6 +3490,10 @@
             const binaryBitmap = this.createBinaryBitmap(element);
             return this.decodeBitmap(binaryBitmap);
         }
+        _isHTMLVideoElement(mediaElement) {
+            const potentialVideo = mediaElement;
+            return potentialVideo.videoWidth !== 0;
+        }
         /**
          * Creates a binaryBitmap based in some image source.
          *
@@ -3497,7 +3501,12 @@
          */
         createBinaryBitmap(mediaElement) {
             const ctx = this.getCaptureCanvasContext(mediaElement);
-            this.drawImageOnCanvas(ctx, mediaElement);
+            if (this._isHTMLVideoElement(mediaElement)) {
+                this.drawFrameOnCanvas(mediaElement);
+            }
+            else {
+                this.drawImageOnCanvas(mediaElement);
+            }
             const canvas = this.getCaptureCanvas(mediaElement);
             const luminanceSource = new HTMLCanvasElementLuminanceSource(canvas);
             const hybridBinarizer = new HybridBinarizer(luminanceSource);
@@ -3525,10 +3534,16 @@
             return this.captureCanvas;
         }
         /**
+         * Overwriting this allows you to manipulate the next frame in anyway you want before decode.
+         */
+        drawFrameOnCanvas(srcElement, dimensions = { sx: 0, sy: 0, sWidth: srcElement.videoWidth, sHeight: srcElement.videoHeight, dx: 0, dy: 0, dWidth: srcElement.videoWidth, dHeight: srcElement.videoHeight }, canvasElementContext = this.captureCanvasContext) {
+            canvasElementContext.drawImage(srcElement, dimensions.sx, dimensions.sy, dimensions.sWidth, dimensions.sHeight, dimensions.dx, dimensions.dy, dimensions.dWidth, dimensions.dHeight);
+        }
+        /**
          * Ovewriting this allows you to manipulate the snapshot image in anyway you want before decode.
          */
-        drawImageOnCanvas(canvasElementContext, srcElement) {
-            canvasElementContext.drawImage(srcElement, 0, 0);
+        drawImageOnCanvas(srcElement, dimensions = { sx: 0, sy: 0, sWidth: srcElement.naturalWidth, sHeight: srcElement.naturalHeight, dx: 0, dy: 0, dWidth: srcElement.naturalWidth, dHeight: srcElement.naturalHeight }, canvasElementContext = this.captureCanvasContext) {
+            canvasElementContext.drawImage(srcElement, dimensions.sx, dimensions.sy, dimensions.sWidth, dimensions.sHeight, dimensions.dx, dimensions.dy, dimensions.dWidth, dimensions.dHeight);
         }
         /**
          * Call the encapsulated readers decode
@@ -6229,10 +6244,10 @@
             let low = dimension / 2 - this.nbCenterLayers;
             let high = dimension / 2 + this.nbCenterLayers;
             return sampler.sampleGrid(image, dimension, dimension, low, low, // topleft
-            high, low, // topright
-            high, high, // bottomright
-            low, high, // bottomleft
-            topLeft.getX(), topLeft.getY(), topRight.getX(), topRight.getY(), bottomRight.getX(), bottomRight.getY(), bottomLeft.getX(), bottomLeft.getY());
+                high, low, // topright
+                high, high, // bottomright
+                low, high, // bottomleft
+                topLeft.getX(), topLeft.getY(), topRight.getX(), topRight.getY(), bottomRight.getX(), bottomRight.getY(), bottomLeft.getX(), bottomLeft.getY());
         }
         /**
          * Samples a line.
@@ -7555,7 +7570,7 @@
         }
         // See ITFWriter.PATTERNS
         /*
-      
+
         /!**
          * Patterns of Wide / Narrow lines to indicate each digit
          *!/
@@ -7596,7 +7611,7 @@
             }
             const points = [new ResultPoint(startRange[1], rowNumber), new ResultPoint(endRange[0], rowNumber)];
             let resultReturn = new Result(resultString, null, // no natural byte representation for these barcodes
-            0, points, BarcodeFormat$1.ITF, new Date().getTime());
+                0, points, BarcodeFormat$1.ITF, new Date().getTime());
             return resultReturn;
         }
         /*
@@ -8832,7 +8847,7 @@
                 if (possibleFormats.indexOf(BarcodeFormat$1.EAN_13) > -1) {
                     readers.push(new EAN13Reader());
                 }
-                else if (possibleFormats.indexOf(BarcodeFormat$1.UPC_A) > -1) {
+                if (possibleFormats.indexOf(BarcodeFormat$1.UPC_A) > -1) {
                     readers.push(new UPCAReader());
                 }
                 if (possibleFormats.indexOf(BarcodeFormat$1.EAN_8) > -1) {
@@ -8844,7 +8859,7 @@
             }
             if (readers.length === 0) {
                 readers.push(new EAN13Reader());
-                // UPC-A is covered by EAN-13
+                readers.push(new UPCAReader());
                 readers.push(new EAN8Reader());
                 readers.push(new UPCEReader());
             }
@@ -8875,7 +8890,7 @@
                     if (ean13MayBeUPCA && canReturnUPCA) {
                         const rawBytes = result.getRawBytes();
                         // Transfer the metadata across
-                        const resultUPCA = new Result(result.getText().substring(1), rawBytes, rawBytes.length, result.getResultPoints(), BarcodeFormat$1.UPC_A);
+                        const resultUPCA = new Result(result.getText().substring(1), rawBytes, (rawBytes ? rawBytes.length : null), result.getResultPoints(), BarcodeFormat$1.UPC_A);
                         resultUPCA.putAllMetadata(result.getResultMetadata());
                         return resultUPCA;
                     }
@@ -13623,9 +13638,9 @@
         }
     }
     /**
-       * See ISO 18004:2006 Annex D.
-       * Element i represents the raw version bits that specify version i + 7
-       */
+     * See ISO 18004:2006 Annex D.
+     * Element i represents the raw version bits that specify version i + 7
+     */
     Version$1.VERSION_DECODE_INFO = Int32Array.from([
         0x07C94, 0x085BC, 0x09A99, 0x0A4D3, 0x0BBF6,
         0x0C762, 0x0D847, 0x0E60D, 0x0F928, 0x10B78,
@@ -13636,8 +13651,8 @@
         0x2542E, 0x26A64, 0x27541, 0x28C69
     ]);
     /**
-       * See ISO 18004:2006 6.5.1 Table 9
-       */
+     * See ISO 18004:2006 6.5.1 Table 9
+     */
     Version$1.VERSIONS = [
         new Version$1(1, new Int32Array(0), new ECBlocks$1(7, new ECB$1(1, 19)), new ECBlocks$1(10, new ECB$1(1, 16)), new ECBlocks$1(13, new ECB$1(1, 13)), new ECBlocks$1(17, new ECB$1(1, 9))),
         new Version$1(2, Int32Array.from([6, 18]), new ECBlocks$1(10, new ECB$1(1, 34)), new ECBlocks$1(16, new ECB$1(1, 28)), new ECBlocks$1(22, new ECB$1(1, 22)), new ECBlocks$1(28, new ECB$1(1, 16))),
@@ -15362,7 +15377,7 @@
             }
             // Continue up, left finding white space
             while (startI >= i && centerJ >= i && !image.get(centerJ - i, startI - i) &&
-                stateCount[1] <= maxCount) {
+            stateCount[1] <= maxCount) {
                 stateCount[1]++;
                 i++;
             }
@@ -15372,7 +15387,7 @@
             }
             // Continue up, left finding black border
             while (startI >= i && centerJ >= i && image.get(centerJ - i, startI - i) &&
-                stateCount[0] <= maxCount) {
+            stateCount[0] <= maxCount) {
                 stateCount[0]++;
                 i++;
             }
@@ -15392,7 +15407,7 @@
                 return false;
             }
             while (startI + i < maxI && centerJ + i < maxJ && !image.get(centerJ + i, startI + i) &&
-                stateCount[3] < maxCount) {
+            stateCount[3] < maxCount) {
                 stateCount[3]++;
                 i++;
             }
@@ -15400,7 +15415,7 @@
                 return false;
             }
             while (startI + i < maxI && centerJ + i < maxJ && image.get(centerJ + i, startI + i) &&
-                stateCount[4] < maxCount) {
+            stateCount[4] < maxCount) {
                 stateCount[4]++;
                 i++;
             }
@@ -15685,15 +15700,15 @@
                 average = totalModuleSize / startSize;
                 let stdDev = Math.sqrt(square / startSize - average * average);
                 possibleCenters.sort(
-                /**
-                 * <p>Orders by furthest from average</p>
-                 */
-                // FurthestFromAverageComparator implements Comparator<FinderPattern>
-                (center1, center2) => {
-                    const dA = Math.abs(center2.getEstimatedModuleSize() - average);
-                    const dB = Math.abs(center1.getEstimatedModuleSize() - average);
-                    return dA < dB ? -1 : dA > dB ? 1 : 0;
-                });
+                    /**
+                     * <p>Orders by furthest from average</p>
+                     */
+                        // FurthestFromAverageComparator implements Comparator<FinderPattern>
+                    (center1, center2) => {
+                        const dA = Math.abs(center2.getEstimatedModuleSize() - average);
+                        const dB = Math.abs(center1.getEstimatedModuleSize() - average);
+                        return dA < dB ? -1 : dA > dB ? 1 : 0;
+                    });
                 const limit = Math.max(0.2 * average, stdDev);
                 for (let i = 0; i < possibleCenters.length && possibleCenters.length > 3; i++) {
                     const pattern = possibleCenters[i];
@@ -15711,20 +15726,20 @@
                 }
                 average = totalModuleSize / possibleCenters.length;
                 possibleCenters.sort(
-                /**
-                 * <p>Orders by {@link FinderPattern#getCount()}, descending.</p>
-                 */
-                // CenterComparator implements Comparator<FinderPattern>
-                (center1, center2) => {
-                    if (center2.getCount() === center1.getCount()) {
-                        const dA = Math.abs(center2.getEstimatedModuleSize() - average);
-                        const dB = Math.abs(center1.getEstimatedModuleSize() - average);
-                        return dA < dB ? 1 : dA > dB ? -1 : 0;
-                    }
-                    else {
-                        return center2.getCount() - center1.getCount();
-                    }
-                });
+                    /**
+                     * <p>Orders by {@link FinderPattern#getCount()}, descending.</p>
+                     */
+                        // CenterComparator implements Comparator<FinderPattern>
+                    (center1, center2) => {
+                        if (center2.getCount() === center1.getCount()) {
+                            const dA = Math.abs(center2.getEstimatedModuleSize() - average);
+                            const dB = Math.abs(center1.getEstimatedModuleSize() - average);
+                            return dA < dB ? 1 : dA > dB ? -1 : 0;
+                        }
+                        else {
+                            return center2.getCount() - center1.getCount();
+                        }
+                    });
                 possibleCenters.splice(3); // this is not realy necessary as we only return first 3 anyway
             }
             return [
@@ -15909,14 +15924,14 @@
          * width of each, measuring along the axis between their centers.</p>
          */
         calculateModuleSizeOneWay(pattern, otherPattern) {
-            const moduleSizeEst1 = this.sizeOfBlackWhiteBlackRunBothWays(/*(int) */ Math.floor(pattern.getX()), 
-            /*(int) */ Math.floor(pattern.getY()), 
-            /*(int) */ Math.floor(otherPattern.getX()), 
-            /*(int) */ Math.floor(otherPattern.getY()));
-            const moduleSizeEst2 = this.sizeOfBlackWhiteBlackRunBothWays(/*(int) */ Math.floor(otherPattern.getX()), 
-            /*(int) */ Math.floor(otherPattern.getY()), 
-            /*(int) */ Math.floor(pattern.getX()), 
-            /*(int) */ Math.floor(pattern.getY()));
+            const moduleSizeEst1 = this.sizeOfBlackWhiteBlackRunBothWays(/*(int) */ Math.floor(pattern.getX()),
+                /*(int) */ Math.floor(pattern.getY()),
+                /*(int) */ Math.floor(otherPattern.getX()),
+                /*(int) */ Math.floor(otherPattern.getY()));
+            const moduleSizeEst2 = this.sizeOfBlackWhiteBlackRunBothWays(/*(int) */ Math.floor(otherPattern.getX()),
+                /*(int) */ Math.floor(otherPattern.getY()),
+                /*(int) */ Math.floor(pattern.getX()),
+                /*(int) */ Math.floor(pattern.getY()));
             if (isNaN(moduleSizeEst1)) {
                 return moduleSizeEst2 / 7.0;
             }
@@ -17214,13 +17229,13 @@
           if (other.isZero()) {
             throw new IllegalArgumentException("Divide by 0");
           }
-      
+
           let quotient: ModulusPoly = field.getZero();
           let remainder: ModulusPoly = this;
-      
+
           let denominatorLeadingTerm: /*int/ number = other.getCoefficient(other.getDegree());
           let inverseDenominatorLeadingTerm: /*int/ number = field.inverse(denominatorLeadingTerm);
-      
+
           while (remainder.getDegree() >= other.getDegree() && !remainder.isZero()) {
             let degreeDifference: /*int/ number = remainder.getDegree() - other.getDegree();
             let scale: /*int/ number = field.multiply(remainder.getCoefficient(remainder.getDegree()), inverseDenominatorLeadingTerm);
@@ -17229,7 +17244,7 @@
             quotient = quotient.add(iterationQuotient);
             remainder = remainder.subtract(term);
           }
-      
+
           return new ModulusPoly[] { quotient, remainder };
         }
         */
@@ -18349,6 +18364,9 @@
             return invalidRowCounts;
         }
         adjustRowNumbers(barcodeColumn, codewordsRow, codewords) {
+            if (this.detectionResultColumns[barcodeColumn - 1] == null) {
+                return;
+            }
             let codeword = codewords[codewordsRow];
             let previousColumnCodewords = this.detectionResultColumns[barcodeColumn - 1].getCodewords();
             let nextColumnCodewords = previousColumnCodewords;
@@ -19136,7 +19154,7 @@
          *
          * <p> This method always replaces malformed-input and unmappable-character
          * sequences with this charset's default replacement string. The {@link
-         * java.nio.charset.CharsetDecoder} class should be used when more control
+            * java.nio.charset.CharsetDecoder} class should be used when more control
          * over the decoding process is required.
          *
          * @param  charsetName  the name of a supported
@@ -20143,7 +20161,7 @@
                 let increment = i === 0 ? 1 : -1;
                 let startColumn = Math.trunc(Math.trunc(startPoint.getX()));
                 for (let imageRow /*int*/ = Math.trunc(Math.trunc(startPoint.getY())); imageRow <= boundingBox.getMaxY() &&
-                    imageRow >= boundingBox.getMinY(); imageRow += increment) {
+                imageRow >= boundingBox.getMinY(); imageRow += increment) {
                     let codeword = PDF417ScanningDecoder.detectCodeword(image, 0, image.getWidth(), leftToRight, startColumn, imageRow, minCodewordWidth, maxCodewordWidth);
                     if (codeword != null) {
                         rowIndicatorColumn.setCodeword(imageRow, codeword);
@@ -20330,8 +20348,8 @@
                     if (previousRowCodeword != null) {
                         return (leftToRight ? previousRowCodeword.getEndX() : previousRowCodeword.getStartX()) +
                             offset *
-                                skippedColumns *
-                                (previousRowCodeword.getEndX() - previousRowCodeword.getStartX());
+                            skippedColumns *
+                            (previousRowCodeword.getEndX() - previousRowCodeword.getStartX());
                     }
                 }
                 skippedColumns++;
@@ -20394,7 +20412,7 @@
             let increment = leftToRight ? 1 : -1;
             let previousPixelValue = leftToRight;
             while ((leftToRight ? imageColumn < maxColumn : imageColumn >= minColumn) &&
-                moduleNumber < moduleBitCount.length) {
+            moduleNumber < moduleBitCount.length) {
                 if (image.get(imageColumn, imageRow) === previousPixelValue) {
                     moduleBitCount[moduleNumber]++;
                     imageColumn += increment;
@@ -20420,7 +20438,7 @@
             // there should be no black pixels before the start column. If there are, then we need to start earlier.
             for (let i /*int*/ = 0; i < 2; i++) {
                 while ((leftToRight ? correctedStartColumn >= minColumn : correctedStartColumn < maxColumn) &&
-                    leftToRight === image.get(correctedStartColumn, imageRow)) {
+                leftToRight === image.get(correctedStartColumn, imageRow)) {
                     if (Math.abs(codewordStartColumn - correctedStartColumn) > PDF417ScanningDecoder.CODEWORD_SKEW_SIZE) {
                         return codewordStartColumn;
                     }
@@ -22220,8 +22238,8 @@
             if (numTotalBytes !==
                 ((numDataBytesInGroup1 + numEcBytesInGroup1) *
                     numRsBlocksInGroup1) +
-                    ((numDataBytesInGroup2 + numEcBytesInGroup2) *
-                        numRsBlocksInGroup2)) {
+                ((numDataBytesInGroup2 + numEcBytesInGroup2) *
+                    numRsBlocksInGroup2)) {
                 throw new WriterException('Total bytes mismatch');
             }
             if (blockID < numRsBlocksInGroup1) {
@@ -23399,7 +23417,7 @@
                 // add additional B/S encoding cost of other, if any
                 newModeBitCount +=
                     State.calculateBinaryShiftCost(other) -
-                        State.calculateBinaryShiftCost(this);
+                    State.calculateBinaryShiftCost(this);
             }
             else if (this.binaryShiftByteCount > other.binaryShiftByteCount &&
                 other.binaryShiftByteCount > 0) {
@@ -24232,3 +24250,4 @@
     Object.defineProperty(exports, '__esModule', { value: true });
 
 })));
+//# sourceMappingURL=index.js.map

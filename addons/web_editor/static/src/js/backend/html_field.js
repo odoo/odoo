@@ -21,7 +21,6 @@ import {
     getRangePosition
 } from '@web_editor/js/editor/odoo-editor/src/utils/utils';
 import { toInline } from 'web_editor.convertInline';
-import { loadJS } from '@web/core/assets';
 import {
     markup,
     Component,
@@ -74,11 +73,8 @@ export class HtmlFieldWysiwygAdapterComponent extends ComponentAdapter {
 
 export class HtmlField extends Component {
     setup() {
-        // readonly if nodes in <head> as the head will be removed on insertion in the DOM
-        // this prevents the field from overwriting the value with invalid HTML when relevant
-        const domParser = new DOMParser();
-        const parsedOriginal = domParser.parseFromString(this.props.value || '', 'text/html');
-        this.containsComplexHTML = !!parsedOriginal.head.innerHTML.trim();
+        this.containsComplexHTML = this.computeContainsComplexHTML();
+        this.sandboxedPreview = this.props.sandboxedPreview || this.containsComplexHTML;
 
         this.readonlyElementRef = useRef("readonlyElement");
         this.codeViewRef = useRef("codeView");
@@ -108,7 +104,6 @@ export class HtmlField extends Component {
                 this.cssReadonlyAsset = await ajax.loadAsset(this.props.cssReadonlyAssetId);
             }
             if (this.props.cssEditAssetId || this.props.isInlineStyle) {
-                await loadJS('/web_editor/static/lib/html2canvas.js');
                 this.cssEditAsset = await ajax.loadAsset(this.props.cssEditAssetId || 'web_editor.assets_edit_html_field');
             }
         });
@@ -117,7 +112,7 @@ export class HtmlField extends Component {
             res_id: this.props.record.resId,
         };
         onWillUpdateProps((newProps) => {
-            if (!newProps.readonly && this.state.iframeVisible) {
+            if (!newProps.readonly && !this.sandboxedPreview && this.state.iframeVisible) {
                 this.state.iframeVisible = false;
             }
 
@@ -135,7 +130,7 @@ export class HtmlField extends Component {
                 if (this._qwebPlugin) {
                     this._qwebPlugin.destroy();
                 }
-                if (this.props.readonly) {
+                if (this.props.readonly || (!this.state.showCodeView && this.sandboxedPreview)) {
                     if (this.showIframe) {
                         await this._setupReadonlyIframe();
                     } else if (this.readonlyElementRef.el) {
@@ -161,6 +156,13 @@ export class HtmlField extends Component {
             })();
         });
         onWillUnmount(() => {
+            if (!this.props.readonly && this._isDirty()) {
+                // If we still have uncommited changes, commit them with the
+                // urgent flag to avoid losing them. Urgent flag is used to be
+                // able to save the changes before the component is destroyed
+                // by the owl component manager.
+                this.commitChanges({ urgent: true });
+            }
             if (this._qwebPlugin) {
                 this._qwebPlugin.destroy();
             }
@@ -170,11 +172,24 @@ export class HtmlField extends Component {
         });
     }
 
+    /**
+     * Check whether the current value contains nodes that would break
+     * on insertion inside an existing body.
+     *
+     * @returns {boolean} true if 'this.props.value' contains a node
+     * that can only exist once per document.
+     */
+    computeContainsComplexHTML() {
+        const domParser = new DOMParser();
+        const parsedOriginal = domParser.parseFromString(this.props.value || '', 'text/html');
+        return !!parsedOriginal.head.innerHTML.trim();
+    }
+
     get markupValue () {
         return markup(this.props.value);
     }
     get showIframe () {
-        return this.props.readonly && this.props.cssReadonlyAssetId;
+        return (this.sandboxedPreview && !this.state.showCodeView) || (this.props.readonly && this.props.cssReadonlyAssetId);
     }
     get wysiwygOptions() {
         let dynamicPlaceholderOptions = {};
@@ -229,11 +244,6 @@ export class HtmlField extends Component {
                 collaborationModelName: this.props.record.resModel,
                 collaborationFieldName: this.props.fieldName,
                 collaborationResId: parseInt(this.props.record.resId),
-            },
-            mediaModalParams: {
-                ...this.props.wysiwygOptions.mediaModalParams,
-                res_model: this.props.record.resModel,
-                res_id: this.props.record.resId,
             },
             fieldId: this.props.id,
         };
@@ -309,7 +319,7 @@ export class HtmlField extends Component {
             this.wysiwyg.toolbar.$el.append($codeviewButtonToolbar);
             $codeviewButtonToolbar.click(this.toggleCodeView.bind(this));
         }
-        this.wysiwyg.odooEditor.editable.addEventListener("input", () =>
+        this.wysiwyg.odooEditor.addEventListener("historyStep", () =>
             this.props.setDirty(this._isDirty())
         );
 
@@ -345,6 +355,8 @@ export class HtmlField extends Component {
             const t = document.createElement('T');
             t.setAttribute('t-out', dynamicPlaceholder);
             this.wysiwyg.odooEditor.execCommand('insert', t);
+            // Ensure the dynamic placeholder <t> element is sanitized.
+            this.wysiwyg.odooEditor.sanitize(t);
         }
     }
     onDynamicPlaceholderClose() {
@@ -367,15 +379,20 @@ export class HtmlField extends Component {
     }
     async commitChanges({ urgent } = {}) {
         if (this._isDirty() || urgent) {
-            if (urgent) {
-                await this.updateValue();
-            }
-            if (this.wysiwyg) {
-                // Avoid listening to changes made during the _toInline process.
+            let saveModifiedImagesPromise, toInlinePromise;
+            if (this.wysiwyg && this.wysiwyg.odooEditor) {
                 this.wysiwyg.odooEditor.observerUnactive('commitChanges');
-                await this.wysiwyg.saveModifiedImages();
+                saveModifiedImagesPromise = this.wysiwyg.saveModifiedImages();
                 if (this.props.isInlineStyle) {
-                    await this._toInline();
+                    // Avoid listening to changes made during the _toInline process.
+                    toInlinePromise = this._toInline();
+                }
+                if (urgent) {
+                    await this.updateValue();
+                }
+                await saveModifiedImagesPromise;
+                if (this.props.isInlineStyle) {
+                    await toInlinePromise;
                 }
                 this.wysiwyg.odooEditor.observerActive('commitChanges');
             }
@@ -387,16 +404,23 @@ export class HtmlField extends Component {
     _isDirty() {
         const strippedPropValue = stripHistoryIds(String(this.props.value));
         const strippedEditingValue = stripHistoryIds(this.getEditingValue());
-        return !this.props.readonly && strippedPropValue !== strippedEditingValue;
+        const domParser = new DOMParser();
+        const parsedPropValue = domParser.parseFromString(strippedPropValue || '<p><br></p>', 'text/html').body;
+        const parsedEditingValue = domParser.parseFromString(strippedEditingValue, 'text/html').body;
+        return !this.props.readonly && parsedPropValue.innerHTML !== parsedEditingValue.innerHTML;
     }
     _getCodeViewEl() {
         return this.state.showCodeView && this.codeViewRef.el;
     }
     async _setupReadonlyIframe() {
-        const iframeTarget = this.iframeRef.el.contentDocument.querySelector('#iframe_target');
+        const iframeTarget = this.sandboxedPreview
+            ? this.iframeRef.el.contentDocument.documentElement
+            : this.iframeRef.el.contentDocument.querySelector('#iframe_target');
+
         if (this.iframePromise && iframeTarget) {
             if (iframeTarget.innerHTML !== this.props.value) {
                 iframeTarget.innerHTML = this.props.value;
+                retargetLinks(iframeTarget);
             }
             return this.iframePromise;
         }
@@ -422,7 +446,6 @@ export class HtmlField extends Component {
 
             this.iframeRef.el.addEventListener('load', async () => {
                 const _avoidDoubleLoad = ++avoidDoubleLoad;
-                const asset = await ajax.loadAsset(this.props.cssReadonlyAssetId);
 
                 if (_avoidDoubleLoad !== avoidDoubleLoad) {
                     console.warn('Wysiwyg immediate iframe double load detected');
@@ -434,52 +457,66 @@ export class HtmlField extends Component {
                 } catch (_e) {
                     return;
                 }
-                cwindow.document
-                    .open("text/html", "replace")
-                    .write(
-                        '<!DOCTYPE html><html>' +
-                        '<head>' +
-                            '<meta charset="utf-8"/>' +
-                            '<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>\n' +
-                            '<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>\n' +
-                        '</head>\n' +
-                        '<body class="o_in_iframe o_readonly" style="overflow: hidden;">\n' +
-                            '<div id="iframe_target"></div>\n' +
-                        '</body>' +
-                        '</html>');
-
-                for (const cssLib of asset.cssLibs) {
-                    const link = cwindow.document.createElement('link');
-                    link.setAttribute('type', 'text/css');
-                    link.setAttribute('rel', 'stylesheet');
-                    link.setAttribute('href', cssLib);
-                    cwindow.document.head.append(link);
-                }
-                for (const cssContent of asset.cssContents) {
-                    const style = cwindow.document.createElement('style');
-                    style.setAttribute('type', 'text/css');
-                    const textNode = cwindow.document.createTextNode(cssContent);
-                    style.append(textNode);
-                    cwindow.document.head.append(style);
+                if (!this.sandboxedPreview) {
+                    cwindow.document
+                        .open("text/html", "replace")
+                        .write(
+                            '<!DOCTYPE html><html>' +
+                            '<head>' +
+                                '<meta charset="utf-8"/>' +
+                                '<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>\n' +
+                                '<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>\n' +
+                            '</head>\n' +
+                            '<body class="o_in_iframe o_readonly" style="overflow: hidden;">\n' +
+                                '<div id="iframe_target"></div>\n' +
+                            '</body>' +
+                            '</html>');
                 }
 
-                const iframeTarget = cwindow.document.querySelector('#iframe_target');
-                iframeTarget.innerHTML = value;
+                if (this.props.cssReadonlyAssetId) {
+                    const asset = await ajax.loadAsset(this.props.cssReadonlyAssetId);
+                    for (const cssLib of asset.cssLibs) {
+                        const link = cwindow.document.createElement('link');
+                        link.setAttribute('type', 'text/css');
+                        link.setAttribute('rel', 'stylesheet');
+                        link.setAttribute('href', cssLib);
+                        cwindow.document.head.append(link);
+                    }
+                    for (const cssContent of asset.cssContents) {
+                        const style = cwindow.document.createElement('style');
+                        style.setAttribute('type', 'text/css');
+                        const textNode = cwindow.document.createTextNode(cssContent);
+                        style.append(textNode);
+                        cwindow.document.head.append(style);
+                    }
+                }
 
-                const script = cwindow.document.createElement('script');
-                script.setAttribute('type', 'text/javascript');
-                const scriptTextNode = document.createTextNode(
-                    `if (window.top.${this._onUpdateIframeId}) {` +
-                        `window.top.${this._onUpdateIframeId}(${_avoidDoubleLoad})` +
-                    `}`
-                );
-                script.append(scriptTextNode);
-                cwindow.document.body.append(script);
+                if (!this.sandboxedPreview) {
+                    const iframeTarget = cwindow.document.querySelector('#iframe_target');
+                    iframeTarget.innerHTML = value;
+
+                    const script = cwindow.document.createElement('script');
+                    script.setAttribute('type', 'text/javascript');
+                    const scriptTextNode = document.createTextNode(
+                        `if (window.top.${this._onUpdateIframeId}) {` +
+                            `window.top.${this._onUpdateIframeId}(${_avoidDoubleLoad})` +
+                        `}`
+                    );
+                    script.append(scriptTextNode);
+                    cwindow.document.body.append(script);
+                } else {
+                    cwindow.document.documentElement.innerHTML = value;
+                }
 
                 const height = cwindow.document.body.scrollHeight;
                 this.iframeRef.el.style.height = Math.max(30, Math.min(height, 500)) + 'px';
 
                 retargetLinks(cwindow.document.body);
+                if (this.sandboxedPreview) {
+                    this.state.iframeVisible = true;
+                    this.onIframeUpdated();
+                    resolve();
+                }
             });
             // Force the iframe to call the `load` event. Without this line, the
             // event 'load' might never trigger.
@@ -524,11 +561,10 @@ export class HtmlField extends Component {
      */
     async _toInline() {
         const $editable = this.wysiwyg.getEditable();
+        this.wysiwyg.odooEditor.sanitize(this.wysiwyg.odooEditor.editable);
         const html = this.wysiwyg.getValue();
         const $odooEditor = $editable.closest('.odoo-editor-editable');
         // Save correct nodes references.
-        const originalContents = document.createDocumentFragment();
-        originalContents.append(...$editable[0].childNodes);
         // Remove temporarily the class so that css editing will not be converted.
         $odooEditor.removeClass('odoo-editor-editable');
         $editable.html(html);
@@ -536,7 +572,8 @@ export class HtmlField extends Component {
         await toInline($editable, this.cssRules, this.wysiwyg.$iframe);
         $odooEditor.addClass('odoo-editor-editable');
 
-        $editable[0].replaceChildren(...originalContents.childNodes);
+        this.wysiwyg.setValue($editable.html());
+        this.wysiwyg.odooEditor.sanitize(this.wysiwyg.odooEditor.editable);
     }
     async _getWysiwygClass() {
         return getWysiwygClass();
@@ -552,7 +589,12 @@ export class HtmlField extends Component {
         }]));
     }
     _onWysiwygBlur() {
-        this.commitChanges();
+        // Avoid save on blur if the html field is in inline mode.
+        if (this.props.isInlineStyle) {
+            this.updateValue();
+        } else {
+            this.commitChanges();
+        }
     }
     async _onReadonlyClickChecklist(ev) {
         if (ev.offsetX > 0) {
@@ -626,6 +668,7 @@ HtmlField.props = {
     cssReadonlyAssetId: { type: String, optional: true },
     cssEditAssetId: { type: String, optional: true },
     isInlineStyle: { type: Boolean, optional: true },
+    sandboxedPreview: {type: Boolean, optional: true},
     wrapper: { type: String, optional: true },
     wysiwygOptions: { type: Object },
 };
@@ -656,6 +699,9 @@ HtmlField.extractProps = ({ attrs, field }) => {
     if ('collaborative' in attrs.options) {
         wysiwygOptions.collaborative = attrs.options.collaborative;
     }
+    if ('style-inline' in attrs.options) {
+        wysiwygOptions.inlineStyle = Boolean(attrs.options['style-inline']);
+    }
     if ('allowCommandImage' in attrs.options) {
         // Set the option only if it is explicitly set in the view so a default
         // can be set elsewhere otherwise.
@@ -672,6 +718,7 @@ HtmlField.extractProps = ({ attrs, field }) => {
         isTranslatable: field.translate,
         fieldName: field.name,
         codeview: Boolean(odoo.debug && attrs.options.codeview),
+        sandboxedPreview: Boolean(attrs.options.sandboxedPreview),
         placeholder: attrs.placeholder,
 
         isCollaborative: attrs.options.collaborative,
@@ -687,14 +734,14 @@ HtmlField.extractProps = ({ attrs, field }) => {
 
 registry.category("fields").add("html", HtmlField, { force: true });
 
-function stripHistoryIds(value) {
+export function stripHistoryIds(value) {
     return value && value.replace(/\sdata-last-history-steps="[^"]*?"/, '') || value;
 }
 
-// Ensure all external links are opened in a new tab.
+// Ensure all links are opened in a new tab.
 const retargetLinks = (container) => {
-    for (const externalLink of container.querySelectorAll(`a:not([href^="${location.origin}"]):not([href^="/"])`)) {
-        externalLink.setAttribute('target', '_blank');
-        externalLink.setAttribute('rel', 'noreferrer');
+    for (const link of container.querySelectorAll('a')) {
+        link.setAttribute('target', '_blank');
+        link.setAttribute('rel', 'noreferrer');
     }
 }

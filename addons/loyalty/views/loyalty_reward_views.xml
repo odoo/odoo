@@ -14,7 +14,7 @@
                 <sheet>
                     <group>
                         <group string="Reward" id="reward_type_group">
-                            <field name="reward_type" widget="selection" attrs="{'readonly' : [('program_type', '=', 'buy_x_get_y')]}"/>
+                            <field name="reward_type" widget="selection" force_save="1" attrs="{'readonly' : [('program_type', '=', 'buy_x_get_y')]}"/>
                             <label for="discount" attrs="{'invisible': [('reward_type', '!=', 'discount')]}"/>
                             <div class="d-flex flex-row" attrs="{'invisible': [('reward_type', '!=', 'discount')]}">
                                 <field name="discount" class="oe_inline me-1"/>
@@ -55,6 +55,7 @@
                     </group>
                     <group>
                         <field name="description" string="Description on order"/>
+                        <field name="discount_line_product_id" string="Discount product" groups="base.group_no_one"/>
                     </group>
                 </sheet>
             </form>
@@ -80,6 +81,8 @@
                 <field name="discount_max_amount"/>
                 <field name="discount_line_product_id"/>
                 <field name="reward_product_id"/>
+                <field name="reward_product_ids"/>
+                <field name="all_discount_product_ids"/>
                 <field name="reward_product_tag_id"/>
                 <field name="multi_product"/>
                 <field name="reward_product_qty"/>

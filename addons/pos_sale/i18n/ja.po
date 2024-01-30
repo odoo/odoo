@@ -6,14 +6,15 @@
 # Martin Trigaux, 2022
 # Andy Yiu, 2022
 # Ryoko Tsuda <ryoko@quartile.co>, 2023
+# Junko Augias, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-14 05:51+0000\n"
+"POT-Creation-Date: 2023-05-23 08:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2023\n"
+"Last-Translator: Junko Augias, 2023\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,14 +27,14 @@ msgstr ""
 #: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderRow.xml:0
 #, python-format
 msgid "(left:"
-msgstr ""
+msgstr "(残:"
 
 #. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/xml/ProductScreen/Orderline.xml:0
 #, python-format
 msgid "(tax incl.)"
-msgstr ""
+msgstr "(税込み)"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.res_config_settings_view_form
@@ -48,7 +49,14 @@ msgstr "<span class=\"o_form_label\">販売チーム</span>"
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.report_invoice_document
 msgid "<span style=\"margin: 0px 5px;\">:</span>"
-msgstr ""
+msgstr "<span style=\"margin: 0px 5px;\">:</span>"
+
+#. module: pos_sale
+#. odoo-javascript
+#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
+#, python-format
+msgid "A new order has been created."
+msgstr "新規オーダが作成されました"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -108,7 +116,7 @@ msgstr "顧客"
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
 msgid "Customer loading error"
-msgstr ""
+msgstr "顧客ローディングエラー"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -121,14 +129,14 @@ msgstr "日付"
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.message_body
 msgid "Delivered from"
-msgstr ""
+msgstr "以下から配送:"
 
 #. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
 msgid "Do you want to load the SN/Lots linked to the Sales Order?"
-msgstr ""
+msgstr "販売オーダにリンクしたシリアル番号/ロットをロードしますか？"
 
 #. module: pos_sale
 #: model:product.template,name:pos_sale.default_downpayment_product_product_template
@@ -138,7 +146,7 @@ msgstr "前受金 (POS)"
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__down_payment_details
 msgid "Down Payment Details"
-msgstr ""
+msgstr "前受金詳細"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_config__down_payment_product_id
@@ -174,25 +182,27 @@ msgid ""
 "It seems that you didn't configure a down payment product in your point of sale.\n"
 "                        You can go to your point of sale configuration to choose one."
 msgstr ""
+"POSで前払金プロダクトを設定していないようです。\n"
+"POSの設定で選択することができます。"
 
 #. module: pos_sale
 #. odoo-python
 #: code:addons/pos_sale/models/sale_order.py:0
 #, python-format
 msgid "Linked POS Orders"
-msgstr ""
+msgstr "リンク済POSオーダ"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__sale_order_origin_id
 msgid "Linked Sale Order"
-msgstr ""
+msgstr "リンク済販売オーダ"
 
 #. module: pos_sale
 #. odoo-python
 #: code:addons/pos_sale/models/pos_order.py:0
 #, python-format
 msgid "Linked Sale Orders"
-msgstr ""
+msgstr "リンク済販売オーダ"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -235,7 +245,7 @@ msgstr "いいえ"
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
 msgid "No down payment product"
-msgstr ""
+msgstr "前受金プロダクトなし"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_crm_team__pos_sessions_open_count
@@ -259,7 +269,7 @@ msgstr "オーダ"
 #: model:ir.model.fields,field_description:pos_sale.field_sale_order__pos_order_line_ids
 #: model:ir.model.fields,field_description:pos_sale.field_sale_order_line__pos_order_line_ids
 msgid "Order lines Transfered to Point of Sale"
-msgstr ""
+msgstr "POSに転送されたオーダ明細"
 
 #. module: pos_sale
 #: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__paid
@@ -321,7 +331,7 @@ msgstr "以前の注文リスト"
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
 msgid "Products not available in POS"
-msgstr ""
+msgstr "POSで利用不可能なプロダクト"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -349,7 +359,7 @@ msgstr "見積/オーダ"
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
 msgid "SN/Lots Loading"
-msgstr ""
+msgstr "シリアル番号/ロットロード中"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -357,7 +367,7 @@ msgstr ""
 #: code:addons/pos_sale/static/src/xml/ProductScreen/Orderline.xml:0
 #, python-format
 msgid "SO"
-msgstr ""
+msgstr "販売オーダ"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order__sale_order_count
@@ -427,7 +437,7 @@ msgstr "セッション実行中"
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_crm_team__pos_order_amount_total
 msgid "Session Sale Amount"
-msgstr ""
+msgstr "セッション販売金額"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.crm_team_view_kanban_dashboard
@@ -440,14 +450,14 @@ msgstr "セッション実行中"
 #: code:addons/pos_sale/static/src/xml/SetSaleOrderButton.xml:0
 #, python-format
 msgid "Set Sale Order"
-msgstr ""
+msgstr "販売オーダ設定"
 
 #. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
 msgid "Settle the order"
-msgstr ""
+msgstr "オーダする"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -456,12 +466,12 @@ msgstr ""
 msgid ""
 "Some of the products in your Sale Order are not available in POS, do you "
 "want to import them?"
-msgstr ""
+msgstr "販売オーダに含まれる商品の中にはPOSで利用できないものがありますが、インポートしますか？"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__sale_order_line_id
 msgid "Source Sale Order Line"
-msgstr ""
+msgstr "ソース販売オーダ明細"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -479,7 +489,7 @@ msgstr "ステータス"
 #. module: pos_sale
 #: model:ir.model.fields,help:pos_sale.field_sale_order__amount_unpaid
 msgid "The amount due from the sale order."
-msgstr ""
+msgstr "販売オーダからの未払金額"
 
 #. module: pos_sale
 #: model:ir.model.fields,help:pos_sale.field_pos_order__currency_rate
@@ -493,14 +503,14 @@ msgstr "注文日に適用されるレートの通貨に対する通貨のレー
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
 msgid "There was a problem in loading the %s customer."
-msgstr ""
+msgstr "%s顧客をロード中に問題が発生しました。"
 
 #. module: pos_sale
 #: model:ir.model.fields,help:pos_sale.field_pos_config__crm_team_id
 #: model:ir.model.fields,help:pos_sale.field_pos_session__crm_team_id
 #: model:ir.model.fields,help:pos_sale.field_res_config_settings__pos_crm_team_id
 msgid "This Point of sale's sales will be related to this Sales Team."
-msgstr ""
+msgstr "このPOSの販売はこの販売チームに関連付けられます。"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.res_config_settings_view_form
@@ -511,7 +521,7 @@ msgstr "このプロダクトは前払いが行われた時に適用されます
 #: model:ir.model.fields,help:pos_sale.field_pos_config__down_payment_product_id
 #: model:ir.model.fields,help:pos_sale.field_res_config_settings__pos_down_payment_product_id
 msgid "This product will be used as down payment on a sale order."
-msgstr ""
+msgstr "このプロダクトは販売オーダの前払いとして使用されます。"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -527,6 +537,8 @@ msgid ""
 "Transfered<br/>\n"
 "                                from Sale"
 msgstr ""
+"転送済<br/>\n"
+"                                (販売から)"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.view_order_form_inherit_pos_sale
@@ -534,6 +546,8 @@ msgid ""
 "Transfered<br/>\n"
 "                                to POS"
 msgstr ""
+"転送済<br/>\n"
+"                                POSへ"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -545,7 +559,7 @@ msgstr "オフラインの場合、注文を取得できません。"
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_sale_order__amount_unpaid
 msgid "Unpaid Amount"
-msgstr ""
+msgstr "未払金額"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -569,4 +583,4 @@ msgstr "はい"
 msgid ""
 "You have tried to charge a down payment of %s but only %s remains to be "
 "paid, %s will be applied to the purchase order line."
-msgstr ""
+msgstr " %s の未払い金額を課金しようとしましたが支払残高は%sのみで、  %sが購買オーダ明細に適用されます。 "

@@ -36,7 +36,7 @@ _logger = logging.getLogger(__name__)
 
 # Only users who can modify the user (incl. the user herself) see the real contents of these fields
 USER_PRIVATE_FIELDS = []
-MIN_ROUNDS = 350000
+MIN_ROUNDS = 600_000
 concat = chain.from_iterable
 
 #
@@ -131,6 +131,7 @@ class Groups(models.Model):
     _description = "Access Groups"
     _rec_name = 'full_name'
     _order = 'name'
+    _allow_sudo_commands = False
 
     name = fields.Char(required=True, translate=True)
     users = fields.Many2many('res.users', 'res_groups_users_rel', 'gid', 'uid')
@@ -153,6 +154,13 @@ class Groups(models.Model):
     def _check_one_user_type(self):
         self.users._check_one_user_type()
 
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_settings_group(self):
+        classified = self.env['res.config.settings']._get_classified_fields()
+        for _name, _groups, implied_group in classified['group']:
+            if implied_group.id in self.ids:
+                raise ValidationError(_('You cannot delete a group linked with a settings field.'))
+
     @api.depends('category_id.name', 'name')
     def _compute_full_name(self):
         # Important: value must be stored in environment of group, not group1!
@@ -165,7 +173,7 @@ class Groups(models.Model):
     def _search_full_name(self, operator, operand):
         lst = True
         if isinstance(operand, bool):
-            return [[('name', operator, operand)]]
+            return [('name', operator, operand)]
         if isinstance(operand, str):
             lst = False
             operand = [operand]
@@ -223,7 +231,7 @@ class Groups(models.Model):
         result = self.get_external_id()
         missings = {group_id: f'__custom__.group_{group_id}' for group_id, ext_id in result.items() if not ext_id}
         if missings:
-            self.env['ir.model.data'].create(
+            self.env['ir.model.data'].sudo().create(
                 [
                     {
                         'name': name.split('.')[1],
@@ -270,6 +278,7 @@ class Users(models.Model):
     _description = 'User'
     _inherits = {'res.partner': 'partner_id'}
     _order = 'name, login'
+    _allow_sudo_commands = False
 
     @property
     def SELF_READABLE_FIELDS(self):
@@ -649,10 +658,14 @@ class Users(models.Model):
         return res
 
     @api.ondelete(at_uninstall=True)
-    def _unlink_except_superuser(self):
+    def _unlink_except_master_data(self):
+        portal_user_template = self.env.ref('base.template_portal_user_id', False)
+        default_user_template = self.env.ref('base.default_user', False)
         if SUPERUSER_ID in self.ids:
             raise UserError(_('You can not remove the admin user as it is used internally for resources created by Odoo (updates, module installation, ...)'))
         self.clear_caches()
+        if (portal_user_template and portal_user_template in self) or (default_user_template and default_user_template in self):
+            raise UserError(_('Deleting the template users is not allowed. Deleting this profile will compromise critical functionalities.'))
 
     @api.model
     def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
@@ -745,6 +758,10 @@ class Users(models.Model):
     @api.model
     def _get_login_domain(self, login):
         return [('login', '=', login)]
+
+    @api.model
+    def _get_email_domain(self, email):
+        return [('email', '=', email)]
 
     @api.model
     def _get_login_order(self):
@@ -910,8 +927,8 @@ class Users(models.Model):
             user.write({
                 'login': f'__deleted_user_{user.id}_{time.time()}',
                 'password': '',
-                'api_key_ids': Command.clear(),
             })
+            user.api_key_ids._remove()
 
             res_users_deletion_values.append({
                 'user_id': user.id,
@@ -1284,7 +1301,7 @@ class UsersImplied(models.Model):
                 user = self.new(values)
                 gs = user.groups_id._origin
                 gs = gs | gs.trans_implied_ids
-                values['groups_id'] = type(self).groups_id.convert_to_write(gs, user)
+                values['groups_id'] = self._fields['groups_id'].convert_to_write(gs, user)
         return super(UsersImplied, self).create(vals_list)
 
     def write(self, values):
@@ -1426,6 +1443,9 @@ class GroupsView(models.Model):
                         xml_by_category[category_name].append(E.newline())
                     xml_by_category[category_name].append(E.field(name=field_name, **attrs))
                     xml_by_category[category_name].append(E.newline())
+                    # add duplicate invisible field so default values are saved on create
+                    if attrs.get('groups') == 'base.group_no_one':
+                        xml0.append(E.field(name=field_name, **dict(attrs, invisible="1", groups='!base.group_no_one')))
 
                 else:
                     # application separator with boolean fields
@@ -1443,6 +1463,8 @@ class GroupsView(models.Model):
                             dest_group.append(E.field(name=field_name, invisible="1", **attrs))
                         else:
                             dest_group.append(E.field(name=field_name, **attrs))
+                        # add duplicate invisible field so default values are saved on create
+                        xml0.append(E.field(name=field_name, **dict(attrs, invisible="1", groups='!base.group_no_one')))
                         group_count += 1
                     xml4.append(E.group(*left_group))
                     xml4.append(E.group(*right_group))
@@ -1673,9 +1695,13 @@ class UsersView(models.Model):
                 values1[key] = val
 
         if 'groups_id' not in values and (add or rem):
+            added = self.env['res.groups'].sudo().browse(add)
+            added |= added.mapped('trans_implied_ids')
+            added_ids = added._ids
             # remove group ids in `rem` and add group ids in `add`
+            # do not remove groups that are added by implied
             values1['groups_id'] = list(itertools.chain(
-                zip(repeat(3), rem),
+                zip(repeat(3), [gid for gid in rem if gid not in added_ids]),
                 zip(repeat(4), add)
             ))
 
@@ -1973,6 +1999,7 @@ class APIKeys(models.Model):
     _name = 'res.users.apikeys'
     _description = 'Users API Keys'
     _auto = False # so we can have a secret column
+    _allow_sudo_commands = False
 
     name = fields.Char("Description", required=True, readonly=True)
     user_id = fields.Many2one('res.users', index=True, required=True, readonly=True, ondelete="cascade")

@@ -12,9 +12,9 @@ import { Record, RelationalModel } from "@web/views/relational_model";
  * those 2 fields ('event_id' + 'event_ticket_id')
  */
 
-class EventConfiguratorRelationalModel extends RelationalModel {}
+export class EventConfiguratorRelationalModel extends RelationalModel {}
 
-class EventConfiguratorRecord extends Record {
+export class EventConfiguratorRecord extends Record {
     /**
      * We let the regular process take place to allow the validation of the required fields
      * to happen.

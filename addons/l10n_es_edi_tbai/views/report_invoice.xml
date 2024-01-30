@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="l10n_es_tbai_external_layout_standard" inherit_id="account.report_invoice_document">
+        <xpath expr="//div[@id='qrcode']" position="after">
+            <div name="l10n_es_tbai_qrcode" t-if="o._l10n_es_tbai_is_in_chain()" style="page-break-inside: avoid">
+                <div t-out="o._get_l10n_es_tbai_id()"/>
+                <img
+                    t-att-src="'/report/barcode/?barcode_type=%s&amp;value=%s&amp;width=%s&amp;height=%s&amp;barLevel=%s'%('QR', quote_plus(o._get_l10n_es_tbai_qr()), 125, 125, 'M')"/>
+
+                <!-- NOTE: Sizes assume a 90 dpi resolution to meet requirements (between 30 and 40 mm) -->
+            </div>
+        </xpath>
+    </template>
+</odoo>

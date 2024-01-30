@@ -115,6 +115,7 @@ class Company(models.Model):
                 'code': new_code,
                 'account_type': sales_tax_accounts[0].account_type,
                 'company_id': self.id,
+                'tag_ids': [(4, tag.id, 0) for tag in sales_tax_accounts[0].tag_ids],
                 })
             self.env['ir.model.data'].create({
                 'name': f'oss_tax_account_company_{self.id}',
@@ -127,7 +128,9 @@ class Company(models.Model):
 
     def _get_oss_tags(self):
         oss_tag = self.env.ref('l10n_eu_oss.tag_oss')
-        [chart_template_xml_id] = self.chart_template_id.parent_id.get_external_id().values() or self.chart_template_id.get_external_id().values()
+        chart_template_xml_id = ''
+        if self.chart_template_id:
+            [chart_template_xml_id] = self.chart_template_id.parent_id.get_external_id().values() or self.chart_template_id.get_external_id().values()
         tag_for_country = EU_TAG_MAP.get(chart_template_xml_id, {
             'invoice_base_tag': None,
             'invoice_tax_tag': None,

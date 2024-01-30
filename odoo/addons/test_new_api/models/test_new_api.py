@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import datetime
 import logging
 _logger = logging.getLogger('precompute_setter')
 
@@ -146,6 +147,7 @@ class Message(models.Model):
     important = fields.Boolean()
     label = fields.Char(translate=True)
     priority = fields.Integer()
+    active = fields.Boolean(default=True)
 
     attributes = fields.Properties(
         string='Properties',
@@ -230,6 +232,7 @@ class EmailMessage(models.Model):
     message = fields.Many2one('test_new_api.message', 'Message',
                               required=True, ondelete='cascade')
     email_to = fields.Char('To')
+    active = fields.Boolean('Active Message', related='message.active', store=True, related_sudo=False)
 
 
 class DiscussionPartner(models.Model):
@@ -539,6 +542,13 @@ class OrderLine(models.Model):
     order_id = fields.Many2one('test_new_api.order', required=True, ondelete='cascade')
     product = fields.Char()
     reward = fields.Boolean()
+    has_been_rewarded = fields.Char(compute='_compute_has_been_rewarded', store=True)
+
+    @api.depends('reward')
+    def _compute_has_been_rewarded(self):
+        for rec in self:
+            if rec.reward:
+                rec.has_been_rewarded = 'Yes'
 
     def unlink(self):
         # also delete associated reward lines
@@ -588,6 +598,7 @@ class ComputeRecursive(models.Model):
     parent = fields.Many2one('test_new_api.recursive', ondelete='cascade')
     full_name = fields.Char(compute='_compute_full_name', recursive=True)
     display_name = fields.Char(compute='_compute_display_name', recursive=True, store=True)
+    context_dependent_name = fields.Char(compute='_compute_context_dependent_name', recursive=True)
 
     @api.depends('name', 'parent.full_name')
     def _compute_full_name(self):
@@ -605,6 +616,18 @@ class ComputeRecursive(models.Model):
             else:
                 rec.display_name = rec.name
 
+    # This field is recursive, non-stored and context-dependent. Its purpose is
+    # to reproduce a bug in modified(), which might not detect that the field
+    # is present in cache if it has values in another context.
+    @api.depends_context('bozo')
+    @api.depends('name', 'parent.context_dependent_name')
+    def _compute_context_dependent_name(self):
+        for rec in self:
+            if rec.parent:
+                rec.context_dependent_name = rec.parent.context_dependent_name + " / " + rec.name
+            else:
+                rec.context_dependent_name = rec.name
+
 
 class ComputeRecursiveTree(models.Model):
     _name = 'test_new_api.recursive.tree'
@@ -620,6 +643,45 @@ class ComputeRecursiveTree(models.Model):
         for rec in self:
             children_names = rec.mapped('children_ids.display_name')
             rec.display_name = '%s(%s)' % (rec.name, ', '.join(children_names))
+
+
+class ComputeRecursiveOrder(models.Model):
+    _name = _description = 'test_new_api.recursive.order'
+
+    value = fields.Integer()
+
+
+class ComputeRecursiveLine(models.Model):
+    _name = _description = 'test_new_api.recursive.line'
+
+    order_id = fields.Many2one('test_new_api.recursive.order')
+    task_ids = fields.One2many('test_new_api.recursive.task', 'line_id')
+    task_number = fields.Integer(compute='_compute_task_number', store=True)
+
+    # line.task_number indirectly depends on recursive field task.line_id, and
+    # is triggered by the recursion in modified() on field task.line_id
+    @api.depends('task_ids')
+    def _compute_task_number(self):
+        for record in self:
+            record.task_number = len(record.task_ids)
+
+
+class ComputeRecursiveTask(models.Model):
+    _name = _description = 'test_new_api.recursive.task'
+
+    value = fields.Integer()
+    line_id = fields.Many2one('test_new_api.recursive.line',
+                              compute='_compute_line_id', recursive=True, store=True)
+
+    # the recursive nature of task.line_id is a bit artificial, but it makes
+    # line.task_number be triggered by a recursive call in modified()
+    @api.depends('value', 'line_id.order_id.value')
+    def _compute_line_id(self):
+        # this assignment forces the new value of record.line_id to be dirty in cache
+        self.line_id = False
+        for record in self:
+            domain = [('order_id.value', '=', record.value)]
+            record.line_id = record.line_id.search(domain, order='id desc', limit=1)
 
 
 class ComputeCascade(models.Model):
@@ -1377,7 +1439,9 @@ class ComputeMember(models.Model):
 
 class User(models.Model):
     _name = _description = 'test_new_api.user'
+    _allow_sudo_commands = False
 
+    name = fields.Char()
     group_ids = fields.Many2many('test_new_api.group')
     group_count = fields.Integer(compute='_compute_group_count', store=True)
 
@@ -1389,7 +1453,9 @@ class User(models.Model):
 
 class Group(models.Model):
     _name = _description = 'test_new_api.group'
+    _allow_sudo_commands = False
 
+    name = fields.Char()
     user_ids = fields.Many2many('test_new_api.user')
 
 
@@ -1740,6 +1806,20 @@ class RelatedTranslation2(models.Model):
     parent_id = fields.Many2one('test_new_api.related_translation_1', string='Parent Model')
     name = fields.Char('Name Related', related='parent_id.name', readonly=False)
     html = fields.Html('HTML Related', related='parent_id.html', readonly=False)
+    computed_name = fields.Char('Name Computed', compute='_compute_name')
+    computed_html = fields.Char('HTML Computed', compute='_compute_html')
+
+    @api.depends_context('lang')
+    @api.depends('parent_id.name')
+    def _compute_name(self):
+        for record in self:
+            record.computed_name = record.parent_id.name
+
+    @api.depends_context('lang')
+    @api.depends('parent_id.html')
+    def _compute_html(self):
+        for record in self:
+            record.computed_html = record.parent_id.html
 
 
 class RelatedTranslation3(models.Model):
@@ -1775,3 +1855,45 @@ class UnlinkLine(models.Model):
 
     container_id = fields.Many2one('test_new_api.unlink.container')
     container_name = fields.Char('Container Name', related='container_id.name', store=True)
+
+
+class Team(models.Model):
+    _name = 'test_new_api.team'
+    _description = 'Odoo Team'
+
+    name = fields.Char()
+    parent_id = fields.Many2one('test_new_api.team')
+    member_ids = fields.One2many('test_new_api.team.member', 'team_id')
+
+
+class TeamMember(models.Model):
+    _name = 'test_new_api.team.member'
+    _description = 'Odoo Developer'
+
+    name = fields.Char('Name')
+    team_id = fields.Many2one('test_new_api.team')
+    parent_id = fields.Many2one('test_new_api.team', related='team_id.parent_id')
+
+class UnsearchableO2M(models.Model):
+    _name = 'test_new_api.unsearchable.o2m'
+    _description = 'Test non-stored unsearchable o2m'
+
+    name = fields.Char('Name')
+    stored_parent_id = fields.Many2one('test_new_api.unsearchable.o2m', store=True)
+    parent_id = fields.Many2one('test_new_api.unsearchable.o2m', store=False, compute="_compute_parent_id")
+    child_ids = fields.One2many('test_new_api.unsearchable.o2m', 'parent_id')
+
+    @api.depends('stored_parent_id')
+    def _compute_parent_id(self):
+        for r in self:
+            r.parent_id = r.stored_parent_id
+
+
+class ModelAutovacuumed(models.Model):
+    _name = _description = 'test_new_api.autovacuumed'
+
+    expire_at = fields.Datetime('Expires at')
+
+    @api.autovacuum
+    def _gc(self):
+        self.search([('expire_at', '<', datetime.datetime.now() - datetime.timedelta(days=1))]).unlink()

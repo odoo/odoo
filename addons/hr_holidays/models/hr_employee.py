@@ -5,9 +5,10 @@ import datetime
 from dateutil.relativedelta import relativedelta
 
 from odoo import _, api, fields, models
+from odoo.exceptions import UserError
 from odoo.tools.float_utils import float_round
 from odoo.addons.resource.models.resource import HOURS_PER_DAY
-
+import pytz
 
 class HrEmployeeBase(models.AbstractModel):
     _inherit = "hr.employee.base"
@@ -87,6 +88,8 @@ class HrEmployeeBase(models.AbstractModel):
             ('holiday_status_id.requires_allocation', '=', 'yes'),
             ('state', '=', 'validate'),
             ('date_from', '<=', current_date),
+            '|',
+            ('date_to', '=', False),
             ('date_to', '>=', current_date),
         ], ['number_of_days:sum', 'employee_id'], ['employee_id'])
         rg_results = dict((d['employee_id'][0], {"employee_id_count": d['employee_id_count'], "number_of_days": d['number_of_days']}) for d in data)
@@ -134,7 +137,7 @@ class HrEmployeeBase(models.AbstractModel):
             ('employee_id', 'in', self.ids),
             ('date_from', '<=', fields.Datetime.now()),
             ('date_to', '>=', fields.Datetime.now()),
-            ('state', 'not in', ('cancel', 'refuse'))
+            ('state', '=', 'validate'),
         ])
         leave_data = {}
         for holiday in holidays:
@@ -168,6 +171,8 @@ class HrEmployeeBase(models.AbstractModel):
                 employee.show_leaves = False
 
     def _search_absent_employee(self, operator, value):
+        if operator not in ('=', '!=') or not isinstance(value, bool):
+            raise UserError(_('Operation not supported'))
         # This search is only used for the 'Absent Today' filter however
         # this only returns employees that are absent right now.
         today_date = datetime.datetime.utcnow().date()
@@ -175,14 +180,12 @@ class HrEmployeeBase(models.AbstractModel):
         today_end = fields.Datetime.to_string(today_date + relativedelta(hours=23, minutes=59, seconds=59))
         holidays = self.env['hr.leave'].sudo().search([
             ('employee_id', '!=', False),
-            ('state', 'not in', ['cancel', 'refuse']),
+            ('state', '=', 'validate'),
             ('date_from', '<=', today_end),
             ('date_to', '>=', today_start),
         ])
-        op = 'not in'
-        if (operator == '=' and value) or (operator == '!=' and not value):
-            op = 'in'
-        return [('id', op, holidays.mapped('employee_id').ids)]
+        operator = ['in', 'not in'][(operator == '=') != value]
+        return [('id', operator, holidays.mapped('employee_id').ids)]
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -247,7 +250,7 @@ class HrEmployee(models.Model):
             ('employee_id', 'in', self.ids),
             ('date_from', '<=', fields.Datetime.now()),
             ('date_to', '>=', fields.Datetime.now()),
-            ('state', 'not in', ('cancel', 'refuse'))
+            ('state', '=', 'validate'),
         ])
         for holiday in holidays:
             employee = self.filtered(lambda e: e.id == holiday.employee_id.id)
@@ -268,6 +271,14 @@ class HrEmployee(models.Model):
             },
         }
 
+    def _get_contextual_employee(self):
+        if self.env.context.get('employee_id'):
+            return self.browse(self.env.context['employee_id'])
+        return self.env.user.employee_id
+
+    def _is_leave_user(self):
+        return self == self.env.user.employee_id and self.user_has_groups('hr_holidays.group_hr_holidays_user')
+
     def get_stress_days(self, start_date, end_date):
         all_days = {}
 
@@ -281,22 +292,83 @@ class HrEmployee(models.Model):
 
         return all_days
 
+    @api.model
+    def get_special_days_data(self, date_start, date_end):
+        return {
+            'stressDays': self.get_stress_days_data(date_start, date_end),
+            'bankHolidays': self.get_public_holidays_data(date_start, date_end),
+        }
+
+    @api.model
+    def get_public_holidays_data(self, date_start, date_end):
+        self = self._get_contextual_employee()
+        employee_tz = pytz.timezone(self._get_tz() if self else self.env.user.tz or 'utc')
+        public_holidays = self._get_public_holidays(date_start, date_end).sorted('date_from')
+        return list(map(lambda bh: {
+            'id': -bh.id,
+            'colorIndex': 0,
+            'end': datetime.datetime.combine(bh.date_to.astimezone(employee_tz), datetime.datetime.max.time()).isoformat(),
+            'endType': "datetime",
+            'isAllDay': True,
+            'start': datetime.datetime.combine(bh.date_from.astimezone(employee_tz), datetime.datetime.min.time()).isoformat(),
+            'startType': "datetime",
+            'title': bh.name,
+        }, public_holidays))
+
+    def _get_public_holidays(self, date_start, date_end):
+        domain = [
+            ('resource_id', '=', False),
+            ('company_id', 'in', self.env.companies.ids),
+            ('date_from', '<=', date_end),
+            ('date_to', '>=', date_start),
+        ]
+
+        # a user with hr_holidays permissions will be able to see all public holidays from his calendar
+        if not self._is_leave_user():
+            domain += [
+                '|',
+                ('calendar_id', '=', False),
+                ('calendar_id', '=', self.resource_calendar_id.id),
+            ]
+
+        return self.env['resource.calendar.leaves'].search(domain)
+
+    @api.model
+    def get_stress_days_data(self, date_start, date_end):
+        self = self._get_contextual_employee()
+        stress_days = self._get_stress_days(date_start, date_end).sorted('start_date')
+        return list(map(lambda sd: {
+            'id': -sd.id,
+            'colorIndex': sd.color,
+            'end': datetime.datetime.combine(sd.end_date, datetime.datetime.max.time()).isoformat(),
+            'endType': "datetime",
+            'isAllDay': True,
+            'start': datetime.datetime.combine(sd.start_date, datetime.datetime.min.time()).isoformat(),
+            'startType': "datetime",
+            'title': sd.name,
+        }, stress_days))
+
     def _get_stress_days(self, start_date, end_date):
-        stress_days = self.env['hr.leave.stress.day'].search([
+        domain = [
             ('start_date', '<=', end_date),
             ('end_date', '>=', start_date),
-            '|',
-                ('resource_calendar_id', '=', False),
-                ('resource_calendar_id', 'in', (self.resource_calendar_id | self.env.company.resource_calendar_id).ids),
             ('company_id', 'in', self.env.companies.ids),
-        ])
+        ]
 
         # a user with hr_holidays permissions will be able to see all stress days from his calendar
-        is_leave_user = self == self.env.user.employee_id and self.user_has_groups('hr_holidays.group_hr_holidays_user')
+        if not self._is_leave_user():
+            domain += [
+                '|',
+                ('resource_calendar_id', '=', False),
+                ('resource_calendar_id', '=', self.resource_calendar_id.id),
+            ]
+            if self.department_id:
+                domain += [
+                    '|',
+                    ('department_ids', '=', False),
+                    ('department_ids', 'parent_of', self.department_id.id),
+                ]
+            else:
+                domain += [('department_ids', '=', False)]
 
-        if not is_leave_user and stress_days.department_ids:
-            stress_days = stress_days.filtered(lambda sd:\
-                not sd.department_ids\
-                or self.department_id and not set(self.department_id.ids).isdisjoint(sd.department_ids.get_children_department_ids().ids))
-
-        return stress_days
+        return self.env['hr.leave.stress.day'].search(domain)

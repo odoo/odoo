@@ -14,7 +14,7 @@ class StockMoveLine(models.Model):
     _name = "stock.move.line"
     _description = "Product Moves (Stock Move Line)"
     _rec_name = "product_id"
-    _order = "result_package_id desc, location_id asc, location_dest_id asc, picking_id asc, id"
+    _order = "result_package_id desc, id"
 
     picking_id = fields.Many2one(
         'stock.picking', 'Transfer', auto_join=True,
@@ -219,9 +219,10 @@ class StockMoveLine(models.Model):
 
     @api.onchange('result_package_id', 'product_id', 'product_uom_id', 'qty_done')
     def _onchange_putaway_location(self):
-        if not self.id and self.user_has_groups('stock.group_stock_multi_locations') and self.product_id and self.qty_done:
+        default_dest_location = self._get_default_dest_location()
+        if not self.id and self.user_has_groups('stock.group_stock_multi_locations') and self.product_id and self.qty_done \
+                and self.location_dest_id == default_dest_location:
             qty_done = self.product_uom_id._compute_quantity(self.qty_done, self.product_id.uom_id)
-            default_dest_location = self._get_default_dest_location()
             self.location_dest_id = default_dest_location.with_context(exclude_sml_ids=self.ids)._get_putaway_strategy(
                 self.product_id, quantity=qty_done, package=self.result_package_id,
                 packaging=self.move_id.product_packaging_id)
@@ -311,16 +312,23 @@ class StockMoveLine(models.Model):
             else:
                 create_move(move_line)
 
+        moves_to_update = mls.filtered(
+            lambda ml:
+            ml.move_id and
+            ml.qty_done and (
+                ml.move_id.state == 'done' or (
+                    ml.move_id.picking_id and
+                    ml.move_id.picking_id.immediate_transfer
+                ))
+        ).move_id
+        for move in moves_to_update:
+            move.with_context(avoid_putaway_rules=True).product_uom_qty = move.quantity_done
+
         for ml, vals in zip(mls, vals_list):
-            if ml.move_id and \
-                    ml.move_id.picking_id and \
-                    ml.move_id.picking_id.immediate_transfer and \
-                    ml.move_id.state != 'done' and \
-                    'qty_done' in vals:
-                ml.move_id.with_context(avoid_putaway_rules=True).product_uom_qty = ml.move_id.quantity_done
+            if self.env.context.get('import_file') and ml.reserved_uom_qty and not ml.move_id._should_bypass_reservation():
+                raise UserError(_("It is not allowed to import reserved quantity, you have to use the quantity directly."))
+
             if ml.state == 'done':
-                if 'qty_done' in vals:
-                    ml.move_id.product_uom_qty = ml.move_id.quantity_done
                 if ml.product_id.type == 'product':
                     Quant = self.env['stock.quant']
                     quantity = ml.product_uom_id._compute_quantity(ml.qty_done, ml.move_id.product_id.uom_id,rounding_method='HALF-UP')
@@ -361,7 +369,7 @@ class StockMoveLine(models.Model):
         updates = {}
         for key, model in triggers:
             if key in vals:
-                updates[key] = self.env[model].browse(vals[key])
+                updates[key] = vals[key] if isinstance(vals[key], models.BaseModel) else self.env[model].browse(vals[key])
 
         if 'result_package_id' in updates:
             for ml in self.filtered(lambda ml: ml.package_level_id):
@@ -467,7 +475,8 @@ class StockMoveLine(models.Model):
         # this is what move's `action_done` will do. So, we replicate the behavior here.
         if updates or 'qty_done' in vals:
             moves = self.filtered(lambda ml: ml.move_id.state == 'done').mapped('move_id')
-            moves |= self.filtered(lambda ml: ml.move_id.state not in ('done', 'cancel') and ml.move_id.picking_id.immediate_transfer).mapped('move_id')
+            moves |= self.filtered(lambda ml: not ml.move_id.origin_returned_move_id and ml.move_id.state not in ('done', 'cancel')\
+                and ml.move_id.picking_id.immediate_transfer).mapped('move_id')
             for move in moves:
                 move.product_uom_qty = move.quantity_done
             next_moves._do_unreserve()
@@ -491,7 +500,11 @@ class StockMoveLine(models.Model):
             if not float_is_zero(ml.reserved_qty, precision_digits=precision) and ml.move_id and not ml.move_id._should_bypass_reservation(ml.location_id):
                 self.env['stock.quant']._update_reserved_quantity(ml.product_id, ml.location_id, -ml.reserved_qty, lot_id=ml.lot_id, package_id=ml.package_id, owner_id=ml.owner_id, strict=True)
         moves = self.mapped('move_id')
+        package_levels = self.package_level_id
         res = super(StockMoveLine, self).unlink()
+        package_levels = package_levels.filtered(lambda pl: not (pl.move_line_ids or pl.move_ids))
+        if package_levels:
+            package_levels.unlink()
         if moves:
             # Add with_prefetch() to set the _prefecht_ids = _ids
             # because _prefecht_ids generator look lazily on the cache of move_id
@@ -689,6 +702,7 @@ class StockMoveLine(models.Model):
             product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=True
         )
         if quantity > available_quantity:
+            quantity = quantity - available_quantity
             # We now have to find the move lines that reserved our now unavailable quantity. We
             # take care to exclude ourselves and the move lines were work had already been done.
             outdated_move_lines_domain = [
@@ -890,6 +904,8 @@ class StockMoveLine(models.Model):
 
     def action_revert_inventory(self):
         move_vals = []
+        # remove inventory mode
+        self = self.with_context(inventory_mode=False)
         processed_move_line = self.env['stock.move.line']
         for move_line in self:
             if move_line.is_inventory and not float_is_zero(move_line.qty_done, precision_digits=move_line.product_uom_id.rounding):

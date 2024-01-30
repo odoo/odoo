@@ -10,7 +10,8 @@ from odoo.tests import tagged
 class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
 
     def setUp(self):
-        super(TestUi, self).setUp()
+        super().setUp()
+        self.env.company.country_id = self.env.ref('base.us')
         # create a template
         product_template = self.env['product.template'].create({
             'name': 'Test Product',
@@ -318,6 +319,15 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
         self.start_tour(self.env['website'].get_client_action_url('/shop?search=Test Product'), 'shop_list_view_b2c', login="admin")
 
     def test_07_editor_shop(self):
+        self.env["product.pricelist"].create({
+            "name": "EUR Pricelist",
+            "selectable": True,
+            "website_id": self.env.ref("website.default_website").id,
+            "country_group_ids": [(4, self.env.ref('base.europe').id)],
+            "sequence": 3,
+            "currency_id": self.env.ref("base.EUR").id,
+        })
+
         self.start_tour("/", 'shop_editor', login="admin")
 
     def test_08_portal_tour_archived_variant_multiple_attributes(self):
@@ -401,3 +411,46 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
         product_template.product_variant_ids[-1].active = False
 
         self.start_tour("/", 'tour_shop_archived_variant_multi', login="portal")
+
+    def test_09_pills_variant(self):
+        """The goal of this test is to make sure that you can click anywhere on a pill
+        and still trigger a variant change. The radio input be visually hidden.
+
+        Using "portal" to have various users in the tests.
+        """
+
+        attribute_1 = self.env['product.attribute'].create([
+            {
+                'name': 'Size',
+                'create_variant': 'always',
+                'display_type': 'pills',
+            },
+        ])
+
+        attribute_values = self.env['product.attribute.value'].create([
+            {
+                'name': 'Large',
+                'attribute_id': attribute_1.id,
+                'sequence': 1,
+            },
+            {
+                'name': 'Small',
+                'attribute_id': attribute_1.id,
+                'sequence': 2,
+            },
+        ])
+
+        product_template = self.env['product.template'].create({
+            'name': 'Test Product 2',
+            'is_published': True,
+        })
+
+        self.env['product.template.attribute.line'].create([
+            {
+                'attribute_id': attribute_1.id,
+                'product_tmpl_id': product_template.id,
+                'value_ids': [(6, 0, attribute_values.ids)],
+            },
+        ])
+
+        self.start_tour("/", 'test_09_pills_variant', login="portal")

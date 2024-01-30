@@ -239,6 +239,10 @@ class TestUsers2(TransactionCase):
 
         self.assertIn(self.env.ref('base.group_user'), user.groups_id)
 
+        # all template user groups are copied
+        default_user = self.env.ref('base.default_user')
+        self.assertEqual(default_user.groups_id, user.groups_id)
+
     def test_selection_groups(self):
         # create 3 groups that should be in a selection
         app = self.env['ir.module.category'].create({'name': 'Foo'})
@@ -279,6 +283,15 @@ class TestUsers2(TransactionCase):
         user.write({fname: group2.id})
         self.assertEqual(user.groups_id & groups, groups)
         self.assertEqual(user.read([fname])[0][fname], group2.id)
+
+        normalized_values = user._remove_reified_groups({fname: group0.id})
+        self.assertEqual(sorted(normalized_values['groups_id']), [(3, group1.id), (3, group2.id), (4, group0.id)])
+
+        normalized_values = user._remove_reified_groups({fname: group1.id})
+        self.assertEqual(sorted(normalized_values['groups_id']), [(3, group2.id), (4, group1.id)])
+
+        normalized_values = user._remove_reified_groups({fname: group2.id})
+        self.assertEqual(normalized_values['groups_id'], [(4, group2.id)])
 
     def test_read_group_with_reified_field(self):
         """ Check that read_group gets rid of reified fields"""

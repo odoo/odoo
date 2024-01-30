@@ -58,7 +58,7 @@ class RegistrationEditor(models.TransientModel):
 
         attendee_list = []
         for so_line in [l for l in sale_order.order_line if l.event_ticket_id]:
-            existing_registrations = [r for r in registrations if r.event_ticket_id == so_line.event_ticket_id]
+            existing_registrations = [r for r in registrations if r.event_ticket_id == so_line.event_ticket_id and r.sale_order_line_id == so_line]
             for reg in existing_registrations:
                 attendee_list.append([0, 0, {
                     'event_id': reg.event_id.id,

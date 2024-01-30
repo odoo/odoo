@@ -34,6 +34,9 @@ tour.register('sale_timesheet_tour', {
     content: "Add 10 hours as ordered quantity for this product.",
     run: 'text 10',
 }, {
+    trigger: 'div[name="name"] textarea:propValueContains(Service Product)',
+    run: () => {}
+}, {
     trigger: 'button[name="action_confirm"]',
     content: 'Click on Confirm button to create a sale order with this quotation.',
 }, tour.stepUtils.toggleHomeMenu(),

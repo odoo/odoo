@@ -55,9 +55,9 @@ class SaleOrder(models.Model):
 
     @api.model
     def _get_note_url(self):
-        website = self.env['website'].get_current_website()
-        if website:
-            return website.get_base_url()
+        website_id = self._context.get('website_id')
+        if website_id:
+            return self.env['website'].browse(website_id).get_base_url()
         return super()._get_note_url()
 
     @api.depends('order_line')
@@ -84,6 +84,13 @@ class SaleOrder(models.Model):
                 order.is_abandoned_cart = bool(order.date_order <= abandoned_datetime and order.partner_id != public_partner_id and order.order_line)
             else:
                 order.is_abandoned_cart = False
+
+    @api.depends('partner_id')
+    def _compute_payment_term_id(self):
+        super()._compute_payment_term_id()
+        for order in self:
+            if order.website_id:
+                order.payment_term_id = order.website_id.with_company(order.company_id).sale_get_payment_term(order.partner_id)
 
     def _search_abandoned_cart(self, operator, value):
         website_ids = self.env['website'].search_read(fields=['id', 'cart_abandoned_delay', 'partner_id'])
@@ -150,9 +157,6 @@ class SaleOrder(models.Model):
         if add_qty and (not product or not product._is_add_to_cart_allowed()):
             raise UserError(_("The given product does not exist therefore it cannot be added to cart."))
 
-        if product.lst_price == 0 and product.website_id.prevent_zero_price_sale:
-            raise UserError(_("The given product does not have a price therefore it cannot be added to cart."))
-
         if line_id is not False:
             order_line = self._cart_find_product_line(product_id, line_id, **kwargs)[:1]
         else:
@@ -192,6 +196,16 @@ class SaleOrder(models.Model):
             warning = ''
 
         order_line = self._cart_update_order_line(product_id, quantity, order_line, **kwargs)
+
+        if (
+            order_line
+            and order_line.price_unit == 0
+            and self.website_id.prevent_zero_price_sale
+            and product.detailed_type not in self.env['product.template']._get_product_types_allow_zero_price()
+        ):
+            raise UserError(_(
+                "The given product does not have a price therefore it cannot be added to cart.",
+            ))
 
         return {
             'line_id': order_line.id,
@@ -332,6 +346,10 @@ class SaleOrder(models.Model):
                         product not in products and
                         (not product.company_id or product.company_id == line.company_id) and
                         product._is_variant_possible(parent_combination=combination)
+                        and (
+                            not self.website_id.prevent_zero_price_sale
+                            or product._get_contextual_price()
+                        )
                 )
 
         return random.sample(all_accessory_products, len(all_accessory_products))
@@ -469,3 +487,20 @@ class SaleOrder(models.Model):
             # URL should always be relative, safety check
             action['url'] = f'/@{action["url"]}'
         return action
+
+    def _get_website_sale_extra_values(self):
+        """ Hook to provide additional rendering values for the cart template.
+        :return: additional values to be passed to the cart template
+        :rtype: dict
+        """
+        self.ensure_one()
+        return {}
+
+    def _get_lang(self):
+        res = super()._get_lang()
+
+        if self.website_id and request and request.is_frontend:
+            # Use request lang as cart lang if request comes from frontend
+            return request.env.lang
+
+        return res

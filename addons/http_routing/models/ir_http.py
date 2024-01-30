@@ -29,10 +29,6 @@ from odoo.tools import config, ustr, pycompat
 
 _logger = logging.getLogger(__name__)
 
-# global resolver (GeoIP API is thread-safe, for multithreaded workers)
-# This avoids blowing up open files limit
-odoo._geoip_resolver = None
-
 # ------------------------------------------------------------
 # Slug API
 # ------------------------------------------------------------
@@ -466,28 +462,28 @@ class IrHttp(models.AbstractModel):
         elif not url_lang_str:
             _logger.debug("%r (lang: %r) missing lang in url, redirect", path, request_url_code)
             redirect = request.redirect_query(f'/{request_url_code}{path}', request.httprequest.args)
-            redirect.set_cookie('frontend_lang', request.lang._get_cached('code'))
+            redirect.set_cookie('frontend_lang', request.lang._get_cached('code'), max_age=365 * 24 * 3600)
             werkzeug.exceptions.abort(redirect)
 
         # See /6, default lang in url, /en/home -> /home
         elif url_lang_str == default_lang.url_code and allow_redirect:
             _logger.debug("%r (lang: %r) default lang in url, redirect", path, request_url_code)
             redirect = request.redirect_query(path_no_lang, request.httprequest.args)
-            redirect.set_cookie('frontend_lang', default_lang._get_cached('code'))
+            redirect.set_cookie('frontend_lang', default_lang._get_cached('code'), max_age=365 * 24 * 3600)
             werkzeug.exceptions.abort(redirect)
 
         # See /7, lang alias in url, /fr_FR/home -> /fr/home
         elif url_lang_str != request_url_code and allow_redirect:
             _logger.debug("%r (lang: %r) lang alias in url, redirect", path, request_url_code)
             redirect = request.redirect_query(f'/{request_url_code}{path_no_lang}', request.httprequest.args, code=301)
-            redirect.set_cookie('frontend_lang', request.lang._get_cached('code'))
+            redirect.set_cookie('frontend_lang', request.lang._get_cached('code'), max_age=365 * 24 * 3600)
             werkzeug.exceptions.abort(redirect)
 
         # See /8, homepage with trailing slash. /fr_BE/ -> /fr_BE
         elif path == f'/{url_lang_str}/' and allow_redirect:
             _logger.debug("%r (lang: %r) homepage with trailing slash, redirect", path, request_url_code)
             redirect = request.redirect_query(path[:-1], request.httprequest.args, code=301)
-            redirect.set_cookie('frontend_lang', default_lang._get_cached('code'))
+            redirect.set_cookie('frontend_lang', default_lang._get_cached('code'), max_age=365 * 24 * 3600)
             werkzeug.exceptions.abort(redirect)
 
         # See /9, valid lang in url
@@ -520,6 +516,11 @@ class IrHttp(models.AbstractModel):
         string. This act as a light redirection, it does not return a
         3xx responses to the browser but still change the current URL.
         """
+        # WSGI encoding dance https://peps.python.org/pep-3333/#unicode-issues
+        if isinstance(path, str):
+            path = path.encode('utf-8')
+        path = path.decode('latin1', 'replace')
+
         if query_string is None:
             query_string = request.httprequest.environ['QUERY_STRING']
 
@@ -576,7 +577,7 @@ class IrHttp(models.AbstractModel):
     def _frontend_pre_dispatch(cls):
         request.update_context(lang=request.lang._get_cached('code'))
         if request.httprequest.cookies.get('frontend_lang') != request.lang._get_cached('code'):
-            request.future_response.set_cookie('frontend_lang', request.lang._get_cached('code'))
+            request.future_response.set_cookie('frontend_lang', request.lang._get_cached('code'), max_age=365 * 24 * 3600)
 
     @classmethod
     def _get_exception_code_values(cls, exception):
@@ -641,7 +642,7 @@ class IrHttp(models.AbstractModel):
         code, values = cls._get_exception_code_values(exception)
 
         request.cr.rollback()
-        if code == 403:
+        if code in (404, 403):
             try:
                 response = cls._serve_fallback()
                 if response:

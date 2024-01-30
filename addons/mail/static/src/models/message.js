@@ -251,13 +251,16 @@ registerModel({
          *
          * @param {Object} param0
          * @param {string} param0.body the new body of the message
+         * @param {number[]} param0.attachment_ids
+         * @param {string[]} param0.attachment_tokens
          */
-        async updateContent({ body, attachment_ids }) {
+        async updateContent({ body, attachment_ids, attachment_tokens }) {
             const messageData = await this.messaging.rpc({
                 route: '/mail/message/update_content',
                 params: {
                     body,
                     attachment_ids,
+                    attachment_tokens,
                     message_id: this.id,
                 },
             });

@@ -120,6 +120,25 @@ class TestSMSComposerComment(TestSMSCommon, TestSMSRecipients):
 
         self.assertSMSNotification([{'partner': self.test_record.customer_id, 'number': self.test_record.mobile_nbr}], 'Dear %s this is an SMS.' % self.test_record.display_name, messages)
 
+    def test_composer_comment_invalid_field(self):
+        """ Test the Send Message in SMS Composer when a Model does not contain a number field name """
+        test_record = self.env['mail.test.sms.partner'].create({
+            'name': 'Test',
+            'customer_id': self.partner_1.id,
+        })
+        sms_composer = self.env['sms.composer'].create({
+            'body': self._test_body,
+            'number_field_name': 'phone_nbr',
+            'recipient_single_number_itf': self.random_numbers_san[0],
+            'res_id': test_record.id,
+            'res_model': 'mail.test.sms.partner'
+        })
+
+        self.assertNotIn(','.join(test_record._fields), 'phone_nbr')
+        with self.mockSMSGateway():
+            sms_composer._action_send_sms()
+        self.assertSMSNotification([{'number': self.random_numbers_san[0]}], self._test_body)
+
     def test_composer_comment_nofield(self):
         """ Test the Send Message in SMS Composer when a Model does not contain any phone number related field """
         test_record = self.env['mail.test.sms.partner'].create({'name': 'Test'})
@@ -134,6 +153,7 @@ class TestSMSComposerComment(TestSMSCommon, TestSMSRecipients):
         self.assertSMSNotification([{'number': self.random_numbers_san[0]}], self._test_body)
 
     def test_composer_default_recipient(self):
+        """ Test default description of SMS composer must be partner name"""
         self.test_record.write({
             'phone_nbr': '0123456789',
         })
@@ -145,8 +165,20 @@ class TestSMSComposerComment(TestSMSCommon, TestSMSRecipients):
                     'number_field_name': 'phone_nbr',
                 })
 
-        self.assertFalse(composer.recipient_single_valid)
         self.assertEqual(composer.recipient_single_description, self.test_record.customer_id.display_name)
+
+    def test_composer_nofield_w_customer(self):
+        """ Test SMS composer without number field, the number on partner must be used instead"""
+        with self.with_user('employee'):
+            composer = self.env['sms.composer'].with_context(
+                    default_res_model='mail.test.sms', default_res_id=self.test_record.id,
+                ).create({
+                    'body': self._test_body,
+                })
+
+        self.assertTrue(composer.recipient_single_valid)
+        self.assertEqual(composer.recipient_single_number, self.test_numbers[1])
+        self.assertEqual(composer.recipient_single_number_itf, self.test_numbers[1])
 
     def test_composer_internals(self):
         with self.with_user('employee'):

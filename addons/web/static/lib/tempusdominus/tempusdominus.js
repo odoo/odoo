@@ -802,17 +802,22 @@ var DateTimePicker = function ($, moment) {
         //public
 
 
-        DateTimePicker.prototype.getMoment = function getMoment(d) {
+        DateTimePicker.prototype.getMoment = function getMoment(d, f) { // ODOO FIX: give optional format
             var returnMoment = void 0;
+
+            // ODOO FIX: default to original `parseFormats` attribute
+            if (!f) {
+                f = this.parseFormats;
+            }
 
             if (d === undefined || d === null) {
                 returnMoment = moment(); //TODO should this use format? and locale?
             } else if (this._hasTimeZone()) {
                 // There is a string to parse and a default time zone
                 // parse with the tz function which takes a default time zone if it is not in the format string
-                returnMoment = moment.tz(d, this.parseFormats, this._options.locale, this._options.useStrict, this._options.timeZone);
+                returnMoment = moment.tz(d, f, this._options.locale, this._options.useStrict, this._options.timeZone); // ODOO FIX: use format argument
             } else {
-                returnMoment = moment(d, this.parseFormats, this._options.locale, this._options.useStrict);
+                returnMoment = moment(d, f, this._options.locale, this._options.useStrict); // ODOO FIX: use format argument
             }
 
             if (this._hasTimeZone()) {
@@ -2434,7 +2439,7 @@ var TempusDominusBootstrap4 = function ($) {
                     break;
                 case 'selectHour':
                     {
-                        var hour = parseInt($(e.target).text(), 10);
+                        var hour = this.getMoment($(e.target).text(), this.use24Hours ? 'HH' : 'hh').hour(); // ODOO FIX: use moment format to get the proper value (not necessarily latn numbers)
 
                         if (!this.use24Hours) {
                             if (lastPicked.hours() >= 12) {
@@ -2456,7 +2461,7 @@ var TempusDominusBootstrap4 = function ($) {
                         break;
                     }
                 case 'selectMinute':
-                    this._setValue(lastPicked.clone().minutes(parseInt($(e.target).text(), 10)), this._getLastPickedDateIndex());
+                    this._setValue(lastPicked.clone().minutes(this.getMoment($(e.target).text(), 'mm').minute()), this._getLastPickedDateIndex()); // ODOO FIX: use moment format to get the proper value (not necessarily latn numbers)
                     if (!this._isEnabled('a') && !this._isEnabled('s') && !this._options.keepOpen && !this._options.inline) {
                         this.hide();
                     } else {
@@ -2464,7 +2469,7 @@ var TempusDominusBootstrap4 = function ($) {
                     }
                     break;
                 case 'selectSecond':
-                    this._setValue(lastPicked.clone().seconds(parseInt($(e.target).text(), 10)), this._getLastPickedDateIndex());
+                    this._setValue(lastPicked.clone().seconds(this.getMoment($(e.target).text(), 'ss').second()), this._getLastPickedDateIndex()); // ODOO FIX: use moment format to get the proper value (not necessarily latn numbers)
                     if (!this._isEnabled('a') && !this._options.keepOpen && !this._options.inline) {
                         this.hide();
                     } else {

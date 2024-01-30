@@ -44,6 +44,7 @@ tour.register('project_tour', {
     run: "text Test",
 }, {
     trigger: ".o_kanban_project_tasks .o_column_quick_create .o_kanban_add",
+    content: Markup(_t('Let\'s create your first <b>stage</b>.')),
     position: 'right',
 }, {
     trigger: ".o_kanban_project_tasks .o_column_quick_create .input-group .o_input",
@@ -53,6 +54,7 @@ tour.register('project_tour', {
     run: "text Test",
 }, {
     trigger: ".o_kanban_project_tasks .o_column_quick_create .o_kanban_add",
+    content: Markup(_t('Let\'s create your second <b>stage</b>.')),
     position: 'right',
 }, {
     trigger: '.o-kanban-button-new',
@@ -107,11 +109,13 @@ tour.register('project_tour', {
     position: "bottom",
     run: "click",
 }, {
-    trigger: ".o_field_widget[name='user_ids'] input",
+    trigger: ".o_field_widget[name='user_ids']",
     extra_trigger: '.o_form_project_tasks',
     content: _t("Assign a responsible to your task"),
     position: "right",
-    run: "text a"
+    run() {
+        document.querySelector('.o_field_widget[name="user_ids"] input').click();
+    }
 }, {
     trigger: ".ui-autocomplete > li > a:not(:has(i.fa))",
     auto: true,

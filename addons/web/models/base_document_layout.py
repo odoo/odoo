@@ -6,6 +6,7 @@ from odoo import api, fields, models, tools
 
 from odoo.addons.base.models.ir_qweb_fields import nl2br
 from odoo.modules import get_resource_path
+from odoo.tools import html2plaintext, is_html_empty
 
 try:
     import sass as libsass
@@ -62,6 +63,7 @@ class BaseDocumentLayout(models.TransientModel):
     report_header = fields.Html(related='company_id.report_header', readonly=False)
     report_footer = fields.Html(related='company_id.report_footer', readonly=False, default=_default_report_footer)
     company_details = fields.Html(related='company_id.company_details', readonly=False, default=_default_company_details)
+    is_company_details_empty = fields.Boolean(compute='_compute_empty_company_details')
 
     # The paper format changes won't be reflected in the preview.
     paperformat_id = fields.Many2one(related='company_id.paperformat_id', readonly=False)
@@ -131,7 +133,11 @@ class BaseDocumentLayout(models.TransientModel):
                     wizard_with_logo = wizard
                 preview_css = markupsafe.Markup(self._get_css_for_preview(styles, wizard_with_logo.id))
                 ir_ui_view = wizard_with_logo.env['ir.ui.view']
-                wizard.preview = ir_ui_view._render_template('web.report_invoice_wizard_preview', {'company': wizard_with_logo, 'preview_css': preview_css})
+                wizard.preview = ir_ui_view._render_template('web.report_invoice_wizard_preview', {
+                    'company': wizard_with_logo,
+                    'preview_css': preview_css,
+                    'is_html_empty': is_html_empty,
+                })
             else:
                 wizard.preview = False
 
@@ -202,7 +208,7 @@ class BaseDocumentLayout(models.TransientModel):
         if not logo:
             return False, False
         # The "===" gives different base64 encoding a correct padding
-        logo += b'===' if type(logo) == bytes else '==='
+        logo += b'===' if isinstance(logo, bytes) else '==='
         try:
             # Catches exceptions caused by logo not being an image
             image = tools.image_fix_orientation(tools.base64_to_image(logo))
@@ -304,3 +310,10 @@ class BaseDocumentLayout(models.TransientModel):
             )
         except libsass.CompileError as e:
             raise libsass.CompileError(e.args[0])
+
+    @api.depends('company_details')
+    def _compute_empty_company_details(self):
+        # In recent change when an html field is empty a <p> balise remains with a <br> in it,
+        # but when company details is empty we want to put the info of the company
+        for record in self:
+            record.is_company_details_empty = not html2plaintext(record.company_details or '')

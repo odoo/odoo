@@ -156,7 +156,7 @@
                               <div class="small mb-1"><strong class="text-muted">Purchase Representative</strong></div>
                               <div class="row flex-nowrap">
                                   <div class="col flex-grow-0 pe-2">
-                                      <img class="rounded-circle mr4 float-start o_portal_contact_img" t-att-src="image_data_uri(order.user_id.avatar_1024)" alt="Contact"/>
+                                      <img class="rounded-circle mr4 float-start o_portal_contact_img" t-att-src="image_data_uri(order.user_id.avatar_128)" alt="Contact"/>
                                   </div>
                                   <div class="col ps-0" style="min-width: 150px">
                                       <span t-field="order.user_id" t-options='{"widget": "contact", "fields": ["name", "phone"], "no_marker": True}'/>

@@ -55,9 +55,9 @@ class AccountEdiXmlUBLNL(models.AbstractModel):
         vals.pop('country_subentity')
         return vals
 
-    def _get_invoice_line_allowance_vals_list(self, line):
+    def _get_invoice_line_allowance_vals_list(self, line, tax_values_list=None):
         # EXTENDS account.edi.xml.ubl_bis3
-        vals_list = super()._get_invoice_line_allowance_vals_list(line)
+        vals_list = super()._get_invoice_line_allowance_vals_list(line, tax_values_list=tax_values_list)
         # [BR-NL-32] Use of Discount reason code ( AllowanceChargeReasonCode ) is not recommended.
         # [BR-EN-34] Use of Charge reason code ( AllowanceChargeReasonCode ) is not recommended.
         # Careful ! [BR-42]-Each Invoice line allowance (BG-27) shall have an Invoice line allowance reason (BT-139)

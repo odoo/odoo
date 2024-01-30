@@ -152,6 +152,18 @@ class MailPluginController(http.Controller):
         if not normalized_email:
             return {'error': _('Bad Email.')}
 
+        notification_email = request.env['ir.mail_server']._get_default_from_address()
+        if normalized_email == tools.email_normalize(notification_email):
+            return {
+                'partner': {
+                    'name': _('Notification'),
+                    'email': normalized_email,
+                    'enrichment_info': {
+                        'type': 'odoo_custom_error', 'info': _('This is your notification address. Search the Contact manually to link this email to a record.'),
+                    },
+                },
+            }
+
         # Search for the partner based on the email.
         # If multiple are found, take the first one.
         partner = request.env['res.partner'].search(['|', ('email', 'in', [normalized_email, email]),
@@ -214,6 +226,9 @@ class MailPluginController(http.Controller):
         params name: name of the new partner
         params company: parent company id of the new partner
         """
+        notification_email = request.env['ir.mail_server']._get_default_from_address()
+        if tools.email_normalize(email) == tools.email_normalize(notification_email):
+            raise Forbidden()
         # old route name "/mail_client_extension/partner/create is deprecated as of saas-14.3,it is not needed for newer
         # versions of the mail plugin but necessary for supporting older versions
         # TODO search the company again instead of relying on the one provided here?
@@ -288,15 +303,20 @@ class MailPluginController(http.Controller):
         search = self._get_iap_search_term(email)
 
         partner_iap = request.env["res.partner.iap"].sudo().search([("iap_search_domain", "=", search)], limit=1)
-
         if partner_iap:
-            return partner_iap.partner_id
+            return partner_iap.partner_id.sudo(False)
 
         return request.env["res.partner"].search([("is_company", "=", True), ("email_normalized", "=ilike", "%" + search)], limit=1)
 
     def _get_company_data(self, company):
         if not company:
             return {'id': -1}
+
+        try:
+            company.check_access_rights('read')
+            company.check_access_rule('read')
+        except AccessError:
+            return {'id': company.id, 'name': _('No Access')}
 
         fields_list = ['id', 'name', 'phone', 'mobile', 'email', 'website']
 

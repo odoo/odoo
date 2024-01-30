@@ -27,6 +27,10 @@ Allows users to create custom dashboard.
         ],
         'web.qunit_suite_tests': [
             'board/static/tests/**/*',
+            ('remove', 'board/static/tests/mobile/**/*'), # mobile test
+        ],
+        'web.qunit_mobile_suite_tests': [
+            'board/static/tests/mobile/**/*',
         ],
     },
     'license': 'LGPL-3',

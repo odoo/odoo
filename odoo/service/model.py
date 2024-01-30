@@ -72,14 +72,13 @@ def _as_validation_error(env, exc):
     """ Return the IntegrityError encapsuled in a nice ValidationError """
 
     unknown = _('Unknown')
+    model = DotDict({'_name': unknown.lower(), '_description': unknown})
+    field = DotDict({'name': unknown.lower(), 'string': unknown})
     for _name, rclass in env.registry.items():
         if exc.diag.table_name == rclass._table:
             model = rclass
-            field = model._fields.get(exc.diag.column_name)
+            field = model._fields.get(exc.diag.column_name) or field
             break
-    else:
-        model = DotDict({'_name': unknown.lower(), '_description': unknown})
-        field = DotDict({'name': unknown.lower(), 'string': unknown})
 
     if exc.pgcode == errorcodes.NOT_NULL_VIOLATION:
         return ValidationError(_(
@@ -109,7 +108,7 @@ def _as_validation_error(env, exc):
     if exc.diag.constraint_name in env.registry._sql_constraints:
         return ValidationError(_(
             "The operation cannot be completed: %s",
-            translate_sql_constraint(env.cr, exc.diag.constraint_name, env.context['lang'])
+            translate_sql_constraint(env.cr, exc.diag.constraint_name, env.context.get('lang', 'en_US'))
         ))
 
     return ValidationError(_("The operation cannot be completed: %s", exc.args[0]))
@@ -139,9 +138,16 @@ def retrying(func, env):
                 if env.cr._closed:
                     raise
                 env.cr.rollback()
+                env.reset()
                 env.registry.reset_changes()
                 if request:
                     request.session = request._get_session_and_dbname()[0]
+                    # Rewind files in case of failure
+                    for filename, file in request.httprequest.files.items():
+                        if hasattr(file, "seekable") and file.seekable():
+                            file.seek(0)
+                        else:
+                            raise RuntimeError(f"Cannot retry request on input file {filename!r} after serialization failure") from exc
                 if isinstance(exc, IntegrityError):
                     raise _as_validation_error(env, exc) from exc
                 if exc.pgcode not in PG_CONCURRENCY_ERRORS_TO_RETRY:
@@ -158,6 +164,7 @@ def retrying(func, env):
             raise RuntimeError("unreachable")
 
     except Exception:
+        env.reset()
         env.registry.reset_changes()
         raise
 

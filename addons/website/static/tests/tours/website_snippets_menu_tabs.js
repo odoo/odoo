@@ -1,11 +1,11 @@
 /** @odoo-module **/
 
-import tour from 'web_tour.tour';
 import wTourUtils from 'website.tour_utils';
 
-tour.register("website_snippets_menu_tabs", {
+wTourUtils.registerWebsitePreviewTour("website_snippets_menu_tabs", {
     test: true,
-    url: "/?enable_editor=1",
+    url: "/",
+    edition: true,
 }, [
     wTourUtils.goToTheme(),
     {

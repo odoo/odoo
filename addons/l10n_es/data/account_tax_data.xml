@@ -2086,6 +2086,38 @@
             (0,0, {'repartition_type': 'tax'}),
         ]"/>
     </record>
+    <record id="account_tax_template_p_iva5_nd" model="account.tax.template">
+        <field name="type_tax_use">purchase</field>
+        <field name="name">5% IVA Soportado no deducible</field>
+        <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
+        <field name="amount" eval="5"/>
+        <field name="amount_type">percent</field>
+        <field name="analytic" eval="True"/>
+        <field name="tax_group_id" ref="tax_group_iva_nd"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+    </record>
     <record id="account_tax_template_p_iva4_nd" model="account.tax.template">
         <field name="type_tax_use">purchase</field>
         <field name="name">4% IVA Soportado no deducible</field>
@@ -2113,7 +2145,7 @@
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'repartition_type': 'base',
-                'tag_ids': [ref('mod_303_153')],
+                'tag_ids': [ref('mod_303_150')],
             }),
             (0,0, {'repartition_type': 'tax'}),
         ]"/>
@@ -2135,7 +2167,7 @@
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'repartition_type': 'base',
-                'tag_ids': [ref('mod_303_153')],
+                'tag_ids': [ref('mod_303_150')],
             }),
             (0,0, {'repartition_type': 'tax'}),
         ]"/>
@@ -2763,6 +2795,39 @@
             }),
         ]"/>
     </record>
+    <record id="account_tax_template_p_irpf24_rdc" model="account.tax.template">
+        <field name="type_tax_use">purchase</field>
+        <field name="name">Retenciones IRPF 24% (Rendimientos del capital)</field>
+        <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
+        <field name="amount" eval="-24"/>
+        <field name="amount_type">percent</field>
+        <field name="tax_group_id" ref="tax_group_retenciones_24"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_es.account_common_4751'),
+            }),
+
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_es.account_common_4751'),
+            }),
+        ]"/>
+    </record>
     <record id="account_tax_template_s_irpf20" model="account.tax.template">
         <field name="description">Retención 20%</field>
         <field name="type_tax_use">sale</field>
@@ -2827,6 +2892,40 @@
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_es.account_common_473'),
+            }),
+        ]"/>
+    </record>
+    <record id="account_tax_template_s_irpf24_rdc" model="account.tax.template">
+        <field name="description">Retención 24% (Rendimientos del capital)</field>
+        <field name="type_tax_use">sale</field>
+        <field name="name">Retenciones a cuenta IRPF 24% (Rendimientos del capital)</field>
+        <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
+        <field name="amount" eval="-24"/>
+        <field name="amount_type">percent</field>
+        <field name="tax_group_id" ref="tax_group_retenciones_24"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_es.account_common_473'),
+            }),
+
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_473'),
             }),
@@ -3983,6 +4082,82 @@
             (0,0, {
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_4751'),
+            }),
+        ]"/>
+    </record>
+     <record id="account_tax_template_p_irpf19ca" model="account.tax.template">
+        <field name="description"/> <!-- for resetting the value on existing DBs -->
+        <field name="type_tax_use">purchase</field>
+        <field name="name">Retenciones IRPF 19% Consejeros y administradores</field>
+        <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
+        <field name="amount" eval="-19"/>
+        <field name="amount_type">percent</field>
+        <field name="tax_group_id" ref="tax_group_retenciones_19"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('mod_111_02')],
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_es.account_common_4751'),
+                'tag_ids': [ref('mod_111_03')],
+            }),
+
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('mod_111_02')],
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_es.account_common_4751'),
+                'tag_ids': [ref('mod_111_03')],
+            }),
+        ]"/>
+    </record>
+    <record id="account_tax_template_p_irpf35cya" model="account.tax.template">
+        <field name="description"/> <!-- for resetting the value on existing DBs -->
+        <field name="type_tax_use">purchase</field>
+        <field name="name">Retenciones IRPF 35% Consejeros y administradores</field>
+        <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
+        <field name="amount" eval="-35"/>
+        <field name="amount_type">percent</field>
+        <field name="tax_group_id" ref="tax_group_retenciones_35"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('mod_111_02')],
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_es.account_common_4751'),
+                'tag_ids': [ref('mod_111_03')],
+            }),
+
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('mod_111_02')],
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_es.account_common_4751'),
+                'tag_ids': [ref('mod_111_03')],
             }),
         ]"/>
     </record>

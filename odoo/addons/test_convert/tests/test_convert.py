@@ -223,6 +223,24 @@ class TestEvalXML(common.TransactionCase):
     def test_xml(self):
         pass
 
-    @unittest.skip("not tested")
     def test_html(self):
-        pass
+        self.assertEqual(
+            self.eval_xml(Field(ET.fromstring(
+            """<parent>
+                <t t-if="True">
+                    <t t-out="'text'"/>
+                </t>
+                <t t-else="">
+                    <t t-out="'text2'"></t>
+                </t>
+            </parent>"""), type="html")),
+            """<parent>
+                <t t-if="True">
+                    <t t-out="'text'"></t>
+                </t>
+                <t t-else="">
+                    <t t-out="'text2'"></t>
+                </t>
+            </parent>""",
+            "Evaluating an HTML field should give empty nodes instead of self-closing tags"
+        )

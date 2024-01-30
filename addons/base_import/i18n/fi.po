@@ -314,6 +314,26 @@ msgid "Error Parsing Date [%s:L%d]: %s"
 msgstr "Virhe käsitellessä päivämäärää [%s:L%d]: %s"
 
 #. module: base_import
+#: code:addons/base_import/models/base_import.py:0
+#, python-format
+msgid ""
+"Error while importing records: Text Delimiter should be a single character."
+msgstr ""
+"Virhe tietueiden tuonnissa: Tekstin erottimena saa olla vain yksi merkki."
+
+#. module: base_import
+#: code:addons/base_import/models/base_import.py:0
+#, python-format
+msgid ""
+"Error while importing records: all rows should be of the same size, but the "
+"title row has %d entries while the first row has %d. You may need to change "
+"the separator character."
+msgstr ""
+"Virhe tietueiden tuonnin aikana: kaikkien rivien pitäisi olla samankokoisia,"
+" mutta otsikkorivillä on %d merkintää, kun taas ensimmäisellä rivillä on %d."
+" Sinun on ehkä muutettava erotinmerkkiäs."
+
+#. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format

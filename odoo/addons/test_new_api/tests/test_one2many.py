@@ -2,6 +2,7 @@
 from odoo.tests.common import TransactionCase
 from odoo.exceptions import MissingError
 from odoo import Command
+from odoo.tools import mute_logger
 
 
 class One2manyCase(TransactionCase):
@@ -409,3 +410,73 @@ class One2manyCase(TransactionCase):
         self.assertEqual(len(parent.child_ids), 3)
         self.assertEqual(parent, parent.child_ids.parent_id)
         self.assertEqual(parent.child_ids.mapped('name'), ['C3', 'PO', 'R2D2'])
+
+    def test_parent_id(self):
+        Team = self.env['test_new_api.team']
+        Member = self.env['test_new_api.team.member']
+
+        team1 = Team.create({'name': 'ORM'})
+        team2 = Team.create({'name': 'Bugfix', 'parent_id': team1.id})
+        team3 = Team.create({'name': 'Support', 'parent_id': team2.id})
+
+        Member.create({'name': 'Raphael', 'team_id': team1.id})
+        member2 = Member.create({'name': 'Noura', 'team_id': team3.id})
+        Member.create({'name': 'Ivan', 'team_id': team2.id})
+
+        # In this specific case...
+        self.assertEqual(member2.id, member2.team_id.parent_id.id)
+
+        # ...we had an infinite recursion on making the following search.
+        with self.assertRaises(ValueError):
+            Team.search([('member_ids', 'child_of', member2.id)])
+
+        # Also, test a simple infinite loop if record is marked as a parent of itself
+        team1.parent_id = team1.id
+        # Check that the search is not stuck in the loop
+        Team.search([('id', 'parent_of', team1.id)])
+        Team.search([('id', 'child_of', team1.id)])
+
+    @mute_logger('odoo.osv.expression')
+    def test_create_one2many_with_unsearchable_field(self):
+        # odoo.osv.expression is muted as reading a non-stored and unsearchable field will log an error and makes the runbot red
+
+        unsearchableO2M = self.env['test_new_api.unsearchable.o2m']
+
+        # Create a parent record
+        parent_record1 = unsearchableO2M.create({
+            'name': 'Parent 1',
+        })
+
+        # Create another parent record
+        parent_record2 = unsearchableO2M.create({
+            'name': 'Parent 2',
+        })
+
+        children = {parent_record1.id : [], parent_record2.id : []}
+        # Create child records linked to parent_record1
+        for i in range(5):
+            child = unsearchableO2M.create({
+                'name': f'Child {i}',
+                'stored_parent_id': parent_record1.id,
+                'parent_id': parent_record1.id,
+            })
+            self.assertEqual(child.parent_id, parent_record1)
+            children[parent_record1.id].append(child.id)
+
+        # Create child records linked to parent_record2
+        for i in range(5, 10):
+            child = unsearchableO2M.create({
+                'name': f'Child {i}',
+                'stored_parent_id': parent_record2.id,
+                'parent_id': parent_record2.id,
+            })
+            self.assertEqual(child.parent_id, parent_record2)
+            children[parent_record2.id].append(child.id)
+
+        # invalidating the cache to force reading one2many again
+        self.env.invalidate_all()
+        # Make sure the parent_record1 only has its own child records
+        self.assertEqual(parent_record1.child_ids.ids, children[parent_record1.id])
+
+        # Make sure the parent_record2 only has its own child records
+        self.assertEqual(parent_record2.child_ids.ids, children[parent_record2.id])

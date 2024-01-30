@@ -6,17 +6,17 @@
 # Eric Geens <ericgeens@yahoo.com>, 2022
 # Lukas Van Cauter <cvl@odoo.com>, 2022
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2022
-# Jolien De Paepe, 2023
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
 # Martin Trigaux, 2023
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-14 05:51+0000\n"
+"POT-Creation-Date: 2023-05-23 08:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -339,29 +339,29 @@ msgstr ""
 #: model:mail.template,body_html:project.rating_project_request_email_template
 msgid ""
 "<div>\n"
-"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"/>\n"
-"    <t t-set=\"partner\" t-value=\"object._rating_get_partner()\"/>\n"
+"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"></t>\n"
+"    <t t-set=\"partner\" t-value=\"object._rating_get_partner()\"></t>\n"
 "    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"width:100%; margin:0px auto;\">\n"
 "    <tbody>\n"
 "        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "            <t t-if=\"partner.name\">\n"
-"                Hello <t t-out=\"partner.name or ''\">Brandon Freeman</t>,<br/><br/>\n"
+"                Hello <t t-out=\"partner.name or ''\">Brandon Freeman</t>,<br><br>\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
-"                Hello,<br/><br/>\n"
+"                Hello,<br><br>\n"
 "            </t>\n"
 "            Please take a moment to rate our services related to the task \"<strong t-out=\"object.name or ''\">Planning and budget</strong>\"\n"
 "            <t t-if=\"object._rating_get_operator().name\">\n"
-"                assigned to <strong t-out=\"object._rating_get_operator().name or ''\">Mitchell Admin</strong>.<br/>\n"
+"                assigned to <strong t-out=\"object._rating_get_operator().name or ''\">Mitchell Admin</strong>.<br>\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
-"                .<br/>\n"
+"                .<br>\n"
 "            </t>\n"
 "        </td></tr>\n"
 "        <tr><td style=\"text-align: center;\">\n"
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" summary=\"o_mail_notification\" style=\"width:100%; margin: 32px 0px 32px 0px;\">\n"
 "                <tr><td style=\"font-size: 13px;\">\n"
-"                    <strong>Tell us how you feel about our service</strong><br/>\n"
+"                    <strong>Tell us how you feel about our service</strong><br>\n"
 "                    <span style=\"font-size: 12px; opacity: 0.5; color: #454748;\">(click on one of these smileys)</span>\n"
 "                </td></tr>\n"
 "                <tr><td style=\"font-size: 13px;\">\n"
@@ -369,17 +369,17 @@ msgid ""
 "                        <tr>\n"
 "                            <td>\n"
 "                                <a t-attf-href=\"/rate/{{ access_token }}/5\">\n"
-"                                    <img alt=\"Satisfied\" src=\"/rating/static/src/img/rating_5.png\" title=\"Satisfied\"/>\n"
+"                                    <img alt=\"Satisfied\" src=\"/rating/static/src/img/rating_5.png\" title=\"Satisfied\">\n"
 "                                </a>\n"
 "                            </td>\n"
 "                            <td>\n"
 "                                <a t-attf-href=\"/rate/{{ access_token }}/3\">\n"
-"                                    <img alt=\"Okay\" src=\"/rating/static/src/img/rating_3.png\" title=\"Okay\"/>\n"
+"                                    <img alt=\"Okay\" src=\"/rating/static/src/img/rating_3.png\" title=\"Okay\">\n"
 "                                </a>\n"
 "                            </td>\n"
 "                            <td>\n"
 "                                <a t-attf-href=\"/rate/{{ access_token }}/1\">\n"
-"                                    <img alt=\"Dissatisfied\" src=\"/rating/static/src/img/rating_1.png\" title=\"Dissatisfied\"/>\n"
+"                                    <img alt=\"Dissatisfied\" src=\"/rating/static/src/img/rating_1.png\" title=\"Dissatisfied\">\n"
 "                                </a>\n"
 "                            </td>\n"
 "                        </tr>\n"
@@ -390,10 +390,10 @@ msgid ""
 "        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "            We appreciate your feedback. It helps us to improve continuously.\n"
 "            <t t-if=\"object.project_id.rating_status == 'stage'\">\n"
-"                <br/><br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">This customer survey has been sent because your task has been moved to the stage <b t-out=\"object.stage_id.name or ''\">In progress</b></span>\n"
+"                <br><br><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">This customer survey has been sent because your task has been moved to the stage <b t-out=\"object.stage_id.name or ''\">In progress</b></span>\n"
 "            </t>\n"
 "            <t t-if=\"object.project_id.rating_status == 'periodic'\">\n"
-"                <br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">This customer survey is sent <b t-out=\"object.project_id.rating_status_period or ''\">Weekly</b> as long as the task is in the <b t-out=\"object.stage_id.name or ''\">In progress</b> stage.</span>\n"
+"                <br><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">This customer survey is sent <b t-out=\"object.project_id.rating_status_period or ''\">Weekly</b> as long as the task is in the <b t-out=\"object.stage_id.name or ''\">In progress</b> stage.</span>\n"
 "            </t>\n"
 "        </td></tr>\n"
 "    </tbody>\n"
@@ -402,47 +402,47 @@ msgid ""
 "            "
 msgstr ""
 "<div>\n"
-"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"/>\n"
-"    <t t-set=\"relatie\" t-value=\"object._rating_get_partner()\"/>\n"
+"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"></t>\n"
+"    <t t-set=\"partner\" t-value=\"object._rating_get_partner()\"></t>\n"
 "    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"width:100%; margin:0px auto;\">\n"
 "    <tbody>\n"
 "        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
-"            <t t-if=\"relatie.naam\">\n"
-"                Hallo <t t-out=\"relatie.name or ''\">Brandon Freeman</t>,<br/><br/>\n"
+"            <t t-if=\"partner.name\">\n"
+"                Hallo <t t-out=\"partner.name or ''\">Brandon Freeman</t>,<br><br>\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
-"                Hallo,<br/><br/>\n"
+"                Hallo,<br><br>\n"
 "            </t>\n"
 "            Neem even de tijd om onze diensten te beoordelen met betrekking tot de taak \"<strong t-out=\"object.name or ''\">Planning en budget</strong>\"\n"
 "            <t t-if=\"object._rating_get_operator().name\">\n"
-"                toegewezen aan <strong t-out=\"object._rating_get_operator().name or ''\">Mitchell-beheerder</strong>.<br/>\n"
+"                toegewezen aan <strong t-out=\"object._rating_get_operator().name or ''\">Mitchell Admin</strong>.<br>\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
-"                .<br/>\n"
+"                .<br>\n"
 "            </t>\n"
 "        </td></tr>\n"
 "        <tr><td style=\"text-align: center;\">\n"
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" summary=\"o_mail_notification\" style=\"width:100%; margin: 32px 0px 32px 0px;\">\n"
 "                <tr><td style=\"font-size: 13px;\">\n"
-"                    <strong>Vertel ons wat je van onze service vindt</strong><br/>\n"
-"                    <span style=\"font-size: 12px; opacity: 0.5; color: #454748;\">(klik op een van deze smileys)</span>\n"
+"                    <strong>Vertel ons wat je van onze dienstverlening vindt</strong><br>\n"
+"                    <span style=\"font-size: 12px; opacity: 0.5; color: #454748;\">(klik op één van deze smileys)</span>\n"
 "                </td></tr>\n"
 "                <tr><td style=\"font-size: 13px;\">\n"
 "                    <table style=\"width:100%;text-align:center;margin-top:2rem;\">\n"
 "                        <tr>\n"
 "                            <td>\n"
 "                                <a t-attf-href=\"/rate/{{ access_token }}/5\">\n"
-"                                    <img alt=\"Tevreden\" src=\"/rating/static/src/img/rating_5.png\" title=\"Tevreden\"/>\n"
+"                                    <img alt=\"Satisfied\" src=\"/rating/static/src/img/rating_5.png\" title=\"Satisfied\">\n"
 "                                </a>\n"
 "                            </td>\n"
 "                            <td>\n"
 "                                <a t-attf-href=\"/rate/{{ access_token }}/3\">\n"
-"                                    <img alt=\"Oké\" src=\"/rating/static/src/img/rating_3.png\" title=\"Oké\"/>\n"
+"                                    <img alt=\"Okay\" src=\"/rating/static/src/img/rating_3.png\" title=\"Okay\">\n"
 "                                </a>\n"
 "                            </td>\n"
 "                            <td>\n"
 "                                <a t-attf-href=\"/rate/{{ access_token }}/1\">\n"
-"                                    <img alt=\"Ontevreden\" src=\"/rating/static/src/img/rating_1.png\" title=\"Ontevreden\"/>\n"
+"                                    <img alt=\"Dissatisfied\" src=\"/rating/static/src/img/rating_1.png\" title=\"Dissatisfied\">\n"
 "                                </a>\n"
 "                            </td>\n"
 "                        </tr>\n"
@@ -451,12 +451,12 @@ msgstr ""
 "            </table>\n"
 "        </td></tr>\n"
 "        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
-"            Wij waarderen je feedback. Het helpt ons om continu te verbeteren.\n"
+"            We waarderen je feedback. Het helpt ons om continu te verbeteren.\n"
 "            <t t-if=\"object.project_id.rating_status == 'stage'\">\n"
-"                <br/><br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">Deze klantenenquête is verzonden omdat je taak is verplaatst naar de fase <b t-out=\"object.stage_id.name or ''\">In uitvoering</b></span>\n"
+"                <br><br><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">Deze klantenenquête is verzonden omdat je taak is verplaatst naar de fase <b t-out=\"object.stage_id.name or ''\">In behandeling</b></span>\n"
 "            </t>\n"
-"            <t t-if=\"object.project_id.rating_status == 'periodiek'\">\n"
-"                <br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">Dit klantenonderzoek is verzonden <b t-out=\"object.project_id.rating_status_period or ''\">Wekelijks</b> zolang de taak zich in de fase <b t-out=\"object.stage_id.name or ''\">In uitvoering</b> bevindt.</span>\n"
+"            <t t-if=\"object.project_id.rating_status == 'periodic'\">\n"
+"                <br><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">Deze klantenenquête wordt <b t-out=\"object.project_id.rating_status_period or ''\">wekelijks</b> verzonden zolang je taak zich in de fase <b t-out=\"object.stage_id.name or ''\">In behandeling</b> bevindt.</span>\n"
 "            </t>\n"
 "        </td></tr>\n"
 "    </tbody>\n"
@@ -468,52 +468,52 @@ msgstr ""
 #: model:mail.template,body_html:project.project_done_email_template
 msgid ""
 "<div>\n"
-"    Dear <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br/>\n"
+"    Dear <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br>\n"
 "    It is my pleasure to let you know that we have successfully completed the project \"<strong t-out=\"object.name or ''\">Renovations</strong>\".\n"
 "    <t t-if=\"user.signature\">\n"
-"        <br/>\n"
-"        <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"        <br>\n"
+"        <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
 "    </t>\n"
 "</div>\n"
-"<br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" groups=\"project.group_project_stages\">You are receiving this email because your project has been moved to the stage <b t-out=\"object.stage_id.name or ''\">Done</b></span>\n"
+"<br><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" groups=\"project.group_project_stages\">You are receiving this email because your project has been moved to the stage <b t-out=\"object.stage_id.name or ''\">Done</b></span>\n"
 "            "
 msgstr ""
 "<div>\n"
-"    Beste <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br/>\n"
-"    Het is mij een genoegen je te laten weten dat we het project \"<strong t-out=\"object.name or ''\">Renovatie</strong>\" met succes hebben afgerond.\n"
+"    Beste <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br>\n"
+"    Het is mijn genoegen je te laten weten dat we het project \"<strong t-out=\"object.name or ''\">Renovaties</strong>\" met succes hebben afgerond.\n"
 "    <t t-if=\"user.signature\">\n"
-"        <br/>\n"
-"        <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"        <br>\n"
+"        <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
 "    </t>\n"
 "</div>\n"
-"<br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" groups=\"project.group_project_stages\">Je ontvangt deze e-mail omdat je project naar de fase <b t-out=\"object.stage_id.name or ''\">Voltooid</b> werd verplaatst</span>\n"
+"<br><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" groups=\"project.group_project_stages\">Je ontvangt deze e-mail omdat je project naar de fase <b t-out=\"object.stage_id.name or ''\">Gereed</b> werd verplaatst</span>\n"
 "            "
 
 #. module: project
 #: model:mail.template,body_html:project.mail_template_data_project_task
 msgid ""
 "<div>\n"
-"    Dear <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br/>\n"
-"    Thank you for your enquiry.<br/>\n"
+"    Dear <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br>\n"
+"    Thank you for your enquiry.<br>\n"
 "    If you have any questions, please let us know.\n"
-"    <br/><br/>\n"
+"    <br><br>\n"
 "    Thank you,\n"
 "    <t t-if=\"user.signature\">\n"
-"        <br/>\n"
-"        <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"        <br>\n"
+"        <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
 "    </t>\n"
 "</div>\n"
 "        "
 msgstr ""
 "<div>\n"
-"    Beste <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br/>\n"
-"    Dank je voor je aanvraag.<br/>\n"
-"    Als je vragen hebt, laat het ons weten.\n"
-"    <br/><br/>\n"
-"    Dank je,\n"
+"    Beste <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br>\n"
+"    Hartelijk dank voor je aanvraag.<br>\n"
+"    Aarzel niet om contact met ons op te nemen als je vragen hebt.\n"
+"    <br><br>\n"
+"    Hartelijk dank,\n"
 "    <t t-if=\"user.signature\">\n"
-"        <br/>\n"
-"        <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"        <br>\n"
+"        <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
 "    </t>\n"
 "</div>\n"
 "        "
@@ -647,7 +647,7 @@ msgstr "<span class=\"o_stat_text\">Subtaken</span>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_milestone_view_form
 msgid "<span class=\"o_stat_text\">Tasks</span>"
-msgstr "<span class=\"o_stat_text\">Tasken</span>"
+msgstr "<span class=\"o_stat_text\">Taken</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -677,7 +677,7 @@ msgstr "<strong>Toegewezen uren:</strong>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong>Assignees</strong>"
-msgstr "<strong>Toegewezen aan</strong>"
+msgstr "<strong>Toegewezen personen</strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -867,8 +867,8 @@ msgid ""
 "Add columns to organize your tasks into <b>stages</b> <i>e.g. New - In "
 "Progress - Done</i>."
 msgstr ""
-"Voeg kolommen toe om je taken in <b>fasen</b> te ordenen, <i>bijv. Nieuw - "
-"In uitvoering - Gereed</i>."
+"Voeg kolommen toe om je taken in <b>fases</b> te ordenen, <i>bijv. Nieuw - "
+"In behandeling - Gereed</i>."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
@@ -978,7 +978,7 @@ msgid ""
 "An analytic account is required in order to use timesheets."
 msgstr ""
 "Kostenplaats waaraan dit project, zijn taken en zijn urenstaten zijn gekoppeld.\n"
-"Volg de kosten en omzet van je project door deze kostenplaats in te stellen op je gerelateerde documenten (bijv. verkooporders, facturen, inkooporders, leveranciersfacturen, onkosten, enz.).\n"
+"Volg de kosten en omzet van je project door deze kostenplaats in te stellen op je gerelateerde documenten (bijv. verkooporders, facturen, inkooporders, leveranciersfacturen, declaratie, enz.).\n"
 "Deze kostenplaats kan, als nodig, voor elke taak afzonderlijk worden gewijzigd.\n"
 "Om gebruik te kunnen maken van urenstaten is een kostenplaats vereist."
 
@@ -990,7 +990,7 @@ msgid ""
 "By default, the analytic account of the project is set. However, it can be changed on each task individually if necessary."
 msgstr ""
 "Kostenplaats waaraan deze taak en de bijbehorende urenstaten zijn gekoppeld.\n"
-"Houd de kosten en omzet van je taak bij door de kostenplaats in te stellen op je gerelateerde documenten (bijv. verkooporders, facturen, inkooporders, leveranciersfacturen, onkosten, enz.).\n"
+"Houd de kosten en omzet van je taak bij door de kostenplaats in te stellen op je gerelateerde documenten (bijv. verkooporders, facturen, inkooporders, leveranciersfacturen, declaratie, enz.).\n"
 "Standaard is de kostenplaats van het project ingesteld. Het kan echter indien nodig voor elke taak afzonderlijk worden gewijzigd."
 
 #. module: project
@@ -1151,7 +1151,7 @@ msgstr "Toegewezen aan"
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 #, python-format
 msgid "Assignees"
-msgstr "Toegewezen aan"
+msgstr "Toegewezen personen"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__date_assign
@@ -1488,7 +1488,7 @@ msgid ""
 "Rating when changing stage: an email will be automatically sent when the task reaches the stage on which the rating email template is set.\n"
 "Periodic rating: an email will be automatically sent at regular intervals as long as the task remains in the stage in which the rating email template is set."
 msgstr ""
-"Verzamel feedback van je klanten door hen een beoordelingsverzoek te sturen wanneer een taak een bepaalde fase ingaat. Om dit te doen, definieer je een beoordelings-e-mailsjabloon op de overeenkomstige fasen.\n"
+"Verzamel feedback van je klanten door hen een beoordelingsverzoek te sturen wanneer een taak een bepaalde fase ingaat. Om dit te doen, definieer je een beoordelings-e-mailsjabloon op de overeenkomstige fases.\n"
 "Beoordeling bij verandering van fase: er wordt automatisch een e-mail verzonden wanneer de taak de fase bereikt waarop de beoordelingsmailsjabloon is ingesteld.\n"
 "Periodieke beoordeling: er wordt automatisch een e-mail verzonden met regelmatige tussenpozen, zolang de taak in de fase blijft waarin de beoordelingsmailsjabloon is ingesteld."
 
@@ -1756,7 +1756,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_bounced_content
 msgid "Custom Bounced Message"
-msgstr "Aangepast teruggestuurd bericht"
+msgstr "Aangepast bouncebericht"
 
 #. module: project
 #. odoo-python
@@ -1788,13 +1788,13 @@ msgstr "Klant e-mail"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Customer Feedback"
-msgstr "Klant feedback"
+msgstr "Klantfeedback"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__access_url
 #: model:ir.model.fields,help:project.field_project_task__access_url
 msgid "Customer Portal URL"
-msgstr "Klant portaal URL"
+msgstr "Klantenportaal URL"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.rating_rating_action_project_report
@@ -1802,7 +1802,7 @@ msgstr "Klant portaal URL"
 #: model:ir.model.fields,field_description:project.field_res_config_settings__group_project_rating
 #: model:ir.ui.menu,name:project.rating_rating_menu_project
 msgid "Customer Ratings"
-msgstr "Klantenbeoordelingen"
+msgstr "Klantbeoordelingen"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_status
@@ -2171,8 +2171,8 @@ msgstr "Ontevreden"
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
 msgstr ""
-"Heeft geen toegang, sla deze gegevens over voor de gebruikers overzicht "
-"e-mail"
+"Heeft geen toegang, sla deze gegevens over voor de gebruikers "
+"samenvattingsmail"
 
 #. module: project
 #. odoo-python
@@ -2385,7 +2385,7 @@ msgstr "Gevouwen in kanban"
 #: model:ir.model.fields,help:project.field_project_task__is_closed
 #: model:ir.model.fields,help:project.field_report_project_task_user__is_closed
 msgid "Folded in Kanban stages are closing stages."
-msgstr "Gevouwen Kanban-fasen zijn slotfasen."
+msgstr "Gevouwen Kanban-fases zijn slotfases."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -2477,7 +2477,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Get customer feedback"
-msgstr "Krijg klant feedback"
+msgstr "Krijg klantfeedback"
 
 #. module: project
 #. odoo-python
@@ -2518,7 +2518,7 @@ msgstr "Grijs kanban label"
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Group By"
-msgstr "Groepeer op"
+msgstr "Groeperen op"
 
 #. module: project
 #. odoo-javascript
@@ -2585,13 +2585,6 @@ msgstr "Uren"
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "How’s this project going?"
 msgstr "Hoe gaat het met dit project?"
-
-#. module: project
-#. odoo-python
-#: code:addons/project/models/project.py:0
-#, python-format
-msgid "I take it"
-msgstr "Ik neem hem"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_collaborator__id
@@ -2675,11 +2668,12 @@ msgstr ""
 #: model:ir.model.fields,help:project.field_project_task_type__fold
 msgid ""
 "If enabled, this stage will be displayed as folded in the Kanban view of "
-"your tasks. Tasks in a folded stage are considered as closed."
+"your tasks. Tasks in a folded stage are considered as closed (not applicable"
+" to personal stages)."
 msgstr ""
-"Indien ingeschakeld, wordt deze fase weergegeven als gevouwen in de Kanban-"
+"Indien ingeschakeld, wordt deze fase weergegeven als gevouwen in de kanban-"
 "weergave van je taken. Taken in een gevouwen fase worden als gesloten "
-"beschouwd."
+"beschouwd (niet van toepassing op persoonlijke fases)."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__rating_template_id
@@ -3159,6 +3153,13 @@ msgstr "Schrijf een reactie"
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
+#, python-format
+msgid "Let's create your first <b>stage</b>."
+msgstr "Laten we je eerste <b>fase</b> maken."
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/js/tours/project.js:0
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Let's create your first <b>project</b>."
@@ -3170,6 +3171,13 @@ msgstr "Maak je eerste <b>project</b> aan."
 #, python-format
 msgid "Let's create your first <b>task</b>."
 msgstr "Maak je eerste <b>taak</b> aan."
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/js/tours/project.js:0
+#, python-format
+msgid "Let's create your second <b>stage</b>."
+msgstr "Laten we je tweede <b>fase</b> maken."
 
 #. module: project
 #. odoo-javascript
@@ -3605,6 +3613,11 @@ msgstr "Volgende herhaling"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
+msgid "No Customer"
+msgstr "Geen klant"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 msgid "No Milestone"
 msgstr "Geen milestone"
 
@@ -3641,7 +3654,7 @@ msgstr "Geen bijdragers gevonden"
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_project_report
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_task
 msgid "No customer ratings yet"
-msgstr "Nog geen klantenbeoordelingen"
+msgstr "Nog geen klantbeoordelingen"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.action_project_task_burndown_chart_report
@@ -3761,7 +3774,7 @@ msgstr "Aantal fouten"
 #: model:ir.model.fields,help:project.field_project_project__message_needaction_counter
 #: model:ir.model.fields,help:project.field_project_task__message_needaction_counter
 #: model:ir.model.fields,help:project.field_project_update__message_needaction_counter
-msgid "Number of messages which requires an action"
+msgid "Number of messages requiring action"
 msgstr "Aantal berichten die actie vereisen"
 
 #. module: project
@@ -4020,7 +4033,7 @@ msgid ""
 "Plan resource allocation across projects and estimate deadlines more "
 "accurately"
 msgstr ""
-"Plan de toewijzing van middelen over projecten en schat deadlines "
+"Plan de toewijzing van resources over projecten en schat deadlines "
 "nauwkeuriger in"
 
 #. module: project
@@ -4842,7 +4855,7 @@ msgstr "Zoek in alle"
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in Assignees"
-msgstr "Zoeken in toegewezen aan"
+msgstr "Zoeken in toegewezen personen"
 
 #. module: project
 #. odoo-python
@@ -4950,7 +4963,7 @@ msgstr "Status instellen"
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Set a Rating Email Template on Stages"
-msgstr "Stel een beoordelings-e-mailsjabloon in op fasen"
+msgstr "Stel een beoordelings-e-mailsjabloon in op fases"
 
 #. module: project
 #: model:mail.template,description:project.project_done_email_template
@@ -4967,8 +4980,8 @@ msgid ""
 "Set this template on a project stage to request feedback from your "
 "customers. Enable the \"customer ratings\" feature on the project"
 msgstr ""
-"Definieer dit sjabloon op de fase van een project om feedback te vragen van "
-"je klanten. Activeer de \"klantenbeoordelingsfunctie\" op het project"
+"Definieer deze sjabloon op de fase van een project om feedback te vragen van"
+" je klanten. Activeer de \"klantbeoordelingsfunctie\" op het project"
 
 #. module: project
 #: model:mail.template,description:project.mail_template_data_project_task
@@ -4977,7 +4990,7 @@ msgid ""
 "stages"
 msgstr ""
 "Stel deze sjabloon in op de fase van een project om e-mail te automatiseren "
-"wanneer taken de fasen bereiken"
+"wanneer taken de fases bereiken"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_config_settings_action
@@ -5394,12 +5407,12 @@ msgstr "Omschrijving van de taak..."
 #. module: project
 #: model:mail.message.subtype,name:project.mt_task_progress
 msgid "Task in Progress"
-msgstr "Taak in uitvoering"
+msgstr "Taak in behandeling"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Task in progress. Click to block or set as done."
-msgstr "Taak in bewerking. Klik op blokkeer of zet op gereed."
+msgstr "Taak in behandeling. Klik op blokkeer of zet op gereed."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
@@ -5715,7 +5728,7 @@ msgid ""
 "This will archive the stages and all the tasks they contain from the "
 "following projects:"
 msgstr ""
-"Hiermee worden de fasen en alle taken die ze bevatten van de volgende "
+"Hiermee worden de fases en alle taken die ze bevatten van de volgende "
 "projecten gearchiveerd:"
 
 #. module: project
@@ -5755,7 +5768,7 @@ msgstr "Tip: Maak taken van inkomende e-mails"
 #: model:digest.tip,name:project.digest_tip_project_0
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_0
 msgid "Tip: Customize tasks and stages according to the project"
-msgstr "Tip: pas taken en fasen aan volgens het project"
+msgstr "Tip: pas taken en fases aan volgens het project"
 
 #. module: project
 #. odoo-python
@@ -6205,7 +6218,7 @@ msgstr "Werktijd om te sluiten"
 msgid ""
 "Would you like to unarchive all of the tasks contained in these stages as "
 "well?"
-msgstr "Wil je ook alle taken in deze fasen de-archiveren?"
+msgstr "Wil je ook alle taken in deze fases de-archiveren?"
 
 #. module: project
 #. odoo-javascript
@@ -6279,7 +6292,7 @@ msgid ""
 "You cannot delete stages containing tasks. You can either archive them or "
 "first delete all of their tasks."
 msgstr ""
-"Je kunt geen fasen met taken verwijderen. Je kunt ze archiveren of eerst al "
+"Je kunt geen fases met taken verwijderen. Je kunt ze archiveren of eerst al "
 "de taken verwijderen."
 
 #. module: project
@@ -6288,7 +6301,7 @@ msgid ""
 "You cannot delete stages containing tasks. You should first delete all of "
 "their tasks."
 msgstr ""
-"Je kunt geen fasen met taken verwijderen. Je moet eerst al hun taken "
+"Je kunt geen fases met taken verwijderen. Je moet eerst al hun taken "
 "verwijderen."
 
 #. module: project
@@ -6385,12 +6398,12 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_kanban
 msgid "assignee"
-msgstr "toegewezen"
+msgstr "toegewezen persoon"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_kanban
 msgid "assignees"
-msgstr "toegewezen aan"
+msgstr "toegewezen personen"
 
 #. module: project
 #. odoo-javascript

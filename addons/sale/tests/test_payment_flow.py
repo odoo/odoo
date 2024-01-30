@@ -19,7 +19,7 @@ class TestSalePayment(AccountPaymentCommon, SaleCommon, PaymentHttpCommon):
 
         # Replace PaymentCommon defaults by SaleCommon ones
         cls.currency = cls.sale_order.currency_id
-        cls.partner = cls.sale_order.partner_id
+        cls.partner = cls.sale_order.partner_invoice_id
 
     def test_11_so_payment_link(self):
         # test customized /payment/pay route with sale_order_id param
@@ -35,7 +35,7 @@ class TestSalePayment(AccountPaymentCommon, SaleCommon, PaymentHttpCommon):
             patched.assert_called_once_with(ANY, logged_in=ANY, sale_order_id=ANY)
 
         self.assertEqual(tx_context['currency_id'], self.sale_order.currency_id.id)
-        self.assertEqual(tx_context['partner_id'], self.sale_order.partner_id.id)
+        self.assertEqual(tx_context['partner_id'], self.sale_order.partner_invoice_id.id)
         self.assertEqual(tx_context['amount'], self.sale_order.amount_total)
         self.assertEqual(tx_context['sale_order_id'], self.sale_order.id)
 
@@ -56,7 +56,7 @@ class TestSalePayment(AccountPaymentCommon, SaleCommon, PaymentHttpCommon):
 
         self.assertEqual(tx_sudo.sale_order_ids, self.sale_order)
         self.assertEqual(tx_sudo.amount, self.amount)
-        self.assertEqual(tx_sudo.partner_id, self.sale_order.partner_id)
+        self.assertEqual(tx_sudo.partner_id, self.sale_order.partner_invoice_id)
         self.assertEqual(tx_sudo.company_id, self.sale_order.company_id)
         self.assertEqual(tx_sudo.currency_id, self.sale_order.currency_id)
         self.assertEqual(tx_sudo.reference, self.sale_order.name)
@@ -70,6 +70,17 @@ class TestSalePayment(AccountPaymentCommon, SaleCommon, PaymentHttpCommon):
         self.assertTrue(tx_sudo.payment_id)
         self.assertEqual(tx_sudo.payment_id.state, 'posted')
 
+    def test_so_payment_link_with_different_partner_invoice(self):
+        # test customized /payment/pay route with sale_order_id param
+        # partner_id and partner_invoice_id different on the so
+        self.sale_order.partner_invoice_id = self.portal_partner
+        self.partner = self.sale_order.partner_invoice_id
+        route_values = self._prepare_pay_values()
+        route_values['sale_order_id'] = self.sale_order.id
+
+        tx_context = self._get_tx_checkout_context(**route_values)
+        self.assertEqual(tx_context['partner_id'], self.sale_order.partner_invoice_id.id)
+
     def test_12_so_partial_payment_link(self):
         # test customized /payment/pay route with sale_order_id param
         # partial amount specified
@@ -81,7 +92,7 @@ class TestSalePayment(AccountPaymentCommon, SaleCommon, PaymentHttpCommon):
 
         self.assertEqual(tx_context['reference_prefix'], self.reference)
         self.assertEqual(tx_context['currency_id'], self.sale_order.currency_id.id)
-        self.assertEqual(tx_context['partner_id'], self.sale_order.partner_id.id)
+        self.assertEqual(tx_context['partner_id'], self.sale_order.partner_invoice_id.id)
         self.assertEqual(tx_context['amount'], self.amount)
         self.assertEqual(tx_context['sale_order_id'], self.sale_order.id)
 
@@ -99,7 +110,7 @@ class TestSalePayment(AccountPaymentCommon, SaleCommon, PaymentHttpCommon):
 
         self.assertEqual(tx_sudo.sale_order_ids, self.sale_order)
         self.assertEqual(tx_sudo.amount, self.amount)
-        self.assertEqual(tx_sudo.partner_id, self.sale_order.partner_id)
+        self.assertEqual(tx_sudo.partner_id, self.sale_order.partner_invoice_id)
         self.assertEqual(tx_sudo.company_id, self.sale_order.company_id)
         self.assertEqual(tx_sudo.currency_id, self.sale_order.currency_id)
         self.assertEqual(tx_sudo.reference, self.reference)
@@ -118,7 +129,7 @@ class TestSalePayment(AccountPaymentCommon, SaleCommon, PaymentHttpCommon):
 
         self.assertEqual(tx_context['reference_prefix'], self.reference)
         self.assertEqual(tx_context['currency_id'], self.sale_order.currency_id.id)
-        self.assertEqual(tx_context['partner_id'], self.sale_order.partner_id.id)
+        self.assertEqual(tx_context['partner_id'], self.sale_order.partner_invoice_id.id)
         self.assertEqual(tx_context['amount'], self.amount)
         self.assertEqual(tx_context['sale_order_id'], self.sale_order.id)
 
@@ -136,7 +147,7 @@ class TestSalePayment(AccountPaymentCommon, SaleCommon, PaymentHttpCommon):
 
         self.assertEqual(tx2_sudo.sale_order_ids, self.sale_order)
         self.assertEqual(tx2_sudo.amount, self.amount)
-        self.assertEqual(tx2_sudo.partner_id, self.sale_order.partner_id)
+        self.assertEqual(tx2_sudo.partner_id, self.sale_order.partner_invoice_id)
         self.assertEqual(tx2_sudo.company_id, self.sale_order.company_id)
         self.assertEqual(tx2_sudo.currency_id, self.sale_order.currency_id)
 

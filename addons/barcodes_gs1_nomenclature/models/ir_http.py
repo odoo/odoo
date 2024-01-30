@@ -7,6 +7,7 @@ from odoo import models
 class IrHttp(models.AbstractModel):
     _inherit = 'ir.http'
 
+    # TODO: remove in master.
     def session_info(self):
         res = super().session_info()
         nomenclature = self.env.company.sudo().nomenclature_id

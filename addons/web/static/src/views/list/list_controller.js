@@ -79,6 +79,8 @@ export class ListController extends Component {
             rootState,
         });
 
+        this.optionalActiveFields = [];
+
         onWillStart(async () => {
             this.isExportEnable = await this.userService.hasGroup("base.group_allow_export");
         });
@@ -161,7 +163,7 @@ export class ListController extends Component {
 
     async createRecord({ group } = {}) {
         const list = (group && group.list) || this.model.root;
-        if (this.editable) {
+        if (this.editable && !list.isGrouped) {
             if (!(list instanceof DynamicRecordList)) {
                 throw new Error("List should be a DynamicRecordList");
             }
@@ -313,10 +315,15 @@ export class ListController extends Component {
         return list.isGrouped ? list.nbTotalRecords : list.count;
     }
 
+    onOptionalFieldsChanged(optionalActiveFields) {
+        this.optionalActiveFields = optionalActiveFields;
+    }
+
     get defaultExportList() {
         return unique(
             this.props.archInfo.columns
                 .filter((col) => col.type === "field")
+                .filter((col) => !col.optional || this.optionalActiveFields[col.name])
                 .map((col) => this.props.fields[col.name])
                 .filter((field) => field.exportable !== false)
         );
@@ -432,13 +439,13 @@ export class ListController extends Component {
         }
     }
 
-    async onDeleteSelectedRecords() {
+    get deleteConfirmationDialogProps() {
         const root = this.model.root;
         const body =
             root.isDomainSelected || root.selection.length > 1
                 ? this.env._t("Are you sure you want to delete these records?")
                 : this.env._t("Are you sure you want to delete this record?");
-        const dialogProps = {
+        return {
             body,
             confirm: async () => {
                 const total = root.count;
@@ -463,7 +470,10 @@ export class ListController extends Component {
             },
             cancel: () => {},
         };
-        this.dialogService.add(ConfirmationDialog, dialogProps);
+    }
+
+    async onDeleteSelectedRecords() {
+        this.dialogService.add(ConfirmationDialog, this.deleteConfirmationDialogProps);
     }
 
     discardSelection() {

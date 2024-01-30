@@ -231,15 +231,16 @@ options.registry.WebsiteSaleGridLayout = options.Class.extend({
      * @see this.selectClass for params
      */
     setPpg: function (previewMode, widgetValue, params) {
+        const PPG_LIMIT = 10000;
         const ppg = parseInt(widgetValue);
         if (!ppg || ppg < 1) {
             return false;
         }
-        this.ppg = ppg;
+        this.ppg = Math.min(ppg, PPG_LIMIT);
         return this._rpc({
             route: '/shop/config/website',
             params: {
-                'shop_ppg': ppg,
+                'shop_ppg': this.ppg,
             },
         });
     },
@@ -955,13 +956,17 @@ options.registry.ReplaceMedia.include({
      * Removes the image in the back-end
      */
     async removeMedia() {
-        this._rpc({
-            route: '/shop/product/remove-image',
-            params: {
-                image_res_model: this.recordModel,
-                image_res_id: this.recordId,
-            },
-        }).then(() => this.trigger_up('request_save', {reload: true, optionSelector: '#product_detail_main'}));
+        if (this.recordModel === "product.image") {
+            // Unlink the "product.image" record as it is not the main product
+            // image.
+            await this._rpc({
+                model: "product.image",
+                method: "unlink",
+                args: [[this.recordId]],
+            });
+        }
+        this.$target[0].remove();
+        this.trigger_up("request_save", {reload: true, optionSelector: "#product_detail_main"});
     },
     /**
      * Change sequence of product page images

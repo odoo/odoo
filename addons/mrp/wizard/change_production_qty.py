@@ -3,7 +3,7 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.tools import float_is_zero, float_round
+from odoo.tools import float_is_zero
 
 
 class ChangeProductionQty(models.TransientModel):
@@ -42,7 +42,7 @@ class ChangeProductionQty(models.TransientModel):
             if self._need_quantity_propagation(move, qty):
                 push_moves |= move.copy({'product_uom_qty': qty})
             else:
-                move.write({'product_uom_qty': move.product_uom_qty + qty})
+                self._update_product_qty(move, qty)
 
         if push_moves:
             push_moves._action_confirm()._action_assign()
@@ -52,6 +52,10 @@ class ChangeProductionQty(models.TransientModel):
     @api.model
     def _need_quantity_propagation(self, move, qty):
         return move.move_dest_ids and not float_is_zero(qty, precision_rounding=move.product_uom.rounding)
+
+    @api.model
+    def _update_product_qty(self, move, qty):
+        move.write({'product_uom_qty': move.product_uom_qty + qty})
 
     def change_prod_qty(self):
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
@@ -67,10 +71,8 @@ class ChangeProductionQty(models.TransientModel):
                 ))
             old_production_qty = production.product_qty
             new_production_qty = wizard.product_qty
-            done_moves = production.move_finished_ids.filtered(lambda x: x.state == 'done' and x.product_id == production.product_id)
-            qty_produced = production.product_id.uom_id._compute_quantity(sum(done_moves.mapped('product_qty')), production.product_uom_id)
 
-            factor = (new_production_qty - qty_produced) / (old_production_qty - qty_produced)
+            factor = new_production_qty / old_production_qty
             update_info = production._update_raw_moves(factor)
             documents = {}
             for move, old_qty, new_qty in update_info:
@@ -83,8 +85,12 @@ class ChangeProductionQty(models.TransientModel):
                         else:
                             documents[key] = [value]
             production._log_manufacture_exception(documents)
-            self._update_finished_moves(production, new_production_qty - qty_produced, old_production_qty - qty_produced)
+            self._update_finished_moves(production, new_production_qty, old_production_qty)
             production.write({'product_qty': new_production_qty})
+            if not float_is_zero(production.qty_producing, precision_rounding=production.product_uom_id.rounding) and\
+               not production.workorder_ids:
+                production.qty_producing = new_production_qty
+                production._set_qty_producing()
 
             for wo in production.workorder_ids:
                 operation = wo.operation_id

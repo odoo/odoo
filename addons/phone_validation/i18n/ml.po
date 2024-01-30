@@ -3,6 +3,7 @@
 # 	* phone_validation
 # 
 # Translators:
+# Hasna, 2023
 # Niyas Raphy, 2023
 # 
 msgid ""
@@ -47,6 +48,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_view_search
 msgid "Archived"
 msgstr "ആർക്കൈവ് ചെയ്തു"
+
+#. module: phone_validation
+#: code:addons/phone_validation/models/phone_blacklist.py:0
+#, python-format
+msgid "Are you sure you want to unblacklist this Phone Number?"
+msgstr ""
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_attachment_count
@@ -142,13 +149,13 @@ msgstr "ഫോള്ളോവെഴ്‌സ് "
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_partner_ids
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "അനുയായികൾ (പങ്കാളികൾ)"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__has_message
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__has_message
 msgid "Has Message"
-msgstr ""
+msgstr "സന്ദേശമുണ്ട്"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__id
@@ -214,7 +221,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_is_follower
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "അനുയായിയാണ്"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist____last_update
@@ -278,8 +285,10 @@ msgstr "പിശകുകളുടെ എണ്ണം"
 #. module: phone_validation
 #: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__message_needaction_counter
 #: model:ir.model.fields,help:phone_validation.field_phone_blacklist__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "ഒരു പ്രവർത്തനം ആവശ്യമായ സന്ദേശങ്ങളുടെ എണ്ണം"
+msgid "Number of messages requiring action"
+msgstr ""
+"നടപടി ആവശ്യമായ സന്ദേശങ്ങളുടെ എണ്ണം\n"
+" "
 
 #. module: phone_validation
 #: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__message_has_error_counter
@@ -325,7 +334,7 @@ msgstr ""
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__phone_mobile_search
 msgid "Phone/Mobile"
-msgstr ""
+msgstr "ഫോൺ/മൊബൈൽ"
 
 #. module: phone_validation
 #: code:addons/phone_validation/models/mail_thread_phone.py:0

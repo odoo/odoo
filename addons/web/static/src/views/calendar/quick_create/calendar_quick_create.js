@@ -79,6 +79,7 @@ CalendarQuickCreate.components = {
     Dialog,
 };
 CalendarQuickCreate.props = {
+    title: { type: String, optional: true },
     close: Function,
     record: Object,
     model: Object,

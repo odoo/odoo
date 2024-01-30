@@ -12,10 +12,10 @@ const VIDEO_URL = 'https://www.youtube.com/watch?v=Dpq87YCHmJc';
 wTourUtils.registerWebsitePreviewTour('test_replace_media', {
     url: '/',
     test: true,
+    edition: true,
 }, [
-    wTourUtils.clickOnEdit(),
     {
-        trigger: '.editor_enable.editor_has_snippets',
+        trigger: "body",
         run: function () {
             // Patch the VideoDialog so that it does not do external calls
             // during the test (note that we don't unpatch but as the patch
@@ -48,6 +48,8 @@ wTourUtils.registerWebsitePreviewTour('test_replace_media', {
         trigger: "#oe_snippets we-title:contains('Image') .o_we_image_weight:contains('kb')",
         run: function () {}, // check
     },
+    wTourUtils.changeOption("ImageTools", 'we-select[data-name="shape_img_opt"] we-toggler'),
+    wTourUtils.changeOption("ImageTools", "we-button[data-set-img-shape]"),
     {
         content: "replace image",
         trigger: "#oe_snippets we-button[data-replace-media]",
@@ -55,6 +57,11 @@ wTourUtils.registerWebsitePreviewTour('test_replace_media', {
     {
         content: "select svg",
         trigger: ".o_select_media_dialog img[title='sample.svg']",
+    },
+    {
+        content: "ensure the svg doesn't have a shape",
+        trigger: "iframe .s_picture figure img:not([data-shape])",
+        run: function () {}, // check
     },
     {
         content: "ensure image size is not displayed",

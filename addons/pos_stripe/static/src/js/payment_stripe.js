@@ -26,6 +26,7 @@ let PaymentStripe = PaymentInterface.extend({
             let data = await rpc.query({
                 model: 'pos.payment.method',
                 method: 'stripe_connection_token',
+                kwargs: { context: this.pos.env.session.user_context },
             }, {
                 silent: true,
             });
@@ -34,7 +35,8 @@ let PaymentStripe = PaymentInterface.extend({
             }
             return data.secret;
         } catch (error) {
-            this._showError(error.message.message, 'Fetch Token');
+            const message = error.message.code === 200 ? error.message.data.message : error.message.message;
+            this._showError(message, 'Fetch Token');
             this.terminal = false;
         };
     },
@@ -115,6 +117,29 @@ let PaymentStripe = PaymentInterface.extend({
         ));
     },
 
+    _getCapturedCardAndTransactionId: function (processPayment) {
+        const charges = processPayment.paymentIntent.charges;
+        if (!charges) {
+            return [false, false];
+        }
+
+        const intentCharge = charges.data[0];
+        const processPaymentDetails = intentCharge.payment_method_details;
+        const cardPresentBrand = processPaymentDetails.card_present.brand;
+
+        if (processPaymentDetails.type === 'interac_present') {
+            // Canadian interac payments should not be captured:
+            // https://stripe.com/docs/terminal/payments/regional?integration-country=CA#create-a-paymentintent
+            return ['interac', intentCharge.id];
+        } else if (cardPresentBrand.includes('eftpos')) {
+            // Australian eftpos should not be captured:
+            // https://stripe.com/docs/terminal/payments/regional?integration-country=AU
+            return [cardPresentBrand, intentCharge.id];
+        }
+
+        return [false, false];
+    },
+
     collectPayment: async function (amount) {
         let line = this.pos.get_order().selected_paymentline;
         let clientSecret = await this.fetchPaymentIntentClientSecret(line.payment_method, amount);
@@ -138,7 +163,15 @@ let PaymentStripe = PaymentInterface.extend({
                 return false;
             } else if (processPayment.paymentIntent) {
                 line.set_payment_status('waitingCapture');
-                await this.captureAfterPayment(processPayment, line);
+
+                const [captured_card_type, captured_transaction_id] = this._getCapturedCardAndTransactionId(processPayment);
+                if (captured_card_type && captured_transaction_id) {
+                    line.card_type = captured_card_type;
+                    line.transaction_id = captured_transaction_id;
+                } else {
+                    await this.captureAfterPayment(processPayment, line);
+                }
+
                 line.set_payment_status('done');
                 return true;
             }
@@ -173,6 +206,7 @@ let PaymentStripe = PaymentInterface.extend({
                 model: 'pos.payment.method',
                 method: 'stripe_capture_payment',
                 args: [paymentIntentId],
+                kwargs: { context: this.pos.env.session.user_context },
             }, {
                 silent: true,
             });
@@ -181,7 +215,8 @@ let PaymentStripe = PaymentInterface.extend({
             }
             return data;
         } catch (error) {
-            this._showError(error.message.message, 'Capture Payment');
+            const message = error.message.code === 200 ? error.message.data.message : error.message.message;
+            this._showError(message, 'Capture Payment');
             return false;
         };
     },
@@ -192,6 +227,7 @@ let PaymentStripe = PaymentInterface.extend({
                 model: 'pos.payment.method',
                 method: 'stripe_payment_intent',
                 args: [[payment_method.id], amount],
+                kwargs: { context: this.pos.env.session.user_context },
             }, {
                 silent: true,
             });
@@ -200,7 +236,8 @@ let PaymentStripe = PaymentInterface.extend({
             }
             return data.client_secret;
         } catch (error) {
-            this._showError(error.message.message, 'Fetch Secret');
+            const message = error.message.code === 200 ? error.message.data.message : error.message.message;
+            this._showError(message, 'Fetch Secret');
             return false;
         };
     },

@@ -109,8 +109,15 @@ class AccruedExpenseRevenue(models.TransientModel):
                 },
             })
 
+    def _get_computed_account(self, order, product, is_purchase):
+        accounts = product.with_company(order.company_id).product_tmpl_id.get_product_accounts(fiscal_pos=order.fiscal_position_id)
+        if is_purchase:
+            return accounts['expense']
+        else:
+            return accounts['income']
+
     def _compute_move_vals(self):
-        def _get_aml_vals(order, balance, amount_currency, account_id, label=""):
+        def _get_aml_vals(order, balance, amount_currency, account_id, label="", analytic_distribution=None):
             if not is_purchase:
                 balance *= -1
                 amount_currency *= -1
@@ -120,6 +127,10 @@ class AccruedExpenseRevenue(models.TransientModel):
                 'credit': balance * -1 if balance < 0 else 0.0,
                 'account_id': account_id,
             }
+            if analytic_distribution:
+                values.update({
+                    'analytic_distribution': analytic_distribution,
+                })
             if len(order) == 1 and self.company_id.currency_id != order.currency_id:
                 values.update({
                     'amount_currency': amount_currency,
@@ -147,11 +158,12 @@ class AccruedExpenseRevenue(models.TransientModel):
             if len(orders) == 1 and self.amount and order.order_line:
                 total_balance = self.amount
                 order_line = order.order_line[0]
-                if is_purchase:
-                    account = order_line.product_id.property_account_expense_id or order_line.product_id.categ_id.property_account_expense_categ_id
-                else:
-                    account = order_line.product_id.property_account_income_id or order_line.product_id.categ_id.property_account_income_categ_id
-                values = _get_aml_vals(order, self.amount, 0, account.id, label=_('Manual entry'))
+                account = self._get_computed_account(order, order_line.product_id, is_purchase)
+                distribution = order_line.analytic_distribution if order_line.analytic_distribution else {}
+                if not is_purchase and order.analytic_account_id:
+                    analytic_account_id = str(order.analytic_account_id.id)
+                    distribution[analytic_account_id] = distribution.get(analytic_account_id, 0) + 100.0
+                values = _get_aml_vals(order, self.amount, 0, account.id, label=_('Manual entry'), analytic_distribution=distribution)
                 move_lines.append(Command.create(values))
             else:
                 other_currency = self.company_id.currency_id != order.currency_id
@@ -177,18 +189,22 @@ class AccruedExpenseRevenue(models.TransientModel):
                 )
                 for order_line in lines:
                     if is_purchase:
-                        account = order_line.product_id.property_account_expense_id or order_line.product_id.categ_id.property_account_expense_categ_id
+                        account = self._get_computed_account(order, order_line.product_id, is_purchase)
                         amount = self.company_id.currency_id.round(order_line.qty_to_invoice * order_line.price_unit / rate)
                         amount_currency = order_line.currency_id.round(order_line.qty_to_invoice * order_line.price_unit)
                         fnames = ['qty_to_invoice', 'qty_received', 'qty_invoiced', 'invoice_lines']
                         label = _('%s - %s; %s Billed, %s Received at %s each', order.name, _ellipsis(order_line.name, 20), order_line.qty_invoiced, order_line.qty_received, formatLang(self.env, order_line.price_unit, currency_obj=order.currency_id))
                     else:
-                        account = order_line.product_id.property_account_income_id or order_line.product_id.categ_id.property_account_income_categ_id
+                        account = self._get_computed_account(order, order_line.product_id, is_purchase)
                         amount = self.company_id.currency_id.round(order_line.untaxed_amount_to_invoice / rate)
                         amount_currency = order_line.untaxed_amount_to_invoice
                         fnames = ['qty_to_invoice', 'untaxed_amount_to_invoice', 'qty_invoiced', 'qty_delivered', 'invoice_lines']
                         label = _('%s - %s; %s Invoiced, %s Delivered at %s each', order.name, _ellipsis(order_line.name, 20), order_line.qty_invoiced, order_line.qty_delivered, formatLang(self.env, order_line.price_unit, currency_obj=order.currency_id))
-                    values = _get_aml_vals(order, amount, amount_currency, account.id, label=label)
+                    distribution = order_line.analytic_distribution if order_line.analytic_distribution else {}
+                    if not is_purchase and order.analytic_account_id:
+                        analytic_account_id = str(order.analytic_account_id.id)
+                        distribution[analytic_account_id] = distribution.get(analytic_account_id, 0) + 100.0
+                    values = _get_aml_vals(order, amount, amount_currency, account.id, label=label, analytic_distribution=distribution)
                     move_lines.append(Command.create(values))
                     total_balance += amount
                 # must invalidate cache or o can mess when _create_invoices().action_post() of original order after this
@@ -196,7 +212,18 @@ class AccruedExpenseRevenue(models.TransientModel):
 
         if not self.company_id.currency_id.is_zero(total_balance):
             # globalized counterpart for the whole orders selection
-            values = _get_aml_vals(orders, -total_balance, 0.0, self.account_id.id, label=_('Accrued total'))
+            analytic_distribution = {}
+            total = sum(order.amount_total for order in orders)
+            for line in orders.order_line:
+                ratio = line.price_total / total
+                if not is_purchase and line.order_id.analytic_account_id:
+                    account_id = str(line.order_id.analytic_account_id.id)
+                    analytic_distribution.update({account_id: analytic_distribution.get(account_id, 0) +100.0*ratio})
+                if not line.analytic_distribution:
+                    continue
+                for account_id, distribution in line.analytic_distribution.items():
+                    analytic_distribution.update({account_id : analytic_distribution.get(account_id, 0) + distribution*ratio})
+            values = _get_aml_vals(orders, -total_balance, 0.0, self.account_id.id, label=_('Accrued total'), analytic_distribution=analytic_distribution)
             move_lines.append(Command.create(values))
 
         move_type = _('Expense') if is_purchase else _('Revenue')

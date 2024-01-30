@@ -4,7 +4,7 @@
 from collections import defaultdict
 
 from odoo import api, fields, models, _, Command
-from odoo.tools import get_lang
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, get_lang
 
 
 class PurchaseOrderGroup(models.Model):
@@ -59,7 +59,7 @@ class PurchaseOrder(models.Model):
 
         self.partner_id = partner.id
         self.fiscal_position_id = fpos.id
-        self.payment_term_id = payment_term.id,
+        self.payment_term_id = payment_term.id
         self.company_id = requisition.company_id.id
         self.currency_id = requisition.currency_id.id
         if not self.origin or requisition.name not in self.origin.split(', '):
@@ -215,22 +215,45 @@ class PurchaseOrder(models.Model):
         product_to_best_price_line = defaultdict(lambda: self.env['purchase.order.line'])
         product_to_best_date_line = defaultdict(lambda: self.env['purchase.order.line'])
         product_to_best_price_unit = defaultdict(lambda: self.env['purchase.order.line'])
-        order_lines = self.order_line | self.alternative_po_ids.order_line
-        for line in order_lines:
+        po_alternatives = self | self.alternative_po_ids
+
+        multiple_currencies = False
+        if len(po_alternatives.currency_id) > 1:
+            multiple_currencies = True
+
+        for line in po_alternatives.order_line:
             if not line.product_qty or not line.price_subtotal or line.state in ['cancel', 'purchase', 'done']:
                 continue
-            if not product_to_best_price_line[line.product_id] or product_to_best_price_line[line.product_id][0].price_subtotal > line.price_subtotal:
+
+            # if no best price line => no best price unit line either
+            if not product_to_best_price_line[line.product_id]:
                 product_to_best_price_line[line.product_id] = line
-            elif product_to_best_price_line[line.product_id][0].price_subtotal == line.price_subtotal:
-                product_to_best_price_line[line.product_id] |= line
+                product_to_best_price_unit[line.product_id] = line
+            else:
+                price_subtotal = line.price_subtotal
+                price_unit = line.price_unit
+                current_price_subtotal = product_to_best_price_line[line.product_id][0].price_subtotal
+                current_price_unit = product_to_best_price_unit[line.product_id][0].price_unit
+                if multiple_currencies:
+                    price_subtotal /= line.order_id.currency_rate
+                    price_unit /= line.order_id.currency_rate
+                    current_price_subtotal /= product_to_best_price_line[line.product_id][0].order_id.currency_rate
+                    current_price_unit /= product_to_best_price_unit[line.product_id][0].order_id.currency_rate
+
+                if current_price_subtotal > price_subtotal:
+                    product_to_best_price_line[line.product_id] = line
+                elif current_price_subtotal == price_subtotal:
+                    product_to_best_price_line[line.product_id] |= line
+                if current_price_unit > price_unit:
+                    product_to_best_price_unit[line.product_id] = line
+                elif current_price_unit == price_unit:
+                    product_to_best_price_unit[line.product_id] |= line
+
             if not product_to_best_date_line[line.product_id] or product_to_best_date_line[line.product_id][0].date_planned > line.date_planned:
                 product_to_best_date_line[line.product_id] = line
             elif product_to_best_date_line[line.product_id][0].date_planned == line.date_planned:
                 product_to_best_date_line[line.product_id] |= line
-            if not product_to_best_price_unit[line.product_id] or product_to_best_price_unit[line.product_id][0].price_unit > line.price_unit:
-                product_to_best_price_unit[line.product_id] = line
-            elif product_to_best_price_unit[line.product_id][0].price_unit == line.price_unit:
-                product_to_best_price_unit[line.product_id] |= line
+
         best_price_ids = set()
         best_date_ids = set()
         best_price_unit_ids = set()
@@ -263,6 +286,10 @@ class PurchaseOrderLine(models.Model):
                         date=pol.order_id.date_order and pol.order_id.date_order.date(),
                         uom_id=line.product_uom_id,
                         params=params)
+
+                    if not pol.date_planned:
+                        pol.date_planned = pol._get_date_planned(seller).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+
                     product_ctx = {'seller_id': seller.id, 'lang': get_lang(pol.env, partner.lang).code}
                     name = pol._get_product_purchase_description(pol.product_id.with_context(product_ctx))
                     if line.product_description_variants:

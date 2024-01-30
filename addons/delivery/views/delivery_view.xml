@@ -235,7 +235,7 @@
                         <field name="delivery_type" attrs="{'invisible':True}"/>
                         <label for="carrier_tracking_ref"/>
                         <div name="tracking">
-                            <field name="carrier_tracking_ref" class="oe_inline" attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}"/>
+                            <field name="carrier_tracking_ref" class="oe_inline text-break" attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}"/>
                             <button type='object' class="fa fa-arrow-right oe_link" confirm="Cancelling a delivery may not be undoable. Are you sure you want to continue?" name="cancel_shipment" string="Cancel" attrs="{'invisible':['|','|','|',('carrier_tracking_ref','=',False),('delivery_type','in', ['fixed', 'base_on_rule']),('delivery_type','=',False),('state','not in',('done'))]}"/>
                         </div>
                         <label for="weight" string="Weight"/>

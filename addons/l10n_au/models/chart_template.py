@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models
+from odoo import models, fields
 
 
 class AccountChartTemplate(models.Model):
@@ -12,5 +12,8 @@ class AccountChartTemplate(models.Model):
             company.write({
                 'fiscalyear_last_month': '6',
                 'fiscalyear_last_day': 30,
+                # Changing the opening date to the first day of the fiscal year.
+                # This way the opening entries will be set to the 30th of June.
+                'account_opening_date': fields.Date.context_today(self).replace(month=7, day=1),
             })
         return res

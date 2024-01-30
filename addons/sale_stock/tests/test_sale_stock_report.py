@@ -91,7 +91,7 @@ class TestSaleStockInvoices(TestSaleCommon):
 
     def setUp(self):
         super(TestSaleStockInvoices, self).setUp()
-
+        self.env.ref('base.group_user').write({'implied_ids': [(4, self.env.ref('stock.group_production_lot').id)]})
         self.product_by_lot = self.env['product.product'].create({
             'name': 'Product By Lot',
             'type': 'product',

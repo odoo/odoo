@@ -31,19 +31,19 @@
 # Janne Räty, 2022
 # Martin Trigaux, 2022
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2022
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2022
 # Marko Happonen <marko.happonen@sprintit.fi>, 2022
 # Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2022
 # Konsta Aavaranta, 2023
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-14 05:51+0000\n"
+"POT-Creation-Date: 2023-05-23 08:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
+"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -59,7 +59,10 @@ msgid ""
 "\n"
 "\n"
 "%s --> Product UoM is %s (%s) - Move UoM is %s (%s)"
-msgstr " %s -> Tuotteen UoM on %s (%s) - Siirrä UoM on %s (%s) \n"
+msgstr ""
+"\n"
+"\n"
+" %s -> Tuotteen mittayksikkö on %s (%s) - Siirron mittayksikkö on %s (%s) "
 
 #. module: stock
 #. odoo-python
@@ -262,7 +265,6 @@ msgid ""
 "* Available: When products are reserved, it is set to 'Available'.\n"
 "* Done: When the shipment is processed, the state is 'Done'."
 msgstr ""
-"\n"
 "* Uusi: Kun varastotilaus on luotu ja sitä ei ole vielä vahvistettu.\n"
 "* Odotetaan toista liikettä: Tämä tila näkyy, kun siirto odottaa toista, esimerkiksi ketjussa.\n"
 "* Odotetaan Saatavuutta: Tämä tila saavutetaan, kun hankintaratkaisu ei ole suora. Se saattaa vaatia aikataulutuksen suorittamista, joka on valmistettava komponentti ...\n"
@@ -380,33 +382,33 @@ msgstr ""
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Hello <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,<br/><br/>\n"
+"        Hello <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,<br><br>\n"
 "        We are glad to inform you that your order has been shipped.\n"
 "        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and object.carrier_tracking_ref\">\n"
 "            Your tracking reference is\n"
 "            <strong>\n"
 "            <t t-if=\"object.carrier_tracking_url\">\n"
-"                <t t-set=\"multiple_carrier_tracking\" t-value=\"object.get_multiple_carrier_tracking()\"/>\n"
+"                <t t-set=\"multiple_carrier_tracking\" t-value=\"object.get_multiple_carrier_tracking()\"></t>\n"
 "                <t t-if=\"multiple_carrier_tracking\">\n"
 "                    <t t-foreach=\"multiple_carrier_tracking\" t-as=\"line\">\n"
-"                        <br/><a t-att-href=\"line[1]\" target=\"_blank\" t-out=\"line[0] or ''\"/>\n"
+"                        <br><a t-att-href=\"line[1]\" target=\"_blank\" t-out=\"line[0] or ''\"></a>\n"
 "                    </t>\n"
 "                </t>\n"
 "                <t t-else=\"\">\n"
-"                    <a t-attf-href=\"{{ object.carrier_tracking_url }}\" target=\"_blank\" t-out=\"object.carrier_tracking_ref or ''\"/>.\n"
+"                    <a t-attf-href=\"{{ object.carrier_tracking_url }}\" target=\"_blank\" t-out=\"object.carrier_tracking_ref or ''\"></a>.\n"
 "                </t>\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
-"                <t t-out=\"object.carrier_tracking_ref or ''\"/>.\n"
+"                <t t-out=\"object.carrier_tracking_ref or ''\"></t>.\n"
 "            </t>\n"
 "            </strong>\n"
 "        </t>\n"
-"        <br/><br/>\n"
-"        Please find your delivery order attached for more details.<br/><br/>\n"
+"        <br><br>\n"
+"        Please find your delivery order attached for more details.<br><br>\n"
 "        Thank you,\n"
 "        <t t-if=\"user.signature\">\n"
-"            <br/>\n"
-"            <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"            <br>\n"
+"            <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -414,33 +416,33 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Hei <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,<br/><br/>\n"
-"        Meillä on ilo ilmoittaa, että tilauksesi on lähetetty.\n"
+"        Hei <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,<br><br>\n"
+"        Olemme iloisia voidessamme ilmoittaa, että tilauksesi on lähetetty.\n"
 "       <t t-if=\"hasattr(object, 'carrier_tracking_ref') and object.carrier_tracking_ref\"> \n"
 "            Seurantaviitteesi on\n"
 "           <strong> \n"
-"           <t t-if=\"object.carrier_tracking_url\">\n"
-"               <t t-set=\"multiple_carrier_tracking\" t-value=\"object.get_multiple_carrier_tracking()\"/> \n"
+"           <t t-if=\"object.carrier_tracking_url\"> \n"
+"               <t t-set=\"multiple_carrier_tracking\" t-value=\"object.get_multiple_carrier_tracking()\"></t>\n"
 "               <t t-if=\"multiple_carrier_tracking\">\n"
 "                    <t t-foreach=\"multiple_carrier_tracking\" t-as=\"line\">\n"
-"                        <br/><a t-att-href=\"line[1]\" target=\"_blank\" t-out=\"line[0] or ''\"/>\n"
+"                        <br><a t-att-href=\"line[1]\" target=\"_blank\" t-out=\"line[0] or ''\"></a>\n"
 "                    </t>\n"
 "                </t>\n"
 "               <t t-else=\"\"> \n"
-"                   <a t-attf-href=\"{{ object.carrier_tracking_url }}\" target=\"_blank\" t-out=\"object.carrier_tracking_ref or ''\"/>.\n"
+"                   <a t-attf-href=\"{{ object.carrier_tracking_url }}\" target=\"_blank\" t-out=\"object.carrier_tracking_ref or ''\"></a>.\n"
 "               </t>\n"
 "           </t>\n"
-"           <t t-else=\"\">\n"
-"               <t t-out=\"object.carrier_tracking_ref or ''\"/>.\n"
+"           <t t-else=\"\"> \n"
+"               <t t-out=\"object.carrier_tracking_ref or ''\"></t>.\n"
 "           </t>\n"
 "           </strong>\n"
 "       </t>\n"
-"       <br/><br/>\n"
-"        Lisätietoja saat liitteenä olevasta toimitustilauksesta.<br/><br/>\n"
+"       <br><br>\n"
+"        Lisätietoja saat liitteenä olevasta toimitustilauksesta.<br><br>\n"
 "        Kiitos,\n"
 "        <t t-if=\"user.signature\">\n"
-"            <br/>\n"
-"            <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"            <br>\n"
+"            <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -3816,17 +3818,19 @@ msgstr "Virheellinen verkkotunnuksen vasen operandi %s"
 
 #. module: stock
 #. odoo-python
-#: code:addons/stock/models/product.py:0
+#: code:addons/stock/models/product.py:0 code:addons/stock/models/product.py:0
 #, python-format
 msgid "Invalid domain operator %s"
 msgstr "Virheellinen verkkotunnuksen operaattori %s"
 
 #. module: stock
 #. odoo-python
-#: code:addons/stock/models/product.py:0
+#: code:addons/stock/models/product.py:0 code:addons/stock/models/product.py:0
 #, python-format
-msgid "Invalid domain right operand %s"
-msgstr "Virheellinen verkkotunnuksen oikea operandi %s"
+msgid "Invalid domain right operand '%s'. It must be of type Integer/Float"
+msgstr ""
+"Oikea operandi '%s' on virheellinen. Sen on oltava kokonaisluku tai "
+"liukuluku"
 
 #. module: stock
 #. odoo-python
@@ -4015,6 +4019,15 @@ msgstr "Myöhästyy tai myöhästyy määräajasta ja suunnitellusta päivästä
 #: model:ir.model.fields,field_description:stock.field_stock_move__is_quantity_done_editable
 msgid "Is quantity done editable"
 msgstr "Onko määrä muokattavissa"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"It is not allowed to import reserved quantity, you have to use the quantity "
+"directly."
+msgstr "Varattua määrää ei saa tuoda. Sitä on käytettävä suoraan."
 
 #. module: stock
 #. odoo-python
@@ -4768,7 +4781,6 @@ msgid "Minimum Stock Rules"
 msgstr "Minimivarastosäännöt"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_report_stock_quantity__move_ids
 #: model:ir.model.fields,field_description:stock.field_stock_assign_serial__move_id
 #: model:ir.model.fields,field_description:stock.field_stock_package_level__move_ids
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_line__move_id
@@ -5196,7 +5208,7 @@ msgstr "Saapuneiden varastosiirtojen määrä viimeisten 12 kuukauden aikana"
 #: model:ir.model.fields,help:stock.field_stock_lot__message_needaction_counter
 #: model:ir.model.fields,help:stock.field_stock_picking__message_needaction_counter
 #: model:ir.model.fields,help:stock.field_stock_scrap__message_needaction_counter
-msgid "Number of messages which requires an action"
+msgid "Number of messages requiring action"
 msgstr "Toimenpiteitä vaativien viestien määrä"
 
 #. module: stock
@@ -8644,6 +8656,17 @@ msgstr ""
 " yrityksen omistamia määriä."
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"This product's company cannot be changed as long as there are stock moves of"
+" it belonging to another company."
+msgstr ""
+"Tämän tuotteen yritystä ei voi vaihtaa niin kauan kuin sitä on varastossa "
+"toiselle yritykselle kuuluvana."
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
 msgid ""
 "This quantity is expressed in the Default Unit of Measure of the product."
@@ -8664,6 +8687,21 @@ msgid "This report cannot be used for done and not done %s at the same time"
 msgstr ""
 "Tätä raporttia ei voi käyttää samaan aikaan, kun on tehty ja kun ei ole "
 "tehty %s"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"This sequence prefix is already being used by another operation type. It is "
+"recommended that you select a unique prefix to avoid issues and/or repeated "
+"reference values or assign the existing reference sequence to this operation"
+" type."
+msgstr ""
+"Tätä järjestysnumeroinnin etuliitettä käytetään jo toisella "
+"toimintotyypillä. On suositeltavaa käyttää yksilöllistä etuliitettä "
+"ongelmien ja/tai päällekkäisten viitearvojen välttämiseksi. Voit myös valita"
+" olemassaolevan järjestysnumeroinnin tälle toimintotyypille."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__property_stock_production
@@ -9101,7 +9139,7 @@ msgstr "Mittayksikön nimi"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__product_uom_id
 msgid "Unit of measure"
-msgstr ""
+msgstr "Mittayksikkö"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -9530,7 +9568,7 @@ msgstr "Pakkaustyypin paino"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_storage_category__weight_uom_name
 msgid "Weight unit"
-msgstr ""
+msgstr "Painoyksikkö"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__weight_uom_name
@@ -9992,8 +10030,10 @@ msgstr "Et voi jakaa luonnossiirtoa. Se on vahvistettava ensin."
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
-msgid "You cannot split a stock move that has been set to 'Done'."
-msgstr "Et voi jakaa valmista varastosiirtoa."
+msgid "You cannot split a stock move that has been set to 'Done' or 'Cancel'."
+msgstr ""
+"Et voi jakaa varastosiirtoa, joka on asetettu tilaan \"Valmis\" tai "
+"\"Peruuta\"."
 
 #. module: stock
 #. odoo-python
@@ -10049,13 +10089,24 @@ msgid ""
 "You have not recorded <i>done</i> quantities yet, by clicking on "
 "<i>apply</i> Odoo will process all the quantities."
 msgstr ""
-"Et ole kirjannut <i>tehtyjä</i> määriä vielä, klikkaamalla <i>Käytä</i> EC "
-"käsittelee kaikki määrät."
+"Et ole kirjannut <i>tehtyjä</i> määriä vielä, klikkaamalla <i>Käytä</i> Odoo"
+" käsittelee kaikki määrät."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid "You have processed less products than the initial demand."
 msgstr "Olet käsittelemässä vähemmän tuotteita kuin alkuperäinen tarve on."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/res_config_settings.py:0
+#, python-format
+msgid ""
+"You have product(s) in stock that have lot/serial number tracking enabled. \n"
+"Switch off tracking on all the products before switching off this setting."
+msgstr ""
+"Sinulla on varastossa tuote tai tuotteita, joiden erän tai sarjanumeron seuranta on käytössä.\n"
+"Ota seuranta pois käytöstä kaikista tuotteista ennen tämän asetuksen poistamista käytöstä."
 
 #. module: stock
 #. odoo-python
@@ -10098,7 +10149,7 @@ msgstr "Voit palauttaa vain yhden keräyksen kerrallaan."
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "You might want to update the locations of this transfer's operations"
-msgstr ""
+msgstr "Sinun kannattaa päivittää tämän siirron toimintojen sijainnit"
 
 #. module: stock
 #. odoo-python

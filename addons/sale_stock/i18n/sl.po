@@ -4,13 +4,15 @@
 # 
 # Translators:
 # Boris Kodelja <boris@hbs.si>, 2022
-# Grega Vavtar <grega@hbs.si>, 2022
 # Martin Trigaux, 2022
 # Tadej Lupšina <tadej@hbs.si>, 2022
 # Matjaz Mozetic <m.mozetic@matmoz.si>, 2022
 # matjaz k <matjaz@mentis.si>, 2022
 # Jasmina Macur <jasmina@hbs.si>, 2022
 # Nejc G <nejc@luxim.si>, 2022
+# Tomaž Jug <tomaz@editor.si>, 2023
+# Katja Deržič, 2024
+# Grega Vavtar <grega@hbs.si>, 2024
 # 
 msgid ""
 msgstr ""
@@ -18,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-10 10:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Nejc G <nejc@luxim.si>, 2022\n"
+"Last-Translator: Grega Vavtar <grega@hbs.si>, 2024\n"
 "Language-Team: Slovenian (https://app.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -104,6 +106,11 @@ msgid ""
 "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"Glede na nastavitev izdelka, se lahko dostavljena količina samodejno izračuna:\n"
+"-ročno: količina je nastavljena ročno na knjižbi\n"
+"-iz stroškov: količina je vsota količin iz knjiženih stroškov\n"
+"-iz časovnice: količina je vsota ur, zabeleženih na nalogah, povezanih s to knjižbo prodaje\n"
+"-iz premikov zalog: količina prihaja iz potrjenih komisioniranj\n"
 
 #. module: sale_stock
 #. openerp-web
@@ -116,7 +123,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_rules_report__so_route_ids
 msgid "Apply specific routes"
-msgstr ""
+msgstr "Uporaba določenih poti"
 
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__picking_policy__direct
@@ -175,7 +182,7 @@ msgstr "Datum:"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_users__property_warehouse_id
 msgid "Default Warehouse"
-msgstr ""
+msgstr "Privzeto skladišče"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
@@ -185,7 +192,7 @@ msgstr "Dostava"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_cancel__display_delivery_alert
 msgid "Delivery Alert"
-msgstr ""
+msgstr "Opozorilo o dostavi"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__delivery_count
@@ -195,7 +202,7 @@ msgstr "Dobavni nalogi"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__delivery_status
 msgid "Delivery Status"
-msgstr ""
+msgstr "Status dostave"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__expected_date
@@ -279,7 +286,7 @@ msgstr "Pričakovano:"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__forecast_expected_date
 msgid "Forecast Expected Date"
-msgstr ""
+msgstr "Pričakovani datum napovedi"
 
 #. module: sale_stock
 #. openerp-web
@@ -292,7 +299,7 @@ msgstr "Napovedana zaloga"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__free_qty_today
 msgid "Free Qty Today"
-msgstr ""
+msgstr "Prosta količina danes"
 
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__full
@@ -325,7 +332,7 @@ msgstr "Incoterm"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__incoterm_location
 msgid "Incoterm Location"
-msgstr ""
+msgstr "Lokacija Incoterm"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__group_display_incoterm
@@ -501,7 +508,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_to_deliver
 msgid "Qty To Deliver"
-msgstr ""
+msgstr "Količina za dostavo"
 
 #. module: sale_stock
 #. openerp-web
@@ -675,11 +682,12 @@ msgid ""
 msgstr ""
 
 #. module: sale_stock
+#. odoo-python
 #: code:addons/sale_stock/models/sale_order_line.py:0
 #, python-format
 msgid ""
-"The ordered quantity cannot be decreased below the amount already delivered."
-" Instead, create a return in your inventory."
+"The ordered quantity of a sale order line cannot be decreased below the "
+"amount already delivered. Instead, create a return in your inventory."
 msgstr ""
 
 #. module: sale_stock

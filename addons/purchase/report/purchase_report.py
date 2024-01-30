@@ -42,7 +42,7 @@ class PurchaseReport(models.Model):
         help="Amount of time between purchase approval and document creation date. Due to a hack needed to calculate this, \
               every record will show the same average value, therefore only use this as an aggregated value with group_operator=avg")
     price_total = fields.Float('Total', readonly=True)
-    price_average = fields.Float('Average Cost', readonly=True, group_operator="avg")
+    price_average = fields.Float('Average Cost', readonly=True, group_operator="avg", digits='Product Price')
     nbr_lines = fields.Integer('# of Lines', readonly=True)
     category_id = fields.Many2one('product.category', 'Product Category', readonly=True)
     product_tmpl_id = fields.Many2one('product.template', 'Product Template', readonly=True)
@@ -79,7 +79,7 @@ class PurchaseReport(models.Model):
                     l.product_id,
                     p.product_tmpl_id,
                     t.categ_id as category_id,
-                    po.currency_id,
+                    c.currency_id,
                     t.uom_id as product_uom,
                     extract(epoch from age(po.date_approve,po.date_order))/(24*60*60)::decimal(16,2) as delay,
                     extract(epoch from age(l.date_planned,po.date_order))/(24*60*60)::decimal(16,2) as delay_pass,
@@ -109,6 +109,7 @@ class PurchaseReport(models.Model):
                 join res_partner partner on po.partner_id = partner.id
                     left join product_product p on (l.product_id=p.id)
                         left join product_template t on (p.product_tmpl_id=t.id)
+                left join res_company C ON C.id = po.company_id
                 left join uom_uom line_uom on (line_uom.id=l.product_uom)
                 left join uom_uom product_uom on (product_uom.id=t.uom_id)
                 left join {currency_table} ON currency_table.company_id = po.company_id
@@ -130,7 +131,7 @@ class PurchaseReport(models.Model):
                 po.user_id,
                 po.partner_id,
                 line_uom.factor,
-                po.currency_id,
+                c.currency_id,
                 l.price_unit,
                 po.date_approve,
                 l.date_planned,
@@ -170,10 +171,24 @@ class PurchaseReport(models.Model):
             if any(field.split(':')[1].split('(')[0] != 'avg' for field in [avg_days_to_purchase] if field):
                 raise UserError(_("Value: 'avg_days_to_purchase' should only be used to show an average. If you are seeing this message then it is being accessed incorrectly."))
 
+        if 'price_average:avg' in fields:
+            fields.extend(['aggregated_qty_ordered:array_agg(qty_ordered)'])
+            fields.extend(['aggregated_price_average:array_agg(price_average)'])
+
         res = []
         if fields:
             res = super(PurchaseReport, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
 
+        if 'price_average:avg' in fields:
+            qties = 'aggregated_qty_ordered'
+            special_field = 'aggregated_price_average'
+            for data in res:
+                if data[special_field] and data[qties]:
+                    total_unit_cost = sum(float(value) * float(qty) for value, qty in zip(data[special_field], data[qties]) if qty and value)
+                    total_qty_ordered = sum(float(qty) for qty in data[qties] if qty)
+                    data['price_average'] = (total_unit_cost / total_qty_ordered) if total_qty_ordered else 0
+                del data[special_field]
+                del data[qties]
         if not res and avg_days_to_purchase:
             res = [{}]
 

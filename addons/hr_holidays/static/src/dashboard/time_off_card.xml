@@ -26,7 +26,8 @@
                     allocated="data.max_leaves"
                     approved="data.leaves_approved"
                     planned="data.leaves_requested"
-                    left="data.virtual_remaining_leaves" />
+                    left="data.virtual_remaining_leaves"
+                    usable="data.usable_remaining_leaves" />
             </t>
         </div>
         <span t-if="props.requires_allocation and data.closest_allocation_expire !== false" class="text-uppercase o_timeoff_validity">
@@ -64,6 +65,7 @@
                         <li>Approved: <span t-esc="props.approved"/></li>
                         <li style="border-bottom: 1px solid gray;">Planned: <span t-esc="props.planned"/></li>
                         <li>Left: <span t-esc="props.left"/></li>
+                        <li t-if="props.left != props.usable">Usable: <span t-esc="props.usable"/></li>
                     </ul>
                 </t>
             </Popover>

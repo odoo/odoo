@@ -62,7 +62,7 @@ class StockRule(models.Model):
                 supplier = procurement.product_id.with_company(procurement.company_id.id)._select_seller(
                     partner_id=procurement.values.get("supplierinfo_name"),
                     quantity=procurement.product_qty,
-                    date=procurement_date_planned.date(),
+                    date=max(procurement_date_planned.date(), fields.Date.today()),
                     uom_id=procurement.product_uom)
 
             # Fall back on a supplier for which no price may be defined. Not ideal, but better than
@@ -136,7 +136,7 @@ class StockRule(models.Model):
                     vals = self._update_purchase_order_line(procurement.product_id,
                         procurement.product_qty, procurement.product_uom, company_id,
                         procurement.values, po_line)
-                    po_line.write(vals)
+                    po_line.sudo().write(vals)
                 else:
                     if float_compare(procurement.product_qty, 0, precision_rounding=procurement.product_uom.rounding) <= 0:
                         # If procurement contains negative quantity, don't create a new line that would contain negative qty

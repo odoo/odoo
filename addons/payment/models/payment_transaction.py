@@ -172,7 +172,8 @@ class PaymentTransaction(models.Model):
             # Duplicate partner values.
             partner = self.env['res.partner'].browse(values['partner_id'])
             values.update({
-                'partner_name': partner.name,
+                # Use the parent partner as fallback if the invoicing address has no name.
+                'partner_name': partner.name or partner.parent_id.name,
                 'partner_lang': partner.lang,
                 'partner_email': partner.email,
                 'partner_address': payment_utils.format_partner_address(
@@ -291,7 +292,7 @@ class PaymentTransaction(models.Model):
             raise ValidationError(_("Only confirmed transactions can be refunded."))
 
         for tx in self:
-            tx._send_refund_request(amount_to_refund)
+            tx._send_refund_request(amount_to_refund=amount_to_refund)
 
     #=== BUSINESS METHODS - PAYMENT FLOW ===#
 

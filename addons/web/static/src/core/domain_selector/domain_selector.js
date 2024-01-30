@@ -39,18 +39,24 @@ export class DomainSelector extends Component {
         }
     }
 
-    traverseNode(ctx) {
+    traverseNode(ctx, negate = false) {
         if (ctx.index < ctx.domain.length) {
-            if (typeof ctx.currentElement === "string" && ["&", "|"].includes(ctx.currentElement)) {
-                this.traverseBranchNode(ctx);
+            if (ctx.currentElement === "!") {
+                ctx.next();
+                this.traverseNode(ctx, !negate);
+            } else if (
+                typeof ctx.currentElement === "string" &&
+                ["&", "|"].includes(ctx.currentElement)
+            ) {
+                this.traverseBranchNode(ctx, negate);
             } else {
-                this.traverseLeafNode(ctx);
+                this.traverseLeafNode(ctx, negate);
             }
         }
     }
-    traverseBranchNode(ctx) {
+    traverseBranchNode(ctx, negate) {
         if (ctx.parent.type !== "branch" || ctx.parent.operator !== ctx.currentElement) {
-            const node = this.makeBranchNode(ctx, ctx.currentElement, []);
+            const node = this.makeBranchNode(ctx, ctx.currentElement, [], negate);
             ctx.parent.operands.push(node);
             ctx = Object.assign(Object.create(ctx), { parent: node });
         }
@@ -59,14 +65,14 @@ export class DomainSelector extends Component {
         ctx.next();
         this.traverseNode(ctx);
     }
-    traverseLeafNode(ctx) {
+    traverseLeafNode(ctx, negate) {
         const condition = ctx.currentElement;
         const [leftOperand, operator, rightOperand] = condition;
-        const node = this.makeLeafNode(ctx, operator, [leftOperand, rightOperand]);
+        const node = this.makeLeafNode(ctx, operator, [leftOperand, rightOperand], negate);
         ctx.parent.operands.push(node);
     }
 
-    makeBranchNode(ctx, operator, operands) {
+    makeBranchNode(ctx, operator, operands, negate) {
         const updateDomain = () => this.props.update(ctx.getFullDomain());
         const makeFakeNode = this.makeFakeNode.bind(this);
 
@@ -76,10 +82,14 @@ export class DomainSelector extends Component {
             operator,
             operands,
             computeDomain() {
-                return Domain.combine(
+                let domain = Domain.combine(
                     this.operands.map((operand) => operand.computeDomain()),
                     this.operator === "&" ? "AND" : "OR"
                 );
+                if (negate) {
+                    domain = Domain.not(domain);
+                }
+                return domain;
             },
             update(operator) {
                 this.operator = operator;
@@ -98,7 +108,7 @@ export class DomainSelector extends Component {
             },
         };
     }
-    makeLeafNode(ctx, operator, operands) {
+    makeLeafNode(ctx, operator, operands, negate) {
         const updateDomain = () => this.props.update(ctx.getFullDomain());
         const makeFakeNode = this.makeFakeNode.bind(this);
 
@@ -108,7 +118,11 @@ export class DomainSelector extends Component {
             operator,
             operands,
             computeDomain() {
-                return new Domain([[this.operands[0], this.operator, this.operands[1]]]);
+                let domain = new Domain([[this.operands[0], this.operator, this.operands[1]]]);
+                if (negate) {
+                    domain = Domain.not(domain);
+                }
+                return domain;
             },
             update(changes) {
                 if ("fieldName" in changes) {
@@ -181,6 +195,10 @@ export class DomainSelector extends Component {
         } else {
             return this.makeLeafNode(ctx, op, [field, value]);
         }
+    }
+
+    resetDomain() {
+        this.props.update("[]");
     }
 }
 

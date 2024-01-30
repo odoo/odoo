@@ -208,7 +208,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span attrs=\"{'invisible': [('state', '=', 'draft')]}\">/</span>"
-msgstr ""
+msgstr "<span attrs=\"{'invisible': [('state', '=', 'draft')]}\">/</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -224,7 +224,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"fw-bold text-nowrap\">To Produce</span>"
-msgstr ""
+msgstr "<span class=\"fw-bold text-nowrap\">Виготовити</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -1299,9 +1299,12 @@ msgstr "Обчислити зі специфікації"
 msgid ""
 "Compute the days required to resupply all components from BoM, by either "
 "buying or manufacturing the components and/or subassemblies."
+"                                       Also note that purchase security lead"
+" times will be added when appropriate."
 msgstr ""
 "Обчисліть дні, необхідні для поповнення всіх компонентів зі специфікації, "
-"купуючи або виготовляючи компоненти та/або вузли."
+"купуючи або виготовляючи компоненти та/або вузли. Також зауважте, що терміни"
+" виконання закупівлі будуть додані, коли це необхідно."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__time_computed_on
@@ -1496,11 +1499,11 @@ msgstr "Створіть нову продуктивність робочих з
 #: model:ir.model.fields,help:mrp.field_product_product__days_to_prepare_mo
 #: model:ir.model.fields,help:mrp.field_product_template__days_to_prepare_mo
 msgid ""
-"Create and confirm Manufacturing Orders these many days in advance, to have enough time to replenish components or manufacture semi-finished products.\n"
-"Note that this does not affect the MO scheduled date, which still respects the just-in-time mechanism."
+"Create and confirm Manufacturing Orders this many days in advance, to have enough time to replenish components or manufacture semi-finished products.\n"
+"Note that security lead times will also be considered when appropriate."
 msgstr ""
 "Створюйте та підтверджуйте замовлення на виробництво за багато днів наперед, щоб мати достатньо часу для поповнення компонентів або виробництва напівфабрикатів.\n"
-"Зауважте, що це не впливає на заплановану дату MO, яка все ще поважає механізм вчасно."
+"Зауважте, що безпекові терміни також розглядатимуться, коли це доречно."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
@@ -2869,7 +2872,7 @@ msgstr "Ручне обчислення"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__manual_consumption_readonly
 msgid "Manual Consumption Readonly"
-msgstr ""
+msgstr "Ручне споживання лише для читання"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__time_cycle_manual
@@ -3374,8 +3377,8 @@ msgstr "К-сть створених MO"
 #: model:ir.model.fields,help:mrp.field_mrp_bom__message_needaction_counter
 #: model:ir.model.fields,help:mrp.field_mrp_production__message_needaction_counter
 #: model:ir.model.fields,help:mrp.field_mrp_unbuild__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Кількість повідомлень, які потебують дії"
+msgid "Number of messages requiring action"
+msgstr "Кількість повідомлень, які вимагають дії"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__message_has_error_counter
@@ -4505,7 +4508,7 @@ msgstr "Серійне масове виробництво"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_consumption_warning_form
 msgid "Set Quantities & Validate"
-msgstr ""
+msgstr "Встановіть Кількість та Підтвердіть"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_routing_workcenter__time_mode__manual
@@ -4766,7 +4769,7 @@ msgstr "Початкова дата"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__state
 msgid "State"
-msgstr "Область"
+msgstr "Статус"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__state
@@ -4981,6 +4984,16 @@ msgstr "Компонент %s не повинен бути таким же як 
 
 #. module: mrp
 #. odoo-python
+#: code:addons/mrp/models/mrp_bom.py:0
+#, python-format
+msgid ""
+"The current configuration is incorrect because it would create a cycle "
+"between these products: %s."
+msgstr ""
+"Поточна конфігурація є неправильною, оскільки це створить цикл між цими "
+"товарами: %s."
+
+#. module: mrp
 #: code:addons/mrp/models/stock_orderpoint.py:0
 #, python-format
 msgid "The following replenishment order has been generated"
@@ -5257,13 +5270,13 @@ msgstr "Відстеження часу: %(user)s"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_capacity__time_stop
-msgid "Time in minutes for the cleaning."
-msgstr "Час у хвилинах для чищення."
+msgid "Additional time in minutes for the cleaning."
+msgstr "Додатковий час на очищення."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_capacity__time_start
-msgid "Time in minutes for the setup."
-msgstr "Час у хвилинах для встановлення."
+msgid "Additional time in minutes for the setup."
+msgstr "Додатковий час в хвилинах для встановлення."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__time_cycle_manual
@@ -5657,6 +5670,18 @@ msgstr "Дійсний"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
 msgid "Validate"
 msgstr "Підтвердити"
+
+#. module: mrp
+#. odoo-python
+#: code:addons/addons/mrp/wizard/mrp_consumption_warning.py:0
+#: code:addons/mrp/wizard/mrp_consumption_warning.py:0
+#, python-format
+msgid ""
+"Values cannot be set and validated because a Lot/Serial Number needs to be specified for a tracked product that is having its consumed amount increased:\n"
+"- "
+msgstr ""
+"Значення не можна встановити та перевірити, оскільки потрібно вказати партійниий/серійний номер для відстежуваного товару, споживання якого збільшується:\n"
+"- "
 
 #. module: mrp
 #. odoo-javascript
@@ -6388,13 +6413,6 @@ msgstr ""
 #, python-format
 msgid "You need to provide a lot for the finished product."
 msgstr "Вам необхідно надати партію для готового товару."
-
-#. module: mrp
-#. odoo-python
-#: code:addons/mrp/wizard/mrp_consumption_warning.py:0
-#, python-format
-msgid "You need to supply Lot/Serial Number"
-msgstr ""
 
 #. module: mrp
 #. odoo-python

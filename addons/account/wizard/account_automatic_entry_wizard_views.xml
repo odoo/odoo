@@ -14,6 +14,9 @@
                         The selected destination account is set to use a specific currency. Every entry transferred to it will be converted into this currency, causing
                         the loss of any pre-existing foreign currency amount.
                     </div>
+                    <div attrs="{'invisible': [('lock_date_message', '=', False)]}" class="alert alert-warning text-center" role="status">
+                        <field name="lock_date_message" nolabel="1"/>
+                    </div>
                     <field name="action" invisible="context.get('hide_automatic_options')" widget="radio" options="{'horizontal': true}"/>
                     <group>
                         <group attrs="{'invisible': [('action', '!=', 'change_period')]}">

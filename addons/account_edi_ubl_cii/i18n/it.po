@@ -5,14 +5,16 @@
 # Translators:
 # Martin Trigaux, 2022
 # Friederike Fasterling-Nesselbosch, 2022
+# Marianna Ciofani, 2023
+# Sergio Zanchetta <primes2h@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-14 05:51+0000\n"
+"POT-Creation-Date: 2023-05-23 08:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2024\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -48,9 +50,16 @@ msgstr ""
 "</li></p>"
 
 #. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+#, python-format
+msgid "A payment of %s was detected."
+msgstr "È stato individuato un pagamento di %s."
+
+#. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_a_nz
 msgid "A-NZ BIS Billing 3.0"
-msgstr ""
+msgstr "A-NZ BIS Billing 3.0"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -80,6 +89,14 @@ msgstr "Funzioni comuni per i documenti EDI: generare i dati, i vincoli, ecc."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
+#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
+#, python-format
+msgid "Conditional cash/payment discount"
+msgstr "Denaro condizionale/sconto pagamento"
+
+#. module: account_edi_ubl_cii
+#. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_cii_facturx.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
 #, python-format
@@ -104,6 +121,8 @@ msgstr "Impossibile recuperare l'imposta: %s %% for linea '%s'."
 #, python-format
 msgid "Could not retrieve the unit of measure for line with label '%s'."
 msgstr ""
+"Non è stato possibile recuperare l'unità di misura per la riga con "
+"l'etichetta \"%s\"."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -143,6 +162,12 @@ msgstr "Ogni riga di fattura avrà una e una sola imposta."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
+#, python-format
+msgid "Each invoice line should have a product or a label."
+msgstr "Ogni riga della fattura deve contenere un prodotto o un'etichetta."
+
+#. module: account_edi_ubl_cii
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Each invoice line should have at least one tax."
@@ -223,9 +248,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
-msgid "No gross price nor net price found for line in xml"
+msgid ""
+"No gross price, net price nor line subtotal amount found for line in xml"
 msgstr ""
-"Non è stato trovato un prezzo lordo né un prezzo netto per la linea in xml"
+"Non è stato trovato nessun prezzo lordo, prezzo netto o importo subtotale "
+"per la riga nell'XML"
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
@@ -268,7 +295,7 @@ msgstr "Azione resoconto"
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_sg
 msgid "SG BIS Billing 3.0"
-msgstr ""
+msgstr "SG BIS Billing 3.0"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_nl
@@ -280,7 +307,7 @@ msgstr "SI-UBL 2.0 (NLCIUS)"
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Tax '%s' is invalid: %s"
-msgstr ""
+msgstr "L'imposta \"%s\" non è valida: %s"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -299,7 +326,7 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
 #, python-format
 msgid "The currency '%s' is not active."
-msgstr "La valuta '%s' non è attiva."
+msgstr "La valuta \"%s\" non è attiva."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -335,6 +362,17 @@ msgstr ""
 
 #. module: account_edi_ubl_cii
 #. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
+#, python-format
+msgid ""
+"The invoice contains line(s) with a negative unit price, which is not "
+"allowed. You might need to set a negative quantity instead."
+msgstr ""
+"La fattura contiene righe con un prezzo unitario negativo al contrario di "
+"quanto consentito. È necessario configurare una quantità negativa."
+
+#. module: account_edi_ubl_cii
+#. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_cii_facturx.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
 #, python-format
@@ -353,6 +391,8 @@ msgid ""
 "The journal in which to upload should either be a sale or a purchase "
 "journal."
 msgstr ""
+"Il registro da aggiornare dovrebbe essere un giornale relativo sia alle "
+"vendite che agli acquisti."
 
 #. module: account_edi_ubl_cii
 #. odoo-python

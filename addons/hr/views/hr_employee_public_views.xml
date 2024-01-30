@@ -61,12 +61,13 @@
                             </div>
                             <group>
                                 <group>
-                                    <field name="mobile_phone" widget="phone" options="{'enable_sms': false}"/>
-                                    <field name="work_phone" widget="phone" options="{'enable_sms': false}"/>
+                                    <field name="mobile_phone" widget="phone"/>
+                                    <field name="work_phone" widget="phone"/>
                                     <field name="work_email" widget="email"/>
                                 </group>
                                 <group>
                                     <field name="department_id" context="{'open_employees_kanban': 1}"/>
+                                    <field name="job_id"/>
                                     <field name="employee_type"/>
                                     <field name="company_id" groups="base.group_multi_company"/>
                                     <field name="parent_id"/>

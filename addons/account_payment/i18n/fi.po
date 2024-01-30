@@ -131,7 +131,7 @@ msgid ""
 "                                If you believe that it is an error, please contact the website administrator."
 msgstr ""
 "<strong>Sopivaa maksuvaihtoehtoa ei löytynyt.</strong><br/>\n"
-"                                Jos uskot, että kyseessä on virhe, ota yhteyttä sivuston ylläpitäjään. "
+"                                Jos uskot, että kyseessä on virhe, ota yhteyttä sivuston ylläpitäjään."
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_refund_wizard_view_form
@@ -549,6 +549,15 @@ msgid "There was en error processing your payment: invalid credit card ID."
 msgstr "Maksusi käsittelyssä tapahtui virhe: virheellinen luottokorttitunnus."
 
 #. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/models/payment_provider.py:0
+#, python-format
+msgid ""
+"To uninstall this module, please remove first the corresponding payment "
+"method line in the incoming payments tab defined on the bank journal."
+msgstr ""
+
+#. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_bank_statement_line__transaction_ids
 #: model:ir.model.fields,field_description:account_payment.field_account_move__transaction_ids
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__transaction_ids
@@ -581,6 +590,16 @@ msgid ""
 msgstr ""
 "Et voi poistaa maksutapaa, joka on linkitetty palveluntarjoajaan, joka on käytössä tai testitilassa.\n"
 "Linkitetyt palveluntarjoajat: %s"
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/models/payment_provider.py:0
+#, python-format
+msgid ""
+"You cannot uninstall this module as payment method transactions already "
+"exist."
+msgstr ""
+"Et voi poistaa tätä moduulia, koska maksutapahtumatietoja on jo olemassa."
 
 #. module: account_payment
 #. odoo-python

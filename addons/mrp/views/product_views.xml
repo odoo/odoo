@@ -18,7 +18,8 @@
                         <field name="days_to_prepare_mo" class="oe_inline"/> days
                         <button name="action_compute_bom_days" string="Compute from BoM" type="object" attrs="{'invisible':['|', ('type', '=', 'service'), ('bom_count', '=', 0)]}"
                                 groups="mrp.group_mrp_user"
-                                help="Compute the days required to resupply all components from BoM, by either buying or manufacturing the components and/or subassemblies."
+                                help="Compute the days required to resupply all components from BoM, by either buying or manufacturing the components and/or subassemblies.
+                                      Also note that purchase security lead times will be added when appropriate."
                                 class="oe_link pt-0"/>
                     </div>
                 </xpath>

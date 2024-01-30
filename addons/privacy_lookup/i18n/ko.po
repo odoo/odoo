@@ -5,7 +5,8 @@
 # Translators:
 # Martin Trigaux, 2022
 # JH CHOI <hwangtog@gmail.com>, 2022
-# Sarah Park, 2022
+# Sarah Park, 2023
+# Daye Jeong, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-06-09 14:06+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Sarah Park, 2022\n"
+"Last-Translator: Daye Jeong, 2023\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,17 +30,17 @@ msgstr "추가 메모"
 #. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_log__anonymized_email
 msgid "Anonymized Email"
-msgstr ""
+msgstr "익명 이메일"
 
 #. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_log__anonymized_name
 msgid "Anonymized Name"
-msgstr ""
+msgstr "익명"
 
 #. module: privacy_lookup
 #: model:ir.actions.server,name:privacy_lookup.ir_actions_server_archive_all
 msgid "Archive Selection"
-msgstr ""
+msgstr "보관 선택"
 
 #. module: privacy_lookup
 #: code:addons/privacy_lookup/wizard/privacy_lookup_wizard.py:0
@@ -51,7 +52,7 @@ msgstr "보관됨"
 #. module: privacy_lookup
 #: model_terms:ir.ui.view,arch_db:privacy_lookup.privacy_lookup_wizard_line_view_search
 msgid "Can be archived"
-msgstr ""
+msgstr "보관 가능"
 
 #. module: privacy_lookup
 #: model:ir.model,name:privacy_lookup.model_res_partner
@@ -85,7 +86,7 @@ msgstr "삭제"
 #. module: privacy_lookup
 #: model:ir.actions.server,name:privacy_lookup.ir_actions_server_unlink_all
 msgid "Delete Selection"
-msgstr ""
+msgstr "삭제 선택"
 
 #. module: privacy_lookup
 #: code:addons/privacy_lookup/wizard/privacy_lookup_wizard.py:0
@@ -115,12 +116,12 @@ msgstr "이메일"
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard__execution_details
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard_line__execution_details
 msgid "Execution Details"
-msgstr ""
+msgstr "실행 세부 정보"
 
 #. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_log__records_description
 msgid "Found Records"
-msgstr ""
+msgstr "검색된 정보"
 
 #. module: privacy_lookup
 #: model_terms:ir.ui.view,arch_db:privacy_lookup.privacy_lookup_wizard_line_view_search
@@ -130,12 +131,12 @@ msgstr "그룹별"
 #. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_log__user_id
 msgid "Handled By"
-msgstr ""
+msgstr "담당자"
 
 #. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard_line__has_active
 msgid "Has Active"
-msgstr ""
+msgstr "활성화됨"
 
 #. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_log__id
@@ -148,12 +149,12 @@ msgstr "ID"
 #. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard_line__is_active
 msgid "Is Active"
-msgstr ""
+msgstr "활성화"
 
 #. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard_line__is_unlinked
 msgid "Is Unlinked"
-msgstr ""
+msgstr "연결 해제됨"
 
 #. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_log____last_update
@@ -194,7 +195,7 @@ msgstr "로그"
 #. module: privacy_lookup
 #: model_terms:ir.ui.view,arch_db:privacy_lookup.privacy_lookup_wizard_view_form
 msgid "Lookup"
-msgstr ""
+msgstr "검색"
 
 #. module: privacy_lookup
 #: model_terms:ir.ui.view,arch_db:privacy_lookup.privacy_lookup_wizard_line_view_search
@@ -209,7 +210,7 @@ msgstr "이름"
 #. module: privacy_lookup
 #: model_terms:ir.ui.view,arch_db:privacy_lookup.privacy_lookup_wizard_line_view_tree
 msgid "Open Record"
-msgstr ""
+msgstr "레코드 열기"
 
 #. module: privacy_lookup
 #: model:ir.ui.menu,name:privacy_lookup.privacy_menu
@@ -220,7 +221,7 @@ msgstr "비공개"
 #: model:ir.model,name:privacy_lookup.model_privacy_log
 #: model_terms:ir.ui.view,arch_db:privacy_lookup.privacy_log_view_form
 msgid "Privacy Log"
-msgstr ""
+msgstr "개인 정보 로그"
 
 #. module: privacy_lookup
 #: model:ir.actions.act_window,name:privacy_lookup.privacy_log_action
@@ -228,7 +229,7 @@ msgstr ""
 #: model:ir.ui.menu,name:privacy_lookup.pricacy_log_menu
 #: model_terms:ir.ui.view,arch_db:privacy_lookup.privacy_log_view_list
 msgid "Privacy Logs"
-msgstr ""
+msgstr "개인 정보 로그"
 
 #. module: privacy_lookup
 #: code:addons/privacy_lookup/wizard/privacy_lookup_wizard.py:0
@@ -238,22 +239,22 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:privacy_lookup.privacy_lookup_wizard_view_form
 #, python-format
 msgid "Privacy Lookup"
-msgstr ""
+msgstr "개인 정보 조회"
 
 #. module: privacy_lookup
 #: model:ir.actions.act_window,name:privacy_lookup.action_privacy_lookup_wizard_line
 msgid "Privacy Lookup Line"
-msgstr ""
+msgstr "개인 정보 조회 내역"
 
 #. module: privacy_lookup
 #: model:ir.model,name:privacy_lookup.model_privacy_lookup_wizard
 msgid "Privacy Lookup Wizard"
-msgstr ""
+msgstr "개인 정보 조회 마법사"
 
 #. module: privacy_lookup
 #: model:ir.model,name:privacy_lookup.model_privacy_lookup_wizard_line
 msgid "Privacy Lookup Wizard Line"
-msgstr ""
+msgstr "개인 정보 조회 마법사 내역"
 
 #. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard_line__resource_ref
@@ -263,7 +264,7 @@ msgstr "기록"
 #. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard__records_description
 msgid "Records Description"
-msgstr ""
+msgstr "레코드 설명"
 
 #. module: privacy_lookup
 #: model_terms:ir.ui.view,arch_db:privacy_lookup.privacy_lookup_wizard_view_form
@@ -288,19 +289,19 @@ msgstr "자원명"
 #. module: privacy_lookup
 #: model_terms:ir.ui.view,arch_db:privacy_lookup.privacy_lookup_wizard_line_view_search
 msgid "Search References"
-msgstr ""
+msgstr "참조 검색"
 
 #. module: privacy_lookup
 #: code:addons/privacy_lookup/wizard/privacy_lookup_wizard.py:0
 #, python-format
 msgid "The record is already unlinked."
-msgstr ""
+msgstr "레코드가 이미 연결 해제되었습니다."
 
 #. module: privacy_lookup
 #: code:addons/privacy_lookup/models/privacy_log.py:0
 #, python-format
 msgid "This email address is not valid (%s)"
-msgstr ""
+msgstr "이 이메일 주소는 올바르지 않습니다 (%s)"
 
 #. module: privacy_lookup
 #: model_terms:ir.ui.view,arch_db:privacy_lookup.privacy_lookup_wizard_line_view_tree
@@ -313,7 +314,7 @@ msgstr ""
 #: code:addons/privacy_lookup/wizard/privacy_lookup_wizard.py:0
 #, python-format
 msgid "Unarchived"
-msgstr ""
+msgstr "보관 취소됨"
 
 #. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard_line__wizard_id

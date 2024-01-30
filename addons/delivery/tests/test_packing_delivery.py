@@ -2,7 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.stock.tests.test_packing import TestPackingCommon
-
+from odoo.tests import Form
+from unittest.mock import patch
 
 class TestPacking(TestPackingCommon):
 
@@ -104,3 +105,41 @@ class TestPacking(TestPackingCommon):
         picking_ship.action_confirm()
         picking_ship.button_validate()
         self.assertEqual(picking_ship.state, 'done')
+
+    def test_multistep_delivery_tracking(self):
+        # Set Warehouse as multi steps delivery
+        self.warehouse.delivery_steps = "pick_pack_ship"
+
+        # Create and confirm the SO
+        so = self.env['sale.order'].create({
+            'name': 'Sale order',
+            'partner_id': self.env['res.partner'].create({'name': 'Rando le clodo'}).id,
+            'order_line': [
+                (0, 0, {'name': self.product_aw.name, 'product_id': self.product_aw.id, 'product_uom_qty': 1, 'price_unit': 1})
+            ]
+        })
+        delivery_wizard = Form(self.env['choose.delivery.carrier'].with_context({
+            'default_order_id': so.id,
+            'default_carrier_id': self.test_carrier.id,
+        }))
+        choose_delivery_carrier = delivery_wizard.save()
+        choose_delivery_carrier.button_confirm()
+        so.action_confirm()
+
+        self.env['stock.quant']._update_available_quantity(self.product_aw, self.stock_location, 20.0)
+
+        # Confirm the picking and send to shipper
+        picking_ship = so.picking_ids.filtered(lambda p: p.picking_type_id.name == 'Pick')
+        picking_ship.action_confirm()
+        picking_ship.move_ids.quantity_done = 1.0
+        picking_ship.button_validate()
+
+        # Mock carrier shipping method
+        with patch(
+            'odoo.addons.delivery.models.delivery_carrier.DeliveryCarrier.fixed_send_shipping',
+            return_value=[{'exact_price': 0, 'tracking_number': "666"}]
+        ):
+            picking_ship.send_to_shipper()
+
+        for p in so.picking_ids:
+            self.assertEqual(p.carrier_tracking_ref, "666")

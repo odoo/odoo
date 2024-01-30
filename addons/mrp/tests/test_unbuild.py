@@ -821,3 +821,127 @@ class TestUnbuild(TestMrpCommon):
         mo2 = mo_form.save()
         mo2.button_mark_done()
         self.assertEqual(mo2.state, 'done', "Production order should be in done state.")
+
+    def test_unbuild_mo_with_tracked_product_and_component(self):
+        """
+            Test that the unbuild order is correctly created when the finished product
+            and the component is tracked by serial number
+        """
+        finished_product = self.env['product.product'].create({
+            'name': 'Product tracked by sn',
+            'type': 'product',
+            'tracking': 'serial',
+        })
+        finished_product_sn = self.env['stock.lot'].create({
+            'name': 'sn1',
+            'product_id': finished_product.id,
+            'company_id': self.env.company.id
+        })
+        component = self.env['product.product'].create({
+            'name': 'Product component',
+            'type': 'product',
+        })
+        bom_1 = self.env['mrp.bom'].create({
+            'product_id': finished_product.id,
+            'product_tmpl_id': finished_product.product_tmpl_id.id,
+            'product_uom_id': self.env.ref('uom.product_uom_unit').id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': component.id, 'product_qty': 1}),
+            ],
+        })
+        # mo_1
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = finished_product
+        mo_form.bom_id = bom_1
+        mo_form.product_qty = 1.0
+        mo = mo_form.save()
+        mo.action_confirm()
+        mo.qty_producing = 1.0
+        mo.lot_producing_id = finished_product_sn
+        mo.move_raw_ids.quantity_done = 1
+        mo.button_mark_done()
+        self.assertEqual(mo.state, 'done', "Production order should be in done state.")
+        # unbuild order mo_1
+        action = mo.button_unbuild()
+        wizard = Form(self.env[action['res_model']].with_context(action['context'])).save()
+        wizard.action_validate()
+        self.assertEqual(mo.unbuild_ids.produce_line_ids[0].product_id, finished_product)
+        self.assertEqual(mo.unbuild_ids.produce_line_ids[0].lot_ids, finished_product_sn)
+        self.assertEqual(mo.unbuild_ids.produce_line_ids[1].product_id, component)
+        self.assertEqual(mo.unbuild_ids.produce_line_ids[1].lot_ids.id, False)
+
+        # set the component as tracked
+        component.tracking = 'serial'
+        component_sn = self.env['stock.lot'].create({
+            'name': 'component-sn1',
+            'product_id': component.id,
+            'company_id': self.env.company.id
+        })
+        self.env['stock.quant']._update_available_quantity(component, self.stock_location, 1, lot_id=component_sn)
+        #mo2 with tracked component
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = finished_product
+        mo_form.bom_id = bom_1
+        mo_form.product_qty = 1.0
+        mo_2 = mo_form.save()
+        mo_2.action_confirm()
+        mo_2.qty_producing = 1.0
+        mo_2.lot_producing_id = finished_product_sn
+        mo_2.move_raw_ids.quantity_done = 1
+        mo_2.button_mark_done()
+        self.assertEqual(mo_2.state, 'done', "Production order should be in done state.")
+        # unbuild mo_2
+        action = mo_2.button_unbuild()
+        wizard = Form(self.env[action['res_model']].with_context(action['context'])).save()
+        wizard.action_validate()
+        self.assertEqual(mo_2.unbuild_ids.produce_line_ids[0].product_id, finished_product)
+        self.assertEqual(mo_2.unbuild_ids.produce_line_ids[0].lot_ids, finished_product_sn)
+        self.assertEqual(mo_2.unbuild_ids.produce_line_ids[1].product_id, component)
+        self.assertEqual(mo_2.unbuild_ids.produce_line_ids[1].lot_ids, component_sn)
+
+    def test_unbuild_different_qty(self):
+        """
+        Test that the quantity to unbuild is the qty produced in the MO
+
+        BoM:
+        - 4x final product
+        components:
+        - 2 x (storable)
+        - 4 x (consumable)
+        - Create a MO with 4 final products to produce.
+        - Confirm and validate, then unlock the mo and update the qty produced to 10
+        - open the wizard to unbuild > the quantity proposed should be 10
+        - unbuild 4 units
+        - the move lines should be created with the correct quantity
+        """
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = self.bom_1
+        mo = mo_form.save()
+
+        mo.action_confirm()
+        mo_form = Form(mo)
+        mo_form.qty_producing = 4
+        mo = mo_form.save()
+        mo.button_mark_done()
+        self.assertEqual(mo.state, 'done', "Production order should be in done state.")
+        # unlock and update the qty produced
+        mo.action_toggle_is_locked()
+        with Form(mo) as mo_form:
+            mo_form.qty_producing = 10
+        self.assertEqual(mo.qty_producing, 10)
+        #unbuild order
+        unbuild_form = Form(self.env['mrp.unbuild'])
+        unbuild_form.mo_id = mo
+        # check that the quantity to unbuild is the qty produced in the MO
+        self.assertEqual(unbuild_form.product_qty, 10)
+        unbuild_form.product_qty = 3
+        unbuild_order = unbuild_form.save()
+        unbuild_order.action_unbuild()
+        self.assertRecordValues(unbuild_order.produce_line_ids.move_line_ids, [
+            # pylint: disable=bad-whitespace
+            {'product_id': self.bom_1.product_id.id, 'qty_done': 3},
+            {'product_id': self.bom_1.bom_line_ids[0].product_id.id, 'qty_done': 0.6},
+            {'product_id': self.bom_1.bom_line_ids[1].product_id.id, 'qty_done': 1.2},
+        ])

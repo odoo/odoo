@@ -7,3 +7,4 @@ from . import test_models
 from . import test_session
 from . import test_static
 from . import test_web_server
+from . import test_xss

@@ -297,9 +297,7 @@ export class FormController extends Component {
                     description: this.env._t("Archive"),
                     callback: () => {
                         const dialogProps = {
-                            body: this.env._t(
-                                "Are you sure that you want to archive this record?"
-                            ),
+                            body: this.env._t("Are you sure that you want to archive this record?"),
                             confirmLabel: this.env._t("Archive"),
                             confirm: () => this.model.root.archive(),
                             cancel: () => {},
@@ -344,8 +342,8 @@ export class FormController extends Component {
         await this.model.root.duplicate();
     }
 
-    async deleteRecord() {
-        const dialogProps = {
+    get deleteConfirmationDialogProps() {
+        return {
             body: this.env._t("Are you sure you want to delete this record?"),
             confirm: async () => {
                 await this.model.root.delete();
@@ -355,7 +353,10 @@ export class FormController extends Component {
             },
             cancel: () => {},
         };
-        this.dialogService.add(ConfirmationDialog, dialogProps);
+    }
+
+    async deleteRecord() {
+        this.dialogService.add(ConfirmationDialog, this.deleteConfirmationDialogProps);
     }
 
     disableButtons() {
@@ -371,17 +372,20 @@ export class FormController extends Component {
     }
 
     async beforeExecuteActionButton(clickParams) {
+        const record = this.model.root;
         if (clickParams.special !== "cancel") {
-            return this.model.root
-                .save({ stayInEdition: true, useSaveErrorDialog: !this.env.inDialog })
-                .then((saved) => {
-                    if (saved && this.props.onSave) {
-                        this.props.onSave(this.model.root);
-                    }
-                    return saved;
-                });
+            let saved = false;
+            if (clickParams.special === "save" && this.props.saveRecord) {
+                saved = await this.props.saveRecord(record, clickParams);
+            } else {
+                saved = await record.save({ stayInEdition: true });
+            }
+            if (saved !== false && this.props.onSave) {
+                this.props.onSave(record, clickParams);
+            }
+            return saved;
         } else if (this.props.onDiscard) {
-            this.props.onDiscard(this.model.root);
+            this.props.onDiscard(record);
         }
     }
 

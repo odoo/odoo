@@ -12,9 +12,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:26+0000\n"
+"POT-Creation-Date: 2023-05-23 08:24+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
 "Last-Translator: Cozmin Candea <office@terrabit.ro>, 2023\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
@@ -25,6 +25,7 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
 
 #. module: website_event_track
+#. odoo-python
 #: code:addons/website_event_track/models/website.py:0
 #, python-format
 msgid "\"Events App Name\" field is required."
@@ -37,24 +38,28 @@ msgid "# Wishlisted"
 msgstr ""
 
 #. module: website_event_track
+#. odoo-python
 #: code:addons/website_event_track/models/event_track.py:0
 #, python-format
 msgid "%(name)s from %(company)s"
 msgstr ""
 
 #. module: website_event_track
+#. odoo-python
 #: code:addons/website_event_track/models/event_track.py:0
 #, python-format
 msgid "%(name)s, %(function)s at %(company)s"
 msgstr ""
 
 #. module: website_event_track
+#. odoo-python
 #: code:addons/website_event_track/models/website.py:0
 #, python-format
 msgid "%s Events"
 msgstr "%s Evenimente"
 
 #. module: website_event_track
+#. odoo-python
 #: code:addons/website_event_track/controllers/webmanifest.py:0
 #, python-format
 msgid "%s Online Events Application"
@@ -119,20 +124,20 @@ msgstr ""
 #: model:mail.template,body_html:website_event_track.mail_template_data_track_confirmation
 msgid ""
 "<div>\n"
-"    Dear <t t-out=\"object.partner_id.name or object.partner_name or ''\">Brandon Freeman</t><br/>\n"
+"    Dear <t t-out=\"object.partner_id.name or object.partner_name or ''\">Brandon Freeman</t><br>\n"
 "    We are pleased to inform you that your proposal <t t-out=\"object.name or ''\">What This Event Is All About</t> has been accepted and confirmed for the event <t t-out=\"object.event_id.name or ''\">OpenWood Collection Online Reveal</t>.\n"
-"    <br/>\n"
+"    <br>\n"
 "    You will find more details here:\n"
 "    <div style=\"margin: 16px 0px 16px 0px;\">\n"
 "        <a t-attf-href=\"/event/{{ object.event_id.id }}/track/{{ object.id }}\" style=\"padding: 8px 16px 8px 16px; font-size: 14px; color: #FFFFFF; text-decoration: none !important; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
 "            View Talk\n"
 "        </a>\n"
 "    </div>\n"
-"    <br/><br/>\n"
+"    <br><br>\n"
 "    Thank you,\n"
 "    <t t-if=\"user.signature\">\n"
-"        <br/>\n"
-"        <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"        <br>\n"
+"        <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
 "    </t>\n"
 "</div>"
 msgstr ""
@@ -329,6 +334,7 @@ msgid "Advanced reporting"
 msgstr ""
 
 #. module: website_event_track
+#. odoo-python
 #: code:addons/website_event_track/models/event_event.py:0
 #, python-format
 msgid "Agenda"
@@ -345,7 +351,7 @@ msgid "Allow Track Proposals"
 msgstr ""
 
 #. module: website_event_track
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
 #, python-format
 msgid "Allow push notifications?"
@@ -372,7 +378,7 @@ msgid "Announced"
 msgstr "Anunțat"
 
 #. module: website_event_track
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_event_track/static/src/xml/event_track_proposal_templates.xml:0
 #, python-format
 msgid "Application"
@@ -427,67 +433,8 @@ msgid "Biography"
 msgstr "Biografie"
 
 #. module: website_event_track
+#. odoo-python
 #: code:addons/website_event_track/models/event_track_stage.py:0
-#: model:event.track,legend_blocked:website_event_track.event_7_track_1
-#: model:event.track,legend_blocked:website_event_track.event_7_track_10
-#: model:event.track,legend_blocked:website_event_track.event_7_track_11
-#: model:event.track,legend_blocked:website_event_track.event_7_track_12
-#: model:event.track,legend_blocked:website_event_track.event_7_track_13
-#: model:event.track,legend_blocked:website_event_track.event_7_track_14
-#: model:event.track,legend_blocked:website_event_track.event_7_track_15
-#: model:event.track,legend_blocked:website_event_track.event_7_track_16
-#: model:event.track,legend_blocked:website_event_track.event_7_track_17
-#: model:event.track,legend_blocked:website_event_track.event_7_track_18
-#: model:event.track,legend_blocked:website_event_track.event_7_track_19
-#: model:event.track,legend_blocked:website_event_track.event_7_track_2
-#: model:event.track,legend_blocked:website_event_track.event_7_track_20
-#: model:event.track,legend_blocked:website_event_track.event_7_track_21
-#: model:event.track,legend_blocked:website_event_track.event_7_track_22
-#: model:event.track,legend_blocked:website_event_track.event_7_track_23
-#: model:event.track,legend_blocked:website_event_track.event_7_track_24
-#: model:event.track,legend_blocked:website_event_track.event_7_track_25
-#: model:event.track,legend_blocked:website_event_track.event_7_track_26
-#: model:event.track,legend_blocked:website_event_track.event_7_track_3
-#: model:event.track,legend_blocked:website_event_track.event_7_track_4
-#: model:event.track,legend_blocked:website_event_track.event_7_track_5
-#: model:event.track,legend_blocked:website_event_track.event_7_track_6
-#: model:event.track,legend_blocked:website_event_track.event_7_track_7
-#: model:event.track,legend_blocked:website_event_track.event_7_track_8
-#: model:event.track,legend_blocked:website_event_track.event_7_track_9
-#: model:event.track,legend_blocked:website_event_track.event_7_track_l3_1
-#: model:event.track,legend_blocked:website_event_track.event_7_track_l3_10
-#: model:event.track,legend_blocked:website_event_track.event_7_track_l3_11
-#: model:event.track,legend_blocked:website_event_track.event_7_track_l3_2
-#: model:event.track,legend_blocked:website_event_track.event_track1
-#: model:event.track,legend_blocked:website_event_track.event_track10
-#: model:event.track,legend_blocked:website_event_track.event_track11
-#: model:event.track,legend_blocked:website_event_track.event_track12
-#: model:event.track,legend_blocked:website_event_track.event_track13
-#: model:event.track,legend_blocked:website_event_track.event_track14
-#: model:event.track,legend_blocked:website_event_track.event_track15
-#: model:event.track,legend_blocked:website_event_track.event_track16
-#: model:event.track,legend_blocked:website_event_track.event_track17
-#: model:event.track,legend_blocked:website_event_track.event_track18
-#: model:event.track,legend_blocked:website_event_track.event_track19
-#: model:event.track,legend_blocked:website_event_track.event_track2
-#: model:event.track,legend_blocked:website_event_track.event_track20
-#: model:event.track,legend_blocked:website_event_track.event_track21
-#: model:event.track,legend_blocked:website_event_track.event_track22
-#: model:event.track,legend_blocked:website_event_track.event_track23
-#: model:event.track,legend_blocked:website_event_track.event_track24
-#: model:event.track,legend_blocked:website_event_track.event_track25
-#: model:event.track,legend_blocked:website_event_track.event_track27
-#: model:event.track,legend_blocked:website_event_track.event_track28
-#: model:event.track,legend_blocked:website_event_track.event_track29
-#: model:event.track,legend_blocked:website_event_track.event_track3
-#: model:event.track,legend_blocked:website_event_track.event_track30
-#: model:event.track,legend_blocked:website_event_track.event_track31
-#: model:event.track,legend_blocked:website_event_track.event_track4
-#: model:event.track,legend_blocked:website_event_track.event_track5
-#: model:event.track,legend_blocked:website_event_track.event_track6
-#: model:event.track,legend_blocked:website_event_track.event_track7
-#: model:event.track,legend_blocked:website_event_track.event_track8
-#: model:event.track,legend_blocked:website_event_track.event_track9
 #: model:event.track.stage,legend_blocked:website_event_track.event_track_stage0
 #: model:event.track.stage,legend_blocked:website_event_track.event_track_stage1
 #: model:event.track.stage,legend_blocked:website_event_track.event_track_stage2
@@ -580,6 +527,7 @@ msgid "Color Index"
 msgstr "Index Culori"
 
 #. module: website_event_track
+#. odoo-python
 #: code:addons/website_event_track/controllers/event_track.py:0
 #, python-format
 msgid "Coming soon"
@@ -625,6 +573,7 @@ msgid ""
 msgstr ""
 
 #. module: website_event_track
+#. odoo-python
 #: code:addons/website_event_track/models/event_track.py:0
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_id
 #, python-format
@@ -637,6 +586,7 @@ msgid "Contact Details"
 msgstr "Detalii Contact"
 
 #. module: website_event_track
+#. odoo-python
 #: code:addons/website_event_track/models/event_track.py:0
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__contact_email
 #, python-format
@@ -845,7 +795,7 @@ msgid "Email Template"
 msgstr "Șablon email"
 
 #. module: website_event_track
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
 #, python-format
 msgid "Error"
@@ -951,7 +901,7 @@ msgid "Events PWA"
 msgstr ""
 
 #. module: website_event_track
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
 #: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_widget_reminder
@@ -1198,67 +1148,8 @@ msgid "In"
 msgstr "În"
 
 #. module: website_event_track
+#. odoo-python
 #: code:addons/website_event_track/models/event_track_stage.py:0
-#: model:event.track,legend_normal:website_event_track.event_7_track_1
-#: model:event.track,legend_normal:website_event_track.event_7_track_10
-#: model:event.track,legend_normal:website_event_track.event_7_track_11
-#: model:event.track,legend_normal:website_event_track.event_7_track_12
-#: model:event.track,legend_normal:website_event_track.event_7_track_13
-#: model:event.track,legend_normal:website_event_track.event_7_track_14
-#: model:event.track,legend_normal:website_event_track.event_7_track_15
-#: model:event.track,legend_normal:website_event_track.event_7_track_16
-#: model:event.track,legend_normal:website_event_track.event_7_track_17
-#: model:event.track,legend_normal:website_event_track.event_7_track_18
-#: model:event.track,legend_normal:website_event_track.event_7_track_19
-#: model:event.track,legend_normal:website_event_track.event_7_track_2
-#: model:event.track,legend_normal:website_event_track.event_7_track_20
-#: model:event.track,legend_normal:website_event_track.event_7_track_21
-#: model:event.track,legend_normal:website_event_track.event_7_track_22
-#: model:event.track,legend_normal:website_event_track.event_7_track_23
-#: model:event.track,legend_normal:website_event_track.event_7_track_24
-#: model:event.track,legend_normal:website_event_track.event_7_track_25
-#: model:event.track,legend_normal:website_event_track.event_7_track_26
-#: model:event.track,legend_normal:website_event_track.event_7_track_3
-#: model:event.track,legend_normal:website_event_track.event_7_track_4
-#: model:event.track,legend_normal:website_event_track.event_7_track_5
-#: model:event.track,legend_normal:website_event_track.event_7_track_6
-#: model:event.track,legend_normal:website_event_track.event_7_track_7
-#: model:event.track,legend_normal:website_event_track.event_7_track_8
-#: model:event.track,legend_normal:website_event_track.event_7_track_9
-#: model:event.track,legend_normal:website_event_track.event_7_track_l3_1
-#: model:event.track,legend_normal:website_event_track.event_7_track_l3_10
-#: model:event.track,legend_normal:website_event_track.event_7_track_l3_11
-#: model:event.track,legend_normal:website_event_track.event_7_track_l3_2
-#: model:event.track,legend_normal:website_event_track.event_track1
-#: model:event.track,legend_normal:website_event_track.event_track10
-#: model:event.track,legend_normal:website_event_track.event_track11
-#: model:event.track,legend_normal:website_event_track.event_track12
-#: model:event.track,legend_normal:website_event_track.event_track13
-#: model:event.track,legend_normal:website_event_track.event_track14
-#: model:event.track,legend_normal:website_event_track.event_track15
-#: model:event.track,legend_normal:website_event_track.event_track16
-#: model:event.track,legend_normal:website_event_track.event_track17
-#: model:event.track,legend_normal:website_event_track.event_track18
-#: model:event.track,legend_normal:website_event_track.event_track19
-#: model:event.track,legend_normal:website_event_track.event_track2
-#: model:event.track,legend_normal:website_event_track.event_track20
-#: model:event.track,legend_normal:website_event_track.event_track21
-#: model:event.track,legend_normal:website_event_track.event_track22
-#: model:event.track,legend_normal:website_event_track.event_track23
-#: model:event.track,legend_normal:website_event_track.event_track24
-#: model:event.track,legend_normal:website_event_track.event_track25
-#: model:event.track,legend_normal:website_event_track.event_track27
-#: model:event.track,legend_normal:website_event_track.event_track28
-#: model:event.track,legend_normal:website_event_track.event_track29
-#: model:event.track,legend_normal:website_event_track.event_track3
-#: model:event.track,legend_normal:website_event_track.event_track30
-#: model:event.track,legend_normal:website_event_track.event_track31
-#: model:event.track,legend_normal:website_event_track.event_track4
-#: model:event.track,legend_normal:website_event_track.event_track5
-#: model:event.track,legend_normal:website_event_track.event_track6
-#: model:event.track,legend_normal:website_event_track.event_track7
-#: model:event.track,legend_normal:website_event_track.event_track8
-#: model:event.track,legend_normal:website_event_track.event_track9
 #: model:event.track.stage,legend_normal:website_event_track.event_track_stage0
 #: model:event.track.stage,legend_normal:website_event_track.event_track_stage1
 #: model:event.track.stage,legend_normal:website_event_track.event_track_stage2
@@ -1280,14 +1171,14 @@ msgid "In this video, I covered 6 tips and tricks to help out beginners:"
 msgstr ""
 
 #. module: website_event_track
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_event_track/static/src/xml/website_event_pwa.xml:0
 #, python-format
 msgid "Install"
 msgstr "Instalează"
 
 #. module: website_event_track
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_event_track/static/src/xml/website_event_pwa.xml:0
 #, python-format
 msgid "Install Application"
@@ -1645,7 +1536,7 @@ msgid "No Track Visitors yet!"
 msgstr ""
 
 #. module: website_event_track
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_event_track/static/src/js/website_event_track_proposal_form_tags.js:0
 #, python-format
 msgid "No results found"
@@ -1679,8 +1570,8 @@ msgstr "Numărul de erori"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Număr de mesaje ce necesită intervenție"
+msgid "Number of messages requiring action"
+msgstr ""
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__message_has_error_counter
@@ -1725,14 +1616,14 @@ msgid "Plan your experience by adding your favorites talks to your wishlist"
 msgstr ""
 
 #. module: website_event_track
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_event_track/static/src/js/website_event_track_proposal_form.js:0
 #, python-format
 msgid "Please enter either a contact email address or a contact phone number."
 msgstr ""
 
 #. module: website_event_track
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_event_track/static/src/js/website_event_track_proposal_form.js:0
 #, python-format
 msgid "Please fill out the form correctly."
@@ -1793,67 +1684,8 @@ msgid "Raising qualitive insights from your customers"
 msgstr ""
 
 #. module: website_event_track
+#. odoo-python
 #: code:addons/website_event_track/models/event_track_stage.py:0
-#: model:event.track,legend_done:website_event_track.event_7_track_1
-#: model:event.track,legend_done:website_event_track.event_7_track_10
-#: model:event.track,legend_done:website_event_track.event_7_track_11
-#: model:event.track,legend_done:website_event_track.event_7_track_12
-#: model:event.track,legend_done:website_event_track.event_7_track_13
-#: model:event.track,legend_done:website_event_track.event_7_track_14
-#: model:event.track,legend_done:website_event_track.event_7_track_15
-#: model:event.track,legend_done:website_event_track.event_7_track_16
-#: model:event.track,legend_done:website_event_track.event_7_track_17
-#: model:event.track,legend_done:website_event_track.event_7_track_18
-#: model:event.track,legend_done:website_event_track.event_7_track_19
-#: model:event.track,legend_done:website_event_track.event_7_track_2
-#: model:event.track,legend_done:website_event_track.event_7_track_20
-#: model:event.track,legend_done:website_event_track.event_7_track_21
-#: model:event.track,legend_done:website_event_track.event_7_track_22
-#: model:event.track,legend_done:website_event_track.event_7_track_23
-#: model:event.track,legend_done:website_event_track.event_7_track_24
-#: model:event.track,legend_done:website_event_track.event_7_track_25
-#: model:event.track,legend_done:website_event_track.event_7_track_26
-#: model:event.track,legend_done:website_event_track.event_7_track_3
-#: model:event.track,legend_done:website_event_track.event_7_track_4
-#: model:event.track,legend_done:website_event_track.event_7_track_5
-#: model:event.track,legend_done:website_event_track.event_7_track_6
-#: model:event.track,legend_done:website_event_track.event_7_track_7
-#: model:event.track,legend_done:website_event_track.event_7_track_8
-#: model:event.track,legend_done:website_event_track.event_7_track_9
-#: model:event.track,legend_done:website_event_track.event_7_track_l3_1
-#: model:event.track,legend_done:website_event_track.event_7_track_l3_10
-#: model:event.track,legend_done:website_event_track.event_7_track_l3_11
-#: model:event.track,legend_done:website_event_track.event_7_track_l3_2
-#: model:event.track,legend_done:website_event_track.event_track1
-#: model:event.track,legend_done:website_event_track.event_track10
-#: model:event.track,legend_done:website_event_track.event_track11
-#: model:event.track,legend_done:website_event_track.event_track12
-#: model:event.track,legend_done:website_event_track.event_track13
-#: model:event.track,legend_done:website_event_track.event_track14
-#: model:event.track,legend_done:website_event_track.event_track15
-#: model:event.track,legend_done:website_event_track.event_track16
-#: model:event.track,legend_done:website_event_track.event_track17
-#: model:event.track,legend_done:website_event_track.event_track18
-#: model:event.track,legend_done:website_event_track.event_track19
-#: model:event.track,legend_done:website_event_track.event_track2
-#: model:event.track,legend_done:website_event_track.event_track20
-#: model:event.track,legend_done:website_event_track.event_track21
-#: model:event.track,legend_done:website_event_track.event_track22
-#: model:event.track,legend_done:website_event_track.event_track23
-#: model:event.track,legend_done:website_event_track.event_track24
-#: model:event.track,legend_done:website_event_track.event_track25
-#: model:event.track,legend_done:website_event_track.event_track27
-#: model:event.track,legend_done:website_event_track.event_track28
-#: model:event.track,legend_done:website_event_track.event_track29
-#: model:event.track,legend_done:website_event_track.event_track3
-#: model:event.track,legend_done:website_event_track.event_track30
-#: model:event.track,legend_done:website_event_track.event_track31
-#: model:event.track,legend_done:website_event_track.event_track4
-#: model:event.track,legend_done:website_event_track.event_track5
-#: model:event.track,legend_done:website_event_track.event_track6
-#: model:event.track,legend_done:website_event_track.event_track7
-#: model:event.track,legend_done:website_event_track.event_track8
-#: model:event.track,legend_done:website_event_track.event_track9
 #: model:event.track.stage,legend_done:website_event_track.event_track_stage0
 #: model:event.track.stage,legend_done:website_event_track.event_track_stage1
 #: model:event.track.stage,legend_done:website_event_track.event_track_stage2
@@ -1942,7 +1774,7 @@ msgid "Securing your Lumber during transport"
 msgstr ""
 
 #. module: website_event_track
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_event_track/static/src/js/website_event_track_proposal_form_tags.js:0
 #, python-format
 msgid "Select categories"
@@ -1969,7 +1801,7 @@ msgid "Sequence"
 msgstr "Secvență"
 
 #. module: website_event_track
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
 #: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_widget_reminder
@@ -1999,6 +1831,7 @@ msgid "Speaker Bio"
 msgstr ""
 
 #. module: website_event_track
+#. odoo-python
 #: code:addons/website_event_track/models/event_track.py:0
 #, python-format
 msgid "Speaker Email"
@@ -2027,6 +1860,7 @@ msgid ""
 msgstr ""
 
 #. module: website_event_track
+#. odoo-python
 #: code:addons/website_event_track/models/event_track.py:0
 #, python-format
 msgid "Speakers"
@@ -2104,33 +1938,35 @@ msgid "Tags"
 msgstr "Etichete"
 
 #. module: website_event_track
+#. odoo-python
 #: code:addons/website_event_track/models/event_event.py:0
 #, python-format
 msgid "Talk Proposals"
 msgstr "Propunerile discuției"
 
 #. module: website_event_track
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
 #, python-format
 msgid "Talk added to your Favorites"
 msgstr "Discuție adăugată la Favorite"
 
 #. module: website_event_track
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
 #, python-format
 msgid "Talk already in your Favorites"
 msgstr "Discuție deja în favorite"
 
 #. module: website_event_track
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
 #, python-format
 msgid "Talk removed from your Favorites"
 msgstr "Discuție eliminată din favorite"
 
 #. module: website_event_track
+#. odoo-python
 #: code:addons/website_event_track/models/event_event.py:0
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_aside
 #, python-format
@@ -2155,7 +1991,7 @@ msgstr ""
 "Sarcina este blocată. Click aici pentru a debloca sau seta ca și finalizat."
 
 #. module: website_event_track
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_event_track/static/src/xml/event_track_proposal_templates.xml:0
 #, python-format
 msgid "Thank you for your proposal."
@@ -2531,7 +2367,7 @@ msgid ""
 msgstr ""
 
 #. module: website_event_track
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_event_track/static/src/xml/event_track_proposal_templates.xml:0
 #, python-format
 msgid "We will evaluate your proposition and get back to you shortly."
@@ -2651,14 +2487,14 @@ msgid "Woodworking: How I got started!"
 msgstr ""
 
 #. module: website_event_track
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_event_track/static/src/js/website_event_track_proposal_form.js:0
 #, python-format
 msgid "You cannot access this page."
 msgstr ""
 
 #. module: website_event_track
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
 #, python-format
 msgid ""

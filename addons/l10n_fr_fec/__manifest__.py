@@ -12,6 +12,7 @@
     'depends': ['l10n_fr', 'account'],
     'data': [
         'security/ir.model.access.csv',
+        'security/security.xml',
         'wizard/account_fr_fec_view.xml',
     ],
     'auto_install': True,

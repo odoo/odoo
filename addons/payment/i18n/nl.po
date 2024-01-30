@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-14 05:52+0000\n"
+"POT-Creation-Date: 2023-11-07 12:37+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
 "Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
@@ -97,7 +97,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_methods
 msgid "<strong>No suitable payment provider could be found.</strong>"
-msgstr "<strong>Geen geschikte betalingsprovider gevonden.</strong>"
+msgstr "<strong>Geen geschikte betaalprovider gevonden.</strong>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -105,7 +105,7 @@ msgid ""
 "<strong>Warning</strong> Creating a payment provider from the <em>CREATE</em> button is not supported.\n"
 "                        Please use the <em>Duplicate</em> action instead."
 msgstr ""
-"<strong>Waarschuwing</strong> Het maken van een betalingsprovider via de knop <em>CREATE</em> wordt niet ondersteund.\n"
+"<strong>Waarschuwing</strong> Het maken van een betaalprovider via de knop <em>CREATE</em> wordt niet ondersteund.\n"
 "                        Gebruik in plaats daarvan de actie <em>Dupliceren</em>."
 
 #. module: payment
@@ -224,7 +224,7 @@ msgstr "Snel afrekenen toestaan"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__payment_provider_selection
 msgid "Allow Payment Provider"
-msgstr "Betalingsprovider toestaan"
+msgstr "Betaalprovider toestaan"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__allow_tokenization
@@ -319,11 +319,6 @@ msgstr "Beschikbaarheid"
 #, python-format
 msgid "Bank"
 msgstr "Bank"
-
-#. module: payment
-#: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
-msgid "Bank Account"
-msgstr "Bankrekening"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__journal_name
@@ -449,11 +444,6 @@ msgid "Color"
 msgstr "Kleur"
 
 #. module: payment
-#: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
-msgid "Communication"
-msgstr "Communicatie"
-
-#. module: payment
 #: model:ir.model,name:payment.model_res_company
 msgid "Companies"
 msgstr "Bedrijven"
@@ -515,7 +505,7 @@ msgstr "Token maken"
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_provider
 msgid "Create a new payment provider"
-msgstr "Een nieuwe betalingsprovider maken"
+msgstr "Een nieuwe betaalprovider maken"
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_token
@@ -764,21 +754,17 @@ msgid "Full Only"
 msgstr "Alleen volledig"
 
 #. module: payment
+#: model:ir.model,name:payment.model_payment_link_wizard
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
 msgid "Generate Payment Link"
 msgstr "Genereer betaallink"
-
-#. module: payment
-#: model:ir.model,name:payment.model_payment_link_wizard
-msgid "Generate Sales Payment Link"
-msgstr "Gegenereerde verkoop betaallink"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_search
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_search
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_search
 msgid "Group By"
-msgstr "Groepeer op"
+msgstr "Groeperen op"
 
 #. module: payment
 #: model:ir.model,name:payment.model_ir_http
@@ -827,9 +813,9 @@ msgid ""
 "to pay via this one. If 'All' is selected, customers can pay via any "
 "available payment provider."
 msgstr ""
-"Als een specifieke betalingsprovider wordt geselecteerd, kunnen klanten "
-"alleen via deze betalen. Als 'Alle' is geselecteerd, kunnen klanten betalen "
-"via elke beschikbare betalingsprovider."
+"Als een specifieke betaalprovider wordt geselecteerd, kunnen klanten alleen "
+"via deze betalen. Als 'Alle' is geselecteerd, kunnen klanten betalen via "
+"elke beschikbare betaalprovider."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -1053,7 +1039,7 @@ msgid ""
 "from the Payment Provider menu."
 msgstr ""
 "Er is geen handmatige betaalmethode gevonden voor dit bedrijf. Maak er een "
-"aan in het menu Payment Provider."
+"aan in het menu Betaalprovider."
 
 #. module: payment
 #. odoo-javascript
@@ -1150,7 +1136,7 @@ msgstr "Handeling"
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Operations in progress"
-msgstr "Bewerkingen in uitvoering"
+msgstr "Bewerkingen in behandeling"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__res_company__payment_onboarding_payment_method__other
@@ -1236,13 +1222,13 @@ msgstr "Betalingsmethode"
 #. module: payment
 #: model:ir.model,name:payment.model_payment_provider
 msgid "Payment Provider"
-msgstr "Betalingsprovider"
+msgstr "Betaalprovider"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_provider
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_list
 msgid "Payment Providers"
-msgstr "Betalingsproviders"
+msgstr "Betaalproviders"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__available_provider_ids
@@ -1304,12 +1290,12 @@ msgstr "Betalingsgegevens opgeslagen op %(date)s"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Payment provider"
-msgstr "Betalingsprovider"
+msgstr "Betaalprovider"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_provider_onboarding_wizard
 msgid "Payment provider onboarding wizard"
-msgstr "Onboarding-wizard voor betalingsproviders"
+msgstr "Onboarding-wizard voor betaalproviders"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_form
@@ -1356,17 +1342,6 @@ msgstr "Selecteer slechts één betalingsoptie."
 #, python-format
 msgid "Please set an amount smaller than %s."
 msgstr "Stel een bedrag in dat kleiner is dan %s."
-
-#. module: payment
-#: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
-msgid "Please use the following transfer details"
-msgstr "Gebruik de volgende tranfer details."
-
-#. module: payment
-#: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
-msgid "Please use the order name as communication reference."
-msgstr ""
-"Je dient het ordernummer als referentie te gebruiken in alle communicatie."
 
 #. module: payment
 #. odoo-javascript
@@ -1595,7 +1570,7 @@ msgstr "Status"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_company__payment_provider_onboarding_state
 msgid "State of the onboarding payment provider step"
-msgstr "Status van de stap van de onboarding-betalingsprovider"
+msgstr "Status van de stap van de onboarding-betaalprovider"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__state
@@ -1655,8 +1630,8 @@ msgid ""
 "The countries in which this payment provider is available. Leave blank to "
 "make it available in all countries."
 msgstr ""
-"De landen waarin deze betalingsprovider beschikbaar is. Laat dit veld leeg "
-"om het in alle landen beschikbaar te maken."
+"De landen waarin deze betaalprovider beschikbaar is. Laat dit veld leeg om "
+"het in alle landen beschikbaar te maken."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__fees
@@ -1695,8 +1670,8 @@ msgid ""
 "The maximum payment amount that this payment provider is available for. "
 "Leave blank to make it available for any payment amount."
 msgstr ""
-"Het maximale betalingsbedrag waarvoor deze betalingsprovider beschikbaar is."
-" Laat leeg om het beschikbaar te maken voor elk betalingsbedrag."
+"Het maximale betalingsbedrag waarvoor deze betaalprovider beschikbaar is. "
+"Laat leeg om het beschikbaar te maken voor elk betalingsbedrag."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__auth_msg
@@ -1767,7 +1742,7 @@ msgstr "De brontransactie van gerelateerde terugbetalingstransacties"
 #: model:ir.model.fields,help:payment.field_payment_token__provider_code
 #: model:ir.model.fields,help:payment.field_payment_transaction__provider_code
 msgid "The technical code of this payment provider."
-msgstr "De technische code van deze betalingsprovider."
+msgstr "De technische code van deze betaalprovider."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__redirect_form_view_id
@@ -1939,7 +1914,7 @@ msgid ""
 "providers: %s"
 msgstr ""
 "Transactieautorisatie wordt niet ondersteund door de volgende "
-"betalingsproviders: %s"
+"betaalproviders: %s"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__support_refund
@@ -2060,7 +2035,7 @@ msgstr "We verwerken je betaling, een moment geduld..."
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "We are waiting for the payment provider to confirm the payment."
-msgstr "We wachten op de betalingsprovider om de betaling te bevestigen."
+msgstr "We wachten op de betaalprovider om de betaling te bevestigen."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__tokenize
@@ -2089,6 +2064,17 @@ msgstr ""
 #: model:payment.provider,name:payment.payment_provider_transfer
 msgid "Wire Transfer"
 msgstr "Overschrijving"
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_provider.py:0
+#, python-format
+msgid ""
+"You cannot delete the payment provider %s; disable it or uninstall it "
+"instead."
+msgstr ""
+"Je kan de betaalprovider %s niet verwijderen; schakel hem uit of "
+"desinstalleer hem in de plaats."
 
 #. module: payment
 #. odoo-python
@@ -2202,6 +2188,7 @@ msgstr "Je betaling is ontvangen, maar moet handmatig bevestigd worden."
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_sepa_direct_debit
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_sips
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_stripe
+#: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
 #, python-format
 msgid ""
 "Your payment has been successfully processed but is waiting for approval."
@@ -2279,7 +2266,7 @@ msgstr "info"
 #: model:ir.actions.server,name:payment.cron_post_process_payment_tx_ir_actions_server
 #: model:ir.cron,cron_name:payment.cron_post_process_payment_tx
 msgid "payment: post-process transactions"
-msgstr "betaling: transacties na verwerking"
+msgstr "Betaling: transacties na verwerking"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_kanban

@@ -31,7 +31,7 @@ class PosCategory(models.Model):
                 res.append(cat.name)
                 cat = cat.parent_id
             return res
-        return [(cat.id, " / ".join(reversed(get_names(cat)))) for cat in self]
+        return [(cat.id, " / ".join(reversed(get_names(cat)))) for cat in self if cat.name]
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_session_open(self):

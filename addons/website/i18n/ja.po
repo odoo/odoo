@@ -3,20 +3,21 @@
 # 	* website
 # 
 # Translators:
-# Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2022
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2022
-# Ryoko Tsuda <ryoko@quartile.co>, 2023
 # Andy Yiu, 2023
 # Noma Yuki, 2023
 # Martin Trigaux, 2023
+# Ryoko Tsuda <ryoko@quartile.co>, 2023
+# Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2023
+# Wil Odoo, 2023
+# Junko Augias, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-14 05:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Junko Augias, 2023\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,6 +39,12 @@ msgstr "」警告が"
 
 #. module: website
 #. odoo-python
+#: code:addons/website/models/website_rewrite.py:0
+#, python-format
+msgid "\"URL from\" can not be empty."
+msgstr "\"URL from\" は空にすることはできません"
+
+#. module: website
 #: code:addons/website/models/website_rewrite.py:0
 #, python-format
 msgid "\"URL to\" can not be empty."
@@ -203,7 +210,7 @@ msgstr "+ フィールド"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "+ New Website"
-msgstr "+ 新規サイト"
+msgstr "+ 新規ウェブサイト"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.footer_custom
@@ -241,7 +248,7 @@ msgid ""
 "                                                The website will still work if you reject or discard those cookies."
 msgstr ""
 "。\n"
-"                                                これらのCookieを拒否又は破棄しても、Webサイトは引き続き機能します。"
+"                                                これらのCookieを拒否又は破棄しても、ウェブサイトは引き続き機能します。"
 
 #. module: website
 #. odoo-javascript
@@ -622,6 +629,8 @@ msgid ""
 "<br/><br/>\n"
 "                    Example of rule:<br/>"
 msgstr ""
+"<br/><br/>\n"
+"                  規則例:<br/>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_carousel
@@ -784,7 +793,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_pages_kanban_view
 msgid "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
-msgstr "<i class=\"fa fa-globe me-1\" title=\"Webサイト\"/>"
+msgstr "<i class=\"fa fa-globe me-1\" title=\"ウェブサイト\"/>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.page_404
@@ -1112,7 +1121,7 @@ msgstr "<span class=\"mx-2\">/</span>"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "<span class=\"mx-2\">to</span>"
-msgstr ""
+msgstr "<span class=\"mx-2\">から</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.language_selector_inline
@@ -1290,6 +1299,8 @@ msgid ""
 "<span class=\"s_website_form_label_content\">Question</span>\n"
 "                                                            <span class=\"s_website_form_mark\"> *</span>"
 msgstr ""
+"<span class=\"s_website_form_label_content\">お問合せ内容</span>\n"
+"                                                            <span class=\"s_website_form_mark\"> *</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus
@@ -1310,7 +1321,7 @@ msgstr "<span>テーマ</span>"
 msgid ""
 "A CDN helps you serve your website’s content with high availability and high"
 " performance to any visitor wherever they are located."
-msgstr "CDNは世界中の訪問者に高可用性及び高性能のWebサイトコンテンツを提供するのに役立ちます。"
+msgstr "CDNは世界中の訪問者に高可用性及び高性能のウェブサイトコンテンツを提供するのに役立ちます。"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_chart
@@ -1350,9 +1361,9 @@ msgid ""
 "field as True to allow users to run this action. If it is set to False the "
 "action cannot be run through the website."
 msgstr ""
-"コードサーバーアクションは専用コントローラーを使ってWebサイトから行えます。 "
+"コードサーバーアクションは専用コントローラーを使ってウェブサイトから行えます。 "
 "アドレスは<base>/website/action/です<website_path>。ユーザーは本フィールドをTrueに設定してこの操作を実行できるようにされます。"
-" Falseに設定されている場合はWebサイトでアクションを実行することはできません。"
+" Falseに設定されている場合はウェブサイトでアクションを実行することはできません。"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_color_blocks_2
@@ -1458,7 +1469,7 @@ msgstr "アクセサリー"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Accordion"
-msgstr ""
+msgstr "アコーディオン"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
@@ -1468,7 +1479,7 @@ msgstr "アカウント・販売管理"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Accounts are usable across all your multiple websites"
-msgstr "アカウントは複数サイトに渡って使用できます"
+msgstr "アカウントは複数ウェブサイトで使用できます"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_rewrite__redirect_type
@@ -1720,7 +1731,7 @@ msgstr "全て"
 #. module: website
 #: model:ir.model,name:website.model_website_route
 msgid "All Website Route"
-msgstr "すべてのWebサイトルート"
+msgstr "すべてのウェブサイトルート"
 
 #. module: website
 #. odoo-javascript
@@ -1728,7 +1739,7 @@ msgstr "すべてのWebサイトルート"
 #: model_terms:ir.ui.view,arch_db:website.view_view_qweb
 #, python-format
 msgid "All Websites"
-msgstr "全てのWebサイト"
+msgstr "全てのウェブサイト"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_big_icons_subtitles
@@ -1764,13 +1775,13 @@ msgstr "全てのクッキーを許可"
 #: code:addons/website/static/src/xml/website.cookies_bar.xml:0
 #, python-format
 msgid "Allow the use of cookies from this website on this browser?"
-msgstr "このブラウザーにこのサイトのクッキー使用を許可しますか?"
+msgstr "このブラウザーにこのウェブサイトのクッキー使用を許可しますか?"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_ir_ui_view__track
 #: model:ir.model.fields,help:website.field_website_page__track
 msgid "Allow to specify for one page of the website to be trackable or not"
-msgstr "Webサイトの1ページを追跡可能にするかどうかを指定できるようにします"
+msgstr "ウェブサイトの1ページを追跡可能にするかどうかを指定できるようにします"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_model__website_form_access
@@ -1821,7 +1832,7 @@ msgid ""
 "or indirectly, implying any approval, association, sponsorship, endorsement,"
 " or affiliation with any linked website, unless specifically stated herein."
 msgstr ""
-"このサイトは他のサイトにリンクされている場合はありますが、ここに特に明記されていない限り、リンクされているサイトの承認、関連付け、スポンサーシップ、承認又は提携を暗示することはありません。"
+"このウェブサイトは他のウェブサイトにリンクされている場合はありますが、ここに特に明記されていない限り、リンクされているウェブサイトの承認、関連付け、スポンサーシップ、承認又は提携を暗示することはありません。"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -2033,7 +2044,7 @@ msgid ""
 "Authenticate users, protect user data and allow the website to deliver the services users expects,\n"
 "                                                such as maintaining the content of their cart, or allowing file uploads."
 msgstr ""
-"ユーザーを認証し、ユーザーデータを保護してサイトがユーザーが期待するサービスを提供できるようにします。カートの内容を維持したり、ファイルのアップロードを許可したりします。"
+"ユーザーを認証し、ユーザーデータを保護してウェブサイトがユーザーが期待するサービスを提供できるようにします。カートの内容を維持したり、ファイルのアップロードを許可したりします。"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.theme_view_search
@@ -2072,7 +2083,7 @@ msgstr "自動サイズ"
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__website_published
 #: model:ir.model.fields,field_description:website.field_ir_cron__website_published
 msgid "Available on the Website"
-msgstr "サイトで使用可"
+msgstr "ウェブサイトで使用可"
 
 #. module: website
 #. odoo-javascript
@@ -2126,7 +2137,7 @@ msgstr "バッグ"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Banner"
-msgstr ""
+msgstr "バナー"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
@@ -2192,7 +2203,7 @@ msgstr "大"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Big Boxes"
-msgstr ""
+msgstr "Bigボックス"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -2271,33 +2282,33 @@ msgstr "ブートストラップベースのテンプレート"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options_border_widgets
 #, python-format
 msgid "Border"
-msgstr "ふち"
+msgstr "枠線"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Border Bottom"
-msgstr "下にふち"
+msgstr "枠線下"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_blockquote_options
 msgid "Border Color"
-msgstr "ふち色"
+msgstr "枠線色"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Border Radius"
-msgstr "ふち半径"
+msgstr "枠線半径"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Border Width"
-msgstr "ふち幅"
+msgstr "枠線幅"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Bordered"
-msgstr "ふち付き"
+msgstr "枠線付き"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
@@ -2338,7 +2349,7 @@ msgstr "パンくず"
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 #, python-format
 msgid "Build my website"
-msgstr "サイトを構築"
+msgstr "ウェブサイトを構築"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_table_of_content
@@ -2357,7 +2368,7 @@ msgstr "%sを作る"
 #: code:addons/website/static/src/components/website_loader/website_loader.xml:0
 #, python-format
 msgid "Building your website..."
-msgstr "Webサイトを作る..."
+msgstr "ウェブサイト構築中..."
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_ir_asset__bundle
@@ -2450,7 +2461,7 @@ msgstr "キャンセル"
 #: code:addons/website/models/res_lang.py:0
 #, python-format
 msgid "Cannot deactivate a language that is currently used on a website."
-msgstr "サイトに使用されている言語を無効化することはできません。"
+msgstr "ウェブサイトに使用されている言語を無効化することはできません。"
 
 #. module: website
 #. odoo-javascript
@@ -2836,7 +2847,7 @@ msgstr "列"
 msgid ""
 "Comma-separated list of website type/purpose for which this feature should "
 "be pre-selected"
-msgstr "どんな機能が予め選択されるべきかのサイトタイプ・目的のカンマ区切りリスト"
+msgstr "どんな機能が予め選択されるべきかのウェブサイトタイプ・目的のカンマ区切りリスト"
 
 #. module: website
 #: model:ir.model,name:website.model_res_company
@@ -2855,7 +2866,7 @@ msgstr "会社"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Comparisons"
-msgstr ""
+msgstr "比較"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
@@ -3074,10 +3085,10 @@ msgstr ""
 "クッキーとは、私たちのサービスをご利用する際、こちらのサーバーからあなたのコンピューター・装置へ送信するテキストのものです。\n"
 "                            コンテキストコンテンツを提供するために、そのテキストはあなたのブラウザーに保存されて、後ほどこちらのサーバーに送り返します。\n"
 "                            クッキーを使用しない場合、Webの使用は苛立ちを感じるかもしれんません。\n"
-"                            クッキーであなたのサイトでの活動をサポートいたします。例えば、セクション (再びログインする必要がないように)又はショッピングカート。\n"
+"                            クッキーであなたのウェブサイトでの活動をサポートいたします。例えば、セクション (再びログインする必要がないように)又はショッピングカート。\n"
 "                            <br/>\n"
-"                            クッキーは、うちのサイトでの以前・現在の活動 (訪問したページ)、又はあなたの言語・国に基づいてあなたのお好みを理解するのをご協力し、より良いサービスをご提供できるようにします。\n"
-"                            私たちもクッキーを利用してサイトトラフィック・インタラクションについて集計データをコンパイルし、未来でより良いサイト経験とツールをご提供します。"
+"                            クッキーは、うちのウェブサイトでの以前・現在の活動 (訪問したページ)、又はあなたの言語・国に基づいてあなたのお好みを理解するのをご協力し、より良いサービスをご提供できるようにします。\n"
+"                            私たちもクッキーを利用してウェブサイトトラフィック・インタラクションについて集計データをコンパイルし、未来でより良いウェブサイト経験とツールをご提供します。"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -3087,7 +3098,7 @@ msgstr "著作権"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Countdown"
-msgstr ""
+msgstr "カウントダウン"
 
 #. module: website
 #. odoo-javascript
@@ -3146,7 +3157,7 @@ msgstr "カバー性質"
 #. module: website
 #: model:ir.model,name:website.model_website_cover_properties_mixin
 msgid "Cover Properties Website Mixin"
-msgstr "カバー性質WebサイトMixin"
+msgstr "カバー属性ウェブサイトMixin"
 
 #. module: website
 #. odoo-javascript
@@ -3733,13 +3744,13 @@ msgstr "表示名"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Display a customizable cookies bar on your website"
-msgstr "サイトにカスタマイズ可能なクッキーバーを表示"
+msgstr "ウェブサイトにカスタマイズ可能なクッキーバーを表示"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__website_cookies_bar
 #: model:ir.model.fields,help:website.field_website__cookies_bar
 msgid "Display a customizable cookies bar on your website."
-msgstr "サイトにカスタマイズ可能なクッキーバーを表示。"
+msgstr "ウェブサイトにカスタマイズ可能なクッキーバーを表示。"
 
 #. module: website
 #. odoo-python
@@ -3760,18 +3771,18 @@ msgstr "プロフィールを表示"
 #: code:addons/website/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Display the website description"
-msgstr "サイト説明を表示"
+msgstr "ウェブサイト説明を表示"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__website_logo
 #: model:ir.model.fields,help:website.field_website__logo
 msgid "Display this logo on the website."
-msgstr "サイトにロゴを表示"
+msgstr "ウェブサイトにロゴを表示"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Display this website when users visit this domain"
-msgstr "ユーザーが本ドメインを訪問する際にこのサイトを表示"
+msgstr "ユーザーが本ドメインを訪問する際にこのウェブサイトを表示"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_cards
@@ -3927,7 +3938,7 @@ msgstr "期間"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Dynamic Carousel"
-msgstr ""
+msgstr "ダイナミックカルーセル"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -3937,7 +3948,7 @@ msgstr "ダイナミックコンテンツ"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Dynamic Snippet"
-msgstr ""
+msgstr "ダイナミックスニペット"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__website_homepage_url
@@ -4343,7 +4354,7 @@ msgstr "機能"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Features Grid"
-msgstr ""
+msgstr "機能グリッド"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_dynamic_snippet_options_template
@@ -4755,7 +4766,7 @@ msgstr "ページ管理画面に移動"
 #: code:addons/website/static/src/xml/website.backend.xml:0
 #, python-format
 msgid "Go to Website"
-msgstr "サイトへ"
+msgstr "ウェブサイトへ"
 
 #. module: website
 #. odoo-javascript
@@ -5056,7 +5067,7 @@ msgstr "効率的な翻訳に役立つビジュアル: "
 msgid ""
 "Here is an overview of the cookies that may be stored on your device when "
 "you visit our website:"
-msgstr "私たちのサイトにアクセス時、あなたの装置に保存できるクッキーの概要です: "
+msgstr "私たちのウェブサイトにアクセス時、あなたの装置に保存できるクッキーの概要です: "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
@@ -5096,7 +5107,7 @@ msgstr "高"
 msgid ""
 "Hint: How to use Google Map on your website (Contact Us page and as a "
 "snippet)"
-msgstr "ヒント: サイトにどうGoogleマップを使うか (お問い合わせページ、及びスニペットとして)"
+msgstr "ヒント: ウェブサイトにどうGoogleマップを使うか (お問い合わせページ、及びスニペットとして)"
 
 #. module: website
 #. odoo-javascript
@@ -5140,7 +5151,7 @@ msgstr "ホームオーディオ"
 #: model_terms:ir.ui.view,arch_db:website.website_pages_kanban_view
 #, python-format
 msgid "Home page of the current website"
-msgstr "現サイトのホームページ"
+msgstr "現ウェブサイトのホームページ"
 
 #. module: website
 #. odoo-python
@@ -5264,12 +5275,12 @@ msgstr "アイコン"
 #. module: website
 #: model:ir.model.fields,help:website.field_website__specific_user_account
 msgid "If True, new accounts will be associated to the current website"
-msgstr "Trueの場合、新規アカウントは現サイトに関連付けられます"
+msgstr "Trueの場合、新規アカウントは現ウェブサイトに関連付けられます"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_configurator_feature__menu_sequence
 msgid "If set, a website menu will be created for the feature."
-msgstr "設定すると、今後にサイトメニューが作成されます。"
+msgstr "設定すると、今後にウェブサイトメニューが作成されます。"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_configurator_feature__menu_company
@@ -5282,7 +5293,7 @@ msgstr "設定すると、「会社」メニューの子として、第二レベ
 #: model:ir.model.fields,help:website.field_website__social_default_image
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "If set, replaces the website logo as the default social share image."
-msgstr "設定すると、デフォルトソーシャルシェア画像としてWebサイトのロゴが置き換えられます。"
+msgstr "設定すると、デフォルトソーシャルシェア画像としてウェブサイトのロゴが置き換えられます。"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.qweb_500
@@ -5332,7 +5343,7 @@ msgstr "画像"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Image - Text"
-msgstr ""
+msgstr "画像 - テキスト"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
@@ -5342,7 +5353,7 @@ msgstr "画像カバー"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Image Gallery"
-msgstr ""
+msgstr "画像ギャラリー"
 
 #. module: website
 #. odoo-javascript
@@ -5385,7 +5396,7 @@ msgstr "画像サブタイトル"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Images Wall"
-msgstr ""
+msgstr "画像壁"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -5682,7 +5693,7 @@ msgstr "インデックス化されてある"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_module_module__is_installed_on_current_website
 msgid "Is Installed On Current Website"
-msgstr "現サイトにインストールされてある"
+msgstr "現ウェブサイトにインストールされてある"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_menu__is_mega_menu
@@ -5789,7 +5800,7 @@ msgid ""
 "            we recommend you to try to use the new color system, which is\n"
 "            still customizable."
 msgstr ""
-"お客様のサイトに、いくつのところはまだOdoo "
+"お客様のウェブサイトに、いくつのところはまだOdoo "
 "13.0の旧カラーシステムを使用しているそうです。まだお使いできますが、同じカスタム可能な新しいカラーシステムはおすすめです。"
 
 #. module: website
@@ -5910,7 +5921,7 @@ msgstr "言語セレクター"
 #. module: website
 #: model:ir.model.fields,help:website.field_website_visitor__lang_id
 msgid "Language from the website when visitor has been created"
-msgstr "訪問者が作成される時のサイトの言語"
+msgstr "訪問者が作成される時のウェブサイトの言語"
 
 #. module: website
 #: model:ir.model,name:website.model_res_lang
@@ -5924,7 +5935,7 @@ msgstr "言語"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Languages available on your website"
-msgstr "サイトで利用可能な言語"
+msgstr "ウェブサイトで利用可能な言語"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_odoo_menu
@@ -6240,7 +6251,7 @@ msgstr "リンクスタイル"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_faq_collapse
 msgid "Links to other Websites"
-msgstr "他のサイトへのリンク"
+msgstr "他のウェブサイトへのリンク"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -6331,7 +6342,7 @@ msgstr "メインアクション"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Main page of your website served to visitors"
-msgstr "訪問者に表示するサイトのメインページ"
+msgstr "訪問者に表示するウェブサイトのメインページ"
 
 #. module: website
 #. odoo-javascript
@@ -6380,12 +6391,12 @@ msgstr "マップStatic API"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 msgid "Mark Text"
-msgstr "テキストをマック"
+msgstr "テキストをマーク"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 msgid "Marked Fields"
-msgstr "マックされたフィールド"
+msgstr "マークされた項目"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_google_map_options
@@ -6421,7 +6432,7 @@ msgstr "メディア"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Media List"
-msgstr ""
+msgstr "メディアリスト"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_media_list
@@ -6572,7 +6583,7 @@ msgstr "モバイル"
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 #, python-format
 msgid "Mobile Alignment"
-msgstr ""
+msgstr "モバイル配置"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -6640,7 +6651,7 @@ msgstr "モジュールマーケティング自動化"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__module_website_livechat
 msgid "Module Website Livechat"
-msgstr "モジュールサイトWebチャット"
+msgstr "モジュールウェブサイトチャット"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -6655,7 +6666,7 @@ msgid ""
 "push notification. If they have completed one of your forms, you can send "
 "them an SMS, or call them right away while they are browsing your website."
 msgstr ""
-"Odooソーシャルアプリをお使いする訪問者はサイトを閲覧する際モニターします。Webチャットやプッシュ通知で、ワンクリックで訪問者と繋がれます。サイトのフォームが記入された場合、まだサイトにいるうちにSMSを送信する、又は直接呼び出しましょう。"
+"Odooソーシャルアプリをお使いする訪問者はウェブサイトを閲覧する際モニターします。Webチャットやプッシュ通知で、ワンクリックで訪問者と繋がれます。ウェブサイトのフォームが記入された場合、まだウェブサイトにいるうちにSMSを送信する、又は直接呼び出しましょう。"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_odoo_menu
@@ -6728,18 +6739,18 @@ msgstr "マルチメニュー"
 #. module: website
 #: model:ir.model,name:website.model_website_multi_mixin
 msgid "Multi Website Mixin"
-msgstr "マルチWebサイトMixin"
+msgstr "複数ウェブサイトMixin"
 
 #. module: website
 #: model:ir.model,name:website.model_website_published_multi_mixin
 msgid "Multi Website Published Mixin"
-msgstr "マルチWebサイト公開済みMixin"
+msgstr "複数ウェブサイト公開済Mixin"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__group_multi_website
 #: model:res.groups,name:website.group_multi_website
 msgid "Multi-website"
-msgstr "マルチWebサイト"
+msgstr "複数ウェブサイト"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_list
@@ -6970,6 +6981,13 @@ msgstr "検索結果は見つかりませんでした。 別のキーワード�
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
 msgid "No support"
 msgstr "サポートなし"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/systray_items/website_switcher.js:0
+#, python-format
+msgid "No website domain configured for this website."
+msgstr "このウェブサイト用に設定されたウェブサイトドメインがありません。"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
@@ -7220,7 +7238,7 @@ msgstr "オープンソースERP"
 #. module: website
 #: model:ir.actions.client,name:website.action_open_website_configurator
 msgid "Open Website Configurator"
-msgstr "オープンWebサイトコンフィギュレーター"
+msgstr "ウェブサイトコンフィギュレータを開く"
 
 #. module: website
 #. odoo-javascript
@@ -7534,6 +7552,13 @@ msgid "Pay"
 msgstr "お支払い"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/js/form_editor_registry.js:0
+#, python-format
+msgid "Phone Number"
+msgstr "電話番号"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_thumbnails
 msgid "Phones"
 msgstr "電話"
@@ -7672,7 +7697,7 @@ msgstr "プリセット"
 #: code:addons/website/static/src/js/backend/view_hierarchy.js:0
 #, python-format
 msgid "Press %s for next %s"
-msgstr ""
+msgstr " %sを押して次の %sへ"
 
 #. module: website
 #. odoo-javascript
@@ -7843,7 +7868,7 @@ msgstr "公開"
 #: code:addons/website/static/src/components/views/page_list.js:0
 #, python-format
 msgid "Publish Website Content"
-msgstr "Webサイトコンテンツを公開"
+msgstr "ウェブサイトコンテンツを公開"
 
 #. module: website
 #: model:website.configurator.feature,description:website.feature_module_career
@@ -7896,7 +7921,7 @@ msgstr "品質"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Quotes"
-msgstr ""
+msgstr "引用"
 
 #. module: website
 #: model:ir.model,name:website.model_ir_qweb
@@ -7964,6 +7989,13 @@ msgid "Redirect to URL in a new tab"
 msgstr "新しいタブでURLへリダイレクト"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/website_preview/website_preview.js:0
+#, python-format
+msgid "Redirecting..."
+msgstr "リダイレクト中…"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.view_rewrite_search
 msgid "Redirection Type"
 msgstr "リダイレクトタイプ"
@@ -8016,7 +8048,7 @@ msgstr "関連キーワード"
 msgid ""
 "Remember information about the preferred look or behavior of the website, "
 "such as your preferred language or region."
-msgstr "言語や地区など、サイトのお好みの外観や挙動について情報を保存します。"
+msgstr "言語や地区など、ウェブサイトのお好みの外観や挙動について情報を保存します。"
 
 #. module: website
 #. odoo-javascript
@@ -8110,7 +8142,7 @@ msgstr "以前のバージョンを復元 (ソフトリセット)。"
 #: model:ir.model.fields,help:website.field_website_published_multi_mixin__website_id
 #: model:ir.model.fields,help:website.field_website_snippet_filter__website_id
 msgid "Restrict publishing to this website."
-msgstr "このWebサイトへの公開を制限。"
+msgstr "このウェブサイトへの公開を制限。"
 
 #. module: website
 #: model:res.groups,name:website.group_website_restricted_editor
@@ -8379,12 +8411,12 @@ msgid ""
 "free and high quality photos, makes it possible for you to get the perfect "
 "picture, in just a few clicks."
 msgstr ""
-"サイトを表現するために、メディアダイアログに写真を検索します。OdooはUnsplashと連携しており、数クリックで数百万のロイヤリティフリーかつ高品質の写真からピッタリな画像を選んで使っていきましょう。"
+"ウェブサイトを表現するために、メディアダイアログに写真を検索します。OdooはUnsplashと連携しており、数クリックで数百万のロイヤリティフリーかつ高品質の写真からピッタリな画像を選んで使っていきましょう。"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_searchbar
 msgid "Search on our website"
-msgstr "当社のサイトで検索"
+msgstr "当社のウェブサイトで検索"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.searchbar_input_snippet_options
@@ -8566,12 +8598,12 @@ msgstr "設定"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Settings of Website"
-msgstr "サイト設定"
+msgstr "ウェブサイト設定"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Settings on this page will apply to this website"
-msgstr "本ページの設定はこのサイトに適用します"
+msgstr "本ページの設定はこのウェブサイトに適用します"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -8706,7 +8738,7 @@ msgstr "モバイルに表示・非表示"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Showcase"
-msgstr ""
+msgstr "ショーケース"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -9054,6 +9086,13 @@ msgid "Sub Menus"
 msgstr "サブメニュー"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/js/form_editor_registry.js:0
+#, python-format
+msgid "Subject"
+msgstr "件名"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus
 #: model_terms:ir.ui.view,arch_db:website.s_website_form
 msgid "Submit"
@@ -9130,7 +9169,7 @@ msgstr "翻訳"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Table of Content"
-msgstr ""
+msgstr "目次"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_odoo_menu
@@ -9226,7 +9265,7 @@ msgstr "テキスト"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Text - Image"
-msgstr ""
+msgstr "テキスト - 画像"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -9289,7 +9328,7 @@ msgstr "選択した名前はすでに存在しています"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "The company this website belongs to"
-msgstr "本サイトの所属会社:"
+msgstr "本ウェブサイトの所属会社:"
 
 #. module: website
 #. odoo-javascript
@@ -9340,14 +9379,14 @@ msgstr "フォームの特定モデルは存在しません"
 #: model:ir.model.fields,help:website.field_website_published_multi_mixin__website_url
 #: model:ir.model.fields,help:website.field_website_snippet_filter__website_url
 msgid "The full URL to access the document through the website."
-msgstr "サイト経由で書類にアクセスするための完全なURL。"
+msgstr "ウェブサイト経由で書類にアクセスするための完全なURL。"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_base_automation__website_url
 #: model:ir.model.fields,help:website.field_ir_actions_server__website_url
 #: model:ir.model.fields,help:website.field_ir_cron__website_url
 msgid "The full URL to access the server action through the website."
-msgstr "サイト経由でサーバーアクションにアクセスするための完全なURL。"
+msgstr "ウェブサイト経由でサーバーアクションにアクセスするための完全なURL。"
 
 #. module: website
 #. odoo-python
@@ -9409,12 +9448,12 @@ msgstr "指定してない場合は、タイトルはデフォルト値を使用
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
 msgid ""
 "The website will not work properly if you reject or discard those cookies."
-msgstr "クッキーを拒否・破棄すると、サイトは正しく作動できません。"
+msgstr "クッキーを拒否・破棄すると、ウェブサイトは正しく作動できません。"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
 msgid "The website will still work if you reject or discard those cookies."
-msgstr "クッキーを拒否・破棄する場合でも、サイトは正しく作動できます。"
+msgstr "クッキーを拒否・破棄する場合でも、ウェブサイトは正しく作動できます。"
 
 #. module: website
 #. odoo-javascript
@@ -9473,7 +9512,7 @@ msgstr "テーマユーティリティ"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.list_website_public_pages
 msgid "There are currently no pages for this website."
-msgstr "このサイトに現在はページがありません。"
+msgstr "このウェブサイトに現在はページがありません。"
 
 #. module: website
 #. odoo-python
@@ -9498,9 +9537,9 @@ msgid ""
 " and conditions of your use of this website and any of its products or "
 "services (collectively, \"Website\" or \"Services\")."
 msgstr ""
-"これらの利用規約 (「条件」、「契約」)はサイト (「サイト運営者」、又は「私たち」)とあなた "
-"(「ユーザー」、又は「あなた」)の間の合意です。この契約は、あなたのこのサイト及びサイトのプロダクト・サービス "
-"(以下、「サイト」、又は「サービス」と総称します)の使用の一般取引条件を定めます。"
+"これらの利用規約 (「条件」、「契約」)はウェブサイト (「ウェブサイト運営者」、又は「私たち」)とあなた "
+"(「ユーザー」、又は「あなた」)の間の合意です。この契約は、あなたのこのウェブサイト及びウェブサイトのプロダクト・サービス "
+"(以下、「ウェブサイト」、又は「サービス」と総称します)の使用の一般取引条件を定めます。"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_big_icons_subtitles
@@ -9539,7 +9578,7 @@ msgstr "このURLは「%s」に含まれています (「%s」から)"
 #: model:ir.model.fields,help:website.field_res_config_settings__favicon
 #: model:ir.model.fields,help:website.field_website__favicon
 msgid "This field holds the image used to display a favicon on the website."
-msgstr "このフィールドは、サイト上にファビコンを表示するために使用される画像を保持します。"
+msgstr "この項目はウェブサイト上にファビコンを表示するために使用される画像を保持します。"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_page__arch_base
@@ -9574,6 +9613,15 @@ msgstr "このフィールドは、書き込む前に現在の「arch_db」を�
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
+#, python-format
+msgid ""
+"This font already exists, you can only add it as a local font to replace the"
+" server version."
+msgstr "このフォントはすでに存在しており、サーバーバージョンを置き換えるためにローカルフォントとして追加することしかできません。"
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "This font is hosted and served to your visitors by Google servers"
@@ -9596,7 +9644,7 @@ msgstr "これは注目コンテンツや情報に注意を引きつける簡単
 #: code:addons/website/controllers/form.py:0
 #, python-format
 msgid "This message has been posted on your website!"
-msgstr "サイトにメッセージを投稿しました!"
+msgstr "ウェブサイトにメッセージを投稿しました!"
 
 #. module: website
 #. odoo-python
@@ -9609,7 +9657,7 @@ msgstr "この演算子は対応されていません"
 #: model:ir.ui.menu,name:website.menu_current_page
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
 msgid "This page"
-msgstr "ページは"
+msgstr "現ページ"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.page_404
@@ -9623,7 +9671,7 @@ msgstr "ページは存在しませんが、サイトの編集者であるあな
 #: code:addons/website/static/src/components/translator/translator.js:0
 #, python-format
 msgid "This translation is not editable."
-msgstr ""
+msgstr "翻訳は編集することはできません。"
 
 #. module: website
 #. odoo-javascript
@@ -9639,6 +9687,24 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.report_viewhierarchy_children
 msgid "This view arch has been modified"
 msgstr "このビューアーキテクチャは変更されました"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/systray_items/website_switcher.js:0
+#, python-format
+msgid ""
+"This website does not have a domain configured. To avoid unexpected behaviours during website edition, we recommend closing (or refreshing) other browser tabs.\n"
+"To remove this message please set a domain in your website settings"
+msgstr ""
+"このウェブサイトにはドメインが設定されていません。ウェブサイトのエ編集中に予期しない動作を避けるため、他のブラウザのタブを閉じる（または更新する）ことをお勧めします。\n"
+"このメッセージを削除するには、ウェブサイトの設定でドメインを設定して下さい。"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/systray_items/website_switcher.xml:0
+#, python-format
+msgid "This website does not have a domain configured."
+msgstr "このウェブサイトには設定されたドメインがありません。"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
@@ -9674,7 +9740,7 @@ msgstr "時間帯"
 #: model:digest.tip,name:website.digest_tip_website_4
 #: model_terms:digest.tip,tip_description:website.digest_tip_website_4
 msgid "Tip: Add shapes to energize your Website"
-msgstr "ヒント: 図形を追加してサイトに活力をつけましょう"
+msgstr "ヒント: 図形を追加してウェブサイトに活力をつけましょう"
 
 #. module: website
 #: model:digest.tip,name:website.digest_tip_website_0
@@ -9692,7 +9758,7 @@ msgstr "ヒント: 検索エンジン最適化 (SEO)"
 #: model:digest.tip,name:website.digest_tip_website_3
 #: model_terms:digest.tip,tip_description:website.digest_tip_website_3
 msgid "Tip: Use illustrations to spice up your website"
-msgstr "ヒント: イラストを使ってサイトを盛り上げていきましょう"
+msgstr "ヒント: イラストを使ってウェブサイトを盛り上げていきましょう"
 
 #. module: website
 #: model:digest.tip,name:website.digest_tip_website_1
@@ -9780,7 +9846,7 @@ msgstr "上"
 #: code:addons/website/models/website.py:0
 #, python-format
 msgid "Top Menu for Website %s"
-msgstr "サイトのトップメニュー %s"
+msgstr "ウェブサイトのトップメニュー %s"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options_background_options
@@ -9834,8 +9900,15 @@ msgstr "翻訳属性"
 #. odoo-javascript
 #: code:addons/website/static/src/components/translator/translator.js:0
 #, python-format
+msgid "Translate Selection Option"
+msgstr "選択オプションを翻訳する"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/components/translator/translator.js:0
+#, python-format
 msgid "Translate header in the text. Menu is generated automatically."
-msgstr ""
+msgstr "テキストの見出しを翻訳します。メニューは自動的に生成されます。"
 
 #. module: website
 #. odoo-javascript
@@ -9921,7 +9994,7 @@ msgstr ""
 "\n"
 "        301 恒久的な移動: ブラウザは新しいURLをキャッシュに保存。\n"
 "        302 一時的な移動: ブラウザは新しいURLをキャッシュに保存しない、次回はもう一度新しいURLを確認。\n"
-"        404 未検出: 特定のページ・コントローラーを削除したい場合 (例: Eコマースはインストールされたが特定のサイトに販売をしたくない、或いは欲しくない)\n"
+"        404 未検出: 特定のページ・コントローラーを削除したい場合 (例: Eコマースはインストールされたが特定のウェブサイトに販売をしたくない、或いは欲しくない)\n"
 "        308 リダイレクト・リライト: 新しいURLでコントローラーの名前を変更したい場合。 (例: /shop -> /garden - 両URLはアクセス可能が/shopは自動的に/gardenにリダイレクト)\n"
 "    "
 
@@ -9980,7 +10053,7 @@ msgstr "ホバー時に下線"
 msgid ""
 "Understand how visitors engage with our website, via Google Analytics.\n"
 "                                                Learn more about"
-msgstr "どうGoogle Analyticsで訪問者をサイトに繋げるかについてもっと知る:"
+msgstr "どうGoogle Analyticsで訪問者をウェブサイトに繋げるかについてもっと知る:"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
@@ -10067,7 +10140,7 @@ msgstr "URL及びページ"
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "Use Google Map on your website (Contact Us page, snippets, etc)."
-msgstr "サイトにGoogleマップを使用 (お問合せページ、スニペットなど)。"
+msgstr "ウェブサイトにGoogleマップを使用 (お問い合せページ、スニペットなど)。"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_website_menu__use_main_menu_as_parent
@@ -10083,7 +10156,7 @@ msgstr "Google Analyticsの代替として、簡単かつプライバシーフ�
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Use a CDN to optimize the availability of your website's content"
-msgstr "CDNを使用してサイトコンテンツの可用性を最適化"
+msgstr "CDNを使用してウェブサイトコンテンツの可用性を最適化"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__has_default_share_image
@@ -10189,7 +10262,7 @@ msgid ""
 "Used to make advertising more engaging to users and more valuable to publishers and advertisers,\n"
 "                                                such as providing more relevant ads when you visit other websites that display ads or to improve reporting on ad campaign performance."
 msgstr ""
-"広告をもっとユーザに魅力的になって、及び出版業者や広告業者にとってもっと価値であるになるために使われてます。例えば、広告を表示する他のサイトに訪問する時に関連のある広告を提供したり、又は広告キャンペーンパフォーマンスのレポーティングを改善したりします。"
+"広告をもっとユーザに魅力的になって、及び出版業者や広告業者にとってもっと価値であるになるために使われてます。例えば、広告を表示する他のウェブサイトに訪問する時に関連のある広告を提供したり、又は広告キャンペーンパフォーマンスのレポーティングを改善したりします。"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.footer_custom
@@ -10329,7 +10402,7 @@ msgstr "ログアウトしたユーザに表示"
 #: model:ir.model.fields,field_description:website.field_website_published_multi_mixin__website_published
 #: model:ir.model.fields,field_description:website.field_website_snippet_filter__website_published
 msgid "Visible on current website"
-msgstr "現在のサイトに表示"
+msgstr "現在のウェブサイトに表示"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
@@ -10413,7 +10486,7 @@ msgstr "訪問者が閲覧したページを確認します。"
 msgid ""
 "Wait for visitors to come to your website to see their history and engage "
 "with them."
-msgstr "訪問者のサイト履歴を確認し、訪問者と繋がりましょう。"
+msgstr "訪問者のウェブサイト履歴を確認し、訪問者と繋がりましょう。"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_alert_options
@@ -10432,6 +10505,8 @@ msgid ""
 "We are a team of passionate people whose goal is to improve everyone's life through disruptive products. We build great products to solve your business problems.\n"
 "                            <br/><br/>Our products are designed for small to medium size companies willing to optimize their performance."
 msgstr ""
+"当社は、革命的な製品を通じてすべての人の生活を向上させることを目指す、情熱的なスタッフからなるチームです。当社はお客様のビジネス上の問題を解決するために優れた製品を開発しています。\n"
+"　　　　　　　　<br/><br/>当社の製品は、パフォーマンスの最適化を望む中小企業向けに設計されています。"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_descriptive
@@ -10441,6 +10516,7 @@ msgid ""
 "problems. Our products are designed for small to medium size companies "
 "willing to optimize their performance."
 msgstr ""
+"当社は、革命的な製品を通じてすべての人の生活を向上させることを目指す、情熱的なスタッフからなるチームです。当社はお客様のビジネス上の問題を解決するために優れた製品を開発しています。当社の製品は、パフォーマンスの最適化を望む中小企業向けに設計されています。"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_headline
@@ -10448,6 +10524,7 @@ msgid ""
 "We are a team of passionate people whose goal is to improve everyone's "
 "life.<br/>Our services are designed for small to medium size companies."
 msgstr ""
+"当社は、革命的な製品を通じてすべての人の生活を向上させることを目指す、情熱的なスタッフからなるチームです。<br/>当社のサービスは、パフォーマンスの最適化を望む中小企業向けに設計されています。"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_progress_bar
@@ -10457,7 +10534,7 @@ msgstr "もうすぐ終わります!"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_references
 msgid "We are in good company."
-msgstr ""
+msgstr "私たちは素晴らしい会社で働いています。"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
@@ -10483,7 +10560,7 @@ msgstr "<b>あなた</b>のビジネス成長にご協力いたします"
 msgid ""
 "We may not be able to provide the best service to you if you reject those "
 "cookies, but the website will work."
-msgstr "クッキーを拒否した場合は、最適なサービスを提供することはできない場合がありますが、サイトは使用できます。"
+msgstr "クッキーを拒否した場合は、最適なサービスを提供することはできない場合がありますが、ウェブサイトは使用できます。"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_cards
@@ -10497,7 +10574,7 @@ msgstr "ニーズと予算に合わせて、プロダクトを提供いたしま
 msgid ""
 "We use cookies to provide improved experience on this website. You can learn"
 " more about our cookies and how we use them in our"
-msgstr "クッキーを使って、サイトにより良い経験を提供いたします。クッキー及びクッキーの使用についてもっと知る: "
+msgstr "クッキーを使って、ウェブサイトにより良い経験を提供いたします。クッキー及びクッキーの使用についてもっと知る: "
 
 #. module: website
 #. odoo-javascript
@@ -10560,58 +10637,58 @@ msgstr "Web訪問者"
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_search
 #, python-format
 msgid "Website"
-msgstr "サイト"
+msgstr "ウェブサイト"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__website_company_id
 msgid "Website Company"
-msgstr "サイトの所属会社"
+msgstr "ウェブサイトの会社"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_configurator_feature__website_config_preselection
 msgid "Website Config Preselection"
-msgstr "サイト設定事前選択"
+msgstr "ウェブサイト設定事前選択"
 
 #. module: website
 #: model:ir.actions.client,name:website.website_configurator
 msgid "Website Configurator"
-msgstr "サイトコンフィグレータ"
+msgstr "ウェブサイトコンフィギュレータ"
 
 #. module: website
 #: model:ir.model,name:website.model_website_configurator_feature
 msgid "Website Configurator Feature"
-msgstr "サイトコンフィグレータ機能"
+msgstr "ウェブサイトコンフィギュレータ機能"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__website_domain
 #: model:ir.model.fields,field_description:website.field_website__domain
 msgid "Website Domain"
-msgstr "サイトドメイン"
+msgstr "ウェブサイトドメイン"
 
 #. module: website
 #: model:ir.model.constraint,message:website.constraint_website_domain_unique
 msgid "Website Domain should be unique."
-msgstr "サイトドメインは一意であることが必要です。"
+msgstr "ウェブサイトドメインは一意にしてください。"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website__favicon
 msgid "Website Favicon"
-msgstr "Webサイトファビコン"
+msgstr "ウェブサイトファビコン"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_model__website_form_key
 msgid "Website Form Key"
-msgstr "Webサイトフォームキー"
+msgstr "ウェブサイトフォームキー"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.ir_model_view
 msgid "Website Forms"
-msgstr "Webサイトフォーム"
+msgstr "ウェブサイトフォーム"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Website Info"
-msgstr "サイト情報"
+msgstr "ウェブサイト情報"
 
 #. module: website
 #. odoo-javascript
@@ -10620,64 +10697,64 @@ msgstr "サイト情報"
 #: model:ir.model.fields,field_description:website.field_website__logo
 #, python-format
 msgid "Website Logo"
-msgstr "サイトロゴ"
+msgstr "ウェブサイトロゴ"
 
 #. module: website
 #: model:ir.actions.act_window,name:website.action_website_menu
 #: model:ir.model,name:website.model_website_menu
 msgid "Website Menu"
-msgstr "Webサイトメニュー"
+msgstr "ウェブサイトメニュー"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_menus_form_view
 msgid "Website Menus Settings"
-msgstr "Webサイトメニュー設定"
+msgstr "ウェブサイトメニュー設定"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__website_name
 #: model:ir.model.fields,field_description:website.field_website__name
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Website Name"
-msgstr "サイト名"
+msgstr "ウェブサイト名"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_ui_view__first_page_id
 #: model:ir.model.fields,field_description:website.field_website_page__first_page_id
 msgid "Website Page"
-msgstr "サイトページ"
+msgstr "ウェブサイトページ"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_pages_form_view
 msgid "Website Page Settings"
-msgstr "サイトページ設定"
+msgstr "ウェブサイトページ設定"
 
 #. module: website
 #: model:ir.actions.act_window,name:website.action_website_pages_list
 #: model_terms:ir.ui.view,arch_db:website.website_pages_view_search
 msgid "Website Pages"
-msgstr "サイトページ"
+msgstr "ウェブサイトページ"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_base_automation__website_path
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__website_path
 #: model:ir.model.fields,field_description:website.field_ir_cron__website_path
 msgid "Website Path"
-msgstr "サイトパス"
+msgstr "ウェブサイトパス"
 
 #. module: website
 #: model:ir.actions.client,name:website.website_preview
 msgid "Website Preview"
-msgstr "サイトプレビュー"
+msgstr "ウェブサイトプレビュー"
 
 #. module: website
 #: model:ir.model,name:website.model_website_published_mixin
 msgid "Website Published Mixin"
-msgstr "サイト公開済Mixin"
+msgstr "ウェブサイト公開済Mixin"
 
 #. module: website
 #: model:ir.model,name:website.model_website_searchable_mixin
 msgid "Website Searchable Mixin"
-msgstr "サイト検索可能Mixin"
+msgstr "ウェブサイト検索可能Mixin"
 
 #. module: website
 #. odoo-javascript
@@ -10685,22 +10762,22 @@ msgstr "サイト検索可能Mixin"
 #: model_terms:ir.ui.view,arch_db:website.view_website_form
 #, python-format
 msgid "Website Settings"
-msgstr "サイト設定"
+msgstr "ウェブサイト設定"
 
 #. module: website
 #: model:ir.model,name:website.model_website_snippet_filter
 msgid "Website Snippet Filter"
-msgstr "サイトスニペットフィルタ"
+msgstr "ウェブサイトスニペットフィルタ"
 
 #. module: website
 #: model:ir.model,name:website.model_theme_website_menu
 msgid "Website Theme Menu"
-msgstr "サイトテーマメニュー"
+msgstr "ウェブサイトテーマメニュー"
 
 #. module: website
 #: model:ir.model,name:website.model_theme_website_page
 msgid "Website Theme Page"
-msgstr "サイトテーマページ"
+msgstr "ウェブサイトテーマページ"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_partner__website_url
@@ -10710,33 +10787,33 @@ msgstr "サイトテーマページ"
 #: model:ir.model.fields,field_description:website.field_website_published_multi_mixin__website_url
 #: model:ir.model.fields,field_description:website.field_website_snippet_filter__website_url
 msgid "Website URL"
-msgstr "サイトURL"
+msgstr "ウェブサイトURL"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_base_automation__website_url
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__website_url
 #: model:ir.model.fields,field_description:website.field_ir_cron__website_url
 msgid "Website Url"
-msgstr "サイトURL"
+msgstr "ウェブサイトURL"
 
 #. module: website
 #: model:ir.model,name:website.model_website_visitor
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_form
 msgid "Website Visitor"
-msgstr "サイト訪問者"
+msgstr "ウェブサイト訪問者"
 
 #. module: website
 #. odoo-python
 #: code:addons/website/models/website_visitor.py:0
 #, python-format
 msgid "Website Visitor #%s"
-msgstr "サイト訪問者 #%s"
+msgstr "ウェブサイト訪問者 #%s"
 
 #. module: website
 #: model:ir.actions.server,name:website.website_visitor_cron_ir_actions_server
 #: model:ir.cron,cron_name:website.website_visitor_cron
 msgid "Website Visitor : clean inactive visitors"
-msgstr "サイト訪問者: 非アクティブ訪問者をクリア"
+msgstr "ウェブサイト訪問者: 非アクティブ訪問者をクリア"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_faq_collapse
@@ -10745,77 +10822,77 @@ msgid ""
 "the User by this site. The User may configure his / her browser to notify "
 "and reject the installation of the cookies sent by us."
 msgstr ""
-"サイトがクッキーを使ってカスタマイズすることで、ユーザのサイト体験を向上させることがあります。ユーザはブラウザを設定して、受信したクッキーのインストールを通知・拒否することができます。"
+"ウェブサイトがクッキーを使ってカスタマイズすることで、ユーザのサイト体験を向上させることがあります。ユーザはブラウザを設定して、受信したクッキーのインストールを通知・拒否することができます。"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.menu_tree
 msgid "Website menu"
-msgstr "サイトメニュー"
+msgstr "ウェブサイトメニュー"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_ui_view__website_meta_description
 #: model:ir.model.fields,field_description:website.field_website_page__website_meta_description
 #: model:ir.model.fields,field_description:website.field_website_seo_metadata__website_meta_description
 msgid "Website meta description"
-msgstr "サイトメタ説明"
+msgstr "ウェブサイトメタ説明"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_ui_view__website_meta_keywords
 #: model:ir.model.fields,field_description:website.field_website_page__website_meta_keywords
 #: model:ir.model.fields,field_description:website.field_website_seo_metadata__website_meta_keywords
 msgid "Website meta keywords"
-msgstr "サイトメタキーワード"
+msgstr "ウェブサイトメタキーワード"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_ui_view__website_meta_title
 #: model:ir.model.fields,field_description:website.field_website_page__website_meta_title
 #: model:ir.model.fields,field_description:website.field_website_seo_metadata__website_meta_title
 msgid "Website meta title"
-msgstr "サイトメタタイトル"
+msgstr "ウェブサイトメタタイトル"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_ui_view__website_meta_og_img
 #: model:ir.model.fields,field_description:website.field_website_page__website_meta_og_img
 #: model:ir.model.fields,field_description:website.field_website_seo_metadata__website_meta_og_img
 msgid "Website opengraph image"
-msgstr "サイトopengraph画像"
+msgstr "ウェブサイトopengraph画像"
 
 #. module: website
 #: model:ir.model,name:website.model_website_rewrite
 msgid "Website rewrite"
-msgstr "サイトリライト"
+msgstr "ウェブサイトリライト"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.view_website_rewrite_form
 msgid "Website rewrite Settings"
-msgstr "サイトリライト設定"
+msgstr "ウェブサイトリライト設定"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.action_website_rewrite_tree
 msgid "Website rewrites"
-msgstr "サイトリライト"
+msgstr "ウェブサイトリライト"
 
 #. module: website
 #: model:ir.actions.server,name:website.ir_actions_server_website_analytics
 msgid "Website: Analytics"
-msgstr "Webサイト: 分析"
+msgstr "ウェブサイト: 分析"
 
 #. module: website
 #: model:ir.actions.server,name:website.ir_actions_server_website_dashboard
 msgid "Website: Dashboard"
-msgstr "Webサイト: ダッシュボード"
+msgstr "ウェブサイト: ダッシュボード"
 
 #. module: website
 #: model:ir.actions.act_window,name:website.action_website_list
 #: model:ir.ui.menu,name:website.menu_website_websites_list
 #: model_terms:ir.ui.view,arch_db:website.view_website_tree
 msgid "Websites"
-msgstr "Webサイト"
+msgstr "ウェブサイト"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_base_language_install__website_ids
 msgid "Websites to translate"
-msgstr "翻訳対象サイト"
+msgstr "翻訳対象ウェブサイト"
 
 #. module: website
 #. odoo-javascript
@@ -10896,6 +10973,18 @@ msgstr "年"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/client_actions/website_preview/website_preview.js:0
+#, python-format
+msgid ""
+"You are about to be redirected to the domain configured for your website ( "
+"%s ). This is necessary to edit or view your website from the Website app. "
+"You might need to log back in."
+msgstr ""
+"ウェブサイト用に設定されたドメインへリダイレクトしようとしています ( %s "
+")。これはウェブサイトアプリからウェブサイトを編集したり表示するために必要です。ログバックインする必要があるかもしれません。"
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/components/translator/translator.xml:0
 #, python-format
 msgid "You are about to enter the translation mode."
@@ -10968,7 +11057,7 @@ msgstr "フォームの提出ボタンを削除できません"
 #, python-format
 msgid ""
 "You cannot delete default website %s. Try to change its settings instead"
-msgstr ""
+msgstr "デフォルトウェブサイト%sを削除することはできません。代わりにセッティングで変更してみて下さい。"
 
 #. module: website
 #. odoo-python
@@ -11003,7 +11092,7 @@ msgstr "第三者にクッキーの使用を拒否: "
 #: code:addons/website/models/website.py:0
 #, python-format
 msgid "You must keep at least one website."
-msgstr "少なくとも一つのサイトを保留しなければなりません。"
+msgstr "少なくとも1つのウェブサイトを保持してください。"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_faq_collapse
@@ -11027,12 +11116,40 @@ msgid "You'll be able to create your pages later on."
 msgstr "後でページを作成できます。"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/js/form_editor_registry.js:0
+#, python-format
+msgid "Your Company"
+msgstr "貴社"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_dynamic_snippet_template
 msgid ""
 "Your Dynamic Snippet will be displayed here... This message is displayed "
 "because you did not provided both a filter and a template to use.<br/>"
 msgstr ""
 "ダイナミックスニペットはここに表示されます...使用するフィルタとテンプレートは提供されないため、このメッセージは表示されました。<br/>"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/js/form_editor_registry.js:0
+#, python-format
+msgid "Your Email"
+msgstr "Eメール"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/js/form_editor_registry.js:0
+#, python-format
+msgid "Your Name"
+msgstr "お名前"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/js/form_editor_registry.js:0
+#, python-format
+msgid "Your Question"
+msgstr "あなたの質問"
 
 #. module: website
 #. odoo-javascript
@@ -11053,7 +11170,7 @@ msgstr "説明は短すぎます。"
 msgid ""
 "Your experience may be degraded if you discard those cookies, but the "
 "website will still work."
-msgstr "クッキーを破棄する場合は、サイトは依然使用できますが、最適な体験は提供されません。"
+msgstr "クッキーを破棄する場合、ご利用体験が最適化されませんが、ウェブサイトは使用いただけます。"
 
 #. module: website
 #. odoo-javascript
@@ -11128,7 +11245,7 @@ msgstr "ブログ"
 #: code:addons/website/static/src/client_actions/configurator/configurator.js:0
 #, python-format
 msgid "a business website"
-msgstr "ビジネスサイト"
+msgstr "ビジネスウェブサイト"
 
 #. module: website
 #. odoo-javascript
@@ -11156,7 +11273,7 @@ msgstr "Eラーニングプラットフォーム"
 #: code:addons/website/static/src/client_actions/configurator/configurator.js:0
 #, python-format
 msgid "an event website"
-msgstr "イベントサイト"
+msgstr "イベントウェブサイト"
 
 #. module: website
 #. odoo-javascript
@@ -11182,7 +11299,7 @@ msgstr "、そしてここにフロントページのアドレスをコピー及
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "big"
-msgstr ""
+msgstr "大"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -11215,42 +11332,42 @@ msgstr "btn-secondary"
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 #, python-format
 msgid "business"
-msgstr ""
+msgstr "ビジネス"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "celebration, launch"
-msgstr ""
+msgstr "お祝い、ローンチ"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "chart, table, diagram, pie"
-msgstr ""
+msgstr "チャート、表、図、円"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "cite"
-msgstr ""
+msgstr "引用"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "columns, description"
-msgstr ""
+msgstr "コラム、説明"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "common answers, common questions"
-msgstr ""
+msgstr "よくある回答、よくある質問"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "content"
-msgstr ""
+msgstr "コンテンツ"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "customers, clients"
-msgstr ""
+msgstr "顧客、クライアント"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
@@ -11262,7 +11379,7 @@ msgstr "日"
 #: code:addons/website/static/src/client_actions/configurator/configurator.js:0
 #, python-format
 msgid "develop the brand"
-msgstr ""
+msgstr "ブランドを開発"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
@@ -11295,12 +11412,12 @@ msgstr "Eラーニング"
 #: code:addons/website/controllers/form.py:0
 #, python-format
 msgid "email"
-msgstr ""
+msgstr "Eメール"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "evolution, growth"
-msgstr ""
+msgstr "変化、成長"
 
 #. module: website
 #. odoo-javascript
@@ -11314,7 +11431,7 @@ msgstr "fonts.google.com"
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 #, python-format
 msgid "for my"
-msgstr ""
+msgstr "私の"
 
 #. module: website
 #. odoo-javascript
@@ -11331,31 +11448,31 @@ msgstr "あります)"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.brand_promotion
 msgid "free website"
-msgstr ""
+msgstr "無料ウェブサイト"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 #, python-format
 msgid "from Logo"
-msgstr ""
+msgstr "ロゴから"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
 msgid "frontend_lang (Odoo)"
-msgstr ""
+msgstr "frontend_lang (Odoo)"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "gallery, carousel"
-msgstr ""
+msgstr "ギャラリー、カルーセル"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.js:0
 #, python-format
 msgid "get leads"
-msgstr ""
+msgstr "リードを入手"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -11365,7 +11482,7 @@ msgstr "google1234567890123456.html"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "heading, h1"
-msgstr ""
+msgstr "heading, h1"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_contact
@@ -11376,7 +11493,7 @@ msgstr "hello@mycompany.com"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "hero, jumbotron"
-msgstr ""
+msgstr "ヒーロー、ジャンボトロン"
 
 #. module: website
 #. odoo-javascript
@@ -11411,7 +11528,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "image, media, illustration"
-msgstr ""
+msgstr "画像、メディア、イラスト"
 
 #. module: website
 #. odoo-javascript
@@ -11441,7 +11558,7 @@ msgstr "info@yourcompany.example.com"
 #: code:addons/website/static/src/client_actions/configurator/configurator.js:0
 #, python-format
 msgid "inform customers"
-msgstr ""
+msgstr "顧客に伝える"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
@@ -11461,36 +11578,36 @@ msgstr "発生しました"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "masonry, grid"
-msgstr ""
+msgstr "石積み、グリッド"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "menu, pricing"
-msgstr ""
+msgstr "メニュー、価格"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/xml/website_form_editor.xml:0
 #, python-format
 msgid "no value"
-msgstr ""
+msgstr "値なし"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
 msgid "o-color-"
-msgstr ""
+msgstr "o-color-"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/systray_items/edit_website.js:0
 #, python-format
 msgid "or edit master"
-msgstr ""
+msgstr "またはマスタ編集"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "organization, structure"
-msgstr ""
+msgstr "団体、組織"
 
 #. module: website
 #. odoo-javascript
@@ -11505,12 +11622,12 @@ msgstr "完璧なサイトを作ることを。"
 #: code:addons/website/static/src/components/fields/widget_iframe.xml:0
 #, python-format
 msgid "phone"
-msgstr ""
+msgstr "電話"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
 msgid "placeholder"
-msgstr ""
+msgstr "プレースホルダ"
 
 #. module: website
 #. odoo-javascript
@@ -11522,66 +11639,66 @@ msgstr "ポインタに従って、7つのステップで最高なページを�
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "pricing"
-msgstr ""
+msgstr "価格"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "promotion, characteristic, quality"
-msgstr ""
+msgstr "プロモーション、特徴、品質"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.searchbar_input_snippet_options
 msgid "results"
-msgstr ""
+msgstr "結果"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 msgid "rows"
-msgstr ""
+msgstr "行"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.js:0
 #, python-format
 msgid "schedule appointments"
-msgstr ""
+msgstr "予約をする"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.js:0
 #, python-format
 msgid "sell more"
-msgstr ""
+msgstr "もっと売る"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "separator, divider"
-msgstr ""
+msgstr "セパレータ、ディバイダ"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
 msgid "session_id (Odoo)<br/>"
-msgstr ""
+msgstr "session_id (Odoo)<br/>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "statistics, stats, KPI"
-msgstr ""
+msgstr "分析、統計、KPI"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "testimonials"
-msgstr ""
+msgstr "お客様の声"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
 msgid "text link"
-msgstr ""
+msgstr "テキストリンク"
 
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__theme_ir_ui_view__inherit_id__theme_ir_ui_view
 msgid "theme.ir.ui.view"
-msgstr ""
+msgstr "theme.ir.ui.view"
 
 #. module: website
 #. odoo-javascript
@@ -11593,7 +11710,7 @@ msgstr "このページ"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "valuation, rank"
-msgstr ""
+msgstr "評価、ランク"
 
 #. module: website
 #. odoo-javascript
@@ -11601,7 +11718,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_res_config_settings__website_id
 #, python-format
 msgid "website"
-msgstr "サイト"
+msgstr "ウェブサイト"
 
 #. module: website
 #. odoo-javascript

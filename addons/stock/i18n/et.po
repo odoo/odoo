@@ -13,24 +13,25 @@
 # Algo Kärp <algokarp@gmail.com>, 2022
 # Martin Trigaux, 2022
 # Triine Aavik <triine@avalah.ee>, 2022
-# Eneli Õigus <enelioigus@gmail.com>, 2022
 # Martin Aavastik <martin@avalah.ee>, 2022
 # Egon Raamat <egon@avalah.ee>, 2022
 # Arma Gedonsky <armagedonsky@hot.ee>, 2022
 # Piia Paurson <piia@avalah.ee>, 2022
 # Patrick-Jordan Kiudorv, 2022
 # JanaAvalah, 2023
-# Leaanika Randmets, 2023
 # Anna, 2023
 # Nimesh Parmar, 2023
+# Mihkel avalah, 2023
+# Eneli Õigus <enelioigus@gmail.com>, 2024
+# Leaanika Randmets, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-14 05:51+0000\n"
+"POT-Creation-Date: 2023-05-23 08:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Nimesh Parmar, 2023\n"
+"Last-Translator: Leaanika Randmets, 2024\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -367,33 +368,33 @@ msgstr ""
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Hello <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,<br/><br/>\n"
+"        Hello <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,<br><br>\n"
 "        We are glad to inform you that your order has been shipped.\n"
 "        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and object.carrier_tracking_ref\">\n"
 "            Your tracking reference is\n"
 "            <strong>\n"
 "            <t t-if=\"object.carrier_tracking_url\">\n"
-"                <t t-set=\"multiple_carrier_tracking\" t-value=\"object.get_multiple_carrier_tracking()\"/>\n"
+"                <t t-set=\"multiple_carrier_tracking\" t-value=\"object.get_multiple_carrier_tracking()\"></t>\n"
 "                <t t-if=\"multiple_carrier_tracking\">\n"
 "                    <t t-foreach=\"multiple_carrier_tracking\" t-as=\"line\">\n"
-"                        <br/><a t-att-href=\"line[1]\" target=\"_blank\" t-out=\"line[0] or ''\"/>\n"
+"                        <br><a t-att-href=\"line[1]\" target=\"_blank\" t-out=\"line[0] or ''\"></a>\n"
 "                    </t>\n"
 "                </t>\n"
 "                <t t-else=\"\">\n"
-"                    <a t-attf-href=\"{{ object.carrier_tracking_url }}\" target=\"_blank\" t-out=\"object.carrier_tracking_ref or ''\"/>.\n"
+"                    <a t-attf-href=\"{{ object.carrier_tracking_url }}\" target=\"_blank\" t-out=\"object.carrier_tracking_ref or ''\"></a>.\n"
 "                </t>\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
-"                <t t-out=\"object.carrier_tracking_ref or ''\"/>.\n"
+"                <t t-out=\"object.carrier_tracking_ref or ''\"></t>.\n"
 "            </t>\n"
 "            </strong>\n"
 "        </t>\n"
-"        <br/><br/>\n"
-"        Please find your delivery order attached for more details.<br/><br/>\n"
+"        <br><br>\n"
+"        Please find your delivery order attached for more details.<br><br>\n"
 "        Thank you,\n"
 "        <t t-if=\"user.signature\">\n"
-"            <br/>\n"
-"            <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"            <br>\n"
+"            <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -401,32 +402,34 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Tere ${object.partner_id.name},<br/><br/>\n"
-"        Meil on hea meel teavitada, et Teie tellimus on välja saadetud.\n"
-"        %if object.carrier_tracking_ref:\n"
-"            Teie jälgimisnumber on\n"
+"        Tere <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,<br><br>\n"
+"        Meil on hea meel teatada, et teie tellimus on teele pandud.\n"
+"        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and object.carrier_tracking_ref\">\n"
+"            Tellimuse jälgmiseks kasutage viidet\n"
 "            <strong>\n"
-"            %if object.carrier_tracking_url:\n"
-"                % set multiple_carrier_tracking = object.get_multiple_carrier_tracking()\n"
-"                %if multiple_carrier_tracking:\n"
-"                    % for line in multiple_carrier_tracking:\n"
-"                        <br/><a href=\"${line[1]}\" target=\"_blank\">${line[0]}</a>\n"
-"                    % endfor\n"
-"                %else:\n"
-"                    <a href=\"${object.carrier_tracking_url}\" target=\"_blank\">${object.carrier_tracking_ref}</a>.\n"
-"                %endif\n"
-"            %else:\n"
-"                ${object.carrier_tracking_ref}.\n"
-"            %endif\n"
+"            <t t-if=\"object.carrier_tracking_url\">\n"
+"                <t t-set=\"multiple_carrier_tracking\" t-value=\"object.get_multiple_carrier_tracking()\"></t>\n"
+"                <t t-if=\"multiple_carrier_tracking\">\n"
+"                    <t t-foreach=\"multiple_carrier_tracking\" t-as=\"line\">\n"
+"                        <br><a t-att-href=\"line[1]\" target=\"_blank\" t-out=\"line[0] or ''\"></a>\n"
+"                    </t>\n"
+"                </t>\n"
+"                <t t-else=\"\">\n"
+"                    <a t-attf-href=\"{{ object.carrier_tracking_url }}\" target=\"_blank\" t-out=\"object.carrier_tracking_ref or ''\"></a>.\n"
+"                </t>\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                <t t-out=\"object.carrier_tracking_ref or ''\"></t>.\n"
+"            </t>\n"
 "            </strong>\n"
-"        %endif\n"
-"        <br/><br/>\n"
-"        Tellimuse täpsem informatsioon on lisatud manusena. <br/><br/>\n"
-"        Tervitades\n"
-"        % if user.signature:\n"
-"            <br/>\n"
-"            ${user.signature | safe}\n"
-"        % endif\n"
+"        </t>\n"
+"        <br><br>\n"
+"        Lisainformatsiooni leiate manuses olevalt saatelehelt.<br><br>\n"
+"        Täname,\n"
+"        <t t-if=\"user.signature\">\n"
+"            <br>\n"
+"            <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"        </t>\n"
 "    </p>\n"
 "</div>\n"
 "        "
@@ -824,7 +827,7 @@ msgstr "Tegevused"
 #: model:ir.model.fields,field_description:stock.field_stock_lot__activity_exception_decoration
 #: model:ir.model.fields,field_description:stock.field_stock_picking__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Tegevuse erandlik kohendus"
+msgstr "Tegevuse erandi tüüp"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__activity_state
@@ -1339,7 +1342,7 @@ msgid ""
 "one to wait for the previous, this second option should be chosen."
 msgstr ""
 "Vaikimis süsteem võtab lähteasukohast ja passiivselt ootab saadavust. Teine "
-"võimalus on luua hankimine lähteasukohta (ignoreerides laoseisu) korje "
+"võimalus on luua hankimine lähteasukohta (ignoreerides laoseisu) siire "
 "teostamiseks. Kui soovitakse siirded kokku ühendada ja oodata eelmise siirde"
 " lõppemist, tuleks valida teine võimalus."
 
@@ -2810,12 +2813,12 @@ msgstr "Meili teel kinnitamine"
 #: model:ir.model.fields,field_description:stock.field_res_company__stock_move_email_validation
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__stock_move_email_validation
 msgid "Email Confirmation picking"
-msgstr "E-kirja kinnitus korjel"
+msgstr "E-kirja kinnitus siirdel"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__stock_mail_confirmation_template_id
 msgid "Email Template confirmation picking"
-msgstr "Korje kinnitamise e-kirja mall"
+msgstr "Siirde kinnitamise e-kirja mall"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_company__stock_mail_confirmation_template_id
@@ -2832,7 +2835,7 @@ msgid ""
 msgstr ""
 "Nautige kiiret kogemust Odoo triipkoodi mooduliga. See töötab kiiresti ja ka"
 " ilma stabiilse interneti ühenduseta. See toetab kõiki töövoogusid: "
-"inventuurid, koondatud korjed, partiide või kaubaaluste liigutamine, "
+"inventuurid, koondatud siirded, partiide või kaubaaluste liigutamine, "
 "madalate varude kontrollimine, jne.  Avage \"Rakendused\" menüü ja "
 "aktiveerige triipkoodide liidestus."
 
@@ -2870,7 +2873,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
 msgid "Exception(s) occurred on the picking"
-msgstr "Korjel esinesid erandid"
+msgstr "Siirdel esines(id) erand(id)"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
@@ -2905,7 +2908,7 @@ msgstr "Oodatav"
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "Exp %s"
-msgstr "Oodata%s"
+msgstr "Oodatav kuupäev %s"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__products_availability_state__expected
@@ -3504,8 +3507,8 @@ msgid ""
 "If the picking is unlocked you can edit initial demand (for a draft picking)"
 " or done quantities (for a done picking)."
 msgstr ""
-"Kui korje pole lukustatud, saab muuta algset nõudlust (mustankorjel) või "
-"Tehtud kogust (Tehtud staatusega korjel)."
+"Kui siire pole lukustatud, saab muuta algset nõudlust (Mustand staatuses "
+"siirdel) või Tehtud kogust (Tehtud staatusega siirdel)."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__sn_duplicated
@@ -3745,7 +3748,7 @@ msgstr "Tootekood"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__code__internal
 msgid "Internal Transfer"
-msgstr "Ühendusesisene ülekanne"
+msgstr "Sisemine siire"
 
 #. module: stock
 #. odoo-python
@@ -3788,17 +3791,17 @@ msgstr "Invalid domain left operand %s"
 
 #. module: stock
 #. odoo-python
-#: code:addons/stock/models/product.py:0
+#: code:addons/stock/models/product.py:0 code:addons/stock/models/product.py:0
 #, python-format
 msgid "Invalid domain operator %s"
 msgstr "Kehtetu domeeni operator %s"
 
 #. module: stock
 #. odoo-python
-#: code:addons/stock/models/product.py:0
+#: code:addons/stock/models/product.py:0 code:addons/stock/models/product.py:0
 #, python-format
-msgid "Invalid domain right operand %s"
-msgstr "Invalid domain right operand %s"
+msgid "Invalid domain right operand '%s'. It must be of type Integer/Float"
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -3985,6 +3988,15 @@ msgstr "On hilinenud või hilineb olenevalt planeeritud kuupäeva tähtajast"
 #: model:ir.model.fields,field_description:stock.field_stock_move__is_quantity_done_editable
 msgid "Is quantity done editable"
 msgstr "Kas `Tehtud` etapis on kogus muudetav"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"It is not allowed to import reserved quantity, you have to use the quantity "
+"directly."
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -4703,7 +4715,7 @@ msgstr "Sõnumi edastamise veateade"
 #: model:ir.model.fields,field_description:stock.field_res_partner__picking_warn_msg
 #: model:ir.model.fields,field_description:stock.field_res_users__picking_warn_msg
 msgid "Message for Stock Picking"
-msgstr "Sõnum laokorjele"
+msgstr "Sõnum laosiirdele"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__message_ids
@@ -4733,7 +4745,6 @@ msgid "Minimum Stock Rules"
 msgstr "Minimaalse lao reegel"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_report_stock_quantity__move_ids
 #: model:ir.model.fields,field_description:stock.field_stock_assign_serial__move_id
 #: model:ir.model.fields,field_description:stock.field_stock_package_level__move_ids
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_line__move_id
@@ -5117,7 +5128,7 @@ msgstr "Märkus"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__note
 msgid "Notes"
-msgstr "Märkused"
+msgstr "Märkmed"
 
 #. module: stock
 #. odoo-python
@@ -5161,8 +5172,8 @@ msgstr "Sissetulevate kaupade liikumiste arv viimase 12 kuu jooksul"
 #: model:ir.model.fields,help:stock.field_stock_lot__message_needaction_counter
 #: model:ir.model.fields,help:stock.field_stock_picking__message_needaction_counter
 #: model:ir.model.fields,help:stock.field_stock_scrap__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Tegutsemist nõudvate sõnumite arv"
+msgid "Number of messages requiring action"
+msgstr "Tegevust nõudvate sõnumite arv"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_lot__message_has_error_counter
@@ -5753,7 +5764,7 @@ msgstr "Nopi"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__pick_type_id
 msgid "Pick Type"
-msgstr "Laokorje"
+msgstr "Siirde tüüp"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_lot_label_layout__picking_ids
@@ -5784,7 +5795,7 @@ msgstr "Laolehe tüüp"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__picking_type_code_domain
 msgid "Picking Type Code Domain"
-msgstr "Korje tüübi koodi domeen"
+msgstr "Siirde tüübi koodi domeen"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.vpicktree
@@ -5818,7 +5829,7 @@ msgstr "Planeerimisprobleemid"
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "Please add 'Done' quantities to the picking to create a new pack."
-msgstr "Palun lisage \"Tehtud\" kogused korjele uue paki loomiseks."
+msgstr "Uue paki loomiseks lisage \"Tehtud\" kogused siirdele."
 
 #. module: stock
 #. odoo-python
@@ -5937,7 +5948,7 @@ msgstr "Töö lihtsustamiseks kasuta triipkoode ja triipkoodilugejat."
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Process operations in wave transfers"
-msgstr "Process operations in wave transfers"
+msgstr "Käsitle siirdeid lainetena ehk vali siiretelt vajalikud tooted"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -7381,7 +7392,7 @@ msgstr "Pakkimise järjestus"
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Sequence picking"
-msgstr "Korjete järjestus"
+msgstr "Siirete järjestus"
 
 #. module: stock
 #. odoo-python
@@ -8437,7 +8448,7 @@ msgid ""
 "routes put another location. If it is empty, it will check for the customer "
 "location on the partner. "
 msgstr ""
-"See on vaikimisi sihtasukoht kui te loote korje käsitsi selle tegevuse "
+"See on vaikimisi sihtasukoht kui te loote siire käsitsi selle tegevuse "
 "tüübiga. Seda on võimalik muuta, või muuta marsruuti, et panna teise "
 "asukohta. Kui see on tühi siis kontrollib süsteem partneri asukohta partneri"
 " kaardil. "
@@ -8586,6 +8597,17 @@ msgstr ""
 "ettevõttele."
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"This product's company cannot be changed as long as there are stock moves of"
+" it belonging to another company."
+msgstr ""
+"Tootega seotud ettevõtet ei saa muuta, kuna osad laosiirded kuuluvad teisele"
+" ettevõttele."
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
 msgid ""
 "This quantity is expressed in the Default Unit of Measure of the product."
@@ -8604,6 +8626,17 @@ msgstr "See kirje on juba olemas."
 #, python-format
 msgid "This report cannot be used for done and not done %s at the same time"
 msgstr "Seda aruannet ei saa kasutada korraga tehtud ja tegemata %s jaoks"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"This sequence prefix is already being used by another operation type. It is "
+"recommended that you select a unique prefix to avoid issues and/or repeated "
+"reference values or assign the existing reference sequence to this operation"
+" type."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__property_stock_production
@@ -8757,7 +8790,7 @@ msgstr "Reserveeritud kogus kokku"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_category__total_route_ids
 msgid "Total routes"
-msgstr "Kogu marsruudid"
+msgstr "Kõik marsruudid"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -8892,7 +8925,7 @@ msgstr "Siirded gruppidele"
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid ""
 "Transfers that are late on scheduled time or one of pickings will be late"
-msgstr "Siirded, mis on planeeritud ajast hilisemad või üks korjetest hilineb"
+msgstr "Siirded, mis on planeeritud ajast hilisemad või üks siiretest hilineb"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_location__usage__transit
@@ -8908,7 +8941,7 @@ msgstr "Transiidi asukohad"
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__trigger
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
 msgid "Trigger"
-msgstr "Tellimise meetod"
+msgstr "Käivitaja"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_rule__procure_method__make_to_order
@@ -9435,7 +9468,7 @@ msgstr "Lao hoiatused"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_picking_wave
 msgid "Wave Transfers"
-msgstr "Wave Transfers"
+msgstr "Lainetena siirded"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__website_message_ids
@@ -9464,7 +9497,7 @@ msgstr "Pakenditüübi kaal"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_storage_category__weight_uom_name
 msgid "Weight unit"
-msgstr ""
+msgstr "Kaalu ühik"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__weight_uom_name
@@ -9923,8 +9956,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
-msgid "You cannot split a stock move that has been set to 'Done'."
-msgstr "\"Tehtud\" staatuses laosiiret ei saa poolitada."
+msgid "You cannot split a stock move that has been set to 'Done' or 'Cancel'."
+msgstr "\"Tehtud\" või \"Tühistatud\" staatuses siirdeid ei saa poolitada."
 
 #. module: stock
 #. odoo-python
@@ -9991,6 +10024,15 @@ msgstr "Olete töödelnud vähem tooteid, kui oli esialgne nõudlus."
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/res_config_settings.py:0
+#, python-format
+msgid ""
+"You have product(s) in stock that have lot/serial number tracking enabled. \n"
+"Switch off tracking on all the products before switching off this setting."
+msgstr ""
+
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid ""
@@ -10016,14 +10058,14 @@ msgstr ""
 #: code:addons/stock/wizard/stock_picking_return.py:0
 #, python-format
 msgid "You may only return Done pickings."
-msgstr "Te saate tagastada ainult Tehtud korjeid."
+msgstr "Saate tagastada ainult Tehtud staatuses siirdeid."
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/wizard/stock_picking_return.py:0
 #, python-format
 msgid "You may only return one picking at a time."
-msgstr "Te saate tagastada ainult ühe korje korraga."
+msgstr "Te saate tagastada ainult ühe siire korraga."
 
 #. module: stock
 #. odoo-python
@@ -10078,7 +10120,7 @@ msgstr "Peaksite seda dokumenti värskendama, et see kajastaks T&amp;C."
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "You still have ongoing operations for picking types %s in warehouse %s"
-msgstr "Teil on endiselt käimasolevad toimingud korje tüüpidele %s laos %s"
+msgstr "Teil on endiselt käimasolevad toimingud siirde tüüpidele %s laos %s"
 
 #. module: stock
 #. odoo-python

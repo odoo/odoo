@@ -24,7 +24,7 @@ class Job(models.Model):
     no_of_hired_employee = fields.Integer(string='Hired Employees', copy=False,
         help='Number of hired employees for this job position during recruitment phase.')
     employee_ids = fields.One2many('hr.employee', 'job_id', string='Employees', groups='base.group_user')
-    description = fields.Html(string='Job Description')
+    description = fields.Html(string='Job Description', sanitize_attributes=False)
     requirements = fields.Text('Requirements')
     department_id = fields.Many2one('hr.department', string='Department', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company)

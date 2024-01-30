@@ -2,6 +2,7 @@
 
 import {
     click,
+    editInput,
     getFixture,
     nextTick,
     patchWithCleanup,
@@ -9,12 +10,8 @@ import {
 } from "@web/../tests/helpers/utils";
 import { makeView } from "@web/../tests/views/helpers";
 import { createWebClient } from "@web/../tests/webclient/helpers";
-import { dialogService } from "@web/core/dialog/dialog_service";
-import { registry } from "@web/core/registry";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { setupControlPanelServiceRegistry } from "@web/../tests/search/helpers";
-
-const serviceRegistry = registry.category("services");
 
 QUnit.module("ViewDialogs", (hooks) => {
     let serverData;
@@ -70,7 +67,6 @@ QUnit.module("ViewDialogs", (hooks) => {
         };
         target = getFixture();
         setupControlPanelServiceRegistry();
-        serviceRegistry.add("dialog", dialogService);
     });
 
     QUnit.module("FormViewDialog");
@@ -345,4 +341,39 @@ QUnit.module("ViewDialogs", (hooks) => {
         assert.verifySteps(["remove"]);
         assert.containsNone(target, ".o_dialog .o_form_view");
     });
+
+    QUnit.test(
+        "Save a FormViewDialog when a required field is empty don't close the dialog",
+        async function (assert) {
+            serverData.views = {
+                "partner,false,form": `
+                        <form string="Partner">
+                            <sheet>
+                                <group><field name="foo" required="1"/></group>
+                            </sheet>
+                            <footer>
+                                <button name="save" special="save" class="btn-primary"/>
+                            </footer>
+                        </form>
+                `,
+            };
+
+            const webClient = await createWebClient({ serverData });
+            webClient.env.services.dialog.add(FormViewDialog, {
+                resModel: "partner",
+                context: { answer: 42 },
+            });
+
+            await nextTick();
+
+            await click(target, '.modal button[name="save"]');
+            await nextTick();
+
+            assert.containsOnce(target, ".modal", "modal should still be opened");
+            await editInput(target, "[name='foo'] input", "new");
+
+            await click(target, '.modal button[name="save"]');
+            assert.containsNone(target, ".modal", "modal should be closed");
+        }
+    );
 });

@@ -79,6 +79,7 @@ Featuring
             'website_slides/static/src/js/components/**/*.js',
             'website_slides/static/src/components/**/*.xml',
             'website_slides/static/src/js/tours/slides_tour.js',
+            'website_slides/static/src/client_actions/website_preview/website_preview.js',
         ],
         'web.assets_frontend': [
             'website_slides/static/src/scss/website_slides.scss',

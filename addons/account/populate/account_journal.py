@@ -24,6 +24,8 @@ class AccountJournal(models.Model):
             ('chart_template_id', '!=', False),
             ('id', 'in', self.env.registry.populated_models['res.company']),
         ])
+        if not company_ids:
+            return []
         return [
             ('company_id', populate.cartesian(company_ids.ids)),
             ('type', populate.cartesian(['sale', 'purchase', 'cash', 'bank', 'general'])),

@@ -345,7 +345,7 @@ class AccountReconcileModel(models.Model):
     match_partner_category_ids = fields.Many2many('res.partner.category', string='Matching categories',
         help='The reconciliation model will only be applied to the selected customer/vendor categories.')
 
-    line_ids = fields.One2many('account.reconcile.model.line', 'model_id')
+    line_ids = fields.One2many('account.reconcile.model.line', 'model_id', copy=True)
     partner_mapping_line_ids = fields.One2many(string="Partner Mapping Lines",
                                                comodel_name='account.reconcile.model.partner.mapping',
                                                inverse_name='model_id',
@@ -721,7 +721,7 @@ class AccountReconcileModel(models.Model):
 
             # Exact tokens.
             if len(tokens) == 1:
-                exact_tokens.append(tokens[0])
+                exact_tokens.append(text_value)
         return numerical_tokens, exact_tokens, text_tokens
 
     def _get_invoice_matching_amls_candidates(self, st_line, partner):
@@ -786,7 +786,7 @@ class AccountReconcileModel(models.Model):
                         {table_alias}.{field} AS token
                     FROM {tables}
                     JOIN account_move account_move_line__move_id ON account_move_line__move_id.id = account_move_line.move_id
-                    WHERE {where_clause} AND {table_alias}.{field} IS NOT NULL
+                    WHERE {where_clause} AND COALESCE({table_alias}.{field}, '') != ''
                 ''')
                 all_params += where_params
 
@@ -858,7 +858,9 @@ class AccountReconcileModel(models.Model):
             return self.env['res.partner']
 
         for partner_mapping in self.partner_mapping_line_ids:
-            match_payment_ref = re.match(partner_mapping.payment_ref_regex, st_line.payment_ref) if partner_mapping.payment_ref_regex else True
+            match_payment_ref = True
+            if partner_mapping.payment_ref_regex:
+                match_payment_ref = re.match(partner_mapping.payment_ref_regex, st_line.payment_ref) if st_line.payment_ref else False
             match_narration = True
             if partner_mapping.narration_regex:
                 match_narration = re.match(

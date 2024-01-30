@@ -8,6 +8,7 @@ var OdooEditorLib = require('@web_editor/js/editor/odoo-editor/src/OdooEditor');
 var Widget = require('web.Widget');
 var Wysiwyg = require('web_editor.wysiwyg');
 var options = require('web_editor.snippets.options');
+const { TABLE_ATTRIBUTES, TABLE_STYLES } = require('@web_editor/js/backend/convert_inline');
 
 const COLOR_PICKER_TEMPLATE = `
     <colorpicker>
@@ -27,7 +28,19 @@ const COLOR_PICKER_TEMPLATE = `
             <button data-color="white-50"/>
             <button data-color="white-75"/>
         </div>
-        <div class="o_colorpicker_section" data-name="common" data-display="Common Colors" data-icon-class="fa fa-paint-brush"/>
+        <div class="o_colorpicker_section" data-name="common" data-display="Common Colors" data-icon-class="fa fa-paint-brush">
+            <button data-color="black"></button>
+            <button data-color="900"></button>
+            <button data-color="800"></button>
+            <button data-color="700" class="d-none"></button>
+            <button data-color="600"></button>
+            <button data-color="500" class="d-none"></button>
+            <button data-color="400"></button>
+            <button data-color="300" class="d-none"></button>
+            <button data-color="200"></button>
+            <button data-color="100"></button>
+            <button data-color="white"></button>
+        </div>
     </colorpicker>
 `;
 const SNIPPETS_TEMPLATE = `
@@ -726,22 +739,8 @@ var textInput = function (target, char) {
 // Convert Inline
 //--------------------------------------------------------------------------
 
-const tableAttributes = {
-    cellspacing: 0,
-    cellpadding: 0,
-    border: 0,
-    width: '100%',
-    align: 'center',
-    role: 'presentation',
-};
-const tableAttributesString = Object.keys(tableAttributes).map(key => `${key}="${tableAttributes[key]}"`).join(' ');
-const tableStyles = {
-    'border-collapse': 'collapse',
-    'text-align': 'inherit',
-    'font-size': 'unset',
-    'line-height': 'unset',
-};
-const tableStylesString = Object.keys(tableStyles).map(key => `${key}: ${tableStyles[key]};`).join(' ');
+const tableAttributesString = Object.keys(TABLE_ATTRIBUTES).map(key => `${key}="${TABLE_ATTRIBUTES[key]}"`).join(' ');
+const tableStylesString = Object.keys(TABLE_STYLES).map(key => `${key}: ${TABLE_STYLES[key]};`).join(' ');
 /**
  * Take a matrix representing a grid and return an HTML string of the Bootstrap
  * grid. The matrix is an array of rows, with each row being an array of cells.

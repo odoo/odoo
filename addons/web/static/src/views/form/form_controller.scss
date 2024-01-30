@@ -98,7 +98,7 @@
         @extend .oe_inline;
         float: right!important;
     }
-    @for $i from 2 through 12 {
+    @for $i from 2 through 13 {
         .o_field_widget.o_input_#{$i}ch input{
             width: 1ch * $i !important;
         }
@@ -597,10 +597,6 @@
                         }
                     }
                 }
-                // Prevent table overflow when having long chars in x2many list
-                .o_field_widget:has(.o_field_x2many.o_field_x2many_list) {
-                    width: 100%;
-                }
             }
         }
 
@@ -716,10 +712,26 @@
         }
     }
 
+    span.o_list_monetary {
+        display: block
+    }
+
+    .o_field_monetary {
+        /*rtl:ignore*/
+        direction : ltr;
+    }
+
+    .o_list_monetary {
+        /*rtl:ignore*/
+        text-align: right;
+        /*rtl:ignore*/
+        direction : ltr;
+    }
+
     .o_field_float, .o_field_date, .o_field_monetary {
         &.oe_inline {
             &, input {
-                max-width: 9rem;
+                max-width: inherit;
             }
         }
     }

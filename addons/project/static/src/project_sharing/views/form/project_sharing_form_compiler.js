@@ -65,7 +65,7 @@ export class ProjectSharingChatterCompiler extends ViewCompiler {
         return compileChatter(node, {
             resId: 'model.root.resId or undefined',
             resModel: 'model.root.resModel',
-            projectSharingId: 'model.root.context.active_id',
+            projectSharingId: 'model.root.context.active_id_chatter',
         });
     }
 }
@@ -76,7 +76,7 @@ registry.category("form_compilers").add("portal_chatter_compiler", {
         compileChatter(node, {
             resId: "props.record.resId or undefined",
             resModel: "props.record.resModel",
-            projectSharingId: "props.record.context.active_id",
+            projectSharingId: "props.record.context.active_id_chatter",
         }),
 });
 

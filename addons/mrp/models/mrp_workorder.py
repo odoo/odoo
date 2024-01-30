@@ -124,7 +124,7 @@ class MrpWorkorder(models.Model):
     finished_lot_id = fields.Many2one(
         'stock.lot', string='Lot/Serial Number', compute='_compute_finished_lot_id',
         inverse='_set_finished_lot_id', domain="[('product_id', '=', product_id), ('company_id', '=', company_id)]",
-        check_company=True)
+        check_company=True, search='_search_finished_lot_id')
     time_ids = fields.One2many(
         'mrp.workcenter.productivity', 'workorder_id', copy=False)
     is_user_working = fields.Boolean(
@@ -230,6 +230,9 @@ class MrpWorkorder(models.Model):
         for workorder in self:
             workorder.finished_lot_id = workorder.production_id.lot_producing_id
 
+    def _search_finished_lot_id(self, operator, value):
+        return [('production_id.lot_producing_id', operator, value)]
+
     def _set_finished_lot_id(self):
         for workorder in self:
             workorder.production_id.lot_producing_id = workorder.finished_lot_id
@@ -258,12 +261,15 @@ class MrpWorkorder(models.Model):
             workorder.date_planned_finished = workorder.leave_id.date_to
 
     def _set_dates_planned(self):
-        if not self[0].date_planned_start or not self[0].date_planned_finished:
+        if not self[0].date_planned_start:
             if not self.leave_id:
                 return
             raise UserError(_("It is not possible to unplan one single Work Order. "
                               "You should unplan the Manufacturing Order instead in order to unplan all the linked operations."))
         date_from = self[0].date_planned_start
+        for wo in self:
+            if not wo.date_planned_finished:
+                wo.date_planned_finished = wo._calculate_date_planned_finished()
         date_to = self[0].date_planned_finished
         to_write = self.env['mrp.workorder']
         for wo in self.sudo():
@@ -321,7 +327,8 @@ class MrpWorkorder(models.Model):
     @api.depends('operation_id', 'workcenter_id', 'qty_production')
     def _compute_duration_expected(self):
         for workorder in self:
-            workorder.duration_expected = workorder._get_duration_expected()
+            if workorder.state not in ['done', 'cancel']:
+                workorder.duration_expected = workorder._get_duration_expected()
 
     @api.depends('time_ids.duration', 'qty_produced')
     def _compute_duration(self):
@@ -428,8 +435,12 @@ class MrpWorkorder(models.Model):
 
     @api.onchange('date_planned_finished')
     def _onchange_date_planned_finished(self):
-        if self.date_planned_start and self.date_planned_finished:
+        if self.date_planned_start and self.date_planned_finished and self.workcenter_id:
             self.duration_expected = self._calculate_duration_expected()
+
+        if not self.date_planned_finished and self.date_planned_start:
+            raise UserError(_("It is not possible to unplan one single Work Order. "
+                              "You should unplan the Manufacturing Order instead in order to unplan all the linked operations."))
 
     def _calculate_duration_expected(self, date_planned_start=False, date_planned_finished=False):
         interval = self.workcenter_id.resource_calendar_id.get_work_duration_data(
@@ -608,7 +619,12 @@ class MrpWorkorder(models.Model):
         if self.state in ('done', 'cancel'):
             return True
 
-        if self.product_tracking == 'serial':
+        if self.production_id.state != 'progress':
+            self.production_id.write({
+                'date_start': datetime.now(),
+            })
+
+        if self.product_tracking == 'serial' and self.qty_producing == 0:
             self.qty_producing = 1.0
         elif self.qty_producing == 0:
             self.qty_producing = self.qty_remaining
@@ -618,10 +634,6 @@ class MrpWorkorder(models.Model):
                 self._prepare_timeline_vals(self.duration, datetime.now())
             )
 
-        if self.production_id.state != 'progress':
-            self.production_id.write({
-                'date_start': datetime.now(),
-            })
         if self.state == 'progress':
             return True
         start_date = datetime.now()
@@ -649,7 +661,7 @@ class MrpWorkorder(models.Model):
             return self.with_context(bypass_duration_calculation=True).write(vals)
 
     def button_finish(self):
-        end_date = datetime.now()
+        end_date = fields.Datetime.now()
         for workorder in self:
             if workorder.state in ('done', 'cancel'):
                 continue
@@ -818,8 +830,8 @@ class MrpWorkorder(models.Model):
             'workcenter_id': self.workcenter_id.id,
             'description': _('Time Tracking: %(user)s', user=self.env.user.name),
             'loss_id': loss_id[0].id,
-            'date_start': date_start,
-            'date_end': date_end,
+            'date_start': date_start.replace(microsecond=0),
+            'date_end': date_end.replace(microsecond=0) if date_end else date_end,
             'user_id': self.env.user.id,  # FIXME sle: can be inconsistent with company_id
             'company_id': self.company_id.id,
         }

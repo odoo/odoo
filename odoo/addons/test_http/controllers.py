@@ -1,7 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import json
 import logging
+
 import werkzeug
+from psycopg2.errorcodes import SERIALIZATION_FAILURE
+from psycopg2 import OperationalError
+
 from odoo import http
 from odoo.exceptions import AccessError, UserError
 from odoo.http import request
@@ -14,6 +18,14 @@ _logger = logging.getLogger(__name__)
 
 CT_JSON = {'Content-Type': 'application/json; charset=utf-8'}
 WSGI_SAFE_KEYS = {'PATH_INFO', 'QUERY_STRING', 'RAW_URI', 'SCRIPT_NAME', 'wsgi.url_scheme'}
+
+
+# Force serialization errors. Patched in some tests.
+should_fail = None
+
+
+class SerializationFailureError(OperationalError):
+    pgcode = SERIALIZATION_FAILURE
 
 
 class TestHttp(http.Controller):
@@ -150,6 +162,14 @@ class TestHttp(http.Controller):
     # =====================================================
     # Errors
     # =====================================================
+    @http.route('/test_http/fail', type='http', auth='none')
+    def fail(self):
+        _logger.error(
+            "The /test_http/fail route should never be called, referrer: %s",
+            http.request.httprequest.headers.get('referer')
+        )
+        raise request.not_found()
+
     @http.route('/test_http/json_value_error', type='json', auth='none')
     def json_value_error(self):
         raise ValueError('Unknown destination')
@@ -169,3 +189,16 @@ class TestHttp(http.Controller):
                 raise AccessError("Wrong iris code")
             if error == 'UserError':
                 raise UserError("Walter is AFK")
+
+    @http.route("/test_http/upload_file", methods=["POST"], type="http", auth="none", csrf=False)
+    def upload_file_retry(self, ufile):
+        global should_fail  # pylint: disable=W0603
+        if should_fail is None:
+            raise ValueError("should_fail should be set.")
+
+        data = ufile.read()
+        if should_fail:
+            should_fail = False  # Fail once
+            raise SerializationFailureError()
+
+        return data.decode()

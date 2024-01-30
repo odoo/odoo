@@ -42,11 +42,10 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
         run: () => {}, // It's a check.
     },
     // Add a menu item in edit mode.
-    wTourUtils.clickOnEdit(),
+    ...wTourUtils.clickOnEditAndWaitEditMode(),
     {
         content: "Click on a menu item",
         trigger: 'iframe #top_menu .nav-item a',
-        extra_trigger: '#oe_snippets.o_loaded',
     },
     {
         content: "Click on Edit Menu",
@@ -115,10 +114,9 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
         run: () => {}, // it's a check
     },
     // Edit the menu item from the "edit menu" popover button
-    wTourUtils.clickOnEdit(),
+    ...wTourUtils.clickOnEditAndWaitEditMode(),
     {
         content: "Click on the 'Modnar' link",
-        extra_trigger: "#oe_snippets.o_loaded",
         trigger: 'iframe #top_menu .nav-item a:contains("Modnar")',
     },
     {

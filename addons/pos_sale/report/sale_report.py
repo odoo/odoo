@@ -34,19 +34,19 @@ class SaleReport(models.Model):
             CASE WHEN pos.state != 'invoiced' THEN SUM(l.qty) ELSE 0 END AS qty_to_invoice,
             SUM(l.price_subtotal_incl)
                 / MIN({self._case_value_or_one('pos.currency_rate')})
-                / {self._case_value_or_one('currency_table.rate')}
+                * {self._case_value_or_one('currency_table.rate')}
             AS price_total,
             SUM(l.price_subtotal)
                 / MIN({self._case_value_or_one('pos.currency_rate')})
-                / {self._case_value_or_one('currency_table.rate')}
+                * {self._case_value_or_one('currency_table.rate')}
             AS price_subtotal,
             (CASE WHEN pos.state != 'invoiced' THEN SUM(l.price_subtotal) ELSE 0 END)
                 / MIN({self._case_value_or_one('pos.currency_rate')})
-                / {self._case_value_or_one('currency_table.rate')}
+                * {self._case_value_or_one('currency_table.rate')}
             AS amount_to_invoice,
             (CASE WHEN pos.state = 'invoiced' THEN SUM(l.price_subtotal) ELSE 0 END)
                 / MIN({self._case_value_or_one('pos.currency_rate')})
-                / {self._case_value_or_one('currency_table.rate')}
+                * {self._case_value_or_one('currency_table.rate')}
             AS amount_invoiced,
             count(*) AS nbr,
             pos.name AS name,
@@ -71,7 +71,7 @@ class SaleReport(models.Model):
             l.discount AS discount,
             SUM((l.price_unit * l.discount * l.qty / 100.0
                 / {self._case_value_or_one('pos.currency_rate')}
-                / {self._case_value_or_one('currency_table.rate')}))
+                * {self._case_value_or_one('currency_table.rate')}))
             AS discount_amount,
             NULL AS order_id"""
 

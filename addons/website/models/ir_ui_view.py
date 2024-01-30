@@ -7,6 +7,7 @@ import werkzeug
 
 from odoo import api, fields, models
 from odoo import tools
+from odoo.addons.website.tools import add_form_signature
 from odoo.exceptions import AccessError
 from odoo.osv import expression
 from odoo.http import request
@@ -470,6 +471,11 @@ class View(models.Model):
             'data-bg-video-src', 'data-shape', 'data-scroll-background-ratio',
         ]
 
+    def _get_combined_arch(self):
+        root = super()._get_combined_arch()
+        add_form_signature(root, self.sudo().env)
+        return root
+
     # --------------------------------------------------------------------------
     # Snippet saving
     # --------------------------------------------------------------------------
@@ -484,3 +490,11 @@ class View(models.Model):
 
     def _update_field_translations(self, fname, translations, digest=None):
         return super(View, self.with_context(no_cow=True))._update_field_translations(fname, translations, digest)
+
+    def _get_base_lang(self):
+        """ Returns the default language of the website as the base language if the record is bound to it """
+        self.ensure_one()
+        website = self.website_id
+        if website:
+            return website.default_lang_id.code
+        return super()._get_base_lang()

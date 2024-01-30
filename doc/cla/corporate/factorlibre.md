@@ -13,3 +13,5 @@ Daniel Duque daniel.duque@factorlibre.com https://github.com/danielduqma
 List of contributors:
 
 Daniel Duque daniel.duque@factorlibre.com https://github.com/danielduqma
+Hugo Santos hugo.santos@factorlibre.com https://github.com/hugosantosred
+Jorge Martínez jorge.martinez@factorlibre.com https://github.com/jorgemartinez-factorlibre

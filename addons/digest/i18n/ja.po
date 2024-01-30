@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux, 2022
 # Ryoko Tsuda <ryoko@quartile.co>, 2022
+# Junko Augias, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-20 09:01+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2022\n"
+"Last-Translator: Junko Augias, 2023\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,17 +29,17 @@ msgstr ""
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_mail_main
 msgid "<span class=\"button\" id=\"button_open_report\">Open Report</span>"
-msgstr ""
+msgstr "<span class=\"button\" id=\"button_open_report\">レポートを開く</span>"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_mail_main
 msgid "<span class=\"odoo_link_text\">Odoo</span>"
-msgstr ""
+msgstr "<span class=\"odoo_link_text\">Odoo</span>"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_mail_main
 msgid "<span style=\"color: #8f8f8f;\">Unsubscribe</span>"
-msgstr ""
+msgstr "<span style=\"color: #8f8f8f;\">登録解除</span>"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
@@ -64,13 +65,13 @@ msgstr "許可グループ"
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__available_fields
 msgid "Available Fields"
-msgstr ""
+msgstr "利用可能なフィールド"
 
 #. module: digest
 #: code:addons/digest/models/digest.py:0
 #, python-format
 msgid "Choose the metrics you care about"
-msgstr ""
+msgstr "気になる指標を選択する"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__company_id
@@ -128,7 +129,7 @@ msgstr "日次"
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid "Deactivate"
-msgstr ""
+msgstr "向こうか"
 
 #. module: digest
 #: model:ir.model.fields.selection,name:digest.selection__digest_digest__state__deactivated
@@ -160,7 +161,7 @@ msgstr "ダイジェストEメール"
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.portal_digest_unsubscribed
 msgid "Digest Subscriptions"
-msgstr ""
+msgstr "ダイジェストサブスクリプション"
 
 #. module: digest
 #: model:ir.actions.act_window,name:digest.digest_tip_action
@@ -172,7 +173,7 @@ msgstr "ダイジェストヒント"
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid "Digest Title"
-msgstr ""
+msgstr "ダイジェストタイトル"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__display_name
@@ -205,7 +206,7 @@ msgstr "グループ化"
 msgid ""
 "Have a question about a document? Click on the responsible user's picture to"
 " start a conversation. If his avatar has a green dot, he is online."
-msgstr ""
+msgstr "ドキュメントについて質問がありますか？担当ユーザの写真をクリックして会話を始めて下さい。アバターに緑の点があれば、オンライン中です。"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__id
@@ -217,28 +218,28 @@ msgstr "ID"
 #: code:addons/digest/controllers/portal.py:0
 #, python-format
 msgid "Invalid periodicity set on digest"
-msgstr ""
+msgstr "ダイジェストに無効な周期性が設定されています。"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__is_subscribed
 msgid "Is user subscribed"
-msgstr ""
+msgstr "ユーザは登録中か"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_tree
 msgid "KPI Digest"
-msgstr ""
+msgstr "KPI ダイジェスト"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_tip_view_form
 msgid "KPI Digest Tip"
-msgstr ""
+msgstr "KPI ダイジェストヒント"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_tip_view_tree
 msgid "KPI Digest Tips"
-msgstr ""
+msgstr "KPI ダイジェストヒント"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
@@ -248,12 +249,12 @@ msgstr "KPIs 重要経営指標"
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__kpi_mail_message_total_value
 msgid "Kpi Mail Message Total Value"
-msgstr ""
+msgstr "KPIメールメッセージ合計値"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__kpi_res_users_connected_value
 msgid "Kpi Res Users Connected Value"
-msgstr ""
+msgstr "KPI担当ユーザ連絡済値"
 
 #. module: digest
 #: code:addons/digest/models/digest.py:0
@@ -294,7 +295,7 @@ msgstr "最終更新日"
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__kpi_mail_message_total
 msgid "Messages Sent"
-msgstr ""
+msgstr "メッセージ送信済"
 
 #. module: digest
 #: model:ir.model.fields.selection,name:digest.selection__digest_digest__periodicity__monthly
@@ -317,12 +318,12 @@ msgstr "新規ユーザは自動的に次のダイジェストEメールの受�
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__next_run_date
 msgid "Next Mailing Date"
-msgstr ""
+msgstr "次回メール送信日"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_section_mobile
 msgid "Odoo Mobile"
-msgstr ""
+msgstr "Odooモバイル"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__periodicity
@@ -346,7 +347,7 @@ msgstr ""
 msgid ""
 "Press ALT in any screen to highlight shortcuts for every button in the "
 "screen. It is useful to process multiple documents in batch."
-msgstr ""
+msgstr "任意の画面でALTキーを押すと、画面内の各ボタンのショートカットがハイライトされます。複数のドキュメントを一括処理するのに便利です。"
 
 #. module: digest
 #: model:ir.model.fields.selection,name:digest.selection__digest_digest__periodicity__quarterly
@@ -363,7 +364,7 @@ msgstr "宛先"
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_section_mobile
 msgid "Run your business from anywhere with <b>Odoo Mobile</b>."
-msgstr ""
+msgstr " <b>Odooモバイル</b>でどこからでもビジネスを運営しましょう。"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
@@ -394,7 +395,7 @@ msgstr "ステータス"
 #: code:addons/digest/models/digest.py:0
 #, python-format
 msgid "Switch to weekly Digests"
-msgstr ""
+msgstr "週間ダイジェストに変更"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_tip__tip_description
@@ -461,12 +462,12 @@ msgstr "タイトル"
 msgid ""
 "Type \"@\" to notify someone in a message, or \"#\" to link to a channel. "
 "Try to notify @OdooBot to test the feature."
-msgstr ""
+msgstr "メッセージで誰かに通知するには\"@\"を、チャンネルにリンクするには \"#\"を入力します。試しに@OdooBotに通知してみましょう。"
 
 #. module: digest
 #: model:ir.model.fields,help:digest.field_digest_tip__sequence
 msgid "Used to display digest tip in email template base on order"
-msgstr ""
+msgstr "オーダに基づき、Eメールテンプレートにダイジェストチップを表示するために使用します。"
 
 #. module: digest
 #: model:ir.model,name:digest.model_res_users
@@ -476,18 +477,18 @@ msgstr "ユーザ"
 #. module: digest
 #: model:ir.model.fields,help:digest.field_digest_tip__user_ids
 msgid "Users having already received this tip"
-msgstr ""
+msgstr "すでにこのヒントを受け取ったユーザ"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid "Want to add your own KPIs?<br/>"
-msgstr ""
+msgstr "自分のKPIを追加しますか？<br/>"
 
 #. module: digest
 #: code:addons/digest/models/digest.py:0
 #, python-format
 msgid "Want to customize this email?"
-msgstr ""
+msgstr "このEメールをカスタマイズしますか？"
 
 #. module: digest
 #: code:addons/digest/models/digest.py:0
@@ -495,7 +496,7 @@ msgstr ""
 msgid ""
 "We have noticed you did not connect these last few days. We have "
 "automatically switched your preference to %(new_perioridicy_str)s Digests."
-msgstr ""
+msgstr "ここ数日、接続されていません。あなたの優先順位を自動的に%(new_perioridicy_str)sダイジェストに切り替えました。"
 
 #. module: digest
 #: model:ir.model.fields.selection,name:digest.selection__digest_digest__periodicity__weekly
@@ -509,6 +510,7 @@ msgid ""
 "This is useful when computing a margin or a discount on a quotation, sale "
 "order or invoice."
 msgstr ""
+"数値を編集する際、 `=` を入力することで数式を使用することができます。これは、見積書、オーダ、請求書のマージンや割引を計算するときに便利です。"
 
 #. module: digest
 #: model_terms:digest.tip,tip_description:digest.digest_tip_digest_4
@@ -516,21 +518,23 @@ msgid ""
 "When following documents, use the pencil icon to fine-tune the information you want to receive.\n"
 "Follow a project / sales team to keep track of this project's tasks / this team's opportunities."
 msgstr ""
+"ドキュメントをフォローする場合は、鉛筆のアイコンを使って受信したい情報を微調整して下さい。\n"
+"プロジェクト/販売チームをフォローすると、プロジェクトのタスク/チームの案件を追跡できます。"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.portal_digest_unsubscribed
 msgid "You have been successfully unsubscribed from:<br/>"
-msgstr ""
+msgstr "以下からの登録解除が完了しました:<br/>"
 
 #. module: digest
 #: model:digest.digest,name:digest.digest_digest_default
 msgid "Your Odoo Periodic Digest"
-msgstr ""
+msgstr "Odoo期間ダイジェスト"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid "e.g. Your Weekly Digest"
-msgstr ""
+msgstr "例:週間ダイジェスト"
 
 #. module: digest
 #: code:addons/digest/models/digest.py:0
@@ -548,4 +552,4 @@ msgstr "季刊"
 #: code:addons/digest/models/digest.py:0
 #, python-format
 msgid "weekly"
-msgstr ""
+msgstr "週次"

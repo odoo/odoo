@@ -134,7 +134,7 @@ export class KanbanRenderer extends Component {
                 }
 
                 // Open first link
-                const firstLink = target.querySelector("a, button");
+                const firstLink = target.querySelector(".oe_kanban_global_click, a, button");
                 if (firstLink && firstLink instanceof HTMLElement) {
                     firstLink.click();
                 }
@@ -377,9 +377,10 @@ export class KanbanRenderer extends Component {
 
     async validateQuickCreate(mode, group) {
         const values = group.quickCreateRecord.data;
-        let record = group.quickCreateRecord;
+        const quickCreateRecord = group.quickCreateRecord;
+        let record;
         try {
-            record = await group.validateQuickCreate(record, mode);
+            record = await group.validateQuickCreate(quickCreateRecord, mode);
         } catch (e) {
             // TODO: filter RPC errors more specifically (eg, for access denied, there is no point in opening a dialog)
             if (!(e instanceof RPCError)) {

@@ -25,6 +25,68 @@
         </field>
     </record>
 
+    <!--TO DO: Remove in master and update existing inherit_id-->
+    <record id="timesheets_analysis_report_graph_timesheet_grid" model="ir.ui.view">
+        <field name="name">timesheets.analysis.report.graph</field>
+        <field name="model">timesheets.analysis.report</field>
+        <field name="inherit_id" ref="hr_timesheet.timesheets_analysis_report_graph_employee"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='unit_amount']" position="after">
+                <field name="billable_time" widget="timesheet_uom"/>
+                <field name="non_billable_time" widget="timesheet_uom"/>
+            </xpath>
+        </field>
+    </record>
+
+
+    <record id="timesheets_analysis_report_pivot_project_inherit" model="ir.ui.view">
+        <field name="name">timesheets.analysis.report.pivot.project</field>
+        <field name="model">timesheets.analysis.report</field>
+        <field name="inherit_id" ref="hr_timesheet.timesheets_analysis_report_pivot_project"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='unit_amount']" position="after">
+                <field name="billable_time" widget="timesheet_uom"/>
+                <field name="non_billable_time" widget="timesheet_uom"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="timesheets_analysis_report_graph_project_inherit" model="ir.ui.view">
+        <field name="name">timesheets.analysis.report.graph.project</field>
+        <field name="model">timesheets.analysis.report</field>
+        <field name="inherit_id" ref="hr_timesheet.timesheets_analysis_report_graph_project"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='unit_amount']" position="after">
+                <field name="billable_time" widget="timesheet_uom"/>
+                <field name="non_billable_time" widget="timesheet_uom"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="timesheets_analysis_report_pivot_task_inherit" model="ir.ui.view">
+        <field name="name">timesheets.analysis.report.pivot.task</field>
+        <field name="model">timesheets.analysis.report</field>
+        <field name="inherit_id" ref="hr_timesheet.timesheets_analysis_report_pivot_task"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='unit_amount']" position="after">
+                <field name="billable_time" widget="timesheet_uom"/>
+                <field name="non_billable_time" widget="timesheet_uom"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="timesheets_analysis_report_graph_task_inherit" model="ir.ui.view">
+        <field name="name">timesheets.analysis.report.graph.task</field>
+        <field name="model">timesheets.analysis.report</field>
+        <field name="inherit_id" ref="hr_timesheet.timesheets_analysis_report_graph_task"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='unit_amount']" position="after">
+                <field name="billable_time" widget="timesheet_uom"/>
+                <field name="non_billable_time" widget="timesheet_uom"/>
+            </xpath>
+        </field>
+    </record>
+
     <record id="timesheets_analysis_report_pivot_invoice_type" model="ir.ui.view">
         <field name="name">timesheets.analysis.report.pivot</field>
         <field name="model">timesheets.analysis.report</field>
@@ -34,6 +96,8 @@
                 <field name="timesheet_invoice_type" type="col"/>
                 <field name="amount" string="Timesheet Costs"/>
                 <field name="unit_amount" type="measure" widget="timesheet_uom"/>
+                <field name="billable_time" widget="timesheet_uom"/>
+                <field name="non_billable_time" widget="timesheet_uom"/>
             </pivot>
         </field>
     </record>
@@ -45,6 +109,8 @@
             <graph string="Timesheets" sample="1" js_class="hr_timesheet_graphview" disable_linking="True">
                 <field name="amount" string="Timesheet Costs"/>
                 <field name="unit_amount" type="measure" widget="timesheet_uom"/>
+                <field name="billable_time" widget="timesheet_uom"/>
+                <field name="non_billable_time" widget="timesheet_uom"/>
                 <field name="timesheet_invoice_type" type="row"/>
             </graph>
         </field>

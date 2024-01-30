@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-14 05:51+0000\n"
+"POT-Creation-Date: 2023-05-23 08:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
 "Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
@@ -48,6 +48,13 @@ msgstr ""
 "<strong>التنسيق المستخدم لاستيراد الفاتورة: %s</strong> <p><li> %s </li></p>"
 
 #. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+#, python-format
+msgid "A payment of %s was detected."
+msgstr "تم رصد دفع بقيمة %s "
+
+#. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_a_nz
 msgid "A-NZ BIS Billing 3.0"
 msgstr "A-NZ BIS Billing 3.0"
@@ -58,7 +65,7 @@ msgstr "A-NZ BIS Billing 3.0"
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Articles 226 items 11 to 15 Directive 2006/112/EN"
-msgstr ""
+msgstr "Articles 226 items 11 to 15 Directive 2006/112/EN"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -79,6 +86,14 @@ msgid ""
 msgstr ""
 "الوظائف المعتادة لمستندات نظام تبادل المستندات إلكترونياً: إنشاء البيانات، "
 "التقييدات، إلخ "
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
+#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
+#, python-format
+msgid "Conditional cash/payment discount"
+msgstr "خصم مشروط للنقد/الدفع "
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -104,7 +119,7 @@ msgstr "تعذر إحضار الضريبة: %s %% للبند '%s'. "
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Could not retrieve the unit of measure for line with label '%s'."
-msgstr ""
+msgstr "تعذر جلب وحدة قياس البند مع بطاقة العنوان \"%s\". "
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -144,6 +159,12 @@ msgstr "يجب أن يكون لكل بند فاتورة ضريبة واحدة ف
 
 #. module: account_edi_ubl_cii
 #. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
+#, python-format
+msgid "Each invoice line should have a product or a label."
+msgstr "يجب أن يحتوي كل بند فاتورة على منتج أو بطاقة عنوان. "
+
+#. module: account_edi_ubl_cii
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Each invoice line should have at least one tax."
@@ -162,6 +183,8 @@ msgid ""
 "Errors occured while creating the EDI document (format: %s). The receiver "
 "might refuse it."
 msgstr ""
+"حدثت أخطاء أثناء إنشاء مستند نظام تبادل المستندات تلقائياً (الصيغة: %s). قد "
+"يقوم المستلم برفضه. "
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -218,8 +241,11 @@ msgstr "لم يتم العثور على نظام عنوان إلكتروني (EA
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
-msgid "No gross price nor net price found for line in xml"
-msgstr "لم يتم العثور على السعر الإجمالي أو السعر الصافي للبند في ملف xml "
+msgid ""
+"No gross price, net price nor line subtotal amount found for line in xml"
+msgstr ""
+"لم يتم العثور على السعر الإجمالي أو السعر الصافي أو الإجمالي الفرعي للبند في"
+" ملف xml "
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
@@ -262,7 +288,7 @@ msgstr "إجراء التقرير"
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_sg
 msgid "SG BIS Billing 3.0"
-msgstr ""
+msgstr "SG BIS Billing 3.0"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_nl
@@ -324,6 +350,17 @@ msgstr "الحقل %s مطلوب في %s. "
 msgid ""
 "The field 'Sanitized Account Number' is required on the Recipient Bank."
 msgstr "الحقل 'رقم الحساب السليم' مطلوب في الحساب البنكي للمستلم. "
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
+#, python-format
+msgid ""
+"The invoice contains line(s) with a negative unit price, which is not "
+"allowed. You might need to set a negative quantity instead."
+msgstr ""
+"تحتوي الفاتورة على بنود بها سعر وحدة سالب، وهو أمر غير مسموح به. قد تحتاج "
+"إلى تعيين كمية سالبة عوضاً عن ذلك. "
 
 #. module: account_edi_ubl_cii
 #. odoo-python

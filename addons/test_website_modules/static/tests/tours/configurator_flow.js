@@ -90,7 +90,7 @@ tour.register('configurator_flow', {
                 }
             }
             for (const url of ['/', '/event', '/slides', '/pricing', '/blog/', '/blog/', '/contactus']) {
-                if (!$iframe.contents().find(`#top_menu a[href^='${url}'`).length) {
+                if (!$iframe.contents().find(`#top_menu a[href^='${url}']`).length) {
                     console.error(`Missing ${url} menu URL. It should have been created by the configurator.`);
                 }
             }

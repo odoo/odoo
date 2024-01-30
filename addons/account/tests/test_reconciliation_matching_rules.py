@@ -761,7 +761,7 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
         })
 
     def test_partner_mapping_rule(self):
-        st_line = self._create_st_line(partner_id=None, payment_ref="toto42")
+        st_line = self._create_st_line(partner_id=None, payment_ref=None)
 
         rule = self._create_reconcile_model(
             partner_mapping_line_ids=[{
@@ -769,6 +769,11 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
                 'payment_ref_regex': 'toto.*',
             }],
         )
+
+        # No match because the reference is not matching the regex.
+        self.assertEqual(st_line._retrieve_partner(), self.env['res.partner'])
+
+        st_line.payment_ref = "toto42"
 
         # Matching using the regex on payment_ref.
         self.assertEqual(st_line._retrieve_partner(), self.partner_1)
@@ -1027,6 +1032,28 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
                 rule._apply_rules(st_line, None),
                 {},
             )
+
+        with rollback():
+            # Test Matching on exact_token.
+            term_line.name = "PAY-123"
+            st_line.payment_ref = "PAY-123"
+
+            # Matching if no checkbox checked.
+            self.assertDictEqual(
+                rule._apply_rules(st_line, None),
+                {'amls': term_line, 'model': rule},
+            )
+
+        with self.subTest(rule_field='match_text_location_label', st_line_field='payment_ref'):
+            with rollback():
+                term_line.name = ''
+                st_line.payment_ref = '/?'
+
+                # No exact matching when the term line name is an empty string
+                self.assertDictEqual(
+                    rule._apply_rules(st_line, None),
+                    {},
+                )
 
         for rule_field, st_line_field in (
             ('match_text_location_label', 'payment_ref'),

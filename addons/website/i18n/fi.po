@@ -9,7 +9,6 @@
 # Topi Aura <topi@aurat.fi>, 2022
 # Sanna Edelman <direct@generare.com>, 2022
 # Pekka Ikonen, 2022
-# Teija Hölttä <teija.holtta@gmail.com>, 2022
 # Teemu Tiitinen, 2022
 # Jussi Lehto <jussi@gulfeo.com>, 2022
 # Kari Lindgren <karisatu@gmail.com>, 2022
@@ -32,15 +31,15 @@
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2022
 # Richard Mouthier <rmo@odoo.com>, 2022
 # Svante Suominen <svante.suominen@web-veistamo.fi>, 2023
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023
 # Martin Trigaux, 2023
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023
+# Teija Hölttä <teija.holtta@gmail.com>, 2023
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-14 05:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
 "Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
@@ -55,7 +54,7 @@ msgstr ""
 #: code:addons/website/static/src/snippets/s_image_gallery/options.js:0
 #, python-format
 msgid " Add Images"
-msgstr "Lisää kuvia"
+msgstr " Lisää kuvia"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -64,6 +63,12 @@ msgstr "\" varoitus jossa"
 
 #. module: website
 #. odoo-python
+#: code:addons/website/models/website_rewrite.py:0
+#, python-format
+msgid "\"URL from\" can not be empty."
+msgstr "\"URL-osoite\" ei voi olla tyhjä."
+
+#. module: website
 #: code:addons/website/models/website_rewrite.py:0
 #, python-format
 msgid "\"URL to\" can not be empty."
@@ -753,7 +758,7 @@ msgid ""
 "                                        How to create my Plausible Shared Link"
 msgstr ""
 "<i class=\"fa fa-arrow-right\"/>\n"
-"                                        Miten luon uskottavan jaetun linkin?"
+"                                        Näin luot luon uskottavan jaetun linkin"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -1341,6 +1346,8 @@ msgid ""
 "<span class=\"s_website_form_label_content\">Question</span>\n"
 "                                                            <span class=\"s_website_form_mark\"> *</span>"
 msgstr ""
+"<span class=\"s_website_form_label_content\">Kysymys</span>\n"
+"                                                            <span class=\"s_website_form_mark\"> *</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus
@@ -1520,7 +1527,7 @@ msgstr "Tarvikkeet"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Accordion"
-msgstr ""
+msgstr "Haitariluettelo"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
@@ -2201,7 +2208,7 @@ msgstr "Laukut"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Banner"
-msgstr ""
+msgstr "Banneri"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
@@ -2267,7 +2274,7 @@ msgstr "Suuri"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Big Boxes"
-msgstr ""
+msgstr "Isot laatikot"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -2945,7 +2952,7 @@ msgstr "Yritys"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Comparisons"
-msgstr ""
+msgstr "Vertailut"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
@@ -3179,7 +3186,7 @@ msgstr "Tekijänoikeus"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Countdown"
-msgstr ""
+msgstr "Lähtölaskenta"
 
 #. module: website
 #. odoo-javascript
@@ -3867,7 +3874,7 @@ msgstr "Näytä verkkosivun kuvaus"
 #: model:ir.model.fields,help:website.field_res_config_settings__website_logo
 #: model:ir.model.fields,help:website.field_website__logo
 msgid "Display this logo on the website."
-msgstr "Näytä logo verkkosivuilla"
+msgstr "Näytä logo verkkosivuilla."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -4029,7 +4036,7 @@ msgstr "Kesto"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Dynamic Carousel"
-msgstr ""
+msgstr "Dynaaminen karuselli"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -4039,7 +4046,7 @@ msgstr "Dynaaminen sisältö"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Dynamic Snippet"
-msgstr ""
+msgstr "Dynaaminen katkelma"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__website_homepage_url
@@ -4451,7 +4458,7 @@ msgstr "Ominaisuudet"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Features Grid"
-msgstr ""
+msgstr "Ominaisuuksien ruudukko"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_dynamic_snippet_options_template
@@ -5481,7 +5488,7 @@ msgstr "Kuva"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Image - Text"
-msgstr ""
+msgstr "Kuva - Teksti"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
@@ -5491,7 +5498,7 @@ msgstr "Kuvan kansi"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Image Gallery"
-msgstr ""
+msgstr "Kuvagalleria"
 
 #. module: website
 #. odoo-javascript
@@ -5534,12 +5541,12 @@ msgstr "Kuvien aliotsikot"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Images Wall"
-msgstr ""
+msgstr "Kuvaseinä"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "In"
-msgstr " "
+msgstr "Jossa"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_pages_kanban_view
@@ -6578,7 +6585,7 @@ msgstr "Media"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Media List"
-msgstr ""
+msgstr "Medialuettelo"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_media_list
@@ -7138,6 +7145,13 @@ msgid "No support"
 msgstr "Ei tukea"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/systray_items/website_switcher.js:0
+#, python-format
+msgid "No website domain configured for this website."
+msgstr "Tälle verkkosivustolle ei ole määritetty verkkotunnusta."
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
@@ -7221,7 +7235,7 @@ msgstr "Kielten määrä"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Numbers"
-msgstr ""
+msgstr "Numerot"
 
 #. module: website
 #. odoo-javascript
@@ -7711,6 +7725,13 @@ msgid "Pay"
 msgstr "Maksa"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/js/form_editor_registry.js:0
+#, python-format
+msgid "Phone Number"
+msgstr "Puhelinnumero"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_thumbnails
 msgid "Phones"
 msgstr "Puhelimet"
@@ -8139,6 +8160,13 @@ msgstr "Uudelleenohjaus"
 #, python-format
 msgid "Redirect to URL in a new tab"
 msgstr "Uudelleenohjaa URL-osoitteeseen uudessa välilehdessä"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/website_preview/website_preview.js:0
+#, python-format
+msgid "Redirecting..."
+msgstr "Uudelleenohjataan..."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.view_rewrite_search
@@ -8889,7 +8917,7 @@ msgstr "Näytä/piilota mobiililaitteessa"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Showcase"
-msgstr ""
+msgstr "Esittely"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -9186,7 +9214,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Steps"
-msgstr ""
+msgstr "Vaiheet"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_table_of_content_options
@@ -9245,6 +9273,13 @@ msgstr "Muotoilu"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Sub Menus"
 msgstr "Alivalikot"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/js/form_editor_registry.js:0
+#, python-format
+msgid "Subject"
+msgstr "Aihe"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus
@@ -9323,7 +9358,7 @@ msgstr "KÄÄNNÄ"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Table of Content"
-msgstr ""
+msgstr "Sisällysluettelo"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_odoo_menu
@@ -9419,7 +9454,7 @@ msgstr "Teksti"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Text - Image"
-msgstr ""
+msgstr "Teksti - Kuva"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -9777,6 +9812,17 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
+#, python-format
+msgid ""
+"This font already exists, you can only add it as a local font to replace the"
+" server version."
+msgstr ""
+"Tämä fontti on jo olemassa, voit vain lisätä sen paikallisena fonttina "
+"palvelinversion tilalle."
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "This font is hosted and served to your visitors by Google servers"
@@ -9833,7 +9879,7 @@ msgstr ""
 #: code:addons/website/static/src/components/translator/translator.js:0
 #, python-format
 msgid "This translation is not editable."
-msgstr ""
+msgstr "Tätä käännöstä ei voi muokata."
 
 #. module: website
 #. odoo-javascript
@@ -9851,6 +9897,24 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.report_viewhierarchy_children
 msgid "This view arch has been modified"
 msgstr "Tätä näkymä-archia on muutettu"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/systray_items/website_switcher.js:0
+#, python-format
+msgid ""
+"This website does not have a domain configured. To avoid unexpected behaviours during website edition, we recommend closing (or refreshing) other browser tabs.\n"
+"To remove this message please set a domain in your website settings"
+msgstr ""
+"Tälle verkkosivustolle ei ole määritetty verkkotunnusta. Jotta vältät odottamattomat toiminnot verkkosivuston muokkauksen aikana, suosittelemme sulkemaan (tai päivittämään) muut selaimen välilehdet.\n"
+"Poista tämä viesti määrittämällä verkkotunnus verkkosivuston asetuksissa"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/systray_items/website_switcher.xml:0
+#, python-format
+msgid "This website does not have a domain configured."
+msgstr "Tälle verkkosivustolle ei ole määritetty verkkotunnusta."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
@@ -10055,8 +10119,15 @@ msgstr "Käännä ominaisuus"
 #. odoo-javascript
 #: code:addons/website/static/src/components/translator/translator.js:0
 #, python-format
+msgid "Translate Selection Option"
+msgstr "Käännä valintavaihtoehto"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/components/translator/translator.js:0
+#, python-format
 msgid "Translate header in the text. Menu is generated automatically."
-msgstr ""
+msgstr "Käännä otsikko tekstissä. Valikko luodaan automaattisesti."
 
 #. module: website
 #. odoo-javascript
@@ -11173,6 +11244,19 @@ msgstr "Vuosi"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/client_actions/website_preview/website_preview.js:0
+#, python-format
+msgid ""
+"You are about to be redirected to the domain configured for your website ( "
+"%s ). This is necessary to edit or view your website from the Website app. "
+"You might need to log back in."
+msgstr ""
+"Sinut ohjataan pian verkkosivustollesi määritettyyn verkkotunnukseen ( %s )."
+" Tämä on tarpeen, jotta voit muokata tai tarkastella verkkosivustoasi "
+"verkkosivustosovelluksesta. Sinun on ehkä kirjauduttava takaisin sisään."
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/components/translator/translator.xml:0
 #, python-format
 msgid "You are about to enter the translation mode."
@@ -11315,6 +11399,13 @@ msgid "You'll be able to create your pages later on."
 msgstr "Voit luoda sivut myöhemmin."
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/js/form_editor_registry.js:0
+#, python-format
+msgid "Your Company"
+msgstr "Oma yritys"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_dynamic_snippet_template
 msgid ""
 "Your Dynamic Snippet will be displayed here... This message is displayed "
@@ -11322,6 +11413,27 @@ msgid ""
 msgstr ""
 "Dynaaminen pätkäsi näytetään tässä... Tämä viesti näytetään, koska et ole "
 "antanut sekä suodatinta että mallia käytettäväksi.<br/>"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/js/form_editor_registry.js:0
+#, python-format
+msgid "Your Email"
+msgstr "Sähköpostisi"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/js/form_editor_registry.js:0
+#, python-format
+msgid "Your Name"
+msgstr "Nimesi"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/js/form_editor_registry.js:0
+#, python-format
+msgid "Your Question"
+msgstr "Oma kysymys"
 
 #. module: website
 #. odoo-javascript
@@ -11776,7 +11888,7 @@ msgstr "o-color-"
 #: code:addons/website/static/src/systray_items/edit_website.js:0
 #, python-format
 msgid "or edit master"
-msgstr "tai muokata masteria"
+msgstr "tai muokkaa lähdekieltä"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -11808,7 +11920,7 @@ msgstr "paikanvaraaja"
 #: code:addons/website/static/src/components/website_loader/website_loader.xml:0
 #, python-format
 msgid "pointer to build the perfect page in 7 steps."
-msgstr "vinkit täydellisen sivun rakentamiseen seitsemällä askeleella"
+msgstr "vinkit täydellisen sivun rakentamiseen seitsemällä askeleella."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets

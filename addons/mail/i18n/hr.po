@@ -15,7 +15,7 @@
 # Milan Tribuson <one.mile.code@gmail.com>, 2022
 # Vojislav Opačić <vojislav.opacic@gmail.com>, 2022
 # Matej Mijoč, 2022
-# Hrvoje Sić <hrvoje.sic@gmail.com>, 2022
+# hrvoje sić <hrvoje.sic@gmail.com>, 2022
 # 0ba0ac30481a756f36528ba6f9a4317e_6443a87 <52eefe24349934c364624ef40611b7a3_1010754>, 2022
 # Igor Krizanovic <krizanovic.igor@gmail.com>, 2022
 # Martin Trigaux, 2022
@@ -24,15 +24,17 @@
 # Tina Milas, 2022
 # Mario Jureša <mario.juresa@uvid.hr>, 2022
 # Bole <bole@dajmi5.com>, 2023
+# Jan Carević, 2023
 # Vladimir Vrgoč, 2023
+# Carlo Štefanac, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-14 05:51+0000\n"
+"POT-Creation-Date: 2023-05-23 08:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Vladimir Vrgoč, 2023\n"
+"Last-Translator: Carlo Štefanac, 2023\n"
 "Language-Team: Croatian (https://app.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -177,14 +179,14 @@ msgstr "%s kreiran"
 #: code:addons/mail/static/src/models/activity_list_view_item.js:0
 #, python-format
 msgid "%s days overdue"
-msgstr ""
+msgstr "%s dana kasni"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models/activity_view.js:0
 #, python-format
 msgid "%s days overdue:"
-msgstr ""
+msgstr "%s dana kasni:"
 
 #. module: mail
 #. odoo-javascript
@@ -1381,6 +1383,13 @@ msgstr ""
 
 #. module: mail
 #. odoo-python
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid "An access token must be provided for each attachment."
+msgstr ""
+
+#. module: mail
+#. odoo-python
 #: code:addons/mail/models/res_partner.py:0
 #, python-format
 msgid "An email is required for find_or_create to work"
@@ -2308,7 +2317,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/chat_window_header/chat_window_header.xml:0
 #, python-format
 msgid "Close chat window"
-msgstr ""
+msgstr "Zatvori prozor razgovora"
 
 #. module: mail
 #. odoo-javascript
@@ -3019,6 +3028,7 @@ msgstr ""
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/components/thread_view_topbar/thread_view_topbar.xml:0
+#: code:addons/mail/static/src/models/discuss.js:0
 #: model:ir.actions.client,name:mail.action_discuss
 #: model:ir.ui.menu,name:mail.mail_menu_technical
 #: model:ir.ui.menu,name:mail.menu_root_discuss
@@ -3154,7 +3164,7 @@ msgstr "Riješeno"
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 #, python-format
 msgid "Done & Launch Next"
-msgstr ""
+msgstr "Riješeno i lansiraj slijedeći"
 
 #. module: mail
 #. odoo-javascript
@@ -3163,7 +3173,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 #, python-format
 msgid "Done & Schedule Next"
-msgstr ""
+msgstr "Riješeno i planiraj slijedeći"
 
 #. module: mail
 #. odoo-javascript
@@ -3208,13 +3218,13 @@ msgstr "Padajući izbornik"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__date_deadline
 msgid "Due Date"
-msgstr "Datum dospijeća"
+msgstr "Predviđeni datum"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_date_deadline_range
 #: model:ir.model.fields,field_description:mail.field_ir_cron__activity_date_deadline_range
 msgid "Due Date In"
-msgstr "Datum dospijeća u"
+msgstr "Predviđeni datum za"
 
 #. module: mail
 #. odoo-javascript
@@ -3222,27 +3232,27 @@ msgstr "Datum dospijeća u"
 #: code:addons/mail/static/src/models/activity_list_view_item.js:0
 #, python-format
 msgid "Due in %s days"
-msgstr ""
+msgstr "Predviđeno za %s dana"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models/activity_view.js:0
 #, python-format
 msgid "Due in %s days:"
-msgstr ""
+msgstr "Predviđeno za %s dana:"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/components/activity/activity.xml:0
 #, python-format
 msgid "Due on"
-msgstr ""
+msgstr "Predviđeno na"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_date_deadline_range_type
 #: model:ir.model.fields,field_description:mail.field_ir_cron__activity_date_deadline_range_type
 msgid "Due type"
-msgstr ""
+msgstr "Vrsta predviđeno"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__mail_dup
@@ -4024,13 +4034,6 @@ msgid "Gmail Credentials"
 msgstr ""
 
 #. module: mail
-#. odoo-python
-#: code:addons/mail/models/res_users.py:0
-#, python-format
-msgid "Go to the configuration panel"
-msgstr "Idi na ploču za konfiguriranje"
-
-#. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_channel__channel_type__group
 msgid "Group"
 msgstr "Grupa"
@@ -4474,6 +4477,8 @@ msgid ""
 "If the email address is on the blacklist, the contact won't receive mass "
 "mailing anymore, from any list"
 msgstr ""
+"Ako je adresa e-pošte na crnoj listi, kontakt više neće primati masovnu "
+"poštu, ni s jedne liste"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__reply_to_force_new
@@ -5699,7 +5704,7 @@ msgstr "Označi sve pročitane"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 msgid "Mark as Done"
-msgstr "Označi kao izvršeno"
+msgstr "Označi kao Riješeno"
 
 #. module: mail
 #. odoo-javascript
@@ -5725,7 +5730,14 @@ msgstr "Označi sa 'Za obaviti'"
 #: code:addons/mail/static/src/xml/web_kanban_activity.xml:0
 #, python-format
 msgid "Mark as done"
-msgstr "Označi kao izvršeno"
+msgstr "Označi kao Riješeno"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/models/call_settings_menu.js:0
+#, python-format
+msgid "Media devices unobtainable"
+msgstr ""
 
 #. module: mail
 #: model:mail.activity.type,name:mail.mail_activity_data_meeting
@@ -6561,8 +6573,8 @@ msgstr "Broj grešaka"
 #: model:ir.model.fields,help:mail.field_mail_thread_cc__message_needaction_counter
 #: model:ir.model.fields,help:mail.field_res_partner__message_needaction_counter
 #: model:ir.model.fields,help:mail.field_res_users__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Broj poruka koje zahtijevaju aktivnost"
+msgid "Number of messages requiring action"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_blacklist__message_has_error_counter
@@ -6978,7 +6990,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:mail.selection__res_partner__activity_state__overdue
 #, python-format
 msgid "Overdue"
-msgstr "Dospjelo"
+msgstr "Kasni"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -7924,6 +7936,13 @@ msgid "SSL"
 msgstr "SSL"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/models/call_settings_menu.js:0
+#, python-format
+msgid "SSL might not be set up properly"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__is_ssl
 msgid "SSL/TLS"
 msgstr "SSL/TLS"
@@ -7984,7 +8003,7 @@ msgstr "Spremi kao novi predložak"
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__delay_count
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 msgid "Schedule"
-msgstr "Planer"
+msgstr "Planiraj"
 
 #. module: mail
 #. odoo-javascript
@@ -8981,6 +9000,21 @@ msgid ""
 msgstr ""
 
 #. module: mail
+#. odoo-python
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid ""
+"The attachment %s does not exist or you do not have the rights to access it."
+msgstr ""
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid "The attachment %s does not exist."
+msgstr ""
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models/blur_manager.js:0
 #, python-format
@@ -9350,7 +9384,7 @@ msgstr "Današnje aktivnosti"
 #: code:addons/mail/static/src/models/activity_view.js:0
 #, python-format
 msgid "Today:"
-msgstr ""
+msgstr "Danas:"
 
 #. module: mail
 #. odoo-javascript
@@ -9379,7 +9413,7 @@ msgstr "Sutra"
 #: code:addons/mail/static/src/models/activity_view.js:0
 #, python-format
 msgid "Tomorrow:"
-msgstr ""
+msgstr "Sutra:"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_form
@@ -9888,6 +9922,14 @@ msgid ""
 msgstr ""
 
 #. module: mail
+#: code:addons/mail/models/mail_alias.py:0
+#, python-format
+msgid ""
+"Value for `mail.catchall.domain.allowed` cannot be validated.\n"
+"It should be a comma separated list of domains e.g. example.com,example.org."
+msgstr ""
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
@@ -10130,7 +10172,7 @@ msgstr "Jučer"
 #: code:addons/mail/static/src/models/activity_view.js:0
 #, python-format
 msgid "Yesterday:"
-msgstr ""
+msgstr "Jučer:"
 
 #. module: mail
 #. odoo-javascript
@@ -10220,17 +10262,6 @@ msgstr ""
 #, python-format
 msgid "You can only open the profile of existing users."
 msgstr ""
-
-#. module: mail
-#. odoo-python
-#: code:addons/mail/models/res_users.py:0
-#, python-format
-msgid ""
-"You cannot create a new user from here.\n"
-" To create new user please go to configuration panel."
-msgstr ""
-"Odavde ne možete kreirati novog korisnika.\n"
-"Za izradu novog korisnika molim vas koristite ploču za konfiguraciju."
 
 #. module: mail
 #. odoo-python

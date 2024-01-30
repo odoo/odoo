@@ -3,7 +3,6 @@
 # 	* sale_project
 # 
 # Translators:
-# Piia Paurson <piia@avalah.ee>, 2022
 # Egon Raamat <egon@avalah.ee>, 2022
 # Arma Gedonsky <armagedonsky@hot.ee>, 2022
 # Rivo Zängov <eraser@eraser.ee>, 2022
@@ -11,9 +10,9 @@
 # Martin Trigaux, 2022
 # Martin Aavastik <martin@avalah.ee>, 2022
 # Eneli Õigus <enelioigus@gmail.com>, 2022
-# Triine Aavik <triine@avalah.ee>, 2022
+# JanaAvalah, 2023
+# Triine Aavik <triine@avalah.ee>, 2023
 # Leaanika Randmets, 2023
-# Jana Jaakson, 2023
 # 
 msgid ""
 msgstr ""
@@ -21,8 +20,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-02-02 10:34+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Jana Jaakson, 2023\n"
-"Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
+"Last-Translator: Leaanika Randmets, 2023\n"
+"Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -70,7 +69,7 @@ msgstr ""
 "  - Käsitsi: kogus määratakse reale käsitsi\n"
 "  - Analüütiline kulude alusel: kogus on summa postitatud kuludest\n"
 "  - Ajaarvestus: kogus on müügireaga seotud ülesannetele logitud tundide alusel.\n"
-"  - Laoliikumised: kogus tuleb kinnitatud korjetest\n"
+"  - Laoliikumised: kogus tuleb kinnitatud siiretest\n"
 
 #. module: sale_project
 #. odoo-javascript
@@ -427,6 +426,13 @@ msgid ""
 msgstr ""
 "Müügitellimuse kinnitusel võib see toode luua projekti ja/või ülesande. Nende põhjal saate jälgida müüdavat teenust.\n"
 "          „Müügitellimuse projekt”: kasutab müügitellimuse loodud projekti, kui see on määratletud, või loob valitud malli alusel uue projekti."
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/sale_order.py:0
+#, python-format
+msgid "Operation not supported"
+msgstr "Toiming pole toetatud"
 
 #. module: sale_project
 #. odoo-python

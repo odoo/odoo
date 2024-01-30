@@ -64,6 +64,8 @@ registerModel({
                 createNewRecordDeferred: composerData ? makeDeferred() : null,
             });
             await this.createNewRecordDeferred;
+            // Give some time to chatter model being updated by save.
+            await new Promise((resolve) => setTimeout(() => requestAnimationFrame(resolve)));
             return saved;
         },
         onAttachmentsLoadingTimeout() {
@@ -205,7 +207,9 @@ registerModel({
          * @param {string[]} [fieldNames]
          */
         async reloadParentView({ fieldNames } = {}) {
-            await this.saveRecord();
+            if (this.saveRecord) {
+                await this.saveRecord();
+            }
             if (this.webRecord) {
                 await this.webRecord.model.root.load({ resId: this.threadId }, { keepChanges: true });
                 this.webRecord.model.notify();
@@ -282,14 +286,9 @@ registerModel({
                 });
                 this.createNewRecordDeferred.resolve();
             }
-            if (this.createNewRecordFiles) {
-                const files = this.createNewRecordFiles;
-                this.fileUploader.uploadFiles(files);
-            }
             this.update({
                 createNewRecordComposerData: clear(),
                 createNewRecordDeferred: clear(),
-                createNewRecordFiles: clear(),
             });
         },
         /**
@@ -538,7 +537,6 @@ registerModel({
         webRecord: attr(),
         createNewRecordComposerData: attr(),
         createNewRecordDeferred: attr(),
-        createNewRecordFiles: attr(),
     },
     onChanges: [
         {

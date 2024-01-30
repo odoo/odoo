@@ -19,6 +19,7 @@ import { ViewButton } from "@web/views/view_button/view_button";
 import { useBounceButton } from "@web/views/view_hook";
 import { Widget } from "@web/views/widgets/widget";
 import { getFormattedValue } from "../utils";
+import { localization } from "@web/core/l10n/localization";
 
 import {
     Component,
@@ -31,6 +32,7 @@ import {
     useState,
     useEffect,
 } from "@odoo/owl";
+import { _t } from "@web/core/l10n/translation";
 
 const formatters = registry.category("formatters");
 
@@ -54,6 +56,14 @@ const FIXED_FIELD_COLUMN_WIDTHS = {
     monetary: "104px",
     handle: "33px",
 };
+
+/**
+ * @param {HTMLElement} parent
+ */
+function containsActiveElement(parent) {
+    const { activeElement } = document;
+    return parent !== activeElement && parent.contains(activeElement);
+}
 
 function getElementToFocus(cell) {
     return getTabableElements(cell)[0] || cell;
@@ -106,22 +116,6 @@ export class ListRenderer extends Component {
         onWillUpdateProps((nextProps) => {
             this.allColumns = nextProps.archInfo.columns;
             this.state.columns = this.getActiveColumns(nextProps.list);
-        });
-        onPatched(() => {
-            const editedRecord = this.props.list.editedRecord;
-            if (editedRecord && this.activeRowId !== editedRecord.id) {
-                if (this.cellToFocus && this.cellToFocus.record === editedRecord) {
-                    const column = this.cellToFocus.column;
-                    const forward = this.cellToFocus.forward;
-                    this.focusCell(column, forward);
-                } else if (this.lastEditedCell) {
-                    this.focusCell(this.lastEditedCell.column, true);
-                } else {
-                    this.focusCell(this.state.columns[0]);
-                }
-            }
-            this.cellToFocus = null;
-            this.lastEditedCell = null;
         });
         let dataRowId;
         this.rootRef = useRef("root");
@@ -191,6 +185,23 @@ export class ListRenderer extends Component {
             this.columnWidths = null;
             this.freezeColumnWidths();
         });
+        onPatched(() => {
+            const editedRecord = this.props.list.editedRecord;
+            if (editedRecord && this.activeRowId !== editedRecord.id) {
+                if (this.cellToFocus && this.cellToFocus.record === editedRecord) {
+                    const column = this.cellToFocus.column;
+                    const forward = this.cellToFocus.forward;
+                    this.focusCell(column, forward);
+                } else if (this.lastEditedCell) {
+                    this.focusCell(this.lastEditedCell.column, true);
+                } else {
+                    this.focusCell(this.state.columns[0]);
+                }
+            }
+            this.cellToFocus = null;
+            this.lastEditedCell = null;
+        });
+        this.isRTL = localization.direction === "rtl";
     }
 
     displaySaveNotification() {
@@ -230,6 +241,9 @@ export class ListRenderer extends Component {
 
         if (!this.columnWidths || !this.columnWidths.length) {
             // no column widths to restore
+
+            table.style.tableLayout = "fixed";
+            const allowedWidth = table.parentNode.getBoundingClientRect().width;
             // Set table layout auto and remove inline style to make sure that css
             // rules apply (e.g. fixed width of record selector)
             table.style.tableLayout = "auto";
@@ -242,7 +256,7 @@ export class ListRenderer extends Component {
 
             // Squeeze the table by applying a max-width on largest columns to
             // ensure that it doesn't overflow
-            this.columnWidths = this.computeColumnWidthsFromContent();
+            this.columnWidths = this.computeColumnWidthsFromContent(allowedWidth);
             table.style.tableLayout = "fixed";
         }
         headers.forEach((th, index) => {
@@ -275,7 +289,7 @@ export class ListRenderer extends Component {
         });
     }
 
-    computeColumnWidthsFromContent() {
+    computeColumnWidthsFromContent(allowedWidth) {
         const table = this.tableRef.el;
 
         // Toggle a className used to remove style that could interfere with the ideal width
@@ -306,7 +320,6 @@ export class ListRenderer extends Component {
         const sortedThs = [...table.querySelectorAll("thead th:not(.o_list_button)")].sort(
             (a, b) => getWidth(b) - getWidth(a)
         );
-        const allowedWidth = table.parentNode.getBoundingClientRect().width;
 
         let totalWidth = getTotalWidth();
         for (let index = 1; totalWidth > allowedWidth; index++) {
@@ -527,6 +540,29 @@ export class ListRenderer extends Component {
                 continue;
             }
             const { rawAttrs, widget } = this.props.list.activeFields[fieldName];
+            let currencyId;
+            if (type === "monetary" || widget === "monetary") {
+                const currencyField =
+                    this.props.list.activeFields[fieldName].options.currency_field ||
+                    this.fields[fieldName].currency_field ||
+                    "currency_id";
+                currencyId =
+                    currencyField in this.props.list.activeFields &&
+                    values[0][currencyField] &&
+                    values[0][currencyField][0];
+                if (currencyId) {
+                    const sameCurrency = values.every(
+                        (value) => currencyId === value[currencyField][0]
+                    );
+                    if (!sameCurrency) {
+                        aggregates[fieldName] = {
+                            help: _t("Different currencies cannot be aggregated"),
+                            value: "—",
+                        };
+                        continue;
+                    }
+                }
+            }
             const func =
                 (rawAttrs.sum && "sum") ||
                 (rawAttrs.avg && "avg") ||
@@ -550,6 +586,9 @@ export class ListRenderer extends Component {
                     digits: rawAttrs.digits ? JSON.parse(rawAttrs.digits) : undefined,
                     escape: true,
                 };
+                if (currencyId) {
+                    formatOptions.currencyId = currencyId;
+                }
                 aggregates[fieldName] = {
                     help: rawAttrs[func],
                     value: formatter ? formatter(aggregateValue, formatOptions) : aggregateValue,
@@ -561,14 +600,14 @@ export class ListRenderer extends Component {
 
     formatAggregateValue(group, column) {
         const { widget, rawAttrs } = column;
-        const fieldType = this.props.list.fields[column.name].type;
+        const field = this.props.list.fields[column.name];
         const aggregateValue = group.aggregates[column.name];
         if (!(column.name in group.aggregates)) {
             return "";
         }
-        const formatter = formatters.get(widget, false) || formatters.get(fieldType, false);
+        const formatter = formatters.get(widget, false) || formatters.get(field.type, false);
         const formatOptions = {
-            digits: rawAttrs.digits ? JSON.parse(rawAttrs.digits) : undefined,
+            digits: rawAttrs.digits ? JSON.parse(rawAttrs.digits) : field.digits,
             escape: true,
         };
         return formatter ? formatter(aggregateValue, formatOptions) : aggregateValue;
@@ -614,6 +653,10 @@ export class ListRenderer extends Component {
     isNumericColumn(column) {
         const { type } = this.fields[column.name];
         return ["float", "integer", "monetary"].includes(type);
+    }
+
+    shouldReverseHeader(column) {
+        return this.isNumericColumn(column) && !this.isRTL;
     }
 
     isSortable(column) {
@@ -848,8 +891,9 @@ export class ListRenderer extends Component {
 
     getOptionalActiveFields() {
         this.optionalActiveFields = {};
-        const optionalActiveFields = browser.localStorage.getItem(this.keyOptionalFields);
+        let optionalActiveFields = browser.localStorage.getItem(this.keyOptionalFields);
         if (optionalActiveFields) {
+            optionalActiveFields = optionalActiveFields.split(",");
             this.allColumns.forEach((col) => {
                 this.optionalActiveFields[col.name] = optionalActiveFields.includes(col.name);
             });
@@ -857,6 +901,9 @@ export class ListRenderer extends Component {
             this.allColumns.forEach((col) => {
                 this.optionalActiveFields[col.name] = col.optional === "show";
             });
+        }
+        if (this.props.onOptionalFieldsChanged) {
+            this.props.onOptionalFieldsChanged(this.optionalActiveFields);
         }
     }
 
@@ -894,6 +941,14 @@ export class ListRenderer extends Component {
 
         if ((this.props.list.model.multiEdit && record.selected) || this.isInlineEditable(record)) {
             if (record.isInEdition && this.props.list.editedRecord === record) {
+                const cell = this.tableRef.el.querySelector(
+                    `.o_selected_row td[name='${column.name}']`
+                );
+                if (cell && containsActiveElement(cell)) {
+                    this.lastEditedCell = { column, record };
+                    // Cell is already focused.
+                    return;
+                }
                 this.focusCell(column);
                 this.cellToFocus = null;
             } else {
@@ -1514,8 +1569,15 @@ export class ListRenderer extends Component {
         group.toggle();
     }
 
+    get canSelectRecord() {
+        return !this.props.list.editedRecord && !this.props.list.model.useSampleModel;
+    }
+
     toggleSelection() {
         const list = this.props.list;
+        if (!this.canSelectRecord) {
+            return;
+        }
         if (list.selection.length === list.records.length) {
             list.records.forEach((record) => {
                 record.toggleSelection(false);
@@ -1529,12 +1591,18 @@ export class ListRenderer extends Component {
     }
 
     toggleRecordSelection(record) {
+        if (!this.canSelectRecord) {
+            return;
+        }
         record.toggleSelection();
         this.props.list.selectDomain(false);
     }
 
     async toggleOptionalField(fieldName) {
         this.optionalActiveFields[fieldName] = !this.optionalActiveFields[fieldName];
+        if (this.props.onOptionalFieldsChanged) {
+            this.props.onOptionalFieldsChanged(this.optionalActiveFields);
+        }
         this.state.columns = this.getActiveColumns(this.props.list);
         this.saveOptionalActiveFields(
             this.allColumns.filter((col) => this.optionalActiveFields[col.name] && col.optional)
@@ -1831,6 +1899,7 @@ ListRenderer.props = [
     "noContentHelp?",
     "nestedKeyOptionalFieldsData?",
     "readonly?",
+    "onOptionalFieldsChanged?",
 ];
 ListRenderer.defaultProps = { hasSelectors: false, cycleOnTab: true };
 

@@ -5,13 +5,14 @@
 # Translators:
 # Martin Trigaux, 2022
 # Linkup <link-up@naver.com>, 2022
+# Daye Jeong, 2023
 # Sarah Park, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-14 05:51+0000\n"
+"POT-Creation-Date: 2023-05-23 08:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
 "Last-Translator: Sarah Park, 2023\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
@@ -47,6 +48,13 @@ msgid ""
 msgstr "<strong>청구서 가져오기에서 사용되는 양식: %s</strong> <p><li> %s </li></p>"
 
 #. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+#, python-format
+msgid "A payment of %s was detected."
+msgstr "%s 결제가 확인되었습니다."
+
+#. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_a_nz
 msgid "A-NZ BIS Billing 3.0"
 msgstr "A-NZ BIS Billing 3.0"
@@ -76,6 +84,14 @@ msgstr "BIS3 DE (XRechnung)"
 msgid ""
 "Common functions for EDI documents: generate the data, the constraints, etc"
 msgstr "EDI 문서의 공통 기능: 데이터 생성, 제약 조건 등"
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
+#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
+#, python-format
+msgid "Conditional cash/payment discount"
+msgstr "조건부 현금 할인/결제 할인"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -140,6 +156,12 @@ msgstr "각 청구서에는 하나의 세금 항목만 포함될 수 있습니�
 
 #. module: account_edi_ubl_cii
 #. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
+#, python-format
+msgid "Each invoice line should have a product or a label."
+msgstr "청구서 내역에는 품목이나 라벨 항목이 있어야 합니다."
+
+#. module: account_edi_ubl_cii
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Each invoice line should have at least one tax."
@@ -212,8 +234,9 @@ msgstr "%s에 대한 전자주소체계 (EAS, Electronic Address Scheme)를 찾�
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
-msgid "No gross price nor net price found for line in xml"
-msgstr "xml 항목에서 총 금액 또는 순 금액을 찾을 수 없습니다"
+msgid ""
+"No gross price, net price nor line subtotal amount found for line in xml"
+msgstr "xml 항목에서 총 금액, 순 금액 또는 항목 소계 금액을 찾을 수 없습니다."
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
@@ -239,7 +262,7 @@ msgstr "매출 VAT, 감면 요율, 중간"
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Output VAT, reduced rate, raw fish"
-msgstr ""
+msgstr "매출 VAT, 감면 요율, 생선회"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -256,7 +279,7 @@ msgstr "보고서 작업"
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_sg
 msgid "SG BIS Billing 3.0"
-msgstr ""
+msgstr "SG BIS Billing 3.0"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_nl
@@ -268,7 +291,7 @@ msgstr "SI-UBL 2.0 (NLCIUS)"
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Tax '%s' is invalid: %s"
-msgstr ""
+msgstr "세금 '%s' 이(가) 유효하지 않습니다: %s"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -316,6 +339,15 @@ msgstr "%s 필드는 %s의 필요 항목입니다."
 msgid ""
 "The field 'Sanitized Account Number' is required on the Recipient Bank."
 msgstr "수취인 은행 정보에는 '삭제된 계좌 번호' 필드가 필요 항목입니다."
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
+#, python-format
+msgid ""
+"The invoice contains line(s) with a negative unit price, which is not "
+"allowed. You might need to set a negative quantity instead."
+msgstr "청구서에 단가가 음수인 줄이 있습니다. 이는 허용되지 않으므로 대신 수량을 음수로 설정해야 할 수 있습니다."
 
 #. module: account_edi_ubl_cii
 #. odoo-python

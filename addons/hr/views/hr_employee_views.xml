@@ -54,7 +54,7 @@
                     <field name="last_activity_time" invisible="1"/>
                     <field name="last_activity" invisible="1"/>
                     <header>
-                        <button name="%(plan_wizard_action)d" string="Launch Plan" type="action" groups="hr.group_hr_user"/>
+                        <button name="%(plan_wizard_action)d" string="Launch Plan" type="action" groups="hr.group_hr_user" attrs="{'invisible': [('active', '=', False)]}"/>
                     </header>
                     <sheet>
                         <div name="button_box" class="oe_button_box">
@@ -98,6 +98,7 @@
                             </group>
                             <group>
                                 <field name="department_id"/>
+                                <field name="job_id"/>
                                 <field name="parent_id"/>
                                 <field name="coach_id"/>
                             </group>
@@ -138,7 +139,7 @@
                                                 'form_view_ref': 'base.res_partner_view_form_private'}"
                                             options='{"always_reload": True, "highlight_first_line": True}'/>
                                         <field name="private_email" string="Email"/>
-                                        <field name="phone" class="o_force_ltr" string="Phone" readonly="True"/>
+                                        <field name="phone" string="Phone" readonly="True"/>
                                         <field name="bank_account_id" context="{'default_partner_id': address_home_id}"/>
                                         <field name="lang" string="Language"/>
                                         <label for="km_home_work"/>
@@ -165,7 +166,8 @@
                                         <field name="permit_no"/>
                                         <field name="visa_expire"/>
                                         <field name="work_permit_expiration_date"/>
-                                        <field name="has_work_permit" widget="work_permit_upload"/>
+                                        <field name="work_permit_name" invisible="1"/>
+                                        <field name="has_work_permit" widget="work_permit_upload" filename="work_permit_name"/>
                                     </group>
                                     <group string="Citizenship">
                                         <field name="country_id" options='{"no_open": True, "no_create": True}'/>
@@ -193,8 +195,7 @@
                                             <button name="%(hr_employee_print_badge)d" string="Print Badge" class="btn btn-link" type="action" attrs="{'invisible': [('barcode', '=', False)]}"/>
                                         </div>
                                     </group>
-                                    <group string='Payroll' name="payroll_group">
-                                        <field name="job_id"/>
+                                    <group string='Payroll' name="payroll_group" invisible="1">
                                     </group>
                                     <group name="application_group" string="Application Settings" invisible="1"/>
                                 </group>
@@ -225,7 +226,7 @@
                         class="oe_stat_button"
                         icon="fa-address-card-o"
                         type="object"
-                        attrs="{'invisible': [('related_contacts_count', '=', 0)]}">
+                        attrs="{'invisible': ['|', ('id', '=', False), ('related_contacts_count', '=', 0)]}">
                         <div class="o_field_widget o_stat_info">
                             <span class="o_stat_value"><field name="related_contacts_count"/></span>
                             <span class="o_stat_text">Contacts</span>
@@ -447,6 +448,7 @@
             <field name="view_mode">tree,kanban,form</field>
             <field name="search_view_id" ref="view_employee_filter"/>
             <field name="context">{
+                "searchpanel_default_department_id": active_id,
                 "default_department_id": active_id,
                 "search_default_group_department": 1,
                 "search_default_department_id": active_id,

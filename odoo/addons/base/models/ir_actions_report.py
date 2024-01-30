@@ -88,6 +88,7 @@ class IrActionsReport(models.Model):
     _inherit = 'ir.actions.actions'
     _table = 'ir_act_report_xml'
     _order = 'name'
+    _allow_sudo_commands = False
 
     type = fields.Char(default='ir.actions.report')
     binding_type = fields.Selection(default='report')
@@ -287,7 +288,12 @@ class IrActionsReport(models.Model):
                 command_args.extend(['--header-spacing', str(paperformat_id.header_spacing)])
 
             command_args.extend(['--margin-left', str(paperformat_id.margin_left)])
-            command_args.extend(['--margin-bottom', str(paperformat_id.margin_bottom)])
+
+            if specific_paperformat_args and specific_paperformat_args.get('data-report-margin-bottom'):
+                command_args.extend(['--margin-bottom', str(specific_paperformat_args['data-report-margin-bottom'])])
+            else:
+                command_args.extend(['--margin-bottom', str(paperformat_id.margin_bottom)])
+
             command_args.extend(['--margin-right', str(paperformat_id.margin_right)])
             if not landscape and paperformat_id.orientation:
                 command_args.extend(['--orientation', str(paperformat_id.orientation)])
@@ -297,7 +303,8 @@ class IrActionsReport(models.Model):
                 command_args.extend(['--disable-smart-shrinking'])
 
         # Add extra time to allow the page to render
-        command_args.extend(['--javascript-delay', '1000'])
+        delay = self.env['ir.config_parameter'].sudo().get_param('report.print_delay', '1000')
+        command_args.extend(['--javascript-delay', delay])
 
         if landscape:
             command_args.extend(['--orientation', 'landscape'])
@@ -326,7 +333,7 @@ class IrActionsReport(models.Model):
             return {}
         base_url = IrConfig.get_param('report.url') or layout.get_base_url()
 
-        root = lxml.html.fromstring(html)
+        root = lxml.html.fromstring(html, parser=lxml.html.HTMLParser(encoding='utf-8'))
         match_klass = "//div[contains(concat(' ', normalize-space(@class), ' '), ' {} ')]"
 
         header_node = etree.Element('div', id='minimal_layout_report_headers')
@@ -623,7 +630,7 @@ class IrActionsReport(models.Model):
             try:
                 reader = PdfFileReader(stream)
                 writer.appendPagesFromReader(reader)
-            except PdfReadError:
+            except (PdfReadError, TypeError, NotImplementedError, ValueError):
                 raise UserError(_("Odoo is unable to merge the generated PDFs."))
         result_stream = io.BytesIO()
         streams.append(result_stream)
@@ -696,7 +703,7 @@ class IrActionsReport(models.Model):
             # This scenario happens when you want to print a PDF report for the first time, as the
             # assets are not in cache and must be generated. To workaround this issue, we manually
             # commit the writes in the `ir.attachment` table. It is done thanks to a key in the context.
-            if not config['test_enable']:
+            if not config['test_enable'] and 'commit_assetsbundle' not in self.env.context:
                 additional_context['commit_assetsbundle'] = True
 
             html = self.with_context(**additional_context)._render_qweb_html(report_ref, res_ids_wo_stream, data=data)[0]
@@ -739,13 +746,25 @@ class IrActionsReport(models.Model):
                 return collected_streams
 
             # In case of multiple docs, we need to split the pdf according the records.
-            # To do so, we split the pdf based on top outlines computed by wkhtmltopdf.
+            # In the simplest case of 1 res_id == 1 page, we use the PDFReader to print the
+            # pages one by one.
+            html_ids_wo_none = [x for x in html_ids if x]
+            reader = PdfFileReader(pdf_content_stream)
+            if reader.numPages == len(res_ids_wo_stream):
+                for i in range(reader.numPages):
+                    attachment_writer = PdfFileWriter()
+                    attachment_writer.addPage(reader.getPage(i))
+                    stream = io.BytesIO()
+                    attachment_writer.write(stream)
+                    collected_streams[res_ids[i]]['stream'] = stream
+                return collected_streams
+
+            # In cases where the number of res_ids != the number of pages,
+            # we split the pdf based on top outlines computed by wkhtmltopdf.
             # An outline is a <h?> html tag found on the document. To retrieve this table,
             # we look on the pdf structure using pypdf to compute the outlines_pages from
             # the top level heading in /Outlines.
-            html_ids_wo_none = [x for x in html_ids if x]
             if len(res_ids_wo_stream) > 1 and set(res_ids_wo_stream) == set(html_ids_wo_none):
-                reader = PdfFileReader(pdf_content_stream)
                 root = reader.trailer['/Root']
                 has_valid_outlines = '/Outlines' in root and '/First' in root['/Outlines']
                 if not has_valid_outlines:

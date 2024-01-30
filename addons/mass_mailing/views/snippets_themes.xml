@@ -11,7 +11,7 @@
                 <i class="fa fa-lg fa-mobile"/>
             </button>
             <button class="o_fullscreen_btn btn btn-primary">
-                <img src="/web_editor/font_to_img/61541/rgb(255,255,255)/16" alt="Fullscreen"/>
+                <img class="img-fluid" src="/web_editor/font_to_img/61541/rgb(255,255,255)/16" alt="Fullscreen"/>
             </button>
         </div>
     </xpath>
@@ -191,21 +191,21 @@
 </template>
 
 <template id="s_mail_block_footer_social" name="Footer Center">
-    <div class="s_footer_social o_mail_block_footer_social o_mail_footer_social_center o_mail_snippet_general bg-200">
+    <div class="s_footer_social o_mail_block_footer_social o_mail_footer_social_center o_mail_snippet_general bg-200 pt16">
         <div class="container">
             <div class="row">
-                <div class="col-lg o_mail_footer_social">
+                <div class="col-lg o_mail_footer_social" style="text-align: center;">
                     <t t-call="mass_mailing.social_links"/>
                 </div>
             </div>
             <div class="row">
-                <div class="col-lg o_mail_footer_links">
+                <div class="col-lg o_mail_footer_links" style="text-align: center;">
                     <a role="button" href="/unsubscribe_from_list" class="btn btn-link">Unsubscribe</a>
                 </div>
             </div>
             <div class="row">
                 <div class="col-lg">
-                    <p>
+                    <p style="text-align: center;">
                         © <t t-esc="datetime.datetime.now().year"/> All Rights Reserved
                     </p>
                 </div>
@@ -215,7 +215,7 @@
 </template>
 
 <template id="s_mail_block_footer_social_left" name="Footer Left">
-    <div class="s_footer_social o_mail_block_footer_social o_mail_footer_social_left o_mail_snippet_general">
+    <div class="s_footer_social o_mail_block_footer_social o_mail_footer_social_left o_mail_snippet_general pt16">
         <div class="container">
             <div class="row">
                 <div class="col-lg o_mail_footer_description">
@@ -300,12 +300,16 @@
     </xpath>
 </template>
 
+<!--
+TODO these next two templates should have been removed in 16.0 as they were
+emptied pre-release while waiting for a proper upgrade script to remove them
+after backport. They will now be removed in master.
+-->
 <template id="snippet_options_extra_shapes" inherit_id="web_editor.snippet_options">
-    <div><!-- TODO remove me in 16.0 post-backport --></div>
+    <xpath expr="//div"><!-- TODO remove me in master (do not xpath this) --></xpath>
 </template>
-
 <template id="snippet_options_image_styles" inherit_id="web_editor.snippet_options">
-    <div><!-- TODO remove me in 16.0 post-backport --></div>
+    <xpath expr="//div"><!-- TODO remove me in master (do not xpath this) --></xpath>
 </template>
 
 <!-- Mass Mailing Snippet Options -->

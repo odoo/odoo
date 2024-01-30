@@ -97,8 +97,7 @@ class Multirange {
         this.leftCounter = document.createElement("span");
         this.leftCounter.classList.add("multirange-min", "position-absolute", "opacity-75", "opacity-100-hover", "mt-1");
         this.rightCounter = document.createElement("span");
-        this.rightCounter.classList.add("multirange-max", "position-absolute", "opacity-75", "opacity-100-hover", "mt-1");
-        this.rightCounter.style.right = 0;
+        this.rightCounter.classList.add("multirange-max", "position-absolute", "opacity-75", "opacity-100-hover", "mt-1", "end-0");
         this.countersWrapper.append(this.leftCounter, this.rightCounter);
 
         /* Add the counterInput */
@@ -267,11 +266,12 @@ class Multirange {
     }
 
     formatNumber(number) {
-        number = String(number).split('.');
-        if (number[1] && number[1].length === 1) {
-            number[1] += '0';
-        }
-        let formatedNumber = number[0].replace(/(?=(?:\d{3})+$)(?!\b)/g, ',') + (number[1] ? '.' + number[1] : '.00');
+        const language = document.querySelector("html").getAttribute("lang");
+        const locale = language === "sr@latin" ? "sr-Latn-RS" : language.replace(/_/g, "-");
+        let formatedNumber = number.toLocaleString(locale, {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+        });
         if (this.currency.length) {
             if (this.currencyPosition === 'after') {
                 formatedNumber = formatedNumber + ' ' + this.currency;

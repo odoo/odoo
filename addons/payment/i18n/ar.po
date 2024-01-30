@@ -4,15 +4,15 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
-# Malaz Abuidris <msea@odoo.com>, 2022
+# Malaz Abuidris <msea@odoo.com>, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-14 05:52+0000\n"
+"POT-Creation-Date: 2023-11-07 12:37+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2022\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -317,11 +317,6 @@ msgid "Bank"
 msgstr "البنك"
 
 #. module: payment
-#: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
-msgid "Bank Account"
-msgstr "الحساب البنكي"
-
-#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__journal_name
 msgid "Bank Name"
 msgstr "اسم البنك"
@@ -379,7 +374,7 @@ msgstr "الرسالة الملغية "
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Canceled operations"
-msgstr ""
+msgstr "العمليات الملغاة "
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__capture_manually
@@ -443,11 +438,6 @@ msgstr "الكود"
 #: model:ir.model.fields,field_description:payment.field_payment_provider__color
 msgid "Color"
 msgstr "اللون"
-
-#. module: payment
-#: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
-msgid "Communication"
-msgstr "التواصل "
 
 #. module: payment
 #: model:ir.model,name:payment.model_res_company
@@ -720,7 +710,7 @@ msgstr "يدعم خاصية الدفع والخروج السريع "
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Failed operations"
-msgstr ""
+msgstr "العمليات الفاشلة "
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__fees
@@ -760,14 +750,10 @@ msgid "Full Only"
 msgstr "كامل فقط "
 
 #. module: payment
+#: model:ir.model,name:payment.model_payment_link_wizard
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
 msgid "Generate Payment Link"
 msgstr "إنشاء رابط الدفع "
-
-#. module: payment
-#: model:ir.model,name:payment.model_payment_link_wizard
-msgid "Generate Sales Payment Link"
-msgstr "إنشاء رابط دفع المبيعات "
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_search
@@ -1141,7 +1127,7 @@ msgstr "العملية"
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Operations in progress"
-msgstr ""
+msgstr "العمليات قيد التنفيذ "
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__res_company__payment_onboarding_payment_method__other
@@ -1349,16 +1335,6 @@ msgid "Please set an amount smaller than %s."
 msgstr "يرجى تعيين مبلغ أقل من %s. "
 
 #. module: payment
-#: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
-msgid "Please use the following transfer details"
-msgstr "يرجى استخدام تفاصيل التحويل التالية "
-
-#. module: payment
-#: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
-msgid "Please use the order name as communication reference."
-msgstr "يرجى استخدام اسم الطلب كمرجع للتواصل. "
-
-#. module: payment
 #. odoo-javascript
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
@@ -1484,7 +1460,7 @@ msgstr "حفظ تفاصيل الدفع الخاصة بي "
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Saving your payment method, please wait..."
-msgstr ""
+msgstr "جاري حفظ طريقة الدفع، يرجى الانتظار... "
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -1830,8 +1806,8 @@ msgid ""
 "This action will also archive %s tokens that are registered with this "
 "provider. Archiving tokens is irreversible."
 msgstr ""
-"سيقوم هذا الإجراء أيضاً بأرشفة رموز %s المسجلة مع مزود الدفع هذا. لا يمكنك "
-"التراجع عن أرشفة الرمز. "
+"سيقوم هذا الإجراء أيضاً بأرشفة الرموز %s المسجلة مع مزود الدفع هذا. لا يمكنك"
+" التراجع عن أرشفة الرمز. "
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__allow_tokenization
@@ -1878,7 +1854,7 @@ msgstr ""
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "This payment has been canceled."
-msgstr ""
+msgstr "لقد تم إلغاء هذا الدفع. "
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.verified_token_checkmark
@@ -1971,7 +1947,7 @@ msgstr "إبطال المعاملة"
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Waiting for operations to process"
-msgstr ""
+msgstr "بانتظار معالجة العمليات "
 
 #. module: payment
 #. odoo-python
@@ -2060,6 +2036,15 @@ msgstr "تحويل بنكي"
 #. odoo-python
 #: code:addons/payment/models/payment_provider.py:0
 #, python-format
+msgid ""
+"You cannot delete the payment provider %s; disable it or uninstall it "
+"instead."
+msgstr "لا يمكنك حذف مزود الدفع %s؛ قم بتعطيله أو إلغاء تثبيته عوضاً عن ذلك. "
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_provider.py:0
+#, python-format
 msgid "You cannot publish a disabled provider."
 msgstr "لا يمكنك نشر مزود دفع تم تعطيله. "
 
@@ -2140,7 +2125,7 @@ msgstr "لقد تم إلغاء الدفع. "
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Your payment has been processed."
-msgstr ""
+msgstr "لقد تمت معالجة الدفع. "
 
 #. module: payment
 #. odoo-javascript
@@ -2166,6 +2151,7 @@ msgstr "تم استلام الدفع ولكن يجب تأكيده يدوياً. 
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_sepa_direct_debit
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_sips
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_stripe
+#: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
 #, python-format
 msgid ""
 "Your payment has been successfully processed but is waiting for approval."
@@ -2203,7 +2189,7 @@ msgstr "لم تتم معالجة عملية الدفع بعد. "
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Your payment is being processed, please wait..."
-msgstr ""
+msgstr "تتم معالجة الدفع، يرجى الانتظار... "
 
 #. module: payment
 #. odoo-javascript
@@ -2217,7 +2203,7 @@ msgstr "عملية الدفع الخاصة بك معلقة. "
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Your payment method has been saved."
-msgstr ""
+msgstr "لقد تم حفظ طريقة الدفع الخاصة بك. "
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form

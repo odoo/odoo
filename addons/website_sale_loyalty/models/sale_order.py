@@ -22,8 +22,8 @@ class SaleOrder(models.Model):
                 if leaf[0] != 'sale_ok':
                     continue
                 res[idx] = ('ecommerce_ok', '=', True)
-                break
-        return expression.AND([res, [('website_id', 'in', (self.website_id.id, False))]])
+                return expression.AND([res, [('website_id', 'in', (self.website_id.id, False))]])
+        return res
 
     def _get_trigger_domain(self):
         res = super()._get_trigger_domain()
@@ -33,8 +33,8 @@ class SaleOrder(models.Model):
                 if leaf[0] != 'program_id.sale_ok':
                     continue
                 res[idx] = ('program_id.ecommerce_ok', '=', True)
-                break
-        return expression.AND([res, [('program_id.website_id', 'in', (self.website_id.id, False))]])
+                return expression.AND([res, [('program_id.website_id', 'in', (self.website_id.id, False))]])
+        return res
 
     def _try_pending_coupon(self):
         if not request:
@@ -118,13 +118,13 @@ class SaleOrder(models.Model):
             for lines in grouped_order_lines.values():
                 if lines.reward_id.reward_type != 'discount':
                     continue
-                if self.env.user.has_group('sale.group_show_price_subtotal'):
-                    price_unit = sum(lines.mapped('price_subtotal'))
-                else:
-                    price_unit = sum(lines.mapped('price_total'))
                 new_lines += self.env['sale.order.line'].new({
                     'product_id': lines[0].product_id.id,
-                    'price_unit': price_unit,
+                    'tax_id': False,
+                    'price_unit': sum(lines.mapped('price_unit')),
+                    'price_subtotal': sum(lines.mapped('price_subtotal')),
+                    'price_total': sum(lines.mapped('price_total')),
+                    'discount': 0.0,
                     'name': lines[0].name_short if lines.reward_id.reward_type != 'product' else lines[0].name,
                     'product_uom_qty': 1,
                     'product_uom': lines[0].product_uom.id,
@@ -186,3 +186,21 @@ class SaleOrder(models.Model):
         so_to_reset.applied_coupon_ids = False
         for so in so_to_reset:
             so._update_programs_and_rewards()
+
+    def _get_website_sale_extra_values(self):
+        promo_code_success = self.get_promo_code_success_message(delete=False)
+        promo_code_error = self.get_promo_code_error(delete=False)
+
+        return {
+            'promo_code_success': promo_code_success,
+            'promo_code_error': promo_code_error,
+        }
+
+    def _cart_find_product_line(self, product_id, line_id=None, **kwargs):
+        """ Override to filter out reward lines from the cart lines.
+
+        These are handled by the _update_programs_and_rewards and _auto_apply_rewards methods.
+        """
+        lines = super()._cart_find_product_line(product_id, line_id, **kwargs)
+        lines = lines.filtered(lambda l: not l.is_reward_line) if not line_id else lines
+        return lines

@@ -19,6 +19,7 @@ QUnit.module("Widgets", (hooks) => {
                             type: "many2one",
                             relation: "product",
                         },
+                        __last_update: { type: "datetime" },
                         sign: { string: "Signature", type: "binary" },
                     },
                     records: [

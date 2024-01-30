@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { Component, xml } from "@odoo/owl";
 import {
     addRow,
     click,
@@ -740,16 +741,18 @@ QUnit.module("Fields", (hooks) => {
                 ["Save & Close", "Save & New", "Discard"]
             );
 
+            await editInput(modal, "[name='display_name'] input", "Hello (edited)");
+
             await click(modal.querySelector(".modal-footer button"));
             assert.containsNone(target, ".modal");
             assert.deepEqual(
                 [...target.querySelectorAll("[name='timmy'] .o_data_row")].map(
                     (row) => row.textContent
                 ),
-                ["Hello"]
+                ["Hello (edited)"]
             );
 
-            assert.verifySteps(["create", "read", "action: myaction", "read"]);
+            assert.verifySteps(["create", "read", "action: myaction", "write", "read", "read"]);
         }
     );
 
@@ -2105,4 +2108,34 @@ QUnit.module("Fields", (hooks) => {
             );
         }
     );
+
+    QUnit.test("many2many field calling replaceWith (add + remove)", async function (assert) {
+        serverData.models.partner.records[0].p = [1];
+
+        class MyX2Many extends Component {
+            onClick() {
+                this.props.value.replaceWith([2, 3]);
+            }
+        }
+        MyX2Many.template = xml`
+            <span class="ids" t-esc="this.props.value.resIds"/>
+            <button class="my_btn" t-on-click="onClick">To id</button>`;
+
+        registry.category("fields").add("my_x2many", MyX2Many);
+
+        await makeView({
+            type: "form",
+            resModel: "turtle",
+            serverData,
+            arch: `
+                <form>
+                    <field name="partner_ids" widget="my_x2many"/>
+                </form>`,
+            resId: 2,
+        });
+
+        assert.strictEqual(target.querySelector(".ids").innerText, "2,4");
+        await click(target.querySelector(".my_btn"));
+        assert.strictEqual(target.querySelector(".ids").innerText, "2,3");
+    });
 });

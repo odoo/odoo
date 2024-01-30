@@ -3,12 +3,46 @@
 
 from datetime import datetime, timedelta
 
+from odoo import http
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.website.tests.test_base_url import TestUrlCommon
-from odoo.addons.website_event.tests.common import OnlineEventCase
-from odoo.tests import tagged
+from odoo.addons.website_event.tests.common import TestEventOnlineCommon, OnlineEventCase
+from odoo.tests import HttpCase, tagged
 from odoo.tools import mute_logger
+
+class TestEventRegisterUTM(HttpCase, TestEventOnlineCommon):
+    def test_event_registration_utm_values(self):
+        self.event_0.registration_ids.unlink()
+        self.event_0.write({
+            'event_ticket_ids': [
+                (5, 0),
+                (0, 0, {
+                    'name': 'First Ticket',
+                }),
+            ],
+            'is_published': True
+        })
+        event_campaign = self.env['utm.campaign'].create({'name': 'utm event test'})
+
+        self.authenticate(None, None)
+        self.opener.cookies.update({
+            'odoo_utm_campaign': event_campaign.name,
+            'odoo_utm_source': self.env.ref('utm.utm_source_newsletter').name,
+            'odoo_utm_medium': self.env.ref('utm.utm_medium_email').name
+        })
+        # get 1 free ticket
+        self.url_open(f'/event/{self.event_0.id}/registration/confirm', data={
+            '1-name': 'Bob',
+            '1-email': 'bob@test.lan',
+            '1-event_ticket_id': self.event_0.event_ticket_ids[0].id,
+            'csrf_token': http.Request.csrf_token(self),
+        })
+        new_registration = self.event_0.registration_ids
+        self.assertEqual(len(new_registration), 1)
+        self.assertEqual(new_registration.utm_campaign_id, event_campaign)
+        self.assertEqual(new_registration.utm_source_id, self.env.ref('utm.utm_source_newsletter'))
+        self.assertEqual(new_registration.utm_medium_id, self.env.ref('utm.utm_medium_email'))
 
 
 @tagged('post_install', '-at_install')
@@ -18,14 +52,18 @@ class TestUi(HttpCaseWithUserDemo):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'website_event_tour', login='admin', step_delay=100)
 
     def test_website_event_pages_seo(self):
+        website = self.env['website'].get_current_website()
         event = self.env['event.event'].create({
             'name': 'Event With Menu',
             'website_menu': True,
+            'website_id': website.id,
         })
         intro_event_menu = event.introduction_menu_ids
         url = intro_event_menu.menu_id.clean_url()
         self.start_tour(self.env['website'].get_client_action_url(url), 'website_event_pages_seo', login='admin')
-        self.assertEqual(intro_event_menu.view_id.website_meta_title, "Hello, world!")
+        view_key = intro_event_menu.view_id.key
+        specific_view = website.with_context(website_id=website.id).viewref(view_key)
+        self.assertEqual(specific_view.website_meta_title, "Hello, world!")
         self.assertEqual(event.website_meta_title, False)
 
 @tagged('-at_install', 'post_install')

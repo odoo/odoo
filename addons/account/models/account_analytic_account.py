@@ -77,7 +77,7 @@ class AccountAnalyticAccount(models.Model):
             "type": "ir.actions.act_window",
             "res_model": "account.move",
             "domain": [('id', 'in', move_ids)],
-            "context": {"create": False},
+            "context": {"create": False, 'default_move_type': 'out_invoice'},
             "name": _("Customer Invoices"),
             'view_mode': 'tree,form',
         }
@@ -95,7 +95,7 @@ class AccountAnalyticAccount(models.Model):
             "type": "ir.actions.act_window",
             "res_model": "account.move",
             "domain": [('id', 'in', move_ids)],
-            "context": {"create": False},
+            "context": {"create": False, 'default_move_type': 'in_invoice'},
             "name": _("Vendor Bills"),
             'view_mode': 'tree,form',
         }

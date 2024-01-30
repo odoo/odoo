@@ -211,13 +211,13 @@ export const ormService = {
     async: [
         "call",
         "create",
-        "name_get",
+        "nameGet",
         "read",
         "readGroup",
         "search",
         "searchRead",
         "unlink",
-        "web_search_read",
+        "webSearchRead",
         "write",
     ],
     start(env, { rpc, user }) {

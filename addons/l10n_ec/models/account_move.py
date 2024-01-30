@@ -14,6 +14,7 @@ _DOCUMENTS_MAPPING = {
         'ec_dt_09',
         'ec_dt_11',
         'ec_dt_12',
+        'ec_dt_16',
         'ec_dt_20',
         'ec_dt_21',
         'ec_dt_41',

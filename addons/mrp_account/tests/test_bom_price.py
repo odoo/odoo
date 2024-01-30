@@ -21,6 +21,8 @@ class TestBomPriceCommon(common.TransactionCase):
         super().setUpClass()
         # Required for `product_uom_id ` to be visible in the view
         cls.env.user.groups_id += cls.env.ref('uom.group_uom')
+        # Required for `product_id ` to be visible in the view
+        cls.env.user.groups_id += cls.env.ref('product.group_product_variant')
         cls.Product = cls.env['product.product']
         cls.Bom = cls.env['mrp.bom']
 
@@ -111,15 +113,22 @@ class TestBomPrice(TestBomPriceCommon):
 
     def test_01_compute_price_operation_cost(self):
         """Test calcuation of bom cost with operations."""
-        workcenter_from1 = Form(self.env['mrp.workcenter'])
-        workcenter_from1.name = 'Workcenter'
-        workcenter_from1.time_efficiency = 80
-        workcenter_from1.default_capacity = 2
-        workcenter_from1.oee_target = 100
-        workcenter_from1.time_start = 15
-        workcenter_from1.time_stop = 15
-        workcenter_from1.costs_hour = 100
-        workcenter_1 = workcenter_from1.save()
+        workcenter_form1 = Form(self.env['mrp.workcenter'])
+        workcenter_form1.name = 'Workcenter'
+        workcenter_form1.time_efficiency = 80
+        workcenter_form1.default_capacity = 2
+        workcenter_form1.oee_target = 100
+        workcenter_form1.time_start = 15
+        workcenter_form1.time_stop = 15
+        workcenter_form1.costs_hour = 100
+        workcenter_1 = workcenter_form1.save()
+
+        self.env['mrp.workcenter.capacity'].create({
+            'product_id': self.dining_table.id,
+            'workcenter_id': workcenter_1.id,
+            'time_start': 2,
+            'time_stop': 1,
+        })
 
         self.bom_1.write({
             'operation_ids': [
@@ -180,8 +189,9 @@ class TestBomPrice(TestBomPriceCommon):
         # Cutting        (15 + 15 + (20 * 100/80) / 60) * 100 =   91.67
         # Drilling       (15 + 15 + (25 * 100/80) / 60) * 100 =  102.08
         # Fitting        (15 + 15 + (30 * 100/80) / 60) * 100 =  112.50
+        # Table Capacity (3 operations * (2 + 1)  / 60) * 100 =   15.00
         # ----------------------------------------
-        # Operation Cost  1 unit = 306.25
+        # Operation Cost  1 unit = 321.25
         # -----------------------------------------------------------------
 
 
@@ -192,18 +202,19 @@ class TestBomPrice(TestBomPriceCommon):
         # Cutting        (15 + 15 + (20 * 1 * 100/80) / 60) * 100 =   91.67
         # Drilling       (15 + 15 + (25 * 1 * 100/80) / 60) * 100 =  102.08
         # Fitting        (15 + 15 + (30 * 1 * 100/80) / 60) * 100 =  112.50
+        # Table Capacity (3 operations * (2 + 1)      / 60) * 100 =   15.00
         # ----------------------------------------
-        # Operation Cost 1 dozen (306.25 per dozen) and 25.52 for 1 Unit
+        # Operation Cost 1 dozen (306.25 + 15 = 321.25 per dozen) and 25.52 for 1 Unit
         # --------------------------------------------------------------------------
 
 
         self.assertEqual(self.dining_table.standard_price, 1000, "Initial price of the Product should be 1000")
         self.dining_table.button_bom_cost()
-        # Total cost of Dining Table = (550) + Total cost of operations (306.25) = 856.25
-        self.assertEqual(float_round(self.dining_table.standard_price, precision_digits=2), 856.25, "After computing price from BoM price should be 856.25")
+        # Total cost of Dining Table = (550) + Total cost of operations (321.25) = 871.25
+        self.assertEqual(float_round(self.dining_table.standard_price, precision_digits=2), 871.25, "After computing price from BoM price should be 871.25")
         self.Product.browse([self.dining_table.id, self.table_head.id]).action_bom_cost()
-        # Total cost of Dining Table = (718.75) + Total cost of all operations (306.25 + 25.52) = 1050.52
-        self.assertEqual(float_compare(self.dining_table.standard_price, 1050.52, precision_digits=2), 0, "After computing price from BoM price should be 1050.52")
+        # Total cost of Dining Table = (718.75) + Total cost of all operations (321.25 + 25.52) = 1065.52
+        self.assertEqual(float_compare(self.dining_table.standard_price, 1065.52, precision_digits=2), 0, "After computing price from BoM price should be 1065.52")
 
     def test_02_compute_byproduct_price(self):
         """Test BoM cost when byproducts with cost share"""

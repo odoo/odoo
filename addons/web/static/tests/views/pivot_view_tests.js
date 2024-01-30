@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { dialogService } from "@web/core/dialog/dialog_service";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
 import { makeFakeLocalizationService, makeFakeUserService } from "../helpers/mock_services";
@@ -114,6 +113,12 @@ QUnit.module("Views", (hooks) => {
                             sortable: true,
                             store: true,
                         },
+                        price_nonaggregatable: {
+                            string: "Price non-aggregatable",
+                            type: "monetary",
+                            group_operator: undefined,
+                            store: true,
+                        },
                     },
                     records: [
                         {
@@ -192,7 +197,6 @@ QUnit.module("Views", (hooks) => {
         };
         setupControlPanelFavoriteMenuRegistry();
         setupControlPanelServiceRegistry();
-        serviceRegistry.add("dialog", dialogService);
         serviceRegistry.add("localization", makeFakeLocalizationService());
         serviceRegistry.add("user", makeFakeUserService());
         patchWithCleanup(browser, { setTimeout: (fn) => fn() });
@@ -230,6 +234,38 @@ QUnit.module("Views", (hooks) => {
             "should contain a pivot cell with the sum of all records"
         );
     });
+
+    QUnit.test(
+        "all measures should be displayed with a pivot_measures context",
+        async function (assert) {
+            assert.expect(1);
+
+            serverData.models.partner.fields.bouh = {
+                string: "bouh",
+                type: "integer",
+                group_operator: "sum",
+            };
+
+            await makeView({
+                type: "pivot",
+                resModel: "partner",
+                serverData,
+                context: { pivot_measures: ["foo"] },
+                arch: `
+                <pivot string="Partners">
+                    <field name="foo" type="measure"/>
+                    <field name="bouh" type="measure"/>
+                </pivot>`,
+            });
+
+            await click(target.querySelector(".o_cp_bottom_left button.dropdown-toggle"));
+            const measures = Array.from(
+                target.querySelectorAll(".o_cp_bottom_left .dropdown-menu .dropdown-item")
+            ).map((e) => e.textContent);
+
+            assert.deepEqual(measures, ["bouh", "Foo", "Count"]);
+        }
+    );
 
     QUnit.test("pivot rendering with widget", async function (assert) {
         await makeView({
@@ -442,6 +478,27 @@ QUnit.module("Views", (hooks) => {
             assert.strictEqual(
                 target.querySelector(".o_pivot_measure_row").innerText,
                 "Computed and not stored"
+            );
+        }
+    );
+
+    QUnit.test(
+        "pivot view do not add number field without group_operator",
+        async function (assert) {
+            await makeView({
+                type: "pivot",
+                resModel: "partner",
+                serverData,
+                arch: `
+                <pivot>
+                    <field name="price_nonaggregatable"/>
+                </pivot>`,
+            });
+
+            await click(target.querySelector(".o_cp_bottom_left button.dropdown-toggle"));
+            assert.containsNone(
+                target,
+                ".o_cp_bottom_left .dropdown-menu .dropdown-item:contains(Price non-aggregatable)"
             );
         }
     );
@@ -5230,6 +5287,7 @@ QUnit.module("Views", (hooks) => {
         "comparison with two groupbys: rows from reference period should be displayed",
         async function (assert) {
             assert.expect(3);
+            patchDate(2023, 2, 22, 1, 0, 0);
 
             serverData.models.partner.records = [
                 { id: 1, date: "2021-10-10", product_id: 1, customer: 1 },
@@ -5568,6 +5626,46 @@ QUnit.module("Views", (hooks) => {
             );
         }
     );
+
+    QUnit.test("filter -> sort -> unfilter should not crash", async function (assert) {
+        await makeView({
+            type: "pivot",
+            resModel: "partner",
+            serverData,
+            arch: `
+                    <pivot>
+                        <field name="product_id" type="row"/>
+                        <field name="bar" type="row"/>
+                    </pivot>
+                `,
+            searchViewArch: `
+                <search>
+                    <filter name="xphone" domain="[('product_id', '=', 37)]" />
+                </search>
+            `,
+            context: {
+                search_default_xphone: true,
+            },
+        });
+
+        assert.deepEqual(getFacetTexts(target), ["xphone"]);
+        assert.deepEqual(
+            [...target.querySelectorAll("tbody th")].map((el) => el.innerText),
+            ["Total", "xphone", "Yes"]
+        );
+        assert.strictEqual(getCurrentValues(target), ["1", "1", "1"].join());
+
+        await click(target, ".o_pivot_measure_row");
+        await toggleFilterMenu(target);
+        await toggleMenuItem(target, "xphone");
+
+        assert.deepEqual(getFacetTexts(target), []);
+        assert.deepEqual(
+            [...target.querySelectorAll("tbody th")].map((el) => el.innerText),
+            ["Total", "xphone", "Yes", "xpad"]
+        );
+        assert.strictEqual(getCurrentValues(target), ["4", "1", "1", "3"].join());
+    });
 
     QUnit.test(
         "no class 'o_view_sample_data' when real data are presented",

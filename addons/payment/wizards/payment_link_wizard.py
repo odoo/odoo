@@ -87,7 +87,7 @@ class PaymentLinkWizard(models.TransientModel):
         """
         defaults = self.default_get(['res_model', 'res_id'])
         selection = [('all', "All")]
-        res_model, res_id = defaults['res_model'], defaults['res_id']
+        res_model, res_id = defaults.get('res_model'), defaults.get('res_id')
         if res_id and res_model in ['account.move', "sale.order"]:
             # At module install, the selection method is called
             # but the document context isn't specified.
@@ -135,7 +135,7 @@ class PaymentLinkWizard(models.TransientModel):
             related_document = self.env[payment_link.res_model].browse(payment_link.res_id)
             base_url = related_document.get_base_url()  # Don't generate links for the wrong website
             url_params = {
-                'reference': urls.url_quote(payment_link.description),
+                'reference': payment_link.description,
                 'amount': self.amount,
                 'access_token': self._get_access_token(),
                 **self._get_additional_link_values(),

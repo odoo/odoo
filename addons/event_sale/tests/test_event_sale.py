@@ -40,7 +40,7 @@ class TestEventSale(TestEventSaleCommon):
         })
 
         cls.sale_order = cls.env['sale.order'].create({
-            'partner_id': cls.env.ref('base.res_partner_2').id,
+            'partner_id': cls.env['res.partner'].create({'name': 'Test Partner'}).id,
             'note': 'Invoice after delivery',
             'payment_term_id': cls.env.ref('account.account_payment_term_end_following_month').id
         })
@@ -168,14 +168,16 @@ class TestEventSale(TestEventSaleCommon):
         )
         self.assertEqual(
             set(ticket1_new_reg.mapped('phone')),
-            set(['+32456111111', self.event_customer.phone])
+            set(['+32456111111', self.event_customer._phone_format(self.event_customer.phone)])
         )
         self.assertEqual(
             set(ticket1_new_reg.mapped('mobile')),
-            set(['+32456222222', self.event_customer.mobile])
+            set(['+32456222222', self.event_customer._phone_format(self.event_customer.mobile)])
         )
-        for field in ['name', 'email', 'phone', 'mobile']:
+        for field in ['name', 'email']:
             self.assertEqual(ticket2_new_reg[field], self.event_customer[field])
+        for field in ['phone', 'mobile']:
+            self.assertEqual(ticket2_new_reg[field], self.event_customer._phone_format(self.event_customer[field]))
 
         # ADDING MANUAL LINES ON SO
         # ------------------------------------------------------------

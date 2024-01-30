@@ -373,6 +373,18 @@ class PaymentProvider(models.Model):
         """
         self.env['payment.token'].search([('provider_id', 'in', self.ids)]).write({'active': False})
 
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_master_data(self):
+        """ Prevent the deletion of the payment provider if it has an xmlid. """
+        external_ids = self.get_external_id()
+        for provider in self:
+            external_id = external_ids[provider.id]
+            if external_id and not external_id.startswith('__export__'):
+                raise UserError(_(
+                    "You cannot delete the payment provider %s; disable it or uninstall it"
+                    " instead.", provider.name
+                ))
+
     #=== ACTION METHODS ===#
 
     def button_immediate_install(self):

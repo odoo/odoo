@@ -11,6 +11,7 @@ export class DateFilterValue extends Component {
         this._setStateFromProps(this.props);
         onWillUpdateProps(this._setStateFromProps);
     }
+
     _setStateFromProps(props) {
         this.period = props.period;
         /** @type {number|undefined} */
@@ -41,8 +42,11 @@ export class DateFilterValue extends Component {
     }
 
     onYearChanged(date) {
+        if (!date) {
+            date = undefined;
+        }
         this.date = date;
-        this.yearOffset = date.year - DateTime.now().year;
+        this.yearOffset = date && date.year - DateTime.now().year;
         this._updateFilter();
     }
 

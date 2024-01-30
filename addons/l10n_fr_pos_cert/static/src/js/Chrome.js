@@ -3,8 +3,7 @@ odoo.define('l10n_fr_pos_cert.Chrome', function (require) {
 
     const Chrome = require('point_of_sale.Chrome');
     const Registries = require('point_of_sale.Registries');
-    const { ConnectionLostError, ConnectionAbortedError } = require('@web/core/network/rpc_service')
-    const { identifyError } = require('point_of_sale.utils');
+    const { isConnectionError } = require('point_of_sale.utils');
 
     const PosFrCertChrome = (Chrome) =>
         class extends Chrome {
@@ -19,7 +18,7 @@ odoo.define('l10n_fr_pos_cert.Chrome', function (require) {
                             const info = await this.env.pos.getClosePosInfo();
                             this.showPopup('ClosePosPopup', { info: info });
                         } catch (e) {
-                            if (identifyError(e) instanceof ConnectionLostError||ConnectionAbortedError) {
+                            if (isConnectionError(e)) {
                                 this.showPopup('OfflineErrorPopup', {
                                     title: this.env._t('Network Error'),
                                     body: this.env._t('Please check your internet connection and try again.'),

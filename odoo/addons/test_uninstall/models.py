@@ -18,3 +18,13 @@ class test_uninstall_model(models.Model):
     _sql_constraints = [
         ('name_uniq', 'unique (name)', 'Each name must be unique.'),
     ]
+
+class ResUsers(models.Model):
+    _inherit = 'res.users'
+
+    _sql_constraints = [
+        ('test_uninstall_res_user_unique_constraint', 'unique (password)', 'Test uninstall unique constraint'),
+        ('test_uninstall_res_user_check_constraint', 'check (true)', 'Test uninstall check constraint'),
+        ('test_uninstall_res_user_exclude_constraint', 'exclude (password with =)', 'Test uninstall exclude constraint'),
+        ('test_uninstall_res_user_exclude_constraint_looooooooooooong_name', 'exclude (password with =)', 'Test uninstall exclude constraint'),
+    ]

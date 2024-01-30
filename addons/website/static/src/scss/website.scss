@@ -285,6 +285,10 @@ $-header-nav-link-height: $nav-link-height;
         @include o-apply-colors('copyright-custom', $background: $-footer-color);
         @include o-add-gradient('copyright-gradient');
     }
+    .s_popup {
+        // The colors of the footer must not impact the "all pages" popup.
+        @include o-apply-colors(1);
+    }
 }
 
 h2, h3, h4, h5, h6 {
@@ -539,6 +543,9 @@ table.table_desc tr td {
     }
     // Content
     .carousel-inner {
+        // Create a new stacking context to ensure that elements like indicators
+        // and arrows will always appear on top of the carousel content.
+        isolation: isolate;
         overflow: hidden;
         height: 100%;
         .carousel-item {
@@ -886,6 +893,12 @@ header {
         max-height: 80vh;
         overflow-y: auto;
         overflow-x: hidden; // Needed because of container in container having 0px padding... TODO improve
+
+        @include media-breakpoint-down(lg) {
+            .nav-link, .dropdown-item {
+                white-space: normal;
+            }
+        }
     }
 
     &:not(.o_header_is_scrolled) {
@@ -1178,6 +1191,9 @@ header {
     }
 } @else if o-website-value('header-template') == 'centered_logo' {
     header .o_header_centered_logo {
+        > li.nav-item {
+            align-self: center !important;
+        }
         @include media-breakpoint-up(lg) {
             width: 50%;
         }
@@ -1212,6 +1228,10 @@ header {
             }
         }
     }
+} @else if o-website-value('header-template') == 'slogan' {
+    #top_menu_container > ul.nav > li.nav-item {
+        align-self: center;
+    }
 }
 
 // Mega menu
@@ -1222,6 +1242,7 @@ header {
     border-radius: 0;
     background-clip: unset; // Remove the 1px gap introduced by BS4
     background-color: transparent; // In order to allow the mega menu to be transparent
+    border: 1px solid $gray-200; // Prevent to see the color of the block behind.
 
     .container, .container-fluid {
         // Need to reforce those because they are removed since its a container
@@ -1271,7 +1292,7 @@ header {
 }
 
 #wrapwrap.o_header_overlay {
-    > header:not(.o_header_affixed):not(.o_top_menu_collapse_shown) {
+    > header:not(.o_header_affixed):not(.o_top_menu_collapse_shown):not(.o_header_sidebar) {
         @include o-position-absolute(0, 0, auto, 0);
         z-index: 1000;
 
@@ -1400,6 +1421,7 @@ header {
     height: 1em;
     margin-right: 0.2em;
     border-radius: $border-radius-pill;
+    object-fit: cover;
 }
 a.js_change_lang:hover, a.o_add_language:hover {
     text-decoration: none;
@@ -1551,6 +1573,12 @@ $ribbon-padding: 100px;
     display: none !important;
 }
 
+// Cookies Bar
+#website_cookies_bar {
+    min-height: 0px;
+    height: 0px;
+}
+
 // Search results
 .o_search_result_item_detail {
     flex: 1;
@@ -1598,6 +1626,21 @@ ul.o_checklist > li.o_checked::after {
 input[value*="data-oe-translation-initial-sha"] {
     @extend .o_text_content_invisible;
 }
+[data-oe-translation-initial-sha] {
+    > .o_translation_select {
+        border: $input-border-width solid $input-border-color;
+        @include border-radius($input-border-radius, 0);
+
+        // Hide translatable `<select/>`s since we use `.o_translation_select`
+        // elements to handle translations.
+        + select {
+            display: none !important;
+        }
+        > div:not(:last-child) {
+            border-bottom: inherit;
+        }
+    }
+}
 
 //------------------------------------------------------------------------------
 // Website Animate
@@ -1629,6 +1672,17 @@ input[value*="data-oe-translation-initial-sha"] {
 }
 .o_wanim_overflow_xy_hidden {
     overflow-x: hidden !important;
+
+    &.o_rtl {
+        // Fix for Chrome and Edge bug: resolves slow/stuck scrolling during
+        // left-overflowing animations on RTL web pages. Note: using overflow on
+        // the main element hides animated elements outside of it (e.g. "Framed"
+        // page layout). This may not be the ideal solution but could be the
+        // best workaround for now.
+        > main {
+            overflow-x: hidden;
+        }
+    }
     .o_footer_slideout {
         overflow-y: hidden !important;
     }

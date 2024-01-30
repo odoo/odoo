@@ -3,8 +3,9 @@
 
 from psycopg2 import IntegrityError
 
+from odoo.exceptions import ValidationError
 from odoo.fields import Command
-from odoo.tests import tagged, TransactionCase
+from odoo.tests import tagged, TransactionCase, Form
 from odoo.tools import mute_logger
 
 from unittest.mock import patch
@@ -111,3 +112,48 @@ class TestLoyalty(TransactionCase):
             ],
         })
         self.assertTrue(all(r.reward_type == 'product' for r in self.program.reward_ids))
+
+    def test_loyalty_program_preserve_reward_with_always_edit(self):
+        with Form(self.env['loyalty.program']) as program_form:
+            program_form.name = 'Test'
+            program_form.program_type = 'buy_x_get_y'
+            program_form.reward_ids.remove(0)
+            with program_form.reward_ids.new() as new_reward:
+                new_reward.reward_product_qty = 2
+            program = program_form.save()
+            self.assertEqual(program.reward_ids.reward_type, 'product')
+            self.assertEqual(program.reward_ids.reward_product_qty, 2)
+
+    def test_archiving_unarchiving(self):
+        self.program.write({
+            'reward_ids': [
+                Command.create({
+                    'description': 'Test Product',
+                }),
+            ],
+        })
+        before_archived_reward_ids = self.program.reward_ids
+        self.program.toggle_active()
+        self.program.toggle_active()
+        after_archived_reward_ids = self.program.reward_ids
+        self.assertEqual(before_archived_reward_ids, after_archived_reward_ids)
+
+    def test_prevent_archiving_product_linked_to_active_loyalty_reward(self):
+        self.program.program_type = 'promotion'
+        self.program.flush_recordset()
+        product = self.env['product.product'].with_context(default_taxes_id=False).create({
+            'name': 'Test Product',
+            'detailed_type': 'consu',
+            'list_price': 20.0,
+        })
+        reward = self.env['loyalty.reward'].create({
+            'program_id': self.program.id,
+            'discount_line_product_id': product.id,
+        })
+        self.program.write({
+            'reward_ids': [Command.link(reward.id)],
+        })
+        with self.assertRaises(ValidationError):
+            product.action_archive()
+        self.program.action_archive()
+        product.action_archive()

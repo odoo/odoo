@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 from odoo.addons.website_slides.tests import common as slides_common
+from odoo.exceptions import UserError
 from odoo.tests.common import users
+from unittest.mock import patch
 
 
 class TestSlidesManagement(slides_common.SlidesCase):
@@ -134,6 +135,36 @@ class TestSlidesManagement(slides_common.SlidesCase):
             ['Congratulations! You completed %s' % self.channel.name, 'ATestSubject']
         )
 
+    @users('user_officer')
+    def test_share_without_template(self):
+        channel_without_template = self.env['slide.channel'].create({
+            'name': 'Course Without Template',
+            'slide_ids': [(0, 0, {
+                'name': 'Test Slide'
+            })],
+            'share_channel_template_id': False,
+            'share_slide_template_id': False,
+        })
+        all_channels = self.channel | channel_without_template
+
+        # try sharing the course
+        with self.assertRaises(UserError) as user_error:
+            all_channels._send_share_email("test@test.com")
+
+        self.assertEqual(
+            user_error.exception.args[0],
+            f'Impossible to send emails. Select a "Channel Share Template" for courses {channel_without_template.name} first'
+        )
+
+        # try sharing slides
+        with self.assertRaises(UserError) as user_error:
+            all_channels.slide_ids._send_share_email("test@test.com", False)
+
+        self.assertEqual(
+            user_error.exception.args[0],
+            f'Impossible to send emails. Select a "Share Template" for courses {channel_without_template.name} first'
+        )
+
     def test_unlink_slide_channel(self):
         self.assertTrue(self.channel.slide_content_ids.mapped('question_ids').exists(),
             "Has question(s) linked to the slides")
@@ -143,6 +174,38 @@ class TestSlidesManagement(slides_common.SlidesCase):
         self.assertFalse(self.channel.exists(),
             "Should have deleted channel along with the slides even if there are slides with quiz and participant(s)")
 
+    def test_default_completion_time(self):
+        """Verify whether the system calculates the completion time when it is not specified,
+        but if the user does provide a completion time, the default time should not be applied."""
+
+        def _get_completion_time_pdf(*args, **kwargs):
+            return 13.37
+
+        with patch(
+            'odoo.addons.website_slides.models.slide_slide.Slide._get_completion_time_pdf',
+            new=_get_completion_time_pdf
+        ):
+            slides_1 = self.env['slide.slide'].create({
+                'name': 'Test_Content',
+                'slide_category': 'document',
+                'is_published': True,
+                'is_preview': True,
+                'document_binary_content': 'c3Rk',
+                'channel_id': self.channel.id,
+            })
+
+            slides_2 = self.env['slide.slide'].create({
+                'name': 'Test_Content',
+                'slide_category': 'document',
+                'is_published': True,
+                'is_preview': True,
+                'document_binary_content': 'c3Rk',
+                'channel_id': self.channel.id,
+                'completion_time': 123,
+            })
+
+        self.assertEqual(13.37, slides_1.completion_time)
+        self.assertEqual(123.0, slides_2.completion_time)
 
 class TestSequencing(slides_common.SlidesCase):
 

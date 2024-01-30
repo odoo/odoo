@@ -104,6 +104,43 @@ class TestPickShip(TestStockCommon):
         })
         return picking_pick, picking_pack, picking_ship
 
+    def test_unreserve_only_required_quantity(self):
+        product_unreserve = self.env['product.product'].create({
+            'name': 'product unreserve',
+            'type': 'product',
+            'categ_id': self.env.ref('product.product_category_all').id,
+        })
+        stock_location = self.env['stock.location'].browse(self.stock_location)
+        self.env['stock.quant']._update_available_quantity(product_unreserve, stock_location, 4.0)
+        quants = self.env['stock.quant']._gather(product_unreserve, stock_location, strict=True)
+        self.assertEqual(quants[0].reserved_quantity, 0)
+        move = self.MoveObj.create({
+            'name': product_unreserve.name,
+            'product_id': product_unreserve.id,
+            'product_uom_qty': 3,
+            'product_uom': product_unreserve.uom_id.id,
+            'state': 'confirmed',
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location,
+        })
+        move._action_assign()
+        self.assertEqual(quants[0].reserved_quantity, 3)
+        move_2 = self.MoveObj.create({
+            'name': product_unreserve.name,
+            'product_id': product_unreserve.id,
+            'product_uom_qty': 2,
+            'quantity_done':2,
+            'product_uom': product_unreserve.uom_id.id,
+            'state': 'confirmed',
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location,
+        })
+        move_2._action_assign()
+        move_2._action_done()
+        quants = self.env['stock.quant']._gather(product_unreserve, stock_location, strict=True)
+        self.assertEqual(quants[0].reserved_quantity, 2)
+
+
     def test_mto_moves(self):
         """
             10 in stock, do pick->ship and check ship is assigned when pick is done, then backorder of ship

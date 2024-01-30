@@ -2,7 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.sale.tests.common import TestSaleCommon
+from odoo.exceptions import ValidationError
 from odoo.tests.common import tagged
+from psycopg2.errors import NotNullViolation
 
 
 @tagged('post_install', '-at_install')
@@ -12,6 +14,7 @@ class TestSoLineMilestones(TestSaleCommon):
     def setUpClass(cls, chart_template_ref=None):
         super().setUpClass(chart_template_ref=chart_template_ref)
 
+        cls.env['res.config.settings'].create({'group_project_milestone': True}).execute()
         uom_hour = cls.env.ref('uom.product_uom_hour')
 
         cls.product_delivery_milestones1 = cls.env['product.product'].create({
@@ -37,6 +40,18 @@ class TestSoLineMilestones(TestSaleCommon):
             'default_code': 'MILE-DELI4',
             'service_type': 'milestones',
             'service_tracking': 'project_only',
+        })
+        cls.product_delivery_milestones3 = cls.env['product.product'].create({
+            'name': "Milestones 3, create project & task",
+            'standard_price': 20,
+            'list_price': 35,
+            'type': 'service',
+            'invoice_policy': 'delivery',
+            'uom_id': uom_hour.id,
+            'uom_po_id': uom_hour.id,
+            'default_code': 'MILE-DELI4',
+            'service_type': 'milestones',
+            'service_tracking': 'task_in_project',
         })
 
         cls.sale_order = cls.env['sale.order'].create({
@@ -121,3 +136,33 @@ class TestSoLineMilestones(TestSaleCommon):
         self.assertEqual(task.sale_line_id, self.milestone1.sale_line_id, 'The task should have the SOL from the milestone.')
         self.project.sale_line_id = self.sol2
         self.assertEqual(task.sale_line_id, self.sol1, 'The task should keep the SOL linked to the milestone.')
+
+    def test_create_milestone_on_project_set_on_sales_order(self):
+        """
+        Regression Test:
+        If we confirm an SO with a service with a delivery based on milestones,
+        that creates both a project & task, and we set a project on the SO,
+        the project for the milestone should be the one set on the SO,
+        and no ValidationError or NotNullViolation should be raised.
+        """
+        project = self.env['project.project'].create({
+            'name': 'Test Project For Milestones',
+            'partner_id': self.partner_a.id
+        })
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'partner_invoice_id': self.partner_a.id,
+            'partner_shipping_id': self.partner_a.id,
+            'project_id': project.id,  # the user set a project on the SO
+        })
+        self.env['sale.order.line'].create({
+            'product_id': self.product_delivery_milestones3.id,
+            'product_uom_qty': 20,
+            'order_id': sale_order.id,
+        })
+        try:
+            sale_order.action_confirm()
+        except (ValidationError, NotNullViolation):
+            self.fail("The sale order should be confirmed, "
+                      "and no ValidationError or NotNullViolation should be raised, "
+                      "for a missing project on the milestone.")

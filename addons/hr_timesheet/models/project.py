@@ -4,6 +4,7 @@
 from collections import defaultdict
 
 from odoo import models, fields, api, _
+from odoo.tools.float_utils import float_compare
 from odoo.exceptions import UserError, ValidationError, RedirectWarning
 from odoo.addons.rating.models.rating_data import OPERATOR_MAPPING
 
@@ -236,13 +237,22 @@ class Project(models.Model):
         uom_to = self.env.company.timesheet_encode_uom_id
         return round(uom_from._compute_quantity(time, uom_to, raise_if_failure=False), 2)
 
+    def action_project_timesheets(self):
+        action = self.env['ir.actions.act_window']._for_xml_id('hr_timesheet.act_hr_timesheet_line_by_project')
+        action['display_name'] = _("%(name)s's Timesheets", name=self.name)
+        return action
+
 
 class Task(models.Model):
     _name = "project.task"
     _inherit = "project.task"
 
     analytic_account_active = fields.Boolean("Active Analytic Account", compute='_compute_analytic_account_active', compute_sudo=True)
-    allow_timesheets = fields.Boolean("Allow timesheets", related='project_id.allow_timesheets', help="Timesheets can be logged on this task.", readonly=True)
+    allow_timesheets = fields.Boolean(
+        "Allow timesheets",
+        compute='_compute_allow_timesheets', compute_sudo=True,
+        search='_search_allow_timesheets', readonly=True,
+        help="Timesheets can be logged on this task.")
     remaining_hours = fields.Float("Remaining Hours", compute='_compute_remaining_hours', store=True, readonly=True, help="Number of allocated hours minus the number of hours spent.")
     remaining_hours_percentage = fields.Float(compute='_compute_remaining_hours_percentage', search='_search_remaining_hours_percentage')
     effective_hours = fields.Float("Hours Spent", compute='_compute_effective_hours', compute_sudo=True, store=True)
@@ -263,6 +273,17 @@ class Task(models.Model):
     def _compute_encode_uom_in_days(self):
         self.encode_uom_in_days = self._uom_in_days()
 
+    @api.depends('project_id.allow_timesheets')
+    def _compute_allow_timesheets(self):
+        for task in self:
+            task.allow_timesheets = task.project_id.allow_timesheets
+
+    def _search_allow_timesheets(self, operator, value):
+        query = self.env['project.project'].sudo()._search([
+            ('allow_timesheets', operator, value),
+        ])
+        return [('project_id', 'in', query)]
+
     @api.depends('analytic_account_id.active', 'project_id.analytic_account_id.active')
     def _compute_analytic_account_active(self):
         """ Overridden in sale_timesheet """
@@ -273,12 +294,12 @@ class Task(models.Model):
     def _compute_effective_hours(self):
         if not any(self._ids):
             for task in self:
-                task.effective_hours = round(sum(task.timesheet_ids.mapped('unit_amount')), 2)
+                task.effective_hours = sum(task.timesheet_ids.mapped('unit_amount'))
             return
         timesheet_read_group = self.env['account.analytic.line'].read_group([('task_id', 'in', self.ids)], ['unit_amount', 'task_id'], ['task_id'])
         timesheets_per_task = {res['task_id'][0]: res['unit_amount'] for res in timesheet_read_group}
         for task in self:
-            task.effective_hours = round(timesheets_per_task.get(task.id, 0.0), 2)
+            task.effective_hours = timesheets_per_task.get(task.id, 0.0)
 
     @api.depends('effective_hours', 'subtask_effective_hours', 'planned_hours')
     def _compute_progress_hours(self):
@@ -286,7 +307,7 @@ class Task(models.Model):
             if (task.planned_hours > 0.0):
                 task_total_hours = task.effective_hours + task.subtask_effective_hours
                 task.overtime = max(task_total_hours - task.planned_hours, 0)
-                if task_total_hours > task.planned_hours:
+                if float_compare(task_total_hours, task.planned_hours, precision_digits=2) >= 0:
                     task.progress = 100
                 else:
                     task.progress = round(100.0 * task_total_hours / task.planned_hours, 2)

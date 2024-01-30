@@ -11,6 +11,9 @@ export class PhoneField extends Component {
     setup() {
         useInputField({ getValue: () => this.props.value || "" });
     }
+    get phoneHref() {
+        return "tel:" + this.props.value.replace(/\s+/g, "");
+    }
 }
 
 PhoneField.template = "web.PhoneField";

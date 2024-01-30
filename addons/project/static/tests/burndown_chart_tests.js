@@ -3,7 +3,6 @@
 import { browser } from "@web/core/browser/browser";
 import { click, getFixture, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { setupControlPanelServiceRegistry, toggleGroupByMenu, toggleMenuItem, toggleMenuItemOption } from "@web/../tests/search/helpers";
-import { dialogService } from "@web/core/dialog/dialog_service";
 import { makeView } from "@web/../tests/views/helpers";
 import { registry } from "@web/core/registry";
 import { makeFakeNotificationService, fakeCookieService } from "@web/../tests/helpers/mock_services";
@@ -74,7 +73,6 @@ QUnit.module("Project", {}, () => {
             registry.category("services").add("notification", makeFakeNotificationService(notificationMock), {
                 force: true,
             });
-            serviceRegistry.add("dialog", dialogService);
             serviceRegistry.add("cookie", fakeCookieService);
         });
 

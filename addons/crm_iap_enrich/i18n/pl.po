@@ -6,6 +6,7 @@
 # Piotr Strębski <strebski@gmail.com>, 2022
 # Maksym <ms@myodoo.pl>, 2023
 # Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
+# Paweł Wodyński <pw@myodoo.pl>, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-11 14:34+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023\n"
+"Last-Translator: Paweł Wodyński <pw@myodoo.pl>, 2023\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -50,7 +51,7 @@ msgstr "Pozwól na ręczne wzbogacenie"
 #: model:ir.cron,cron_name:crm_iap_enrich.ir_cron_lead_enrichment
 #: model:ir.cron,name:crm_iap_enrich.ir_cron_lead_enrichment
 msgid "CRM: enrich leads (IAP)"
-msgstr "CRM: wzbogacanie leadów (IAP)"
+msgstr "CRM: wzbogacanie sygnałów (IAP)"
 
 #. module: crm_iap_enrich
 #: model:ir.model,name:crm_iap_enrich.model_res_config_settings
@@ -66,7 +67,7 @@ msgstr "Wzbogacenie"
 #. module: crm_iap_enrich
 #: model_terms:ir.ui.view,arch_db:crm_iap_enrich.crm_lead_view_form
 msgid "Enrich lead with company data"
-msgstr "Wzbogać lead o dane firmy"
+msgstr "Wzbogać sygnał o dane firmy"
 
 #. module: crm_iap_enrich
 #: model_terms:ir.ui.view,arch_db:crm_iap_enrich.crm_lead_view_form
@@ -82,13 +83,13 @@ msgstr "Wzbogacenie zakończone"
 #: model_terms:ir.ui.view,arch_db:crm_iap_enrich.mail_message_lead_enrich_no_email
 #: model_terms:ir.ui.view,arch_db:crm_iap_enrich.mail_message_lead_enrich_notfound
 msgid "Lead Enrichment (based on email address)"
-msgstr "Wzbogacanie potencjalnych klientów (na podstawie adresu e-mail)"
+msgstr "Wzbogacanie sygnałów (na podstawie adresu e-mail)"
 
 #. module: crm_iap_enrich
 #: code:addons/crm_iap_enrich/models/crm_lead.py:0
 #, python-format
 msgid "Lead enriched based on email address"
-msgstr "Szansa wzbogacona w oparciu o adres e-mail"
+msgstr "Sygnał wzbogacony w oparciu o adres e-mail"
 
 #. module: crm_iap_enrich
 #: model:ir.model,name:crm_iap_enrich.model_crm_lead
@@ -99,7 +100,7 @@ msgstr "Sygnał/Szansa"
 #: code:addons/crm_iap_enrich/models/crm_lead.py:0
 #, python-format
 msgid "Not enough credits for Lead Enrichment"
-msgstr "Niewystarczająca liczba punktów dla wzbogacenia leadów"
+msgstr "Niewystarczająca liczba punktów do wzbogacenia sygnałów"
 
 #. module: crm_iap_enrich
 #: code:addons/crm_iap_enrich/models/crm_lead.py:0
@@ -112,7 +113,7 @@ msgstr ""
 #: code:addons/crm_iap_enrich/models/crm_lead.py:0
 #, python-format
 msgid "The leads/opportunities have successfully been enriched"
-msgstr "Leady/szanse zostały z powodzeniem wzbogacone"
+msgstr "Sygnały/szanse zostały z powodzeniem wzbogacone"
 
 #. module: crm_iap_enrich
 #: model:ir.model.fields,help:crm_iap_enrich.field_crm_lead__iap_enrich_done
@@ -120,5 +121,5 @@ msgid ""
 "Whether IAP service for lead enrichment based on email has been performed on"
 " this lead."
 msgstr ""
-"Czy na tym leadzie została wykonana usługa IAP wzbogacenia leada na "
+"Czy na tym sygnale została wykonana usługa IAP wzbogacenia sygnału na "
 "podstawie wiadomości e-mail."

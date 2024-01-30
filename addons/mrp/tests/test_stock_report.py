@@ -121,6 +121,7 @@ class TestMrpStockReports(TestReportsCommon):
         mo_1 = mo_form.save()
         mo_1.action_confirm()
         pick = mo_1.move_raw_ids.move_orig_ids.picking_id
+        pick.picking_type_id.show_operations = True  # Could be false without demo data, as the lot group is disabled
         pick_form = Form(pick)
         with pick_form.move_line_ids_without_package.edit(0) as move_line:
             move_line.qty_done = 20

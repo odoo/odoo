@@ -118,6 +118,7 @@ class CrmTeam(models.Model):
     member_warning = fields.Text('Membership Issue Warning', compute='_compute_member_warning')
     crm_team_member_ids = fields.One2many(
         'crm.team.member', 'crm_team_id', string='Sales Team Members',
+        context={'active_test': True},
         help="Add members to automatically assign their documents to this sales team.")
     crm_team_member_all_ids = fields.One2many(
         'crm.team.member', 'crm_team_id', string='Sales Team Members (incl. inactive)',

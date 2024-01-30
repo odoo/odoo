@@ -20,11 +20,17 @@ class PaymentTransaction(models.Model):
     def _compute_sale_order_reference(self, order):
         self.ensure_one()
         if self.provider_id.so_reference_type == 'so_name':
-            return order.name
+            order_reference = order.name
         else:
             # self.provider_id.so_reference_type == 'partner'
             identification_number = order.partner_id.id
-            return '%s/%s' % ('CUST', str(identification_number % 97).rjust(2, '0'))
+            order_reference = '%s/%s' % ('CUST', str(identification_number % 97).rjust(2, '0'))
+
+        invoice_journal = self.env['account.journal'].search([('type', '=', 'sale'), ('company_id', '=', self.env.company.id)], limit=1)
+        if invoice_journal:
+            order_reference = invoice_journal._process_reference_for_sale_order(order_reference)
+
+        return order_reference
 
     @api.depends('sale_order_ids')
     def _compute_sale_order_ids_nbr(self):
@@ -133,7 +139,8 @@ class PaymentTransaction(models.Model):
         )
         if not template_id:
             return
-
+        template_id = int(template_id)
+        template = self.env['mail.template'].browse(template_id)
         for tx in self:
             tx = tx.with_company(tx.company_id).with_context(
                 company_id=tx.company_id.id,
@@ -142,9 +149,13 @@ class PaymentTransaction(models.Model):
                 lambda i: not i.is_move_sent and i.state == 'posted' and i._is_ready_to_be_sent()
             )
             invoice_to_send.is_move_sent = True # Mark invoice as sent
-            for invoice in invoice_to_send.with_user(SUPERUSER_ID):
-                invoice.message_post_with_template(
-                    int(template_id),
+            for invoice in invoice_to_send:
+                lang = template._render_lang(invoice.ids)[invoice.id]
+                model_desc = invoice.with_context(lang=lang).type_name
+                invoice.with_context(model_description=model_desc).with_user(
+                    SUPERUSER_ID
+                ).message_post_with_template(
+                    template_id=template_id,
                     email_layout_xmlid='mail.mail_notification_layout_with_responsible_signature',
                 )
 

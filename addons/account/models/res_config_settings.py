@@ -67,7 +67,11 @@ class ResConfigSettings(models.TransientModel):
              'Bank transactions are then reconciled on the Outstanding Payments Account rather the Payable Account.')
     transfer_account_id = fields.Many2one('account.account', string="Internal Transfer Account",
         related='company_id.transfer_account_id', readonly=False,
-        domain="[('reconcile', '=', True), ('account_type', '=', 'asset_current')]",
+        domain=[
+            ('reconcile', '=', True),
+            ('account_type', '=', 'asset_current'),
+            ('deprecated', '=', False),
+        ],
         help="Intermediary account used when moving from a liquidity account to another.")
     module_account_accountant = fields.Boolean(string='Accounting')
     group_warning_account = fields.Boolean(string="Warnings in Invoices", implied_group='account.group_warning_account')
@@ -243,6 +247,8 @@ class ResConfigSettings(models.TransientModel):
 
     def action_update_terms(self):
         self.ensure_one()
+        if hasattr(self, 'website_id') and self.env.user.has_group('website.group_website_designer'):
+            return self.env["website"].get_client_action('/terms', True)
         return {
             'name': _('Update Terms & Conditions'),
             'type': 'ir.actions.act_window',

@@ -13,9 +13,8 @@ registerModel({
         onClickEditActivityButton() {
             const popoverViewOwner = this.activityListViewOwner.popoverViewOwner;
             const webRecord = this.webRecord;
-            const thread = this.activity.thread;
             this.activity.edit().then(() => {
-                webRecord.model.load({ resId: thread.id });
+                webRecord.model.load({ offset: webRecord.model.root.offset });
             });
             popoverViewOwner.delete();
         },

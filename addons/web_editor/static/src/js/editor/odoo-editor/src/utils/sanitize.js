@@ -15,8 +15,10 @@ import {
     isUnbreakable,
     isEditorTab,
     isZWS,
-    getUrlsInfosInString,
-    isVoidElement,
+    isArtificialVoidElement,
+    EMAIL_REGEX,
+    URL_REGEX_WITH_INFOS,
+    unwrapContents,
 } from './utils.js';
 
 const NOT_A_NUMBER = /[^\d]/g;
@@ -78,6 +80,46 @@ export function areSimilarElements(node, node2) {
     );
 }
 
+/**
+ * Returns a URL if link's label is a valid email of http URL, null otherwise.
+ *
+ * @param {HTMLAnchorElement} link
+ * @returns {String|null}
+ */
+function deduceURLfromLabel(link) {
+    const label = link.innerText.trim().replaceAll('\u200B', '');
+    // Check first for e-mail.
+    let match = label.match(EMAIL_REGEX);
+    if (match) {
+        return match[1] ? match[0] : 'mailto:' + match[0];
+    }
+    // Check for http link.
+    // Regex with 'g' flag is stateful, reset lastIndex before and after using
+    // exec.
+    URL_REGEX_WITH_INFOS.lastIndex = 0;
+    match = URL_REGEX_WITH_INFOS.exec(label);
+    URL_REGEX_WITH_INFOS.lastIndex = 0;
+    if (match && match[0] === label) {
+        const currentHttpProtocol = (link.href.match(/^http(s)?:\/\//gi) || [])[0];
+        if (match[2]) {
+            return match[0];
+        } else if (currentHttpProtocol) {
+            // Avoid converting a http link to https.
+            return currentHttpProtocol + match[0];
+        } else {
+            return 'https://' + match[0];
+        }
+    }
+    return null;
+}
+
+function shouldPreserveCursor(node, root) {
+    const selection = root.ownerDocument.getSelection();
+    return node.isConnected && selection &&
+        selection.anchorNode && root.contains(selection.anchorNode) &&
+        selection.focusNode && root.contains(selection.focusNode);
+}
+
 class Sanitize {
     constructor(root) {
         this.root = root;
@@ -135,14 +177,18 @@ class Sanitize {
                 !isEditorTab(node)
             ) {
                 getDeepRange(this.root, { select: true });
-                const restoreCursor = node.isConnected &&
-                    preserveCursor(this.root.ownerDocument);
+                const restoreCursor = shouldPreserveCursor(node, this.root) && preserveCursor(this.root.ownerDocument);
                 const nodeP = node.previousSibling;
                 moveNodes(...endPos(node.previousSibling), node);
                 if (restoreCursor) {
                     restoreCursor();
                 }
                 node = nodeP;
+            }
+
+            // Remove comment nodes to avoid issues with mso comments.
+            if (node.nodeType === Node.COMMENT_NODE) {
+                node.remove();
             }
 
             const selection = this.root.ownerDocument.getSelection();
@@ -169,8 +215,7 @@ class Sanitize {
                 !isBlock(node.parentElement) &&
                 anchor !== node
             ) {
-                const restoreCursor = node.isConnected &&
-                    preserveCursor(this.root.ownerDocument);
+                const restoreCursor = shouldPreserveCursor(node, this.root) && preserveCursor(this.root.ownerDocument);
                 node.textContent = node.textContent.replace('\u200B', '');
                 node.parentElement.removeAttribute("data-oe-zws-empty-inline");
                 if (restoreCursor) {
@@ -181,12 +226,15 @@ class Sanitize {
             // Remove empty blocks in <li>
             if (
                 node.nodeName === 'P' &&
-                node.parentElement.tagName === 'LI' &&
-                isEmptyBlock(node)
+                node.parentElement.tagName === 'LI'
             ) {
                 const parent = node.parentElement;
-                const restoreCursor = node.isConnected &&
-                    preserveCursor(this.root.ownerDocument);
+                const restoreCursor = shouldPreserveCursor(node, this.root) && preserveCursor(this.root.ownerDocument);
+                if (isEmptyBlock(node)) {
+                    node.remove();
+                } else {
+                    unwrapContents(node);
+                }
                 node.remove();
                 fillEmpty(parent);
                 if (restoreCursor) {
@@ -234,27 +282,43 @@ class Sanitize {
             // Ensure elements which should not contain any content are tagged
             // contenteditable=false to avoid any hiccup.
             if (
-                isVoidElement(node) &&
+                isArtificialVoidElement(node) &&
                 node.getAttribute('contenteditable') !== 'false'
             ) {
                 node.setAttribute('contenteditable', 'false');
             }
 
-            if (node.firstChild) {
-                this._parse(node.firstChild);
+            // Remove empty class/style attributes.
+            for (const attributeName of ['class', 'style']) {
+                if (node.nodeType === Node.ELEMENT_NODE && node.hasAttribute(attributeName) && !node.getAttribute(attributeName)) {
+                    node.removeAttribute(attributeName);
+                }
+            }
+
+            let firstChild = node.firstChild;
+            // Unwrap the contents of SPAN and FONT elements without attributes.
+            if (['SPAN', 'FONT'].includes(node.nodeName) && !node.hasAttributes()) {
+                getDeepRange(this.root, { select: true });
+                const restoreCursor = shouldPreserveCursor(node, this.root) && preserveCursor(this.root.ownerDocument);
+                firstChild = unwrapContents(node)[0];
+                if (restoreCursor) {
+                    restoreCursor();
+                }
+            }
+
+            if (firstChild) {
+                this._parse(firstChild);
             }
 
             // Update link URL if label is a new valid link.
             if (node.nodeName === 'A' && anchorEl === node) {
-                const linkLabel = node.innerText;
-                const urlInfo = getUrlsInfosInString(linkLabel);
-                if (urlInfo.length && urlInfo[0].label === linkLabel && !node.href.startsWith('mailto:')) {
-                    node.setAttribute('href', urlInfo[0].url);
+                const url = deduceURLfromLabel(node);
+                if (url) {
+                    node.setAttribute('href', url);
                 }
             }
             node = node.nextSibling;
         }
-
     }
 }
 

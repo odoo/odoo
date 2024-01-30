@@ -277,6 +277,12 @@ msgid "Special Consumptions Tax (ICE)"
 msgstr ""
 
 #. module: l10n_ec
+#: model:ir.model.fields,help:l10n_ec.field_res_partner__l10n_ec_vat_validation
+#: model:ir.model.fields,help:l10n_ec.field_res_users__l10n_ec_vat_validation
+msgid "Error message when validating the Ecuadorian VAT"
+msgstr ""
+
+#. module: l10n_ec
 #: model:ir.model,name:l10n_ec.model_account_tax
 msgid "Tax"
 msgstr ""
@@ -332,8 +338,8 @@ msgstr ""
 #: code:addons/l10n_ec/models/res_partner.py:0
 #, python-format
 msgid ""
-"VAT %s is not valid for an Ecuadorian DNI, it must be like this form "
-"1234567897"
+"The VAT %s seems to be invalid as the tenth digit doesn't comply with the validation algorithm "
+"(could be an old VAT number)"
 msgstr ""
 
 #. module: l10n_ec
@@ -341,8 +347,8 @@ msgstr ""
 #: code:addons/l10n_ec/models/res_partner.py:0
 #, python-format
 msgid ""
-"VAT %s is not valid for an Ecuadorian company, it must be like this form "
-"1234567897001"
+"The VAT %s seems to be invalid as the tenth digit doesn't comply with the validation algorithm "
+"(SRI has stated that this validation is not required anymore for some VAT numbers)"
 msgstr ""
 
 #. module: l10n_ec
@@ -367,6 +373,12 @@ msgstr ""
 #: model:account.tax.group,name:l10n_ec.tax_group_vat_08
 #: model:ir.model.fields.selection,name:l10n_ec.selection__account_tax_group__l10n_ec_type__vat08
 msgid "VAT 8%"
+msgstr ""
+
+#. module: l10n_ec
+#: model:ir.model.fields,field_description:l10n_ec.field_res_partner__l10n_ec_vat_validation
+#: model:ir.model.fields,field_description:l10n_ec.field_res_users__l10n_ec_vat_validation
+msgid "VAT Error message validation"
 msgstr ""
 
 #. module: l10n_ec

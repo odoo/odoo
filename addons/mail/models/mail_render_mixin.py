@@ -5,6 +5,7 @@ import babel
 import copy
 import logging
 import re
+import traceback
 
 from lxml import html
 from markupsafe import Markup
@@ -123,10 +124,10 @@ class MailRenderMixin(models.AbstractModel):
         mailings. It replaces
 
          * href of links (mailto will not match the regex)
-         * src of images (base64 hardcoded data will not match the regex)
-         * styling using url like background-image: url
+         * src of images/v:fill/v:image (base64 hardcoded data will not match the regex)
+         * styling using url like background-image: url or background="url"
 
-        It is done using regex because it is shorten than using an html parser
+        It is done using regex because it is shorter than using an html parser
         to create a potentially complex soupe and hope to have a result that
         has not been harmed.
         """
@@ -146,15 +147,16 @@ class MailRenderMixin(models.AbstractModel):
             return match.group(1) + urls.url_join(_sub_relative2absolute.base_url, match.group(2))
 
         _sub_relative2absolute.base_url = base_url
-        html = re.sub(r"""(<img(?=\s)[^>]*\ssrc=")(/[^/][^"]+)""", _sub_relative2absolute, html)
+        html = re.sub(r"""(<(?:img|v:fill|v:image)(?=\s)[^>]*\ssrc=")(/[^/][^"]+)""", _sub_relative2absolute, html)
         html = re.sub(r"""(<a(?=\s)[^>]*\shref=")(/[^/][^"]+)""", _sub_relative2absolute, html)
+        html = re.sub(r"""(<[\w-]+(?=\s)[^>]*\sbackground=")(/[^/][^"]+)""", _sub_relative2absolute, html)
         html = re.sub(re.compile(
             r"""( # Group 1: element up to url in style
                 <[^>]+\bstyle=" # Element with a style attribute
                 [^"]+\burl\( # Style attribute contains "url(" style
-                (?:&\#34;|'|&quot;)?) # url style may start with (escaped) quote: capture it
+                (?:&\#34;|'|&quot;|&\#39;)?) # url style may start with (escaped) quote: capture it
             ( # Group 2: url itself
-                /(?:[^'")]|(?!&\#34;))+ # stop at the first closing quote
+                /(?:[^'")]|(?!&\#34;)|(?!&\#39;))+ # stop at the first closing quote
         )""", re.VERBOSE), _sub_relative2absolute, html)
 
         return wrapper(html)
@@ -312,7 +314,7 @@ class MailRenderMixin(models.AbstractModel):
                     group = self.env.ref('mail.group_mail_template_editor')
                     raise AccessError(_('Only users belonging to the "%s" group can modify dynamic templates.', group.name)) from e
                 _logger.info("Failed to render template : %s", template_src, exc_info=True)
-                raise UserError(_("Failed to render QWeb template : %s)", template_src)) from e
+                raise UserError(_("Failed to render QWeb template : %s\n\n%s)", template_src, traceback.format_exc())) from e
             results[record.id] = render_result
 
         return results

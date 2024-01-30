@@ -39,7 +39,7 @@ class AccountEdiXmlUBLANZ(models.AbstractModel):
         # EXTENDS account.edi.xml.ubl_bis3
         vals = super()._get_partner_party_vals(partner, role)
 
-        if partner.country_code == 'AU':
+        if partner.country_code == 'AU' and partner.vat:
             vals['endpoint_id'] = partner.vat.replace(" ", "")
         if partner.country_code == 'NZ':
             vals['endpoint_id'] = partner.company_registry
@@ -54,7 +54,7 @@ class AccountEdiXmlUBLANZ(models.AbstractModel):
         vals_list = super()._get_partner_party_legal_entity_vals_list(partner)
 
         for vals in vals_list:
-            if partner.country_code == 'AU':
+            if partner.country_code == 'AU' and partner.vat:
                 vals.update({
                     'company_id': partner.vat.replace(" ", ""),
                     'company_id_attrs': {'schemeID': '0151'},

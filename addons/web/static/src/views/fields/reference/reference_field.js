@@ -17,12 +17,14 @@ export class ReferenceField extends Component {
         });
 
         onWillUpdateProps((nextProps) => {
+            const nextRelation = this.getRelation(nextProps);
             if (
                 valuesEqual(this.getValue(this.props) || {}, this.getValue(nextProps) || {}) &&
                 this.state.resModel &&
-                this.getRelation(nextProps) !== this.state.resModel
+                nextRelation !== this.state.resModel
             ) {
                 nextProps.update(false);
+                this.state.resModel = nextRelation;
             }
         });
     }

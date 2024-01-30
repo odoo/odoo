@@ -1044,6 +1044,87 @@ QUnit.module("SettingsFormView", (hooks) => {
         }
     );
 
+    QUnit.test("header field don't dirty settings", async (assert) => {
+        assert.expect(6);
+
+        serverData.actions = {
+            1: {
+                id: 1,
+                name: "Settings view",
+                res_model: "res.config.settings",
+                type: "ir.actions.act_window",
+                views: [[1, "form"]],
+            },
+            4: {
+                id: 4,
+                name: "Other action",
+                res_model: "task",
+                type: "ir.actions.act_window",
+                views: [[2, "list"]],
+            },
+        };
+
+        serverData.views = {
+            "res.config.settings,1,form": `
+                <form string="Settings" js_class="base_settings">
+                    <div class="settings">
+                        <div class="app_settings_block" string="CRM" data-key="crm">
+                            <div class="app_settings_header pt-1 pb-1" style="background-color: #FEF0D0;">
+                                <div class="col-xs-12 col-md-6 ms-0 o_setting_box">
+                                    <div class="o_setting_right_pane border-start-0 ms-0 ps-0">
+                                        <div class="content-group">
+                                            <div class="row flex-row flex-nowrap mt8 align-items-center">
+                                                <label class="col text-nowrap ml8 flex-nowrap" string="Foo" for="foo_config_id"/>
+                                                <field name="foo" title="Foo?."/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <button name="4" string="Execute action" type="action"/>
+                        </div>
+                    </div>
+                </form>`,
+            "task,2,list": '<tree><field name="display_name"/></tree>',
+            "res.config.settings,false,search": "<search></search>",
+            "task,false,search": "<search></search>",
+        };
+
+        const mockRPC = (route, args) => {
+            if (args.method === "create") {
+                assert.deepEqual(
+                    args.args[0],
+                    { foo: true },
+                    "should create a record with foo=true"
+                );
+            }
+        };
+
+        const webClient = await createWebClient({ serverData, mockRPC });
+
+        await doAction(webClient, 1);
+
+        assert.containsNone(
+            target,
+            ".o_field_boolean input:checked",
+            "checkbox should not be checked"
+        );
+
+        await click(target.querySelector(".o_field_boolean input"));
+        assert.containsOnce(target, ".o_field_boolean input:checked", "checkbox should be checked");
+
+        assert.containsNone(
+            target,
+            ".modal-title",
+            "should not say that there are unsaved changes"
+        );
+
+        await click(target.querySelector("button[name='4']"));
+        assert.containsNone(document.body, ".modal", "should not open a warning dialog");
+
+        assert.containsOnce(target, ".o_list_view", "should be open list view");
+    });
+
     QUnit.test("clicking a button with dirty settings -- save", async (assert) => {
         registry.category("services").add(
             "action",
@@ -1687,7 +1768,7 @@ QUnit.module("SettingsFormView", (hooks) => {
             <SettingsPage slots="{NoContentHelper:props.slots.NoContentHelper}" initialTab="props.initialApp" t-slot-scope="settings" modules="[{&quot;key&quot;:&quot;crm&quot;,&quot;string&quot;:&quot;CRM&quot;,&quot;imgurl&quot;:&quot;/crm/static/description/icon.png&quot;,&quot;isVisible&quot;:false}]" class="'settings'">
                 <SettingsApp t-props="{&quot;key&quot;:&quot;crm&quot;,&quot;string&quot;:&quot;CRM&quot;,&quot;imgurl&quot;:&quot;/crm/static/description/icon.png&quot;,&quot;isVisible&quot;:false}" selectedTab="settings.selectedTab" class="'app_settings_block'">
                     <FormLabel id="'display_name'" fieldName="'display_name'" record="props.record" fieldInfo="props.archInfo.fieldNodes['display_name']" className="&quot;highhopes&quot;" string="\`My&quot; little '  Label\`"/>
-                    <Field id="'display_name'" name="'display_name'" record="props.record" fieldInfo="props.archInfo.fieldNodes['display_name']" setDirty.alike="props.setFieldAsDirty"/>
+                    <Field id="'display_name'" name="'display_name'" record="props.record" fieldInfo="props.archInfo.fieldNodes['display_name']" readonly="props.archInfo.activeActions?.edit === false and !props.record.isNew" setDirty.alike="props.setFieldAsDirty"/>
                 </SettingsApp>
             </SettingsPage>
         </div>`;
@@ -1738,7 +1819,7 @@ QUnit.module("SettingsFormView", (hooks) => {
 
         const expectedCompiled = `
             <HighlightText originalText="\`this is Baz value: \`"/>
-            <Field id="'baz'" name="'baz'" record="props.record" fieldInfo="props.archInfo.fieldNodes['baz']" setDirty.alike="props.setFieldAsDirty"/>
+            <Field id="'baz'" name="'baz'" record="props.record" fieldInfo="props.archInfo.fieldNodes['baz']" readonly="props.archInfo.activeActions?.edit === false and !props.record.isNew" setDirty.alike="props.setFieldAsDirty"/>
             <HighlightText originalText="\` and this is the after text\`"/>`;
         assert.areEquivalent(
             compiled.querySelector("Setting div.o_setting_right_pane div.text-muted").innerHTML,

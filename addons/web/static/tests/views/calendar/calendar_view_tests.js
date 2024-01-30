@@ -41,6 +41,7 @@ import { dialogService } from "@web/core/dialog/dialog_service";
 import { localization } from "@web/core/l10n/localization";
 import { registry } from "@web/core/registry";
 import { userService } from "@web/core/user_service";
+import { CalendarYearRenderer } from "@web/views/calendar/calendar_year/calendar_year_renderer";
 import { CharField } from "@web/views/fields/char/char_field";
 import { actionService } from "@web/webclient/actions/action_service";
 
@@ -1312,8 +1313,8 @@ QUnit.module("Views", ({ beforeEach }) => {
         );
         assert.strictEqual(
             target.querySelector(".o_cw_popover .list-group-item b.text-capitalize").textContent,
-            "Wednesday, December 14, 2016",
-            "should display date 'Wednesday, December 14, 2016'"
+            "December 14, 2016",
+            "should display date 'December 14, 2016'"
         );
         assert.containsN(
             target,
@@ -2105,6 +2106,28 @@ QUnit.module("Views", ({ beforeEach }) => {
         assert.verifySteps(["doAction"]);
     });
 
+    QUnit.test(`create event with default title in context (with quickCreate)`, async (assert) => {
+        assert.expect(1);
+
+        serverData.models.event.records = [];
+
+        await makeView({
+            type: "calendar",
+            resModel: "event",
+            serverData,
+            arch: `
+                <calendar date_start="start" date_stop="stop" mode="week" all_day="allday" />
+            `,
+            context: {
+                default_name: "Example Title",
+            },
+        });
+
+        await selectAllDayRange(target, "2016-12-14", "2016-12-15");
+        const input = target.querySelector(".o-calendar-quick-create--input");
+        assert.strictEqual(input.value, "Example Title");
+    });
+
     QUnit.test(`create all day event in week mode (no quickCreate)`, async (assert) => {
         assert.expect(1);
 
@@ -2442,10 +2465,18 @@ QUnit.module("Views", ({ beforeEach }) => {
 
         // switch to week mode
         await changeScale(target, "week");
-        assert.containsNone(
+        assert.containsOnce(
             findEvent(target, 2),
             ".fc-content .fc-time",
-            "should not show time in week mode as week mode already have time on y-axis"
+            "should show time in week mode"
+        );
+
+        // switch to day mode
+        await changeScale(target, "day");
+        assert.containsOnce(
+            findEvent(target, 2),
+            ".fc-content .fc-time",
+            "should show time in day mode"
         );
     });
 
@@ -2737,6 +2768,25 @@ QUnit.module("Views", ({ beforeEach }) => {
             partnerSection.querySelector(".o_calendar_filter_item[data-value='56']"),
             "o_cw_filter_color_1"
         );
+    });
+
+    QUnit.test("Colors: use available colors when attr is not number", async (assert) => {
+        await makeView({
+            type: "calendar",
+            resModel: "event",
+            serverData,
+            arch: `
+                <calendar date_start="start" date_stop="stop" color="name">
+                    <field name="partner_ids" write_model="filter_partner" write_field="partner_id" filter_field="partner_checked"  />
+                </calendar>
+            `,
+        });
+        const colorClass = Array.from(findEvent(target, 1).classList).find((className) =>
+            className.startsWith("o_calendar_color_")
+        );
+        assert.notOk(isNaN(Number(colorClass.split("_").at(-1))));
+        await clickEvent(target, 1);
+        assert.hasClass(target.querySelector(".o_cw_popover"), colorClass);
     });
 
     QUnit.test(`Add filters and specific color`, async (assert) => {
@@ -3495,7 +3545,7 @@ QUnit.module("Views", ({ beforeEach }) => {
         );
         await click(target, ".o-calendar-quick-create--create-btn");
         assert.strictEqual(
-            findEvent(target, 8).textContent,
+            findEvent(target, 8).querySelector(".o_event_title").textContent,
             "new event in quick create",
             "should display the new record after quick create dialog"
         );
@@ -3528,7 +3578,7 @@ QUnit.module("Views", ({ beforeEach }) => {
         await clickEvent(target, 1);
         assert.strictEqual(
             target.querySelector(".o_cw_popover .list-group-item").textContent,
-            "Wednesday, December 14, 2016 (All day)"
+            "December 14, 2016 (All day)"
         );
     });
 
@@ -4191,7 +4241,7 @@ QUnit.module("Views", ({ beforeEach }) => {
     });
 
     QUnit.test(`Monday week start week mode`, async (assert) => {
-        assert.expect(3);
+        assert.expect(4);
 
         patchDate(2019, 8, 15, 8, 0, 0); // 2019-09-15 08:00:00
         // the week start depends on the locale
@@ -4229,10 +4279,15 @@ QUnit.module("Views", ({ beforeEach }) => {
             "Sun 15",
             "The last day of the week should be Sunday the 15th"
         );
+        assert.strictEqual(
+            target.querySelector(".fc-head .fc-week-number").textContent,
+            "Week 37",
+            "The number of the week should be correct"
+        );
     });
 
     QUnit.test(`Saturday week start week mode`, async (assert) => {
-        assert.expect(3);
+        assert.expect(4);
 
         patchDate(2019, 8, 12, 8, 0, 0); // 2019-09-12 08:00:00
 
@@ -4270,6 +4325,118 @@ QUnit.module("Views", ({ beforeEach }) => {
             dayHeaders[dayHeaders.length - 1].textContent,
             "Fri 13",
             "The last day of the week should be Friday the 13th"
+        );
+        assert.strictEqual(
+            target.querySelector(".fc-head .fc-week-number").textContent,
+            "Week 36",
+            "The number of the week should be correct"
+        );
+    });
+
+    QUnit.test(`Monday week start year mode`, async (assert) => {
+        assert.expect(4);
+
+        patchDate(2019, 8, 15, 8, 0, 0); // 2019-09-15 08:00:00
+        // the week start depends on the locale
+        patchWithCleanup(localization, { weekStart: 1 });
+
+        patchWithCleanup(CalendarYearRenderer.prototype, {
+            get options() {
+                return { ...this._super(), weekNumbers: true };
+            },
+        });
+
+        await makeView({
+            type: "calendar",
+            resModel: "event",
+            serverData,
+            arch: `
+                <calendar date_start="start" date_stop="stop" mode="year" />
+            `,
+            mockRPC(route, { method, model, kwargs }) {
+                if (model === "event" && method === "search_read") {
+                    assert.deepEqual(
+                        kwargs.domain,
+                        [
+                            ["start", "<=", "2019-12-31 22:59:59"],
+                            ["stop", ">=", "2018-12-31 23:00:00"],
+                        ],
+                        "The domain to search events in should be correct"
+                    );
+                }
+            },
+        });
+
+        const weekRow = target.querySelector(".fc-day-top.fc-today").closest("tr");
+        const weekDays = weekRow.querySelectorAll(".fc-day-top");
+        assert.strictEqual(
+            weekDays[0].textContent,
+            "9",
+            "The first day of the week should be Monday the 9th"
+        );
+        assert.strictEqual(
+            weekDays[weekDays.length - 1].textContent,
+            "15",
+            "The last day of the week should be Sunday the 15th"
+        );
+        assert.strictEqual(
+            weekRow.querySelector(".fc-week-number").textContent,
+            "37",
+            "The number of the week should be correct"
+        );
+    });
+
+    QUnit.test(`Sunday week start year mode`, async (assert) => {
+        assert.expect(4);
+
+        patchDate(2019, 8, 15, 8, 0, 0); // 2019-09-15 08:00:00
+        // the week start depends on the locale
+        // the localization presents a python-like 1 to 7 weekStart value
+        patchWithCleanup(localization, { weekStart: 7 });
+
+        patchWithCleanup(CalendarYearRenderer.prototype, {
+            get options() {
+                return { ...this._super(), weekNumbers: true };
+            },
+        });
+
+        await makeView({
+            type: "calendar",
+            resModel: "event",
+            serverData,
+            arch: `
+                <calendar date_start="start" date_stop="stop" mode="year" />
+            `,
+            mockRPC(route, { method, model, kwargs }) {
+                if (model === "event" && method === "search_read") {
+                    assert.deepEqual(
+                        kwargs.domain,
+                        [
+                            ["start", "<=", "2019-12-31 22:59:59"],
+                            ["stop", ">=", "2018-12-31 23:00:00"],
+                        ],
+                        "The domain to search events in should be correct"
+                    );
+                }
+            },
+        });
+
+        const weekRow = target.querySelector(".fc-day-top.fc-today").closest("tr");
+        const weekDays = weekRow.querySelectorAll(".fc-day-top");
+        assert.strictEqual(
+            weekDays[0].textContent,
+            "15",
+            "The first day of the week should be Sunday the 15th"
+        );
+        assert.strictEqual(
+            weekDays[weekDays.length - 1].textContent,
+            "21",
+            "The last day of the week should be Saturday the 21st"
+        );
+        assert.strictEqual(
+            weekRow.querySelector(".fc-week-number").textContent,
+            "38",
+            "The number of the week should be correct"
         );
     });
 

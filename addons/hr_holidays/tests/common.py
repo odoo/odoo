@@ -11,6 +11,7 @@ class TestHrHolidaysCommon(common.TransactionCase):
     def setUpClass(cls):
         super(TestHrHolidaysCommon, cls).setUpClass()
         cls.env.user.tz = 'Europe/Brussels'
+        cls.env.user.company_id.resource_calendar_id.tz = "Europe/Brussels"
 
         # Test users to use through the various tests
         cls.user_hruser = mail_new_test_user(cls.env, login='armande', groups='base.group_user,hr_holidays.group_hr_holidays_user')
@@ -56,3 +57,4 @@ class TestHrHolidaysCommon(common.TransactionCase):
         cls.employee_hrmanager_id = cls.employee_hrmanager.id
 
         cls.rd_dept.write({'manager_id': cls.employee_hruser_id})
+        cls.hours_per_day = cls.employee_emp.resource_id.calendar_id.hours_per_day or 8

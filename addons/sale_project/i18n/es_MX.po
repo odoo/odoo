@@ -5,7 +5,10 @@
 # Translators:
 # Braulio D. López Vázquez <bdl@odoo.com>, 2022
 # Martin Trigaux, 2022
-# Lucia Pacheco <lpo@odoo.com>, 2023
+# Lucia Pacheco, 2023
+# Iran Villalobos López, 2023
+# Fernanda Alvarez, 2023
+# Wil Odoo, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,8 +16,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-02-02 10:34+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Lucia Pacheco <lpo@odoo.com>, 2023\n"
-"Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
+"Last-Translator: Wil Odoo, 2023\n"
+"Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -69,14 +72,14 @@ msgstr ""
 #: code:addons/sale_project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
 #, python-format
 msgid "All items have been loaded"
-msgstr ""
+msgstr "Se cargaron todos los elementos "
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid "Based on Delivered Quantity (Manual)"
-msgstr ""
+msgstr "Basado en cantidad entregada (manual) "
 
 #. module: sale_project
 #. odoo-python
@@ -350,9 +353,9 @@ msgid ""
 "Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
 "Create a task and track hours: Create a task on the sales order validation and track the work hours."
 msgstr ""
-"Establezca manualmente las cantidades en la orden: factura basada en la cantidad ingresada de forma manual, sin crear una cuenta analítica.\n"
-"Hojas de horas en el contrato: factura basada en las horas registradas en la hoja de horas correspondiente.\n"
-"Cree una tarea y haga un seguimiento de las horas: Cree una tarea en la validación de la orden de venta y haga un seguimiento de las horas de trabajo."
+"Establezca las cantidades en la orden de forma manual: facture según la cantidad ingresada de forma manual, sin crear una cuenta analítica.\n"
+"Hojas de horas en el contrato: facture según las horas registradas en la hoja de horas correspondiente.\n"
+"Cree una tarea y haga un seguimiento de las horas: cree una tarea en la validación de la orden de venta y haga un seguimiento de las horas de trabajo."
 
 #. module: sale_project
 #. odoo-python
@@ -422,6 +425,13 @@ msgid ""
 msgstr ""
 "Desde la confirmación de la orden de venta, este producto puede crear un proyecto y/o una tarea, de los cuales puede hacer un seguimiento del servicio que está vendiendo.\n"
 "         'En el proyecto de la orden de venta': Se utilizará la configuración de la orden de venta, si se ha definido, o creará un nuevo proyecto basado en la plantilla seleccionada."
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/sale_order.py:0
+#, python-format
+msgid "Operation not supported"
+msgstr "Operación no compatible"
 
 #. module: sale_project
 #. odoo-python
@@ -631,7 +641,7 @@ msgstr ""
 #: model:ir.model.fields,help:sale_project.field_project_project__sale_order_id
 #: model:ir.model.fields,help:sale_project.field_project_task__project_sale_order_id
 msgid "Sales order to which the project is linked."
-msgstr "Orden de venta al que está vinculado el proyecto."
+msgstr "Orden de venta a la que está vinculado el proyecto."
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_task__sale_order_id

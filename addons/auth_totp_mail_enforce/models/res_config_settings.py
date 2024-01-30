@@ -21,7 +21,7 @@ class ResConfigSettings(models.TransientModel):
     @api.onchange('auth_totp_enforce')
     def _onchange_auth_totp_enforce(self):
         if self.auth_totp_enforce:
-            self.auth_totp_policy = 'employee_required'
+            self.auth_totp_policy = self.auth_totp_policy or 'employee_required'
         else:
             self.auth_totp_policy = False
 

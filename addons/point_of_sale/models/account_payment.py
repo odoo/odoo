@@ -13,7 +13,7 @@ class AccountPayment(models.Model):
 
     def _get_valid_liquidity_accounts(self):
         result = super()._get_valid_liquidity_accounts()
-        return result + (self.pos_payment_method_id.outstanding_account_id,)
+        return result | self.pos_payment_method_id.outstanding_account_id
 
     @api.depends("force_outstanding_account_id")
     def _compute_outstanding_account_id(self):

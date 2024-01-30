@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
+from odoo import fields, Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged, Form
 import time
+
 
 @tagged('post_install', '-at_install')
 class TestTransferWizard(AccountTestInvoicingCommon):
@@ -188,6 +190,67 @@ class TestTransferWizard(AccountTestInvoicingCommon):
         })
         cls.move_2.action_post()
 
+    def test_transfer_default_tax(self):
+        """ Make sure default taxes on accounts are not computed on transfer moves
+        """
+        account_with_tax = self.env['account.account'].create({
+            'name': 'Auto Taxed',
+            'code': 'autotaxed',
+            'account_type': 'expense',
+            'tax_ids': [Command.link(self.company_data['default_tax_purchase'].id)],
+        })
+        expense_accrual_account = self.env['account.account'].create({
+            'name': 'Accrual Expense Account',
+            'code': '234567',
+            'account_type': 'expense',
+            'reconcile': True,
+        })
+        move_with_tax = self.env['account.move'].create({
+            'journal_id': self.journal.id,
+            'line_ids': [
+                Command.create({
+                    'account_id': account_with_tax.id,
+                    'balance': 400,
+                }),
+                Command.create({
+                    'account_id': self.payable_account.id,
+                    'balance': -460,
+                }),
+            ]
+        })
+        move_with_tax.action_post()
+
+        self.assertRecordValues(move_with_tax.line_ids, [
+            {'balance': 400, 'account_id': account_with_tax.id},
+            {'balance': -460, 'account_id': self.payable_account.id},
+            {'balance': 60, 'account_id': self.company_data['default_account_tax_purchase'].id},
+        ])
+
+        # Open the transfer wizard
+
+        # We use a form to pass the context properly to the depends_context move_line_ids field
+        context = {'active_model': 'account.move.line', 'active_ids': move_with_tax.line_ids[0].ids}
+        with Form(self.env['account.automatic.entry.wizard'].with_context(context)) as wizard_form:
+            wizard_form.action = 'change_period'
+            wizard_form.date = '2019-05-01'
+            wizard_form.journal_id = self.company_data['default_journal_misc']
+            wizard_form.expense_accrual_account = expense_accrual_account
+        wizard = wizard_form.save()
+
+        # Create the adjustment moves.
+        wizard_res = wizard.do_action()
+
+        # Check that the adjustment moves only contain the expense account and not the linked taxes.
+        created_moves = self.env['account.move'].browse(wizard_res['domain'][0][2])
+
+        self.assertRecordValues(created_moves[0].line_ids, [
+            {'balance': 400, 'account_id': account_with_tax.id},
+            {'balance': -400, 'account_id': expense_accrual_account.id},
+        ])
+        self.assertRecordValues(created_moves[1].line_ids, [
+            {'balance': -400, 'account_id': account_with_tax.id},
+            {'balance': 400, 'account_id': expense_accrual_account.id},
+        ])
 
     def test_transfer_wizard_reconcile(self):
         """ Tests reconciliation when doing a transfer with the wizard
@@ -289,3 +352,58 @@ class TestTransferWizard(AccountTestInvoicingCommon):
         self.assertEqual(len(destination_lines), 2, "Two lines should have been created on destination account: one for each currency (the lines with same partner and currency should have been aggregated)")
         self.assertAlmostEqual(destination_lines.filtered(lambda x: x.currency_id == self.test_currency_1).amount_currency, -10, self.test_currency_1.decimal_places)
         self.assertAlmostEqual(destination_lines.filtered(lambda x: x.currency_id == self.test_currency_2).amount_currency, -756, self.test_currency_2.decimal_places)
+
+    def test_period_change_lock_date(self):
+        """ Test that the period change wizard correctly handles the lock date: if the original entry is dated
+        before the lock date, the adjustment entry is created on the first end of month after the lock date.
+        """
+        # Set up accrual accounts
+        self.company_data['company'].expense_accrual_account_id = self.env['account.account'].create({
+            'name': 'Expense Accrual Account',
+            'code': '113226',
+            'account_type': 'asset_prepayments',
+            'reconcile': True,
+        })
+        self.company_data['company'].revenue_accrual_account_id = self.env['account.account'].create({
+            'name': 'Revenue Accrual Account',
+            'code': '226113',
+            'account_type': 'liability_current',
+            'reconcile': True,
+        })
+
+        # Create a move before the lock date
+        move = self.env['account.move'].create({
+            'journal_id': self.company_data['default_journal_sale'].id,
+            'date': '2019-01-01',
+            'line_ids': [
+                Command.create({'account_id': self.accounts[0].id, 'debit': 1000, }),
+                Command.create({'account_id': self.accounts[0].id, 'credit': 1000, }),
+            ]
+        })
+        move.action_post()
+
+        # Set the lock date
+        move.company_id.write({'period_lock_date': '2019-02-28', 'fiscalyear_lock_date': '2019-02-28'})
+
+        # Open the transfer wizard at a date after the lock date
+        wizard = self.env['account.automatic.entry.wizard'] \
+            .with_context(active_model='account.move.line', active_ids=move.line_ids[0].ids) \
+            .create({
+                'action': 'change_period',
+                'date': '2019-05-01',
+                'journal_id': self.company_data['default_journal_misc'].id,
+            })
+
+        # Check that the 'The date is being set prior to the user lock date' message appears.
+        self.assertRecordValues(wizard, [{
+            'lock_date_message': 'The date is being set prior to the user lock date 02/28/2019. '
+                                 'The Journal Entry will be accounted on 03/31/2019 upon posting.'
+        }])
+
+        # Create the adjustment move.
+        wizard_res = wizard.do_action()
+
+        # Check that the adjustment move was created on the first end of month after the lock date.
+        created_moves = self.env['account.move'].browse(wizard_res['domain'][0][2])
+        adjustment_move = created_moves[1]  # There are 2 created moves; the adjustment move is the second one.
+        self.assertRecordValues(adjustment_move, [{'date': fields.Date.to_date('2019-03-31')}])

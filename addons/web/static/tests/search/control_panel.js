@@ -84,8 +84,14 @@ QUnit.module("Search", (hooks) => {
             Component: ControlPanel,
             config: {
                 viewSwitcherEntries: [
-                    { type: "list", active: true, icon: "oi-view-list", name: "List" },
-                    { type: "kanban", icon: "oi-view-kanban", name: "Kanban" },
+                    {
+                        type: "list",
+                        active: true,
+                        icon: "oi-view-list",
+                        name: "List",
+                        accessKey: "l",
+                    },
+                    { type: "kanban", icon: "oi-view-kanban", name: "Kanban", accessKey: "k" },
                 ],
             },
             searchMenuTypes: [],
@@ -96,8 +102,10 @@ QUnit.module("Search", (hooks) => {
         const views = target.querySelectorAll(".o_switch_view");
 
         assert.strictEqual(views[0].getAttribute("data-tooltip"), "List");
+        assert.strictEqual(views[0].getAttribute("data-hotkey"), "l");
         assert.hasClass(views[0], "active");
         assert.strictEqual(views[1].getAttribute("data-tooltip"), "Kanban");
+        assert.strictEqual(views[1].getAttribute("data-hotkey"), "k");
         assert.hasClass(views[1], "oi-view-kanban");
 
         controlPanel.env.services.action.switchView = (viewType) => {

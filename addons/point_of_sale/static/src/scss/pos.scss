@@ -787,6 +787,8 @@ td {
 /*  ********* The Numpad ********* */
 
 .pos .numpad {
+    /*rtl:ignore*/
+    direction: ltr;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     text-align: center;
@@ -883,7 +885,6 @@ td {
     display: flex;
     overflow-x: auto;
     overflow-y: hidden;
-    flex-direction: row-reverse;
 }
 
 .pos .rightpane-header .categories-header {
@@ -1192,6 +1193,10 @@ td {
     padding: 2px 5px;
     font-weight: bold;
     padding: 0 map-get($spacers, 2) map-get($spacers, 2);
+}
+
+.pos .product .product-name.no-image {
+    -webkit-line-clamp: 9;
 }
 
 .pos .product .product-info-button {
@@ -1806,6 +1811,7 @@ td {
     }
     body * {
         visibility: hidden;
+        height: 0 !important;
     }
     .pos, .pos * {
         position: static !important;
@@ -1819,6 +1825,7 @@ td {
         visibility: visible;
         background: white !important;
         color: black !important;
+        height: auto !important;
     }
     .pos .pos-receipt {
         margin: 0 !important;
@@ -2178,6 +2185,8 @@ td {
 .pos .order .orderlines {
     flex-grow: 1;
     overflow: auto;
+    display: flex;
+    flex-direction: column;
 }
 
 .pos .order .order-empty {
@@ -2657,6 +2666,11 @@ td {
     cursor: pointer;
     border: 1px solid $gray-200;
     color: $primary;
+}
+.pos .popup .button.dynamic-size {
+    width: auto; 
+    white-space: nowrap; 
+    padding: 0 15px;
 }
 
 .pos .popup-textarea textarea {

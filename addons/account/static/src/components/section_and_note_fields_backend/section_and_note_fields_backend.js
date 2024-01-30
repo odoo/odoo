@@ -71,6 +71,7 @@ export class SectionAndNoteListRenderer extends ListRenderer {
 SectionAndNoteListRenderer.template = "account.sectionAndNoteListRenderer";
 
 export class SectionAndNoteFieldOne2Many extends X2ManyField {}
+SectionAndNoteFieldOne2Many.additionalClasses = ['o_field_one2many'];
 SectionAndNoteFieldOne2Many.components = {
     ...X2ManyField.components,
     ListRenderer: SectionAndNoteListRenderer,

@@ -120,6 +120,165 @@ class TestMassMailing(TestMassMailCommon):
 
     @users('user_marketing')
     @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_mailing_recipients(self):
+        """ Test recipient-specific computation, with email, formatting,
+        multi-emails, ... to test corner cases. Blacklist mixin impact is
+        tested. """
+        (customer_mult, customer_fmt, customer_unic,
+         customer_case, customer_weird, customer_weird_2
+        ) = self.env['res.partner'].create([
+            {
+                'email': 'customer.multi.1@example.com, "Test Multi 2" <customer.multi.2@example.com>',
+                'name': 'MultiEMail',
+            }, {
+                'email': '"Formatted Customer" <test.customer.format@example.com>',
+                'name': 'FormattedEmail',
+            }, {
+                'email': '"Unicode Customer" <test.customer.😊@example.com>',
+                'name': 'UnicodeEmail',
+            }, {
+                'email': 'TEST.CUSTOMER.CASE@EXAMPLE.COM',
+                'name': 'CaseEmail',
+            }, {
+                'email': 'test.customer.weird@example.com Weird Format',
+                'name': 'WeirdFormatEmail',
+            }, {
+                'email': 'Weird Format2 test.customer.weird.2@example.com',
+                'name': 'WeirdFormatEmail2',
+            }
+        ])
+
+        # check difference of email management between a classic model and a model
+        # with an 'email_normalized' field (blacklist mixin)
+        for dst_model in ['mailing.test.customer', 'mailing.test.blacklist']:
+            with self.subTest(dst_model=dst_model):
+                (record_p_mult, record_p_fmt, record_p_unic,
+                 record_p_case, record_p_weird, record_p_weird_2,
+                 record_mult, record_fmt, record_unic,
+                 record_case, recod_weird, record_weird_2
+                ) = self.env[dst_model].create([
+                    {
+                        'customer_id': customer_mult.id,
+                    }, {
+                        'customer_id': customer_fmt.id,
+                    }, {
+                        'customer_id': customer_unic.id,
+                    }, {
+                        'customer_id': customer_case.id,
+                    }, {
+                        'customer_id': customer_weird.id,
+                    }, {
+                        'customer_id': customer_weird_2.id,
+                    }, {
+                        'email_from': 'record.multi.1@example.com, "Record Multi 2" <record.multi.2@example.com>',
+                    }, {
+                        'email_from': '"Formatted Record" <record.format@example.com>',
+                    }, {
+                        'email_from': '"Unicode Record" <record.😊@example.com>',
+                    }, {
+                        'email_from': 'TEST.RECORD.CASE@EXAMPLE.COM',
+                    }, {
+                        'email_from': 'test.record.weird@example.com Weird Format',
+                    }, {
+                        'email_from': 'Weird Format2 test.record.weird.2@example.com',
+                    }
+                ])
+                test_records = (
+                    record_p_mult + record_p_fmt + record_p_unic +
+                    record_p_case + record_p_weird + record_p_weird_2 +
+                    record_mult + record_fmt + record_unic +
+                    record_case + recod_weird + record_weird_2
+                )
+                mailing = self.env['mailing.mailing'].create({
+                    'body_html': """<div><p>Hello ${object.name}</p>""",
+                    'mailing_domain': [('id', 'in', test_records.ids)],
+                    'mailing_model_id': self.env['ir.model']._get_id(dst_model),
+                    'mailing_type': 'mail',
+                    'name': 'SourceName',
+                    'preview': 'Hi ${object.name} :)',
+                    'reply_to_mode': 'update',
+                    'subject': 'MailingSubject',
+                })
+
+                with self.mock_mail_gateway(mail_unlink_sent=False):
+                    mailing.action_send_mail()
+
+                # Difference in email, email_to_recipients and email_to_mail
+                # -> email: trace email: normalized, to ease its management, mainly technical
+                # -> email_to_mail: mail.mail email: email_to stored in outgoing mail.mail (can be multi)
+                # -> email_to_recipients: email_to for outgoing emails, list means several recipients
+                self.assertMailTraces(
+                    [
+                        {'email': 'customer.multi.1@example.com, "Test Multi 2" <customer.multi.2@example.com>',
+                         'email_to_recipients': [[f'"{customer_mult.name}" <customer.multi.1@example.com>', f'"{customer_mult.name}" <customer.multi.2@example.com>']],
+                         'failure_type': False,
+                         'partner': customer_mult,
+                         'trace_status': 'sent'},
+                        {'email': '"Formatted Customer" <test.customer.format@example.com>',
+                         # mail to avoids double encapsulation
+                         'email_to_recipients': [[f'"{customer_fmt.name}" <test.customer.format@example.com>']],
+                         'failure_type': False,
+                         'partner': customer_fmt,
+                         'trace_status': 'sent'},
+                        {'email': '"Unicode Customer" <test.customer.😊@example.com>',
+                         # mail to avoids double encapsulation
+                         'email_to_recipients': [[f'"{customer_unic.name}" <test.customer.😊@example.com>']],
+                         'failure_type': False,
+                         'partner': customer_unic,
+                         'trace_status': 'sent'},
+                        {'email': 'TEST.CUSTOMER.CASE@EXAMPLE.COM',
+                         'email_to_recipients': [[f'"{customer_case.name}" <test.customer.case@example.com>']],
+                         'failure_type': False,
+                         'partner': customer_case,
+                         'trace_status': 'sent'},  # lower cased
+                        {'email': 'test.customer.weird@example.com Weird Format',
+                         'email_to_recipients': [[f'"{customer_weird.name}" <test.customer.weird@example.comweirdformat>']],
+                         'failure_type': False,
+                         'partner': customer_weird,
+                         'trace_status': 'sent'},  # concatenates everything after domain
+                        {'email': 'Weird Format2 test.customer.weird.2@example.com',
+                         'email_to_recipients': [[f'"{customer_weird_2.name}" <test.customer.weird.2@example.com>']],
+                         'failure_type': False,
+                         'partner': customer_weird_2,
+                         'trace_status': 'sent'},
+                        {'email': 'record.multi.1@example.com',
+                         'email_to_mail': 'record.multi.1@example.com,record.multi.2@example.com',
+                         'email_to_recipients': [['record.multi.1@example.com', 'record.multi.2@example.com']],
+                         'failure_type': False,
+                         'trace_status': 'sent'},
+                        {'email': 'record.format@example.com',
+                         'email_to_mail': 'record.format@example.com',
+                         'email_to_recipients': [['record.format@example.com']],
+                         'failure_type': False,
+                         'trace_status': 'sent'},
+                        {'email': 'record.😊@example.com',
+                         'email_to_mail': 'record.😊@example.com',
+                         'email_to_recipients': [['record.😊@example.com']],
+                         'failure_type': False,
+                         'trace_status': 'sent'},
+                        {'email': 'test.record.case@example.com',
+                         'email_to_mail': 'test.record.case@example.com',
+                         'email_to_recipients': [['test.record.case@example.com']],
+                         'failure_type': False,
+                         'trace_status': 'sent'},
+                        {'email': 'test.record.weird@example.comweirdformat',
+                         'email_to_mail': 'test.record.weird@example.comweirdformat',
+                         'email_to_recipients': [['test.record.weird@example.comweirdformat']],
+                         'failure_type': False,
+                         'trace_status': 'sent'},
+                        {'email': 'test.record.weird.2@example.com',
+                         'email_to_mail': 'test.record.weird.2@example.com',
+                         'email_to_recipients': [['test.record.weird.2@example.com']],
+                         'failure_type': False,
+                         'trace_status': 'sent'},
+                    ],
+                    mailing,
+                    test_records,
+                    check_mail=True,
+                )
+
+    @users('user_marketing')
+    @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_mailing_reply_to_mode_new(self):
         mailing = self.env['mailing.mailing'].browse(self.mailing_bl.ids)
         recipients = self._create_mailing_test_records(model='mailing.test.blacklist', count=5)
@@ -297,6 +456,37 @@ class TestMassMailing(TestMassMailCommon):
             mailing, recipients, check_mail=True
         )
         self.assertEqual(mailing.canceled, 3)
+
+    @users('user_marketing')
+    def test_mailing_w_seenlist(self):
+        """
+        Tests whether function `_get_seen_list` is correctly able to identify duplicate emails,
+        even through different batches.
+        Mails use different names to make sure they are recognized as duplicates even without being
+        normalized (e.g.: '"jc" <0@example.com>' and '"vd" <0@example.com>' are duplicates)
+        """
+        BATCH_SIZE = 5
+        names = ['jc', 'vd']
+        emails = [f'test.{i}@example.com' for i in range(BATCH_SIZE)]
+        records = self.env['mailing.test.partner'].create([{
+            'name': f'test_duplicates {i}', 'email_from': f'"{names[i % 2]}" <{emails[i % BATCH_SIZE]}>'
+        } for i in range(20)])
+
+        mailing = self.env['mailing.mailing'].create({
+            'mailing_domain': [('name', 'ilike', 'test_duplicates %')],
+            'mailing_model_id': self.env.ref('test_mass_mailing.model_mailing_test_partner').id,
+            'name': 'test duplicates',
+            'subject': 'test duplicates',
+        })
+
+        with self.mock_mail_gateway():
+            for i in range(0, 20, BATCH_SIZE):
+                mailing.action_send_mail(records[i:i + BATCH_SIZE].mapped('id'))
+            self.assertEqual(len(self._mails), BATCH_SIZE)
+            self.assertEqual(mailing.canceled, 15)
+            mails_sent = [email_normalize(mail['email_to'][0]) for mail in self._mails]
+            for email in emails:
+                self.assertEqual(mails_sent.count(email), 1)
 
     @users('user_marketing')
     def test_mailing_w_seenlist_unstored_partner(self):

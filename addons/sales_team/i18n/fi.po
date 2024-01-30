@@ -16,10 +16,10 @@
 # Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2022
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2022
 # Miku Laitinen <miku.laitinen@gmail.com>, 2022
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2022
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022
 # Martin Trigaux, 2022
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -27,8 +27,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-04 09:25+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
-"Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
+"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023\n"
+"Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -44,12 +44,12 @@ msgstr "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_kanban
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "<i class=\"fa fa-envelope me-1\" role=\"img\" aria-label=\"Email\" title=\"Email\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-envelope me-1\" role=\"img\" aria-label=\"Email\" title=\"Email\"/>"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_kanban
 msgid "<span class=\"bg-odoo\">Archived</span>"
-msgstr ""
+msgstr "<span class=\"bg-odoo\">Arkistoitu</span>"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_kanban_dashboard
@@ -86,13 +86,15 @@ msgstr "Toimenpiteiden tyypit"
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_member_action
 msgid "Add a Team Member"
-msgstr ""
+msgstr "Lisää tiimin jäsen"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__crm_team_member_ids
 msgid ""
 "Add members to automatically assign their documents to this sales team."
 msgstr ""
+"Lisää jäseniä, jotta heidän asiakirjansa voidaan määrittää automaattisesti "
+"tähän myyntitiimiin."
 
 #. module: sales_team
 #: code:addons/sales_team/models/crm_team.py:0
@@ -101,6 +103,8 @@ msgid ""
 "Adding %(user_name)s in this team would remove him/her from its current team"
 " %(team_name)s."
 msgstr ""
+"Lisäämällä %(user_name)s tähän tiimiin hänet poistettaisiin nykyisestä "
+"tiimistä %(team_name)s."
 
 #. module: sales_team
 #: code:addons/sales_team/models/crm_team_member.py:0
@@ -109,6 +113,8 @@ msgid ""
 "Adding %(user_name)s in this team would remove him/her from its current "
 "teams %(team_names)s."
 msgstr ""
+"Lisäämällä %(user_name)s tähän tiimiin hänet poistettaisiin nykyisistä "
+"tiimeistä %(team_names)s."
 
 #. module: sales_team
 #: code:addons/sales_team/models/crm_team.py:0
@@ -117,6 +123,8 @@ msgid ""
 "Adding %(user_names)s in this team would remove them from their current "
 "teams (%(team_names)s)."
 msgstr ""
+"Lisäämällä %(user_names)s tähän tiimiin heidät poistetaan nykyisistä "
+"tiimeistään (%(team_names)s)."
 
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_manager
@@ -152,7 +160,7 @@ msgstr "Iso kaunis Painike :)"
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_crm_tag
 msgid "CRM Tag"
-msgstr ""
+msgstr "CRM-tunniste"
 
 #. module: sales_team
 #: code:addons/sales_team/models/crm_team.py:0
@@ -195,17 +203,17 @@ msgstr "Kontakti"
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.sales_team_crm_tag_action
 msgid "Create CRM Tags"
-msgstr ""
+msgstr "Luo CRM-tunnisteet"
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_config
 msgid "Create a Sales Team"
-msgstr ""
+msgstr "Luo myyntitiimi"
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.mail_activity_type_action_config_sales
 msgid "Create an Activity Type"
-msgstr ""
+msgstr "Luo toimintatyyppi"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_tag__create_uid
@@ -321,6 +329,8 @@ msgid ""
 "If True, users may belong to several sales teams. Otherwise membership is "
 "limited to a single sales team."
 msgstr ""
+"Jos True, käyttäjät voivat kuulua useisiin myyntitiimeihin. Muussa "
+"tapauksessa jäsenyys on rajoitettu yhteen myyntitiimiin."
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__message_needaction
@@ -361,7 +371,7 @@ msgstr "Kuva"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__image_128
 msgid "Image (128)"
-msgstr ""
+msgstr "Kuva (128)"
 
 #. module: sales_team
 #: model:crm.tag,name:sales_team.categ_oppor4
@@ -407,16 +417,18 @@ msgid ""
 "Main user sales team. Used notably for pipeline, or to set sales team in "
 "invoicing or subscription."
 msgstr ""
+"Pääkäyttäjän myyntitiimi. Käytetään erityisesti myyntiputkiin tai "
+"myyntitiimin asettamiseen laskutukseen tai tilaukseen."
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__member_company_ids
 msgid "Member Company"
-msgstr ""
+msgstr "Jäsenyritys"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__member_warning
 msgid "Member Warning"
-msgstr ""
+msgstr "Jäsenen varoitus"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
@@ -426,7 +438,7 @@ msgstr "Jäsenet"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__member_warning
 msgid "Membership Issue Warning"
-msgstr ""
+msgstr "Jäsenyyden asettamisen varoitus"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_has_error
@@ -449,7 +461,7 @@ msgstr "Matkapuhelin"
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__is_membership_multi
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__is_membership_multi
 msgid "Multiple Memberships Allowed"
-msgstr ""
+msgstr "Useita jäsenyyksiä sallittu"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__name
@@ -471,7 +483,7 @@ msgstr "Virheiden määrä"
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__message_needaction_counter
 #: model:ir.model.fields,help:sales_team.field_crm_team_member__message_needaction_counter
-msgid "Number of messages which requires an action"
+msgid "Number of messages requiring action"
 msgstr "Toimenpiteitä vaativien viestien määrä"
 
 #. module: sales_team
@@ -498,7 +510,7 @@ msgstr "Kassapääte"
 #. module: sales_team
 #: model:crm.team,name:sales_team.crm_team_1
 msgid "Pre-Sales"
-msgstr ""
+msgstr "Myyntiä edeltävä"
 
 #. module: sales_team
 #: model:crm.tag,name:sales_team.categ_oppor1
@@ -547,7 +559,7 @@ msgstr "Myyntitiimin jäsenet"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__crm_team_member_all_ids
 msgid "Sales Team Members (incl. inactive)"
-msgstr ""
+msgstr "Myyntitiimin jäsenet (myös toimimattomat)"
 
 #. module: sales_team
 #: model:ir.actions.act_window,name:sales_team.crm_team_action_config
@@ -617,7 +629,7 @@ msgstr "Tunnisteet"
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "Team Details"
-msgstr ""
+msgstr "Tiimin yksityiskohdat"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__user_id
@@ -633,7 +645,7 @@ msgstr "Tiimin jäsenet"
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_member_action
 msgid "Team Members are salespersons assigned to specific teams."
-msgstr ""
+msgstr "Tiimin jäsenet ovat tiettyihin tiimeihin nimettyjä myyjiä."
 
 #. module: sales_team
 #: model:ir.actions.act_window,name:sales_team.crm_team_action_pipeline
@@ -656,6 +668,8 @@ msgid ""
 "Those represent the different categories of things you have to do (e.g. "
 "\"Call\" or \"Prepare meeting\")."
 msgstr ""
+"Ne edustavat eri kategorioita, joissa sinun on tehtävä asioita (esim. "
+"\"Soita\" tai \"Valmistele kokous\")."
 
 #. module: sales_team
 #: code:addons/sales_team/models/crm_team.py:0
@@ -664,6 +678,8 @@ msgid ""
 "To add a Salesperson into multiple Teams, activate the Multi-Team option in "
 "settings."
 msgstr ""
+"Jos haluat lisätä myyjän useisiin tiimeihin, aktivoi asetuksissa Multi-Team-"
+"vaihtoehto."
 
 #. module: sales_team
 #: model:crm.tag,name:sales_team.categ_oppor6
@@ -675,12 +691,14 @@ msgstr "Koulutus"
 msgid ""
 "UX: Give users not to add in the currently chosen team to avoid duplicates"
 msgstr ""
+"UX: Anna käyttäjille mahdollisuus olla lisäämättä tällä hetkellä valittuun "
+"tiimiin päällekkäisyyksien välttämiseksi"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__member_company_ids
 #: model:ir.model.fields,help:sales_team.field_crm_team_member__user_company_ids
 msgid "UX: Limit to team company or all if no company"
-msgstr ""
+msgstr "UX: Rajoita tiimiyritykseen tai kaikkiin, jos ei yritystä"
 
 #. module: sales_team
 #: code:addons/sales_team/models/crm_team.py:0
@@ -694,6 +712,8 @@ msgstr "Määrittelemätön graafinen malli myyntitiimille: %s"
 msgid ""
 "Use Sales Teams to organize your sales departments and draw up reports."
 msgstr ""
+"Käytä myyntitiimejä myyntiosastojen organisointiin ja raporttien "
+"laatimiseen."
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_pipeline
@@ -702,6 +722,8 @@ msgid ""
 "Use Sales Teams to organize your sales departments.\n"
 "                Each team will work with a separate pipeline."
 msgstr ""
+"Käytä myyntitiimejä myyntiosastojen organisointiin.\n"
+"                Kukin tiimi työskentelee erillisen myyntiputken kanssa."
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.sales_team_crm_tag_action
@@ -709,6 +731,8 @@ msgid ""
 "Use Tags to manage and track your Opportunities (product structure, sales "
 "type, ...)"
 msgstr ""
+"Käytä Tunnisteita tilaisuuksien hallintaan ja seurantaan (tuoterakenne, "
+"myyntityyppi, ...)"
 
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_res_users
@@ -723,12 +747,12 @@ msgstr "Käyttäjän yritys"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__user_in_teams_ids
 msgid "User In Teams"
-msgstr ""
+msgstr "Käyttäjä on tiimeissä"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_res_users__sale_team_id
 msgid "User Sales Team"
-msgstr ""
+msgstr "Käyttäjän myyntitiimi"
 
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_salesman_all_leads
@@ -743,7 +767,7 @@ msgstr "Käyttäjä: Vain omat dokumentit"
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__member_ids
 msgid "Users assigned to this team."
-msgstr ""
+msgstr "Tähän tiimiin määritetyt käyttäjät."
 
 #. module: sales_team
 #: model:crm.team,name:sales_team.salesteam_website_sales
@@ -757,16 +781,18 @@ msgid ""
 "You are trying to create duplicate membership(s). We found that "
 "%(duplicates)s already exist(s)."
 msgstr ""
+"Yrität luoda päällekkäisiä jäsenyyksiä. Havaitsimme, että %(duplicates)s on "
+"jo olemassa."
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "e.g. North America"
-msgstr ""
+msgstr "esim. Pohjois-Amerikka"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.sales_team_crm_tag_view_form
 msgid "e.g. Services"
-msgstr ""
+msgstr "esim. palvelut"
 
 #. module: sales_team
 #: model:crm.team,name:sales_team.ebay_sales_team

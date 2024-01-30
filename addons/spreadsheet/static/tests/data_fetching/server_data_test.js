@@ -300,7 +300,6 @@ QUnit.module("spreadsheet server data", {}, () => {
         batchEndpoint.call(request2);
         assert.verifySteps([]);
         await nextTick();
-        console.log("Passe");
         assert.verifySteps(["success-callback", "failure-callback"]);
     });
 });

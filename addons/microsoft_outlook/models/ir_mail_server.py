@@ -52,6 +52,11 @@ class IrMailServer(models.Model):
                     'This server %r can only be used for your personal email address. '
                     'Please fill the "from_filter" field with %r.', server.name, server.smtp_user))
 
+            if not server.smtp_user:
+                raise UserError(_(
+                            'Please fill the "Username" field with your Outlook/Office365 username (your email address). '
+                            'This should be the same account as the one used for the Outlook OAuthentication Token.'))
+
     @api.onchange('smtp_encryption')
     def _onchange_encryption(self):
         """Do not change the SMTP configuration if it's a Outlook server
