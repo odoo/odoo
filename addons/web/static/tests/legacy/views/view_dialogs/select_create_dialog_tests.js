@@ -123,7 +123,7 @@ QUnit.module("ViewDialogs", (hooks) => {
                                 ["display_name", "ilike", "piou"],
                                 ["foo", "ilike", "piou"],
                             ],
-                            fields: ["display_name", "foo", "bar"],
+                            fields: [],
                             groupby: ["bar"],
                             orderby: "",
                             lazy: true,
