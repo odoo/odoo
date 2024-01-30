@@ -8,7 +8,6 @@ import { Component } from "@odoo/owl";
  * @property {string?} name
  * @property {string?} icon
  * @property {string?} separator
- * @property {string?} imageUrl
  */
 export class CategorySelector extends Component {
     static template = "point_of_sale.CategorySelector";
@@ -21,13 +20,16 @@ export class CategorySelector extends Component {
                 name: { type: String, optional: true },
                 icon: { type: String, optional: true },
                 showSeparator: { type: Boolean, optional: true },
-                imageUrl: { type: String, optional: true },
+                has_image: Boolean,
+                color: { type: Number, optional: true },
             },
         },
         class: { type: String, optional: true },
         onClick: { type: Function },
+        getImgSrc: { type: Function, optional: true },
     };
     static defaultProps = {
         class: "",
+        getImgSrc: (c) => `/web/image?model=pos.category&field=image_128&id=${c.id}`,
     };
 }

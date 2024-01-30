@@ -69,9 +69,10 @@
             </xpath>
             <xpath expr="//page[@name='sales']/group[@name='sale']" position="inside">
                 <group name="pos" string="Point of Sale" invisible="not sale_ok">
+                    <field name="color" invisible="true"/>
                     <field name="available_in_pos"/>
                     <field name="to_weight" invisible="not available_in_pos"/>
-                    <field name="pos_categ_ids" widget="many2many_tags" groups="point_of_sale.group_pos_user" invisible="not available_in_pos" string="Category"/>
+                    <field name="pos_categ_ids" widget="many2many_tags" groups="point_of_sale.group_pos_user" invisible="not available_in_pos" string="Category" options="{'color_field': 'color'}"/>
                 </group>
             </xpath>
             <xpath expr="//page[@name='general_information']" position="after">
