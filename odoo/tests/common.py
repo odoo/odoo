@@ -107,6 +107,7 @@ ADMIN_USER_ID = odoo.SUPERUSER_ID
 CHECK_BROWSER_SLEEP = 0.1 # seconds
 CHECK_BROWSER_ITERATIONS = 100
 BROWSER_WAIT = CHECK_BROWSER_SLEEP * CHECK_BROWSER_ITERATIONS # seconds
+DEFAULT_SUCCESS_SIGNAL = 'test successful'
 
 def get_db_name():
     db = odoo.tools.config['db_name']
@@ -914,7 +915,7 @@ class ChromeBrowser:
     """ Helper object to control a Chrome headless process. """
     remote_debugging_port = 0  # 9222, change it in a non-git-tracked file
 
-    def __init__(self, test_case: HttpCase, success_signal: Callable[[str], bool], headless: bool = True, debug: bool = False):
+    def __init__(self, test_case: HttpCase, success_signal: str = DEFAULT_SUCCESS_SIGNAL, headless: bool = True, debug: bool = False):
         self._logger = test_case._logger
         self.test_case = test_case
         self.success_signal = success_signal
@@ -982,9 +983,11 @@ class ChromeBrowser:
     def stop(self):
         if hasattr(self, 'ws'):
             self._websocket_send('Page.stopScreencast')
-            if self.screencasts_dir and os.path.isdir(self.screencasts_frames_dir):
+            if self.screencasts_dir:
+                screencasts_frames_dir = self.screencasts_frames_dir
                 self.screencasts_dir = None
-                shutil.rmtree(self.screencasts_frames_dir)
+                if os.path.isdir(screencasts_frames_dir):
+                    shutil.rmtree(screencasts_frames_dir, ignore_errors=True)
 
             self._websocket_request('Page.stopLoading')
             self._websocket_request('Runtime.evaluate', params={'expression': """
@@ -1302,7 +1305,7 @@ class ChromeBrowser:
                         "Trying to set result to failed (%s) but found the future settled (%s)",
                         message, self._result
                     )
-        elif self.success_signal(message):
+        elif message == self.success_signal:
             @run
             def _get_heap():
                 yield self._websocket_send("HeapProfiler.collectGarbage", with_future=True)
@@ -1379,6 +1382,8 @@ which leads to stray network requests and inconsistencies."""
             wait()
 
     def _handle_screencast_frame(self, sessionId, data, metadata):
+        if not self.screencasts_frames_dir:
+            return
         self._websocket_send('Page.screencastFrameAck', params={'sessionId': sessionId})
         if not self.screencasts_dir:
             return
@@ -1426,6 +1431,8 @@ which leads to stray network requests and inconsistencies."""
             self._logger.debug('No screencast frames to encode')
             return None
 
+        self.stop_screencast()
+
         for f in self.screencast_frames:
             with open(f['file_path'], 'rb') as b64_file:
                 frame = base64.decodebytes(b64_file.read())
@@ -1453,7 +1460,11 @@ which leads to stray network requests and inconsistencies."""
                     duration = end_time - self.screencast_frames[i]['timestamp']
                     concat_file.write("file '%s'\nduration %s\n" % (frame_file_path, duration))
                 concat_file.write("file '%s'" % frame_file_path)  # needed by the concat plugin
-            r = subprocess.run([ffmpeg_path, '-intra', '-f', 'concat','-safe', '0', '-i', concat_script_path, '-pix_fmt', 'yuv420p', outfile])
+            try:
+                subprocess.run([ffmpeg_path, '-f', 'concat', '-safe', '0', '-i', concat_script_path, '-pix_fmt', 'yuv420p', '-g', '0', outfile], check=True)
+            except subprocess.CalledProcessError:
+                self._logger.error('Failed to encode screencast.')
+                return
             self._logger.log(25, 'Screencast in: %s', outfile)
         else:
             outfile = outfile.strip('.mp4')
@@ -1463,6 +1474,9 @@ which leads to stray network requests and inconsistencies."""
     def start_screencast(self):
         assert self.screencasts_dir
         self._websocket_send('Page.startScreencast')
+
+    def stop_screencast(self):
+        self._websocket_send('Page.stopScreencast')
 
     def set_cookie(self, name, value, path, domain):
         params = {'name': name, 'value': value, 'path': path, 'domain': domain}
@@ -1475,7 +1489,8 @@ which leads to stray network requests and inconsistencies."""
         self._websocket_request('Network.deleteCookies', params=params)
         return
 
-    def _wait_ready(self, ready_code, timeout=60):
+    def _wait_ready(self, ready_code=None, timeout=60):
+        ready_code = ready_code or "document.readyState === 'complete'"
         self._logger.info('Evaluate ready code "%s"', ready_code)
         start_time = time.time()
         result = None
@@ -1799,7 +1814,7 @@ class HttpCase(TransactionCase):
 
         return session
 
-    def browser_js(self, url_path, code, ready='', login=None, timeout=60, cookies=None, error_checker=None, watch=False, success_signal='test successful', debug=False, **kw):
+    def browser_js(self, url_path, code, ready='', login=None, timeout=60, cookies=None, error_checker=None, watch=False, success_signal=DEFAULT_SUCCESS_SIGNAL, debug=False, **kw):
         """ Test js code running in the browser
         - optionnally log as 'login'
         - load page given by url_path
@@ -1824,10 +1839,7 @@ class HttpCase(TransactionCase):
         if watch:
             self._logger.warning('watch mode is only suitable for local testing')
 
-        if isinstance(success_signal, str):
-            ss = lambda s: s == success_signal
-
-        browser = ChromeBrowser(self, headless=not watch, success_signal=ss, debug=debug)
+        browser = ChromeBrowser(self, headless=not watch, success_signal=success_signal, debug=debug)
         try:
             self.authenticate(login, login, browser=browser)
             # Flush and clear the current transaction.  This is useful in case
@@ -1856,7 +1868,6 @@ class HttpCase(TransactionCase):
 
             # Needed because tests like test01.js (qunit tests) are passing a ready
             # code = ""
-            ready = ready or "document.readyState === 'complete'"
             self.assertTrue(browser._wait_ready(ready), 'The ready "%s" code was always falsy' % ready)
 
             error = False
