@@ -80,6 +80,8 @@ class AccountMove(models.Model):
             ('84', "Taxable Base modified due to firm court ruling or administrative decision"),
             ('85', "Taxable Base modified due to unpaid outputs where there is a judgement opening insolvency proceedings"),
         ], string='Spanish Facturae EDI Reason Code', default='10')
+    l10n_es_invoicing_period_start_date = fields.Date(string="Invoice Period Start Date")
+    l10n_es_invoicing_period_end_date = fields.Date(string="Invoice Period End Date")
 
     def _l10n_es_edi_facturae_get_default_enable(self):
         self.ensure_one()
@@ -307,6 +309,10 @@ class AccountMove(models.Model):
                 partner_name['surname'] = name_split[-1]
 
         invoice_issuer_signature_type = 'supplier' if self.move_type == 'out_invoice' else 'customer'
+        invoicing_period = {
+            'StartDate': self.l10n_es_invoicing_period_start_date,
+            'EndDate': self.l10n_es_invoicing_period_end_date,
+        } if self.l10n_es_invoicing_period_start_date and self.l10n_es_invoicing_period_end_date else None
         need_conv = bool(inv_curr != eur_curr)
         conversion_rate = abs(self.amount_total_in_currency_signed / self.amount_total_signed) if self.amount_total_signed else 0.
         total_outst_am_in_currency = abs(self.amount_total_in_currency_signed)
@@ -356,6 +362,7 @@ class AccountMove(models.Model):
                     'ExchangeRateDetails': need_conv,
                     'ExchangeRate': f"{round(conversion_rate, 4):.4f}",
                     'LanguageName': self._context.get('lang', 'en_US').split('_')[0],
+                    'InvoicingPeriod': invoicing_period,
                 },
                 'TaxOutputs': taxes,
                 'TaxesWithheld': taxes_withheld,

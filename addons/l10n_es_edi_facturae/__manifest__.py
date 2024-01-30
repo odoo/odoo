@@ -28,6 +28,7 @@ for more informations, see https://www.facturae.gob.es/face/Paginas/FACE.aspx
         'views/res_company_views.xml',
         'views/res_partner_views.xml',
         'views/account_tax_views.xml',
+        'views/account_move_views.xml',
         'views/uom_uom_views.xml',
         'views/account_menuitem.xml',
 
