@@ -99,13 +99,17 @@ export class ProductScreen extends Component {
             },
             ...categoriesToDisplay.map((category) => {
                 return {
-                    ...pick(category, "id", "name", "color", "has_image"),
+                    ...pick(category, "id", "name", "color"),
                     showSeparator:
                         selectedCategory &&
                         [
                             ...selectedCategory.allParents.map((p) => p.id),
                             this.pos.selectedCategory.id,
                         ].includes(category.id),
+                    imgSrc:
+                        this.pos.config.show_category_images && category.has_image
+                            ? `/web/image?model=pos.category&field=image_128&id=${category.id}`
+                            : undefined,
                 };
             }),
         ];
