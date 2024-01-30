@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { after, expect, test } from "@odoo/hoot";
+
 import { defineModels, getService, makeMockEnv, models, onRpc } from "../web_test_helpers";
 import { rpcBus } from "@web/core/network/rpc";
 import { ERROR_INACCESSIBLE_OR_MISSING } from "@web/core/name_service";
@@ -22,13 +23,13 @@ class PO extends models.Model {
 
 defineModels([Dev, PO]);
 
-test("single loadDisplayNames", async () => {
+test`headless`("single loadDisplayNames", async () => {
     await makeMockEnv();
     const displayNames = await getService("name").loadDisplayNames("dev", [1, 2]);
     expect(displayNames).toEqual({ 1: "Julien", 2: "Pierre" });
 });
 
-test("loadDisplayNames is done in silent mode", async () => {
+test`headless`("loadDisplayNames is done in silent mode", async () => {
     await makeMockEnv();
 
     const onRPCRequest = ({ detail }) => {
@@ -42,7 +43,7 @@ test("loadDisplayNames is done in silent mode", async () => {
     expect(["RPC:REQUEST(silent)"]).toVerifySteps();
 });
 
-test("single loadDisplayNames following addDisplayNames", async () => {
+test`headless`("single loadDisplayNames following addDisplayNames", async () => {
     await makeMockEnv();
     onRpc((_, { model, method, kwargs }) => {
         expect.step(`${model}:${method}:${kwargs.domain[0][2]}`);
@@ -54,7 +55,7 @@ test("single loadDisplayNames following addDisplayNames", async () => {
     expect([]).toVerifySteps();
 });
 
-test("single loadDisplayNames following addDisplayNames (2)", async () => {
+test`headless`("single loadDisplayNames following addDisplayNames (2)", async () => {
     await makeMockEnv();
     onRpc((_, { model, method, kwargs }) => {
         expect.step(`${model}:${method}:${kwargs.domain[0][2]}`);
@@ -66,7 +67,7 @@ test("single loadDisplayNames following addDisplayNames (2)", async () => {
     expect(["dev:web_search_read:2"]).toVerifySteps();
 });
 
-test("loadDisplayNames in batch", async () => {
+test`headless`("loadDisplayNames in batch", async () => {
     await makeMockEnv();
     onRpc((_, { model, method, kwargs }) => {
         expect.step(`${model}:${method}:${kwargs.domain[0][2]}`);
@@ -83,7 +84,7 @@ test("loadDisplayNames in batch", async () => {
     expect(["dev:web_search_read:1,2"]).toVerifySteps();
 });
 
-test("loadDisplayNames on different models", async () => {
+test`headless`("loadDisplayNames on different models", async () => {
     await makeMockEnv();
     onRpc((_, { model, method, kwargs }) => {
         expect.step(`${model}:${method}:${kwargs.domain[0][2]}`);
@@ -101,7 +102,7 @@ test("loadDisplayNames on different models", async () => {
     expect(["dev:web_search_read:1", "po:web_search_read:1"]).toVerifySteps();
 });
 
-test("invalid id", async () => {
+test`headless`("invalid id", async () => {
     await makeMockEnv();
     try {
         await getService("name").loadDisplayNames("dev", ["a"]);
@@ -110,7 +111,7 @@ test("invalid id", async () => {
     }
 });
 
-test("inaccessible or missing id", async () => {
+test`headless`("inaccessible or missing id", async () => {
     await makeMockEnv();
     onRpc((_, { model, method, kwargs }) => {
         expect.step(`${model}:${method}:${kwargs.domain[0][2]}`);
@@ -121,7 +122,7 @@ test("inaccessible or missing id", async () => {
     expect(["dev:web_search_read:3"]).toVerifySteps();
 });
 
-test("batch + inaccessible/missing", async () => {
+test`headless`("batch + inaccessible/missing", async () => {
     await makeMockEnv();
     onRpc((_, { model, method, kwargs }) => {
         expect.step(`${model}:${method}:${kwargs.domain[0][2]}`);

@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { describe, expect, test } from "@odoo/hoot";
+
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { Domain } from "@web/core/domain";
 import { PyDate } from "@web/core/py_js/py_date";
@@ -9,7 +10,7 @@ import { PyDate } from "@web/core/py_js/py_date";
 // Basic properties
 //-------------------------------------------------------------------------
 
-describe("Basic Properties", () => {
+describe`headless`("Basic Properties", () => {
     test("empty", () => {
         expect(new Domain([]).contains({})).toBe(true);
         expect(new Domain([]).toString()).toBe("[]");
@@ -405,7 +406,7 @@ describe("Basic Properties", () => {
 // ---------------------------------------------------------------------------
 // Normalization
 // ---------------------------------------------------------------------------
-describe("Normalization", () => {
+describe`headless`("Normalization", () => {
     test("return simple (normalized) domains", () => {
         const domains = ["[]", `[("a", "=", 1)]`, `["!", ("a", "=", 1)]`];
         for (const domain of domains) {
@@ -429,7 +430,7 @@ describe("Normalization", () => {
 // ---------------------------------------------------------------------------
 // Combining domains
 // ---------------------------------------------------------------------------
-describe("Combining domains", () => {
+describe`headless`("Combining domains", () => {
     test("combining zero domain", () => {
         expect(Domain.combine([], "AND").toString()).toBe("[]");
         expect(Domain.combine([], "OR").toString()).toBe("[]");
@@ -495,7 +496,7 @@ describe("Combining domains", () => {
 // ---------------------------------------------------------------------------
 // OPERATOR AND / OR / NOT
 // ---------------------------------------------------------------------------
-describe("Operator and - or - not", () => {
+describe`headless`("Operator and - or - not", () => {
     test("combining two domains with and/or", () => {
         expect(Domain.and([`[("a", "=", 1)]`, "[]"]).toString()).toBe(`[("a", "=", 1)]`);
         expect(Domain.and([`[("a", "=", 1)]`, []]).toString()).toBe(`[("a", "=", 1)]`);
@@ -541,7 +542,7 @@ describe("Operator and - or - not", () => {
     });
 });
 
-describe("Remove domain leaf", () => {
+describe`headless`("Remove domain leaf", () => {
     test("Remove leaf in domain.", () => {
         let domain = [
             ["start_datetime", "!=", false],

@@ -1,9 +1,10 @@
 /** @odoo-module **/
 
 import { describe, expect, test } from "@odoo/hoot";
+
 import { evaluateBooleanExpr, evaluateExpr } from "@web/core/py_js/py";
 
-describe("basic values", () => {
+describe`headless`("basic values", () => {
     test("evaluate simple values", () => {
         expect(evaluateExpr("12")).toBe(12);
         expect(evaluateExpr('"foo"')).toBe("foo");
@@ -60,7 +61,7 @@ describe("basic values", () => {
     });
 });
 
-describe("number properties", () => {
+describe`headless`("number properties", () => {
     test("number arithmetic", () => {
         expect(evaluateExpr("1 + 2")).toBe(3);
         expect(evaluateExpr("4 - 2")).toBe(2);
@@ -87,7 +88,7 @@ describe("number properties", () => {
     });
 });
 
-describe("boolean properties", () => {
+describe`headless`("boolean properties", () => {
     test("boolean arithmetic", () => {
         expect(evaluateExpr("True and False")).toBe(false);
         expect(evaluateExpr("True or False")).toBe(true);
@@ -124,7 +125,7 @@ describe("boolean properties", () => {
     });
 });
 
-describe("values from context", () => {
+describe`headless`("values from context", () => {
     test("free variable", () => {
         expect(evaluateExpr("a", { a: 3 })).toBe(3);
         expect(evaluateExpr("a + b", { a: 3, b: 5 })).toBe(8);
@@ -150,7 +151,7 @@ describe("values from context", () => {
     });
 });
 
-describe("comparisons", () => {
+describe`headless`("comparisons", () => {
     test("equality", () => {
         expect(evaluateExpr("1 == 1")).toBe(true);
         expect(evaluateExpr('"foo" == "foo"')).toBe(true);
@@ -245,7 +246,7 @@ describe("comparisons", () => {
     });
 });
 
-describe("containment", () => {
+describe`headless`("containment", () => {
     test("in tuples", () => {
         expect(evaluateExpr("'bar' in ('foo', 'bar')")).toBe(true);
         expect(evaluateExpr("'bar' in ('foo', 'qux')")).toBe(false);
@@ -278,7 +279,7 @@ describe("containment", () => {
     });
 });
 
-describe("conversions", () => {
+describe`headless`("conversions", () => {
     test("to bool", () => {
         expect(evaluateExpr("bool('')")).toBe(false);
         expect(evaluateExpr("bool('foo')")).toBe(true);
@@ -287,14 +288,14 @@ describe("conversions", () => {
     });
 });
 
-describe("callables", () => {
+describe`headless`("callables", () => {
     test("should call function from context", () => {
         expect(evaluateExpr("foo()", { foo: () => 3 })).toBe(3);
         expect(evaluateExpr("1 + foo()", { foo: () => 3 })).toBe(4);
     });
 });
 
-describe("dicts", () => {
+describe`headless`("dicts", () => {
     test("dict", () => {
         expect(evaluateExpr("{}")).toEqual({});
         expect(evaluateExpr("{'foo': 1 + 2}")).toEqual({ foo: 3 });
@@ -329,7 +330,7 @@ describe("dicts", () => {
     });
 });
 
-describe("objects", () => {
+describe`headless`("objects", () => {
     test("can read values from object", () => {
         expect(evaluateExpr("obj.a", { obj: { a: 123 } })).toBe(123);
         expect(evaluateExpr("obj.a.b.c", { obj: { a: { b: { c: 321 } } } })).toBe(321);
@@ -340,7 +341,7 @@ describe("objects", () => {
     });
 });
 
-describe("if expressions", () => {
+describe`headless`("if expressions", () => {
     test("simple if expressions", () => {
         expect(evaluateExpr("1 if True else 2")).toBe(1);
         expect(evaluateExpr("1 if 3 < 2 else 'greater'")).toBe("greater");
@@ -353,13 +354,13 @@ describe("if expressions", () => {
     });
 });
 
-describe("miscellaneous expressions", () => {
+describe`headless`("miscellaneous expressions", () => {
     test("tuple in list", () => {
         expect(evaluateExpr("[(1 + 2,'foo', True)]")).toEqual([[3, "foo", true]]);
     });
 });
 
-describe("evaluate to boolean", () => {
+describe`headless`("evaluate to boolean", () => {
     test("simple expression", () => {
         expect(evaluateBooleanExpr("12")).toBe(true);
         expect(evaluateBooleanExpr("0")).toBe(false);
@@ -396,7 +397,7 @@ describe("evaluate to boolean", () => {
     });
 });
 
-describe("sets", () => {
+describe`headless`("sets", () => {
     test("static set", () => {
         expect(evaluateExpr("set()")).toEqual(new Set());
         expect(evaluateExpr("set([])")).toEqual(new Set([]));

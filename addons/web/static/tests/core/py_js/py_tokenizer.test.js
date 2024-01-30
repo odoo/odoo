@@ -1,15 +1,16 @@
 /** @odoo-module **/
 
 import { expect, test } from "@odoo/hoot";
+
 import { tokenize } from "@web/core/py_js/py";
 
-test("can tokenize simple expressions with spaces", () => {
+test`headless`("can tokenize simple expressions with spaces", () => {
     expect(tokenize("1")).toEqual([{ type: 0 /* Number */, value: 1 }]);
     expect(tokenize(" 1")).toEqual([{ type: 0 /* Number */, value: 1 }]);
     expect(tokenize(" 1 ")).toEqual([{ type: 0 /* Number */, value: 1 }]);
 });
 
-test("can tokenize numbers", () => {
+test`headless`("can tokenize numbers", () => {
     /* Without exponent */
     expect(tokenize("1")).toEqual([{ type: 0 /* Number */, value: 1 }]);
     expect(tokenize("13")).toEqual([{ type: 0 /* Number */, value: 13 }]);
@@ -28,7 +29,7 @@ test("can tokenize numbers", () => {
     ]);
 });
 
-test("can tokenize floats", () => {
+test`headless`("can tokenize floats", () => {
     /* Without exponent */
     expect(tokenize("12.0")).toEqual([{ type: 0 /* Number */, value: 12 }]);
     expect(tokenize("1.2")).toEqual([{ type: 0 /* Number */, value: 1.2 }]);
@@ -56,34 +57,34 @@ test("can tokenize floats", () => {
     ]);
 });
 
-test("can tokenize strings", () => {
+test`headless`("can tokenize strings", () => {
     expect(tokenize('"foo"')).toEqual([{ type: 1 /* String */, value: "foo" }]);
 });
 
-test("can tokenize bare names", () => {
+test`headless`("can tokenize bare names", () => {
     expect(tokenize("foo")).toEqual([{ type: 3 /* Name */, value: "foo" }]);
 });
 
-test("can tokenize misc operators", () => {
+test`headless`("can tokenize misc operators", () => {
     expect(tokenize("in")).toEqual([{ type: 2 /* Symbol */, value: "in" }]);
     expect(tokenize("not in")).toEqual([{ type: 2 /* Symbol */, value: "not in" }]);
     expect(tokenize("3 ** 2")[1]).toEqual({ type: 2 /* Symbol */, value: "**" });
 });
 
-test("can tokenize constants", () => {
+test`headless`("can tokenize constants", () => {
     expect(tokenize("None")).toEqual([{ type: 4 /* Constant */, value: "None" }]);
     expect(tokenize("True")).toEqual([{ type: 4 /* Constant */, value: "True" }]);
     expect(tokenize("False")).toEqual([{ type: 4 /* Constant */, value: "False" }]);
 });
 
-test("can tokenize parenthesis", () => {
+test`headless`("can tokenize parenthesis", () => {
     expect(tokenize("()")).toEqual([
         { type: 2 /* Symbol */, value: "(" },
         { type: 2 /* Symbol */, value: ")" },
     ]);
 });
 
-test("can tokenize function with kwargs", () => {
+test`headless`("can tokenize function with kwargs", () => {
     expect(tokenize('foo(bar=3, qux="4")')).toEqual([
         { type: 3 /* Name */, value: "foo" },
         { type: 2 /* Symbol */, value: "(" },
@@ -98,7 +99,7 @@ test("can tokenize function with kwargs", () => {
     ]);
 });
 
-test("can tokenize if statement", () => {
+test`headless`("can tokenize if statement", () => {
     expect(tokenize("1 if True else 2")).toEqual([
         { type: 0 /* Number */, value: 1 },
         { type: 2 /* Symbol */, value: "if" },
@@ -108,6 +109,6 @@ test("can tokenize if statement", () => {
     ]);
 });
 
-test("sanity check: throw some errors", () => {
+test`headless`("sanity check: throw some errors", () => {
     expect(() => tokenize("'asdf")).toThrow();
 });

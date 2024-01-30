@@ -3,11 +3,12 @@
 import { after, expect, test } from "@odoo/hoot";
 import { on } from "@odoo/hoot-dom";
 import { Component, xml } from "@odoo/owl";
+
 import { makeMockEnv, mountWithCleanup, onRpc } from "@web/../tests/web_test_helpers";
 import { rpcBus } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
 
-test("add user context to a simple read request", async () => {
+test`headless`("add user context to a simple read request", async () => {
     onRpc(async (route, params) => {
         expect.step(route);
         expect(params).toEqual({
@@ -32,7 +33,7 @@ test("add user context to a simple read request", async () => {
     expect(["/web/dataset/call_kw/res.partner/read"]).toVerifySteps();
 });
 
-test("context is combined with user context in read request", async () => {
+test`headless`("context is combined with user context in read request", async () => {
     onRpc(async (route, params) => {
         expect.step(route);
         expect(params).toEqual({
@@ -62,7 +63,7 @@ test("context is combined with user context in read request", async () => {
     expect(["/web/dataset/call_kw/res.partner/read"]).toVerifySteps();
 });
 
-test("basic method call of model", async () => {
+test`headless`("basic method call of model", async () => {
     onRpc(async (route, params) => {
         expect.step(route);
         expect(params).toEqual({
@@ -88,7 +89,7 @@ test("basic method call of model", async () => {
     expect(["/web/dataset/call_kw/res.partner/test"]).toVerifySteps();
 });
 
-test("create method: one record", async () => {
+test`headless`("create method: one record", async () => {
     onRpc(async (route, params) => {
         expect.step(route);
         expect(params).toEqual({
@@ -113,7 +114,7 @@ test("create method: one record", async () => {
     expect(["/web/dataset/call_kw/res.partner/create"]).toVerifySteps();
 });
 
-test("create method: several records", async () => {
+test`headless`("create method: several records", async () => {
     onRpc(async (route, params) => {
         expect.step(route);
         expect(params).toEqual({
@@ -138,7 +139,7 @@ test("create method: several records", async () => {
     expect(["/web/dataset/call_kw/res.partner/create"]).toVerifySteps();
 });
 
-test("read method", async () => {
+test`headless`("read method", async () => {
     onRpc(async (route, params) => {
         expect.step(route);
         expect(params).toEqual({
@@ -171,7 +172,7 @@ test("read method", async () => {
     expect(["/web/dataset/call_kw/sale.order/read"]).toVerifySteps();
 });
 
-test("unlink method", async () => {
+test`headless`("unlink method", async () => {
     onRpc(async (route, params) => {
         expect.step(route);
         expect(params).toEqual({
@@ -196,7 +197,7 @@ test("unlink method", async () => {
     expect(["/web/dataset/call_kw/res.partner/unlink"]).toVerifySteps();
 });
 
-test("write method", async () => {
+test`headless`("write method", async () => {
     onRpc(async (route, params) => {
         expect.step(route);
         expect(params).toEqual({
@@ -221,7 +222,7 @@ test("write method", async () => {
     expect(["/web/dataset/call_kw/res.partner/write"]).toVerifySteps();
 });
 
-test("webReadGroup method", async () => {
+test`headless`("webReadGroup method", async () => {
     onRpc(async (route, params) => {
         expect.step(route);
         expect(params).toEqual({
@@ -256,7 +257,7 @@ test("webReadGroup method", async () => {
     expect(["/web/dataset/call_kw/sale.order/web_read_group"]).toVerifySteps();
 });
 
-test("readGroup method", async () => {
+test`headless`("readGroup method", async () => {
     onRpc(async (route, params) => {
         expect.step(route);
         expect(params).toEqual({
@@ -291,7 +292,7 @@ test("readGroup method", async () => {
     expect(["/web/dataset/call_kw/sale.order/read_group"]).toVerifySteps();
 });
 
-test("test readGroup method removes duplicate values from groupby", async () => {
+test`headless`("test readGroup method removes duplicate values from groupby", async () => {
     onRpc(async (route, params) => {
         expect.step(route);
         expect(params.kwargs.groupby).toEqual(["date_order:month"], {
@@ -312,7 +313,7 @@ test("test readGroup method removes duplicate values from groupby", async () => 
     expect(["/web/dataset/call_kw/sale.order/read_group"]).toVerifySteps();
 });
 
-test("search_read method", async () => {
+test`headless`("search_read method", async () => {
     onRpc(async (route, params) => {
         expect.step(route);
         expect(params).toEqual({
@@ -339,7 +340,7 @@ test("search_read method", async () => {
     expect(["/web/dataset/call_kw/sale.order/search_read"]).toVerifySteps();
 });
 
-test("search_count method", async () => {
+test`headless`("search_count method", async () => {
     onRpc(async (route, params) => {
         expect.step(route);
         expect(params).toEqual({
@@ -364,7 +365,7 @@ test("search_count method", async () => {
     expect(["/web/dataset/call_kw/sale.order/search_count"]).toVerifySteps();
 });
 
-test("webRead method", async () => {
+test`headless`("webRead method", async () => {
     onRpc(async (route, params) => {
         expect.step(route);
         expect(params).toEqual({
@@ -394,7 +395,7 @@ test("webRead method", async () => {
     expect(["/web/dataset/call_kw/sale.order/web_read"]).toVerifySteps();
 });
 
-test("webSearchRead method", async () => {
+test`headless`("webSearchRead method", async () => {
     onRpc(async (route, params) => {
         expect.step(route);
         expect(params).toEqual({
@@ -423,7 +424,7 @@ test("webSearchRead method", async () => {
     expect(["/web/dataset/call_kw/sale.order/web_search_read"]).toVerifySteps();
 });
 
-test("orm is specialized for component", async () => {
+test`headless`("orm is specialized for component", async () => {
     const env = await makeMockEnv();
 
     class MyComponent extends Component {
@@ -439,7 +440,7 @@ test("orm is specialized for component", async () => {
     expect(component.orm).not.toBe(env.services.orm);
 });
 
-test("silent mode", async () => {
+test`headless`("silent mode", async () => {
     onRpc((route) => {
         expect.step(route);
         return false;
@@ -475,7 +476,7 @@ test("silent mode", async () => {
     ]).toVerifySteps();
 });
 
-test("validate some obviously wrong calls", async () => {
+test`headless`("validate some obviously wrong calls", async () => {
     expect.assertions(2);
 
     const { services } = await makeMockEnv();
@@ -488,7 +489,7 @@ test("validate some obviously wrong calls", async () => {
     );
 });
 
-test("optimize read and unlink if no ids", async () => {
+test`headless`("optimize read and unlink if no ids", async () => {
     onRpc((route) => {
         expect.step(route);
         return false;
