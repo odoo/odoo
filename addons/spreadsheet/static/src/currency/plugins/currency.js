@@ -14,6 +14,7 @@ const DATA_SOURCE_ID = "CURRENCIES";
 class CurrencyPlugin extends UIPlugin {
     constructor(config) {
         super(config);
+        this.currentCompanyCurrencyFormat = config.defaultCurrencyFormat;
         this.dataSources = config.custom.dataSources;
         if (this.dataSources) {
             this.dataSources.add(DATA_SOURCE_ID, CurrencyDataSource);
@@ -74,6 +75,9 @@ class CurrencyPlugin extends UIPlugin {
      * @returns {string | undefined}
      */
     getCompanyCurrencyFormat(companyId) {
+        if (!companyId && this.currentCompanyCurrencyFormat) {
+            return this.currentCompanyCurrencyFormat;
+        }
         const currency =
             this.dataSources &&
             this.dataSources.get(DATA_SOURCE_ID).getCompanyCurrencyFormat(companyId);
