@@ -25,6 +25,8 @@ export class CurrencyPlugin extends OdooUIPlugin {
 
     constructor(config) {
         super(config);
+        /** @type {string | undefined} */
+        this.currentCompanyCurrencyFormat = config.defaultCurrencyFormat;
         /** @type {import("@spreadsheet/data_sources/server_data").ServerData} */
         this._serverData = config.custom.dataSources?.serverData;
     }
@@ -100,6 +102,9 @@ export class CurrencyPlugin extends OdooUIPlugin {
      * @returns {string | undefined}
      */
     getCompanyCurrencyFormat(companyId) {
+        if (!companyId && this.currentCompanyCurrencyFormat) {
+            return this.currentCompanyCurrencyFormat;
+        }
         const currency = this.serverData.get(
             "res.currency",
             "get_company_currency_for_spreadsheet",
