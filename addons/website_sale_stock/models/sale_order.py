@@ -105,7 +105,7 @@ class SaleOrder(models.Model):
                 cache_key = self._get_cache_key_for_line(line)
                 combination_info = combination_info_cache.get(cache_key)
                 if not combination_info:
-                    combination_info = product.with_context(**self._get_context_for_line(line))._get_combination_info_variant(add_qty=line.product_uom_qty)
+                    combination_info = product.with_context(**self._get_context_for_line(line), website_id=sale_order.website_id.id)._get_combination_info_variant(add_qty=line.product_uom_qty)
                     combination_info_cache[cache_key] = combination_info
                 if not product.allow_out_of_stock_order and combination_info['free_qty'] == 0:
                     return False
