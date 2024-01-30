@@ -17,6 +17,7 @@
                         <group name="sequence">
                             <field name="parent_id" class="o_text_overflow"/>
                             <field name="sequence" groups="base.group_no_one" />
+                            <field name="color" widget="color_picker" />
                         </group>
                     </group>
                 </sheet>
@@ -41,6 +42,7 @@
             <kanban class="o_kanban_mobile">
                 <field name="name"/>
                 <field name="id"/>
+                <field name="color"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div t-attf-class="oe_kanban_global_click">

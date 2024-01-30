@@ -102,6 +102,7 @@
             'web/static/src/scss/bootstrap_overridden.scss',
             'web/static/src/scss/fontawesome_overridden.scss',
             'web/static/fonts/fonts.scss',
+            'web/static/src/core/colorlist/colorlist.scss',
             # JS boot
             'web/static/src/module_loader.js',
             # libs (should be loaded before framework)
