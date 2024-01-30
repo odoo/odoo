@@ -422,6 +422,15 @@ X[]
                         contentAfter: `<div>[]def</div>`,
                     });
                 });
+                it('should remove emoji', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: `<p>[]\uD83D\uDE0D def</p>`,
+                        stepFunction: async editor => {
+                            await deleteForward(editor);
+                        },
+                        contentAfter: `<p>[]&nbsp;def</p>`,
+                    });
+                });
             });
             describe('white spaces', () => {
                 describe('no intefering spaces', () => {
