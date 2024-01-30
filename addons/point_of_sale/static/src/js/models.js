@@ -3318,12 +3318,6 @@ class Order extends PosModel {
                 }
                 else if(rounding_method === "DOWN" && rounding_applied < 0 && remaining < 0){
                     rounding_applied += rounding;
-                }else if(rounding_method  == "HALF-UP"){
-                    if(remaining > 0 && utils.float_is_zero(rounding_applied - rounding / -2, this.pos.currency.decimals)){
-                        rounding_applied = rounding / 2;
-                    }else if(remaining < 0 && utils.float_is_zero(rounding_applied - rounding / 2, this.pos.currency.decimals)){
-                        rounding_applied = -rounding /2;
-                    }
                 }
                 return sign * rounding_applied;
             }
