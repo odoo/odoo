@@ -77,6 +77,14 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
             'country_id': cls.env.ref('base.be').id,
         })
 
+        cls.tax_0 = cls.env['account.tax'].create({
+            'name': 'tax_0',
+            'amount_type': 'percent',
+            'amount': 0,
+            'type_tax_use': 'sale',
+            'country_id': cls.env.ref('base.be').id,
+        })
+
         cls.env.company.invoice_is_ubl_cii = True
 
         cls.pay_term = cls.env['account.payment.term'].create({
@@ -483,6 +491,22 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
         }])
 
         self._assert_invoice_attachment(invoice.ubl_cii_xml_id, None, 'from_odoo/bis3_export_with_changed_taxes.xml')
+
+    def test_export_tax_exempt(self):
+        invoice = self._generate_move(
+            self.partner_1,
+            self.partner_2,
+            move_type='out_invoice',
+            invoice_line_ids=[
+                {
+                    'product_id': self.product_a.id,
+                    'price_unit': 990.0,
+                    'tax_ids': [(6, 0, self.tax_0.ids)],
+                },
+            ],
+        )
+        self.assertTrue(invoice.ubl_cii_xml_id)
+        self._assert_invoice_attachment(invoice.ubl_cii_xml_id, None, 'from_odoo/bis3_out_invoice_tax_exempt.xml')
 
     ####################################################
     # Test import
