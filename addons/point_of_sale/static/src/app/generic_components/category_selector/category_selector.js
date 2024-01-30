@@ -21,7 +21,7 @@ export class CategorySelector extends Component {
                 name: { type: String, optional: true },
                 icon: { type: String, optional: true },
                 showSeparator: { type: Boolean, optional: true },
-                imageUrl: { type: String, optional: true },
+                imageUrl: { type: [String, Boolean], optional: true },
             },
         },
         class: { type: String, optional: true },

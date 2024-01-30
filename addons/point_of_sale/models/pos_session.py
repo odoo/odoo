@@ -286,7 +286,9 @@ class PosSession(models.Model):
                 'has_cash_move_perm': self.user_has_groups('account.group_account_invoice'),
                 'has_available_products': self._pos_has_valid_product(),
                 'pos_special_products_ids': self.env['pos.config']._get_special_products().ids,
-                'open_orders': self.env['pos.order'].search([('session_id', '=', self.id), ('state', '=', 'draft')]).export_for_ui()
+                'open_orders': self.env['pos.order'].search([('session_id', '=', self.id), ('state', '=', 'draft')]).export_for_ui(),
+                'show_product_images' : self.env['ir.config_parameter'].sudo().get_param('point_of_sale.show_product_images', 'yes'),
+                'show_category_images' : self.env['ir.config_parameter'].sudo().get_param('point_of_sale.show_category_images', 'yes'),
             }
 
         if len(models_to_load) > 0:
