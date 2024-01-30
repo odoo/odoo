@@ -766,8 +766,7 @@ class AccountPayment(models.Model):
                         "include one and only one outstanding payments/receipts account.",
                         move.display_name,
                     ))
-
-                if len(counterpart_lines) != 1:
+                if len(counterpart_lines.mapped("account_id")) > 1:
                     raise UserError(_(
                         "Journal Entry %s is not valid. In order to proceed, the journal items must "
                         "include one and only one receivable/payable account (with an exception of "
