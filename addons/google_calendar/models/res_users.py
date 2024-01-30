@@ -130,10 +130,11 @@ class User(models.Model):
         """ Cron job """
         users = self.env['res.users'].sudo().search([('google_calendar_rtoken', '!=', False), ('google_synchronization_stopped', '=', False)])
         google = GoogleCalendarService(self.env['google.service'])
-        for user in users:
+        for done, user in enumerate(users, 1):
             _logger.info("Calendar Synchro - Starting synchronization for %s", user)
             try:
                 user.with_user(user).sudo()._sync_google_calendar(google)
+                self.env['ir.cron']._notify_progress(done=done, remaining=len(users) - done)
                 self.env.cr.commit()
             except Exception as e:
                 _logger.exception("[%s] Calendar Synchro - Exception : %s!", user, exception_to_unicode(e))

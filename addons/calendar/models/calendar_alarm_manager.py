@@ -192,6 +192,7 @@ class AlarmManager(models.AbstractModel):
                 alarm.mail_template_id,
                 force_send=len(attendees) <= force_send_limit
             )
+        self.env['ir.cron']._notify_progress(done=len(alarms), remaining=0)
 
         for event in events:
             if event.recurrence_id:
