@@ -3332,10 +3332,22 @@ class Order extends PosModel {
                     rounding_applied -= this.pos.cash_rounding[0].rounding;
                 }
                 else if(rounding_method === "DOWN" && rounding_applied < 0 && remaining < 0){
+<<<<<<< HEAD
                     rounding_applied += this.pos.cash_rounding[0].rounding;
                 }
                 else if(rounding_method === "HALF-UP" && rounding_applied === this.pos.cash_rounding[0].rounding / -2){
                     rounding_applied += this.pos.cash_rounding[0].rounding;
+||||||| parent of 619977170779 (temp)
+                    rounding_applied += rounding;
+                }else if(rounding_method  == "HALF-UP"){
+                    if(remaining > 0 && utils.float_is_zero(rounding_applied - rounding / -2, this.pos.currency.decimals)){
+                        rounding_applied = rounding / 2;
+                    }else if(remaining < 0 && utils.float_is_zero(rounding_applied - rounding / 2, this.pos.currency.decimals)){
+                        rounding_applied = -rounding /2;
+                    }
+=======
+                    rounding_applied += rounding;
+>>>>>>> 619977170779 (temp)
                 }
                 return sign * rounding_applied;
             }
