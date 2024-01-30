@@ -72,6 +72,14 @@ class TestUBLBE(TestUBLCommon):
             'country_id': cls.env.ref('base.be').id,
         })
 
+        cls.tax_0 = cls.env['account.tax'].create({
+            'name': 'tax_0',
+            'amount_type': 'percent',
+            'amount': 0,
+            'type_tax_use': 'sale',
+            'country_id': cls.env.ref('base.be').id,
+        })
+
         cls.acc_bank = cls.env['res.partner.bank'].create({
             'acc_number': 'BE15001559627231',
             'partner_id': cls.company_data['company'].partner_id.id,
@@ -355,6 +363,21 @@ class TestUBLBE(TestUBLCommon):
         attachment = invoice._get_edi_attachment(self.edi_format)
         price_amount = etree.fromstring(attachment.raw).find('.//{*}InvoiceLine/{*}Price/{*}PriceAmount')
         self.assertEqual(price_amount.text, '102.15')
+
+    def test_export_tax_exempt(self):
+        invoice = self._generate_move(
+            self.partner_1,
+            self.partner_2,
+            move_type='out_invoice',
+            invoice_line_ids=[
+                {
+                    'product_id': self.product_a.id,
+                    'price_unit': 990.0,
+                    'tax_ids': [(6, 0, self.tax_0.ids)],
+                },
+            ],
+        )
+        self._assert_invoice_attachment(invoice, None, 'from_odoo/bis3_out_invoice_tax_exempt.xml')
 
     ####################################################
     # Test import
