@@ -114,8 +114,8 @@
                     <t t-set="classes" t-value="'col-lg-3 col-xl-4 d-print-none me-lg-auto'"/>
                     <t t-set="title">
                         <h2>
-                            <span t-if="invoice.amount_residual > 0" t-field="invoice.amount_residual"/>
-                            <span t-else="1" t-field="invoice.amount_total"/>
+                            <span t-if="invoice.amount_residual > 0" t-field="invoice.amount_residual" class="text-break"/>
+                            <span t-else="1" t-field="invoice.amount_total" class="text-break"/>
                         </h2>
                         <div class="small" t-if="invoice.payment_state not in ('paid', 'in_payment') and invoice.move_type == 'out_invoice'"><i class="fa fa-clock-o"/><span class="o_portal_sidebar_timeago ml4" t-att-datetime="invoice.invoice_date_due"/></div>
                     </t>
