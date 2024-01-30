@@ -844,3 +844,43 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
                         move_form.purchase_vendor_bill_id = self.env['purchase.bill.union'].browse(-purchase_order.id).exists()
                         payment_reference = move_form._values['payment_reference']
                         self.assertEqual(payment_reference, expected_value, "The payment reference should be %s" % expected_value)
+
+    def test_invoice_user_id_on_bill(self):
+        """
+        Test that the invoice_user_id field is set to current user when creating a vendor bill from a PO
+        or when using Auto-Complete feature of a vendor bill.
+        """
+        group_purchase_user = self.env.ref('purchase.group_purchase_user')
+        group_employee = self.env.ref('base.group_user')
+        group_partner_manager = self.env.ref('base.group_partner_manager')
+        purchase_user = self.env['res.users'].with_context(no_reset_password=True).create({
+            'name': 'Purchase user',
+            'login': 'purchaseUser',
+            'email': 'pu@odoo.com',
+            'groups_id': [Command.set([group_purchase_user.id, group_employee.id, group_partner_manager.id])],
+        })
+        po1 = self.env['purchase.order'].with_context(tracking_disable=True).create({
+            'partner_id': self.partner_a.id,
+            'user_id': purchase_user.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product_order.id,
+                    'product_qty': 1.0,
+                    'price_unit': self.product_order.list_price,
+                    'taxes_id': False,
+                }),
+            ]
+        })
+        po2 = po1.copy()
+        po1.button_confirm()
+        po2.button_confirm()
+        # creating bill from PO
+        po1.order_line.qty_received = 1
+        po1.action_create_invoice()
+        invoice1 = po1.invoice_ids
+        self.assertEqual(invoice1.invoice_user_id, self.env.user)
+        # creating bill with Auto_complete feature
+        move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
+        move_form.purchase_vendor_bill_id = self.env['purchase.bill.union'].browse(-po2.id)
+        invoice2 = move_form.save()
+        self.assertEqual(invoice2.invoice_user_id, self.env.user)
