@@ -16,6 +16,7 @@ This module integrates with the Kenyan G03 Tremol control unit device to the KRA
         'views/report_invoice.xml',
         'views/res_config_settings_view.xml',
         'views/res_partner_views.xml',
+        'wizard/account_move_send_views.xml',
     ],
     'assets': {
         'web.assets_backend': [
