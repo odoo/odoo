@@ -1397,7 +1397,7 @@ class PosOrderLine(models.Model):
         for line in self.filtered(lambda l: not l.is_total_cost_computed):
             product = line.product_id
             if line._is_product_storable_fifo_avco() and stock_moves:
-                product_cost = product._compute_average_price(0, line.qty, self._get_stock_moves_to_consider(stock_moves, product))
+                product_cost = product._compute_average_price(0, line.qty, line._get_stock_moves_to_consider(stock_moves, product))
             else:
                 product_cost = product.standard_price
             line.total_cost = line.qty * product.cost_currency_id._convert(
@@ -1410,6 +1410,7 @@ class PosOrderLine(models.Model):
             line.is_total_cost_computed = True
 
     def _get_stock_moves_to_consider(self, stock_moves, product):
+        self.ensure_one()
         return stock_moves.filtered(lambda ml: ml.product_id.id == product.id)
 
     @api.depends('price_subtotal', 'total_cost')
