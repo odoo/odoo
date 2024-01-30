@@ -9,7 +9,7 @@ export class ProductCard extends Component {
         name: String,
         productId: Number,
         price: String,
-        imageUrl: String,
+        imageUrl: [String, Boolean],
         productInfo: { Boolean, optional: true },
         onClick: { type: Function, optional: true },
         onProductInfoClick: { type: Function, optional: true },
