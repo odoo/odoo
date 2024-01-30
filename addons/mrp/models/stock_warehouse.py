@@ -13,13 +13,13 @@ class StockWarehouse(models.Model):
         'Manufacture to Resupply', default=True,
         help="When products are manufactured, they can be manufactured in this warehouse.")
     manufacture_pull_id = fields.Many2one(
-        'stock.rule', 'Manufacture Rule')
+        'stock.rule', 'Manufacture Rule', copy=False)
     manufacture_mto_pull_id = fields.Many2one(
-        'stock.rule', 'Manufacture MTO Rule')
+        'stock.rule', 'Manufacture MTO Rule', copy=False)
     pbm_mto_pull_id = fields.Many2one(
-        'stock.rule', 'Picking Before Manufacturing MTO Rule')
+        'stock.rule', 'Picking Before Manufacturing MTO Rule', copy=False)
     sam_rule_id = fields.Many2one(
-        'stock.rule', 'Stock After Manufacturing Rule')
+        'stock.rule', 'Stock After Manufacturing Rule', copy=False)
     manu_type_id = fields.Many2one(
         'stock.picking.type', 'Manufacturing Operation Type',
         domain="[('code', '=', 'mrp_operation'), ('company_id', '=', company_id)]", check_company=True)
@@ -37,7 +37,7 @@ class StockWarehouse(models.Model):
         the components from the Stock to Input location first, and then\
         transfer it to the Production location.")
 
-    pbm_route_id = fields.Many2one('stock.route', 'Picking Before Manufacturing Route', ondelete='restrict')
+    pbm_route_id = fields.Many2one('stock.route', 'Picking Before Manufacturing Route', ondelete='restrict', copy=False)
 
     pbm_loc_id = fields.Many2one('stock.location', 'Picking before Manufacturing Location', check_company=True)
     sam_loc_id = fields.Many2one('stock.location', 'Stock after Manufacturing Location', check_company=True)

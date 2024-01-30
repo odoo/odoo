@@ -10,19 +10,19 @@ class StockWarehouse(models.Model):
     subcontracting_to_resupply = fields.Boolean(
         'Resupply Subcontractors', default=True)
     subcontracting_mto_pull_id = fields.Many2one(
-        'stock.rule', 'Subcontracting MTO Rule')
+        'stock.rule', 'Subcontracting MTO Rule', copy=False)
     subcontracting_pull_id = fields.Many2one(
-        'stock.rule', 'Subcontracting MTS Rule'
+        'stock.rule', 'Subcontracting MTS Rule', copy=False
     )
 
-    subcontracting_route_id = fields.Many2one('stock.route', 'Resupply Subcontractor', ondelete='restrict')
+    subcontracting_route_id = fields.Many2one('stock.route', 'Resupply Subcontractor', ondelete='restrict', copy=False)
 
     subcontracting_type_id = fields.Many2one(
         'stock.picking.type', 'Subcontracting Operation Type',
-        domain=[('code', '=', 'mrp_operation')])
+        domain=[('code', '=', 'mrp_operation')], copy=False)
     subcontracting_resupply_type_id = fields.Many2one(
         'stock.picking.type', 'Subcontracting Resupply Operation Type',
-        domain=[('code', '=', 'outgoing')])
+        domain=[('code', '=', 'outgoing')], copy=False)
 
     @api.model_create_multi
     def create(self, vals_list):

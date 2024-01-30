@@ -19,7 +19,7 @@ class StockWarehouse(models.Model):
 
     buy_to_resupply = fields.Boolean('Buy to Resupply', default=True,
                                      help="When products are bought, they can be delivered to this warehouse")
-    buy_pull_id = fields.Many2one('stock.rule', 'Buy rule')
+    buy_pull_id = fields.Many2one('stock.rule', 'Buy rule', copy=False)
 
     def _generate_global_route_rules_values(self):
         rules = super()._generate_global_route_rules_values()
