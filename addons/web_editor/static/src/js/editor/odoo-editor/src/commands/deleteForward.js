@@ -54,15 +54,21 @@ export function deleteText(charSize, offset, direction, alreadyMoved) {
     restore();
 
     // If the removed element was not visible content, propagate the deletion.
+    const parentState = getState(parentElement, firstSplitOffset, direction);
     if (
         isZWS ||
         (isSpace &&
-            getState(parentElement, firstSplitOffset, direction).cType !== CTYPES.CONTENT)
+            (parentState.cType !== CTYPES.CONTENT || parentState.node === undefined))
     ) {
-        if(direction === DIRECTIONS.LEFT) {
+        if (direction === DIRECTIONS.LEFT) {
             parentElement.oDeleteBackward(firstSplitOffset, alreadyMoved);
         } else {
-            parentElement.oDeleteForward(firstSplitOffset, alreadyMoved);
+            if (isSpace && parentState.node == undefined) {
+                // multiple invisible space at the start of the node
+                this.oDeleteForward(offset, alreadyMoved);
+            } else {
+                parentElement.oDeleteForward(firstSplitOffset, alreadyMoved);
+            }
         }
         if (isZWS) {
             fillEmpty(parentElement);
