@@ -276,3 +276,34 @@ QUnit.test("Model is in dashboard mode", async (assert) => {
     await nextTick();
     assert.verifySteps(["activate sheet"]);
 });
+
+QUnit.test("default currency format", async (assert) => {
+    const loader = await createDashboardLoader({
+        mockRPC: function (route, args) {
+            if (
+                args.model === "spreadsheet.dashboard" &&
+                args.method === "get_readonly_dashboard"
+            ) {
+                return {
+                    data: {},
+                    revisions: [],
+                    default_currency: {
+                        code: "Odoo",
+                        symbol: "θ",
+                        position: "after",
+                        decimalPlaces: 2,
+                    },
+                };
+            }
+            if (args.method === "get_company_currency_for_spreadsheet") {
+                throw new Error("Should not make any RPC");
+            }
+        },
+    });
+    await loader.load();
+    const result = loader.getDashboard(3);
+    assert.strictEqual(result.status, Status.Loading);
+    await nextTick();
+    const { model } = loader.getDashboard(3);
+    assert.strictEqual(model.getters.getCompanyCurrencyFormat(), "#,##0.00[$θ]");
+});
