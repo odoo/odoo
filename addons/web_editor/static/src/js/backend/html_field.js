@@ -590,7 +590,9 @@ export class HtmlField extends Component {
     }
     _onWysiwygBlur() {
         // Avoid save on blur if the html field is in inline mode.
-        if (!this.props.isInlineStyle) {
+        if (this.props.isInlineStyle) {
+            this.updateValue();
+        } else {
             this.commitChanges();
         }
     }

@@ -125,6 +125,14 @@ describe('Editor', () => {
                 });
             });
         });
+        describe('sanitize should modify p within li', () => {
+            it('should convert p into span if p has classes', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<ul><li><p class="class-1">abc</p><p class="class-2">def</p></li></ul>',
+                    contentAfter: '<ul><li><span class="class-1">abc</span><span class="class-2">def</span></li></ul>',
+                });
+            });
+        });
     });
     describe('deleteForward', () => {
         describe('Selection collapsed', () => {
