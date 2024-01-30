@@ -133,11 +133,9 @@ export function useModelWithSampleData(ModelClass, params, options = {}) {
 
     const globalState = component.props.globalState || {};
     const localState = component.props.state || {};
-    let useSampleModel = Boolean(
-        "useSampleModel" in globalState
-            ? globalState.useSampleModel
-            : component.props.useSampleModel
-    );
+    let useSampleModel =
+        component.props.useSampleModel &&
+        (!("useSampleModel" in globalState) || globalState.useSampleModel);
     model.useSampleModel = useSampleModel;
     const orm = model.orm;
     let sampleORM = localState.sampleORM;
@@ -179,7 +177,9 @@ export function useModelWithSampleData(ModelClass, params, options = {}) {
 
     useSetupView({
         getGlobalState() {
-            return { useSampleModel };
+            if (component.props.useSampleModel) {
+                return { useSampleModel };
+            }
         },
         getLocalState: () => {
             return { sampleORM };
