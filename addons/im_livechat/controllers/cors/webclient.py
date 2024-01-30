@@ -7,6 +7,6 @@ from odoo.addons.im_livechat.tools.misc import force_guest_env
 
 class WebClient(WebclientController):
     @route("/im_livechat/cors/init_messaging", methods=["POST"], type="json", auth="public", cors="*")
-    def livechat_init_messaging(self, guest_token):
+    def livechat_init_messaging(self, guest_token, context=None):
         force_guest_env(guest_token)
-        return self.mail_init_messaging()
+        return self.mail_init_messaging(context=context)
