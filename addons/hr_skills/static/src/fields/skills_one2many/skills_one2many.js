@@ -85,12 +85,12 @@ export class SkillsX2ManyField extends X2ManyField {
         });
 
         this._openRecord = (params) => {
-            params.title = this.getWizardTitleName();
+            params.title = this.title;
             openRecord({...params});
         };
     }
 
-    getWizardTitleName() {
+    get title() {
         return _t("Select Skills")
     }
 

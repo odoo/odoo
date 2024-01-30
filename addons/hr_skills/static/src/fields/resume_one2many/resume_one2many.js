@@ -2,7 +2,7 @@
 
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-
+import { _t } from "@web/core/l10n/translation";
 import { formatDate } from "@web/core/l10n/dates";
 
 import { SkillsX2ManyField, skillsX2ManyField } from "../skills_one2many/skills_one2many";
@@ -32,10 +32,11 @@ ResumeListRenderer.recordRowTemplate = "hr_skills.ResumeListRenderer.RecordRow";
 
 
 export class ResumeX2ManyField extends SkillsX2ManyField {
-    getWizardTitleName() {
-        return _t("Create a resume line");
+    get title() {
+        return _t("Select Experience");
     }
 }
+
 ResumeX2ManyField.components = {
     ...SkillsX2ManyField.components,
     ListRenderer: ResumeListRenderer,
