@@ -9,7 +9,7 @@
                     <t t-foreach="range(barcode_and_qty[1])" t-as="qty">
                         <t t-translation="off">
 ^XA
-^FT100,80^A0N,40,30^FD<t t-esc="product.display_name"/>^FS
+^FT100,80^A0N,40,30^FD<t t-raw="product.display_name"/>^FS
 <t t-if="product.default_code and len(product.default_code) &gt; 15">
 ^FT100,115^A0N,30,24^FD<t t-esc="product.default_code[:15]"/>^FS
 ^FT100,150^A0N,30,24^FD<t t-esc="product.default_code[15:30]"/>^FS
@@ -43,7 +43,7 @@
                 <t t-translation="off">
 ^XA
 ^FO100,50
-^A0N,44,33^FD<t t-esc="lot.product_id.display_name"/>^FS
+^A0N,44,33^FD<t t-raw="lot.product_id.display_name"/>^FS
 ^FO100,100
 ^A0N,44,33^FDLN/SN: <t t-esc="lot.name"/>^FS
 ^FO100,150^BY3
