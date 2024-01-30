@@ -24,7 +24,7 @@ class ProductTemplate(models.Model):
 
         if combination_info['product_id']:
             product = self.env['product.product'].sudo().browse(combination_info['product_id'])
-            website = self.env['website'].get_current_website()
+            website = self.env.context.get('line_website_id') or self.env['website'].get_current_website()
             free_qty = product.with_context(warehouse=website._get_warehouse_available()).free_qty
             has_stock_notification = product._has_stock_notification(self.env.user.partner_id) \
                                      or request \

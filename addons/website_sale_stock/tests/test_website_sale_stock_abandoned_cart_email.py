@@ -51,3 +51,42 @@ class TestWebsiteSaleStockAbandonedCartEmail(TestWebsiteSaleCartAbandonedCommon)
         }).action_apply_inventory()
 
         self.assertTrue(self.send_mail_patched(sale_order.id))
+        
+        company = self.env['res.company'].create({'name': 'Company C'})
+        self.env.user.company_id = company
+        website_1 = self.env['website'].create({'name': 'Website Company C'})
+        website_1.send_abandoned_cart_email = True
+        website_1.company_id = company
+        warehouse_1 = self.env['stock.warehouse'].search([('company_id', '=', company.id)])
+        product = self.env['product.product'].create({
+            'name': 'Product',
+            'allow_out_of_stock_order': False,
+            'type': 'product',
+            'default_code': 'E-COM1',
+        })
+        self.env['stock.quant'].with_context(inventory_mode=True).create([{
+            'product_id': product.id,
+            'inventory_quantity': 25.0,
+            'location_id': warehouse_1.lot_stock_id.id,
+        }]).action_apply_inventory()
+
+        order_line = [[0, 0, {
+            'name': 'Product',
+            'product_id': product.id,
+            'product_uom_qty': 5,
+        }]]
+        customer_b = self.env['res.partner'].create({
+            'name': 'b',
+            'email': 'b@example.com',
+        })
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': customer_b.id,
+            'website_id': website_1.id,
+            'state': 'draft',
+            'date_order': (datetime.utcnow() - relativedelta(hours=website.cart_abandoned_delay)) - relativedelta(
+                minutes=1),
+            'order_line': order_line
+        })
+
+        self.assertTrue(self.send_mail_patched(sale_order.id))
