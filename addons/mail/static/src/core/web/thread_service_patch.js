@@ -65,27 +65,11 @@ patch(ThreadService.prototype, {
         if (!thread.mainAttachment && thread.attachmentsInWebClientView.length > 0) {
             this.setMainAttachmentFromIndex(thread, 0);
         }
-        if ("followers" in result) {
-            if (result.selfFollower) {
-                thread.selfFollower = { thread, ...result.selfFollower };
-            }
-            thread.followersCount = result.followersCount;
-            Record.MAKE_UPDATE(() => {
-                for (const followerData of result.followers) {
-                    const follower = this.store.Follower.insert({
-                        thread,
-                        ...followerData,
-                    });
-                    if (follower.notEq(thread.selfFollower)) {
-                        thread.followers.add(follower);
-                    }
-                }
-            });
-            thread.recipientsCount = result.recipientsCount;
-            for (const recipientData of result.recipients) {
-                thread.recipients.add({ thread, ...recipientData });
-            }
-        }
+        thread.selfFollower = result.selfFollower;
+        thread.followersCount = result.followersCount;
+        thread.followers = result.followers;
+        thread.recipientsCount = result.recipientsCount;
+        thread.recipients = result.recipients;
         if ("suggestedRecipients" in result) {
             this.insertSuggestedRecipients(thread, result.suggestedRecipients);
         }

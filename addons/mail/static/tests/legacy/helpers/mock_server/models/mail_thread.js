@@ -127,6 +127,7 @@ patch(MockServer.prototype, {
         const domain = [
             ["res_id", "=", ids[0]],
             ["res_model", "=", model],
+            ["partner_id", "!=", this.pyEnv.currentPartnerId],
         ];
         if (after) {
             domain.push(["id", ">", after]);
