@@ -16,7 +16,7 @@ class SaleOrder(models.Model):
         only. """
         result = super(SaleOrder, self).write(vals)
         if any(line.product_type == 'event' for line in self.order_line) and vals.get('partner_id'):
-            registrations_toupdate = self.env['event.registration'].search([('sale_order_id', 'in', self.ids)])
+            registrations_toupdate = self.env['event.registration'].sudo().search([('sale_order_id', 'in', self.ids)])
             registrations_toupdate.write({'partner_id': vals['partner_id']})
         return result
 
