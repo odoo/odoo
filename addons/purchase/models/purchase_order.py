@@ -877,6 +877,10 @@ class PurchaseOrder(models.Model):
                 'id': product.uom_id.id,
             },
         }
+        if product.purchase_line_warn_msg:
+            product_infos['warning'] = product.purchase_line_warn_msg
+        if product.purchase_line_warn == "block":
+            product_infos['readOnly'] = True
         if product.uom_id != product.uom_po_id:
             product_infos['purchase_uom'] = {
                 'display_name': product.uom_po_id.display_name,
