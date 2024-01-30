@@ -125,13 +125,19 @@ export class Thread extends Record {
     custom_channel_name;
     /** @type {string} */
     description;
-    followers = Record.many("Follower");
+    followers = Record.many("Follower", {
+        /** @this {import("models").Thread} */
+        onAdd(r) {
+            r.thread = this;
+        },
+        onDelete: (r) => r.delete(),
+    });
     selfFollower = Record.one("Follower", {
         /** @this {import("models").Thread} */
         onAdd(r) {
             r.thread = this;
         },
-        onDelete: (r) => (r.thread = undefined),
+        onDelete: (r) => r.delete(),
     });
     /** @type {integer|undefined} */
     followersCount;
