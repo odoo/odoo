@@ -411,4 +411,30 @@ QUnit.module("ActionManager", (hooks) => {
             "window_reload",
         ]);
     });
+
+    QUnit.test("test home client action", async function (assert) {
+        patchWithCleanup(browser.location, {
+            assign: (url) => assert.step(`assign ${url}`),
+        });
+
+        let assertRPCs = false;
+        const mockRPC = (route) => {
+            if (assertRPCs) {
+                assert.step(route);
+            }
+            if (route === "/web/webclient/version_info") {
+                return true;
+            }
+        };
+        const webClient = await createWebClient({ serverData, mockRPC });
+
+        assertRPCs = true;
+        await doAction(webClient, {
+            type: "ir.actions.client",
+            tag: "home",
+        });
+        await new Promise((r) => setTimeout(r, 1000));
+        await nextTick();
+        assert.verifySteps(["/web/webclient/version_info", "assign /"]);
+    });
 });
