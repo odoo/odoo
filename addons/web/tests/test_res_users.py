@@ -17,19 +17,23 @@ class TestResUsers(TransactionCase):
         ])
 
     def test_name_search(self):
-        """ Test name search with self assign feature """
+        """
+        Test name search with self assign feature
+        The self assign feature is present only when a limit is present,
+        which is the case with the public name_search by default
+        """
         ResUsers = self.env['res.users']
         jean = self.users[0]
-        user_ids = ResUsers.with_user(jean)._name_search('')
+        user_ids = [id_ for id_, __ in ResUsers.with_user(jean).name_search('')]
         self.assertEqual(jean.id, user_ids[0], "The current user, Jean, should be the first in the result.")
-        user_ids = ResUsers.with_user(jean)._name_search('Claude')
+        user_ids = [id_ for id_, __ in ResUsers.with_user(jean).name_search('Claude')]
         self.assertNotIn(jean.id, user_ids, "The current user, Jean, should not be in the result because his name does not fit the condition.")
         pascal = self.users[-1]
-        user_ids = ResUsers.with_user(pascal)._name_search('')
+        user_ids = [id_ for id_, __ in ResUsers.with_user(pascal).name_search('')]
         self.assertEqual(pascal.id, user_ids[0], "The current user, Pascal, should be the first in the result.")
-        user_ids = ResUsers.with_user(pascal)._name_search('', limit=3)
+        user_ids = [id_ for id_, __ in ResUsers.with_user(pascal).name_search('', limit=3)]
         self.assertEqual(pascal.id, user_ids[0], "The current user, Pascal, should be the first in the result.")
         self.assertEqual(len(user_ids), 3, "The number of results found should still respect the limit set.")
         jean_paul = self.users[1]
-        user_ids = ResUsers.with_user(jean_paul)._name_search('Jean')
+        user_ids = [id_ for id_, __ in ResUsers.with_user(jean_paul).name_search('Jean')]
         self.assertEqual(jean_paul.id, user_ids[0], "The current user, Jean-Paul, should be the first in the result")
