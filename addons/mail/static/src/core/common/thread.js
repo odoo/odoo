@@ -425,7 +425,7 @@ export class Thread extends Component {
         if (!msg.author?.eq(prevMsg.author)) {
             return false;
         }
-        if (!msg.originThread?.eq(prevMsg.originThread)) {
+        if (!msg.thread?.eq(prevMsg.thread)) {
             return false;
         }
         if (msg.parentMessage) {

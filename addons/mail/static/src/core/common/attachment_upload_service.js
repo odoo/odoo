@@ -36,7 +36,7 @@ export class AttachmentUploadService {
                 const threadId = parseInt(upload.data.get("thread_id"));
                 const threadModel = upload.data.get("thread_model");
                 const tmpUrl = upload.data.get("tmp_url");
-                const originThread = this.store.Thread.insert({
+                const thread = this.store.Thread.insert({
                     model: threadModel,
                     id: threadId,
                 });
@@ -45,7 +45,7 @@ export class AttachmentUploadService {
                     this._makeAttachmentData(
                         upload,
                         tmpId,
-                        hooker.composer ? undefined : originThread,
+                        hooker.composer ? undefined : thread,
                         tmpUrl
                     )
                 );
@@ -82,11 +82,11 @@ export class AttachmentUploadService {
                 }
                 const threadId = parseInt(upload.data.get("thread_id"));
                 const threadModel = upload.data.get("thread_model");
-                const originThread = this.store.Thread.get({ model: threadModel, id: threadId });
+                const thread = this.store.Thread.get({ model: threadModel, id: threadId });
                 const attachment = this.store.Attachment.insert({
                     ...response,
                     extension: upload.title.split(".").pop(),
-                    originThread: hooker.composer ? undefined : originThread,
+                    thread: hooker.composer ? undefined : thread,
                 });
                 if (hooker.composer) {
                     const index = hooker.composer.attachments.findIndex(({ id }) => id === tmpId);
@@ -166,13 +166,13 @@ export class AttachmentUploadService {
         return formData;
     }
 
-    _makeAttachmentData(upload, tmpId, originThread, tmpUrl) {
+    _makeAttachmentData(upload, tmpId, thread, tmpUrl) {
         const attachmentData = {
             filename: upload.title,
             id: tmpId,
             mimetype: upload.type,
             name: upload.title,
-            originThread: originThread,
+            thread,
             extension: upload.title.split(".").pop(),
             uploading: true,
             tmpUrl,

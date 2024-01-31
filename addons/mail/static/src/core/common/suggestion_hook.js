@@ -84,7 +84,7 @@ export function useSuggestion() {
             self.clearSearch();
         },
         get thread() {
-            return comp.props.composer.thread || comp.props.composer.message.originThread;
+            return comp.props.composer.thread || comp.props.composer.message.thread;
         },
         insert(option) {
             const cursorPosition = comp.props.composer.selection.start;

@@ -58,7 +58,7 @@ export class Message extends Record {
     reactions = Record.many("MessageReactions", { inverse: "message" });
     notifications = Record.many("Notification", { inverse: "message" });
     recipients = Record.many("Persona");
-    originThread = Record.one("Thread");
+    thread = Record.one("Thread");
     /** @type {string} */
     scheduledDatetime;
     starredPersonas = Record.many("Persona");
@@ -128,7 +128,7 @@ export class Message extends Record {
     }
 
     get isHighlightedFromMention() {
-        return this.isSelfMentioned && this.originThread?.model === "discuss.channel";
+        return this.isSelfMentioned && this.thread?.model === "discuss.channel";
     }
 
     get isSelfAuthored() {
@@ -161,30 +161,28 @@ export class Message extends Record {
     }
 
     get isNotification() {
-        return (
-            this.message_type === "notification" && this.originThread?.model === "discuss.channel"
-        );
+        return this.message_type === "notification" && this.thread?.model === "discuss.channel";
     }
 
-    get isSubjectSimilarToOriginThreadName() {
-        if (!this.subject || !this.originThread || !this.originThread.name) {
+    get isSubjectSimilarToThreadName() {
+        if (!this.subject || !this.thread || !this.thread.name) {
             return false;
         }
         const regexPrefix = /^((re|fw|fwd)\s*:\s*)*/i;
-        const cleanedThreadName = this.originThread.name.replace(regexPrefix, "");
+        const cleanedThreadName = this.thread.name.replace(regexPrefix, "");
         const cleanedSubject = this.subject.replace(regexPrefix, "");
         return cleanedSubject === cleanedThreadName;
     }
 
     get isSubjectDefault() {
-        const threadName = this.originThread?.name?.trim().toLowerCase();
+        const threadName = this.thread?.name?.trim().toLowerCase();
         const defaultSubject = this.default_subject ? this.default_subject.toLowerCase() : "";
         const candidates = new Set([defaultSubject, threadName]);
         return candidates.has(this.subject?.toLowerCase());
     }
 
     get resUrl() {
-        return `${url("/web")}#model=${this.originThread?.model}&id=${this.originThread?.id}`;
+        return `${url("/web")}#model=${this.thread?.model}&id=${this.thread?.id}`;
     }
 
     get editDate() {

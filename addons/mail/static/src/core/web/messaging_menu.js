@@ -154,12 +154,10 @@ export class MessagingMenu extends Component {
 
     /** @param {import("models").Failure} failure */
     onClickFailure(failure) {
-        const originThreadIds = new Set(
-            failure.notifications.map(({ message }) => message.originThread.id)
-        );
-        if (originThreadIds.size === 1) {
+        const threadIds = new Set(failure.notifications.map(({ message }) => message.thread.id));
+        if (threadIds.size === 1) {
             const message = failure.notifications[0].message;
-            this.openThread(message.originThread);
+            this.openThread(message.thread);
         } else {
             this.openFailureView(failure);
             this.close();

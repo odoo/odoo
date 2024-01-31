@@ -43,7 +43,7 @@ export class MailCoreWeb {
                     inbox.counter++;
                 }
                 inbox.messages.add(message);
-                const thread = message.originThread;
+                const thread = message.thread;
                 if (message.notIn(thread.needactionMessages)) {
                     thread.message_needaction_counter++;
                 }
@@ -63,10 +63,10 @@ export class MailCoreWeb {
                         continue;
                     }
                     // update thread counter (before removing message from Inbox, to ensure isNeedaction check is correct)
-                    const originThread = message.originThread;
-                    if (originThread && message.isNeedaction) {
-                        originThread.message_needaction_counter--;
-                        originThread.needactionMessages.delete({ id: messageId });
+                    const thread = message.thread;
+                    if (thread && message.isNeedaction) {
+                        thread.message_needaction_counter--;
+                        thread.needactionMessages.delete({ id: messageId });
                     }
                     // move messages from Inbox to history
                     const partnerIndex = message.needaction_partner_ids.find(

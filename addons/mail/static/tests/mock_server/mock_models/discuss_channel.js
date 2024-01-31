@@ -532,7 +532,7 @@ export class DiscussChannel extends models.ServerModel {
         `;
         this.env["bus.bus"]._sendone(this.env.partner, "discuss.channel/transient_message", {
             body: notifBody,
-            originThread: { model: "discuss.channel", id: channel.id },
+            thread: { model: "discuss.channel", id: channel.id },
         });
         return true;
     }
@@ -575,7 +575,7 @@ export class DiscussChannel extends models.ServerModel {
             }
             this.env["bus.bus"]._sendone(this.env.partner, "discuss.channel/transient_message", {
                 body: `<span class="o_mail_notification">${message}</span>`,
-                originThread: { model: "discuss.channel", id: channel.id },
+                thread: { model: "discuss.channel", id: channel.id },
             });
         }
     }
