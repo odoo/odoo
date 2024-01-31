@@ -96,4 +96,21 @@ export const ColumnLayoutMixin = {
         }
         return true;
     },
+    /**
+     * Fill in the gap left by a removed item having a mobile order class.
+     *
+     * @param {HTMLElement} parentEl the removed item parent
+     * @param {Number} itemOrder the removed item mobile order
+     */
+    _fillRemovedItemGap(parentEl, itemOrder) {
+        [...parentEl.children].forEach(el => {
+            const elMobileOrder = this._getItemMobileOrder(el);
+            if (elMobileOrder) {
+                const elOrder = parseInt(elMobileOrder[1]);
+                if (elOrder > itemOrder) {
+                    el.classList.replace(`order-${elOrder}`, `order-${elOrder - 1}`);
+                }
+            }
+        });
+    },
 };

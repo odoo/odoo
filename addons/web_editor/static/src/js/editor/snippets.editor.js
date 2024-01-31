@@ -27,6 +27,7 @@ import { touching, closest, addLoadingEffect as addButtonLoadingEffect } from "@
 import { _t } from "@web/core/l10n/translation";
 import { renderToElement } from "@web/core/utils/render";
 import { RPCError } from "@web/core/network/rpc";
+import { ColumnLayoutMixin } from "@web_editor/js/common/column_layout_mixin";
 
 let cacheSnippetTemplate = {};
 
@@ -1091,6 +1092,13 @@ var SnippetEditor = Widget.extend({
             this.trigger_up('deactivate_snippet', {$snippet: self.$target});
         }
 
+        // If the target has a mobile order class, store its parent and order.
+        const targetMobileOrder = ColumnLayoutMixin._getItemMobileOrder(this.$target[0])
+        if (targetMobileOrder) {
+            this.dragState.startingParent = this.$target[0].parentNode;
+            this.dragState.mobileOrder = parseInt(targetMobileOrder[1]);
+        }
+
         const toInsertInline = window.getComputedStyle(this.$target[0]).display.includes('inline');
 
         this.dropped = false;
@@ -1456,6 +1464,13 @@ var SnippetEditor = Widget.extend({
 
             for (var i in this.styles) {
                 this.styles[i].onMove();
+            }
+
+            // If the target has a mobile order class, and if it was dropped in
+            // another snippet, fill the gap left in the starting snippet.
+            if (this.dragState.mobileOrder !== undefined
+                && this.$target[0].parentNode !== this.dragState.startingParent) {
+                ColumnLayoutMixin._fillRemovedItemGap(this.dragState.startingParent, this.dragState.mobileOrder);
             }
 
             this.$target.trigger('content_changed');
