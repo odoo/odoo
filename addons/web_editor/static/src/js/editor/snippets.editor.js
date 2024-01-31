@@ -1093,10 +1093,10 @@ var SnippetEditor = Widget.extend({
         }
 
         // If the target has a mobile order class, store its parent and order.
-        const targetMobileOrder = ColumnLayoutMixin._getItemMobileOrder(this.$target[0])
+        const targetMobileOrder = this.$target[0].style.order;
         if (targetMobileOrder) {
             this.dragState.startingParent = this.$target[0].parentNode;
-            this.dragState.mobileOrder = parseInt(targetMobileOrder[1]);
+            this.dragState.mobileOrder = parseInt(targetMobileOrder);
         }
 
         const toInsertInline = window.getComputedStyle(this.$target[0]).display.includes('inline');
