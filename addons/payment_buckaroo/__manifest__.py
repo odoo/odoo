@@ -6,7 +6,7 @@
     'category': 'Accounting/Payment Acquirers',
     'sequence': 355,
     'summary': 'Payment Acquirer: Buckaroo Implementation',
-    'description': """Buckaroo Payment Acquirer""",
+    'description': " ",  # Non-empty string to avoid loading the README file.
     'depends': ['payment'],
     'data': [
         'views/payment_views.xml',

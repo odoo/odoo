@@ -6,7 +6,7 @@
     'category': 'Accounting/Payment Acquirers',
     'sequence': 380,
     'summary': 'Payment Acquirer: Stripe Implementation',
-    'description': """Stripe Payment Acquirer""",
+    'description': " ",  # Non-empty string to avoid loading the README file.
     'depends': ['payment'],
     'data': [
         'views/payment_views.xml',
