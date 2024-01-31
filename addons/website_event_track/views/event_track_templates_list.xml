@@ -253,7 +253,7 @@
                         <span class="h4 m-0"
                             t-out="tracks_header_name"/>
                     </div>
-                    <a t-attf-class="my-auto align-self-start text-black {{ 'collapsed' if tracks_info['default_collapsed'] else '' }}"
+                    <a t-attf-class="my-auto align-self-start stretched-link text-black {{ 'collapsed' if tracks_info['default_collapsed'] else '' }}"
                         t-attf-href="#collapse_session_list_{{ tracks_info_index }}"
                         t-attf-aria-controls="collapse_session_list_{{ tracks_info_index }}"
                         t-att-aria-expanded="'false' if tracks_info['default_collapsed'] else 'true'"
