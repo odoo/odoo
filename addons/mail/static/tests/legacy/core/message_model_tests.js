@@ -35,7 +35,7 @@ QUnit.test("Message model properties", async (assert) => {
         needaction_partner_ids: [pyEnv.currentPartnerId],
         starredPersonas: { id: pyEnv.currentPartnerId, type: "partner" },
         model: "res.partner",
-        originThread: { id: pyEnv.currentPartnerId, model: "res.partner" },
+        thread: { id: pyEnv.currentPartnerId, model: "res.partner" },
         res_id: pyEnv.currentPartnerId,
     });
     assert.ok(message);
@@ -47,9 +47,9 @@ QUnit.test("Message model properties", async (assert) => {
     assert.ok(message.attachments);
     assert.strictEqual(message.attachments[0].name, "test.txt");
 
-    assert.ok(message.originThread);
-    assert.strictEqual(message.originThread.id, pyEnv.currentPartnerId);
-    assert.strictEqual(message.originThread.name, "general");
+    assert.ok(message.thread);
+    assert.strictEqual(message.thread.id, pyEnv.currentPartnerId);
+    assert.strictEqual(message.thread.name, "general");
 
     assert.ok(message.author);
     assert.strictEqual(message.author.id, 5);

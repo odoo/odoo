@@ -78,7 +78,7 @@ class TestImLivechatMessage(HttpCase):
             'model': 'discuss.channel',
             'needaction_partner_ids': [],
             'notifications': [],
-            'originThread': {
+            'thread': {
                 'id': channel_livechat_1.id,
                 'model': 'discuss.channel',
                 'module_icon': '/mail/static/description/icon.png',

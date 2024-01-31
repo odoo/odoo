@@ -237,7 +237,7 @@ export class ThreadService {
             if (thread.eq(this.store.discuss.inbox)) {
                 Record.MAKE_UPDATE(() => {
                     for (const message of fetched) {
-                        const thread = message.originThread;
+                        const thread = message.thread;
                         if (thread && message.notIn(thread.needactionMessages)) {
                             thread.needactionMessages.unshift(message);
                         }
@@ -654,7 +654,7 @@ export class ThreadService {
                 {
                     ...tmpData,
                     body: prettyContent,
-                    originThread: thread,
+                    thread,
                     temporary_id: tmpId,
                 },
                 { html: true }

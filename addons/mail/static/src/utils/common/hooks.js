@@ -179,7 +179,7 @@ export function useMessageHighlight(duration = 2000) {
          * @param {import("models").Thread} thread
          */
         async highlightMessage(message, thread) {
-            if (thread.notEq(message.originThread)) {
+            if (thread.notEq(message.thread)) {
                 return;
             }
             await threadService.loadAround(thread, message.id);

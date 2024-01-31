@@ -63,7 +63,7 @@ export class Thread extends Record {
     /** @type {string} */
     model;
     allMessages = Record.many("Message", {
-        inverse: "originThread",
+        inverse: "thread",
     });
     /** @type {boolean} */
     areAttachmentsLoaded = false;

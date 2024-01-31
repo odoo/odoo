@@ -11,7 +11,7 @@ patch(Thread.prototype, {
         this.chatbotTypingMessage = Record.one("Message", {
             compute() {
                 if (this.chatbot) {
-                    return { id: -0.1 - this.id, originThread: this, author: this.operator };
+                    return { id: -0.1 - this.id, thread: this, author: this.operator };
                 }
             },
         });
@@ -22,7 +22,7 @@ patch(Thread.prototype, {
                     return {
                         id: -0.2 - this.id,
                         body: livechatService.options.default_message,
-                        originThread: this,
+                        thread: this,
                         author: this.operator,
                     };
                 }

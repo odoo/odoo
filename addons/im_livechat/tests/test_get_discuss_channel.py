@@ -234,7 +234,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                             "<br>Type <b>/command</b> to execute a command."
                             "<br>Type <b>:shortcut</b> to insert a canned response in your message."
                             "</span>",
-                            "originThread": {
+                            "thread": {
                                 "model": "discuss.channel",
                                 "id": channel.id,
                             },

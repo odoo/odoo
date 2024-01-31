@@ -23,7 +23,7 @@ export class Chatbot extends Record {
             if (this.isTyping && this.thread) {
                 return {
                     id: -0.1 - this.thread.id,
-                    originThread: this.thread,
+                    thread: this.thread,
                     author: this.script.partner,
                 };
             }
@@ -45,7 +45,7 @@ export class Chatbot extends Record {
      * @param {import("models").Message} message
      */
     async processAnswer(message) {
-        if (this.thread.notEq(message.originThread) || !this.currentStep?.expectAnswer) {
+        if (this.thread.notEq(message.thread) || !this.currentStep?.expectAnswer) {
             return;
         }
         if (this.currentStep.type === "free_input_multi") {
@@ -67,7 +67,7 @@ export class Chatbot extends Record {
                 id: this._store.env.services["mail.message"].getNextTemporaryId(),
                 author: this.script.partner,
                 body: this.currentStep.scriptStep.message,
-                originThread: this.thread,
+                thread: this.thread,
             },
             { html: true }
         );

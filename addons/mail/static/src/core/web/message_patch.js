@@ -52,7 +52,7 @@ patch(Message.prototype, {
         }
     },
     openRecord() {
-        this.threadService.open(this.message.originThread);
+        this.threadService.open(this.message.thread);
     },
 
     /**

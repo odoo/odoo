@@ -5,7 +5,7 @@ import { patch } from "@web/core/utils/patch";
 
 patch(Composer.prototype, {
     get allowUpload() {
-        const thread = this.thread ?? this.message.originThread;
+        const thread = this.thread ?? this.message.thread;
         return (
             super.allowUpload &&
             (thread.model !== "discuss.channel" ||
