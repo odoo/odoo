@@ -32,7 +32,7 @@ class ChannelUsersRelation(models.Model):
         ('ongoing', 'Ongoing'),
         ('completed', 'Finished')],
         string='Attendee Status', readonly=True, required=True, default='joined')
-    completion = fields.Integer('% Completed Contents', default=0, group_operator="avg")
+    completion = fields.Integer('% Completed Contents', default=0, aggregator="avg")
     completed_slides_count = fields.Integer('# Completed Contents', default=0)
     partner_id = fields.Many2one('res.partner', index=True, required=True, ondelete='cascade')
     partner_email = fields.Char(related='partner_id.email', readonly=True)

@@ -28,7 +28,7 @@ QUnit.module("Project", {}, () => {
                                 store: true,
                                 sortable: true
                             },
-                            nb_tasks: { string: "Number of Tasks", type: "integer", store: true, sortable: true, group_operator: "sum" }
+                            nb_tasks: { string: "Number of Tasks", type: "integer", store: true, sortable: true, aggregator: "sum" }
                         },
                         records: [
                             { id: 1, project_id: 1, stage_id: 1, is_closed: 'open', date: "2020-01-01", nb_tasks: 10 },

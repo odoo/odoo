@@ -35,7 +35,7 @@ class ContractHistory(models.Model):
         ('cancel', 'Cancelled')
     ], string='Status', readonly=True)
     resource_calendar_id = fields.Many2one('resource.calendar', string="Working Schedule", readonly=True)
-    wage = fields.Monetary('Wage', help="Employee's monthly gross wage.", readonly=True, group_operator="avg")
+    wage = fields.Monetary('Wage', help="Employee's monthly gross wage.", readonly=True, aggregator="avg")
     company_id = fields.Many2one('res.company', string='Company', readonly=True)
     company_country_id = fields.Many2one('res.country', string="Company country", related='company_id.country_id', readonly=True)
     country_code = fields.Char(related='company_country_id.code', depends=['company_country_id'], readonly=True)

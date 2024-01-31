@@ -436,16 +436,16 @@ export class GraphModel extends Model {
         const sequential_spec = sequential_field && groupBy[0].spec;
         const measures = ["__count"];
         if (measure !== "__count") {
-            let { group_operator, type } = fields[measure];
+            let { aggregator, type } = fields[measure];
             if (type === "many2one") {
-                group_operator = "count_distinct";
+                aggregator = "count_distinct";
             }
-            if (group_operator === undefined) {
+            if (aggregator === undefined) {
                 throw new Error(
                     `No aggregate function has been provided for the measure '${measure}'`
                 );
             }
-            measures.push(`${measure}:${group_operator}`);
+            measures.push(`${measure}:${aggregator}`);
         }
 
         const numbering = {}; // used to avoid ambiguity with many2one with values with same labels:

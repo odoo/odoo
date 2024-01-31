@@ -17,7 +17,7 @@ class HrEmployeeSkillReport(models.BaseModel):
     skill_id = fields.Many2one('hr.skill', readonly=True)
     skill_type_id = fields.Many2one('hr.skill.type', readonly=True)
     skill_level = fields.Char(readonly=True)
-    level_progress = fields.Float(readonly=True, group_operator='avg')
+    level_progress = fields.Float(readonly=True, aggregator='avg')
 
     def init(self):
         tools.drop_view_if_exists(self.env.cr, self._table)

@@ -40,7 +40,7 @@ class Rating(models.Model):
     rated_partner_id = fields.Many2one('res.partner', string="Rated Operator")
     rated_partner_name = fields.Char(related="rated_partner_id.name")
     partner_id = fields.Many2one('res.partner', string='Customer')
-    rating = fields.Float(string="Rating Value", group_operator="avg", default=0)
+    rating = fields.Float(string="Rating Value", aggregator="avg", default=0)
     rating_image = fields.Binary('Image', compute='_compute_rating_image')
     rating_image_url = fields.Char('Image URL', compute='_compute_rating_image')
     rating_text = fields.Selection(rating_data.RATING_TEXT, string='Rating', store=True, compute='_compute_rating_text', readonly=True)
