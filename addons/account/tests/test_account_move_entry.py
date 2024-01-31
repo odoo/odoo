@@ -1162,3 +1162,12 @@ class TestAccountMove(AccountTestInvoicingCommon):
 
         with self.assertRaisesRegex(UserError, 'not balanced'), self.env.cr.savepoint():
             stealer_move.write({'line_ids': [Command.link(honest_move.line_ids[0].id)]})
+
+    def test_validate_move_wizard_with_auto_post_entry(self):
+        """ Test that the wizard to validate a move with auto_post is working fine. """
+        self.test_move.date = fields.Date.today() + relativedelta(months=3)
+        self.test_move.auto_post = 'at_date'
+        wizard = self.env['validate.account.move'].with_context(active_model='account.move', active_ids=self.test_move.ids).create({})
+        wizard.force_post = True
+        wizard.validate_move()
+        self.assertTrue(self.test_move.state == 'posted')
