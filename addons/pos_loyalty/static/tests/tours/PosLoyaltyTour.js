@@ -300,3 +300,27 @@ registry.category("web_tour.tours").add("PosLoyaltyTour9", {
             ProductScreen.totalAmountIs("200.00"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("PosLoyaltyTour10", {
+    test: true,
+    url: "/pos/web",
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("AAA Partner"),
+            PosLoyalty.customerIs("AAA Partner"),
+            ProductScreen.clickDisplayedProduct("Product Test"),
+            ProductScreen.totalAmountIs("1.00"),
+            ProductScreen.selectedOrderlineHas("Product Test", "1.00"),
+            PosLoyalty.isRewardButtonHighlighted(true),
+            PosLoyalty.claimReward("Free Product B"),
+            {
+                content: `click on reward item`,
+                trigger: `.selection-item:contains("Free Product B")`,
+            },
+            PosLoyalty.hasRewardLine("Free Product B", "-1.00"),
+            ProductScreen.totalAmountIs("1.00"),
+            PosLoyalty.isRewardButtonHighlighted(false),
+        ].flat(),
+});
