@@ -7,6 +7,7 @@ import { useService } from "@web/core/utils/hooks";
 import { useAsyncLockedMethod } from "@point_of_sale/app/utils/hooks";
 import { session } from "@web/session";
 
+import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
 import { PartnerLine } from "@point_of_sale/app/screens/partner_list/partner_line/partner_line";
 import { PartnerDetailsEdit } from "@point_of_sale/app/screens/partner_list/partner_editor/partner_editor";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
@@ -166,7 +167,15 @@ export class PartnerListScreen extends Component {
         this.activateEditMode();
     }
     async saveChanges(processedChanges) {
-        const partnerId = await this.orm.call("res.partner", "create_from_ui", [processedChanges]);
+        let partnerId;
+        try {
+            partnerId = await this.orm.call("res.partner", "create_from_ui", [processedChanges]);
+        } catch (error) {
+            return this.env.services.popup.add(ErrorPopup, {
+                title: error.message,
+                body: error.data.message,
+            });
+        }
         await this.pos.load_new_partners();
         this.state.selectedPartner = this.pos.db.get_partner_by_id(partnerId);
         this.confirm();
