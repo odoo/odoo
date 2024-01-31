@@ -98,7 +98,7 @@ export const computeReportMeasures = (fields, fieldAttrs, activeMeasures) => {
         }
         if (
             ["integer", "float", "monetary"].includes(field.type) &&
-            field.group_operator !== undefined
+            field.aggregator !== undefined
         ) {
             measures[fieldName] = field;
         }

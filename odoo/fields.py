@@ -189,7 +189,7 @@ class Field(MetaField('DummyField', (object,), {})):
     :param bool store: whether the field is stored in database
         (default:``True``, ``False`` for computed fields)
 
-    :param str group_operator: aggregate function used by :meth:`~odoo.models.Model.read_group`
+    :param str aggregator: aggregate function used by :meth:`~odoo.models.Model.read_group`
         when grouping on this field.
 
         Supported aggregate functions are:
@@ -319,7 +319,7 @@ class Field(MetaField('DummyField', (object,), {})):
     change_default = False              # whether the field may trigger a "user-onchange"
 
     related_field = None                # corresponding related field
-    group_operator = None               # operator for aggregating values
+    aggregator = None                   # operator for aggregating values
     group_expand = None                 # name of method to expand groups in read_group()
     prefetch = True                     # the prefetch group (False means no group)
 
@@ -475,6 +475,10 @@ class Field(MetaField('DummyField', (object,), {})):
             attrs['_depends'] = tuple(attrs.pop('depends'))
         if 'depends_context' in attrs:
             attrs['_depends_context'] = tuple(attrs.pop('depends_context'))
+
+        if 'group_operator' in attrs:
+            warnings.warn("Since Odoo 18, 'group_operator' is deprecated, use 'aggregator' instead", DeprecationWarning, 2)
+            attrs['aggregator'] = attrs.pop('group_operator')
 
         return attrs
 
@@ -726,7 +730,7 @@ class Field(MetaField('DummyField', (object,), {})):
     _related_string = property(attrgetter('string'))
     _related_help = property(attrgetter('help'))
     _related_groups = property(attrgetter('groups'))
-    _related_group_operator = property(attrgetter('group_operator'))
+    _related_aggregator = property(attrgetter('aggregator'))
 
     @property
     def base_field(self):
@@ -862,7 +866,7 @@ class Field(MetaField('DummyField', (object,), {})):
     _description_required = property(attrgetter('required'))
     _description_groups = property(attrgetter('groups'))
     _description_change_default = property(attrgetter('change_default'))
-    _description_group_operator = property(attrgetter('group_operator'))
+    _description_aggregator = property(attrgetter('aggregator'))
     _description_default_export_compatible = property(attrgetter('default_export_compatible'))
     _description_exportable = property(attrgetter('exportable'))
 
@@ -1408,13 +1412,13 @@ class Integer(Field):
     type = 'integer'
     column_type = ('int4', 'int4')
 
-    group_operator = 'sum'
+    aggregator = 'sum'
 
     def _get_attrs(self, model_class, name):
         res = super()._get_attrs(model_class, name)
-        # The default group_operator is None for sequence fields
-        if 'group_operator' not in res and name == 'sequence':
-            res['group_operator'] = None
+        # The default aggregator is None for sequence fields
+        if 'aggregator' not in res and name == 'sequence':
+            res['aggregator'] = None
         return res
 
     def convert_to_column(self, value, record, values=None, validate=True):
@@ -1489,7 +1493,7 @@ class Float(Field):
 
     type = 'float'
     _digits = None                      # digits argument passed to class initializer
-    group_operator = 'sum'
+    aggregator = 'sum'
 
     def __init__(self, string=Default, digits=Default, **kwargs):
         super(Float, self).__init__(string=string, _digits=digits, **kwargs)
@@ -1558,7 +1562,7 @@ class Monetary(Field):
     column_type = ('numeric', 'numeric')
 
     currency_field = None
-    group_operator = 'sum'
+    aggregator = 'sum'
 
     def __init__(self, string=Default, currency_field=Default, **kwargs):
         super(Monetary, self).__init__(string=string, currency_field=currency_field, **kwargs)
@@ -3176,7 +3180,7 @@ class Many2oneReference(Integer):
     type = 'many2one_reference'
 
     model_field = None
-    group_operator = None
+    aggregator = None
 
     _related_model_field = property(attrgetter('model_field'))
 

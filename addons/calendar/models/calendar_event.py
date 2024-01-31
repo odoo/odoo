@@ -738,7 +738,7 @@ class Meeting(models.Model):
         groupby = [groupby] if isinstance(groupby, str) else groupby
         fields_aggregates = [
             field_name for field_name in (fields or list(self._fields))
-            if ':' in field_name or (field_name in self and self._fields[field_name].group_operator)
+            if ':' in field_name or (field_name in self and self._fields[field_name].aggregator)
         ]
         grouped_fields = {group_field.split(':')[0] for group_field in groupby + fields_aggregates}
         private_fields = grouped_fields - self._get_public_fields()

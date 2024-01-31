@@ -50,7 +50,7 @@ class SaleReport(models.Model):
     state_id = fields.Many2one(comodel_name='res.country.state', string="Customer State", readonly=True)
 
     # sale.order.line fields
-    order_reference = fields.Reference(string='Related Order', selection=[('sale.order', 'Sales Order')], group_operator="count_distinct")
+    order_reference = fields.Reference(string='Related Order', selection=[('sale.order', 'Sales Order')], aggregator="count_distinct")
 
     categ_id = fields.Many2one(
         comodel_name='product.category', string="Product Category", readonly=True)
@@ -72,7 +72,7 @@ class SaleReport(models.Model):
     weight = fields.Float(string="Gross Weight", readonly=True)
     volume = fields.Float(string="Volume", readonly=True)
 
-    discount = fields.Float(string="Discount %", readonly=True, group_operator='avg')
+    discount = fields.Float(string="Discount %", readonly=True, aggregator='avg')
     discount_amount = fields.Monetary(string="Discount Amount", readonly=True)
 
     # aggregates or computed fields

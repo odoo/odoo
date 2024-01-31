@@ -61,7 +61,7 @@ QUnit.module("Views", (hooks) => {
                             string: "Foo",
                             type: "integer",
                             searchable: true,
-                            group_operator: "sum",
+                            aggregator: "sum",
                         },
                         bar: { string: "bar", type: "boolean", store: true, sortable: true },
                         date: { string: "Date", type: "date", store: true, sortable: true },
@@ -95,7 +95,7 @@ QUnit.module("Views", (hooks) => {
                             string: "Computed and not stored",
                             type: "integer",
                             compute: true,
-                            group_operator: "sum",
+                            aggregator: "sum",
                         },
                         company_type: {
                             string: "Company Type",
@@ -111,7 +111,7 @@ QUnit.module("Views", (hooks) => {
                         price_nonaggregatable: {
                             string: "Price non-aggregatable",
                             type: "monetary",
-                            group_operator: undefined,
+                            aggregator: undefined,
                             store: true,
                         },
                         ref: {
@@ -121,7 +121,7 @@ QUnit.module("Views", (hooks) => {
                                 ["product", "Product"],
                                 ["customer", "Customer"],
                             ],
-                            group_operator: "count_distinct",
+                            aggregator: "count_distinct",
                         },
                         properties: {
                             string: "Properties",
@@ -292,7 +292,7 @@ QUnit.module("Views", (hooks) => {
             serverData.models.partner.fields.bouh = {
                 string: "bouh",
                 type: "integer",
-                group_operator: "sum",
+                aggregator: "sum",
             };
 
             await makeView({
@@ -341,7 +341,7 @@ QUnit.module("Views", (hooks) => {
             string: "Foo",
             type: "integer",
             store: true,
-            group_operator: "sum",
+            aggregator: "sum",
         };
 
         await makeView({
@@ -416,7 +416,7 @@ QUnit.module("Views", (hooks) => {
                 string: "Fubar",
                 type: "integer",
                 store: false,
-                group_operator: "sum",
+                aggregator: "sum",
             };
 
             await makeView({
@@ -439,8 +439,8 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("pivot rendering with invisible attribute on field", async function (assert) {
         // when invisible, a field should neither be an active measure nor be a selectable measure
         Object.assign(serverData.models.partner.fields, {
-            foo: { string: "Foo", type: "integer", store: true, group_operator: "sum" },
-            foo2: { string: "Foo2", type: "integer", store: true, group_operator: "sum" },
+            foo: { string: "Foo", type: "integer", store: true, aggregator: "sum" },
+            foo2: { string: "Foo2", type: "integer", store: true, aggregator: "sum" },
         });
 
         await makeView({
@@ -536,7 +536,7 @@ QUnit.module("Views", (hooks) => {
     );
 
     QUnit.test(
-        "pivot view do not add number field without group_operator",
+        "pivot view do not add number field without aggregator",
         async function (assert) {
             await makeView({
                 type: "pivot",
@@ -2055,7 +2055,7 @@ QUnit.module("Views", (hooks) => {
         serverData.models.partner.fields.amount = {
             string: "Amount",
             type: "float",
-            group_operator: "sum",
+            aggregator: "sum",
         };
 
         let expectedContext;
@@ -2768,7 +2768,7 @@ QUnit.module("Views", (hooks) => {
         serverData.models.partner.fields.amount = {
             string: "Amount",
             type: "float",
-            group_operator: "sum",
+            aggregator: "sum",
         };
 
         await makeView({
@@ -2978,7 +2978,7 @@ QUnit.module("Views", (hooks) => {
         serverData.models.partner.fields.amount = {
             string: "Amount",
             type: "float",
-            group_operator: "sum",
+            aggregator: "sum",
         };
 
         await makeView({
@@ -3115,7 +3115,7 @@ QUnit.module("Views", (hooks) => {
             serverData.models.partner.fields.amount = {
                 string: "Amount",
                 type: "float",
-                group_operator: "sum",
+                aggregator: "sum",
             };
 
             await makeView({
@@ -3398,17 +3398,17 @@ QUnit.module("Views", (hooks) => {
         serverData.models.partner.fields.bouh = {
             string: "bouh",
             type: "integer",
-            group_operator: "sum",
+            aggregator: "sum",
         };
         serverData.models.partner.fields.modd = {
             string: "modd",
             type: "integer",
-            group_operator: "sum",
+            aggregator: "sum",
         };
         serverData.models.partner.fields.zip = {
             string: "Zip",
             type: "integer",
-            group_operator: "sum",
+            aggregator: "sum",
         };
 
         await makeView({
@@ -4569,7 +4569,7 @@ QUnit.module("Views", (hooks) => {
             type: "boolean",
             store: true,
             searchable: true,
-            group_operator: "bool_or",
+            aggregator: "bool_or",
         };
         serverData.models.partner.records = [
             { id: 1, bar: true, date: "2019-12-14" },

@@ -46,7 +46,7 @@ class AccountInvoiceReport(models.Model):
     account_id = fields.Many2one('account.account', string='Revenue/Expense Account', readonly=True, domain=[('deprecated', '=', False)])
     price_subtotal = fields.Float(string='Untaxed Total', readonly=True)
     price_total = fields.Float(string='Total in Currency', readonly=True)
-    price_average = fields.Float(string='Average Price', readonly=True, group_operator="avg")
+    price_average = fields.Float(string='Average Price', readonly=True, aggregator="avg")
     price_margin = fields.Float(string='Margin', readonly=True)
     inventory_value = fields.Float(string='Inventory Value', readonly=True)
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True)

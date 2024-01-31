@@ -21,15 +21,15 @@ class ReportProjectTaskUser(models.Model):
     date_last_stage_update = fields.Datetime(string='Last Stage Update', readonly=True)
     project_id = fields.Many2one('project.project', string='Project', readonly=True)
     working_days_close = fields.Float(string='Working Days to Close',
-        digits=(16, 2), readonly=True, group_operator="avg")
+        digits=(16, 2), readonly=True, aggregator="avg")
     working_days_open = fields.Float(string='Working Days to Assign',
-        digits=(16, 2), readonly=True, group_operator="avg")
-    delay_endings_days = fields.Float(string='Days to Deadline', digits=(16, 2), group_operator="avg", readonly=True)
+        digits=(16, 2), readonly=True, aggregator="avg")
+    delay_endings_days = fields.Float(string='Days to Deadline', digits=(16, 2), aggregator="avg", readonly=True)
     nbr = fields.Integer('# of Tasks', readonly=True)  # TDE FIXME master: rename into nbr_tasks
-    working_hours_open = fields.Float(string='Working Hours to Assign', digits=(16, 2), readonly=True, group_operator="avg")
-    working_hours_close = fields.Float(string='Working Hours to Close', digits=(16, 2), readonly=True, group_operator="avg")
-    rating_last_value = fields.Float('Last Rating (1-5)', group_operator="avg", readonly=True, groups="project.group_project_rating")
-    rating_avg = fields.Float('Average Rating (1-5)', readonly=True, group_operator='avg', groups="project.group_project_rating")
+    working_hours_open = fields.Float(string='Working Hours to Assign', digits=(16, 2), readonly=True, aggregator="avg")
+    working_hours_close = fields.Float(string='Working Hours to Close', digits=(16, 2), readonly=True, aggregator="avg")
+    rating_last_value = fields.Float('Last Rating (1-5)', aggregator="avg", readonly=True, groups="project.group_project_rating")
+    rating_avg = fields.Float('Average Rating (1-5)', readonly=True, aggregator='avg', groups="project.group_project_rating")
     priority = fields.Selection([
         ('0', 'Low'),
         ('1', 'High')

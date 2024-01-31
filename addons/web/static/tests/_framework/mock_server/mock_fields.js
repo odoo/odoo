@@ -3,7 +3,7 @@ import { MockServerError } from "./mock_server_utils";
  * @typedef {{
  *  compute?: (() => void) | string;
  *  default?: RecordFieldValue | ((record: ModelRecord) => RecordFieldValue);
- *  group_operator?: GroupOperator;
+ *  aggregator?: Aggregator;
  *  name: string;
  *  onChange?: (record: ModelRecord) => void;
  *  readonly: boolean;
@@ -33,7 +33,7 @@ import { MockServerError } from "./mock_server_utils";
  *  | "max"
  *  | "min"
  *  | "sum"
- * } GroupOperator
+ * } Aggregator
  *
  * @typedef {{
  *  __domain: string;
@@ -113,7 +113,7 @@ const makeFieldGenerator = (type, { groupOperator, requiredKeys = [] } = {}) => 
         store: true,
     };
     if (groupOperator) {
-        defaultDef.group_operator = groupOperator;
+        defaultDef.aggregator = groupOperator;
     }
     if (type !== "generic") {
         defaultDef.type = type;

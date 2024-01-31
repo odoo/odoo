@@ -12,7 +12,7 @@ class LeaveReport(models.Model):
 
     employee_id = fields.Many2one('hr.employee', string="Employee", readonly=True)
     active_employee = fields.Boolean(readonly=True)
-    number_of_days = fields.Float('Number of Days', readonly=True, group_operator="sum")
+    number_of_days = fields.Float('Number of Days', readonly=True, aggregator="sum")
     department_id = fields.Many2one('hr.department', string='Department', readonly=True)
     leave_type = fields.Many2one("hr.leave.type", string="Time Off Type", readonly=True)
     holiday_status = fields.Selection([

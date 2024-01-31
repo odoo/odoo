@@ -51,7 +51,7 @@ QUnit.module("Search", (hooks) => {
                         bar: { string: "Bar", type: "many2one", relation: "partner" },
                         birthday: { string: "Birthday", type: "date", store: true, sortable: true },
                         date_field: { string: "Date", type: "date", store: true, sortable: true },
-                        float_field: { string: "Float", type: "float", group_operator: "sum" },
+                        float_field: { string: "Float", type: "float", aggregator: "sum" },
                         foo: { string: "Foo", type: "char", store: true, sortable: true },
                     },
                     records: {},
@@ -410,7 +410,7 @@ QUnit.module("Search", (hooks) => {
         //             birthday: { string: "Birthday", type: "date", store: true, sortable: true },
         //             foo: { string: "Foo", type: "char", store: true, sortable: true },
         //             bar: { string: "Bar", type: "many2one", relation: "partner" },
-        //             float_field: { string: "Float", type: "float", group_operator: "sum" },
+        //             float_field: { string: "Float", type: "float", aggregator: "sum" },
         //         },
         //         records: [
         //             {
