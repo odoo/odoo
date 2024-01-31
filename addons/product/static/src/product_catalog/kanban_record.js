@@ -45,7 +45,7 @@ export class ProductCatalogKanbanRecord extends KanbanRecord {
 
     onGlobalClick(ev) {
         // avoid a concurrent update when clicking on the buttons (that are inside the record)
-        if (ev.target.closest(".o_product_catalog_cancel_global_click")) {
+        if (ev.target.closest(".o_product_catalog_cancel_global_click") || ev.target.closest('.dropdown-item')) {
             return;
         }
         if (this.productCatalogData.quantity === 0) {
