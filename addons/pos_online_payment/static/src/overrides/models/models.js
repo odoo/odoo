@@ -30,7 +30,7 @@ patch(Order.prototype, {
         if ("paid_order" in opData) {
             opData.is_paid = true;
             // only one line will have the `online_payment_resolver` method
-            this.paymentlines.forEach((line) => line.onlinePaymentResolver?.());
+            this.paymentlines.forEach((line) => line.onlinePaymentResolver?.(true));
             return opData;
         } else {
             opData.is_paid = false;
@@ -92,7 +92,7 @@ patch(Order.prototype, {
         }
         if (newDoneOnlinePayment || opData["modified_payment_lines"]) {
             // only one line will have the `online_payment_resolver` method
-            this.paymentlines.forEach((line) => line.onlinePaymentResolver?.());
+            this.paymentlines.forEach((line) => line.onlinePaymentResolver?.(true));
         }
 
         return opData;
