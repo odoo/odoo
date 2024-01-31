@@ -569,18 +569,22 @@ class HolidaysAllocation(models.Model):
                 allocation.already_accrued = True
 
     @api.model
-    def _update_accrual(self):
+    def _update_accrual(self, batch_size=100):
         """
         Method called by the cron task in order to increment the number_of_days when
         necessary.
         """
         today = datetime.combine(fields.Date.today(), time(0, 0, 0))
-        allocations = self.search([
+        domain = [
             ('allocation_type', '=', 'accrual'), ('state', '=', 'validate'),
             ('accrual_plan_id', '!=', False), ('employee_id', '!=', False),
             '|', ('date_to', '=', False), ('date_to', '>', fields.Datetime.now()),
-            '|', ('nextcall', '=', False), ('nextcall', '<=', today)])
+            '|', ('nextcall', '=', False), ('nextcall', '<=', today)
+        ]
+        allocations = self.search(domain, limit=batch_size)
+        allocations_count = len(allocations) if len(allocations) < batch_size else self.search_count(domain)
         allocations._process_accrual_plans()
+        self.env['ir.cron']._notify_progress(done=len(allocations), remaining=allocations_count - len(allocations))
 
     def _get_future_leaves_on(self, accrual_date):
         # As computing future accrual allocation days automatically updates the allocation,
