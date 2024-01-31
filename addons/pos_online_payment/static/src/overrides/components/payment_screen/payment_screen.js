@@ -148,12 +148,23 @@ patch(PaymentScreen.prototype, {
                         ),
                         order: this.currentOrder,
                     };
-                    this.currentOrder.onlinePaymentData = onlinePaymentData;
                     const qrCodePopupCloser = this.dialog.add(
                         OnlinePaymentPopup,
-                        onlinePaymentData
+                        onlinePaymentData,
+                        {
+                            onClose: () => {
+                                onlinePaymentLine.onlinePaymentResolver(false);
+                            },
+                        }
                     );
-                    await new Promise((r) => (onlinePaymentLine.onlinePaymentResolver = r));
+                    const paymentResult = await new Promise(
+                        (r) => (onlinePaymentLine.onlinePaymentResolver = r)
+                    );
+                    if (!paymentResult) {
+                        this.cancelOnlinePayment(this.currentOrder);
+                        onlinePaymentLine.set_payment_status(undefined);
+                        return false;
+                    }
                     qrCodePopupCloser();
                     if (onlinePaymentLine.get_payment_status() === "waiting") {
                         onlinePaymentLine.set_payment_status(undefined);
