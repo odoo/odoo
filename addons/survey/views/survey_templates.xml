@@ -372,7 +372,7 @@
     </template>
 
     <template id="question_text_box" name="Question: free text box">
-        <div class="o_survey_comment_container p-0">
+        <div class="o_survey_comment_container h-auto p-0">
             <textarea class="form-control o_survey_question_text_box bg-transparent text-dark rounded-0 p-0" rows="3"
                       t-att-name="question.id" t-att-placeholder="question.question_placeholder"
                       t-att-data-question-type="question.question_type"><t t-if="answer_lines" t-esc="answer_lines[0].value_text_box or None"/></textarea>
