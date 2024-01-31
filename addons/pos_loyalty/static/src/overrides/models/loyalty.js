@@ -993,15 +993,17 @@ patch(Order.prototype, {
                     continue;
                 }
                 let unclaimedQty;
-                if (reward.reward_type === "product" && !reward.multi_product) {
-                    const product = reward.reward_product_ids[0];
-                    unclaimedQty = this._computeUnclaimedFreeProductQty(
-                        reward,
-                        couponProgram.coupon_id,
-                        product,
-                        points
-                    );
-                    if (unclaimedQty <= 0) {
+                if (reward.reward_type === "product") {
+                    if (!reward.multi_product) {
+                        const product = reward.reward_product_ids[0];
+                        unclaimedQty = this._computeUnclaimedFreeProductQty(
+                            reward,
+                            couponProgram.coupon_id,
+                            product,
+                            points
+                        );
+                    }
+                    if (!unclaimedQty || unclaimedQty <= 0) {
                         continue;
                     }
                 }
