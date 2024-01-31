@@ -111,7 +111,7 @@ class Product(models.Model):
         price = self._get_contextual_price()
         website = self.env['website'].get_current_website()
         line_tax_type = website.show_line_subtotals_tax_selection
-        company_taxes = self.taxes_id.filtered(lambda tax: tax.company_id == self.env.company)
+        company_taxes = self.taxes_id.filtered(lambda tax: tax.company_id in self.env.company.parent_ids)
         if line_tax_type == "tax_included" and company_taxes:
             price = company_taxes.compute_all(price, product=self, partner=self.env['res.partner'])['total_included']
         return price
