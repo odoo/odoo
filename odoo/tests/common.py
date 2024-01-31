@@ -1449,7 +1449,7 @@ which leads to stray network requests and inconsistencies."""
     def clear(self):
         self._websocket_send('Page.stopScreencast')
         if self.screencasts_dir and os.path.isdir(self.screencasts_frames_dir):
-            shutil.rmtree(self.screencasts_frames_dir)
+            shutil.rmtree(self.screencasts_frames_dir, ignore_errors=True)
         self.screencast_frames = []
         self._websocket_request('Page.stopLoading')
         self._websocket_request('Runtime.evaluate', params={'expression': """
