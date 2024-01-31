@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo.fields import Command
+from odoo.fields import Command, Datetime
 from odoo.exceptions import ValidationError
 from odoo.tests import tagged
 
@@ -126,6 +126,7 @@ class TestTaskDependencies(TestProjectCommon):
     def test_duplicate_project_with_task_dependencies(self):
         self.project_pigs.allow_task_dependencies = True
         self.task_1.depend_on_ids = self.task_2
+        self.task_1.date_deadline = Datetime.now()
         pigs_copy = self.project_pigs.copy()
 
         task1_copy = pigs_copy.task_ids.filtered(lambda t: t.name == 'Pigs UserTask')
@@ -136,6 +137,7 @@ class TestTaskDependencies(TestProjectCommon):
 
         self.assertEqual(task1_copy.depend_on_ids.ids, [task2_copy.id],
                          "Copy should only create a relation between both copy if they are both part of the project")
+        self.assertEqual(task1_copy.date_deadline, self.task_1.date_deadline, "date_deadline should be copied")
 
         task1_copy.depend_on_ids = self.task_1
 
