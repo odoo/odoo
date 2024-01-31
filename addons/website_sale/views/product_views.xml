@@ -179,8 +179,8 @@
                     <field name="public_categ_ids" widget="many2many_tags" string="Categories"/>
                     <field name="website_ribbon_id" groups="base.group_no_one" options="{'no_quick_create': True}"/>
                 </group>
-                <group name="product_template_images" string="eCommerce Media" invisible="not sale_ok">
-                    <field name="product_template_image_ids" class="o_website_sale_image_list" context="{'default_name': name}" mode="kanban" add-label="Add a Media" nolabel="1"/>
+                <group colspan="2" name="product_template_images" string="eCommerce Media" invisible="not sale_ok">
+                    <field colspan="2" name="product_template_image_ids" class="o_website_sale_image_list" context="{'default_name': name}" mode="kanban" widget="product_media_viewer" add-label="Add Media" nolabel="1"/>
                 </group>
             </xpath>
         </field>
@@ -206,8 +206,8 @@
                 <field name="variant_ribbon_id" options="{'no_quick_create': True}"/>
             </group>
             <group name="packaging" position="after">
-                <group name="product_variant_images" string="Extra Variant Media">
-                    <field name="product_variant_image_ids" class="o_website_sale_image_list" context="{'default_name': name}" mode="kanban" add-label="Add a Media" nolabel="1"/>
+                <group colspan="2" name="product_variant_images" string="Extra Variant Media">
+                    <field colspan="2" name="product_variant_image_ids" mode="kanban" widget="product_media_viewer" add-label="Add Media" nolabel="1"/>
                 </group>
             </group>
         </field>
