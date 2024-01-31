@@ -204,7 +204,7 @@ QUnit.module("Base Import Tests", (hooks) => {
             serverData.models.foo.fields.foobar = {
                 string: "Fubar",
                 type: "integer",
-                group_operator: "sum",
+                aggregator: "sum",
             };
 
             await makeView({

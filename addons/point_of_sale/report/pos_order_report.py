@@ -24,7 +24,7 @@ class PosOrderReport(models.Model):
     price_total = fields.Float(string='Total Price', readonly=True)
     price_sub_total = fields.Float(string='Subtotal w/o discount', readonly=True)
     total_discount = fields.Float(string='Total Discount', readonly=True)
-    average_price = fields.Float(string='Average Price', readonly=True, group_operator="avg")
+    average_price = fields.Float(string='Average Price', readonly=True, aggregator="avg")
     company_id = fields.Many2one('res.company', string='Company', readonly=True)
     nbr_lines = fields.Integer(string='Sale Line Count', readonly=True)
     product_qty = fields.Integer(string='Product Quantity', readonly=True)

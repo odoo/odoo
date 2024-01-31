@@ -76,7 +76,7 @@ class XlsxCreatorCase(common.HttpCase):
 
 @tagged('-at_install', 'post_install')
 class TestGroupedExport(XlsxCreatorCase):
-    model_name = 'export.group_operator'
+    model_name = 'export.aggregator'
     # pylint: disable=bad-whitespace
 
     def test_int_sum_max(self):

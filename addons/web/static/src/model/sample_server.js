@@ -465,8 +465,8 @@ export class SampleServer {
         for (const measureSpec of params.fields || Object.keys(fields)) {
             const matches = measureSpec.match(MEASURE_SPEC_REGEX);
             let { fieldName, aggregateFunction, measure } = (matches && matches.groups) || {};
-            if (!aggregateFunction && fieldName in fields && fields[fieldName].group_operator) {
-                aggregateFunction = fields[fieldName].group_operator;
+            if (!aggregateFunction && fieldName in fields && fields[fieldName].aggregator) {
+                aggregateFunction = fields[fieldName].aggregator;
                 measure = fieldName;
             }
             if (!fieldName && !measure) {

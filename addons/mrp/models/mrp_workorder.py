@@ -86,10 +86,10 @@ class MrpWorkorder(models.Model):
         readonly=False, store=True, copy=False)
     duration_unit = fields.Float(
         'Duration Per Unit', compute='_compute_duration',
-        group_operator="avg", readonly=True, store=True)
+        aggregator="avg", readonly=True, store=True)
     duration_percent = fields.Integer(
         'Duration Deviation (%)', compute='_compute_duration',
-        group_operator="avg", readonly=True, store=True)
+        aggregator="avg", readonly=True, store=True)
     progress = fields.Float('Progress Done (%)', digits=(16, 2), compute='_compute_progress')
 
     operation_id = fields.Many2one(
@@ -123,7 +123,7 @@ class MrpWorkorder(models.Model):
     last_working_user_id = fields.One2many('res.users', string='Last user that worked on this work order.', compute='_compute_working_users')
     costs_hour = fields.Float(
         string='Cost per hour',
-        default=0.0, group_operator="avg")
+        default=0.0, aggregator="avg")
         # Technical field to store the hourly cost of workcenter at time of work order completion (i.e. to keep a consistent cost).',
 
     scrap_ids = fields.One2many('stock.scrap', 'workorder_id')

@@ -20,19 +20,19 @@ class ImLivechatReportChannel(models.Model):
     start_date = fields.Datetime('Start Date of session', readonly=True)
     start_hour = fields.Char('Start Hour of session', readonly=True)
     day_number = fields.Char('Day Number', readonly=True, help="1 is Monday, 7 is Sunday")
-    time_to_answer = fields.Float('Time to answer (sec)', digits=(16, 2), readonly=True, group_operator="avg", help="Average time in seconds to give the first answer to the visitor")
+    time_to_answer = fields.Float('Time to answer (sec)', digits=(16, 2), readonly=True, aggregator="avg", help="Average time in seconds to give the first answer to the visitor")
     start_date_hour = fields.Char('Hour of start Date of session', readonly=True)
-    duration = fields.Float('Average duration', digits=(16, 2), readonly=True, group_operator="avg", help="Duration of the conversation (in seconds)")
-    nbr_speaker = fields.Integer('# of speakers', readonly=True, group_operator="avg", help="Number of different speakers")
-    nbr_message = fields.Integer('Average message', readonly=True, group_operator="avg", help="Number of message in the conversation")
-    is_without_answer = fields.Integer('Session(s) without answer', readonly=True, group_operator="sum",
+    duration = fields.Float('Average duration', digits=(16, 2), readonly=True, aggregator="avg", help="Duration of the conversation (in seconds)")
+    nbr_speaker = fields.Integer('# of speakers', readonly=True, aggregator="avg", help="Number of different speakers")
+    nbr_message = fields.Integer('Average message', readonly=True, aggregator="avg", help="Number of message in the conversation")
+    is_without_answer = fields.Integer('Session(s) without answer', readonly=True, aggregator="sum",
                                        help="""A session is without answer if the operator did not answer. 
                                        If the visitor is also the operator, the session will always be answered.""")
-    days_of_activity = fields.Integer('Days of activity', group_operator="max", readonly=True, help="Number of days since the first session of the operator")
+    days_of_activity = fields.Integer('Days of activity', aggregator="max", readonly=True, help="Number of days since the first session of the operator")
     is_anonymous = fields.Integer('Is visitor anonymous', readonly=True)
     country_id = fields.Many2one('res.country', 'Country of the visitor', readonly=True)
     is_happy = fields.Integer('Visitor is Happy', readonly=True)
-    rating = fields.Integer('Rating', group_operator="avg", readonly=True)
+    rating = fields.Integer('Rating', aggregator="avg", readonly=True)
     # TODO DBE : Use Selection field - Need : Pie chart must show labels, not keys.
     rating_text = fields.Char('Satisfaction Rate', readonly=True)
     is_unrated = fields.Integer('Session not rated', readonly=True)

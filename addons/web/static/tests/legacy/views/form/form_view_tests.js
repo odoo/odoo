@@ -87,7 +87,7 @@ QUnit.module("Views", (hooks) => {
                             string: "Qux",
                             type: "float",
                             digits: [16, 1],
-                            group_operator: "sum",
+                            aggregator: "sum",
                         },
                         p: { string: "one2many field", type: "one2many", relation: "partner" },
                         trululu: { string: "Trululu", type: "many2one", relation: "partner" },

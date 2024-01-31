@@ -77,18 +77,18 @@ class GroupsTreeNode:
         if root:
             self.insert_leaf(root)
 
-    def _get_aggregate(self, field_name, data, group_operator):
+    def _get_aggregate(self, field_name, data, aggregator):
         # When exporting one2many fields, multiple data lines might be exported for one record.
         # Blank cells of additionnal lines are filled with an empty string. This could lead to '' being
         # aggregated with an integer or float.
         data = (value for value in data if value != '')
 
-        if group_operator == 'avg':
+        if aggregator == 'avg':
             return self._get_avg_aggregate(field_name, data)
 
-        aggregate_func = OPERATOR_MAPPING.get(group_operator)
+        aggregate_func = OPERATOR_MAPPING.get(aggregator)
         if not aggregate_func:
-            _logger.warning("Unsupported export of group_operator '%s' for field %s on model %s", group_operator, field_name, self._model._name)
+            _logger.warning("Unsupported export of aggregator '%s' for field %s on model %s", aggregator, field_name, self._model._name)
             return
 
         if self.data:
@@ -113,7 +113,7 @@ class GroupsTreeNode:
                 # e.g. line_ids/analytic_line_ids/amount
                 continue
             field = self._model._fields[field_name]
-            if field.group_operator:
+            if field.aggregator:
                 aggregated_field_names.append(field_name)
         return aggregated_field_names
 
@@ -130,7 +130,7 @@ class GroupsTreeNode:
 
             if field_name in self._get_aggregated_field_names():
                 field = self._model._fields[field_name]
-                aggregated_values[field_name] = self._get_aggregate(field_name, field_data, field.group_operator)
+                aggregated_values[field_name] = self._get_aggregate(field_name, field_data, field.aggregator)
 
         return aggregated_values
 

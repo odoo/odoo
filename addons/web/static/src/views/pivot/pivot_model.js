@@ -1098,9 +1098,9 @@ export class PivotModel extends Model {
     }
     /**
      * Returns the list of measure specs associated with metaData.activeMeasures, i.e.
-     * a measure 'fieldName' becomes 'fieldName:groupOperator' where
-     * groupOperator is the value specified on the field 'fieldName' for
-     * the key group_operator.
+     * a measure 'fieldName' becomes 'fieldName:aggregator' where
+     * aggregator is the value specified on the field 'fieldName' for
+     * the key aggregator.
      *
      * @protected
      * @param {Config} config
@@ -1115,14 +1115,14 @@ export class PivotModel extends Model {
             }
             const field = this.metaData.fields[measure];
             if (field.type === "many2one") {
-                field.group_operator = "count_distinct";
+                field.aggregator = "count_distinct";
             }
-            if (field.group_operator === undefined) {
+            if (field.aggregator === undefined) {
                 throw new Error(
                     "No aggregate function has been provided for the measure '" + measure + "'"
                 );
             }
-            acc.push(measure + ":" + field.group_operator);
+            acc.push(measure + ":" + field.aggregator);
             return acc;
         }, []);
     }

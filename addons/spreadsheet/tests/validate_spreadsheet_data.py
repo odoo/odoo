@@ -49,9 +49,9 @@ def odoo_view_links(data):
     ]
 
 
-def remove_group_operator(field_name):
+def remove_aggregator(field_name):
     """remove the group operator
-    >>> remove_group_operator("amount:sum")
+    >>> remove_aggregator("amount:sum")
     >>> "amount"
     """
     return field_name.split(":")[0]
@@ -163,7 +163,7 @@ def extract_fields(extract_fn, items):
     fields_by_model = defaultdict(set)
     for item in items:
         model, fields = extract_fn(item)
-        fields_by_model[model] |= {remove_group_operator(field) for field in fields}
+        fields_by_model[model] |= {remove_aggregator(field) for field in fields}
     return dict(fields_by_model)
 
 

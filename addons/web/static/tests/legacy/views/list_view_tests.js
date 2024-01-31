@@ -123,7 +123,7 @@ QUnit.module("Views", (hooks) => {
                             string: "int_field",
                             type: "integer",
                             sortable: true,
-                            group_operator: "sum",
+                            aggregator: "sum",
                         },
                         text: { string: "text field", type: "text" },
                         qux: { string: "my float", type: "float" },
@@ -1958,7 +1958,7 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test(
-        "basic grouped list rendering with a date field between two fields with a group_operator",
+        "basic grouped list rendering with a date field between two fields with a aggregator",
         async function (assert) {
             await makeView({
                 type: "list",
@@ -2155,7 +2155,7 @@ QUnit.module("Views", (hooks) => {
         serverData.models.foo.fields.value = {
             string: "Value",
             type: "integer",
-            group_operator: "sum",
+            aggregator: "sum",
         };
         for (const record of serverData.models.foo.records) {
             record.value = 1;
@@ -3965,7 +3965,7 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("date field aggregates in grouped lists", async function (assert) {
-        // this test simulates a scenario where a date field has a group_operator
+        // this test simulates a scenario where a date field has a aggregator
         // and the web_read_group thus return a value for that field for each group
         await makeView({
             type: "list",
@@ -4457,11 +4457,11 @@ QUnit.module("Views", (hooks) => {
             });
             assert.verifySteps(["default order"]);
 
-            // we cannot sort by sort_field since it doesn't have a group_operator
+            // we cannot sort by sort_field since it doesn't have a aggregator
             await click(target.querySelector(".o_column_sortable[data-name='sort_field']"));
             assert.verifySteps([]);
 
-            // we can sort by int_field since it has a group_operator
+            // we can sort by int_field since it has a aggregator
             await click(target.querySelector(".o_column_sortable[data-name='int_field']"));
             assert.verifySteps(["int_field ASC"]);
 

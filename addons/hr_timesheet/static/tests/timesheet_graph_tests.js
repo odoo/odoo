@@ -22,7 +22,7 @@ QUnit.module('hr_timesheet', function (hooks) {
             models: {
                 'account.analytic.line': {
                     fields: {
-                        unit_amount: { string: "Unit Amount", type: "float", group_operator: "sum", store: true },
+                        unit_amount: { string: "Unit Amount", type: "float", aggregator: "sum", store: true },
                         project_id: {
                             string: "Project",
                             type: "many2one",

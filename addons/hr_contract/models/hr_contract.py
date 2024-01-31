@@ -38,7 +38,7 @@ class Contract(models.Model):
         'resource.calendar', 'Working Schedule', compute='_compute_employee_contract', store=True, readonly=False,
         default=lambda self: self.env.company.resource_calendar_id.id, copy=False, index=True,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
-    wage = fields.Monetary('Wage', required=True, tracking=True, help="Employee's monthly gross wage.", group_operator="avg")
+    wage = fields.Monetary('Wage', required=True, tracking=True, help="Employee's monthly gross wage.", aggregator="avg")
     contract_wage = fields.Monetary('Contract Wage', compute='_compute_contract_wage')
     notes = fields.Html('Notes')
     state = fields.Selection([

@@ -11,7 +11,7 @@ class ReportProjectTaskUser(models.Model):
     effective_hours = fields.Float('Hours Spent', readonly=True)
     remaining_hours = fields.Float('Remaining Hours', readonly=True)
     remaining_hours_percentage = fields.Float('Remaining Hours Percentage', readonly=True)
-    progress = fields.Float('Progress', group_operator='avg', readonly=True)
+    progress = fields.Float('Progress', aggregator='avg', readonly=True)
     overtime = fields.Float(readonly=True)
     total_hours_spent = fields.Float("Total Hours Spent", help="Time spent on this task, including its sub-tasks.")
     subtask_effective_hours = fields.Float("Hours Spent on Sub-Tasks", help="Time spent on the sub-tasks (and their own sub-tasks) of this task.")

@@ -62,12 +62,12 @@ class AccountMoveLine(models.Model):
     date = fields.Date(
         related='move_id.date', store=True,
         copy=False,
-        group_operator='min',
+        aggregator='min',
     )
     invoice_date = fields.Date(
         related='move_id.invoice_date', store=True,
         copy=False,
-        group_operator='min',
+        aggregator='min',
     )
     ref = fields.Char(
         related='move_id.ref', store=True,
@@ -127,7 +127,7 @@ class AccountMoveLine(models.Model):
     )
     amount_currency = fields.Monetary(
         string='Amount in Currency',
-        group_operator=None,
+        aggregator=None,
         compute='_compute_amount_currency', inverse='_inverse_amount_currency', store=True, readonly=False, precompute=True,
         help="The amount expressed in an optional other currency if it is a multi-currency entry.")
     currency_id = fields.Many2one(
@@ -234,7 +234,7 @@ class AccountMoveLine(models.Model):
     amount_residual_currency = fields.Monetary(
         string='Residual Amount in Currency',
         compute='_compute_amount_residual', store=True,
-        group_operator=None,
+        aggregator=None,
         help="The residual amount on a journal item expressed in its currency (possibly not the "
              "company currency).",
     )
@@ -390,7 +390,7 @@ class AccountMoveLine(models.Model):
         string='Discount amount in Currency',
         store=True,
         currency_field='currency_id',
-        group_operator=None,
+        aggregator=None,
     )
     # Discounted balance when the early payment discount is applied
     discount_balance = fields.Monetary(

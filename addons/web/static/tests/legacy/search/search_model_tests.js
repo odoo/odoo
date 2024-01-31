@@ -64,7 +64,7 @@ QUnit.module("Search", (hooks) => {
                     fields: {
                         foo: { string: "Foo", type: "char" },
                         bar: { string: "Bar", type: "boolean" },
-                        int_field: { string: "Int Field", type: "integer", group_operator: "sum" },
+                        int_field: { string: "Int Field", type: "integer", aggregator: "sum" },
                         company_id: { string: "company", type: "many2one", relation: "company" },
                         company_ids: {
                             string: "Companies",

@@ -62,7 +62,7 @@ class IrModel(models.Model):
                 fname: field_data
                 for fname, field_data in model.fields_get(
                     attributes={
-                        'definition_record_field', 'definition_record', 'group_operator',
+                        'definition_record_field', 'definition_record', 'aggregator',
                         'name', 'readonly', 'related', 'relation', 'required', 'searchable',
                         'selection', 'sortable', 'store', 'string', 'tracking', 'type',
                     },

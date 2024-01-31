@@ -330,7 +330,7 @@ class CurrencyRate(models.Model):
                            default=fields.Date.context_today)
     rate = fields.Float(
         digits=0,
-        group_operator="avg",
+        aggregator="avg",
         help='The rate of the currency to the currency of rate 1',
         string='Technical Rate'
     )
@@ -338,14 +338,14 @@ class CurrencyRate(models.Model):
         digits=0,
         compute="_compute_company_rate",
         inverse="_inverse_company_rate",
-        group_operator="avg",
+        aggregator="avg",
         help="The currency of rate 1 to the rate of the currency.",
     )
     inverse_company_rate = fields.Float(
         digits=0,
         compute="_compute_inverse_company_rate",
         inverse="_inverse_inverse_company_rate",
-        group_operator="avg",
+        aggregator="avg",
         help="The rate of the currency to the currency of rate 1 ",
     )
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True, required=True, ondelete="cascade")

@@ -363,7 +363,7 @@ test("rendering with given searchViewId", async function () {
                     searchable: true,
                     sortable: true,
                     store: true,
-                    group_operator: "sum",
+                    aggregator: "sum",
                     type: "integer",
                     name: "id",
                 },

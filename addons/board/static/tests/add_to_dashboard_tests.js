@@ -55,7 +55,7 @@ QUnit.module("Board", (hooks) => {
                     int_field: {
                         string: "Integer field",
                         type: "integer",
-                        group_operator: "sum",
+                        aggregator: "sum",
                     },
                 },
                 records: [
