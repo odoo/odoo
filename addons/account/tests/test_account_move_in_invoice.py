@@ -758,6 +758,38 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             'amount_total': 1384.0,
         })
 
+    def test_compute_cash_rounding_lines(self):
+        cash_rounding_add_invoice_line = self.env['account.cash.rounding'].create({
+            'name': 'Add invoice line Rounding Down',
+            'rounding': .1,
+            'strategy': 'add_invoice_line',
+            'profit_account_id': self.company_data['default_account_revenue'].id,
+            'loss_account_id': self.company_data['default_account_expense'].id,
+            'rounding_method': 'DOWN',
+        })
+        move = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2019-01-01',
+            'invoice_cash_rounding_id': cash_rounding_add_invoice_line.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'name': 'line',
+                    'price_unit': 295,
+                    'tax_ids': [],
+                }),
+                Command.create({
+                    'name': 'cost',
+                    'price_unit': 280.33,
+                }),
+                Command.create({
+                    'name': 'cost neg',
+                    'price_unit': -280.33,
+                }),
+            ],
+        })
+        self.assertFalse(move.line_ids.filtered(lambda line: line.display_type == 'rounding'))
+
     def test_in_invoice_line_onchange_cash_rounding_1(self):
         # Required for `invoice_cash_rounding_id` to be visible in the view
         self.env.user.groups_id += self.env.ref('account.group_cash_rounding')
