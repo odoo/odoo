@@ -1,6 +1,13 @@
 /** @odoo-module */
 
+<<<<<<< HEAD
 import { PartnerList } from "@point_of_sale/app/screens/partner_list/partner_list";
+||||||| parent of 0e4ff6f3e104 (temp)
+import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
+import { PartnerListScreen } from "@point_of_sale/app/screens/partner_list/partner_list";
+=======
+import { PartnerListScreen } from "@point_of_sale/app/screens/partner_list/partner_list";
+>>>>>>> 0e4ff6f3e104 (temp)
 import { patch } from "@web/core/utils/patch";
 
 patch(PartnerList.prototype, {
