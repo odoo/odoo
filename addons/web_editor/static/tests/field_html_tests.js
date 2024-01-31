@@ -612,7 +612,7 @@ QUnit.module('web_editor', {}, function () {
             $('.modal .tab-content .tab-pane').removeClass('fade'); // to be sync in test
             const $labelInputField = $('input#o_link_dialog_label_input');
             const $linkPreview = $('a#link-preview');
-            assert.strictEqual($labelInputField.val().replace(/\u200B/g, ''), 'This website',
+            assert.strictEqual($labelInputField.val(), 'This website',
                 "The label input field should match the link's content");
             assert.strictEqual($linkPreview.text().replace(/\u200B/g, ''), 'This website',
                 "Link label in preview should match label input field");
