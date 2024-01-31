@@ -850,7 +850,8 @@ class HolidaysAllocation(models.Model):
                     to_do |= allocation
                 elif allocation.state == 'refuse':
                     to_clean |= allocation
-        self.env['mail.activity'].create(activity_vals)
+        if activity_vals:
+            self.env['mail.activity'].create(activity_vals)
         if to_clean:
             to_clean.activity_unlink(['hr_holidays.mail_act_leave_allocation_approval'])
         if to_do:
