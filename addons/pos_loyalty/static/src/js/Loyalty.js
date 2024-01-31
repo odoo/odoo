@@ -1054,10 +1054,12 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
                     continue;
                 }
                 let potentialQty;
-                if (reward.reward_type === 'product' && !reward.multi_product) {
-                    const product = this.pos.db.get_product_by_id(reward.reward_product_ids[0]);
-                    potentialQty = this._computeUnclaimedFreeProductQty(reward, couponProgram.coupon_id, product, points);
-                    if (potentialQty <= 0) {
+                if (reward.reward_type === 'product') {
+                    if(!reward.multi_product){
+                        const product = this.pos.db.get_product_by_id(reward.reward_product_ids[0]);
+                        potentialQty = this._computeUnclaimedFreeProductQty(reward, couponProgram.coupon_id, product, points);
+                    }
+                    if (!potentialQty || potentialQty <= 0) {
                         continue;
                     }
                 }
@@ -1099,16 +1101,22 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
                 // Loyalty program (applies_on == 'both') should needs an orderline before it can apply a reward.
                 const considerTheReward = program.applies_on !== 'both' || (program.applies_on == 'both' && hasLine);
                 if (reward.reward_type === 'product' && considerTheReward) {
-                    const product = this.pos.db.get_product_by_id(reward.reward_product_ids[0]);
-                    const potentialQty = this._computePotentialFreeProductQty(reward, product, points);
-                    if (potentialQty <= 0) {
-                        continue;
+                    let hasPotentialQty = true;
+                    let potentialQty;
+                    for (const productId of reward.reward_product_ids) {
+                        const product = this.pos.db.get_product_by_id(productId);
+                        potentialQty = this._computePotentialFreeProductQty(reward, product, points);
+                        if (potentialQty <= 0) {
+                            hasPotentialQty = false;
+                        }
                     }
-                    result.push({
-                        coupon_id: couponProgram.coupon_id,
-                        reward: reward,
-                        potentialQty
-                    });
+                    if (hasPotentialQty) {
+                        result.push({
+                            coupon_id: couponProgram.coupon_id,
+                            reward: reward,
+                            potentialQty
+                        });
+                    }
                 }
             }
         }

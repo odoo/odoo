@@ -1361,3 +1361,60 @@ class TestUi(TestPointOfSaleHttpCommon):
             "ExpiredEWalletProgramTour",
             login="accountman",
         )
+
+    def test_loyalty_program_with_tagged_free_product(self):
+        self.env['loyalty.program'].search([]).write({'active': False})
+
+        free_product_tag = self.env['product.tag'].create({'name': 'Free Product'})
+
+        self.env['product.product'].create([
+            {
+                'name': 'Free Product A',
+                'type': 'product',
+                'list_price': 1,
+                'available_in_pos': True,
+                'taxes_id': False,
+                'product_tag_ids': [(4, free_product_tag.id)],
+            },
+            {
+                'name': 'Free Product B',
+                'type': 'product',
+                'list_price': 1,
+                'available_in_pos': True,
+                'taxes_id': False,
+                'product_tag_ids': [(4, free_product_tag.id)],
+            },
+            {
+                'name': 'Product Test',
+                'type': 'product',
+                'list_price': 1,
+                'available_in_pos': True,
+                'taxes_id': False,
+            }
+        ])
+
+        self.env['loyalty.program'].create({
+            'name': 'Free Product with Tag',
+            'program_type': 'loyalty',
+            'applies_on': 'both',
+            'trigger': 'auto',
+            'portal_visible': True,
+            'rule_ids': [(0, 0, {
+                'reward_point_mode': 'money',
+                'minimum_qty': 1,
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'product',
+                'reward_product_tag_id': free_product_tag.id,
+                'reward_product_qty': 1,
+                'required_points': 1,
+            })],
+        })
+
+        self.env['res.partner'].create({'name': 'AAA Partner'})
+        self.main_pos_config.open_ui()
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "PosLoyaltyTour10",
+            login="accountman",
+        )
