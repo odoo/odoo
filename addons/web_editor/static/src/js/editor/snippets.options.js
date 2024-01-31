@@ -5671,17 +5671,30 @@ registry.SnippetMove = SnippetOptionWidget.extend(ColumnLayoutMixin, {
         $overlayArea.prepend($buttons[0]);
 
         // Needed for compatibility (with already dropped snippets).
-        // If the target is a column, check if all the columns are either mobile
-        // ordered or not. If they are not consistent, then we remove the mobile
-        // order classes from all of them, to avoid issues.
         const parentEl = this.$target[0].parentElement;
         if (parentEl.classList.contains("row")) {
             const columnEls = [...parentEl.children];
-            const orderedColumnEls = columnEls.filter(el => this._getItemMobileOrder(el));
+            let orderedColumnEls = columnEls.filter(el => el.style.order);
+
+            // TODO: remove in master once handled by a migration script.
+            // If there is no inline order, make sure that any existing order
+            // class is replaced with inline CSS.
+            if (!orderedColumnEls.length) {
+                for (const el of columnEls) {
+                    const orderClass = el.className.match(/(^|\s+)(?<cls>order-(?<ord>[0-9]+))(?!\S)/);
+                    if (orderClass) {
+                        el.classList.remove(orderClass.groups.cls);
+                        el.style.order = orderClass.groups.ord;
+                        orderedColumnEls.push(el);
+                    }
+                }
+            }
+
+            // If the target is a column, check if all the columns are either
+            // mobile ordered or not. If they are not consistent, then we remove
+            // the mobile order classes from all of them, to avoid issues.
             if (orderedColumnEls.length && orderedColumnEls.length !== columnEls.length) {
-                orderedColumnEls.forEach(el => {
-                    el.className = el.className.replace(/\border(-lg)?-[0-9]+\b/g, "");
-                });
+                this._removeMobileOrders(orderedColumnEls);
             }
         }
 
@@ -5692,20 +5705,19 @@ registry.SnippetMove = SnippetOptionWidget.extend(ColumnLayoutMixin, {
      */
     onClone(options) {
         this._super.apply(this, arguments);
-        const mobileOrder = this._getItemMobileOrder(this.$target[0]);
+        const mobileOrder = this.$target[0].style.order;
         // If the order has been adapted on mobile, it must be different
         // for each clone.
         if (options.isCurrent && mobileOrder) {
             const siblingEls = this.$target[0].parentElement.children;
-            const cloneEls = [...siblingEls].filter(el => el.classList.contains(mobileOrder[0]));
+            const cloneEls = [...siblingEls].filter(el => el.style.order === mobileOrder);
             // For cases in which multiple clones are made at the same time, we
             // change the order for all clones at once. (e.g.: it happens when
             // increasing the columns count.) This makes sure the clones get a
             // mobile order in line with their DOM order.
             cloneEls.forEach((el, i) => {
                 if (i > 0) {
-                    const newMobileOrder = siblingEls.length - cloneEls.length + i;
-                    el.classList.replace(mobileOrder[0], `order-${newMobileOrder}`);
+                    el.style.order = siblingEls.length - cloneEls.length + i;
                 }
             });
         }
@@ -5716,20 +5728,18 @@ registry.SnippetMove = SnippetOptionWidget.extend(ColumnLayoutMixin, {
     onMove() {
         this._super.apply(this, arguments);
         // Remove all the mobile order classes after a drag and drop.
-        [...this.$target[0].parentElement.children].forEach(el => {
-            el.className = el.className.replace(/\border(-lg)?-[0-9]+\b/g, "");
-        });
+        this._removeMobileOrders(this.$target[0].parentElement.children);
     },
     /**
      * @override
      */
     onRemove() {
         this._super.apply(this, arguments);
-        const targetMobileOrder = this._getItemMobileOrder(this.$target[0]);
+        const targetMobileOrder = this.$target[0].style.order;
         // If the order has been adapted on mobile, the gap created by the
         // removed snippet must be filled in.
         if (targetMobileOrder) {
-            const targetOrder = parseInt(targetMobileOrder[1]);
+            const targetOrder = parseInt(targetMobileOrder);
             this._fillRemovedItemGap(this.$target[0].parentElement, targetOrder);
         }
     },
@@ -5752,7 +5762,7 @@ registry.SnippetMove = SnippetOptionWidget.extend(ColumnLayoutMixin, {
         let siblingEls, mobileOrder;
         if (moveLeftOrRight) {
             siblingEls = this.$target[0].parentElement.children;
-            mobileOrder = !!this._getItemMobileOrder(this.$target[0]);
+            mobileOrder = !!this.$target[0].style.order;
         }
         if (moveLeftOrRight && isMobile && !isNavItem) {
             if (!mobileOrder) {
@@ -5787,9 +5797,7 @@ registry.SnippetMove = SnippetOptionWidget.extend(ColumnLayoutMixin, {
                 }
             }
             if (mobileOrder) {
-                for (const el of siblingEls) {
-                    el.className = el.className.replace(/\border(-lg)?-[0-9]+\b/g, "");
-                }
+                this._removeMobileOrders(siblingEls);
             }
         }
         if (!this.$target.is(this.data.noScroll)
@@ -5839,15 +5847,15 @@ registry.SnippetMove = SnippetOptionWidget.extend(ColumnLayoutMixin, {
             // On mobile, items' reordering is independent from desktop inside
             // a snippet (left or right), not at a higher level (up or down).
             if (moveLeftOrRight && isMobileView) {
-                const targetMobileOrder = this._getItemMobileOrder(this.$target[0]);
+                const targetMobileOrder = this.$target[0].style.order;
                 if (targetMobileOrder) {
                     const siblingEls = this.$target[0].parentElement.children;
                     const orderModifier = widgetName === "move_left_opt" ? -1 : 1;
                     let delta = 0;
                     while (true) {
                         delta += orderModifier;
-                        const nextOrderClass = `order-${parseInt(targetMobileOrder[1]) + delta}`;
-                        const siblingEl = [...siblingEls].find(el => el.classList.contains(nextOrderClass));
+                        const nextOrder = parseInt(targetMobileOrder) + delta;
+                        const siblingEl = [...siblingEls].find(el => el.style.order === nextOrder.toString());
                         if (!siblingEl) {
                             break;
                         }
@@ -5876,13 +5884,13 @@ registry.SnippetMove = SnippetOptionWidget.extend(ColumnLayoutMixin, {
      * @param {HTMLCollection} siblingEls
      */
     _swapMobileOrders(widgetValue, siblingEls) {
-        const targetMobileOrder = this._getItemMobileOrder(this.$target[0]);
+        const targetMobileOrder = this.$target[0].style.order;
         const orderModifier = widgetValue === "prev" ? -1 : 1;
         let delta = 0;
         while (true) {
             delta += orderModifier;
-            const newOrderClass = `order-${parseInt(targetMobileOrder[1]) + delta}`;
-            const comparedEl = [...siblingEls].find(el => el.classList.contains(newOrderClass));
+            const newOrder = parseInt(targetMobileOrder) + delta;
+            const comparedEl = [...siblingEls].find(el => el.style.order === newOrder.toString());
             // TODO In master: remove break.
             if (!comparedEl) {
                 break;
@@ -5890,8 +5898,8 @@ registry.SnippetMove = SnippetOptionWidget.extend(ColumnLayoutMixin, {
             if (window.getComputedStyle(comparedEl).display === "none") {
                 continue;
             }
-            this.$target[0].classList.replace(targetMobileOrder[0], newOrderClass);
-            comparedEl.classList.replace(newOrderClass, targetMobileOrder[0]);
+            this.$target[0].style.order = newOrder;
+            comparedEl.style.order = targetMobileOrder;
             break;
         }
     },
