@@ -1616,32 +1616,29 @@ export class Matchers {
      */
     #resolve(specs) {
         if (this.#modifiers.rejects || this.#modifiers.resolves) {
-            return Promise.resolve(this.#received)
-                .then(
-                    /** @param {PromiseFulfilledResult<R>} reason */
-                    (result) => {
-                        if (this.#modifiers.rejects) {
-                            throw new HootError(
-                                `expected promise to reject, instead resolved with: ${result}`
-                            );
-                        }
-                        this.#received = result;
-                        return this.#resolveFinalResult(specs);
+            return Promise.resolve(this.#received).then(
+                /** @param {PromiseFulfilledResult<R>} reason */
+                (result) => {
+                    if (this.#modifiers.rejects) {
+                        throw new HootError(
+                            `expected promise to reject, instead resolved with: ${result}`
+                        );
                     }
-                )
-                .catch(
-                    /** @param {PromiseRejectedResult} reason */
-                    (reason) => {
-                        if (this.#modifiers.resolves) {
-                            throw new HootError(
-                                `expected promise to resolve, instead rejected with: ${reason}`,
-                                { cause: reason }
-                            );
-                        }
-                        this.#received = reason;
-                        return this.#resolveFinalResult(specs);
+                    this.#received = result;
+                    return this.#resolveFinalResult(specs);
+                },
+                /** @param {PromiseRejectedResult} reason */
+                (reason) => {
+                    if (this.#modifiers.resolves) {
+                        throw new HootError(
+                            `expected promise to resolve, instead rejected with: ${reason}`,
+                            { cause: reason }
+                        );
                     }
-                );
+                    this.#received = reason;
+                    return this.#resolveFinalResult(specs);
+                }
+            );
         } else {
             return this.#resolveFinalResult(specs);
         }
