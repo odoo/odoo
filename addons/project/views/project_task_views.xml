@@ -369,6 +369,7 @@
                             <field name="project_id"
                                    domain="[('active', '=', True), '|', ('company_id', '=', False), ('company_id', '=?', company_id)]"
                                    widget="project"
+                                   required="context.get('time_task_creation')"
                             />
                             <field name="milestone_id"
                                 placeholder="e.g. Product Launch"

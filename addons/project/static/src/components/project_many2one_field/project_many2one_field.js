@@ -9,7 +9,8 @@ export class ProjectMany2OneField extends Many2OneField {
     get Many2XAutocompleteProps() {
         const props = super.Many2XAutocompleteProps;
         const { project_id, parent_id } = this.props.record.data;
-        if (!project_id && !parent_id) {
+        const context = this.props.context.time_task_creation
+        if (!project_id && !parent_id && !context) {
             props.placeholder = _t("Private");
         }
         return props;
