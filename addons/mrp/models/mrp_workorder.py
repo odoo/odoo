@@ -281,7 +281,7 @@ class MrpWorkorder(models.Model):
         mo_dirty.workorder_ids._action_confirm()
         return res
 
-    @api.depends('production_id.product_qty', 'qty_producing', 'production_id.product_uom_id')
+    @api.depends('production_id.product_qty', 'production_id.product_uom_id')
     def _compute_is_produced(self):
         self.is_produced = False
         for order in self.filtered(lambda p: p.production_id and p.production_id.product_uom_id):
@@ -294,7 +294,7 @@ class MrpWorkorder(models.Model):
             if workorder.state not in ['done', 'cancel']:
                 workorder.duration_expected = workorder._get_duration_expected()
 
-    @api.depends('time_ids.duration', 'qty_producing')
+    @api.depends('time_ids.duration')
     def _compute_duration(self):
         for order in self:
             order.duration = sum(order.time_ids.mapped('duration'))
@@ -716,7 +716,7 @@ class MrpWorkorder(models.Model):
         action['res_id'] = self.id
         return action
 
-    @api.depends('qty_production', 'qty_reported_from_previous_wo', 'qty_producing', 'production_id.product_uom_id')
+    @api.depends('qty_production', 'qty_reported_from_previous_wo', 'production_id.product_uom_id')
     def _compute_qty_remaining(self):
         for wo in self:
             if wo.production_id.product_uom_id:

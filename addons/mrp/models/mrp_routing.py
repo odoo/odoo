@@ -72,7 +72,6 @@ class MrpRoutingWorkcenter(models.Model):
         for operation in self - manual_ops:
             data = self.env['mrp.workorder'].search([
                 ('operation_id', '=', operation.id),
-                ('qty_producing', '>', 0),
                 ('state', '=', 'done')],
                 limit=operation.time_mode_batch,
                 order="date_finished desc, id desc")
