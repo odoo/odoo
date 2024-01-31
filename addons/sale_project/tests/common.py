@@ -21,7 +21,7 @@ class TestSaleProjectCommon(TestSaleCommon):
             'name': 'Project for selling timesheet - AA',
             'code': 'AA-2030',
             'plan_id': cls.analytic_plan.id,
-            'company_id': cls.company_data['company'].id,
+            'company_id': False,
         })
         Project = cls.env['project.project'].with_context(tracking_disable=True)
         cls.project_global = Project.create({
