@@ -186,6 +186,21 @@ class BaseFollowersTest(TestMailCommon):
         self.assertEqual(groups[self.user_employee.partner_id.id], set(self.user_employee.groups_id.ids), "User Employee groups are not correctly fetched")
         self.assertEqual(groups[self.user_portal.partner_id.id], set(self.user_portal.groups_id.ids), "User Portal groups are not correctly fetched")
 
+    @users('employee')
+    def test_subscriptions_data_fetch(self):
+        """ Test that _get_subscription_data gives correct values when modifying followers manually."""
+        test_record = self.test_record
+        test_record_copy = self.test_record.copy()
+        test_records = test_record + test_record_copy
+        test_record.message_subscribe([self.user_employee.partner_id.id])
+        subscription_data = self.env['mail.followers']._get_subscription_data([(test_records._name, test_records.ids)], None)
+        self.assertEqual(len(subscription_data), 1)
+        self.assertEqual(subscription_data[0][1], test_record.id)
+        self.env['mail.followers'].browse(subscription_data[0][0]).sudo().res_id = test_record_copy
+        subscription_data = self.env['mail.followers']._get_subscription_data([(test_records._name, test_records.ids)], None)
+        self.assertEqual(len(subscription_data), 1)
+        self.assertEqual(subscription_data[0][1], test_record_copy.id)
+
 
 @tagged('mail_followers')
 class AdvancedFollowersTest(TestMailCommon):

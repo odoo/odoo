@@ -177,6 +177,8 @@ GROUP BY partner.id, users.notification_type"""
           share status of partner (returned only if include_pshare is True)
           active flag status of partner (returned only if include_active is True)
         """
+        self.env['mail.followers'].flush(['partner_id', 'res_id', 'res_model', 'subtype_ids'])
+        self.env['res.partner'].flush(['active', 'partner_share'])
         # base query: fetch followers of given documents
         where_clause = ' OR '.join(['fol.res_model = %s AND fol.res_id IN %s'] * len(doc_data))
         where_params = list(itertools.chain.from_iterable((rm, tuple(rids)) for rm, rids in doc_data))
