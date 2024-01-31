@@ -133,6 +133,11 @@ class DiscussChannel(models.Model):
         """ Set deactivate the livechat channel and notify (the operator) the reason of closing the session."""
         self.ensure_one()
         if self.livechat_active:
+            member = self.channel_member_ids.filtered(lambda m: m.is_self)
+            if member:
+                member.fold_state = "closed"
+                # sudo: discuss.channel.rtc.session - member of current user can leave call
+                member.sudo()._rtc_leave_call()
             self.livechat_active = False
             # avoid useless notification if the channel is empty
             if not self.message_ids:
@@ -145,21 +150,6 @@ class DiscussChannel(models.Model):
                 message_type='notification',
                 subtype_xmlid='mail.mt_comment'
             )
-
-    def _get_init_channels(self):
-        """Override to only return the latest live chat channel for which the
-        current persona is the visitor in the embed live chat context: every
-        other channel is irrelevant in this case.
-        """
-        if self.env.context.get("is_for_livechat"):
-            channel_domain = [
-                ("channel_type", "=", "livechat"),
-                ("livechat_active", "=", True),
-                ("is_member", "=", True),
-            ]
-            return self.search(channel_domain)
-        return super()._get_init_channels()
-
 
     # Rating Mixin
 

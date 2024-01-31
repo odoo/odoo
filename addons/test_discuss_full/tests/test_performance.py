@@ -220,7 +220,7 @@ class TestDiscussFullPerformance(HttpCase):
         self.authenticate(self.users[0].login, self.password)
         self.env['res.lang']._lang_get_id('en_US')  # cache language for validation
         with self.assertQueryCount(emp=self._query_count):
-            init_messaging = self.make_jsonrpc_request("/mail/action", {"init_messaging": True})
+            init_messaging = self.make_jsonrpc_request("/mail/action", {"init_messaging": {}})
         self.assertEqual(init_messaging, self._get_init_messaging_result())
 
     def _get_init_messaging_result(self):

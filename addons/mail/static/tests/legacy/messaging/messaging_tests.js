@@ -33,7 +33,7 @@ QUnit.test("Receiving a new message out of discuss app should open a chat window
     });
     await assertSteps([
         `/mail/action - ${JSON.stringify({
-            init_messaging: true,
+            init_messaging: {},
             failures: true,
             systray_get_activities: true,
             context: { lang: "en", tz: "taht", uid: pyEnv.currentUserId },
@@ -75,7 +75,7 @@ QUnit.test(
         });
         await assertSteps([
             `/mail/action - ${JSON.stringify({
-                init_messaging: true,
+                init_messaging: {},
                 failures: true,
                 systray_get_activities: true,
                 context: { lang: "en", tz: "taht", uid: pyEnv.currentUserId },

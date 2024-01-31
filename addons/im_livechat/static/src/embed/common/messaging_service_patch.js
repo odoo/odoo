@@ -35,11 +35,8 @@ patch(Messaging.prototype, {
         this.isReady.resolve();
     },
     get initMessagingParams() {
-        return {
-            ...super.initMessagingParams,
-            context: {
-                is_for_livechat: true,
-            },
-        };
+        const params = super.initMessagingParams;
+        params.init_messaging.channel_types = ["livechat"];
+        return params;
     },
 });

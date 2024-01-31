@@ -62,11 +62,9 @@ class ResUsers(models.Model):
         members_with_unread = members.filtered(lambda member: member.message_unread_counter)
         # fetch channels data before calling super to benefit from prefetching (channel info might
         # prefetch a lot of data that super could use, about the current user in particular)
-        channels_info = self.env["discuss.channel"]._get_init_channels()._channel_info()
         super()._init_messaging(store)
         store.add({
             "Store": {
                 "initChannelsUnreadCounter": len(members_with_unread),
             },
-            "Thread": channels_info
         })
