@@ -49,7 +49,7 @@ export class DiscussCoreCommon {
                 const filteredStarredMessages = [];
                 let starredCounter = 0;
                 for (const msg of this.store.discuss.starred.messages) {
-                    if (!msg.originThread?.eq(thread)) {
+                    if (!msg.thread?.eq(thread)) {
                         filteredStarredMessages.push(msg);
                     } else {
                         starredCounter++;
@@ -58,11 +58,11 @@ export class DiscussCoreCommon {
                 this.store.discuss.starred.messages = filteredStarredMessages;
                 this.store.discuss.starred.counter -= starredCounter;
                 this.store.discuss.inbox.messages = this.store.discuss.inbox.messages.filter(
-                    (msg) => !msg.originThread?.eq(thread)
+                    (msg) => !msg.thread?.eq(thread)
                 );
                 this.store.discuss.inbox.counter -= thread.message_needaction_counter;
                 this.store.discuss.history.messages = this.store.discuss.history.messages.filter(
-                    (msg) => !msg.originThread?.eq(thread)
+                    (msg) => !msg.thread?.eq(thread)
                 );
                 this.threadService.closeChatWindow?.(thread);
                 if (thread.eq(this.store.discuss.thread)) {
@@ -75,7 +75,7 @@ export class DiscussCoreCommon {
                 this._handleNotificationNewMessage(payload, metadata)
             );
             this.busService.subscribe("discuss.channel/transient_message", (payload) => {
-                const { body, originThread } = payload;
+                const { body, thread } = payload;
                 const lastMessageId = this.messageService.getLastMessageId();
                 const message = this.store.Message.insert(
                     {
@@ -84,12 +84,12 @@ export class DiscussCoreCommon {
                         id: lastMessageId + 0.01,
                         is_note: true,
                         is_transient: true,
-                        originThread,
+                        thread,
                     },
                     { html: true }
                 );
-                message.originThread.messages.push(message);
-                message.originThread.transientMessages.push(message);
+                message.thread.messages.push(message);
+                message.thread.transientMessages.push(message);
             });
             this.busService.subscribe("discuss.channel/unpin", (payload) => {
                 const thread = this.store.Thread.get({ model: "discuss.channel", id: payload.id });
@@ -123,9 +123,9 @@ export class DiscussCoreCommon {
                 }
             });
             this.env.bus.addEventListener("mail.message/delete", ({ detail: { message } }) => {
-                if (message.originThread) {
-                    if (message.id > message.originThread.seen_message_id) {
-                        message.originThread.message_unread_counter--;
+                if (message.thread) {
+                    if (message.id > message.thread.seen_message_id) {
+                        message.thread.message_unread_counter--;
                     }
                 }
             });

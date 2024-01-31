@@ -32,7 +32,7 @@ const StorePatch = {
             ({ Message: messages }) => {
                 for (const message of messages) {
                     if (message.isNeedaction) {
-                        message.originThread.needactionMessages.add(message);
+                        message.thread.needactionMessages.add(message);
                     }
                 }
                 this.fetchChannelsState = "fetched";

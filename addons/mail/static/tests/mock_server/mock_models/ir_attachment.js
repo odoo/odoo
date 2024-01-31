@@ -52,7 +52,7 @@ export class IrAttachment extends webModels.IrAttachment {
                 name: attachment.name,
                 size: attachment.file_size,
             };
-            res["originThread"] = [["ADD", { id: attachment.res_id, model: attachment.res_model }]];
+            res["thread"] = [["ADD", { id: attachment.res_id, model: attachment.res_model }]];
             const voice = this.env["discuss.voice.metadata"]._filter([
                 ["attachment_id", "=", attachment.id],
             ])[0];

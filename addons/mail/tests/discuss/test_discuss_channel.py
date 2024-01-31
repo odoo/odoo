@@ -426,7 +426,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                             "<br>Type <b>#channel</b> to mention a channel."
                             "<br>Type <b>/command</b> to execute a command."
                             "</span>",
-                        "originThread": {
+                        "thread": {
                             "model": "discuss.channel",
                             "id": channel.id,
                         },
@@ -464,7 +464,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                             "<br>Type <b>#channel</b> to mention a channel."
                             "<br>Type <b>/command</b> to execute a command."
                             "</span>",
-                        "originThread": {
+                        "thread": {
                             "model": "discuss.channel",
                             "id": test_group.id,
                         },

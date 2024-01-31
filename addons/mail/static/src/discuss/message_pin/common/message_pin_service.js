@@ -33,16 +33,13 @@ patch(MessageModel.prototype, {
     update(data) {
         super.update(data);
         const { pinned_at: pinnedAt } = data;
-        if (
-            this.originThread?.model === "discuss.channel" &&
-            (pinnedAt !== undefined || this.isEmpty)
-        ) {
+        if (this.thread?.model === "discuss.channel" && (pinnedAt !== undefined || this.isEmpty)) {
             if (pinnedAt && !this.isEmpty) {
-                this.originThread.pinnedMessages.add(this);
+                this.thread.pinnedMessages.add(this);
                 this.pinnedAt = pinnedAt;
             } else {
                 this.pinnedAt = undefined;
-                this.originThread.pinnedMessages.delete(this);
+                this.thread.pinnedMessages.delete(this);
             }
         }
     },
@@ -124,7 +121,7 @@ export class MessagePin {
      * @param {import("models").Message}
      */
     pin(message) {
-        const thread = message.originThread;
+        const thread = message.thread;
         this.dialogService.add(MessageConfirmDialog, {
             confirmText: _t("Yeah, pin it!"),
             message: message,
@@ -143,7 +140,7 @@ export class MessagePin {
      * @param {boolean} pinned
      */
     setPin(message, pinned) {
-        this.ormService.call("discuss.channel", "set_message_pin", [message.originThread.id], {
+        this.ormService.call("discuss.channel", "set_message_pin", [message.thread.id], {
             message_id: message.id,
             pinned,
         });

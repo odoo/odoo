@@ -1323,7 +1323,7 @@ class TestDiscussFullPerformance(HttpCase):
                         },
                     },
                 ],
-                "originThread": {
+                "thread": {
                     "id": channel.id,
                     "model": "discuss.channel",
                     "module_icon": "/mail/static/description/icon.png",
@@ -1374,7 +1374,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "model": "discuss.channel",
                 "needaction_partner_ids": [],
                 "notifications": [],
-                "originThread": {
+                "thread": {
                     "id": channel.id,
                     "model": "discuss.channel",
                     "module_icon": "/mail/static/description/icon.png",
@@ -1419,7 +1419,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "model": "discuss.channel",
                 "needaction_partner_ids": [],
                 "notifications": [],
-                "originThread": {
+                "thread": {
                     "id": channel.id,
                     "model": "discuss.channel",
                     "module_icon": "/mail/static/description/icon.png",
@@ -1464,7 +1464,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "model": "discuss.channel",
                 "needaction_partner_ids": [],
                 "notifications": [],
-                "originThread": {
+                "thread": {
                     "id": channel.id,
                     "model": "discuss.channel",
                     "module_icon": "/mail/static/description/icon.png",
@@ -1508,7 +1508,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "model": "discuss.channel",
                 "needaction_partner_ids": [],
                 "notifications": [],
-                "originThread": {
+                "thread": {
                     "id": channel.id,
                     "model": "discuss.channel",
                     "module_icon": "/mail/static/description/icon.png",
@@ -1545,7 +1545,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "model": "discuss.channel",
                 "needaction_partner_ids": [],
                 "notifications": [],
-                "originThread": {
+                "thread": {
                     "id": channel.id,
                     "model": "discuss.channel",
                     "module_icon": "/mail/static/description/icon.png",

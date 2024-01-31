@@ -867,14 +867,14 @@ class UnfollowFromInboxTest(MailCommon):
         # The user doesn't follow the record
         messages = self._fetch_inbox_message(message.id)
         self.assertEqual(len(messages), 1)
-        self.assertFalse(messages[0].get('originThread').get('selfFollower'))
+        self.assertFalse(messages[0].get('thread').get('selfFollower'))
         self.assertFalse('follower_id_by_partner_id' in messages[0])
 
         # The user follows the record
         test_record._message_subscribe(partner_ids=self.partner_employee.ids)
         messages = self._fetch_inbox_message(message.id)
         self.assertEqual(len(messages), 1)
-        follower_id = messages[0]['originThread']['selfFollower']['id']
+        follower_id = messages[0]['thread']['selfFollower']['id']
         self.assertTrue(follower_id)
         self.assertFalse('follower_id_by_partner_id' in messages[0])
         follower = self.env['mail.followers'].browse(follower_id)
@@ -885,7 +885,7 @@ class UnfollowFromInboxTest(MailCommon):
         # The user doesn't follow the record anymore
         test_record.message_unsubscribe(partner_ids=self.partner_employee.ids)
         messages = self._fetch_inbox_message(message.id)
-        self.assertFalse(messages[0].get('originThread').get('selfFollower'))
+        self.assertFalse(messages[0].get('thread').get('selfFollower'))
 
 
 @tagged('mail_followers', 'post_install', '-at_install')

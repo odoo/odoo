@@ -11,10 +11,10 @@ patch(Attachment.prototype, {
         };
     },
     get urlRoute() {
-        if (!this.accessToken && this.originThread?.model === "discuss.channel") {
+        if (!this.accessToken && this.thread?.model === "discuss.channel") {
             return this.isImage
-                ? `/im_livechat/cors/channel/${this.originThread.id}/image/${this.id}`
-                : `/im_livechat/cors/channel/${this.originThread.id}/attachment/${this.id}`;
+                ? `/im_livechat/cors/channel/${this.thread.id}/image/${this.id}`
+                : `/im_livechat/cors/channel/${this.thread.id}/attachment/${this.id}`;
         }
         return super.urlRoute;
     },

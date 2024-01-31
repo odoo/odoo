@@ -30,7 +30,7 @@ patch(MockServer.prototype, {
                 name: attachment.name,
                 size: attachment.file_size,
             };
-            res["originThread"] = [
+            res["thread"] = [
                 [
                     "ADD",
                     {

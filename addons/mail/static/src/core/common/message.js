@@ -270,7 +270,7 @@ export class Message extends Component {
     }
 
     get canAddReaction() {
-        return Boolean(!this.message.is_transient && this.message.originThread);
+        return Boolean(!this.message.is_transient && this.message.thread);
     }
 
     get deletable() {
@@ -290,15 +290,13 @@ export class Message extends Component {
 
     get canToggleStar() {
         return Boolean(
-            !this.message.is_transient &&
-                this.message.originThread &&
-                this.store.self.type === "partner"
+            !this.message.is_transient && this.message.thread && this.store.self.type === "partner"
         );
     }
 
     get showUnfollow() {
         return Boolean(
-            this.message.originThread?.selfFollower && this.props.thread?.model === "mail.box"
+            this.message.thread?.selfFollower && this.props.thread?.model === "mail.box"
         );
     }
 
@@ -319,7 +317,7 @@ export class Message extends Component {
         if (!this.props.thread) {
             return false;
         }
-        return this.props.thread.eq(this.message.originThread);
+        return this.props.thread.eq(this.message.thread);
     }
 
     get isInInbox() {
@@ -384,13 +382,12 @@ export class Message extends Component {
     }
 
     onClickMarkAsUnread() {
-        const previousMessageId =
-            this.message.originThread.getPreviousMessage(this.message)?.id ?? false;
+        const previousMessageId = this.message.thread.getPreviousMessage(this.message)?.id ?? false;
         if (this.props.thread.seen_message_id === previousMessageId) {
             return;
         }
         return rpc("/discuss/channel/set_last_seen_message", {
-            channel_id: this.message.originThread.id,
+            channel_id: this.message.thread.id,
             last_message_id: previousMessageId,
             allow_older: true,
         });

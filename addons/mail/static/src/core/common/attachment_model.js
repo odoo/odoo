@@ -28,7 +28,7 @@ export class Attachment extends FileModelMixin(Record) {
         return attachment;
     }
 
-    originThread = Record.one("Thread", { inverse: "attachments" });
+    thread = Record.one("Thread", { inverse: "attachments" });
     res_name;
     message = Record.one("Message");
     /** @type {string} */

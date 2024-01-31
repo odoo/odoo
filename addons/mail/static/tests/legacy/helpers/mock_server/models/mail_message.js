@@ -327,15 +327,15 @@ patch(MockServer.prototype, {
             }
             response.author = author || guestAuthor;
             if (response["model"] && response["res_id"]) {
-                const originThread = {
+                const thread = {
                     model: response["model"],
                     id: response["res_id"],
                     module_icon: "/base/static/description/icon.png",
                 };
                 if (response["model"] !== "discuss.channel") {
-                    originThread.name = response["record_name"];
+                    thread.name = response["record_name"];
                 }
-                Object.assign(response, { originThread });
+                Object.assign(response, { thread });
             }
             return response;
         });
@@ -358,7 +358,7 @@ patch(MockServer.prototype, {
                 ]);
                 if (follower.length !== 0) {
                     const follower_id = follower[0].id;
-                    message.originThread.selfFollower = {
+                    message.thread.selfFollower = {
                         id: follower_id,
                         is_active: true,
                         partner: { id: this.pyEnv.currentPartnerId, type: "partner" },
@@ -394,7 +394,7 @@ patch(MockServer.prototype, {
                 id: message.id,
                 message_type: message.message_type,
                 notifications: notifications,
-                originThread: message.res_id
+                thread: message.res_id
                     ? {
                           id: message.res_id,
                           model: message.model,

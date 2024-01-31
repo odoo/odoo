@@ -1059,12 +1059,12 @@ class Message(models.Model):
                 'scheduledDatetime': scheduled_dt_by_msg_id.get(vals['id'], False),
             })
             if vals['model'] and vals['res_id']:
-                originThread = {'model': vals['model'], 'id': vals['res_id']}
+                thread = {'model': vals['model'], 'id': vals['res_id']}
                 if vals['model'] != 'discuss.channel':
-                    originThread['name'] = vals['record_name']
+                    thread['name'] = vals['record_name']
                 if self.env[vals['model']]._original_module:
-                    originThread['module_icon'] = modules.module.get_module_icon(self.env[vals['model']]._original_module)
-                vals['originThread'] = originThread
+                    thread['module_icon'] = modules.module.get_module_icon(self.env[vals['model']]._original_module)
+                vals['thread'] = thread
         return vals_list
 
     @api.model
@@ -1131,7 +1131,7 @@ class Message(models.Model):
             follower_id_by_pid = vals.pop('follower_id_by_partner_id', {})
             follower_id = follower_id_by_pid.get(partner_id, False)
             if follower_id:
-                vals['originThread']['selfFollower'] = {
+                vals['thread']['selfFollower'] = {
                     'id': follower_id,
                     'is_active': True,
                     'partner': {'id': partner_id, 'type': "partner"},
@@ -1160,7 +1160,7 @@ class Message(models.Model):
             'message_type': message.message_type,
             'body': message.body,
             'notifications': message.notification_ids._filtered_for_web_client()._notification_format(),
-            'originThread': {
+            'thread': {
                 'id': message.res_id,
                 'model': message.model,
                 'modelName': message.env['ir.model']._get(message.model).display_name,

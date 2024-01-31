@@ -46,11 +46,11 @@
                                 message="props.message"
                                 thread="props.thread"/>
                             <small t-if="!isOriginThread and !message.is_transient" t-on-click.prevent="openRecord" class="ms-1 text-500">
-                                <t t-if="message.originThread?.model !== 'discuss.channel'">
-                                    on <a t-att-href="message.resUrl"><t t-esc="message.originThread?.displayName"/></a>
+                                <t t-if="message.thread?.model !== 'discuss.channel'">
+                                    on <a t-att-href="message.resUrl"><t t-esc="message.thread?.displayName"/></a>
                                 </t>
                                 <t t-else="">
-                                    (from <a t-att-href="message.resUrl"><t t-esc="message.originThread?.prefix"/><t t-esc="message.originThread?.displayName"/></a>)
+                                    (from <a t-att-href="message.resUrl"><t t-esc="message.thread?.prefix"/><t t-esc="message.thread?.displayName"/></a>)
                                 </t>
                             </small>
                             <div t-if="props.message.scheduledDate" t-att-class="{ 'ms-2': props.isInChatWindow and isAlignedRight }" t-att-title="messageService.scheduledDateSimple(props.message)">
@@ -90,7 +90,7 @@
                                                             }" t-ref="body">
                                                     <Composer t-if="state.isEditing" autofocus="true" composer="message.composer" messageComponent="constructor" onDiscardCallback.bind="exitEditMode" onPostCallback.bind="exitEditMode" mode="env.inChatter ? 'extended' : 'compact'" sidebar="false"/>
                                                     <t t-else="">
-                                                        <em t-if="message.subject and !message.isSubjectSimilarToOriginThreadName and !message.isSubjectDefault" class="mb-1 me-2">Subject: <t t-out="props.messageSearch?.highlight(message.subject) ?? message.subject"/></em>
+                                                        <em t-if="message.subject and !message.isSubjectSimilarToThreadName and !message.isSubjectDefault" class="mb-1 me-2">Subject: <t t-out="props.messageSearch?.highlight(message.subject) ?? message.subject"/></em>
                                                         <div t-if="message.message_type and message.message_type.includes('email')" t-ref="shadowBody"/>
                                                         <t t-elif="state.showTranslation" t-out="message.translationValue"/>
                                                         <t t-elif="message.body" t-out="props.messageSearch?.highlight(message.body) ?? message.body"/>
@@ -166,7 +166,7 @@
 </t>
 
 <t t-name="mail.Message.notification">
-    <div t-if="message.originThread?.eq(props.thread) and message.notifications.length > 0" class="mx-1">
+    <div t-if="message.thread?.eq(props.thread) and message.notifications.length > 0" class="mx-1">
         <span class="o-mail-Message-notification cursor-pointer" t-att-class="message.failureNotifications.length > 0 ? 'text-danger' : text-600" role="button" tabindex="0" t-on-click="onClickNotification">
             <i t-att-class="message.notifications[0].icon" role="img" aria-label="Delivery failure"/> <span t-if="message.notifications[0].label" t-out="message.notifications[0].label"/>
         </span>

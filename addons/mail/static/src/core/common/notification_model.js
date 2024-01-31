@@ -28,7 +28,7 @@ export class Notification extends Record {
         inverse: "notifications",
         /** @this {import("models").Notification} */
         compute() {
-            const thread = this.message?.originThread;
+            const thread = this.message?.thread;
             if (!this.message?.author?.eq(this._store.self)) {
                 return;
             }

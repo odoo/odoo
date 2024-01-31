@@ -118,7 +118,7 @@ export class MessageService {
         if (message.isNeedaction) {
             await this.setDone(message);
         }
-        const thread = message.originThread;
+        const thread = message.thread;
         await this.env.services["mail.thread"].removeFollower(thread.selfFollower);
         this.env.services.notification.add(
             _t('You are no longer following "%(thread_name)s".', { thread_name: thread.name }),

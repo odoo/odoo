@@ -30,16 +30,14 @@ export class Failure extends Record {
         },
     });
     get modelName() {
-        return this.notifications?.[0]?.message?.originThread?.modelName;
+        return this.notifications?.[0]?.message?.thread?.modelName;
     }
     get resModel() {
-        return this.notifications?.[0]?.message?.originThread?.model;
+        return this.notifications?.[0]?.message?.thread?.model;
     }
     get resIds() {
         return new Set([
-            ...this.notifications
-                .map((notif) => notif.message?.originThread?.id)
-                .filter((id) => !!id),
+            ...this.notifications.map((notif) => notif.message?.thread?.id).filter((id) => !!id),
         ]);
     }
     lastMessage = Record.one("Message", {
