@@ -7,9 +7,10 @@
             <field name="state">code</field>
             <field name="code">model._check_presence()</field>
             <field eval="True" name="active" />
-            <field name="user_id" ref="base.user_root" />
-            <field name="interval_number">1</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field><!-- TODO: See if you can use trigger instead-->
             <field name="interval_type">hours</field>
+            <field name="priority">4</field>
         </record>
     </data>
 </odoo>
