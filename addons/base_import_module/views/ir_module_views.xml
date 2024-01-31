@@ -34,7 +34,7 @@
             <field name="inherit_id" ref="base.module_tree"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='category_id']" position="after">
-                    <field name="module_type" invisible="1"/>
+                    <field name="module_type" column_invisible="1"/>
                 </xpath>
             </field>
         </record>
