@@ -128,6 +128,28 @@ class MrpUnbuild(models.Model):
         if 'done' in self.mapped('state'):
             raise UserError(_("You cannot delete an unbuild order if the state is 'Done'."))
 
+    def _prepare_finished_move_line_vals(self, finished_move):
+        return {
+            'move_id': finished_move.id,
+            'lot_id': self.lot_id.id,
+            'quantity': self.product_qty,
+            'product_id': finished_move.product_id.id,
+            'product_uom_id': finished_move.product_uom.id,
+            'location_id': finished_move.location_id.id,
+            'location_dest_id': finished_move.location_dest_id.id,
+        }
+
+    def _prepare_move_line_vals(self, move, origin_move_line, taken_quantity):
+        return {
+            'move_id': move.id,
+            'lot_id': origin_move_line.lot_id.id,
+            'quantity': taken_quantity,
+            'product_id': move.product_id.id,
+            'product_uom_id': origin_move_line.product_uom_id.id,
+            'location_id': move.location_id.id,
+            'location_dest_id': move.location_dest_id.id,
+        }
+
     def action_unbuild(self):
         self.ensure_one()
         self._check_company()
@@ -155,15 +177,8 @@ class MrpUnbuild(models.Model):
             raise UserError(_('Some of your byproducts are tracked, you have to specify a manufacturing order in order to retrieve the correct byproducts.'))
 
         for finished_move in finished_moves:
-            self.env['stock.move.line'].create({
-                'move_id': finished_move.id,
-                'lot_id': self.lot_id.id,
-                'quantity': self.product_qty,
-                'product_id': finished_move.product_id.id,
-                'product_uom_id': finished_move.product_uom.id,
-                'location_id': finished_move.location_id.id,
-                'location_dest_id': finished_move.location_dest_id.id,
-            })
+            finished_move_line_vals = self._prepare_finished_move_line_vals(finished_move)
+            self.env['stock.move.line'].create(finished_move_line_vals)
 
         # TODO: Will fail if user do more than one unbuild with lot on the same MO. Need to check what other unbuild has aready took
         qty_already_used = defaultdict(float)
@@ -179,15 +194,8 @@ class MrpUnbuild(models.Model):
                     # Iterate over all move_lines until we unbuilded the correct quantity.
                     taken_quantity = min(needed_quantity, move_line.quantity - qty_already_used[move_line])
                     if taken_quantity:
-                        self.env['stock.move.line'].create({
-                            'move_id': move.id,
-                            'lot_id': move_line.lot_id.id,
-                            'quantity': taken_quantity,
-                            'product_id': move.product_id.id,
-                            'product_uom_id': move_line.product_uom_id.id,
-                            'location_id': move.location_id.id,
-                            'location_dest_id': move.location_dest_id.id,
-                        })
+                        move_line_vals = self._prepare_move_line_vals(move, move_line, taken_quantity)
+                        self.env['stock.move.line'].create(move_line_vals)
                         needed_quantity -= taken_quantity
                         qty_already_used[move_line] += taken_quantity
             else:
