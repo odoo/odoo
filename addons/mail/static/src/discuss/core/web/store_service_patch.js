@@ -13,6 +13,12 @@ const StorePatch = {
         this.fetchChannelsDeferred = undefined;
         this.initChannelsUnreadCounter = 0;
     },
+    onStarted() {
+        super.onStarted();
+        if (this.discuss.isActive) {
+            this.fetchChannels();
+        }
+    },
     async fetchChannels() {
         if (["fetching", "fetched"].includes(this.fetchChannelsState)) {
             return this.fetchChannelsDeferred;
