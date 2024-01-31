@@ -230,7 +230,7 @@ class Challenge(models.Model):
 
     ##### Update #####
 
-    @api.model # FIXME: check how cron functions are called to see if decorator necessary
+    @api.model
     def _cron_update(self, ids=False, commit=True):
         """Daily cron check.
 
@@ -242,14 +242,24 @@ class Challenge(models.Model):
         # cannot be replaced by a parameter because it is intended to impact side-effects of
         # write operations
         self = self.with_context(commit_gamification=commit)
-        # start scheduled challenges
+        done = self._cron_start_challenges()
+        done += self._cron_close_challenges()
+        self.env['ir.cron']._notify_progress(done=len(done), remaining=1)
+        done += self._cron_update_challenges(ids=ids)
+        self.env['ir.cron']._notify_progress(done=len(done), remaining=0)
+
+    @api.model
+    def _cron_start_challenges(self):
         planned_challenges = self.search([
             ('state', '=', 'draft'),
             ('start_date', '<=', fields.Date.today())
         ])
         if planned_challenges:
             planned_challenges.write({'state': 'inprogress'})
+        return planned_challenges
 
+    @api.model
+    def _cron_close_challenges(self):
         # close scheduled challenges
         scheduled_challenges = self.search([
             ('state', '=', 'inprogress'),
@@ -257,10 +267,13 @@ class Challenge(models.Model):
         ])
         if scheduled_challenges:
             scheduled_challenges.write({'state': 'done'})
+        return scheduled_challenges
 
+    @api.model
+    def _cron_update_challenges(self, ids=None):
         records = self.browse(ids) if ids else self.search([('state', '=', 'inprogress')])
-
-        return records._update_all()
+        records._update_all()
+        return records
 
     def _update_all(self):
         """Update the challenges and related goals."""
