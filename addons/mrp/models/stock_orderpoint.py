@@ -103,13 +103,15 @@ class StockWarehouseOrderpoint(models.Model):
 
         bom_manufacture = self.env['mrp.bom']._bom_find(orderpoints_without_kit.product_id, bom_type='normal')
         bom_manufacture = self.env['mrp.bom'].concat(*bom_manufacture.values())
-        productions_group = self.env['mrp.production']._read_group(
-            [('bom_id', 'in', bom_manufacture.ids), ('state', '=', 'draft'), ('orderpoint_id', 'in', orderpoints_without_kit.ids)],
-            ['orderpoint_id', 'product_uom_id'],
-            ['product_qty:sum'])
-        for orderpoint, uom, product_qty_sum in productions_group:
-            res[orderpoint.id] += uom._compute_quantity(
-                product_qty_sum, orderpoint.product_uom, round=False)
+        productions_group = self.env['mrp.production'].read_group(
+            [('bom_id', 'in', bom_manufacture.ids), ('state', '=', 'draft')],
+            ['product_id', 'product_qty', 'product_uom_id'],
+            ['product_id', 'product_uom_id'], lazy=False)
+        qties_in_production = {group['product_id'][0]: group['product_qty'] for group in productions_group}
+        for orderpoint in self:
+            product_qty = qties_in_production.get(orderpoint.product_id.id, 0.0)
+            product_uom_qty = orderpoint.product_id.uom_id._compute_quantity(product_qty, orderpoint.product_uom, round=False)
+            res[orderpoint.id] += product_uom_qty
         return res
 
     def _get_qty_multiple_to_order(self):
