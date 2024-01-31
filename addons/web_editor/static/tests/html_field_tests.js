@@ -959,7 +959,7 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
     QUnit.module("Link");
 
     QUnit.test("link preview in Link Dialog", async (assert) => {
-        assert.expect(4);
+        assert.expect(6);
 
         serverData.models.partner.records.push({
             id: 1,
@@ -976,6 +976,26 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
                 </form>`,
         });
 
+        // Test the popover option to edit the link
+        const a = document.querySelector(".test_target a");
+        // Wait for the popover to appear
+        await nextTick();
+        a.click();
+        await nextTick();
+        // Click on the edit link icon
+        document.querySelector("a.mx-1.o_we_edit_link.text-dark").click();
+        // Make sure popover is closed
+        await new Promise(resolve => $(a).on('hidden.bs.popover.link_popover', resolve));
+        let labelInputField = document.querySelector(".modal input#o_link_dialog_label_input");
+        let linkPreview = document.querySelector(".modal a#link-preview");
+        assert.strictEqual(labelInputField.value, 'This website',
+            "The label input field should match the link's content");
+        assert.strictEqual(linkPreview.innerText.replaceAll("\u200B", ""), "This website",
+            "Link label in preview should match label input field");
+
+        // Click on discard
+        await click(document, ".modal .modal-footer button.btn-secondary");
+
         const p = document.querySelector(".test_target");
         // Select link label to open the floating toolbar.
         setSelection(p, 0, p, 1);
@@ -984,8 +1004,8 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
         document.querySelector("#toolbar #create-link").click();
         await nextTick();
 
-        const labelInputField = document.querySelector(".modal input#o_link_dialog_label_input");
-        const linkPreview = document.querySelector(".modal a#link-preview");
+        labelInputField = document.querySelector(".modal input#o_link_dialog_label_input");
+        linkPreview = document.querySelector(".modal a#link-preview");
         assert.strictEqual(labelInputField.value, 'This website',
             "The label input field should match the link's content");
         assert.strictEqual(linkPreview.innerText, 'This website',
