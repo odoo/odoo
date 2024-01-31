@@ -1240,7 +1240,7 @@ class AccountChartTemplate(models.AbstractModel):
                 or code_translations.get_python_translations(translation_module, generic_lang).get(record[fname])
             )
 
-    def _load_translations(self, langs=None, companies=None):
+    def _load_translations(self, langs=None, companies=None, template_data=None):
         """Load the translations of the chart template.
 
         :param langs: the lang code to load the translations for. If one of the codes is not present,
@@ -1257,7 +1257,7 @@ class AccountChartTemplate(models.AbstractModel):
 
         # Gather translations for records that are created from the chart_template data
         for chart_template, chart_companies in groupby(companies, lambda c: c.chart_template):
-            template_data = self.env['account.chart.template']._get_chart_template_data(chart_template)
+            template_data = template_data or self.env['account.chart.template']._get_chart_template_data(chart_template)
             template_data.pop('template_data', None)
             for mname, data in template_data.items():
                 for _xml_id, record in data.items():
@@ -1270,7 +1270,7 @@ class AccountChartTemplate(models.AbstractModel):
                             field_translation = self._get_field_translation(record, fname, lang)
                             if field_translation:
                                 for company in chart_companies:
-                                    xml_id = f"account.{company.id}_{_xml_id}"
+                                    xml_id = _xml_id if '.' in _xml_id else f"account.{company.id}_{_xml_id}"
                                     translation_importer.model_translations[mname][fname][xml_id][lang] = field_translation
 
         # Gather translations for the TEMPLATE_MODELS records that are not created from the chart_template data
