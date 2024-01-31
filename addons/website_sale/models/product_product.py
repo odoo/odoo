@@ -104,7 +104,7 @@ class Product(models.Model):
         line_tax_type = website.show_line_subtotals_tax_selection
         fpos_id = self.env['website'].sudo()._get_current_fiscal_position_id(self.env.user.partner_id)
         fiscal_position = self.env['account.fiscal.position'].sudo().browse(fpos_id)
-        product_taxes = self.sudo().taxes_id.filtered(lambda x: x.company_id == self.env.company)
+        product_taxes = self.sudo().taxes_id.filtered(lambda x: x.company_id in self.env.company.parent_ids)
         if product_taxes:
             taxes = fiscal_position.map_tax(product_taxes)
             price = self.env['account.tax']._fix_tax_included_price_company(
