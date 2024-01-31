@@ -80,8 +80,8 @@ $o-hr-holidays-border-color: map-get($grays, '300');
                         @include o-position-absolute($top: 14px, $left: calc((var(--KanbanRecord-padding-h) + #{$spacer * 1.5} + var(--hrHolidays-Circle-Size) * .5 + #{$border-width * .5}) * -1));
                         width: var(--hrHolidays-Circle-Size);
                         height: var(--hrHolidays-Circle-Size);
-                        border: 2px solid map-get($o-theme-text-colors, 'primary');
-                        border-radius: 10px;
+                        border: $border-width * 2 solid map-get($o-theme-text-colors, 'primary');
+                        border-radius: $border-radius-pill;
                         background: $o-gray-100;
                     }
                 }
