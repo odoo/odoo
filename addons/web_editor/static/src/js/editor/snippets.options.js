@@ -5670,6 +5670,21 @@ registry.SnippetMove = SnippetOptionWidget.extend(ColumnLayoutMixin, {
         $overlayArea.prepend($buttons[1]);
         $overlayArea.prepend($buttons[0]);
 
+        // Needed for compatibility (with already dropped snippets).
+        // If the target is a column, check if all the columns are either mobile
+        // ordered or not. If they are not consistent, then we remove the mobile
+        // order classes from all of them, to avoid issues.
+        const parentEl = this.$target[0].parentElement;
+        if (parentEl.classList.contains("row")) {
+            const columnEls = [...parentEl.children];
+            const orderedColumnEls = columnEls.filter(el => this._getItemMobileOrder(el));
+            if (orderedColumnEls.length && orderedColumnEls.length !== columnEls.length) {
+                orderedColumnEls.forEach(el => {
+                    el.className = el.className.replace(/\border(-lg)?-[0-9]+\b/g, "");
+                });
+            }
+        }
+
         return this._super(...arguments);
     },
     /**
@@ -5698,6 +5713,16 @@ registry.SnippetMove = SnippetOptionWidget.extend(ColumnLayoutMixin, {
     /**
      * @override
      */
+    onMove() {
+        this._super.apply(this, arguments);
+        // Remove all the mobile order classes after a drag and drop.
+        [...this.$target[0].parentElement.children].forEach(el => {
+            el.className = el.className.replace(/\border(-lg)?-[0-9]+\b/g, "");
+        });
+    },
+    /**
+     * @override
+     */
     onRemove() {
         this._super.apply(this, arguments);
         const targetMobileOrder = this._getItemMobileOrder(this.$target[0]);
@@ -5705,13 +5730,7 @@ registry.SnippetMove = SnippetOptionWidget.extend(ColumnLayoutMixin, {
         // removed snippet must be filled in.
         if (targetMobileOrder) {
             const targetOrder = parseInt(targetMobileOrder[1]);
-
-            [...this.$target[0].parentElement.children].forEach(el => {
-                const elOrder = parseInt(this._getItemMobileOrder(el)[1]);
-                if (elOrder > targetOrder) {
-                    el.classList.replace(`order-${elOrder}`, `order-${elOrder - 1}`);
-                }
-            });
+            this._fillRemovedItemGap(this.$target[0].parentElement, targetOrder);
         }
     },
 
