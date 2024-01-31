@@ -9,7 +9,10 @@ class ResUsers(models.Model):
 
     @api.model
     def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
-        user_ids = list(super()._name_search(name, domain, operator, limit, order))
+        user_query = super()._name_search(name, domain, operator, limit, order)
+        if limit is None:
+            return user_query
+        user_ids = list(user_query)
         if self._uid in user_ids:
             if user_ids.index(self._uid) != 0:
                 user_ids.remove(self._uid)
