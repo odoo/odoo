@@ -41,7 +41,7 @@ export class Messaging {
 
     get initMessagingParams() {
         return {
-            init_messaging: true,
+            init_messaging: {},
         };
     }
 

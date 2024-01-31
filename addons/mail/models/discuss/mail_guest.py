@@ -134,7 +134,6 @@ class MailGuest(models.Model):
                 # sudo: bus.bus: reading non-sensitive last id
                 "initBusId": self.env["bus.bus"].sudo()._bus_last_id(),
             },
-            "Thread": self.env["discuss.channel"]._get_init_channels()._channel_info(),
         })
 
     def _guest_format(self, fields=None):

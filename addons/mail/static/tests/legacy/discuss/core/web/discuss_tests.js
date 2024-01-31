@@ -27,7 +27,7 @@ QUnit.test("can create a new channel [REQUIRE FOCUS]", async () => {
     });
     await assertSteps([
         `/mail/action - ${JSON.stringify({
-            init_messaging: true,
+            init_messaging: {},
             failures: true,
             systray_get_activities: true,
             context: { lang: "en", tz: "taht", uid: pyEnv.currentUserId },
@@ -118,7 +118,7 @@ QUnit.test("can join a chat conversation", async (assert) => {
     });
     await assertSteps([
         `/mail/action - ${JSON.stringify({
-            init_messaging: true,
+            init_messaging: {},
             failures: true,
             systray_get_activities: true,
             context: { lang: "en", tz: "taht", uid: pyEnv.currentUserId },
