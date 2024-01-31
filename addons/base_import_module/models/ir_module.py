@@ -318,6 +318,8 @@ class IrModule(models.Model):
 
     @api.model
     def _get_modules_from_apps(self, fields, module_type, module_name, domain=None, limit=None, offset=None):
+        if 'name' not in fields:
+            fields = fields + ['name']
         payload = {
             'params': {
                 'series': major_version,
@@ -334,7 +336,7 @@ class IrModule(models.Model):
             resp.raise_for_status()
             modules_list = resp.json().get('result', [])
             for mod in modules_list:
-                module_name = mod.get('name', module_name)
+                module_name = mod['name']
                 existing_mod = self.search([('name', '=', module_name), ('state', '=', 'installed')])
                 mod['id'] = existing_mod.id if existing_mod else -1
                 if 'icon' in fields:
