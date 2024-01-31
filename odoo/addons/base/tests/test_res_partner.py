@@ -735,6 +735,94 @@ class TestPartnerRecursion(TransactionCase):
         with self.assertRaises(ValidationError):
             (self.p3 + self.p1).parent_id = self.p2
 
+    def test_106_res_partner_recursion_performance(self):
+        # old approach
+        from collections import defaultdict
+        from odoo.tools import SQL
+        import itertools
+
+        from odoo.tools import check_relation_loop
+
+        def _check_recursion_legacy(cr, table, col1, col2, col1_in):
+            """
+            Verifies that there is no loop in a hierarchical structure of records,
+            by following the parent relationship using the **parent** field until a
+            loop is detected or until a top-level record is found.
+
+            :param parent: optional parent field name (default: ``self._parent_name``)
+            :return: **True** if no loop was found, **False** otherwise.
+            """
+            for id in col1_in:
+                current_id = id
+                seen_ids = {current_id}
+                while current_id:
+                    cr.execute(SQL(
+                        "SELECT %s FROM %s WHERE %s = %s",
+                        SQL.identifier(col2), SQL.identifier(table), SQL.identifier(col1), current_id,
+                    ))
+                    result = cr.fetchone()
+                    current_id = result[0] if result else None
+                    if current_id in seen_ids:
+                        return False
+            return True
+
+        cr = self.env.cr
+
+        cr.execute(
+            """
+            CREATE TABLE test_recursion_m2o (
+                col1 INTEGER PRIMARY KEY,
+                col2 INTEGER
+            );
+            CREATE INDEX ON test_recursion_m2o (col1);
+            CREATE INDEX ON test_recursion_m2o (col2);
+            """
+        )
+
+        root_node = 1
+        num_children_per_node = 4
+        tree_depth = 8
+
+        first_n = (num_children_per_node ** tree_depth - 1) // (num_children_per_node - 1) + root_node
+        last_n = first_n + num_children_per_node ** tree_depth - 2 + root_node
+
+        def generate_tree_relations(root, num_children, depth):
+            if depth == 0:
+                return []
+
+            current_node = root
+            relations = []
+            level_d = [root]
+            while depth:
+                new_level_d = []
+                for n in level_d:
+                    for i in range(num_children):
+                        current_node += 1
+                        new_level_d.append(current_node)
+                        relations.append((current_node, n))  # child -> parent
+                level_d = new_level_d
+                depth -= 1
+
+            return relations
+
+        tree_relations = generate_tree_relations(root_node, num_children_per_node, tree_depth)
+
+        cr.execute(SQL(
+            """
+            INSERT INTO test_recursion_m2o (col1, col2) VALUES %s
+            """,
+            SQL(', ').join(tree_relations)
+        ))
+        col1_in = [first_n, first_n + 1, first_n + 2, first_n + 3, last_n]
+
+        import timeit
+
+        t1 = timeit.timeit("check_relation_loop(cr, 'test_recursion_m2o', 'col1', 'col2', col1_in)", number=10, globals=locals())
+        t2 = timeit.timeit("_check_recursion_legacy(cr, 'test_recursion_m2o', 'col1', 'col2', col1_in)", number=10, globals=locals())
+        print(t1)  # 0.0027043330192100257
+        print(t2)  # 0.012238458992214873
+
+
     def test_110_res_partner_recursion_multi_update(self):
         """ multi-write on several partners in same hierarchy must not trigger a false cycle detection """
         ps = self.p1 + self.p2 + self.p3
