@@ -6,7 +6,7 @@ from markupsafe import Markup
 from odoo import api, fields, Command, models, _
 from odoo.tools import float_round
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import email_split, float_is_zero, float_repr, float_compare, is_html_empty
+from odoo.tools import email_split, float_is_zero, get_lang, float_compare, is_html_empty
 from odoo.tools.misc import clean_context, format_date
 
 
@@ -234,8 +234,11 @@ class HrExpense(models.Model):
     def _compute_label_convert_rate(self):
         records_with_diff_currency = self.filtered(lambda x: not x.same_currency and x.currency_id)
         (self - records_with_diff_currency).label_convert_rate = False
+        lang = get_lang(self.env)
         for expense in records_with_diff_currency:
-            rate_txt = _('1 %(exp_cur)s = %(rate)s %(comp_cur)s', exp_cur=expense.currency_id.name, rate=float_repr(expense.currency_rate, 6), comp_cur=expense.company_currency_id.name)
+            fmt = "%.{0}f".format(expense.currency_id.decimal_places)
+            rate = lang.format(fmt, expense.currency_id.round(expense.currency_rate), grouping=True, monetary=True)
+            rate_txt = _('1 %(exp_cur)s = %(rate)s %(comp_cur)s', exp_cur=expense.currency_id.name, rate=rate, comp_cur=expense.company_currency_id.name)
             expense.label_convert_rate = rate_txt
 
     def _compute_attachment_number(self):
