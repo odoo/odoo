@@ -143,3 +143,6 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
     def test_livechat_as_portal_user(self):
         new_test_user(self.env, login="portal_user", groups="base.group_portal")
         self.start_tour("/my", "website_livechat_as_portal_tour", login="portal_user")
+
+    def test_user_known_after_reload(self):
+        self.start_tour('/', 'website_livechat_user_known_after_reload')

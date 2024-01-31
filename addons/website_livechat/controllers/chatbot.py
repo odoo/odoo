@@ -3,6 +3,7 @@
 
 from odoo import http, Command
 from odoo.http import request
+from odoo.addons.mail.tools.discuss import StoreData
 
 
 class WebsiteLivechatChatbotScriptController(http.Controller):
@@ -50,10 +51,12 @@ class WebsiteLivechatChatbotScriptController(http.Controller):
 
         discuss_channel = request.env['discuss.channel'].create(discuss_channel_values)
         chatbot_script._post_welcome_steps(discuss_channel)
-
+        store = StoreData()
+        request.env["res.users"]._init_store_data(store)
         return request.render("im_livechat.chatbot_test_script_page", {
             'server_url': chatbot_script.get_base_url(),
             'channel_data': {'id': discuss_channel.id, 'model': 'discuss.channel'},
             'chatbot_data': chatbot_script._format_for_frontend(),
             'current_partner_id': request.env.user.partner_id.id,
+            'storeData': store.get_result(),
         })
