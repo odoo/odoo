@@ -131,11 +131,11 @@
             <tree string="Time Off Type" multi_edit="1">
                 <field name="sequence" widget="handle"/>
                 <field name="display_name"/>
-                <field name="allocation_validation_type"/>
-                <field name="employee_requests" optional="hide"/>
-                <field name="requires_allocation" optional="hide"/>
-                <field name="leave_validation_type" optional="hide"/>
+                <field name="leave_validation_type" optional="hide" string="Time Off Approval"/>
                 <field name="responsible_ids" widget="many2many_tags" invisible="leave_validation_type in ['no_validation', 'manager'] and (requires_allocation == 'no' or allocation_validation_type != 'officer')" optional="hide"/>
+                <field name="requires_allocation" optional="hide"/>
+                <field name="allocation_validation_type" string="Allocation Approval"/>
+                <field name="employee_requests" optional="hide"/>
                 <field name="company_id" groups="base.group_multi_company" optional="hide"/>
             </tree>
         </field>
