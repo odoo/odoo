@@ -845,7 +845,7 @@ QUnit.test("channel - states: open from the bus", async () => {
     });
     await assertSteps([
         `/mail/action - ${JSON.stringify({
-            init_messaging: true,
+            init_messaging: {},
             failures: true,
             systray_get_activities: true,
             context: { lang: "en", tz: "taht", uid: pyEnv.currentUserId },
@@ -992,7 +992,7 @@ QUnit.test("chat - states: open from the bus", async () => {
     });
     await assertSteps([
         `/mail/action - ${JSON.stringify({
-            init_messaging: true,
+            init_messaging: {},
             failures: true,
             systray_get_activities: true,
             context: { lang: "en", tz: "taht", uid: pyEnv.currentUserId },

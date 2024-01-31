@@ -84,11 +84,6 @@ patch(MockServer.prototype, {
                 initChannelsUnreadCounter: members.filter((member) => member.message_unread_counter)
                     .length,
             },
-            Thread: this._mockDiscussChannelChannelInfo(
-                this._mockDiscussChannel__get_init_channels(user, context).map(
-                    (channel) => channel.id
-                )
-            ),
         };
     },
     /**

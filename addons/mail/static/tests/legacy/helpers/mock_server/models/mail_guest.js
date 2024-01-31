@@ -9,12 +9,10 @@ patch(MockServer.prototype, {
         return guestId ? this.pyEnv["mail.guest"].searchRead([["id", "=", guestId]])[0] : null;
     },
     _mockMailGuest__initMessaging(context) {
-        const channels = this._mockDiscussChannel__get_init_channels(undefined, context);
         return {
             Store: {
                 initBusId: this.lastBusNotificationId,
             },
-            Thread: this._mockDiscussChannelChannelInfo(channels.map((channels) => channels.id)),
         };
     },
     /**

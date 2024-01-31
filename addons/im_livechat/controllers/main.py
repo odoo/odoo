@@ -261,8 +261,4 @@ class LivechatController(http.Controller):
         channel_sudo = request.env["discuss.channel"].sudo().search([("uuid", "=", uuid)])
         if not channel_sudo:
             return
-        domain = [("channel_id", "=", channel_sudo.id), ("is_self", "=", True)]
-        member = request.env["discuss.channel.member"].search(domain)
-        # sudo: discuss.channel.rtc.session - member of current user can leave call
-        member.sudo()._rtc_leave_call()
         channel_sudo._close_livechat_session()

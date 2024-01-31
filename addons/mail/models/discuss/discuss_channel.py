@@ -804,17 +804,6 @@ class Channel(models.Model):
         return self.env.user.partner_id if not guest else self.env["res.partner"], guest
 
     @api.model
-    def _get_init_channels(self):
-        member_domain = [
-            ("is_self", "=", True),
-            "|",
-            ("fold_state", "in", ("open", "folded")),
-            ("rtc_inviting_session_id", "!=", False)
-        ]
-        channel_domain = [("channel_member_ids", "any", member_domain)]
-        return self.search(channel_domain)
-
-    @api.model
     def _get_channels_as_member(self):
         # 2 different queries because the 2 sub-queries together with OR are less efficient
         member_domain = [("channel_type", "in", ("channel", "group")), ("is_member", "=", True)]

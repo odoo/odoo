@@ -67,23 +67,6 @@ patch(MockServer.prototype, {
         return this._mockMailMessageMessageFormat(messages.map(({ id }) => id));
     },
 
-    /** @override */
-    _mockDiscussChannel__get_init_channels(user, context = {}) {
-        if (context.is_for_livechat) {
-            const guest =
-                this.pyEnv.currentUser?._is_public() && this._mockMailGuest__getGuestFromContext();
-            const members = this.getRecords("discuss.channel.member", [
-                guest ? ["guest_id", "=", guest.id] : ["partner_id", "=", user.partner_id],
-            ]);
-            return this.getRecords("discuss.channel", [
-                ["id", "in", members.map((m) => m.channel_id)],
-                ["channel_type", "=", "livechat"],
-                ["livechat_active", "=", true],
-            ]);
-        }
-        return super._mockDiscussChannel__get_init_channels(...arguments);
-    },
-
     /**
      * Simulates `_get_visitor_leave_message` on `discuss.channel`.
      */

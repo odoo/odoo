@@ -17,12 +17,32 @@ patch(MockServer.prototype, {
     },
     _mockRoute_ProcessRequest(args) {
         const res = {};
-        if (args.init_messaging) {
+        if ("init_messaging" in args) {
             const initMessaging =
                 this._mockMailGuest__getGuestFromContext() && this.pyEnv.currentUser?._is_public()
                     ? this._mockMailGuest__initMessaging(args.context)
                     : this._mockResUsers_InitMessaging([this.pyEnv.currentUserId], args.context);
             this._addToRes(res, initMessaging);
+            const guest =
+                this.pyEnv.currentUser?._is_public() && this._mockMailGuest__getGuestFromContext();
+            const members = this.getRecords("discuss.channel.member", [
+                guest
+                    ? ["guest_id", "=", guest.id]
+                    : ["partner_id", "=", this.pyEnv.currentPartnerId],
+                "|",
+                ["fold_state", "in", ["open", "folded"]],
+                ["rtc_inviting_session_id", "!=", false],
+            ]);
+            const channelsDomain = [["id", "in", members.map((m) => m.channel_id)]];
+            const { channelTypes } = args.init_messaging;
+            if (channelTypes) {
+                channelsDomain.push(["channel_type", "in", channelTypes]);
+            }
+            this._addToRes(res, {
+                Thread: this._mockDiscussChannelChannelInfo(
+                    this.pyEnv["discuss.channel"].search(channelsDomain)
+                ),
+            });
         }
         if (args.failures && this.pyEnv.currentPartnerId) {
             const partner = this.getRecords(

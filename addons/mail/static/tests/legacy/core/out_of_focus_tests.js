@@ -25,7 +25,7 @@ QUnit.test("Spaces in notifications are not encoded", async () => {
     const channel = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]])[0];
     await assertSteps([
         `/mail/action - ${JSON.stringify({
-            init_messaging: true,
+            init_messaging: {},
             failures: true,
             systray_get_activities: true,
             context: { lang: "en", tz: "taht", uid: pyEnv.currentUserId },

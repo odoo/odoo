@@ -36,7 +36,7 @@ QUnit.test("list activity widget with no activity", async () => {
     });
     await assertSteps([
         `/mail/action - ${JSON.stringify({
-            init_messaging: true,
+            init_messaging: {},
             failures: true,
             systray_get_activities: true,
             context: { lang: "en", tz: "taht", uid: pyEnv.currentUserId },
@@ -114,7 +114,7 @@ QUnit.test("list activity widget with activities", async () => {
     });
     await assertSteps([
         `/mail/action - ${JSON.stringify({
-            init_messaging: true,
+            init_messaging: {},
             failures: true,
             systray_get_activities: true,
             context: { lang: "en", tz: "taht", uid: pyEnv.currentUserId },
@@ -193,7 +193,7 @@ QUnit.test("list activity widget with exception", async () => {
     });
     await assertSteps([
         `/mail/action - ${JSON.stringify({
-            init_messaging: true,
+            init_messaging: {},
             failures: true,
             systray_get_activities: true,
             context: { lang: "en", tz: "taht", uid: pyEnv.currentUserId },
@@ -299,7 +299,7 @@ QUnit.test("list activity widget: open dropdown", async () => {
     });
     await assertSteps([
         `/mail/action - ${JSON.stringify({
-            init_messaging: true,
+            init_messaging: {},
             failures: true,
             systray_get_activities: true,
             context: { lang: "en", tz: "taht", uid: pyEnv.currentUserId },

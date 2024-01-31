@@ -964,18 +964,4 @@ patch(MockServer.prototype, {
         ]);
         return channels.concat(pinnedChannels);
     },
-    /**
-     * Simulates `_get_init_channels` on `discuss.channel`.
-     */
-    _mockDiscussChannel__get_init_channels(user, context) {
-        const guest =
-            this.pyEnv.currentUser?._is_public() && this._mockMailGuest__getGuestFromContext();
-        const members = this.getRecords("discuss.channel.member", [
-            guest ? ["guest_id", "=", guest.id] : ["partner_id", "=", user.partner_id],
-            "|",
-            ["fold_state", "in", ["open", "folded"]],
-            ["rtc_inviting_session_id", "!=", false],
-        ]);
-        return this.getRecords("discuss.channel", [["id", "in", members.map((m) => m.channel_id)]]);
-    },
 });
