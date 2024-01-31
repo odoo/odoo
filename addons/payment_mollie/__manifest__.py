@@ -7,7 +7,7 @@
     'category': 'Accounting/Payment Acquirers',
     'sequence': 356,
     'summary': 'Payment Acquirer: Mollie Implementation',
-    'description': """Mollie Payment Acquirer""",
+    'description': " ",  # Non-empty string to avoid loading the README file.
 
     'author': 'Odoo S.A, Applix BV, Droggol Infotech Pvt. Ltd.',
     'website': 'https://www.mollie.com',

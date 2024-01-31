@@ -5,7 +5,7 @@
     'version': '2.0',
     'category': 'Accounting/Payment Acquirers',
     'summary': 'Payment Acquirer: Wire Transfer Implementation',
-    'description': """Wire Transfer Payment Acquirer""",
+    'description': " ",  # Non-empty string to avoid loading the README file.
     'depends': ['payment'],
     'data': [
         'views/payment_views.xml',
