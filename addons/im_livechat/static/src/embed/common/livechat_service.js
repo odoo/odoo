@@ -83,8 +83,9 @@ export class LivechatService {
             (await rpc("/im_livechat/init", {
                 channel_id: this.options.channel_id,
             }));
-        this.available = data?.available_for_me ?? this.available;
-        this.rule = this.store.LivechatRule.insert(data?.rule ?? {});
+        this.available = data.available_for_me;
+        this.rule = this.store.LivechatRule.insert(data.rule);
+        this.store.insert(data.storeData);
         if (this.options?.force_thread) {
             this._saveLivechatState(this.options.force_thread, { persisted: true });
         }

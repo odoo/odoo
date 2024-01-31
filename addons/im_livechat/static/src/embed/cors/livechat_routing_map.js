@@ -39,4 +39,5 @@ livechatRoutingMap
         "/im_livechat/cors/rtc/session/update_and_broadcast"
     )
     .add("/im_livechat/visitor_leave_session", "/im_livechat/cors/visitor_leave_session")
-    .add("/im_livechat/get_session", "/im_livechat/cors/get_session");
+    .add("/im_livechat/get_session", "/im_livechat/cors/get_session")
+    .add("/im_livechat/init", "/im_livechat/cors/init");

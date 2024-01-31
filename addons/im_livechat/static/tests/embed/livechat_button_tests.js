@@ -54,7 +54,7 @@ QUnit.test("clicking on notification opens the chat", async () => {
     await start({
         mockRPC(route) {
             if (route === "/im_livechat/init") {
-                return { rule: { action: "display_button_and_text" } };
+                return { available_for_me: true, rule: { action: "display_button_and_text" } };
             }
         },
     });

@@ -19,3 +19,8 @@ class CorsLivechatController(LivechatController):
         return self.get_session(
             channel_id, anonymous_name, previous_operator_id, chatbot_script_id, persisted, **kwargs
         )
+
+    @route("/im_livechat/cors/init", type="json", auth="public", cors="*")
+    def cors_livechat_init(self, channel_id, guest_token=""):
+        force_guest_env(guest_token, raise_if_not_found=False)
+        return self.livechat_init(channel_id)
