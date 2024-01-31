@@ -2335,11 +2335,11 @@
                 <div class="oe_structure" id="oe_structure_website_sale_confirmation_3"/>
             </t>
 
-            <div class="d-flex justify-content-between align-items-center">
+            <t t-set="tx_sudo" t-value="order.get_portal_last_transaction()"/>
+            <div t-if="tx_sudo.state in ['pending', 'done']" class="d-flex justify-content-between align-items-center">
                 <h3>Thank you for your order.</h3>
                 <a role="button" class="d-none d-md-inline-block btn btn-primary ms-auto" href="/shop/print" target="_blank" aria-label="Print" title="Print"><i class="fa fa-print me-2"></i>Print</a>
             </div>
-            <t t-set="tx_sudo" t-value="order.get_portal_last_transaction()"/>
             <t t-if="tx_sudo.state == 'done'">
                 <div class="mb-4">
                     <h5>
