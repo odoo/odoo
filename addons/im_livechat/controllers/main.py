@@ -84,7 +84,8 @@ class LivechatController(http.Controller):
         info = channel.get_livechat_info(username=username)
         return request.render('im_livechat.loader', {'info': info}, headers=[('Content-Type', 'application/javascript')])
 
-    @http.route('/im_livechat/init', type='json', auth="public", cors="*")
+    @http.route('/im_livechat/init', type='json', auth="public")
+    @add_guest_to_context
     def livechat_init(self, channel_id):
         operator_available = len(request.env['im_livechat.channel'].sudo().browse(channel_id).available_operator_ids)
         rule = {}
@@ -108,10 +109,13 @@ class LivechatController(http.Controller):
                (not operator_available and matching_rule.chatbot_only_if_no_operator)) and matching_rule.chatbot_script_id.script_step_ids:
                 chatbot_script = matching_rule.chatbot_script_id
                 rule.update({'chatbotScript': chatbot_script._format_for_frontend()})
+        store = StoreData()
+        request.env["res.users"]._init_store_data(store)
         return {
             'available_for_me': bool((rule and rule.get('chatbotScript'))
                                 or operator_available and (not rule or rule['action'] != 'hide_button')),
             'rule': rule,
+            'storeData': store.get_result(),
         }
 
     def _get_guest_name(self):
