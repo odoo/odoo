@@ -1734,12 +1734,12 @@ Attempting to double-book your time off won't magically make your vacation 2x be
         ])
         # only take leaves linked to accruals
         concerned_leaves = concerned_leaves\
-            .filtered(lambda leave: leave.holiday_status_id in accrual_allocations.holiday_status_id)\
-            .sorted('date_from', reverse=True)
-        reason = _("the accruated amount is insufficient for that duration.")
+            .filtered(lambda leave: leave.holiday_status_id in accrual_allocations.holiday_status_id)
+        reason = _("the accrued amount is insufficient for that duration.")
         for leave in concerned_leaves:
             to_recheck_leaves_per_leave_type = concerned_leaves.employee_id._get_consumed_leaves(leave.holiday_status_id)[1]
             exceeding_duration = to_recheck_leaves_per_leave_type[leave.employee_id][leave.holiday_status_id]['exceeding_duration']
             if not exceeding_duration:
                 continue
             leave._force_cancel(reason, 'mail.mt_note')
+        self.env['ir.cron']._notify_progress(done=len(concerned_leaves), remaining=0)
