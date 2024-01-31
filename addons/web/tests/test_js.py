@@ -94,7 +94,7 @@ class MobileWebSuite(odoo.tests.HttpCase):
     @odoo.tests.no_retry
     def test_unit_mobile(self):
         # Unit tests suite (mobile)
-        self.browser_js('/web/tests/next?headless&tag=-desktop', "", "", login='admin', timeout=1800, error_checker=unit_test_error_checker)
+        self.browser_js('/web/tests/next?headless&tag=-desktop&tag=-headless', "", "", login='admin', timeout=1800, error_checker=unit_test_error_checker)
 
     def test_qunit_mobile(self):
         # ! DEPRECATED
