@@ -6,7 +6,7 @@
     'category': 'Accounting/Payment Acquirers',
     'sequence': 350,
     'summary': 'Payment Acquirer: Authorize.net Implementation',
-    'description': """Authorize.Net Payment Acquirer""",
+    'description': " ",  # Non-empty string to avoid loading the README file.
     'depends': ['payment'],
     'data': [
         'views/payment_views.xml',
