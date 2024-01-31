@@ -6,7 +6,7 @@
     'category': 'Accounting/Payment Acquirers',
     'sequence': 365,
     'summary': 'Payment Acquirer: Paypal Implementation',
-    'description': """Paypal Payment Acquirer""",
+    'description': " ",  # Non-empty string to avoid loading the README file.
     'depends': ['payment'],
     'data': [
         'views/payment_views.xml',

@@ -6,7 +6,7 @@
     'category': 'Accounting/Payment Acquirers',
     'sequence': 370,
     'summary': 'Payment Acquirer: PayuLatam Implementation',
-    'description': """Payulatam payment acquirer""",
+    'description': " ",  # Non-empty string to avoid loading the README file.
     'depends': ['payment'],
     'data': [
         'views/payment_views.xml',
