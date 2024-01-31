@@ -163,7 +163,7 @@ registry.category("web_tour.tours").add('project_tour', {
 }, {
     trigger: ".dropdown-menu span.text-danger",
     extra_trigger: ".dropdown-menu",
-    content: markup(_t("Mark the task as <b>Canceled</b>")),
+    content: markup(_t("Mark the task as <b>Cancelled</b>")),
 }, {
     trigger: ".o_kanban_record .oe_kanban_content .o_widget_subtask_counter .subtask_list_button:contains('1/2')",
     content: _t("Close the sub-tasks list"),
