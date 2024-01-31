@@ -4,16 +4,16 @@
         <t t-set="show_project" t-value="true"/>
         <t t-set="show_task" t-value="true"/>
         <t t-call="web.html_container">
-            <t t-call="web.internal_layout">
-                <div class="page">
-                    <t t-foreach="docs" t-as="doc">
-                        <t t-set="doc_name" t-value="doc.name"/>
-                        <t t-if="with_order_id" t-set="doc_name" t-value="str(doc.order_id.name) +' - '+ str(doc_name)"/>
-                        <t t-elif="doc_name == '/'" t-set="doc_name" t-value="'Draft'"/>
-                        <div class="oe_structure"/>
-                        <div class="row mt8">
-                            <div class="col-12">
-                                <t t-if="doc.timesheet_ids">
+            <t t-foreach="docs" t-as="doc">
+                <t t-if="doc.timesheet_ids">
+                    <t t-call="web.internal_layout">
+                        <div class="page">
+                            <t t-set="doc_name" t-value="doc.name"/>
+                            <t t-if="with_order_id" t-set="doc_name" t-value="str(doc.order_id.name) +' - '+ str(doc_name)"/>
+                            <t t-elif="doc_name == '/'" t-set="doc_name" t-value="'Draft'"/>
+                            <div class="oe_structure"/>
+                            <div class="row mt8">
+                                <div class="col-12">
                                     <h2>
                                         <br/>
                                         <span>Timesheets for the <t t-out="doc_name">S0001</t> <t t-out="record_name">- Timesheet product</t>
@@ -21,11 +21,11 @@
                                     </h2>
                                     <t t-set='lines' t-value='doc.timesheet_ids'/>
                                     <t t-call="hr_timesheet.timesheet_table"/>
-                                </t>
+                                </div>
                             </div>
                         </div>
                     </t>
-                </div>
+                </t>
             </t>
         </t>
     </template>
