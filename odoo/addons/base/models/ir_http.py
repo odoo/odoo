@@ -189,11 +189,6 @@ class IrHttp(models.AbstractModel):
 
         request.dispatcher.pre_dispatch(rule, args)
 
-        # Replace uid placeholder by the current request.env.uid
-        for key, val in list(args.items()):
-            if isinstance(val, models.BaseModel):
-                args[key] = val.with_env(request.env)
-
         # verify the default language set in the context is valid,
         # otherwise fallback on the company lang, english or the first
         # lang installed
@@ -203,6 +198,9 @@ class IrHttp(models.AbstractModel):
         for key, val in list(args.items()):
             if not isinstance(val, models.BaseModel):
                 continue
+
+            # Replace uid and lang placeholder by the current request.env.uid and request.env.lang
+            args[key] = val.with_env(request.env)
 
             try:
                 # explicitly crash now, instead of crashing later

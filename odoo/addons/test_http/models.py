@@ -59,6 +59,7 @@ class Galaxy(models.Model):
     _description = 'Galaxy'
 
     name = fields.Char(required=True, help='The galaxy common name.')
+    translated_name = fields.Char(translate=True)
     picture = fields.Image(attachment=True, groups="base.group_user")
 
     @api.model

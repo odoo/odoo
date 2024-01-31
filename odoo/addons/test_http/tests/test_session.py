@@ -134,6 +134,13 @@ class TestHttpSession(TestHttpBase):
             res = self.url_open('/test_http/echo-http-context-lang')
             self.assertEqual(res.text, 'en_US')
 
+        milky_way = self.env.ref('test_http.milky_way')
+        with self.subTest(case='fr record in url but fr_FR disabled'):
+            session.context['lang'] = 'fr_FR'
+            odoo.http.root.session_store.save(session)
+            lang_fr.active = False
+            self.url_open(f'/test_http/{milky_way.id}').raise_for_status()
+
     def test_session7_serializable(self):
         """Tests setting a non-serializable value to the session is prevented
         The test ensures the warning/exception is raised at the moment the attribute is set,
