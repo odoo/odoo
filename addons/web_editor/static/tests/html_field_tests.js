@@ -737,7 +737,7 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
     QUnit.module("Link");
 
     QUnit.test("link preview in Link Dialog", async (assert) => {
-        assert.expect(4);
+        assert.expect(6);
 
         serverData.models.partner.records.push({
             id: 1,
@@ -754,6 +754,25 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
                 </form>`,
         });
 
+        // Test the popover option to edit the link
+        const a = document.querySelector(".test_target a");
+        // Wait for the popover to appear
+        await nextTick();
+        a.click();
+        await nextTick();
+        // Click on the edit link icon
+        document.querySelector("a.mx-1.o_we_edit_link.text-dark").click();
+        await nextTick();
+        let labelInputField = document.querySelector(".modal input#o_link_dialog_label_input");
+        let linkPreview = document.querySelector(".modal a#link-preview");
+        assert.strictEqual(labelInputField.value, 'This website',
+            "The label input field should match the link's content");
+        assert.strictEqual(linkPreview.innerText.replaceAll("\u200B", ""), "This website",
+            "Link label in preview should match label input field");
+
+        // Click on discard
+        await click(document, ".modal .modal-footer button.btn-secondary");
+
         const p = document.querySelector(".test_target");
         // Select link label to open the floating toolbar.
         setSelection(p, 0, p, 1);
@@ -762,8 +781,8 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
         document.querySelector("#toolbar #create-link").click();
         await nextTick();
 
-        const labelInputField = document.querySelector(".modal input#o_link_dialog_label_input");
-        const linkPreview = document.querySelector(".modal a#link-preview");
+        labelInputField = document.querySelector(".modal input#o_link_dialog_label_input");
+        linkPreview = document.querySelector(".modal a#link-preview");
         assert.strictEqual(labelInputField.value, 'This website',
             "The label input field should match the link's content");
         assert.strictEqual(linkPreview.innerText, 'This website',
@@ -777,5 +796,12 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
         await click(document, ".modal .modal-footer button.btn-primary");
         assert.strictEqual(p.innerText.replaceAll('\u200B', ''), 'New label',
             "The link's label should be updated");
+        // In this scenario, the link is automatically selected, causing the
+        // floating toolbar to open. We must close it to prevent undesired
+        // elements from being added to the <body>, which would result in a
+        // test error.
+        await nextTick();
+        await click(document, ".note-editable.odoo-editor-editable");
+        await nextTick();
     });
 });
