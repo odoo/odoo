@@ -52,5 +52,7 @@ class ValidateAccountMove(models.TransientModel):
             self.abnormal_amount_partner_ids.ignore_abnormal_invoice_amount = True
         if self.ignore_abnormal_date:
             self.abnormal_date_partner_ids.ignore_abnormal_invoice_date = True
+        if self.force_post:
+            self.move_ids.auto_post = 'no'
         self.move_ids._post(not self.force_post)
         return {'type': 'ir.actions.act_window_close'}
