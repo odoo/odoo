@@ -45,10 +45,13 @@ def float_round(value, precision_digits=None, precision_rounding=None, rounding_
        :param float precision_rounding: decimal number representing the minimum
            non-zero value at the desired precision (for example, 0.01 for a 
            2-digit precision).
-       :param rounding_method: the rounding method used: 'HALF-UP', 'UP' or 'DOWN',
-           the first one rounding up to the closest number with the rule that
-           number>=0.5 is rounded up to 1, the second always rounding up and the
-           latest one always rounding down.
+       :param rounding_method: the rounding method used:
+           - 'HALF-UP' will round to the closest number with ties going away from zero.
+           - 'HALF-DOWN' will round to the closest number with ties going towards zero.
+           - 'HALF_EVEN' will round to the closest number with ties going to the closest
+              even number.
+           - 'UP' will always round away from 0.
+           - 'DOWN' will always round towards 0.
        :return: rounded float
     """
     rounding_factor = _float_check_precision(precision_digits=precision_digits,
@@ -89,6 +92,17 @@ def float_round(value, precision_digits=None, precision_rounding=None, rounding_
     elif rounding_method == 'DOWN':
         normalized_value += sign*epsilon
         rounded_value = math.floor(abs(normalized_value)) * sign
+
+    # TIE-BREAKING: HALF-EVEN
+    # We want to apply HALF-EVEN tie-breaking rules, i.e. 0.5 rounds towards closest even number.
+    elif rounding_method == 'HALF-EVEN':
+        rounded_value = math.copysign(builtins.round(normalized_value), normalized_value)
+
+    # TIE-BREAKING: HALF-DOWN
+    # We want to apply HALF-DOWN tie-breaking rules, i.e. 0.5 rounds towards 0.
+    elif rounding_method == 'HALF-DOWN':
+        normalized_value -= math.copysign(epsilon, normalized_value)
+        rounded_value = round(normalized_value)
 
     # TIE-BREAKING: HALF-UP (for normal rounding)
     # We want to apply HALF-UP tie-breaking rules, i.e. 0.5 rounds away from 0.
