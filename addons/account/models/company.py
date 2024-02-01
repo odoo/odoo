@@ -132,9 +132,6 @@ class ResCompany(models.Model):
         help="Journal used by default for moving the period of an entry",
     )
 
-    # Technical field to hide country specific fields in company form view
-    country_code = fields.Char(related='country_id.code', depends=['country_id'])
-
     # Taxes
     account_fiscal_country_id = fields.Many2one(
         string="Fiscal Country",
