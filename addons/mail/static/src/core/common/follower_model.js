@@ -15,7 +15,7 @@ export class Follower extends Record {
         return super.insert(...arguments);
     }
 
-    followedThread = Record.one("Thread");
+    thread = Record.one("Thread");
     /** @type {number} */
     id;
     /** @type {boolean} */
@@ -24,10 +24,8 @@ export class Follower extends Record {
 
     /** @returns {boolean} */
     get isEditable() {
-        const hasWriteAccess = this.followedThread ? this.followedThread.hasWriteAccess : false;
-        return this.partner.eq(this._store.self)
-            ? this.followedThread.hasReadAccess
-            : hasWriteAccess;
+        const hasWriteAccess = this.thread ? this.thread.hasWriteAccess : false;
+        return this.partner.eq(this._store.self) ? this.thread.hasReadAccess : hasWriteAccess;
     }
 }
 

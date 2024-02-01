@@ -69,13 +69,13 @@ patch(ThreadService.prototype, {
         }
         if ("followers" in result) {
             if (result.selfFollower) {
-                thread.selfFollower = { followedThread: thread, ...result.selfFollower };
+                thread.selfFollower = { thread, ...result.selfFollower };
             }
             thread.followersCount = result.followersCount;
             Record.MAKE_UPDATE(() => {
                 for (const followerData of result.followers) {
                     const follower = this.store.Follower.insert({
-                        followedThread: thread,
+                        thread,
                         ...followerData,
                     });
                     if (follower.notEq(thread.selfFollower)) {
@@ -85,7 +85,7 @@ patch(ThreadService.prototype, {
             });
             thread.recipientsCount = result.recipientsCount;
             for (const recipientData of result.recipients) {
-                thread.recipients.add({ followedThread: thread, ...recipientData });
+                thread.recipients.add({ thread, ...recipientData });
             }
         }
         if ("suggestedRecipients" in result) {
@@ -160,7 +160,7 @@ patch(ThreadService.prototype, {
         Record.MAKE_UPDATE(() => {
             for (const data of followers) {
                 const follower = this.store.Follower.insert({
-                    followedThread: thread,
+                    thread,
                     ...data,
                 });
                 if (follower.notEq(thread.selfFollower)) {
@@ -178,7 +178,7 @@ patch(ThreadService.prototype, {
         );
         Record.MAKE_UPDATE(() => {
             for (const data of recipients) {
-                thread.recipients.add({ followedThread: thread, ...data });
+                thread.recipients.add({ thread, ...data });
             }
         });
     },
@@ -205,14 +205,14 @@ patch(ThreadService.prototype, {
     },
     /** @param {import("models").Follower} recipient */
     removeRecipient(recipient) {
-        recipient.followedThread.recipients.delete(recipient);
+        recipient.thread.recipients.delete(recipient);
     },
     /**
      * @param {import("models").Follower} follower
      */
     async removeFollower(follower) {
-        await this.orm.call(follower.followedThread.model, "message_unsubscribe", [
-            [follower.followedThread.id],
+        await this.orm.call(follower.thread.model, "message_unsubscribe", [
+            [follower.thread.id],
             [follower.partner.id],
         ]);
         follower.delete();

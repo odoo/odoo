@@ -129,9 +129,9 @@ export class Thread extends Record {
     selfFollower = Record.one("Follower", {
         /** @this {import("models").Thread} */
         onAdd(r) {
-            r.followedThread = this;
+            r.thread = this;
         },
-        onDelete: (r) => (r.followedThread = undefined),
+        onDelete: (r) => (r.thread = undefined),
     });
     /** @type {integer|undefined} */
     followersCount;
