@@ -223,8 +223,17 @@
                         </page>
                         <page name="sub_tasks_page" string="Sub-tasks">
                             <field name="child_ids" context="{
+<<<<<<< saas-17.4
                                 'default_project_id': project_id, 'default_display_in_project': False, 'default_parent_id': id,
                                 'default_milestone_id': allow_milestones and milestone_id, 'default_partner_id': partner_id,
+||||||| 9ad56173e1a057b23b037cbe338bbe226c71f6e6
+                            <field name="child_ids" context="{'default_parent_id': id, 'default_partner_id': partner_id, 'form_view_ref' : 'project.project_sharing_project_task_view_form'}">
+=======
+                                'default_project_id': project_id,
+                                'default_display_in_project': False,
+                                'default_parent_id': id,
+                                'default_partner_id': partner_id,
+>>>>>>> 70784efef314d4e68a01013cd47082152088b481
                                 'form_view_ref' : 'project.project_sharing_project_task_view_form',
                             }">
                                 <tree editable="bottom">
