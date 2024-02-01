@@ -67,7 +67,7 @@ export class Many2OneField extends Component {
         this.computeActiveActions(this.props);
 
         this.openMany2X = useOpenMany2XRecord({
-            resModel: this.relation,
+            resModel: () => this.relation,
             activeActions: this.state.activeActions,
             isToMany: false,
             onRecordSaved: async (record) => {

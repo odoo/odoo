@@ -50,11 +50,12 @@ export function useSelectCreate({ resModel, activeActions, onSelected, onCreateE
     const addDialog = useOwnedDialogs();
 
     function selectCreate({ domain, context, filters, title, kanbanViewId }) {
+        const model = resModel.call ? resModel() : resModel;
         addDialog(SelectCreateDialog, {
             title: title || env._t("Select records"),
             noCreate: !activeActions.create,
             multiSelect: "link" in activeActions ? activeActions.link : false, // LPE Fixme
-            resModel,
+            resModel: model,
             context,
             domain,
             onSelected,
@@ -147,10 +148,10 @@ export class Many2XAutocomplete extends Component {
         this.orm = useService("orm");
 
         this.autoCompleteContainer = useForwardRefToParent("autocomplete_container");
-        const { activeActions, resModel, update, isToMany, fieldString } = this.props;
+        const { activeActions, update, isToMany, fieldString } = this.props;
 
         this.openMany2X = useOpenMany2XRecord({
-            resModel,
+            resModel: () => this.props.resModel,
             activeActions,
             isToMany,
             onRecordSaved: (record) => {
@@ -178,7 +179,7 @@ export class Many2XAutocomplete extends Component {
         });
 
         this.selectCreate = useSelectCreate({
-            resModel,
+            resModel: () => this.props.resModel,
             activeActions,
             onSelected: (resId) => {
                 const resIds = Array.isArray(resId) ? resId : [resId];
@@ -390,7 +391,8 @@ export function useOpenMany2XRecord({
         { resId = false, forceModel = null, title, context },
         immediate = false
     ) {
-        const model = forceModel || resModel;
+        const modelGetter = forceModel || resModel;
+        const model = modelGetter.call ? modelGetter() : modelGetter;
         let viewId;
         if (resId !== false) {
             viewId = await orm.call(model, "get_formview_id", [[resId]], {
