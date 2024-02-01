@@ -531,3 +531,24 @@ class TestPurchase(AccountTestInvoicingCommon):
         product._invalidate_cache()
         self.assertEqual(product.seller_ids[0].partner_id, self.partner_a)
         self.assertEqual(product.seller_ids[0].company_id, company_a)
+
+    def test_purchase_product_search(self):
+        """ This test ensures that the product can be found by its name, not only vendor name
+        """
+        partner = ctx.env.ref('base.res_partner_1')
+
+        # update sellers on product
+        product = ctx.env.ref('product.product_delivery_01')
+        product.update({
+            'seller_ids': [(4, 0, {
+                'partner_id': partner.id,
+                'min_qty': 1.0,
+                'price': 1.0,
+                'product_name':'vendor name',
+                'product_code':'vendor code'
+            })]
+        })
+
+        self.assertIn('Office Chair',self.env['product.product'].name_search('Office Chair')[0])
+        self.assertIn('[vendor code] vendor name', self.env['product.product'].with_context(partner_id = partner.id).name_search('Office Chair')[0])
+        self.assertNotIn('Office Chair', self.env['product.product'].with_context(partner_id = partner.id).name_search('Office Chair')[0])
