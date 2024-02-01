@@ -465,14 +465,14 @@
                         <t t-else="">
                             Invoicing Address
                         </t>
-                        <small t-if="sale_order.partner_id == sale_order.partner_id">
+                        <small t-if="sale_order.partner_id == sale_order.partner_invoice_id == sale_order.env.user.partner_id">
                             <a class="small" t-attf-href="/my/account?redirect={{sale_order.get_portal_url()}}">
                                 <i class="fa fa-fw fa-pencil"/>
                             </a>
                         </small>
                     </h4>
                     <hr class="mt-1 mb-2"/>
-                    <div t-field="sale_order.partner_id" t-options="{ 'widget': 'contact', 'fields': [ 'name', 'address', 'phone', 'email']}"/>
+                    <div t-field="sale_order.partner_invoice_id" t-options="{'widget': 'contact', 'fields': ['name', 'address', 'phone', 'email']}"/>
                     <span t-if="sale_order.partner_shipping_id != sale_order.partner_invoice_id"
                             id="shipping_address"
                             class="col-lg-6">
