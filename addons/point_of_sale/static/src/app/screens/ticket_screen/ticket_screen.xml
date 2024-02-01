@@ -168,7 +168,7 @@
                                 </div>
                                 <div class="subpads d-flex">
                                     <ActionpadWidget
-                                        partner="getSelectedPartner()"
+                                        partner="getSelectedOrder()?.get_partner()"
                                         actionName="constructor.numpadActionName"
                                         actionType="'refund'"
                                         actionToTrigger.bind="onDoRefund" />

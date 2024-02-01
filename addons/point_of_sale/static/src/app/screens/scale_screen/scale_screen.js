@@ -9,7 +9,11 @@ import { useService } from "@web/core/utils/hooks";
 export class ScaleScreen extends Component {
     static template = "point_of_sale.ScaleScreen";
     static components = { Dialog };
-    static props = ["product"];
+    static props = {
+        getPayload: Function,
+        product: Object,
+        close: Function,
+    };
     setup() {
         this.pos = usePos();
         this.hardwareProxy = useService("hardware_proxy");

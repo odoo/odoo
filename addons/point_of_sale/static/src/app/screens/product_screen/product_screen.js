@@ -173,15 +173,6 @@ export class ProductScreen extends Component {
             this.selectedOrderlineQuantity &&
             isProductCard;
     }
-
-    /**
-     * To be overridden by modules that checks availability of
-     * connected scale.
-     * @see _onScaleNotAvailable
-     */
-    get partner() {
-        return this.currentOrder ? this.currentOrder.get_partner() : null;
-    }
     get currentOrder() {
         return this.pos.get_order();
     }

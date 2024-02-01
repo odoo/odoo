@@ -230,8 +230,8 @@ export class SaleOrderManagementScreen extends Component {
                                   body: _t(
                                       "Do you want to load the SN/Lots linked to the Sales Order?"
                                   ),
-                                  confirmText: _t("Yes"),
-                                  cancelText: _t("No"),
+                                  confirmLabel: _t("Yes"),
+                                  cancelLabel: _t("No"),
                               })
                             : { confirmed: useLoadedLots };
                     useLoadedLots = confirmed;

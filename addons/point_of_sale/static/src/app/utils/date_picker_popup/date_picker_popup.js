@@ -9,12 +9,12 @@ export class DatePickerPopup extends Component {
     static components = { Dialog };
     static props = {
         title: { type: String, optional: true },
-        confirmText: { type: String, optional: true },
+        confirmLabel: { type: String, optional: true },
         getPayload: Function,
         close: Function,
     };
     static defaultProps = {
-        confirmText: _t("Confirm"),
+        confirmLabel: _t("Confirm"),
         title: _t("DatePicker"),
     };
 

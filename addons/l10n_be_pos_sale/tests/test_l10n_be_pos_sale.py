@@ -37,4 +37,4 @@ class TestPoSSaleL10NBe(TestPointOfSaleHttpCommon):
 
         sale_order.action_confirm()
         self.main_pos_config.open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PosSettleOrderIsInvoice', login="accountman")
+        self.start_pos_tour('PosSettleOrderIsInvoice', login="accountman")

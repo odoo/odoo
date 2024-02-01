@@ -13,7 +13,7 @@ export const debugService = {
         const internalState = reactive({ widgetOpen: false });
         const state = withComputedProperties(reactive({}), [internalState], {
             showWidget(internalState) {
-                return env.debug && internalState.widgetOpen;
+                return env.debug ? internalState.widgetOpen : false;
             },
         });
         registry.category("main_components").add("DebugWidget", {

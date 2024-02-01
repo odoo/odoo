@@ -11,6 +11,12 @@ from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 @odoo.tests.tagged('post_install', '-at_install')
 class TestFrontend(AccountTestInvoicingCommon, HttpCaseWithUserDemo):
 
+    def _get_url(self):
+        return f"/pos/ui?config_id={self.pos_config.id}"
+
+    def start_pos_tour(self, tour_name, login="pos_user", **kwargs):
+        self.start_tour(self._get_url(), tour_name, login=login, **kwargs)
+
     @classmethod
     def setUpClass(cls, chart_template_ref=None):
         super().setUpClass(chart_template_ref=chart_template_ref)
@@ -206,12 +212,12 @@ class TestFrontend(AccountTestInvoicingCommon, HttpCaseWithUserDemo):
 
         self.pos_config.with_user(self.pos_admin).open_ui()
 
-        self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'pos_restaurant_sync', login="pos_admin")
+        self.start_pos_tour('pos_restaurant_sync', login="pos_admin")
 
         self.assertEqual(1, self.env['pos.order'].search_count([('amount_total', '=', 4.4), ('state', '=', 'draft')]))
         self.assertEqual(1, self.env['pos.order'].search_count([('amount_total', '=', 4.4), ('state', '=', 'paid')]))
 
-        self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'pos_restaurant_sync_second_login', login="pos_admin")
+        self.start_pos_tour('pos_restaurant_sync_second_login', login="pos_admin")
 
         self.assertEqual(0, self.env['pos.order'].search_count([('amount_total', '=', 4.4), ('state', '=', 'draft')]))
         self.assertEqual(1, self.env['pos.order'].search_count([('amount_total', '=', 2.2), ('state', '=', 'draft')]))
@@ -219,18 +225,18 @@ class TestFrontend(AccountTestInvoicingCommon, HttpCaseWithUserDemo):
 
     def test_02_others(self):
         self.pos_config.with_user(self.pos_admin).open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'SplitBillScreenTour', login="pos_admin")
-        self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'ControlButtonsTour', login="pos_admin")
-        self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'FloorScreenTour', login="pos_admin")
+        self.start_pos_tour('SplitBillScreenTour', login="pos_admin")
+        self.start_pos_tour('ControlButtonsTour', login="pos_admin")
+        self.start_pos_tour('FloorScreenTour', login="pos_admin")
 
     def test_04_ticket_screen(self):
         self.pos_config.with_user(self.pos_admin).open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'PosResTicketScreenTour', login="pos_admin")
+        self.start_pos_tour('PosResTicketScreenTour', login="pos_admin")
 
     def test_05_tip_screen(self):
         self.pos_config.write({'set_tip_after_payment': True, 'iface_tipproduct': True, 'tip_product_id': self.env.ref('point_of_sale.product_product_tip')})
         self.pos_config.with_user(self.pos_admin).open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'PosResTipScreenTour', login="pos_admin")
+        self.start_pos_tour('PosResTipScreenTour', login="pos_admin")
 
         order1 = self.env['pos.order'].search([('pos_reference', 'ilike', '%-0001')], limit=1, order='id desc')
         order2 = self.env['pos.order'].search([('pos_reference', 'ilike', '%-0002')], limit=1, order='id desc')
@@ -246,15 +252,15 @@ class TestFrontend(AccountTestInvoicingCommon, HttpCaseWithUserDemo):
 
     def test_06_split_bill_screen(self):
         self.pos_config.with_user(self.pos_admin).open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'SplitBillScreenTour2', login="pos_admin")
+        self.start_pos_tour('SplitBillScreenTour2', login="pos_admin")
 
     def test_07_split_bill_screen(self):
         self.pos_config.with_user(self.pos_admin).open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'SplitBillScreenTour3', login="pos_admin")
+        self.start_pos_tour('SplitBillScreenTour3', login="pos_admin")
 
     def test_08_refund_stay_current_table(self):
         self.pos_config.with_user(self.pos_admin).open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'RefundStayCurrentTableTour', login="pos_admin")
+        self.start_pos_tour('RefundStayCurrentTableTour', login="pos_admin")
 
     def test_09_combo_split_bill(self):
         setup_pos_combo_items(self)
@@ -265,7 +271,7 @@ class TestFrontend(AccountTestInvoicingCommon, HttpCaseWithUserDemo):
     def test_10_save_last_preparation_changes(self):
         self.pos_config.write({'printer_ids': False})
         self.pos_config.with_user(self.pos_admin).open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'SaveLastPreparationChangesTour', login="pos_admin")
+        self.start_pos_tour('SaveLastPreparationChangesTour', login="pos_admin")
         self.assertTrue(self.pos_config.current_session_id.order_ids.last_order_preparation_change, "There should be a last order preparation change")
         self.assertTrue("Coca" in self.pos_config.current_session_id.order_ids.last_order_preparation_change, "The last order preparation change should contain 'Coca'")
 

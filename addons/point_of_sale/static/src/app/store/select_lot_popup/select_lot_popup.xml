@@ -12,7 +12,7 @@
                         <EditListInput
                             item="item"
                             shouldShowOptions="this.shouldShowOptionsForItem(item)"
-                            hasInvalidValue="item.text and !this.hasValidValue(item._id, item.text)"
+                            hasInvalidValue="!!(item.text and !this.hasValidValue(item._id, item.text))"
                             getOptions="() => this.getRemainingOptions()"
                             customInput="props.customInput"
                             createNewItem.bind="createNewItem"

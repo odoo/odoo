@@ -9,7 +9,7 @@
                     <ControlButtons t-if="!ui.isSmall" />
                     <div class="subpads d-flex">
                         <ActionpadWidget
-                            partner="partner"
+                            partner="currentOrder?.get_partner()"
                             actionName="constructor.numpadActionName"
                             actionType="'payment'"
                             onClickMore.bind="displayAllControlPopup" />

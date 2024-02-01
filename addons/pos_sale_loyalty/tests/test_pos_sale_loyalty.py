@@ -41,5 +41,5 @@ class TestPoSSaleLoyalty(TestPointOfSaleHttpCommon):
         })
 
         self.main_pos_config.open_ui()
-        self.start_tour("/pos/web?config_id=%d" % self.main_pos_config.id, "PosSaleLoyaltyTour1", login="accountman")
+        self.start_pos_tour("PosSaleLoyaltyTour1", login="accountman")
         self.assertEqual(self.env['loyalty.card'].search_count([('partner_id', '=', self.partner_a.id)]), 1)

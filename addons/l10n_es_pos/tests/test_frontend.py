@@ -26,7 +26,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         # this `limit` value is linked to the `SIMPLIFIED_INVOICE_LIMIT` const in the tour
         self.main_pos_config.l10n_es_simplified_invoice_limit = 1000
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", "spanish_pos_tour", login="pos_user")
+        self.start_pos_tour("spanish_pos_tour")
         num_of_simp_invoices = self.env['account.move'].search_count([('journal_id', '=', simp.id), ('l10n_es_is_simplified', '=', True)])
         num_of_regular_invoices = get_number_of_regular_invoices() - initial_number_of_regular_invoices
         self.assertEqual(num_of_simp_invoices, 3)

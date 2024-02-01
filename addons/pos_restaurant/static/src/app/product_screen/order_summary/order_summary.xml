@@ -6,7 +6,7 @@
         </xpath>
         <xpath expr="//OrderWidget" position="attributes">
             <attribute name="isConfigRestaurant">pos.config.module_pos_restaurant</attribute>
-            <attribute name="isOrderBooked">currentOrder.isBooked</attribute>
+            <attribute name="isOrderBooked">!!currentOrder.isBooked</attribute>
         </xpath>
     </t>
 </templates>

@@ -17,6 +17,12 @@ import odoo.tests
 @odoo.tests.tagged('post_install', '-at_install')
 class TestUi(AccountTestInvoicingCommon, OnlinePaymentCommon):
 
+    def _get_url(self):
+        return f"/pos/ui?config_id={self.pos_config.id}"
+
+    def start_pos_tour(self, tour_name, login="pos_user", **kwargs):
+        self.start_tour(self._get_url(), tour_name, login=login, **kwargs)
+
     @classmethod
     def setUpClass(cls, chart_template_ref=None):
         super().setUpClass(chart_template_ref=chart_template_ref)
@@ -290,11 +296,7 @@ class TestUi(AccountTestInvoicingCommon, OnlinePaymentCommon):
 
     def test_errors_tour(self):
         self._open_session_ui()
-        self.start_tour(
-            "/pos/ui?config_id=%d" % self.pos_config.id,
-            'OnlinePaymentErrorsTour',
-            login="pos_op_user",
-        )
+        self.start_pos_tour('OnlinePaymentErrorsTour', login="pos_op_user")
 
     @classmethod
     def tearDownClass(cls):

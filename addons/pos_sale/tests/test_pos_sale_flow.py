@@ -112,7 +112,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
             'order_line': [(0, 0, {'product_id': product2.id})],
         })
         self.main_pos_config.open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PosSettleOrderIncompatiblePartner', login="accountman")
+        self.start_pos_tour('PosSettleOrderIncompatiblePartner', login="accountman")
 
     def test_settle_order_with_different_product(self):
         """This test create an order and settle it in the PoS. But only one of the product is delivered.
@@ -154,7 +154,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.assertEqual(sale_order.order_line[1].qty_delivered, 0)
 
         self.main_pos_config.open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PosSettleOrder2', login="accountman")
+        self.start_pos_tour('PosSettleOrder2', login="accountman")
 
         self.assertEqual(sale_order.order_line[0].qty_delivered, 1)
         self.assertEqual(sale_order.order_line[1].qty_delivered, 0)
@@ -188,7 +188,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
             'down_payment_product_id': self.downpayment_product.id,
         })
         self.main_pos_config.open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PosRefundDownpayment', login="accountman")
+        self.start_pos_tour('PosRefundDownpayment', login="accountman")
         self.assertEqual(len(sale_order.order_line), 3)
         self.assertEqual(sale_order.order_line[1].qty_invoiced, 1)
         self.assertEqual(sale_order.order_line[2].qty_invoiced, -1)
@@ -253,7 +253,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
 
         self.main_pos_config.company_id.write({'point_of_sale_update_stock_quantities': 'real'})
         self.main_pos_config.open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PosSettleOrderRealTime', login="accountman")
+        self.start_pos_tour('PosSettleOrderRealTime', login="accountman")
         self.main_pos_config.current_session_id.close_session_from_ui()
         pos_order = self.env['pos.order'].search([], order='id desc', limit=1)
         self.assertEqual(pos_order.picking_ids.move_line_ids[0].quantity, 2)
@@ -293,7 +293,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.assertEqual(sale_order.order_line[0].qty_delivered, 0)
 
         self.main_pos_config.open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PosSettleOrder3', login="accountman")
+        self.start_pos_tour('PosSettleOrder3', login="accountman")
 
         self.assertEqual(sale_order.order_line[0].qty_delivered, 1)
         self.assertEqual(sale_order.picking_ids.mapped('state'), ['cancel', 'cancel', 'cancel'])
@@ -331,7 +331,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         })
         self.assertEqual(sale_order.amount_total, 32.2)  # 3.5 * 8 * 1.15
         self.main_pos_config.open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PosSettleOrderNotGroupable', login="accountman")
+        self.start_pos_tour('PosSettleOrderNotGroupable', login="accountman")
 
     def test_customer_notes(self):
         """This test create an order and settle it in the PoS. It also uses multistep delivery
@@ -360,7 +360,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         sale_order.action_confirm()
 
         self.main_pos_config.open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PosSettleOrderWithNote', login="accountman")
+        self.start_pos_tour('PosSettleOrderWithNote', login="accountman")
 
     def test_pos_invoice_analytic_account(self):
         #create a sale order with product_a
@@ -384,7 +384,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
             'analytic_account_id': self.analytic_account_partner_a_1.id,
         })
         self.main_pos_config.open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PosSettleAndInvoiceOrder', login="accountman")
+        self.start_pos_tour('PosSettleAndInvoiceOrder', login="accountman")
 
         pos_order = self.env['pos.order'].search([], order='id desc', limit=1)
         self.assertTrue(pos_order.account_move.line_ids[0].analytic_distribution, "Analytic distribution should be set on the invoice line")
