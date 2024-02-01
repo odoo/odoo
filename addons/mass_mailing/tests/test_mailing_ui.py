@@ -30,3 +30,12 @@ class TestUi(HttpCaseWithUserDemo):
 
     def test_03_mass_mailing_code_view_tour(self):
         self.start_tour("/web?debug=tests", 'mass_mailing_code_view_tour', login="demo")
+
+    def test_03_mass_mailing_undo_icon_to_image_change(self):
+        self.env['ir.attachment'].create({
+            'name': 'sample.png',
+            'public': True,
+            'mimetype': 'image/png',
+            'datas': b"R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs=",
+        })
+        self.start_tour("/web", 'mass_mailing_undo_icon_to_image_change', login="demo")
