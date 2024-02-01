@@ -4,7 +4,7 @@
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import common
 
-from odoo.tools import html2plaintext
+from odoo.tools import html_to_plaintext
 
 
 @common.tagged('post_install', '-at_install')
@@ -67,5 +67,5 @@ class TestSaleMrpInvoices(AccountTestInvoicingCommon):
 
         html = self.env['ir.actions.report']._render_qweb_html(
             'account.report_invoice_with_payments', invoice.ids)[0]
-        text = html2plaintext(html)
-        self.assertRegex(text, r'Product By Lot\n1.00Units\nLOT0001', "There should be a line that specifies 1 x LOT0001")
+        text = html_to_plaintext(html)
+        self.assertRegex(text, r'Product By Lot\n1.00 Units\nLOT0001', "There should be a line that specifies 1 x LOT0001")

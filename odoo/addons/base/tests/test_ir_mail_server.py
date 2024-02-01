@@ -113,8 +113,8 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
             'content',
             'content',
             'content',
-            "test1\n*test2*\ntest3\ntest4\ntest5\ntest6   test7\ntest8    test9\ntest10\ntest11\ntest12\ngoogle [1]\ntest link [2]\n\n\n[1] http://google.com\n[2] javascript:alert('malicious code')",
-            'On 01/05/2016 10:24 AM, Raoul\nPoilvache wrote:\n\n* Test reply. The suite. *\n\n--\nRaoul Poilvache\n\nTop cool !!!\n\n--\nRaoul Poilvache',
+            "test1\n**test2**\n*test3*\n*test4*\n~~test5~~\ntest6\n  * test7\n  * test8\n  1. test9\n  2. test10\n> test11\n> > test12\n>> \n\n[google][1] [test link][2]\n\n   [1]: http://google.com\n   [2]: javascript:alert('malicious code')",
+            'On 01/05/2016 10:24 AM, Raoul Poilvache wrote:\n> **Test reply. The suite.**\n> \n> -- \n> Raoul Poilvache\n\n--\nRaoul Poilvache\n',
         ]
         for body, expected in zip(bodies, expected_list):
             message = self.env['ir.mail_server'].build_email(

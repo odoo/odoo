@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, models, fields
-from odoo.tools import email_normalize, html2plaintext, is_html_empty, plaintext2html
+from odoo.tools import email_normalize, html_to_plaintext, is_html_empty, plaintext2html
 
 
 class ChatbotScript(models.Model):
@@ -197,7 +197,7 @@ class ChatbotScript(models.Model):
         }
 
     def _validate_email(self, email_address, discuss_channel):
-        email_address = html2plaintext(email_address)
+        email_address = html_to_plaintext(email_address)
         email_normalized = email_normalize(email_address)
 
         posted_message = False

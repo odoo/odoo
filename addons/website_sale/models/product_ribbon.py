@@ -11,7 +11,7 @@ class ProductRibbon(models.Model):
     @api.depends('html')
     def _compute_display_name(self):
         for ribbon in self:
-            ribbon.display_name = f'{tools.html2plaintext(ribbon.html)} (#{ribbon.id})'
+            ribbon.display_name = f'{tools.html_to_plaintext(ribbon.html)} (#{ribbon.id})'
 
     html = fields.Html(string='Ribbon html', required=True, translate=True, sanitize=False)
     bg_color = fields.Char(string='Ribbon background color', required=False)
