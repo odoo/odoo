@@ -2208,6 +2208,9 @@ class AccountMove(models.Model):
             dirty_recs = eligible_recs.filtered(dirty_fname)
             return dirty_recs, dirty_fname
 
+        def filter_trivial(mapping):
+            return {k: v for k, v in mapping.items() if 'id' not in k}
+
         existing_before = existing()
         needed_before = needed()
         dirty_recs_before, dirty_fname = dirty()
@@ -2233,7 +2236,9 @@ class AccountMove(models.Model):
         }
 
         if needed_after == needed_before:
-            return
+            return  # do not modify user input if nothing changed in the needs
+        if not needed_before and (filter_trivial(existing_after) != filter_trivial(existing_before)):
+            return  # do not modify user input if already created manually
 
         to_delete = [
             line.id
