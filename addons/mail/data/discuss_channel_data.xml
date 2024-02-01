@@ -7,6 +7,13 @@
             <field name="description">General announcements for all employees.</field>
         </record>
 
+        <record model="discuss.channel" id="mail.channel_admin">
+            <field name="name">Administrators</field>
+            <field name="description">General channel for administrators.</field>
+            <field name="group_public_id" ref="base.group_system"/>
+            <field name="group_ids" eval="[Command.link(ref('base.group_system'))]"/>
+        </record>
+
         <!-- notify all employees of module installation -->
         <record model="mail.message" id="mail.module_install_notification">
             <field name="model">discuss.channel</field>
