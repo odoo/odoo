@@ -523,25 +523,30 @@ class Website(models.Model):
                 columns_map.get(self.product_page_grid_columns)
 
     @api.model
-    def _send_abandoned_cart_email(self):
+    def _send_abandoned_cart_email(self, batch_size=500):
         for website in self.search([]):
             if not website.send_abandoned_cart_email:
                 continue
-            all_abandoned_carts = self.env['sale.order'].search([
+            domain = [
                 ('is_abandoned_cart', '=', True),
                 ('cart_recovery_email_sent', '=', False),
                 ('website_id', '=', website.id),
-            ])
-            if not all_abandoned_carts:
+            ]
+            all_abandoned_carts_count = self.env['sale.order'].search_count(domain)
+            self.env['ir.cron']._log_progress(0, all_abandoned_carts_count)
+            if not all_abandoned_carts_count:
                 continue
 
+            all_abandoned_carts = self.env['sale.order'].search(domain, limit=batch_size)
             abandoned_carts = all_abandoned_carts._filter_can_send_abandoned_cart_mail()
             # Mark abandoned carts that failed the filter as sent to avoid rechecking them again and again.
             (all_abandoned_carts - abandoned_carts).cart_recovery_email_sent = True
+            self.env['ir.cron']._log_progress(len(all_abandoned_carts - abandoned_carts))
             for sale_order in abandoned_carts:
                 template = self.env.ref('website_sale.mail_template_sale_cart_recovery')
                 template.send_mail(sale_order.id, email_values=dict(email_to=sale_order.partner_id.email))
                 sale_order.cart_recovery_email_sent = True
+            self.env['ir.cron']._log_progress(len(abandoned_carts))
 
     def _display_partner_b2b_fields(self):
         """ This method is to be inherited by localizations and return
