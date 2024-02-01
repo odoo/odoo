@@ -53,9 +53,11 @@ class AccountPartialReconcile(models.Model):
     company_id = fields.Many2one(
         comodel_name='res.company',
         string="Company", store=True, readonly=False,
+        precompute=True,
         compute='_compute_company_id')
     max_date = fields.Date(
         string="Max Date of Matched Lines", store=True,
+        precompute=True,
         compute='_compute_max_date')
         # used to determine at which date this reconciliation needs to be shown on the aged receivable/payable reports
 
@@ -168,18 +170,19 @@ class AccountPartialReconcile(models.Model):
                 line2number[partial.debit_move_id.id] = partial.id
                 line2number[partial.credit_move_id.id] = partial.id
 
-        processed_aml_ids = []
-        with amls.move_id._check_balanced({'records': amls.move_id}):  # avoid checking the consistency for each individual write
-            for min_partial_id, line_ids in number2lines.items():
-                min_partial = self.browse(min_partial_id)
-                lines = self.env['account.move.line'].browse(line_ids).with_context(skip_matching_number_check=True)
-                lines.matching_number = (
-                    str(min_partial.full_reconcile_id.id)
-                    if min_partial.full_reconcile_id else
-                    f"P{min_partial.id}"
-                )
-                processed_aml_ids.extend(line_ids)
-            self.env['account.move.line'].browse(set(amls.ids) - set(processed_aml_ids)).matching_number = False
+        amls.flush_recordset(['full_reconcile_id'])
+        self.env.cr.execute_values("""
+            UPDATE account_move_line l
+               SET matching_number = CASE
+                       WHEN l.full_reconcile_id IS NOT NULL THEN l.full_reconcile_id::text
+                       ELSE 'P' || source.number
+                   END
+              FROM (VALUES %s) AS source(number, ids)
+             WHERE l.id = ANY(source.ids)
+        """, list(number2lines.items()), page_size=1000)
+        processed_amls = self.env['account.move.line'].browse([_id for ids in number2lines.values() for _id in ids])
+        processed_amls.invalidate_recordset(['matching_number'])
+        (amls - processed_amls).matching_number = False
 
     # -------------------------------------------------------------------------
     # RECONCILIATION METHODS
