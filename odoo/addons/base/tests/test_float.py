@@ -71,8 +71,10 @@ class TestFloatPrecision(TransactionCase):
             result = float_repr(value, precision_digits=digits)
             self.assertEqual(result, expected, 'Rounding error: got %s, expected %s' % (result, expected))
 
-        try_round(2.6745, '2.675')
-        try_round(-2.6745, '-2.675')
+        try_round(2.6735, '2.674')  # Tie rounds away from 0
+        try_round(-2.6735, '-2.674')  # Tie rounds away from 0
+        try_round(2.6745, '2.675')  # Tie rounds away from 0
+        try_round(-2.6745, '-2.675')  # Tie rounds away from 0
         try_round(2.6744, '2.674')
         try_round(-2.6744, '-2.674')
         try_round(0.0004, '0.000')
@@ -81,6 +83,34 @@ class TestFloatPrecision(TransactionCase):
         try_round(-357.4555, '-357.456')
         try_round(457.4554, '457.455')
         try_round(-457.4554, '-457.455')
+
+        # Try some rounding value with rounding method HALF-DOWN instead of HALF-UP
+        try_round(2.6735, '2.673', method='HALF-DOWN')  # Tie rounds towards 0
+        try_round(-2.6735, '-2.673', method='HALF-DOWN')  # Tie rounds towards 0
+        try_round(2.6745, '2.674', method='HALF-DOWN')  # Tie rounds towards 0
+        try_round(-2.6745, '-2.674', method='HALF-DOWN')  # Tie rounds towards 0
+        try_round(2.6744, '2.674', method='HALF-DOWN')
+        try_round(-2.6744, '-2.674', method='HALF-DOWN')
+        try_round(0.0004, '0.000', method='HALF-DOWN')
+        try_round(-0.0004, '-0.000', method='HALF-DOWN')
+        try_round(357.4555, '357.455', method='HALF-DOWN')
+        try_round(-357.4555, '-357.455', method='HALF-DOWN')
+        try_round(457.4554, '457.455', method='HALF-DOWN')
+        try_round(-457.4554, '-457.455', method='HALF-DOWN')
+
+        # Try some rounding value with rounding method HALF-EVEN instead of HALF-UP
+        try_round(2.6735, '2.674', method='HALF-EVEN')  # Tie rounds to the closest even number (i.e. up here)
+        try_round(-2.6735, '-2.674', method='HALF-EVEN')  # Tie rounds to the closest even number (i.e. up here)
+        try_round(2.6745, '2.674', method='HALF-EVEN')  # Tie rounds to the closest even number (i.e. down here)
+        try_round(-2.6745, '-2.674', method='HALF-EVEN')  # Tie rounds to the closest even number (i.e. down here)
+        try_round(2.6744, '2.674', method='HALF-EVEN')
+        try_round(-2.6744, '-2.674', method='HALF-EVEN')
+        try_round(0.0004, '0.000', method='HALF-EVEN')
+        try_round(-0.0004, '-0.000', method='HALF-EVEN')
+        try_round(357.4555, '357.455', method='HALF-EVEN')
+        try_round(-357.4555, '-357.455', method='HALF-EVEN')
+        try_round(457.4554, '457.455', method='HALF-EVEN')
+        try_round(-457.4554, '-457.455', method='HALF-EVEN')
 
         # Try some rounding value with rounding method UP instead of HALF-UP
         # We use 8.175 because when normalizing 8.175 with precision_digits=3 it gives
