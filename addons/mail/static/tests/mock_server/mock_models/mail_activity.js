@@ -89,6 +89,10 @@ export class MailActivity extends models.ServerModel {
             if (record.summary) {
                 record.display_name = record.summary;
             }
+            const user = this.pyEnv["res.users"].searchRead([["id", "=", record.user_id[0]]])[0];
+            record.persona = this._mockResPartnerMailPartnerFormat([user.partner_id[0]]).get(
+                user.partner_id[0]
+            );
             return record;
         });
     }
