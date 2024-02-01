@@ -50,6 +50,7 @@ import {
     TEXT_STYLE_CLASSES,
     padLinkWithZws,
     isLinkEligibleForZwnbsp,
+    lastLeaf,
 } from '../utils/utils.js';
 
 const TEXT_CLASSES_REGEX = /\btext-[^\s]*\b/;
@@ -299,6 +300,15 @@ export const editorCommands = {
         }
 
         currentNode = lastChildNode || currentNode;
+        if (
+            currentNode.nodeName !== 'BR' &&
+            currentNode.nextSibling &&
+            currentNode.nextSibling.nodeName === 'BR' &&
+            lastLeaf(currentNode.parentNode) === currentNode.nextSibling &&
+            !closestElement(currentNode, '[t-field],[t-esc],[t-out]')
+        ) {
+            currentNode.nextSibling.remove();
+        }
         selection.removeAllRanges();
         const newRange = new Range();
         let lastPosition;
