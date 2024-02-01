@@ -24,8 +24,15 @@ const wysiwygUtils = require('@web_editor/js/common/wysiwyg_utils');
 const weUtils = require('web_editor.utils');
 const { PeerToPeer, RequestError } = require('@web_editor/js/wysiwyg/PeerToPeer');
 const { Mutex } = require('web.concurrency');
+<<<<<<< HEAD
 const snippetsOptions = require('web_editor.snippets.options');
 const { peek } = require('@web_editor/js/editor/odoo-editor/src/utils/utils');
+||||||| parent of b7f2a3e70215 (temp)
+
+=======
+const image_processing = require('web_editor.image_processing');
+
+>>>>>>> b7f2a3e70215 (temp)
 var _t = core._t;
 const QWeb = core.qweb;
 
@@ -1364,6 +1371,7 @@ const Wysiwyg = Widget.extend({
             } else {
                 params.node.replaceWith(element);
             }
+<<<<<<< HEAD
             this.odooEditor.unbreakableStepUnactive();
             this.odooEditor.historyStep();
         } else {
@@ -1377,6 +1385,52 @@ const Wysiwyg = Widget.extend({
                 }
             });
         }
+||||||| parent of b7f2a3e70215 (temp)
+            // restore saved html classes
+            if (params.htmlClass) {
+                element.className += " " + params.htmlClass;
+            }
+            restoreSelection();
+            if (wasImageOrVideo || wasFontAwesome) {
+                $node.replaceWith(element);
+                this.odooEditor.unbreakableStepUnactive();
+                this.odooEditor.historyStep();
+            } else if (element) {
+                this.odooEditor.execCommand('insertHTML', element.outerHTML);
+            }
+        });
+        mediaDialog.on('closed', this, function () {
+            // if the mediaDialog content has been saved
+            // the previous selection in not relevant anymore
+            if (mediaDialog.destroyAction !== 'save') {
+                restoreSelection();
+            }
+        });
+=======
+            // restore saved html classes
+            if (params.htmlClass) {
+                element.classList.add(...params.htmlClass.split(" "));
+            }
+            restoreSelection();
+            if (wasImageOrVideo || wasFontAwesome) {
+                if (wysiwygUtils.isImg(element)) {
+                    image_processing.loadImageInfo(element, this._rpc.bind(this));
+                }
+                $node.replaceWith(element);
+                this.odooEditor.unbreakableStepUnactive();
+                this.odooEditor.historyStep();
+            } else if (element) {
+                this.odooEditor.execCommand('insertHTML', element.outerHTML);
+            }
+        });
+        mediaDialog.on('closed', this, function () {
+            // if the mediaDialog content has been saved
+            // the previous selection in not relevant anymore
+            if (mediaDialog.destroyAction !== 'save') {
+                restoreSelection();
+            }
+        });
+>>>>>>> b7f2a3e70215 (temp)
     },
     getInSelection(selector) {
         return getInSelection(this.odooEditor.document, selector);
