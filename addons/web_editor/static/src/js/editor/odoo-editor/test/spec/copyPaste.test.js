@@ -307,7 +307,7 @@ describe('Paste', () => {
                     stepFunction: async editor => {
                         await pasteHtml(editor, `<meta charset="utf-8"><b style="font-weight:normal;" id="docs-internal-guid-ddad60c5-7fff-0a8f-fdd5-c1107201fe26"><p dir="ltr" style="line-height:1.38;margin-top:0pt;margin-bottom:0pt;"><span style="font-size:11pt;font-family:Arial,sans-serif;color:#000000;background-color:transparent;font-weight:400;font-style:normal;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre;white-space:pre-wrap;">test1</span></p><p dir="ltr" style="line-height:1.38;margin-top:0pt;margin-bottom:0pt;"><span style="font-size:11pt;font-family:Arial,sans-serif;color:#000000;background-color:transparent;font-weight:400;font-style:normal;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre;white-space:pre-wrap;">test2</span></p></b>`);
                     },
-                    contentAfter: '<p>test1</p><p>test2[]<br></p>',
+                    contentAfter: '<p>test1</p><p>test2[]</p>',
                 });
             });
             it('should remove unwanted b tag and p tag with unwanted styles when pasting list from gdocs', async () => {
@@ -384,7 +384,7 @@ describe('Paste', () => {
                     contentAfter: '<p style="margin-bottom: 0px;">a</p>' +
                                   '<p style="margin-bottom: 0px;">b</p>' +
                                   '<p style="margin-bottom: 0px;">c</p>' +
-                                  '<p>d[]<br></p>',
+                                  '<p>d[]</p>',
                 });
             });
             it('should paste text and understand \\r\\n newlines', async () => {
@@ -396,7 +396,7 @@ describe('Paste', () => {
                     contentAfter: '<p style="margin-bottom: 0px;">a</p>' +
                                   '<p style="margin-bottom: 0px;">b</p>' +
                                   '<p style="margin-bottom: 0px;">c</p>' +
-                                  '<p>d[]<br></p>',
+                                  '<p>d[]</p>',
                 });
             });
             it('should paste text and understand \\n newlines within UNBREAKABLE node', async () => {
@@ -405,7 +405,7 @@ describe('Paste', () => {
                     stepFunction: async editor => {
                         await pasteText(editor, 'a\nb\nc\nd');
                     },
-                    contentAfter: '<div>a<br>b<br>c<br>d[]<br></div>',
+                    contentAfter: '<div>a<br>b<br>c<br>d[]</div>',
                 });
             });
             it('should paste text and understand \\n newlines within UNBREAKABLE node(2)', async () => {
@@ -414,7 +414,7 @@ describe('Paste', () => {
                     stepFunction: async editor => {
                         await pasteText(editor, 'b\nc\nd');
                     },
-                    contentAfter: '<div><span style="font-size: 9px;">ab<br>c<br>d[]<br></span></div>',
+                    contentAfter: '<div><span style="font-size: 9px;">ab<br>c<br>d[]</span></div>',
                 });
             });
         });
@@ -771,7 +771,7 @@ describe('Paste', () => {
                     stepFunction: async editor => {
                         await pasteHtml(editor, '<h1>abc<br>def<br>ghi<br>jkl</h1>');
                     },
-                    contentAfter: '<p>abc</p><h1>def</h1><h1>ghi</h1><p>jkl[]<br></p>',
+                    contentAfter: '<p>abc</p><h1>def</h1><h1>ghi</h1><p>jkl[]</p>',
                 });
             });
             it('should split h2 with <br> into seperate h2 elements', async () => {
@@ -780,7 +780,7 @@ describe('Paste', () => {
                     stepFunction: async editor => {
                         await pasteHtml(editor, '<h2>abc<br>def<br>ghi<br>jkl</h2>');
                     },
-                    contentAfter: '<p>abc</p><h2>def</h2><h2>ghi</h2><p>jkl[]<br></p>',
+                    contentAfter: '<p>abc</p><h2>def</h2><h2>ghi</h2><p>jkl[]</p>',
                 });
             });
             it('should split h3 with <br> into seperate h3 elements', async () => {
@@ -789,7 +789,7 @@ describe('Paste', () => {
                     stepFunction: async editor => {
                         await pasteHtml(editor, '<h3>abc<br>def<br>ghi<br>jkl</h3>');
                     },
-                    contentAfter: '<p>abc</p><h3>def</h3><h3>ghi</h3><p>jkl[]<br></p>',
+                    contentAfter: '<p>abc</p><h3>def</h3><h3>ghi</h3><p>jkl[]</p>',
                 });
             });
             it('should split h4 with <br> into seperate h4 elements', async () => {
@@ -798,7 +798,7 @@ describe('Paste', () => {
                     stepFunction: async editor => {
                         await pasteHtml(editor, '<h4>abc<br>def<br>ghi<br>jkl</h4>');
                     },
-                    contentAfter: '<p>abc</p><h4>def</h4><h4>ghi</h4><p>jkl[]<br></p>',
+                    contentAfter: '<p>abc</p><h4>def</h4><h4>ghi</h4><p>jkl[]</p>',
                 });
             });
             it('should split h5 with <br> into seperate h5 elements', async () => {
@@ -807,7 +807,7 @@ describe('Paste', () => {
                     stepFunction: async editor => {
                         await pasteHtml(editor, '<h5>abc<br>def<br>ghi<br>jkl</h5>');
                     },
-                    contentAfter: '<p>abc</p><h5>def</h5><h5>ghi</h5><p>jkl[]<br></p>',
+                    contentAfter: '<p>abc</p><h5>def</h5><h5>ghi</h5><p>jkl[]</p>',
                 });
             });
             it('should split h6 with <br> into seperate h6 elements', async () => {
@@ -816,7 +816,7 @@ describe('Paste', () => {
                     stepFunction: async editor => {
                         await pasteHtml(editor, '<h6>abc<br>def<br>ghi<br>jkl</h6>');
                     },
-                    contentAfter: '<p>abc</p><h6>def</h6><h6>ghi</h6><p>jkl[]<br></p>',
+                    contentAfter: '<p>abc</p><h6>def</h6><h6>ghi</h6><p>jkl[]</p>',
                 });
             });
             it('should split p with <br> into seperate p elements', async () => {
@@ -825,28 +825,28 @@ describe('Paste', () => {
                     stepFunction: async editor => {
                         await pasteHtml(editor, '<p>abc<br>def<br>ghi<br>jkl</p>');
                     },
-                    contentAfter: '<p>abc</p><p>def</p><p>ghi</p><p>jkl[]<br></p>',
+                    contentAfter: '<p>abc</p><p>def</p><p>ghi</p><p>jkl[]</p>',
                 });
                 await testEditor(BasicEditor, {
                     contentBefore: '<p>[]<br></p>',
                     stepFunction: async editor => {
                         await pasteHtml(editor, '<p>abc<br>def<br>ghi<br>jkl</p><p>mno</p>');
                     },
-                    contentAfter: '<p>abc</p><p>def</p><p>ghi</p><p>jkl</p><p>mno[]<br></p>',
+                    contentAfter: '<p>abc</p><p>def</p><p>ghi</p><p>jkl</p><p>mno[]</p>',
                 });
                 await testEditor(BasicEditor, {
                     contentBefore: '<p>[]<br></p>',
                     stepFunction: async editor => {
                         await pasteHtml(editor, '<p>abc<br>def<br>ghi<br>jkl</p><p><br></p><p>mno</p>');
                     },
-                    contentAfter: '<p>abc</p><p>def</p><p>ghi</p><p>jkl</p><p><br></p><p>mno[]<br></p>',
+                    contentAfter: '<p>abc</p><p>def</p><p>ghi</p><p>jkl</p><p><br></p><p>mno[]</p>',
                 });
                 await testEditor(BasicEditor, {
                     contentBefore: '<p>[]<br></p>',
                     stepFunction: async editor => {
                         await pasteHtml(editor, '<p>abc<br>def<br><br><br>ghi</p>');
                     },
-                    contentAfter: '<p>abc</p><p>def</p><p><br></p><p><br></p><p>ghi[]<br></p>',
+                    contentAfter: '<p>abc</p><p>def</p><p><br></p><p><br></p><p>ghi[]</p>',
                 });
             });
             it('should split multiple elements with <br>', async () => {
@@ -855,7 +855,7 @@ describe('Paste', () => {
                     stepFunction: async editor => {
                         await pasteHtml(editor, '<p>abc<br>def</p><h1>ghi<br>jkl</h1><h2><br></h2><h3>mno<br>pqr</h3>');
                     },
-                    contentAfter: '<p>abc</p><p>def</p><h1>ghi</h1><h1>jkl</h1><h2><br></h2><h3>mno</h3><p>pqr[]<br></p>',
+                    contentAfter: '<p>abc</p><p>def</p><h1>ghi</h1><h1>jkl</h1><h2><br></h2><h3>mno</h3><p>pqr[]</p>',
                 });
             });
             it('should split div with <br>', async () => {
@@ -864,7 +864,7 @@ describe('Paste', () => {
                     stepFunction: async editor => {
                         await pasteHtml(editor, '<div>abc<br>def</div>');
                     },
-                    contentAfter: '<p>abc</p><p>def[]<br></p>',
+                    contentAfter: '<p>abc</p><p>def[]</p>',
                 });
             });
         });
@@ -1721,7 +1721,7 @@ describe('Paste', () => {
                         await pasteText(editor, 'odoo.com\ngoogle.com');
                     },
                     contentAfter: '<p style="margin-bottom: 0px;"><a href="http://odoo.com">odoo.com</a></p>' +
-                                  '<p><a href="http://google.com">google.com</a>[]<br></p>'
+                                  '<p><a href="http://google.com">google.com</a>[]</p>'
                 });
             });
             it('should paste html content over an empty link', async () => {
@@ -1873,7 +1873,7 @@ describe('Paste', () => {
                         // Powerbox should not open
                         window.chai.expect(editor.powerbox.isOpen).to.be.false;
                     },
-                    contentAfter: `<p>abc <a href="${url}">${url}</a> def[]<br></p>`,
+                    contentAfter: `<p>abc <a href="${url}">${url}</a> def[]</p>`,
                 });
                 await testEditor(BasicEditor, {
                     contentBefore: '<p>[xyz]<br></p>',
@@ -1882,7 +1882,7 @@ describe('Paste', () => {
                         // Powerbox should not open
                         window.chai.expect(editor.powerbox.isOpen).to.be.false;
                     },
-                    contentAfter: `<p>abc <a href="${imgUrl}">${imgUrl}</a> def[]<br></p>`,
+                    contentAfter: `<p>abc <a href="${imgUrl}">${imgUrl}</a> def[]</p>`,
                 });
                 await testEditor(BasicEditor, {
                     contentBefore: '<p>[xyz]<br></p>',
@@ -1891,7 +1891,7 @@ describe('Paste', () => {
                         // Powerbox should not open
                         window.chai.expect(editor.powerbox.isOpen).to.be.false;
                     },
-                    contentAfter: `<p>abc <a href="${videoUrl}">${videoUrl}</a> def[]<br></p>`,
+                    contentAfter: `<p>abc <a href="${videoUrl}">${videoUrl}</a> def[]</p>`,
                 });
                 await testEditor(BasicEditor, {
                     contentBefore: '<p>[xyz]<br></p>',
@@ -1900,7 +1900,7 @@ describe('Paste', () => {
                         // Powerbox should not open
                         window.chai.expect(editor.powerbox.isOpen).to.be.false;
                     },
-                    contentAfter: `<p><a href="${url}">${url}</a> <a href="${videoUrl}">${videoUrl}</a> <a href="${imgUrl}">${imgUrl}</a>[]<br></p>`,
+                    contentAfter: `<p><a href="${url}">${url}</a> <a href="${videoUrl}">${videoUrl}</a> <a href="${imgUrl}">${imgUrl}</a>[]</p>`,
                 });
             });
             it('should paste and transform URL over the existing url', async () => {
@@ -2390,7 +2390,7 @@ describe('Paste', () => {
 
             // Assertion
             window.chai.expect(editable.innerHTML).to.be.equal(
-                '<p>text<b>bold text</b>more text<br></p>',
+                '<p>text<b>bold text</b>more text</p>',
                 'should paste content in the paragraph'
             );
         });
