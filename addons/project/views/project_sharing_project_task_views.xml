@@ -184,7 +184,13 @@
                             <field name="description" type="html" options="{'collaborative': true, 'allowCommandImage': false, 'allowCommandVideo': false, 'allowCommandFile': false}"/>
                         </page>
                         <page name="sub_tasks_page" string="Sub-tasks">
-                            <field name="child_ids" context="{'default_parent_id': id, 'default_partner_id': partner_id, 'form_view_ref' : 'project.project_sharing_project_task_view_form'}">
+                            <field name="child_ids" context="{
+                                'default_project_id': project_id,
+                                'default_display_in_project': False,
+                                'default_parent_id': id,
+                                'default_partner_id': partner_id,
+                                'form_view_ref' : 'project.project_sharing_project_task_view_form',
+                            }">
                                 <tree editable="bottom">
                                     <field name="project_id" column_invisible="True"/>
                                     <field name="state" column_invisible="True"/>
