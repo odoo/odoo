@@ -1119,9 +1119,10 @@ class AccountMoveLine(models.Model):
 
     @api.depends('account_id', 'partner_id', 'product_id')
     def _compute_analytic_distribution(self):
+        cache = {}
         for line in self:
             if line.display_type == 'product' or not line.move_id.is_invoice(include_receipts=True):
-                distribution = self.env['account.analytic.distribution.model']._get_distribution({
+                arguments = frozendict({
                     "product_id": line.product_id.id,
                     "product_categ_id": line.product_id.categ_id.id,
                     "partner_id": line.partner_id.id,
@@ -1129,7 +1130,9 @@ class AccountMoveLine(models.Model):
                     "account_prefix": line.account_id.code,
                     "company_id": line.company_id.id,
                 })
-                line.analytic_distribution = distribution or line.analytic_distribution
+                if arguments not in cache:
+                    cache[arguments] = self.env['account.analytic.distribution.model']._get_distribution(arguments)
+                line.analytic_distribution = cache[arguments] or line.analytic_distribution
 
     @api.depends('discount_date', 'date_maturity')
     def _compute_payment_date(self):
@@ -2333,12 +2336,17 @@ class AccountMoveLine(models.Model):
 
         :param reconciliation_plan: A list of reconciliation to perform.
         """
-        # Parameter allowing to disable the exchange journal entries on partials.
-        disable_partial_exchange_diff = bool(self.env['ir.config_parameter'].sudo().get_param('account.disable_partial_exchange_diff'))
-
         # ==== Prepare the reconciliation ====
         # Batch the amls all together to know what should be reconciled and when.
         plan_list, all_amls = self._optimize_reconciliation_plan(reconciliation_plan)
+        move_container = {'records': all_amls.move_id}
+        with all_amls.move_id._check_balanced(move_container),\
+             all_amls.move_id._sync_dynamic_lines(move_container):
+            self._reconcile_plan_with_sync(plan_list, all_amls)
+
+    def _reconcile_plan_with_sync(self, plan_list, all_amls):
+        # Parameter allowing to disable the exchange journal entries on partials.
+        disable_partial_exchange_diff = bool(self.env['ir.config_parameter'].sudo().get_param('account.disable_partial_exchange_diff'))
 
         # ==== Prefetch the fields all at once to speedup the reconciliation ====
         # All of those fields will be cached by the orm. Since the amls are split into multiple batches, the orm is not
@@ -2423,12 +2431,13 @@ class AccountMoveLine(models.Model):
 
         full_batches = []
         all_aml_ids = set()
+        number2lines = all_amls._reconciled_by_number()
         for plan in plan_list:
             for aml in plan['amls']:
                 if 'full_batch_index' in aml_values_map[aml]:
                     continue
 
-                involved_amls = plan['amls']._all_reconciled_lines()
+                involved_amls = plan['amls']._filter_reconciled_by_number(number2lines)
                 all_aml_ids.update(involved_amls.ids)
                 full_batch_index = len(full_batches)
                 has_multiple_currencies = len(involved_amls.currency_id) > 1
@@ -2524,13 +2533,7 @@ class AccountMoveLine(models.Model):
                 })
                 full_reconcile_full_batch_index.append(full_batch_index)
 
-        self.env['account.full.reconcile']\
-            .with_context(
-                skip_invoice_sync=True,
-                skip_invoice_line_sync=True,
-                skip_account_move_synchronization=True,
-            )\
-            .create(full_reconcile_values_list)
+        self.env['account.full.reconcile'].create(full_reconcile_values_list)
 
         # === Cash basis rounding autoreconciliation ===
         # In case a cash basis rounding difference line got created for the transition account, we reconcile it with the corresponding lines
@@ -2597,15 +2600,11 @@ class AccountMoveLine(models.Model):
         journal = company.currency_exchange_journal_id
         expense_exchange_account = company.expense_currency_exchange_account_id
         income_exchange_account = company.income_currency_exchange_account_id
-
-        temp_exchange_move = self.env['account.move'].new({'journal_id': journal.id})
-        accounting_exchange_date = temp_exchange_move._get_accounting_date(
-            exchange_date or fields.Date.context_today(self),
-            False,
-        )
+        accounting_exchange_date = journal.with_context(move_date=exchange_date).accounting_date
 
         move_vals = {
             'move_type': 'entry',
+            'name': '/', # do not trigger the compute name before posting as it will most likely be posted immediately after
             'date': accounting_exchange_date,
             'journal_id': journal.id,
             'line_ids': [],
@@ -2711,13 +2710,7 @@ class AccountMoveLine(models.Model):
                 ))
 
         # ==== Create the move ====
-        exchange_moves = self.env['account.move']\
-            .with_context(
-                skip_invoice_sync=True,
-                skip_invoice_line_sync=True,
-                skip_account_move_synchronization=True,
-            )\
-            .create(exchange_move_values_list)
+        exchange_moves = self.env['account.move'].create(exchange_move_values_list)
         exchange_moves._post(soft=False)
 
         # ==== Reconcile ====
@@ -3060,12 +3053,28 @@ class AccountMoveLine(models.Model):
             ids.append(aml.id)
         return ids
 
-    def _all_reconciled_lines(self):
-        reconciled = self
+    def _reconciled_by_number(self) -> dict:
+        """Get the mapping of all the lines matched with the lines in self grouped by matching number."""
         matching_numbers = [n for n in set(self.mapped('matching_number')) if n]
         if matching_numbers:
-            reconciled |= self.search([('matching_number', 'in', matching_numbers)])
-        return reconciled
+            return dict(self._read_group(
+                domain=[('matching_number', 'in', matching_numbers)],
+                groupby=['matching_number'],
+                aggregates=['id:recordset'],
+            ))
+        return {}
+
+    def _filter_reconciled_by_number(self, mapping: dict):
+        """Get all the the lines matched with the lines in self.
+
+        Uses a mapping built with `_reconciled_by_number` to avoid multiple calls to the database.
+        """
+        matching_numbers = [n for n in set(self.mapped('matching_number')) if n]
+        return self | self.browse([_id for number in matching_numbers for _id in mapping[number].ids])
+
+    def _all_reconciled_lines(self):
+        """Get all the the lines matched with the lines in self."""
+        return self._filter_reconciled_by_number(self._reconciled_by_number())
 
     def _get_attachment_domains(self):
         self.ensure_one()
