@@ -591,6 +591,7 @@ export const editorCommands = {
                     (node.nodeType === Node.TEXT_NODE && isVisibleStr(node)) ||
                     (isEmptyBlock(node.parentNode)) ||
                     (node.nodeType === Node.ELEMENT_NODE &&
+                    node.nodeName !== 'FIGURE' &&
                     ['inline', 'inline-block'].includes(getComputedStyle(node).display) &&
                     isVisibleStr(node.textContent) &&
                     !node.classList.contains('btn') &&
