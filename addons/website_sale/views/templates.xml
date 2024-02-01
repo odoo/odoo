@@ -2082,7 +2082,7 @@
                                 <div class="mt-3">
                                     <h3 class="mb24">Pay with </h3>
                                 </div>
-                                <div t-if="providers or tokens" id="payment_method">
+                                <div t-if="providers or tokens" id="payment_method" class="o_not_editable">
                                     <t t-call="payment.checkout">
                                         <t t-set="footer_template_id" t-value="'website_sale.payment_footer'"/>
                                         <t t-set="submit_button_label">Pay Now</t>
