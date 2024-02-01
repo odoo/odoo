@@ -596,6 +596,7 @@ export const editorCommands = {
                 } else if ((node.nodeType === Node.TEXT_NODE && !isWhitespace(node))
                         || (node.nodeName === 'BR' && isEmptyBlock(node.parentNode))
                         || (node.nodeType === Node.ELEMENT_NODE &&
+                            node.nodeName !== 'FIGURE' &&
                             ['inline', 'inline-block'].includes(getComputedStyle(node).display) &&
                             !isWhitespace(node.textContent) &&
                             !node.classList.contains('btn') &&
