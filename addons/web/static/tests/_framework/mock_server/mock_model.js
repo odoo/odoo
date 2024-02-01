@@ -1582,8 +1582,8 @@ export class Model extends Array {
             set(target, p, newValue) {
                 if (target[p] !== newValue) {
                     onchangeValues[p] = newValue;
-                    target[p] = newValue;
                 }
+                return Reflect.set(target, p, newValue);
             },
         });
 
