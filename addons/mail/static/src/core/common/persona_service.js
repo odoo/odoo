@@ -45,7 +45,7 @@ export class PersonaService {
      */
     getRecentChatPartnerIds() {
         return Object.values(this.store.Thread.records)
-            .filter((thread) => thread.type === "chat" && thread.correspondent)
+            .filter((thread) => thread.channel_type === "chat" && thread.correspondent)
             .sort(
                 (a, b) =>
                     compareDatetime(b.lastInterestDateTime, a.lastInterestDateTime) || b.id - a.id

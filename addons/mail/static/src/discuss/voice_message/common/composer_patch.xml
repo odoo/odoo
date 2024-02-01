@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-inherit="mail.Composer" t-inherit-mode="extension">
         <xpath expr="//FileUploader" position="after">
-            <VoiceRecorder t-if="thread and thread.type !== 'chatter' and allowUpload"
+            <VoiceRecorder t-if="thread?.model === 'discuss.channel' and allowUpload"
                 composer="props.composer"
                 attachmentUploader="attachmentUploader"
                 onchangeRecording.bind="() => this.state.recording = !this.state.recording"/>

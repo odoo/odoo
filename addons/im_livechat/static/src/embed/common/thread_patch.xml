@@ -10,7 +10,7 @@
             <Message t-if="props.thread.chatbot?.typingMessage" message="props.thread.chatbot.typingMessage" hasActions="false" isInChatWindow="env.inChatWindow" isTypingMessage="true"  thread="props.thread"/>
         </xpath>
         <xpath expr="//*[hasclass('o-mail-Thread-empty')]" position="replace">
-            <t t-if="props.thread.type !== 'livechat'">$0</t>
+            <t t-if="props.thread.channel_type !== 'livechat'">$0</t>
         </xpath>
         <xpath expr="//*[hasclass('o-mail-Thread-newMessage')]" position="replace">
             <t t-if="!chatbotService.chatbot">$0</t>
@@ -18,7 +18,7 @@
     </t>
     <t t-inherit="mail.NotificationMessage" t-inherit-mode="extension">
         <xpath expr="//*[hasclass('o-mail-NotificationMessage')]" position="attributes">
-            <attribute name="t-attf-class" add="{{ props.thread.type === 'livechat' ? 'o-livechat-NoPinMenu' : '' }}" separator=" "/>
+            <attribute name="t-attf-class" add="{{ props.thread.channel_type === 'livechat' ? 'o-livechat-NoPinMenu' : '' }}" separator=" "/>
         </xpath>
     </t>
 </templates>

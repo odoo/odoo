@@ -58,12 +58,12 @@ patch(Thread.prototype, {
         ];
     },
     get avatarUrl() {
-        if (this.type === "channel" || this.type === "group") {
+        if (this.channel_type === "channel" || this.channel_type === "group") {
             return imageUrl("discuss.channel", this.id, "avatar_128", {
                 unique: this.avatarCacheKey,
             });
         }
-        if (this.type === "chat" && this.correspondent) {
+        if (this.channel_type === "chat" && this.correspondent) {
             return this.correspondent.avatarUrl;
         }
         return super.avatarUrl;

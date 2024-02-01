@@ -5,7 +5,7 @@
     <t t-if="env.inChatter" t-call="mail.Thread.jumpPresent"/> <!-- chatter has its own scrollable, this ensures proper sticky showing -->
     <div class="o-mail-Thread position-relative flex-grow-1 d-flex flex-column overflow-auto" t-att-class="{ 'pb-4':  props.showJumpPresent and !state.showJumpPresent }" t-ref="messages" tabindex="-1">
         <t t-if="!props.thread.isEmpty or props.thread.loadOlder or props.thread.hasLoadingFailed" name="content">
-            <div class="d-flex flex-column position-relative flex-grow-1" t-att-class="{'justify-content-end': !env.inChatter and props.thread.type !== 'mailbox'}">
+            <div class="d-flex flex-column position-relative flex-grow-1" t-att-class="{'justify-content-end': !env.inChatter and props.thread.model !== 'mail.box'}">
                 <span class="position-absolute w-100 invisible" t-att-class="props.order === 'asc' ? 'bottom-0' : 'top-0'" t-ref="present-treshold" t-att-style="`height: Min(${PRESENT_THRESHOLD}px, 100%)`"/>
                 <t t-set="currentDay" t-value="0"/>
                 <t t-set="prevMsg" t-value="0"/>
@@ -58,7 +58,7 @@
         <t t-else="">
             <div class="o-mail-Thread-empty d-flex flex-column align-items-center justify-content-center text-muted fst-italic h-100" t-att-class="{'p-4': props.showEmptyMessage}">
                 <t t-if="props.thread.isLoaded">
-                    <t t-if="props.thread.isEmpty and props.thread.type === 'mailbox'">
+                    <t t-if="props.thread.isEmpty and props.thread.model === 'mail.box'">
                     <t t-if="props.thread.id === 'inbox' and state.mountedAndLoaded">
                         <div t-if="store.self.notification_preference !== 'inbox'" class="align-items-center text-center">
                             <h4 class="mb-3 fw-bolder">
