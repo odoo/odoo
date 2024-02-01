@@ -245,7 +245,7 @@ class SaleOrder(models.Model):
     amount_total = fields.Monetary(string='Total', store=True, compute='_amount_all', tracking=4)
     currency_rate = fields.Float(
         string="Currency Rate",
-        compute='_compute_currency_rate', store=True, digits=(12, 6), precompute=True,
+        compute='_compute_currency_rate', store=True, digits=0, precompute=True,
         help='The rate of the currency to the currency of rate 1 applicable at the date of the order')
 
     payment_term_id = fields.Many2one(
