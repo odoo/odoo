@@ -23,9 +23,9 @@
     }
     .o_employee_avatar {
         width: fit-content;
+
         .o_employee_availability {
-            top: $spacer * -.25;
-            right: $spacer * -.25;
+            @include o-position-absolute($top: $spacer * -.25, $right: $spacer * -.25);
             height: $spacer;
             width: $spacer;
         }
