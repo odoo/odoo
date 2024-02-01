@@ -207,6 +207,7 @@ class AccountJournal(models.Model):
     selected_payment_method_codes = fields.Char(
         compute='_compute_selected_payment_method_codes',
     )
+    accounting_date = fields.Date(compute='_compute_accounting_date')
 
     _sql_constraints = [
         ('code_company_uniq', 'unique (company_id, code)', 'Journal codes must be unique per company.'),
@@ -354,6 +355,16 @@ class AccountJournal(models.Model):
                 journal.suspense_account_id = journal.company_id.account_journal_suspense_account_id
             else:
                 journal.suspense_account_id = False
+
+    @api.depends('company_id')
+    @api.depends_context('move_date', 'has_tax')
+    def _compute_accounting_date(self):
+        move_date = self.env.context.get('move_date') or fields.Date.context_today(self)
+        has_tax = self.env.context.get('has_tax') or False
+        for journal in self:
+            temp_move = self.env['account.move'].new({'journal_id': journal.id})
+            journal.accounting_date = temp_move._get_accounting_date(move_date, has_tax)
+
 
     @api.onchange('type')
     def _onchange_type_for_alias(self):
