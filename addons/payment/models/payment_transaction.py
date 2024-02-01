@@ -964,25 +964,30 @@ class PaymentTransaction(models.Model):
         )  # DEBUG level because this can get spammy with transactions in non-final states
         return post_processing_values
 
-    def _cron_finalize_post_processing(self):
+    def _cron_finalize_post_processing(self, batch_size=1000):
         """ Finalize the post-processing of recently done transactions not handled by the client.
 
         :return: None
         """
         txs_to_post_process = self
+        txs_to_post_process_count = len(self)
         if not txs_to_post_process:
             # Don't try forever to post-process a transaction that doesn't go through. Set the limit
             # to 4 days because some providers (PayPal) need that much for the payment verification.
             retry_limit_date = datetime.now() - relativedelta.relativedelta(days=4)
             # Retrieve all transactions matching the criteria for post-processing
-            txs_to_post_process = self.search([
+            domain = [
                 ('state', '=', 'done'),
                 ('is_post_processed', '=', False),
                 ('last_state_change', '>=', retry_limit_date),
-            ])
+            ]
+            txs_to_post_process_count = self.search_count(domain)
+            txs_to_post_process = self.search(domain, limit=batch_size)
+        self.env['ir.cron']._log_progress(0, txs_to_post_process_count)
         for tx in txs_to_post_process:
             try:
                 tx._finalize_post_processing()
+                self.env['ir.cron']._log_progress(1)
                 self.env.cr.commit()
             except psycopg2.OperationalError:
                 self.env.cr.rollback()  # Rollback and try later.
