@@ -625,6 +625,7 @@ class MailActivity(models.Model):
                 {'id': attachment.id, 'name': attachment.name}
                 for attachment in record.attachment_ids
             ]
+            activity['persona'] = record.user_id.partner_id.mail_partner_format().get(record.user_id.partner_id)
         return activities
 
     @api.model

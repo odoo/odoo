@@ -111,6 +111,7 @@ export class Activity extends Record {
     /** @type {Object[]} */
     mail_template_ids;
     note = Record.attr("", { html: true });
+    persona = Record.one("Persona");
     /** @type {number|false} */
     previous_activity_type_id;
     /** @type {number|false} */
