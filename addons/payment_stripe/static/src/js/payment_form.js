@@ -87,6 +87,9 @@ paymentForm.include({
         const paymentElement = this.stripeElements[paymentOptionId].create(
             'payment', paymentElementOptions
         );
+        paymentElement.on('loaderror', response => {
+            this._displayErrorDialog(_t("Cannot display the payment form"), response.error.message);
+        });
         paymentElement.mount(stripeInlineForm);
 
         const tokenizationCheckbox = inlineForm.querySelector(
@@ -126,13 +129,14 @@ paymentForm.include({
 
         // Trigger form validation and wallet collection.
         const _super = this._super.bind(this);
-        const { error: submitError } = await this.stripeElements[paymentOptionId].submit();
-        if (submitError) {
-            this._displayErrorDialog(_t("Incorrect payment details"));
+        try {
+            await this.stripeElements[paymentOptionId].submit();
+        } catch (error) {
+            this._displayErrorDialog(_t("Incorrect payment details"), error.message);
             this._enableButton();
-        } else { // There is no invalid input, resume the generic flow.
-            return await _super(...arguments);
+            return
         }
+        return await _super(...arguments);
     },
 
     /**
