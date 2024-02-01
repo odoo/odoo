@@ -609,6 +609,67 @@ QUnit.module('web_editor', {}, function () {
             form.destroy();
         });
 
+        QUnit.test('media dialog: undo icon to icon change', async function (assert) {
+            assert.expect(2);
+
+            this.data['note.note'].records[0].body ='<p><span class="fa fa-3x rounded bg-primary m-3 fa-times-circle"></span></p>'
+
+            var form = await testUtils.createView({
+                View: FormView,
+                model: 'note.note',
+                data: this.data,
+                arch: '<form>' +
+                    '<field name="body" widget="html" style="height: 100px"/>' +
+                    '</form>',
+                res_id: 1,
+                mockRPC: function (route, args) {
+                    if (args.model === 'ir.attachment') {
+                        return Promise.resolve([]);
+                    }
+                    if (route.indexOf('/web_unsplash/fetch_images') === 0) {
+                        return Promise.resolve();
+                    }
+                    return this._super(route, args);
+                },
+            });
+            const promise = new Promise((resolve) => _formResolveTestPromise = resolve);
+            await testUtils.form.clickEdit(form);
+            await promise;
+
+            // the dialog load some xml assets
+            var defMediaDialog = testUtils.makeTestPromise();
+            testUtils.mock.patch(MediaDialog, {
+                init: function () {
+                    this._super.apply(this, arguments);
+                    this.opened(defMediaDialog.resolve.bind(defMediaDialog));
+                }
+            });
+
+            var pText = document.querySelector('.note-editable p span');
+            Wysiwyg.setRange(pText, 0, pText, 0);
+            const wysiwyg = $('.note-editable').data('wysiwyg');
+            defMediaDialog = testUtils.makeTestPromise();
+            wysiwyg.openMediaDialog();
+
+            // load static xml file (dialog, media dialog, unsplash image widget)
+            await defMediaDialog;
+            document.querySelector('.modal .tab-content .tab-pane').classList.remove('fade'); // to be sync in test
+            await testUtils.dom.click(document.querySelector('.modal a[aria-controls="editor-media-icon"]'));
+            await testUtils.dom.click(document.querySelector('.modal #editor-media-icon .font-icons-icon.fa-glass'));
+
+            assert.strictEqual(wysiwyg.getValue(),
+                '<p><span class="fa fa-3x rounded bg-primary m-3 fa-glass"></span></p>',
+                "should have the new icon in the dom.");
+
+            await wysiwyg.odooEditor.execCommand('undo');
+            assert.strictEqual(wysiwyg.getValue(),
+                '<p><span class="fa fa-3x rounded bg-primary m-3 fa-times-circle"></span></p>',
+                "should have the first icon in the dom.");
+            
+            testUtils.mock.unpatch(MediaDialog);
+            form.destroy();
+        });
+
         QUnit.test('link dialog - external link - no edit', async function (assert) {
             assert.expect(2);
 

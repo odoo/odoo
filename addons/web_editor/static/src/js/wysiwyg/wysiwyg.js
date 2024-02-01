@@ -22,6 +22,7 @@ const wysiwygUtils = require('@web_editor/js/common/wysiwyg_utils');
 const weUtils = require('web_editor.utils');
 const { PeerToPeer } = require('@web_editor/js/wysiwyg/PeerToPeer');
 const { Mutex } = require('web.concurrency');
+const image_processing = require('web_editor.image_processing');
 
 var _t = core._t;
 const QWeb = core.qweb;
@@ -1345,10 +1346,13 @@ const Wysiwyg = Widget.extend({
             }
             // restore saved html classes
             if (params.htmlClass) {
-                element.className += " " + params.htmlClass;
+                element.classList.add(...params.htmlClass.split(" "));
             }
             restoreSelection();
             if (wasImageOrVideo || wasFontAwesome) {
+                if (wysiwygUtils.isImg(element)) {
+                    image_processing.loadImageInfo(element, this._rpc.bind(this));
+                }
                 $node.replaceWith(element);
                 this.odooEditor.unbreakableStepUnactive();
                 this.odooEditor.historyStep();
