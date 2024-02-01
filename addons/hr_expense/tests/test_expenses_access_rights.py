@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from odoo import Command
 from odoo.addons.hr_expense.tests.common import TestExpenseCommon
 from odoo.exceptions import AccessError, UserError
-from odoo.tests import tagged
+from odoo.tests import HttpCase, tagged, new_test_user
 
 
 @tagged('-at_install', 'post_install')
-class TestExpensesAccessRights(TestExpenseCommon):
+class TestExpensesAccessRights(TestExpenseCommon, HttpCase):
 
     def test_expense_access_rights(self):
         ''' The expense employee can't be able to create an expense for someone else.'''
@@ -116,3 +118,33 @@ class TestExpensesAccessRights(TestExpenseCommon):
         expense_sheet.with_user(self.expense_user_manager).action_refuse_expense_sheets()
         expense_sheet.with_user(self.expense_user_manager)._do_refuse('failed')
         self.assertRecordValues(expense_sheet, [{'state': 'cancel'}])
+
+    def test_expense_sheet_access_rights_user(self):
+        # The expense base user (without other rights) is able to create and read sheet
+
+        user = new_test_user(self.env, login='test-expense', groups='base.group_user')
+        expense_employee = self.env['hr.employee'].create({
+            'name': 'expense_employee_base_user',
+            'user_id': user.id,
+            'work_contact_id': user.partner_id.id,
+            'address_id': user.partner_id.id,
+        })
+
+        expense_sheet = self.env['hr.expense.sheet'].with_user(user).create({
+            'name': 'First Expense for employee',
+            'employee_id': expense_employee.id,
+            'journal_id': self.company_data['default_journal_purchase'].id,
+            'accounting_date': '2017-01-01',
+            'expense_line_ids': [
+                Command.create({
+                    # Expense without foreign currency but analytic account.
+                    'name': 'expense_1',
+                    'date': '2016-01-01',
+                    'product_id': self.product_a.id,
+                    'unit_amount': 1000.0,
+                    'employee_id': expense_employee.id,
+                }),
+            ],
+        })
+        self.start_tour("/web", 'hr_expense_access_rights_test_tour', login="test-expense")
+        self.assertRecordValues(expense_sheet, [{'state': 'submit'}])
