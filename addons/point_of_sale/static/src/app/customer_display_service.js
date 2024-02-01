@@ -4,6 +4,7 @@ import { batched } from "@point_of_sale/js/utils";
 import { effect, Reactive } from "@point_of_sale/utils";
 import { registry } from "@web/core/registry";
 import { pick } from "@web/core/utils/objects";
+import { renderToString } from "@web/core/utils/render";
 
 export class LocalDisplay extends Reactive {
     status = "success";
@@ -117,7 +118,11 @@ export const customerDisplayService = {
             : new LocalDisplay(globalState);
         // Register an effect to update the display automatically when anything it renders changes
         effect(
-            batched((display) => display.update()),
+            batched((display) => {
+                if (renderToString.app) {
+                display.update()
+                }
+            }),
             [display]
         );
         return display;
