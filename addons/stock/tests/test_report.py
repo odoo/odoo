@@ -4,6 +4,7 @@
 from datetime import date, datetime, timedelta
 
 from odoo.tests.common import Form, TransactionCase
+from odoo import Command
 
 
 class TestReportsCommon(TransactionCase):
@@ -31,6 +32,10 @@ class TestReportsCommon(TransactionCase):
         product_form.name = 'Product'
         cls.product = product_form.save()
         cls.product_template = cls.product.product_tmpl_id
+        cls.wh_2 = cls.env['stock.warehouse'].create({
+            'name': 'Evil Twin Warehouse',
+            'code': 'ETWH',
+        })
 
     def get_report_forecast(self, product_template_ids=False, product_variant_ids=False, context=False):
         if product_template_ids:
@@ -664,10 +669,7 @@ class TestReports(TestReportsCommon):
         report display the good moves according to the selected warehouse.
         """
         # Warehouse config.
-        wh_2 = self.env['stock.warehouse'].create({
-            'name': 'Evil Twin Warehouse',
-            'code': 'ETWH',
-        })
+        wh_2 = self.wh_2
         picking_type_out_2 = self.env['stock.picking.type'].search([
             ('code', '=', 'outgoing'),
             ('warehouse_id', '=', wh_2.id),
@@ -755,6 +757,60 @@ class TestReports(TestReportsCommon):
         self.assertEqual(draft_picking_qty['out'], 0)
         self.assertEqual(lines[0]['document_out']['id'], delivery_2.id)
         self.assertEqual(lines[0]['quantity'], 8)
+
+    def test_report_forecast_5_multi_warehouse_chain(self):
+        """ Create a MTO chain inter warehouse, the forecast report should ignore the
+        "not current" warehouse"""
+
+        wh_2 = self.wh_2
+        wh = self.env.ref('stock.warehouse0')
+        # replenish rule
+        replenish_route = self.env['stock.route'].create({
+            'name': "replenish",
+            'rule_ids': [Command.create({
+                'name': "replenish",
+                'action': "pull",
+                'location_src_id': wh_2.lot_stock_id.id,
+                'location_dest_id': wh.lot_stock_id.id,
+                'picking_type_id': wh_2.int_type_id.id,
+            })],
+        })
+        self.env.ref('stock.route_warehouse0_mto').active = True
+        self.product.route_ids = [Command.set([self.env.ref('stock.route_warehouse0_mto').id, replenish_route.id])]
+        self.env['stock.quant']._update_available_quantity(self.product, wh_2.lot_stock_id, 5)
+
+        # Creates a delivery to empty WH
+        delivery = self.env['stock.picking'].create({
+            'partner_id': self.partner.id,
+            'picking_type_id': wh.out_type_id.id,
+            'move_ids': [Command.create({
+                'name': 'Delivery',
+                'product_id': self.product.id,
+                'product_uom_qty': 5,
+                'product_uom': self.product.uom_id.id,
+                'location_id': wh.lot_stock_id.id,
+                'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+                'procure_method': 'make_to_order',
+            })],
+        })
+        delivery.action_confirm()
+
+        # Check the WH2 ressuply WH
+        inter_wh_delivery = self.env['stock.move'].search([
+            ('picking_type_id', '=', wh_2.int_type_id.id),
+            ('location_id', '=', wh_2.lot_stock_id.id),
+            ('location_dest_id', '=', wh.lot_stock_id.id),
+            ('product_id', '=', self.product.id),
+        ])
+        self.assertEqual(len(inter_wh_delivery), 1)
+        _, _, lines = self.get_report_forecast(
+            product_template_ids=self.product_template.ids,
+            context={'warehouse': wh.id},
+        )
+        # The forecast should show 1 line linking the delivery with the replenish
+        self.assertEqual(len(lines), 1)
+        self.assertEqual(lines[0]['document_out']['id'], delivery.id)
+        self.assertEqual(lines[0]['document_in']['id'], inter_wh_delivery.picking_id.id)
 
     def test_report_forecast_6_multi_company(self):
         """ Create transfers for two different companies and check report
