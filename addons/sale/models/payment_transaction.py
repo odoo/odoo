@@ -146,7 +146,7 @@ class PaymentTransaction(models.Model):
             invoice_to_send.is_move_sent = True # Mark invoice as sent
             invoice_to_send.with_user(SUPERUSER_ID)._generate_pdf_and_send_invoice(template)
 
-    def _cron_send_invoice(self):
+    def _cron_send_invoice(self, batch_size=1000):
         """
             Cron to send invoice that where not ready to be send directly after posting
         """
@@ -156,7 +156,7 @@ class PaymentTransaction(models.Model):
         # No need to retrieve old transactions
         retry_limit_date = datetime.now() - relativedelta.relativedelta(days=2)
         # Retrieve all transactions matching the criteria for post-processing
-        self.search([
+        domain = [
             ('state', '=', 'done'),
             ('is_post_processed', '=', True),
             ('invoice_ids', 'in', self.env['account.move']._search([
@@ -165,7 +165,11 @@ class PaymentTransaction(models.Model):
             ])),
             ('sale_order_ids.state', '=', 'sale'),
             ('last_state_change', '>=', retry_limit_date),
-        ])._send_invoice()
+        ]
+        txs_count = self.search_count(domain)
+        txs = self.search(domain, limit=batch_size)
+        txs._send_invoice()
+        self.env['ir.cron']._log_progress(len(txs), txs_count-len(txs))
 
     def _invoice_sale_orders(self):
         for tx in self.filtered(lambda tx: tx.sale_order_ids):
