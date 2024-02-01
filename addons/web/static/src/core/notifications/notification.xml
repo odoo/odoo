@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.NotificationWowl">
-        <div t-on-mouseenter="this.props.freeze" t-on-mouseleave="this.props.refresh" t-attf-class="o_notification {{props.className}} border border-{{props.type}} bg-view mb-2 position-relative"
+        <div t-on-mouseenter="this.props.freeze" t-on-mouseleave="this.props.refresh" t-attf-class="o_notification {{props.className}} border border-{{props.type}} mb-2 position-relative"
          role="alert" aria-live="assertive" aria-atomic="true">
             <strong t-if="props.title" t-attf-class="o_notification_title d-block text-{{props.type}} py-2 ps-3 pe-5" t-out="props.title"/>
             <button type="button" class="o_notification_close btn" aria-label="Close" t-on-click="props.close">
