@@ -22,5 +22,6 @@ Allow users to login through OAuth2 Provider.
             'auth_oauth/static/**/*',
         ],
     },
+    "pre_init_hook": "pre_init_hook",
     'license': 'LGPL-3',
 }
