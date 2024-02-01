@@ -284,11 +284,14 @@ class TestIrCron(TransactionCase, CronMixinCase):
         def _cb(self, cron_name, server_action_id, job_id):
             return True
 
+        def _notify(self, message):
+            pass
+
         self.cron._trigger()
         self.env.flush_all()
         self.registry.enter_test_mode(self.cr)
         try:
-            with patch.object(self.registry['ir.cron'], '_callback', _cb):
+            with patch.object(self.registry['ir.cron'], '_callback', _cb), patch.object(self.registry['ir.cron'], '_notify_admin', _notify):
                 self.registry['ir.cron']._process_job(
                     self.registry.db_name,
                     self.registry.cursor(),
@@ -308,7 +311,7 @@ class TestIrCron(TransactionCase, CronMixinCase):
         self.env.flush_all()
         self.registry.enter_test_mode(self.cr)
         try:
-            with patch.object(self.registry['ir.cron'], '_callback', _cb):
+            with patch.object(self.registry['ir.cron'], '_callback', _cb), patch.object(self.registry['ir.cron'], '_notify_admin', _notify):
                 self.registry['ir.cron']._process_job(
                     self.registry.db_name,
                     self.registry.cursor(),

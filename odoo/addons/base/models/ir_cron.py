@@ -289,6 +289,13 @@ class ir_cron(models.Model):
             raise
         return cr.dictfetchone()
 
+    def _notify_admin(self, message):
+        _logger.warning(message)
+
+    def _notify_admin_deactivation(self, cron_name, cron_id, action_id):
+        self._notify_admin(_('The cron %s with id %s call from action %s has been deactivated after failing 5 consecutive times.\n'
+                             'Verify the cron logs for more information.', cron_name, cron_id, action_id))
+
     @classmethod
     def _process_job(cls, db, cron_cr, job):
         """ Execute a cron job and re-schedule a call for later. """
@@ -354,6 +361,8 @@ class ir_cron(models.Model):
             job['failures'] = job['failures'] + 1 if not deactivate else 0
             job['first_failure_date'] = (job['first_failure_date'] or now) if not deactivate else None
             job['active'] = job['active'] and not deactivate
+            if deactivate:
+                ir_cron._notify_admin_deactivation(job['cron_name'], job['id'], job['ir_actions_server_id'])
         else:
             # Reset the counter if the cron did not fail
             job['failures'] = 0
