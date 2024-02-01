@@ -1,7 +1,6 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, tools
+from odoo import api, fields, models
 
 
 class SaleReport(models.Model):
@@ -57,7 +56,7 @@ class SaleReport(models.Model):
     weight = fields.Float('Gross Weight', readonly=True)
     volume = fields.Float('Volume', readonly=True)
 
-    discount = fields.Float('Discount %', readonly=True)
+    discount = fields.Float('Discount %', readonly=True, group_operator="avg")
     discount_amount = fields.Float('Discount Amount', readonly=True)
     campaign_id = fields.Many2one('utm.campaign', 'Campaign', readonly=True)
     medium_id = fields.Many2one('utm.medium', 'Medium', readonly=True)
