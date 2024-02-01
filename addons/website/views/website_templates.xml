@@ -2789,8 +2789,9 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
                     </ul>
                 </div>
                 <span t-if="next_step"
-                        class="d-inline-block d-md-none text-muted"
-                        t-out="'Next: ' + next_step[1]['name']"/>
+                        class="d-inline-block d-md-none text-muted">
+                        Next: <t t-out="next_step[1]['name']"/>
+                </span>
             </div>
         </div>
         <div class="o_wizard_circle_progress progress d-md-none position-relative rounded-circle ms-3 bg-transparent"
