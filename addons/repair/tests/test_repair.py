@@ -3,6 +3,7 @@
 from odoo.exceptions import UserError
 from odoo.tests import tagged, common, Form
 from odoo.tools import float_compare, float_is_zero
+from odoo import Command
 
 
 @tagged('post_install', '-at_install')
@@ -623,3 +624,31 @@ class TestRepair(common.TransactionCase):
         repair_order.move_ids.quantity = 1
         repair_order.action_repair_end()
         self.assertEqual(repair_order.state, 'done')
+
+    def test_repair_multi_unit_order_with_serial_tracking(self):
+        """
+        Test that a sale order with a single order line with quantity > 1 for a product that creates a repair order and
+        is tracked via serial number creates multiple repair orders rather than grouping the line into a single RO
+        """
+        product_a = self.env['product.product'].create({
+            'name': 'productA',
+            'detailed_type': 'product',
+            'tracking': 'serial',
+            'create_repair': True,
+        })
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.res_partner_1.id,
+            'order_line': [Command.create({
+                'product_id': product_a.id,
+                'product_uom_qty': 3.0,
+            })]
+        })
+        sale_order.action_confirm()
+
+        repair_orders = sale_order.repair_order_ids
+        self.assertRecordValues(repair_orders, [
+            {'product_id': product_a.id, 'product_qty': 1.0},
+            {'product_id': product_a.id, 'product_qty': 1.0},
+            {'product_id': product_a.id, 'product_qty': 1.0},
+        ])
