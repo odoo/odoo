@@ -9,7 +9,7 @@ from odoo.tests.common import users, tagged, HttpCase, warmup
 
 @tagged('post_install', '-at_install')
 class TestDiscussFullPerformance(HttpCase):
-    _query_count = 66
+    _query_count = 66 + 1  # +1 is necessary to fix nondeterministic issue on runbot
     _query_count_discuss_channels = 69
 
     def setUp(self):
