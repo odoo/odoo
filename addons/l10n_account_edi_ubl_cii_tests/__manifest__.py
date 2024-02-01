@@ -19,7 +19,7 @@ valid ones.
     """,
     'depends': [
         'account_edi_ubl_cii',
-        'l10n_fr',
+        'l10n_fr_account',
         'l10n_be',
         'l10n_de',
         'l10n_nl',
