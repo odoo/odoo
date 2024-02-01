@@ -749,18 +749,31 @@ Attempting to double-book your time off won't magically make your vacation 2x be
             if holiday.state in ['cancel', 'refuse', 'validate1', 'validate']:
                 raise ValidationError(_("This modification is not allowed in the current state."))
 
-    @api.constrains('date_from', 'date_to')
     def _check_validity(self):
+        sorted_leaves = defaultdict(lambda: self.env['hr.leave'])
         for leave in self:
-            leave_type = leave.holiday_status_id
+            sorted_leaves[(leave.holiday_status_id, leave.date_from.date())] |= leave
+        for (leave_type, date_from), leaves in sorted_leaves.items():
             if leave_type.requires_allocation == 'no':
                 continue
-            employees = leave._get_employees_from_holiday_type()
-            date_from = leave.date_from.date()
+            employees = self.env['hr.employee']
+            for leave in leaves:
+                employees |= leave._get_employees_from_holiday_type()
             leave_data = leave_type.get_allocation_data(employees, date_from)
-            max_excess = leave_type.max_allowed_negative if leave_type.allows_negative else 0
+            if leave_type.allows_negative:
+                max_excess = leave_type.max_allowed_negative
+                for employee in employees:
+                    if leave_data[employee][0][1]['virtual_remaining_leaves'] < -max_excess:
+                        raise ValidationError(_("There is no valid allocation to cover that request."))
+                continue
+
+            previous_leave_data = leave_type.with_context(
+                ignored_leave_ids=leaves.ids
+            ).get_allocation_data(employees, date_from)
             for employee in employees:
-                if leave_data[employee][0][1]['total_virtual_excess'] > max_excess:
+                previous_emp_data = previous_leave_data[employee][0][1]['virtual_excess_data']
+                emp_data = leave_data[employee][0][1]['virtual_excess_data']
+                if previous_emp_data != emp_data and len(emp_data) >= len(previous_emp_data):
                     raise ValidationError(_("There is no valid allocation to cover that request."))
 
     ####################################################
@@ -907,6 +920,7 @@ Attempting to double-book your time off won't magically make your vacation 2x be
                     self._check_double_validation_rules(employee_id, values.get('state', False))
 
         holidays = super(HolidaysRequest, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
+        holidays._check_validity()
 
         for holiday in holidays:
             if not self._context.get('leave_fast_create'):
@@ -956,6 +970,7 @@ Attempting to double-book your time off won't magically make your vacation 2x be
             if 'date_to' in values:
                 values['request_date_to'] = values['date_to']
         result = super(HolidaysRequest, self).write(values)
+        self._check_validity()
         if not self.env.context.get('leave_fast_create'):
             for holiday in self:
                 if employee_id:

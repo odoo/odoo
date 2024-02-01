@@ -380,7 +380,9 @@ class HolidaysType(models.Model):
         elif not target_date:
             target_date = fields.Date.today()
 
-        allocations_leaves_consumed, extra_data = employees._get_consumed_leaves(self, target_date)
+        allocations_leaves_consumed, extra_data = employees.with_context(
+            ignored_leave_ids=self.env.context.get('ignored_leave_ids')
+        )._get_consumed_leaves(self, target_date)
         leave_type_requires_allocation = self.filtered(lambda lt: lt.requires_allocation == 'yes')
 
         for employee in employees:
@@ -403,7 +405,6 @@ class HolidaysType(models.Model):
                         'holds_changes': False,
                         'total_virtual_excess': 0,
                         'virtual_excess_data': {},
-                        'total_real_excess': 0,
                         'exceeding_duration': extra_data[employee][leave_type]['exceeding_duration'],
                         'request_unit': leave_type.request_unit,
                         'icon': leave_type.sudo().icon_id.url,
@@ -418,6 +419,8 @@ class HolidaysType(models.Model):
                     lt_info[1]['virtual_excess_data'].update({
                         excess_date.strftime('%Y-%m-%d'): excess_days
                     }),
+                    if not leave_type.allows_negative:
+                        continue
                     lt_info[1]['virtual_leaves_taken'] += amount
                     lt_info[1]['virtual_remaining_leaves'] -= amount
                     lt_info[1]['total_virtual_excess'] += amount
@@ -427,7 +430,6 @@ class HolidaysType(models.Model):
                         lt_info[1]['leaves_approved'] += amount
                         lt_info[1]['leaves_taken'] += amount
                         lt_info[1]['remaining_leaves'] -= amount
-                        lt_info[1]['total_real_excess'] += amount
                 allocations_now = self.env['hr.leave.allocation']
                 allocations_date = self.env['hr.leave.allocation']
                 allocations_with_remaining_leaves = self.env['hr.leave.allocation']
