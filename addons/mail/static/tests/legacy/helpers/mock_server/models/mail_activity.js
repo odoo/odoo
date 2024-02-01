@@ -71,6 +71,10 @@ patch(MockServer.prototype, {
             if (record.summary) {
                 record.display_name = record.summary;
             }
+            const user = this.pyEnv["res.users"].searchRead([["id", "=", record.user_id[0]]])[0];
+            record.persona = this._mockResPartnerMailPartnerFormat([user.partner_id[0]]).get(
+                user.partner_id[0]
+            );
             return record;
         });
         return res;

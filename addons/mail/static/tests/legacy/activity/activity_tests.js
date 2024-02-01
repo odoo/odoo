@@ -13,6 +13,9 @@ import {
     triggerHotkey,
 } from "@web/../tests/helpers/utils";
 import { click, contains, createFile, inputFiles } from "@web/../tests/utils";
+import { getOrigin } from "@web/core/utils/urls";
+
+const { DateTime } = luxon;
 
 const views = {
     "res.fake,false,form": `
@@ -534,4 +537,22 @@ QUnit.test("chatter 'activities' button open the activity schedule wizard", asyn
     });
     await click("button", { text: "Activities" });
     assert.verifySteps(["doAction"]);
+});
+
+QUnit.test("Activity avatar should have a unique timestamp", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({});
+    pyEnv["mail.activity"].create({
+        res_id: partnerId,
+        res_model: "res.partner",
+    });
+    const { openFormView } = await start();
+    const partner = pyEnv["res.partner"].searchRead([["id", "=", pyEnv.currentPartnerId]])[0];
+    openFormView("res.partner", partnerId);
+    await contains(".o-mail-Activity");
+    await contains(
+        `.o-mail-Activity-sidebar img[data-src="${getOrigin()}/web/image/res.partner/${
+            pyEnv.currentPartnerId
+        }/avatar_128?unique=${DateTime.fromSQL(partner.write_date).ts}`
+    );
 });

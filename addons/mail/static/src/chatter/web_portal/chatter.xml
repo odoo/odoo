@@ -142,7 +142,7 @@
         </div>
         <t t-if="state.showActivities">
             <t t-foreach="activities" t-as="activity" t-key="activity.id">
-                <Activity data="activity" onActivityChanged.bind="onActivityChanged" reloadParentView.bind="reloadParentView"/>
+                <Activity activity="activity" onActivityChanged.bind="onActivityChanged" reloadParentView.bind="reloadParentView"/>
             </t>
         </t>
     </div>

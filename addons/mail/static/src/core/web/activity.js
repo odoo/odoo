@@ -17,14 +17,14 @@ import { FileUploader } from "@web/views/fields/file_handler";
 
 /**
  * @typedef {Object} Props
- * @property {import("models").Activity} data
+ * @property {import("models").Activity} activity
  * @property {function} onActivityChanged
  * @property {function} reloadParentView
  * @extends {Component<Props, Env>}
  */
 export class Activity extends Component {
     static components = { ActivityMailTemplate, FileUploader };
-    static props = ["data", "onActivityChanged", "reloadParentView"];
+    static props = ["activity", "onActivityChanged", "reloadParentView"];
     static template = "mail.Activity";
 
     setup() {
@@ -41,14 +41,14 @@ export class Activity extends Component {
     }
 
     get displayName() {
-        if (this.props.data.summary) {
-            return _t("“%s”", this.props.data.summary);
+        if (this.props.activity.summary) {
+            return _t("“%s”", this.props.activity.summary);
         }
-        return this.props.data.display_name;
+        return this.props.activity.display_name;
     }
 
     get displayCreateDate() {
-        return deserializeDateTime(this.props.data.create_date).toLocaleString(
+        return deserializeDateTime(this.props.activity.create_date).toLocaleString(
             luxon.DateTime.DATETIME_SHORT_WITH_SECONDS
         );
     }
@@ -62,7 +62,7 @@ export class Activity extends Component {
     }
 
     get delay() {
-        return computeDelay(this.props.data.date_deadline);
+        return computeDelay(this.props.activity.date_deadline);
     }
 
     toggleDetails() {
@@ -75,7 +75,7 @@ export class Activity extends Component {
             return;
         }
         this.markDonePopover.open(ev.currentTarget, {
-            activity: this.props.data,
+            activity: this.props.activity,
             hasHeader: true,
             onActivityChanged: this.props.onActivityChanged,
         });
@@ -84,7 +84,7 @@ export class Activity extends Component {
     async onFileUploaded(data) {
         const thread = this.thread;
         const { id: attachmentId } = await this.attachmentUploader.uploadData(data);
-        await this.activityService.markAsDone(this.props.data, [attachmentId]);
+        await this.activityService.markAsDone(this.props.activity, [attachmentId]);
         this.props.onActivityChanged(thread);
         await this.threadService.fetchNewMessages(thread);
     }
@@ -93,26 +93,29 @@ export class Activity extends Component {
         const target = ev.currentTarget;
         if (!this.avatarCard.isOpen) {
             this.avatarCard.open(target, {
-                id: this.props.data.user_id[0],
+                id: this.props.activity.persona.userId,
             });
         }
     }
 
     async edit() {
         const thread = this.thread;
-        const id = this.props.data.id;
+        const id = this.props.activity.id;
         await this.env.services["mail.activity"].edit(id);
         this.props.onActivityChanged(thread);
     }
 
     async unlink() {
         const thread = this.thread;
-        this.activityService.delete(this.props.data);
-        await this.env.services.orm.unlink("mail.activity", [this.props.data.id]);
+        this.activityService.delete(this.props.activity);
+        await this.env.services.orm.unlink("mail.activity", [this.props.activity.id]);
         this.props.onActivityChanged(thread);
     }
 
     get thread() {
-        return this.threadService.getThread(this.props.data.res_model, this.props.data.res_id);
+        return this.threadService.getThread(
+            this.props.activity.res_model,
+            this.props.activity.res_id
+        );
     }
 }

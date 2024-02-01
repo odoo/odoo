@@ -81,6 +81,20 @@ insertModelFields("discuss.channel", {
     },
     uuid: { default: () => uniqueId("discuss.channel_uuid-") },
 });
+insertModelFields("res.users", {
+    partner_id: {
+        default() {
+            return this.pyEnv["res.partner"].create({});
+        },
+    },
+});
+insertModelFields("mail.activity", {
+    user_id: {
+        default() {
+            return this.pyEnv.currentUserId;
+        },
+    },
+});
 insertModelFields("discuss.channel.member", {
     fold_state: { default: "closed" },
     is_pinned: { default: true },
