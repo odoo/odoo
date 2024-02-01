@@ -21,7 +21,7 @@ Auto-complete partner companies' data
         'data/cron.xml',
         'data/iap_service_data.xml',
     ],
-    'auto_install': True,
+    'auto_install': False,
     'assets': {
         'web.assets_backend': [
             'partner_autocomplete/static/src/scss/*',
