@@ -93,20 +93,32 @@ class SaleOrderLine(models.Model):
                 continue
             if not line.product_template_id.sudo().create_repair or line.move_ids.sudo().repair_id or float_compare(line.product_uom_qty, 0, precision_rounding=line.product_uom.rounding) <= 0:
                 continue
+
             order = line.order_id
-            new_repair_vals.append({
+            default_repair_vals = {
                 'state': 'confirmed',
                 'partner_id': order.partner_id.id,
                 'sale_order_id': order.id,
                 'sale_order_line_id': line.id,
                 'picking_type_id': order.warehouse_id.repair_type_id.id,
-            })
-            if line.product_template_id.type in ('consu', 'product'):
-                new_repair_vals[-1].update({
+            }
+            if line.product_id.tracking == 'serial':
+                vals = {
+                    **default_repair_vals,
+                    'product_id': line.product_id.id,
+                    'product_qty': 1,
+                    'product_uom': line.product_uom.id,
+                }
+                new_repair_vals.extend([vals] * int(line.product_uom_qty))
+            elif line.product_id.type in ('consu', 'product'):
+                new_repair_vals.append({
+                    **default_repair_vals,
                     'product_id': line.product_id.id,
                     'product_qty': line.product_uom_qty,
                     'product_uom': line.product_uom.id,
                 })
+            else:
+                new_repair_vals.append(default_repair_vals.copy())
 
         if new_repair_vals:
             self.env['repair.order'].sudo().create(new_repair_vals)
