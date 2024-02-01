@@ -2294,5 +2294,6 @@ Please change the quantity done or the rounding precision of your unit of measur
             return self.env['stock.move']
         moves |= self
         for move in self.move_orig_ids:
-            moves |= move._get_moves_orig(moves)
+            if move.location_id.warehouse_id == self.location_id.warehouse_id:
+                moves |= move._get_moves_orig(moves)
         return moves
