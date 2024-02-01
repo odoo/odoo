@@ -17,9 +17,20 @@ import {
     patchWithCleanup,
     triggerHotkey,
 } from "../../helpers/utils";
-import { backspaceSearchBar, editSearchBar } from "./command_service_tests";
+import testUtils from "@web/../tests/legacy_tests/helpers/test_utils";
 
 import { Component, xml } from "@odoo/owl";
+
+async function editSearchBar(searchValue) {
+    const searchBar = document.querySelector(".o_command_palette_search input");
+    await testUtils.fields.editInput(searchBar, searchValue);
+}
+
+async function backspaceSearchBar() {
+    const searchBar = document.querySelector(".o_command_palette_search input");
+    searchBar.dispatchEvent(new KeyboardEvent("keydown", { key: "backspace" }));
+    await nextTick();
+}
 
 let env;
 let target;
