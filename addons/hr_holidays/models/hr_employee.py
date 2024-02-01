@@ -394,6 +394,9 @@ class HrEmployee(models.Model):
             ('employee_id', 'in', employees.ids),
             ('state', 'in', ['confirm', 'validate1', 'validate']),
         ]
+        if self.env.context.get('ignored_leave_ids'):
+            leaves_domain.append(('id', 'not in', self.env.context.get('ignored_leave_ids')))
+
         if not target_date:
             target_date = fields.Date.today()
         if ignore_future:
@@ -454,7 +457,6 @@ class HrEmployee(models.Model):
                     'is_virtual': True,
                 }),
                 'total_virtual_excess': 0,
-                'total_real_excess': 0,
                 'exceeding_duration': 0,
                 'to_recheck_leaves': self.env['hr.leave']
             })
