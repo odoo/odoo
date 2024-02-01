@@ -8,6 +8,10 @@ from odoo.tests.common import tagged
 @tagged('-at_install', 'post_install')
 class PosSaleGiftCardTest(TestPointOfSaleHttpCommon):
 
+    def setUp(self):
+        super(PosSaleGiftCardTest, self).setUp()
+        self.main_pos_config.gift_card_product_id = self.env.ref('gift_card.pay_with_gift_card_product')
+
     def test_gift_card_from_sale_order_in_pos(self):
         gift_card = self.env['gift.card'].create({
             'initial_amount': 500,
