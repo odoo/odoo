@@ -194,9 +194,9 @@
             <div class="text-center mt16 mb256">
                 <button type="submit" value="finish" class="btn btn-secondary disabled">Submit</button>
                 <button id="next_page" t-attf-class="btn #{'btn-secondary' if survey_last else 'btn-primary'} d-none">Next</button>
-                    <span class="fw-bold text-muted ms-2 d-none d-md-inline">
-                        <span id="enter-tooltip">or press Enter</span>
-                    </span>
+                <span class="fw-bold text-muted ms-2 d-none d-md-inline">
+                    <span id="enter-tooltip">or press CTRL+Enter</span>
+                </span>
             </div>
         </t>
 
@@ -219,7 +219,7 @@
                         <t t-else="">Continue</t>
                     </button>
                     <button id="next_page" t-attf-class="btn #{'btn-secondary' if survey_last else 'btn-primary'} d-none">Next</button>
-                    <span class="fw-bold text-muted ms-2 d-none d-md-inline" id="enter-tooltip"> or press Enter</span>
+                    <span class="fw-bold text-muted ms-2 d-none d-md-inline" id="enter-tooltip"> or press CTRL+Enter</span>
                 </div>
             </div>
         </t>
