@@ -131,7 +131,9 @@ class AccountMoveReversal(models.TransientModel):
             if is_modify:
                 moves_vals_list = []
                 for move in moves.with_context(include_business_fields=True):
-                    moves_vals_list.append(move.copy_data({'date': self.date})[0])
+                    data = move.copy_data({'date': self.date})[0]
+                    data['line_ids'] = [line for line in data['line_ids'] if line[2]['display_type'] == 'product']
+                    moves_vals_list.append(data)
                 new_moves = self.env['account.move'].create(moves_vals_list)
 
             moves_to_redirect |= new_moves
