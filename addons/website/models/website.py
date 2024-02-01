@@ -1279,6 +1279,31 @@ class Website(models.Model):
                       of the same.
             :rtype: list({name: str, url: str})
         """
+        # ==== WEBSITE.PAGES ====
+        # '/' already has a http.route & is in the routing_map so it will already have an entry in the xml
+        domain = [('url', '!=', '/')]
+        if not force:
+            domain += [('website_indexed', '=', True), ('visibility', '=', False)]
+            # is_visible
+            domain += [
+                ('website_published', '=', True), ('visibility', '=', False),
+                '|', ('date_publish', '=', False), ('date_publish', '<=', fields.Datetime.now())
+            ]
+
+        if query_string:
+            domain += [('url', 'like', query_string)]
+
+        pages = self._get_website_pages(domain)
+
+        for page in pages:
+            record = {'loc': page['url'], 'id': page['id'], 'name': page['name']}
+            if page.view_id and page.view_id.priority != 16:
+                record['priority'] = min(round(page.view_id.priority / 32.0, 1), 1)
+            if page['write_date']:
+                record['lastmod'] = page['write_date'].date()
+            yield record
+
+        # ==== CONTROLLERS ====
         router = self.env['ir.http'].routing_map()
         url_set = set()
 
@@ -1342,29 +1367,6 @@ class Website(models.Model):
                     url_set.add(url)
 
                     yield page
-
-        # '/' already has a http.route & is in the routing_map so it will already have an entry in the xml
-        domain = [('url', '!=', '/')]
-        if not force:
-            domain += [('website_indexed', '=', True), ('visibility', '=', False)]
-            # is_visible
-            domain += [
-                ('website_published', '=', True), ('visibility', '=', False),
-                '|', ('date_publish', '=', False), ('date_publish', '<=', fields.Datetime.now())
-            ]
-
-        if query_string:
-            domain += [('url', 'like', query_string)]
-
-        pages = self._get_website_pages(domain)
-
-        for page in pages:
-            record = {'loc': page['url'], 'id': page['id'], 'name': page['name']}
-            if page.view_id and page.view_id.priority != 16:
-                record['priority'] = min(round(page.view_id.priority / 32.0, 1), 1)
-            if page['write_date']:
-                record['lastmod'] = page['write_date'].date()
-            yield record
 
     def get_website_page_ids(self):
         if not self.env.user.has_group('website.group_website_restricted_editor'):
