@@ -17,10 +17,18 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { Deferred, mockDate, mockTimeZone, tick } from "@odoo/hoot-mock";
-import { leave } from "@odoo/hoot-dom";
-import { Command, mockService, onRpc, serverState, withUser } from "@web/../tests/web_test_helpers";
+import { leave, press } from "@odoo/hoot-dom";
+import {
+    Command,
+    mockService,
+    onRpc,
+    patchWithCleanup,
+    serverState,
+    withUser,
+} from "@web/../tests/web_test_helpers";
+import { browser } from "@web/core/browser/browser";
 import { deserializeDateTime } from "@web/core/l10n/dates";
-import { getOrigin } from "@web/core/utils/urls";
+import { getOrigin, url } from "@web/core/utils/urls";
 
 const { DateTime } = luxon;
 
@@ -1815,4 +1823,38 @@ test("Delete starred message decrements starred counter once", async () => {
     await click(".o-mail-Message-moreMenu [title='Delete']");
     await click("button", { text: "Confirm" });
     await contains("button", { count: 1, text: "Starred2" });
+});
+
+test("Copy Message Link", async () => {
+    patchWithCleanup(browser.navigator.clipboard, {
+        writeText(text) {
+            step(text);
+            super.writeText(text);
+        },
+    });
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "channel1" });
+    const [, messageId_2] = pyEnv["mail.message"].create([
+        {
+            body: "Message without type",
+            res_id: channelId,
+            model: "discuss.channel",
+        },
+        {
+            body: "Hello world",
+            res_id: channelId,
+            message_type: "comment",
+            model: "discuss.channel",
+        },
+    ]);
+    await start();
+    await openDiscuss(channelId);
+    await click(".o-mail-Message:eq(0) [title='Expand']");
+    await contains("[title='Copy Message Link']", { count: 0 });
+    await click(".o-mail-Message:eq(1) [title='Expand']");
+    await click("[title='Copy Message Link']");
+    await assertSteps([url(`/mail/message/${messageId_2}`)]);
+    press(["ctrl", "v"]);
+    await click(".o-mail-Composer-send:enabled");
+    await contains(".o-mail-Message", { text: url(`/mail/message/${messageId_2}`) });
 });

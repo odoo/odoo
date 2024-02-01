@@ -7,6 +7,7 @@ import {
 } from "@mail/utils/common/format";
 import { rpc } from "@web/core/network/rpc";
 
+import { browser } from "@web/core/browser/browser";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
@@ -336,6 +337,18 @@ export class Message extends Record {
         return this.scheduledDatetime.toLocaleString(DateTime.TIME_24_SIMPLE, {
             locale: user.lang?.replace("_", "-"),
         });
+    }
+
+    async copyLink() {
+        let notification = _t("Message Link Copied!");
+        let type = "info";
+        try {
+            await browser.navigator.clipboard.writeText(url(`/mail/message/${this.id}`));
+        } catch {
+            notification = _t("Message Link Copy Failed (Permission denied?)!");
+            type = "danger";
+        }
+        this.store.env.services.notification.add(notification, { type });
     }
 
     async edit(body, attachments = [], { mentionedChannels = [], mentionedPartners = [] } = {}) {

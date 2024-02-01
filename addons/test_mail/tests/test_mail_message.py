@@ -3,12 +3,13 @@
 import base64
 from markupsafe import Markup
 from unittest.mock import patch
+from werkzeug.urls import url_encode
 
 from odoo.addons.mail.tests.common import mail_new_test_user, MailCommon
 from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.test_mail.models.test_mail_models import MailTestSimple
 from odoo.exceptions import AccessError, UserError
-from odoo.tests.common import tagged, users
+from odoo.tests.common import tagged, users, HttpCase
 from odoo.tools import is_html_empty, mute_logger, formataddr
 
 
@@ -508,3 +509,62 @@ class TestMessageAccess(MailCommon):
 
         self.assertTrue(new_mail)
         self.assertEqual(new_msg.parent_id, message)
+
+
+@tagged("mail_message")
+class TestMessageLinks(MailCommon, HttpCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        cls.user_employee_1 = mail_new_test_user(cls.env, login='tao1', groups='base.group_user', name='Tao Lee')
+        cls.public_channel = cls.env['discuss.channel'].channel_create(name='Public Channel1', group_id=None)
+        cls.private_group = cls.env['discuss.channel'].create_group(partners_to=cls.user_employee_1.partner_id.ids, name="Group")
+
+    @users('employee')
+    def test_message_link_by_employee(self):
+        record = self.env['mail.test.simple'].create({'name': 'Test1'})
+        thread_message = record.message_post(body='Thread Message', message_type='comment')
+        channel_message = self.public_channel.message_post(body='Public Channel Message', message_type='comment')
+        deleted_message = record.message_post(body='', message_type='comment')
+        private_message_id = self.private_group.with_user(self.user_employee_1).message_post(
+            body='Private Message',
+            message_type='comment',
+        ).id
+        self.authenticate('employee', 'employee')
+        with self.subTest(thread_message=thread_message):
+            url_params = {
+                'highlight_message_id': thread_message.id,
+                'model': thread_message.model,
+                'id': thread_message.res_id,
+                'view_type': 'form',
+            }
+            expected_url = self.base_url() + '/web#%s' % url_encode(url_params)
+            res = self.url_open(f'/mail/message/{thread_message.id}')
+            self.assertEqual(res.url, expected_url)
+        with self.subTest(channel_message=channel_message):
+            url_params = {
+                'highlight_message_id': channel_message.id,
+                'active_id': channel_message.res_id,
+                'action': 'mail.action_discuss',
+            }
+            expected_url = self.base_url() + '/web#%s' % url_encode(url_params)
+            res = self.url_open(f'/mail/message/{channel_message.id}')
+            self.assertEqual(res.url, expected_url)
+        with self.subTest(deleted_message=deleted_message):
+            res = self.url_open(f'/mail/message/{deleted_message.id}')
+            self.assertEqual(res.status_code, 404)
+        with self.subTest(private_message_id=private_message_id):
+            res = self.url_open(f'/mail/message/{private_message_id}')
+            self.assertEqual(res.status_code, 401)
+
+    @users('employee')
+    def test_message_link_by_public(self):
+        message = self.public_channel.message_post(
+            body='Public Channel Message',
+            message_type='comment',
+            subtype_xmlid='mail.mt_comment'
+        )
+        res = self.url_open(f'/mail/message/{message.id}')
+        self.assertEqual(res.status_code, 200)
