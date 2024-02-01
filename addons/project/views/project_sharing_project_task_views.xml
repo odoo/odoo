@@ -221,11 +221,23 @@
                             <field name="description" type="html" options="{'collaborative': true, 'allowCommandImage': false, 'allowCommandVideo': false, 'allowCommandFile': false}"/>
                         </page>
                         <page name="sub_tasks_page" string="Sub-tasks">
+<<<<<<< HEAD
                             <field name="child_ids" context="{
                                 'default_project_id': project_id, 'default_display_in_project': False, 'default_parent_id': id,
                                 'default_milestone_id': allow_milestones and milestone_id, 'default_partner_id': partner_id,
                                 'form_view_ref' : 'project.project_sharing_project_task_view_form',
                             }">
+||||||| parent of 8444b9806338 (temp)
+                            <field name="child_ids" context="{'default_parent_id': id, 'default_partner_id': partner_id, 'form_view_ref' : 'project.project_sharing_project_task_view_form'}">
+=======
+                            <field name="child_ids" context="{
+                                'default_project_id': project_id,
+                                'default_display_in_project': False,
+                                'default_parent_id': id,
+                                'default_partner_id': partner_id,
+                                'form_view_ref' : 'project.project_sharing_project_task_view_form',
+                            }">
+>>>>>>> 8444b9806338 (temp)
                                 <tree editable="bottom">
                                     <field name="project_id" column_invisible="True"/>
                                     <field name="display_in_project" column_invisible="True"/>
