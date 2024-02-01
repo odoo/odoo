@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import models
+from odoo import models, fields
 from odoo.addons.account.models.chart_template import template
 
 
@@ -17,6 +17,7 @@ class AccountChartTemplate(models.AbstractModel):
             'property_stock_account_input_categ_id': 'nz_21210',
             'property_stock_account_output_categ_id': 'nz_11340',
             'property_stock_valuation_account_id': 'nz_11330',
+            'property_stock_account_production_cost_id': 'nz_11350',
         }
 
     @template('nz', 'res.company')
@@ -35,5 +36,10 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_journal_early_pay_discount_gain_account_id': 'nz_61620',
                 'account_sale_tax_id': 'nz_tax_sale_15',
                 'account_purchase_tax_id': 'nz_tax_purchase_15',
+                'fiscalyear_last_month': '3',
+                'fiscalyear_last_day': 31,
+                # Changing the opening date to the first day of the fiscal year.
+                # This way the opening entries will be set to the 31st of March.
+                'account_opening_date': fields.Date.context_today(self).replace(month=4, day=1),
             },
         }
