@@ -366,24 +366,34 @@ class SaleOrder(models.Model):
                 'tax_id': [(Command.CLEAR, 0, 0)],
             }]
         discount_factor = min(1, (max_discount / discountable)) if discountable else 1
-        mapped_taxes = {tax: self.fiscal_position_id.map_tax(tax) for tax in discountable_per_tax}
-        reward_dict = {tax: {
-            'name': _(
-                'Discount: %(desc)s%(tax_str)s',
-                desc=reward.description,
-                tax_str=len(discountable_per_tax) and any(t.name for t in mapped_taxes[tax]) and _(' - On product with the following taxes: %(taxes)s', taxes=", ".join(mapped_taxes[tax].mapped('name'))) or '',
-            ),
-            'product_id': reward.discount_line_product_id.id,
-            'price_unit': -(price * discount_factor),
-            'product_uom_qty': 1.0,
-            'product_uom': reward.discount_line_product_id.uom_id.id,
-            'reward_id': reward.id,
-            'coupon_id': coupon.id,
-            'points_cost': 0,
-            'reward_identifier_code': reward_code,
-            'sequence': sequence,
-            'tax_id': [(Command.CLEAR, 0, 0)] + [(Command.LINK, tax.id, False) for tax in mapped_taxes[tax]]
-        } for tax, price in discountable_per_tax.items() if price}
+        reward_dict = {}
+        for tax, price in discountable_per_tax.items():
+            if not price:
+                continue
+            mapped_taxes = self.fiscal_position_id.map_tax(tax)
+            tax_desc = ''
+            if any(t.name for t in mapped_taxes):
+                tax_desc = _(
+                    ' - On product with the following taxes: %(taxes)s',
+                    taxes=", ".join(mapped_taxes.mapped('name')),
+                )
+            reward_dict[tax] = {
+                'name': _(
+                    'Discount: %(desc)s%(tax_str)s',
+                    desc=reward.description,
+                    tax_str=tax_desc,
+                ),
+                'product_id': reward.discount_line_product_id.id,
+                'price_unit': -(price * discount_factor),
+                'product_uom_qty': 1.0,
+                'product_uom': reward.discount_line_product_id.uom_id.id,
+                'reward_id': reward.id,
+                'coupon_id': coupon.id,
+                'points_cost': 0,
+                'reward_identifier_code': reward_code,
+                'sequence': sequence,
+                'tax_id': [Command.clear()] + [Command.link(tax.id) for tax in mapped_taxes]
+            }
         # We only assign the point cost to one line to avoid counting the cost multiple times
         if reward_dict:
             reward_dict[next(iter(reward_dict))]['points_cost'] = point_cost
