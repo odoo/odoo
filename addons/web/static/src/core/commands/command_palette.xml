@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
   <t t-name="web.CommandPalette" owl="1">
-    <Dialog header="false" footer="false" size="'md'" contentClass="'o_command_palette mt-5'">
+    <Dialog header="false" footer="false" size="'md'" contentClass="'o_command_palette mt-5'" headerClass="'o_command_palette_modal'">
       <div t-ref="root">
         <div class="o_command_palette_search input-group mb-2 px-4 py-3 border-bottom">
           <span t-if="state.namespace !== 'default'" class="o_namespace d-flex align-items-center me-1" t-out="state.namespace"/>
