@@ -597,7 +597,8 @@ class SaleOrder(models.Model):
     def _compute_is_expired(self):
         today = fields.Date.today()
         for order in self:
-            order.is_expired = order.state == 'sent' and order.validity_date and order.validity_date < today
+            is_date_expired = order.validity_date and order.validity_date < today
+            order.is_expired = order.state in ('draft', 'sent') and is_date_expired
 
     @api.depends('company_id', 'fiscal_position_id')
     def _compute_tax_country_id(self):
