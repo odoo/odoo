@@ -1558,3 +1558,38 @@ class TestSubcontractingSerialMassReceipt(TransactionCase):
         self.assertEqual(picking_receipt.state, 'done')
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.raw_material, self.env.ref('stock.stock_location_stock')), 0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.raw_material, self.subcontractor.property_stock_subcontractor, allow_negative=True), -quantity)
+
+    def test_bom_subcontracting_product_dynamic_attribute(self):
+        """
+            Test that the report BOM data is available for a product with an dynamic attribute
+            but without variant.
+        """
+        dynamic_attribute = self.env['product.attribute'].create({
+            'name': 'flavour',
+            'create_variant': 'dynamic',
+        })
+        value_1 = self.env['product.attribute.value'].create({
+            'name': 'Vanilla',
+            'attribute_id': dynamic_attribute.id,
+        })
+        value_2 = self.env['product.attribute.value'].create({
+            'name': 'Chocolate',
+            'attribute_id': dynamic_attribute.id,
+        })
+        product_template = self.env['product.template'].create({
+            'name': 'Cake',
+            'uom_id': self.env.ref('uom.product_uom_unit').id,
+            'detailed_type': 'product',
+        })
+        self.env['product.template.attribute.line'].create({
+            'product_tmpl_id': product_template.id,
+            'attribute_id': dynamic_attribute.id,
+            'value_ids': [Command.set([value_1.id, value_2.id])],
+        })
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': product_template.id,
+            'type': 'subcontract',
+            'subcontractor_ids': [Command.set([self.subcontractor.id])],
+        })
+        report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom.id, searchVariant=False)
+        self.assertTrue(report_values)
