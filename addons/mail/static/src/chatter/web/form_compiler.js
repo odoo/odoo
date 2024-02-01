@@ -20,6 +20,7 @@ function compileChatter(node, params) {
         threadModel: "__comp__.props.record.resModel",
         webRecord: "__comp__.props.record",
         saveRecord: "() => __comp__.save and __comp__.save()",
+        highlightMessageId: "__comp__.highlightMessageId",
     });
     const chatterContainerHookXml = createElement("div");
     chatterContainerHookXml.classList.add("o-mail-ChatterContainer", "o-mail-Form-chatter");

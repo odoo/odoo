@@ -307,6 +307,12 @@ export class Thread extends Record {
     });
     /** @type {"not_fetched"|"pending"|"fetched"} */
     fetchMembersState = "not_fetched";
+    /** @type {integer|null} */
+    highlightMessage = Record.one("Message", {
+        onAdd(msg) {
+            msg.thread = this;
+        },
+    });
 
     get accessRestrictedToGroupText() {
         if (!this.authorizedGroupFullName) {
