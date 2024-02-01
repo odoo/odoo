@@ -4563,7 +4563,7 @@ X[]
             });
             it('should type a, b, c, undo x2, d, undo x2, redo x2', async () => {
                 await testEditor(OdooEditor, {
-                    contentBefore: '<p>[]</p>',
+                    contentBefore: '<p>[]<br></p>',
                     stepFunction: async editor => {
                         await insertText(editor, 'a');
                         await insertText(editor, 'b');
@@ -4581,7 +4581,7 @@ X[]
             });
             it('should type a, b, c, undo x2, d, undo, redo x2', async () => {
                 await testEditor(OdooEditor, {
-                    contentBefore: '<p>[]</p>',
+                    contentBefore: '<p>[]<br></p>',
                     stepFunction: async editor => {
                         await insertText(editor, 'a');
                         await insertText(editor, 'b');
@@ -4951,7 +4951,7 @@ X[]
         describe('undo', () => {
             it('should be able to write after undo', async () => {
                 await testEditor(BasicEditor, {
-                    contentBefore: '<p>[]</p>',
+                    contentBefore: '<p>[]<br></p>',
                     stepFunction: async editor => {
                         editor.execCommand('columnize', 2);
                         undo(editor);
@@ -4962,7 +4962,7 @@ X[]
             });
             it('should work properly after undo and then redo', async () => {
                 await testEditor(BasicEditor, {
-                    contentBefore: '<p>[]</p>',
+                    contentBefore: '<p>[]<br></p>',
                     stepFunction: async editor => {
                         editor.execCommand('columnize', 2);
                         undo(editor);
@@ -7287,7 +7287,7 @@ X[]
         describe('rating star elements', () => {
             it('add star elements', async () => {
                 await testEditor(BasicEditor, {
-                    contentBefore: '<p>[]</p>',
+                    contentBefore: '<p>[]<br></p>',
                     stepFunction: async editor => {
                         await insertText(editor,'/');
                         await insertText(editor, '3star');
@@ -7298,7 +7298,7 @@ X[]
                     contentAfterEdit: `<p>\u200B<span contenteditable="false" class="o_stars o_three_stars" id="checkId-1"><i class="fa fa-star-o" contenteditable="false">\u200B</i><i class="fa fa-star-o" contenteditable="false">\u200B</i><i class="fa fa-star-o" contenteditable="false">\u200B</i></span>\u200B[]</p>`,
                 });
                 await testEditor(BasicEditor, {
-                    contentBefore: '<p>[]</p>',
+                    contentBefore: '<p>[]<br></p>',
                     stepFunction: async editor => {
                         await insertText(editor,'/');
                         await insertText(editor, '5star');
@@ -7311,7 +7311,7 @@ X[]
             });
             it('should delete star rating elements when delete is pressed twice', async () => {
                 await testEditor(BasicEditor, {
-                    contentBefore: `<p>\u200B<span contenteditable="false" class="o_stars o_three_stars" id="checkId-1"><i class="fa fa-star-o" contenteditable="false">\u200B</i><i class="fa fa-star-o" contenteditable="false">\u200B</i><i class="fa fa-star-o" contenteditable="false">\u200B</i></span>\u200B</p><p>[]</p>`,
+                    contentBefore: `<p>\u200B<span contenteditable="false" class="o_stars o_three_stars" id="checkId-1"><i class="fa fa-star-o" contenteditable="false">\u200B</i><i class="fa fa-star-o" contenteditable="false">\u200B</i><i class="fa fa-star-o" contenteditable="false">\u200B</i></span>\u200B</p><p>[]<br></p>`,
                     stepFunction: async editor => {
                         await deleteBackward(editor)
                         await deleteBackward(editor)
