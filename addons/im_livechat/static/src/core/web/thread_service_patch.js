@@ -13,7 +13,7 @@ patch(ThreadService.prototype, {
      */
     setDiscussThread(thread, pushState) {
         super.setDiscussThread(thread, pushState);
-        if (this.ui.isSmall && thread.type === "livechat") {
+        if (this.ui.isSmall && thread.channel_type === "livechat") {
             this.store.discuss.activeTab = "livechat";
         }
     },

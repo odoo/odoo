@@ -55,7 +55,8 @@ patch(Composer.prototype, {
                 ev.target.value === "/" || // suggestions not yet started
                 this.hasSuggestions ||
                 (command &&
-                    (!command.channel_types || command.channel_types.includes(this.thread.type)))
+                    (!command.channel_types ||
+                        command.channel_types.includes(this.thread.channel_type)))
             ) {
                 this.stopTyping();
                 return;

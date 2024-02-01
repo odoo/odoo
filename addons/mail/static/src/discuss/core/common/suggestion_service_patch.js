@@ -34,7 +34,7 @@ patch(SuggestionService.prototype, {
                     return false;
                 }
                 if (command.channel_types) {
-                    return command.channel_types.includes(thread.type);
+                    return command.channel_types.includes(thread.channel_type);
                 }
                 return true;
             })

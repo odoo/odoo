@@ -77,13 +77,13 @@ export class Thread extends Record {
     activeRtcSession = Record.one("RtcSession");
     get canLeave() {
         return (
-            ["channel", "group"].includes(this.type) &&
+            ["channel", "group"].includes(this.channel_type) &&
             !this.message_needaction_counter &&
             !this.group_based_subscription
         );
     }
     get canUnpin() {
-        return this.type === "chat" && this.importantCounter === 0;
+        return this.channel_type === "chat" && this.importantCounter === 0;
     }
     channelMembers = Record.many("ChannelMember", {
         onDelete: (r) => r.delete(),
@@ -139,7 +139,7 @@ export class Thread extends Record {
     loadOlder = false;
     loadNewer = false;
     get importantCounter() {
-        if (this.type === "mailbox") {
+        if (this.model === "mail.box") {
             return this.counter;
         }
         if (this.isChatChannel) {
@@ -216,6 +216,11 @@ export class Thread extends Record {
     scrollTop = Record.attr("bottom", {
         /** @this {import("models").Thread} */
         compute() {
+            /**
+             * Approximation: this value should also depend on the view and not
+             * only the thread type. In particular for chatter, it should depend
+             * whether it is displayed in chatter or chat window.
+             */
             return this.type === "chatter" ? 0 : "bottom";
         },
     });
@@ -260,10 +265,10 @@ export class Thread extends Record {
     fetchMembersState = "not_fetched";
 
     _computeDiscussAppCategory() {
-        if (["group", "chat"].includes(this.type)) {
+        if (["group", "chat"].includes(this.channel_type)) {
             return this._store.discuss.chats;
         }
-        if (this.type === "channel") {
+        if (this.channel_type === "channel") {
             return this._store.discuss.channels;
         }
     }
@@ -308,13 +313,13 @@ export class Thread extends Record {
 
     get allowCalls() {
         return (
-            this.typesAllowingCalls.includes(this.type) &&
+            this.typesAllowingCalls.includes(this.channel_type) &&
             !this.correspondent?.eq(this._store.odoobot)
         );
     }
 
     get hasMemberList() {
-        return ["channel", "group"].includes(this.type);
+        return ["channel", "group"].includes(this.channel_type);
     }
 
     get hasAttachmentPanel() {
@@ -322,14 +327,14 @@ export class Thread extends Record {
     }
 
     get isChatChannel() {
-        return ["chat", "group"].includes(this.type);
+        return ["chat", "group"].includes(this.channel_type);
     }
 
     get displayName() {
-        if (this.type === "chat" && this.correspondent) {
+        if (this.channel_type === "chat" && this.correspondent) {
             return this.custom_channel_name || this.correspondent.nameOrDisplayName;
         }
-        if (this.type === "group" && !this.name) {
+        if (this.channel_type === "group" && !this.name) {
             const listFormatter = new Intl.ListFormat(user.lang?.replace("_", "-"), {
                 type: "conjunction",
                 style: "long",
@@ -342,7 +347,10 @@ export class Thread extends Record {
     }
 
     get displayToSelf() {
-        return this.is_pinned || (["channel", "group"].includes(this.type) && this.hasSelfAsMember);
+        return (
+            this.is_pinned ||
+            (["channel", "group"].includes(this.channel_type) && this.hasSelfAsMember)
+        );
     }
 
     /** @type {import("models").Persona[]} */
@@ -357,7 +365,7 @@ export class Thread extends Record {
     }
 
     computeCorrespondent() {
-        if (this.type === "channel") {
+        if (this.channel_type === "channel") {
             return undefined;
         }
         const correspondents = this.correspondents;
@@ -377,7 +385,7 @@ export class Thread extends Record {
     }
 
     get allowDescription() {
-        return ["channel", "group"].includes(this.type);
+        return ["channel", "group"].includes(this.channel_type);
     }
 
     get isTransient() {
@@ -426,7 +434,7 @@ export class Thread extends Record {
     }
 
     get invitationLink() {
-        if (!this.uuid || this.type === "chat") {
+        if (!this.uuid || this.channel_type === "chat") {
             return undefined;
         }
         return `${window.location.origin}/chat/${this.id}/${this.uuid}`;

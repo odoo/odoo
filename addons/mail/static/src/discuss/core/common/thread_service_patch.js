@@ -20,7 +20,7 @@ patch(ThreadService.prototype, {
             const command = commandRegistry.get(firstWord, false);
             if (
                 command &&
-                (!command.channel_types || command.channel_types.includes(thread.type))
+                (!command.channel_types || command.channel_types.includes(thread.channel_type))
             ) {
                 await this.executeCommand(thread, command, body);
                 return;

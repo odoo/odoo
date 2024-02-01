@@ -84,12 +84,12 @@ export class DiscussSidebarCategories extends Component {
      * @param {import("models").Thread} thread
      */
     async leaveChannel(thread) {
-        if (thread.type !== "group" && thread.isAdmin) {
+        if (thread.channel_type !== "group" && thread.isAdmin) {
             await this.askConfirmation(
                 _t("You are the administrator of this channel. Are you sure you want to leave?")
             );
         }
-        if (thread.type === "group") {
+        if (thread.channel_type === "group") {
             await this.askConfirmation(
                 _t(
                     "You are about to leave this group conversation and will no longer have access to it unless you are invited again. Are you sure you want to continue?"
@@ -118,7 +118,7 @@ export class DiscussSidebarCategories extends Component {
      * @param {import("models").Thread} thread
      */
     openSettings(thread) {
-        if (thread.type === "channel") {
+        if (thread.channel_type === "channel") {
             this.actionService.doAction({
                 type: "ir.actions.act_window",
                 res_model: "discuss.channel",

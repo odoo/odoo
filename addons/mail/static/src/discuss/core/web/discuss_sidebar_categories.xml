@@ -51,14 +51,14 @@
         >
             <div class="bg-inherit position-relative d-flex ms-4 flex-shrink-0" style="width:30px;height:30px">
                 <img class="w-100 h-100 rounded" t-att-src="thread.avatarUrl" alt="Thread Image"/>
-                <ThreadIcon t-if="thread.type === 'chat' or (thread.type === 'channel' and !thread.authorizedGroupFullName)" thread="thread" size="'small'" className="'o-mail-DiscussSidebarChannel-threadIcon position-absolute bottom-0 end-0 p-1 me-n1 mb-n1 d-flex align-items-center justify-content-center rounded-circle bg-inherit'"/>
+                <ThreadIcon t-if="thread.channel_type === 'chat' or (thread.channel_type === 'channel' and !thread.authorizedGroupFullName)" thread="thread" size="'small'" className="'o-mail-DiscussSidebarChannel-threadIcon position-absolute bottom-0 end-0 p-1 me-n1 mb-n1 d-flex align-items-center justify-content-center rounded-circle bg-inherit'"/>
             </div>
             <span class="ms-3 me-2 text-truncate" t-att-class="{ 'o-item-unread fw-bolder': thread.message_unread_counter > 0 and !thread.muteUntilDateTime }">
                 <t t-esc="thread.displayName"/>
             </span>
             <div class="flex-grow-1"/>
             <div class="o-mail-DiscussSidebarChannel-commands d-none ms-1 me-3">
-                <i t-if="thread.type === 'channel'" t-attf-class="fa fa-cog {{ hover_class }}" title="Channel settings" t-on-click.stop="() => this.openSettings(thread)" role="img"/>
+                <i t-if="thread.channel_type === 'channel'" t-attf-class="fa fa-cog {{ hover_class }}" title="Channel settings" t-on-click.stop="() => this.openSettings(thread)" role="img"/>
                 <div t-if="thread.canLeave" class="fa fa-times ms-1" t-attf-class="{{ hover_class }}"
                     t-on-click.stop="() => this.leaveChannel(thread)" title="Leave this channel" role="img"/>
                 <div t-if="thread.canUnpin" t-attf-class="fa fa-times ms-1 {{ hover_class }}" t-on-click.stop="() => threadService.unpin(thread)" title="Unpin Conversation" role="img"/>

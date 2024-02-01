@@ -6,18 +6,18 @@ import { patch } from "@web/core/utils/patch";
 
 patch(Thread.prototype, {
     _computeDiscussAppCategory() {
-        return this.type === "livechat"
+        return this.channel_type === "livechat"
             ? this._store.discuss.livechat
             : super._computeDiscussAppCategory();
     },
     get hasMemberList() {
-        return this.type === "livechat" || super.hasMemberList;
+        return this.channel_type === "livechat" || super.hasMemberList;
     },
     get canLeave() {
-        return this.type !== "livechat" && super.canLeave;
+        return this.channel_type !== "livechat" && super.canLeave;
     },
     get canUnpin() {
-        if (this.type === "livechat") {
+        if (this.channel_type === "livechat") {
             return this.message_unread_counter === 0;
         }
         return super.canUnpin;
@@ -29,7 +29,7 @@ patch(Thread.prototype, {
 
     computeCorrespondent() {
         let correspondent = super.computeCorrespondent();
-        if (this.type === "livechat" && !correspondent) {
+        if (this.channel_type === "livechat" && !correspondent) {
             // For livechat threads, the correspondent is the first
             // channel member that is not the operator.
             const orderedChannelMembers = [...this.channelMembers].sort((a, b) => a.id - b.id);
@@ -42,7 +42,7 @@ patch(Thread.prototype, {
     },
 
     get displayName() {
-        if (this.type !== "livechat" || !this.correspondent) {
+        if (this.channel_type !== "livechat" || !this.correspondent) {
             return super.displayName;
         }
         if (!this.correspondent.is_public && this.correspondent.country) {
@@ -55,7 +55,7 @@ patch(Thread.prototype, {
     },
 
     get avatarUrl() {
-        if (this.type === "livechat" && this.correspondent) {
+        if (this.channel_type === "livechat" && this.correspondent) {
             return this.correspondent.avatarUrl;
         }
         return super.avatarUrl;
@@ -66,7 +66,7 @@ patch(Thread.prototype, {
      * @param {import("models").Persona} persona
      */
     getMemberName(persona) {
-        if (this.type !== "livechat") {
+        if (this.channel_type !== "livechat") {
             return super.getMemberName(persona);
         }
         if (persona.user_livechat_username) {

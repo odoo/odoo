@@ -142,9 +142,9 @@ export class SuggestionService {
         let partners;
         const isNonPublicChannel =
             thread &&
-            (thread.type === "group" ||
-                thread.type === "chat" ||
-                (thread.type === "channel" && thread.authorizedGroupFullName));
+            (thread.channel_type === "group" ||
+                thread.channel_type === "chat" ||
+                (thread.channel_type === "channel" && thread.authorizedGroupFullName));
         if (isNonPublicChannel) {
             // Only return the channel members when in the context of a
             // group restricted channel. Indeed, the message with the mention
@@ -220,9 +220,9 @@ export class SuggestionService {
         let threads;
         if (
             thread &&
-            (thread.type === "group" ||
-                thread.type === "chat" ||
-                (thread.type === "channel" && thread.authorizedGroupFullName))
+            (thread.channel_type === "group" ||
+                thread.channel_type === "chat" ||
+                (thread.channel_type === "channel" && thread.authorizedGroupFullName))
         ) {
             // Only return the current channel when in the context of a
             // group restricted channel or group or chat. Indeed, the message with the mention
@@ -235,7 +235,7 @@ export class SuggestionService {
         }
         const suggestionList = threads.filter(
             (thread) =>
-                thread.type === "channel" &&
+                thread.channel_type === "channel" &&
                 thread.displayName &&
                 cleanTerm(thread.displayName).includes(cleanedSearchTerm)
         );

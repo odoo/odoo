@@ -141,27 +141,23 @@ export class ThreadService {
         if (thread.model === "discuss.channel") {
             return "/discuss/channel/messages";
         }
-        switch (thread.type) {
-            case "chatter":
-                return "/mail/thread/messages";
-            case "mailbox":
-                return `/mail/${thread.id}/messages`;
-            default:
-                throw new Error(`Unknown thread type: ${thread.type}`);
+        if (thread.model === "mail.box") {
+            return `/mail/${thread.id}/messages`;
         }
+        return "/mail/thread/messages";
     }
 
     getFetchParams(thread) {
         if (thread.model === "discuss.channel") {
             return { channel_id: thread.id };
         }
-        if (thread.type === "chatter") {
-            return {
-                thread_id: thread.id,
-                thread_model: thread.model,
-            };
+        if (thread.model === "mail.box") {
+            return {};
         }
-        return {};
+        return {
+            thread_id: thread.id,
+            thread_model: thread.model,
+        };
     }
 
     /**
@@ -459,7 +455,7 @@ export class ThreadService {
             return;
         }
         return Object.values(this.store.Thread.records).find(
-            (thread) => thread.type === "chat" && thread.correspondent?.eq(partner)
+            (thread) => thread.channel_type === "chat" && thread.correspondent?.eq(partner)
         );
     }
 
@@ -526,16 +522,16 @@ export class ThreadService {
         const newName = name.trim();
         if (
             newName !== thread.displayName &&
-            ((newName && thread.type === "channel") ||
-                thread.type === "chat" ||
-                thread.type === "group")
+            ((newName && thread.channel_type === "channel") ||
+                thread.channel_type === "chat" ||
+                thread.channel_type === "group")
         ) {
-            if (thread.type === "channel" || thread.type === "group") {
+            if (thread.channel_type === "channel" || thread.channel_type === "group") {
                 thread.name = newName;
                 await this.orm.call("discuss.channel", "channel_rename", [[thread.id]], {
                     name: newName,
                 });
-            } else if (thread.type === "chat") {
+            } else if (thread.channel_type === "chat") {
                 thread.custom_channel_name = newName;
                 await this.orm.call("discuss.channel", "channel_set_custom_name", [[thread.id]], {
                     name: newName,
@@ -574,7 +570,7 @@ export class ThreadService {
         this.store.discuss.activeTab =
             !this.ui.isSmall || thread.model === "mail.box"
                 ? "main"
-                : ["chat", "group"].includes(thread.type)
+                : ["chat", "group"].includes(thread.channel_type)
                 ? "chat"
                 : "channel";
         if (pushState) {
@@ -775,8 +771,8 @@ export class ThreadService {
      * @param {Message} message
      */
     notifyMessageToUser(thread, message) {
-        let notify = thread.type !== "channel";
-        if (thread.type === "channel" && message.recipients?.includes(this.store.self)) {
+        let notify = thread.channel_type !== "channel";
+        if (thread.channel_type === "channel" && message.recipients?.includes(this.store.self)) {
             notify = true;
         }
         if (

@@ -33,20 +33,20 @@ patch(Thread.prototype, {
     },
 
     get isLastMessageFromCustomer() {
-        if (this.type !== "livechat") {
+        if (this.channel_type !== "livechat") {
             return super.isLastMessageFromCustomer;
         }
         return this.newestMessage?.isSelfAuthored;
     },
 
     get avatarUrl() {
-        if (this.type === "livechat") {
+        if (this.channel_type === "livechat") {
             return this.operator.avatarUrl;
         }
         return super.avatarUrl;
     },
 
     get hasWelcomeMessage() {
-        return this.type === "livechat" && !this.chatbot && !this.requested_by_operator;
+        return this.channel_type === "livechat" && !this.chatbot && !this.requested_by_operator;
     },
 });
