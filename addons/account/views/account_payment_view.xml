@@ -449,6 +449,7 @@
             <field name="view_mode">form</field>
             <field name="target">new</field>
             <field name="context" eval="{
+                'mailing_document_based': True,
                 'mail_post_autofollow': True,
                 'default_composition_mode': 'mass_mail',
                 'default_use_template': True,

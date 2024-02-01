@@ -378,16 +378,16 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
     @freeze_time('2019-01-01')
     def test_enough_payment_tolerance(self):
         rule = self._create_reconcile_model(
-            payment_tolerance_param=1.0,
+            payment_tolerance_param=2.0,
             line_ids=[{}],
         )
 
         for inv_type, bsl_sign in (('out_invoice', 1), ('in_invoice', -1)):
 
-            invl = self._create_invoice_line(1000.0, self.partner_a, inv_type, inv_date='2019-01-01')
+            invl = self._create_invoice_line(1210.0, self.partner_a, inv_type, inv_date='2019-01-01')
 
             # Enough tolerance to match the invoice line.
-            st_line = self._create_st_line(amount=bsl_sign * 990.0)
+            st_line = self._create_st_line(amount=bsl_sign * 1185.80)
             self._check_statement_matching(
                 rule,
                 {st_line: {'amls': invl, 'model': rule, 'status': 'write_off'}},
@@ -396,7 +396,7 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
             # The payment amount is higher than the invoice one.
             # However, since the invoice amount is lower than the payment amount,
             # the tolerance is not checked and the invoice line is matched.
-            st_line = self._create_st_line(amount=bsl_sign * 1010.0)
+            st_line = self._create_st_line(amount=bsl_sign * 1234.20)
             self._check_statement_matching(
                 rule,
                 {st_line: {'amls': invl, 'model': rule}},
