@@ -1727,26 +1727,27 @@ class Request:
         Prepare the user session and load the ORM before forwarding the
         request to ``_serve_ir_http``.
         """
+        try:
+            registry = Registry(self.db)
+        except (AttributeError, psycopg2.OperationalError, psycopg2.ProgrammingError):
+            # psycopg2 error or attribute error while constructing
+            # the registry. That means either
+            #  - the database probably does not exists anymore, or
+            #  - the database is corrupted, or
+            #  - the database version doesn't match the server version.
+            # So remove the database from the cookie
+            self.db = None
+            self.session.db = ModuleNotFoundError
+            root.session_store.save(self.session)
+            if request.httprequest.path == '/web':
+                # Internal Server Error
+                raise
+            else:
+                return self._serve_nodb()
+
         rule = None
-        registry = Registry(self.db)
         with contextlib.closing(registry.cursor(readonly=True)) as cr:
-            try:
-                self.registry = registry.check_signaling(cr)
-            except (AttributeError, psycopg2.OperationalError, psycopg2.ProgrammingError):
-                # psycopg2 error or attribute error while constructing
-                # the registry. That means either
-                #  - the database probably does not exists anymore, or
-                #  - the database is corrupted, or
-                #  - the database version doesn't match the server version.
-                # So remove the database from the cookie
-                self.db = None
-                self.session.db = None
-                root.session_store.save(self.session)
-                if request.httprequest.path == '/web':
-                    # Internal Server Error
-                    raise
-                else:
-                    return self._serve_nodb()
+            self.registry = registry.check_signaling(cr)
             ir_http = self.registry['ir.http']
             self.env = odoo.api.Environment(cr, self.session.uid, self.session.context)
             with contextlib.suppress(NotFound):
