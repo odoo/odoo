@@ -89,15 +89,11 @@
 
     <template id="portal_invoice_page_inherit" inherit_id="account.portal_invoice_page">
         <xpath expr="//t[@t-set='entries']/div/div/div[hasclass('o_download_pdf')]" position="inside">
-            <div t-if="invoice.timesheet_count > 0" class="flex-grow-1 border-0">
-                <div class="btn-toolbar flex-sm-nowrap justify-content-center">
-                    <div class="btn-group mb-1">
-                        <t t-set="search_value" t-value="invoice.name"/>
-                        <t t-if="invoice.state == 'draft'" t-set="search_value" t-value="invoice.id"/>
-                        <a t-if="invoice.move_type == 'out_invoice' and invoice.state in ('draft', 'posted') and invoice.timesheet_count > 0"
-                           target="_blank" t-att-href="'/my/timesheets?search_in=invoice&amp;search=%s' % search_value">View Timesheets</a>
-                    </div>
-                </div>
+            <div t-if="invoice.timesheet_count > 0" class="flex-grow-1">
+                <t t-set="search_value" t-value="invoice.name"/>
+                <t t-if="invoice.state == 'draft'" t-set="search_value" t-value="invoice.id"/>
+                <a t-if="invoice.move_type == 'out_invoice' and invoice.state in ('draft', 'posted') and invoice.timesheet_count > 0"
+                    target="_blank" t-att-href="'/my/timesheets?search_in=invoice&amp;search=%s' % search_value" class="btn btn-secondary d-block w-100">View Timesheets</a>
             </div>
         </xpath>
     </template>
