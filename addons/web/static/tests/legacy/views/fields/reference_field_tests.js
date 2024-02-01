@@ -215,6 +215,38 @@ QUnit.module("Fields", (hooks) => {
                     onchanges: {},
                 },
             },
+            views: {
+                "product,false,form": `
+                    <form>
+                        <header>
+                            <span class="reftest_product_form_header">Product Form</span>
+                        </header>
+                        <field name="name" />
+                    </form>`,
+                "product,false,list": `
+                    <tree>
+                        <field name="name" string="Product Name"/>
+                    </tree>`,
+                "product,false,search": `
+                    <search>
+                        <field name="name" />
+                    </search>`,
+                "partner,false,form": `
+                    <form>
+                        <header>
+                            <span class="reftest_partner_form_header">Partner Form</span>
+                        </header>
+                        <field name="name" />
+                    </form>`,
+                "partner,false,list": `
+                    <tree>
+                        <field name="name" string="Partner Name"/>
+                    </tree>`,
+                "partner,false,search": `
+                    <search>
+                        <field name="name" />
+                    </search>`,
+            },
         };
 
         setupViewRegistries();
@@ -1042,6 +1074,57 @@ QUnit.module("Fields", (hooks) => {
             assert.containsOnce(target, ".o_list_table .reference_field.o_field_invalid");
         }
     );
+
+    QUnit.test("Change model of a ReferenceField and use dialog options.", async function (assert) {
+        serverData.models.turtle.records[0].partner_ids = [1];
+        serverData.models.partner.records[0].reference = "product,41";
+
+        await makeView({
+            type: "form",
+            resModel: "turtle",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <field name="partner_ids">
+                        <tree editable="bottom">
+                            <field name="name" />
+                            <field name="reference" class="reference_field" />
+                        </tree>
+                    </field>
+               </form>`,
+        });
+        assert.strictEqual(target.querySelector(".reference_field").textContent, "xpad");
+
+        await click(target, ".reference_field");
+        //Select the "Partner" option, different from original "Product"
+        assert.strictEqual(
+            target.querySelector(".reference_field select.o_input").value,
+            "product",
+        );
+        await editSelect(target, ".reference_field select.o_input", "partner");
+        //Open "Search more..."
+        await click(target, ".o_list_table .reference_field input");
+        await click(target, ".o_m2o_dropdown_option_search_more");
+        assert.equal(
+            target.querySelector(".o_dialog .o_list_renderer thead").textContent,
+            "Partner Name",
+        );
+        await click(target, ".o_dialog .o_form_button_cancel");
+        //Start input and open "Create and edit"
+        await click(target, ".o_list_table .reference_field input");
+        await editInput(target, ".o_list_table .reference_field input", "a brand new value");
+        await click(target, ".o_m2o_dropdown_option_create_edit");
+        assert.containsOnce(target, ".o_dialog .reftest_partner_form_header");
+        assert.equal(
+            target.querySelector(".o_dialog .o_field_char[name='name'] input").value,
+            "a brand new value",
+        );
+        await click(target, ".o_dialog .o_form_button_save");
+
+        await clickSave(target);
+        assert.equal(target.querySelector(".reference_field").textContent, "a brand new value");
+    });
 
     QUnit.test("model selector is displayed only when it should be", async function (assert) {
         //The model selector should be only displayed if
