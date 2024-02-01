@@ -15,7 +15,7 @@ export class SaleOrderRow extends Component {
     static template = "pos_sale.SaleOrderRow";
     static props = {
         order: Object,
-        highlightedOrder: { type: Object, optional: true },
+        highlightedOrder: [Object, { value: null }],
         onClickSaleOrder: Function,
     };
 

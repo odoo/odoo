@@ -37,8 +37,8 @@ patch(OrderSummary.prototype, {
                     "Are you sure you want to remove %s from this order?\n You will still be able to claim it through the reward button.",
                     reward.description
                 ),
-                cancelText: _t("No"),
-                confirmText: _t("Yes"),
+                cancelLabel: _t("No"),
+                confirmLabel: _t("Yes"),
             });
             if (confirmed) {
                 buffer = null;

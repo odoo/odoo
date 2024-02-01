@@ -1,5 +1,5 @@
 /** @odoo-module */
-import { Component } from "@odoo/owl";
+import { Component, whenReady } from "@odoo/owl";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { useSelfOrder } from "@pos_self_order/app/self_order_service";
 import { Router } from "@pos_self_order/app/router";
@@ -14,7 +14,7 @@ import { EatingLocationPage } from "@pos_self_order/app/pages/eating_location_pa
 import { StandNumberPage } from "@pos_self_order/app/pages/stand_number_page/stand_number_page";
 import { OrdersHistoryPage } from "@pos_self_order/app/pages/order_history_page/order_history_page";
 import { LoadingOverlay } from "@pos_self_order/app/components/loading_overlay/loading_overlay";
-import { startOwl } from "@point_of_sale/startOwl";
+import { mountComponent } from "@web/env";
 
 export class selfOrderIndex extends Component {
     static template = "pos_self_order.selfOrderIndex";
@@ -42,4 +42,4 @@ export class selfOrderIndex extends Component {
         return Object.values(this.selfOrder.productByIds).length > 0;
     }
 }
-startOwl(selfOrderIndex);
+whenReady(() => mountComponent(selfOrderIndex, document.body));
