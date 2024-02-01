@@ -465,10 +465,6 @@ export class TicketScreen extends Component {
             return `${this._state.syncedOrders.currentPage}/${this._getLastPage()}`;
         }
     }
-    getSelectedPartner() {
-        const order = this.getSelectedOrder();
-        return order ? order.get_partner() : null;
-    }
     getHasItemsToRefund() {
         const order = this.getSelectedOrder();
         if (!order) {

@@ -11,6 +11,11 @@ export class EditListInput extends Component {
         onInputChange: Function,
         removeItem: Function,
         getOptions: Function,
+        shouldShowOptions: Boolean,
+        hasInvalidValue: Boolean,
+        customInput: Boolean,
+        onSelectItem: Function,
+        onUnselectItem: Function,
     };
 
     setup() {

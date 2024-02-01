@@ -58,7 +58,6 @@
             'bus/static/src/multi_tab_service.js',
             'bus/static/src/workers/*',
             'barcodes/static/src/barcode_service.js',
-            'point_of_sale/static/src/startOwl.js',
             'point_of_sale/static/src/utils.js',
             'web/static/lib/bootstrap/js/dist/dom/data.js',
             'web/static/lib/bootstrap/js/dist/dom/event-handler.js',

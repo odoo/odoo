@@ -21,6 +21,12 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
     def _get_main_company(cls):
         return cls.company_data['company']
 
+    def _get_url(self):
+        return f"/pos/ui?config_id={self.main_pos_config.id}"
+
+    def start_pos_tour(self, tour_name, login="pos_user", **kwargs):
+        self.start_tour(self._get_url(), tour_name, login=login, **kwargs)
+
     @classmethod
     def setUpClass(cls, chart_template_ref=None):
         super().setUpClass(chart_template_ref=chart_template_ref)
@@ -566,7 +572,7 @@ class TestUi(TestPointOfSaleHttpCommon):
     def test_04_product_configurator(self):
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config, 'ProductConfiguratorTour', login="pos_user")
+        self.start_pos_tour('ProductConfiguratorTour')
 
     def test_05_ticket_screen(self):
         if not loaded_demo_data(self.env):
@@ -882,7 +888,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         setup_pos_combo_items(self)
         self.office_combo.write({'lst_price': 50})
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'PosComboPriceTaxIncludedTour', login="pos_user")
+        self.start_pos_tour('PosComboPriceTaxIncludedTour')
         order = self.env['pos.order'].search([])
         self.assertEqual(len(order.lines), 4, "There should be 4 order lines - 1 combo parent and 3 combo lines")
         # check that the combo lines are correctly linked to each other
@@ -937,7 +943,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             )
         ]})
         self.main_pos_config.open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'chrome_without_cash_move_permission', login="accountman")
+        self.start_pos_tour('chrome_without_cash_move_permission', login="accountman")
 
     def test_09_pos_barcodes_scan_product_pacaging(self):
         product = self.env['product.product'].create({

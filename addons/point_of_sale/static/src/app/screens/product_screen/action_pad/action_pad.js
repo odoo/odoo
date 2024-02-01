@@ -9,7 +9,7 @@ export class ActionpadWidget extends Component {
     static template = "point_of_sale.ActionpadWidget";
     static components = { SelectPartnerButton };
     static props = {
-        partner: { type: [Object, { value: null }] },
+        partner: { type: [Object, { value: null }], optional: true },
         actionName: Object,
         actionType: String,
         onClickMore: { type: Function, optional: true },

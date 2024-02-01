@@ -8,7 +8,7 @@ import { hasTouch } from "@web/core/browser/feature_detection";
 import { localization } from "@web/core/l10n/localization";
 import { user } from "@web/core/user";
 import { session } from "@web/session";
-import { startOwl } from "@point_of_sale/startOwl";
+import { mountComponent } from "@web/env";
 import { Chrome } from "@point_of_sale/app/pos_app";
 
 const loader = reactive({ isShown: true });
@@ -25,7 +25,8 @@ whenReady(() => {
         server_version_info: session.server_version_info,
         isEnterprise: session.server_version_info.slice(-1)[0] === "e",
     };
-    const app = await startOwl(Chrome, {
+    await whenReady();
+    const app = await mountComponent(Chrome, document.body, {
         name: "Odoo Point of Sale",
         props: { disableLoader: () => (loader.isShown = false) },
     });
