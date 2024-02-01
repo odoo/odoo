@@ -74,7 +74,7 @@
                 </t>
             </t>
             <t t-foreach="threads" t-as="thread" t-key="thread.localId">
-                <t t-set="message" t-value="thread.isChatChannel or (thread.type === 'channel' and thread.needactionMessages.length === 0) ? thread.newestPersistentNotEmptyOfAllMessage : thread.needactionMessages.at(-1)"/>
+                <t t-set="message" t-value="thread.isChatChannel or (thread.channel_type === 'channel' and thread.needactionMessages.length === 0) ? thread.newestPersistentNotEmptyOfAllMessage : thread.needactionMessages.at(-1)"/>
                 <NotificationItem
                     body="message?.inlineBody"
                     counter="thread.needactionCounter"
@@ -88,7 +88,7 @@
                     onSwipeLeft="hasTouch() and thread.canUnpin ? { action: () => this.threadService.unpin(thread), icon: 'fa-times-circle', bgColor: 'bg-danger' } : undefined"
                 >
                     <t t-set-slot="icon">
-                        <ImStatus t-if="thread.type === 'chat' and thread.correspondent" persona="thread.correspondent" thread="thread" className="'position-absolute top-100 start-100 translate-middle mt-n1 ms-n1'"/>
+                        <ImStatus t-if="thread.channel_type === 'chat' and thread.correspondent" persona="thread.correspondent" thread="thread" className="'position-absolute top-100 start-100 translate-middle mt-n1 ms-n1'"/>
                     </t>
                     <t t-if="message" t-set-slot="body-icon">
                         <t t-if="message.isSelfAuthored">

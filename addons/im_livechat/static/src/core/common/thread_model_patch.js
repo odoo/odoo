@@ -16,6 +16,6 @@ patch(Thread.prototype, {
     },
 
     get isChatChannel() {
-        return this.type === "livechat" || super.isChatChannel;
+        return this.channel_type === "livechat" || super.isChatChannel;
     },
 });

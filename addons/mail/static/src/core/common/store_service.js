@@ -115,7 +115,7 @@ export class Store extends BaseStore {
             let threads = Object.values(this.Thread.records).filter(
                 (thread) =>
                     thread.displayToSelf ||
-                    (thread.needactionMessages.length > 0 && thread.type !== "mailbox")
+                    (thread.needactionMessages.length > 0 && thread.model !== "mail.box")
             );
             const tab = this.discuss.activeTab;
             if (tab !== "main") {
@@ -345,12 +345,8 @@ export const storeService = {
         Record.onChange(store.Thread, "records", () => store.updateBusSubscription());
         services.ui.bus.addEventListener("resize", () => {
             store.discuss.activeTab = "main";
-            if (
-                services.ui.isSmall &&
-                store.discuss.thread &&
-                store.discuss.thread.type !== "mailbox"
-            ) {
-                store.discuss.activeTab = store.discuss.thread.type;
+            if (services.ui.isSmall && store.discuss.thread?.channel_type) {
+                store.discuss.activeTab = store.discuss.thread.channel_type;
             }
         });
         store.onStarted();

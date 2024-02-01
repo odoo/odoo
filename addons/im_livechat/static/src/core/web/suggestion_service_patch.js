@@ -8,6 +8,6 @@ patch(SuggestionService.prototype, {
     /** @override */
     getSupportedDelimiters(thread) {
         const res = super.getSupportedDelimiters(...arguments);
-        return thread.type === "livechat" ? [...res, [":"]] : res;
+        return thread.channel_type === "livechat" ? [...res, [":"]] : res;
     },
 });

@@ -6,7 +6,7 @@
         <div t-if="ui.isSmall and store.discuss.activeTab === 'main'" class="w-100 border-bottom" t-call="mail.Discuss.mobileTopbar" t-ref="mobileTopbar"/>
         <div t-if="thread and (store.inPublicPage or !(ui.isSmall and ['chat', 'channel'].includes(store.discuss.activeTab)))" class="o-mail-Discuss-content d-flex flex-column h-100 w-100 bg-view overflow-auto" t-ref="content">
             <div class="o-mail-Discuss-header px-3 bg-view border-bottom d-flex flex-shrink-0 align-items-center">
-                <div t-if="thread and ['channel', 'group', 'chat'].includes(thread.type)" class="o-mail-Discuss-threadAvatar position-relative align-self-center align-items-center mt-2 mb-2 me-2">
+                <div t-if="thread and ['channel', 'group', 'chat'].includes(thread.channel_type)" class="o-mail-Discuss-threadAvatar position-relative align-self-center align-items-center mt-2 mb-2 me-2">
                     <img class="rounded" t-att-src="thread.avatarUrl" alt="Thread Image"/>
                     <FileUploader t-if="thread.is_editable" acceptedFileExtensions="'.bmp, .jpg, .jpeg, .png, .svg'" showUploadingText="false" multiUpload="false" onUploaded="(data) => this.onFileUploaded(data)">
                         <t t-set-slot="toggler">
@@ -19,11 +19,11 @@
                 <t t-else="">
                     <ThreadIcon className="'me-2 align-self-center'" thread="thread"/>
                 </t>
-                <ImStatus t-if="thread and thread.type === 'chat' and thread.correspondent" className="'me-1'" persona="thread.correspondent" thread="thread" />
+                <ImStatus t-if="thread and thread.channel_type === 'chat' and thread.correspondent" className="'me-1'" persona="thread.correspondent" thread="thread" />
                 <div class="d-flex flex-grow-1 align-self-center align-items-center h-100 py-2">
                     <AutoresizeInput
                         className="'o-mail-Discuss-threadName lead fw-bold flex-shrink-1 text-dark py-0'"
-                        enabled="thread.is_editable or thread.type === 'chat'"
+                        enabled="thread.is_editable or thread.channel_type === 'chat'"
                         onValidate.bind="renameThread"
                         value="thread.displayName"
                     />
@@ -63,7 +63,7 @@
             <div class="overflow-auto bg-view d-flex flex-grow-1" t-ref="core">
                 <div class="d-flex flex-column flex-grow-1">
                     <Thread thread="thread" t-key="thread.localId" jumpPresent="state.jumpThreadPresent" messageEdition="messageEdition" messageToReplyTo="messageToReplyTo"/>
-                    <Composer t-if="thread.type !== 'mailbox' or thread.eq(messageToReplyTo.thread)" t-key="thread.localId" composer="thread.composer" autofocus="true" messageEdition="messageEdition" messageToReplyTo="messageToReplyTo" onDiscardCallback="() => messageToReplyTo.cancel()" onPostCallback.bind="() => this.state.jumpThreadPresent++" dropzoneRef="contentRef" type="messageToReplyTo?.message ? (messageToReplyTo.message.is_note ? 'note' : 'message') : undefined"/>
+                    <Composer t-if="thread.model !== 'mail.box' or thread.eq(messageToReplyTo.thread)" t-key="thread.localId" composer="thread.composer" autofocus="true" messageEdition="messageEdition" messageToReplyTo="messageToReplyTo" onDiscardCallback="() => messageToReplyTo.cancel()" onPostCallback.bind="() => this.state.jumpThreadPresent++" dropzoneRef="contentRef" type="messageToReplyTo?.message ? (messageToReplyTo.message.is_note ? 'note' : 'message') : undefined"/>
                 </div>
                 <div t-if="threadActions.activeAction?.componentCondition" t-attf-class="{{ threadActions.activeAction.panelOuterClass }}" class="h-100 border-start o-mail-Discuss-inspector">
                     <t t-component="threadActions.activeAction.component" thread="thread" t-props="threadActions.activeAction.componentProps"/>
