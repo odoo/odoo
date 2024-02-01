@@ -1000,19 +1000,33 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         self.assertTrue(all(not invoice.send_and_print_values for invoice in invoices))
 
     def test_cron_notifications(self):
-        invoice_success = self.init_invoice("out_invoice", amounts=[1000], post=True)
-        invoice_error = self.init_invoice("out_invoice", amounts=[1000], post=True)
-        wizard = self.create_send_and_print(invoice_success + invoice_error)
-        wizard.checkbox_download = False
-        sp_partner = self.env.user.partner_id
-        wizard.action_send_and_print()
+        invoices_success = (
+                self.init_invoice("out_invoice", amounts=[1000], post=True) +
+                self.init_invoice("out_invoice", amounts=[1000], post=True)
+        )
+        invoices_error = (
+                self.init_invoice("out_invoice", amounts=[1000], post=True) +
+                self.init_invoice("out_invoice", amounts=[1000], post=True)
+        )
+
+        sp_partner_1 = self.env.user.partner_id
+        wizard_partner_1 = self.create_send_and_print(invoices_success)
+        wizard_partner_1.checkbox_download = False
+        wizard_partner_1.action_send_and_print()
+
+        sp_partner_2 = self.env['res.partner'].create({'name': 'Partner 2', 'email': 'test@test.odoo.com'})
+        self.env.user.partner_id = sp_partner_2
+        wizard_partner_2 = self.create_send_and_print(invoices_error)
+        wizard_partner_2.checkbox_download = False
+        wizard_partner_2.action_send_and_print()
 
         def _hook_invoice_document_before_pdf_report_render(self, invoice, invoice_data):
-            if invoice == invoice_error:
+            if invoice.id in invoices_error.ids:
                 invoice_data['error'] = 'blblblbl'
 
-        self.assertTrue(invoice_success.send_and_print_values)
-        self.assertEqual(invoice_success.send_and_print_values.get('sp_partner_id'), sp_partner.id)
+        self.assertTrue(all(invoice.send_and_print_values for invoice in invoices_success + invoices_error))
+        self.assertEqual(invoices_success[0].send_and_print_values.get('sp_partner_id'), sp_partner_1.id)
+        self.assertEqual(invoices_error[0].send_and_print_values.get('sp_partner_id'), sp_partner_2.id)
 
         with patch(
             'odoo.addons.account.wizard.account_move_send.AccountMoveSend._hook_invoice_document_before_pdf_report_render',
@@ -1020,11 +1034,18 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         ):
             self.env.ref('account.ir_cron_account_move_send').method_direct_trigger()  # force processing
 
-        bus = self.env['bus.bus'].sudo().search(
-            [('channel', 'like', f'"res.partner",{sp_partner.id}')],
+        bus_1 = self.env['bus.bus'].sudo().search(
+            [('channel', 'like', f'"res.partner",{sp_partner_1.id}')],
             order='id desc',
             limit=1,
         )
-        self.assertEqual(json.loads(bus.message)['payload']['type'], 'success')
-        self.assertEqual(json.loads(bus.message)['payload']['action_button']['res_ids'], invoice_success.ids)
-        # FIXME @las I only manage to get the latest message, and not the previous one with the invoices in error T_T any idea ?
+        self.assertEqual(json.loads(bus_1.message)['payload']['type'], 'success')
+        self.assertEqual(json.loads(bus_1.message)['payload']['action_button']['res_ids'], invoices_success.ids)
+
+        bus_2 = self.env['bus.bus'].sudo().search(
+            [('channel', 'like', f'"res.partner",{sp_partner_2.id}')],
+            order='id desc',
+            limit=1,
+        )
+        self.assertEqual(json.loads(bus_2.message)['payload']['type'], 'warning')
+        self.assertEqual(json.loads(bus_2.message)['payload']['action_button']['res_ids'], invoices_error.ids)
