@@ -72,6 +72,7 @@ class Manager(Thread):
         Thread that will load interfaces and drivers and contact the odoo server with the updates
         """
 
+        _logger.info("IoT Box Image version: %s", helpers.get_version())
         helpers.check_git_branch()
         is_certificate_ok, certificate_details = helpers.get_certificate_status()
         if not is_certificate_ok:
