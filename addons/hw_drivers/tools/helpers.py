@@ -147,6 +147,7 @@ def check_git_branch():
                 db_branch = 'master'
 
             local_branch = subprocess.check_output(git + ['symbolic-ref', '-q', '--short', 'HEAD']).decode('utf-8').rstrip()
+            _logger.info("Current IoT Box local git branch: %s / Associated Odoo database's git branch: %s", local_branch, db_branch)
 
             if db_branch != local_branch:
                 with writable():
