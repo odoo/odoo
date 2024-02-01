@@ -43,6 +43,7 @@ Chatter.props.push(
     "hasParentReloadOnAttachmentsChanged?",
     "hasParentReloadOnFollowersUpdate?",
     "hasParentReloadOnMessagePosted?",
+    "highlightMessageId?",
     "isAttachmentBoxVisibleInitially?",
     "isChatterAside?",
     "isInFormSheetBg?",
@@ -76,6 +77,7 @@ patch(Chatter.prototype, {
         this.recipientsPopover = usePopover(RecipientList);
         Object.assign(this.state, {
             composerType: false,
+            highlightMessageId: this.props.highlightMessageId,
             isAttachmentBoxOpened: this.props.isAttachmentBoxVisibleInitially,
             isSearchOpen: false,
             showActivities: true,
@@ -145,6 +147,14 @@ patch(Chatter.prototype, {
                 }
             },
             () => [this.state.thread?.status, this.attachments]
+        );
+        useEffect(
+            () => {
+                if (this.state.thread && this.state.highlightMessageId) {
+                    this.highlightMessage();
+                }
+            },
+            () => [this.state.highlightMessageId, this.state.thread]
         );
     },
 
@@ -238,6 +248,19 @@ patch(Chatter.prototype, {
             partner_ids: [this.store.self.id],
         });
         this.onFollowerChanged(thread);
+    },
+
+    async highlightMessage() {
+        const messageId = this.state.highlightMessageId;
+        this.state.highlightMessageId = null;
+        await this.state.thread.isLoadedDeferred;
+        await this.messageHighlight.highlightMessage(
+            this.store.Message.insert({
+                id: messageId,
+                thread: this.state.thread,
+            }),
+            this.state.thread
+        );
     },
 
     onActivityChanged(thread) {

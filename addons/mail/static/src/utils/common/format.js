@@ -1,7 +1,7 @@
 import { loadEmoji } from "@web/core/emoji_picker/emoji_picker";
 
 import { escape, unaccent } from "@web/core/utils/strings";
-import { url } from "@web/core/utils/urls";
+import { getOrigin, url } from "@web/core/utils/urls";
 
 const urlRegexp =
     /\b(?:https?:\/\/\d{1,3}(?:\.\d{1,3}){3}|(?:https?:\/\/|(?:www\.))[-a-z0-9@:%._+~#=\u00C0-\u024F\u1E00-\u1EFF]{2,256}\.[a-z]{2,13})\b(?:[-a-z0-9@:%_+~#?&[\]^|{}`\\'$//=\u00C0-\u024F\u1E00-\u1EFF]|[.]*[-a-z0-9@:%_+~#?&[\]^|{}`\\'$//=\u00C0-\u024F\u1E00-\u1EFF]|,(?!$| )|\.(?!$| |\.)|;(?!$| ))*/gi;
@@ -110,9 +110,13 @@ function linkify(text) {
         // Decode the url first, in case it's already an encoded url
         const url = decodeURI(match[0]);
         const href = encodeURI(!/^https?:\/\//i.test(url) ? "http://" + url : url);
-        result += `<a target="_blank" rel="noreferrer noopener" href="${href}">${_escapeEntities(
-            url
-        )}</a>`;
+        const paramsMatch = /\/mail\/([a-zA-Z.]+)\/(\d+)\/message\/redirect\/(\d+\b)/.exec(url);
+        let urlParams = `target="_blank" rel="noreferrer noopener" href="${href}"`;
+        if (paramsMatch && new URL(href).origin === getOrigin()) {
+            const oeData = `data-oe-model="${paramsMatch[1]}" data-oe-res-id="${paramsMatch[2]}" data-oe-id="${paramsMatch[3]}"`;
+            urlParams += ` class='o_message_redirect' ${oeData}`;
+        }
+        result += `<a ${urlParams}>${_escapeEntities(url)}</a>`;
         curIndex = match.index + match[0].length;
     }
     return result + _escapeEntities(text.slice(curIndex));
@@ -246,6 +250,20 @@ export function convertBrToLineBreak(str) {
         str.replaceAll("<br>", "\n").replaceAll("</br>", "\n"),
         "text/html"
     ).body.textContent;
+}
+
+export function formatMessageForEdit(str) {
+    const transform = (node, transformChildren) => {
+        if (node.nodeType === 3) {
+            return node.textContent;
+        }
+        if (node.tagName === "A" && node.classList.contains("o_message_redirect")) {
+            return node.getAttribute("href");
+        }
+        node.innerHTML = transformChildren();
+        return node.outerHTML;
+    };
+    return convertBrToLineBreak(parseAndTransform(str, transform));
 }
 
 export function cleanTerm(term) {

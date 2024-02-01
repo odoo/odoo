@@ -30,7 +30,7 @@ class LinkPreview(models.Model):
     def _create_from_message_and_notify(self, message):
         if tools.is_html_empty(message.body):
             return self
-        urls = OrderedSet(html.fromstring(message.body).xpath('//a[not(@data-oe-model)]/@href'))
+        urls = OrderedSet(html.fromstring(message.body).xpath('//a[not(@data-oe-model) and not(contains(@class, "o_message_redirect"))]/@href'))
         link_previews = self.env['mail.link.preview']
         requests_session = requests.Session()
         link_preview_values = []

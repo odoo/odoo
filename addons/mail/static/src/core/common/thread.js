@@ -137,6 +137,21 @@ export class Thread extends Component {
         );
         useEffect(
             () => {
+                if (this.props.thread.highlightMessageId && this.state.mountedAndLoaded) {
+                    const message =
+                        this.store.Message.get(this.props.thread.highlightMessageId) ||
+                        this.store.Message.insert({
+                            id: this.props.thread.highlightMessageId,
+                            thread: this.props.thread,
+                        });
+                    this.props.thread.highlightMessageId = null;
+                    this.messageHighlight?.highlightMessage(message, this.props.thread);
+                }
+            },
+            () => [this.props.thread.highlightMessageId, this.state.mountedAndLoaded]
+        );
+        useEffect(
+            () => {
                 if (!this.state.mountedAndLoaded) {
                     return;
                 }

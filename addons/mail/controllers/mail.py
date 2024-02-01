@@ -3,11 +3,15 @@
 import logging
 
 from werkzeug.urls import url_encode
+from werkzeug.exceptions import NotFound, Unauthorized
 
 from odoo import _, http
 from odoo.exceptions import AccessError
 from odoo.http import request
 from odoo.tools import consteq
+from odoo.addons.mail.controllers.discuss.public_page import PublicPageController
+from odoo.addons.mail.models.discuss.mail_guest import add_guest_to_context
+from odoo.addons.mail.tools.discuss import Store
 
 _logger = logging.getLogger(__name__)
 
@@ -83,7 +87,7 @@ class MailController(http.Controller):
                     #   _get_redirect_suggested_company
                     #   - If no company, then redirect to the messaging
                     #   - Merge the suggested company with the companies on the cookie
-                    # - Make a new access test if it succeeds, redirect to the record. Otherwise, 
+                    # - Make a new access test if it succeeds, redirect to the record. Otherwise,
                     #   redirect to the messaging.
                     if not suggested_company:
                         raise AccessError('')
@@ -197,3 +201,53 @@ class MailController(http.Controller):
             'model_name': request.env['ir.model'].sudo()._get(model).display_name,
             'access_url': record._notify_get_action_link('view', model=model, res_id=res_id) if display_link else False,
         })
+
+    @http.route("/mail/message/redirect", methods=["POST"], type="json", auth="public")
+    @add_guest_to_context
+    def mail_message_redirect(self, message_id):
+        message = request.env['mail.message'].search([('id', '=', message_id)])
+        if not message:
+            return {'error': 'Unauthorized'}
+        # sudo: public user can access some relational fields of mail.message
+        if message.sudo()._filter_empty():
+            return {'error': 'NotFound'}
+        store = Store()
+        if message.model == 'discuss.channel':
+            store.add(request.env['discuss.channel'].browse(message.res_id))
+        store.add('Thread', {'id': message.res_id, 'model': message.model, 'highlightMessageId': message_id})
+        return {'threadData': store.get_result()}
+
+    @http.route('/mail/<string:res_model>/<int:res_id>/message/redirect/<int:message_id>', type='http', auth='public')
+    @add_guest_to_context
+    def mail_thread_message_redirect(self, res_model, res_id, message_id, **kwargs):
+        message = request.env['mail.message'].search([('id', '=', message_id)])
+        if not message:
+            if request.env.user._is_public():
+                return request.redirect('/web/login?redirect=/mail/%s/%s/message/redirect/%s' % (res_model, res_id, message_id))
+            raise Unauthorized()
+
+        # sudo: public user can access some relational fields of mail.message
+        if message.sudo()._filter_empty():
+            raise NotFound()
+        if not request.env.user._is_internal():
+            thread = request.env[message.model].search([('id', '=', message.res_id)])
+            if message.model == 'discuss.channel':
+                store = Store({'isChannelTokenSecret': True, 'discuss_public_thread': {'highlightMessageId': message_id}})
+                return PublicPageController()._response_discuss_channel_invitation(store, thread)
+            else:
+                return request.redirect(thread._get_share_url(share_token=False))
+
+        url_params = {
+            'active_id': message.res_id,
+            'highlight_message_id': message_id,
+        }
+        if message.model == 'discuss.channel':
+            url_params['action'] = 'mail.action_discuss'
+        else:
+            url_params.update({
+                'model': message.model,
+                'id': message.res_id,
+                'view_type': 'form',
+            })
+        url = '/web#%s' % url_encode(url_params)
+        return request.redirect(url)

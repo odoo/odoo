@@ -104,11 +104,12 @@ class PublicPageController(http.Controller):
         return self._response_discuss_public_template(store, channel)
 
     def _response_discuss_public_template(self, store, channel):
+        discuss_public_thread = store.get_result().get('Store', {}).get('discuss_public_thread', {})
         store.add(
             {
                 "companyName": request.env.company.name,
                 "inPublicPage": True,
-                "discuss_public_thread": {"id": channel.id, "model": "discuss.channel"},
+                "discuss_public_thread": {"id": channel.id, "model": "discuss.channel", **discuss_public_thread},
             }
         )
         store.add(channel)

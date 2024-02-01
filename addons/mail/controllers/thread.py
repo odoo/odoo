@@ -3,6 +3,7 @@
 from datetime import datetime
 from markupsafe import Markup
 from werkzeug.exceptions import NotFound
+from lxml import html
 
 from odoo import http
 from odoo.http import request
@@ -71,6 +72,25 @@ class ThreadController(http.Controller):
     def _get_allowed_message_post_params(self):
         return {"attachment_ids", "body", "message_type", "partner_ids", "subtype_xmlid", "parent_id"}
 
+    def modify_anchor_elements(self, body):
+        root = html.fromstring(body)
+        for a in root.xpath("//a[contains(@class, 'o_message_redirect')]"):
+            message_id = request.env["mail.message"].sudo().browse(int(a.get("data-oe-id")))
+            if message_id.exists():
+                thread_id = request.env[message_id.model].sudo().browse(message_id.res_id)
+                a.text = None
+                for child in list(a):
+                    a.remove(child)
+                display_name = thread_id.display_name or f"{request.env['ir.model']._get(thread_id._name).display_name} ({thread_id.id})"
+                a.extend([
+                    html.builder.SPAN(f"#{display_name}"),
+                    html.Element("i", {"class": "fa fa-angle-right ps-2 pe-1"}),
+                    html.Element("i", {"class": "fa fa-comment"})
+                ])
+            else:
+                a.classes.discard('o_message_redirect')
+        return html.tostring(root, method='html').decode()
+
     @http.route("/mail/message/post", methods=["POST"], type="json", auth="public")
     @add_guest_to_context
     def mail_message_post(self, thread_model, thread_id, post_data, context=None, special_mentions=[], **kwargs):
@@ -99,7 +119,7 @@ class ThreadController(http.Controller):
         if not thread:
             raise NotFound()
         if "body" in post_data:
-            post_data["body"] = Markup(post_data["body"])  # contains HTML such as @mentions
+            post_data["body"] = Markup(self.modify_anchor_elements(post_data["body"]))  # contains HTML such as @mentions
         new_partners = []
         if "partner_emails" in kwargs:
             new_partners = [record.id for record in request.env["res.partner"]._find_or_create_from_emails(
@@ -125,7 +145,7 @@ class ThreadController(http.Controller):
             raise NotFound()
         if not message_sudo.model or not message_sudo.res_id:
             raise NotFound()
-        body = Markup(body) if body else body  # may contain HTML such as @mentions
+        body = Markup(self.modify_anchor_elements(body)) if body else body  # may contain HTML such as @mentions
         guest.env[message_sudo.model].browse([message_sudo.res_id])._message_update_content(
             message_sudo, body, attachment_ids=attachment_ids, partner_ids=partner_ids
         )

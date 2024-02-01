@@ -16,7 +16,15 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { Deferred, mockDate, mockTimeZone, tick } from "@odoo/hoot-mock";
-import { Command, mockService, onRpc, serverState, withUser } from "@web/../tests/web_test_helpers";
+import { browser } from "@web/core/browser/browser";
+import {
+    Command,
+    mockService,
+    onRpc,
+    patchWithCleanup,
+    serverState,
+    withUser,
+} from "@web/../tests/web_test_helpers";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { getOrigin } from "@web/core/utils/urls";
 
@@ -1811,4 +1819,221 @@ test("Delete starred message decrements starred counter once", async () => {
     await click(".o-mail-Message-moreMenu [title='Delete']");
     await click("button", { text: "Confirm" });
     await contains("button", { count: 1, text: "Starred2" });
+});
+
+test("Copy message link tests inside discuss channel", async () => {
+    const pyEnv = await startServer();
+    const [channelId_1, channelId_2] = pyEnv["discuss.channel"].create([
+        { name: "channel1" },
+        { name: "channel2" },
+    ]);
+    const [, messageId_2, messageId_3, messageId_4] = pyEnv["mail.message"].create([
+        {
+            body: "Message without type",
+            res_id: channelId_1,
+            model: "discuss.channel",
+        },
+        {
+            body: "Hello world",
+            res_id: channelId_1,
+            message_type: "comment",
+            model: "discuss.channel",
+        },
+        {
+            body: "", // stimulating a deleted message
+            res_id: channelId_1,
+            message_type: "comment",
+            model: "discuss.channel",
+        },
+        {
+            body: "Hello world 2",
+            res_id: channelId_2,
+            message_type: "comment",
+            model: "discuss.channel",
+        },
+    ]);
+    patchWithCleanup(browser.navigator, {
+        ...browser.navigator,
+        clipboard: {
+            writeText: (text) => {
+                step(text);
+                return Promise.resolve();
+            },
+        },
+    });
+    patchWithCleanup(browser.location, {
+        ...browser.location,
+        protocol: "http:",
+        host: "message-link-test.com",
+    });
+    await start();
+    await openDiscuss(channelId_1);
+    await click(":nth-child(1 of .o-mail-Message) [title='Expand']");
+    await contains(".o-mail-Message-moreMenu .o-dropdown-item[title='Copy Message Link']", {
+        count: 0,
+    });
+
+    await click(":nth-child(2 of .o-mail-Message) [title='Expand']");
+    await click(".o-mail-Message-moreMenu .o-dropdown-item[title='Copy Message Link']");
+    await assertSteps([
+        `${getOrigin()}/mail/discuss.channel/${channelId_1}/message/redirect/${messageId_2}`,
+    ]);
+    await insertText(
+        ".o-mail-Composer-input",
+        `${getOrigin()}/mail/discuss.channel/${channelId_1}/message/redirect/${messageId_2}`
+    );
+    await click(".o-mail-Composer-send:enabled");
+    await click(
+        `.o-mail-Message
+         a.o_message_redirect[data-oe-model="discuss.channel"][data-oe-res-id="${channelId_1}"][data-oe-id='${messageId_2}']`,
+        {
+            text: "#channel1",
+        }
+    );
+    await contains(".o-mail-Message.o-highlighted", { text: "Hello world" });
+
+    await insertText(
+        ".o-mail-Composer-input",
+        `${getOrigin()}/mail/discuss.channel/${channelId_1}/message/redirect/${messageId_3}`
+    );
+    await click(".o-mail-Composer-send:enabled");
+    await click(
+        `:nth-child(4 of .o-mail-Message) a.o_message_redirect[data-oe-id='${messageId_3}']`
+    );
+    await contains(".o_notification", { text: "This message no longer exists." });
+
+    await insertText(
+        ".o-mail-Composer-input",
+        `${getOrigin()}/mail/discuss.channel/${channelId_2}/message/redirect/${messageId_4}`
+    );
+    await click(".o-mail-Composer-send:enabled");
+    await click(
+        `:nth-child(5 of .o-mail-Message) a.o_message_redirect[data-oe-id='${messageId_4}']`
+    );
+    await contains(".o-mail-Message.o-highlighted .o-mail-Message-content", {
+        text: "Hello world 2",
+    });
+});
+
+test("Copy message link tests inside chatwindow", async () => {
+    const pyEnv = await startServer();
+    const [channelId_1, channelId_2] = pyEnv["discuss.channel"].create([
+        { name: "channel1" },
+        { name: "channel2" },
+    ]);
+    const messageId_1 = pyEnv["mail.message"].create({
+        body: "Hello world",
+        res_id: channelId_1,
+        message_type: "comment",
+        model: "discuss.channel",
+    });
+    const messageId_2 = pyEnv["mail.message"].create({
+        body: `<a class="o_message_redirect" data-oe-res-id="${channelId_1}"
+                data-oe-model="discuss.channel" data-oe-id="${messageId_1}">#channel1</a>`,
+        res_id: channelId_2,
+        message_type: "comment",
+        model: "discuss.channel",
+    });
+    pyEnv["mail.notification"].create({
+        mail_message_id: messageId_2,
+        notification_status: "sent",
+        notification_type: "inbox",
+        res_partner_id: pyEnv.user.partnerId,
+    });
+    await start();
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await click(".o-mail-NotificationItem", { text: "channel2" });
+    await contains(".o-mail-ChatWindow");
+    await click(`.o-mail-Message a.o_message_redirect[data-oe-id='${messageId_1}']`);
+    await contains(".o-mail-ChatWindow", { count: 2 });
+    await contains(".o-mail-Message.o-highlighted", { text: "Hello world" });
+});
+
+test("Copy message link tests inside chatter", async () => {
+    const pyEnv = await startServer();
+    const threadId = pyEnv["res.partner"].create({ name: "partner1" });
+    const messageId = pyEnv["mail.message"].create({
+        body: "Hello Partner1",
+        res_id: threadId,
+        message_type: "comment",
+        model: "res.partner",
+    });
+    patchWithCleanup(browser.navigator, {
+        ...browser.navigator,
+        clipboard: {
+            writeText: (text) => {
+                step(text);
+                return Promise.resolve();
+            },
+        },
+    });
+    patchWithCleanup(browser.location, {
+        ...browser.location,
+        protocol: "http:",
+        host: "message-link-test.com",
+    });
+    await start();
+    await openFormView("res.partner", threadId);
+    await click(".o-mail-Message [title='Expand']");
+    await click(".o-mail-Message-moreMenu .o-dropdown-item[title='Copy Message Link']");
+    await assertSteps([
+        `${getOrigin()}/mail/res.partner/${threadId}/message/redirect/${messageId}`,
+    ]);
+    await click(".o-mail-Chatter-sendMessage");
+    await insertText(
+        ".o-mail-Composer-input",
+        `${getOrigin()}/mail/res.partner/${threadId}/message/redirect/${messageId}`
+    );
+    await click(".o-mail-Composer-send:enabled");
+    await click(
+        `.o-mail-Message a[data-oe-model="res.partner"][data-oe-res-id="${threadId}"][data-oe-id="${messageId}"]`
+    );
+    await contains(".o-mail-Message.o-highlighted", { text: "Hello Partner1" });
+});
+
+test("Message redirect link edit test", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "channel1" });
+    const messageId = pyEnv["mail.message"].create({
+        body: "Hello world",
+        res_id: channelId,
+        message_type: "comment",
+        model: "discuss.channel",
+    });
+    patchWithCleanup(browser.location, {
+        ...browser.location,
+        protocol: "http:",
+        host: "message-link-test.com",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await insertText(
+        ".o-mail-Composer-input",
+        `${getOrigin()}/mail/discuss.channel/${channelId}/message/redirect/${messageId}`
+    );
+    await click(".o-mail-Composer-send:enabled");
+    await contains(".o-mail-Message", { text: "#channel1" });
+
+    await click(":nth-child(2 of .o-mail-Message) [title='Expand']");
+    await click(".o-mail-Message-moreMenu [title='Edit']");
+    await contains(".o-mail-Message-editable .o-mail-Composer-input", {
+        value: `${getOrigin()}/mail/discuss.channel/${channelId}/message/redirect/${messageId}`,
+    });
+    await insertText(".o-mail-Message-editable .o-mail-Composer-input", "1");
+    await click(".o-mail-Message a", { text: "save" });
+    await contains(".o-mail-Message-editable .o-mail-Composer-input", { count: 0 });
+    await contains(".o-mail-Message", {
+        text: `${getOrigin()}/mail/discuss.channel/${channelId}/message/redirect/${messageId}1`,
+    });
+
+    await click(":nth-child(2 of .o-mail-Message) [title='Expand']");
+    await click(".o-mail-Message-moreMenu [title='Edit']");
+    await insertText(
+        ".o-mail-Message-editable .o-mail-Composer-input",
+        `${getOrigin()}/mail/discuss.channel/${channelId}/message/redirect/${messageId}`,
+        { replace: true }
+    );
+    await click(".o-mail-Message a", { text: "save" });
+    await contains(".o-mail-Message-editable .o-mail-Composer-input", { count: 0 });
+    await contains(".o-mail-Message", { text: "#channel1" });
 });

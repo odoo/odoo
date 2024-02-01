@@ -1,7 +1,7 @@
 import { Record } from "@mail/core/common/record";
 import {
     EMOJI_REGEX,
-    convertBrToLineBreak,
+    formatMessageForEdit,
     htmlToTextContentInline,
     prettifyMessageContent,
 } from "@mail/utils/common/format";
@@ -349,7 +349,7 @@ export class Message extends Record {
     }
 
     async edit(body, attachments = [], { mentionedChannels = [], mentionedPartners = [] } = {}) {
-        if (convertBrToLineBreak(this.body) === body && attachments.length === 0) {
+        if (formatMessageForEdit(this.body) === body && attachments.length === 0) {
             return;
         }
         const validMentions = this.store.getMentionsFromText(body, {
