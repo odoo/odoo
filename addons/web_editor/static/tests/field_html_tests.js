@@ -986,7 +986,7 @@ QUnit.module('web_editor', {}, function () {
             const clipboardData = new DataTransfer();
             clipboardData.setData('text/plain', 'https://www.youtube.com/watch?v=qxb74CMR748');
             p.dispatchEvent(new ClipboardEvent('paste', { clipboardData, bubbles: true }));
-            assert.strictEqual(p.outerHTML, '<p>https://www.youtube.com/watch?v=qxb74CMR748<br></p>',
+            assert.strictEqual(p.outerHTML, '<p>https://www.youtube.com/watch?v=qxb74CMR748</p>',
                 "The URL should be inserted as text");
             assert.isVisible($('.oe-powerbox-wrapper:contains("Embed Youtube Video")'),
                 "The powerbox should be opened");

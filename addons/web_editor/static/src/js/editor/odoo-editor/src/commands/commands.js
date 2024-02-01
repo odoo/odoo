@@ -51,6 +51,7 @@ import {
     getCursorDirection,
     padLinkWithZws,
     isLinkEligibleForZwnbsp,
+    lastLeaf,
 } from '../utils/utils.js';
 
 const TEXT_CLASSES_REGEX = /\btext-[^\s]*\b/;
@@ -295,6 +296,14 @@ export const editorCommands = {
         }
 
         currentNode = lastChildNode || currentNode;
+        if (
+            currentNode.nodeName !== 'BR' &&
+            currentNode.nextSibling &&
+            currentNode.nextSibling.nodeName === 'BR' &&
+            lastLeaf(currentNode.parentNode) === currentNode.nextSibling
+        ) {
+            currentNode.nextSibling.remove();
+        }
         selection.removeAllRanges();
         const newRange = new Range();
         let lastPosition;
