@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_partner_form_l10n_fr" model="ir.ui.view">
+        <field name="name">res.partner.form.l10n.fr</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="l10n_fr.res_partner_form_l10n_fr"/>
+        <field name="arch" type="xml">
+            <field name="siret" position="attributes">
+                <attribute name="invisible">'FR' not in fiscal_country_codes or not is_company</attribute>
+            </field>
+        </field>
+    </record>
+</odoo>
