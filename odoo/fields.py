@@ -1794,7 +1794,7 @@ class _String(Field):
             dirty_records.flush_recordset([self.name])
 
         dirty = self.store and any(records._ids)
-        lang = self._lang(records.env, validate=True)
+        lang = self._lang(records.env, validate=dirty)
 
         # not dirty fields
         if not dirty:

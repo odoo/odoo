@@ -1088,7 +1088,7 @@ class Cache(object):
             if env.context.get('prefetch_langs'):
                 installed = [lang for lang, _ in env['res.lang'].get_installed()]
                 langs = OrderedSet(installed + ['en_US'])
-                _langs = [f'_{l}' for l in langs] if field._lang(env, validate=True).startswith('_') else []
+                _langs = [f'_{l}' for l in langs] if field._lang(env).startswith('_') else []
                 for id_, val in zip(records._ids, values):
                     if val is None:
                         field_cache.setdefault(id_, None)
@@ -1101,7 +1101,7 @@ class Cache(object):
                             **val
                         }
             else:
-                lang = field._lang(env, validate=True)
+                lang = field._lang(env)
                 for id_, val in zip(records._ids, values):
                     if val is None:
                         field_cache.setdefault(id_, None)
