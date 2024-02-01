@@ -1993,10 +1993,12 @@
                             <t t-if="not errors and website_sale_order.amount_total" name="website_sale_non_free_cart">
                                 <div t-if="providers or tokens" id="payment_method" class="mt-3">
                                     <h3 class="mb24">Pay with </h3>
-                                    <t t-call="payment.checkout">
-                                        <t t-set="footer_template_id" t-value="'website_sale.payment_footer'"/>
-                                        <t t-set="submit_button_label">Pay Now</t>
-                                    </t>
+                                    <div class="o_not_editable">
+                                        <t t-call="payment.checkout">
+                                            <t t-set="footer_template_id" t-value="'website_sale.payment_footer'"/>
+                                            <t t-set="submit_button_label">Pay Now</t>
+                                        </t>
+                                    </div>
                                 </div>
                                 <div t-else="" class="alert alert-warning">
                                     <strong>No suitable payment option could be found.</strong><br/>
