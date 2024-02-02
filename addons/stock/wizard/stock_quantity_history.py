@@ -28,8 +28,8 @@ class StockQuantityHistory(models.TransientModel):
         # moves until date.
         action = {
             'type': 'ir.actions.act_window',
-            'views': [(tree_view_id, 'tree'), (form_view_id, 'form')],
-            'view_mode': 'tree,form',
+            'views': [(tree_view_id, 'list'), (form_view_id, 'form')],
+            'view_mode': 'list,form',
             'name': _('Products'),
             'res_model': 'product.product',
             'domain': domain,

@@ -269,7 +269,7 @@ describe.tags("desktop")("DebugMenu", () => {
     test("get view: basic rendering", async () => {
         serverState.debug = "1";
 
-        webModels.ResPartner._views.list = `<tree><field name="name"/></tree>`;
+        webModels.ResPartner._views.list = `<list><field name="name"/></list>`;
         webModels.ResPartner._views.search = `<search/>`;
 
         defineWebModels();
@@ -285,7 +285,7 @@ describe.tags("desktop")("DebugMenu", () => {
         await contains(".o_debug_manager button").click();
         await contains(".dropdown-menu .dropdown-item:contains('Get View')").click();
         expect(".modal").toHaveCount(1);
-        expect(".modal-body").toHaveText(`<tree><field name="name"/></tree>`);
+        expect(".modal-body").toHaveText(`<list><field name="name"/></list>`);
     });
 
     test("can edit a pivot view", async () => {
@@ -321,7 +321,7 @@ describe.tags("desktop")("DebugMenu", () => {
     test("can edit a search view", async () => {
         serverState.debug = "1";
 
-        webModels.ResPartner._views.list = `<tree><field name="id"/></tree>`;
+        webModels.ResPartner._views.list = `<list><field name="id"/></list>`;
         webModels.ResPartner._views["search,293"] = "<search></search>";
         webModels.IrUiView._records.push({ id: 293, name: "Edit View" });
         webModels.IrUiView._views.form = `<form><field name="id"/></form>`;
@@ -347,7 +347,7 @@ describe.tags("desktop")("DebugMenu", () => {
     test("edit search view on action without search_view_id", async () => {
         serverState.debug = "1";
 
-        webModels.ResPartner._views.list = `<tree><field name="id"/></tree>`;
+        webModels.ResPartner._views.list = `<list><field name="id"/></list>`;
         webModels.ResPartner._views["search,293"] = "<search></search>";
         webModels.IrUiView._records.push({ id: 293, name: "Edit View" });
         webModels.IrUiView._views.form = `<form><field name="id"/></form>`;

@@ -54,11 +54,11 @@ export const getServerData = () => JSON.parse(JSON.stringify({
             </form>
         `,
         "account.analytic.line,false,list": `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="project_id"/>
                 <field name="task_id"/>
                 <field name="unit_amount"/>
-            </tree>
+            </list>
         `,
     },
 }));

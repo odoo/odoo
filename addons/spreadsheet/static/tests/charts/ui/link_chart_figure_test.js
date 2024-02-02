@@ -108,7 +108,7 @@ QUnit.module(
                 },
             };
             this.serverData.views = {};
-            this.serverData.views["ir.ui.menu,false,list"] = `<tree></tree>`;
+            this.serverData.views["ir.ui.menu,false,list"] = `<list></list>`;
             this.serverData.views["ir.ui.menu,false,search"] = `<search></search>`;
             this.serverData.models = {
                 ...getBasicData(),

@@ -18,7 +18,7 @@ class HrJob(models.Model):
         action.update({
             'name': _("Matching Applicants"),
             'views': [
-                (self.env.ref('hr_recruitment_skills.crm_case_tree_view_inherit_hr_recruitment_skills').id, 'tree'),
+                (self.env.ref('hr_recruitment_skills.crm_case_tree_view_inherit_hr_recruitment_skills').id, 'list'),
                 (False, 'form'),
             ],
             'context': context,

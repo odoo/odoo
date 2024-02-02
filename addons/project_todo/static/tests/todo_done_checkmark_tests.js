@@ -31,9 +31,9 @@ QUnit.module("TodoDoneCheckmark Tests", (hooks) => {
                         </template>
                     </kanban>`,
                 "project.task,false,list": `
-                    <tree>
+                    <list>
                         <field name="state" widget="todo_done_checkmark" nolabel="1"/>
-                    </tree>`,
+                    </list>`,
                 "project.task,false,form": `
                     <form js_class="todo_form">
                         <field name="state"/>

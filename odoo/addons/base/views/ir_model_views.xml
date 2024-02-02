@@ -48,7 +48,7 @@
                     <notebook>
                         <page string="Fields" name="fields">
                             <field name="field_id">
-                                <tree string="Fields Description">
+                                <list string="Fields Description">
                                     <field name="name"/>
                                     <field name="field_description"/>
                                     <field name="ttype"/>
@@ -56,7 +56,7 @@
                                     <field name="readonly"/>
                                     <field name="index" groups="base.group_no_one"/>
                                     <field name="state" groups="base.group_no_one"/>
-                                </tree>
+                                </list>
                                 <form string="Fields Description">
                                     <group>
                                         <group>
@@ -112,11 +112,11 @@
                                             </group>
                                             <group invisible="ttype not in ['selection', 'reference']" readonly="ttype not in ['selection', 'reference']">
                                                 <field name="selection_ids">
-                                                    <tree editable="bottom">
+                                                    <list editable="bottom">
                                                         <field name="sequence" widget="handle"/>
                                                         <field name="value"/>
                                                         <field name="name"/>
-                                                    </tree>
+                                                    </list>
                                                 </field>
                                             </group>
                                             <group string="Advanced Properties" groups="base.group_no_one">
@@ -172,7 +172,7 @@
                         </page>
                         <page string="Access Rights" name="access_rights">
                             <field name="access_ids">
-                                <tree string="Access Rights" editable="top"
+                                <list string="Access Rights" editable="top"
                                       decoration-warning="not group_id and
                                                          (perm_read or perm_write or
                                                           perm_create or perm_unlink)">
@@ -182,12 +182,12 @@
                                     <field name="perm_write"/>
                                     <field name="perm_create"/>
                                     <field name="perm_unlink"/>
-                                </tree>
+                                </list>
                             </field>
                         </page>
                         <page string="Record Rules" name="record_rules">
                             <field name="rule_ids">
-                                <tree string="Record Rules" editable="top" decoration-info="not groups">
+                                <list string="Record Rules" editable="top" decoration-info="not groups">
                                     <field name="name"/>
                                     <field name="groups" widget="many2many_tags" options="{'no_create':True}"/>
                                     <field name="domain_force"/>
@@ -195,7 +195,7 @@
                                     <field name="perm_write"/>
                                     <field name="perm_create"/>
                                     <field name="perm_unlink"/>
-                                </tree>
+                                </list>
                             </field>
                         </page>
                         <page string="Notes" name="notes" groups="base.group_no_one">
@@ -212,12 +212,12 @@
         <record id="view_model_tree" model="ir.ui.view">
             <field name="model">ir.model</field>
             <field name="arch" type="xml">
-                <tree string="Model Description">
+                <list string="Model Description">
                     <field name="model"/>
                     <field name="name"/>
                     <field name="state"/>
                     <field name="transient"/>
-                </tree>
+                </list>
             </field>
         </record>
         <record id="view_model_search" model="ir.ui.view">
@@ -338,11 +338,11 @@
                                 </group>
                                 <group invisible="ttype not in ['selection', 'reference']" readonly="ttype not in ['selection', 'reference']">
                                     <field name="selection_ids">
-                                        <tree editable="bottom">
+                                        <list editable="bottom">
                                             <field name="sequence" widget="handle"/>
                                             <field name="value"/>
                                             <field name="name"/>
-                                        </tree>
+                                        </list>
                                     </field>
                                 </group>
                                 <group string="Advanced Properties" groups="base.group_no_one">
@@ -395,7 +395,7 @@
         <record id="view_model_fields_tree" model="ir.ui.view">
             <field name="model">ir.model.fields</field>
             <field name="arch" type="xml">
-                <tree string="Fields" duplicate="false">
+                <list string="Fields" duplicate="false">
                     <field name="name"/>
                     <field name="field_description"/>
                     <field name="model_id"/>
@@ -405,7 +405,7 @@
                     <field name="store"/>
                     <field name="readonly"/>
                     <field name="relation"/>
-                </tree>
+                </list>
             </field>
         </record>
         <record id="view_model_fields_search" model="ir.ui.view">
@@ -460,12 +460,12 @@
         <record id="view_model_fields_selection_tree" model="ir.ui.view">
             <field name="model">ir.model.fields.selection</field>
             <field name="arch" type="xml">
-                <tree>
+                <list>
                     <field name="sequence" widget="handle"/>
                     <field name="field_id"/>
                     <field name="value"/>
                     <field name="name"/>
-                </tree>
+                </list>
             </field>
         </record>
         <record id="view_model_fields_selection_search" model="ir.ui.view">
@@ -520,12 +520,12 @@
         <record id="view_model_data_list" model="ir.ui.view">
             <field name="model">ir.model.data</field>
             <field name="arch" type="xml">
-                <tree string="External Identifiers">
+                <list string="External Identifiers">
                     <field name="complete_name"/>
                     <field name="display_name"/>
                     <field name="model" groups="base.group_no_one"/>
                     <field name="res_id" widget="many2one_reference_integer"/>
-                </tree>
+                </list>
             </field>
         </record>
         <record id="view_model_data_search" model="ir.ui.view">
@@ -576,12 +576,12 @@
         <record id="view_model_constraint_list" model="ir.ui.view">
             <field name="model">ir.model.constraint</field>
             <field name="arch" type="xml">
-                <tree string="Model Constraints">
+                <list string="Model Constraints">
                     <field name="type"/>
                     <field name="name"/>
                     <field name="module"/>
                     <field name="model"/>
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -628,11 +628,11 @@
         <record id="view_model_relation_list" model="ir.ui.view">
             <field name="model">ir.model.relation</field>
             <field name="arch" type="xml">
-                <tree string="ManyToMany Relations">
+                <list string="ManyToMany Relations">
                     <field name="name"/>
                     <field name="module"/>
                     <field name="model"/>
-                </tree>
+                </list>
             </field>
         </record>
         <record id="action_model_relation" model="ir.actions.act_window">
@@ -645,10 +645,10 @@
 
         <!-- ir.model.access -->
         <record id="ir_access_view_tree" model="ir.ui.view">
-            <field name="name">ir.model.access.view.tree</field>
+            <field name="name">ir.model.access.view.list</field>
             <field name="model">ir.model.access</field>
             <field name="arch" type="xml">
-                <tree string="Access Rights"
+                <list string="Access Rights"
                       decoration-warning="not group_id and
                                          (perm_read or perm_write or
                                           perm_create or perm_unlink)">
@@ -659,14 +659,14 @@
                     <field name="perm_write"/>
                     <field name="perm_create"/>
                     <field name="perm_unlink"/>
-                </tree>
+                </list>
             </field>
         </record>
         <record id="ir_access_view_tree_edition" model="ir.ui.view">
-            <field name="name">ir.model.access.view.tree.edition</field>
+            <field name="name">ir.model.access.view.list.edition</field>
             <field name="model">ir.model.access</field>
             <field name="arch" type="xml">
-                <tree string="Access Rights" editable="top"
+                <list string="Access Rights" editable="top"
                       decoration-warning="not group_id and
                                          (perm_read or perm_write or
                                           perm_create or perm_unlink)">
@@ -677,7 +677,7 @@
                     <field name="perm_write"/>
                     <field name="perm_create"/>
                     <field name="perm_unlink"/>
-                </tree>
+                </list>
             </field>
         </record>
         <record id="ir_access_view_form" model="ir.ui.view">

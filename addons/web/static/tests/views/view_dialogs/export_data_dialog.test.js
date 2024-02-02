@@ -177,7 +177,7 @@ test("Export dialog UI test", async () => {
     await mountView({
         type: "list",
         resModel: "partner",
-        arch: `<tree><field name="foo"/></tree>`,
+        arch: `<list><field name="foo"/></list>`,
         loadActionMenus: true,
     });
 
@@ -251,7 +251,7 @@ test("Export dialog: interacting with export templates", async () => {
     await mountView({
         type: "list",
         resModel: "partner",
-        arch: `<tree export_xlsx="1"><field name="foo"/></tree>`,
+        arch: `<list export_xlsx="1"><field name="foo"/></list>`,
         loadActionMenus: true,
     });
 
@@ -350,7 +350,7 @@ test("Export dialog: interacting with export templates in debug", async () => {
     await mountView({
         type: "list",
         resModel: "partner",
-        arch: `<tree export_xlsx="1"><field name="foo"/></tree>`,
+        arch: `<list export_xlsx="1"><field name="foo"/></list>`,
         loadActionMenus: true,
     });
 
@@ -381,7 +381,7 @@ test("Export dialog: interacting with available fields", async () => {
     await mountView({
         type: "list",
         resModel: "partner",
-        arch: `<tree export_xlsx="1"><field name="foo"/></tree>`,
+        arch: `<list export_xlsx="1"><field name="foo"/></list>`,
         loadActionMenus: true,
     });
 
@@ -469,7 +469,7 @@ test("Export dialog: compatible and export type options", async () => {
     await mountView({
         type: "list",
         resModel: "partner",
-        arch: `<tree><field name="foo"/></tree>`,
+        arch: `<list><field name="foo"/></list>`,
         loadActionMenus: true,
     });
 
@@ -508,7 +508,7 @@ test("toggling import compatibility after adding an expanded field", async () =>
     await mountView({
         type: "list",
         resModel: "partner",
-        arch: `<tree><field name="foo"/></tree>`,
+        arch: `<list><field name="foo"/></list>`,
         loadActionMenus: true,
     });
 
@@ -539,7 +539,7 @@ test("Export dialog: many2many fields are extendable", async () => {
     await mountView({
         type: "list",
         resModel: "partner",
-        arch: `<tree><field name="foo"/></tree>`,
+        arch: `<list><field name="foo"/></list>`,
         loadActionMenus: true,
     });
 
@@ -583,11 +583,11 @@ test("Export dialog: export list with 'exportable: false'", async () => {
     await mountView({
         type: "list",
         resModel: "partner",
-        arch: `<tree export_xlsx="1">
+        arch: `<list export_xlsx="1">
             <field name="foo"/>
             <field name="not_exportable"/>
             <field name="exportable"/>
-        </tree>`,
+        </list>`,
         loadActionMenus: true,
     });
 
@@ -612,7 +612,7 @@ test("Export dialog: display on small screen after resize", async () => {
     await mountView({
         type: "list",
         resModel: "partner",
-        arch: `<tree export_xlsx="1"><field name="foo"/></tree>`,
+        arch: `<list export_xlsx="1"><field name="foo"/></list>`,
         loadActionMenus: true,
     });
 
@@ -660,10 +660,10 @@ test("ExportDialog: export all records of the domain", async () => {
         type: "list",
         resModel: "partner",
         arch: `
-        <tree export_xlsx="1" limit="1">
+        <list export_xlsx="1" limit="1">
             <field name="foo"/>
             <field name="bar"/>
-        </tree>`,
+        </list>`,
         loadActionMenus: true,
         domain: [["bar", "!=", "glou"]],
     });
@@ -724,10 +724,10 @@ test("Direct export list", async () => {
         type: "list",
         resModel: "partner",
         arch: `
-        <tree export_xlsx="1">
+        <list export_xlsx="1">
             <field name="foo"/>
             <field name="bar"/>
-        </tree>`,
+        </list>`,
         loadActionMenus: true,
         domain: [["bar", "!=", "glou"]],
     });
@@ -753,10 +753,10 @@ test("Direct export grouped list", async () => {
         type: "list",
         resModel: "partner",
         arch: `
-        <tree export_xlsx="1">
+        <list export_xlsx="1">
             <field name="foo"/>
             <field name="bar"/>
-        </tree>`,
+        </list>`,
         loadActionMenus: true,
         groupBy: ["foo", "bar"],
         domain: [["bar", "!=", "glou"]],
@@ -785,10 +785,10 @@ test("Direct export list take optional fields into account", async () => {
         type: "list",
         resModel: "partner",
         arch: `
-        <tree>
+        <list>
             <field name="foo" optional="show"/>
             <field name="bar" optional="show"/>
-        </tree>`,
+        </list>`,
         loadActionMenus: true,
     });
 
@@ -812,10 +812,10 @@ test("Export dialog with duplicated fields", async () => {
         type: "list",
         resModel: "partner",
         arch: `
-        <tree>
+        <list>
             <field name="foo" string="Foo"/>
             <field name="foo" string="duplicate of Foo"/>
-        </tree>`,
+        </list>`,
         loadActionMenus: true,
     });
 
@@ -852,10 +852,10 @@ test("Export dialog: export list contains field with 'default_export: true'", as
         type: "list",
         resModel: "partner",
         arch: `
-        <tree>
+        <list>
             <field name="foo" string="Foo"/>
             <field name="foo" string="duplicate of Foo"/>
-        </tree>`,
+        </list>`,
         loadActionMenus: true,
     });
 
@@ -879,7 +879,7 @@ test("Export dialog: search subfields", async () => {
     await mountView({
         type: "list",
         resModel: "partner",
-        arch: `<tree export_xlsx="1"><field name="foo"/></tree>`,
+        arch: `<list export_xlsx="1"><field name="foo"/></list>`,
         loadActionMenus: true,
     });
 
@@ -914,7 +914,7 @@ test("Export dialog: expand subfields after search", async () => {
     await mountView({
         type: "list",
         resModel: "partner",
-        arch: `<tree export_xlsx="1"><field name="foo"/></tree>`,
+        arch: `<list export_xlsx="1"><field name="foo"/></list>`,
         loadActionMenus: true,
     });
 
@@ -957,7 +957,7 @@ test("Export dialog: search in debug", async () => {
     await mountView({
         type: "list",
         resModel: "partner",
-        arch: `<tree export_xlsx="1"><field name="foo"/></tree>`,
+        arch: `<list export_xlsx="1"><field name="foo"/></list>`,
         loadActionMenus: true,
     });
 
@@ -988,7 +988,7 @@ test("Export dialog: disable button during export", async () => {
     await mountView({
         type: "list",
         resModel: "partner",
-        arch: `<tree export_xlsx="1"><field name="foo"/></tree>`,
+        arch: `<list export_xlsx="1"><field name="foo"/></list>`,
         loadActionMenus: true,
     });
 

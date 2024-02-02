@@ -25,10 +25,10 @@
     </record>
 
     <record id="view_complete_invoice_refund_tree" model="ir.ui.view">
-        <field name="name">account.move.tree2</field>
+        <field name="name">account.move.list2</field>
         <field name="model">account.move</field>
         <field name="arch" type="xml">
-            <tree decoration-info="state == 'draft'" default_order="create_date" string="Invoices and Refunds" decoration-muted="state == 'cancel'" js_class="account_tree">
+            <list decoration-info="state == 'draft'" default_order="create_date" string="Invoices and Refunds" decoration-muted="state == 'cancel'" js_class="account_tree">
                 <field name="l10n_latam_document_type_id_code"/>
                 <field name="l10n_latam_document_number" string="Folio" readonly="state != 'draft'"/>
                 <field name="partner_id_vat"/>
@@ -49,7 +49,7 @@
                 <field name="state" optional="show"/>
                 <field name="payment_state" optional="hide"/>
                 <field name="move_type" column_invisible="context.get('default_move_type', True)"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -60,7 +60,7 @@
         <field name="domain">[('move_type', 'in', ['out_invoice', 'out_refund'])]</field>
         <field name="context">{'default_move_type': 'out_invoice'}</field>
         <field name="target">current</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
     </record>
 
     <record model="ir.actions.act_window" id="vendor_bills_and_refunds">
@@ -70,7 +70,7 @@
         <field name="domain">[('move_type', 'in', ['in_invoice', 'in_refund'])]</field>
         <field name="context">{'default_move_type': 'in_invoice'}</field>
         <field name="target">current</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
     </record>
 
     <menuitem id="menu_sale_invoices_credit_notes" parent="account.menu_finance_receivables" sequence="3" action="sale_invoices_credit_notes" name="Sale Invoices and Credit Notes (CL)"/>

@@ -90,7 +90,7 @@ class FleetVehicleModel(models.Model):
         self.ensure_one()
         view = {
             'type': 'ir.actions.act_window',
-            'view_mode': 'kanban,tree,form',
+            'view_mode': 'kanban,list,form',
             'res_model': 'fleet.vehicle',
             'name': _('Vehicles'),
             'context': {'search_default_model_id': self.id, 'default_model_id': self.id}

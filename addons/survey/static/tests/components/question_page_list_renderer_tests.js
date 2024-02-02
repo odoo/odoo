@@ -72,12 +72,12 @@ QUnit.module("QuestionPageListRenderer", (hooks) => {
                 arch: `
                 <form>
                     <field name="lines" widget="question_page_one2many">
-                        <tree>
+                        <list>
                             <field name="sequence" widget="handle"/>
                             <field name="title" widget="survey_description_page"/>
                             <field name="question_type" />
                             <field name="is_page" column_invisible="1"/>
-                        </tree>
+                        </list>
                     </field>
                 </form>
             `,
@@ -104,13 +104,13 @@ QUnit.module("QuestionPageListRenderer", (hooks) => {
                 arch: `
                 <form>
                     <field name="lines" widget="question_page_one2many">
-                        <tree>
+                        <list>
                             <field name="sequence" widget="handle"/>
                             <field name="title" widget="survey_description_page"/>
                             <field name="question_type" />
                             <field name="is_page" column_invisible="1"/>
                             <field name="random_questions_count"/>
-                        </tree>
+                        </list>
                     </field>
                 </form>
             `,
@@ -143,13 +143,13 @@ QUnit.module("QuestionPageListRenderer", (hooks) => {
                 arch: `
                 <form>
                     <field name="lines" widget="question_page_one2many">
-                        <tree>
+                        <list>
                             <field name="sequence" widget="handle"/>
                             <field name="question_type" />
                             <field name="title" widget="survey_description_page"/>
                             <field name="is_page" column_invisible="1"/>
                             <field name="random_questions_count"/>
-                        </tree>
+                        </list>
                     </field>
                 </form>
             `,
@@ -179,13 +179,13 @@ QUnit.module("QuestionPageListRenderer", (hooks) => {
                 arch: `
                 <form>
                     <field name="lines" widget="question_page_one2many">
-                        <tree>
+                        <list>
                             <field name="sequence" widget="handle"/>
                             <field name="random_questions_count"/>
                             <field name="question_type" />
                             <field name="title" widget="survey_description_page"/>
                             <field name="is_page" column_invisible="1"/>
-                        </tree>
+                        </list>
                     </field>
                 </form>
             `,

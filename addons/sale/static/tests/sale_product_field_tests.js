@@ -104,9 +104,9 @@ QUnit.module("Fields", (hooks) => {
                 <form>
                     <sheet>
                         <field name="order_line">
-                            <tree editable="bottom" >
+                            <list editable="bottom" >
                                 <field name="product_template_id" widget="sol_product_many2one" />
-                            </tree>
+                            </list>
                         </field>
                     </sheet>
                 </form>`,

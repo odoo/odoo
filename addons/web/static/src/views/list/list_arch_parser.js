@@ -171,7 +171,7 @@ export class ListArchParser {
                     }
                 }
                 return false;
-            } else if (["tree", "list"].includes(node.tagName)) {
+            } else if ("list" === node.tagName) {
                 const activeActions = {
                     ...getActiveActions(xmlDoc),
                     exportXlsx: archParseBoolean(xmlDoc.getAttribute("export_xlsx"), true),

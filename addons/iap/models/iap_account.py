@@ -45,7 +45,7 @@ class IapAccount(models.Model):
     @api.model
     def get_view(self, view_id=None, view_type='form', **kwargs):
         res = super().get_view(view_id, view_type, **kwargs)
-        if view_type == 'tree':
+        if view_type == 'list':
             self.env['iap.account'].get_services()
         return res
 

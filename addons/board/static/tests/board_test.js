@@ -87,7 +87,7 @@ QUnit.module("Board", (hooks) => {
 
     QUnit.test("basic functionality, with one sub action", async function (assert) {
         assert.expect(23);
-        serverData.views["partner,4,list"] = '<tree string="Partner"><field name="foo"/></tree>';
+        serverData.views["partner,4,list"] = '<list string="Partner"><field name="foo"/></list>';
         await makeView({
             serverData,
             type: "form",
@@ -191,7 +191,7 @@ QUnit.module("Board", (hooks) => {
     });
 
     QUnit.test("views in the dashboard do not have a control panel", async function (assert) {
-        serverData.views["partner,4,list"] = '<tree string="Partner"><field name="foo"/></tree>';
+        serverData.views["partner,4,list"] = '<list string="Partner"><field name="foo"/></list>';
 
         await makeView({
             serverData,
@@ -230,7 +230,7 @@ QUnit.module("Board", (hooks) => {
         // action's params (like context or domain), as the dashboard can directly
         // retrieve them from the action. Same applies for the view_type, as the
         // first view of the action can be used, by default.
-        serverData.views["partner,4,list"] = '<tree string="Partner"><field name="foo"/></tree>';
+        serverData.views["partner,4,list"] = '<list string="Partner"><field name="foo"/></list>';
 
         await makeView({
             serverData,
@@ -261,7 +261,7 @@ QUnit.module("Board", (hooks) => {
     });
 
     QUnit.test("can sort a sub list", async function (assert) {
-        serverData.views["partner,4,list"] = '<tree string="Partner"><field name="foo"/></tree>';
+        serverData.views["partner,4,list"] = '<list string="Partner"><field name="foo"/></list>';
         serverData.models.partner.fields.foo.sortable = true;
 
         await makeView({
@@ -319,7 +319,7 @@ QUnit.module("Board", (hooks) => {
         };
         serviceRegistry.add("action", fakeActionService, { force: true });
 
-        serverData.views["partner,4,list"] = '<tree string="Partner"><field name="foo"/></tree>';
+        serverData.views["partner,4,list"] = '<list string="Partner"><field name="foo"/></list>';
         serverData.models.partner.fields.foo.sortable = true;
 
         await makeView({
@@ -366,7 +366,7 @@ QUnit.module("Board", (hooks) => {
         };
         serviceRegistry.add("action", fakeActionService, { force: true });
 
-        serverData.views["partner,4,list"] = '<tree string="Partner"><field name="foo"/></tree>';
+        serverData.views["partner,4,list"] = '<list string="Partner"><field name="foo"/></list>';
         serverData.views["partner,5,form"] =
             '<form string="Partner"><field name="display_name"/></form>';
 
@@ -401,7 +401,7 @@ QUnit.module("Board", (hooks) => {
     });
 
     QUnit.skip("can drag and drop a view", async function (assert) {
-        serverData.views["partner,4,list"] = '<tree string="Partner"><field name="foo"/></tree>';
+        serverData.views["partner,4,list"] = '<list string="Partner"><field name="foo"/></list>';
 
         await makeView({
             serverData,
@@ -455,7 +455,7 @@ QUnit.module("Board", (hooks) => {
     });
 
     QUnit.test("twice the same action in a dashboard", async function (assert) {
-        serverData.views["partner,4,list"] = '<tree string="Partner"><field name="foo"/></tree>';
+        serverData.views["partner,4,list"] = '<list string="Partner"><field name="foo"/></list>';
         serverData.views["partner,5,kanban"] = `
             <kanban>
                 <templates>
@@ -586,7 +586,7 @@ QUnit.module("Board", (hooks) => {
     QUnit.test("Views should be loaded in the user's language", async function (assert) {
         assert.expect(2);
         patchUserContextWithCleanup({ lang: "fr_FR" });
-        serverData.views["partner,4,list"] = '<tree string="Partner"><field name="foo"/></tree>';
+        serverData.views["partner,4,list"] = '<list string="Partner"><field name="foo"/></list>';
 
         await makeView({
             serverData,
@@ -616,7 +616,7 @@ QUnit.module("Board", (hooks) => {
 
     QUnit.test("Dashboard should use correct groupby", async function (assert) {
         assert.expect(1);
-        serverData.views["partner,4,list"] = '<tree string="Partner"><field name="foo"/></tree>';
+        serverData.views["partner,4,list"] = '<list string="Partner"><field name="foo"/></list>';
 
         await makeView({
             serverData,
@@ -699,7 +699,7 @@ QUnit.module("Board", (hooks) => {
         async function (assert) {
             assert.expect(1);
             serverData.views["partner,4,list"] =
-                '<tree string="Partner"><field name="foo"/></tree>';
+                '<list string="Partner"><field name="foo"/></list>';
 
             await makeView({
                 serverData,

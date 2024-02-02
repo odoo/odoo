@@ -439,7 +439,7 @@ class BaseAutomation(models.Model):
             'type': 'ir.actions.act_window',
             'name': _('Webhook Logs'),
             'res_model': 'ir.logging',
-            'view_mode': 'tree,form',
+            'view_mode': 'list,form',
             'domain': [('path', '=', "base_automation(%s)" % self.id)],
         }
 

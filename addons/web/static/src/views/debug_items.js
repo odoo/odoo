@@ -62,7 +62,6 @@ export function editView({ accessRights, component, env }) {
         // legacy
         viewId = component.props.viewInfo.view_id;
         type = component.props.viewInfo.type;
-        type = type === "tree" ? "list" : type;
     }
     if (!type) {
         return;

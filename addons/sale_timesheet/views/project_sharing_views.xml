@@ -7,21 +7,21 @@
         <field name="priority">600</field>
         <field name="inherit_id" ref="hr_timesheet.project_sharing_inherit_project_task_view_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='timesheet_ids']/tree" position="attributes">
+            <xpath expr="//field[@name='timesheet_ids']/list" position="attributes">
                 <attribute name="decoration-muted">timesheet_invoice_id != False</attribute>
             </xpath>
-            <xpath expr="//field[@name='timesheet_ids']/tree/field[@name='unit_amount']" position="before">
+            <xpath expr="//field[@name='timesheet_ids']/list/field[@name='unit_amount']" position="before">
                 <field name="timesheet_invoice_id" column_invisible="True"/>
                 <field name="so_line"
                     column_invisible="not parent.allow_billable"
                     context="{'with_remaining_hours': True, 'with_price_unit': True}" options="{'no_create': True, 'no_open': True}"
                     optional="hide"/>
             </xpath>
-            <xpath expr="//field[@name='child_ids']/tree/field[@name='remaining_hours']" position="after">
+            <xpath expr="//field[@name='child_ids']/list/field[@name='remaining_hours']" position="after">
                 <field name="remaining_hours_available" column_invisible="True"/>
                 <field name="remaining_hours_so" optional="hide" widget="timesheet_uom" column_invisible="not parent.allow_timesheets"/>
             </xpath>
-            <xpath expr="//field[@name='depend_on_ids']/tree/field[@name='remaining_hours']" position="after">
+            <xpath expr="//field[@name='depend_on_ids']/list/field[@name='remaining_hours']" position="after">
                 <field name="remaining_hours_available" column_invisible="True"/>
                 <field name="remaining_hours_so" optional="hide" widget="timesheet_uom" column_invisible="not parent.allow_timesheets"/>
             </xpath>

@@ -20,7 +20,7 @@
     <record id="action_pos_printer_form" model="ir.actions.act_window">
         <field name="name">Preparation Printers</field>
         <field name="res_model">pos.printer</field>
-        <field name="view_mode">tree,kanban,form</field>
+        <field name="view_mode">list,kanban,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
             Add a new restaurant order printer
@@ -40,12 +40,12 @@
         <field name="name">Preparation Printers</field>
         <field name="model">pos.printer</field>
         <field name="arch" type="xml">
-            <tree string="Preparation Printers">
+            <list string="Preparation Printers">
                 <field name="company_id" invisible="1" />
                 <field name="name" />
                 <field name="proxy_ip" />
                 <field name="product_categories_ids" widget="many2many_tags"/>
-            </tree>
+            </list>
         </field>
     </record>
 

@@ -15,10 +15,10 @@
                     </group>
                     <field name="show_backorder_lines" invisible="1"/>
                     <field name="mrp_production_backorder_line_ids" nolabel="1" invisible="not show_backorder_lines">
-                        <tree create="0" delete="0" editable="top">
+                        <list create="0" delete="0" editable="top">
                             <field name="mrp_production_id" force_save="1"/>
                             <field name="to_backorder" widget="boolean_toggle"/>
-                        </tree>
+                        </list>
                     </field>
                     <footer>
                         <button name="action_backorder" string="Create backorder" data-hotkey="q"

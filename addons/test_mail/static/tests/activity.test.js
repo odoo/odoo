@@ -632,7 +632,7 @@ test("activity view: search more to schedule an activity for a record of a respe
     registerArchs(archs);
     MailTestActivity._views = {
         ...MailTestActivity._views,
-        "list,false": '<tree string="MailTestActivity"><field name="name"/></tree>',
+        "list,false": '<list string="MailTestActivity"><field name="name"/></list>',
     };
     const env = await start();
     await openView({
@@ -675,7 +675,7 @@ test("activity view: Domain should not reset on load", async () => {
     registerArchs(archs);
     MailTestActivity._views = {
         ...MailTestActivity._views,
-        "list,false": '<tree string="MailTestActivity"><field name="name"/></tree>',
+        "list,false": '<list string="MailTestActivity"><field name="name"/></list>',
     };
     const env = await start();
     await openView({
@@ -709,7 +709,7 @@ test("activity view: 'scheduleActivity' does not add activity_ids condition as s
     registerArchs(archs);
     MailTestActivity._views = {
         ...MailTestActivity._views,
-        "list,false": '<tree string="MailTestActivity"><field name="name"/></tree>',
+        "list,false": '<list string="MailTestActivity"><field name="name"/></list>',
     };
     const env = await start();
     await openView({
@@ -742,7 +742,7 @@ test("activity view: 'onClose' of 'openActivityFormView' does not add activity_i
     registerArchs(archs);
     MailTestActivity._views = {
         ...MailTestActivity._views,
-        "list,false": '<tree string="MailTestActivity"><field name="name"/></tree>',
+        "list,false": '<list string="MailTestActivity"><field name="name"/></list>',
     };
     const env = await start();
     await openView({
@@ -772,7 +772,7 @@ test("activity view: 'onReloadData' does not add activity_ids condition as selec
     registerArchs(archs);
     MailTestActivity._views = {
         ...MailTestActivity._views,
-        "list,false": '<tree string="MailTestActivity"><field name="name"/></tree>',
+        "list,false": '<list string="MailTestActivity"><field name="name"/></list>',
     };
     const env = await start();
     await openView({

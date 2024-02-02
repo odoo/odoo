@@ -58,12 +58,12 @@ QUnit.test("basic rendering", async (assert) => {
         arch: `
             <form>
                 <field name="lines" widget="slide_category_one2many">
-                    <tree>
+                    <list>
                         <field name="is_category" column_invisible="1"/>
                         <field name="name"/>
                         <field name="display_name"/>
                         <field name="int"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
     });
@@ -86,11 +86,11 @@ QUnit.test("click on section behaves as usual in readonly mode", async (assert) 
         arch: `
             <form>
                 <field name="lines" widget="slide_category_one2many">
-                    <tree>
+                    <list>
                         <field name="is_category" column_invisible="1"/>
                         <field name="name"/>
                         <field name="int"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
     });
@@ -108,11 +108,11 @@ QUnit.test("click on section edit the section in place", async (assert) => {
         arch: `
             <form>
                 <field name="lines" widget="slide_category_one2many">
-                    <tree>
+                    <list>
                         <field name="is_category" column_invisible="1"/>
                         <field name="name"/>
                         <field name="int"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
     });
@@ -130,11 +130,11 @@ QUnit.test("click on real line opens a dialog", async (assert) => {
         arch: `
             <form>
                 <field name="lines" widget="slide_category_one2many">
-                    <tree>
+                    <list>
                         <field name="is_category" column_invisible="1"/>
                         <field name="name"/>
                         <field name="int"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
     });
@@ -151,7 +151,7 @@ QUnit.test("can create section inline", async (assert) => {
         arch: `
             <form>
                 <field name="lines" widget="slide_category_one2many">
-                    <tree>
+                    <list>
                         <field name="is_category" column_invisible="1"/>
                         <field name="name"/>
                         <field name="int"/>
@@ -159,7 +159,7 @@ QUnit.test("can create section inline", async (assert) => {
                             <create string="add line"/>
                             <create string="add section" context="{'default_is_category': true}"/>
                         </control>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
     });
@@ -179,7 +179,7 @@ QUnit.test("creates real record in form dialog", async (assert) => {
         arch: `
             <form>
                 <field name="lines" widget="slide_category_one2many">
-                    <tree>
+                    <list>
                         <field name="is_category" column_invisible="1"/>
                         <field name="name"/>
                         <field name="int"/>
@@ -187,7 +187,7 @@ QUnit.test("creates real record in form dialog", async (assert) => {
                             <create string="add line"/>
                             <create string="add section" context="{'default_is_category': true}"/>
                         </control>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
     });

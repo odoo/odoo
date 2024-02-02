@@ -2,7 +2,7 @@
 <odoo>
 
     <record id="res_partner_tree_l10n_it" model="ir.ui.view">
-        <field name="name">res.partner.tree.l10n.it</field>
+        <field name="name">res.partner.list.l10n.it</field>
         <field name="mode">primary</field>
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.view_partner_tree"/>
@@ -77,7 +77,7 @@
     </record>
 
     <record id="view_invoice_tree_inherit" model="ir.ui.view">
-        <field name="name">account.move.tree.inherit</field>
+        <field name="name">account.move.list.inherit</field>
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_invoice_tree" />
         <field name="arch" type="xml">
@@ -186,17 +186,17 @@
       <field name="name">l10n_it.ddt.list.view</field>
       <field name="model">l10n_it.ddt</field>
       <field name="arch" type="xml">
-        <tree>
+        <list>
           <field name="name"/>
           <field name="date"/>
-        </tree>
+        </list>
       </field>
     </record>
 
     <record id="action_ddt_account" model="ir.actions.act_window">
         <field name="name">Transport Document</field>
         <field name="res_model">l10n_it.ddt</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="view_id" ref="l10n_it_ddt_list_view"/>
     </record>
 

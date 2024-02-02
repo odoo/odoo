@@ -19,10 +19,10 @@
     </record>
 
     <record id="view_document_type_tree" model="ir.ui.view">
-        <field name="name">l10n_latam.document.type.tree</field>
+        <field name="name">l10n_latam.document.type.list</field>
         <field name="model">l10n_latam.document.type</field>
         <field name="arch" type="xml">
-            <tree string="Document Type" decoration-muted="(not active)" create="0" edit="0">
+            <list string="Document Type" decoration-muted="(not active)" create="0" edit="0">
                 <field name="code"/>
                 <field name="name"/>
                 <field name="doc_code_prefix"/>
@@ -30,7 +30,7 @@
                 <field name='internal_type'/>
                 <field name='country_id'/>
                 <field name="active" widget="boolean_toggle"/>
-            </tree>
+            </list>
         </field>
     </record>
 

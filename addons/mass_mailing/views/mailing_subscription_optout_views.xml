@@ -17,13 +17,13 @@
     </record>
 
     <record id="mailing_subscription_optout_view_tree" model="ir.ui.view">
-        <field name="name">mailing.subscription.optout.view.tree</field>
+        <field name="name">mailing.subscription.optout.view.list</field>
         <field name="model">mailing.subscription.optout</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -40,7 +40,7 @@
     <record id="mailing_subscription_optout_action" model="ir.actions.act_window">
         <field name="name">Optout Reasons</field>
         <field name="res_model">mailing.subscription.optout</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 No data yet.

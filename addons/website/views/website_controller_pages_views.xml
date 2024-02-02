@@ -51,7 +51,7 @@
     <field name="model">website.controller.page</field>
     <field name="priority">99</field>
     <field name="arch" type="xml">
-        <tree>
+        <list>
             <field name="name" string="Page Title"/>
             <field name="name_slugified"/>
             <field name="page_type"/>
@@ -63,14 +63,14 @@
             correctly. -->
             <field name="website_id" column_invisible="True"/>
             <field name="website_id" groups="website.group_multi_website"/>
-        </tree>
+        </list>
     </field>
 </record>
 
 <record id="action_website_controller_pages_list" model="ir.actions.act_window">
     <field name="name">Website Model Pages</field>
     <field name="res_model">website.controller.page</field>
-    <field name="view_mode">tree,kanban,form</field>
+    <field name="view_mode">list,kanban,form</field>
 </record>
 
 <menuitem id="menu_website_controller_pages_list"
