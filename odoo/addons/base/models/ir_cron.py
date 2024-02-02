@@ -373,7 +373,7 @@ class ir_cron(models.Model):
             odoo.netsvc.log(_logger, logging.DEBUG, 'cron.object.execute', (self._cr.dbname, self._uid, '*', cron_name, server_action_id), depth=log_depth)
             _logger.info('Starting job `%s`.', cron_name)
             start_time = time.time()
-            self.env['ir.actions.server'].browse(server_action_id).run()
+            self.env['ir.actions.server'].browse(server_action_id).with_context(cron_mode=True).run()
             end_time = time.time()
             _logger.info('Job done: `%s` (%.3fs).', cron_name, end_time - start_time)
             if start_time and _logger.isEnabledFor(logging.DEBUG):
