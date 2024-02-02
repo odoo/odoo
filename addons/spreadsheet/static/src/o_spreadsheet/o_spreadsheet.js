@@ -15972,14 +15972,8 @@
                         : undefined));
                 }
             }
-            else if (zone.left === zone.right && zone.top === zone.bottom) {
-                // A single cell. If it's only the title, the dataset is not added.
-                if (!dataSetsHaveTitle) {
-                    dataSets.push(createDataSet(getters, dataSetSheetId, zone, undefined));
-                }
-            }
             else {
-                /* 1 row or 1 column */
+                /* 1 cell, 1 row or 1 column */
                 dataSets.push(createDataSet(getters, dataSetSheetId, zone, dataSetsHaveTitle
                     ? {
                         top: zone.top,
@@ -16028,8 +16022,10 @@
         }
         const dataRange = ds.dataRange.clone({ zone: dataZone });
         return {
-            label: ds.labelCell ? getters.getRangeString(ds.labelCell, "forceSheetReference") : undefined,
-            range: getters.getRangeString(dataRange, "forceSheetReference"),
+            label: ds.labelCell
+                ? getters.getRangeString(ds.labelCell, "forceSheetReference", true)
+                : undefined,
+            range: getters.getRangeString(dataRange, "forceSheetReference", true),
         };
     }
     function toExcelLabelRange(getters, labelRange, shouldRemoveFirstLabel) {
@@ -16042,7 +16038,7 @@
             zone.top = zone.top + 1;
         }
         const range = labelRange.clone({ zone });
-        return getters.getRangeString(range, "forceSheetReference");
+        return getters.getRangeString(range, "forceSheetReference", true);
     }
     /**
      * Transform a chart definition which supports dataSets (dataSets and LabelRange)
@@ -16579,7 +16575,7 @@
                 return undefined;
             const dataSets = this.dataSets
                 .map((ds) => toExcelDataset(this.getters, ds))
-                .filter((ds) => ds.range !== ""); // && range !== INCORRECT_RANGE_STRING ? show incorrect #ref ?
+                .filter((ds) => ds.range !== "" && ds.range !== INCORRECT_RANGE_STRING);
             const labelRange = toExcelLabelRange(this.getters, this.labelRange, shouldRemoveFirstLabel(this.labelRange, this.dataSets[0], this.dataSetsHaveTitle));
             return {
                 ...this.getDefinition(),
@@ -17167,7 +17163,7 @@
                 return undefined;
             const dataSets = this.dataSets
                 .map((ds) => toExcelDataset(this.getters, ds))
-                .filter((ds) => ds.range !== ""); // && range !== INCORRECT_RANGE_STRING ? show incorrect #ref ?
+                .filter((ds) => ds.range !== "" && ds.range !== INCORRECT_RANGE_STRING);
             const labelRange = toExcelLabelRange(this.getters, this.labelRange, shouldRemoveFirstLabel(this.labelRange, this.dataSets[0], this.dataSetsHaveTitle));
             return {
                 ...this.getDefinition(),
@@ -17454,7 +17450,7 @@
                 return undefined;
             const dataSets = this.dataSets
                 .map((ds) => toExcelDataset(this.getters, ds))
-                .filter((ds) => ds.range !== ""); // && range !== INCORRECT_RANGE_STRING ? show incorrect #ref ?
+                .filter((ds) => ds.range !== "" && ds.range !== INCORRECT_RANGE_STRING);
             const labelRange = toExcelLabelRange(this.getters, this.labelRange, shouldRemoveFirstLabel(this.labelRange, this.dataSets[0], this.dataSetsHaveTitle));
             return {
                 ...this.getDefinition(),
@@ -31931,6 +31927,10 @@
                         format: cell.format ? getItemId(cell.format, formats) : undefined,
                         content: cell.content || undefined,
                     };
+                    // if there is a formula but no dependencies (maybe because the cell is in error), no need to recompute the formula text
+                    if (cell.isFormula && cell.dependencies.length) {
+                        cells[xc].content = this.buildFormulaContent(_sheet.id, cell, cell.dependencies, true);
+                    }
                 }
                 _sheet.cells = cells;
             }
@@ -31965,13 +31965,13 @@
         /*
          * Reconstructs the original formula string based on a normalized form and its dependencies
          */
-        buildFormulaContent(sheetId, cell, dependencies) {
+        buildFormulaContent(sheetId, cell, dependencies, useFixedZone = false) {
             const ranges = dependencies || cell.dependencies;
             let rangeIndex = 0;
             return concat(cell.compiledFormula.tokens.map((token) => {
                 if (token.type === "REFERENCE") {
                     const range = ranges[rangeIndex++];
-                    return this.getters.getRangeString(range, sheetId);
+                    return this.getters.getRangeString(range, sheetId, useFixedZone);
                 }
                 return token.value;
             }));
@@ -32540,7 +32540,13 @@
             }
         }
         exportForExcel(data) {
-            this.export(data);
+            if (data.sheets) {
+                for (let sheet of data.sheets) {
+                    if (this.cfRules[sheet.id]) {
+                        sheet.conditionalFormats = this.cfRules[sheet.id].map((rule) => this.mapToConditionalFormat(sheet.id, rule, { useFixedReference: true }));
+                    }
+                }
+            }
         }
         // ---------------------------------------------------------------------------
         // Getters
@@ -32605,11 +32611,11 @@
         // ---------------------------------------------------------------------------
         // Private
         // ---------------------------------------------------------------------------
-        mapToConditionalFormat(sheetId, cf) {
+        mapToConditionalFormat(sheetId, cf, options = { useFixedReference: false }) {
             return {
                 ...cf,
                 ranges: cf.ranges.map((range) => {
-                    return this.getters.getRangeString(range, sheetId);
+                    return this.getters.getRangeString(range, sheetId, options.useFixedReference);
                 }),
             };
         }
@@ -34446,8 +34452,9 @@
          *
          * @param range the range (received from getRangeFromXC or getRangeFromZone)
          * @param forSheetId the id of the sheet where the range string is supposed to be used.
+         * @param [useFixedZone=false] if true, the range will be returned with fixed row and column
          */
-        getRangeString(range, forSheetId) {
+        getRangeString(range, forSheetId, useFixedZone = false) {
             if (!range) {
                 return INCORRECT_RANGE_STRING;
             }
@@ -34474,7 +34481,7 @@
             if (prefixSheet && !sheetName) {
                 return INCORRECT_RANGE_STRING;
             }
-            let rangeString = this.getRangePartString(rangeImpl, 0);
+            let rangeString = this.getRangePartString(rangeImpl, 0, useFixedZone);
             if (rangeImpl.parts && rangeImpl.parts.length === 2) {
                 // this if converts A2:A2 into A2 except if any part of the original range had fixed row or column (with $)
                 if (rangeImpl.zone.top !== rangeImpl.zone.bottom ||
@@ -34484,7 +34491,7 @@
                     rangeImpl.parts[1].rowFixed ||
                     rangeImpl.parts[1].colFixed) {
                     rangeString += ":";
-                    rangeString += this.getRangePartString(rangeImpl, 1);
+                    rangeString += this.getRangePartString(rangeImpl, 1, useFixedZone);
                 }
             }
             return `${prefixSheet ? sheetName + "!" : ""}${rangeString}`;
@@ -34525,13 +34532,13 @@
         /**
          * Get a Xc string that represent a part of a range
          */
-        getRangePartString(range, part) {
+        getRangePartString(range, part, useFixedZone = false) {
             const colFixed = range.parts && range.parts[part]?.colFixed ? "$" : "";
             const col = part === 0 ? numberToLetters(range.zone.left) : numberToLetters(range.zone.right);
             const rowFixed = range.parts && range.parts[part]?.rowFixed ? "$" : "";
             const row = part === 0 ? String(range.zone.top + 1) : String(range.zone.bottom + 1);
             let str = "";
-            if (range.isFullCol) {
+            if (range.isFullCol && !useFixedZone) {
                 if (part === 0 && range.unboundedZone.hasHeader) {
                     str = colFixed + col + rowFixed + row;
                 }
@@ -34539,7 +34546,7 @@
                     str = colFixed + col;
                 }
             }
-            else if (range.isFullRow) {
+            else if (range.isFullRow && !useFixedZone) {
                 if (part === 0 && range.unboundedZone.hasHeader) {
                     str = colFixed + col + rowFixed + row;
                 }
@@ -49800,12 +49807,7 @@
             attrs.push(["t", "str"]);
             cycle = escapeXml /*xml*/ `<v>${cell.value}</v>`;
         }
-        node = escapeXml /*xml*/ `
-      <f>
-        ${XlsxFormula}
-      </f>
-      ${cycle}
-    `;
+        node = escapeXml /*xml*/ ` <f> ${XlsxFormula} </f> ${cycle} `;
         return { attrs, node };
     }
     function addContent(content, sharedStrings, forceString = false) {
@@ -50624,11 +50626,10 @@
                         ({ attrs: additionalAttrs, node: cellNode } = addContent(cell.content, construct.sharedStrings, isTableHeader));
                     }
                     attributes.push(...additionalAttrs);
-                    cellNodes.push(escapeXml /*xml*/ `
-          <c ${formatAttributes(attributes)}>
-            ${cellNode}
-          </c>
-        `);
+                    // prettier-ignore
+                    cellNodes.push(escapeXml /*xml*/ `<c ${formatAttributes(attributes)}>
+  ${cellNode}
+</c>`);
                 }
             }
             if (cellNodes.length || row.size !== DEFAULT_CELL_HEIGHT || row.isHidden) {
@@ -51611,9 +51612,9 @@
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.4.20';
-    __info__.date = '2024-01-29T15:40:01.780Z';
-    __info__.hash = '06c0ecf';
+    __info__.version = '16.4.21';
+    __info__.date = '2024-02-02T14:05:57.857Z';
+    __info__.hash = '73662b1';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
