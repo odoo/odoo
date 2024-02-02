@@ -661,18 +661,15 @@ class Users(models.Model):
                 if env.user in self:
                     lazy_property.reset_all(env)
 
-        # clear caches linked to the users
-        if self.ids and 'groups_id' in values:
-            # DLE P139: Calling invalidate_cache on a new, well you lost everything as you wont be able to take it back from the cache
-            # `test_00_equipment_multicompany_user`
-            self.env['ir.model.access'].call_cache_clearing_methods()
-
         # per-method / per-model caches have been removed so the various
         # clear_cache/clear_caches methods pretty much just end up calling
         # Registry.clear_cache
         invalidation_fields = self._get_invalidation_fields()
-        if (invalidation_fields & values.keys()) or any(key.startswith('context_') for key in values):
+        if self.ids and (invalidation_fields & values.keys()) or any(key.startswith('context_') for key in values):
             self.env.registry.clear_cache()
+            if 'groups_id' in values:
+                self.env.invalidate_all() # self.env['ir.model.access'].call_cache_clearing_methods()
+
 
         return res
 
@@ -801,7 +798,7 @@ class Users(models.Model):
                     user = user.with_user(user)
                     user._check_credentials(password, user_agent_env)
                     tz = request.httprequest.cookies.get('tz') if request else None
-                    if tz in pytz.all_timezones and (not user.tz or not user.login_date):
+                    if tz in pytz.all_timezones and (not user.tz or (not user.login_date and user.tz != tz)):
                         # first login or missing tz -> set tz to browser tz
                         user.tz = tz
                     user._update_last_login()
@@ -1363,8 +1360,9 @@ class UsersImplied(models.Model):
             users_batch[user.groups_id] += user
         for groups, users in users_batch.items():
             gs = set(concat(g.trans_implied_ids for g in groups))
-            vals = {'groups_id': [Command.link(g.id) for g in gs]}
-            super(UsersImplied, users).write(vals)
+            if gs:
+                vals = {'groups_id': [Command.link(g.id) for g in gs]}
+                super(UsersImplied, users).write(vals)
         return res
 
 #
