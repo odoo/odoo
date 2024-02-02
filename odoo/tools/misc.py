@@ -1224,24 +1224,58 @@ def babel_locale_parse(lang_code):
         except:
             return babel.Locale.parse("en_US")
 
-def formatLang(env, value, digits=2, grouping=True, monetary=False, dp=None, currency_obj=None):
+def formatLang(env, value, digits=2, grouping=True, monetary=False, dp=None, currency_obj=None, rounding_method='HALF-EVEN', rounding_unit='decimals'):
     """
-        Assuming 'Account' decimal.precision=3:
-            formatLang(value) -> digits=2 (default)
-            formatLang(value, digits=4) -> digits=4
-            formatLang(value, dp='Account') -> digits=3
-            formatLang(value, digits=5, dp='Account') -> digits=5
+    This function will format a number `value` to the appropriate format of the language used.
+
+    :param Object env: The environment.
+    :param float value: The value to be formatted.
+    :param int digits: The number of decimals digits.
+    :param bool grouping: Usage of language grouping or not.
+    :param bool monetary: Usage of thousands separator or not.
+        .. deprecated:: 13.0
+    :param str dp: Name of the decimals precision to be used. This will override ``digits``
+                   and ``currency_obj`` precision.
+    :param Object currency_obj: Currency to be used. This will override ``digits`` precision.
+    :param str rounding_method: The rounding method to be used:
+        **'HALF-UP'** will round to the closest number with ties going away from zero,
+        **'HALF-DOWN'** will round to the closest number with ties going towards zero,
+        **'HALF_EVEN'** will round to the closest number with ties going to the closest
+        even number,
+        **'UP'** will always round away from 0,
+        **'DOWN'** will always round towards 0.
+    :param str rounding_unit: The rounding unit to be used:
+        **decimals** will round to decimals with ``digits`` or ``dp`` precision,
+        **units** will round to units without any decimals,
+        **thousands** will round to thousands without any decimals,
+        **lakhs** will round to lakhs without any decimals,
+        **millions** will round to millions without any decimals.
+
+    :returns: The value formatted.
+    :rtype: str
     """
     # We don't want to return 0
-    if isinstance(value, str) and not value:
+    if value == '':
         return ''
 
-    if dp:
-        digits = env['decimal.precision'].precision_get(dp)
-    elif currency_obj:
-        digits = currency_obj.decimal_places
+    if rounding_unit == 'decimals':
+        if dp:
+            digits = env['decimal.precision'].precision_get(dp)
+        elif currency_obj:
+            digits = currency_obj.decimal_places
+    else:
+        digits = 0
 
-    rounded_value = float_round(value, precision_digits=digits, rounding_method='HALF-EVEN')
+    rounding_unit_mapping = {
+        'decimals': 1,
+        'thousands': 10**3,
+        'lakhs': 10**5,
+        'millions': 10**6,
+    }
+
+    value /= rounding_unit_mapping.get(rounding_unit, 1)
+
+    rounded_value = float_round(value, precision_digits=digits, rounding_method=rounding_method)
     formatted_value = get_lang(env).format(f'%.{digits}f', rounded_value, grouping=grouping, monetary=monetary)
 
     if currency_obj and currency_obj.symbol:
