@@ -27,10 +27,9 @@ class MrpBom(models.Model):
     @api.depends('analytic_distribution')
     def _compute_analytic_account_ids(self):
         for record in self:
-            if not record.analytic_distribution:
-                record.analytic_account_ids = []
-            else:
-                record.analytic_account_ids = list({int(ad_id) for ids in record.analytic_distribution for ad_id in ids.split(",")})
+            record.analytic_account_ids = bool(record.analytic_distribution) and self.env['account.analytic.account'].browse(
+                list({int(account_id) for ids in record.analytic_distribution for account_id in ids.split(",")})
+            ).exists()
 
     @api.onchange('product_id')
     def _onchange_analytic_distribution(self):
