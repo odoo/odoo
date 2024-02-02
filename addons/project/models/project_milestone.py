@@ -62,7 +62,7 @@ class ProjectMilestone(models.Model):
     def _compute_can_be_marked_as_done(self):
         if not any(self._ids):
             for milestone in self:
-                milestone.can_be_marked_as_done = not milestone.is_reached and all(milestone.task_ids.mapped(lambda t: t.state in CLOSED_STATES))
+                milestone.can_be_marked_as_done = not milestone.is_reached and all(milestone.task_ids.mapped(lambda t: t.is_closed))
             return
 
         unreached_milestones = self.filtered(lambda milestone: not milestone.is_reached)
