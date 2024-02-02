@@ -277,3 +277,35 @@ class TestReInvoice(TestSaleCommon):
         self.assertFalse(so_line4, "No re-invoicing should have created a new sale line with product #2")
         self.assertEqual(so_line1.qty_delivered, 1, "No re-invoicing should have impacted exising SO line 1")
         self.assertEqual(so_line2.qty_delivered, 1, "No re-invoicing should have impacted exising SO line 2")
+
+    def test_not_recomputing_unit_price_for_expensed_so_lines(self):
+        # Required for `analytic_account_id` to be visible in the view
+        self.env.user.groups_id += self.env.ref('analytic.group_analytic_accounting')
+
+        # create SO line and confirm SO (with only one line)
+        sol_1 = self.env['sale.order.line'].create({
+            'product_id': self.company_data['product_order_cost'].id,
+            'product_uom_qty': 2,
+            'qty_delivered': 1,
+            'order_id': self.sale_order.id,
+        })
+        self.sale_order.action_confirm()
+
+        # create invoice lines and validate it
+        move_form = Form(self.AccountMove)
+        move_form.partner_id = self.partner_a
+        with move_form.invoice_line_ids.new() as line_form:
+            line_form.product_id = self.company_data['product_order_cost']
+            line_form.quantity = 3.0
+            line_form.analytic_distribution = {self.analytic_account.id: 100}
+        invoice = move_form.save()
+        invoice.action_post()
+
+        # update the quantity of the expensed line
+        sol_2 = self.sale_order.order_line.filtered(lambda sol: sol != sol_1 and sol.product_id == self.company_data['product_order_cost'])
+
+        sol_2_subtotal_before = sol_2.price_unit
+        sol_2.product_uom_qty = 3.0
+        sol_2_subtotal_after = sol_2.price_unit
+
+        self.assertEqual(sol_2_subtotal_before, sol_2_subtotal_after)
