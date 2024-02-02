@@ -666,20 +666,3 @@ class Website(models.Model):
         if current_step:
             return next(step for step in steps if current_step in step[0])[1]
         return steps
-
-
-class WebsiteSaleExtraField(models.Model):
-    _name = 'website.sale.extra.field'
-    _description = 'E-Commerce Extra Info Shown on product page'
-    _order = 'sequence'
-
-    website_id = fields.Many2one('website')
-    sequence = fields.Integer(default=10)
-    field_id = fields.Many2one(
-        'ir.model.fields',
-        domain=[('model_id.model', '=', 'product.template'), ('ttype', 'in', ['char', 'binary'])],
-        required=True,
-        ondelete='cascade'
-    )
-    label = fields.Char(related='field_id.field_description')
-    name = fields.Char(related='field_id.name')
