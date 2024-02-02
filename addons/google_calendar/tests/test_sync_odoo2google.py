@@ -4,6 +4,7 @@
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from unittest.mock import patch
+from markupsafe import Markup
 
 from odoo.addons.google_calendar.utils.google_calendar import GoogleCalendarService
 from odoo.addons.google_account.models.google_service import GoogleService
@@ -778,3 +779,34 @@ class TestSyncOdoo2Google(TestSyncGoogle):
         })
         event._sync_odoo2google(self.google_service)
         self.assertGoogleEventHasNoConferenceData()
+
+    @patch_api
+    def test_discuss_videocall_location_set_on_description(self):
+        partner = self.env['res.partner'].create({'name': 'Jean-Luc', 'email': 'jean-luc@opoo.com'})
+        event = self.env['calendar.event'].create({
+            'name': 'Event',
+            'start': datetime(2020, 1, 15, 8, 0),
+            'stop': datetime(2020, 1, 15, 18, 0),
+            'partner_ids': [(4, partner.id)],
+            'need_sync': False,
+            'videocall_location': 'https://www.odoo.com',
+            'description': 'test'
+        })
+        event._sync_odoo2google(self.google_service)
+        button = Markup("<a href='%s'>Join meeting</a>") % (event.videocall_location)
+        self.assertGoogleEventHasVideocallLocationInDescription(button + event.description)
+
+    @patch_api
+    def test_videocall_location_is_not_duplicated_in_description(self):
+        partner = self.env['res.partner'].create({'name': 'Jean-Luc', 'email': 'jean-luc@opoo.com'})
+        event = self.env['calendar.event'].create({
+            'name': 'Event',
+            'start': datetime(2020, 1, 15, 8, 0),
+            'stop': datetime(2020, 1, 15, 18, 0),
+            'partner_ids': [(4, partner.id)],
+            'need_sync': False,
+            'videocall_location': 'https://www.odoo.com',
+        })
+        event.description = "test\n" + event.videocall_location
+        event._sync_odoo2google(self.google_service)
+        self.assertGoogleEventHasVideocallLocationInDescription(event.description)

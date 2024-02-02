@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import pytz
+from markupsafe import Markup
 from dateutil.parser import parse
 from dateutil.relativedelta import relativedelta
 from uuid import uuid4
@@ -145,7 +146,7 @@ class Meeting(models.Model):
             'attendee_ids': attendee_commands,
             'alarm_ids': alarm_commands,
             'recurrency': google_event.is_recurrent(),
-            'videocall_location': google_event.get_meeting_url(),
+            'videocall_location': google_event.get_meeting_url() or related_event.videocall_location,
             'show_as': 'free' if google_event.is_available() else 'busy',
             'guests_readonly': not bool(google_event.guestsCanModify)
         }
@@ -298,7 +299,7 @@ class Meeting(models.Model):
             'start': start,
             'end': end,
             'summary': self.name,
-            'description': tools.html_sanitize(self.description) if not tools.is_html_empty(self.description) else '',
+            'description': self._google_description(),
             'location': self.location or '',
             'guestsCanModify': not self.guests_readonly,
             'organizer': {'email': self.user_id.email, 'self': self.user_id == self.env.user},
@@ -354,3 +355,13 @@ class Meeting(models.Model):
         if self.user_id and self.user_id.sudo().google_calendar_token:
             return self.user_id
         return self.env.user
+
+    def _google_description(self):
+        description = tools.html_sanitize(self.description) if not tools.is_html_empty(self.description) else ''
+        if self.videocall_source and self.videocall_source != 'google_meet' and self.videocall_location:
+            if self.videocall_location in description:
+                return description
+            button = Markup("<a href='%s'>%s</a>") % (self.videocall_location, _('Join meeting'))
+            new_description = button + description
+            return new_description
+        return description
