@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { Spreadsheet } from "@odoo/o-spreadsheet";
+import { Model, Spreadsheet } from "@odoo/o-spreadsheet";
 import { registerCleanup } from "@web/../tests/helpers/cleanup";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { getFixture, nextTick } from "@web/../tests/helpers/utils";
@@ -8,10 +8,24 @@ import { loadBundle } from "@web/core/assets";
 import { getTemplate } from "@web/core/templates";
 import { PublicReadonlySpreadsheet } from "@spreadsheet/public_readonly_app/public_readonly";
 
-import { App } from "@odoo/owl";
+import { App, Component, xml } from "@odoo/owl";
 import { registry } from "@web/core/registry";
+import { useSpreadsheetNotificationStore } from "@spreadsheet/hooks";
+import {
+    makeFakeDialogService,
+    makeFakeNotificationService,
+} from "@web/../tests/legacy/helpers/mock_services";
 
 /** @typedef {import("@spreadsheet/o_spreadsheet/o_spreadsheet").Model} Model */
+
+class Parent extends Component {
+    static template = xml`<Spreadsheet model="props.model"/>`;
+    static components = { Spreadsheet };
+    static props = { model: Model };
+    setup() {
+        useSpreadsheetNotificationStore();
+    }
+}
 
 /**
  * Mount o-spreadsheet component with the given spreadsheet model
@@ -19,8 +33,11 @@ import { registry } from "@web/core/registry";
  * @returns {Promise<HTMLElement>}
  */
 export async function mountSpreadsheet(model) {
+    const serviceRegistry = registry.category("services");
+    serviceRegistry.add("dialog", makeFakeDialogService(), { force: true });
+    serviceRegistry.add("notification", makeFakeNotificationService(), { force: true });
     await loadBundle("web.chartjs_lib");
-    const app = new App(Spreadsheet, {
+    const app = new App(Parent, {
         props: { model },
         getTemplate,
         env: model.config.custom.env,
@@ -51,6 +68,8 @@ export async function mountPublicSpreadsheet(data, dataUrl, mode) {
         },
     };
     serviceRegistry.add("http", fakeHTTPService);
+    serviceRegistry.add("dialog", makeFakeDialogService(), { force: true });
+    serviceRegistry.add("notification", makeFakeNotificationService(), { force: true });
     const env = await makeTestEnv();
     const app = new App(PublicReadonlySpreadsheet, {
         props: { dataUrl, downloadExcelUrl: "downloadUrl", mode },
