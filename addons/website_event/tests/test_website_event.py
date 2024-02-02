@@ -85,6 +85,7 @@ class TestWebsiteAccess(HttpCaseWithUserDemo, TestWebsiteEventCommon):
 
     def test_website_access_event_manager(self):
         """ Event managers are allowed to access both published and unpublished events """
+        self.user_eventmanager.password = self.user_eventmanager.login
         self.authenticate('user_eventmanager', 'user_eventmanager')
         published_events = self.events.filtered(lambda event: event.website_published)
         resp = self.url_open('/event/%i' % published_events[0].id)
@@ -98,8 +99,9 @@ class TestWebsiteAccess(HttpCaseWithUserDemo, TestWebsiteEventCommon):
         self.assertTrue(published_events[0].name in resp.text, 'Managers must see the unpublished events.')
         self.assertTrue(unpublished_events[0].name in resp.text, 'Managers must see the published events.')
 
-    def test_website_access_event_uer(self):
+    def test_website_access_event_user(self):
         """ Event users are allowed to access both published and unpublished events """
+        self.user_eventuser.password = self.user_eventuser.login
         self.authenticate('user_eventuser', 'user_eventuser')
         published_events = self.events.filtered(lambda event: event.website_published)
         resp = self.url_open('/event/%i' % published_events[0].id)

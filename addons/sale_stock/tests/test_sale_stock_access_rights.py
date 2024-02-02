@@ -12,9 +12,9 @@ class TestControllersAccessRights(HttpCase, TestSaleCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.portal_user = mail_new_test_user(cls.env, login='jimmy-portal', groups='base.group_portal')
+        cls.portal_user = mail_new_test_user(cls.env, login='jimmy-portal', password='jimmy-portal', groups='base.group_portal')
 
-    def test_SO_and_DO_portal_acess(self):
+    def test_SO_and_DO_portal_access(self):
         """ Ensure that it is possible to open both SO and DO, either using the access token
         or being connected as portal user"""
         so_form = Form(self.env['sale.order'])
