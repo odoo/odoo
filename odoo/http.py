@@ -239,7 +239,7 @@ DEFAULT_LANG = 'en_US'
 # The dictionary to initialise a new session with.
 def get_default_session():
     return {
-        'context': {},  # 'lang': request.default_lang()  # must be set at runtime
+        'context': {},
         'db': None,
         'debug': '',
         'login': None,
@@ -1059,7 +1059,6 @@ class Session(collections.abc.MutableMapping):
         debug = self.debug
         self.clear()
         self.update(get_default_session(), db=db, debug=debug)
-        self.context['lang'] = request.default_lang() if request else DEFAULT_LANG
         self.should_rotate = True
 
         if request and request.env:
@@ -1362,7 +1361,7 @@ class Request:
         for key, val in get_default_session().items():
             session.setdefault(key, val)
         if not session.context.get('lang'):
-            session.context['lang'] = self.default_lang()
+            session.context['lang'] = self.best_lang
 
         dbname = None
         host = self.httprequest.environ['HTTP_HOST']
@@ -1501,17 +1500,6 @@ class Request:
 
         hm_expected = hmac.new(secret.encode('ascii'), msg, hashlib.sha1).hexdigest()
         return consteq(hm, hm_expected)
-
-    def default_context(self):
-        return dict(get_default_session()['context'], lang=self.default_lang())
-
-    def default_lang(self):
-        """Returns default user language according to request specification
-
-        :returns: Preferred language if specified or 'en_US'
-        :rtype: str
-        """
-        return self.best_lang or DEFAULT_LANG
 
     def get_http_params(self):
         """
@@ -1749,7 +1737,7 @@ class Request:
         with contextlib.closing(registry.cursor(readonly=True)) as cr:
             self.registry = registry.check_signaling(cr)
             ir_http = self.registry['ir.http']
-            self.env = odoo.api.Environment(cr, self.session.uid, self.session.context)
+            self.env = odoo.api.Environment(cr, self.session.uid, dict(self.session.context, lang='en_US'))
             with contextlib.suppress(NotFound):
                 rule, args = ir_http._match(self.httprequest.path)
         if not rule:

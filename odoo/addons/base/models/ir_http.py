@@ -158,7 +158,7 @@ class IrHttp(models.AbstractModel):
             if request.session.uid is not None:
                 if not security.check_session(request.session, request.env):
                     request.session.logout(keep_db=True)
-                    request.env = api.Environment(request.env.cr, None, request.session.context)
+                    request.env = api.Environment(request.env.cr, None, request.env.context)
             getattr(cls, f'_auth_method_{auth}')()
         except (AccessDenied, http.SessionExpiredException, werkzeug.exceptions.HTTPException):
             raise
@@ -189,10 +189,10 @@ class IrHttp(models.AbstractModel):
 
         request.dispatcher.pre_dispatch(rule, args)
 
-        # verify the default language set in the context is valid,
-        # otherwise fallback on the company lang, english or the first
-        # lang installed
+        # set the lang using the following fallback cascade:
+        # session > browser > company > english > first installed lang
         env = request.env if request.env.uid else request.env['base'].with_user(SUPERUSER_ID).env
+        env = env(context=dict(env.context, lang=request.session['context']['lang']))
         request.update_context(lang=get_lang(env)._get_cached('code'))
 
         for key, val in list(args.items()):

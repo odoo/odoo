@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import binascii
+import collections
 import contextlib
 import datetime
 import hmac
@@ -29,7 +30,7 @@ from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 from odoo.exceptions import AccessDenied, AccessError, UserError, ValidationError
 from odoo.http import request, DEFAULT_LANG
 from odoo.osv import expression
-from odoo.tools import is_html_empty, partition, collections, frozendict, lazy_property
+from odoo.tools import is_html_empty, frozendict, get_lang, lazy_property, partition
 
 _logger = logging.getLogger(__name__)
 
@@ -734,38 +735,30 @@ class Users(models.Model):
 
     @api.model
     @tools.ormcache('self._uid')
+    def _get_cached_lang(self):
+        return self.env.user.read(['lang'], load=False)[0]['lang']
+
+    @api.model
+    @tools.ormcache('self._uid')
     def context_get(self):
-        user = self.env.user
         # determine field names to read
         name_to_key = {
-            name: name[8:] if name.startswith('context_') else name
+            name: name.removeprefix('context_')
             for name in self._fields
-            if name.startswith('context_') or name in ('lang', 'tz')
+            if name.startswith('context_') or name in ('tz',)
         }
         # use read() to not read other fields: this must work while modifying
         # the schema of models res.users or res.partner
-        values = user.read(list(name_to_key), load=False)[0]
+        values = self.env.user.read(list(name_to_key), load=False)[0]
 
         context = {
             key: values[name]
             for name, key in name_to_key.items()
         }
-
-        # ensure lang is set and available
-        # context > request > company > english > any lang installed
-        langs = [code for code, _ in self.env['res.lang'].get_installed()]
-        lang = context.get('lang')
-        if lang not in langs:
-            lang = request.best_lang if request else None
-            if lang not in langs:
-                lang = self.env.user.company_id.partner_id.lang
-                if lang not in langs:
-                    lang = DEFAULT_LANG
-                    if lang not in langs:
-                        lang = langs[0] if langs else DEFAULT_LANG
-        context['lang'] = lang
-
-        # ensure uid is set
+        context['lang'] = get_lang(
+            env=self.env(context=context),
+            request=request
+        )._get_cached('code')
         context['uid'] = self.env.uid
 
         return frozendict(context)

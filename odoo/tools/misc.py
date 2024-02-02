@@ -1194,25 +1194,38 @@ class replace_exceptions(ContextDecorator):
 
 html_escape = markupsafe.escape
 
-def get_lang(env, lang_code=False):
+def get_lang(env, lang_code=False, request=None):
     """
-    Retrieve the first lang object installed, by checking the parameter lang_code,
-    the context and then the company. If no lang is installed from those variables,
-    fallback on english or on the first lang installed in the system.
+    Retrieve the first lang object installed, by checking the parameter
+    lang_code, the context, the user, the request and then the company.
+    If no lang is installed from those variables, fallback on english or
+    on the first lang installed in the system.
 
     :param env:
     :param str lang_code: the locale (i.e. en_US)
+    :param odoo.http.Request request:
     :return res.lang: the first lang found that is installed on the system.
     """
-    langs = [code for code, _ in env['res.lang'].get_installed()]
-    lang = 'en_US' if 'en_US' in langs else langs[0]
+    res_lang = env['res.lang'].with_context(lang=None)
+    public_user_id = env['ir.model.data']._xmlid_to_res_model_res_id('base.public_user')[1]
+    user = env.user.with_context(lang=None)
+    langs = [code for code, _ in res_lang.get_installed()]
+
     if lang_code and lang_code in langs:
         lang = lang_code
     elif (context_lang := env.context.get('lang')) in langs:
         lang = context_lang
-    elif (company_lang := env.user.with_context(lang='en_US').company_id.partner_id.lang) in langs:
+    elif user.id != public_user_id and (user_lang := user._get_cached_lang()) in langs:
+        lang = user_lang
+    elif (request_lang := request and request.best_lang) in langs:
+        lang = request_lang
+    elif (company_lang := user.company_id.partner_id.lang) in langs:
         lang = company_lang
-    return env['res.lang']._lang_get(lang)
+    elif 'en_US' in langs:
+        lang = 'en_US'
+    else:
+        lang = langs[0]
+    return env['res.lang'].with_context(lang=lang)._lang_get(lang)
 
 def babel_locale_parse(lang_code):
     try:
