@@ -170,11 +170,14 @@ class AccountJournal(models.Model):
 
     # Bank journals fields
     company_partner_id = fields.Many2one('res.partner', related='company_id.partner_id', string='Account Holder', readonly=True, store=False)
-    bank_account_id = fields.Many2one('res.partner.bank',
+    bank_account_id = fields.Many2one(
+        'res.partner.bank',
         string="Bank Account",
         ondelete='restrict', copy=False,
         check_company=True,
-        domain="[('partner_id','=', company_partner_id)]")
+        domain="[('partner_id','=', company_partner_id)]",
+        inverse="_inverse_bank_account_id",
+    )
     bank_statements_source = fields.Selection(selection=_get_bank_statements_available_sources, string='Bank Feeds', default='undefined', help="Defines how the bank statements will be registered")
     bank_acc_number = fields.Char(related='bank_account_id.acc_number', readonly=False)
     bank_id = fields.Many2one('res.bank', related='bank_account_id.bank_id', readonly=False)
@@ -218,6 +221,15 @@ class AccountJournal(models.Model):
                     cache.get(record.company_id)
                 )
                 cache[record.company_id].append(record.code)
+
+    def _inverse_bank_account_id(self):
+        if self.bank_account_id and self.bank_account_id not in self.env.company.partner_id.bank_ids:
+            self.env.company.partner_id.bank_ids = [
+                (0, 0, {
+                    'acc_number': self.bank_account_id,
+                    'partner_id': self.env.company.partner_id.id,
+                })
+            ]
 
     @api.depends('outbound_payment_method_line_ids', 'inbound_payment_method_line_ids')
     def _compute_available_payment_method_ids(self):
