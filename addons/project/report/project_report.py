@@ -28,8 +28,8 @@ class ReportProjectTaskUser(models.Model):
     nbr = fields.Integer('# of Tasks', readonly=True)  # TDE FIXME master: rename into nbr_tasks
     working_hours_open = fields.Float(string='Working Hours to Assign', digits=(16, 2), readonly=True, group_operator="avg")
     working_hours_close = fields.Float(string='Working Hours to Close', digits=(16, 2), readonly=True, group_operator="avg")
-    rating_last_value = fields.Float('Rating (/5)', group_operator="avg", readonly=True, groups="project.group_project_rating")
-    rating_avg = fields.Float('Average Rating', readonly=True, group_operator='avg', groups="project.group_project_rating")
+    rating_last_value = fields.Float('Last Rating (1-5)', group_operator="avg", readonly=True, groups="project.group_project_rating")
+    rating_avg = fields.Float('Average Rating (1-5)', readonly=True, group_operator='avg', groups="project.group_project_rating")
     priority = fields.Selection([
         ('0', 'Low'),
         ('1', 'High')
