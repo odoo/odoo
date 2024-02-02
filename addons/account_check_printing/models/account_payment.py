@@ -271,7 +271,7 @@ class AccountPayment(models.Model):
             }
 
         # Decode the reconciliation to keep only invoices.
-        term_lines = self.line_ids.filtered(lambda line: line.account_id.account_type in ('asset_receivable', 'liability_payable'))
+        term_lines = self.receivable_payable_line_ids
         invoices = (term_lines.matched_debit_ids.debit_move_id.move_id + term_lines.matched_credit_ids.credit_move_id.move_id)\
             .filtered(lambda x: x.is_outbound() or x.move_type == 'in_receipt')
         invoices = invoices.sorted(lambda x: x.invoice_date_due or x.date)

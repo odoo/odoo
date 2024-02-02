@@ -157,6 +157,12 @@ class AccountMove(models.Model):
         readonly=True,
         states={'draft': [('readonly', False)]},
     )
+    receivable_payable_line_ids = fields.One2many(
+        'account.move.line',
+        'move_id',
+        compute='_compute_receivable_payable_line_ids',
+        help="Technical field to speed up reconciliation",
+    )
 
     # === Payment fields === #
     payment_id = fields.Many2one(
@@ -612,6 +618,18 @@ class AccountMove(models.Model):
             if company_id != move.company_id:
                 move.company_id = company_id
 
+    @api.depends('line_ids')
+    def _compute_receivable_payable_line_ids(self):
+        moves_receivable_lines = defaultdict(set)
+        lines = self.env['account.move.line'].search([
+            ('move_id', 'in', self.ids),
+            ('account_id.account_type', 'in', ('asset_receivable', 'liability_payable'))
+        ], order='id')
+        for line in lines:
+            moves_receivable_lines[line.move_id.id].add(line.id)
+        for move in self:
+            move.receivable_payable_line_ids = self.env['account.move.line'].browse(moves_receivable_lines[move.id])
+
     @api.depends('move_type')
     def _compute_journal_id(self):
         for record in self.filtered(lambda r: r.journal_id.type not in r._get_valid_journal_types()):
@@ -1040,11 +1058,8 @@ class AccountMove(models.Model):
                     or not move.is_invoice(include_receipts=True):
                 continue
 
-            pay_term_lines = move.line_ids\
-                .filtered(lambda line: line.account_id.account_type in ('asset_receivable', 'liability_payable'))
-
             domain = [
-                ('account_id', 'in', pay_term_lines.account_id.ids),
+                ('account_id', 'in', move.receivable_payable_line_ids.account_id.ids),
                 ('parent_state', '=', 'posted'),
                 ('partner_id', '=', move.commercial_partner_id.id),
                 ('reconciled', '=', False),
@@ -3296,9 +3311,8 @@ class AccountMove(models.Model):
         return name + (f" ({shorten(self.ref, width=50)})" if show_ref and self.ref else '')
 
     def _get_reconciled_amls(self):
-        """Helper used to retrieve the reconciled move lines on this journal entry"""
-        reconciled_lines = self.line_ids.filtered(lambda line: line.account_id.account_type in ('asset_receivable', 'liability_payable'))
-        return reconciled_lines.mapped('matched_debit_ids.debit_move_id') + reconciled_lines.mapped('matched_credit_ids.credit_move_id')
+        reconciled_line_ids = self.receivable_payable_line_ids
+        return reconciled_line_ids.mapped('matched_debit_ids.debit_move_id') + reconciled_line_ids.mapped('matched_credit_ids.credit_move_id')
 
     def _get_reconciled_payments(self):
         """Helper used to retrieve the reconciled payments on this journal entry"""
@@ -3314,7 +3328,7 @@ class AccountMove(models.Model):
 
     def _get_all_reconciled_invoice_partials(self):
         self.ensure_one()
-        reconciled_lines = self.line_ids.filtered(lambda line: line.account_id.account_type in ('asset_receivable', 'liability_payable'))
+        reconciled_lines = self.receivable_payable_line_ids
         if not reconciled_lines:
             return {}
 
@@ -3400,8 +3414,7 @@ class AccountMove(models.Model):
         :return A list of tuple (partial, amount, invoice_line).
         '''
         self.ensure_one()
-        pay_term_lines = self.line_ids\
-            .filtered(lambda line: line.account_type in ('asset_receivable', 'liability_payable'))
+        pay_term_lines = self.receivable_payable_line_ids
         invoice_partials = []
         exchange_diff_moves = []
 

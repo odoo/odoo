@@ -45,7 +45,7 @@ class AccountBankStatementLine(models.Model):
         comodel_name='account.move',
         auto_join=True,
         string='Journal Entry', required=True, readonly=True, ondelete='cascade',
-        check_company=True)
+        check_company=True, index='btree')
     statement_id = fields.Many2one(
         comodel_name='account.bank.statement',
         string='Statement',

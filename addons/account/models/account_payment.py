@@ -16,7 +16,7 @@ class AccountPayment(models.Model):
     move_id = fields.Many2one(
         comodel_name='account.move',
         string='Journal Entry', required=True, readonly=True, ondelete='cascade',
-        check_company=True)
+        check_company=True, index='btree')
 
     is_reconciled = fields.Boolean(string="Is Reconciled", store=True,
         compute='_compute_reconciliation_status')
