@@ -197,7 +197,7 @@
                                         attrs="{'invisible': [('allow_milestones', '=', False)], 'column_invisible': [('parent.allow_milestones', '=', False)]}"
                                     />
                                     <field name="company_id" invisible="1"/>
-                                    <field name="partner_id" options="{'no_open': True, 'no_create': True, 'no_edit': True}" optional="hide" attrs="{'invisible': [('project_id', '=', False)]}"/>
+                                    <field name="partner_id" options="{'no_open': True, 'no_create': True, 'no_edit': True}" optional="hide"/>
                                     <field name="user_ids" invisible="1" />
                                     <field name="portal_user_names" string="Assignees" optional="show"/>
                                     <field name="date_deadline" attrs="{'invisible': [('state', 'in', ['1_done','1_canceled'])]}" optional="show"/>
