@@ -245,7 +245,7 @@ QUnit.module('web_editor', {}, function () {
         });
 
         QUnit.test('colorpicker', async function (assert) {
-            assert.expect(7);
+            assert.expect(8);
 
             var form = await testUtils.createView({
                 View: FormView,
@@ -276,9 +276,11 @@ QUnit.module('web_editor', {}, function () {
                 const openingProm = new Promise(resolve => {
                     $colorpicker.one('shown.bs.dropdown', () => resolve());
                 });
-                await testUtils.dom.click($colorpicker.find('button:first'));
+                await testUtils.dom.click($colorpicker.find('.dropdown-toggle:first'));
                 return openingProm;
             }
+
+            await new Promise(resolve => setTimeout(resolve, 50));
 
             await openColorpicker('#toolbar .note-back-color-preview');
             assert.ok($('.note-back-color-preview .dropdown-menu').hasClass('show'),
@@ -295,10 +297,10 @@ QUnit.module('web_editor', {}, function () {
 
             var fontElement = $field.find('.note-editable font')[0];
             var rangeControl = {
-                sc: fontElement,
+                sc: fontElement.firstChild,
                 so: 0,
-                ec: fontElement,
-                eo: 1,
+                ec: fontElement.firstChild,
+                eo: 9,
             };
             range = Wysiwyg.getRange();
             assert.deepEqual(_.pick(range, 'sc', 'so', 'ec', 'eo'), rangeControl,
@@ -325,6 +327,26 @@ QUnit.module('web_editor', {}, function () {
             assert.strictEqual($field.find('.note-editable').html(),
                 '<p>t<font style="background-color: rgb(0, 255, 255);">oto t</font>oto toto</p><p>tata</p>',
                 "should have properly reset the background color");
+
+            // Select the whole paragraph.
+            const paragraph = $('.note-editable p:first-child')[0];
+            rangeControl = {
+                sc: paragraph.firstChild,
+                so: 0,
+                ec: paragraph.lastChild,
+                eo: 2,
+            };
+            Wysiwyg.setRange(rangeControl.sc, rangeControl.so, rangeControl.ec, rangeControl.eo);
+
+            await openColorpicker('#toolbar .note-fore-color-preview');
+            await $('#toolbar .note-fore-color-preview .o_we_color_btn.bg-o-color-2').mouseenter();
+            await $('#toolbar .note-fore-color-preview .o_we_color_btn.bg-o-color-2').mouseleave();
+            await $('#toolbar .note-fore-color-preview .o_we_color_btn.bg-o-color-3').mouseenter();
+            await $('#toolbar .note-fore-color-preview .o_we_color_btn.bg-o-color-3').mouseleave();
+
+            range = Wysiwyg.getRange();
+            assert.deepEqual(_.pick(range, 'sc', 'so', 'ec', 'eo'), rangeControl,
+                "shouldn't reset the previous selection on quick hovering on colors");
 
             form.destroy();
         });
