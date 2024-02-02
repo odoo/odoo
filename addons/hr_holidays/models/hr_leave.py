@@ -783,7 +783,7 @@ Attempting to double-book your time off won't magically make your vacation 2x be
             if leave_type.allows_negative:
                 max_excess = leave_type.max_allowed_negative
                 for employee in employees:
-                    if leave_data[employee][0][1]['virtual_remaining_leaves'] < -max_excess:
+                    if leave_data[employee] and leave_data[employee][0][1]['virtual_remaining_leaves'] < -max_excess:
                         raise ValidationError(_("There is no valid allocation to cover that request."))
                 continue
 
@@ -791,8 +791,10 @@ Attempting to double-book your time off won't magically make your vacation 2x be
                 ignored_leave_ids=leaves.ids
             ).get_allocation_data(employees, date_from)
             for employee in employees:
-                previous_emp_data = previous_leave_data[employee][0][1]['virtual_excess_data']
-                emp_data = leave_data[employee][0][1]['virtual_excess_data']
+                previous_emp_data = previous_leave_data[employee] and previous_leave_data[employee][0][1]['virtual_excess_data']
+                emp_data = leave_data[employee] and leave_data[employee][0][1]['virtual_excess_data']
+                if not previous_emp_data and not emp_data:
+                    continue
                 if previous_emp_data != emp_data and len(emp_data) >= len(previous_emp_data):
                     raise ValidationError(_("There is no valid allocation to cover that request."))
 
@@ -990,7 +992,8 @@ Attempting to double-book your time off won't magically make your vacation 2x be
             if 'date_to' in values:
                 values['request_date_to'] = values['date_to']
         result = super(HolidaysRequest, self).write(values)
-        self._check_validity()
+        if any(field in values for field in ['request_date_from', 'date_from', 'request_date_from', 'date_to', 'holiday_status_id', 'employee_id']):
+            self._check_validity()
         if not self.env.context.get('leave_fast_create'):
             for holiday in self:
                 if employee_id:
