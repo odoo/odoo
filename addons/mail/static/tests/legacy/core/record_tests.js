@@ -4,6 +4,7 @@ import { BaseStore, Record, makeStore, modelRegistry } from "@mail/core/common/r
 
 import { registry } from "@web/core/registry";
 import { clearRegistryWithCleanup, makeTestEnv } from "@web/../tests/helpers/mock_env";
+import { assertSteps, step } from "@web/../tests/legacy/utils";
 import { markup, reactive, toRaw } from "@odoo/owl";
 
 const serviceRegistry = registry.category("services");
@@ -614,4 +615,22 @@ QUnit.test("store updates can be observed", async (assert) => {
     assert.verifySteps(["abc:2"], "observable from record._store");
     rawStore.Model.store.abc = 3;
     assert.verifySteps(["abc:3"], "observable from Model.store");
+});
+
+QUnit.test("onAdd hook on many without inverse", async () => {
+    (class Thread extends Record {
+        static id = "name";
+        name;
+        members = Record.many("Member", {
+            onAdd: (member) => step(`Member.onAdd(${member.name})`),
+        });
+    }).register();
+    (class Member extends Record {
+        static id = "name";
+        name;
+        thread = Record.one("Thread");
+    }).register();
+    const store = await start();
+    store.Thread.insert({ name: "General", members: { name: "John" } });
+    await assertSteps(["Member.onAdd(John)"]);
 });
