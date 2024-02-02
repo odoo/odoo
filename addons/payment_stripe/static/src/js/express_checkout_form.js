@@ -20,12 +20,11 @@ paymentExpressCheckoutForm.include({
      */
     _getOrderDetails(deliveryAmount) {
         const pending = this.paymentContext['shippingInfoRequired'] && deliveryAmount === undefined;
-        const amount = deliveryAmount ? parseInt(this.paymentContext['minorAmount'] + deliveryAmount)
-            : parseInt(this.paymentContext['minorAmount']);
+        const minorAmount = parseInt(this.paymentContext['minorAmount'])
         const displayItems = [
             {
                 label: _t("Your order"),
-                amount: parseInt(this.paymentContext['minorAmount']),
+                amount: minorAmount,
             },
         ];
         if (this.paymentContext['shippingInfoRequired'] && deliveryAmount !== undefined) {
@@ -37,7 +36,7 @@ paymentExpressCheckoutForm.include({
         return {
             total: {
                 label: this.paymentContext['merchantName'],
-                amount: amount,
+                amount: minorAmount + (deliveryAmount ?? 0),
                 // Delay the display of the amount until the shipping price is retrieved.
                 pending: pending,
             },
