@@ -10,6 +10,7 @@ import { ProductImageViewer } from "@website_sale/js/components/website_sale_ima
 import { jsonrpc } from "@web/core/network/rpc_service";
 import { debounce, throttleForAnimation } from "@web/core/utils/timing";
 import { listenSizeChange, SIZES, utils as uiUtils } from "@web/core/ui/ui_service";
+import { isBrowserFirefox, hasTouch } from "@web/core/browser/feature_detection";
 import { Component } from "@odoo/owl";
 
 export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerMixin, {
@@ -93,6 +94,11 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
             this._applyHash();
             this.triggerVariantChange(this.$el);
         });
+
+        // This allows conditional styling for the filmstrip
+        if (isBrowserFirefox() || hasTouch()) {
+            this.el.querySelector('.o_wsale_filmstip_container')?.classList.add('o_wsale_filmstip_fancy_disabled');
+        }
 
         this.getRedirectOption();
         return def;
