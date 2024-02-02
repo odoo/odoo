@@ -510,18 +510,23 @@ class HrEmployee(models.Model):
                                 to_recheck_leaves_per_leave_type[employee][leave_type]['to_recheck_leaves'] |= leave
                                 skip_excess = True
                                 continue
+                            if allocation.date_from > leave.date_to.date() or (allocation.date_to and allocation.date_to < leave.date_from.date()):
+                                continue
                             interval_start = max(
                                 leave.date_from,
                                 datetime.combine(allocation.date_from, time.min)
-                            ).replace(tzinfo=pytz.UTC)
+                            )
                             interval_end = min(
                                 leave.date_to,
                                 datetime.combine(allocation.date_to, time.max)
                                 if allocation.date_to else leave.date_to
-                            ).replace(tzinfo=pytz.UTC)
-                            duration_info = employee._get_calendar_attendances(interval_start, interval_end)
+                            )
+                            duration = leave[leave_duration_field]
+                            if leave.date_from != interval_start or leave.date_to != interval_end:
+                                duration_info = employee._get_calendar_attendances(interval_start.replace(tzinfo=pytz.UTC), interval_end.replace(tzinfo=pytz.UTC))
+                                duration = duration_info['hours' if leave_unit == 'hours' else 'days']
                             max_allowed_duration = min(
-                                duration_info['hours' if leave_unit == 'hours' else 'days'],
+                                duration,
                                 leave_type_data[allocation]['virtual_remaining_leaves']
                             )
 
