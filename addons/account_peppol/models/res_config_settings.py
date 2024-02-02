@@ -80,6 +80,15 @@ class ResConfigSettings(models.TransientModel):
         return response
 
     # -------------------------------------------------------------------------
+    # ONCHANGE METHODS
+    # -------------------------------------------------------------------------
+
+    @api.onchange('account_peppol_endpoint')
+    def _onchange_account_peppol_endpoint(self):
+        if self.account_peppol_endpoint:
+            self.account_peppol_endpoint = ''.join(char for char in self.account_peppol_endpoint if char.isalnum())
+
+    # -------------------------------------------------------------------------
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
     @api.depends('is_account_peppol_eligible', 'account_peppol_edi_user')
