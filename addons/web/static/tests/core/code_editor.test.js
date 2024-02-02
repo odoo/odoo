@@ -1,28 +1,18 @@
-import { after, afterEach, expect, onError, test } from "@odoo/hoot";
+import { after, expect, onError, test } from "@odoo/hoot";
 import { queryAll, queryAllTexts, queryOne } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { Component, markup, useState, xml } from "@odoo/owl";
-import { contains, mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import {
+    contains,
+    mountWithCleanup,
+    patchWithCleanup,
+    preventResizeObserverError,
+} from "@web/../tests/web_test_helpers";
 
 import { CodeEditor } from "@web/core/code_editor/code_editor";
 import { debounce } from "@web/core/utils/timing";
 
-let resizeObserverErrorCount = 0;
-onError((ev) => {
-    // commits cb1fcb598f404bd4b0be3a541297cbdc556b29be and f478310d170028b99eb009560382e53330159200
-    // This error is sometimes thrown but is essentially harmless as long as it is not thrown
-    // indefinitely. cf https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver#observation_errors
-    if (ev.message === "ResizeObserver loop completed with undelivered notifications.") {
-        if (resizeObserverErrorCount < 1) {
-            ev.preventDefault();
-        }
-        resizeObserverErrorCount++;
-    }
-});
-
-afterEach(() => {
-    resizeObserverErrorCount = 0;
-});
+preventResizeObserverError();
 
 function getDomValue() {
     return queryAll(".ace_line")
