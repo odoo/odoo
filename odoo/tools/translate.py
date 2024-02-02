@@ -883,7 +883,7 @@ def _extract_translatable_qweb_terms(element, callback):
             # them all lower case.
             # https://www.w3schools.com/html/html5_syntax.asp
             # https://github.com/odoo/owl/blob/master/doc/reference/component.md#composition
-            if not el.tag[0].isupper() and 't-component' not in el.attrib:
+            if not el.tag[0].isupper() and 't-component' not in el.attrib and 't-set-slot' not in el.attrib:
                 for att in ('title', 'alt', 'label', 'placeholder', 'aria-label'):
                     if att in el.attrib:
                         _push(callback, el.attrib[att], el.sourceline)
