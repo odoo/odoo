@@ -1653,8 +1653,18 @@ export function pointerUp(target, options) {
  */
 export function press(keyStrokes) {
     const eventInits = parseKeyStroke(keyStrokes);
+    const modifiers = [];
     for (const eventInit of eventInits) {
+        if (["Control", "Alt", "Shift"].includes(eventInit.key)) {
+            _keyDown(getActiveElement(), eventInit);
+            modifiers.push(eventInit);
+            continue;
+        }
         _press(getActiveElement(), eventInit);
+    }
+    for (let i = modifiers.length-1; i >= 0;i--) {
+        const eventInit = modifiers[i];
+        _keyUp(getActiveElement(), eventInit);
     }
 
     return logEvents("press");

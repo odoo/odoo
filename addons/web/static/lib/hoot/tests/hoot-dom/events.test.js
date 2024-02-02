@@ -24,7 +24,10 @@ import { mount, parseUrl } from "../local_helpers";
 /**
  * @param {import("../../helpers/dom").Target} target
  */
-const monitorEvents = (target) => {
+const monitorEvents = (
+    target,
+    cb = ((ev) => expect.step([ev.currentTarget.tagName.toLowerCase(), ev.type].join(".")))
+) => {
     const element = queryOne(target);
     for (const prop in element) {
         const type = prop.match(/^on(\w+)/)?.[1];
@@ -32,7 +35,7 @@ const monitorEvents = (target) => {
             continue;
         }
         const off = on(element, type, (ev) => {
-            expect.step([ev.currentTarget.tagName.toLowerCase(), ev.type].join("."));
+            cb(ev);
             if (ev.type === "submit") {
                 ev.preventDefault();
             }
@@ -498,6 +501,49 @@ describe(parseUrl(import.meta.url), () => {
 
         expect("input").toHaveValue(4);
     });
+
+    test("compose shift, alt and control and a key", async () => {
+        await mount(/* xml */`<input />`);
+        debugger;
+        click("input");
+        monitorEvents("input", (ev) => {
+            expect.step(`${ev.type}:${ev.key}:${ev.ctrlKey}:${ev.altKey}:${ev.shiftKey}`)
+        });
+        press("Control+k");
+        expect("input").toHaveValue("k");
+        expect([
+            "keydown:Control:false:false:false",
+            "keydown:k:true:false:false",
+            "keypress:k:true:false:false",
+            "input:undefined:undefined:undefined:undefined",
+            "keyup:k:true:false:false",
+            "keyup:Control:false:false:false",
+        ]).toVerifySteps();
+
+        press("Shift+k");
+        expect("input").toHaveValue("kk");
+        expect([
+            "keydown:Shift:false:false:false",
+            "keydown:k:false:false:true",
+            "keypress:k:false:false:true",
+            "input:undefined:undefined:undefined:undefined",
+            "keyup:k:false:false:true",
+            "keyup:Shift:false:false:false",
+        ]).toVerifySteps();
+
+        press("Alt+Control+k");
+        expect("input").toHaveValue("kkk");
+        expect([
+            "keydown:Alt:false:false:false",
+            "keydown:Control:false:true:false",
+            "keydown:k:true:true:false",
+            "keypress:k:true:true:false",
+            "input:undefined:undefined:undefined:undefined",
+            "keyup:k:true:true:false",
+            "keyup:Control:false:true:false",
+            "keyup:Alt:false:false:false",
+        ]).toVerifySteps();
+    })
 
     test.todo("scroll", async () => {
         expect(scroll()).toBeTruthy();
