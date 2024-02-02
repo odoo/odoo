@@ -422,6 +422,10 @@ class ReportBomStructure(models.AbstractModel):
         return byproducts, byproduct_cost_portion
 
     @api.model
+    def _get_operation_cost(self, duration, operation):
+        return (duration / 60.0) * operation.workcenter_id.costs_hour
+
+    @api.model
     def _get_operation_line(self, product, bom, qty, level, index):
         operations = []
         total = 0.0
@@ -435,7 +439,7 @@ class ReportBomStructure(models.AbstractModel):
             operation_cycle = float_round(qty / capacity, precision_rounding=1, rounding_method='UP')
             duration_expected = (operation_cycle * operation.time_cycle * 100.0 / operation.workcenter_id.time_efficiency) + \
                                 operation.workcenter_id._get_expected_duration(product)
-            total = ((duration_expected / 60.0) * operation.workcenter_id.costs_hour)
+            total = self._get_operation_cost(duration_expected, operation)
             operations.append({
                 'type': 'operation',
                 'index': f"{index}{operation_index}",
