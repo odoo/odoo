@@ -153,7 +153,7 @@ QUnit.test("make voice message in chat", async () => {
         channel_type: "chat",
     });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await contains("button[title='Voice Message']");
     patchDate(2023, 6, 31, 13, 0, 0, 0);
     await click("button[title='Voice Message']");

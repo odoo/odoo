@@ -31,7 +31,7 @@ QUnit.test("persisted session history", async () => {
     });
     browser.localStorage.setItem(
         "im_livechat.saved_state",
-        JSON.stringify({ threadData: { id: channelId, model: "discuss.channel" }, persisted: true })
+        JSON.stringify({ threadData: { channelId }, persisted: true })
     );
     pyEnv["mail.message"].create({
         author_id: pyEnv.adminPartnerId,

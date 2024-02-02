@@ -185,7 +185,7 @@ QUnit.test("do not auto-scroll to attachment box when initially open", async () 
         `,
     };
     const { openFormView } = await start({ serverData: { views } });
-    openFormView("res.partner", partnerId);
+    await openFormView("res.partner", partnerId);
     await contains(".o-mail-Message");
     // weak test, no guarantee that we waited long enough for the potential scroll to happen
     await contains(".o_content", { scroll: 0 });
@@ -201,7 +201,7 @@ QUnit.test("attachment box should order attachments from newest to oldest", asyn
         { name: "C.txt", mimetype: "text/plain", ...resData },
     ]);
     const { openView } = await start();
-    openView({
+    await openView({
         res_id: partnerId,
         res_model: "res.partner",
         views: [[false, "form"]],

@@ -1,9 +1,9 @@
 /* @odoo-module */
 
-import { OR, Record } from "@mail/core/common/record";
+import { Record } from "@mail/core/common/record";
 
 export class Composer extends Record {
-    static id = OR("thread", "message");
+    static id = [["thread"], ["message"]];
     /** @returns {import("models").Composer} */
     static get(data) {
         return super.get(data);

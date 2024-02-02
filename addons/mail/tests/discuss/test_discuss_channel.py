@@ -333,8 +333,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                 "type": "mail.record/insert",
                 "payload": {
                     'Thread': {
-                        "id": channel.id,
-                        "model": "discuss.channel",
+                        "channelId": channel.id,
                         "name": "test test",
                     }
                 },
@@ -357,8 +356,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                 "payload": {
                     'Thread': {
                         "avatarCacheKey": avatar_cache_key,
-                        "id": channel.id,
-                        'model': "discuss.channel",
+                        "channelId": channel.id,
                     }
                 },
             }]
@@ -427,8 +425,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                             "<br>Type <b>/command</b> to execute a command."
                             "</span>",
                         "originThread": {
-                            "model": "discuss.channel",
-                            "id": channel.id,
+                            "channelId": channel.id,
                         },
                     },
                 },
@@ -465,8 +462,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                             "<br>Type <b>/command</b> to execute a command."
                             "</span>",
                         "originThread": {
-                            "model": "discuss.channel",
-                            "id": test_group.id,
+                            "channelId": test_group.id,
                         },
                     },
                 },

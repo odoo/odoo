@@ -9,7 +9,7 @@ threadActionsRegistry.add("expand-discuss", {
         return (
             component.thread &&
             component.props.chatWindow?.isOpen &&
-            component.thread.model === "discuss.channel" &&
+            component.thread.channelId &&
             !component.ui.isSmall
         );
     },

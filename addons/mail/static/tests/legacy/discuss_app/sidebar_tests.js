@@ -24,7 +24,6 @@ QUnit.test("toggling category button hide category items", async () => {
     await openDiscuss();
     await contains("button.o-active", { text: "Inbox" });
     await contains(".o-mail-DiscussSidebarChannel");
-
     await click(
         ":nth-child(1 of .o-mail-DiscussSidebarCategory) .o-mail-DiscussSidebarCategory-icon"
     );
@@ -38,10 +37,9 @@ QUnit.test("toggling category button does not hide active category items", async
         { name: "def", channel_type: "channel" },
     ]);
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await contains(".o-mail-DiscussSidebarChannel", { count: 2 });
     await contains(".o-mail-DiscussSidebarChannel.o-active");
-
     await click(
         ":nth-child(1 of .o-mail-DiscussSidebarCategory) .o-mail-DiscussSidebarCategory-icon"
     );
@@ -740,7 +738,7 @@ QUnit.test("channel - avatar: should update avatar url from bus", async (assert)
         name: "test",
     });
     const { env, openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await contains(
         `img[data-src='${getOrigin()}/web/image/discuss.channel/${channelId}/avatar_128?unique=notaDateCache']`,
         { count: 2 }
@@ -1136,7 +1134,7 @@ QUnit.test("Can leave channel", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await contains(".o-mail-DiscussSidebarChannel", { text: "General" });
     await click("[title='Leave this channel']");
     await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "General" });
@@ -1224,8 +1222,8 @@ QUnit.test("Update channel data via bus notification", async () => {
     });
     const tab1 = await start({ asTab: true });
     const tab2 = await start({ asTab: true });
-    tab1.openDiscuss(channelId);
-    tab2.openDiscuss(channelId);
+    await tab1.openDiscuss(channelId);
+    await tab2.openDiscuss(channelId);
     await contains(".o-mail-DiscussSidebarChannel", { text: "Sales", target: tab1.target });
     await insertText(".o-mail-Discuss-threadName", "test", { target: tab1.target });
     await triggerHotkey("Enter");

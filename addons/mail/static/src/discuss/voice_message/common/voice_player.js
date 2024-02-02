@@ -86,12 +86,12 @@ export class VoicePlayer extends Component {
                 }
                 this.wasUploading = uploading;
             },
-            () => [this.props.attachment.uploading]
+            () => [Boolean(this.props.attachment.uploadId)]
         );
         onMounted(() => {
             this.initElements();
             this.wrapper.addEventListener("click", (e) => {
-                if (this.props.attachment.uploading) {
+                if (this.props.attachment.uploadId) {
                     return;
                 }
                 const clientX = (e.targetTouches ? e.targetTouches[0] : e).clientX;
@@ -103,10 +103,10 @@ export class VoicePlayer extends Component {
                 );
                 this.seekTo(progress);
             });
-            if (!this.props.attachment.uploading) {
+            if (!this.props.attachment.uploadId) {
                 this.makeAudio();
             }
-            this.wasUploading = this.props.attachment.uploading;
+            this.wasUploading = this.props.attachment.uploadId;
         });
         onWillUnmount(() => {
             if (this.state.playing) {
@@ -377,7 +377,7 @@ export class VoicePlayer extends Component {
     }
 
     onClickPlayPause() {
-        if (this.props.attachment.uploading) {
+        if (this.props.attachment.uploadId) {
             return;
         }
         if (this.state.paused) {

@@ -4,9 +4,11 @@ import { Record } from "@mail/core/common/record";
 
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { FileModelMixin } from "@web/core/file_viewer/file_model";
+import { rpc } from "@web/core/network/rpc";
+import { assignDefined } from "@mail/utils/common/misc";
 
 export class Attachment extends FileModelMixin(Record) {
-    static id = "id";
+    static id = [["id!"], ["uploadId!"]];
     /** @type {Object.<number, import("models").Attachment>} */
     static records = {};
     /** @returns {import("models").Attachment} */
@@ -28,11 +30,42 @@ export class Attachment extends FileModelMixin(Record) {
         return attachment;
     }
 
+    uploadId;
     originThread = Record.one("Thread", { inverse: "attachments" });
     res_name;
     message = Record.one("Message");
     /** @type {string} */
     create_date;
+    /** @type {Deferred} */
+    uploadDoneDeferred;
+    /** @type {() => void} */
+    uploadAbort;
+    uploadHooker;
+
+    /** Delete the given attachment on the server as well as removing it globally. */
+    async unlink() {
+        if (this.uploadAbort) {
+            this.uploadAbort();
+            this.uploadDoneDeferred.resolve();
+        }
+        if (this.id) {
+            await rpc(
+                "/mail/attachment/delete",
+                assignDefined({ attachment_id: this.id }, { access_token: this.accessToken })
+            );
+        }
+        this.delete();
+    }
+
+    delete() {
+        if (this.tmpUrl) {
+            URL.revokeObjectURL(this.tmpUrl);
+        }
+        if (this._store.env.services["discuss.voice_message"] && this.voice && this.id) {
+            this._store.env.services["discuss.voice_message"].activePlayer = null;
+        }
+        super.delete();
+    }
 
     get isDeletable() {
         return true;

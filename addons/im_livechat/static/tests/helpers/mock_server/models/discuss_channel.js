@@ -13,7 +13,9 @@ patch(MockServer.prototype, {
     _mockDiscussChannelChannelInfo(ids) {
         const channelInfos = super._mockDiscussChannelChannelInfo(...arguments);
         for (const channelInfo of channelInfos) {
-            const channel = this.getRecords("discuss.channel", [["id", "=", channelInfo.id]])[0];
+            const channel = this.getRecords("discuss.channel", [
+                ["id", "=", channelInfo.channelId],
+            ])[0];
             channelInfo["anonymous_name"] = channel.anonymous_name;
             // add the last message date
             if (channel.channel_type === "livechat") {

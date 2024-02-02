@@ -12,7 +12,6 @@ export class MailCoreCommon {
     constructor(env, services) {
         this.env = env;
         this.busService = services.bus_service;
-        this.attachmentService = services["mail.attachment"];
         this.messageService = services["mail.message"];
         this.messagingService = services["mail.messaging"];
         this.store = services["mail.store"];
@@ -25,21 +24,21 @@ export class MailCoreCommon {
                 if (messageData) {
                     this.store.Message.insert(messageData);
                 }
-                const attachment = this.store.Attachment.get(attachmentId);
+                const attachment = this.store.Attachment.get({ id: attachmentId });
                 if (attachment) {
-                    this.attachmentService.remove(attachment);
+                    attachment.delete();
                 }
             });
             this.busService.subscribe("mail.link.preview/delete", (payload) => {
                 const { id, message_id } = payload;
-                const message = this.store.Message.get(message_id);
+                const message = this.store.Message.get({ id: message_id });
                 if (message) {
                     message.linkPreviews.delete({ id });
                 }
             });
             this.busService.subscribe("mail.message/delete", (payload) => {
                 for (const messageId of payload.message_ids) {
-                    const message = this.store.Message.get(messageId);
+                    const message = this.store.Message.get({ id: messageId });
                     if (!message) {
                         continue;
                     }
@@ -81,13 +80,7 @@ export class MailCoreCommon {
 }
 
 export const mailCoreCommon = {
-    dependencies: [
-        "bus_service",
-        "mail.attachment",
-        "mail.message",
-        "mail.messaging",
-        "mail.store",
-    ],
+    dependencies: ["bus_service", "mail.message", "mail.messaging", "mail.store"],
     /**
      * @param {import("@web/env").OdooEnv} env
      * @param {Partial<import("services").Services>} services

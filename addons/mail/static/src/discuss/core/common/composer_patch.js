@@ -8,9 +8,7 @@ patch(Composer.prototype, {
         const thread = this.thread ?? this.message.originThread;
         return (
             super.allowUpload &&
-            (thread.model !== "discuss.channel" ||
-                thread?.allow_public_upload ||
-                this.store.self.isInternalUser)
+            (!thread.channelId || thread?.allow_public_upload || this.store.self.isInternalUser)
         );
     },
 });

@@ -173,12 +173,11 @@ class TestDiscussFullPerformance(HttpCase):
                 "odoobot": {
                     "active": False,
                     "email": "odoobot@example.com",
-                    "id": self.user_root.partner_id.id,
+                    "partnerId": self.user_root.partner_id.id,
                     "im_status": "bot",
                     "is_company": False,
                     "name": "OdooBot",
                     "out_of_office_date_end": False,
-                    "type": "partner",
                     "userId": False,
                     "isInternalUser": False,
                     "write_date": fields.Datetime.to_string(self.user_root.partner_id.write_date),
@@ -315,19 +314,17 @@ class TestDiscussFullPerformance(HttpCase):
                             [
                                 {
                                     "thread": {
-                                        "id": channel.id,
-                                        "model": "discuss.channel",
+                                        "channelId": channel.id,
                                     },
                                     "id": member_0.id,
                                     "persona": {
                                         "active": True,
                                         "email": "e.e@example.com",
-                                        "id": self.users[0].partner_id.id,
+                                        "partnerId": self.users[0].partner_id.id,
                                         "im_status": "online",
                                         "is_company": False,
                                         "name": "Ernest Employee",
                                         "out_of_office_date_end": False,
-                                        "type": "partner",
                                         "userId": self.users[0].id,
                                         "isInternalUser": True,
                                         "write_date": write_date_0,
@@ -341,10 +338,9 @@ class TestDiscussFullPerformance(HttpCase):
                     ]
                 ],
                 "custom_channel_name": False,
-                "id": channel.id,
+                "channelId": channel.id,
                 "memberCount": len(self.group_user.users),
                 "message_unread_counter": 0,
-                "model": "discuss.channel",
                 "create_uid": self.user_root.id,
                 "defaultDisplayMode": False,
                 "description": "General announcements for all employees.",
@@ -377,19 +373,17 @@ class TestDiscussFullPerformance(HttpCase):
                             [
                                 {
                                     "thread": {
-                                        "id": channel.id,
-                                        "model": "discuss.channel",
+                                        "channelId": channel.id,
                                     },
                                     "id": member_0.id,
                                     "persona": {
                                         "active": True,
                                         "email": "e.e@example.com",
-                                        "id": self.users[0].partner_id.id,
+                                        "partnerId": self.users[0].partner_id.id,
                                         "im_status": "online",
                                         "is_company": False,
                                         "name": "Ernest Employee",
                                         "out_of_office_date_end": False,
-                                        "type": "partner",
                                         "userId": self.users[0].id,
                                         "isInternalUser": True,
                                         "write_date": write_date_0,
@@ -403,10 +397,9 @@ class TestDiscussFullPerformance(HttpCase):
                     ]
                 ],
                 "custom_channel_name": False,
-                "id": channel.id,
+                "channelId": channel.id,
                 "memberCount": 5,
                 "message_unread_counter": 0,
-                "model": "discuss.channel",
                 "create_uid": self.env.user.id,
                 "defaultDisplayMode": False,
                 "description": False,
@@ -439,19 +432,17 @@ class TestDiscussFullPerformance(HttpCase):
                             [
                                 {
                                     "thread": {
-                                        "id": channel.id,
-                                        "model": "discuss.channel",
+                                        "channelId": channel.id,
                                     },
                                     "id": member_0.id,
                                     "persona": {
                                         "active": True,
                                         "email": "e.e@example.com",
-                                        "id": self.users[0].partner_id.id,
+                                        "partnerId": self.users[0].partner_id.id,
                                         "im_status": "online",
                                         "is_company": False,
                                         "name": "Ernest Employee",
                                         "out_of_office_date_end": False,
-                                        "type": "partner",
                                         "userId": self.users[0].id,
                                         "isInternalUser": True,
                                         "write_date": write_date_0,
@@ -465,10 +456,9 @@ class TestDiscussFullPerformance(HttpCase):
                     ]
                 ],
                 "custom_channel_name": False,
-                "id": channel.id,
+                "channelId": channel.id,
                 "memberCount": 5,
                 "message_unread_counter": 0,
-                "model": "discuss.channel",
                 "create_uid": self.env.user.id,
                 "defaultDisplayMode": False,
                 "description": False,
@@ -501,19 +491,17 @@ class TestDiscussFullPerformance(HttpCase):
                             [
                                 {
                                     "thread": {
-                                        "id": channel.id,
-                                        "model": "discuss.channel",
+                                        "channelId": channel.id,
                                     },
                                     "id": member_0.id,
                                     "persona": {
                                         "active": True,
                                         "email": "e.e@example.com",
-                                        "id": self.users[0].partner_id.id,
+                                        "partnerId": self.users[0].partner_id.id,
                                         "im_status": "online",
                                         "is_company": False,
                                         "name": "Ernest Employee",
                                         "out_of_office_date_end": False,
-                                        "type": "partner",
                                         "userId": self.users[0].id,
                                         "isInternalUser": True,
                                         "write_date": write_date_0,
@@ -527,10 +515,9 @@ class TestDiscussFullPerformance(HttpCase):
                     ]
                 ],
                 "custom_channel_name": False,
-                "id": channel.id,
+                "channelId": channel.id,
                 "memberCount": 5,
                 "message_unread_counter": 0,
-                "model": "discuss.channel",
                 "create_uid": self.env.user.id,
                 "defaultDisplayMode": False,
                 "description": False,
@@ -542,14 +529,12 @@ class TestDiscussFullPerformance(HttpCase):
                             {
                                 "id": self.channel_channel_group_1_invited_member.id,
                                 "persona": {
-                                    "id": self.channel_channel_group_1_invited_member.partner_id.id,
+                                    "partnerId": self.channel_channel_group_1_invited_member.partner_id.id,
                                     "im_status": "online",
                                     "name": "Ernest Employee",
-                                    "type": "partner",
                                 },
                                 "thread": {
-                                    "id": channel.id,
-                                    "model": "discuss.channel",
+                                    "channelId": channel.id,
                                 },
                             },
                         ],
@@ -565,14 +550,12 @@ class TestDiscussFullPerformance(HttpCase):
                     "channelMember": {
                         "id": self.channel_channel_group_1_inviting_member.id,
                         "persona": {
-                            "id": self.channel_channel_group_1_inviting_member.partner_id.id,
+                            "partnerId": self.channel_channel_group_1_inviting_member.partner_id.id,
                             "im_status": "offline",
                             "name": "test2",
-                            "type": "partner",
                         },
                         "thread": {
-                            "id": channel.id,
-                            "model": "discuss.channel",
+                            "channelId": channel.id,
                         },
                     },
                 },
@@ -584,14 +567,12 @@ class TestDiscussFullPerformance(HttpCase):
                                 "channelMember": {
                                     "id": self.channel_channel_group_1_inviting_member.id,
                                     "persona": {
-                                        "id": self.channel_channel_group_1_inviting_member.partner_id.id,
+                                        "partnerId": self.channel_channel_group_1_inviting_member.partner_id.id,
                                         "im_status": "offline",
                                         "name": "test2",
-                                        "type": "partner",
                                     },
                                     "thread": {
-                                        "id": channel.id,
-                                        "model": "discuss.channel",
+                                        "channelId": channel.id,
                                     },
                                 },
                                 "id": self.channel_channel_group_1_inviting_session.id,
@@ -624,19 +605,17 @@ class TestDiscussFullPerformance(HttpCase):
                             [
                                 {
                                     "thread": {
-                                        "id": channel.id,
-                                        "model": "discuss.channel",
+                                        "channelId": channel.id,
                                     },
                                     "id": member_0.id,
                                     "persona": {
                                         "active": True,
                                         "email": "e.e@example.com",
-                                        "id": self.users[0].partner_id.id,
+                                        "partnerId": self.users[0].partner_id.id,
                                         "im_status": "online",
                                         "is_company": False,
                                         "name": "Ernest Employee",
                                         "out_of_office_date_end": False,
-                                        "type": "partner",
                                         "userId": self.users[0].id,
                                         "isInternalUser": True,
                                         "write_date": write_date_0,
@@ -650,10 +629,9 @@ class TestDiscussFullPerformance(HttpCase):
                     ]
                 ],
                 "custom_channel_name": False,
-                "id": channel.id,
+                "channelId": channel.id,
                 "memberCount": 5,
                 "message_unread_counter": 0,
-                "model": "discuss.channel",
                 "create_uid": self.env.user.id,
                 "defaultDisplayMode": False,
                 "description": False,
@@ -686,19 +664,17 @@ class TestDiscussFullPerformance(HttpCase):
                             [
                                 {
                                     "thread": {
-                                        "id": channel.id,
-                                        "model": "discuss.channel",
+                                        "channelId": channel.id,
                                     },
                                     "id": member_0.id,
                                     "persona": {
                                         "active": True,
                                         "email": "e.e@example.com",
-                                        "id": self.users[0].partner_id.id,
+                                        "partnerId": self.users[0].partner_id.id,
                                         "im_status": "online",
                                         "is_company": False,
                                         "name": "Ernest Employee",
                                         "out_of_office_date_end": False,
-                                        "type": "partner",
                                         "userId": self.users[0].id,
                                         "isInternalUser": True,
                                         "write_date": write_date_0,
@@ -708,19 +684,17 @@ class TestDiscussFullPerformance(HttpCase):
                                 },
                                 {
                                     "thread": {
-                                        "id": channel.id,
-                                        "model": "discuss.channel",
+                                        "channelId": channel.id,
                                     },
                                     "id": member_12.id,
                                     "persona": {
                                         "active": True,
                                         "email": False,
-                                        "id": self.users[12].partner_id.id,
+                                        "partnerId": self.users[12].partner_id.id,
                                         "im_status": "offline",
                                         "is_company": False,
                                         "name": "test12",
                                         "out_of_office_date_end": False,
-                                        "type": "partner",
                                         "userId": self.users[12].id,
                                         "isInternalUser": True,
                                         "write_date": write_date_0,
@@ -734,10 +708,9 @@ class TestDiscussFullPerformance(HttpCase):
                     ]
                 ],
                 "custom_channel_name": False,
-                "id": channel.id,
+                "channelId": channel.id,
                 "memberCount": 2,
                 "message_unread_counter": 0,
-                "model": "discuss.channel",
                 "create_uid": self.env.user.id,
                 "defaultDisplayMode": False,
                 "description": False,
@@ -770,19 +743,17 @@ class TestDiscussFullPerformance(HttpCase):
                             [
                                 {
                                     "thread": {
-                                        "id": channel.id,
-                                        "model": "discuss.channel",
+                                        "channelId": channel.id,
                                     },
                                     "id": member_0.id,
                                     "persona": {
                                         "active": True,
                                         "email": "e.e@example.com",
-                                        "id": self.users[0].partner_id.id,
+                                        "partnerId": self.users[0].partner_id.id,
                                         "im_status": "online",
                                         "is_company": False,
                                         "name": "Ernest Employee",
                                         "out_of_office_date_end": False,
-                                        "type": "partner",
                                         "userId": self.users[0].id,
                                         "isInternalUser": True,
                                         "write_date": write_date_0,
@@ -792,19 +763,17 @@ class TestDiscussFullPerformance(HttpCase):
                                 },
                                 {
                                     "thread": {
-                                        "id": channel.id,
-                                        "model": "discuss.channel",
+                                        "channelId": channel.id,
                                     },
                                     "id": member_14.id,
                                     "persona": {
                                         "active": True,
                                         "email": False,
-                                        "id": self.users[14].partner_id.id,
+                                        "partnerId": self.users[14].partner_id.id,
                                         "im_status": "offline",
                                         "is_company": False,
                                         "name": "test14",
                                         "out_of_office_date_end": False,
-                                        "type": "partner",
                                         "userId": self.users[14].id,
                                         "isInternalUser": True,
                                         "write_date": write_date_0,
@@ -818,10 +787,9 @@ class TestDiscussFullPerformance(HttpCase):
                     ]
                 ],
                 "custom_channel_name": False,
-                "id": channel.id,
+                "channelId": channel.id,
                 "memberCount": 2,
                 "message_unread_counter": 0,
-                "model": "discuss.channel",
                 "create_uid": self.env.user.id,
                 "defaultDisplayMode": False,
                 "description": False,
@@ -854,19 +822,17 @@ class TestDiscussFullPerformance(HttpCase):
                             [
                                 {
                                     "thread": {
-                                        "id": channel.id,
-                                        "model": "discuss.channel",
+                                        "channelId": channel.id,
                                     },
                                     "id": member_0.id,
                                     "persona": {
                                         "active": True,
                                         "email": "e.e@example.com",
-                                        "id": self.users[0].partner_id.id,
+                                        "partnerId": self.users[0].partner_id.id,
                                         "im_status": "online",
                                         "is_company": False,
                                         "name": "Ernest Employee",
                                         "out_of_office_date_end": False,
-                                        "type": "partner",
                                         "userId": self.users[0].id,
                                         "isInternalUser": True,
                                         "write_date": write_date_0,
@@ -876,19 +842,17 @@ class TestDiscussFullPerformance(HttpCase):
                                 },
                                 {
                                     "thread": {
-                                        "id": channel.id,
-                                        "model": "discuss.channel",
+                                        "channelId": channel.id,
                                     },
                                     "id": member_15.id,
                                     "persona": {
                                         "active": True,
                                         "email": False,
-                                        "id": self.users[15].partner_id.id,
+                                        "partnerId": self.users[15].partner_id.id,
                                         "im_status": "offline",
                                         "is_company": False,
                                         "name": "test15",
                                         "out_of_office_date_end": False,
-                                        "type": "partner",
                                         "userId": self.users[15].id,
                                         "isInternalUser": True,
                                         "write_date": write_date_0,
@@ -902,10 +866,9 @@ class TestDiscussFullPerformance(HttpCase):
                     ]
                 ],
                 "custom_channel_name": False,
-                "id": channel.id,
+                "channelId": channel.id,
                 "memberCount": 2,
                 "message_unread_counter": 0,
-                "model": "discuss.channel",
                 "create_uid": self.env.user.id,
                 "defaultDisplayMode": False,
                 "description": False,
@@ -938,19 +901,17 @@ class TestDiscussFullPerformance(HttpCase):
                             [
                                 {
                                     "thread": {
-                                        "id": channel.id,
-                                        "model": "discuss.channel",
+                                        "channelId": channel.id,
                                     },
                                     "id": member_0.id,
                                     "persona": {
                                         "active": True,
                                         "email": "e.e@example.com",
-                                        "id": self.users[0].partner_id.id,
+                                        "partnerId": self.users[0].partner_id.id,
                                         "im_status": "online",
                                         "is_company": False,
                                         "name": "Ernest Employee",
                                         "out_of_office_date_end": False,
-                                        "type": "partner",
                                         "userId": self.users[0].id,
                                         "isInternalUser": True,
                                         "write_date": write_date_0,
@@ -960,19 +921,17 @@ class TestDiscussFullPerformance(HttpCase):
                                 },
                                 {
                                     "thread": {
-                                        "id": channel.id,
-                                        "model": "discuss.channel",
+                                        "channelId": channel.id,
                                     },
                                     "id": member_2.id,
                                     "persona": {
                                         "active": True,
                                         "email": "test2@example.com",
-                                        "id": self.users[2].partner_id.id,
+                                        "partnerId": self.users[2].partner_id.id,
                                         "im_status": "offline",
                                         "is_company": False,
                                         "name": "test2",
                                         "out_of_office_date_end": False,
-                                        "type": "partner",
                                         "userId": self.users[2].id,
                                         "isInternalUser": True,
                                         "write_date": write_date_0,
@@ -986,10 +945,9 @@ class TestDiscussFullPerformance(HttpCase):
                     ]
                 ],
                 "custom_channel_name": False,
-                "id": channel.id,
+                "channelId": channel.id,
                 "memberCount": 2,
                 "message_unread_counter": 0,
-                "model": "discuss.channel",
                 "create_uid": self.env.user.id,
                 "defaultDisplayMode": False,
                 "description": False,
@@ -1022,19 +980,17 @@ class TestDiscussFullPerformance(HttpCase):
                             [
                                 {
                                     "thread": {
-                                        "id": channel.id,
-                                        "model": "discuss.channel",
+                                        "channelId": channel.id,
                                     },
                                     "id": member_0.id,
                                     "persona": {
                                         "active": True,
                                         "email": "e.e@example.com",
-                                        "id": self.users[0].partner_id.id,
+                                        "partnerId": self.users[0].partner_id.id,
                                         "im_status": "online",
                                         "is_company": False,
                                         "name": "Ernest Employee",
                                         "out_of_office_date_end": False,
-                                        "type": "partner",
                                         "userId": self.users[0].id,
                                         "isInternalUser": True,
                                         "write_date": write_date_0,
@@ -1044,19 +1000,17 @@ class TestDiscussFullPerformance(HttpCase):
                                 },
                                 {
                                     "thread": {
-                                        "id": channel.id,
-                                        "model": "discuss.channel",
+                                        "channelId": channel.id,
                                     },
                                     "id": member_3.id,
                                     "persona": {
                                         "active": True,
                                         "email": False,
-                                        "id": self.users[3].partner_id.id,
+                                        "partnerId": self.users[3].partner_id.id,
                                         "im_status": "offline",
                                         "is_company": False,
                                         "name": "test3",
                                         "out_of_office_date_end": False,
-                                        "type": "partner",
                                         "userId": self.users[3].id,
                                         "isInternalUser": True,
                                         "write_date": fields.Datetime.to_string(
@@ -1072,10 +1026,9 @@ class TestDiscussFullPerformance(HttpCase):
                     ]
                 ],
                 "custom_channel_name": False,
-                "id": channel.id,
+                "channelId": channel.id,
                 "memberCount": 2,
                 "message_unread_counter": 0,
-                "model": "discuss.channel",
                 "create_uid": self.env.user.id,
                 "defaultDisplayMode": False,
                 "description": False,
@@ -1112,26 +1065,23 @@ class TestDiscussFullPerformance(HttpCase):
                             [
                                 {
                                     "thread": {
-                                        "id": channel.id,
-                                        "model": "discuss.channel",
+                                        "channelId": channel.id,
                                     },
                                     "id": member_0.id,
                                     "persona": {
                                         "active": True,
                                         "country": False,
-                                        "id": self.users[0].partner_id.id,
+                                        "partnerId": self.users[0].partner_id.id,
                                         "is_bot": False,
                                         "is_public": False,
                                         "name": "Ernest Employee",
-                                        "type": "partner",
                                     },
                                     "fetched_message_id": False,
                                     "seen_message_id": False,
                                 },
                                 {
                                     "thread": {
-                                        "id": channel.id,
-                                        "model": "discuss.channel",
+                                        "channelId": channel.id,
                                     },
                                     "id": member_1.id,
                                     "persona": {
@@ -1141,11 +1091,10 @@ class TestDiscussFullPerformance(HttpCase):
                                             "id": self.env.ref("base.in").id,
                                             "name": "India",
                                         },
-                                        "id": self.users[1].partner_id.id,
+                                        "partnerId": self.users[1].partner_id.id,
                                         "is_bot": False,
                                         "is_public": False,
                                         "name": "test1",
-                                        "type": "partner",
                                     },
                                     "fetched_message_id": {"id": last_message.id},
                                     "seen_message_id": {"id": last_message.id},
@@ -1156,10 +1105,9 @@ class TestDiscussFullPerformance(HttpCase):
                     ]
                 ],
                 "custom_channel_name": False,
-                "id": channel.id,
+                "channelId": channel.id,
                 "memberCount": 2,
                 "message_unread_counter": 0,
-                "model": "discuss.channel",
                 "create_uid": self.users[1].id,
                 "defaultDisplayMode": False,
                 "description": False,
@@ -1173,9 +1121,8 @@ class TestDiscussFullPerformance(HttpCase):
                 "custom_notifications": False,
                 "mute_until_dt": False,
                 "operator": {
-                    "id": self.users[0].partner_id.id,
+                    "partnerId": self.users[0].partner_id.id,
                     "name": "Ernest Employee",
-                    "type": "partner",
                     "write_date": write_date_0,
                 },
                 "rtcSessions": [["ADD", []]],
@@ -1201,33 +1148,29 @@ class TestDiscussFullPerformance(HttpCase):
                         [
                             {
                                 "thread": {
-                                    "id": channel.id,
-                                    "model": "discuss.channel",
+                                    "channelId": channel.id,
                                 },
                                 "id": member_0.id,
                                 "persona": {
                                     "active": True,
                                     "country": False,
-                                    "id": self.users[0].partner_id.id,
+                                    "partnerId": self.users[0].partner_id.id,
                                     "is_bot": False,
                                     "is_public": False,
                                     "name": "Ernest Employee",
-                                    "type": "partner",
                                 },
                                 "fetched_message_id": False,
                                 "seen_message_id": False,
                             },
                             {
                                 "thread": {
-                                    "id": channel.id,
-                                    "model": "discuss.channel",
+                                    "chanelId": channel.id,
                                 },
                                 "id": member_g.id,
                                 "persona": {
-                                    "id": guest.id,
+                                    "guestId": guest.id,
                                     "im_status": "offline",
                                     "name": "Visitor",
-                                    "type": "guest",
                                     "write_date": fields.Datetime.to_string(guest.write_date),
                                 },
                                 "fetched_message_id": {"id": last_message.id},
@@ -1237,10 +1180,9 @@ class TestDiscussFullPerformance(HttpCase):
                     ]
                 ],
                 "custom_channel_name": False,
-                "id": channel.id,
+                "channelId": channel.id,
                 "memberCount": 2,
                 "message_unread_counter": 1,
-                "model": "discuss.channel",
                 "create_uid": self.env.ref("base.public_user").id,
                 "defaultDisplayMode": False,
                 "description": False,
@@ -1254,9 +1196,8 @@ class TestDiscussFullPerformance(HttpCase):
                 "custom_notifications": False,
                 "mute_until_dt": False,
                 "operator": {
-                    "id": self.users[0].partner_id.id,
+                    "partnerId": self.users[0].partner_id.id,
                     "name": "Ernest Employee",
-                    "type": "partner",
                     "write_date": write_date_0,
                 },
                 "rtcSessions": [["ADD", []]],
@@ -1289,10 +1230,9 @@ class TestDiscussFullPerformance(HttpCase):
             return {
                 "attachments": [],
                 "author": {
-                    "id": user_2.partner_id.id,
+                    "partnerId": user_2.partner_id.id,
                     "is_company": False,
                     "name": "test2",
-                    "type": "partner",
                     "userId": user_2.id,
                     "isInternalUser": True,
                     "write_date": write_date_2,
@@ -1318,30 +1258,27 @@ class TestDiscussFullPerformance(HttpCase):
                         "notification_type": "inbox",
                         "persona": {
                             "displayName": "Ernest Employee",
-                            "id": self.users[0].partner_id.id,
-                            "type": "partner",
+                            "partnerId": self.users[0].partner_id.id,
                         },
                     },
                 ],
                 "originThread": {
-                    "id": channel.id,
-                    "model": "discuss.channel",
+                    "channelId": channel.id,
                     "module_icon": "/mail/static/description/icon.png",
                 },
                 "pinned_at": False,
                 "reactions": [],
                 "recipients": [
                     {
-                        "id": self.users[0].partner_id.id,
+                        "partnerId": self.users[0].partner_id.id,
                         "name": "Ernest Employee",
-                        "type": "partner",
                     },
                 ],
                 "record_name": "public channel 1",
                 "res_id": channel.id,
                 "scheduledDatetime": False,
                 "sms_ids": [],
-                "starredPersonas": [{"id": self.users[0].partner_id.id, "type": "partner"}],
+                "starredPersonas": [{"partnerId": self.users[0].partner_id.id}],
                 "subject": False,
                 "subtype_description": False,
                 "subtype_id": [mt_note_id, "Note"],
@@ -1352,10 +1289,9 @@ class TestDiscussFullPerformance(HttpCase):
             return {
                 "attachments": [],
                 "author": {
-                    "id": user_0.partner_id.id,
+                    "partnerId": user_0.partner_id.id,
                     "is_company": False,
                     "name": "Ernest Employee",
-                    "type": "partner",
                     "userId": user_0.id,
                     "isInternalUser": True,
                     "write_date": write_date_0,
@@ -1375,8 +1311,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "needaction_partner_ids": [],
                 "notifications": [],
                 "originThread": {
-                    "id": channel.id,
-                    "model": "discuss.channel",
+                    "channelId": channel.id,
                     "module_icon": "/mail/static/description/icon.png",
                 },
                 "pinned_at": False,
@@ -1397,10 +1332,9 @@ class TestDiscussFullPerformance(HttpCase):
             return {
                 "attachments": [],
                 "author": {
-                    "id": user_0.partner_id.id,
+                    "partnerId": user_0.partner_id.id,
                     "is_company": False,
                     "name": "Ernest Employee",
-                    "type": "partner",
                     "userId": user_0.id,
                     "isInternalUser": True,
                     "write_date": write_date_0,
@@ -1420,8 +1354,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "needaction_partner_ids": [],
                 "notifications": [],
                 "originThread": {
-                    "id": channel.id,
-                    "model": "discuss.channel",
+                    "channelId": channel.id,
                     "module_icon": "/mail/static/description/icon.png",
                 },
                 "pinned_at": False,
@@ -1442,10 +1375,9 @@ class TestDiscussFullPerformance(HttpCase):
             return {
                 "attachments": [],
                 "author": {
-                    "id": user_0.partner_id.id,
+                    "partnerId": user_0.partner_id.id,
                     "is_company": False,
                     "name": "Ernest Employee",
-                    "type": "partner",
                     "userId": user_0.id,
                     "isInternalUser": True,
                     "write_date": write_date_0,
@@ -1465,8 +1397,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "needaction_partner_ids": [],
                 "notifications": [],
                 "originThread": {
-                    "id": channel.id,
-                    "model": "discuss.channel",
+                    "channelId": channel.id,
                     "module_icon": "/mail/static/description/icon.png",
                 },
                 "pinned_at": False,
@@ -1487,10 +1418,9 @@ class TestDiscussFullPerformance(HttpCase):
             return {
                 "attachments": [],
                 "author": {
-                    "id": user_1.partner_id.id,
+                    "partnerId": user_1.partner_id.id,
                     "is_company": False,
                     "name": "test1",
-                    "type": "partner",
                     "userId": user_1.id,
                     "isInternalUser": True,
                     "write_date": write_date_1,
@@ -1509,8 +1439,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "needaction_partner_ids": [],
                 "notifications": [],
                 "originThread": {
-                    "id": channel.id,
-                    "model": "discuss.channel",
+                    "channelId": channel.id,
                     "module_icon": "/mail/static/description/icon.png",
                 },
                 "pinned_at": False,
@@ -1530,7 +1459,7 @@ class TestDiscussFullPerformance(HttpCase):
         if channel == self.channel_livechat_2:
             return {
                 "attachments": [],
-                "author": {"id": guest.id, "name": "Visitor", "type": "guest"},
+                "author": {"guestId": guest.id, "name": "Visitor"},
                 "body": "<p>test</p>",
                 "create_date": create_date,
                 "date": date,
@@ -1546,8 +1475,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "needaction_partner_ids": [],
                 "notifications": [],
                 "originThread": {
-                    "id": channel.id,
-                    "model": "discuss.channel",
+                    "channelId": channel.id,
                     "module_icon": "/mail/static/description/icon.png",
                 },
                 "pinned_at": False,

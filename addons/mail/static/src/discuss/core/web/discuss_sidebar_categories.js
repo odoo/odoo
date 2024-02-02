@@ -75,7 +75,7 @@ export class DiscussSidebarCategories extends Component {
     get hasQuickSearch() {
         return (
             Object.values(this.store.Thread.records).filter(
-                (thread) => thread.is_pinned && thread.model === "discuss.channel"
+                (thread) => thread.is_pinned && thread.channelId
             ).length > 19
         );
     }

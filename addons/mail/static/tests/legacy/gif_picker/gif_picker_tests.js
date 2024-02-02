@@ -80,7 +80,7 @@ QUnit.test("composer should display a GIF button", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await contains("button[aria-label='GIFs']");
 });
 
@@ -88,7 +88,7 @@ QUnit.test("Composer GIF button should open the GIF picker", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await click("button[aria-label='GIFs']");
     await contains(".o-discuss-GifPicker");
 });
@@ -103,7 +103,7 @@ QUnit.test("Searching for a GIF", async () => {
             }
         },
     });
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await click("button[aria-label='GIFs']");
     await insertText("input[placeholder='Search for a GIF']", "search");
     await contains("i[aria-label='back']");
@@ -123,7 +123,7 @@ QUnit.test("Open a GIF category trigger the search for the category", async () =
             }
         },
     });
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await click("button[aria-label='GIFs']");
     await click("img[data-src='https://media.tenor.com/6uIlQAHIkNoAAAAM/cry.gif']");
     await contains(".o-discuss-Gif", { count: 2 });
@@ -143,7 +143,7 @@ QUnit.test("Reopen GIF category list when going back", async () => {
             }
         },
     });
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await click("button[aria-label='GIFs']");
     await click("img[data-src='https://media.tenor.com/6uIlQAHIkNoAAAAM/cry.gif']");
     await click("i[aria-label='back']");
@@ -163,7 +163,7 @@ QUnit.test("Add GIF to favorite", async () => {
             }
         },
     });
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await click("button[aria-label='GIFs']");
     await click("img[data-src='https://media.tenor.com/6uIlQAHIkNoAAAAM/cry.gif']");
     await click(":nth-child(1 of div) > .o-discuss-Gif .fa-star-o");
@@ -176,7 +176,7 @@ QUnit.test("Add GIF to favorite", async () => {
 QUnit.test("Chatter should not have the GIF button", async () => {
     const { openFormView, pyEnv } = await start();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
-    openFormView("res.partner", partnerId);
+    await openFormView("res.partner", partnerId);
     await click("button", { text: "Log note" });
     await contains("button[aria-label='GIFs']", { count: 0 });
 });
@@ -188,7 +188,7 @@ QUnit.test(
         const channelId = pyEnv["discuss.channel"].create({ name: "General" });
         patchUiSize({ size: SIZES.SM });
         const { openDiscuss } = await start();
-        openDiscuss(channelId);
+        await openDiscuss(channelId);
         await click("span", { text: "General" });
         await click("button[aria-label='Emojis']");
         await contains(".o-mail-PickerContent-picker .o-mail-PickerContent-emojiPicker");

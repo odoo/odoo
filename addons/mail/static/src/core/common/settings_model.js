@@ -52,8 +52,8 @@ export class Settings extends Record {
             rtcSession.volume ||
             this.volumes.find(
                 (volume) =>
-                    (volume.type === "partner" && volume.persona.id === rtcSession.partnerId) ||
-                    (volume.type === "guest" && volume.persona.id === rtcSession.guestId)
+                    (volume.persona.partnerId && volume.persona.id === rtcSession.partnerId) ||
+                    (volume.persona.guestId && volume.persona.id === rtcSession.guestId)
             )?.volume ||
             0.5
         );
@@ -96,7 +96,7 @@ export class Settings extends Record {
      * @param {number} param0.volume
      */
     async saveVolumeSetting({ partnerId, guestId, volume }) {
-        if (this._store.self.type !== "partner") {
+        if (!this._store.self.partnerId) {
             return;
         }
         const key = `${partnerId}_${guestId}`;
@@ -242,7 +242,7 @@ export class Settings extends Record {
      * @private
      */
     async _saveSettings() {
-        if (this._store.self.type !== "partner") {
+        if (!this._store.self.partnerId) {
             return;
         }
         browser.clearTimeout(this.globalSettingsTimeout);

@@ -28,7 +28,7 @@ QUnit.test("Unknown visitor", async () => {
         livechat_operator_id: pyEnv.currentPartnerId,
     });
     const { openDiscuss } = await start();
-    openDiscuss();
+    await openDiscuss();
     await contains(".o-mail-DiscussSidebar .o-mail-DiscussSidebarCategory-livechat");
     await contains(".o-mail-DiscussSidebarChannel", { text: "Visitor 11" });
 });
@@ -52,7 +52,7 @@ QUnit.test("Known user with country", async () => {
         livechat_operator_id: pyEnv.currentPartnerId,
     });
     const { openDiscuss } = await start();
-    openDiscuss();
+    await openDiscuss();
     await contains(".o-mail-DiscussSidebarChannel", { text: "Jean (Belgium)" });
 });
 
@@ -80,7 +80,7 @@ QUnit.test("Do not show channel when visitor is typing", async () => {
         livechat_operator_id: pyEnv.currentPartnerId,
     });
     const { openDiscuss } = await start();
-    openDiscuss();
+    await openDiscuss();
     await contains(".o-mail-DiscussSidebarCategory", { count: 2 });
     await contains(".o-mail-DiscussSidebarCategory-livechat", { count: 0 });
     // simulate livechat visitor typing
@@ -114,7 +114,7 @@ QUnit.test("Close should update the value on the server", async (assert) => {
     });
     const currentUserId = pyEnv.currentUserId;
     const { env, openDiscuss } = await start();
-    openDiscuss();
+    await openDiscuss();
     const initalSettings = await env.services.orm.call(
         "res.users.settings",
         "_find_or_create_for_user",
@@ -148,7 +148,7 @@ QUnit.test("Open should update the value on the server", async (assert) => {
     });
     const currentUserId = pyEnv.currentUserId;
     const { env, openDiscuss } = await start();
-    openDiscuss();
+    await openDiscuss();
     const initalSettings = await env.services.orm.call(
         "res.users.settings",
         "_find_or_create_for_user",
@@ -181,7 +181,7 @@ QUnit.test("Open from the bus", async () => {
         is_discuss_sidebar_category_livechat_open: false,
     });
     const { openDiscuss } = await start();
-    openDiscuss();
+    await openDiscuss();
     await contains(".o-mail-DiscussSidebarCategory-livechat");
     await contains(".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel", {
         count: 0,
@@ -210,7 +210,7 @@ QUnit.test("Close from the bus", async () => {
         is_discuss_sidebar_category_livechat_open: true,
     });
     const { openDiscuss } = await start();
-    openDiscuss();
+    await openDiscuss();
     await contains(".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel");
     pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "res.users.settings", {
         id: settingsId,
@@ -234,7 +234,7 @@ QUnit.test("Smiley face avatar for livechat item linked to a guest", async () =>
         livechat_operator_id: pyEnv.currentPartnerId,
     });
     const { openDiscuss } = await start();
-    openDiscuss();
+    await openDiscuss();
     const guest = pyEnv["mail.guest"].searchRead([["id", "=", guestId]])[0];
     await contains(
         `.o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel img[data-src='${url(
@@ -257,7 +257,7 @@ QUnit.test("Partner profile picture for livechat item linked to a partner", asyn
         livechat_operator_id: pyEnv.currentPartnerId,
     });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     const partner = pyEnv["res.partner"].searchRead([["id", "=", partnerId]])[0];
     await contains(
         `.o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel img[data-src='${url(
@@ -288,7 +288,7 @@ QUnit.test("No counter if the category is unfolded and with unread messages", as
         livechat_operator_id: pyEnv.currentPartnerId,
     });
     const { openDiscuss } = await start();
-    openDiscuss();
+    await openDiscuss();
     await contains(".o-mail-DiscussSidebarCategory-livechat");
     await contains(".o-mail-DiscussSidebarCategory-livechat .o-mail-Discuss-category-counter", {
         count: 0,
@@ -312,7 +312,7 @@ QUnit.test("No counter if category is folded and without unread messages", async
         is_discuss_sidebar_category_livechat_open: false,
     });
     const { openDiscuss } = await start();
-    openDiscuss();
+    await openDiscuss();
     await contains(".o-mail-DiscussSidebarCategory-livechat");
     await contains(".o-mail-DiscussSidebarCategory-livechat .o-discuss-badge", { count: 0 });
 });
@@ -343,7 +343,7 @@ QUnit.test(
             is_discuss_sidebar_category_livechat_open: false,
         });
         const { openDiscuss } = await start();
-        openDiscuss();
+        await openDiscuss();
         await contains(".o-mail-DiscussSidebarCategory-livechat .o-discuss-badge", { text: "1" });
     }
 );
@@ -365,7 +365,7 @@ QUnit.test("Close manually by clicking the title", async () => {
         is_discuss_sidebar_category_livechat_open: true,
     });
     const { openDiscuss } = await start();
-    openDiscuss();
+    await openDiscuss();
     await contains(".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel");
     // fold the livechat category
     await click(".o-mail-DiscussSidebarCategory-livechat .btn");
@@ -389,7 +389,7 @@ QUnit.test("Open manually by clicking the title", async () => {
         is_discuss_sidebar_category_livechat_open: false,
     });
     const { openDiscuss } = await start();
-    openDiscuss();
+    await openDiscuss();
     await contains(".o-mail-DiscussSidebarCategory-livechat");
     await contains(".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel", {
         count: 0,
@@ -412,7 +412,7 @@ QUnit.test("Category item should be invisible if the category is closed", async 
         livechat_operator_id: pyEnv.currentPartnerId,
     });
     const { openDiscuss } = await start();
-    openDiscuss();
+    await openDiscuss();
     await contains(".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel");
     await click(".o-mail-DiscussSidebarCategory-livechat .btn");
     await contains(".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel", {
@@ -433,7 +433,7 @@ QUnit.test("Active category item should be visible even if the category is close
         livechat_operator_id: pyEnv.currentPartnerId,
     });
     const { openDiscuss } = await start();
-    openDiscuss();
+    await openDiscuss();
     await contains(".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel");
     await click(".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel");
     await contains(
@@ -455,7 +455,7 @@ QUnit.test("Clicking on unpin button unpins the channel", async () => {
         livechat_operator_id: pyEnv.currentPartnerId,
     });
     const { openDiscuss } = await start();
-    openDiscuss();
+    await openDiscuss();
     await click(".o-mail-DiscussSidebarChannel [title='Unpin Conversation']");
     await contains(".o_notification", { text: "You unpinned your conversation with Visitor 11" });
 });
@@ -473,7 +473,7 @@ QUnit.test("Message unread counter", async () => {
         livechat_operator_id: pyEnv.currentPartnerId,
     });
     const { openDiscuss } = await start();
-    openDiscuss();
+    await openDiscuss();
     pyEnv.withGuest(guestId, () =>
         rpc("/im_livechat/chat_post", {
             message_content: "hu",

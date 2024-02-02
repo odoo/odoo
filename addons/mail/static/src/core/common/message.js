@@ -111,7 +111,6 @@ export class Message extends Component {
         this.shadowBody = useRef("shadowBody");
         this.threadService = useState(useService("mail.thread"));
         this.messageService = useState(useService("mail.message"));
-        this.attachmentService = useService("mail.attachment");
         this.dialog = useService("dialog");
         this.ui = useState(useService("ui"));
         this.openReactionMenu = this.openReactionMenu.bind(this);
@@ -226,7 +225,8 @@ export class Message extends Component {
         if (
             this.message.message_type &&
             this.message.message_type.includes("email") &&
-            !["partner", "guest"].includes(this.message.author?.type)
+            !this.message.author?.partnerId &&
+            !this.message.author?.guestId
         ) {
             return url("/mail/static/src/img/email_icon.png");
         }
@@ -290,9 +290,7 @@ export class Message extends Component {
 
     get canToggleStar() {
         return Boolean(
-            !this.message.is_transient &&
-                this.message.originThread &&
-                this.store.self.type === "partner"
+            !this.message.is_transient && this.message.originThread && this.store.self.partnerId
         );
     }
 
@@ -379,10 +377,6 @@ export class Message extends Component {
         this.props.messageToReplyTo.toggle(this.props.thread, this.props.message);
     }
 
-    async onClickAttachmentUnlink(attachment) {
-        await this.attachmentService.delete(attachment);
-    }
-
     onClickMarkAsUnread() {
         const previousMessageId =
             this.message.originThread.getPreviousMessage(this.message)?.id ?? false;
@@ -412,7 +406,8 @@ export class Message extends Component {
             ev.preventDefault();
             const partnerId = Number(ev.target.dataset.oeId);
             if (user.partnerId !== partnerId) {
-                this.threadService.openChat({ partnerId });
+                const persona = this.store.Persona.insert({ partnerId });
+                this.threadService.openChat(persona);
             }
             return;
         }

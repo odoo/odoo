@@ -15,7 +15,7 @@ patch(ThreadService.prototype, {
      * @param {string} body
      */
     async post(thread, body) {
-        if (thread.model === "discuss.channel" && body.startsWith("/")) {
+        if (thread.channelId && body.startsWith("/")) {
             const [firstWord] = body.substring(1).split(/\s/);
             const command = commandRegistry.get(firstWord, false);
             if (

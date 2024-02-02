@@ -872,7 +872,7 @@ class Message(models.Model):
         group_domain = [("message_id", "=", self.id), ("content", "=", content)]
         count = self.env["mail.message.reaction"].search_count(group_domain)
         group_command = "ADD" if count > 0 else "DELETE"
-        personas = [("ADD" if action == "add" else "DELETE", {"id": guest.id if guest else partner.id, "type": "guest" if guest else "partner"})] if guest or partner else []
+        personas = [("ADD" if action == "add" else "DELETE", {"guestId": guest.id, "partnerId": partner.id})] if guest or partner else []
         group_values = {
             "content": content,
             "count": count,
@@ -916,7 +916,7 @@ class Message(models.Model):
             reaction_groups = [{
                 'content': content,
                 'count': len(reactions),
-                'personas': [{'id': guest.id, 'name': guest.name, 'type': "guest"} for guest in reactions.guest_id] + [{'id': partner.id, 'name': partner.name, 'type': "partner"} for partner in reactions.partner_id],
+                'personas': [{'guestId': guest.id, 'name': guest.name} for guest in reactions.guest_id] + [{'partnerId': partner.id, 'name': partner.name} for partner in reactions.partner_id],
                 'message': {'id': message_sudo.id},
             } for content, reactions in reactions_per_content.items()]
             allowed_tracking_ids = message_sudo.tracking_value_ids.filtered(lambda tracking: not tracking.field_groups or self.env.is_superuser() or self.user_has_groups(tracking.field_groups))
@@ -1050,12 +1050,12 @@ class Message(models.Model):
             vals.pop("starred_partner_ids", None)
             vals.update({
                 'needaction_partner_ids': notifs.filtered(lambda n: not n.is_read).res_partner_id.ids,
-                'starredPersonas': [{'id': id, 'type': "partner"} for id in message_sudo.starred_partner_ids.ids],
+                'starredPersonas': [{'partnerId': id} for id in message_sudo.starred_partner_ids.ids],
                 'history_partner_ids': notifs.filtered(lambda n: n.is_read).res_partner_id.ids,
                 'is_note': message_sudo.subtype_id.id == note_id,
                 'is_discussion': message_sudo.subtype_id.id == com_id,
                 'subtype_description': message_sudo.subtype_id.description,
-                'recipients': [{'id': p.id, 'name': p.name, 'type': "partner"} for p in message_sudo.partner_ids],
+                'recipients': [{'partnerId': p.id, 'name': p.name} for p in message_sudo.partner_ids],
                 'scheduledDatetime': scheduled_dt_by_msg_id.get(vals['id'], False),
             })
             if vals['model'] and vals['res_id']:
@@ -1134,7 +1134,7 @@ class Message(models.Model):
                 vals['originThread']['selfFollower'] = {
                     'id': follower_id,
                     'is_active': True,
-                    'partner': {'id': partner_id, 'type': "partner"},
+                    'partner': {'partnerId': partner_id},
                 }
         return messages_formatted
 
@@ -1154,7 +1154,7 @@ class Message(models.Model):
         the message was successfully sent or if an exception or bounce occurred.
         """
         return [{
-            'author': {'id': message.author_id.id, 'type': "partner"} if message.author_id else False,
+            'author': {'partnerId': message.author_id.id} if message.author_id else False,
             'id': message.id,
             'date': message.date,
             'message_type': message.message_type,

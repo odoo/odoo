@@ -47,7 +47,8 @@ export class DiscussCoreWeb {
                 { user: username }
             );
             this.notificationService.add(notification, { type: "info" });
-            const chat = await this.threadService.getChat({ partnerId });
+            const persona = this.store.Persona.insert({ partnerId });
+            const chat = await this.threadService.getChat(persona);
             if (chat && !this.ui.isSmall) {
                 this.store.ChatWindow.insert({ thread: chat });
             }
@@ -75,7 +76,7 @@ export class DiscussCoreWeb {
             }
         });
         this.env.bus.addEventListener("mail.message/delete", ({ detail: { message } }) => {
-            if (message.originThread?.model === "discuss.channel") {
+            if (message.originThread?.channelId) {
                 // initChannelsUnreadCounter becomes unreliable
                 this.store.fetchChannels();
             }

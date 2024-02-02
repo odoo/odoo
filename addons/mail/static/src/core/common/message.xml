@@ -113,7 +113,6 @@
                                 <AttachmentList
                                     t-if="message.attachments.length > 0"
                                     attachments="message.attachments.map((a) => a)"
-                                    unlinkAttachment.bind="onClickAttachmentUnlink"
                                     imagesHeight="message.attachments.length === 1 ? 300 : 75"
                                     messageSearch="props.messageSearch"/>
                                 <LinkPreviewList t-if="message.linkPreviews.length > 0 and store.hasLinkPreviewFeature and !message.linkPreviewSquash" linkPreviews="message.linkPreviews" deletable="deletable"/>

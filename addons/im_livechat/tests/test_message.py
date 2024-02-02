@@ -55,10 +55,9 @@ class TestImLivechatMessage(HttpCase):
         self.assertEqual(message.message_format(), [{
             'attachments': [],
             'author': {
-                'id': self.users[1].partner_id.id,
+                'partnerId': self.users[1].partner_id.id,
                 'is_company': self.users[1].partner_id.is_company,
                 'user_livechat_username': self.users[1].livechat_username,
-                'type': "partner",
                 'userId': self.users[1].id,
                 'isInternalUser': self.users[1]._is_internal(),
                 'write_date': fields.Datetime.to_string(self.users[1].write_date),
@@ -79,8 +78,7 @@ class TestImLivechatMessage(HttpCase):
             'needaction_partner_ids': [],
             'notifications': [],
             'originThread': {
-                'id': channel_livechat_1.id,
-                'model': 'discuss.channel',
+                'channelId': channel_livechat_1.id,
                 'module_icon': '/mail/static/description/icon.png',
             },
             'pinned_at': False,

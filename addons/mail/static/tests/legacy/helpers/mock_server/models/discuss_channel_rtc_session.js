@@ -87,7 +87,7 @@ patch(MockServer.prototype, {
         this.pyEnv["discuss.channel.rtc.session"].write([id], values);
         const sessionData = this._mockDiscussChannelRtcSession_DiscussChannelRtcSessionFormat(id);
         const [channel] = this.pyEnv["discuss.channel"].searchRead([
-            ["id", "=", sessionData.channelMember.thread.id],
+            ["id", "=", sessionData.channelMember.thread.channelId],
         ]);
         this.pyEnv["bus.bus"]._sendone(
             channel,

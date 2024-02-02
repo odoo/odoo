@@ -22,7 +22,7 @@ QUnit.test("initially online", async () => {
         channel_type: "chat",
     });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await contains(".o-mail-ImStatus i[title='Online']");
 });
 
@@ -37,7 +37,7 @@ QUnit.test("initially offline", async () => {
         channel_type: "chat",
     });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await contains(".o-mail-ImStatus i[title='Offline']");
 });
 
@@ -52,7 +52,7 @@ QUnit.test("initially away", async () => {
         channel_type: "chat",
     });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await contains(".o-mail-ImStatus i[title='Idle']");
 });
 
@@ -70,15 +70,12 @@ QUnit.test("change icon on change partner im_status", async () => {
     await openDiscuss(channelId);
     await advanceTime(Store.FETCH_DATA_DEBOUNCE_DELAY);
     await contains(".o-mail-ImStatus i[title='Online']");
-
     pyEnv["res.partner"].write([partnerId], { im_status: "offline" });
     advanceTime(UPDATE_BUS_PRESENCE_DELAY);
     await contains(".o-mail-ImStatus i[title='Offline']");
-
     pyEnv["res.partner"].write([partnerId], { im_status: "away" });
     advanceTime(UPDATE_BUS_PRESENCE_DELAY);
     await contains(".o-mail-ImStatus i[title='Idle']");
-
     pyEnv["res.partner"].write([partnerId], { im_status: "online" });
     advanceTime(UPDATE_BUS_PRESENCE_DELAY);
     await contains(".o-mail-ImStatus i[title='Online']");

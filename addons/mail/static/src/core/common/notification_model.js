@@ -5,7 +5,7 @@ import { Record } from "@mail/core/common/record";
 import { _t } from "@web/core/l10n/translation";
 
 export class Notification extends Record {
-    static id = "id";
+    static id = [["id"]];
     /** @type {Object.<number, import("models").Notification>} */
     static records = {};
     /** @returns {import("models").Notification} */

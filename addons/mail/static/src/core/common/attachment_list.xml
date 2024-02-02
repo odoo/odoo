@@ -13,10 +13,10 @@
             <div class="d-flex flex-grow-1 flex-wrap mx-1" t-att-class="{
                 'justify-content-end': isInChatWindowAndIsAlignedRight and !env.inComposer,
             }" role="menu">
-                <div t-foreach="imagesAttachments" t-as="attachment" t-key="attachment.id" t-att-aria-label="attachment.filename"
+                <div t-foreach="imagesAttachments" t-as="attachment" t-key="attachment.localId" t-att-aria-label="attachment.filename"
                     class="o-mail-AttachmentImage d-flex position-relative flex-shrink-0 mw-100 mb-1 me-1"
                     t-att-title="attachment.name"
-                    t-att-class="{ 'o-isUploading': attachment.uploading }"
+                    t-att-class="{ 'o-isUploading': attachment.uploadId }"
                     tabindex="0"
                     aria-label="View image"
                     role="menuitem"
@@ -25,13 +25,13 @@
                 >
                     <img
                         class="img img-fluid my-0 mx-auto o-viewable"
-                        t-att-class="{ 'opacity-25': attachment.uploading }"
+                        t-att-class="{ 'opacity-25': attachment.uploadId }"
                         t-att-src="getImageUrl(attachment)"
                         t-att-alt="attachment.name"
                         t-attf-style="max-width: min(100%, {{ imagesWidth }}px); max-height: {{ props.imagesHeight }}px;"
                         t-on-load="onImageLoaded"
                     />
-                    <div t-if="attachment.uploading" class="position-absolute top-0 bottom-0 start-0 end-0 d-flex align-items-center justify-content-center" title="Uploading">
+                    <div t-if="attachment.uploadId" class="position-absolute top-0 bottom-0 start-0 end-0 d-flex align-items-center justify-content-center" title="Uploading">
                         <i class="fa fa-spin fa-spinner"/>
                     </div>
                     <div class="position-absolute top-0 bottom-0 start-0 end-0 p-2 text-white opacity-0 opacity-100-hover d-flex align-items-end flax-wrap flex-column">
@@ -50,13 +50,13 @@
                 'justify-content-end': isInChatWindowAndIsAlignedRight and !env.inComposer,
             }">
                 <!-- t-attf-class overridden in extensions -->
-                <div t-foreach="nonImagesAttachments" t-as="attachment" t-key="attachment.id"
+                <div t-foreach="nonImagesAttachments" t-as="attachment" t-key="attachment.localId"
                     class="o-mail-AttachmentCard d-flex rounded mb-1 me-1 mw-100 overflow-auto"
                     t-att-class="{
                         'ms-1': isInChatWindowAndIsAlignedRight,
                         'me-1': !isInChatWindowAndIsAlignedRight,
                         'o-viewable': attachment.isViewable,
-                        'o-isUploading': attachment.uploading,
+                        'o-isUploading': attachment.uploadId,
                     }"
                     t-attf-class="bg-300"
                     t-att-title="attachment.name ? attachment.name : undefined" role="menu" t-att-aria-label="attachment.name"
@@ -71,10 +71,10 @@
                         </div>
                     </t>
                     <div class="o-mail-AttachmentCard-aside position-relative rounded-end overflow-hidden" t-att-class="{ 'o-hasMultipleActions d-flex flex-column': attachment.isDeletable and !env.inComposer }">
-                        <div t-if="attachment.uploading" class="d-flex justify-content-center align-items-center w-100 h-100" title="Uploading">
+                        <div t-if="attachment.uploadId" class="d-flex justify-content-center align-items-center w-100 h-100" title="Uploading">
                             <i class="fa fa-spin fa-spinner"/>
                         </div>
-                        <div t-if="!attachment.uploading and env.inComposer" class="d-flex justify-content-center align-items-center w-100 h-100 text-primary" title="Uploaded">
+                        <div t-if="!attachment.uploadId and env.inComposer" class="d-flex justify-content-center align-items-center w-100 h-100 text-primary" title="Uploaded">
                             <i class="fa fa-check"/>
                         </div>
                         <button t-if="showDelete"

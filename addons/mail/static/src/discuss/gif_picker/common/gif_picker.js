@@ -103,7 +103,7 @@ export class GifPicker extends Component {
         onWillStart(() => {
             this.loadCategories();
         });
-        if (this.store.self.type === "partner") {
+        if (this.store.self.partnerId) {
             onWillStart(() => {
                 this.loadFavorites();
             });

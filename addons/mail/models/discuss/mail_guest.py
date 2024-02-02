@@ -108,9 +108,8 @@ class MailGuest(models.Model):
             raise UserError(_("Guest's name is too long."))
         self.name = name
         guest_data = {
-            'id': self.id,
+            'guestId': self.id,
             'name': self.name,
-            'type': "guest"
         }
         bus_notifs = [(channel, 'mail.record/insert', {'Persona': guest_data}) for channel in self.channel_ids]
         bus_notifs.append((self, 'mail.record/insert', {'Persona': guest_data}))
@@ -143,14 +142,13 @@ class MailGuest(models.Model):
         for guest in self:
             data = {}
             if 'id' in fields:
-                data['id'] = guest.id
+                data['guestId'] = guest.id
             if 'name' in fields:
                 data['name'] = guest.name
             if 'im_status' in fields:
                 data['im_status'] = guest.im_status
             if "write_date" in fields:
                 data["write_date"] = odoo.fields.Datetime.to_string(guest.write_date)
-            data['type'] = "guest"
             guests_formatted_data[guest] = data
         return guests_formatted_data
 

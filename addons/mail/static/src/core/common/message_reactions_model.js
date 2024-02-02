@@ -1,9 +1,9 @@
 /* @odoo-module */
 
-import { AND, Record } from "@mail/core/common/record";
+import { Record } from "@mail/core/common/record";
 
 export class MessageReactions extends Record {
-    static id = AND("message", "content");
+    static id = [["message", "content"]];
     /** @returns {import("models").MessageReactions} */
     static get(data) {
         return super.get(data);

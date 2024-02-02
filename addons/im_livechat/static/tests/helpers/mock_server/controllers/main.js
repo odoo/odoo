@@ -98,8 +98,7 @@ patch(MockServer.prototype, {
             const res = this._mockResUsers__init_store_data();
             return Object.assign(res, {
                 Thread: {
-                    id: -1,
-                    model: "discuss.channel",
+                    channelId: -1,
                     isLoaded: true,
                     name: channelVals["name"],
                     chatbot_current_step_id: channelVals.chatbot_current_step_id,

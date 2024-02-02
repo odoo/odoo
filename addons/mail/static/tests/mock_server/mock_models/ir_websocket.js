@@ -54,7 +54,7 @@ export class IrWebSocket extends busModels.IrWebSocket {
                 isIterable(member.channel_id) ? member.channel_id[0] : member.channel_id
             );
         for (const channelId of userChannelIds) {
-            channels.push({ model: "discuss.channel", id: channelId });
+            channels.push({ channelId });
         }
 
         return channels;

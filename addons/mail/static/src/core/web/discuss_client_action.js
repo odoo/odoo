@@ -56,7 +56,9 @@ export class DiscussClientAction extends Component {
         const rawActiveId =
             props.action.context.active_id ??
             props.action.params?.active_id ??
-            this.store.Thread.localIdToActiveId(this.store.discuss.thread?.localId) ??
+            (this.store.discuss.thread
+                ? `${this.store.discuss.thread.model}_${this.store.discuss.thread.id}`
+                : null) ??
             "mail.box_inbox";
         const [model, id] = this.parseActiveId(rawActiveId);
         const activeThread = await this.store.Thread.getOrFetch({ model, id });

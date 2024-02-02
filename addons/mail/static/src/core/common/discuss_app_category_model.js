@@ -4,7 +4,7 @@ import { compareDatetime } from "@mail/utils/common/misc";
 import { Record } from "./record";
 
 export class DiscussAppCategory extends Record {
-    static id = "id";
+    static id = [["id"]];
     /** @returns {import("models").DiscussAppCategory} */
     static get(data) {
         return super.get(data);
@@ -27,6 +27,16 @@ export class DiscussAppCategory extends Record {
                 compareDatetime(t2.lastInterestDateTime, t1.lastInterestDateTime) || t2.id - t1.id
             );
         }
+    }
+
+    get counter() {
+        return this.threads.reduce((acc, channel) => {
+            if (this.id === "channels") {
+                return channel.message_needaction_counter > 0 ? acc + 1 : acc;
+            } else {
+                return channel.message_unread_counter > 0 ? acc + 1 : acc;
+            }
+        }, 0);
     }
 
     get isVisible() {

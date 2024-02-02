@@ -32,9 +32,9 @@ class ResUsersSettingsVolumes(models.Model):
             'id': volume_setting.id,
             'volume': volume_setting.volume,
             'persona': {
-                'id': volume_setting.partner_id.id if volume_setting.partner_id else volume_setting.guest_id.id,
+                'partnerId': volume_setting.partner_id.id,
+                'guestId': volume_setting.guest_id.id,
                 'name': volume_setting.partner_id.name if volume_setting.partner_id else volume_setting.guest_id.name,
-                'type': "partner" if volume_setting.partner_id else "guest"
             },
             'user_setting_id': {
                 'id': volume_setting.user_setting_id.id,

@@ -134,7 +134,7 @@ patch(ThreadService.prototype, {
                 email,
                 lang,
                 reason,
-                persona: partner_id ? { type: "partner", id: partner_id } : false,
+                persona: partner_id ? { partnerId: partner_id } : false,
                 checked: true,
                 defaultCreateValues,
             });
@@ -188,11 +188,11 @@ patch(ThreadService.prototype, {
             this._openChatWindow(thread, replaceNewMessageChatWindow, options);
             return;
         }
-        if (this.ui.isSmall && thread.model === "discuss.channel") {
+        if (this.ui.isSmall && thread.channelId) {
             this._openChatWindow(thread, replaceNewMessageChatWindow, options);
             return;
         }
-        if (thread.model !== "discuss.channel") {
+        if (!thread.channelId) {
             this.action.doAction({
                 type: "ir.actions.act_window",
                 res_id: thread.id,
@@ -245,7 +245,7 @@ patch(ThreadService.prototype, {
     },
     getRecentChannels() {
         return Object.values(this.store.Thread.records)
-            .filter((thread) => thread.model === "discuss.channel")
+            .filter((thread) => thread.channelId)
             .sort(
                 (a, b) =>
                     compareDatetime(b.lastInterestDateTime, a.lastInterestDateTime) || b.id - a.id

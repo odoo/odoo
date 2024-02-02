@@ -32,7 +32,7 @@ QUnit.test("dragover files on thread with composer", async () => {
         name: "General",
     });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     const files = [
         await createFile({
             content: "hello, world",
@@ -59,7 +59,7 @@ QUnit.test("load more messages from channel (auto-load on scroll)", async () => 
         });
     }
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await contains("button", { text: "Load More", before: [".o-mail-Message", { count: 30 }] });
     await contains(".o-mail-Thread", { scroll: "bottom" });
     await scroll(".o-mail-Thread", 0);
@@ -81,7 +81,7 @@ QUnit.test("show message subject when subject is not the same as the thread name
         subject: "Salutations, voyageur",
     });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await contains(".o-mail-Message", { text: "Subject: Salutations, voyageurnot empty" });
 });
 
@@ -99,7 +99,7 @@ QUnit.test("do not show message subject when subject is the same as the thread n
         subject: "Salutations, voyageur",
     });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await contains(".o-mail-Message", { text: "not empty" });
     await contains(".o-mail-Message", {
         count: 0,
@@ -118,7 +118,7 @@ QUnit.test("auto-scroll to bottom of thread on load", async () => {
         });
     }
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await contains(".o-mail-Message", { count: 25 });
     await contains(".o-mail-Thread", { scroll: "bottom" });
 });
@@ -139,7 +139,7 @@ QUnit.test("display day separator before first message of the day", async () => 
         },
     ]);
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await contains(".o-mail-DateSection");
 });
 
@@ -152,7 +152,7 @@ QUnit.test("do not display day separator if all messages of the day are empty", 
         res_id: channelId,
     });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await contains(".o-mail-Thread", { text: "There are no messages in this conversation." });
     await contains(".o-mail-DateSection", { count: 0 });
 });
@@ -174,7 +174,7 @@ QUnit.test("scroll position is kept when navigating from one channel to another"
             }))
     );
     const { openDiscuss } = await start();
-    openDiscuss(channelId_1);
+    await openDiscuss(channelId_1);
     await contains(".o-mail-Message", { count: 20 });
     const scrollValue1 = $(".o-mail-Thread")[0].scrollHeight / 2;
     await contains(".o-mail-Thread", { scroll: "bottom" });
@@ -206,7 +206,7 @@ QUnit.test("thread is still scrolling after scrolling up then to bottom", async 
             }))
     );
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await contains(".o-mail-Message", { count: 20 });
     await contains(".o-mail-Thread", { scroll: "bottom" });
     await scroll(".o-mail-Thread", $(".o-mail-Thread")[0].scrollHeight / 2);
@@ -221,7 +221,7 @@ QUnit.test("mention a channel with space in the name", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General good boy" });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "#");
     await click(".o-mail-Composer-suggestion");
     await contains(".o-mail-Composer-input", { value: "#General good boy " });
@@ -233,7 +233,7 @@ QUnit.test('mention a channel with "&" in the name', async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General & good" });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "#");
     await click(".o-mail-Composer-suggestion");
     await contains(".o-mail-Composer-input", { value: "#General & good " });
@@ -326,7 +326,7 @@ QUnit.test(
                 }
             },
         });
-        openDiscuss(channelId);
+        await openDiscuss(channelId);
         await focus(".o-mail-Composer-input");
         // simulate receiving a message
         await pyEnv.withUser(userId, () =>
@@ -420,7 +420,7 @@ QUnit.test("show empty placeholder when thread contains no message", async () =>
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await contains(".o-mail-Thread", { text: "There are no messages in this conversation." });
     await contains(".o-mail-Message", { count: 0 });
 });
@@ -430,7 +430,7 @@ QUnit.test("show empty placeholder when thread contains only empty messages", as
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     pyEnv["mail.message"].create({ model: "discuss.channel", res_id: channelId });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await contains(".o-mail-Thread", { text: "There are no messages in this conversation." });
     await contains(".o-mail-Message", { count: 0 });
 });
@@ -455,7 +455,7 @@ QUnit.test(
             pyEnv["mail.message"].create({ model: "discuss.channel", res_id: channelId });
         }
         const { openDiscuss } = await start();
-        openDiscuss(channelId);
+        await openDiscuss(channelId);
         // initial load: +30 empty ; (auto) load more: +20 empty +10 non-empty
         await contains(".o-mail-Message", { count: 10 });
         await contains("button", { text: "Load More" }); // still 40 non-empty
@@ -482,7 +482,7 @@ QUnit.test("no new messages separator on posting message (some message history)"
     ]);
     pyEnv["discuss.channel.member"].write([memberId], { seen_message_id: messageId });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await contains(".o-mail-Message");
     await contains(".o-mail-Thread-newMessage hr + span", { count: 0, text: "New messages" });
     await insertText(".o-mail-Composer-input", "hey!");
@@ -518,7 +518,7 @@ QUnit.test("new messages separator on receiving new message [REQUIRE FOCUS]", as
     ]);
     pyEnv["discuss.channel.member"].write([memberId], { seen_message_id: messageId });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await contains(".o-mail-Message");
     await contains(".o-mail-Thread-newMessage hr + span", { count: 0, text: "New messages" });
 
@@ -549,11 +549,10 @@ QUnit.test("no new messages separator on posting message (no message history)", 
         name: "General",
     });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await contains(".o-mail-Composer-input");
     await contains(".o-mail-Message", { count: 0 });
     await contains(".o-mail-Thread-newMessage hr + span", { count: 0, text: "New messages" });
-
     await insertText(".o-mail-Composer-input", "hey!");
     await click(".o-mail-Composer-send:enabled");
     await contains(".o-mail-Message");
@@ -574,7 +573,7 @@ QUnit.test("Mention a partner with special character (e.g. apostrophe ')", async
         ],
     });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "@");
     await insertText(".o-mail-Composer-input", "Pyn");
     await click(".o-mail-Composer-suggestion");
@@ -607,7 +606,7 @@ QUnit.test("mention 2 different partners that have the same name", async () => {
         ],
     });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "@Te");
     await click(":nth-child(1 of .o-mail-Composer-suggestion");
     await contains(".o-mail-Composer-input", { value: "@TestPartner " });
@@ -629,7 +628,7 @@ QUnit.test("mention a channel on a second line when the first line contains #", 
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General good" });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "#blabla\n#");
     await click(".o-mail-Composer-suggestion");
     await contains(".o-mail-Composer-input", { value: "#blabla\n#General good " });
@@ -643,7 +642,7 @@ QUnit.test(
         const pyEnv = await startServer();
         const channelId = pyEnv["discuss.channel"].create({ name: "General good" });
         const { openDiscuss } = await start();
-        openDiscuss(channelId);
+        await openDiscuss(channelId);
         await insertText(".o-mail-Composer-input", "#");
         await click(".o-mail-Composer-suggestion");
         await contains(".o-mail-Composer-input", { value: "#General good " });
@@ -669,7 +668,7 @@ QUnit.test("mention 2 different channels that have the same name", async () => {
         },
     ]);
     const { openDiscuss } = await start();
-    openDiscuss(channelId_1);
+    await openDiscuss(channelId_1);
     await insertText(".o-mail-Composer-input", "#m");
     await click(":nth-child(1 of .o-mail-Composer-suggestion)");
     await contains(".o-mail-Composer-input", { value: "#my channel " });
@@ -703,7 +702,7 @@ QUnit.test(
             ],
         });
         const { openDiscuss } = await start();
-        openDiscuss(channelId);
+        await openDiscuss(channelId);
         await insertText(".o-mail-Composer-input", "email@odoo.com\n@Te");
         await click(".o-mail-Composer-suggestion");
         await contains(".o-mail-Composer-input", { value: "email@odoo.com\n@TestPartner " });
@@ -733,9 +732,8 @@ QUnit.test("basic rendering of canceled notification", async () => {
         res_partner_id: partnerId,
     });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await contains(".o-mail-Message-notification .fa-envelope-o");
-
     await click(".o-mail-Message-notification");
     await contains(".o-mail-MessageNotificationPopover");
     await contains(".o-mail-MessageNotificationPopover .fa-trash-o");
@@ -772,7 +770,7 @@ QUnit.test(
             },
         ]);
         const { openDiscuss } = await start();
-        openDiscuss(channelId);
+        await openDiscuss(channelId);
         // send a command that leads to receiving a transient message
         await insertText(".o-mail-Composer-input", "/who");
         await click(".o-mail-Composer-send:enabled");
@@ -799,7 +797,7 @@ QUnit.test(
         const pyEnv = await startServer();
         const channelId = pyEnv["discuss.channel"].create({ name: "test" });
         const { openDiscuss } = await start();
-        openDiscuss(channelId);
+        await openDiscuss(channelId);
         await insertText(".o-mail-Composer-input", "Dummy Message");
         await click(".o-mail-Composer-send:enabled");
         await contains(".o-mail-Composer-input:focus");
@@ -864,7 +862,6 @@ QUnit.test(
         await click(".o_menu_systray i[aria-label='Messages']");
         await contains(".o-mail-NotificationItem");
         await contains(".o-mail-ChatWindow", { count: 0 });
-
         await click(".o-mail-NotificationItem");
         await contains(".o-mail-ChatWindow");
     }
@@ -893,7 +890,7 @@ QUnit.test("Thread messages are only loaded once", async (assert) => {
             body: "Message on channel2",
         },
     ]);
-    openDiscuss();
+    await openDiscuss();
     await click(":nth-child(1 of .o-mail-DiscussSidebarChannel");
     await contains(".o-mail-Message-content", { text: "Message on channel1" });
     await click(":nth-child(2 of .o-mail-DiscussSidebarChannel)");
@@ -920,7 +917,7 @@ QUnit.test(
                 }
             },
         });
-        openDiscuss(channelId);
+        await openDiscuss(channelId);
         await contains(".o-mail-Composer-input");
         await triggerEvents(".o-mail-Composer-input", ["blur", "focusout"]);
         await click("button", { text: "Inbox" });
@@ -964,7 +961,7 @@ QUnit.test(
                 }
             },
         });
-        openDiscuss(channelId);
+        await openDiscuss(channelId);
         await click("button", { text: "Inbox" });
         await rpc("/mail/message/post", {
             post_data: {
@@ -1004,7 +1001,7 @@ QUnit.test("can be marked as read while loading", async function () {
             }
         },
     });
-    openDiscuss(undefined);
+    await openDiscuss(undefined);
     await contains(".o-discuss-badge", { text: "1" });
     await click(".o-mail-DiscussSidebarChannel", { text: "Demo" });
     loadDeferred.resolve();
@@ -1026,7 +1023,7 @@ QUnit.test("New message separator not appearing after showing composer on thread
         },
     ]);
     const { openFormView } = await start();
-    openFormView("res.partner", pyEnv.currentPartnerId);
+    await openFormView("res.partner", pyEnv.currentPartnerId);
     await contains("button", { text: "Log note" });
     await contains(".o-mail-Thread-newMessage", { count: 0 });
     await click("button", { text: "Log note" });
@@ -1037,7 +1034,7 @@ QUnit.test("Transient messages are added at the end of the thread", async () => 
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "Dummy Message");
     await click(".o-mail-Composer-send:enabled");
     await contains(".o-mail-Message");

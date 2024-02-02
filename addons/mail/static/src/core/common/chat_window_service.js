@@ -35,7 +35,7 @@ export class ChatWindowService {
         if (this.ui.isSmall || chatWindow.thread?.isTransient) {
             return;
         }
-        if (chatWindow.thread?.model === "discuss.channel") {
+        if (chatWindow.thread?.channelId) {
             chatWindow.thread.foldStateCount++;
             return rpc(
                 "/discuss/channel/fold",

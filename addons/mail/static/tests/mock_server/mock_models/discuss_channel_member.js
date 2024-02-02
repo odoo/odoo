@@ -54,8 +54,7 @@ export class DiscussChannelMember extends models.ServerModel {
             this.write([memberOfCurrentUser.id], vals);
             this.env["bus.bus"]._sendone(this.env.partner, "discuss.Thread/fold_state", {
                 foldStateCount: state_count,
-                id: channel.id,
-                model: "discuss.channel",
+                channelId: channel.id,
                 fold_state: foldState,
             });
         }
@@ -79,14 +78,13 @@ export class DiscussChannelMember extends models.ServerModel {
             if (member.guest_id) {
                 const [guest] = this.env["mail.guest"]._filter([["id", "=", member.guest_id]]);
                 persona = {
-                    id: guest.id,
+                    guestId: guest.id,
                     im_status: guest.im_status,
                     name: guest.name,
-                    type: "guest",
                 };
             }
             dataList.push({
-                thread: { id: member.channel_id, model: "discuss.channel" },
+                thread: { channelId: member.channel_id },
                 id: member.id,
                 persona,
             });

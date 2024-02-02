@@ -16,7 +16,7 @@ patch(AttachmentUploadService.prototype, {
             ) {
                 const attachments = [...this.store.Thread.insert(Thread).composer.attachments];
                 for (const attachment of attachments) {
-                    this.unlink(attachment);
+                    attachment.unlink();
                 }
             }
         });

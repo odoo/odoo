@@ -29,7 +29,7 @@ QUnit.test('do not send typing notification on typing "/" command', async (asser
             }
         },
     });
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "/");
     assert.verifySteps([], "No rpc done");
 });
@@ -46,7 +46,7 @@ QUnit.test(
                 }
             },
         });
-        openDiscuss(channelId);
+        await openDiscuss(channelId);
         await insertText(".o-mail-Composer-input", "/");
         await click(":nth-child(1 of .o-mail-Composer-suggestion)");
         await contains(".o-mail-Composer-suggestion strong", { count: 0 });
@@ -62,7 +62,7 @@ QUnit.test("add an emoji after a command", async () => {
         channel_type: "channel",
     });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await contains(".o-mail-Composer-input", { value: "" });
     await insertText(".o-mail-Composer-input", "/");
     await click(":nth-child(1 of .o-mail-Composer-suggestion)");

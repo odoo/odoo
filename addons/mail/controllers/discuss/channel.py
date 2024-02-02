@@ -91,8 +91,7 @@ class ChannelController(http.Controller):
         else:
             member.mute_until_dt = False
         channel_data = {
-            "id": member.channel_id.id,
-            "model": "discuss.channel",
+            "channelId": member.channel_id.id,
             "mute_until_dt": member.mute_until_dt,
         }
         request.env["bus.bus"]._sendone(member.partner_id, "mail.record/insert", {"Thread": channel_data})
@@ -108,8 +107,7 @@ class ChannelController(http.Controller):
         member.custom_notifications = custom_notifications
         channel_data = {
             "custom_notifications": member.custom_notifications,
-            "id": member.channel_id.id,
-            "model": "discuss.channel",
+            "channelId": member.channel_id.id,
         }
         request.env["bus.bus"]._sendone(member.partner_id, "mail.record/insert", {"Thread": channel_data})
 

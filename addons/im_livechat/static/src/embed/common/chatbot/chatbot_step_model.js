@@ -1,9 +1,9 @@
 /* @odoo-module */
 
-import { AND, Record } from "@mail/core/common/record";
+import { Record } from "@mail/core/common/record";
 
 export class ChatbotStep extends Record {
-    static id = AND("scriptStep", "message");
+    static id = [["scriptStep", "message"]];
 
     operatorFound = false;
     scriptStep = Record.one("ChatbotScriptStep");

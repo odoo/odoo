@@ -11,7 +11,7 @@ patch(Attachment.prototype, {
         };
     },
     get urlRoute() {
-        if (!this.accessToken && this.originThread?.model === "discuss.channel") {
+        if (!this.accessToken && this.originThread?.channelId) {
             return this.isImage
                 ? `/im_livechat/cors/channel/${this.originThread.id}/image/${this.id}`
                 : `/im_livechat/cors/channel/${this.originThread.id}/attachment/${this.id}`;

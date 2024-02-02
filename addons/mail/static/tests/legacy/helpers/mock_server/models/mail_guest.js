@@ -31,10 +31,9 @@ patch(MockServer.prototype, {
                 return [
                     guest.id,
                     {
-                        id: guest.id,
+                        guestId: guest.id,
                         im_status: guest.im_status,
                         name: guest.name,
-                        type: "guest",
                         write_date: guest.write_date,
                     },
                 ];

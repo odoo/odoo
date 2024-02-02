@@ -166,8 +166,8 @@ export class ChannelSelector extends Component {
             this.onValidate();
         }
         if (this.props.category.id === "chats") {
-            if (!this.state.selectedPartners.includes(option.partner.id)) {
-                this.state.selectedPartners.push(option.partner.id);
+            if (!this.state.selectedPartners.includes(option.partner.partnerId)) {
+                this.state.selectedPartners.push(option.partner.partnerId);
             }
             this.state.value = "";
         }
@@ -232,7 +232,7 @@ export class ChannelSelector extends Component {
     get tagsList() {
         const res = [];
         for (const partnerId of this.state.selectedPartners) {
-            const partner = this.store.Persona.get({ type: "partner", id: partnerId });
+            const partner = this.store.Persona.get({ partnerId });
             res.push({
                 id: partner.id,
                 text: partner.name,

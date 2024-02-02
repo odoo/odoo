@@ -11,7 +11,7 @@ threadActionsRegistry.add("pinned-messages", {
     component: PinnedMessagesPanel,
     condition(component) {
         return (
-            component.thread?.model === "discuss.channel" &&
+            component.thread?.channelId &&
             (!component.props.chatWindow || component.props.chatWindow.isOpen)
         );
     },

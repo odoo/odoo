@@ -66,7 +66,7 @@ export class ChatWindow extends Component {
     }
 
     get composerType() {
-        if (this.thread && this.thread.model !== "discuss.channel") {
+        if (this.thread && !this.thread.channelId) {
             return "note";
         }
         return undefined;

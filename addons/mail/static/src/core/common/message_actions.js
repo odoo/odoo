@@ -57,8 +57,7 @@ messageActionsRegistry
     })
     .add("mark-as-unread", {
         condition: (component) =>
-            component.props.thread.model === "discuss.channel" &&
-            component.store.self.type === "partner",
+            component.props.thread.channelId && component.store.self.partnerId,
         icon: "fa-eye-slash",
         title: _t("Mark as Unread"),
         onClick: (component) => component.onClickMarkAsUnread(),

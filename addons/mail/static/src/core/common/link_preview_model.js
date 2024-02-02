@@ -3,7 +3,7 @@
 import { Record } from "@mail/core/common/record";
 
 export class LinkPreview extends Record {
-    static id = "id";
+    static id = [["id"]];
     /** @returns {import("models").LinkPreview} */
     static get(data) {
         return super.get(data);

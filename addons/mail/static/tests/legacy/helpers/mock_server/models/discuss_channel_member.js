@@ -55,7 +55,7 @@ patch(MockServer.prototype, {
                 persona = this._mockMailGuestGuestFormat([guest.id]).get(guest.id);
             }
             const data = {
-                thread: { id: member.channel_id, model: "discuss.channel" },
+                thread: { channelId: member.channel_id },
                 id: member.id,
                 persona,
                 seen_message_id: member.seen_message_id ? { id: member.seen_message_id } : false,
@@ -100,8 +100,7 @@ patch(MockServer.prototype, {
         }
         this.pyEnv["bus.bus"]._sendone(target, "discuss.Thread/fold_state", {
             foldStateCount: state_count,
-            id: member.channel_id[0],
-            model: "discuss.channel",
+            channelId: member.channel_id[0],
             fold_state: state,
         });
     },

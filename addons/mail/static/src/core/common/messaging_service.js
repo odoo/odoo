@@ -65,7 +65,7 @@ export class Messaging {
         const searchTerm = cleanTerm(searchStr);
         for (const localId in this.store.Persona.records) {
             const persona = this.store.Persona.records[localId];
-            if (persona.type !== "partner") {
+            if (!persona.partnerId) {
                 continue;
             }
             const partner = persona;
@@ -103,7 +103,6 @@ export const messagingService = {
         "mail.store",
         "orm",
         "im_status",
-        "mail.attachment", // FIXME: still necessary until insert is managed by this service
         "mail.thread", // FIXME:     still necessary until insert is managed by this service
         "mail.message", // FIXME: still necessary until insert is managed by this service
         "mail.persona", // FIXME: still necessary until insert is managed by this service
