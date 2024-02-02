@@ -40,6 +40,7 @@ patch(PosStore.prototype, {
     },
     set_cashier(employee) {
         this.cashier = employee;
+        this.cashier.role = this.employee_security[employee.id].role;
         const selectedOrder = this.get_order();
         if (selectedOrder && !selectedOrder.get_orderlines().length) {
             // Order without lines can be considered to be un-owned by any employee.
