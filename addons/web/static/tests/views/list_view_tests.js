@@ -3961,6 +3961,35 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test(
+        "groups can be sorted when list is grouped by date with granularity",
+        async function (assert) {
+            serverData.models.foo.fields.date = { sortable: true };
+            await makeView({
+                type: "list",
+                resModel: "foo",
+                serverData,
+                groupBy: ["date:year"],
+                arch: `
+                <tree editable="bottom">
+                    <field name="foo"/>
+                    <field name="date"/>
+                </tree>`,
+                mockRPC(route, args) {
+                    if (args.method === "web_read_group") {
+                        assert.step(args.kwargs.orderby || "default order");
+                    }
+                },
+            });
+
+            assert.containsN(target, ".o_group_header", 2);
+            assert.containsNone(target, ".o_data_row");
+
+            await click(target.querySelector(".o_column_sortable[data-name='date']"));
+            assert.verifySteps(["default order", "date ASC"]);
+        }
+    );
+
+    QUnit.test(
         "groups can't be sorted on aggregates if there is no record",
         async function (assert) {
             serverData.models.foo.records = [];
