@@ -8,6 +8,7 @@ from odoo import Command, fields
 from odoo.exceptions import UserError
 from odoo.tests import Form, users
 from odoo.tools.misc import format_date
+from odoo.tests.common import HttpCase, tagged
 
 from odoo.addons.mrp.tests.common import TestMrpCommon
 
@@ -4036,3 +4037,23 @@ class TestMrpOrder(TestMrpCommon):
         mo_form.product_qty = 10
         mo_form.save()
         self.assertEqual(mo.product_qty, 10)
+
+
+@tagged('-at_install', 'post_install')
+class TestTourMrpOrder(HttpCase):
+    def test_mrp_order_product_catalog(self):
+        product = self.env['product.product'].create({
+            'name': 'test1',
+            'type': 'product',
+        })
+        mo = self.env['mrp.production'].create({
+            'product_id': product.id,
+            'product_uom_qty': 1.0,
+        })
+
+        self.assertEqual(len(mo.move_raw_ids), 0)
+        action = self.env.ref('mrp.mrp_production_action')
+        url = '/web#model=mrp.production&view_type=form&action=%s&id=%s' % (str(action.id), str(mo.id))
+
+        self.start_tour(url, 'test_mrp_production_product_catalog', login='admin')
+        self.assertEqual(len(mo.move_raw_ids), 1)
