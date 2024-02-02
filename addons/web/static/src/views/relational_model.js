@@ -2436,7 +2436,7 @@ export class DynamicGroupList extends DynamicList {
         const everyGroupIsClosed = this.groups.every((group) => group.isFolded);
         if (
             everyGroupIsClosed &&
-            !(this.groupBy.includes(fieldName) || this.hasAggregate(fieldName))
+            !(this.groupBy[0].split(":")[0] === fieldName || this.hasAggregate(fieldName))
         ) {
             return;
         }
