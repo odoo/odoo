@@ -669,22 +669,31 @@ class RecordList extends Array {
         return Record.MAKE_UPDATE(function recordListAssign() {
             /** @type {Record[]|Set<Record>|RecordList<Record|any[]>} */
             const collection = Record.isRecord(data) ? [data] : data;
-            // l1 and collection could be same record list,
+            // data and collection could be same record list,
             // save before clear to not push mutated recordlist that is empty
             const vals = [...collection];
-            /** @type {R[]} */
-            const oldRecordsProxy = recordList._proxyInternal.slice.call(recordList._proxy);
-            for (const oldRecordProxy of oldRecordsProxy) {
-                toRaw(oldRecordProxy)._raw.__uses__.delete(recordList);
-            }
-            const recordsProxy = vals.map((val) =>
+            const oldRecords = recordList._proxyInternal.slice
+                .call(recordList._proxy)
+                .map((recordProxy) => toRaw(recordProxy)._raw);
+            const newRecords = vals.map((val) =>
                 recordList._insert(val, function recordListAssignInsert(record) {
-                    record.__uses__.add(recordList);
+                    if (record.notIn(oldRecords)) {
+                        record.__uses__.add(recordList);
+                        Record.ADD_QUEUE(recordList.field, "onAdd", record);
+                    }
                 })
             );
-            recordList._proxy.data = recordsProxy.map(
-                (recordProxy) => toRaw(recordProxy)._raw.localId
-            );
+            const inverse = recordList.fieldDefinition.inverse;
+            for (const oldRecord of oldRecords) {
+                if (oldRecord.notIn(newRecords)) {
+                    oldRecord.__uses__.delete(recordList);
+                    Record.ADD_QUEUE(recordList.field, "onDelete", oldRecord);
+                    if (inverse) {
+                        oldRecord._fields.get(inverse).value.delete(recordList.owner);
+                    }
+                }
+            }
+            recordList._proxy.data = newRecords.map((newRecord) => newRecord.localId);
         });
     }
     /** @param {R[]} records */
