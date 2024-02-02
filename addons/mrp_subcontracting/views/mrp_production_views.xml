@@ -43,7 +43,7 @@
             <xpath expr="//field[@name='move_raw_ids']" position="replace">
                 <field name="bom_product_ids" invisible="1"/>
                 <field name="move_line_raw_ids" force_save="1"
-                    context="{'tree_view_ref': 'mrp_subcontracting.mrp_subcontracting_stock_move_line_tree_view', 'default_company_id': company_id, 'default_location_id': location_src_id, 'default_location_dest_id': production_location_id, 'bom_product_ids': bom_product_ids}"
+                    context="{'list_view_ref': 'mrp_subcontracting.mrp_subcontracting_stock_move_line_tree_view', 'default_company_id': company_id, 'default_location_id': location_src_id, 'default_location_dest_id': production_location_id, 'bom_product_ids': bom_product_ids}"
                     />
             </xpath>
             <xpath expr="//sheet" position="inside">
@@ -76,7 +76,7 @@
                 <attribute name="options">{'no_create_edit': True, 'no_open': True}</attribute>
             </xpath>
             <xpath expr="//field[@name='move_line_raw_ids']" position="attributes">
-                <attribute name="context">{'tree_view_ref': 'mrp_subcontracting.mrp_subcontracting_portal_stock_move_line_tree_view', 'default_company_id': company_id, 'default_location_id': location_src_id, 'default_location_dest_id': production_location_id, 'bom_product_ids': bom_product_ids}</attribute>
+                <attribute name="context">{'list_view_ref': 'mrp_subcontracting.mrp_subcontracting_portal_stock_move_line_tree_view', 'default_company_id': company_id, 'default_location_id': location_src_id, 'default_location_dest_id': production_location_id, 'bom_product_ids': bom_product_ids}</attribute>
             </xpath>
             <xpath expr="//field[@name='forecasted_issue']" position="replace"/>
             <xpath expr="//button[@name='%(mrp.action_change_production_qty)d']" position="replace"/>
@@ -86,7 +86,7 @@
     </record>
 
     <record id="mrp_production_subcontracting_tree_view" model="ir.ui.view">
-        <field name="name">mrp.production.subcontracting.tree</field>
+        <field name="name">mrp.production.subcontracting.list</field>
         <field name="model">mrp.production</field>
         <field name="mode">primary</field>
         <field name="priority">1000</field>

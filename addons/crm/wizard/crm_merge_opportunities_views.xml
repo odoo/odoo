@@ -11,7 +11,7 @@
                         <field name="team_id" class="oe_inline" context="{'kanban_view_ref': 'sales_team.crm_team_view_kanban'}"/>
                     </group>
                     <field name="opportunity_ids" nolabel="1">
-                        <tree>
+                        <list>
                             <field name="create_date"/>
                             <field name="name"/>
                             <field name="type" optional="hide"/>
@@ -21,7 +21,7 @@
                             <field name="stage_id"/>
                             <field name="user_id" widget="many2one_avatar_user"/>
                             <field name="team_id" optional="hide"/>
-                        </tree>
+                        </list>
                     </field>
                     <footer>
                         <button name="action_merge" type="object" string="Merge" class="btn-primary" data-hotkey="q"/>

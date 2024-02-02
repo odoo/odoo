@@ -75,7 +75,7 @@ class MrpProduction(models.Model):
             "res_model": "account.analytic.account",
             'domain': [('id', 'in', self.analytic_account_ids.ids)],
             "name": _("Analytic Accounts"),
-            'view_mode': 'tree,form',
+            'view_mode': 'list,form',
         }
 
     def _cal_price(self, consumed_moves):

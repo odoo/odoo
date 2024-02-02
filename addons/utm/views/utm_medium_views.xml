@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="utm_medium_view_tree" model="ir.ui.view">
-        <field name="name">utm.medium.view.tree</field>
+        <field name="name">utm.medium.view.list</field>
         <field name="model">utm.medium</field>
         <field name="arch" type="xml">
-            <tree string="Mediums" editable="bottom" sample="1">
+            <list string="Mediums" editable="bottom" sample="1">
                 <field name="name" placeholder='e.g. "Email"'/>
                 <field name="active" column_invisible="True"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -41,7 +41,7 @@
     <record id="utm_medium_action" model="ir.actions.act_window">
         <field name="name">Mediums</field>
         <field name="res_model">utm.medium</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="search_view_id" ref="utm_medium_view_search"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">

@@ -86,7 +86,7 @@ class QrInvoiceWizard(models.TransientModel):
             })
         else:
             action_vals.update({
-                'view_mode': 'tree',
+                'view_mode': 'list',
                 'domain': [('id', 'in', faulty_invoices.ids)],
             })
         return action_vals

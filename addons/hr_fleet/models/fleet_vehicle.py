@@ -122,5 +122,5 @@ class FleetVehicle(models.Model):
 
     def open_assignation_logs(self):
         action = super().open_assignation_logs()
-        action['views'] = [[self.env.ref('hr_fleet.fleet_vehicle_assignation_log_view_list').id, 'tree']]
+        action['views'] = [[self.env.ref('hr_fleet.fleet_vehicle_assignation_log_view_list').id, 'list']]
         return action

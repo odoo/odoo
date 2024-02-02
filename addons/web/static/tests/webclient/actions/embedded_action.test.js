@@ -72,7 +72,7 @@ class Partner extends models.Model {
                     </t>
                 </templates>
             </kanban>`,
-        "list,false": `<tree><field name="foo"/></tree>`,
+        "list,false": `<list><field name="foo"/></list>`,
         "pivot,false": `<pivot/>`,
         "search,false": `<search><field name="foo" string="Foo"/></search>`,
     };
@@ -87,7 +87,7 @@ class Pony extends models.Model {
         { id: 9, name: "Fluttershy" },
     ];
     _views = {
-        "list,false": `<tree><field name="name"/></tree>`,
+        "list,false": `<list><field name="name"/></list>`,
         "kanban,false": `<kanban>
                             <templates>
                                 <t t-name="kanban-box">

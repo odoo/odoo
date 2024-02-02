@@ -48,7 +48,7 @@ export function getMenuServerData() {
         },
     };
     serverData.views = {};
-    serverData.views["ir.ui.menu,1,list"] = `<tree></tree>`;
+    serverData.views["ir.ui.menu,1,list"] = `<list></list>`;
     serverData.views["ir.ui.menu,2,form"] = `<form></form>`;
     serverData.views["ir.ui.menu,false,search"] = `<search></search>`;
     serverData.models = {

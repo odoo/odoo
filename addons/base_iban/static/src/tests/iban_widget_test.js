@@ -24,9 +24,9 @@ QUnit.module("Fields", {}, function () {
                             <field name="name"/>
                         </group>
                         <field name="bank_ids">
-                            <tree editable="bottom">
+                            <list editable="bottom">
                                 <field name="acc_number" widget="iban"/>
-                            </tree>
+                            </list>
                         </field>
                     </sheet>
                 </form>`,

@@ -86,7 +86,7 @@
             <field name="name">account.account.list</field>
             <field name="model">account.account</field>
             <field name="arch" type="xml">
-                <tree editable="top" create="1" delete="1" multi_edit="1" string="Chart of accounts"  open_form_view="True">
+                <list editable="top" create="1" delete="1" multi_edit="1" string="Chart of accounts"  open_form_view="True">
                     <field name="company_id" column_invisible="True"/>
                     <field name="code"/>
                     <field name="name"/>
@@ -100,7 +100,7 @@
                     <field name="allowed_journal_ids" optional="hide" widget="many2many_tags"/>
                     <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -164,7 +164,7 @@
         <record id="action_account_form" model="ir.actions.act_window">
             <field name="name">Chart of Accounts</field>
             <field name="res_model">account.account</field>
-            <field name="view_mode">tree,kanban,form</field>
+            <field name="view_mode">list,kanban,form</field>
             <field name="search_view_id" ref="view_account_search"/>
             <field name="view_id" ref="view_account_list"/>
             <field name="help" type="html">

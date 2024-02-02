@@ -37,7 +37,7 @@ class AccountAnalyticAccount(models.Model):
             "res_model": "mrp.production",
             "domain": [['id', 'in', self.production_ids.ids]],
             "name": _("Manufacturing Orders"),
-            'view_mode': 'tree,form',
+            'view_mode': 'list,form',
             "context": {'default_analytic_account_id': self.id},
         }
         if len(self.production_ids) == 1:
@@ -52,7 +52,7 @@ class AccountAnalyticAccount(models.Model):
             "res_model": "mrp.bom",
             "domain": [['id', 'in', self.bom_ids.ids]],
             "name": _("Bills of Materials"),
-            'view_mode': 'tree,form',
+            'view_mode': 'list,form',
             "context": {'default_analytic_account_id': self.id},
         }
         if self.bom_count == 1:
@@ -68,7 +68,7 @@ class AccountAnalyticAccount(models.Model):
             "domain": [['id', 'in', (self.workcenter_ids.order_ids | self.production_ids.workorder_ids).ids]],
             "context": {"create": False},
             "name": _("Work Orders"),
-            'view_mode': 'tree',
+            'view_mode': 'list',
         }
         return result
 

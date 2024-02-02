@@ -98,7 +98,7 @@ test("in editable list view", async () => {
     await mountView({
         type: "list",
         resModel: "product",
-        arch: '<tree editable="bottom"><field name="url" widget="url"/></tree>',
+        arch: '<list editable="bottom"><field name="url" widget="url"/></list>',
     });
     expect("tbody td:not(.o_list_record_selector) a").toHaveCount(2);
     expect(".o_field_url.o_field_widget[name='url'] a").toHaveCount(2);

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="transifex_code_translation_tree_view" model="ir.ui.view">
-        <field name="name">transifex.code.translation.tree</field>
+        <field name="name">transifex.code.translation.list</field>
         <field name="model">transifex.code.translation</field>
         <field name="arch" type="xml">
-            <tree string="Transifex Code Translation" js_class="transifex_code_translation_tree">
+            <list string="Transifex Code Translation" js_class="transifex_code_translation_tree">
                 <field name="source"/>
                 <field name="value"/>
                 <field name="module"/>
@@ -13,7 +13,7 @@
                        widget="url"
                        text="Contribute"
                        string="Transifex" />
-            </tree>
+            </list>
         </field>
     </record>
 

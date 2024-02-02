@@ -20,7 +20,7 @@ QUnit.module("TodoEditableBreadcrumbName Tests", (hooks) => {
         serverData = {
             views: {
                 "project.task,false,form": `<form js_class="todo_form"><field name="name"/></form>`,
-                "project.task,false,list": `<tree><field name="name"/></tree>`,
+                "project.task,false,list": `<list><field name="name"/></list>`,
             },
         };
         target = getFixture();

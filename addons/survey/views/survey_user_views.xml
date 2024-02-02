@@ -88,8 +88,8 @@
                     </group>
                     <notebook>
                         <page string="Answers" name="page_answers">
-                            <field name="user_input_line_ids" mode="tree" readonly="True" no_label="1">
-                                <tree decoration-muted="skipped == True">
+                            <field name="user_input_line_ids" mode="list" readonly="True" no_label="1">
+                                <list decoration-muted="skipped == True">
                                     <field name="question_sequence" column_invisible="True"/>
                                     <field name="create_date" optional="hidden"/>
                                     <field name="page_id" optional="hidden"/>
@@ -99,7 +99,7 @@
                                     <field name="display_name" string="Answer"/>
                                     <field name="answer_is_correct"/>
                                     <field name="answer_score" sum="Score"/>
-                                </tree>
+                                </list>
                             </field>
                         </page>
                     </notebook>
@@ -110,10 +110,10 @@
     </record>
 
     <record id="survey_user_input_view_tree" model="ir.ui.view">
-        <field name="name">survey.user_input.view.tree</field>
+        <field name="name">survey.user_input.view.list</field>
         <field name="model">survey.user_input</field>
         <field name="arch" type="xml">
-            <tree string="Survey User inputs" decoration-muted="test_entry == True" create="false">
+            <list string="Survey User inputs" decoration-muted="test_entry == True" create="false">
                 <field name="create_date"/>
                 <field name="survey_id"/>
                 <field name="nickname" optional="hide"/>
@@ -128,7 +128,7 @@
                     decoration-success="state == 'done'"
                     decoration-info="state == 'new'"
                     decoration-warning="state == 'in_progress'"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -169,7 +169,7 @@
         <field name="name">Participations</field>
         <field name="res_model">survey.user_input</field>
         <field name="domain">[('survey_id.survey_type', 'in', ('assessment', 'custom', 'live_session', 'survey'))]</field>
-        <field name="view_mode">tree,kanban,form</field>
+        <field name="view_mode">list,kanban,form</field>
         <field name="view_id" ref="survey_user_input_view_tree"></field>
         <field name="search_view_id" ref="survey_user_input_view_search"/>
         <field name="context">{'search_default_group_by_survey': True}</field>
@@ -211,10 +211,10 @@
         </field>
     </record>
     <record id="survey_response_line_view_tree" model="ir.ui.view">
-        <field name="name">survey.user_input.line.view.tree</field>
+        <field name="name">survey.user_input.line.view.list</field>
         <field name="model">survey.user_input.line</field>
         <field name="arch" type="xml">
-            <tree string="Survey Answer Line" create="false">
+            <list string="Survey Answer Line" create="false">
                 <field name="survey_id"/>
                 <field name="user_input_id"/>
                 <field name="question_id"/>
@@ -222,7 +222,7 @@
                 <field name="answer_type"/>
                 <field name="skipped"/>
                 <field name="answer_score" groups="base.group_no_one"/>
-            </tree>
+            </list>
         </field>
     </record>
     <record id="survey_user_input_line_view_search" model="ir.ui.view">
@@ -244,7 +244,7 @@
         <field name="name">Detailed Answers</field>
         <field name="res_model">survey.user_input.line</field>
         <field name="domain">[('survey_id.survey_type', 'in', ('assessment', 'custom', 'live_session', 'survey'))]</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="search_view_id" ref="survey_user_input_line_view_search"/>
         <field name="context">{'search_default_group_by_survey': True, 'search_default_group_by_user_input': True}</field>
         <field name="help" type="html">

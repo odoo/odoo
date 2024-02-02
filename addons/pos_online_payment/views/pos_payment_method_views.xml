@@ -46,14 +46,14 @@
     </record>
 
     <record id="pos_payment_method_view_tree_inherit_pos_online_payment" model="ir.ui.view">
-        <field name="name">pos.payment.method.tree.inherit.pos_online_payment</field>
+        <field name="name">pos.payment.method.list.inherit.pos_online_payment</field>
         <field name="model">pos.payment.method</field>
         <field name="inherit_id" ref="point_of_sale.pos_payment_method_view_tree"/>
         <field name="arch" type="xml">
-            <xpath expr="//tree" position="attributes">
+            <xpath expr="//list" position="attributes">
                 <attribute name="decoration-danger">is_online_payment and not has_an_online_payment_provider</attribute>
             </xpath>
-            <xpath expr="//tree" position="inside">
+            <xpath expr="//list" position="inside">
                 <field name="is_online_payment" optional="hide"/>
                 <field name="has_an_online_payment_provider" column_invisible="True"/>
             </xpath>

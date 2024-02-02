@@ -188,7 +188,7 @@ test("basic flow in editable list view", async () => {
     await mountView({
         type: "list",
         resModel: "product",
-        arch: '<tree editable="bottom"><field name="price"/></tree>',
+        arch: '<list editable="bottom"><field name="price"/></list>',
     });
     const zeroValues = queryAllTexts("td").filter((text) => text === "0");
     expect(zeroValues).toHaveLength(1, {

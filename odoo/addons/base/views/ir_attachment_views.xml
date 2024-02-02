@@ -47,7 +47,7 @@
         <record id="view_attachment_tree" model="ir.ui.view">
             <field name="model">ir.attachment</field>
             <field name="arch" type="xml">
-                <tree string="Attachments">
+                <list string="Attachments">
                     <field name="name"/>
                     <field name="res_model"/>
                     <field name="res_field"/>
@@ -57,7 +57,7 @@
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="create_uid"/>
                     <field name="create_date"/>
-                </tree>
+                </list>
             </field>
         </record>
         <record id="view_attachment_search" model="ir.ui.view">

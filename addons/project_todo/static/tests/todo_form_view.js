@@ -28,10 +28,10 @@ QUnit.module("todoFormView Tests", (hooks) => {
                         <field name="state"/>
                     </form>`,
                 "project.task,false,list": `
-                    <tree>
+                    <list>
                         <field name="name"/>
                         <field name="state"/>
-                    </tree>`,
+                    </list>`,
             },
         };
         target = getFixture();

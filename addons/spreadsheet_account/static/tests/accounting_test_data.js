@@ -30,11 +30,11 @@ export function getAccountingData() {
         },
         views: {
             "account.move.line,false,list": /* xml */ `
-                    <tree string="Move Lines">
+                    <list string="Move Lines">
                         <field name="id"/>
                         <field name="account_id"/>
                         <field name="date"/>
-                    </tree>
+                    </list>
                 `,
             "account.move.line,false,search": /* xml */ `<search/>`,
         },

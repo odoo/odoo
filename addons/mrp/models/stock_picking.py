@@ -141,7 +141,7 @@ class StockPicking(models.Model):
             'res_model': 'mrp.production',
             'type': 'ir.actions.act_window',
             'domain': [('id', 'in', self.production_ids.ids)],
-            'view_mode': 'tree,form',
+            'view_mode': 'list,form',
         }
         if self.production_count == 1:
             action.update({

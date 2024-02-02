@@ -278,7 +278,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree><field name="foo"/><field name="int_field"/></tree>',
+            arch: '<list><field name="foo"/><field name="int_field"/></list>',
         });
 
         // 3 th (1 for checkbox, 2 for columns)
@@ -308,7 +308,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree><field name="foo"/><field name="int_field"/></tree>',
+            arch: '<list><field name="foo"/><field name="int_field"/></list>',
         });
         await click(target.querySelectorAll(".o_data_row .o_list_record_selector input")[0]);
         assert.containsOnce(
@@ -373,7 +373,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree><field name="foo"/><field name="int_field"/></tree>',
+            arch: '<list><field name="foo"/><field name="int_field"/></list>',
         });
 
         // Go to the first checkbox and check it
@@ -416,7 +416,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree><field name="foo"/><field name="int_field"/></tree>',
+            arch: '<list><field name="foo"/><field name="int_field"/></list>',
         });
 
         // Go to the first checkbox and check it
@@ -469,7 +469,7 @@ QUnit.module("Views", (hooks) => {
                 type: "list",
                 resModel: "foo",
                 serverData,
-                arch: '<tree><field name="foo"/><field name="int_field"/></tree>',
+                arch: '<list><field name="foo"/><field name="int_field"/></list>',
             });
 
             await triggerHotkey("ArrowDown");
@@ -537,9 +537,9 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: /* xml */ `
-                <tree class="myClass" style="border: 1px solid red;">
+                <list class="myClass" style="border: 1px solid red;">
                     <field name="foo"/>
-                </tree>
+                </list>
             `,
         });
         assert.containsNone(
@@ -564,7 +564,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree create="0"><field name="foo"/></tree>',
+            arch: '<list create="0"><field name="foo"/></list>',
         });
 
         assert.containsNone(target, ".o_list_button_add", "should not have the 'Create' button");
@@ -577,7 +577,7 @@ QUnit.module("Views", (hooks) => {
                 type: "list",
                 resModel: "foo",
                 serverData,
-                arch: `<tree><field name="foo"/></tree>`,
+                arch: `<list><field name="foo"/></list>`,
             });
 
             assert.equal(
@@ -600,7 +600,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree><field name="foo"/></tree>',
+            arch: '<list><field name="foo"/></list>',
         });
 
         triggerHotkey("control+k");
@@ -620,7 +620,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             actionMenus: {},
-            arch: '<tree delete="0"><field name="foo"/></tree>',
+            arch: '<list delete="0"><field name="foo"/></list>',
         });
 
         assert.containsOnce(target, "div.o_control_panel .o_cp_action_menus");
@@ -635,7 +635,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree editable="top" edit="0"><field name="foo"/></tree>',
+            arch: '<list editable="top" edit="0"><field name="foo"/></list>',
             selectRecord: (resId, options) => {
                 assert.step(`switch to form - resId: ${resId} activeIds: ${options.activeIds}`);
             },
@@ -657,7 +657,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree open_form_view="1"><field name="foo"/></tree>',
+            arch: '<list open_form_view="1"><field name="foo"/></list>',
         });
         assert.containsNone(
             target,
@@ -671,7 +671,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree editable="top"><field name="foo"/></tree>',
+            arch: '<list editable="top"><field name="foo"/></list>',
         });
         assert.containsNone(
             target,
@@ -685,7 +685,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree editable="top" open_form_view="1"><field name="foo"/></tree>',
+            arch: '<list editable="top" open_form_view="1"><field name="foo"/></list>',
             selectRecord: (resId, options) => {
                 assert.step(`switch to form - resId: ${resId} activeIds: ${options.activeIds}`);
             },
@@ -713,7 +713,7 @@ QUnit.module("Views", (hooks) => {
                 resModel: "foo",
                 serverData,
                 actionMenus: {},
-                arch: '<tree><field name="foo"/></tree>',
+                arch: '<list><field name="foo"/></list>',
             });
 
             assert.containsNone(target, "div.o_control_panel .o_cp_action_menus");
@@ -744,7 +744,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             actionMenus: {},
-            arch: '<tree><field name="foo"/></tree>',
+            arch: '<list><field name="foo"/></list>',
         });
 
         assert.containsOnce(target, "div.o_control_panel .o_cp_action_menus");
@@ -773,7 +773,7 @@ QUnit.module("Views", (hooks) => {
             serverData,
             type: "list",
             resModel: "foo",
-            arch: `<tree export_xlsx="0"><field name="foo"/></tree>`,
+            arch: `<list export_xlsx="0"><field name="foo"/></list>`,
         });
         assert.containsNone(target, ".o_list_export_xlsx");
     });
@@ -784,7 +784,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             actionMenus: {},
-            arch: '<tree create="0"><field name="foo"/></tree>',
+            arch: '<list create="0"><field name="foo"/></list>',
         });
 
         await click(target.querySelector("tbody td.o_list_record_selector input"));
@@ -804,13 +804,13 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree>
+                <list>
                     <button name="a" type="object" icon="fa-car"/>
                     <field name="foo"/>
                     <button name="x" type="object" icon="fa-star"/>
                     <button name="y" type="object" icon="fa-refresh"/>
                     <button name="z" type="object" icon="fa-exclamation"/>
-                </tree>`,
+                </list>`,
         });
 
         assert.containsN(
@@ -830,7 +830,7 @@ QUnit.module("Views", (hooks) => {
                 resModel: "foo",
                 serverData,
                 arch: `
-                <tree>
+                <list>
                     <button name="a" type="object" icon="fa-car"/>
                     <field name="foo" column_invisible="1"/>
                     <!--Here the column_invisible=1 is used to simulate a group on the case that the user
@@ -839,7 +839,7 @@ QUnit.module("Views", (hooks) => {
                     <button name="x" type="object" icon="fa-star"/>
                     <button name="y" type="object" icon="fa-refresh"/>
                     <button name="z" type="object" icon="fa-exclamation"/>
-                </tree>`,
+                </list>`,
             });
 
             assert.containsN(
@@ -870,13 +870,13 @@ QUnit.module("Views", (hooks) => {
                 resModel: "foo",
                 serverData,
                 arch: `
-                <tree>
+                <list>
                     <button name="a" type="object" icon="fa-car"/>
                     <field name="foo" invisible="foo == 'blip'"/>
                     <button name="x" type="object" icon="fa-star"/>
                     <button name="y" type="object" icon="fa-refresh"/>
                     <button name="z" type="object" icon="fa-exclamation"/>
-                </tree>`,
+                </list>`,
             });
 
             assert.containsN(
@@ -899,13 +899,13 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree>
+                <list>
                     <button name="a" type="object" icon="fa-car"/>
                     <field name="foo" optional="hide"/>
                     <button name="x" type="object" icon="fa-star"/>
                     <button name="y" type="object" icon="fa-refresh"/>
                     <button name="z" type="object" icon="fa-exclamation"/>
-                </tree>`,
+                </list>`,
         });
 
         assert.containsN(
@@ -923,12 +923,12 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree>
+                <list>
                     <field name="foo"/>
                     <button name="x" type="object" icon="fa-star" invisible="foo == 'blip'"/>
                     <button name="y" type="object" icon="fa-refresh" invisible="foo == 'yop'"/>
                     <button name="z" type="object" icon="fa-exclamation" invisible="foo == 'gnap'"/>
-                </tree>`,
+                </list>`,
         });
 
         assert.containsN(
@@ -952,12 +952,12 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree>
+                <list>
                     <button name="x" type="object" icon="fa-asterisk"/>
                     <button name="x" type="object" icon="fa-star" class="o_yeah"/>
                     <button name="x" type="object" icon="fa-refresh" string="Refresh" class="o_yeah"/>
                     <button name="x" type="object" icon="fa-exclamation" string="Danger" class="o_yeah btn-danger"/>
-                </tree>`,
+                </list>`,
         });
 
         assert.containsOnce(target, "button.btn.btn-link i.fa.fa-asterisk");
@@ -979,10 +979,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree>
+                <list>
                     <button name="a" icon="fa-coffee"/>
                     <button name="b" icon="fa-car" disabled="disabled"/>
-                </tree>`,
+                </list>`,
         });
 
         assert.ok(
@@ -999,13 +999,13 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree>
+                <list>
                     <header>
                          <button name="x" type="object" class="plaf" string="plaf"/>
                          <button name="y" type="object" class="plouf" string="plouf" invisible="not context.get('bim')"/>
                     </header>
                     <field name="foo" />
-                </tree>`,
+                </list>`,
         });
         let cpBreadcrumb = target.querySelector("div.o_control_panel_actions");
         assert.containsNone(cpBreadcrumb, 'button[name="x"]');
@@ -1042,7 +1042,7 @@ QUnit.module("Views", (hooks) => {
                 resModel: "foo",
                 serverData,
                 arch: `
-                <tree>
+                <list>
                     <header>
                         <button name="display" type="object" class="display" string="display" display="always"/>
                         <button name="display" type="object" class="display_invisible" string="invisible 1" display="always" invisible="1"/>
@@ -1050,7 +1050,7 @@ QUnit.module("Views", (hooks) => {
                         <button name="default-selection" type="object" class="default-selection" string="default-selection"/>
                     </header>
                     <field name="foo" />
-                </tree>`,
+                </list>`,
                 context: {
                     a: true,
                 },
@@ -1101,12 +1101,12 @@ QUnit.module("Views", (hooks) => {
                 resModel: "foo",
                 serverData,
                 arch: `
-                <tree>
+                <list>
                     <header>
                         <button name="toDo" type="object" string="toDo" display="always" context="{'b': context.get('a')}"/>
                     </header>
                     <field name="foo" />
-                </tree>`,
+                </list>`,
                 context: {
                     a: "yop",
                 },
@@ -1139,12 +1139,12 @@ QUnit.module("Views", (hooks) => {
                 resModel: "foo",
                 serverData,
                 arch: `
-                    <tree>
+                    <list>
                         <header>
                              <button name="x" type="object" class="plaf" string="plaf"/>
                         </header>
                         <field name="foo" />
-                    </tree>`,
+                    </list>`,
             });
             patchWithCleanup(list.env.services.action, {
                 doActionButton: async () => {
@@ -1174,10 +1174,10 @@ QUnit.module("Views", (hooks) => {
                 resModel: "foo",
                 serverData,
                 arch: `
-                    <tree>
+                    <list>
                         <field name="foo" />
                         <button name="x" type="object" class="do_something" string="Do Something"/>
-                    </tree>`,
+                    </list>`,
             });
             patchWithCleanup(list.env.services.action, {
                 doActionButton: async () => {
@@ -1203,10 +1203,10 @@ QUnit.module("Views", (hooks) => {
                 resModel: "foo",
                 serverData,
                 arch: `
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="foo" />
                         <button name="toDo" type="object" class="do_something" string="Do Something"/>
-                    </tree>`,
+                    </list>`,
                 mockRPC: async (route, args) => {
                     assert.step(args.method);
                     if (route.startsWith("/web/dataset/call_button")) {
@@ -1248,12 +1248,12 @@ QUnit.module("Views", (hooks) => {
                 resModel: "foo",
                 serverData,
                 arch: `
-                    <tree>
+                    <list>
                         <header>
                              <button name="x" type="object" class="plaf" string="plaf" context="{'plouf': 'plif'}"/>
                         </header>
                         <field name="foo" />
-                    </tree>`,
+                    </list>`,
                 context: {
                     paf: "pif",
                 },
@@ -1302,12 +1302,12 @@ QUnit.module("Views", (hooks) => {
                 resModel: "foo",
                 serverData,
                 arch: `
-                    <tree limit="1">
+                    <list limit="1">
                         <header>
                              <button name="x" type="object" class="plaf" string="plaf"/>
                         </header>
                         <field name="foo" />
-                    </tree>`,
+                    </list>`,
                 mockRPC(route, args) {
                     if (args.method === "search") {
                         assert.step("search");
@@ -1376,12 +1376,12 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree>
+                <list>
                     <field name="display_name" widget="nolabel_char" optional="show"/>
                     <field name="foo" widget="label_char" optional="show"/>
                     <field name="int_field" string="My custom label" optional="show"/>
                     <field name="text" optional="show"/>
-                </tree>`,
+                </list>`,
         });
 
         const columnLabels = [...target.querySelectorAll("thead th")].map((th) => th.textContent);
@@ -1411,7 +1411,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree editable="bottom"><field name="foo"/><field name="bar"/></tree>',
+            arch: '<list editable="bottom"><field name="foo"/><field name="bar"/></list>',
         });
 
         assert.containsN(target, "th", 3, "should have 2 th");
@@ -1445,11 +1445,11 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="bottom">
+                <list editable="bottom">
                     <field name="int_field" widget="handle"/>
                     <field name="currency_id"/>
                     <field name="m2o"/>
-                </tree>`,
+                </list>`,
         });
         assert.containsN(target, "thead th", 4, "there should be 4 th");
         assert.hasClass(target.querySelectorAll("thead th")[0], "o_list_record_selector");
@@ -1475,10 +1475,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree>
+                <list>
                     <field name="foo"/>
                     <field name="bar" column_invisible="1"/>
-                </tree>`,
+                </list>`,
         });
 
         // 1 th for checkbox, 1 for 1 visible column
@@ -1493,11 +1493,11 @@ QUnit.module("Views", (hooks) => {
                 resModel: "foo",
                 serverData,
                 arch: `
-                <tree>
+                <list>
                     <field name="date" column_invisible="True"/>
                     <field name="foo" column_invisible="context.get('notInvisible')"/>
                     <field name="bar" column_invisible="context.get('invisible')"/>
-                </tree>`,
+                </list>`,
                 context: {
                     invisible: true,
                     notInvisible: false,
@@ -1527,10 +1527,10 @@ QUnit.module("Views", (hooks) => {
                     <form>
                         <sheet>
                             <field name="foo_o2m">
-                                <tree>
+                                <list>
                                     <field name="foo" column_invisible="context.get('notInvisible')"/>
                                     <field name="bar" column_invisible="context.get('invisible')"/>
-                                </tree>
+                                </list>
                             </field>
                         </sheet>
                     </form>`,
@@ -1566,13 +1566,13 @@ QUnit.module("Views", (hooks) => {
                             <field name="m2m" invisible="True"/>
                             <field name="properties" invisible="True"/>
                             <field name="foo_o2m">
-                                <tree>
+                                <list>
                                     <field name="date" column_invisible="True"/>
                                     <field name="foo" column_invisible="parent.int_field == 3"/>
                                     <field name="bar" column_invisible="parent.int_field == 10"/>
                                     <field name="qux" column_invisible="parent.m2m"/>
                                     <field name="amount" column_invisible="parent.properties"/>
-                                </tree>
+                                </list>
                             </field>
                         </sheet>
                     </form>`,
@@ -1593,10 +1593,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="top">
+                <list editable="top">
                     <field name="foo" column_invisible="1"/>
                     <field name="int_field"/>
-                </tree>`,
+                </list>`,
             mockRPC(_, { args, method }) {
                 assert.step(method);
                 if (method === "web_save") {
@@ -1623,10 +1623,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree multi_edit="1">
+                <list multi_edit="1">
                     <field name="foo"/>
                     <field name="int_field"/>
-                </tree>`,
+                </list>`,
             mockRPC(route, args) {
                 assert.step(args.method);
             },
@@ -1660,10 +1660,10 @@ QUnit.module("Views", (hooks) => {
                 resModel: "foo",
                 serverData,
                 arch: `
-                <tree multi_edit="1">
+                <list multi_edit="1">
                     <field name="int_field" readonly="1"/>
                     <field name="foo" />
-                </tree>`,
+                </list>`,
             });
 
             const firstRow = target.querySelector(".o_data_row");
@@ -1700,11 +1700,11 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="top">
+                <list editable="top">
                     <field name="foo"/>
                     <field name="int_field"/>
                     <field name="text" required="1"/>
-                </tree>`,
+                </list>`,
         });
         assert.containsN(target, ".o_data_row", 4);
         assert.containsNone(target, ".o_selected_row");
@@ -1730,7 +1730,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree><field name="bar"/></tree>',
+            arch: '<list><field name="bar"/></list>',
         });
         assert.strictEqual(target.querySelector(".o_data_cell").getAttribute("data-tooltip"), null);
     });
@@ -1740,7 +1740,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree><field name="text"/></tree>',
+            arch: '<list><field name="text"/></list>',
         });
         assert.strictEqual(target.querySelector(".o_data_cell").getAttribute("data-tooltip"), null);
     });
@@ -1752,7 +1752,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree><field name="html"/></tree>',
+            arch: '<list><field name="html"/></list>',
         });
         assert.strictEqual(target.querySelector(".o_data_cell").innerText, "Hello");
         assert.strictEqual(target.querySelector(".o_data_cell").getAttribute("data-tooltip"), null);
@@ -1763,7 +1763,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree><field name="foo" nolabel="1"/></tree>',
+            arch: '<list><field name="foo" nolabel="1"/></list>',
         });
         assert.strictEqual($(target).find("thead tr:first th:eq(1)").text(), "");
     });
@@ -1775,7 +1775,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree><field name="foo"/></tree>',
+            arch: '<list><field name="foo"/></list>',
         });
 
         assert.strictEqual(
@@ -1794,11 +1794,11 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree>
+                <list>
                     <field name="foo"/>
                     <field name="bar" invisible="id == 1"/>
                     <field name="int_field"/>
-                </tree>`,
+                </list>`,
         });
 
         assert.containsN(target, ".o_data_row", 4);
@@ -1812,9 +1812,9 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree>
+                <list>
                     <field name="foo" invisible="id == 1"/>
-                </tree>`,
+                </list>`,
         });
 
         assert.containsN(target, ".o_data_row", 4);
@@ -1831,10 +1831,10 @@ QUnit.module("Views", (hooks) => {
                 resModel: "foo",
                 serverData,
                 arch: `
-                    <tree editable="top">
+                    <list editable="top">
                         <field name="foo"/>
                         <field name="m2o" column_invisible="1"/>
-                    </tree>`,
+                    </list>`,
                 mockRPC(route) {
                     assert.step(route.split("/").pop());
                 },
@@ -1854,9 +1854,9 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="top">
+                <list editable="top">
                     <field name="date"/>
-                </tree>`,
+                </list>`,
         });
 
         assert.containsN(target, ".o_data_row", 4);
@@ -1879,7 +1879,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: `<tree editable="top"><field name="date"/></tree>`,
+            arch: `<list editable="top"><field name="date"/></list>`,
         });
 
         assert.containsN(target, ".o_data_row", 4, "There should be 4 rows");
@@ -1900,7 +1900,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree><field name="bar"/></tree>',
+            arch: '<list><field name="bar"/></list>',
             domain: [["bar", "=", true]],
         });
 
@@ -1914,7 +1914,7 @@ QUnit.module("Views", (hooks) => {
                 type: "list",
                 resModel: "foo",
                 serverData,
-                arch: '<tree editable="top"><field name="bar"/></tree>',
+                arch: '<list editable="top"><field name="bar"/></list>',
                 domain: [["bar", "=", true]],
             });
             assert.containsN(target, ".o_data_row", 3);
@@ -1936,7 +1936,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree><field name="foo"/><field name="bar"/></tree>',
+            arch: '<list><field name="foo"/><field name="bar"/></list>',
             groupBy: ["bar"],
         });
 
@@ -1952,11 +1952,11 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree>
+                <list>
                     <field name="int_field" widget="handle"/>
                     <field name="foo"/>
                     <field name="bar"/>
-                </tree>`,
+                </list>`,
             groupBy: ["bar"],
         });
 
@@ -1979,11 +1979,11 @@ QUnit.module("Views", (hooks) => {
                 resModel: "foo",
                 serverData,
                 arch: `
-                <tree>
+                <list>
                     <field name="int_field"/>
                     <field name="date"/>
                     <field name="int_field"/>
-                </tree>`,
+                </list>`,
                 groupBy: ["bar"],
             });
 
@@ -2009,7 +2009,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree><field name="foo"/></tree>',
+            arch: '<list><field name="foo"/></list>',
             groupBy: ["bar"],
             allowSelectors: false,
         });
@@ -2023,7 +2023,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree><field name="foo"/></tree>',
+            arch: '<list><field name="foo"/></list>',
             groupBy: ["bar"],
         });
 
@@ -2036,7 +2036,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree ><field name="foo"/><field name="bar"/></tree>',
+            arch: '<list ><field name="foo"/><field name="bar"/></list>',
             groupBy: ["bar"],
             allowSelectors: false,
         });
@@ -2050,7 +2050,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree ><field name="foo"/><field name="bar"/><field name="text"/></tree>',
+            arch: '<list ><field name="foo"/><field name="bar"/><field name="text"/></list>',
             groupBy: ["bar"],
             allowSelectors: false,
         });
@@ -2064,7 +2064,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree ><field name="foo"/><field name="bar"/></tree>',
+            arch: '<list ><field name="foo"/><field name="bar"/></list>',
             groupBy: ["bar"],
             allowSelectors: true,
         });
@@ -2078,7 +2078,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree><field name="foo"/><field name="bar"/><field name="text"/></tree>',
+            arch: '<list><field name="foo"/><field name="bar"/><field name="text"/></list>',
             groupBy: ["bar"],
             allowSelectors: true,
         });
@@ -2095,7 +2095,7 @@ QUnit.module("Views", (hooks) => {
                 resModel: "foo",
                 serverData,
                 arch: `
-                    <tree>
+                    <list>
                         <field name="datetime"/>
                         <field name="foo"/>
                         <field name="int_field" sum="Sum1"/>
@@ -2103,7 +2103,7 @@ QUnit.module("Views", (hooks) => {
                         <field name="qux" sum="Sum2"/>
                         <field name="date"/>
                         <field name="text"/>
-                    </tree>`,
+                    </list>`,
                 groupBy: ["bar"],
             });
 
@@ -2134,7 +2134,7 @@ QUnit.module("Views", (hooks) => {
                 resModel: "foo",
                 serverData,
                 arch: `
-                    <tree>
+                    <list>
                         <field name="datetime"/>
                         <field name="foo"/>
                         <field name="int_field" sum="Sum1"/>
@@ -2142,7 +2142,7 @@ QUnit.module("Views", (hooks) => {
                         <field name="qux" sum="Sum2"/>
                         <field name="date"/>
                         <field name="text" optional="show"/>
-                    </tree>`,
+                    </list>`,
                 groupBy: ["bar"],
             });
 
@@ -2173,12 +2173,12 @@ QUnit.module("Views", (hooks) => {
                 resModel: "foo",
                 serverData,
                 arch: `
-                    <tree open_form_view="True">
+                    <list open_form_view="True">
                         <field name="datetime"/>
                         <field name="int_field" sum="Sum1"/>
                         <field name="bar"/>
                         <field name="qux" sum="Sum2" optional="hide"/>
-                    </tree>`,
+                    </list>`,
                 groupBy: ["bar"],
             });
 
@@ -2200,12 +2200,12 @@ QUnit.module("Views", (hooks) => {
                 resModel: "foo",
                 serverData,
                 arch: `
-                    <tree open_form_view="True">
+                    <list open_form_view="True">
                         <field name="datetime"/>
                         <field name="int_field" sum="Sum1"/>
                         <field name="bar"/>
                         <field name="qux" sum="Sum2" optional="show"/>
-                    </tree>`,
+                    </list>`,
                 groupBy: ["bar"],
             });
 
@@ -2233,10 +2233,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                    <tree>
+                    <list>
                         <field name="bar"/>
                         <field name="value" sum="Sum1"/>
-                    </tree>`,
+                    </list>`,
             groupBy: ["bar"],
         });
         assert.containsN(target, ".o_group_header", 2);
@@ -2252,10 +2252,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree>
+                <list>
                     <field name="foo"/>
                     <field name="m2m" widget="many2many_tags"/>
-                </tree>`,
+                </list>`,
             groupBy: ["m2m"],
         });
 
@@ -2300,11 +2300,11 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree>
+                <list>
                     <field name="foo"/>
                     <field name="m2o"/>
                     <field name="m2m" widget="many2many_tags"/>
-                </tree>`,
+                </list>`,
             groupBy: ["m2o", "m2m"],
         });
 
@@ -2349,7 +2349,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree><field name="foo"/><field name="bar"/></tree>',
+            arch: '<list><field name="foo"/><field name="bar"/></list>',
             groupBy: ["bar", "foo"],
             noContentHelp: "<p>should not be displayed</p>",
         });
@@ -2373,10 +2373,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree>
+                <list>
                     <field name="foo"/>
                     <field name="m2m" widget="many2many_tags"/>
-                </tree>`,
+                </list>`,
             actionMenus: {},
             groupBy: ["m2m"],
         });
@@ -2419,10 +2419,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree>
+                <list>
                     <field name="foo"/>
                     <field name="m2m" widget="many2many_tags"/>
-                </tree>`,
+                </list>`,
             actionMenus: {},
             groupBy: ["m2m"],
         });
@@ -2464,10 +2464,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree>
+                <list>
                     <field name="foo"/>
                     <field name="m2m" widget="many2many_tags"/>
-                </tree>`,
+                </list>`,
             actionMenus: {},
             groupBy: ["m2m"],
         });
@@ -2515,10 +2515,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree>
+                <list>
                     <field name="foo"/>
                     <field name="m2m" widget="many2many_tags"/>
-                </tree>`,
+                </list>`,
             actionMenus: {},
             groupBy: ["m2m"],
             // apply the filter to show only records with active = false
@@ -2559,10 +2559,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="bottom">
+                <list editable="bottom">
                     <field name="foo"/>
                     <field name="m2m" widget="many2many_tags"/>
-                </tree>`,
+                </list>`,
             groupBy: ["m2m"],
             mockRPC(route, args) {
                 if (args.method === "onchange") {
@@ -2599,10 +2599,10 @@ QUnit.module("Views", (hooks) => {
                 resModel: "foo",
                 serverData,
                 arch: `
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="foo"/>
                         <field name="m2m" widget="many2many_tags"/>
-                    </tree>`,
+                    </list>`,
                 groupBy: ["m2m"],
             });
             await click(target.querySelectorAll(".o_group_header")[1]); // open Value 1 group
@@ -2640,11 +2640,11 @@ QUnit.module("Views", (hooks) => {
                 resModel: "foo",
                 serverData,
                 arch: `
-                    <tree>
+                    <list>
                         <field name="foo"/>
                         <field name="priority" widget="priority"/>
                         <field name="m2m" widget="many2many_tags"/>
-                    </tree>`,
+                    </list>`,
                 groupBy: ["m2m"],
                 domain: [["m2o", "=", 1]],
                 mockRPC(route, args) {
@@ -2690,7 +2690,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree><field name="foo"/><field name="date"/></tree>',
+            arch: '<list><field name="foo"/><field name="date"/></list>',
             mockRPC: (route, args) => {
                 if (args.method === "create_or_replace") {
                     const favorite = args.args[0];
@@ -2727,10 +2727,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree>
+                <list>
                     <field name="foo"/>
                     <field name="date"/>
-                </tree>`,
+                </list>`,
             mockRPC(route, args) {
                 if (args.method === "web_search_read") {
                     if (searchReads === 0) {
@@ -2780,7 +2780,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree><field name="m2o"/></tree>',
+            arch: '<list><field name="m2o"/></list>',
         });
 
         assert.ok(
@@ -2795,7 +2795,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree><field name="m2o" widget="many2one"/></tree>',
+            arch: '<list><field name="m2o" widget="many2one"/></list>',
         });
 
         assert.ok(
@@ -2810,7 +2810,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree><field name="m2o"/></tree>',
+            arch: '<list><field name="m2o"/></list>',
             mockRPC(route) {
                 assert.step(route);
             },
@@ -2831,7 +2831,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree><field name="foo"/><field name="int_field"/></tree>',
+            arch: '<list><field name="foo"/><field name="int_field"/></list>',
             groupBy: ["foo"],
         });
 
@@ -2873,7 +2873,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree js_class="custom_list"><field name="foo"/></tree>',
+            arch: '<list js_class="custom_list"><field name="foo"/></list>',
         });
 
         await click(target.querySelector("tr:nth-child(2) td:not(.o_list_record_selector)"));
@@ -2914,7 +2914,7 @@ QUnit.module("Views", (hooks) => {
                 type: "list",
                 resModel: "foo",
                 serverData,
-                arch: '<tree js_class="custom_list" editable="top"><field name="foo" required="1"/></tree>',
+                arch: '<list js_class="custom_list" editable="top"><field name="foo" required="1"/></list>',
                 mockRPC: async (route, args) => {
                     if (args.method === "web_save") {
                         assert.step(`web_save ${args.args[0]}`);
@@ -2955,7 +2955,7 @@ QUnit.module("Views", (hooks) => {
                 type: "list",
                 resModel: "foo",
                 serverData,
-                arch: '<tree js_class="custom_list" editable="top" expand="1"><field name="foo" required="1"/></tree>',
+                arch: '<list js_class="custom_list" editable="top" expand="1"><field name="foo" required="1"/></list>',
                 groupBy: ["bar"],
                 mockRPC: async (route, args) => {
                     if (args.method === "web_save") {
@@ -3002,7 +3002,7 @@ QUnit.module("Views", (hooks) => {
                 type: "list",
                 resModel: "foo",
                 serverData,
-                arch: '<tree editable="top"><field name="foo" required="1"/></tree>',
+                arch: '<list editable="top"><field name="foo" required="1"/></list>',
                 mockRPC: async (route, args) => {
                     if (args.method === "write") {
                         throw new Error("should not save the record");
@@ -3022,12 +3022,12 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.test("action/type attributes on tree arch, type='object'", async (assert) => {
+    QUnit.test("action/type attributes on list arch, type='object'", async (assert) => {
         const list = await makeView({
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree action="a1" type="object"><field name="foo"/></tree>',
+            arch: '<list action="a1" type="object"><field name="foo"/></list>',
             mockRPC(route, args) {
                 assert.step(args.method);
             },
@@ -3045,12 +3045,12 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["doActionButton type object name a1", "web_search_read"]);
     });
 
-    QUnit.test("action/type attributes on tree arch, type='action'", async (assert) => {
+    QUnit.test("action/type attributes on list arch, type='action'", async (assert) => {
         const list = await makeView({
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree action="a1" type="action"><field name="foo"/></tree>',
+            arch: '<list action="a1" type="action"><field name="foo"/></list>',
             mockRPC(route, args) {
                 assert.step(args.method);
             },
@@ -3076,11 +3076,11 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="bottom">
+                <list editable="bottom">
                     <field name="foo"/>
                     <field name="bar"/>
                     <field name="int_field" readonly="1"/>
-                </tree>`,
+                </list>`,
         });
         await click(target.querySelector(".o_field_cell"));
         assert.hasClass(
@@ -3127,10 +3127,10 @@ QUnit.module("Views", (hooks) => {
             arch: `
                 <form>
                     <field name="o2m">
-                        <tree editable="top">
+                        <list editable="top">
                             <field name="titi" readonly="1"/>
                             <field name="grosminet" widget="boolean_toggle"/>
-                        </tree>
+                        </list>
                     </field>
                 </form>`,
             mockRPC(route, args) {
@@ -3177,10 +3177,10 @@ QUnit.module("Views", (hooks) => {
                 arch: `
                     <form>
                         <field name="o2m">
-                            <tree editable="top">
+                            <list editable="top">
                             <field name="int_field" widget="handle"/>
                             <field name="titi"/>
-                            </tree>
+                            </list>
                         </field>
                     </form>`,
             });
@@ -3201,10 +3201,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="top">
+                <list editable="top">
                     <field name="foo"/>
                     <field name="bar" widget="boolean_toggle"/>
-                </tree>`,
+                </list>`,
             mockRPC(route, args) {
                 if (args.method === "web_save") {
                     assert.step("web_save: " + args.args[1].bar);
@@ -3233,7 +3233,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree editable="bottom"><field name="foo"/><field name="bar"/></tree>',
+            arch: '<list editable="bottom"><field name="foo"/><field name="bar"/></list>',
         });
 
         assert.containsN(target, ".o_data_row", 4);
@@ -3247,7 +3247,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree editable="bottom"><field name="foo"/><field name="bar"/></tree>',
+            arch: '<list editable="bottom"><field name="foo"/><field name="bar"/></list>',
             domain: [["foo", "=", "yop"]],
         });
 
@@ -3304,7 +3304,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree editable="bottom"><field name="foo"/><field name="bar"/></tree>',
+            arch: '<list editable="bottom"><field name="foo"/><field name="bar"/></list>',
         });
 
         await click(target.querySelector(".o_data_cell"));
@@ -3321,7 +3321,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree editable="bottom"><field name="foo"/><field name="bar"/></tree>',
+            arch: '<list editable="bottom"><field name="foo"/><field name="bar"/></list>',
         });
 
         await click(target.querySelector(".o_field_cell"));
@@ -3363,7 +3363,7 @@ QUnit.module("Views", (hooks) => {
                 type: "list",
                 resModel: "foo",
                 serverData,
-                arch: '<tree editable="bottom"><field name="foo"/></tree>',
+                arch: '<list editable="bottom"><field name="foo"/></list>',
                 mockRPC(route, args) {
                     if (args.method === "web_save") {
                         assert.deepEqual(
@@ -3398,7 +3398,7 @@ QUnit.module("Views", (hooks) => {
             };
             serverData.views = {
                 "foo,3,list":
-                    '<tree editable="top"><field name="display_name"/><field name="foo"/></tree>',
+                    '<list editable="top"><field name="display_name"/><field name="foo"/></list>',
 
                 "foo,9,search": `
                     <search>
@@ -3451,7 +3451,7 @@ QUnit.module("Views", (hooks) => {
             };
             serverData.views = {
                 "foo,3,list":
-                    '<tree editable="top"><field name="display_name"/><field name="foo"/></tree>',
+                    '<list editable="top"><field name="display_name"/><field name="foo"/></list>',
                 "foo,4,form": '<form><field name="display_name"/><field name="foo"/></form>',
                 "foo,9,search": `
                     <search>
@@ -3486,10 +3486,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="top">
+                <list editable="top">
                     <field name="display_name"/>
                     <field name="foo"/>
-                </tree>`,
+                </list>`,
             mockRPC(route, args) {
                 if (args.method === "read_group") {
                     throw new Error("Should not do a read_group RPC");
@@ -3521,7 +3521,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree><field name="foo"/><field name="bar"/></tree>',
+            arch: '<list><field name="foo"/><field name="bar"/></list>',
         });
         var tbody_selector = target.querySelector("tbody .o_list_record_selector input");
         var thead_selector = target.querySelector("thead .o_list_record_selector input");
@@ -3577,7 +3577,7 @@ QUnit.module("Views", (hooks) => {
                 type: "list",
                 resModel: "foo",
                 serverData,
-                arch: '<tree><field name="foo"/><field name="bar"/></tree>',
+                arch: '<list><field name="foo"/><field name="bar"/></list>',
             });
 
             assert.strictEqual(list.model.root.selection.length, 0, "no record should be selected");
@@ -3609,7 +3609,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("head selector is toggled by the other selectors", async function (assert) {
         await makeView({
             type: "list",
-            arch: '<tree><field name="foo"/><field name="bar"/></tree>',
+            arch: '<list><field name="foo"/><field name="bar"/></list>',
             serverData,
             groupBy: ["bar"],
             resModel: "foo",
@@ -3661,7 +3661,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree><field name="foo"/><field name="bar"/></tree>',
+            arch: '<list><field name="foo"/><field name="bar"/></list>',
         });
 
         assert.containsN(target, ".o_data_row", 4);
@@ -3723,7 +3723,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree limit="3"><field name="foo"/><field name="bar"/></tree>',
+            arch: '<list limit="3"><field name="foo"/><field name="bar"/></list>',
         });
 
         assert.containsN(target, ".o_data_row", 3);
@@ -3779,7 +3779,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree><field name="foo"/><field name="bar"/></tree>',
+            arch: '<list><field name="foo"/><field name="bar"/></list>',
             groupBy: ["foo"],
         });
         assert.containsN(target, ".o_group_header", 3);
@@ -3839,14 +3839,14 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree>
+                <list>
                     <header>
                          <button name="x" type="object" class="plaf" string="plaf"/>
                          <button name="y" type="object" class="plouf" string="plouf"/>
                     </header>
                     <field name="foo"/>
                     <field name="bar"/>
-                </tree>`,
+                </list>`,
         });
 
         assert.containsN(target, ".o_data_row", 4);
@@ -3877,7 +3877,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree multi_edit="1"><field name="foo"/><field name="bar"/></tree>',
+            arch: '<list multi_edit="1"><field name="foo"/><field name="bar"/></list>',
         });
 
         assert.containsN(target, ".o_data_row", 4, "there should be 4 records");
@@ -3924,10 +3924,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree>
+                <list>
                     <field name="foo"/>
                     <field name="int_field" sum="Sum"/>
-                </tree>`,
+                </list>`,
         });
 
         assert.containsNone(
@@ -3976,10 +3976,10 @@ QUnit.module("Views", (hooks) => {
             groupBy: ["foo"],
             actionMenus: {},
             arch: `
-                <tree>
+                <list>
                     <field name="foo"/>
                     <field name="int_field" sum="Sum"/>
-                </tree>`,
+                </list>`,
         });
 
         assert.containsOnce(target, "div.o_control_panel .o_cp_action_menus");
@@ -4030,7 +4030,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree><field name="foo"/><field name="bar"/></tree>',
+            arch: '<list><field name="foo"/><field name="bar"/></list>',
             groupBy: ["date:year"],
             // keep the actionMenus, it is relevant as it computes isM2MGrouped which crashes if we
             // don't correctly extract the fieldName/granularity from the groupBy
@@ -4065,11 +4065,11 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: /*xml*/ `
-                <tree>
+                <list>
                     <field name="foo"/>
                     <field name="int_field" sum="Sum"/>
                     <field name="qux" avg="Average"/>
-                </tree>`,
+                </list>`,
             searchViewArch: `
                 <search>
                     <filter name="my_filter" string="My Filter" domain="[('id', '=', 0)]"/>
@@ -4104,7 +4104,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             groupBy: ["m2o"],
-            arch: '<tree editable="bottom"><field name="foo" /><field name="int_field" sum="Sum"/></tree>',
+            arch: '<list editable="bottom"><field name="foo" /><field name="int_field" sum="Sum"/></list>',
         });
         const groupHeaders = target.querySelectorAll(".o_group_header");
         assert.strictEqual(
@@ -4141,10 +4141,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree>
+                <list>
                     <field name="foo"/>
                     <field name="qux" widget="my_float" sum="Sum"/>
-                </tree>`,
+                </list>`,
             groupBy: ["int_field"],
         });
 
@@ -4161,12 +4161,12 @@ QUnit.module("Views", (hooks) => {
             serverData,
             groupBy: ["m2o"],
             arch: `
-                <tree>
+                <list>
                     <field name="foo"/>
                     <field name="int_field" sum="Sum"/>
                     <button name="a" type="object"/>
                     <field name="qux" sum="Sum"/>
-                </tree>`,
+                </list>`,
         });
 
         const cellVals = ["23", "6.40", "9", "13.00", "32", "19.40"];
@@ -4182,10 +4182,10 @@ QUnit.module("Views", (hooks) => {
             serverData,
             groupBy: ["m2o"],
             arch: `
-                <tree>
+                <list>
                     <field name="foo"/>
                     <field name="date"/>
-                </tree>`,
+                </list>`,
             async mockRPC(route, args, performRPC) {
                 if (args.method === "web_read_group") {
                     const res = await performRPC(...arguments);
@@ -4212,10 +4212,10 @@ QUnit.module("Views", (hooks) => {
                 serverData,
                 groupBy: ["bar"],
                 arch: `
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="foo"/>
                         <field name="qux" widget="float_time" sum="Sum"/>
-                    </tree>`,
+                    </list>`,
                 mockRPC: async function (route, args, performRPC) {
                     if (args.method === "web_read_group") {
                         const result = await performRPC(route, args);
@@ -4240,7 +4240,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree editable="bottom"><field name="int_field" sum="Sum"/></tree>',
+            arch: '<list editable="bottom"><field name="int_field" sum="Sum"/></list>',
         });
 
         assert.strictEqual(
@@ -4265,10 +4265,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree>
+                <list>
                     <field name="foo"/>
                     <field name="qux" widget="float_time" sum="Sum"/>
-                </tree>`,
+                </list>`,
         });
 
         assert.strictEqual(
@@ -4284,9 +4284,9 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree>
+                <list>
                     <field name="amount" widget="monetary" sum="Sum" digits="[69,3]"/>
-                </tree>`,
+                </list>`,
         });
 
         assert.strictEqual(
@@ -4308,10 +4308,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree>
+                <list>
                     <field name="amount" widget="monetary" sum="Sum"/>
                     <field name="currency_id"/>
-                </tree>`,
+                </list>`,
         });
 
         assert.deepEqual(getNodesTextContent(target.querySelectorAll("tbody .o_monetary_cell")), [
@@ -4330,10 +4330,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree>
+                <list>
                     <field name="amount" widget="monetary" sum="Sum"/>
                     <field name="currency_id"/>
-                </tree>`,
+                </list>`,
         });
 
         assert.deepEqual(getNodesTextContent(target.querySelectorAll("tbody .o_monetary_cell")), [
@@ -4352,10 +4352,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree>
+                <list>
                     <field name="amount" widget="monetary" sum="Sum" options="{'currency_field': 'currency_test'}"/>
                     <field name="currency_id"/>
-                </tree>`,
+                </list>`,
         });
 
         assert.deepEqual(getNodesTextContent(target.querySelectorAll("tbody .o_monetary_cell")), [
@@ -4375,10 +4375,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree>
+                <list>
                     <field name="amount" widget="monetary" sum="Sum"/>
                     <field name="currency_test"/>
-                </tree>`,
+                </list>`,
         });
 
         assert.deepEqual(getNodesTextContent(target.querySelectorAll("tbody .o_monetary_cell")), [
@@ -4405,10 +4405,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree>
+                <list>
                     <field name="amount" sum="Sum"/>
                     <field name="currency_id"/>
-                </tree>`,
+                </list>`,
         });
 
         assert.deepEqual(getNodesTextContent(target.querySelectorAll("tbody [name='amount']")), [
@@ -4437,10 +4437,10 @@ QUnit.module("Views", (hooks) => {
                 resModel: "foo",
                 serverData,
                 arch: `
-                <tree>
+                <list>
                     <field name="qux" widget="monetary" sum="Sum"/>
                     <field name="currency_id"/>
-                </tree>`,
+                </list>`,
             });
 
             assert.deepEqual(
@@ -4463,12 +4463,12 @@ QUnit.module("Views", (hooks) => {
                 resModel: "foo",
                 serverData,
                 arch: `
-                <tree>
+                <list>
                     <field name="company_currency_id" column_invisible="1"/>
                     <field name="currency_id" column_invisible="1"/>
                     <field name="amount"/>
                     <field name="amount_currency"/>
-                </tree>`,
+                </list>`,
             });
 
             assert.strictEqual(
@@ -4498,7 +4498,7 @@ QUnit.module("Views", (hooks) => {
                 type: "list",
                 resModel: "foo",
                 serverData,
-                arch: '<tree default_order="foo"><field name="foo"/><field name="bar"/></tree>',
+                arch: '<list default_order="foo"><field name="foo"/><field name="bar"/></list>',
                 mockRPC(route, args) {
                     if (args.method === "web_read_group") {
                         assert.strictEqual(args.kwargs.orderby, "", "should not have an orderBy");
@@ -4518,7 +4518,7 @@ QUnit.module("Views", (hooks) => {
                 type: "list",
                 resModel: "foo",
                 serverData,
-                arch: '<tree default_order="foo"><field name="foo"/><field name="bar"/></tree>',
+                arch: '<list default_order="foo"><field name="foo"/><field name="bar"/></list>',
                 mockRPC(route, args) {
                     if (args.method === "web_read_group") {
                         assert.strictEqual(args.kwargs.orderby, "", "should not have an orderBy");
@@ -4536,7 +4536,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree default_order="bar desc"><field name="foo"/><field name="bar"/></tree>',
+            arch: '<list default_order="bar desc"><field name="foo"/><field name="bar"/></list>',
             mockRPC(route, args) {
                 if (args.method === "web_read_group") {
                     assert.strictEqual(args.kwargs.orderby, "bar DESC", "should have an orderBy");
@@ -4566,10 +4566,10 @@ QUnit.module("Views", (hooks) => {
                 serverData,
                 groupBy: ["foo"],
                 arch: `
-                <tree editable="bottom">
+                <list editable="bottom">
                     <field name="foo"/>
                     <field name="int_field" sum="Sum"/>
-                </tree>`,
+                </list>`,
                 mockRPC(route, args) {
                     if (args.method === "web_read_group") {
                         assert.step(args.kwargs.orderby || "default order");
@@ -4589,10 +4589,10 @@ QUnit.module("Views", (hooks) => {
             serverData,
             groupBy: ["foo"],
             arch: `
-                <tree editable="bottom">
+                <list editable="bottom">
                     <field name="foo"/>
                     <field name="int_field" sum="Sum"/>
-                </tree>`,
+                </list>`,
             mockRPC(route, args) {
                 if (args.method === "web_read_group") {
                     assert.step(args.kwargs.orderby || "default order");
@@ -4653,11 +4653,11 @@ QUnit.module("Views", (hooks) => {
                 serverData,
                 groupBy: ["foo"],
                 arch: `
-                <tree editable="bottom">
+                <list editable="bottom">
                     <field name="foo"/>
                     <field name="int_field"/>
                     <field name="sort_field"/>
-                </tree>`,
+                </list>`,
                 mockRPC(route, args) {
                     if (args.method === "web_read_group") {
                         assert.step(args.kwargs.orderby || "default order");
@@ -4694,9 +4694,9 @@ QUnit.module("Views", (hooks) => {
                 serverData,
                 groupBy: ["bar"],
                 arch: `
-                <tree editable="bottom">
+                <list editable="bottom">
                     <field name="foo"/>
-                </tree>`,
+                </list>`,
                 mockRPC(route, args) {
                     const { method } = args;
                     if (method === "web_read_group") {
@@ -4743,9 +4743,9 @@ QUnit.module("Views", (hooks) => {
                 serverData,
                 groupBy: ["bar"],
                 arch: `
-                <tree editable="bottom" expand="1">
+                <list editable="bottom" expand="1">
                     <field name="foo"/>
-                </tree>`,
+                </list>`,
                 mockRPC(route, args) {
                     const { method } = args;
                     if (method === "web_read_group") {
@@ -4793,7 +4793,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree editable="top"><field name="foo"/><field name="int_field"/></tree>',
+            arch: '<list editable="top"><field name="foo"/><field name="int_field"/></list>',
         });
 
         await click(target.querySelector(".o_field_cell"));
@@ -4820,12 +4820,12 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="top">
+                <list editable="top">
                     <field name="foo"/>
                     <field name="int_field" readonly="1"/>
                     <field name="m2o"/>
                     <field name="m2m" widget="many2many_tags"/>
-                </tree>`,
+                </list>`,
         });
 
         var startWidths = [...target.querySelectorAll("thead th")].map((el) => el.offsetWidth);
@@ -4875,14 +4875,14 @@ QUnit.module("Views", (hooks) => {
                 resModel: "foo",
                 serverData,
                 arch: `
-                    <tree editable="top">
+                    <list editable="top">
                         <field name="bar"/>
                         <field name="foo"/>
                         <field name="int_field"/>
                         <field name="qux"/>
                         <field name="date"/>
                         <field name="datetime"/>
-                    </tree>`,
+                    </list>`,
                 limit: 2,
             });
 
@@ -4925,7 +4925,7 @@ QUnit.module("Views", (hooks) => {
                 resModel: "foo",
                 serverData,
                 arch: `
-                    <tree editable="top">
+                    <list editable="top">
                         <field name="bar"/>
                         <field name="foo"/>
                         <field name="int_field"/>
@@ -4934,7 +4934,7 @@ QUnit.module("Views", (hooks) => {
                         <field name="datetime"/>
                         <field name="amount"/>
                         <field name="currency_id" width="25px"/>
-                    </tree>`,
+                    </list>`,
             });
 
             assert.containsN(target, ".o_resize", 8);
@@ -4973,9 +4973,9 @@ QUnit.module("Views", (hooks) => {
                     <form edit="0">
                         <sheet>
                             <field name="foo_o2m">
-                                <tree editable="bottom">
+                                <list editable="bottom">
                                     <field name="int_field"/>
-                                </tree>
+                                </list>
                             </field>
                         </sheet>
                     </form>`,
@@ -4999,9 +4999,9 @@ QUnit.module("Views", (hooks) => {
                     <form>
                         <sheet>
                             <field name="foo_o2m">
-                                <tree editable="bottom">
+                                <list editable="bottom">
                                     <field name="int_field"/>
-                                </tree>
+                                </list>
                             </field>
                         </sheet>
                     </form>`,
@@ -5027,10 +5027,10 @@ QUnit.module("Views", (hooks) => {
                     <form edit="0">
                         <sheet>
                             <field name="foo_o2m">
-                                <tree editable="bottom">
+                                <list editable="bottom">
                                     <field name="int_field"/>
                                     <field name="foo" optional="hidden"/>
-                                </tree>
+                                </list>
                             </field>
                         </sheet>
                     </form>`,
@@ -5057,10 +5057,10 @@ QUnit.module("Views", (hooks) => {
                     <form>
                         <sheet>
                             <field name="foo_o2m">
-                                <tree editable="bottom">
+                                <list editable="bottom">
                                     <field name="int_field"/>
                                     <field name="foo" optional="hidden"/>
-                                </tree>
+                                </list>
                             </field>
                         </sheet>
                     </form>`,
@@ -5101,7 +5101,7 @@ QUnit.module("Views", (hooks) => {
                                 <page string="Page1"></page>
                                 <page string="Page2">
                                     <field name="foo_o2m">
-                                        <tree editable="bottom">
+                                        <list editable="bottom">
                                             <field name="bar"/>
                                             <field name="foo"/>
                                             <field name="int_field"/>
@@ -5110,7 +5110,7 @@ QUnit.module("Views", (hooks) => {
                                             <field name="datetime"/>
                                             <field name="amount"/>
                                             <field name="currency_id" width="25px"/>
-                                        </tree>
+                                        </list>
                                     </field>
                                 </page>
                             </notebook>
@@ -5158,10 +5158,10 @@ QUnit.module("Views", (hooks) => {
                 resModel: "foo",
                 serverData,
                 arch: `
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="int_field" widget="handle" />
                         <field name="foo" />
-                    </tree>`,
+                    </list>`,
                 noContentHelp: '<p class="hello">click to add a foo</p>',
             });
 
@@ -5219,10 +5219,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "bar",
             serverData,
             arch: `
-                <tree editable="top">
+                <list editable="top">
                     <field name="titi"/>
                     <field name="grosminet" widget="char"/>
-                </tree>`,
+                </list>`,
         });
 
         assert.strictEqual(
@@ -5263,12 +5263,12 @@ QUnit.module("Views", (hooks) => {
         };
         await makeView({
             arch: `
-                <tree editable="top">
+                <list editable="top">
                     <field name="titi"/>
                     <field name="grosminet1" class="large"/>
                     <field name="grosminet3" class="large"/>
                     <field name="grosminet2" class="large"/>
-                </tree>`,
+                </list>`,
             serverData,
             resModel: "bar",
             type: "list",
@@ -5318,10 +5318,10 @@ QUnit.module("Views", (hooks) => {
                                 <page string="Page1"></page>
                                 <page string="Page2">
                                     <field name="o2m">
-                                        <tree editable="bottom">
+                                        <list editable="bottom">
                                             <field name="titi"/>
                                             <field name="grosminet"/>
-                                        </tree>
+                                        </list>
                                     </field>
                                 </page>
                             </notebook>
@@ -5369,10 +5369,10 @@ QUnit.module("Views", (hooks) => {
                     <sheet>
                         <field name="bar"/>
                         <field name="o2m" invisible="bar">
-                            <tree editable="bottom">
+                            <list editable="bottom">
                                 <field name="titi"/>
                                 <field name="grosminet"/>
-                            </tree>
+                            </list>
                         </field>
                     </sheet>
                 </form>`,
@@ -5408,9 +5408,9 @@ QUnit.module("Views", (hooks) => {
                             <page string="Page 1"></page>
                             <page string="Page 2">
                                 <field name="o2m">
-                                    <tree editable="bottom">
+                                    <list editable="bottom">
                                         <field name="display_name"/>
-                                    </tree>
+                                    </list>
                                 </field>
                             </page>
                         </notebook>
@@ -5440,11 +5440,11 @@ QUnit.module("Views", (hooks) => {
         await makeView({
             type: "list",
             arch: `
-                <tree>
+                <list>
                     <field name="foo"/>
                     <button string="choucroute"/>
                     <button icon="fa-heart"/>
-                </tree>`,
+                </list>`,
             serverData,
             resModel: "foo",
         });
@@ -5474,10 +5474,10 @@ QUnit.module("Views", (hooks) => {
                 <form>
                     <sheet>
                         <field name="o2m">
-                            <tree editable="top">
+                            <list editable="top">
                                 <field name="display_name"/>
                                 <button name="the_button" icon="fa-heart"/>
-                            </tree>
+                            </list>
                         </field>
                     </sheet>
                 </form>`,
@@ -5505,7 +5505,7 @@ QUnit.module("Views", (hooks) => {
                 type: "list",
                 resModel: "foo",
                 serverData,
-                arch: '<tree editable="top"><field name="m2o"/></tree>',
+                arch: '<list editable="top"><field name="m2o"/></list>',
             });
 
             await click($(".o_list_button_add:visible").get(0));
@@ -5547,7 +5547,7 @@ QUnit.module("Views", (hooks) => {
                 resModel: "foo",
                 serverData,
                 arch: `
-                    <tree editable="top">
+                    <list editable="top">
                         <field name="bar"/>
                         <field name="foo"/>
                         <field name="int_field"/>
@@ -5556,7 +5556,7 @@ QUnit.module("Views", (hooks) => {
                         <field name="datetime"/>
                         <field name="amount"/>
                         <field name="currency_id" width="25px"/>
-                    </tree>`,
+                    </list>`,
                 groupBy: ["int_field"],
             });
 
@@ -5588,10 +5588,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="top">
+                <list editable="top">
                     <field name="datetime" widget="date"/>
                     <field name="text"/>
-                </tree>`,
+                </list>`,
         });
         assert.strictEqual(
             target.querySelector('th[data-name="datetime"]').offsetWidth,
@@ -5607,10 +5607,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="top">
+                <list editable="top">
                     <field name="datetime"/>
                     <field name="text"/>
-                </tree>`,
+                </list>`,
         });
 
         var width = target.querySelectorAll('th[data-name="datetime"]')[0].offsetWidth;
@@ -5630,10 +5630,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="bottom">
+                <list editable="bottom">
                     <field name="datetime"/>
                     <field name="text"/>
-                </tree>`,
+                </list>`,
         });
 
         var width = target.querySelectorAll('th[data-name="datetime"]')[0].offsetWidth;
@@ -5661,10 +5661,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="bottom">
+                <list editable="bottom">
                     <field name="m2o"/>
                     <field name="text"/>
-                </tree>`,
+                </list>`,
         });
 
         const width = target.querySelectorAll('th[data-name="m2o"]')[0].offsetWidth;
@@ -5691,10 +5691,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="bottom">
+                <list editable="bottom">
                     <field name="datetime"/>
                     <field name="text"/>
-                </tree>`,
+                </list>`,
         });
 
         const initialTextWidth = target.querySelectorAll('th[data-name="text"]')[0].offsetWidth;
@@ -5726,11 +5726,11 @@ QUnit.module("Views", (hooks) => {
                 resModel: "foo",
                 serverData,
                 arch: `
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="datetime"/>
                         <field name="int_field" width="200px"/>
                         <field name="text"/>
-                    </tree>`,
+                    </list>`,
             });
             const pixelsWidth = getComputedStyle(
                 target.querySelector('th[data-name="int_field"]')
@@ -5756,7 +5756,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree><field name="foo"/><field name="text"/></tree>',
+            arch: '<list><field name="foo"/><field name="text"/></list>',
         });
 
         const foo = [...target.querySelectorAll("th")].find((el) => el.textContent === "Foo");
@@ -5784,10 +5784,10 @@ QUnit.module("Views", (hooks) => {
         await makeView({
             type: "list",
             arch: `
-                <tree>
+                <list>
                     <field name="foo"/>
                     <button name="the_button" icon="fa-heart" width="0.1"/>
-                </tree>`,
+                </list>`,
             serverData,
             resModel: "foo",
         });
@@ -5805,12 +5805,12 @@ QUnit.module("Views", (hooks) => {
         await makeView({
             type: "list",
             arch: `
-                <tree>
+                <list>
                     <field name="foo"/>
                     <button name="b1" string="Do This"/>
                     <button name="b2" string="Do That"/>
                     <button name="b3" string="Or Rather Do Something Else"/>
-                </tree>`,
+                </list>`,
             serverData,
             resModel: "foo",
         });
@@ -5838,10 +5838,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree multi_edit="1">
+                <list multi_edit="1">
                     <field name="datetime"/>
                     <field name="text"/>
-                </tree>`,
+                </list>`,
         });
 
         var width = target.querySelector('th[data-name="datetime"]').offsetWidth;
@@ -5889,7 +5889,7 @@ QUnit.module("Views", (hooks) => {
                 resModel: "foo",
                 serverData,
                 arch: `
-                    <tree editable="top">
+                    <list editable="top">
                         <field name="foo" required="1"/>
                         <field name="int_field" readonly="1"/>
                         <field name="boolean"/>
@@ -5899,7 +5899,7 @@ QUnit.module("Views", (hooks) => {
                         <field name="currency_id" column_invisible="1"/>
                         <field name="m2o"/>
                         <field name="m2m" widget="many2many_tags"/>
-                    </tree>`,
+                    </list>`,
             });
             const startHeight = target.querySelector(".o_data_row").offsetHeight;
             const startWidth = target.querySelector(".o_data_row").offsetWidth;
@@ -5949,7 +5949,7 @@ QUnit.module("Views", (hooks) => {
                     ]);
                 }
             },
-            arch: '<tree editable="top">' + '<field name="foo" required="1"/>' + "</tree>",
+            arch: '<list editable="top">' + '<field name="foo" required="1"/>' + "</list>",
         });
         await click(target.querySelector(".o_data_row .o_data_cell"));
         assert.hasClass(target.querySelector(".o_data_row"), "o_selected_row");
@@ -5972,7 +5972,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree><field name="text"/></tree>',
+            arch: '<list><field name="text"/></list>',
         });
 
         // Intentionally set the table width to a small size
@@ -5996,7 +5996,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             actionMenus: {},
-            arch: '<tree><field name="foo"/></tree>',
+            arch: '<list><field name="foo"/></list>',
             mockRPC(route, args) {
                 if (args.method === "unlink") {
                     assert.step("unlink");
@@ -6051,9 +6051,9 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             type: "list",
             arch: `
-                <tree js_class="caution">
+                <list js_class="caution">
                     <field name="foo"/>
-                </tree>
+                </list>
             `,
             serverData,
             actionMenus: {},
@@ -6087,7 +6087,7 @@ QUnit.module("Views", (hooks) => {
                 resModel: "foo",
                 serverData,
                 actionMenus: {},
-                arch: '<tree><field name="foo"/></tree>',
+                arch: '<list><field name="foo"/></list>',
                 mockRPC(route, args) {
                     if (args.method === "unlink") {
                         return Promise.reject({ message: "Odoo Server Error" });
@@ -6121,7 +6121,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree limit="2"><field name="foo"/></tree>',
+            arch: '<list limit="2"><field name="foo"/></list>',
             domain: [["bar", "=", true]],
             mockRPC(route, args) {
                 if (args.method === "unlink") {
@@ -6169,7 +6169,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree limit="2"><field name="foo"/></tree>',
+            arch: '<list limit="2"><field name="foo"/></list>',
             domain: [["bar", "=", true]],
             mockRPC(route, args) {
                 if (args.method === "unlink") {
@@ -6211,7 +6211,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: `<tree editable="top"><field name="foo"/></tree>`,
+            arch: `<list editable="top"><field name="foo"/></list>`,
             actionMenus: {},
         });
 
@@ -6232,7 +6232,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: `<tree editable="top"><field name="foo"/></tree>`,
+            arch: `<list editable="top"><field name="foo"/></list>`,
             actionMenus: {},
         });
 
@@ -6257,7 +6257,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             actionMenus: {},
-            arch: '<tree><field name="foo"/></tree>',
+            arch: '<list><field name="foo"/></list>',
             mockRPC(route) {
                 assert.step(route);
             },
@@ -6315,7 +6315,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree limit="2"><field name="foo"/></tree>',
+            arch: '<list limit="2"><field name="foo"/></list>',
             domain: [["bar", "=", true]],
             mockRPC(route, args) {
                 if (args.method === "action_archive") {
@@ -6366,7 +6366,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree limit="2"><field name="foo"/></tree>',
+            arch: '<list limit="2"><field name="foo"/></list>',
             domain: [["bar", "=", true]],
             mockRPC(route, args) {
                 if (args.method === "action_archive") {
@@ -6415,7 +6415,7 @@ QUnit.module("Views", (hooks) => {
             },
         };
         serverData.views = {
-            "foo,3,list": '<tree><field name="foo"/></tree>',
+            "foo,3,list": '<list><field name="foo"/></list>',
             "foo,9,search": `
                 <search>
                     <filter string="Not Bar" name="not bar" domain="[['bar','=',False]]"/>
@@ -6492,9 +6492,9 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree js_class="custom_list">
+                <list js_class="custom_list">
                     <field name="foo"/>
-                </tree>`,
+                </list>`,
             actionMenus: {},
         });
         assert.containsOnce(target, "div.o_control_panel .o_cp_action_menus");
@@ -6546,9 +6546,9 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree js_class="custom_list">
+                <list js_class="custom_list">
                     <field name="foo"/>
-                </tree>`,
+                </list>`,
             actionMenus: {},
         });
         assert.containsOnce(target, "div.o_control_panel .o_cp_action_menus");
@@ -6586,9 +6586,9 @@ QUnit.module("Views", (hooks) => {
                 resModel: "foo",
                 serverData,
                 arch: /*xml*/ `
-                    <tree expand="1">
+                    <list expand="1">
                         <field name="foo"/>
-                    </tree>`,
+                    </list>`,
                 groupBy: ["foo", "bar"],
                 actionMenus: {},
             });
@@ -6628,7 +6628,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree><field name="foo"/><field name="bar"/></tree>',
+            arch: '<list><field name="foo"/><field name="bar"/></list>',
             searchViewArch: `
                 <search>
                     <filter name="bar" string="bar" context="{'group_by': 'bar'}"/>
@@ -6655,7 +6655,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree limit="2"><field name="foo"/><field name="bar"/></tree>',
+            arch: '<list limit="2"><field name="foo"/><field name="bar"/></list>',
             mockRPC(route, args) {
                 assert.step(args.method);
                 if (args.method === "web_search_read") {
@@ -6688,7 +6688,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree limit="2"><field name="foo"/><field name="bar"/></tree>',
+            arch: '<list limit="2"><field name="foo"/><field name="bar"/></list>',
             mockRPC(route, args) {
                 assert.step(args.method);
                 if (args.method === "web_search_read") {
@@ -6719,7 +6719,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree limit="2"><field name="foo"/><field name="bar"/></tree>',
+            arch: '<list limit="2"><field name="foo"/><field name="bar"/></list>',
             mockRPC(route, args) {
                 assert.step(args.method);
                 if (args.method === "web_search_read") {
@@ -6757,7 +6757,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree limit="2"><field name="foo"/><field name="bar"/></tree>',
+            arch: '<list limit="2"><field name="foo"/><field name="bar"/></list>',
             mockRPC(route, args) {
                 assert.step(args.method);
                 if (args.method === "web_search_read") {
@@ -6788,7 +6788,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree limit="2"><field name="foo"/><field name="bar"/></tree>',
+            arch: '<list limit="2"><field name="foo"/><field name="bar"/></list>',
             mockRPC(route, args) {
                 assert.step(args.method);
                 if (args.method === "web_search_read") {
@@ -6826,7 +6826,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree limit="2"><field name="foo"/><field name="bar"/></tree>',
+            arch: '<list limit="2"><field name="foo"/><field name="bar"/></list>',
             mockRPC(route, args) {
                 assert.step(args.method);
             },
@@ -6846,7 +6846,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree limit="2"><field name="foo"/><field name="bar"/></tree>',
+            arch: '<list limit="2"><field name="foo"/><field name="bar"/></list>',
             async mockRPC(route, args) {
                 assert.step(args.method);
                 if (args.method === "search_count") {
@@ -6888,7 +6888,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree limit="2"><field name="foo"/><field name="bar"/></tree>',
+            arch: '<list limit="2"><field name="foo"/><field name="bar"/></list>',
             async mockRPC(route, args) {
                 assert.step(args.method);
                 if (args.method === "web_search_read") {
@@ -6923,7 +6923,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree groups_limit="2"><field name="foo"/><field name="bar"/></tree>',
+            arch: '<list groups_limit="2"><field name="foo"/><field name="bar"/></list>',
             groupBy: ["foo"],
         });
 
@@ -6937,7 +6937,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree limit="1"><field name="foo"/><field name="bar"/></tree>',
+            arch: '<list limit="1"><field name="foo"/><field name="bar"/></list>',
             groupBy: ["foo"],
         });
 
@@ -6975,7 +6975,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree limit="2" groups_limit="3"><field name="foo"/><field name="bar"/></tree>',
+            arch: '<list limit="2" groups_limit="3"><field name="foo"/><field name="bar"/></list>',
             groupBy: ["bar", "foo"],
         });
 
@@ -6992,7 +6992,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree limit="2" count_limit="3"><field name="foo"/><field name="bar"/></tree>',
+            arch: '<list limit="2" count_limit="3"><field name="foo"/><field name="bar"/></list>',
             mockRPC(route, args) {
                 assert.step(args.method);
                 if (args.method === "web_search_read") {
@@ -7033,7 +7033,7 @@ QUnit.module("Views", (hooks) => {
                 type: "list",
                 resModel: "foo",
                 serverData,
-                arch: '<tree limit="2"><field name="foo"/><field name="bar"/></tree>',
+                arch: '<list limit="2"><field name="foo"/><field name="bar"/></list>',
                 groupBy: ["foo"],
             });
 
@@ -7062,7 +7062,7 @@ QUnit.module("Views", (hooks) => {
                 type: "list",
                 resModel: "foo",
                 serverData,
-                arch: '<tree limit="2"><field name="foo"/><field name="bar"/></tree>',
+                arch: '<list limit="2"><field name="foo"/><field name="bar"/></list>',
                 searchViewArch: `
                     <search>
                         <filter name="foo" domain="[('foo','=','aaa')]"/>
@@ -7108,9 +7108,9 @@ QUnit.module("Views", (hooks) => {
                 resModel: "foo",
                 serverData,
                 arch: /*xml*/ `
-                    <tree expand="1">
+                    <list expand="1">
                         <field name="foo"/>
-                    </tree>`,
+                    </list>`,
                 groupBy: ["foo"],
             });
 
@@ -7244,7 +7244,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree><field name="foo"/><field name="bar"/></tree>',
+            arch: '<list><field name="foo"/><field name="bar"/></list>',
             mockRPC(route, args) {
                 if (args.method === "web_search_read") {
                     nbSearchRead++;
@@ -7295,7 +7295,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree><field name="foo" nolabel="1"/><field name="int_field"/></tree>',
+            arch: '<list><field name="foo" nolabel="1"/><field name="int_field"/></list>',
             mockRPC(route, args) {
                 if (args.method === "web_search_read") {
                     nbSearchRead++;
@@ -7322,7 +7322,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree default_order="foo"><field name="foo"/><field name="bar"/></tree>',
+            arch: '<list default_order="foo"><field name="foo"/><field name="bar"/></list>',
             mockRPC(route, args) {
                 if (args.method === "web_search_read") {
                     assert.strictEqual(
@@ -7352,9 +7352,9 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch:
-                '<tree default_order="foo, bar desc, int_field">' +
+                '<list default_order="foo, bar desc, int_field">' +
                 '<field name="foo"/><field name="bar"/>' +
-                "</tree>",
+                "</list>",
             mockRPC(route, args) {
                 if (args.method === "web_search_read") {
                     assert.strictEqual(
@@ -7376,7 +7376,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.test("use default_order on editable tree: sort on save", async function (assert) {
+    QUnit.test("use default_order on editable list: sort on save", async function (assert) {
         serverData.models.foo.records[0].o2m = [1, 3];
 
         await makeView({
@@ -7387,9 +7387,9 @@ QUnit.module("Views", (hooks) => {
                 <form>
                     <sheet>
                         <field name="o2m">
-                            <tree editable="bottom" default_order="display_name">
+                            <list editable="bottom" default_order="display_name">
                                 <field name="display_name"/>
-                            </tree>
+                            </list>
                         </field>
                     </sheet>
                 </form>`,
@@ -7422,7 +7422,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.test("use default_order on editable tree: sort on demand", async function (assert) {
+    QUnit.test("use default_order on editable list: sort on demand", async function (assert) {
         serverData.models.foo.records[0].o2m = [1, 3];
         serverData.models.bar.fields = {
             ...serverData.models.bar.fields,
@@ -7439,9 +7439,9 @@ QUnit.module("Views", (hooks) => {
                 <form>
                     <sheet>
                         <field name="o2m">
-                            <tree editable="bottom" default_order="name">
+                            <list editable="bottom" default_order="name">
                                 <field name="name"/>
-                            </tree>
+                            </list>
                         </field>
                     </sheet>
                 </form>`,
@@ -7483,7 +7483,7 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test(
-        "use default_order on editable tree: sort on demand in page",
+        "use default_order on editable list: sort on demand in page",
         async function (assert) {
             serverData.models.bar.fields = {
                 ...serverData.models.bar.fields,
@@ -7509,9 +7509,9 @@ QUnit.module("Views", (hooks) => {
                     <form>
                         <sheet>
                             <field name="o2m">
-                                <tree editable="bottom" default_order="name">
+                                <list editable="bottom" default_order="name">
                                     <field name="name"/>
-                                </tree>
+                                </list>
                             </field>
                         </sheet>
                     </form>`,
@@ -7550,10 +7550,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="top">
+                <list editable="top">
                     <field name="foo"/>
                     <button name="notafield" type="object" icon="fa-asterisk" class="o_yeah"/>
-                </tree>`,
+                </list>`,
         });
         assert.containsN(target, "tbody button[name=notafield]", 4);
         assert.containsN(
@@ -7572,7 +7572,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: `<tree><field name="m2m"/></tree>`,
+            arch: `<list><field name="m2m"/></list>`,
             mockRPC(route, args) {
                 assert.step(args.method);
             },
@@ -7596,10 +7596,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree>
+                <list>
                     <field name="foo"/>
                     <field name="bar" widget="boolean_favorite"/>
-                </tree>`,
+                </list>`,
         });
 
         await mouseEnter(target.querySelector("th[data-name=foo]"));
@@ -7646,10 +7646,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree decoration-info="int_field > 5">
+                <list decoration-info="int_field > 5">
                     <field name="foo"/>
                     <field name="int_field"/>
-                </tree>`,
+                </list>`,
         });
 
         assert.containsN(
@@ -7670,9 +7670,9 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch:
-                '<tree editable="bottom" decoration-danger="int_field &lt; 0">' +
+                '<list editable="bottom" decoration-danger="int_field &lt; 0">' +
                 '<field name="int_field"/>' +
-                "</tree>",
+                "</list>",
         });
 
         await click($(".o_list_button_add:visible").get(0));
@@ -7698,10 +7698,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree decoration-info="datetime == '2017-02-27 12:51:35'" decoration-danger="datetime &gt; '2017-02-27 12:51:35' and datetime &lt; '2017-02-27 10:51:35'">
+                <list decoration-info="datetime == '2017-02-27 12:51:35'" decoration-danger="datetime &gt; '2017-02-27 12:51:35' and datetime &lt; '2017-02-27 10:51:35'">
                     <field name="datetime"/>
                     <field name="int_field"/>
-                </tree>`,
+                </list>`,
         });
 
         assert.containsOnce(
@@ -7725,10 +7725,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree decoration-bf="int_field > 5">
+                <list decoration-bf="int_field > 5">
                     <field name="foo"/>
                     <field name="int_field"/>
-                </tree>`,
+                </list>`,
         });
 
         assert.containsN(target, "tbody tr.fw-bold", 3, "should have 3 columns with fw-bold class");
@@ -7742,10 +7742,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree decoration-it="int_field > 5">
+                <list decoration-it="int_field > 5">
                     <field name="foo"/>
                     <field name="int_field"/>
-                </tree>`,
+                </list>`,
         });
 
         assert.containsN(
@@ -7764,10 +7764,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree>
+                <list>
                     <field name="foo" decoration-danger="int_field > 5"/>
                     <field name="int_field"/>
-                </tree>`,
+                </list>`,
         });
 
         assert.containsN(target, "tbody tr", 4);
@@ -7783,10 +7783,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree>
+                <list>
                     <field name="foo" decoration-bf="int_field > 5"/>
                     <field name="int_field"/>
-                </tree>`,
+                </list>`,
         });
 
         assert.containsN(target, "tbody tr", 4);
@@ -7802,10 +7802,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree>
+                <list>
                     <field name="foo" decoration-it="int_field > 5"/>
                     <field name="int_field"/>
-                </tree>`,
+                </list>`,
         });
 
         assert.containsN(target, "tbody tr", 4);
@@ -7825,7 +7825,7 @@ QUnit.module("Views", (hooks) => {
                 type: "list",
                 resModel: "foo",
                 serverData,
-                arch: '<tree><field name="foo"/></tree>',
+                arch: '<list><field name="foo"/></list>',
                 noContentHelp: "click to add a record",
                 searchViewArch: `
                     <search>
@@ -7858,7 +7858,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree><field name="foo"/></tree>',
+            arch: '<list><field name="foo"/></list>',
             noContentHelp: "click to add a partner",
         });
         assert.containsOnce(target, ".o_view_nocontent", "should display the no content helper");
@@ -7885,7 +7885,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree><field name="foo"/></tree>',
+            arch: '<list><field name="foo"/></list>',
         });
 
         assert.containsNone(
@@ -7904,7 +7904,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree><field name="foo"/></tree>',
+            arch: '<list><field name="foo"/></list>',
             noContentHelp: "click new to add a foo",
         });
 
@@ -7927,7 +7927,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree sample="1">
+                <list sample="1">
                     <field name="foo"/>
                     <field name="bar"/>
                     <field name="int_field"/>
@@ -7935,7 +7935,7 @@ QUnit.module("Views", (hooks) => {
                     <field name="m2m" widget="many2many_tags"/>
                     <field name="date"/>
                     <field name="datetime"/>
-                </tree>`,
+                </list>`,
             context: { search_default_empty: true },
             noContentHelp: "click to add a partner",
             searchViewArch: `
@@ -8003,7 +8003,7 @@ QUnit.module("Views", (hooks) => {
                     <filter name="empty" domain="[('id', '&lt;', 0)]"/>
                 </search>`,
             "foo,false,list": `
-                <tree sample="1">
+                <list sample="1">
                     <field name="foo"/>
                     <field name="bar"/>
                     <field name="int_field"/>
@@ -8011,7 +8011,7 @@ QUnit.module("Views", (hooks) => {
                     <field name="m2m" widget="many2many_tags"/>
                     <field name="date"/>
                     <field name="datetime"/>
-                </tree>`,
+                </list>`,
             "foo,false,kanban": "<kanban></kanban>",
         };
 
@@ -8047,10 +8047,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree sample="1">
+                <list sample="1">
                     <field name="foo"/>
                     <field name="m2o" optional="hide"/>
-                </tree>`,
+                </list>`,
             domain: Domain.FALSE.toList(),
         });
         assert.hasClass(target.querySelector(".o_list_view .o_content"), "o_view_sample_data");
@@ -8076,11 +8076,11 @@ QUnit.module("Views", (hooks) => {
         await makeView({
             type: "list",
             arch: `
-                <tree sample="1">
+                <list sample="1">
                     <field name="foo"/>
                     <field name="bar"/>
                     <field name="int_field"/>
-                </tree>`,
+                </list>`,
             serverData,
             domain: Domain.FALSE.toList(),
             resModel: "foo",
@@ -8127,9 +8127,9 @@ QUnit.module("Views", (hooks) => {
         await makeView({
             type: "list",
             arch: `
-                <tree sample="1">
+                <list sample="1">
                     <field name="date"/>
-                </tree>`,
+                </list>`,
             serverData,
             domain: Domain.FALSE.toList(),
             resModel: "foo",
@@ -8150,11 +8150,11 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree sample="1">
+                <list sample="1">
                     <field name="foo"/>
                     <field name="bar"/>
                     <field name="int_field"/>
-                </tree>`,
+                </list>`,
             domain: Domain.TRUE.toList(),
             context: { search_default_true_domain: true },
             searchViewArch: `
@@ -8188,11 +8188,11 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree sample="1">
+                <list sample="1">
                     <field name="foo"/>
                     <field name="bar"/>
                     <field name="int_field"/>
-                </tree>`,
+                </list>`,
             domain: Domain.FALSE.toList(),
         });
 
@@ -8218,11 +8218,11 @@ QUnit.module("Views", (hooks) => {
                 resModel: "foo",
                 serverData,
                 arch: `
-                    <tree editable="top" sample="1">
+                    <list editable="top" sample="1">
                         <field name="foo"/>
                         <field name="bar"/>
                         <field name="int_field"/>
-                    </tree>`,
+                    </list>`,
                 domain: Domain.TRUE.toList(),
                 noContentHelp: "click to add a partner",
                 actionMenus: {},
@@ -8261,11 +8261,11 @@ QUnit.module("Views", (hooks) => {
                 resModel: "foo",
                 serverData,
                 arch: `
-                <tree editable="top" sample="1">
+                <list editable="top" sample="1">
                     <field name="foo"/>
                     <field name="bar"/>
                     <field name="int_field"/>
-                </tree>`,
+                </list>`,
                 domain: Domain.FALSE.toList(),
                 noContentHelp: "click to add a partner",
             });
@@ -8305,11 +8305,11 @@ QUnit.module("Views", (hooks) => {
                 resModel: "foo",
                 serverData,
                 arch: `
-                    <tree editable="top" sample="1">
+                    <list editable="top" sample="1">
                         <field name="foo"/>
                         <field name="bar"/>
                         <field name="int_field"/>
-                    </tree>`,
+                    </list>`,
                 domain: Domain.FALSE.toList(),
                 noContentHelp: "click to add a partner",
                 actionMenus: {},
@@ -8363,11 +8363,11 @@ QUnit.module("Views", (hooks) => {
                 resModel: "foo",
                 serverData,
                 arch: `
-                    <tree editable="top" sample="1">
+                    <list editable="top" sample="1">
                         <field name="foo"/>
                         <field name="bar"/>
                         <field name="int_field"/>
-                    </tree>`,
+                    </list>`,
                 domain: [["int_field", "=", 0]],
                 noContentHelp: "click to add a partner",
                 actionMenus: {},
@@ -8421,12 +8421,12 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree>
+                <list>
                     <field name="foo"/>
                     <groupby name="currency_id">
                         <button string="Button 1" type="object" name="button_method"/>
                     </groupby>
-                </tree>`,
+                </list>`,
             mockRPC(route, args) {
                 assert.step(args.method || route);
             },
@@ -8478,13 +8478,13 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree default_group_by="currency_id">
+                <list default_group_by="currency_id">
                     <field name="foo"/>
                     <groupby name="currency_id">
                         <field name="display_name" />
                         <button string="Button 1" type="object" name="button_method"/>
                     </groupby>
-                </tree>`,
+                </list>`,
         });
 
         assert.containsOnce(target, ".o_list_table_grouped");
@@ -8500,12 +8500,12 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree>
+                <list>
                     <field name="foo"/>
                     <groupby name="currency_id">
                         <button string="Button 1" type="object" name="button_method"/>
                     </groupby>
-                </tree>`,
+                </list>`,
             groupBy: ["bar", "currency_id"],
         });
 
@@ -8526,13 +8526,13 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree>
+                <list>
                     <field name="foo"/>
                     <groupby name="currency_id">
                         <field name="position"/>
                         <button string="Button 1" type="object" name="button_method" invisible="position == 'after'"/>
                     </groupby>
-                </tree>`,
+                </list>`,
             mockRPC(route, args) {
                 assert.step(args.method || route);
                 if (args.method === "web_read" && args.model === "res_currency") {
@@ -8573,13 +8573,13 @@ QUnit.module("Views", (hooks) => {
                 resModel: "foo",
                 serverData,
                 arch: `
-                <tree expand="1">
+                <list expand="1">
                     <field name="foo"/>
                     <groupby name="currency_id">
                         <field name="m2o"/>
                         <button string="Button 1" type="object" name="button_method" invisible="not m2o"/>
                     </groupby>
-                </tree>`,
+                </list>`,
                 mockRPC(route, args) {
                     assert.step(args.method);
                 },
@@ -8605,13 +8605,13 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree expand="1">
+                <list expand="1">
                     <field name="foo"/>
                     <groupby name="currency_id">
                         <field name="position"/>
                         <button string="Button 1" type="object" name="button_method" invisible="position == 'after'"/>
                     </groupby>
-                </tree>`,
+                </list>`,
             groupBy: ["currency_id"],
         });
 
@@ -8627,13 +8627,13 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree expand="1" editable="bottom">
+                <list expand="1" editable="bottom">
                     <field name="foo"/>
                     <groupby name="currency_id">
                         <field name="position"/>
                         <button string="Button 1" type="object" name="button_method" invisible="position == 'after'"/>
                     </groupby>
-                </tree>`,
+                </list>`,
             groupBy: ["currency_id"],
         });
 
@@ -8666,12 +8666,12 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree expand="1">
+                <list expand="1">
                     <field name="foo"/>
                     <groupby name="currency_id">
                         <button string="Button 1" type="edit" name="edit"/>
                     </groupby>
-                </tree>`,
+                </list>`,
             groupBy: ["currency_id"],
         });
         patchWithCleanup(list.env.services.action, {
@@ -8701,13 +8701,13 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="bottom" expand="1">
+                <list editable="bottom" expand="1">
                     <field name="foo"/>
                     <field name="currency_id"/>
                     <groupby name="currency_id">
                         <field name="position" column_invisible="1"/>
                     </groupby>
-                </tree>`,
+                </list>`,
             groupBy: ["currency_id"],
             mockRPC(route, args) {
                 if (args.method === "onchange") {
@@ -8739,12 +8739,12 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="top">
+                <list editable="top">
                     <field name="date"/>
                     <field name="m2o"/>
                     <field name="foo"/>
                     <button type="object" icon="fa-plus-square" name="method"/>
-                </tree>`,
+                </list>`,
             noContentHelp: "click to add a partner",
             mockRPC(route, args) {
                 if (args.method === "web_save") {
@@ -8809,10 +8809,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="top">
+                <list editable="top">
                     <field name="foo"/>
                     <button string="abc" icon="fa-phone" type="object" name="schedule_another_phonecall"/>
-                </tree>`,
+                </list>`,
             mockRPC(route, { method }) {
                 if (method === "web_save") {
                     assert.step("web_save");
@@ -8848,10 +8848,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="top">
+                <list editable="top">
                     <field name="foo"/>
                     <button string="abc" type="object" name="schedule_another_phonecall"/>
-                </tree>`,
+                </list>`,
         });
 
         assert.strictEqual(
@@ -8866,7 +8866,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree editable="top"><field name="foo"/></tree>',
+            arch: '<list editable="top"><field name="foo"/></list>',
         });
 
         assert.containsNone(
@@ -8903,10 +8903,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="top">
+                <list editable="top">
                     <field name="foo"/>
                     <field name="int_field" sum="Sum"/>
-                </tree>`,
+                </list>`,
             mockRPC(route, args) {
                 if (args.method === "web_save") {
                     assert.step("web_save");
@@ -8938,10 +8938,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: /* xml */ `
-                <tree editable="bottom">
+                <list editable="bottom">
                     <field name="foo"/>
                     <field name="date"/>
-                </tree>`,
+                </list>`,
         });
         await click($(".o_list_button_add:visible").get(0));
         assert.strictEqual(
@@ -8978,9 +8978,9 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="bottom" limit="1">
+                <list editable="bottom" limit="1">
                     <field name="text"/>
-                </tree>`,
+                </list>`,
         });
 
         await click(target, "td[name=text]");
@@ -9011,10 +9011,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="bottom" limit="1">
+                <list editable="bottom" limit="1">
                     <field name="foo"/>
                     <button name="action_do_something" type="object" string="Action"/>
-                </tree>`,
+                </list>`,
         });
 
         patchWithCleanup(list.env.services.action, {
@@ -9042,10 +9042,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree>
+                <list>
                     <field name="foo"/>
                     <button string="a button" name="button_action" icon="fa-car" type="object"/>
-                </tree>`,
+                </list>`,
             mockRPC(route) {
                 assert.step(route);
             },
@@ -9080,12 +9080,12 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="top">
+                <list editable="top">
                     <button string="a button" name="button_action" icon="fa-car" type="object" invisible="id == 1"/>
                     <field name="int_field"/>
                     <field name="qux"/>
                     <field name="foo" invisible="id == 1"/>
-                </tree>`,
+                </list>`,
         });
 
         assert.strictEqual(target.querySelectorAll(".o_field_cell")[2].innerHTML, "");
@@ -9115,11 +9115,11 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree>
+                <list>
                     <field name="id"/>
                     <field name="amount"/>
                     <field name="currency_id" column_invisible="1"/>
-                </tree>`,
+                </list>`,
         });
 
         assert.containsN(
@@ -9151,7 +9151,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree><field name="date"/><field name="datetime"/></tree>',
+            arch: '<list><field name="date"/><field name="datetime"/></list>',
         });
         const cells = target.querySelectorAll(".o_data_row .o_data_cell");
         assert.strictEqual(cells[0].textContent, "01/25/2017", "should have formatted the date");
@@ -9168,7 +9168,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree editable="bottom"><field name="foo"/><field name="int_field"/></tree>',
+            arch: '<list editable="bottom"><field name="foo"/><field name="int_field"/></list>',
         });
 
         // edit the first row
@@ -9221,7 +9221,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree><field name="id"/><field name="int_field"/></tree>',
+            arch: '<list><field name="id"/><field name="int_field"/></list>',
             groupBy: ["m2o", "foo"],
             mockRPC(route, args) {
                 if (args.method === "web_read_group") {
@@ -9433,7 +9433,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree><field name="id"/><field name="int_field"/></tree>',
+            arch: '<list><field name="id"/><field name="int_field"/></list>',
             groupBy: ["m2o", "priority"],
         });
 
@@ -9460,7 +9460,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree><field name="foo"/><field name="bar"/></tree>',
+            arch: '<list><field name="foo"/><field name="bar"/></list>',
             groupBy: ["bar"],
             limit: 3,
         });
@@ -9491,7 +9491,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree editable="bottom"><field name="foo"/><field name="bar"/></tree>',
+            arch: '<list editable="bottom"><field name="foo"/><field name="bar"/></list>',
         });
 
         assert.containsN(target, "tr.o_data_row", 4, "should have 4 records");
@@ -9517,10 +9517,10 @@ QUnit.module("Views", (hooks) => {
                 resModel: "foo",
                 serverData,
                 arch: `
-                    <tree editable="top">
+                    <list editable="top">
                         <field name="foo" invisible="bar"/>
                         <field name="bar"/>
-                    </tree>`,
+                    </list>`,
             });
 
             let fooCells = target.querySelectorAll(".o_data_cell.o_list_char");
@@ -9570,10 +9570,10 @@ QUnit.module("Views", (hooks) => {
                 resModel: "foo",
                 serverData,
                 arch: `
-                    <tree editable="top">
+                    <list editable="top">
                         <field name="foo" readonly="bar"/>
                         <field name="bar"/>
-                    </tree>`,
+                    </list>`,
             });
 
             // Make first line editable
@@ -9627,10 +9627,10 @@ QUnit.module("Views", (hooks) => {
                 resModel: "foo",
                 serverData,
                 arch: `
-                    <tree editable="top">
+                    <list editable="top">
                         <field name="foo" required="bar"/>
                         <field name="bar"/>
-                    </tree>`,
+                    </list>`,
             });
 
             // Make first line editable
@@ -9702,10 +9702,10 @@ QUnit.module("Views", (hooks) => {
                 arch: `
                     <form>
                         <field name="o2m">
-                            <tree editable="top">
+                            <list editable="top">
                                 <field name="display_name" invisible="stage == 'open'"/>
                                 <field name="stage"/>
-                            </tree>
+                            </list>
                         </field>
                     </form>`,
                 resId: 1,
@@ -9753,10 +9753,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="bottom">
+                <list editable="bottom">
                     <field name="foo" required="1"/>
                     <field name="bar"/>
-                </tree>`,
+                </list>`,
         });
         patchWithCleanup(list.env.services.notification, {
             add: (message, { type }) => {
@@ -9793,7 +9793,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "event",
             serverData,
-            arch: '<tree><field name="name"/></tree>',
+            arch: '<list><field name="name"/></list>',
             selectRecord: (resId, options) => {
                 assert.step(`switch to form - resId: ${resId}`);
             },
@@ -9807,7 +9807,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: `<tree editable="bottom"><field name="foo"/></tree>`,
+            arch: `<list editable="bottom"><field name="foo"/></list>`,
             mockRPC(route, args) {
                 assert.step(args.method);
             },
@@ -9847,7 +9847,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree editable="bottom"><field name="foo"/><field name="int_field"/></tree>',
+            arch: '<list editable="bottom"><field name="foo"/><field name="int_field"/></list>',
             mockRPC(route) {
                 assert.step(route);
             },
@@ -9899,7 +9899,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree editable="bottom"><field name="foo"/><field name="int_field"/></tree>',
+            arch: '<list editable="bottom"><field name="foo"/><field name="int_field"/></list>',
             mockRPC(route, args, performRPC) {
                 assert.step(args.method);
                 const result = performRPC(route, args);
@@ -9955,7 +9955,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "event",
             serverData,
-            arch: '<tree><field name="name"/></tree>',
+            arch: '<list><field name="name"/></list>',
             info: {
                 actionMenus: {
                     action: [
@@ -9994,7 +9994,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree><field name="foo"/></tree>',
+            arch: '<list><field name="foo"/></list>',
             info: {
                 actionMenus: {
                     action: [
@@ -10055,7 +10055,7 @@ QUnit.module("Views", (hooks) => {
                 type: "list",
                 resModel: "foo",
                 serverData,
-                arch: '<tree><field name="foo"/></tree>',
+                arch: '<list><field name="foo"/></list>',
                 info: {
                     actionMenus: {
                         action: [
@@ -10138,7 +10138,7 @@ QUnit.module("Views", (hooks) => {
                 type: "list",
                 resModel: "foo",
                 serverData,
-                arch: '<tree limit="2"><field name="foo"/></tree>',
+                arch: '<list limit="2"><field name="foo"/></list>',
                 info: {
                     actionMenus: {
                         action: [
@@ -10205,7 +10205,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree editable="top"><field name="foo"/><field name="int_field"/></tree>',
+            arch: '<list editable="top"><field name="foo"/><field name="int_field"/></list>',
         });
 
         const rows = target.querySelectorAll(".o_data_row");
@@ -10241,10 +10241,10 @@ QUnit.module("Views", (hooks) => {
                 resModel: "foo",
                 serverData,
                 arch: `
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="foo"/>
                         <field name="int_field"/>
-                    </tree>`,
+                    </list>`,
             });
 
             await click(target.querySelector(".o_data_cell"));
@@ -10284,10 +10284,10 @@ QUnit.module("Views", (hooks) => {
                 resModel: "foo",
                 serverData,
                 arch: `
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="foo"/>
                         <field name="int_field"/>
-                    </tree>`,
+                    </list>`,
             });
 
             await click(target.querySelector(".o_data_row:nth-child(2) .o_data_cell"));
@@ -10327,10 +10327,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="bottom">
+                <list editable="bottom">
                     <field name="foo"/>
                     <field name="int_field" readonly="1"/>
-                </tree>`,
+                </list>`,
         });
 
         // Pass the first row in edition.
@@ -10375,10 +10375,10 @@ QUnit.module("Views", (hooks) => {
                 resModel: "foo",
                 serverData,
                 arch: `
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="foo"/>
                         <field name="int_field" readonly="1"/>
-                    </tree>`,
+                    </list>`,
             });
 
             // Pass the first row in edition.
@@ -10421,9 +10421,9 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="bottom" create="0">
+                <list editable="bottom" create="0">
                     <field name="display_name"/>
-                </tree>`,
+                </list>`,
         });
 
         assert.containsN(target, ".o_data_row", 4, "the list should contain 4 rows");
@@ -10468,9 +10468,9 @@ QUnit.module("Views", (hooks) => {
                 <form>
                     <sheet>
                         <field name="o2m">
-                        <tree editable="bottom" create="0">
+                        <list editable="bottom" create="0">
                             <field name="display_name"/>
-                        </tree>
+                        </list>
                         </field>
                         <field name="foo"/>
                     </sheet>
@@ -10538,10 +10538,10 @@ QUnit.module("Views", (hooks) => {
                 resModel: "foo",
                 serverData,
                 arch: `
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="foo"/>
                         <field name="int_field" readonly="1"/>
-                    </tree>`,
+                    </list>`,
                 mockRPC(route, args) {
                     assert.step(args.method);
                 },
@@ -10589,11 +10589,11 @@ QUnit.module("Views", (hooks) => {
                         <group>
                             <field name="display_name"/>
                             <field name="o2m">
-                                <tree editable="bottom">
+                                <list editable="bottom">
                                     <field name="foo"/>
                                     <field name="date" readonly="1"/>
                                     <field name="int_field"/>
-                                </tree>
+                                </list>
                             </field>
                         </group>
                     </form>`,
@@ -10631,11 +10631,11 @@ QUnit.module("Views", (hooks) => {
                 resModel: "foo",
                 serverData,
                 arch: `
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="foo"/>
                         <field name="int_field" readonly="1"/>
                         <field name="qux"/>
-                    </tree>`,
+                    </list>`,
             });
 
             await click(target.querySelector(".o_data_row:nth-child(2) [name=qux]"));
@@ -10665,11 +10665,11 @@ QUnit.module("Views", (hooks) => {
                 resModel: "foo",
                 serverData,
                 arch: `
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="int_field" readonly="1"/>
                         <field name="foo"/>
                         <field name="qux"/>
-                    </tree>`,
+                    </list>`,
             });
 
             await click(target.querySelector(".o_data_row:nth-child(2) .o_data_cell"));
@@ -10699,11 +10699,11 @@ QUnit.module("Views", (hooks) => {
                 resModel: "foo",
                 serverData,
                 arch: `
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="int_field"/>
                         <field name="foo"/>
                         <field name="qux" readonly="1"/>
-                    </tree>`,
+                    </list>`,
             });
 
             await click(target.querySelector(".o_data_row:nth-child(2) .o_data_cell"));
@@ -10731,11 +10731,11 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="foo"/>
                         <field name="bar" column_invisible="1"/>
                         <field name="int_field"/>
-                    </tree>`,
+                    </list>`,
             resId: 1,
         });
 
@@ -10758,10 +10758,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="foo"/>
                         <button name="kikou" string="Kikou" type="object"/>
-                    </tree>`,
+                    </list>`,
             resId: 1,
         });
 
@@ -10784,12 +10784,12 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <button name="kikou" string="Kikou" type="object"/>
                         <field name="foo"/>
                         <button name="kikou" string="Kikou" type="object"/>
                         <field name="int_field"/>
-                    </tree>`,
+                    </list>`,
             resId: 1,
         });
 
@@ -10811,7 +10811,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree editable="bottom"><field name="foo"/></tree>',
+            arch: '<list editable="bottom"><field name="foo"/></list>',
         });
 
         await click(target.querySelector(".o_field_cell[name=foo]"));
@@ -10830,10 +10830,10 @@ QUnit.module("Views", (hooks) => {
                 resModel: "foo",
                 serverData,
                 arch: `
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="foo"/>
                         <field name="bar"/>
-                    </tree>`,
+                    </list>`,
             });
 
             await click(target.querySelector(".o_field_cell[name=foo]"));
@@ -10861,7 +10861,7 @@ QUnit.module("Views", (hooks) => {
                 type: "list",
                 resModel: "foo",
                 serverData,
-                arch: '<tree editable="top"><field name="foo"/></tree>',
+                arch: '<list editable="top"><field name="foo"/></list>',
             });
 
             assert.strictEqual(
@@ -10893,12 +10893,12 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="top">
+                <list editable="top">
                     <field name="foo"/>
                     <field name="qux"/>
                     <field name="amount" widget="monetary"/>
                     <field name="currency_id" column_invisible="1"/>
-                </tree>`,
+                </list>`,
         });
         patchWithCleanup(session, { currencies });
         const nbCellRight = [
@@ -10932,7 +10932,7 @@ QUnit.module("Views", (hooks) => {
             }
             serverData.models.bar.records = newRecs;
             serverData.views = {
-                "bar,false,list": '<tree><field name="cornichon"/></tree>',
+                "bar,false,list": '<list><field name="cornichon"/></list>',
                 "bar,false,search":
                     "<search><filter context=\"{'group_by': 'cornichon'}\" string=\"cornichon\"/></search>",
             };
@@ -10940,7 +10940,7 @@ QUnit.module("Views", (hooks) => {
                 type: "list",
                 resModel: "foo",
                 serverData,
-                arch: '<tree editable="top"><field name="foo"/><field name="m2o"/></tree>',
+                arch: '<list editable="top"><field name="foo"/><field name="m2o"/></list>',
                 searchViewArch: `
                     <search>
                         <filter name="bar" string="bar" context="{'group_by': 'bar'}"/>
@@ -10977,7 +10977,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree editable="top"><field name="foo"/></tree>',
+            arch: '<list editable="top"><field name="foo"/></list>',
         });
 
         assert.strictEqual(
@@ -10992,7 +10992,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree editable="top"><field name="foo"/></tree>',
+            arch: '<list editable="top"><field name="foo"/></list>',
         });
 
         await click($(".o_list_button_add:visible").get(0));
@@ -11011,7 +11011,7 @@ QUnit.module("Views", (hooks) => {
                 type: "list",
                 resModel: "foo",
                 serverData,
-                arch: '<tree editable="top"><field name="foo" required="1"/></tree>',
+                arch: '<list editable="top"><field name="foo" required="1"/></list>',
             });
 
             await click($(".o_list_button_add:visible").get(0));
@@ -11038,7 +11038,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree><field name="foo" password="True"/></tree>',
+            arch: '<list><field name="foo" password="True"/></list>',
         });
         assert.deepEqual(
             [...target.querySelectorAll(".o_data_row .o_data_cell")].map((el) => el.textContent),
@@ -11054,10 +11054,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree>
+                <list>
                     <field name="int_field" widget="handle"/>
                     <field name="amount" widget="float" digits="[5,0]"/>
-                </tree>`,
+                </list>`,
             mockRPC(route, args) {
                 if (args.method === "web_search_read") {
                     assert.step(`web_search_read: order: ${args.kwargs.order}`);
@@ -11157,10 +11157,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree>
+                <list>
                     <field name="int_field" widget="handle"/>
                     <field name="id"/>
-                </tree>`,
+                </list>`,
             mockRPC(route, args) {
                 if (route === "/web/dataset/resequence") {
                     if (moves === 0) {
@@ -11266,10 +11266,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="top" default_order="int_field">
+                <list editable="top" default_order="int_field">
                     <field name="int_field" widget="handle"/>
                     <field name="amount" widget="float" digits="[5,0]"/>
-                </tree>`,
+                </list>`,
             mockRPC(route, args) {
                 if (route === "/web/dataset/resequence") {
                     assert.strictEqual(
@@ -11359,10 +11359,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="top" default_order="int_field">
+                <list editable="top" default_order="int_field">
                     <field name="int_field" widget="handle"/>
                     <field name="amount" widget="float"/>
-                </tree>`,
+                </list>`,
         });
 
         assert.strictEqual(
@@ -11430,10 +11430,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="top">
+                <list editable="top">
                     <field name="int_field" widget="handle" />
                     <field name="amount" widget="float" digits="[5,0]" />
-                </tree>`,
+                </list>`,
             mockRPC: async function (route, { field, ids, offset }) {
                 if (route === "/web/dataset/resequence") {
                     assert.strictEqual(
@@ -11543,7 +11543,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree editable="top"><field name="m2o" required="1"/></tree>',
+            arch: '<list editable="top"><field name="m2o" required="1"/></list>',
             mockRPC: async function (route, args, performRPC) {
                 const result = await performRPC(route, args);
                 if (args.method === "onchange") {
@@ -11575,7 +11575,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree><field name="reference"/></tree>',
+            arch: '<list><field name="reference"/></list>',
         });
 
         assert.strictEqual(
@@ -11602,10 +11602,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree expand="1">
+                <list expand="1">
                    <field name="foo" column_invisible="1"/>
                    <field name="reference"/>
-               </tree>`,
+               </list>`,
             groupBy: ["foo"],
             mockRPC(route, args) {
                 assert.step(args.method || route);
@@ -11637,9 +11637,9 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree expand="1" multi_edit="1">
+                <list expand="1" multi_edit="1">
                    <field name="foo"/>
-               </tree>`,
+               </list>`,
             groupBy: ["m2o"],
         });
         // Select items from the first group
@@ -11674,11 +11674,11 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree expand="1" multi_edit="1">
+                <list expand="1" multi_edit="1">
                     <field name="foo" column_invisible="1"/>
                     <field name="bar" widget="boolean_toggle"/>
                     <field name="reference"/>
-                </tree>`,
+                </list>`,
             groupBy: ["foo"],
             mockRPC(route, args) {
                 assert.step(args.method || route);
@@ -11734,9 +11734,9 @@ QUnit.module("Views", (hooks) => {
             resModel: "daterange",
             serverData,
             arch: `
-                <tree multi_edit="1">
+                <list multi_edit="1">
                     <field name="date_start" widget="daterange" options="{'end_date_field': 'date_end'}" />
-                </tree>`,
+                </list>`,
             mockRPC(route, args) {
                 if (args.method === "write") {
                     assert.deepEqual(args.args, [
@@ -11804,9 +11804,9 @@ QUnit.module("Views", (hooks) => {
                 resModel: "daterange",
                 serverData,
                 arch: `
-                    <tree multi_edit="1">
+                    <list multi_edit="1">
                         <field name="date_start" widget="daterange" options="{'end_date_field': 'date_end'}" />
-                    </tree>`,
+                    </list>`,
                 mockRPC(route, args) {
                     if (args.method === "write") {
                         assert.deepEqual(args.args, [
@@ -11855,9 +11855,9 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: /* xml */ `
-                <tree>
+                <list>
                     <field name="date" widget="daterange" options="{'end_date_field': 'date_end'}" />
-                </tree>`,
+                </list>`,
         });
 
         const arrowIcon = target.querySelector(".fa-long-arrow-right");
@@ -11886,9 +11886,9 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: /* xml */ `
-                <tree>
+                <list>
                     <field name="date" widget="daterange" options="{'end_date_field': 'date_end'}" />
-                </tree>`,
+                </list>`,
         });
 
         const arrowIcon = target.querySelector(".fa-long-arrow-right");
@@ -11916,7 +11916,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree editable="top"><field name="foo"/></tree>',
+            arch: '<list editable="top"><field name="foo"/></list>',
             mockRPC(route, args) {
                 if (args.method !== "get_views") {
                     const context = args.kwargs.context;
@@ -11941,7 +11941,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree multi_edit="1"><field name="foo"/></tree>',
+            arch: '<list multi_edit="1"><field name="foo"/></list>',
             mockRPC(route, args) {
                 if (
                     route === "/web/dataset/call_kw/foo/write" ||
@@ -11969,7 +11969,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: `<tree editable="top" multi_edit="1"><field name="foo"/></tree>`,
+            arch: `<list editable="top" multi_edit="1"><field name="foo"/></list>`,
         });
 
         // Select first record
@@ -11996,10 +11996,10 @@ QUnit.module("Views", (hooks) => {
                 resModel: "foo",
                 serverData,
                 arch: `
-                    <tree editable="top">
+                    <list editable="top">
                         <field name="foo" required="1"/>
                         <field name="int_field"/>
-                    </tree>`,
+                    </list>`,
             });
             assert.containsN(target, ".o_data_row", 4);
 
@@ -12056,10 +12056,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="bottom" multi_edit="1">
+                <list editable="bottom" multi_edit="1">
                     <field name="foo"/>
                     <field name="int_field"/>
-                </tree>`,
+                </list>`,
             mockRPC(route, args) {
                 assert.step(args.method || route);
                 if (args.method === "write") {
@@ -12161,10 +12161,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree multi_edit="1">
+                <list multi_edit="1">
                     <field name="foo" string="Custom Label"/>
                     <field name="int_field"/>
-                </tree>`,
+                </list>`,
         });
 
         // select two records
@@ -12190,10 +12190,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree multi_edit="1">
+                <list multi_edit="1">
                     <field name="foo"/>
                     <field name="int_field"/>
-                </tree>`,
+                </list>`,
             createRecord: () => {
                 assert.step("createRecord");
             },
@@ -12215,10 +12215,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree multi_edit="1">
+                <list multi_edit="1">
                     <field name="foo"/>
                     <field name="int_field"/>
-                </tree>`,
+                </list>`,
             mockRPC(route, args) {
                 assert.step(args.method || route);
                 if (args.method === "write") {
@@ -12282,10 +12282,10 @@ QUnit.module("Views", (hooks) => {
                 resModel: "foo",
                 serverData,
                 arch: `
-                    <tree multi_edit="1">
+                    <list multi_edit="1">
                         <field name="foo" required="1"/>
                         <field name="int_field"/>
-                    </tree>`,
+                    </list>`,
             });
 
             assert.containsN(target, ".o_list_record_selector input:enabled", 5);
@@ -12344,7 +12344,7 @@ QUnit.module("Views", (hooks) => {
         }
 
         serverData.views = {
-            "bar,false,list": '<tree><field name="name"/></tree>',
+            "bar,false,list": '<list><field name="name"/></list>',
             "bar,false,search": "<search></search>",
         };
 
@@ -12352,7 +12352,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree multi_edit="1"><field name="m2m" widget="many2many_tags"/></tree>',
+            arch: '<list multi_edit="1"><field name="m2m" widget="many2many_tags"/></list>',
         });
 
         assert.containsN(target, ".o_list_record_selector input:enabled", 5);
@@ -12387,10 +12387,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree multi_edit="1">
+                <list multi_edit="1">
                     <field name="foo"/>
                     <field name="m2m" widget="many2many_tags"/>
-                </tree>`,
+                </list>`,
             groupBy: ["m2m"],
         });
 
@@ -12423,10 +12423,10 @@ QUnit.module("Views", (hooks) => {
                 resModel: "foo",
                 serverData,
                 arch: `
-                    <tree multi_edit="1">
+                    <list multi_edit="1">
                         <field name="foo"/>
                         <field name="m2o"/>
-                    </tree>`,
+                    </list>`,
                 mockRPC(route, args) {
                     if (args.method === "write") {
                         assert.deepEqual(
@@ -12466,9 +12466,9 @@ QUnit.module("Views", (hooks) => {
             await makeView({
                 type: "list",
                 arch: `
-                    <tree editable="top" multi_edit="1">
+                    <list editable="top" multi_edit="1">
                         <field name="foo"/>
-                    </tree>`,
+                    </list>`,
                 serverData,
                 resModel: "foo",
             });
@@ -12507,9 +12507,9 @@ QUnit.module("Views", (hooks) => {
             await makeView({
                 type: "list",
                 arch: `
-                    <tree editable="top">
+                    <list editable="top">
                         <field name="foo"/>
-                    </tree>`,
+                    </list>`,
                 mockRPC(route, args) {
                     assert.step(args.method);
                 },
@@ -12551,9 +12551,9 @@ QUnit.module("Views", (hooks) => {
             await makeView({
                 type: "list",
                 arch: `
-                    <tree multi_edit="1">
+                    <list multi_edit="1">
                         <field name="int_field"/>
-                    </tree>`,
+                    </list>`,
                 serverData,
                 resModel: "foo",
             });
@@ -12612,9 +12612,9 @@ QUnit.module("Views", (hooks) => {
             await makeView({
                 type: "list",
                 arch: `
-                    <tree multi_edit="1">
+                    <list multi_edit="1">
                         <field name="foo"/>
-                    </tree>`,
+                    </list>`,
                 serverData,
                 resModel: "foo",
             });
@@ -12655,9 +12655,9 @@ QUnit.module("Views", (hooks) => {
             await makeView({
                 type: "list",
                 arch: `
-                    <tree multi_edit="1">
+                    <list multi_edit="1">
                         <field name="bar" widget="boolean_toggle"/>
-                    </tree>`,
+                    </list>`,
                 serverData,
                 resModel: "foo",
                 mockRPC(route, args) {
@@ -12694,11 +12694,11 @@ QUnit.module("Views", (hooks) => {
                 resModel: "foo",
                 serverData,
                 arch: `
-                    <tree multi_edit="1">
+                    <list multi_edit="1">
                         <field name="id"/>
                         <field name="foo"/>
                         <field name="int_field" readonly="id > 2"/>
-                    </tree>`,
+                    </list>`,
                 mockRPC(route, args) {
                     if (args.method === "write") {
                         assert.deepEqual(
@@ -12757,10 +12757,10 @@ QUnit.module("Views", (hooks) => {
                 resModel: "foo",
                 serverData,
                 arch: `
-                    <tree multi_edit="1" limit="2">
+                    <list multi_edit="1" limit="2">
                         <field name="id"/>
                         <field name="int_field"/>
-                    </tree>`,
+                    </list>`,
             });
 
             // select all records, and then select all domain
@@ -12786,10 +12786,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="top">
+                <list editable="top">
                     <field name="m2o" readonly="1"/>
                     <field name="foo"/>
-                </tree>`,
+                </list>`,
         });
 
         // edit a field
@@ -12808,7 +12808,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree multi_edit="1"><field name="foo" required="1"/></tree>',
+            arch: '<list multi_edit="1"><field name="foo" required="1"/></list>',
             mockRPC(route, args) {
                 if (args.method === "write") {
                     return Promise.reject();
@@ -12850,10 +12850,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree multi_edit="1">
+                <list multi_edit="1">
                     <field name="foo"/>
                     <field name="int_field"/>
-                </tree>`,
+                </list>`,
             selectRecord: (resId) => {
                 assert.step(`resId: ${resId}`);
             },
@@ -12994,10 +12994,10 @@ QUnit.module("Views", (hooks) => {
                 resModel: "foo",
                 serverData,
                 arch: `
-                    <tree multi_edit="1">
+                    <list multi_edit="1">
                         <field name="foo"/>
                         <field name="int_field"/>
-                    </tree>`,
+                    </list>`,
             });
             assert.containsN(target, ".o_data_row", 4);
             await click(target.querySelector(".o_list_view .o_list_record_selector input"));
@@ -13023,7 +13023,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             serverData,
             resModel: "foo",
-            arch: `<tree multi_edit="1"><field name="foo"/></tree>`,
+            arch: `<list multi_edit="1"><field name="foo"/></list>`,
             groupBy: ["bar"],
             selectRecord: (resId) => {
                 assert.step(`resId: ${resId}`);
@@ -13082,9 +13082,9 @@ QUnit.module("Views", (hooks) => {
             await makeView({
                 type: "list",
                 arch: `
-                    <tree multi_edit="1">
+                    <list multi_edit="1">
                         <field name="foo" required="1"/>
-                    </tree>`,
+                    </list>`,
                 serverData,
                 resModel: "foo",
             });
@@ -13116,10 +13116,10 @@ QUnit.module("Views", (hooks) => {
         await makeView({
             type: "list",
             arch: `
-                <tree multi_edit="1">
+                <list multi_edit="1">
                     <field name="foo"/>
                     <field name="int_field"/>
-                </tree>`,
+                </list>`,
             serverData,
             mockRPC(route, args) {
                 assert.step(args.method || route);
@@ -13189,10 +13189,10 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("editable list view: m2m tags in grouped list", async function (assert) {
         await makeView({
             arch: `
-                <tree editable="top" multi_edit="1">
+                <list editable="top" multi_edit="1">
                     <field name="bar"/>
                     <field name="m2m" widget="many2many_tags"/>
-                </tree>`,
+                </list>`,
             groupBy: ["bar"],
             resModel: "foo",
             serverData,
@@ -13225,9 +13225,9 @@ QUnit.module("Views", (hooks) => {
 
         await makeViewInDialog({
             arch: `
-                <tree editable="top" multi_edit="1">
+                <list editable="top" multi_edit="1">
                     <field name="m2o"/>
-                </tree>`,
+                </list>`,
             serverData,
             mockRPC: async function (route, args) {
                 if (args.method === "get_formview_id") {
@@ -13279,12 +13279,12 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="top">
+                <list editable="top">
                     <field name="bar"/>
                     <field name="foo" readonly="bar"/>
                     <field name="m2o" readonly="not bar"/>
                     <field name="int_field"/>
-                </tree>`,
+                </list>`,
         });
 
         await click($(".o_list_button_add:visible").get(0));
@@ -13334,9 +13334,9 @@ QUnit.module("Views", (hooks) => {
                     <form>
                         <field name="display_name"/>
                         <field name="o2m">
-                            <tree editable="bottom">
+                            <list editable="bottom">
                                 <field name="m2o" required="1"/>
-                            </tree>
+                            </list>
                         </field>
                     </form>`,
             });
@@ -13371,9 +13371,9 @@ QUnit.module("Views", (hooks) => {
                     <form>
                         <field name="text" widget="html"/>
                         <field name="o2m">
-                            <tree editable="bottom">
+                            <list editable="bottom">
                                 <field name="display_name"/>
-                            </tree>
+                            </list>
                         </field>
                     </form>`,
             });
@@ -13402,7 +13402,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree><field name="date"/></tree>',
+            arch: '<list><field name="date"/></list>',
             groupBy: ["date:month"],
         });
 
@@ -13418,7 +13418,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree><field name="bar" widget="boolean_favorite"/></tree>',
+            arch: '<list><field name="bar" widget="boolean_favorite"/></list>',
             groupBy: ["m2o"],
             mockRPC(route, args) {
                 if (args.method === "write") {
@@ -13475,7 +13475,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree><field name="id"/></tree>',
+            arch: '<list><field name="id"/></list>',
             groupBy: ["priority", "m2o"],
             mockRPC(route, args) {
                 // Override of the read_group to display the row even if there is no record in it,
@@ -13524,7 +13524,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree limit="2"><field name="foo"/></tree>',
+            arch: '<list limit="2"><field name="foo"/></list>',
             mockRPC(route, args) {
                 if (args.method === "web_search_read") {
                     assert.strictEqual(args.kwargs.limit, 2, "should use the correct limit value");
@@ -13543,7 +13543,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree><field name="foo"/></tree>',
+            arch: '<list><field name="foo"/></list>',
             mockRPC: async function (route, args) {
                 if (args.method === "web_search_read" && blockSearchRead) {
                     await def;
@@ -13607,7 +13607,7 @@ QUnit.module("Views", (hooks) => {
                 type: "list",
                 resModel: "foo",
                 serverData,
-                arch: '<tree limit="3"><field name="display_name"/></tree>',
+                arch: '<list limit="3"><field name="display_name"/></list>',
                 mockRPC(route, args) {
                     if (checkSearchRead && args.method === "web_search_read") {
                         assert.strictEqual(args.kwargs.limit, 3, "limit should 3");
@@ -13652,7 +13652,7 @@ QUnit.module("Views", (hooks) => {
                 type: "list",
                 resModel: "foo",
                 serverData,
-                arch: '<tree limit="2"><field name="display_name"/></tree>',
+                arch: '<list limit="2"><field name="display_name"/></list>',
                 mockRPC(route, args) {
                     if (checkSearchRead && args.method === "web_search_read") {
                         assert.strictEqual(args.kwargs.limit, 2, "limit should 2");
@@ -13721,7 +13721,7 @@ QUnit.module("Views", (hooks) => {
                 type: "list",
                 resModel: "foo",
                 serverData,
-                arch: '<tree limit="2"><field name="foo"/></tree>',
+                arch: '<list limit="2"><field name="foo"/></list>',
                 actionMenus: {},
                 groupBy: ["m2o"],
             });
@@ -13776,7 +13776,7 @@ QUnit.module("Views", (hooks) => {
                 type: "list",
                 resModel: "foo",
                 serverData,
-                arch: '<tree limit="3"><field name="display_name"/></tree>',
+                arch: '<list limit="3"><field name="display_name"/></list>',
                 actionMenus: {},
                 mockRPC(route) {
                     if (route === "/web/dataset/call_kw/foo/action_archive") {
@@ -13860,7 +13860,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: `<tree limit="3"><field name="display_name"/></tree>`,
+            arch: `<list limit="3"><field name="display_name"/></list>`,
         });
 
         // switch pages (should ask to scroll)
@@ -13891,10 +13891,10 @@ QUnit.module("Views", (hooks) => {
                 resModel: "foo",
                 serverData,
                 arch: `
-                    <tree editable="bottom" default_order="int_field">
+                    <list editable="bottom" default_order="int_field">
                         <field name="int_field" widget="handle"/>
                         <field name="foo"/>
-                    </tree>`,
+                    </list>`,
             });
 
             // starting condition
@@ -13930,11 +13930,11 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="top">
+                <list editable="top">
                     <field name="id" column_invisible="1"/>
                     <field name="foo" readonly="id"/>
                     <field name="int_field" invisible="id"/>
-                </tree>`,
+                </list>`,
         });
 
         // add a new record
@@ -13971,10 +13971,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="bottom">
+                <list editable="bottom">
                     <field name="foo"/>
                     <field name="bar" readonly="foo != 'yop'"/>
-                </tree>`,
+                </list>`,
         });
 
         // clicking on disabled checkbox with active row does not work
@@ -14010,7 +14010,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree groups_limit="3"><field name="foo"/></tree>',
+            arch: '<list groups_limit="3"><field name="foo"/></list>',
             groupBy: ["int_field"],
             mockRPC(route, args) {
                 assert.step(args.method || route);
@@ -14037,7 +14037,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree groups_limit="3"><field name="foo"/></tree>',
+            arch: '<list groups_limit="3"><field name="foo"/></list>',
             searchViewArch: `
                 <search>
                     <filter name="int_field" string="GroupBy IntField" context="{'group_by': 'int_field'}"/>
@@ -14064,7 +14064,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree groups_limit="3"><field name="foo"/></tree>',
+            arch: '<list groups_limit="3"><field name="foo"/></list>',
             irFilters: [
                 {
                     context: "{'group_by': ['int_field']}",
@@ -14100,7 +14100,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree groups_limit="3"><field name="foo"/></tree>',
+            arch: '<list groups_limit="3"><field name="foo"/></list>',
             groupBy: ["foo", "int_field"],
         });
 
@@ -14136,7 +14136,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree expand="1"><field name="foo"/></tree>',
+            arch: '<list expand="1"><field name="foo"/></list>',
             groupBy: ["bar"],
             mockRPC(route, args) {
                 assert.step(args.method || route);
@@ -14158,7 +14158,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: `<tree expand="context.get('expand', False)"><field name="foo"/></tree>`,
+            arch: `<list expand="context.get('expand', False)"><field name="foo"/></list>`,
             context: {
                 expand: true,
             },
@@ -14174,7 +14174,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: `<tree expand="context.get('expand', False)"><field name="foo"/></tree>`,
+            arch: `<list expand="context.get('expand', False)"><field name="foo"/></list>`,
             context: {
                 expand: false,
             },
@@ -14191,7 +14191,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree expand="1"><field name="foo"/></tree>',
+            arch: '<list expand="1"><field name="foo"/></list>',
             groupBy: ["bar", "int_field"],
             mockRPC(route, args) {
                 assert.step(args.method || route);
@@ -14217,7 +14217,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree expand="1"><field name="foo"/></tree>',
+            arch: '<list expand="1"><field name="foo"/></list>',
             groupBy: ["int_field"],
             mockRPC(route, args) {
                 if (args.method === "web_read_group") {
@@ -14275,7 +14275,7 @@ QUnit.module("Views", (hooks) => {
         };
 
         serverData.views = {
-            "foo,3,list": '<tree groups_limit="3"><field name="foo"/></tree>',
+            "foo,3,list": '<list groups_limit="3"><field name="foo"/></list>',
             "foo,9,search": `
                 <search>
                     <filter string="Not Bar" name="not bar" domain="[['bar','=',False]]"/>
@@ -14312,7 +14312,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree limit="2"><field name="foo"/></tree>',
+            arch: '<list limit="2"><field name="foo"/></list>',
             searchViewArch: `
                 <search>
                     <filter name="Some Filter" domain="[('foo', '=', 'gnap')]"/>
@@ -14344,7 +14344,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree editable="top"><field name="foo"/><field name="bar"/></tree>',
+            arch: '<list editable="top"><field name="foo"/><field name="bar"/></list>',
             searchViewArch: `
                 <search>
                     <filter name="bar" string="bar" context="{'group_by': 'bar'}"/>
@@ -14380,7 +14380,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree editable="top"><field name="foo"/><field name="bar"/></tree>',
+            arch: '<list editable="top"><field name="foo"/><field name="bar"/></list>',
             searchViewArch: `
                 <search>
                     <filter name="bar" string="bar" context="{'group_by': 'bar'}"/>
@@ -14408,7 +14408,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree editable="bottom"><field name="foo"/><field name="bar"/></tree>',
+            arch: '<list editable="bottom"><field name="foo"/><field name="bar"/></list>',
             groupBy: ["bar"],
         });
         await click(target.querySelector(".o_group_header"));
@@ -14428,7 +14428,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree editable="top"><field name="foo"/><field name="bar"/></tree>',
+            arch: '<list editable="top"><field name="foo"/><field name="bar"/></list>',
             searchViewArch: `
                 <search>
                     <filter name="bar" string="bar" context="{'group_by': 'bar'}"/>
@@ -14458,10 +14458,10 @@ QUnit.module("Views", (hooks) => {
                 serverData,
                 groupBy: ["foo"],
                 arch: `
-                    <tree multi_edit="1">
+                    <list multi_edit="1">
                         <field name="foo"/>
                         <field name="int_field"/>
-                    </tree>`,
+                    </list>`,
             });
 
             assert.containsNone(target, ".o_data_row", "all groups should be closed");
@@ -14506,7 +14506,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree editable="top"><field name="foo"/><field name="int_field"/></tree>',
+            arch: '<list editable="top"><field name="foo"/><field name="int_field"/></list>',
             groupBy: ["bar"],
         });
 
@@ -14535,7 +14535,7 @@ QUnit.module("Views", (hooks) => {
                 type: "list",
                 resModel: "foo",
                 serverData,
-                arch: '<tree editable="top"><field name="foo" required="1"/></tree>',
+                arch: '<list editable="top"><field name="foo" required="1"/></list>',
                 groupBy: ["foo", "bar"],
             });
 
@@ -14563,7 +14563,7 @@ QUnit.module("Views", (hooks) => {
                 type: "list",
                 resModel: "foo",
                 serverData,
-                arch: '<tree editable="top"><field name="foo"/><field name="bar"/></tree>',
+                arch: '<list editable="top"><field name="foo"/><field name="bar"/></list>',
                 groupBy: ["bar"],
             });
 
@@ -14595,7 +14595,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree editable="bottom"><field name="foo"/></tree>',
+            arch: '<list editable="bottom"><field name="foo"/></list>',
             groupBy: ["bar"],
         });
 
@@ -14636,9 +14636,9 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="top">
+                <list editable="top">
                     <field name="foo"/>
-                </tree>`,
+                </list>`,
             groupBy: ["bar"],
         });
 
@@ -14666,7 +14666,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree editable="bottom" create="0"><field name="foo"/></tree>',
+            arch: '<list editable="bottom" create="0"><field name="foo"/></list>',
             groupBy: ["bar"],
         });
 
@@ -14707,9 +14707,9 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="bottom">
+                <list editable="bottom">
                     <field name="foo" required="1"/>
-                </tree>`,
+                </list>`,
             groupBy: ["bar"],
         });
 
@@ -14749,9 +14749,9 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="top">
+                <list editable="top">
                     <field name="foo" required="1"/>
-                </tree>`,
+                </list>`,
             groupBy: ["bar"],
         });
 
@@ -14793,9 +14793,9 @@ QUnit.module("Views", (hooks) => {
                 resModel: "foo",
                 serverData,
                 arch: `
-                    <tree editable="top" create="0">
+                    <list editable="top" create="0">
                         <field name="foo" required="1"/>
-                    </tree>`,
+                    </list>`,
                 groupBy: ["bar"],
             });
 
@@ -14834,7 +14834,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree editable="bottom"><field name="foo"/></tree>',
+            arch: '<list editable="bottom"><field name="foo"/></list>',
             mockRPC(route, args) {
                 assert.step(args.method || route);
             },
@@ -14894,10 +14894,10 @@ QUnit.module("Views", (hooks) => {
                 resModel: "foo",
                 serverData,
                 arch: `
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="foo"/>
                         <field name="int_field" readonly="1"/>
-                    </tree>`,
+                    </list>`,
                 mockRPC(route, args) {
                     assert.step(args.method);
                 },
@@ -14932,7 +14932,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree editable="bottom"><field name="foo"/></tree>',
+            arch: '<list editable="bottom"><field name="foo"/></list>',
             mockRPC(route, args) {
                 assert.step(args.method || route);
             },
@@ -14977,9 +14977,9 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="top">
+                <list editable="top">
                     <field name="foo"/>
-                </tree>`,
+                </list>`,
             mockRPC(route, args) {
                 assert.step(args.method);
             },
@@ -15013,7 +15013,7 @@ QUnit.module("Views", (hooks) => {
                 type: "list",
                 resModel: "foo",
                 serverData,
-                arch: '<tree editable="bottom" create="0"><field name="foo"/></tree>',
+                arch: '<list editable="bottom" create="0"><field name="foo"/></list>',
                 mockRPC(route, { method }) {
                     assert.step(method);
                 },
@@ -15097,7 +15097,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree><field name="foo" required="1"/></tree>',
+            arch: '<list><field name="foo" required="1"/></list>',
             selectRecord: (resId) => {
                 assert.step(`resId: ${resId}`);
             },
@@ -15213,10 +15213,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="bottom">
+                <list editable="bottom">
                     <field name="foo"/>
                     <field name="int_field"/>
-                </tree>
+                </list>
             `,
         });
 
@@ -15301,10 +15301,10 @@ QUnit.module("Views", (hooks) => {
             serverData,
             groupBy: ["bar"],
             arch: `
-                <tree editable="bottom">
+                <list editable="bottom">
                     <field name="foo"/>
                     <field name="int_field"/>
-                </tree>
+                </list>
             `,
         });
 
@@ -15427,10 +15427,10 @@ QUnit.module("Views", (hooks) => {
             serverData,
             groupBy: ["bar"],
             arch: `
-                <tree editable="bottom">
+                <list editable="bottom">
                     <field name="foo"/>
                     <field name="int_field"/>
-                </tree>
+                </list>
             `,
         });
 
@@ -15555,11 +15555,11 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="bottom">
+                <list editable="bottom">
                     <field name="foo"/>
                     <field name="date" widget="daterange" options="{'end_date_field': 'date_end'}" />
                     <field name="int_field"/>
-                </tree>
+                </list>
             `,
         });
 
@@ -15607,11 +15607,11 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="bottom">
+                <list editable="bottom">
                     <field name="foo"/>
                     <field name="m2o"/>
                     <field name="int_field"/>
-                </tree>
+                </list>
             `,
         });
 
@@ -15648,10 +15648,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree multi_edit="1">
+                <list multi_edit="1">
                     <field name="foo"/>
                     <field name="int_field"/>
-                </tree>
+                </list>
             `,
             async mockRPC(route, args) {
                 if (args.method === "write") {
@@ -15693,9 +15693,9 @@ QUnit.module("Views", (hooks) => {
                 serverData,
                 groupBy: ["bar"],
                 arch: `
-                <tree editable="bottom">
+                <list editable="bottom">
                     <field name="foo"/>
-                </tree>
+                </list>
             `,
             });
 
@@ -15738,10 +15738,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree multi_edit="1" editable="bottom">
+                <list multi_edit="1" editable="bottom">
                     <field name="display_name"/>
                     <field name="foo"/>
-                </tree>`,
+                </list>`,
             searchViewArch: `
                 <search>
                     <field name="foo"/>
@@ -15774,9 +15774,9 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="bottom">
+                <list editable="bottom">
                     <field name="foo" required="1"/>
-                </tree>`,
+                </list>`,
             groupBy: ["bar"],
         });
 
@@ -16040,12 +16040,12 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree>
+                <list>
                     <field name="foo"/>
                     <groupby name="m2o">
                         <button type="object" name="some_method" string="Do this"/>
                     </groupby>
-                </tree>`,
+                </list>`,
             groupBy: ["m2o"],
         });
 
@@ -16141,7 +16141,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree editable="top"><field name="foo" required="1"/></tree>',
+            arch: '<list editable="top"><field name="foo" required="1"/></list>',
             groupBy: ["bar"],
         });
 
@@ -16178,7 +16178,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree editable="bottom"><field name="foo" required="1"/></tree>',
+            arch: '<list editable="bottom"><field name="foo" required="1"/></list>',
             groupBy: ["bar"],
         });
         await click(target.querySelector(".o_group_header")); // open group "No"
@@ -16204,7 +16204,7 @@ QUnit.module("Views", (hooks) => {
                 type: "list",
                 resModel: "foo",
                 serverData,
-                arch: '<tree editable="bottom"><field name="foo" required="1"/></tree>',
+                arch: '<list editable="bottom"><field name="foo" required="1"/></list>',
                 groupBy: ["bar"],
             });
 
@@ -16238,7 +16238,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree editable="top"><field name="foo" required="1"/></tree>',
+            arch: '<list editable="top"><field name="foo" required="1"/></list>',
         });
 
         await click(target.querySelector(".o_data_cell"));
@@ -16262,7 +16262,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree editable="top" create="0"><field name="foo" required="1"/></tree>',
+            arch: '<list editable="top" create="0"><field name="foo" required="1"/></list>',
             groupBy: ["bar"],
         });
 
@@ -16305,11 +16305,11 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="top">
+                <list editable="top">
                     <field name="foo"/>
                     <field name="priority"/>
                     <field name="m2o"/>
-                </tree>`,
+                </list>`,
             groupBy: ["priority"],
             mockRPC(route, args) {
                 if (args.method === "onchange") {
@@ -16346,10 +16346,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="top">
+                <list editable="top">
                     <field name="foo"/>
                     <field name="m2o"/>
-                </tree>`,
+                </list>`,
             groupBy: ["m2o"],
             mockRPC(route, args) {
                 if (args.method === "onchange") {
@@ -16389,12 +16389,12 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree>
+                <list>
                     <field name="foo"/>
                     <field name="m2o" optional="hide"/>
                     <field name="amount"/>
                     <field name="reference" optional="hide"/>
-                </tree>`,
+                </list>`,
         });
 
         assert.containsN(
@@ -16477,12 +16477,12 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree>
+                <list>
                     <field name="foo"/>
                     <field name="m2o" optional="hide"/>
                     <field name="amount"/>
                     <field name="reference" optional="hide"/>
-                </tree>`,
+                </list>`,
         });
 
         assert.containsOnce(
@@ -16506,12 +16506,12 @@ QUnit.module("Views", (hooks) => {
                 resModel: "foo",
                 serverData,
                 arch: `
-                    <tree>
+                    <list>
                         <field name="foo"/>
                         <field name="m2o" optional="hide"/>
                         <field name="amount"/>
                         <field name="reference" optional="hide"/>
-                    </tree>`,
+                    </list>`,
             });
 
             assert.containsN(
@@ -16574,10 +16574,10 @@ QUnit.module("Views", (hooks) => {
 
         serverData.views = {
             "foo,1,list": `
-                    <tree>
+                    <list>
                         <field name="currency_id" optional="show"/>
                         <field name="company_currency_id" optional="show"/>
-                    </tree>`,
+                    </list>`,
             "foo,false,search": "<search/>",
         };
 
@@ -16616,10 +16616,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree>
+                <list>
                     <field name="foo"/>
                     <field name="m2o" optional="hide"/>
-                </tree>`,
+                </list>`,
         });
 
         assert.containsN(target, "th", 3);
@@ -16668,10 +16668,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree>
+                <list>
                     <field name="m2o"/>
                     <field name="foo" widget="asyncwidget" optional="hide"/>
-                </tree>`,
+                </list>`,
         });
 
         assert.containsN(target, "th", 3);
@@ -16723,10 +16723,10 @@ QUnit.module("Views", (hooks) => {
                 "</t></templates></kanban>",
 
             "foo,false,list":
-                '<tree limit="3">' +
+                '<list limit="3">' +
                 '<field name="foo"/>' +
                 '<field name="m2o" optional="hide"/>' +
-                '<field name="o2m" optional="show"/></tree>',
+                '<field name="o2m" optional="show"/></list>',
 
             "foo,false,search": '<search><field name="foo" string="Foo"/></search>',
         };
@@ -16849,11 +16849,11 @@ QUnit.module("Views", (hooks) => {
                 resModel: "foo",
                 serverData,
                 arch: `
-                    <tree>
+                    <list>
                         <field name="foo"/>
                         <field name="m2o" optional="hide"/>
                         <field name="reference" optional="show"/>
-                    </tree>`,
+                    </list>`,
                 viewId: 42,
             });
 
@@ -16962,11 +16962,11 @@ QUnit.module("Views", (hooks) => {
             serverData.views = {
                 "foo,1,search": "<search></search>",
                 "foo,42,list": `
-                    <tree>
+                    <list>
                         <field name="foo"/>
                         <field name="m2o" optional="hide"/>
                         <field name="reference" optional="show"/>
-                    </tree>`,
+                    </list>`,
             };
             const localStorageKey = "optional_fields,foo,list,42,foo,m2o,reference";
             const webClient = await createWebClient({ serverData });
@@ -17004,7 +17004,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("quickcreate in a many2one in a list", async function (assert) {
         await makeView({
             type: "list",
-            arch: '<tree editable="top"><field name="m2o"/></tree>',
+            arch: '<list editable="top"><field name="m2o"/></list>',
             serverData,
             resModel: "foo",
         });
@@ -17027,7 +17027,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree><field name="foo"/><field name="qux" digits="[12,6]"/></tree>',
+            arch: '<list><field name="foo"/><field name="qux" digits="[12,6]"/></list>',
         });
 
         assert.strictEqual(
@@ -17045,10 +17045,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree>
+                <list>
                     <field name="foo"/>
                     <field name="int_field"/>
-                </tree>`,
+                </list>`,
         });
 
         // pointer doesn't perfectly match the resized th.
@@ -17095,10 +17095,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree>
+                <list>
                     <field name="foo"/>
                     <field name="int_field"/>
-                </tree>`,
+                </list>`,
         });
 
         // 1. Resize column foo to middle of column int_field.
@@ -17135,10 +17135,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree>
+                <list>
                     <field name="foo"/>
                     <field name="int_field"/>
-                </tree>`,
+                </list>`,
         });
 
         // 1. Resize column foo to middle of column int_field.
@@ -17175,10 +17175,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="top">
+                <list editable="top">
                     <field name="foo"/>
                     <field name="reference" optional="hide"/>
-                </tree>`,
+                </list>`,
         });
 
         const originalWidths = [...target.querySelectorAll(".o_list_table th")].map((th) =>
@@ -17207,11 +17207,11 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="top">
+                <list editable="top">
                     <field name="foo"/>
                     <field name="bar"/>
                     <field name="reference" optional="hide"/>
-                </tree>`,
+                </list>`,
         });
 
         // Target handle
@@ -17255,16 +17255,16 @@ QUnit.module("Views", (hooks) => {
                 <form>
                     <group>
                         <field name="o2m">
-                            <tree editable="bottom">
+                            <list editable="bottom">
                                 <field name="display_name"/>
                                 <field name="text"/>
-                            </tree>
+                            </list>
                         </field>
                         <field name="m2m">
-                            <tree editable="bottom">
+                            <list editable="bottom">
                                 <field name="display_name"/>
                                 <field name="text"/>
-                            </tree>
+                            </list>
                         </field>
                     </group>
                 </form>`,
@@ -17310,12 +17310,12 @@ QUnit.module("Views", (hooks) => {
                             <notebook>
                                 <page string="Page 1">
                                     <field name="o2m">
-                                        <tree editable="bottom">
+                                        <list editable="bottom">
                                             <field name="display_name"/>
                                             <field name="display_name"/>
                                             <field name="display_name"/>
                                             <field name="display_name"/>
-                                        </tree>
+                                        </list>
                                     </field>
                                 </page>
                             </notebook>
@@ -17346,9 +17346,9 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="top" multi_edit="0">
+                <list editable="top" multi_edit="0">
                     <field name="int_field"/>
-                </tree>`,
+                </list>`,
         });
 
         // click on int_field cell of first row
@@ -17365,9 +17365,9 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="top" multi_edit="1">
+                <list editable="top" multi_edit="1">
                     <field name="int_field"/>
-                </tree>`,
+                </list>`,
         });
 
         // click on int_field cell of first row
@@ -17386,9 +17386,9 @@ QUnit.module("Views", (hooks) => {
                 resModel: "foo",
                 serverData,
                 arch: `
-                <tree editable="top">
+                <list editable="top">
                     <field name="int_field"/>
-                </tree>`,
+                </list>`,
             });
 
             const initialRowCount = $(".o_data_cell[name=int_field]").length;
@@ -17420,9 +17420,9 @@ QUnit.module("Views", (hooks) => {
         await makeView({
             type: "list",
             arch: `
-                <tree>
+                <list>
                     <field name="birthday" decoration-danger="birthday > today"/>
-                </tree>`,
+                </list>`,
             serverData,
             resModel: "foo",
         });
@@ -17456,9 +17456,9 @@ QUnit.module("Views", (hooks) => {
         await makeView({
             type: "list",
             arch: `
-                <tree>
+                <list>
                     <field name="birthday" decoration-danger="birthday > now"/>
-                </tree>`,
+                </list>`,
             serverData,
             resModel: "foo",
         });
@@ -17487,8 +17487,8 @@ QUnit.module("Views", (hooks) => {
         };
         serverData.views = {
             "foo,1,search": "<search></search>",
-            "foo,2,list": '<tree editable="top"><field name="foo"/></tree>',
-            "foo,3,list": '<tree editable="top"><field name="foo"/></tree>',
+            "foo,2,list": '<list editable="top"><field name="foo"/></list>',
+            "foo,3,list": '<list editable="top"><field name="foo"/></list>',
         };
         const webClient = await createWebClient({ serverData });
 
@@ -17536,8 +17536,8 @@ QUnit.module("Views", (hooks) => {
             };
             serverData.views = {
                 "foo,1,search": "<search></search>",
-                "foo,2,list": '<tree editable="top"><field name="foo"/></tree>',
-                "foo,3,list": '<tree editable="top"><field name="foo"/></tree>',
+                "foo,2,list": '<list editable="top"><field name="foo"/></list>',
+                "foo,3,list": '<list editable="top"><field name="foo"/></list>',
             };
             const webClient = await createWebClient({ serverData });
 
@@ -17583,8 +17583,8 @@ QUnit.module("Views", (hooks) => {
         };
         serverData.views = {
             "foo,1,search": "<search></search>",
-            "foo,2,list": '<tree editable="top"><field name="foo"/></tree>',
-            "foo,3,list": '<tree editable="top"><field name="foo"/></tree>',
+            "foo,2,list": '<list editable="top"><field name="foo"/></list>',
+            "foo,3,list": '<list editable="top"><field name="foo"/></list>',
         };
         const webClient = await createWebClient({ serverData });
 
@@ -17627,8 +17627,8 @@ QUnit.module("Views", (hooks) => {
         };
         serverData.views = {
             "foo,1,search": "<search></search>",
-            "foo,2,list": '<tree editable="top"><field name="foo" required="1"/></tree>',
-            "foo,3,list": '<tree editable="top"><field name="foo"/></tree>',
+            "foo,2,list": '<list editable="top"><field name="foo" required="1"/></list>',
+            "foo,3,list": '<list editable="top"><field name="foo"/></list>',
         };
         const webClient = await createWebClient({ serverData });
 
@@ -17665,9 +17665,9 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="top" limit="3">
+                <list editable="top" limit="3">
                     <field name="foo"/>
-                </tree>`,
+                </list>`,
         });
         assert.deepEqual(
             [...target.querySelectorAll(".o_data_cell")].map((el) => el.textContent),
@@ -17695,9 +17695,9 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="top" limit="3">
+                <list editable="top" limit="3">
                     <field name="foo"/>
-                </tree>`,
+                </list>`,
         });
         assert.deepEqual(
             [...target.querySelectorAll(".o_data_cell")].map((el) => el.textContent),
@@ -17725,9 +17725,9 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="top" limit="3">
+                <list editable="top" limit="3">
                     <field name="foo" required="1"/>
-                </tree>`,
+                </list>`,
         });
         assert.deepEqual(
             [...target.querySelectorAll(".o_data_cell")].map((el) => el.textContent),
@@ -17752,9 +17752,9 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="top">
+                <list editable="top">
                     <field name="foo"/>
-                </tree>`,
+                </list>`,
             mockRPC(route, { args, method, model }) {
                 if (model === "foo" && method === "web_save") {
                     assert.step("save"); // should be called
@@ -17780,9 +17780,9 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="top">
+                <list editable="top">
                     <field name="foo"/>
-                </tree>`,
+                </list>`,
             mockRPC(route, { args, method, model }) {
                 if (model === "foo" && method === "web_save") {
                     assert.deepEqual(args, [[1], { foo: "test" }]);
@@ -17806,9 +17806,9 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="top">
+                <list editable="top">
                     <field name="foo" required="1"/>
-                </tree>`,
+                </list>`,
             mockRPC(route, { args, method, model }) {
                 if (model === "foo" && method === "write") {
                     assert.step("save"); // should not be called
@@ -17844,10 +17844,10 @@ QUnit.module("Views", (hooks) => {
                 resModel: "foo",
                 serverData,
                 arch: `
-                    <tree editable="top">
+                    <list editable="top">
                         <field name="foo"/>
                         <field name="int_field"/>
-                    </tree>`,
+                    </list>`,
                 mockRPC(route, { args, method, model }) {
                     if (model === "foo" && method === "onchange") {
                         return def;
@@ -17880,10 +17880,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="top">
+                <list editable="top">
                     <field name="foo"/>
                     <field name="int_field"/>
-                </tree>`,
+                </list>`,
             mockRPC(route, { args, method, model }) {
                 if (model === "foo" && method === "onchange") {
                     return def;
@@ -17931,11 +17931,11 @@ QUnit.module("Views", (hooks) => {
                         <group>
                             <field name="display_name"/>
                             <field name="o2m">
-                                <tree editable="bottom">
+                                <list editable="bottom">
                                     <field name="foo"/>
                                     <field name="date" readonly="foo != 'yop'"/>
                                     <field name="int_field"/>
-                                </tree>
+                                </list>
                             </field>
                         </group>
                     </form>`,
@@ -17989,7 +17989,7 @@ QUnit.module("Views", (hooks) => {
                 type: "list",
                 resModel: "foo",
                 serverData,
-                arch: '<tree editable="top" multi_edit="1"><field name="html"/></tree>',
+                arch: '<list editable="top" multi_edit="1"><field name="html"/></list>',
             });
 
             await click(target.querySelectorAll(".o_data_row")[1].querySelector(".o_data_cell"));
@@ -18014,7 +18014,7 @@ QUnit.module("Views", (hooks) => {
                 type: "list",
                 resModel: "foo",
                 serverData,
-                arch: '<tree limit="3"><field name="display_name"/></tree>',
+                arch: '<list limit="3"><field name="display_name"/></list>',
                 actionMenus: {},
             });
 
@@ -18032,7 +18032,7 @@ QUnit.module("Views", (hooks) => {
 
     QUnit.test("open groups are kept when leaving and coming back", async (assert) => {
         serverData.views = {
-            "foo,false,list": `<tree><field name="foo"/></tree>`,
+            "foo,false,list": `<list><field name="foo"/></list>`,
             "foo,false,search": "<search/>",
             "foo,false,form": "<form/>",
         };
@@ -18074,7 +18074,7 @@ QUnit.module("Views", (hooks) => {
         async (assert) => {
             serverData.models.foo.fields.date.default = "2022-10-10";
             serverData.views = {
-                "foo,false,list": `<tree><field name="foo"/></tree>`,
+                "foo,false,list": `<list><field name="foo"/></list>`,
                 "foo,false,search": "<search/>",
                 "foo,false,form": "<form/>",
             };
@@ -18116,7 +18116,7 @@ QUnit.module("Views", (hooks) => {
         "go to the next page after leaving and coming back to a grouped list view",
         async (assert) => {
             serverData.views = {
-                "foo,false,list": `<tree groups_limit="1"><field name="foo"/></tree>`,
+                "foo,false,list": `<list groups_limit="1"><field name="foo"/></list>`,
                 "foo,false,search": "<search/>",
                 "foo,false,form": "<form/>",
             };
@@ -18163,9 +18163,9 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree>
+                <list>
                     <field name="foo"/>
-                </tree>`,
+                </list>`,
             searchViewArch: `
                 <search>
                     <filter name="group_by_foo" string="Foo" context="{'group_by':'foo'}"/>
@@ -18245,9 +18245,9 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree banner_route="/mybody/isacage">
+                <list banner_route="/mybody/isacage">
                     <field name="foo"/>
-                </tree>`,
+                </list>`,
             async mockRPC(route) {
                 if (route === "/mybody/isacage") {
                     assert.step(route);
@@ -18357,9 +18357,9 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="bottom">
+                <list editable="bottom">
                     <field name="int_field"/>
-                </tree>`,
+                </list>`,
             async mockRPC(route, args) {
                 assert.step(args.method);
                 if (args.method === "onchange") {
@@ -18491,10 +18491,10 @@ QUnit.module("Views", (hooks) => {
                 resModel: "foo",
                 serverData,
                 arch: `
-                <tree editable="bottom">
+                <list editable="bottom">
                     <field class="d-flex align-items-center" name="int_field" widget="progressbar" options="{'editable': true}" />
                     <field class="d-none" name="bar" />
-                </tree>`,
+                </list>`,
             });
             assert.doesNotHaveClass(
                 target.querySelectorAll(".o_field_cell")[2],
@@ -18519,7 +18519,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree><field name="foo"/><field name="m2o"/></tree>',
+            arch: '<list><field name="foo"/><field name="m2o"/></list>',
             searchViewArch: `
                 <search>
                     <field name="m2o" filter_domain="[('m2o', 'child_of', raw_value)]"/>
@@ -18541,7 +18541,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree><field name="qux" widget="percentage"/></tree>',
+            arch: '<list><field name="qux" widget="percentage"/></list>',
             groupBy: ["bar"],
         });
         const [td1, td2] = target.querySelectorAll("td.o_list_number");
@@ -18557,7 +18557,7 @@ QUnit.module("Views", (hooks) => {
                 type: "list",
                 resModel: "foo",
                 serverData,
-                arch: '<tree><field name="qux"/></tree>',
+                arch: '<list><field name="qux"/></list>',
                 groupBy: ["bar"],
             });
             const [td1, td2] = target.querySelectorAll("td.o_list_number");
@@ -18572,9 +18572,9 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree>
+                <list>
                     <button name="a" type="object" icon="fa-car"/>
-                </tree>
+                </list>
             `,
         });
 
@@ -18587,7 +18587,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree groups_limit="1"><field name="foo"/><field name="bar"/></tree>',
+            arch: '<list groups_limit="1"><field name="foo"/><field name="bar"/></list>',
             groupBy: ["bar"],
         });
 
@@ -18728,11 +18728,11 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: `<tree editable="top">
+            arch: `<list editable="top">
                         <field name="text" optional="hide"/>
                         <field name="foo" optional="show"/>
                         <field name="bar" optional="hide"/>
-                    </tree>`,
+                    </list>`,
         });
 
         await clickAdd();
@@ -18802,9 +18802,9 @@ QUnit.module("Views", (hooks) => {
                 resModel: "foo",
                 serverData,
                 arch: `
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="foo"/>
-                    </tree>`,
+                    </list>`,
                 mockRPC(route, args) {
                     if (args.method === "web_save") {
                         throw makeServerError({ message: "Can't write" });
@@ -18840,10 +18840,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree default_order="foo">
+                <list default_order="foo">
                     <field name="foo" nolabel="1"/>
                     <field name="bar"/>
-                </tree>
+                </list>
             `,
         });
         assert.containsOnce(target, "thead th[data-name=foo]");
@@ -18856,9 +18856,9 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree default_order="foo">
+                <list default_order="foo">
                     <field name="foo"/>
-                </tree>
+                </list>
             `,
         });
         assert.containsOnce(target, "thead th[data-name=foo]");
@@ -18888,9 +18888,9 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="bottom">
+                <list editable="bottom">
                     <field name="m2o"/>
-                </tree>
+                </list>
             `,
             mockRPC(_, args) {
                 if (args.method === "web_read") {
@@ -18933,9 +18933,9 @@ QUnit.module("Views", (hooks) => {
                 default_global_key: "some_value",
             },
             arch: `
-                <tree editable="bottom">
+                <list editable="bottom">
                     <field name="m2o" domain="[['someField', '=', context.get('default_global_key', 'nope')]]"/>
-                </tree>
+                </list>
             `,
             mockRPC(_, args) {
                 if (args.method === "name_search") {
@@ -18959,9 +18959,9 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree default_group_by="bar">
+                <list default_group_by="bar">
                     <field name="bar"/>
-                </tree>
+                </list>
             `,
             async mockRPC(route, { kwargs }) {
                 if (route === "/web/dataset/call_kw/partner/web_read_group") {
@@ -18993,7 +18993,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: `<tree limit="4"><field name="foo"/></tree>`,
+            arch: `<list limit="4"><field name="foo"/></list>`,
             searchViewArch: `
                 <search>
                     <filter name="my_filter" string="My Filter" domain="[('id', '>', 1)]"/>
@@ -19033,10 +19033,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="bottom">
+                <list editable="bottom">
                     <field name="m2o"/>
                     <field name="properties" />
-                </tree>
+                </list>
             `,
             mockRPC(route, { method, args }) {
                 if (method === "write") {
@@ -19089,10 +19089,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="bottom">
+                <list editable="bottom">
                     <field name="m2o"/>
                     <field name="properties" />
-                </tree>
+                </list>
             `,
             mockRPC(route, { method, args }) {
                 if (method === "write") {
@@ -19143,10 +19143,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="bottom">
+                <list editable="bottom">
                     <field name="m2o"/>
                     <field name="properties" />
-                </tree>
+                </list>
             `,
             mockRPC(route, { method, args }) {
                 if (method === "write") {
@@ -19196,10 +19196,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="bottom">
+                <list editable="bottom">
                     <field name="m2o"/>
                     <field name="properties" />
-                </tree>
+                </list>
             `,
             mockRPC(route, { method, args }) {
                 if (method === "write") {
@@ -19249,10 +19249,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="bottom">
+                <list editable="bottom">
                     <field name="m2o"/>
                     <field name="properties" />
-                </tree>
+                </list>
             `,
             mockRPC(route, { method, args }) {
                 if (method === "write") {
@@ -19305,10 +19305,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="bottom">
+                <list editable="bottom">
                     <field name="m2o"/>
                     <field name="properties" />
-                </tree>
+                </list>
             `,
             mockRPC(route, { method, args }) {
                 if (method === "write") {
@@ -19368,10 +19368,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="bottom">
+                <list editable="bottom">
                     <field name="m2o"/>
                     <field name="properties" />
-                </tree>
+                </list>
             `,
             mockRPC(route, { method, args }) {
                 if (method === "write") {
@@ -19426,10 +19426,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="bottom">
+                <list editable="bottom">
                     <field name="m2o"/>
                     <field name="properties" />
-                </tree>
+                </list>
             `,
             mockRPC(route, { method, args }) {
                 if (method === "write") {
@@ -19493,10 +19493,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="bottom">
+                <list editable="bottom">
                     <field name="m2o"/>
                     <field name="properties" />
-                </tree>
+                </list>
             `,
             mockRPC(route, { method, args }) {
                 if (method === "write") {
@@ -19552,10 +19552,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="bottom">
+                <list editable="bottom">
                     <field name="m2o"/>
                     <field name="properties" />
-                </tree>
+                </list>
             `,
             mockRPC(route, { method, args }) {
                 if (method === "write") {
@@ -19605,10 +19605,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="bottom">
+                <list editable="bottom">
                     <field name="m2o"/>
                     <field name="properties" />
-                </tree>
+                </list>
             `,
         });
 
@@ -19649,10 +19649,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="bottom">
+                <list editable="bottom">
                     <field name="m2o"/>
                     <field name="properties" />
-                </tree>
+                </list>
             `,
         });
 
@@ -19693,10 +19693,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="bottom">
+                <list editable="bottom">
                     <field name="m2o"/>
                     <field name="properties"/>
-                </tree>`,
+                </list>`,
         });
 
         assert.containsN(target, ".o_list_table thead th", 3);
@@ -19729,10 +19729,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="bottom">
+                <list editable="bottom">
                     <field name="m2o"/>
                     <field name="properties"/>
-                </tree>`,
+                </list>`,
         });
 
         assert.containsN(target, ".o_list_table thead th", 4);
@@ -19766,10 +19766,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="bottom">
+                <list editable="bottom">
                     <field name="m2o"/>
                     <field name="properties"/>
-                </tree>`,
+                </list>`,
             groupBy: ["m2o"],
         });
 
@@ -19809,10 +19809,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="bottom">
+                <list editable="bottom">
                     <field name="m2o"/>
                     <field name="properties" />
-                </tree>
+                </list>
             `,
             mockRPC(route) {
                 assert.step(route);
@@ -19858,10 +19858,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="bottom" limit="2">
+                <list editable="bottom" limit="2">
                     <field name="m2o"/>
                     <field name="properties" />
-                </tree>
+                </list>
             `,
             mockRPC(route) {
                 assert.step(route);
@@ -19896,10 +19896,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="bottom">
+                <list editable="bottom">
                     <field name="m2o"/>
                     <field name="properties" />
-                </tree>
+                </list>
             `,
             mockRPC(route) {
                 assert.step(route);
@@ -19934,10 +19934,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="bottom">
+                <list editable="bottom">
                     <field name="m2o"/>
                     <field name="properties" column_invisible="1"/>
-                </tree>
+                </list>
             `,
             mockRPC(route, { method, args }) {
                 assert.step(method);
@@ -19954,13 +19954,13 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree>
+                <list>
                     <header>
                         <button name="a" type="object" string="Confirm" confirm="Are you sure?" />
                     </header>
                     <field name="foo"/>
                     <field name="bar" />
-                </tree>`,
+                </list>`,
 
             mockRPC: async (route, args) => {
                 if (route.startsWith("/web/dataset/call_button")) {
@@ -19995,10 +19995,10 @@ QUnit.module("Views", (hooks) => {
         };
         serverData.views = {
             "foo,false,list": `
-                <tree default_order="foo">
+                <list default_order="foo">
                     <field name="foo"/>
                     <field name="amount"/>
-                </tree>`,
+                </list>`,
             "foo,false,form": `
                 <form>
                     <field name="amount"/>
@@ -20037,10 +20037,10 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: `<tree editable="bottom">
+            arch: `<list editable="bottom">
                     <field name="m2m" widget="many2many_tags"/>
                     <field name="m2o"/>
-                </tree>`,
+                </list>`,
             async mockRPC(route, args) {
                 if (args.method === "onchange") {
                     assert.step("onchange");
@@ -20085,9 +20085,9 @@ QUnit.module("Views", (hooks) => {
                 resModel: "foo",
                 serverData,
                 arch: `
-                <tree editable="top">
+                <list editable="top">
                     <field name="foo" />
-                </tree>`,
+                </list>`,
             });
 
             //  When we try to select new record in edit mode
@@ -20120,18 +20120,18 @@ QUnit.module("Views", (hooks) => {
                 type: "ir.actions.act_window",
                 views: [[false, "list"]],
                 context: {
-                    tree_view_ref: "foo_view_ref",
+                    list_view_ref: "foo_view_ref",
                     search_default_bar: true,
                 },
             },
         };
         serverData.views = {
             "foo,foo_view_ref,list": `
-                <tree default_order="foo" editable="top">
+                <list default_order="foo" editable="top">
                     <field name="m2m" widget="many2many_tags"/>
-                </tree>`,
+                </list>`,
             "foo,false,search": "<search/>",
-            "bar,false,list": `<tree><field name="name" /></tree>`,
+            "bar,false,list": `<list><field name="name" /></list>`,
             "bar,false,search": "<search/>",
         };
 
@@ -20154,8 +20154,8 @@ QUnit.module("Views", (hooks) => {
         const wc = await createWebClient({ serverData, mockRPC });
         await doAction(wc, 1);
         assert.verifySteps([
-            `foo: get_views: {"lang":"en","tz":"taht","uid":7,"tree_view_ref":"foo_view_ref"}`,
-            `foo: web_search_read: {"lang":"en","tz":"taht","uid":7,"bin_size":true,"tree_view_ref":"foo_view_ref"}`,
+            `foo: get_views: {"lang":"en","tz":"taht","uid":7,"list_view_ref":"foo_view_ref"}`,
+            `foo: web_search_read: {"lang":"en","tz":"taht","uid":7,"bin_size":true,"list_view_ref":"foo_view_ref"}`,
         ]);
 
         await click(target.querySelectorAll(".o_data_row .o_data_cell")[1]);
@@ -20195,9 +20195,9 @@ QUnit.module("Views", (hooks) => {
             arch: `
             <form>
                 <field name="foo">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="m2o"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
             mockRPC: async (route, { method }) => {
@@ -20235,7 +20235,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree><field name="foo"/><field name="amount_currency"/></tree>',
+            arch: '<list><field name="foo"/><field name="amount_currency"/></list>',
         });
 
         assert.containsOnce(
@@ -20269,7 +20269,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree sample="1" editable="top"><field name="int_field"/></tree>',
+            arch: '<list sample="1" editable="top"><field name="int_field"/></list>',
             noContentHelp: "click to add a record",
             mockRPC(route, args) {
                 if (args.method === "web_search_read") {
@@ -20305,7 +20305,7 @@ QUnit.module("Views", (hooks) => {
                 type: "list",
                 resModel: "foo",
                 serverData,
-                arch: '<tree editable="top" open_form_view="1"><field name="foo"/></tree>',
+                arch: '<list editable="top" open_form_view="1"><field name="foo"/></list>',
                 selectRecord: (resId, options) => {
                     assert.step(`switch to form - resId: ${resId} activeIds: ${options.activeIds}`);
                 },
@@ -20340,10 +20340,10 @@ QUnit.module("Views", (hooks) => {
                 resModel: "foo",
                 serverData,
                 arch: `
-                <tree editable="top">
+                <list editable="top">
                     <field name="foo"/>
                     <field name="int_field"/>
-                </tree>`,
+                </list>`,
                 async mockRPC(_, { method }) {
                     if (method === "onchange") {
                         assert.step(method);
@@ -20389,11 +20389,11 @@ QUnit.module("Views", (hooks) => {
                 <form>
                     <sheet>
                         <field name="o2m">
-                            <tree limit="2">
+                            <list limit="2">
                                 <field name="id"/>
                                 <field name="name" required="not city"/>
                                 <field name="city"/>
-                            </tree>
+                            </list>
                         </field>
                     </sheet>
                 </form>`,

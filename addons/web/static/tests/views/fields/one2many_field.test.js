@@ -249,10 +249,10 @@ test("New record with a o2m also with 2 new records, ordered, and resequenced", 
             <form>
                 <field name="foo"/>
                 <field name="p">
-                    <tree editable="bottom" default_order="int_field">
+                    <list editable="bottom" default_order="int_field">
                         <field name="int_field" widget="handle"/>
                         <field name="trululu"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -280,10 +280,10 @@ test.tags("desktop")("one2many in a list x2many editable use the right context",
         arch: `
             <form>
                 <field name="p">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="int_field" widget="handle"/>
                         <field name="trululu" context="{'my_context': 'list'}" />
-                    </tree>
+                    </list>
                     <form>
                         <field name="trululu"  context="{'my_context': 'form'}"/>
                     </form>
@@ -309,10 +309,10 @@ test.tags("desktop")("one2many in a list x2many non-editable use the right conte
         arch: `
             <form>
                 <field name="p">
-                    <tree>
+                    <list>
                         <field name="int_field" widget="handle"/>
                         <field name="trululu" context="{'my_context': 'list'}" />
-                    </tree>
+                    </list>
                     <form>
                         <field name="trululu"  context="{'my_context': 'form'}"/>
                     </form>
@@ -338,10 +338,10 @@ test("O2M field without relation_field", async () => {
         arch: `
             <form>
                 <field name="p">
-                    <tree>
+                    <list>
                         <field name="foo" invisible="1"/>
                         <field name="name" />
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -385,10 +385,10 @@ test("O2M List with pager, decoration and default_order: add and cancel adding",
         arch: `
             <form>
                 <field name="p">
-                    <tree editable="bottom" limit="1" decoration-muted="foo != False" default_order="name">
+                    <list editable="bottom" limit="1" decoration-muted="foo != False" default_order="name">
                         <field name="foo" invisible="1"/>
                         <field name="name" />
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -435,9 +435,9 @@ test.tags("desktop")("O2M with parented m2o and domain on parent.m2o", async () 
         arch: `
             <form>
                 <field name="turtles">
-                    <tree>
+                    <list>
                         <field name="parent_id"/>
-                    </tree>
+                    </list>
                     <form>
                         <field name="parent_id" domain="[('id', 'in', parent.turtles)]"/>
                     </form>
@@ -468,9 +468,9 @@ test.tags("desktop")(
             arch: `
                 <form>
                     <field name="p">
-                        <tree>
+                        <list>
                             <field name="bar"/>
-                        </tree>
+                        </list>
                         <form>
                             <field name="bar"/>
                             <footer>
@@ -516,9 +516,9 @@ test.tags("desktop")("O2M modal buttons are disabled on click", async () => {
         arch: `
             <form>
                 <field name="turtles">
-                    <tree>
+                    <list>
                         <field name="parent_id"/>
-                    </tree>
+                    </list>
                     <form>
                         <field name="parent_id"/>
                     </form>
@@ -566,9 +566,9 @@ test.tags("desktop")("clicking twice on a record in a one2many will open it once
         arch: `
             <form>
                 <field name="turtles">
-                    <tree>
+                    <list>
                         <field name="name"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
     });
@@ -612,15 +612,15 @@ test("resequence a x2m in a form view dialog from another x2m", async () => {
         arch: `
             <form>
                 <field name="turtles">
-                    <tree>
+                    <list>
                         <field name="name"/>
-                    </tree>
+                    </list>
                     <form>
                         <field name="partner_ids">
-                            <tree editable="top">
+                            <list editable="top">
                                 <field name="int_field" widget="handle"/>
                                 <field name="name"/>
-                            </tree>
+                            </list>
                         </field>
                     </form>
                 </field>
@@ -658,11 +658,11 @@ test("one2many list editable with cell readonly modifier", async () => {
         arch: `
             <form>
                 <field name="p">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="turtles" invisible="1"/>
                         <field name="foo" readonly="turtles"/>
                         <field name="qux" readonly="turtles"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -716,11 +716,11 @@ test("one2many wait for the onchange of the resequenced finish before save", asy
         arch: `
             <form>
                 <field name="p">
-                    <tree>
+                    <list>
                         <field name="int_field" widget="handle"/>
                         <field name="foo"/>
                         <field name="qux"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -749,9 +749,9 @@ test("one2many basic properties", async () => {
                     <notebook>
                         <page string="Partner page">
                             <field name="p">
-                                <tree>
+                                <list>
                                     <field name="foo"/>
-                                </tree>
+                                </list>
                             </field>
                         </page>
                     </notebook>
@@ -773,9 +773,9 @@ test("transferring class attributes in one2many sub fields", async () => {
         arch: `
             <form>
                 <field name="turtles">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="turtle_foo" class="hey"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -799,10 +799,10 @@ test("one2many with date and datetime", async () => {
                     <notebook>
                         <page string="Partner page">
                             <field name="p">
-                                <tree>
+                                <list>
                                     <field name="date"/>
                                     <field name="datetime"/>
-                                </tree>
+                                </list>
                             </field>
                         </page>
                     </notebook>
@@ -825,10 +825,10 @@ test("rendering with embedded one2many", async () => {
                     <notebook>
                         <page string="P page">
                             <field name="p">
-                                <tree>
+                                <list>
                                     <field name="foo"/>
                                     <field name="bar"/>
-                                </tree>
+                                </list>
                             </field>
                         </page>
                     </notebook>
@@ -851,9 +851,9 @@ test("use the limit attribute in arch (in field o2m inline tree view)", async ()
         arch: `
             <form>
                 <field name="turtles">
-                    <tree limit="2">
+                    <list limit="2">
                         <field name="turtle_foo"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -862,9 +862,9 @@ test("use the limit attribute in arch (in field o2m inline tree view)", async ()
 });
 
 test.tags("desktop")("nested x2manys with inline form, but not list", async () => {
-    Turtle._views = { list: `<tree><field name="turtle_foo"/></tree>` };
+    Turtle._views = { list: `<list><field name="turtle_foo"/></list>` };
     Partner._views = {
-        list: `<tree><field name="foo"/></tree>`,
+        list: `<list><field name="foo"/></list>`,
     };
     await mountView({
         type: "form",
@@ -897,7 +897,7 @@ test.tags("desktop")(
     "use the limit attribute in arch (in field o2m non inline tree view)",
     async () => {
         Partner._records[0].turtles = [1, 2, 3];
-        Turtle._views = { list: `<tree limit="2"><field name="turtle_foo"/></tree>` };
+        Turtle._views = { list: `<list limit="2"><field name="turtle_foo"/></list>` };
         onRpc((args) => {
             expect.step(args.method);
         });
@@ -928,10 +928,10 @@ test.tags("desktop")("one2many with default_order on view not inline", async () 
     Partner._records[0].turtles = [1, 2, 3];
     Turtle._views = {
         list: `
-            <tree default_order="turtle_foo">
+            <list default_order="turtle_foo">
                 <field name="turtle_int"/>
                 <field name="turtle_foo"/>
-            </tree>`,
+            </list>`,
     };
     await mountView({
         type: "form",
@@ -969,10 +969,10 @@ test.tags("desktop")("embedded one2many with widget", async () => {
                     <notebook>
                         <page string="P page">
                             <field name="p">
-                                <tree>
+                                <list>
                                     <field name="int_field" widget="handle"/>
                                     <field name="foo"/>
-                                </tree>
+                                </list>
                             </field>
                         </page>
                     </notebook>
@@ -998,10 +998,10 @@ test.tags("desktop")("embedded one2many with handle widget", async () => {
         arch: `
             <form>
                 <field name="turtles">
-                    <tree default_order="turtle_int">
+                    <list default_order="turtle_int">
                         <field name="turtle_int" widget="handle"/>
                         <field name="turtle_foo"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -1067,10 +1067,10 @@ test.tags("desktop")("onchange for embedded one2many in a one2many", async () =>
         arch: `
             <form>
                 <field name="turtles">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="turtle_foo"/>
                         <field name="partner_ids" widget="many2many_tags"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -1135,10 +1135,10 @@ test("onchange for embedded one2many in a one2many with a second page", async ()
         arch: `
             <form>
                 <field name="turtles">
-                    <tree editable="bottom" limit="1">
+                    <list editable="bottom" limit="1">
                         <field name="turtle_foo"/>
                         <field name="partner_ids" widget="many2many_tags"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -1198,10 +1198,10 @@ test("onchange for embedded one2many in a one2many updated by server", async () 
         arch: `
             <form>
                 <field name="turtles">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="turtle_foo"/>
                         <field name="partner_ids" widget="many2many_tags"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -1242,10 +1242,10 @@ test("onchange for embedded one2many with handle widget", async () => {
         arch: `
             <form>
                 <field name="turtles">
-                    <tree default_order="turtle_int">
+                    <list default_order="turtle_int">
                         <field name="turtle_int" widget="handle"/>
                         <field name="turtle_foo"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -1292,10 +1292,10 @@ test("onchange for embedded one2many with handle widget using same sequence", as
         arch: `
             <form>
                 <field name="turtles">
-                    <tree default_order="turtle_int">
+                    <list default_order="turtle_int">
                         <field name="turtle_int" widget="handle"/>
                         <field name="turtle_foo"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -1335,10 +1335,10 @@ test("onchange for embedded one2many with handle widget (more records)", async (
         arch: `
             <form>
                 <field name="turtles">
-                    <tree editable="bottom" default_order="turtle_int">
+                    <list editable="bottom" default_order="turtle_int">
                         <field name="turtle_int" widget="handle"/>
                         <field name="turtle_foo"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -1386,11 +1386,11 @@ test("onchange with modifiers for embedded one2many on the second page", async (
         arch: `
             <form>
                 <field name="turtles">
-                    <tree editable="bottom" default_order="turtle_int" limit="10">
+                    <list editable="bottom" default_order="turtle_int" limit="10">
                         <field name="turtle_int" widget="handle"/>
                         <field name="turtle_foo"/>
                         <field name="turtle_qux" readonly="not turtle_foo"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -1454,10 +1454,10 @@ test("onchange followed by edition on the second page", async () => {
                 <sheet>
                     <group>
                         <field name="turtles">
-                            <tree editable="top" default_order="turtle_int">
+                            <list editable="top" default_order="turtle_int">
                                 <field name="turtle_int" widget="handle"/>
                                 <field name="turtle_foo"/>
-                            </tree>
+                            </list>
                         </field>
                     </group>
                 </sheet>
@@ -1538,10 +1538,10 @@ test("onchange followed by edition on the second page (part 2)", async () => {
                 <sheet>
                     <group>
                         <field name="turtles">
-                            <tree editable="bottom" default_order="turtle_int">
+                            <list editable="bottom" default_order="turtle_int">
                                 <field name="turtle_int" widget="handle"/>
                                 <field name="turtle_foo"/>
-                            </tree>
+                            </list>
                         </field>
                     </group>
                 </sheet>
@@ -1624,9 +1624,9 @@ test("onchange returning a commands 4 for an x2many", async () => {
             <form>
                 <field name="foo"/>
                 <field name="turtles">
-                    <tree>
+                    <list>
                         <field name="turtle_foo"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -1683,10 +1683,10 @@ test("x2many fields inside x2manys are fetched after an onchange", async () => {
                     <group>
                         <field name="foo"/>
                         <field name="turtles">
-                            <tree>
+                            <list>
                                 <field name="turtle_foo"/>
                                 <field name="partner_ids" widget="many2many_tags"/>
-                            </tree>
+                            </list>
                         </field>
                     </group>
                 </sheet>
@@ -1728,10 +1728,10 @@ test("reference fields inside x2manys are fetched after an onchange", async () =
                     <group>
                         <field name="foo"/>
                         <field name="turtles">
-                            <tree>
+                            <list>
                                 <field name="turtle_foo"/>
                                 <field name="turtle_ref" class="ref_field"/>
-                                </tree>
+                                </list>
                         </field>
                     </group>
                 </sheet>
@@ -1755,7 +1755,7 @@ test.tags("desktop")("onchange on one2many containing x2many in form view", asyn
             obj.turtles = [[0, false, { turtle_foo: "new record" }]];
         },
     };
-    Partner._views = { list: '<tree><field name="foo"/></tree>', search: "<search></search>" };
+    Partner._views = { list: '<list><field name="foo"/></list>', search: "<search></search>" };
 
     await mountView({
         type: "form",
@@ -1764,14 +1764,14 @@ test.tags("desktop")("onchange on one2many containing x2many in form view", asyn
             <form>
                 <field name="foo"/>
                 <field name="turtles">
-                    <tree>
+                    <list>
                         <field name="turtle_foo"/>
-                    </tree>
+                    </list>
                     <form>
                         <field name="partner_ids">
-                            <tree editable="top">
+                            <list editable="top">
                                 <field name="foo"/>
-                            </tree>
+                            </list>
                         </field>
                     </form>
                 </field>
@@ -1874,14 +1874,14 @@ test.tags("desktop")(
                 <form>
                     <field name="foo"/>
                     <field name="p">
-                        <tree>
+                        <list>
                             <field name="turtles"/>
-                        </tree>
+                        </list>
                         <form>
                             <field name="turtles">
-                                <tree editable="top">
+                                <list editable="top">
                                     <field name="turtle_foo"/>
-                                </tree>
+                                </list>
                             </field>
                         </form>
                     </field>
@@ -1917,9 +1917,9 @@ test("save an o2m dialog form view and discard main form view", async () => {
         arch: `
             <form>
                 <field name="turtles">
-                    <tree>
+                    <list>
                         <field name="name"/>
-                    </tree>
+                    </list>
                     <form>
                         <field name="name"/>
                     </form>
@@ -1961,15 +1961,15 @@ test("discard with nested o2m form view dialog", async () => {
             <form>
                 <field name="name"/>
                 <field name="p">
-                    <tree>
+                    <list>
                         <field name="name"/>
-                    </tree>
+                    </list>
                     <form>
                         <field name="name"/>
                         <field name="p">
-                            <tree>
+                            <list>
                                 <field name="name"/>
-                            </tree>
+                            </list>
                             <form>
                                 <field name="name"/>
                             </form>
@@ -2019,9 +2019,9 @@ test("discard a form dialog view and then reopen it with a domain based on a tex
             <form>
                 <field name="name"/>
                 <field name="turtles">
-                    <tree>
+                    <list>
                         <field name="name"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
     });
@@ -2077,14 +2077,14 @@ test("onchange on one2many with x2many in list (many2many_tags) and form view (l
             <form>
                 <field name="foo"/>
                 <field name="p">
-                    <tree>
+                    <list>
                         <field name="turtles" widget="many2many_tags"/>
-                    </tree>
+                    </list>
                     <form>
                         <field name="turtles">
-                            <tree editable="top">
+                            <list editable="top">
                                 <field name="turtle_foo"/>
-                            </tree>
+                            </list>
                         </field>
                     </form>
                 </field>
@@ -2152,10 +2152,10 @@ test("embedded one2many with handle widget with minimum setValue calls", async (
         arch: `
             <form>
                 <field name="turtles">
-                    <tree default_order="turtle_int">
+                    <list default_order="turtle_int">
                         <field name="turtle_int" widget="handle"/>
                         <field name="turtle_foo"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -2209,10 +2209,10 @@ test("embedded one2many (editable list) with handle widget", async () => {
         arch: `
             <form>
                 <field name="p">
-                    <tree editable="top">
+                    <list editable="top">
                         <field name="int_field" widget="handle"/>
                         <field name="foo"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -2262,10 +2262,10 @@ test("one2many list order with handle widget", async () => {
         arch: `
             <form>
                 <field name="p">
-                    <tree editable="top">
+                    <list editable="top">
                         <field name="int_field" widget="handle"/>
                         <field name="foo"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -2607,9 +2607,9 @@ test("open a record in an one2many readonly", async () => {
         arch: `
             <form>
                 <field name="turtles" readonly='1'>
-                    <tree>
+                    <list>
                         <field name="name" />
-                    </tree>
+                    </list>
                     <form>
                         <field name="name" />
                     </form>
@@ -2637,9 +2637,9 @@ test("open a record in a one2many kanban with an x2m in the form", async () => {
             <form>
                 <field name="name"/>
                 <field name="p">
-                    <tree>
+                    <list>
                         <field name="name"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
     };
@@ -2801,7 +2801,7 @@ test("add record in a one2many non editable list with context", async () => {
             <form>
                 <field name="int_field"/>
                 <field name="turtles" context="{'abc': int_field}">
-                    <tree><field name="name"/></tree>
+                    <list><field name="name"/></list>
                     <form><field name="name"/></form>
                 </field>
             </form>`,
@@ -2820,9 +2820,9 @@ test.tags("desktop")(
         Partner._onChanges.turtles = function () {};
         Turtle._views = {
             list: `
-                <tree>
+                <list>
                     <field name="turtle_foo"/>
-                </tree>`,
+                </list>`,
             form: `
                 <form>
                     <group>
@@ -2864,9 +2864,9 @@ test.tags("desktop")(
                 <form>
                     <field name="name"/>
                     <field name="partner_ids">
-                        <tree>
+                        <list>
                             <field name="name"/>
-                        </tree>
+                        </list>
                     </field>
                 </form>`,
         };
@@ -2926,9 +2926,9 @@ test.tags("desktop")(
                 <form>
                     <field name="name"/>
                     <field name="turtles">
-                        <tree>
+                        <list>
                             <field name="turtle_foo"/>
-                        </tree>
+                        </list>
                     </field>
                 </form>`,
             resId: 1,
@@ -2963,10 +2963,10 @@ test("sorting one2many fields", async () => {
         arch: `
             <form>
                 <field name="p">
-                    <tree>
+                    <list>
                         <field name="foo"/>
                         <field name="int_field"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -3002,10 +3002,10 @@ test("sorting one2many fields with multi page", async () => {
         arch: `
             <form>
                 <field name="p">
-                    <tree limit="2">
+                    <list limit="2">
                         <field name="foo"/>
                         <field name="int_field"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -3036,9 +3036,9 @@ test("one2many list field edition", async () => {
         arch: `
             <form>
                 <field name="p">
-                    <tree editable="top">
+                    <list editable="top">
                         <field name="name"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 2,
@@ -3077,9 +3077,9 @@ test("one2many list: create action disabled", async () => {
         arch: `
             <form>
                 <field name="p">
-                    <tree create="0">
+                    <list create="0">
                         <field name="name"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -3095,9 +3095,9 @@ test("one2many list: cannot open record in editable list and form in readonly mo
         arch: `
             <form edit="0">
                 <field name="p">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="name"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -3116,9 +3116,9 @@ test("one2many list: cannot open record in editable=bottom and edit=false list",
         arch: `
             <form>
                 <field name="p">
-                    <tree editable="bottom" edit="false">
+                    <list editable="bottom" edit="false">
                         <field name="name"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -3138,9 +3138,9 @@ test("one2many list: conditional create/delete actions", async () => {
             <form>
                 <field name="bar"/>
                 <field name="p" options="{'create': [('bar', '=', True)], 'delete': [('bar', '=', True)]}">
-                    <tree>
+                    <list>
                         <field name="name"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -3165,10 +3165,10 @@ test("boolean field in a one2many must be directly editable", async () => {
         arch: `
             <form>
                 <field name="p">
-                    <tree editable="top">
+                    <list editable="top">
                         <field name="bar"/>
                         <field name="name"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -3199,9 +3199,9 @@ test("many2many list: unlink two records", async () => {
         arch: `
             <form>
                 <field name="p" widget="many2many">
-                    <tree>
+                    <list>
                         <field name="name"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -3236,9 +3236,9 @@ test("one2many list: deleting one records", async () => {
         arch: `
             <form>
                 <field name="p">
-                    <tree>
+                    <list>
                         <field name="name"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -3466,9 +3466,9 @@ test("editable one2many list, pager is updated", async () => {
         arch: `
             <form>
                 <field name="turtles">
-                    <tree editable="bottom" limit="3">
+                    <list editable="bottom" limit="3">
                         <field name="turtle_foo"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -3504,10 +3504,10 @@ test("one2many list (non editable): edition", async () => {
         arch: `
             <form>
                 <field name="p">
-                    <tree>
+                    <list>
                         <field name="name"/>
                         <field name="qux"/>
-                    </tree>
+                    </list>
                     <form>
                         <field name="name"/>
                     </form>
@@ -3561,9 +3561,9 @@ test("one2many list (editable): edition, part 2", async () => {
         arch: `
             <form>
                 <field name="p">
-                    <tree editable="top">
+                    <list editable="top">
                         <field name="foo"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -3595,9 +3595,9 @@ test("one2many list (editable): edition, part 3", async () => {
             <form>
                 <group>
                     <field name="turtles">
-                        <tree editable="top">
+                        <list editable="top">
                             <field name="turtle_foo"/>
-                        </tree>
+                        </list>
                     </field>
                 </group>
             </form>`,
@@ -3636,10 +3636,10 @@ test.tags("desktop")("one2many list (editable): edition, part 4", async () => {
             <form>
                 <group>
                     <field name="turtles">
-                        <tree editable="top">
+                        <list editable="top">
                             <field name="turtle_trululu"/>
                             <field name="turtle_description"/>
-                        </tree>
+                        </list>
                     </field>
                 </group>
             </form>`,
@@ -3666,9 +3666,9 @@ test("one2many list (editable): edition, part 5", async () => {
             <form>
                 <group>
                     <field name="turtles">
-                        <tree editable="top">
+                        <list editable="top">
                             <field name="turtle_foo"/>
-                        </tree>
+                        </list>
                     </field>
                 </group>
             </form>`,
@@ -3701,9 +3701,9 @@ test("one2many list (editable): discarding required empty data", async () => {
         arch: `
             <form>
                 <field name="turtles">
-                    <tree editable="top">
+                    <list editable="top">
                         <field name="turtle_foo"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 2,
@@ -3731,9 +3731,9 @@ test.tags("desktop")("discard O2M field with close button", async () => {
         arch: `
             <form>
                 <field name="p">
-                    <tree>
+                    <list>
                         <field name="name" />
-                    </tree>
+                    </list>
                     <form>
                         <field name="name" />
                     </form>
@@ -3764,9 +3764,9 @@ test("editable one2many list, adding line when only one page", async () => {
         arch: `
             <form>
                 <field name="turtles">
-                    <tree editable="bottom" limit="3">
+                    <list editable="bottom" limit="3">
                         <field name="turtle_foo"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -3798,9 +3798,9 @@ test("editable one2many list, adding line, then discarding", async () => {
         arch: `
             <form>
                 <field name="turtles">
-                    <tree editable="bottom" limit="3">
+                    <list editable="bottom" limit="3">
                         <field name="turtle_foo"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -3827,9 +3827,9 @@ test("editable one2many list, required field and pager", async () => {
         arch: `
             <form>
                 <field name="turtles">
-                    <tree editable="bottom" limit="3">
+                    <list editable="bottom" limit="3">
                         <field name="turtle_foo"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -3854,10 +3854,10 @@ test("editable one2many list, required field, pager and confirm discard", async 
         arch: `
             <form>
                 <field name="turtles">
-                    <tree editable="bottom" limit="3">
+                    <list editable="bottom" limit="3">
                         <field name="turtle_foo"/>
                         <field name="turtle_int"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -3889,10 +3889,10 @@ test("save a record with not new, dirty and invalid subrecord", async () => {
         arch: `
             <form>
                 <field name="p">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="name" required="1"/>
                         <field name="int_field"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -3917,9 +3917,9 @@ test("editable one2many list, adding, discarding, and pager", async () => {
         arch: `
             <form>
                 <field name="turtles">
-                    <tree editable="bottom" limit="3">
+                    <list editable="bottom" limit="3">
                         <field name="turtle_foo"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -3954,10 +3954,10 @@ test("unselecting a line with missing required data", async () => {
         arch: `
             <form>
                 <field name="turtles">
-                    <tree editable="top">
+                    <list editable="top">
                         <field name="turtle_foo"/>
                         <field name="turtle_int"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 2,
@@ -3996,9 +3996,9 @@ test("pressing enter in a o2m with a required empty field", async () => {
         arch: `
             <form>
                 <field name="turtles">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="turtle_foo"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 2,
@@ -4019,9 +4019,9 @@ test("pressing enter several times in a one2many", async () => {
         arch: `
             <form>
                 <field name="turtles">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="turtle_foo"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 2,
@@ -4057,10 +4057,10 @@ test("creating a new line in an o2m with an handle field does not focus the hand
         arch: `
             <form>
                 <field name="turtles">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="turtle_int" widget="handle"/>
                         <field name="turtle_foo"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 2,
@@ -4093,10 +4093,10 @@ test("editing a o2m, with required field and onchange", async () => {
             <form>
                 <group>
                     <field name="turtles">
-                        <tree editable="top">
+                        <list editable="top">
                             <field name="turtle_foo"/>
                             <field name="turtle_int"/>
-                        </tree>
+                        </list>
                     </field>
                 </group>
             </form>`,
@@ -4132,9 +4132,9 @@ test("editable o2m, pressing ESC discard current changes", async () => {
         arch: `
             <form>
                 <field name="turtles">
-                    <tree editable="top">
+                    <list editable="top">
                         <field name="turtle_foo"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 2,
@@ -4160,9 +4160,9 @@ test("editable o2m with required field, pressing ESC discard current changes", a
         arch: `
             <form>
                 <field name="turtles">
-                    <tree editable="top">
+                    <list editable="top">
                         <field name="turtle_foo"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 2,
@@ -4182,9 +4182,9 @@ test("pressing escape in editable o2m list in dialog", async () => {
         form: `
             <form>
                 <field name="p">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="name"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
     };
@@ -4195,9 +4195,9 @@ test("pressing escape in editable o2m list in dialog", async () => {
         arch: `
             <form>
                 <field name="p">
-                    <tree>
+                    <list>
                         <field name="name"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -4231,9 +4231,9 @@ test.tags("desktop")(
             arch: `
                 <form>
                     <field name="turtles">
-                        <tree editable="top">
+                        <list editable="top">
                             <field name="product_id"/>
-                        </tree>
+                        </list>
                     </field>
                 </form>`,
             resId: 1,
@@ -4271,9 +4271,9 @@ test("onchange in a one2many", async () => {
         arch: `
             <form>
                 <field name="p">
-                    <tree editable="top">
+                    <list editable="top">
                         <field name="foo"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 2,
@@ -4309,9 +4309,9 @@ test("one2many, default_get and onchange (basic)", async () => {
         arch: `
             <form>
                 <field name="p">
-                    <tree>
+                    <list>
                         <field name="foo"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
     });
@@ -4333,9 +4333,9 @@ test("one2many and default_get (with date)", async () => {
         arch: `
             <form>
                 <field name="p">
-                    <tree>
+                    <list>
                         <field name="date"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
     });
@@ -4356,9 +4356,9 @@ test("one2many and onchange (with integer)", async () => {
         arch: `
             <form>
                 <field name="turtles">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="turtle_int"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -4383,9 +4383,9 @@ test("one2many and onchange (with date)", async () => {
         arch: `
             <form>
                 <field name="p">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="date"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -4443,7 +4443,7 @@ test("one2many and onchange only write modified field", async () => {
             <form>
                 <field name="foo"/>
                 <field name="turtles">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="name"/>
                         <field name="product_id"/>
                         <field name="turtle_bar"/>
@@ -4451,7 +4451,7 @@ test("one2many and onchange only write modified field", async () => {
                         <field name="turtle_int"/>
                         <field name="turtle_qux"/>
                         <field name="turtle_ref"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -4527,10 +4527,10 @@ test("one2many with CREATE _onChanges correctly refreshed", async () => {
             <form>
                 <field name="foo"/>
                 <field name="turtles">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="name" widget="char"/>
                         <field name="turtle_int"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -4564,10 +4564,10 @@ test("editable one2many with sub widgets are rendered in readonly", async () => 
         arch: `
             <form>
                 <field name="turtles">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="turtle_foo" widget="char" readonly="turtle_int == 11111"/>
                         <field name="turtle_int"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -4593,9 +4593,9 @@ test("one2many editable list with onchange keeps the order", async () => {
         arch: `
             <form>
                 <field name="p">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="name"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -4621,10 +4621,10 @@ test("one2many list (editable): readonly domain is evaluated", async () => {
         arch: `
             <form>
                 <field name="p">
-                    <tree editable="top">
+                    <list editable="top">
                         <field name="name" readonly="not product_id"/>
                         <field name="product_id"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -4651,9 +4651,9 @@ test("pager of one2many field in new record", async () => {
         arch: `
             <form>
                 <field name="p">
-                    <tree editable="top">
+                    <list editable="top">
                         <field name="foo"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
     });
@@ -4690,9 +4690,9 @@ test.tags("desktop")("one2many list with a many2one", async () => {
         arch: `
             <form>
                 <field name="p">
-                    <tree>
+                    <list>
                         <field name="product_id"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -4740,10 +4740,10 @@ test.tags("desktop")("one2many list with inline form view", async () => {
                         <field name="product_id"/>
                         <field name="int_field"/>
                     </form>
-                    <tree>
+                    <list>
                         <field name="product_id"/>
                         <field name="foo"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -4823,9 +4823,9 @@ test.tags("desktop")(
                         <form>
                             <field name="product_id" context="{'partner_foo':parent.foo, 'lalala': parent.product_id}"/>
                         </form>
-                        <tree>
+                        <list>
                             <field name="product_id"/>
-                        </tree>
+                        </list>
                     </field>
                 </form>`,
             resId: 1,
@@ -4886,9 +4886,9 @@ test.tags("desktop")(
                 <form>
                     <field name="foo"/>
                     <field name="p">
-                        <tree editable="bottom">
+                        <list editable="bottom">
                             <field name="product_id" context="{'partner_foo':parent.foo}"/>
-                        </tree>
+                        </list>
                     </field>
                 </form>`,
             resId: 1,
@@ -4919,9 +4919,9 @@ test("one2many list, multi page, with many2one and with context with parent key"
             <form>
                 <field name="foo"/>
                 <field name="turtles">
-                    <tree limit="2">
+                    <list limit="2">
                         <field name="product_id" context="{'partner_foo': parent.foo}"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -4949,9 +4949,9 @@ test("one2many list, editable, with a date in the context", async () => {
                 <group>
                     <field name="date"/>
                     <field name="p" context="{'date':date}">
-                        <tree editable="top">
+                        <list editable="top">
                             <field name="date"/>
-                        </tree>
+                        </list>
                     </field>
                 </group>
             </form>`,
@@ -4975,9 +4975,9 @@ test("one2many field with context", async () => {
             <form>
                 <group>
                     <field name="turtles" context="{'turtles':turtles}">
-                        <tree editable="bottom">
+                        <list editable="bottom">
                             <field name="turtle_foo"/>
-                        </tree>
+                        </list>
                     </field>
                 </group>
             </form>`,
@@ -4998,9 +4998,9 @@ test("one2many list edition, some basic functionality", async () => {
         arch: `
             <form>
                 <field name="p">
-                    <tree editable="top">
+                    <list editable="top">
                         <field name="foo"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -5032,9 +5032,9 @@ test("one2many list, the context is properly evaluated and sent", async () => {
             <form>
                 <field name="int_field"/>
                 <field name="p" context="{'hello': 'world', 'abc': int_field}">
-                    <tree editable="top">
+                    <list editable="top">
                         <field name="foo"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -5064,9 +5064,9 @@ test("one2many list not editable, the context is properly evaluated and sent", a
             <form>
                 <field name="int_field"/>
                 <field name="turtles" context="{'hello': 'world', 'abc': int_field, 'default_turtle_int': 5}">
-                    <tree>
+                    <list>
                         <field name="turtle_foo"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -5083,12 +5083,12 @@ test.tags("desktop")("one2many with many2many widget: create", async () => {
 
     Turtle._views = {
         list: `
-            <tree>
+            <list>
                 <field name="name"/>
                 <field name="turtle_foo"/>
                 <field name="turtle_bar"/>
                 <field name="product_id"/>
-            </tree>`,
+            </list>`,
         search: `
             <search>
                 <field name="turtle_foo"/>
@@ -5115,12 +5115,12 @@ test.tags("desktop")("one2many with many2many widget: create", async () => {
         arch: `
             <form>
                 <field name="turtles" widget="many2many">
-                    <tree>
+                    <list>
                         <field name="turtle_foo"/>
                         <field name="turtle_qux"/>
                         <field name="turtle_int"/>
                         <field name="product_id"/>
-                    </tree>
+                    </list>
                     <form>
                         <group>
                             <field name="turtle_foo"/>
@@ -5177,12 +5177,12 @@ test.tags("desktop")("one2many with many2many widget: edition", async () => {
 
     Turtle._views = {
         list: `
-            <tree>
+            <list>
                 <field name="name"/>
                 <field name="turtle_foo"/>
                 <field name="turtle_bar"/>
                 <field name="product_id"/>
-            </tree>`,
+            </list>`,
         search: `
             <search>
                 <field name="turtle_foo"/>
@@ -5211,12 +5211,12 @@ test.tags("desktop")("one2many with many2many widget: edition", async () => {
         arch: `
             <form>
                 <field name="turtles" widget="many2many">
-                    <tree>
+                    <list>
                         <field name="turtle_foo"/>
                         <field name="turtle_qux"/>
                         <field name="turtle_int"/>
                         <field name="product_id"/>
-                    </tree>
+                    </list>
                     <form>
                         <group>
                             <field name="turtle_foo"/>
@@ -5280,9 +5280,9 @@ test("new record, the context is properly evaluated and sent", async () => {
             <form>
                 <field name="int_field"/>
                 <field name="p" context="{'hello': 'world', 'abc': int_field}">
-                    <tree editable="top">
+                    <list editable="top">
                         <field name="foo"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
     });
@@ -5307,9 +5307,9 @@ test("parent data is properly sent on an onchange rpc", async () => {
                 <field name="name"/>
                 <field name="foo"/>
                 <field name="p">
-                    <tree editable="top">
+                    <list editable="top">
                         <field name="bar"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -5354,11 +5354,11 @@ test("parent data is properly sent on an onchange rpc (existing x2many record)",
                 <field name="name"/>
                 <field name="foo"/>
                 <field name="p">
-                    <tree editable="top">
+                    <list editable="top">
                         <field name="name"/>
                         <field name="foo"/>
                         <field name="turtles" widget="many2many_tags"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -5396,9 +5396,9 @@ test("parent data is properly sent on an onchange rpc, new record", async () => 
             <form>
                 <field name="foo"/>
                 <field name="turtles">
-                    <tree editable="top">
+                    <list editable="top">
                         <field name="turtle_bar"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
     });
@@ -5419,10 +5419,10 @@ test("id in one2many obtained in onchange is properly set", async () => {
         arch: `
             <form>
                 <field name="turtles">
-                    <tree>
+                    <list>
                         <field name="id"/>
                         <field name="turtle_foo"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
     });
@@ -5446,10 +5446,10 @@ test("id field in one2many in a new record", async () => {
         arch: `
             <form>
                 <field name="turtles">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="id" invisible="1"/>
                         <field name="turtle_foo"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
     });
@@ -5470,9 +5470,9 @@ test("sub form view with a required field", async () => {
                     <form>
                         <group><field name="foo"/></group>
                     </form>
-                    <tree>
+                    <list>
                         <field name="foo"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -5504,10 +5504,10 @@ test("one2many list with action button", async () => {
             <form>
                 <field name="int_field"/>
                 <field name="p">
-                    <tree>
+                    <list>
                         <field name="foo"/>
                         <button name="method_name" type="object" icon="fa-plus"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -5557,11 +5557,11 @@ test("one2many without inline tree arch", async () => {
     Partner._records[0].turtles = [2, 3];
     Turtle._views = {
         list: `
-            <tree>
+            <list>
                 <field name="turtle_bar"/>
                 <field name="name"/>
                 <field name="partner_ids"/>
-            </tree>`,
+            </list>`,
     };
     await mountView({
         type: "form",
@@ -5617,11 +5617,11 @@ test.tags("desktop")("many2one and many2many in one2many", async () => {
                 <group>
                     <field name="int_field"/>
                     <field name="turtles">
-                        <tree editable="top">
+                        <list editable="top">
                             <field name="name"/>
                             <field name="product_id"/>
                             <field name="partner_ids" widget="many2many_tags"/>
-                        </tree>
+                        </list>
                     </field>
                 </group>
             </form>`,
@@ -5677,10 +5677,10 @@ test("many2manytag in one2many, onchange, some modifiers, and more than one page
         arch: `
             <form>
                 <field name="turtles">
-                    <tree editable="top" limit="2">
+                    <list editable="top" limit="2">
                         <field name="turtle_foo"/>
                         <field name="partner_ids" widget="many2many_tags" readonly="turtle_foo == 'a'"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -5761,11 +5761,11 @@ test.tags("desktop")("onchange many2many in one2many list editable", async () =>
                 <group>
                     <field name="int_field"/>
                     <field name="turtles">
-                        <tree editable="bottom">
+                        <list editable="bottom">
                             <field name="name"/>
                             <field name="product_id"/>
                             <field name="partner_ids" widget="many2many_tags"/>
-                        </tree>
+                        </list>
                     </field>
                 </group>
             </form>`,
@@ -5868,9 +5868,9 @@ test.tags("desktop")("load view for x2many in one2many", async () => {
     Partner._records[2].turtles = [1, 3];
     Partner._views = {
         list: `
-            <tree>
+            <list>
                 <field name="name"/>
-            </tree>`,
+            </list>`,
     };
 
     await mountView({
@@ -5887,9 +5887,9 @@ test.tags("desktop")("load view for x2many in one2many", async () => {
                                 <field name="partner_ids"/>
                             </group>
                         </form>
-                        <tree>
+                        <list>
                             <field name="name"/>
-                        </tree>
+                        </list>
                     </field>
                 </group>
             </form>`,
@@ -5913,9 +5913,9 @@ test.tags("desktop")(
                 <form edit="0">
                     <group>
                         <field name="turtles">
-                            <tree>
+                            <list>
                                 <field name="partner_ids"/>
-                            </tree>
+                            </list>
                             <form>
                                 <field name="turtle_foo"/>
                             </form>
@@ -5955,9 +5955,9 @@ test.tags("desktop")("one2many with x2many in form view (but not in list view)",
             <form>
                 <group>
                     <field name="turtles">
-                        <tree>
+                        <list>
                             <field name="turtle_foo"/>
-                        </tree>
+                        </list>
                         <form>
                             <field name="partner_ids" widget="many2many_tags"/>
                         </form>
@@ -5986,7 +5986,7 @@ test.tags("desktop")("many2many list in a one2many opened by a many2one", async 
     Turtle._records[1].turtle_trululu = 2;
     Partner._views = { form: '<form><field name="timmy"/></form>' };
     PartnerType._views = {
-        list: '<tree editable="bottom"><field name="name"/></tree>',
+        list: '<list editable="bottom"><field name="name"/></list>',
         search: "<search></search>",
     };
     onRpc("/web/dataset/call_kw/partner/get_formview_id", () => {
@@ -6003,9 +6003,9 @@ test.tags("desktop")("many2many list in a one2many opened by a many2one", async 
         arch: `
             <form>
                 <field name="turtles">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="turtle_trululu"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -6045,9 +6045,9 @@ test("nested x2many default values", async () => {
         arch: `
             <form>
                 <field name="turtles">
-                    <tree editable="top">
+                    <list editable="top">
                         <field name="partner_ids" widget="many2many_tags"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
     });
@@ -6110,14 +6110,14 @@ test("nested x2many (inline form view) and _onChanges", async () => {
             <form>
                 <field name="bar"/>
                 <field name="p">
-                    <tree>
+                    <list>
                         <field name="turtles"/>
-                    </tree>
+                    </list>
                     <form>
                         <field name="turtles">
-                            <tree>
+                            <list>
                                 <field name="turtle_foo"/>
-                            </tree>
+                            </list>
                         </field>
                     </form>
                 </field>
@@ -6139,9 +6139,9 @@ test("nested x2many (non inline views and no widget on inner x2many in list)", a
     Partner._records[0].p = [1];
     Partner._views = {
         list: `
-            <tree>
+            <list>
                 <field name="turtles"/>
-            </tree>`,
+            </list>`,
         form: `
             <form>
                 <field name="turtles" widget="many2many_tags"/>
@@ -6174,9 +6174,9 @@ test("one2many (who contains name) with tree view and without form view", async 
             <form edit="0">
                 <group>
                     <field name="turtles">
-                        <tree>
+                        <list>
                             <field name="name"/>
-                        </tree>
+                        </list>
                     </field>
                 </group>
             </form>`,
@@ -6207,9 +6207,9 @@ test("open a record in a one2many list (mode 'readonly') with a notebook", async
         arch: `
             <form>
                 <field name="turtles">
-                    <tree>
+                    <list>
                         <field name="turtle_foo"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -6449,10 +6449,10 @@ test("focusing fields in one2many list", async () => {
             <form>
                 <group>
                     <field name="turtles">
-                        <tree editable="top">
+                        <list editable="top">
                             <field name="turtle_foo"/>
                             <field name="turtle_int"/>
-                        </tree>
+                        </list>
                     </field>
                 </group>
                 <field name="foo"/>
@@ -6482,9 +6482,9 @@ test("one2many list editable = top", async () => {
             <form>
                 <group>
                     <field name="turtles">
-                        <tree editable="top">
+                        <list editable="top">
                             <field name="turtle_foo"/>
-                        </tree>
+                        </list>
                     </field>
                 </group>
             </form>`,
@@ -6517,9 +6517,9 @@ test("one2many list editable = bottom", async () => {
             <form>
                 <group>
                     <field name="turtles">
-                        <tree editable="bottom">
+                        <list editable="bottom">
                             <field name="turtle_foo"/>
-                        </tree>
+                        </list>
                     </field>
                 </group>
             </form>`,
@@ -6548,10 +6548,10 @@ test("one2many list editable - should properly unselect the list field after shi
                 <group>
                     <field name="name"/>
                     <field name="turtles">
-                        <tree editable="bottom">
+                        <list editable="bottom">
                             <field name="turtle_foo"/>
                             <field name="turtle_bar" optional="hide"/>
-                        </tree>
+                        </list>
                     </field>
                 </group>
             </form>`,
@@ -6578,10 +6578,10 @@ test("one2many list editable - should not allow tab navigation focus on the opti
                 <group>
                     <field name="name"/>
                     <field name="turtles">
-                        <tree editable="bottom">
+                        <list editable="bottom">
                             <field name="turtle_foo"/>
                             <field name="turtle_bar" optional="hide"/>
-                        </tree>
+                        </list>
                     </field>
                 </group>
             </form>`,
@@ -6599,9 +6599,9 @@ test('one2many list edition, no "Remove" button in modal', async () => {
         arch: `
             <form>
                 <field name="p">
-                    <tree>
+                    <list>
                         <field name="foo"/>
-                    </tree>
+                    </list>
                     <form>
                         <field name="name"/>
                     </form>
@@ -6625,9 +6625,9 @@ test('x2many fields use their "mode" attribute', async () => {
             <form>
                 <group>
                     <field mode="kanban" name="turtles">
-                        <tree>
+                        <list>
                             <field name="turtle_foo"/>
-                        </tree>
+                        </list>
                         <kanban>
                             <templates>
                                 <t t-name="kanban-box">
@@ -6668,10 +6668,10 @@ test("one2many list editable, onchange and required field", async () => {
             <form>
                 <field name="int_field"/>
                 <field name="turtles">
-                    <tree editable="top">
+                    <list editable="top">
                         <field name="turtle_int"/>
                         <field name="turtle_foo"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -6709,13 +6709,13 @@ test.tags("desktop")("one2many list editable: trigger onchange when row is valid
 
     Turtle._views = {
         list: `
-            <tree editable="top">
+            <list editable="top">
                 <field name="turtle_qux"/>
                 <field name="turtle_bar"/>
                 <field name="turtle_int"/>
                 <field name="turtle_foo"/>
                 <field name="partner_ids" widget="many2many_tags"/>
-            </tree>`,
+            </list>`,
     };
     onRpc((args) => {
         expect.step(args.method);
@@ -6777,9 +6777,9 @@ test("one2many list editable: 'required' modifiers is properly working", async (
             <form>
                 <field name="int_field"/>
                 <field name="turtles">
-                    <tree editable="top">
+                    <list editable="top">
                         <field name="turtle_foo" required="1"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -6811,10 +6811,10 @@ test("one2many list editable: 'required' modifiers is properly working, part 2",
             <form>
                 <field name="int_field"/>
                 <field name="turtles">
-                    <tree editable="top">
+                    <list editable="top">
                         <field name="turtle_int"/>
                         <field name="turtle_foo" required='turtle_int == 0'/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -6848,9 +6848,9 @@ test.tags("desktop")("one2many list editable: add new line before onchange retur
         arch: `
             <form>
                 <field name="turtles">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="turtle_trululu" required="1"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
     });
@@ -6893,9 +6893,9 @@ test("editable list: multiple clicks on Add an item do not create invalid rows",
         arch: `
             <form>
                 <field name="turtles">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="turtle_trululu" required="1"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
     });
@@ -6942,9 +6942,9 @@ test("editable list: value reset by an onchange", async () => {
             <form>
                 <field name="datetime"/>
                 <field name="turtles">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="name"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
     });
@@ -6992,9 +6992,9 @@ test("editable list: onchange that returns a warning", async () => {
         arch: `
             <form>
                 <field name="turtles">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="name"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -7051,9 +7051,9 @@ test("editable list: contexts are correctly sent", async () => {
             <form>
                 <field name="foo"/>
                 <field name="timmy" context="{'key': foo, 'key2': 'hello'}">
-                    <tree editable="top">
+                    <list editable="top">
                         <field name="name"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -7113,10 +7113,10 @@ test("contexts of nested x2manys are correctly sent (add line)", async () => {
             <form>
                 <field name="foo"/>
                 <field name="p">
-                    <tree editable="top">
+                    <list editable="top">
                         <field name="name"/>
                         <field name="timmy" context="{'key': parent.foo, 'key2': 'hello'}" widget="many2many_tags"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -7147,14 +7147,14 @@ test("nested x2manys with context referencing parent record", async () => {
             <form>
                 <field name="foo"/>
                 <field name="p">
-                    <tree>
+                    <list>
                         <field name="name"/>
-                    </tree>
+                    </list>
                     <form>
                         <field name="p" context="{'parent_foo': parent.foo}">
-                            <tree>
+                            <list>
                                 <field name="name"/>
-                            </tree>
+                            </list>
                         </field>
                     </form>
                 </field>
@@ -7221,9 +7221,9 @@ test("one2many: onchange that returns unknown field in list, but not in form", a
             <form>
                 <field name="name"/>
                 <field name="p">
-                    <tree>
+                    <list>
                         <field name="name"/>
-                    </tree>
+                    </list>
                     <form>
                         <field name="name"/>
                         <field name="timmy" widget="many2many_tags"/>
@@ -7261,11 +7261,11 @@ test("multi level of nested x2manys, onchange", async () => {
             <form>
                 <field name="name"/>
                 <field name="p" readonly="name == 'readonly'">
-                    <tree><field name="name"/></tree>
+                    <list><field name="name"/></list>
                     <form>
                         <field name="name"/>
                         <field name="p">
-                            <tree><field name="name"/></tree>
+                            <list><field name="name"/></list>
                             <form><field name="name"/></form>
                         </field>
                     </form>
@@ -7318,10 +7318,10 @@ test("onchange and required fields with override in arch", async () => {
         arch: `
             <form>
                 <field name="turtles">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="turtle_int"/>
                         <field name="turtle_foo" required="0"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -7368,15 +7368,15 @@ test("onchange on a one2many containing a one2many", async () => {
         arch: `
             <form>
                 <field name="p">
-                    <tree>
+                    <list>
                         <field name="name"/>
-                    </tree>
+                    </list>
                     <form>
                         <field name="name"/>
                         <field name="p">
-                            <tree editable="bottom">
+                            <list editable="bottom">
                                 <field name="name"/>
-                            </tree>
+                            </list>
                         </field>
                     </form>
                 </field>
@@ -7415,9 +7415,9 @@ test("editing tabbed one2many (editable=bottom)", async () => {
             <form>
                 <sheet>
                     <field name="turtles">
-                        <tree editable="bottom">
+                        <list editable="bottom">
                             <field name="turtle_foo"/>
-                        </tree>
+                        </list>
                     </field>
                 </sheet>
             </form>`,
@@ -7450,9 +7450,9 @@ test("editing tabbed one2many (editable=bottom), again...", async () => {
         arch: `
             <form>
                 <field name="turtles">
-                    <tree editable="bottom" limit="3">
+                    <list editable="bottom" limit="3">
                         <field name="turtle_foo"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -7491,9 +7491,9 @@ test("editing tabbed one2many (editable=top)", async () => {
             <form>
                 <sheet>
                     <field name="turtles">
-                        <tree editable="top">
+                        <list editable="top">
                             <field name="turtle_foo"/>
-                        </tree>
+                        </list>
                     </field>
                 </sheet>
             </form>`,
@@ -7531,10 +7531,10 @@ test.tags("desktop")("one2many field: change value before pending onchange retur
         arch: `
             <form>
                 <field name="p">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="int_field"/>
                         <field name="trululu"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
     });
@@ -7572,12 +7572,12 @@ test.tags("desktop")("focus is correctly reset after an onchange in an x2many", 
         arch: `
             <form>
                 <field name="p">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="int_field"/>
                         <button string="hello"/>
                         <field name="qux"/>
                         <field name="trululu"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
     });
@@ -7612,9 +7612,9 @@ test("checkbox in an x2many that triggers an onchange", async () => {
         arch: `
             <form>
                 <field name="p">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="bar"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
     });
@@ -7639,10 +7639,10 @@ test("one2many with default value: edit line to make it invalid", async () => {
         arch: `
             <form>
                 <field name="p">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="foo"/>
                         <field name="int_field"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
     });
@@ -7668,10 +7668,10 @@ test("one2many with invalid value and click on another row", async () => {
         arch: `
             <form>
                 <field name="p">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="name"/>
                         <field name="int_field"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -7715,9 +7715,9 @@ test("default value for nested one2manys (coming from onchange)", async () => {
             <form>
                 <sheet>
                     <field name="p">
-                        <tree>
+                        <list>
                             <field name="turtles"/>
-                        </tree>
+                        </list>
                     </field>
                 </sheet>
             </form>`,
@@ -7758,9 +7758,9 @@ test("display correct value after validation error", async () => {
             <form>
                 <sheet>
                     <field name="turtles">
-                        <tree editable="bottom">
+                        <list editable="bottom">
                             <field name="turtle_foo"/>
-                        </tree>
+                        </list>
                     </field>
                 </sheet>
             </form>`,
@@ -7808,9 +7808,9 @@ test("propagate context to sub views without default_* keys", async () => {
             <form>
                 <sheet>
                     <field name="turtles">
-                        <tree editable="bottom">
+                        <list editable="bottom">
                             <field name="turtle_foo"/>
-                        </tree>
+                        </list>
                     </field>
                 </sheet>
             </form>`,
@@ -7833,9 +7833,9 @@ test("nested one2manys with no widget in list and as invisible list in form", as
         arch: `
             <form>
                 <field name="p">
-                    <tree>
+                    <list>
                         <field name="turtles"/>
-                    </tree>
+                    </list>
                     <form>
                         <field name="turtles" invisible="1"/>
                     </form>
@@ -7895,14 +7895,14 @@ test("onchange on nested one2manys", async () => {
                 <sheet>
                     <field name="name"/>
                     <field name="p">
-                        <tree>
+                        <list>
                             <field name="name"/>
-                        </tree>
+                        </list>
                         <form>
                             <field name="turtles">
-                                <tree>
+                                <list>
                                     <field name="name"/>
-                                </tree>
+                                </list>
                             </field>
                         </form>
                     </field>
@@ -7945,11 +7945,11 @@ test("one2many with multiple pages and sequence field", async () => {
         arch: `
             <form>
                 <field name="turtles">
-                    <tree limit="2">
+                    <list limit="2">
                         <field name="turtle_int" widget="handle"/>
                         <field name="turtle_foo"/>
                         <field name="partner_ids" invisible="1"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -7979,11 +7979,11 @@ test("one2many with multiple pages and sequence field, part2", async () => {
         arch: `
             <form>
                 <field name="turtles">
-                    <tree limit="2">
+                    <list limit="2">
                         <field name="turtle_int" widget="handle"/>
                         <field name="turtle_foo"/>
                         <field name="partner_ids" invisible="1"/>
-                    </tree>
+                    </list>
                     <form/>
                 </field>
             </form>`,
@@ -8007,10 +8007,10 @@ test("one2many with sequence field, override default_get, bottom when inline", a
         arch: `
             <form>
                 <field name="turtles">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="turtle_int" widget="handle"/>
                         <field name="turtle_foo"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -8039,10 +8039,10 @@ test("one2many with sequence field, override default_get, top when inline", asyn
         arch: `
             <form>
                 <field name="turtles">
-                    <tree editable="top">
+                    <list editable="top">
                         <field name="turtle_int" widget="handle"/>
                         <field name="turtle_foo"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -8072,10 +8072,10 @@ test("one2many with sequence field, override default_get, bottom when popup", as
         arch: `
             <form>
                 <field name="turtles">
-                    <tree>
+                    <list>
                         <field name="turtle_int" widget="handle"/>
                         <field name="turtle_foo"/>
-                    </tree>
+                    </list>
                     <form>
                         <field name="turtle_int" invisible="1"/>
                         <field name="turtle_foo"/>
@@ -8114,9 +8114,9 @@ test("one2many with sequence field, override default_get, not last page", async 
         arch: `
             <form>
                 <field name="turtles">
-                    <tree limit="2">
+                    <list limit="2">
                         <field name="turtle_int" widget="handle"/>
-                    </tree>
+                    </list>
                     <form>
                         <field name="turtle_int"/>
                     </form>
@@ -8140,9 +8140,9 @@ test("one2many with sequence field, override default_get, last page", async () =
         arch: `
             <form>
                 <field name="turtles">
-                    <tree limit="4">
+                    <list limit="4">
                         <field name="turtle_int" widget="handle"/>
-                    </tree>
+                    </list>
                     <form>
                         <field name="turtle_int"/>
                     </form>
@@ -8174,12 +8174,12 @@ test("one2many with sequence field and text field", async () => {
         arch: `
             <form>
                 <field name="turtles">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="turtle_int" widget="handle"/>
                         <field name="turtle_foo"/>
                         <field name="not_required_product_id"/>
                         <field name="turtle_description" widget="text"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
     });
@@ -8241,11 +8241,11 @@ test("one2many with several pages, onchange and default order", async () => {
         arch: `
             <form>
                 <field name="turtles">
-                    <tree editable="top" limit="2" default_order="turtle_foo">
+                    <list editable="top" limit="2" default_order="turtle_foo">
                         <field name="turtle_int"/>
                         <field name="turtle_foo" class="foo"/>
                         <field name="partner_ids" widget="many2many_tags"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -8297,10 +8297,10 @@ test("one2many with several pages, onchange return command update on unknown rec
             <form>
                 <field name="foo"/>
                 <field name="turtles">
-                    <tree editable="top" limit="1">
+                    <list editable="top" limit="1">
                         <field name="turtle_int"/>
                         <field name="turtle_foo"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -8317,9 +8317,9 @@ test("new record, with one2many with more default values than limit", async () =
         arch: `
             <form>
                 <field name="turtles">
-                    <tree limit="2">
+                    <list limit="2">
                         <field name="turtle_foo"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         context: { default_turtles: [1, 2, 3] },
@@ -8342,9 +8342,9 @@ test("add a new line after limit is reached should behave nicely", async () => {
         arch: `
             <form>
                 <field name="turtles">
-                    <tree limit="3" editable="bottom">
+                    <list limit="3" editable="bottom">
                         <field name="turtle_foo" required="1"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -8373,10 +8373,10 @@ test.tags("desktop")(
         PartnerType._records[0].partner_ids = [1, 2];
         Partner._views = {
             list: `
-                <tree>
+                <list>
                     <field name="sequence" widget="handle"/>
                     <field name="name"/>
-                </tree>`,
+                </list>`,
         };
         onRpc((args) => {
             expect.step(args.method);
@@ -8407,10 +8407,10 @@ test.tags("desktop")("onchange in a one2many with non inline view on a new recor
     };
     Turtle._views = {
         list: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="name"/>
                 <field name="turtle_int"/>
-            </tree>`,
+            </list>`,
     };
     onRpc((args) => {
         expect.step(args.method || args.route);
@@ -8446,9 +8446,9 @@ test.tags("desktop")('add a line, edit it and "Save & New"', async () => {
         arch: `
             <form>
                 <field name="p">
-                    <tree>
+                    <list>
                         <field name="name" widget="char" class="do_not_remove_widget_char"/>
-                    </tree>
+                    </list>
                     <form>
                         <field name="name"/>
                     </form>
@@ -8494,9 +8494,9 @@ test.tags("desktop")(
             <form>
                 <field name="name"/>
                 <field name="p" context="{'default_name': name}" >
-                    <tree>
+                    <list>
                         <field name="name"/>
-                    </tree>
+                    </list>
                     <form>
                         <field name="name"/>
                     </form>
@@ -8527,7 +8527,7 @@ test("o2m add a line custom control create editable", async () => {
         arch: `
             <form>
                 <field name="p">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <control>
                             <create string="Add food" context="" />
                             <create string="Add pizza" context="{'default_name': 'pizza'}"/>
@@ -8536,7 +8536,7 @@ test("o2m add a line custom control create editable", async () => {
                             <create string="Add pasta" context="{'default_name': 'pasta'}"/>
                         </control>
                         <field name="name"/>
-                    </tree>
+                    </list>
                     <form>
                         <field name="name"/>
                     </form>
@@ -8583,7 +8583,7 @@ test("o2m add a line custom control create non-editable", async () => {
         arch: `
             <form>
                 <field name="p">
-                    <tree>
+                    <list>
                     <control>
                         <create string="Add food" context="" />
                         <create string="Add pizza" context="{'default_name': 'pizza'}" />
@@ -8592,7 +8592,7 @@ test("o2m add a line custom control create non-editable", async () => {
                         <create string="Add pasta" context="{'default_name': 'pasta'}" />
                     </control>
                     <field name="name"/>
-                </tree>
+                </list>
                 <form>
                     <field name="name"/>
                     </form>
@@ -8642,13 +8642,13 @@ test("o2m add an action button control", async () => {
         arch: `
             <form>
                 <field name="p">
-                    <tree>
+                    <list>
                         <control>
                             <create string="Create" context="{}" />
                             <button string="Action Button" name="do_something" class="btn-link" type="object" context="{'parent_id': parent.id}"/>
                         </control>
                         <field name="name"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
     });
@@ -8672,10 +8672,10 @@ test("o2m button with parent in context", async () => {
         arch: `
             <form>
                 <field name="turtles">
-                    <tree>
+                    <list>
                         <field name="display_name"/>
                         <button string="Action Button" name="test_button" type="object" context="{'parent_name': parent.display_name}"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
     });
@@ -8690,9 +8690,9 @@ test("o2m add a line custom control create align with handle", async () => {
         arch: `
             <form>
                 <field name="p">
-                    <tree>
+                    <list>
                         <field name="int_field" widget="handle"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
     });
@@ -8720,9 +8720,9 @@ test.tags("desktop")("one2many form view with action button", async () => {
     Partner._records[0].p = [2];
     PartnerType._views = {
         list: `
-            <tree>
+            <list>
                 <field name="name"/>
-            </tree>`,
+            </list>`,
     };
 
     await mountView({
@@ -8732,9 +8732,9 @@ test.tags("desktop")("one2many form view with action button", async () => {
         arch: `
             <form>
                 <field name="p">
-                    <tree>
+                    <list>
                         <field name="name"/>
-                    </tree>
+                    </list>
                     <form>
                         <button type="action" string="Set Timmy"/>
                         <field name="timmy"/>
@@ -8779,14 +8779,14 @@ test.tags("desktop")("onchange affecting inline unopened list view", async () =>
                         <field name="partner_ids">
                             <form>
                                 <field name="turtles">
-                                    <tree editable="bottom">
+                                    <list editable="bottom">
                                         <field name="name"/>
-                                    </tree>
+                                    </list>
                                 </field>
                             </form>
-                            <tree>
+                            <list>
                                 <field name="name"/>
-                            </tree>
+                            </list>
                         </field>
                     </group>
                 </sheet>
@@ -8837,10 +8837,10 @@ test("click on URL should not open the record", async () => {
         arch: `
             <form>
                 <field name="turtles">
-                    <tree>
+                    <list>
                         <field name="name" widget="email"/>
                         <field name="turtle_foo" widget="url"/>
-                    </tree>
+                    </list>
                     <form/>
                 </field>
             </form>`,
@@ -8870,9 +8870,9 @@ test.tags("desktop")("create and edit on m2o in o2m, and press ESCAPE", async ()
         arch: `
             <form>
                 <field name="turtles">
-                    <tree editable="top">
+                    <list editable="top">
                         <field name="turtle_trululu"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
     });
@@ -8914,9 +8914,9 @@ test("one2many add a line should not crash if orderedResIDs is not set", async (
                     <button name="post" type="object" string="Validate" class="oe_highlight"/>
                 </header>
                 <field name="turtles">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="turtle_foo"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
     });
@@ -8934,9 +8934,9 @@ test("one2many shortcut tab should not crash when there is no input widget", asy
         arch: `
             <form>
                 <field name="turtles">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="turtle_foo" widget="text"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -8972,12 +8972,12 @@ test("o2m add a line custom control create editable with 'tab'", async () => {
             <form>
                 <group>
                     <field name="turtles">
-                        <tree editable="bottom">
+                        <list editable="bottom">
                             <control>
                                 <create string="Add soft shell turtle" context="{'default_turtle_foo': 'soft'}"/>
                             </control>
                             <field name="turtle_foo"/>
-                            </tree>
+                            </list>
                     </field>
                 </group>
             </form>`,
@@ -9017,9 +9017,9 @@ test("one2many with onchange, required field, shortcut enter", async () => {
         arch: `
             <form>
                 <field name="turtles">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="turtle_foo" required="1"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
     });
@@ -9073,9 +9073,9 @@ test("edit a field with a slow onchange in one2many", async () => {
         arch: `
             <form>
                 <field name="turtles">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="turtle_foo"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
     });
@@ -9123,9 +9123,9 @@ test("no deadlock when leaving a one2many line with uncommitted changes", async 
         arch: `
             <form>
                 <field name="turtles">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="turtle_foo"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
     });
@@ -9161,10 +9161,10 @@ test("one2many with extra field from server not in form", async () => {
         arch: `
             <form>
                 <field name="p">
-                    <tree>
+                    <list>
                         <field name="datetime"/>
                         <field name="name"/>
-                    </tree>
+                    </list>
                     <form>
                         <field name="name"/>
                     </form>
@@ -9211,10 +9211,10 @@ test.tags("desktop")("one2many invisible depends on parent field", async () => {
                         <page string="Partner page">
                             <field name="bar"/>
                             <field name="p">
-                                <tree>
+                                <list>
                                     <field name="foo" column_invisible="parent.product_id"/>
                                     <field name="bar" column_invisible="not parent.bar"/>
-                                </tree>
+                                </list>
                             </field>
                         </page>
                     </notebook>
@@ -9249,10 +9249,10 @@ test.tags("desktop")("column_invisible attrs on a button in a one2many list", as
             <form>
                 <field name="product_id"/>
                 <field name="p">
-                    <tree>
+                    <list>
                         <field name="foo"/>
                         <button name="abc" string="Do it" class="some_button" column_invisible="not parent.product_id"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -9277,13 +9277,13 @@ test.tags("desktop")("column_invisible attrs on adjacent buttons", async () => {
                 <field name="product_id"/>
                 <field name="trululu"/>
                 <field name="p">
-                    <tree>
+                    <list>
                         <button name="abc1" string="Do it 1" class="some_button1"/>
                         <button name="abc2" string="Do it 2" class="some_button2" column_invisible="parent.product_id"/>
                         <field name="foo"/>
                         <button name="abc3" string="Do it 3" class="some_button3" column_invisible="parent.product_id"/>
                         <button name="abc4" string="Do it 4" class="some_button4" column_invisible="parent.trululu"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -9396,7 +9396,7 @@ test("one2many editable list: edit and click on add a line", async () => {
         arch: `
             <form>
                 <field name="turtles">
-                    <tree editable="bottom"><field name="turtle_int"/></tree>
+                    <list editable="bottom"><field name="turtle_int"/></list>
                 </field>
             </form>`,
         resId: 1,
@@ -9445,10 +9445,10 @@ test("many2manys inside a one2many are fetched in batch after onchange", async (
         arch: `
             <form>
                 <field name="turtles">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="turtle_foo"/>
                         <field name="partner_ids" widget="many2many_tags"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
     });
@@ -9494,10 +9494,10 @@ test("two one2many fields with same relation and _onChanges", async () => {
         arch: `
             <form>
                 <field name="turtles">
-                    <tree editable="bottom"><field name="name" required="1"/></tree>
+                    <list editable="bottom"><field name="name" required="1"/></list>
                 </field>
                 <field name="turtles2">
-                    <tree editable="bottom"><field name="name" required="1"/></tree>
+                    <list editable="bottom"><field name="name" required="1"/></list>
                 </field>
             </form>`,
     });
@@ -9541,10 +9541,10 @@ test("column widths are kept when adding first record in o2m", async () => {
         arch: `
             <form>
                 <field name="p">
-                    <tree editable="top">
+                    <list editable="top">
                         <field name="date"/>
                         <field name="foo"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
     });
@@ -9566,10 +9566,10 @@ test("column widths are kept when editing a record in o2m", async () => {
         arch: `
             <form>
                 <field name="p">
-                    <tree editable="top">
+                    <list editable="top">
                         <field name="date"/>
                         <field name="foo"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -9599,10 +9599,10 @@ test("column widths are kept when remove last record in o2m", async () => {
         arch: `
             <form>
                 <field name="p">
-                    <tree editable="top">
+                    <list editable="top">
                         <field name="date"/>
                         <field name="foo"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -9625,11 +9625,11 @@ test("column widths are correct after toggling optional fields", async () => {
         arch: `
             <form>
                 <field name="p">
-                    <tree editable="top">
+                    <list editable="top">
                         <field name="date" required="1"/>
                         <field name="foo"/>
                         <field name="int_field" optional="1"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
     });
@@ -9673,7 +9673,7 @@ test.tags("desktop")(
                 <form>
                     <field name="trululu"/>
                     <field name="p">
-                        <tree editable="top"><field name="product_id" required="1"/></tree>
+                        <list editable="top"><field name="product_id" required="1"/></list>
                     </field>
                 </form>`,
         });
@@ -9714,14 +9714,14 @@ test("one2many with many2many_tags in list and list in form with a limit", async
             <form>
                 <field name="bar"/>
                 <field name="p">
-                    <tree>
+                    <list>
                         <field name="turtles" widget="many2many_tags"/>
-                    </tree>
+                    </list>
                     <form>
                         <field name="turtles">
-                            <tree limit="2">
+                            <list limit="2">
                                 <field name="name"/>
-                            </tree>
+                            </list>
                         </field>
                     </form>
                 </field>
@@ -9753,14 +9753,14 @@ test("one2many with many2many_tags in list and list in form, and onchange", asyn
             <form>
                 <field name="bar"/>
                 <field name="p">
-                    <tree>
+                    <list>
                         <field name="turtles" widget="many2many_tags"/>
-                    </tree>
+                    </list>
                     <form>
                         <field name="turtles">
-                            <tree editable="bottom">
+                            <list editable="bottom">
                                 <field name="name"/>
-                            </tree>
+                            </list>
                         </field>
                     </form>
                 </field>
@@ -9817,14 +9817,14 @@ test("one2many with many2many_tags in list and list in form, and onchange (2)", 
             <form>
                 <field name="bar"/>
                 <field name="p">
-                    <tree>
+                    <list>
                         <field name="turtles" widget="many2many_tags"/>
-                    </tree>
+                    </list>
                     <form>
                         <field name="turtles">
-                            <tree editable="bottom">
+                            <list editable="bottom">
                                 <field name="turtle_foo" required="1"/>
-                            </tree>
+                            </list>
                         </field>
                     </form>
                 </field>
@@ -9863,10 +9863,10 @@ test("reorder one2many with many2many_tags in list and list in form", async () =
         form: `
             <form>
                 <field name="p">
-                    <tree editable="top">
+                    <list editable="top">
                         <field name="int_field" widget="handle"/>
                         <field name="name"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
     };
@@ -9876,10 +9876,10 @@ test("reorder one2many with many2many_tags in list and list in form", async () =
         arch: `
             <form>
                 <field name="p">
-                    <tree>
+                    <list>
                         <field name="name"/>
                         <field name="p" widget="many2many_tags"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -9942,10 +9942,10 @@ test("nested one2many, onchange, no command value", async () => {
         arch: `
             <form>
                 <field name="turtles">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="o2m"/>
                         <field name="turtle_bar"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
     });
@@ -9966,10 +9966,10 @@ test("edition in list containing widget with decoration", async () => {
         arch: `
             <form>
                 <field name="p">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="int_field"/>
                         <field name="color" widget="badge" decoration-warning="int_field == 9"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -10001,10 +10001,10 @@ test("reordering embedded one2many with handle widget starting with same sequenc
         arch: `
             <form>
                 <field name="turtles">
-                    <tree default_order="turtle_int">
+                    <list default_order="turtle_int">
                         <field name="turtle_int" widget="handle"/>
                         <field name="id"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -10072,12 +10072,12 @@ test("combine contexts on o2m field and create tags", async () => {
             <form>
                 <sheet>
                     <field name="turtles" context="{'default_turtle_foo': 'hard', 'default_turtle_bar': True}">
-                        <tree editable="bottom">
+                        <list editable="bottom">
                             <control>
                                 <create name="add_soft_shell_turtle" string="Add soft shell turtle" context="{'default_turtle_foo': 'soft', 'default_turtle_int': 2}"/>
                             </control>
                             <field name="turtle_foo"/>
-                        </tree>
+                        </list>
                     </field>
                 </sheet>
             </form>`,
@@ -10130,10 +10130,10 @@ test("x2many default_order multiple fields", async () => {
         arch: `
             <form>
                 <field name="p" >
-                    <tree default_order="int_field,id">
+                    <list default_order="int_field,id">
                         <field name="id"/>
                         <field name="int_field"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -10168,10 +10168,10 @@ test("x2many default_order multiple fields with limit", async () => {
         arch: `
             <form>
                 <field name="p" >
-                    <tree default_order="int_field,id" limit="4">
+                    <list default_order="int_field,id" limit="4">
                         <field name="id"/>
                         <field name="int_field"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -10186,12 +10186,12 @@ test("x2many default_order multiple fields with limit", async () => {
 
 test("one2many from a model that has been sorted", async () => {
     Partner._views = {
-        list: `<tree><field name="int_field"/></tree>`,
+        list: `<list><field name="int_field"/></list>`,
         search: `<search/>`,
         form: `
             <form>
                 <field name="turtles">
-                    <tree><field name="turtle_foo"/></tree>
+                    <list><field name="turtle_foo"/></list>
                 </field>
             </form>`,
     };
@@ -10229,9 +10229,9 @@ test("prevent the dialog in readonly x2many tree view with option no_open True",
             <form>
                 <sheet>
                     <field name="turtles">
-                        <tree editable="bottom" no_open="True">
+                        <list editable="bottom" no_open="True">
                             <field name="turtle_foo"/>
-                        </tree>
+                        </list>
                     </field>
                 </sheet>
             </form>`,
@@ -10259,10 +10259,10 @@ test("delete a record while adding another one in a multipage", async () => {
                 <sheet>
                     <group>
                         <field name="turtles">
-                            <tree editable="bottom" limit="1" decoration-muted="turtle_bar == False">
+                            <list editable="bottom" limit="1" decoration-muted="turtle_bar == False">
                                 <field name="turtle_foo"/>
                                 <field name="turtle_bar"/>
-                            </tree>
+                            </list>
                         </field>
                     </group>
                 </sheet>
@@ -10299,9 +10299,9 @@ test("one2many, onchange, edition and multipage...", async () => {
         arch: `
             <form>
                 <field name="turtles">
-                    <tree editable="bottom" limit="2">
+                    <list editable="bottom" limit="2">
                         <field name="turtle_foo"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -10349,10 +10349,10 @@ test("x2many multipage, onchange returning update commands with readonly field",
             <form>
                 <field name="foo"/>
                 <field name="turtles">
-                    <tree limit="1">
+                    <list limit="1">
                         <field name="name"/>
                         <field name="turtle_foo" readonly="1"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -10394,10 +10394,10 @@ test("x2many multipage, onchange returning update commands with readonly field (
             <form>
                 <field name="foo"/>
                 <field name="turtles">
-                    <tree limit="1">
+                    <list limit="1">
                         <field name="name" readonly="not context.get('some_key')"/>
                         <field name="turtle_foo" readonly="context.get('some_key')"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -10442,11 +10442,11 @@ test("x2many multipage, onchange returning update commands with readonly field (
             <form>
                 <field name="foo"/>
                 <field name="turtles">
-                    <tree limit="1">
+                    <list limit="1">
                         <field name="name" readonly="not turtle_bar"/>
                         <field name="turtle_foo" readonly="turtle_bar"/>
                         <field name="turtle_bar" column_invisible="1"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -10478,14 +10478,14 @@ test("onchange on unloaded record clearing posterious change", async () => {
                     <form>
                         <field name="trululu"/>
                         <field name="turtles">
-                            <tree editable="bottom">
+                            <list editable="bottom">
                                 <field name="name"/>
-                            </tree>
+                            </list>
                         </field>
                     </form>
-                    <tree>
+                    <list>
                         <field name="name"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 17,
@@ -10543,9 +10543,9 @@ test("quickly switch between pages in one2many list", async () => {
         arch: `
             <form>
                 <field name="turtles">
-                    <tree limit="1">
+                    <list limit="1">
                         <field name="name"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -10582,10 +10582,10 @@ test("one2many column visiblity depends on onchange of parent field", async () =
             <form>
                 <field name="bar"/>
                 <field name="p">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="foo"/>
                         <field name="int_field" column_invisible="not parent.bar"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -10608,10 +10608,10 @@ test.tags("desktop")("one2many column_invisible on view not inline", async () =>
     Partner._records[0].p = [2];
     Partner._views = {
         list: `
-            <tree>
+            <list>
                 <field name="foo" column_invisible="parent.product_id"/>
                 <field name="bar" column_invisible="not parent.bar"/>
-            </tree>`,
+            </list>`,
     };
 
     await mountView({
@@ -10655,10 +10655,10 @@ test.tags("desktop")(
         Partner._records[0].p = [2];
         Partner._views = {
             list: `
-                <tree editable="top">
+                <list editable="top">
                     <field name="foo" optional="show"/>
                     <field name="bar" optional="hide"/>
-                </tree>`,
+                </list>`,
         };
         await mountView({
             type: "form",
@@ -10729,10 +10729,10 @@ test("x2many list sorted by many2one", async () => {
         arch: `
             <form>
                 <field name="p">
-                    <tree>
+                    <list>
                         <field name="id"/>
                         <field name="trululu"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
     });
@@ -10762,10 +10762,10 @@ test("one2many with extra field from server not in (inline) form", async () => {
         arch: `
             <form>
                 <field name="p">
-                    <tree>
+                    <list>
                         <field name="datetime"/>
                         <field name="name"/>
-                    </tree>
+                    </list>
                     <form>
                         <field name="name"/>
                     </form>
@@ -10790,10 +10790,10 @@ test("one2many with extra X2many field from server not in inline form", async ()
         arch: `
             <form>
                 <field name="p">
-                    <tree>
+                    <list>
                         <field name="turtles"/>
                         <field name="name"/>
-                    </tree>
+                    </list>
                     <form>
                         <field name="name"/>
                     </form>
@@ -10829,9 +10829,9 @@ test("when Navigating to a one2many with tabs, the button add a line receives th
                     <notebook>
                         <page string="Partner page">
                             <field name="turtles">
-                                <tree editable="bottom">
+                                <list editable="bottom">
                                     <field name="turtle_foo"/>
-                                </tree>
+                                </list>
                             </field>
                         </page>
                     </notebook>
@@ -10865,10 +10865,10 @@ test("Navigate to a one2many with tab then tab again focus the next field", asyn
                     <notebook>
                         <page string="Partner page">
                             <field name="turtles">
-                                <tree editable="bottom">
+                                <list editable="bottom">
                                     <field name="turtle_foo"/>
                                     <field name="turtle_description"/>
-                                </tree>
+                                </list>
                             </field>
                         </page>
                     </notebook>
@@ -10911,10 +10911,10 @@ test("when Navigating to a one2many with tabs, not filling any field and hitting
                     <notebook>
                         <page string="Partner page">
                             <field name="turtles">
-                                <tree editable="bottom">
+                                <list editable="bottom">
                                     <field name="turtle_foo"/>
                                     <field name="turtle_description"/>
-                                </tree>
+                                </list>
                             </field>
                         </page>
                     </notebook>
@@ -10964,10 +10964,10 @@ test("when Navigating to a one2many with tabs, editing in a popup, the popup sho
                     <notebook>
                         <page string="Partner page">
                             <field name="turtles">
-                                <tree>
+                                <list>
                                     <field name="turtle_foo"/>
                                     <field name="turtle_description"/>
-                                </tree>
+                                </list>
                                 <form>
                                     <group>
                                         <field name="turtle_foo"/>
@@ -11021,10 +11021,10 @@ test.tags("desktop")(
             arch: `
                 <form>
                     <field name="turtles">
-                        <tree editable="top">
+                        <list editable="top">
                             <field name="turtle_foo"/>
                             <field name="turtle_trululu"/>
-                        </tree>
+                        </list>
                     </field>
                 </form>`,
             resId: 1,
@@ -11060,13 +11060,13 @@ test.tags("desktop")(
                 <form>
                     <field name="name"/>
                     <field name="p">
-                        <tree editable="bottom">
+                        <list editable="bottom">
                             <control>
                                 <create string="Custom 1" context="{'default_foo': '1'}"/>
                                 <create string="Custom 2" context="{'default_foo': '2'}"/>
                             </control>
                             <field name="foo"/>
-                        </tree>
+                        </list>
                     </field>
                     <field name="int_field"/>
                 </form>`,
@@ -11110,9 +11110,9 @@ test("be able to press a key on the keyboard when focusing a column header witho
         arch: `
             <form>
                 <field name="turtles">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="turtle_int" />
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -11134,10 +11134,10 @@ test("Navigate from an invalid but not dirty row", async () => {
         arch: /* xml */ `
             <form>
                 <field name="p">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="name" required="1" />
                         <field name="int_field" readonly="1" />
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -11201,14 +11201,14 @@ test.tags("desktop")("Check onchange with two consecutive one2one", async () => 
             <form string="Turtles">
                 <field string="Product" name="turtle_trululu"/>
                 <field readonly="1" string="Related field" name="product_ids">
-                    <tree>
+                    <list>
                         <field widget="many2many_tags" name="product_partner_ids"/>
-                    </tree>
+                    </list>
                 </field>
                 <field readonly="1" string="Second related field" name="user_ids">
-                    <tree>
+                    <list>
                         <field widget="many2many_tags" name="partner_ids"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -11241,13 +11241,13 @@ test("does not crash when you parse a tree arch containing another tree arch", a
         arch: `
             <form>
                 <field name="p">
-                    <tree>
+                    <list>
                         <field name="turtles">
-                            <tree>
+                            <list>
                                 <field name="turtle_foo"/>
-                            </tree>
+                            </list>
                         </field>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -11260,9 +11260,9 @@ test("open a one2many record containing a one2many", async () => {
         [["form", 1234]]: `
             <form>
                 <field name="turtles" >
-                    <tree>
+                    <list>
                         <field name="name" />
-                    </tree>
+                    </list>
                 </field>
             </form>`,
     };
@@ -11283,7 +11283,7 @@ test("open a one2many record containing a one2many", async () => {
         type: "form",
         arch: `<form>
             <field name="p" context="{ 'form_view_ref': 1234 }">
-                <tree><field name="name" /></tree>
+                <list><field name="name" /></list>
             </field>
         </form>`,
         resModel: "partner",
@@ -11310,9 +11310,9 @@ test("if there are less than 4 lines in a one2many, empty lines must be displaye
         arch: `
             <form>
                 <field name="p">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="name"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -11390,9 +11390,9 @@ test("toggle boolean in o2m with the formView in edition", async () => {
         arch: `
             <form>
                 <field name="turtles">
-                    <tree>
+                    <list>
                         <field name="turtle_bar" widget="boolean_toggle"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -11452,10 +11452,10 @@ test("create a new record with an x2m invisible", async () => {
         arch: `
             <form>
                 <field name="p" invisible="1">
-                    <tree>
+                    <list>
                         <field name="int_field"/>
                         <field name="trululu"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
     });
@@ -11495,10 +11495,10 @@ test("edit a record with an x2m invisible", async () => {
             <form>
                 <field name="foo"/>
                 <field name="turtles" invisible="1">
-                    <tree>
+                    <list>
                         <field name="turtle_foo"/>
                         <field name="turtle_int"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -11519,9 +11519,9 @@ test("can't select a record in a one2many", async () => {
         arch: `
             <form>
                 <field name="turtles">
-                    <tree>
+                    <list>
                         <field name="name"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -11537,10 +11537,10 @@ test("save a record after creating and editing a new invalid record in a one2man
         arch: `
             <form>
                 <field name="p">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="name" required="1"/>
                         <field name="int_field"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -11577,15 +11577,15 @@ test("nested one2manys, multi page, onchange", async () => {
             <form>
                 <field name="int_field"/>
                 <field name="p">
-                    <tree editable="bottom" limit="1" default_order="name">
+                    <list editable="bottom" limit="1" default_order="name">
                         <field name="name" />
                         <field name="int_field" />
                         <field name="turtles">
-                            <tree editable="bottom">
+                            <list editable="bottom">
                                 <field name="turtle_int"/>
-                            </tree>
+                            </list>
                         </field>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -11616,9 +11616,9 @@ test("multi page, command forget for record of second page", async () => {
                 <group>
                     <field name="int_field"/>
                     <field name="p">
-                        <tree limit="2">
+                        <list limit="2">
                             <field name="name"/>
-                        </tree>
+                        </list>
                     </field>
                 </group>
             </form>`,
@@ -11646,10 +11646,10 @@ test("active actions are passed to o2m field", async () => {
         arch: /* xml */ `
             <form>
                 <field name="turtles">
-                    <tree editable="bottom" create="false" delete="false">
+                    <list editable="bottom" create="false" delete="false">
                         <field name="name" />
                         <field name="turtle_foo" />
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -11679,9 +11679,9 @@ test("kanban one2many in opened view form", async () => {
         arch: /* xml */ `
             <form>
                 <field name="p">
-                    <tree>
+                    <list>
                         <field name="name"/>
-                    </tree>
+                    </list>
                     <form>
                         <field name="p">
                             <kanban class="o-custom-class" can_open="0">
@@ -11731,9 +11731,9 @@ test("kanban one2many in opened view form (with _view_ref)", async () => {
         arch: /* xml */ `
             <form>
                 <field name="p">
-                    <tree>
+                    <list>
                         <field name="name"/>
-                    </tree>
+                    </list>
                     <form>
                         <field name="p" mode="kanban" context="{ 'kanban_view_ref': 1234 }" />
                     </form>
@@ -11801,14 +11801,14 @@ test.tags("desktop")("list one2many in opened view form", async () => {
         arch: /* xml */ `
             <form>
                 <field name="p">
-                    <tree>
+                    <list>
                         <field name="name"/>
-                    </tree>
+                    </list>
                     <form>
                         <field name="p">
-                            <tree editable="bottom" class="o-custom-class">
+                            <list editable="bottom" class="o-custom-class">
                                 <field name="name"/>
-                            </tree>
+                            </list>
                         </field>
                     </form>
                 </field>
@@ -11831,9 +11831,9 @@ test.tags("desktop")("list one2many in opened view form", async () => {
 test.tags("desktop")("list one2many in opened view form (with _view_ref)", async () => {
     Partner._views = {
         [["list", 1234]]: /* xml */ `
-            <tree editable="bottom" class="o-custom-class">
+            <list editable="bottom" class="o-custom-class">
                 <field name="name"/>
-            </tree>
+            </list>
         `,
     };
     Partner._records[0].p = [1];
@@ -11843,9 +11843,9 @@ test.tags("desktop")("list one2many in opened view form (with _view_ref)", async
         arch: /* xml */ `
             <form>
                 <field name="p">
-                    <tree>
+                    <list>
                         <field name="name"/>
-                    </tree>
+                    </list>
                     <form>
                         <field name="p" mode="list" context="{ 'list_view_ref': 1234 }" />
                     </form>
@@ -11875,9 +11875,9 @@ test.tags("desktop")("one2many, form view dialog with custom footer", async () =
         arch: `
             <form>
                 <field name="p">
-                    <tree>
+                    <list>
                         <field name="name"/>
-                    </tree>
+                    </list>
                     <form>
                         <field name="name"/>
                         <footer>
@@ -11914,9 +11914,9 @@ test('Add a line, click on "Save & New" with an invalid form', async () => {
         arch: `
             <form>
                 <field name="p">
-                    <tree>
+                    <list>
                         <field name="name"/>
-                    </tree>
+                    </list>
                     <form>
                         <field name="name" required="1"/>
                     </form>
@@ -11963,10 +11963,10 @@ test("field in list but not in fetched form", async () => {
         arch: `
             <form>
                 <field name="o2m">
-                    <tree>
+                    <list>
                         <field name="name"/>
                         <field name="color" />
-                    </tree>
+                    </list>
                 </field>
             </form>`,
     });
@@ -12004,9 +12004,9 @@ test("pressing tab before an onchange is resolved", async () => {
         arch: `
             <form>
                 <field name="p">
-                    <tree editable="bottom" >
+                    <list editable="bottom" >
                         <field name="name"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -12036,14 +12036,14 @@ test("add a row to an x2many and ask canBeRemoved twice", async () => {
 
     const def = new Deferred();
     Partner._views = {
-        list: `<tree><field name="int_field"/></tree>`,
+        list: `<list><field name="int_field"/></list>`,
         search: `<search/>`,
         form: `
             <form>
                 <field name="p">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="name"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
     };
@@ -12122,9 +12122,9 @@ test("one2many: save a record before the onchange is complete in a form dialog",
         arch: `
             <form>
                 <field name="turtles">
-                    <tree>
+                    <list>
                         <field name="name" required="1"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
     });
@@ -12171,10 +12171,10 @@ test("onchange create a record in an invisible x2many", async () => {
             <form>
                 <field name="foo"/>
                 <field name="p">
-                    <tree>
+                    <list>
                         <field name="name" required="1"/>
                         <field name="p" invisible="1"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
     });
@@ -12278,15 +12278,15 @@ test("forget command for nested x2manys in form, not in list", async () => {
                 <group>
                     <field name="int_field"/>
                     <field name="p">
-                        <tree>
+                        <list>
                             <field name="foo"/>
-                        </tree>
+                        </list>
                         <form>
                             <field name="turtles">
-                                <tree editable="bottom">
+                                <list editable="bottom">
                                     <field name="turtle_foo"/>
                                     <field name="partner_ids" widget="many2many_tags"/>
-                                </tree>
+                                </list>
                             </field>
                         </form>
                     </field>
@@ -12320,9 +12320,9 @@ test("modifiers based on x2many", async () => {
         arch: `
             <form>
                 <field name="p" >
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="foo"/>
-                    </tree>
+                    </list>
                 </field>
                 <field name="name" readonly="p"/>
                 <field name="int_field" required="p"/>
@@ -12368,9 +12368,9 @@ test.tags("desktop")("add record in nested x2many with context depending on pare
             <form>
                 <field name="int_field"/>
                 <field name="p">
-                    <tree editable="top">
+                    <list editable="top">
                         <field name="turtles" widget="many2many_tags" context="{'x': parent.int_field, 'y': 2}"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -12399,10 +12399,10 @@ test("one2many with default_order on id, but id not in view", async () => {
         arch: `
             <form>
                 <field name="turtles">
-                    <tree editable="top" default_order="turtle_int,id">
+                    <list editable="top" default_order="turtle_int,id">
                         <field name="turtle_int" widget="handle"/>
                         <field name="turtle_foo"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -12432,9 +12432,9 @@ test("one2many causes an onchange on the parent which fails", async () => {
         arch: `
             <form>
                 <field name="turtles">
-                    <tree editable="top">
+                    <list editable="top">
                         <field name="turtle_foo"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -12480,9 +12480,9 @@ test.tags("desktop")("one2many custom which can be edited in dialog or on the li
         arch: `
             <form>
                 <field name="turtles" widget="custom">
-                    <tree editable="top">
+                    <list editable="top">
                         <field name="turtle_foo"/>
-                    </tree>
+                    </list>
                     <form>
                         <field name="name" />
                     </form>
@@ -12591,7 +12591,7 @@ test("onchange on x2many returning an update command with only readonly fields",
             <form>
                 <field name="bar"/>
                 <field name="turtles">
-                    <tree><field name="name"/></tree>
+                    <list><field name="name"/></list>
                 </field>
             </form>`,
         resId: 1,
@@ -12631,7 +12631,7 @@ test("onchange on x2many returning a create command with only readonly fields", 
             <form>
                 <field name="bar"/>
                 <field name="turtles">
-                    <tree><field name="name"/></tree>
+                    <list><field name="name"/></list>
                 </field>
             </form>`,
         resId: 1,
@@ -12681,9 +12681,9 @@ test("onchange on x2many add and delete x2m record, returning to initial state",
         arch: `
             <form>
                 <field name="turtles">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="name"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,

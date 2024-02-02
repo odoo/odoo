@@ -460,5 +460,5 @@ class Company(models.Model):
                 'active_test': False,
                 'default_parent_id': self.id,
             },
-            'views': [[False, 'tree'], [False, 'kanban'], [False, 'form']],
+            'views': [[False, 'list'], [False, 'kanban'], [False, 'form']],
         }

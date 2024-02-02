@@ -30,7 +30,7 @@
         </field>
     </record>
     <record id="hr_expense_tree_view_inherit_sale_expense" model="ir.ui.view">
-        <field name="name">hr.expense.tree.inherit.sale.expense</field>
+        <field name="name">hr.expense.list.inherit.sale.expense</field>
         <field name="model">hr.expense</field>
         <field name="inherit_id" ref="hr_expense.view_expenses_tree"/>
         <field name="arch" type="xml">
@@ -58,7 +58,7 @@
         <field name="model">hr.expense.sheet</field>
         <field name="inherit_id" ref="hr_expense.view_hr_expense_sheet_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='expense_line_ids']/tree/field[@name='vendor_id']" position="after">
+            <xpath expr="//field[@name='expense_line_ids']/list/field[@name='vendor_id']" position="after">
                 <field name="sale_order_id" invisible="not can_be_reinvoiced" readonly="state in ['done', 'refused']" optional="show" options="{'no_create_edit': True, 'no_create': True, 'no_open': True}" context="{'sale_show_partner_name': True, 'sale_expense_all_order': True}"/>
                 <field name="can_be_reinvoiced" column_invisible="True"/>
             </xpath>
@@ -68,7 +68,7 @@
     <record id="hr_expense_action_from_sale_order" model="ir.actions.act_window">
         <field name="name">Expenses</field>
         <field name="res_model">hr.expense</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="domain">[('sale_order_id', '=', active_id)]</field>
         <field name="context">{'default_sale_order_id': active_id}</field>
     </record>

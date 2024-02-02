@@ -330,7 +330,7 @@ test("BinaryField in list view (formatter)", async () => {
     await mountView({
         resModel: "res.partner",
         type: "list",
-        arch: `<tree><field name="document"/></tree>`,
+        arch: `<list><field name="document"/></list>`,
     });
     expect(`.o_data_row .o_data_cell`).toHaveText("93.43 Bytes");
 });
@@ -341,10 +341,10 @@ test("BinaryField in list view with filename", async () => {
         resModel: "res.partner",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <field name="document" filename="foo" widget="binary"/>
                 <field name="foo"/>
-            </tree>
+            </list>
         `,
     });
     expect(`.o_data_row .o_data_cell`).toHaveText("coucou.txt");

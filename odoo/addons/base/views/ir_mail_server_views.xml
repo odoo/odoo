@@ -72,14 +72,14 @@
         <record model="ir.ui.view" id="ir_mail_server_list">
             <field name="model">ir.mail_server</field>
             <field name="arch" type="xml">
-                <tree string="Outgoing Mail Servers">
+                <list string="Outgoing Mail Servers">
                     <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="smtp_host"/>
                     <field name="smtp_user"/>
                     <field name="smtp_encryption"/>
                     <field name="from_filter" optional="hide"/>
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -104,7 +104,7 @@
         <record model="ir.actions.act_window" id="action_ir_mail_server_list">
             <field name="name">Outgoing Mail Servers</field>
             <field name="res_model">ir.mail_server</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">list,form</field>
             <field name="view_id" ref="ir_mail_server_list" />
             <field name="search_view_id" ref="view_ir_mail_server_search"/>
         </record>

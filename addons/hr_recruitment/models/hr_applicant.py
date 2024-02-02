@@ -532,9 +532,9 @@ class Applicant(models.Model):
                 'default_res_id': self.ids[0],
                 'show_partner_name': 1,
             },
-            'view_mode': 'tree,form',
+            'view_mode': 'list,form',
             'views': [
-                (self.env.ref('hr_recruitment.ir_attachment_hr_recruitment_list_view').id, 'tree'),
+                (self.env.ref('hr_recruitment.ir_attachment_hr_recruitment_list_view').id, 'list'),
                 (False, 'form'),
             ],
             'search_view_id': self.env.ref('hr_recruitment.ir_attachment_view_search_inherit_hr_recruitment').ids,
@@ -551,7 +551,7 @@ class Applicant(models.Model):
             'type': 'ir.actions.act_window',
             'name': _('Job Applications'),
             'res_model': self._name,
-            'view_mode': 'tree,kanban,form,pivot,graph,calendar,activity',
+            'view_mode': 'list,kanban,form,pivot,graph,calendar,activity',
             'domain': [('id', 'in', other_applicants.ids)],
             'context': {
                 'active_test': False,

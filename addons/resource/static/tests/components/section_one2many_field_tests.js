@@ -57,11 +57,11 @@ QUnit.module("SectionOneToManyField", (hooks) => {
             arch: `
                 <form>
                     <field name="lines" widget="section_one2many">
-                        <tree>
+                        <list>
                             <field name="display_type" column_invisible="1" />
                             <field name="title" />
                             <field name="int" />
-                        </tree>
+                        </list>
                     </field>
                 </form>
             `,
