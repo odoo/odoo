@@ -21,13 +21,13 @@
                     <filter string="Starred Tasks" name="starred_tasks" domain="[('priority', '=', '1')]"/>
                     <separator groups="project.group_project_task_dependencies"/>
                     <filter string="Blocked" name="blocked" domain="[('state', '=', '04_waiting_normal')]" groups="project.group_project_task_dependencies"/>
-                    <filter string="Blocking" name="blocking" domain="[('state', 'in', ['01_in_progress', '02_changes_requested', '03_approved', '04_waiting_normal']), ('dependent_ids', '!=', False)]" groups="project.group_project_task_dependencies"/>
+                    <filter string="Blocking" name="blocking" domain="[('is_closed', '=', False), ('dependent_ids', '!=', False)]" groups="project.group_project_task_dependencies"/>
                     <separator/>
                     <filter string="Last Stage Update" name="date_last_stage_update" date="date_last_stage_update"/>
                     <separator/>
-                    <filter string="Open Tasks" name="open_tasks" domain="[('state', 'in', ['01_in_progress', '02_changes_requested', '03_approved', '04_waiting_normal'])]"/>
-                    <filter string="Closed Tasks" name="closed_tasks" domain="[('state', 'in', ['1_done','1_canceled'])]"/>
-                    <filter string="Closed On" name="closed_on" domain="[('state', 'in', ['1_done','1_canceled'])]" date="date_last_stage_update"/>
+                    <filter string="Open Tasks" name="open_tasks" domain="[('is_closed', '=', False)]"/>
+                    <filter string="Closed Tasks" name="closed_tasks" domain="[('is_closed', '=', True)]"/>
+                    <filter string="Closed On" name="closed_on" domain="[('is_closed', '=', True)]" date="date_last_stage_update"/>
                     <separator/>
                     <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                     <group expand="0" string="Group By">
@@ -290,6 +290,7 @@
                     <field name="parent_id" invisible="1"/>
                     <field name="company_id" invisible="1"/>
                     <field name="project_id" invisible="1"/>
+                    <field name="is_closed" invisible="1"/>
                     <field name="html_field_history_metadata" invisible="1"/>
                     <header>
                         <field name="stage_id" widget="statusbar_duration" options="{'clickable': '1', 'fold_field': 'fold'}" invisible="not project_id and not stage_id"/>
@@ -1049,7 +1050,7 @@
             <field name="name">Overpassed Tasks</field>
             <field name="res_model">project.task</field>
             <field name="view_mode">tree,form,calendar,graph,kanban</field>
-            <field name="domain">[('state', 'in', ['01_in_progress', '02_changes_requested', '03_approved', '04_waiting_normal']), ('date_deadline','&lt;',time.strftime('%Y-%m-%d')), ('project_id', '!=', False), ('display_in_project', '=', True)]</field>
+            <field name="domain">[('is_closed', '=', False), ('date_deadline','&lt;',time.strftime('%Y-%m-%d')), ('project_id', '!=', False), ('display_in_project', '=', True)]</field>
             <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_task_search_form"/>
         </record>

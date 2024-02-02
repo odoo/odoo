@@ -43,6 +43,7 @@ class ReportProjectTaskUser(models.Model):
         ('1_canceled', 'Cancelled'),
         ('02_changes_requested', 'Changes Requested'),
     ], string='State', readonly=True)
+    is_closed = fields.Boolean(string='Closed state', readonly=True)
     company_id = fields.Many2one('res.company', string='Company', readonly=True)
     partner_id = fields.Many2one('res.partner', string='Customer', readonly=True)
     stage_id = fields.Many2one('project.task.type', string='Stage', readonly=True)
@@ -82,6 +83,7 @@ class ReportProjectTaskUser(models.Model):
                 t.stage_id,
                 t.state,
                 t.milestone_id,
+                CASE WHEN t.state IN ('1_done', '1_canceled') THEN True ELSE False END AS is_closed,
                 CASE WHEN pm.id IS NOT NULL THEN true ELSE false END as has_late_and_unreached_milestone,
                 t.description,
                 NULLIF(t.rating_last_value, 0) as rating_last_value,
