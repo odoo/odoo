@@ -584,6 +584,28 @@ class TestFormatLang(TransactionCase):
         # If we have a 'dp' and 'currency_obj', we use the decimal precision of 'dp' and the format of 'currency_obj'.
         self.assertEqual(misc.formatLang(self.env, 100, dp=decimal_precision.name, currency_obj=currency_object), '100.000%sfL' % u'\N{NO-BREAK SPACE}')
 
+    def test_rounding_method(self):
+        self.assertEqual(misc.formatLang(self.env, 100.205), '100.20')  # Default is 'HALF-EVEN'
+        self.assertEqual(misc.formatLang(self.env, 100.215), '100.22')  # Default is 'HALF-EVEN'
+
+        self.assertEqual(misc.formatLang(self.env, 100.205, rounding_method='HALF-UP'), '100.21')
+        self.assertEqual(misc.formatLang(self.env, 100.215, rounding_method='HALF-UP'), '100.22')
+
+        self.assertEqual(misc.formatLang(self.env, 100.205, rounding_method='HALF-DOWN'), '100.20')
+        self.assertEqual(misc.formatLang(self.env, 100.215, rounding_method='HALF-DOWN'), '100.21')
+
+    def test_rounding_unit(self):
+        self.assertEqual(misc.formatLang(self.env, 1000000.00), '1,000,000.00')
+        self.assertEqual(misc.formatLang(self.env, 1000000.00, rounding_unit='units'), '1,000,000')
+        self.assertEqual(misc.formatLang(self.env, 1000000.00, rounding_unit='thousands'), '1,000')
+        self.assertEqual(misc.formatLang(self.env, 1000000.00, rounding_unit='lakhs'), '10')
+        self.assertEqual(misc.formatLang(self.env, 1000000.00, rounding_unit="millions"), '1')
+
+    def test_rounding_method_and_rounding_unit(self):
+        self.assertEqual(misc.formatLang(self.env, 1822060000, rounding_method='HALF-UP', rounding_unit='lakhs'), '18,221')
+        self.assertEqual(misc.formatLang(self.env, 1822050000, rounding_method='HALF-UP', rounding_unit='lakhs'), '18,221')
+        self.assertEqual(misc.formatLang(self.env, 1822049900, rounding_method='HALF-UP', rounding_unit='lakhs'), '18,220')
+
 
 class TestUrlValidate(BaseCase):
     def test_url_validate(self):
