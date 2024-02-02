@@ -20,29 +20,6 @@ class HrLeaveType(models.Model):
 class HrLeave(models.Model):
     _inherit = 'hr.leave'
 
-    def _compute_resource_calendar_id(self):
-        super()._compute_resource_calendar_id()
-        for leave in self.filtered(lambda l: l.employee_id):
-            # We use the request dates to find the contracts, because date_from
-            # and date_to are not set yet at this point. Since these dates are
-            # used to get the contracts for which these leaves apply and
-            # contract start- and end-dates are just dates (and not datetimes)
-            # these dates are comparable.
-            if leave.employee_id:
-                contracts = self.env['hr.contract'].search([
-                    '|', ('state', 'in', ['open', 'close']),
-                         '&', ('state', '=', 'draft'),
-                              ('kanban_state', '=', 'done'),
-                    ('employee_id', '=', leave.employee_id.id),
-                    ('date_start', '<=', leave.request_date_to),
-                    '|', ('date_end', '=', False),
-                         ('date_end', '>=', leave.request_date_from),
-                ])
-                if contracts:
-                    # If there are more than one contract they should all have the
-                    # same calendar, otherwise a constraint is violated.
-                    leave.resource_calendar_id = contracts[:1].resource_calendar_id
-
     def _prepare_resource_leave_vals(self):
         vals = super(HrLeave, self)._prepare_resource_leave_vals()
         vals['work_entry_type_id'] = self.holiday_status_id.work_entry_type_id.id
