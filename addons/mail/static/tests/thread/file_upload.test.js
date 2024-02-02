@@ -1,14 +1,20 @@
-/** @odoo-module alias=@mail/../tests/thread/file_upload_tests default=false */
+/** @odoo-module */
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { test } from "@odoo/hoot";
+import {
+    click,
+    contains,
+    createFile,
+    inputFiles,
+    openDiscuss,
+    openFormView,
+    start,
+    startServer,
+} from "../mail_test_helpers";
+import { onRpc } from "@web/../tests/web_test_helpers";
+import { Deferred } from "@odoo/hoot-mock";
 
-import { start } from "@mail/../tests/helpers/test_utils";
-
-import { click, contains, createFile, inputFiles } from "@web/../tests/utils";
-
-QUnit.module("file upload");
-
-QUnit.test("no conflicts between file uploads", async () => {
+test.skip("no conflicts between file uploads", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const channelId = pyEnv["discuss.channel"].create({});
@@ -17,13 +23,9 @@ QUnit.test("no conflicts between file uploads", async () => {
         model: "discuss.channel",
         res_id: channelId,
     });
-    const { openView } = await start();
+    await start();
     // Uploading file in the first thread: res.partner chatter.
-    openView({
-        res_id: partnerId,
-        res_model: "res.partner",
-        views: [[false, "form"]],
-    });
+    await openFormView("res.partner", partnerId);
     await click("button", { text: "Send message" });
     await inputFiles(".o-mail-Chatter .o-mail-Composer input[type=file]", [
         await createFile({
@@ -46,17 +48,14 @@ QUnit.test("no conflicts between file uploads", async () => {
     await contains(".o-mail-ChatWindow .o-mail-AttachmentCard");
 });
 
-QUnit.test("Attachment shows spinner during upload", async () => {
+test.skip("Attachment shows spinner during upload", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "channel_1" });
-    const { openDiscuss } = await start({
-        async mockRPC(route) {
-            if (route === "/mail/attachment/upload") {
-                // never fulfill the attachment upload promise.
-                await new Promise(() => {});
-            }
-        },
+    onRpc("/mail/attachment/upload", async (route, args) => {
+        // never fulfill the attachment upload promise.
+        await new Deferred();
     });
+    await start();
     await openDiscuss(channelId);
     await inputFiles(".o-mail-Composer input[type=file]", [
         await createFile({

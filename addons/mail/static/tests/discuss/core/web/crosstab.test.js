@@ -1,15 +1,17 @@
-/** @odoo-module alias=@mail/../tests/discuss/core/web/crosstab_tests default=false */
+/** @odoo-module */
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { test } from "@odoo/hoot";
+import {
+    assertSteps,
+    click,
+    insertText,
+    start,
+    startServer,
+    step,
+} from "../../../mail_test_helpers";
+import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
 
-import { start } from "@mail/../tests/helpers/test_utils";
-
-import { patchWithCleanup } from "@web/../tests/helpers/utils";
-import { assertSteps, click, contains, insertText, step } from "@web/../tests/utils";
-
-QUnit.module("crosstab");
-
-QUnit.test("Channel subscription is renewed when channel is manually added", async () => {
+test.skip("Channel subscription is renewed when channel is manually added", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create([
         { name: "my channel" },

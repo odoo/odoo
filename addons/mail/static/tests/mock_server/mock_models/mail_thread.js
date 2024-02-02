@@ -432,4 +432,64 @@ export class MailThread extends models.ServerModel {
     _trackSubtype(initialFieldValuesByRecordId) {
         return false;
     }
+
+    _get_mail_thread_data(model, id, request_list) {
+        const res = {
+            hasWriteAccess: true, // mimic user with write access by default
+            hasReadAccess: true,
+        };
+        const thread = this.env[model].search_read([["id", "=", id]])[0];
+        if (!thread) {
+            res["hasReadAccess"] = false;
+            return res;
+        }
+        res["canPostOnReadonly"] = model === "discuss.channel"; // model that have attr _mail_post_access='read'
+        if (request_list.includes("activities")) {
+            const activities = this.env["mail.activity"].search_read([
+                ["id", "in", thread.activity_ids || []],
+            ]);
+            res["activities"] = this.env["mail.activity"].activity_format(
+                activities.map((activity) => activity.id)
+            );
+        }
+        if (request_list.includes("attachments")) {
+            const attachments = this.env["ir.attachment"].search_read([
+                ["res_id", "=", thread.id],
+                ["res_model", "=", model],
+            ]); // order not done for simplicity
+            res["attachments"] = this.env["ir.attachment"]._attachment_format(
+                attachments.map((attachment) => attachment.id)
+            );
+            // Specific implementation of mail.thread.main.attachment
+            if (this.env[model]._fields.message_main_attachment_id) {
+                res["mainAttachment"] = thread.message_main_attachment_id
+                    ? { id: thread.message_main_attachment_id[0] }
+                    : false;
+            }
+        }
+        if (request_list.includes("followers")) {
+            const domain = [
+                ["res_id", "=", thread.id],
+                ["res_model", "=", model],
+            ];
+            res["followersCount"] = (thread.message_follower_ids || []).length;
+            const selfFollower = this.env["mail.followers"].search_read(
+                domain.concat([["partner_id", "=", constants.PARTNER_ID]])
+            )[0];
+            res["selfFollower"] = selfFollower
+                ? this.env["mail.followers"]._formatForChatter(selfFollower.id)[0]
+                : false;
+            res["followers"] = this.message_get_followers(model, [id]);
+            res["recipientsCount"] = (thread.message_follower_ids || []).length - 1;
+            res["recipients"] = this.message_get_followers(model, [id], undefined, 100, {
+                filter_recipients: true,
+            });
+        }
+        if (request_list.includes("suggestedRecipients")) {
+            res["suggestedRecipients"] = this._messageGetSuggestedRecipients(model, [thread.id])[
+                id
+            ];
+        }
+        return res;
+    }
 }

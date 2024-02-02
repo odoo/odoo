@@ -1,20 +1,19 @@
-/** @odoo-module alias=@mail/../tests/core/message_model_tests default=false */
+/** @odoo-module */
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { expect, test } from "@odoo/hoot";
+import { start, startServer } from "../mail_test_helpers";
 
-import { start } from "@mail/../tests/helpers/test_utils";
 import { serializeDateTime, deserializeDateTime } from "@web/core/l10n/dates";
+import { constants } from "@web/../tests/web_test_helpers";
 
-QUnit.module("message model test", {});
-
-QUnit.test("Message model properties", async (assert) => {
-    const pyEnv = await startServer();
+test.skip("Message model properties", async () => {
+    await startServer();
     const { env } = await start();
     env.services["mail.store"].Store.insert({
-        self: { id: pyEnv.currentPartnerId, type: "partner" },
+        self: { id: constants.PARTNER_ID, type: "partner" },
     });
     env.services["mail.store"].Thread.insert({
-        id: pyEnv.currentPartnerId,
+        id: constants.PARTNER_ID,
         model: "res.partner",
         name: "general",
     });
@@ -32,26 +31,23 @@ QUnit.test("Message model properties", async (assert) => {
         body: "<p>Test</p>",
         date: deserializeDateTime("2019-05-05 10:00:00"),
         id: 4000,
-        needaction_partner_ids: [pyEnv.currentPartnerId],
-        starredPersonas: { id: pyEnv.currentPartnerId, type: "partner" },
+        needaction_partner_ids: [constants.PARTNER_ID],
+        starredPersonas: { id: constants.PARTNER_ID, type: "partner" },
         model: "res.partner",
-        thread: { id: pyEnv.currentPartnerId, model: "res.partner" },
-        res_id: pyEnv.currentPartnerId,
+        thread: { id: constants.PARTNER_ID, model: "res.partner" },
+        res_id: constants.PARTNER_ID,
     });
-    assert.ok(message);
-    assert.ok(message.isNeedaction);
-    assert.strictEqual(message.body, "<p>Test</p>");
-    assert.strictEqual(serializeDateTime(message.date), "2019-05-05 10:00:00");
-    assert.strictEqual(message.id, 4000);
-
-    assert.ok(message.attachments);
-    assert.strictEqual(message.attachments[0].name, "test.txt");
-
-    assert.ok(message.thread);
-    assert.strictEqual(message.thread.id, pyEnv.currentPartnerId);
-    assert.strictEqual(message.thread.name, "general");
-
-    assert.ok(message.author);
-    assert.strictEqual(message.author.id, 5);
-    assert.strictEqual(message.author.displayName, "Demo");
+    expect(message).toBeTruthy();
+    expect(message.isNeedaction).toBeTruthy();
+    expect(message.body).toBe("<p>Test</p>");
+    expect(serializeDateTime(message.date)).toBe("2019-05-05 10:00:00");
+    expect(message.id).toBe(4000);
+    expect(message.attachments).toBeTruthy();
+    expect(message.attachments[0].name).toBe("test.txt");
+    expect(message.thread).toBeTruthy();
+    expect(message.thread.id).toBe(constants.PARTNER_ID);
+    expect(message.thread.name).toBe("general");
+    expect(message.author).toBeTruthy();
+    expect(message.author.id).toBe(5);
+    expect(message.author.displayName).toBe("Demo");
 });

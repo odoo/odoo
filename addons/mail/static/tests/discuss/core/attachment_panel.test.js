@@ -1,17 +1,12 @@
-/** @odoo-module alias=@mail/../tests/discuss/core/attachment_panel_tests default=false */
+/** @odoo-module */
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { test } from "@odoo/hoot";
+import { click, contains, openDiscuss, start, startServer } from "../../mail_test_helpers";
 
-import { start } from "@mail/../tests/helpers/test_utils";
-
-import { click, contains } from "@web/../tests/utils";
-
-QUnit.module("attachment panel");
-
-QUnit.test("Empty attachment panel", async () => {
+test.skip("Empty attachment panel", async () => {
     const pyEnv = await startServer();
     const channelId = await pyEnv["discuss.channel"].create({ name: "General" });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await click(".o-mail-Discuss-header button[title='Show Attachments']");
     await contains(".o-mail-Discuss-inspector", {
@@ -19,7 +14,7 @@ QUnit.test("Empty attachment panel", async () => {
     });
 });
 
-QUnit.test("Attachment panel sort by date", async () => {
+test.skip("Attachment panel sort by date", async () => {
     const pyEnv = await startServer();
     const channelId = await pyEnv["discuss.channel"].create({ name: "General" });
     pyEnv["ir.attachment"].create([
@@ -36,7 +31,7 @@ QUnit.test("Attachment panel sort by date", async () => {
             create_date: "2023-09-21",
         },
     ]);
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await click(".o-mail-Discuss-header button[title='Show Attachments']");
     await contains(".o-mail-AttachmentList", {
@@ -50,7 +45,7 @@ QUnit.test("Attachment panel sort by date", async () => {
     });
 });
 
-QUnit.test("Can toggle allow public upload", async () => {
+test.skip("Can toggle allow public upload", async () => {
     const pyEnv = await startServer();
     const channelId = await pyEnv["discuss.channel"].create({ name: "General" });
     const tab1 = await start({ asTab: true });

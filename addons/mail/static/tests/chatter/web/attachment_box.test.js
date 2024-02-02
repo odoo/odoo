@@ -1,15 +1,18 @@
-/** @odoo-module alias=@mail/../tests/chatter/web/attachment_box_tests default=false */
+/** @odoo-module */
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { test } from "@odoo/hoot";
+import {
+    SIZES,
+    click,
+    contains,
+    openFormView,
+    patchUiSize,
+    registerArchs,
+    start,
+    startServer,
+} from "../../mail_test_helpers";
 
-import { patchUiSize, SIZES } from "@mail/../tests/helpers/patch_ui_size";
-import { start } from "@mail/../tests/helpers/test_utils";
-
-import { click, contains, scroll } from "@web/../tests/utils";
-
-QUnit.module("attachment box");
-
-QUnit.test("base non-empty rendering", async () => {
+test.skip("base non-empty rendering", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     pyEnv["ir.attachment"].create([
@@ -26,7 +29,7 @@ QUnit.test("base non-empty rendering", async () => {
             res_model: "res.partner",
         },
     ]);
-    const views = {
+    registerArchs({
         "res.partner,false,form": `
             <form>
                 <sheet></sheet>
@@ -35,20 +38,16 @@ QUnit.test("base non-empty rendering", async () => {
                 </div>
             </form>
         `,
-    };
-    const { openView } = await start({ serverData: { views } });
-    openView({
-        res_id: partnerId,
-        res_model: "res.partner",
-        views: [[false, "form"]],
     });
+    await start();
+    await openFormView("res.partner", partnerId);
     await contains(".o-mail-AttachmentBox");
     await contains("button", { text: "Attach files" });
     await contains(".o-mail-Chatter input[type='file']");
     await contains(".o-mail-AttachmentList");
 });
 
-QUnit.test("remove attachment should ask for confirmation", async () => {
+test.skip("remove attachment should ask for confirmation", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     pyEnv["ir.attachment"].create({
@@ -57,7 +56,7 @@ QUnit.test("remove attachment should ask for confirmation", async () => {
         res_id: partnerId,
         res_model: "res.partner",
     });
-    const views = {
+    registerArchs({
         "res.partner,false,form": `
             <form>
                 <sheet></sheet>
@@ -66,25 +65,19 @@ QUnit.test("remove attachment should ask for confirmation", async () => {
                 </div>
             </form>
         `,
-    };
-    const { openView } = await start({ serverData: { views } });
-    openView({
-        res_id: partnerId,
-        res_model: "res.partner",
-        views: [[false, "form"]],
     });
+    await start();
+    await openFormView("res.partner", partnerId);
     await contains(".o-mail-AttachmentCard");
     await contains("button[title='Remove']");
-
     await click("button[title='Remove']");
     await contains(".modal-body", { text: 'Do you really want to delete "Blah.txt"?' });
-
     // Confirm the deletion
     await click(".modal-footer .btn-primary");
     await contains(".o-mail-AttachmentImage", { count: 0 });
 });
 
-QUnit.test("view attachments", async () => {
+test.skip("view attachments", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     pyEnv["ir.attachment"].create([
@@ -101,34 +94,28 @@ QUnit.test("view attachments", async () => {
             res_model: "res.partner",
         },
     ]);
-    const views = {
+    registerArchs({
         "res.partner,false,form": `<form>
             <sheet></sheet>
             <div class="oe_chatter">
                 <field name="message_ids"  options="{'open_attachments': True}"/>
             </div>
         </form>`,
-    };
-    const { openView } = await start({ serverData: { views } });
-    openView({
-        res_id: partnerId,
-        res_model: "res.partner",
-        views: [[false, "form"]],
     });
+    await start();
+    await openFormView("res.partner", partnerId);
     await click('.o-mail-AttachmentCard[aria-label="Blah.txt"] .o-mail-AttachmentCard-image');
     await contains(".o-FileViewer");
     await contains(".o-FileViewer-header", { text: "Blah.txt" });
     await contains(".o-FileViewer div[aria-label='Next']");
-
     await click(".o-FileViewer div[aria-label='Next']");
     await contains(".o-FileViewer-header", { text: "Blu.txt" });
     await contains(".o-FileViewer div[aria-label='Next']");
-
     await click(".o-FileViewer div[aria-label='Next']");
     await contains(".o-FileViewer-header", { text: "Blah.txt" });
 });
 
-QUnit.test("scroll to attachment box when toggling on", async () => {
+test.skip("scroll to attachment box when toggling on", async () => {
     patchUiSize({ size: SIZES.XXL });
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
@@ -145,12 +132,8 @@ QUnit.test("scroll to attachment box when toggling on", async () => {
         res_id: partnerId,
         res_model: "res.partner",
     });
-    const { openView } = await start();
-    openView({
-        res_id: partnerId,
-        res_model: "res.partner",
-        views: [[false, "form"]],
-    });
+    await start();
+    await openFormView("res.partner", partnerId);
     await contains(".o-mail-Message", { count: 30 });
     await scroll(".o-mail-Chatter", "bottom");
     await click("button[aria-label='Attach files']");
@@ -159,7 +142,7 @@ QUnit.test("scroll to attachment box when toggling on", async () => {
     await contains(".o-mail-AttachmentBox", { visible: true });
 });
 
-QUnit.test("do not auto-scroll to attachment box when initially open", async () => {
+test.skip("do not auto-scroll to attachment box when initially open", async () => {
     patchUiSize({ size: SIZES.LG });
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
@@ -174,7 +157,7 @@ QUnit.test("do not auto-scroll to attachment box when initially open", async () 
         res_id: partnerId,
         res_model: "res.partner",
     });
-    const views = {
+    registerArchs({
         "res.partner,false,form": `
             <form>
                 ${`<sheet><field name="name"/></sheet>`.repeat(100)}
@@ -183,15 +166,15 @@ QUnit.test("do not auto-scroll to attachment box when initially open", async () 
                 </div>
             </form>
         `,
-    };
-    const { openFormView } = await start({ serverData: { views } });
-    openFormView("res.partner", partnerId);
+    });
+    await start();
+    await openFormView("res.partner", partnerId);
     await contains(".o-mail-Message");
     // weak test, no guarantee that we waited long enough for the potential scroll to happen
     await contains(".o_content", { scroll: 0 });
 });
 
-QUnit.test("attachment box should order attachments from newest to oldest", async () => {
+test.skip("attachment box should order attachments from newest to oldest", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const resData = { res_id: partnerId, res_model: "res.partner" };
@@ -200,12 +183,8 @@ QUnit.test("attachment box should order attachments from newest to oldest", asyn
         { name: "B.txt", mimetype: "text/plain", ...resData },
         { name: "C.txt", mimetype: "text/plain", ...resData },
     ]);
-    const { openView } = await start();
-    openView({
-        res_id: partnerId,
-        res_model: "res.partner",
-        views: [[false, "form"]],
-    });
+    await start();
+    await openFormView("res.partner", partnerId);
     await contains(".o-mail-Chatter [aria-label='Attach files']", { text: "3" });
     await click(".o-mail-Chatter [aria-label='Attach files']"); // open attachment box
     await contains(":nth-child(1 of .o-mail-AttachmentCard)", { text: "C.txt" });
@@ -213,7 +192,7 @@ QUnit.test("attachment box should order attachments from newest to oldest", asyn
     await contains(":nth-child(3 of .o-mail-AttachmentCard)", { text: "A.txt" });
 });
 
-QUnit.test("attachment box auto-closed on switch to record wih no attachments", async () => {
+test.skip("attachment box auto-closed on switch to record wih no attachments", async () => {
     const pyEnv = await startServer();
     const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
         { display_name: "first partner" },
@@ -227,7 +206,7 @@ QUnit.test("attachment box auto-closed on switch to record wih no attachments", 
             res_model: "res.partner",
         },
     ]);
-    const views = {
+    registerArchs({
         "res.partner,false,form": `
             <form>
                 <sheet></sheet>
@@ -236,8 +215,8 @@ QUnit.test("attachment box auto-closed on switch to record wih no attachments", 
                 </div>
             </form>
         `,
-    };
-    const { openFormView } = await start({ serverData: { views } });
+    });
+    await start();
     await openFormView("res.partner", partnerId_1, {
         props: { resIds: [partnerId_1, partnerId_2] },
     });

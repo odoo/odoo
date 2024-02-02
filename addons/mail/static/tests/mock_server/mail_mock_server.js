@@ -4,6 +4,8 @@ import { constants } from "@web/../tests/web_test_helpers";
 import { serializeDateTime } from "@web/core/l10n/dates";
 import { registry } from "@web/core/registry";
 
+export const DISCUSS_ACTION_ID = 104;
+
 /**
  * @template [T={}]
  * @typedef {import("@web/../tests/web_test_helpers").RouteCallback<T>} RouteCallback
@@ -42,7 +44,7 @@ async function attachmentUpload(request) {
     if (body.get("voice")) {
         this.env["discuss.voice.metadata"].create({ attachment_id: attachmentId });
     }
-    return this.env["ir.attachment"]._attachmentFormat([attachmentId])[0];
+    return this.env["ir.attachment"]._attachment_format([attachmentId])[0];
 }
 
 /** @type {RouteCallback} */
@@ -68,7 +70,7 @@ async function channelAttachments(request) {
         .sort()
         .slice(0, limit)
         .map(({ id }) => id);
-    return Attachment._attachmentFormat(attachmentIds);
+    return Attachment._attachment_format(attachmentIds);
 }
 
 /** @type {RouteCallback} */
@@ -435,7 +437,7 @@ async function messageUpdateContent(request) {
             MailMessage: {
                 id: message_id,
                 body,
-                attachments: this.env["ir.attachment"]._attachmentFormat(attachment_ids),
+                attachments: this.env["ir.attachment"]._attachment_format(attachment_ids),
             },
         }
     );
@@ -523,68 +525,7 @@ async function starredMessages(request) {
 /** @type {RouteCallback} */
 async function threadData(request) {
     const { request_list, thread_model, thread_id } = await parseRequestParams(request);
-    const res = {
-        hasWriteAccess: true, // mimic user with write access by default
-        hasReadAccess: true,
-    };
-    const thread = this.env[thread_model].search_read([["id", "=", thread_id]])[0];
-    if (!thread) {
-        res["hasReadAccess"] = false;
-        return res;
-    }
-    res["canPostOnReadonly"] = thread_model === "discuss.channel"; // model that have attr _mail_post_access='read'
-    if (request_list.includes("activities")) {
-        const activities = this.env["mail.activity"].search_read([
-            ["id", "in", thread.activity_ids || []],
-        ]);
-        res["activities"] = this._mockMailActivityActivityFormat(
-            activities.map((activity) => activity.id)
-        );
-    }
-    if (request_list.includes("attachments")) {
-        const attachments = this.env["ir.attachment"].search_read([
-            ["res_id", "=", thread.id],
-            ["res_model", "=", thread_model],
-        ]); // order not done for simplicity
-        res["attachments"] = this.env["ir.attachment"]._attachmentFormat(
-            attachments.map((attachment) => attachment.id)
-        );
-        // Specific implementation of mail.thread.main.attachment
-        if (this.env[thread_model]._fields.message_main_attachment_id) {
-            res["mainAttachment"] = thread.message_main_attachment_id
-                ? { id: thread.message_main_attachment_id[0] }
-                : false;
-        }
-    }
-    if (request_list.includes("followers")) {
-        const domain = [
-            ["res_id", "=", thread.id],
-            ["res_model", "=", thread_model],
-        ];
-        res["followersCount"] = (thread.message_follower_ids || []).length;
-        const selfFollower = this.env["mail.followers"].search_read(
-            domain.concat([["partner_id", "=", constants.PARTNER_ID]])
-        )[0];
-        res["selfFollower"] = selfFollower
-            ? this.env["mail.followers"]._formatForChatter(selfFollower.id)[0]
-            : false;
-        res["followers"] = this._mockMailThreadMessageGetFollowers(thread_model, [thread_id]);
-        res["recipientsCount"] = (thread.message_follower_ids || []).length - 1;
-        res["recipients"] = this._mockMailThreadMessageGetFollowers(
-            thread_model,
-            [thread_id],
-            undefined,
-            100,
-            { filter_recipients: true }
-        );
-    }
-    if (request_list.includes("suggestedRecipients")) {
-        res["suggestedRecipients"] = this.env["mail.thread"]._messageGetSuggestedRecipients(
-            thread_model,
-            [thread.id]
-        )[thread_id];
-    }
-    return res;
+    return this.env["mail.thread"]._get_mail_thread_data(thread_model, thread_id, request_list);
 }
 
 /** @type {RouteCallback} */
@@ -613,6 +554,113 @@ async function threadMessages(request) {
     };
 }
 
+/** @type {RouteCallback} */
+async function mailAction(request) {
+    return processRequest.call(this, request);
+}
+
+/** @type {RouteCallback} */
+async function mailData(request) {
+    return processRequest.call(this, request);
+}
+
+/** @type {RouteCallback} */
+async function processRequest(request) {
+    const args = await parseRequestParams(request);
+    const res = {};
+    if ("init_messaging" in args) {
+        const initMessaging =
+            this.env["mail.guest"]._getGuestFromContext() &&
+            this.env["res.users"]._is_public(this.env.uid)
+                ? this.env["mail.guest"]._initMessaging(args.context)
+                : this.env["res.users"]._initMessaging([this.env.uid], args.context);
+        addToRes(res, initMessaging);
+        const guest =
+            this.env["res.users"]._is_public(this.env.uid) &&
+            this.env["mail.guest"]._getGuestFromContext();
+        const members = this.env["discuss.channel.member"]._filter([
+            guest ? ["guest_id", "=", guest.id] : ["partner_id", "=", this.env.user.partner_id[0]],
+            "|",
+            ["fold_state", "in", ["open", "folded"]],
+            ["rtc_inviting_session_id", "!=", false],
+        ]);
+        const channelsDomain = [["id", "in", members.map((m) => m.channel_id)]];
+        const { channelTypes } = args.init_messaging;
+        if (channelTypes) {
+            channelsDomain.push(["channel_type", "in", channelTypes]);
+        }
+        addToRes(res, {
+            Thread: this.env["discuss.channel"].channel_info(
+                this.env["discuss.channel"].search(channelsDomain)
+            ),
+        });
+    }
+    if (args.failures && this.env.user.partner_id) {
+        const partner = this.env["res.partner"]._filter(
+            [["id", "=", this.env.user.partner_id[0]]],
+            {
+                active_test: false,
+            }
+        )[0];
+        const messages = this.env["mail.message"]
+            ._filter([
+                ["author_id", "=", partner.id],
+                ["res_id", "!=", 0],
+                ["model", "!=", false],
+                ["message_type", "!=", "user_notification"],
+            ])
+            .filter((message) => {
+                // Purpose is to simulate the following domain on mail.message:
+                // ['notification_ids.notification_status', 'in', ['bounce', 'exception']],
+                // But it's not supported by getRecords domain to follow a relation.
+                const notifications = this.env["mail.notification"]._filter([
+                    ["mail_message_id", "=", message.id],
+                    ["notification_status", "in", ["bounce", "exception"]],
+                ]);
+                return notifications.length > 0;
+            });
+        messages.length = Math.min(messages.length, 100);
+        addToRes(res, {
+            Message: this.env["mail.message"]._messageNotificationFormat(
+                messages.map((message) => message.id)
+            ),
+        });
+    }
+    if (args.systray_get_activities && this.env.user.partner_id) {
+        const groups = this.env["res.users"]._get_activity_groups();
+        addToRes(res, {
+            Store: {
+                activityCounter: groups.reduce(
+                    (counter, group) => counter + (group.total_count || 0),
+                    0
+                ),
+                activityGroups: groups,
+            },
+        });
+    }
+    return res;
+}
+
+function addToRes(res, data) {
+    for (const [key, val] of Object.entries(data)) {
+        if (Array.isArray(val)) {
+            if (!res[key]) {
+                res[key] = val;
+            } else {
+                res[key].push(...val);
+            }
+        } else if (typeof val === "object" && val !== null) {
+            if (!res[key]) {
+                res[key] = val;
+            } else {
+                Object.assign(res[key], val);
+            }
+        } else {
+            throw new Error("Unsupported return type");
+        }
+    }
+}
+
 //
 registry
     .category("mock_rpc")
@@ -628,6 +676,8 @@ registry
     .add("/discuss/channel/set_last_seen_message", channelSetLastSeenMessage)
     .add("/discuss/channels", channels)
     .add("/discuss/gif/favorites", gifFavorites)
+    .add("/mail/action", mailAction)
+    .add("/mail/data", mailData)
     .add("/mail/attachment/upload", attachmentUpload)
     .add("/mail/attachment/delete", attachmentDelete)
     .add("/mail/history/messages", historyMessages)

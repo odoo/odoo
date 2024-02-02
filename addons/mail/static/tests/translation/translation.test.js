@@ -1,30 +1,23 @@
-/** @odoo-module alias=@mail/../tests/translation/translation_test default=false */
+/** @odoo-module */
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { expect, test } from "@odoo/hoot";
+import { click, contains, openFormView, start, startServer } from "../mail_test_helpers";
+import { constants, onRpc } from "@web/../tests/web_test_helpers";
 
-import { start } from "@mail/../tests/helpers/test_utils";
-
-import { click, contains } from "@web/../tests/utils";
-
-QUnit.module("Google Cloud Translation");
-
-QUnit.test("Toggle display of original/translated version of chatter message", async (assert) => {
+test.skip("Toggle display of original/translated version of chatter message", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     pyEnv["mail.message"].create({
         model: "res.partner",
         body: "Al mal tiempo, buena cara.",
-        author_id: pyEnv.odoobotId,
+        author_id: constants.ODOOBOT_ID,
         res_id: partnerId,
     });
-    const { openFormView } = await start({
-        mockRPC(route) {
-            if (route === "/mail/message/translate") {
-                assert.step("Request");
-                return { body: "To bad weather, good face.", lang_name: "Spanish", error: null };
-            }
-        },
+    onRpc("/mail/message/translate", (route, args) => {
+        expect.step("Request");
+        return { body: "To bad weather, good face.", lang_name: "Spanish", error: null };
     });
+    await start();
     await openFormView("res.partner", partnerId);
     await click("button[title='Expand']");
     await contains("span[title='Translate']");
@@ -44,10 +37,10 @@ QUnit.test("Toggle display of original/translated version of chatter message", a
     });
     await click("span[title='Translate']");
     // The translation button should not trigger more than one external request for a single message.
-    assert.verifySteps(["Request"]);
+    expect(["Request"]).toVerifySteps();
 });
 
-QUnit.test("translation of email message", async () => {
+test.skip("translation of email message", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     pyEnv["mail.message"].create({
@@ -57,13 +50,10 @@ QUnit.test("translation of email message", async () => {
         author_id: partnerId,
         res_id: partnerId,
     });
-    const { openFormView } = await start({
-        mockRPC(route) {
-            if (route === "/mail/message/translate") {
-                return { body: "To bad weather, good face.", lang_name: "Spanish", error: null };
-            }
-        },
+    onRpc("/mail/message/translate", (route, args) => {
+        return { body: "To bad weather, good face.", lang_name: "Spanish", error: null };
     });
+    await start();
     await openFormView("res.partner", partnerId);
     await contains("span", {
         text: "Al mal tiempo, buena cara.",

@@ -15,13 +15,17 @@ const { DateTime } = luxon;
 
 export class DiscussChannel extends models.ServerModel {
     _name = "discuss.channel";
+    _inherit = ["mail.thread"];
 
     author_id = fields.Many2one({
         relation: "res.partner",
         default: () => constants.PARTNER_ID,
     });
     avatarCacheKey = fields.Datetime({ string: "Avatar Cache Key" });
-    channel_member_ids = fields.Generic({
+    channel_member_ids = fields.One2many({
+        relation: "discuss.channel.member",
+        relation_field: "channel_id",
+        string: "Members",
         default: () => [Command.create({ partner_id: constants.PARTNER_ID })],
     });
     channel_type = fields.Generic({ default: "channel" });
@@ -784,7 +788,7 @@ export class DiscussChannel extends models.ServerModel {
             return this.env["bus.bus"]._sendone(channel, "mail.record/insert", {
                 Thread: {
                     avatarCacheKey: channel.avatarCacheKey,
-                    firstId,
+                    id: firstId,
                     model: "discuss.channel",
                 },
             });
@@ -795,7 +799,7 @@ export class DiscussChannel extends models.ServerModel {
         if (channel) {
             const diff = {};
             for (const key in values) {
-                if (channel[key] != values[key] && key !== "image_128") {
+                if (channel[key] !== values[key] && key !== "image_128") {
                     diff[key] = values[key];
                 }
             }
@@ -893,30 +897,51 @@ export class DiscussChannel extends models.ServerModel {
      * Simulates the `_set_last_seen_message` method of `discuss.channel`.
      *
      * @param {number[]} ids
-     * @param {number} messageId
+     * @param {number} message_id
      */
-    _setLastSeenMessage(ids, messageId) {
+    _setLastSeenMessage(ids, message_id) {
         const memberOfCurrentUser = this.env["discuss.channel.member"]._getAsSudoFromContext(
             ids[0]
         );
         if (memberOfCurrentUser) {
             this.env["discuss.channel.member"].write([memberOfCurrentUser.id], {
-                fetched_message_id: messageId,
-                seen_message_id: messageId,
+                fetched_message_id: message_id,
+                seen_message_id: message_id,
             });
         }
+        const [channel] = this.env["discuss.channel"].search_read([["id", "in", ids]]);
+        const [partner, guest] = this.env["res.partner"]._getCurrentPersona();
+        let target = guest ?? partner;
+        if (this.env["discuss.channel"]._typesAllowingSeenInfos().includes(channel.channel_type)) {
+            target = channel;
+        }
+        this.env["bus.bus"]._sendone(target, "discuss.channel.member/seen", {
+            channel_id: channel.id,
+            id: memberOfCurrentUser?.id,
+            last_message_id: message_id,
+            [guest ? "guest_id" : "partner_id"]: guest?.id ?? partner.id,
+        });
     }
 
-    /**
-     * Simulates the `_get_init_channels` method on `discuss.channel`.
-     */
-    _getInitChannels(user) {
-        const members = this.env["discuss.channel.member"]._filter([
-            ["partner_id", "=", user.partner_id],
-            "|",
-            ["fold_state", "in", ["open", "folded"]],
-            ["rtc_inviting_session_id", "!=", false],
+    _types_allowing_seen_infos() {
+        return ["chat", "group"];
+    }
+
+    _get_channels_as_member() {
+        const guest = this.env["mail.guest"]._getGuestFromContext();
+        const memberDomain = guest
+            ? [["guest_id", "=", guest.id]]
+            : [["partner_id", "=", constants.PARTNER_ID]];
+        const members = this.env["discuss.channel.member"]._filter(memberDomain);
+        const pinnedMembers = members.filter((member) => member.is_pinned);
+        const channels = this.env["discuss.channel"]._filter([
+            ["channel_type", "in", ["channel", "group"]],
+            ["channel_member_ids", "in", members.map((member) => member.id)],
         ]);
-        return this._filter([["id", "in", members.map((m) => m.channel_id)]]);
+        const pinnedChannels = this.env["discuss.channel"]._filter([
+            ["channel_type", "not in", ["channel", "group"]],
+            ["channel_member_ids", "in", pinnedMembers.map((member) => member.id)],
+        ]);
+        return channels.concat(pinnedChannels);
     }
 }

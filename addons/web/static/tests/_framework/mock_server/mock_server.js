@@ -213,6 +213,7 @@ export class MockServer {
     };
 
     // Server env
+    /** @type {import("mock_server").Models & MockServerEnvironment} */
     env = this.makeServerEnv();
 
     // Data
@@ -708,6 +709,9 @@ export class MockServer {
             get: (target, p) => {
                 if (p in target || typeof p !== "string") {
                     return target[p];
+                }
+                if (p === "then") {
+                    return;
                 }
                 const model = this.models[p];
                 if (!model) {

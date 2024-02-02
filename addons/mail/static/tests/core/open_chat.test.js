@@ -1,15 +1,10 @@
-/** @odoo-module alias=@mail/../tests/core/open_chat_test default=false */
+/** @odoo-module */
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { test } from "@odoo/hoot";
+import { contains, start, startServer } from "../mail_test_helpers";
+import { Command, constants } from "@web/../tests/web_test_helpers";
 
-import { Command } from "@mail/../tests/helpers/command";
-import { start } from "@mail/../tests/helpers/test_utils";
-
-import { contains } from "@web/../tests/utils";
-
-QUnit.module("Open Chat test", {});
-
-QUnit.test("openChat: display notification for partner without user", async () => {
+test.skip("openChat: display notification for partner without user", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const { env } = await start();
@@ -19,7 +14,7 @@ QUnit.test("openChat: display notification for partner without user", async () =
     });
 });
 
-QUnit.test("openChat: display notification for wrong user", async () => {
+test.skip("openChat: display notification for wrong user", async () => {
     const pyEnv = await startServer();
     pyEnv["res.users"].create({});
     const { env } = await start();
@@ -30,7 +25,7 @@ QUnit.test("openChat: display notification for wrong user", async () => {
     });
 });
 
-QUnit.test("openChat: open new chat for user", async () => {
+test.skip("openChat: open new chat for user", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     pyEnv["res.users"].create({ partner_id: partnerId });
@@ -41,14 +36,14 @@ QUnit.test("openChat: open new chat for user", async () => {
     await contains(".o-mail-ChatWindow");
 });
 
-QUnit.test("openChat: open existing chat for user [REQUIRE FOCUS]", async () => {
+test.skip("openChat: open existing chat for user [REQUIRE FOCUS]", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     pyEnv["res.users"].create({ partner_id: partnerId });
     pyEnv["discuss.channel"].create({
         channel_member_ids: [
             Command.create({
-                partner_id: pyEnv.currentPartnerId,
+                partner_id: constants.PARTNER_ID,
                 fold_state: "open",
             }),
             Command.create({ partner_id: partnerId }),

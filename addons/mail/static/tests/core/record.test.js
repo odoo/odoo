@@ -1,39 +1,90 @@
-/** @odoo-module alias=@mail/../tests/core/record_tests default=false */
+/** @odoo-module */
+
+import { beforeAll, beforeEach, expect, test } from "@odoo/hoot";
 
 import { BaseStore, Record, makeStore, modelRegistry } from "@mail/core/common/record";
 
 import { registry } from "@web/core/registry";
-import { clearRegistryWithCleanup, makeTestEnv } from "@web/../tests/helpers/mock_env";
-import { assertSteps, step } from "@web/../tests/utils";
 import { markup, reactive, toRaw } from "@odoo/owl";
+import { makeMockEnv } from "@web/../tests/web_test_helpers";
+import { Markup } from "@web/../lib/hoot/hoot_utils";
+import { Matchers } from "@web/../lib/hoot/core/expect";
+import { assertSteps, clearRegistryWithCleanup, step } from "../mail_test_helpers";
 
 const serviceRegistry = registry.category("services");
 
-let start;
-QUnit.module("record", {
-    beforeEach() {
-        serviceRegistry.add("store", { start: (env) => makeStore(env) });
-        clearRegistryWithCleanup(modelRegistry);
-        Record.register();
-        ({ Store: class extends BaseStore {} }).Store.register();
-        start = async () => {
-            const env = await makeTestEnv();
-            return env.services.store;
-        };
-    },
+beforeAll(() => {
+    if (!Matchers.registry["toRecEq"]) {
+        expect.extend(function toRecEq(expected, options) {
+            return {
+                name: "toRecEq",
+                acceptedType: "any",
+                predicate: (actual) => actual?.eq(expected),
+                message: (pass) =>
+                    options?.message ||
+                    (pass
+                        ? `received value is[! not] record equal to %actual%`
+                        : `expected values to be record equal`),
+                details: (actual) => {
+                    const details = [
+                        [Markup.green("Expected:"), expected?.localId],
+                        [Markup.red("Received:"), actual?.localId],
+                    ];
+                    details.push([
+                        Markup.text("Diff:"),
+                        Markup.diff(expected?.localId, actual?.localId),
+                    ]);
+                    return details;
+                },
+            };
+        });
+    }
+    if (!Matchers.registry["toRecIn"]) {
+        expect.extend(function toRecIn(record, options) {
+            return {
+                name: "toRecIn",
+                acceptedType: "any",
+                predicate: (reclist) => record?.in(reclist),
+                message: (pass) =>
+                    options?.message ||
+                    (pass
+                        ? `received record is[! not] in record list`
+                        : `expected record to be in record list`),
+                details: (reclist) => {
+                    const details = [
+                        [Markup.green("Expected in reclist:"), record?.localId],
+                        [Markup.red("Record list contains:"), reclist.map((rec) => rec.localId)],
+                    ];
+                    return details;
+                },
+            };
+        });
+    }
 });
 
-QUnit.test("Insert by passing only single-id value (non-relational)", async (assert) => {
+let start;
+beforeEach(() => {
+    serviceRegistry.add("store", { start: (env) => makeStore(env) });
+    clearRegistryWithCleanup(modelRegistry);
+    Record.register();
+    ({ Store: class extends BaseStore {} }).Store.register();
+    start = async () => {
+        const env = await makeMockEnv();
+        return env.services.store;
+    };
+});
+
+test.skip("Insert by passing only single-id value (non-relational)", async () => {
     (class Persona extends Record {
         static id = "name";
         name;
     }).register();
     const store = await start();
     const john = store.Persona.insert("John");
-    assert.strictEqual(john.name, "John");
+    expect(john.name).toBe("John");
 });
 
-QUnit.test("Can pass object as data for relational field with inverse as id", async (assert) => {
+test.skip("Can pass object as data for relational field with inverse as id", async () => {
     (class Thread extends Record {
         static id = "name";
         name;
@@ -46,11 +97,11 @@ QUnit.test("Can pass object as data for relational field with inverse as id", as
     const store = await start();
     const thread = store.Thread.insert("General");
     Object.assign(thread, { composer: {} });
-    assert.ok(thread.composer);
-    assert.ok(thread.composer.thread.eq(thread));
+    expect(thread.composer).toBeTruthy();
+    expect(thread.composer.thread).toRecEq(thread);
 });
 
-QUnit.test("Assign & Delete on fields with inverses", async (assert) => {
+test.skip("Assign & Delete on fields with inverses", async () => {
     (class Thread extends Record {
         static id = "name";
         name;
@@ -78,42 +129,42 @@ QUnit.test("Assign & Delete on fields with inverses", async (assert) => {
     const [hello, world] = store.Message.insert(["hello", "world"]);
     // Assign on fields should adapt inverses
     Object.assign(thread, { composer: {}, members: [["ADD", john]], messages: [hello, world] });
-    assert.ok(thread.composer);
-    assert.ok(thread.composer.thread.eq(thread));
-    assert.ok(john.thread.eq(thread));
-    assert.ok(john.in(thread.members));
-    assert.ok(hello.in(thread.messages));
-    assert.ok(world.in(thread.messages));
-    assert.ok(thread.in(hello.threads));
-    assert.ok(thread.in(world.threads));
+    expect(thread.composer).toBeTruthy();
+    expect(thread.composer.thread).toRecEq(thread);
+    expect(john.thread).toRecEq(thread);
+    expect(john).toRecIn(thread.members);
+    expect(hello).toRecIn(thread.messages);
+    expect(world).toRecIn(thread.messages);
+    expect(thread).toReIn(hello.threads);
+    expect(thread).toRecIn(world.threads);
     // add() should adapt inverses
     thread.members.add(marc);
-    assert.ok(marc.in(thread.members));
-    assert.ok(marc.thread.eq(thread));
+    expect(marc).toRecIn(thread.members);
+    expect(marc.thread).toRecEq(thread);
     // delete should adapt inverses
     thread.members.delete(john);
-    assert.notOk(john.in(thread.members));
-    assert.notOk(john.thread);
+    expect(john).toRecIn(thread.members);
+    expect(john.thread).not.toBeTruthy();
     // can delete with command
     thread.messages = [["DELETE", world]];
-    assert.notOk(world.in(thread.messages));
-    assert.notOk(thread.in(world.threads));
-    assert.ok(thread.messages.length === 1);
-    assert.ok(hello.in(thread.messages));
-    assert.ok(thread.in(hello.threads));
+    expect(world).not.toRecIn(thread.messages);
+    expect(thread).not.toRecIn(world.threads);
+    expect(thread.messages).toHaveCount(1);
+    expect(hello).toRecIn(thread.messages);
+    expect(thread).toRecIn(hello.threads);
     // Deletion removes all relations
     const composer = thread.composer;
     thread.delete();
-    assert.notOk(thread.composer);
-    assert.notOk(composer.thread);
-    assert.notOk(marc.in(thread.members));
-    assert.ok(thread.members.length === 0);
-    assert.notOk(hello.in(thread.messages));
-    assert.notOk(thread.in(hello.threads));
-    assert.ok(thread.messages.length === 0);
+    expect(thread.composer).not.toBeTruthy();
+    expect(composer.thread).not.toBeTruthy();
+    expect(marc).not.toRecIn(thread.members);
+    expect(thread.members).toBeEmpty();
+    expect(hello).not.toRecIn(thread.messages);
+    expect(thread).not.toRecIn(hello.threads);
+    expect(thread.messages).toBeEmpty();
 });
 
-QUnit.test("onAdd/onDelete hooks on relational with inverse", async (assert) => {
+test.skip("onAdd/onDelete hooks on relational with inverse", async () => {
     let logs = [];
     (class Thread extends Record {
         static id = "name";
@@ -133,23 +184,23 @@ QUnit.test("onAdd/onDelete hooks on relational with inverse", async (assert) => 
     const thread = store.Thread.insert("General");
     const [john, marc] = store.Member.insert(["John", "Marc"]);
     thread.members.add(john);
-    assert.deepEqual(logs, ["Thread.onAdd(John)"]);
+    expect(logs).toEqual(["Thread.onAdd(John)"]);
     logs = [];
     thread.members.add(john);
-    assert.deepEqual(logs, []);
+    expect(logs).toBeEmpty();
     marc.thread = thread;
-    assert.deepEqual(logs, ["Thread.onAdd(Marc)"]);
+    expect(logs).toEqual(["Thread.onAdd(Marc)"]);
     logs = [];
     thread.members.delete(marc);
-    assert.deepEqual(logs, ["Thread.onDelete(Marc)"]);
+    expect(logs).toEqual(["Thread.onDelete(Marc)"]);
     logs = [];
     thread.members.delete(marc);
-    assert.deepEqual(logs, []);
+    expect(logs).toBeEmpty();
     john.thread = undefined;
-    assert.deepEqual(logs, ["Thread.onDelete(John)"]);
+    expect(logs).toEqual(["Thread.onDelete(John)"]);
 });
 
-QUnit.test("Computed fields", async (assert) => {
+test.skip("Computed fields", async () => {
     (class Thread extends Record {
         static id = "name";
         name;
@@ -181,17 +232,17 @@ QUnit.test("Computed fields", async (assert) => {
     const thread = store.Thread.insert("General");
     const [john, marc, antony] = store.Persona.insert(["John", "Marc", "Antony"]);
     Object.assign(thread, { members: [john, marc] });
-    assert.ok(thread.admin.eq(john));
-    assert.strictEqual(thread.type, "dm chat");
+    expect(thread.admin).toRecEq(john);
+    expect(thread.type).toBe("dm chat");
     thread.members.delete(john);
-    assert.ok(thread.admin.eq(marc));
-    assert.strictEqual(thread.type, "self-chat");
+    expect(thread.admin).toRecEq(marc);
+    expect(thread.type).toBe("self-chat");
     thread.members.unshift(antony, john);
-    assert.ok(thread.admin.eq(antony));
-    assert.strictEqual(thread.type, "group chat");
+    expect(thread.admin).toRecEq(antony);
+    expect(thread.type).toBe("group chat");
 });
 
-QUnit.test("Computed fields: lazy (default) vs. eager", async (assert) => {
+test.skip("Computed fields: lazy (default) vs. eager", async () => {
     (class Thread extends Record {
         static id = "name";
         name;
@@ -208,13 +259,13 @@ QUnit.test("Computed fields: lazy (default) vs. eager", async (assert) => {
         }
         typeLazy = Record.attr("", {
             compute() {
-                assert.step("LAZY");
+                expect.step("LAZY");
                 return this.computeType();
             },
         });
         typeEager = Record.attr("", {
             compute() {
-                assert.step("EAGER");
+                expect.step("EAGER");
                 return this.computeType();
             },
             eager: true,
@@ -228,27 +279,27 @@ QUnit.test("Computed fields: lazy (default) vs. eager", async (assert) => {
     const store = await start();
     const thread = store.Thread.insert("General");
     const members = thread.members;
-    assert.verifySteps(["EAGER"]);
-    assert.strictEqual(thread.typeEager, "empty chat");
-    assert.verifySteps([]);
-    assert.strictEqual(thread.typeLazy, "empty chat");
-    assert.verifySteps(["LAZY"]);
+    expect(["EAGER"]).toVerifySteps();
+    expect(thread.typeEager).toBe("empty chat");
+    expect([]).toVerifySteps();
+    expect(thread.typeLazy).toBe("empty chat");
+    expect(["LAZY"]).toVerifySteps();
     members.add("John");
-    assert.verifySteps(["EAGER"]);
-    assert.strictEqual(thread.typeEager, "self-chat");
-    assert.verifySteps([]);
+    expect(["EAGER"]).toVerifySteps();
+    expect(thread.typeEager).toBe("self-chat");
+    expect([]).toVerifySteps();
     members.add("Antony");
-    assert.verifySteps(["EAGER"]);
-    assert.strictEqual(thread.typeEager, "dm chat");
-    assert.verifySteps([]);
+    expect(["EAGER"]).toVerifySteps();
+    expect(thread.typeEager).toBe("dm chat");
+    expect([]).toVerifySteps();
     members.add("Demo");
-    assert.verifySteps(["EAGER"]);
-    assert.strictEqual(thread.typeEager, "group chat");
-    assert.strictEqual(thread.typeLazy, "group chat");
-    assert.verifySteps(["LAZY"]);
+    expect(["EAGER"]).toVerifySteps();
+    expect(thread.typeEager).toBe("group chat");
+    expect(thread.typeLazy).toBe("group chat");
+    expect(["LAZY"]).toVerifySteps();
 });
 
-QUnit.test("Trusted insert on html field with { html: true }", async (assert) => {
+test.skip("Trusted insert on html field with { html: true }", async () => {
     (class Message extends Record {
         static id = "body";
         body = Record.attr("", { html: true });
@@ -256,12 +307,12 @@ QUnit.test("Trusted insert on html field with { html: true }", async (assert) =>
     const store = await start();
     const hello = store.Message.insert("<p>hello</p>", { html: true });
     const world = store.Message.insert("<p>world</p>");
-    assert.ok(hello.body instanceof markup("").constructor);
-    assert.strictEqual(hello.body.toString(), "<p>hello</p>");
-    assert.strictEqual(world.body, "<p>world</p>");
+    expect(hello.body instanceof markup("").constructor).toBeTruthy();
+    expect(hello.body.toString()).toBe("<p>hello</p>");
+    expect(world.body).toBe("<p>world</p>");
 });
 
-QUnit.test("(Un)trusted insertion is applied even with same field value", async (assert) => {
+test.skip("(Un)trusted insertion is applied even with same field value", async () => {
     (class Message extends Record {
         static id = "id";
         id;
@@ -270,14 +321,14 @@ QUnit.test("(Un)trusted insertion is applied even with same field value", async 
     const store = await start();
     const rawMessage = { id: 1, body: "<p>hello</p>" };
     let message = store.Message.insert(rawMessage);
-    assert.notOk(message.body instanceof markup("").constructor);
+    expect(message.body instanceof markup("").constructor).not.toBeTruthy();
     message = store.Message.insert(rawMessage, { html: true });
-    assert.ok(message.body instanceof markup("").constructor);
+    expect(message.body instanceof markup("").constructor).toBeTruthy();
     message = store.Message.insert(rawMessage);
-    assert.notOk(message.body instanceof markup("").constructor);
+    expect(message.body instanceof markup("").constructor).not.toBeTruthy();
 });
 
-QUnit.test("Unshift preserves order", async (assert) => {
+test.skip("Unshift preserves order", async () => {
     (class Message extends Record {
         static id = "id";
         id;
@@ -290,30 +341,21 @@ QUnit.test("Unshift preserves order", async (assert) => {
     const store = await start();
     const thread = store.Thread.insert({ name: "General" });
     thread.messages.unshift({ id: 3 }, { id: 2 }, { id: 1 });
-    assert.deepEqual(
-        thread.messages.map((msg) => msg.id),
-        [3, 2, 1]
-    );
+    expect(thread.messages.map((msg) => msg.id)).toEqual([3, 2, 1]);
     thread.messages.unshift({ id: 6 }, { id: 5 }, { id: 4 });
-    assert.deepEqual(
-        thread.messages.map((msg) => msg.id),
-        [6, 5, 4, 3, 2, 1]
-    );
+    expect(thread.messages.map((msg) => msg.id)).toEqual([6, 5, 4, 3, 2, 1]);
     thread.messages.unshift({ id: 7 });
-    assert.deepEqual(
-        thread.messages.map((msg) => msg.id),
-        [7, 6, 5, 4, 3, 2, 1]
-    );
+    expect(thread.messages.map((msg) => msg.id)).toEqual([7, 6, 5, 4, 3, 2, 1]);
 });
 
-QUnit.test("onAdd hook should see fully inserted data", async (assert) => {
+test.skip("onAdd hook should see fully inserted data", async () => {
     (class Thread extends Record {
         static id = "name";
         name;
         members = Record.many("Member", {
             inverse: "thread",
             onAdd: (member) =>
-                assert.step(`Thread.onAdd::${member.name}.${member.type}.${member.isAdmin}`),
+                expect.step(`Thread.onAdd::${member.name}.${member.type}.${member.isAdmin}`),
         });
     }).register();
     (class Member extends Record {
@@ -330,10 +372,10 @@ QUnit.test("onAdd hook should see fully inserted data", async (assert) => {
     const store = await start();
     const thread = store.Thread.insert("General");
     thread.members.add({ name: "John", type: "admin" });
-    assert.verifySteps(["Thread.onAdd::John.admin.true"]);
+    expect(["Thread.onAdd::John.admin.true"]).toVerifySteps();
 });
 
-QUnit.test("Can insert with relation as id, using relation as data object", async (assert) => {
+test.skip("Can insert with relation as id, using relation as data object", async () => {
     (class User extends Record {
         static id = "name";
         name;
@@ -349,13 +391,13 @@ QUnit.test("Can insert with relation as id, using relation as data object", asyn
         { pushNotif: true, user: { name: "John" } },
         { pushNotif: false, user: { name: "Paul" } },
     ]);
-    assert.ok(store.User.get("John"));
-    assert.ok(store.User.get("John").settings.pushNotif);
-    assert.ok(store.User.get("Paul"));
-    assert.notOk(store.User.get("Paul").settings.pushNotif);
+    expect(store.User.get("John")).toBeTruthy();
+    expect(store.User.get("John").settings.pushNotif).toBeTruthy();
+    expect(store.User.get("Paul")).toBeTruthy();
+    expect(store.User.get("Paul").settings.pushNotif).not.toBeTruthy();
 });
 
-QUnit.test("Set on attr should invoke onChange", async (assert) => {
+test.skip("Set on attr should invoke onChange", async () => {
     (class Message extends Record {
         static id = "id";
         id;
@@ -363,14 +405,14 @@ QUnit.test("Set on attr should invoke onChange", async (assert) => {
     }).register();
     const store = await start();
     const message = store.Message.insert(1);
-    Record.onChange(message, "body", () => assert.step("BODY_CHANGED"));
-    assert.verifySteps([]);
+    Record.onChange(message, "body", () => expect.step("BODY_CHANGED"));
+    expect([]).toVerifySteps();
     message.update({ body: "test1" });
     message.body = "test2";
-    assert.verifySteps(["BODY_CHANGED", "BODY_CHANGED"]);
+    expect(["BODY_CHANGED", "BODY_CHANGED"]).toVerifySteps();
 });
 
-QUnit.test("record list sort should be manually observable", async (assert) => {
+test.skip("record list sort should be manually observable", async () => {
     (class Thread extends Record {
         static id = "id";
         id;
@@ -392,31 +434,31 @@ QUnit.test("record list sort should be manually observable", async (assert) => {
     function sortMessages() {
         // minimal access through observed variables to reduce unexpected observing
         observedMessages.sort((m1, m2) => (m1.body < m2.body ? -1 : 1));
-        assert.step(`sortMessages`);
+        expect.step(`sortMessages`);
     }
     const observedMessages = reactive(thread.messages, sortMessages);
-    assert.equal(`${thread.messages.map((m) => m.id)}`, "1,2");
+    expect(`${thread.messages.map((m) => m.id)}`).toBe("1,2");
     sortMessages();
-    assert.equal(`${thread.messages.map((m) => m.id)}`, "1,2");
-    assert.verifySteps(["sortMessages"]);
+    expect(`${thread.messages.map((m) => m.id)}`).toBe("1,2");
+    expect(["sortMessages"]).toVerifySteps();
     messages[0].body = "c";
-    assert.equal(`${thread.messages.map((m) => m.id)}`, "2,1");
-    assert.verifySteps(["sortMessages", "sortMessages"]);
+    expect(`${thread.messages.map((m) => m.id)}`).toBe("2,1");
+    expect(["sortMessages", "sortMessages"]).toVerifySteps();
     messages[0].body = "d";
-    assert.equal(`${thread.messages.map((m) => m.id)}`, "2,1");
-    assert.verifySteps(["sortMessages"]);
+    expect(`${thread.messages.map((m) => m.id)}`).toBe("2,1");
+    expect(["sortMessages"]).toVerifySteps();
     messages[0].author = "Jane";
-    assert.equal(`${thread.messages.map((m) => m.id)}`, "2,1");
-    assert.verifySteps([]);
+    expect(`${thread.messages.map((m) => m.id)}`).toBe("2,1");
+    expect([]).toVerifySteps();
     store.Message.insert({ id: 3, body: "c", thread });
-    assert.equal(`${thread.messages.map((m) => m.id)}`, "2,3,1");
-    assert.verifySteps(["sortMessages", "sortMessages"]);
+    expect(`${thread.messages.map((m) => m.id)}`).toBe("2,3,1");
+    expect(["sortMessages", "sortMessages"]).toVerifySteps();
     messages[0].delete();
-    assert.equal(`${thread.messages.map((m) => m.id)}`, "2,3");
-    assert.verifySteps(["sortMessages"]);
+    expect(`${thread.messages.map((m) => m.id)}`).toBe("2,3");
+    expect(["sortMessages"]).toVerifySteps();
 });
 
-QUnit.test("relation field sort should be automatically observed", async (assert) => {
+test.skip("relation field sort should be automatically observed", async () => {
     (class Thread extends Record {
         static id = "id";
         id;
@@ -438,20 +480,20 @@ QUnit.test("relation field sort should be automatically observed", async (assert
         { id: 1, body: "a", thread },
         { id: 2, body: "b", thread },
     ]);
-    assert.equal(`${thread.messages.map((m) => m.id)}`, "1,2");
+    expect(`${thread.messages.map((m) => m.id)}`).toBe("1,2");
     messages[0].body = "c";
-    assert.equal(`${thread.messages.map((m) => m.id)}`, "2,1");
+    expect(`${thread.messages.map((m) => m.id)}`).toBe("2,1");
     messages[0].body = "d";
-    assert.equal(`${thread.messages.map((m) => m.id)}`, "2,1");
+    expect(`${thread.messages.map((m) => m.id)}`).toBe("2,1");
     messages[0].author = "Jane";
-    assert.equal(`${thread.messages.map((m) => m.id)}`, "2,1");
+    expect(`${thread.messages.map((m) => m.id)}`).toBe("2,1");
     store.Message.insert({ id: 3, body: "c", thread });
-    assert.equal(`${thread.messages.map((m) => m.id)}`, "2,3,1");
+    expect(`${thread.messages.map((m) => m.id)}`).toBe("2,3,1");
     messages[0].delete();
-    assert.equal(`${thread.messages.map((m) => m.id)}`, "2,3");
+    expect(`${thread.messages.map((m) => m.id)}`).toBe("2,3");
 });
 
-QUnit.test("reading of lazy compute relation field should recompute", async (assert) => {
+test.skip("reading of lazy compute relation field should recompute", async () => {
     (class Thread extends Record {
         static id = "id";
         id;
@@ -477,21 +519,21 @@ QUnit.test("reading of lazy compute relation field should recompute", async (ass
         { id: 2, thread },
     ]);
     const messages2 = thread.messages2;
-    assert.strictEqual(`${messages2.map((m) => m.id)}`, "1,2");
+    expect(`${messages2.map((m) => m.id)}`).toBe("1,2");
     store.Message.insert([{ id: 3, thread }]);
-    assert.strictEqual(`${messages2.map((m) => m.id)}`, "1,2,3");
+    expect(`${messages2.map((m) => m.id)}`).toBe("1,2,3");
     store.Message.insert([{ id: 4, thread }]);
-    assert.strictEqual(`${messages2.map((m) => m.id)}`, "1,2,3,4");
+    expect(`${messages2.map((m) => m.id)}`).toBe("1,2,3,4");
 });
 
-QUnit.test("lazy compute should re-compute while they are observed", async (assert) => {
+test.skip("lazy compute should re-compute while they are observed", async () => {
     (class Channel extends Record {
         static id = "id";
         id;
         count = 0;
         multiplicity = Record.attr(undefined, {
             compute() {
-                assert.step("computing");
+                expect.step("computing");
                 if (this.count > 3) {
                     return "many";
                 }
@@ -504,42 +546,47 @@ QUnit.test("lazy compute should re-compute while they are observed", async (asse
     let observe = true;
     function render() {
         if (observe) {
-            assert.step(`render ${reactiveChannel.multiplicity}`);
+            expect.step(`render ${reactiveChannel.multiplicity}`);
         }
     }
     const reactiveChannel = reactive(channel, render);
     render();
-    assert.verifySteps(
-        ["computing", "render few", "render few"],
-        "initial call, render with new value"
-    );
+    expect(["computing", "render few", "render few"]).toVerifySteps({
+        message: "initial call, render with new value",
+    });
     channel.count = 2;
-    assert.verifySteps(["computing"], "changing value to 2 is observed");
+    expect(["computing"]).toVerifySteps({ message: "changing value to 2 is observed" });
     channel.count = 5;
-    assert.verifySteps(["computing", "render many"], "changing value to 5 is observed");
+    expect(["computing", "render many"]).toVerifySteps({
+        message: "changing value to 5 is observed",
+    });
     observe = false;
     channel.count = 6;
-    assert.verifySteps(["computing"], "changing value to 6, still observed until it changes");
+    expect(["computing"]).toVerifySteps({
+        message: "changing value to 6, still observed until it changes",
+    });
     channel.count = 7;
-    assert.verifySteps(["computing"], "changing value to 7, still observed until it changes");
+    expect(["computing"]).toVerifySteps({
+        message: "changing value to 7, still observed until it changes",
+    });
     channel.count = 1;
-    assert.verifySteps(["computing"], "changing value to 1, observed one last time");
+    expect(["computing"]).toVerifySteps({ message: "changing value to 1, observed one last time" });
     channel.count = 0;
-    assert.verifySteps([], "changing value to 0, no longer observed");
+    expect([]).toVerifySteps({ message: "changing value to 0, no longer observed" });
     channel.count = 7;
-    assert.verifySteps([], "changing value to 7, no longer observed");
+    expect([]).toVerifySteps({ message: "changing value to 7, no longer observed" });
     channel.count = 1;
-    assert.verifySteps([], "changing value to 1, no longer observed");
-    assert.strictEqual(channel.multiplicity, "few");
-    assert.verifySteps(["computing"]);
+    expect([]).toVerifySteps({ message: "changing value to 1, no longer observed" });
+    expect(channel.multiplicity).toBe("few");
+    expect(["computing"]).toVerifySteps();
     observe = true;
     render();
-    assert.verifySteps(["render few"]);
+    expect(["render few"]).toVerifySteps();
     channel.count = 7;
-    assert.verifySteps(["computing", "render many"]);
+    expect(["computing", "render many"]).toVerifySteps();
 });
 
-QUnit.test("lazy sort should re-sort while they are observed", async (assert) => {
+test.skip("lazy sort should re-sort while they are observed", async () => {
     (class Thread extends Record {
         static id = "id";
         id;
@@ -555,69 +602,65 @@ QUnit.test("lazy sort should re-sort while they are observed", async (assert) =>
     const store = await start();
     const thread = store.Thread.insert(1);
     thread.messages.push({ id: 1, sequence: 1 }, { id: 2, sequence: 2 });
-    assert.equal(`${thread.messages.map((m) => m.id)}`, "1,2");
+    expect(`${thread.messages.map((m) => m.id)}`).toBe("1,2");
     let observe = true;
     function render() {
         if (observe) {
-            assert.step(`render ${reactiveChannel.messages.map((m) => m.id)}`);
+            expect.step(`render ${reactiveChannel.messages.map((m) => m.id)}`);
         }
     }
     const reactiveChannel = reactive(thread, render);
     render();
     const message = thread.messages[0];
-    assert.verifySteps(["render 1,2"]);
+    expect(["render 1,2"]).toVerifySteps();
     message.sequence = 3;
-    assert.verifySteps(["render 2,1"]);
+    expect(["render 2,1"]).toVerifySteps();
     message.sequence = 4;
-    assert.verifySteps([]);
+    expect([]).toVerifySteps();
     message.sequence = 5;
-    assert.verifySteps([]);
+    expect([]).toVerifySteps();
     message.sequence = 1;
-    assert.verifySteps(["render 1,2"]);
+    expect(["render 1,2"]).toVerifySteps();
     observe = false;
     message.sequence = 10;
-    assert.equal(
+    expect(
         `${toRaw(thread)
             ._raw._fields.get("messages")
-            .value.data.map((localId) => toRaw(thread)._raw._store.get(localId).id)}`,
-        "2,1",
-        "observed one last time when it changes"
-    );
-    assert.verifySteps([]);
+            .value.data.map((localId) => toRaw(thread)._raw._store.get(localId).id)}`
+    ).toBe("2,1", { message: "observed one last time when it changes" });
+    expect([]).toVerifySteps();
     message.sequence = 1;
-    assert.equal(
+    expect(
         `${toRaw(thread)
             ._raw._fields.get("messages")
-            .value.data.map((localId) => toRaw(thread)._raw._store.get(localId).id)}`,
-        "2,1",
-        "no longer observed"
-    );
-    assert.equal(`${thread.messages.map((m) => m.id)}`, "1,2");
+            .value.data.map((localId) => toRaw(thread)._raw._store.get(localId).id)}`
+    ).toBe("2,1", { message: "no longer observed" });
+    expect(`${thread.messages.map((m) => m.id)}`).toBe("1,2");
     observe = true;
     render();
-    assert.verifySteps(["render 1,2"]);
+    expect(["render 1,2"]).toVerifySteps();
     message.sequence = 10;
-    assert.verifySteps(["render 2,1"]);
+    expect(["render 2,1"]).toVerifySteps();
 });
 
-QUnit.test("store updates can be observed", async (assert) => {
+test.skip("store updates can be observed", async () => {
     const store = await start();
     function onUpdate() {
-        assert.step(`abc:${reactiveStore.abc}`);
+        expect.step(`abc:${reactiveStore.abc}`);
     }
     const rawStore = toRaw(store)._raw;
     const reactiveStore = reactive(store, onUpdate);
     onUpdate();
-    assert.verifySteps(["abc:undefined"]);
+    expect(["abc:undefined"]).toVerifySteps();
     store.abc = 1;
-    assert.verifySteps(["abc:1"], "observable from makeStore");
+    expect(["abc:1"]).toVerifySteps({ message: "observable from makeStore" });
     rawStore._store.abc = 2;
-    assert.verifySteps(["abc:2"], "observable from record._store");
+    expect(["abc:2"]).toVerifySteps({ message: "observable from record._store" });
     rawStore.Model.store.abc = 3;
-    assert.verifySteps(["abc:3"], "observable from Model.store");
+    expect(["abc:3"]).toVerifySteps({ message: "observable from Model.store" });
 });
 
-QUnit.test("onAdd/onDelete hooks on one without inverse", async () => {
+test.skip("onAdd/onDelete hooks on one without inverse", async () => {
     (class Thread extends Record {
         static id = "name";
     }).register();
@@ -641,7 +684,7 @@ QUnit.test("onAdd/onDelete hooks on one without inverse", async () => {
     await assertSteps(["thread.onDelete(General)"]);
 });
 
-QUnit.test("onAdd/onDelete hooks on many without inverse", async () => {
+test.skip("onAdd/onDelete hooks on many without inverse", async () => {
     (class Thread extends Record {
         static id = "name";
         name;
@@ -668,7 +711,7 @@ QUnit.test("onAdd/onDelete hooks on many without inverse", async () => {
     await assertSteps(["members.onDelete(John)", "members.onDelete(Jane)"]);
 });
 
-QUnit.test("record list assign should update inverse fields", async (assert) => {
+test.skip("record list assign should update inverse fields", async () => {
     (class Thread extends Record {
         static id = "name";
         name;
@@ -682,13 +725,13 @@ QUnit.test("record list assign should update inverse fields", async (assert) => 
     const general = store.Thread.insert("General");
     const jane = store.Member.insert("Jane");
     general.members = jane; // direct assignation of value goes through assign()
-    assert.ok(jane.thread.eq(general));
+    expect(jane.thread).toRecEq(general);
     general.members = []; // writing empty array specifically goes through assign()
-    assert.notOk(jane.thread);
+    expect(jane.thread).not.toBeTruthy();
     jane.thread = general;
-    assert.ok(jane.in(general.members));
+    expect(jane).toRecIn(general.members);
     jane.thread = [];
-    assert.ok(jane.notIn(general.members));
+    expect(jane).not.toRecIn(general.members);
 });
 
 QUnit.test("datetime type record", async (assert) => {

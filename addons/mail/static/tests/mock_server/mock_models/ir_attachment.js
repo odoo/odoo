@@ -41,7 +41,7 @@ export class IrAttachment extends webModels.IrAttachment {
      * @param {number} ids
      * @returns {Object}
      */
-    _attachmentFormat(ids) {
+    _attachment_format(ids) {
         return this.read(ids).map((attachment) => {
             const res = {
                 create_date: attachment.create_date,

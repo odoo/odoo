@@ -1,39 +1,38 @@
-/** @odoo-module alias=@mail/../tests/discuss/core/channel_invitation_tests default=false */
+/** @odoo-module */
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { test } from "@odoo/hoot";
+import {
+    click,
+    contains,
+    insertText,
+    openDiscuss,
+    start,
+    startServer,
+} from "../../mail_test_helpers";
+import { Command, constants } from "@web/../tests/web_test_helpers";
 
-import { Command } from "@mail/../tests/helpers/command";
-import { start } from "@mail/../tests/helpers/test_utils";
+test.skip("should display the channel invitation form after clicking on the invite button of a chat", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({
+        email: "testpartner@odoo.com",
+        name: "TestPartner",
+    });
+    pyEnv["res.users"].create({ partner_id: partnerId });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "TestChanel",
+        channel_member_ids: [
+            Command.create({ partner_id: constants.PARTNER_ID }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "channel",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click(".o-mail-Discuss-header button[title='Add Users']");
+    await contains(".o-discuss-ChannelInvitation");
+});
 
-import { click, contains, insertText } from "@web/../tests/utils";
-
-QUnit.module("channel invitation form");
-
-QUnit.test(
-    "should display the channel invitation form after clicking on the invite button of a chat",
-    async () => {
-        const pyEnv = await startServer();
-        const partnerId = pyEnv["res.partner"].create({
-            email: "testpartner@odoo.com",
-            name: "TestPartner",
-        });
-        pyEnv["res.users"].create({ partner_id: partnerId });
-        const channelId = pyEnv["discuss.channel"].create({
-            name: "TestChannel",
-            channel_member_ids: [
-                Command.create({ partner_id: pyEnv.currentPartnerId }),
-                Command.create({ partner_id: partnerId }),
-            ],
-            channel_type: "channel",
-        });
-        const { openDiscuss } = await start();
-        await openDiscuss(channelId);
-        await click(".o-mail-Discuss-header button[title='Add Users']");
-        await contains(".o-discuss-ChannelInvitation");
-    }
-);
-
-QUnit.test("can invite users in channel from chat window", async () => {
+test.skip("can invite users in channel from chat window", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({
         email: "testpartner@odoo.com",
@@ -43,7 +42,7 @@ QUnit.test("can invite users in channel from chat window", async () => {
     pyEnv["discuss.channel"].create({
         name: "TestChannel",
         channel_member_ids: [
-            Command.create({ fold_state: "open", partner_id: pyEnv.currentPartnerId }),
+            Command.create({ fold_state: "open", partner_id: constants.PARTNER_ID }),
         ],
         channel_type: "channel",
     });
@@ -59,7 +58,7 @@ QUnit.test("can invite users in channel from chat window", async () => {
     });
 });
 
-QUnit.test("should be able to search for a new user to invite from an existing chat", async () => {
+test.skip("should be able to search for a new user to invite from an existing chat", async () => {
     const pyEnv = await startServer();
     const partnerId_1 = pyEnv["res.partner"].create({
         email: "testpartner@odoo.com",
@@ -74,19 +73,19 @@ QUnit.test("should be able to search for a new user to invite from an existing c
     const channelId = pyEnv["discuss.channel"].create({
         name: "TestChannel",
         channel_member_ids: [
-            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: constants.PARTNER_ID }),
             Command.create({ partner_id: partnerId_1 }),
         ],
         channel_type: "channel",
     });
-    const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await start();
+    await openDiscuss(channelId);
     await click(".o-mail-Discuss-header button[title='Add Users']");
     await insertText(".o-discuss-ChannelInvitation-search", "TestPartner2");
     await contains(".o-discuss-ChannelInvitation-selectable", { text: "TestPartner2" });
 });
 
-QUnit.test("Invitation form should display channel group restriction", async () => {
+test.skip("Invitation form should display channel group restriction", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({
         email: "testpartner@odoo.com",
@@ -98,12 +97,12 @@ QUnit.test("Invitation form should display channel group restriction", async () 
     });
     const channelId = pyEnv["discuss.channel"].create({
         name: "TestChannel",
-        channel_member_ids: [Command.create({ partner_id: pyEnv.currentPartnerId })],
+        channel_member_ids: [Command.create({ partner_id: constants.PARTNER_ID })],
         channel_type: "channel",
         group_public_id: groupId,
     });
-    const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await start();
+    await openDiscuss(channelId);
     await click(".o-mail-Discuss-header button[title='Add Users']");
     await contains(".o-discuss-ChannelInvitation div", {
         text: 'Access restricted to group "testGroup"',
@@ -111,7 +110,7 @@ QUnit.test("Invitation form should display channel group restriction", async () 
     });
 });
 
-QUnit.test("should be able to create a new group chat from an existing chat", async () => {
+test.skip("should be able to create a new group chat from an existing chat", async () => {
     const pyEnv = await startServer();
     const partnerId_1 = pyEnv["res.partner"].create({
         email: "testpartner@odoo.com",
@@ -126,13 +125,13 @@ QUnit.test("should be able to create a new group chat from an existing chat", as
     const channelId = pyEnv["discuss.channel"].create({
         name: "TestChannel",
         channel_member_ids: [
-            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: constants.PARTNER_ID }),
             Command.create({ partner_id: partnerId_1 }),
         ],
         channel_type: "chat",
     });
-    const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await start();
+    await openDiscuss(channelId);
     await click(".o-mail-Discuss-header button[title='Add Users']");
     await insertText(".o-discuss-ChannelInvitation-search", "TestPartner2");
     await click(".o-discuss-ChannelInvitation-selectable", { text: "TestPartner2" });

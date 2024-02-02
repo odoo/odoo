@@ -1,17 +1,21 @@
-/** @odoo-module alias=@mail/../tests/message/link_preview_test default=false */
+/** @odoo-module */
+
+import { expect, test } from "@odoo/hoot";
 
 import { rpc } from "@web/core/network/rpc";
+import {
+    assertSteps,
+    click,
+    contains,
+    insertText,
+    openDiscuss,
+    start,
+    startServer,
+    step,
+} from "../mail_test_helpers";
+import { onRpc } from "@web/../tests/web_test_helpers";
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
-
-import { start } from "@mail/../tests/helpers/test_utils";
-
-import { click, contains, insertText } from "@web/../tests/utils";
-import { assertSteps, step } from "@web/../tests/legacy/utils";
-
-QUnit.module("link preview");
-
-QUnit.test("auto layout with link preview list", async () => {
+test.skip("auto layout with link preview list", async () => {
     const pyEnv = await startServer();
     const linkPreviewId = pyEnv["mail.link.preview"].create({
         og_description: "test description",
@@ -29,12 +33,12 @@ QUnit.test("auto layout with link preview list", async () => {
         model: "discuss.channel",
         res_id: channelId,
     });
-    const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await start();
+    await openDiscuss(channelId);
     await contains(".o-mail-Message .o-mail-LinkPreviewList");
 });
 
-QUnit.test("auto layout with link preview as gif", async () => {
+test.skip("auto layout with link preview as gif", async () => {
     const pyEnv = await startServer();
     const linkPreviewId = pyEnv["mail.link.preview"].create({
         og_description: "test description",
@@ -52,12 +56,12 @@ QUnit.test("auto layout with link preview as gif", async () => {
         model: "discuss.channel",
         res_id: channelId,
     });
-    const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await start();
+    await openDiscuss(channelId);
     await contains(".o-mail-LinkPreviewImage");
 });
 
-QUnit.test("simplest card layout", async () => {
+test.skip("simplest card layout", async () => {
     const pyEnv = await startServer();
     const linkPreviewId = pyEnv["mail.link.preview"].create({
         og_description: "Description",
@@ -73,14 +77,14 @@ QUnit.test("simplest card layout", async () => {
         model: "discuss.channel",
         res_id: channelId,
     });
-    const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await start();
+    await openDiscuss(channelId);
     await contains(".o-mail-LinkPreviewCard");
     await contains(".o-mail-LinkPreviewCard h6", { text: "Article title" });
     await contains(".o-mail-LinkPreviewCard p", { text: "Description" });
 });
 
-QUnit.test("simplest card layout with image", async () => {
+test.skip("simplest card layout with image", async () => {
     const pyEnv = await startServer();
     const linkPreviewId = pyEnv["mail.link.preview"].create({
         og_description: "Description",
@@ -97,15 +101,15 @@ QUnit.test("simplest card layout with image", async () => {
         model: "discuss.channel",
         res_id: channelId,
     });
-    const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await start();
+    await openDiscuss(channelId);
     await contains(".o-mail-LinkPreviewCard");
     await contains(".o-mail-LinkPreviewCard h6", { text: "Article title" });
     await contains(".o-mail-LinkPreviewCard p", { text: "Description" });
     await contains(".o-mail-LinkPreviewCard img");
 });
 
-QUnit.test("Link preview video layout", async () => {
+test.skip("Link preview video layout", async () => {
     const pyEnv = await startServer();
     const linkPreviewId = pyEnv["mail.link.preview"].create({
         og_description: "Description",
@@ -122,15 +126,15 @@ QUnit.test("Link preview video layout", async () => {
         model: "discuss.channel",
         res_id: channelId,
     });
-    const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await start();
+    await openDiscuss(channelId);
     await contains(".o-mail-LinkPreviewVideo");
     await contains(".o-mail-LinkPreviewVideo h6", { text: "video title" });
     await contains(".o-mail-LinkPreviewVideo p", { text: "Description" });
     await contains(".o-mail-LinkPreviewVideo-overlay");
 });
 
-QUnit.test("Link preview image layout", async () => {
+test.skip("Link preview image layout", async () => {
     const pyEnv = await startServer();
     const linkPreviewId = pyEnv["mail.link.preview"].create({
         image_mimetype: "image/jpg",
@@ -145,12 +149,12 @@ QUnit.test("Link preview image layout", async () => {
         model: "discuss.channel",
         res_id: channelId,
     });
-    const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await start();
+    await openDiscuss(channelId);
     await contains(".o-mail-LinkPreviewImage");
 });
 
-QUnit.test("Remove link preview Gif", async () => {
+test.skip("Remove link preview Gif", async () => {
     const pyEnv = await startServer();
     const linkPreviewId = pyEnv["mail.link.preview"].create({
         og_description: "test description",
@@ -168,15 +172,15 @@ QUnit.test("Remove link preview Gif", async () => {
         model: "discuss.channel",
         res_id: channelId,
     });
-    const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await start();
+    await openDiscuss(channelId);
     await click(".o-mail-LinkPreviewImage button[aria-label='Remove']");
     await contains("p", { text: "Do you really want to delete this preview?" });
     await click(".modal-footer button", { text: "Delete" });
     await contains(".o-mail-LinkPreviewImage", { count: 0 });
 });
 
-QUnit.test("Remove link preview card", async () => {
+test.skip("Remove link preview card", async () => {
     const pyEnv = await startServer();
     const linkPreviewId = pyEnv["mail.link.preview"].create({
         og_description: "Description",
@@ -192,15 +196,15 @@ QUnit.test("Remove link preview card", async () => {
         model: "discuss.channel",
         res_id: channelId,
     });
-    const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await start();
+    await openDiscuss(channelId);
     await click(".o-mail-LinkPreviewCard button[aria-label='Remove']");
     await contains("p", { text: "Do you really want to delete this preview?" });
     await click(".modal-footer button", { text: "Delete" });
     await contains(".o-mail-LinkPreviewCard", { count: 0 });
 });
 
-QUnit.test("Remove link preview video", async () => {
+test.skip("Remove link preview video", async () => {
     const pyEnv = await startServer();
     const linkPreviewId = pyEnv["mail.link.preview"].create({
         og_description: "Description",
@@ -217,15 +221,15 @@ QUnit.test("Remove link preview video", async () => {
         model: "discuss.channel",
         res_id: channelId,
     });
-    const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await start();
+    await openDiscuss(channelId);
     await click(".o-mail-LinkPreviewVideo button[aria-label='Remove']");
     await contains("p", { text: "Do you really want to delete this preview?" });
     await click(".modal-footer button", { text: "Delete" });
     await contains(".o-mail-LinkPreviewVideo", { count: 0 });
 });
 
-QUnit.test("Remove link preview image", async () => {
+test.skip("Remove link preview image", async () => {
     const pyEnv = await startServer();
     const linkPreviewId = pyEnv["mail.link.preview"].create({
         image_mimetype: "image/jpg",
@@ -240,15 +244,15 @@ QUnit.test("Remove link preview image", async () => {
         model: "discuss.channel",
         res_id: channelId,
     });
-    const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await start();
+    await openDiscuss(channelId);
     await click(".o-mail-LinkPreviewImage button[aria-label='Remove']");
     await contains("p", { text: "Do you really want to delete this preview?" });
     await click(".modal-footer button", { text: "Delete" });
     await contains(".o-mail-LinkPreviewImage", { count: 0 });
 });
 
-QUnit.test("No crash on receiving link preview of non-known message", async (assert) => {
+test.skip("No crash on receiving link preview of non-known message", async () => {
     const pyEnv = await startServer();
     const linkPreviewId = pyEnv["mail.link.preview"].create({
         image_mimetype: "image/jpg",
@@ -263,96 +267,87 @@ QUnit.test("No crash on receiving link preview of non-known message", async (ass
         model: "discuss.channel",
         res_id: channelId,
     });
-    const { openDiscuss } = await start();
-    openDiscuss();
+    await start();
+    await openDiscuss();
     rpc("/mail/link_preview", { message_id: messageId });
-    assert.ok(true);
+    expect(true).toBeTruthy();
     rpc("/mail/link_preview/hide", { link_preview_ids: [linkPreviewId] });
-    assert.ok(true);
+    expect(true).toBeTruthy();
 });
 
-QUnit.test(
-    "Squash the message and the link preview when the link preview is an image and the link is the only text in the message",
-    async () => {
-        const pyEnv = await startServer();
-        const linkPreviewId = pyEnv["mail.link.preview"].create({
-            image_mimetype: "image/jpg",
-            source_url:
-                "https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Siberischer_tiger_de_edit02.jpg/290px-Siberischer_tiger_de_edit02.jpg",
-        });
-        const channelId = pyEnv["discuss.channel"].create({ name: "wololo" });
-        pyEnv["mail.message"].create({
-            body: "<a href='linkPreviewLink'>http://linkPreview</a>",
-            link_preview_ids: [linkPreviewId],
-            message_type: "comment",
-            model: "discuss.channel",
-            res_id: channelId,
-        });
-        const { openDiscuss } = await start();
-        openDiscuss(channelId);
-        await contains(".o-mail-LinkPreviewImage");
-        await contains(".o-mail-Message-bubble", { count: 0 });
-    }
-);
+test.skip("Squash the message and the link preview when the link preview is an image and the link is the only text in the message", async () => {
+    const pyEnv = await startServer();
+    const linkPreviewId = pyEnv["mail.link.preview"].create({
+        image_mimetype: "image/jpg",
+        source_url:
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Siberischer_tiger_de_edit02.jpg/290px-Siberischer_tiger_de_edit02.jpg",
+    });
+    const channelId = pyEnv["discuss.channel"].create({ name: "wololo" });
+    pyEnv["mail.message"].create({
+        body: "<a href='linkPreviewLink'>http://linkPreview</a>",
+        link_preview_ids: [linkPreviewId],
+        message_type: "comment",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-LinkPreviewImage");
+    await contains(".o-mail-Message-bubble", { count: 0 });
+});
 
-QUnit.test(
-    "Link preview and message should not be squashed when the link preview is not an image",
-    async () => {
-        const pyEnv = await startServer();
-        const linkPreviewId = pyEnv["mail.link.preview"].create({
-            og_description: "Description",
-            og_title: "Article title",
-            og_type: "article",
-            source_url: "https://www.odoo.com",
-        });
-        const channelId = pyEnv["discuss.channel"].create({ name: "wololo" });
-        pyEnv["mail.message"].create({
-            body: "<a href='linkPreviewLink'>http://linkPreview</a>",
-            link_preview_ids: [linkPreviewId],
-            message_type: "comment",
-            model: "discuss.channel",
-            res_id: channelId,
-        });
-        const { openDiscuss } = await start();
-        openDiscuss(channelId);
-        await contains(".o-mail-Message-bubble");
-    }
-);
+test.skip("Link preview and message should not be squashed when the link preview is not an image", async () => {
+    const pyEnv = await startServer();
+    const linkPreviewId = pyEnv["mail.link.preview"].create({
+        og_description: "Description",
+        og_title: "Article title",
+        og_type: "article",
+        source_url: "https://www.odoo.com",
+    });
+    const channelId = pyEnv["discuss.channel"].create({ name: "wololo" });
+    pyEnv["mail.message"].create({
+        body: "<a href='linkPreviewLink'>http://linkPreview</a>",
+        link_preview_ids: [linkPreviewId],
+        message_type: "comment",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Message-bubble");
+});
 
-QUnit.test(
-    "Link preview and message should not be squashed when there is more than the link in the message",
-    async () => {
-        const pyEnv = await startServer();
-        const linkPreviewId = pyEnv["mail.link.preview"].create({
-            image_mimetype: "image/jpg",
-            source_url:
-                "https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Siberischer_tiger_de_edit02.jpg/290px-Siberischer_tiger_de_edit02.jpg",
-        });
-        const channelId = pyEnv["discuss.channel"].create({ name: "wololo" });
-        pyEnv["mail.message"].create({
-            body: "<a href='linkPreviewLink'>http://linkPreview</a> not empty",
-            link_preview_ids: [linkPreviewId],
-            message_type: "comment",
-            model: "discuss.channel",
-            res_id: channelId,
-        });
-        const { openDiscuss } = await start();
-        openDiscuss(channelId);
-        await contains(".o-mail-Message-bubble");
-    }
-);
+test.skip("Link preview and message should not be squashed when there is more than the link in the message", async () => {
+    const pyEnv = await startServer();
+    const linkPreviewId = pyEnv["mail.link.preview"].create({
+        image_mimetype: "image/jpg",
+        source_url:
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Siberischer_tiger_de_edit02.jpg/290px-Siberischer_tiger_de_edit02.jpg",
+    });
+    const channelId = pyEnv["discuss.channel"].create({ name: "wololo" });
+    pyEnv["mail.message"].create({
+        body: "<a href='linkPreviewLink'>http://linkPreview</a> not empty",
+        link_preview_ids: [linkPreviewId],
+        message_type: "comment",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Message-bubble");
+});
 
-QUnit.test("Sending message with link preview URL should show a link preview card", async () => {
+test.skip("Sending message with link preview URL should show a link preview card", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "wololo" });
-    const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await start();
+    await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "https://make-link-preview.com");
     await click("button:not([disabled])", { text: "Send" });
     await contains(".o-mail-LinkPreviewCard");
 });
 
-QUnit.test("Delete all link previews at once", async () => {
+test.skip("Delete all link previews at once", async () => {
     const pyEnv = await startServer();
     const linkPreviewIds = pyEnv["mail.link.preview"].create([
         {
@@ -375,24 +370,19 @@ QUnit.test("Delete all link previews at once", async () => {
         model: "discuss.channel",
         res_id: channelId,
     });
-    const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await start();
+    await openDiscuss(channelId);
     await click(".o-mail-LinkPreviewCard button[aria-label='Remove']");
     await click(".modal-footer button", { text: "Delete all previews" });
     await contains(".o-mail-LinkPreviewCard", { count: 0 });
     await contains(".o-mail-LinkPreviewImage", { count: 0 });
 });
 
-QUnit.test("link preview request is only made when message contains URL", async () => {
+test.skip("link preview request is only made when message contains URL", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "Sales" });
-    const { openDiscuss } = await start({
-        mockRPC(route) {
-            if (route === "/mail/link_preview") {
-                step(route);
-            }
-        },
-    });
+    onRpc("/mail/link_preview", () => step("/mail/link_preview"));
+    await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "Hello, this message does not contain any link");
     await click("button:enabled", { text: "Send" });

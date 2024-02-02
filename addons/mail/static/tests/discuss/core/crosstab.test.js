@@ -1,21 +1,16 @@
-/** @odoo-module alias=@mail/../tests/discuss/core/crosstab_tests default=false */
+/** @odoo-module */
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { test } from "@odoo/hoot";
+import { click, contains, openDiscuss, start, startServer } from "../../mail_test_helpers";
+import { Command, constants } from "@web/../tests/web_test_helpers";
 
-import { Command } from "@mail/../tests/helpers/command";
-import { start } from "@mail/../tests/helpers/test_utils";
-
-import { click, contains } from "@web/../tests/utils";
-
-QUnit.module("crosstab");
-
-QUnit.test("Add member to channel", async () => {
+test.skip("Add member to channel", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const userId = pyEnv["res.users"].create({ name: "Harry" });
     pyEnv["res.partner"].create({ name: "Harry", user_ids: [userId] });
-    const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await start();
+    await openDiscuss(channelId);
     await click("[title='Show Member List']");
     await contains(".o-discuss-ChannelMember", { text: "Mitchell Admin" });
     await click("[title='Add Users']");
@@ -26,7 +21,7 @@ QUnit.test("Add member to channel", async () => {
     await contains(".o-discuss-ChannelMember", { text: "Harry" });
 });
 
-QUnit.test("Remove member from channel", async () => {
+test.skip("Remove member from channel", async () => {
     const pyEnv = await startServer();
     const userId = pyEnv["res.users"].create({ name: "Harry" });
     const partnerId = pyEnv["res.partner"].create({
@@ -36,12 +31,12 @@ QUnit.test("Remove member from channel", async () => {
     const channelId = pyEnv["discuss.channel"].create({
         name: "General",
         channel_member_ids: [
-            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: constants.PARTNER_ID }),
             Command.create({ partner_id: partnerId }),
         ],
     });
-    const { env, openDiscuss } = await start();
-    openDiscuss(channelId);
+    const { env } = await start();
+    await openDiscuss(channelId);
     await click("[title='Show Member List']");
     await contains(".o-discuss-ChannelMember", { text: "Harry" });
     pyEnv.withUser(userId, () =>

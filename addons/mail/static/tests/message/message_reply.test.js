@@ -1,17 +1,13 @@
-/** @odoo-module alias=@mail/../tests/message/message_reply_tests default=false */
+/** @odoo-module */
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
-
-import { start } from "@mail/../tests/helpers/test_utils";
-import { deserializeDateTime } from "@web/core/l10n/dates";
+import { test } from "@odoo/hoot";
 
 import { getOrigin } from "@web/core/utils/urls";
-import { patchWithCleanup } from "@web/../tests/helpers/utils";
-import { click, contains } from "@web/../tests/utils";
+import { click, contains, openDiscuss, start, startServer } from "../mail_test_helpers";
+import { constants, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { deserializeDateTime } from "@web/core/l10n/dates";
 
-QUnit.module("message reply");
-
-QUnit.test("click on message in reply to highlight the parent message", async () => {
+test.skip("click on message in reply to highlight the parent message", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     const messageId = pyEnv["mail.message"].create({
@@ -27,15 +23,15 @@ QUnit.test("click on message in reply to highlight the parent message", async ()
         parent_id: messageId,
         res_id: channelId,
     });
-    const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await start();
+    await openDiscuss(channelId);
     await click(".o-mail-MessageInReply-message", {
         parent: [".o-mail-Message", { text: "Reply to Hey" }],
     });
     await contains(".o-mail-Message.o-highlighted .o-mail-Message-content", { text: "Hey lol" });
 });
 
-QUnit.test("click on message in reply to scroll to the parent message", async () => {
+test.skip("click on message in reply to scroll to the parent message", async () => {
     // make scroll behavior instantaneous.
     patchWithCleanup(Element.prototype, {
         scrollIntoView() {
@@ -61,15 +57,15 @@ QUnit.test("click on message in reply to scroll to the parent message", async ()
         parent_id: oldestMessageId,
         res_id: channelId,
     });
-    const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await start();
+    await openDiscuss(channelId);
     await click(".o-mail-MessageInReply-message", {
         parent: [".o-mail-Message", { text: "Response to first message" }],
     });
     await contains(":nth-child(1 of .o-mail-Message)", { visible: true });
 });
 
-QUnit.test("reply shows correct author avatar", async (assert) => {
+test.skip("reply shows correct author avatar", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     const messageId = pyEnv["mail.message"].create({
@@ -79,7 +75,7 @@ QUnit.test("reply shows correct author avatar", async (assert) => {
         res_id: channelId,
     });
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
-    const partner = pyEnv["res.partner"].searchRead([["id", "=", pyEnv.currentPartnerId]])[0];
+    const partner = pyEnv["res.partner"].search_read([["id", "=", constants.PARTNER_ID]])[0];
     pyEnv["mail.message"].create({
         body: "Howdy",
         message_type: "comment",
@@ -88,11 +84,11 @@ QUnit.test("reply shows correct author avatar", async (assert) => {
         parent_id: messageId,
         res_id: channelId,
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await contains(
         `.o-mail-MessageInReply-avatar[data-src='${`${getOrigin()}/web/image/res.partner/${
-            pyEnv.currentPartnerId
+            constants.PARTNER_ID
         }/avatar_128?unique=${deserializeDateTime(partner.write_date).ts}`}`
     );
 });

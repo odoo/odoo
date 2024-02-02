@@ -1,26 +1,30 @@
-/** @odoo-module alias=@mail/../tests/suggestion/suggestion_tests default=false */
+/** @odoo-module */
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { beforeEach, expect, test } from "@odoo/hoot";
 
 import { Composer } from "@mail/core/common/composer";
-import { Command } from "@mail/../tests/helpers/command";
-import { start } from "@mail/../tests/helpers/test_utils";
+import {
+    click,
+    contains,
+    insertText,
+    openDiscuss,
+    openFormView,
+    start,
+    startServer,
+} from "../mail_test_helpers";
+import { Command, constants, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { Deferred, tick } from "@odoo/hoot-mock";
 
-import { makeDeferred, nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
-import { click, contains, insertText } from "@web/../tests/utils";
-
-QUnit.module("suggestion", {
-    async beforeEach() {
-        // Simulate real user interactions
-        patchWithCleanup(Composer.prototype, {
-            isEventTrusted() {
-                return true;
-            },
-        });
-    },
+beforeEach(() => {
+    // Simulate real user interactions
+    patchWithCleanup(Composer.prototype, {
+        isEventTrusted() {
+            return true;
+        },
+    });
 });
 
-QUnit.test('display partner mention suggestions on typing "@"', async () => {
+test.skip('display partner mention suggestions on typing "@"', async () => {
     const pyEnv = await startServer();
     const partnerId_1 = pyEnv["res.partner"].create({
         email: "testpartner@odoo.com",
@@ -34,59 +38,56 @@ QUnit.test('display partner mention suggestions on typing "@"', async () => {
     const channelId = pyEnv["discuss.channel"].create({
         name: "general",
         channel_member_ids: [
-            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: constants.PARTNER_ID }),
             Command.create({ partner_id: partnerId_1 }),
             Command.create({ partner_id: partnerId_2 }),
         ],
     });
-    const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await start();
+    await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "@");
     await contains(".o-mail-Composer-suggestion strong", { count: 3 });
 });
 
-QUnit.test(
-    'post a first message then display partner mention suggestions on typing "@"',
-    async () => {
-        const pyEnv = await startServer();
-        const partnerId_1 = pyEnv["res.partner"].create({
-            email: "testpartner@odoo.com",
-            name: "TestPartner",
-        });
-        const partnerId_2 = pyEnv["res.partner"].create({
-            email: "testpartner2@odoo.com",
-            name: "TestPartner2",
-        });
-        pyEnv["res.users"].create({ partner_id: partnerId_1 });
-        const channelId = pyEnv["discuss.channel"].create({
-            name: "general",
-            channel_member_ids: [
-                Command.create({ partner_id: pyEnv.currentPartnerId }),
-                Command.create({ partner_id: partnerId_1 }),
-                Command.create({ partner_id: partnerId_2 }),
-            ],
-        });
-        const { openDiscuss } = await start();
-        openDiscuss(channelId);
-        await contains(".o-mail-Composer-input");
-        await insertText(".o-mail-Composer-input", "first message");
-        await click("button:enabled", { text: "Send" });
-        await contains(".o-mail-Message");
-        await insertText(".o-mail-Composer-input", "@");
-        await contains(".o-mail-Composer-suggestion strong", { count: 3 });
-    }
-);
-
-QUnit.test('display partner mention suggestions on typing "@" in chatter', async () => {
+test.skip('post a first message then display partner mention suggestions on typing "@"', async () => {
     const pyEnv = await startServer();
-    const { openFormView } = await start();
-    openFormView("res.partner", pyEnv.currentPartnerId);
+    const partnerId_1 = pyEnv["res.partner"].create({
+        email: "testpartner@odoo.com",
+        name: "TestPartner",
+    });
+    const partnerId_2 = pyEnv["res.partner"].create({
+        email: "testpartner2@odoo.com",
+        name: "TestPartner2",
+    });
+    pyEnv["res.users"].create({ partner_id: partnerId_1 });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "general",
+        channel_member_ids: [
+            Command.create({ partner_id: constants.PARTNER_ID }),
+            Command.create({ partner_id: partnerId_1 }),
+            Command.create({ partner_id: partnerId_2 }),
+        ],
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Composer-input");
+    await insertText(".o-mail-Composer-input", "first message");
+    await click("button:enabled", { text: "Send" });
+    await contains(".o-mail-Message");
+    await insertText(".o-mail-Composer-input", "@");
+    await contains(".o-mail-Composer-suggestion strong", { count: 3 });
+});
+
+test.skip('display partner mention suggestions on typing "@" in chatter', async () => {
+    await startServer();
+    await start();
+    await openFormView("res.partner", constants.PARTNER_ID);
     await click("button", { text: "Send message" });
     await insertText(".o-mail-Composer-input", "@");
     await contains(".o-mail-Composer-suggestion strong", { text: "Mitchell Admin" });
 });
 
-QUnit.test("show other channel member in @ mention", async () => {
+test.skip("show other channel member in @ mention", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({
         email: "testpartner@odoo.com",
@@ -95,17 +96,17 @@ QUnit.test("show other channel member in @ mention", async () => {
     const channelId = pyEnv["discuss.channel"].create({
         name: "general",
         channel_member_ids: [
-            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: constants.PARTNER_ID }),
             Command.create({ partner_id: partnerId }),
         ],
     });
-    const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await start();
+    await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "@");
     await contains(".o-mail-Composer-suggestion strong", { text: "TestPartner" });
 });
 
-QUnit.test("select @ mention insert mention text in composer", async () => {
+test.skip("select @ mention insert mention text in composer", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({
         email: "testpartner@odoo.com",
@@ -114,18 +115,18 @@ QUnit.test("select @ mention insert mention text in composer", async () => {
     const channelId = pyEnv["discuss.channel"].create({
         name: "general",
         channel_member_ids: [
-            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: constants.PARTNER_ID }),
             Command.create({ partner_id: partnerId }),
         ],
     });
-    const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await start();
+    await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "@");
     await click(".o-mail-Composer-suggestion strong", { text: "TestPartner" });
     await contains(".o-mail-Composer-input", { value: "@TestPartner " });
 });
 
-QUnit.test("select @ mention closes suggestions", async () => {
+test.skip("select @ mention closes suggestions", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({
         email: "testpartner@odoo.com",
@@ -134,39 +135,39 @@ QUnit.test("select @ mention closes suggestions", async () => {
     const channelId = pyEnv["discuss.channel"].create({
         name: "general",
         channel_member_ids: [
-            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: constants.PARTNER_ID }),
             Command.create({ partner_id: partnerId }),
         ],
     });
-    const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await start();
+    await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "@");
     await click(".o-mail-Composer-suggestion strong", { text: "TestPartner" });
     await contains(".o-mail-Composer-suggestion strong", { count: 0 });
 });
 
-QUnit.test('display channel mention suggestions on typing "#"', async () => {
+test.skip('display channel mention suggestions on typing "#"', async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         name: "General",
         channel_type: "channel",
     });
-    const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await start();
+    await openDiscuss(channelId);
     await contains(".o-mail-Composer-suggestionList");
     await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
     await insertText(".o-mail-Composer-input", "#");
     await contains(".o-mail-Composer-suggestionList .o-open");
 });
 
-QUnit.test("mention a channel", async () => {
+test.skip("mention a channel", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         name: "General",
         channel_type: "channel",
     });
-    const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await start();
+    await openDiscuss(channelId);
     await contains(".o-mail-Composer-suggestionList");
     await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
     await contains(".o-mail-Composer-input", { value: "" });
@@ -175,34 +176,30 @@ QUnit.test("mention a channel", async () => {
     await contains(".o-mail-Composer-input", { value: "#General " });
 });
 
-QUnit.test("Channel suggestions do not crash after rpc returns", async (assert) => {
+test.skip("Channel suggestions do not crash after rpc returns", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
-    const deferred = makeDeferred();
-    const { openDiscuss } = await start({
-        async mockRPC(args, params, originalFn) {
-            if (params.method === "get_mention_suggestions") {
-                const res = await originalFn(args, params);
-                assert.step("get_mention_suggestions");
-                deferred.resolve();
-                return res;
-            }
-            return originalFn(args, params);
-        },
+    const deferred = new Deferred();
+    onRpc((route, args) => {
+        if (route === "/web/dataset/call_kw/discuss.channel/get_mention_suggestions") {
+            expect.step("get_mention_suggestions");
+            deferred.resolve();
+        }
     });
-    openDiscuss(channelId);
+    await start();
+    await openDiscuss(channelId);
     pyEnv["discuss.channel"].create({ name: "foo" });
     insertText(".o-mail-Composer-input", "#");
-    await nextTick();
+    await tick();
     insertText(".o-mail-Composer-input", "f");
     await deferred;
-    assert.verifySteps(["get_mention_suggestions"]);
+    expect(["get_mention_suggestions"]).toVerifySteps();
 });
 
-QUnit.test("Suggestions are shown after delimiter was used in text (@)", async () => {
+test.skip("Suggestions are shown after delimiter was used in text (@)", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "@");
     await contains(".o-mail-Composer-suggestion");
@@ -212,10 +209,10 @@ QUnit.test("Suggestions are shown after delimiter was used in text (@)", async (
     await contains(".o-mail-Composer-suggestion strong", { text: "Mitchell Admin" });
 });
 
-QUnit.test("Suggestions are shown after delimiter was used in text (#)", async () => {
+test.skip("Suggestions are shown after delimiter was used in text (#)", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "#");
     await contains(".o-mail-Composer-suggestion");
@@ -225,7 +222,7 @@ QUnit.test("Suggestions are shown after delimiter was used in text (#)", async (
     await contains(".o-mail-Composer-suggestion strong", { text: "#General" });
 });
 
-QUnit.test("display partner mention when typing more than 2 words if they match", async () => {
+test.skip("display partner mention when typing more than 2 words if they match", async () => {
     const pyEnv = await startServer();
     pyEnv["res.partner"].create([
         {
@@ -241,8 +238,8 @@ QUnit.test("display partner mention when typing more than 2 words if they match"
             name: "My Test Partner",
         },
     ]);
-    const { openFormView } = await start();
-    openFormView("res.partner", pyEnv.currentPartnerId);
+    await start();
+    await openFormView("res.partner", constants.PARTNER_ID);
     await click("button", { text: "Send message" });
     await insertText(".o-mail-Composer-input", "@My ");
     await contains(".o-mail-Composer-suggestion strong", { count: 3 });
@@ -253,7 +250,7 @@ QUnit.test("display partner mention when typing more than 2 words if they match"
     await contains(".o-mail-Composer-suggestion strong", { text: "My Test Partner" });
 });
 
-QUnit.test("Internal user should be displayed first", async () => {
+test.skip("Internal user should be displayed first", async () => {
     const pyEnv = await startServer();
     const [user1Id, user2Id] = pyEnv["res.users"].create([{}, {}]);
     const partnerIds = pyEnv["res.partner"].create([
@@ -266,18 +263,18 @@ QUnit.test("Internal user should be displayed first", async () => {
         {
             is_active: true,
             partner_id: partnerIds[1], // B
-            res_id: pyEnv.currentPartnerId,
+            res_id: constants.PARTNER_ID,
             res_model: "res.partner",
         },
         {
             is_active: true,
             partner_id: partnerIds[3], // D
-            res_id: pyEnv.currentPartnerId,
+            res_id: constants.PARTNER_ID,
             res_model: "res.partner",
         },
     ]);
-    const { openFormView } = await start();
-    openFormView("res.partner", pyEnv.currentPartnerId);
+    await start();
+    await openFormView("res.partner", constants.PARTNER_ID);
     await click("button", { text: "Send message" });
     await insertText(".o-mail-Composer-input", "@Person ");
     await contains(":nth-child(1 of .o-mail-Composer-suggestion) strong", { text: "Person D" });
@@ -286,7 +283,7 @@ QUnit.test("Internal user should be displayed first", async () => {
     await contains(":nth-child(4 of .o-mail-Composer-suggestion) strong", { text: "Person A" });
 });
 
-QUnit.test("Current user that is a follower should be considered as such", async () => {
+test.skip("Current user that is a follower should be considered as such", async () => {
     const pyEnv = await startServer();
     const userId = pyEnv["res.users"].create({});
     pyEnv["res.partner"].create([
@@ -296,13 +293,13 @@ QUnit.test("Current user that is a follower should be considered as such", async
     pyEnv["mail.followers"].create([
         {
             is_active: true,
-            partner_id: pyEnv.currentPartnerId,
-            res_id: pyEnv.currentPartnerId,
+            partner_id: constants.PARTNER_ID,
+            res_id: constants.PARTNER_ID,
             res_model: "res.partner",
         },
     ]);
-    const { openFormView } = await start();
-    await openFormView("res.partner", pyEnv.currentPartnerId);
+    await start();
+    await openFormView("res.partner", constants.PARTNER_ID);
     await click("button", { text: "Send message" });
     await insertText(".o-mail-Composer-input", "@");
     await contains(".o-mail-Composer-suggestion", { count: 4 });

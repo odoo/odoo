@@ -12,6 +12,7 @@ import { constants, webModels } from "@web/../tests/web_test_helpers";
  */
 
 export class ResPartner extends webModels.ResPartner {
+    _inherit = ["mail.thread"];
     /**
      * Simulates `get_mention_suggestions` on `res.partner`.
      *

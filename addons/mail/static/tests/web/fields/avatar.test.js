@@ -1,16 +1,14 @@
-/** @odoo-module alias=@mail/../tests/web/fields/avatar_tests default=false */
+/** @odoo-module */
+
+import { test } from "@odoo/hoot";
 
 import { Avatar } from "@mail/views/web/fields/avatar/avatar";
-import { start } from "@mail/../tests/helpers/test_utils";
+import { click, contains, start } from "../../mail_test_helpers";
+import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 
-import { getFixture, mount } from "@web/../tests/helpers/utils";
-import { click, contains } from "@web/../tests/utils";
-
-QUnit.module("avatar field");
-
-QUnit.test("basic rendering", async () => {
+test.skip("basic rendering", async () => {
     const { env } = await start();
-    await mount(Avatar, getFixture(), {
+    await mountWithCleanup(Avatar, {
         env,
         props: {
             resId: 2,

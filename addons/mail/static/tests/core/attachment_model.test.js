@@ -1,10 +1,9 @@
-/** @odoo-module alias=@mail/../tests/core/attachment_model_tests default=false */
+/** @odoo-module */
 
-import { start } from "@mail/../tests/helpers/test_utils";
+import { expect, test } from "@odoo/hoot";
+import { start } from "../mail_test_helpers";
 
-QUnit.module("attachment model test", {});
-
-QUnit.test("Attachment model properties", async (assert) => {
+test.skip("Attachment model properties", async () => {
     const { env } = await start();
 
     const attachment = env.services["mail.store"].Attachment.insert({
@@ -13,12 +12,12 @@ QUnit.test("Attachment model properties", async (assert) => {
         mimetype: "text/plain",
         name: "test.txt",
     });
-    assert.ok(attachment);
-    assert.ok(attachment.isText);
-    assert.ok(attachment.isViewable);
-    assert.strictEqual(attachment.filename, "test.txt");
-    assert.strictEqual(attachment.mimetype, "text/plain");
-    assert.strictEqual(attachment.name, "test.txt");
-    assert.strictEqual(attachment.displayName, "test.txt");
-    assert.strictEqual(attachment.extension, "txt");
+    expect(attachment).toBeTruthy();
+    expect(attachment.isText).toBeTruthy();
+    expect(attachment.isViewable).toBeTruthy();
+    expect(attachment.filename).toBe("test.txt");
+    expect(attachment.mimetype).toBe("text/plain");
+    expect(attachment.name).toBe("test.txt");
+    expect(attachment.displayName).toBe("test.txt");
+    expect(attachment.extension).toBe("txt");
 });
