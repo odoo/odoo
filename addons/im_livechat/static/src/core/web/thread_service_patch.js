@@ -18,16 +18,6 @@ patch(ThreadService.prototype, {
         }
     },
 
-    /** @deprecated */
-    sortChannels() {
-        super.sortChannels();
-        // Live chats are sorted by most recent interest date time in the sidebar.
-        this.store.discuss.livechat.threads.sort(
-            (t1, t2) =>
-                compareDatetime(t2.lastInterestDateTime, t1.lastInterestDateTime) || t2.id - t1.id
-        );
-    },
-
     /**
      * @returns {boolean} Whether the livechat thread changed.
      */
