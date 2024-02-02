@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import _, models, Command
+from odoo.addons.base.models.res_bank import sanitize_account_number
 from odoo.tools import float_repr
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.float_utils import float_round
@@ -346,6 +347,42 @@ class AccountEdiCommon(models.AbstractModel):
             invoice.partner_id = self.env['res.partner'].create(partner_vals)
             if vat and self.env['res.partner']._run_vat_test(vat, country, invoice.partner_id.is_company):
                 invoice.partner_id.vat = vat
+
+    def _import_retrieve_and_fill_partner_bank_details(self, invoice, bank_details):
+        """ Retrieve the bank account, if no matching bank account is found, create it
+        """
+
+        bank_details = map(sanitize_account_number, bank_details)
+
+        if invoice.move_type in ('out_refund', 'in_invoice'):
+            partner = invoice.partner_id
+        elif invoice.move_type in ('out_invoice', 'in_refund'):
+            partner = self.env.company.partner_id
+        else:
+            return
+
+        banks_to_create = []
+        acc_number_partner_bank_dict = {
+            bank.sanitized_acc_number: bank
+            for bank in self.env['res.partner.bank'].search(
+                [('company_id', 'in', [False, invoice.company_id.id]), ('acc_number', 'in', bank_details)]
+            )
+        }
+
+        for account_number in bank_details:
+            partner_bank = acc_number_partner_bank_dict.get(account_number, self.env['res.partner.bank'])
+
+            if partner_bank.partner_id == partner:
+                invoice.partner_bank_id = partner_bank
+                return
+            elif not partner_bank and account_number:
+                banks_to_create.append({
+                    'acc_number': account_number,
+                    'partner_id': partner.id,
+                })
+
+        if banks_to_create:
+            invoice.partner_bank_id = self.env['res.partner.bank'].create(banks_to_create)[0]
 
     def _import_fill_invoice_allowance_charge(self, tree, invoice, journal, qty_factor):
         logs = []
