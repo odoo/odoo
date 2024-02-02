@@ -3,10 +3,13 @@
 import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
 import {
     click,
+    clickSave,
     editInput,
     getFixture,
+    getNodesTextContent,
     nextTick,
     patchWithCleanup,
+    selectDropdownItem,
     triggerHotkey,
 } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
@@ -816,4 +819,78 @@ QUnit.module("Fields", (hooks) => {
             assert.hasClass(button, "o_first");
         }
     );
+
+    QUnit.test("correctly load statusbar when dynamic domain changes", async function (assert) {
+        serverData.models = {
+            stage: {
+                fields: {
+                    name: { string: "Name", type: "char" },
+                    folded: { string: "Folded", type: "boolean", default: false },
+                    project_ids: { string: "Project", type: "many2many", relation: "project" },
+                },
+                records: [
+                    { id: 1, name: "Stage Project 1", project_ids: [1] },
+                    { id: 2, name: "Stage Project 2", project_ids: [2] },
+                ],
+            },
+            project: {
+                fields: {
+                    display_name: { string: "Name", type: "char" },
+                },
+                records: [
+                    { id: 1, display_name: "Project 1" },
+                    { id: 2, display_name: "Project 2" },
+                ],
+            },
+            task: {
+                fields: {
+                    status: { string: "Status", type: "many2one", relation: "stage" },
+                    project_id: { string: "Project", type: "many2one", relation: "project" },
+                },
+                records: [{ id: 1, project_id: 1, status: 1 }],
+            },
+        };
+        serverData.models.task.onchanges = {
+            project_id: (obj) => {
+                obj.status = obj.project_id === 1 ? 1 : 2;
+            },
+        };
+
+        await makeView({
+            type: "form",
+            resModel: "task",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <header>
+                    <field name="status" widget="statusbar" domain="[('project_ids', 'in', project_id)]" />
+                    </header>
+                    <field name="project_id"/>
+                </form>`,
+            mockRPC(route, args) {
+                if (args.method === "search_read") {
+                    assert.step(JSON.stringify(args.kwargs.domain));
+                }
+            },
+        });
+
+        assert.deepEqual(
+            getNodesTextContent(target.querySelectorAll(".o_statusbar_status button:not(.d-none)")),
+            ["Stage Project 1"]
+        );
+        assert.verifySteps(['["|",["id","=",1],["project_ids","in",1]]']);
+        await selectDropdownItem(target, "project_id", "Project 2");
+        assert.deepEqual(
+            getNodesTextContent(target.querySelectorAll(".o_statusbar_status button:not(.d-none)")),
+            ["Stage Project 2"]
+        );
+        assert.verifySteps(['["|",["id","=",2],["project_ids","in",2]]']);
+        await clickSave(target);
+        assert.deepEqual(
+            getNodesTextContent(target.querySelectorAll(".o_statusbar_status button:not(.d-none)")),
+            ["Stage Project 2"]
+        );
+        assert.verifySteps([]);
+    });
 });
