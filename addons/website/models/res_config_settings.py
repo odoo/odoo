@@ -228,11 +228,11 @@ class ResConfigSettings(models.TransientModel):
         }
 
     def action_ping_sitemap(self):
-        if not self.website_id.domain:
-            raise UserError(_("You haven't defined your domain"))
-
         return {
-            'type': 'ir.actions.act_url',
-            'url': 'http://www.google.com/ping?sitemap=%s/sitemap.xml' % self.website_id.domain,
-            'target': 'new',
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'message': _("Google doesn't need to be pinged anymore. It will automatically fetch your /sitemap.xml."),
+                'sticky': True,
+            }
         }
