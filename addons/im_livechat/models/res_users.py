@@ -18,6 +18,10 @@ class Users(models.Model):
     def SELF_READABLE_FIELDS(self):
         return super().SELF_READABLE_FIELDS + ['livechat_username', 'livechat_lang_ids', 'has_access_livechat']
 
+    @property
+    def SELF_WRITEABLE_FIELDS(self):
+        return super().SELF_WRITEABLE_FIELDS + ['livechat_username', 'livechat_lang_ids']
+
     @api.depends('res_users_settings_id.livechat_username')
     def _compute_livechat_username(self):
         for user in self:

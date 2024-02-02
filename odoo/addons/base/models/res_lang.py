@@ -21,6 +21,7 @@ class Lang(models.Model):
     _name = "res.lang"
     _description = "Languages"
     _order = "active desc,name"
+    _allow_sudo_commands = False
 
     _disallowed_datetime_patterns = list(tools.DATETIME_FORMATS_MAP)
     _disallowed_datetime_patterns.remove('%y') # this one is in fact allowed, just not good practice
