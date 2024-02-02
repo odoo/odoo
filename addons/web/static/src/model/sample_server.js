@@ -288,19 +288,7 @@ export class SampleServer {
                 return [...new Set(ids)];
             }
             case "selection": {
-                // I hoped we wouldn't have to implement such special cases, but here it is.
-                // If this (mail) field is set, 'Warning' is displayed instead of the last
-                // activity, and we don't want to see a bunch of 'Warning's in a list. In the
-                // future, if we have to implement several special cases like that, we'll setup
-                // a proper hook to allow external modules to define extensions of this function.
-                // For now, as we have only one use case, I guess that doing it here is fine.
-                if (fieldName === "activity_exception_decoration") {
-                    return false;
-                }
-                if (field.selection.length > 0) {
-                    return this._getRandomArrayEl(field.selection)[0];
-                }
-                return false;
+                return this._getRandomSelectionValue(modelName, field);
             }
             default:
                 return false;
@@ -349,6 +337,17 @@ export class SampleServer {
      */
     _getRandomInt(max) {
         return Math.floor(Math.random() * max);
+    }
+
+    /**
+     * @private
+     * @returns {string}
+     */
+    _getRandomSelectionValue(modelName, field) {
+        if (field.selection.length > 0) {
+            return this._getRandomArrayEl(field.selection)[0];
+        }
+        return false;
     }
 
     /**

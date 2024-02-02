@@ -128,6 +128,7 @@ For more specific needs, you may also assign custom-defined actions
             'mail/static/src/**/primary_variables.scss',
         ],
         'web.assets_backend': [
+            'mail/static/src/model/**/*',
             # depends on BS variables, can't be loaded in assets_primary or assets_secondary
             'mail/static/src/scss/variables/derived_variables.scss',
             'mail/static/src/scss/*.scss',
