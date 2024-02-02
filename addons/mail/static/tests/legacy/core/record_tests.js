@@ -4,6 +4,7 @@ import { BaseStore, Record, makeStore, modelRegistry } from "@mail/core/common/r
 
 import { registry } from "@web/core/registry";
 import { clearRegistryWithCleanup, makeTestEnv } from "@web/../tests/helpers/mock_env";
+import { assertSteps, step } from "@web/../tests/utils";
 import { markup, reactive, toRaw } from "@odoo/owl";
 
 const serviceRegistry = registry.category("services");
@@ -614,4 +615,78 @@ QUnit.test("store updates can be observed", async (assert) => {
     assert.verifySteps(["abc:2"], "observable from record._store");
     rawStore.Model.store.abc = 3;
     assert.verifySteps(["abc:3"], "observable from Model.store");
+});
+
+QUnit.test("onAdd/onDelete hooks on one without inverse", async () => {
+    (class Thread extends Record {
+        static id = "name";
+    }).register();
+    (class Member extends Record {
+        static id = "name";
+        name;
+        thread = Record.one("Thread", {
+            onAdd: (thread) => step(`thread.onAdd(${thread.name})`),
+            onDelete: (thread) => step(`thread.onDelete(${thread.name})`),
+        });
+    }).register();
+    const store = await start();
+    const general = store.Thread.insert("General");
+    const john = store.Member.insert("John");
+    await assertSteps([]);
+    john.thread = general;
+    await assertSteps(["thread.onAdd(General)"]);
+    john.thread = general;
+    await assertSteps([]);
+    john.thread = undefined;
+    await assertSteps(["thread.onDelete(General)"]);
+});
+
+QUnit.test("onAdd/onDelete hooks on many without inverse", async () => {
+    (class Thread extends Record {
+        static id = "name";
+        name;
+        members = Record.many("Member", {
+            onAdd: (member) => step(`members.onAdd(${member.name})`),
+            onDelete: (member) => step(`members.onDelete(${member.name})`),
+        });
+    }).register();
+    (class Member extends Record {
+        static id = "name";
+    }).register();
+    const store = await start();
+    const general = store.Thread.insert("General");
+    const jane = store.Member.insert("Jane");
+    const john = store.Member.insert("John");
+    await assertSteps([]);
+    general.members = jane;
+    await assertSteps(["members.onAdd(Jane)"]);
+    general.members = jane;
+    await assertSteps([]);
+    general.members = [["ADD", john]];
+    await assertSteps(["members.onAdd(John)"]);
+    general.members = undefined;
+    await assertSteps(["members.onDelete(John)", "members.onDelete(Jane)"]);
+});
+
+QUnit.test("record list assign should update inverse fields", async (assert) => {
+    (class Thread extends Record {
+        static id = "name";
+        name;
+        members = Record.many("Member", { inverse: "thread" });
+    }).register();
+    (class Member extends Record {
+        static id = "name";
+        thread = Record.one("Thread", { inverse: "members" });
+    }).register();
+    const store = await start();
+    const general = store.Thread.insert("General");
+    const jane = store.Member.insert("Jane");
+    general.members = jane; // direct assignation of value goes through assign()
+    assert.ok(jane.thread.eq(general));
+    general.members = []; // writing empty array specifically goes through assign()
+    assert.notOk(jane.thread);
+    jane.thread = general;
+    assert.ok(jane.in(general.members));
+    jane.thread = [];
+    assert.ok(jane.notIn(general.members));
 });
