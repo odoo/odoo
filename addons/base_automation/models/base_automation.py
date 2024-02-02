@@ -849,6 +849,8 @@ class BaseAutomation(models.Model):
                 method = make_onchange(automation_rule.id)
                 for field in automation_rule.on_change_field_ids:
                     Model._onchange_methods[field.name].append(method)
+                if automation_rule.on_change_field_ids:
+                    self.env.registry.clear_cache('templates')
 
             if automation_rule.model_id.is_mail_thread and automation_rule.trigger in MAIL_TRIGGERS:
                 def _message_post(self, *args, **kwargs):
