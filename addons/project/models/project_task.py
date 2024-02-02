@@ -65,6 +65,7 @@ PROJECT_TASK_WRITABLE_FIELDS = {
     'parent_id',
     'priority',
     'state',
+    'is_closed',
 }
 
 CLOSED_STATES = {
@@ -158,6 +159,7 @@ class Task(models.Model):
         *CLOSED_STATES.items(),
         ('04_waiting_normal', 'Waiting'),
     ], string='State', copy=False, default='01_in_progress', required=True, compute='_compute_state', inverse='_inverse_state', readonly=False, store=True, index=True, recursive=True, tracking=True)
+    is_closed = fields.Boolean("Closed state", compute='_compute_is_closed', search='_search_is_closed')
 
     create_date = fields.Datetime("Created On", readonly=True, index=True)
     write_date = fields.Datetime("Last Updated On", readonly=True)
@@ -326,6 +328,24 @@ class Task(models.Model):
             # if the task as no blocking dependencies and is in waiting_normal, the task goes back to in progress
             elif task.state not in CLOSED_STATES:
                 task.state = '01_in_progress'
+
+    @api.depends('state')
+    def _compute_is_closed(self):
+        for task in self:
+            task.is_closed = task.state in CLOSED_STATES
+
+    def _search_is_closed(self, operator, value):
+        if operator not in ('=', '!=') or not isinstance(value, bool):
+            raise NotImplementedError(_('The search does not support the %s operator or %s value.', operator, value))
+        if (operator == '!=' and value) or (operator == '=' and not value):
+            searched_states = self.OPEN_STATES
+        else:
+            searched_states = list(CLOSED_STATES.keys())
+        domain = [
+            ('state', 'in', searched_states)
+        ]
+        return domain
+
 
     @property
     def OPEN_STATES(self):
