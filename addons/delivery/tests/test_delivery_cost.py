@@ -172,6 +172,7 @@ class TestDeliveryCost(common.TransactionCase):
                 'applied_on': '0_product_variant',
                 'product_id': self.normal_delivery.product_id.id,
             })],
+            'discount_policy': 'without_discount',
         })
 
         # Create sales order with Normal Delivery Charges
