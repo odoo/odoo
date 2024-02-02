@@ -394,16 +394,30 @@ export class KanbanDynamicGroupList extends DynamicGroupList {
      */
     async load() {
         const load = async () => {
-            const previousGroups = this.groups.map((g, i) => [g, i]);
             await super.load();
             if (this.previousParams === this.currentParams) {
-                for (const [group, index] of previousGroups) {
-                    const newGroup = this.groups.find((g) => group.valueEquals(g.value));
-                    if (!group.deleted && !newGroup) {
-                        group.empty();
+                this.previousGroupsStates.forEach((groupState, index) => {
+                    const groupDisapeared = !this.groups.find((g) =>
+                        g.valueEquals(groupState.value)
+                    );
+                    if (!groupState.deleted && groupDisapeared) {
+                        const { value, displayName, __rawValue, isFolded, groupDomain } =
+                            groupState;
+                        const group = this.model.createDataPoint("group", {
+                            ...this.commonGroupParams,
+                            count: 0,
+                            value,
+                            displayName,
+                            __rawValue,
+                            aggregates: {},
+                            groupByField: this.groupByField,
+                            groupDomain,
+                            isFolded,
+                            rawContext: this.rawContext,
+                        });
                         this.groups.splice(index, 0, group);
                     }
-                }
+                });
             }
         };
         await this._loadWithProgressData(load());
