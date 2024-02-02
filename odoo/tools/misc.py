@@ -49,6 +49,7 @@ import odoo.addons
 # get_encodings, ustr and exception_to_unicode were originally from tools.misc.
 # There are moved to loglevels until we refactor tools.
 from odoo.loglevels import get_encodings, ustr, exception_to_unicode     # noqa
+from odoo.tools.float_utils import float_round
 from . import pycompat
 from .cache import *
 from .config import config
@@ -1223,7 +1224,7 @@ def babel_locale_parse(lang_code):
         except:
             return babel.Locale.parse("en_US")
 
-def formatLang(env, value, digits=None, grouping=True, monetary=False, dp=False, currency_obj=False):
+def formatLang(env, value, digits=2, grouping=True, monetary=False, dp=None, currency_obj=None):
     """
         Assuming 'Account' decimal.precision=3:
             formatLang(value) -> digits=2 (default)
@@ -1231,28 +1232,24 @@ def formatLang(env, value, digits=None, grouping=True, monetary=False, dp=False,
             formatLang(value, dp='Account') -> digits=3
             formatLang(value, digits=5, dp='Account') -> digits=5
     """
-
-    if digits is None:
-        digits = DEFAULT_DIGITS = 2
-        if dp:
-            decimal_precision_obj = env['decimal.precision']
-            digits = decimal_precision_obj.precision_get(dp)
-        elif currency_obj:
-            digits = currency_obj.decimal_places
-
+    # We don't want to return 0
     if isinstance(value, str) and not value:
         return ''
 
-    lang_obj = get_lang(env)
+    if dp:
+        digits = env['decimal.precision'].precision_get(dp)
+    elif currency_obj:
+        digits = currency_obj.decimal_places
 
-    res = lang_obj.format('%.' + str(digits) + 'f', value, grouping=grouping, monetary=monetary)
+    rounded_value = float_round(value, precision_digits=digits, rounding_method='HALF-EVEN')
+    formatted_value = get_lang(env).format(f'%.{digits}f', rounded_value, grouping=grouping, monetary=monetary)
 
     if currency_obj and currency_obj.symbol:
-        if currency_obj.position == 'after':
-            res = '%s%s%s' % (res, NON_BREAKING_SPACE, currency_obj.symbol)
-        elif currency_obj and currency_obj.position == 'before':
-            res = '%s%s%s' % (currency_obj.symbol, NON_BREAKING_SPACE, res)
-    return res
+        arguments = (formatted_value, NON_BREAKING_SPACE, currency_obj.symbol)
+
+        return '%s%s%s' % (arguments if currency_obj.position == 'after' else arguments[::-1])
+
+    return formatted_value
 
 
 def format_date(env, value, lang_code=False, date_format=False):
