@@ -3017,7 +3017,7 @@ class AccountMoveLine(models.Model):
         account_field_values = {}
         decimal_precision = self.env['decimal.precision'].precision_get('Percentage Analytic')
         amount = 0
-        for account in self.env['account.analytic.account'].browse(map(int, account_ids.split(","))):
+        for account in self.env['account.analytic.account'].browse(map(int, account_ids.split(","))).exists():
             distribution_plan = distribution_on_each_plan.get(account.root_plan_id, 0) + distribution
             if float_compare(distribution_plan, 100, precision_digits=decimal_precision) == 0:
                 amount = -self.balance * (100 - distribution_on_each_plan.get(account.root_plan_id, 0)) / 100.0
