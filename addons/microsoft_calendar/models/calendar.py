@@ -4,13 +4,14 @@
 import logging
 import pytz
 import re
+from markupsafe import Markup
 from datetime import datetime, timedelta
 from dateutil.parser import parse
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import is_html_empty, email_normalize
+from odoo.tools import is_html_empty, email_normalize, html_sanitize
 from odoo.osv import expression
 
 ATTENDEE_CONVERTER_O2M = {
@@ -39,6 +40,13 @@ class Meeting(models.Model):
     _inherit = ['calendar.event', 'microsoft.calendar.sync']
 
     microsoft_recurrence_master_id = fields.Char('Microsoft Recurrence Master Id')
+    videocall_source = fields.Selection(selection_add=[('microsoft_teams', 'Microsoft Teams')], ondelete={'microsoft_teams': 'set discuss'})
+
+    @api.depends('videocall_location')
+    def _compute_videocall_source(self):
+        events_with_microsoft_url = self.filtered(lambda event: (event.videocall_location or '') in VIDEOCALL_URL_PATTERNS)
+        events_with_microsoft_url.videocall_source = 'microsoft_teams'
+        super(Meeting, self - events_with_microsoft_url)._compute_videocall_source()
 
     def _get_organizer(self):
         return self.user_id
@@ -46,8 +54,8 @@ class Meeting(models.Model):
     @api.model
     def _get_microsoft_synced_fields(self):
         return {'name', 'description', 'allday', 'start', 'date_end', 'stop',
-                'user_id', 'privacy',
-                'attendee_ids', 'alarm_ids', 'location', 'show_as', 'active'}
+                'user_id', 'privacy', 'attendee_ids', 'alarm_ids', 'location',
+                'show_as', 'active', 'description'}
 
     @api.model
     def _restart_microsoft_sync(self):
@@ -495,7 +503,7 @@ class Meeting(models.Model):
 
         if 'description' in fields_to_sync:
             values['body'] = {
-                'content': self.description if not is_html_empty(self.description) else '',
+                'content': self._microsoft_description(),
                 'contentType': "html",
             }
 
@@ -601,6 +609,16 @@ class Meeting(models.Model):
             }
 
         return values
+
+    def _microsoft_description(self):
+        description = html_sanitize(self.description) if not is_html_empty(self.description) else ''
+        if self.videocall_source and self.videocall_source != 'microsoft_teams' and self.videocall_location:
+            if self.videocall_location in description:
+                return description
+            button = Markup("<a href='%s'>%s</a>") % (self.videocall_location, _('Join meeting'))
+            new_description = button + description
+            return new_description
+        return description
 
     def _ensure_attendees_have_email(self):
         invalid_event_ids = self.env['calendar.event'].search_read(

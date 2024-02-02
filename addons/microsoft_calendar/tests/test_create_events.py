@@ -1,5 +1,6 @@
 from unittest.mock import patch
 from datetime import timedelta, datetime
+from markupsafe import Markup
 
 from odoo import Command
 
@@ -497,3 +498,45 @@ class TestCreateEvents(TestCommon):
         new_records = (records - existing_records)
         self.assertEqual(len(new_records), 1)
         self.assert_odoo_event(new_records, expected_event)
+
+    @patch.object(MicrosoftCalendarService, 'insert')
+    def test_discuss_videocall_location_set_on_description(self, mock_insert, mock_get_events):
+        mock_insert.return_value = ["123", "abd"]
+        mock_get_events.return_value = ([], None)
+        partner = self.env['res.partner'].create({'name': 'Jean-Luc', 'email': 'jean-luc@opoo.com'})
+        event = self.env['calendar.event'].create({
+            'name': 'Event',
+            'start': datetime(2020, 1, 15, 8, 0),
+            'stop': datetime(2020, 1, 15, 18, 0),
+            'partner_ids': [(4, partner.id)],
+            'videocall_location': 'https://www.odoo.com',
+            'description': 'test'
+        })
+        self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar()
+        self.call_post_commit_hooks()
+        event.invalidate_recordset()
+        button = Markup("<a href='%s'>Join meeting</a>") % (event.videocall_location)
+        mock_insert.assert_called_once()
+        args, _ = mock_insert.call_args
+        self.assertEqual(args[0].get('body')['content'], button + event.description)
+
+    @patch.object(MicrosoftCalendarService, 'get_events')
+    @patch.object(MicrosoftCalendarService, 'insert')
+    def test_videocall_location_is_not_duplicated_in_description(self, mock_insert, mock_get_events):
+        mock_insert.return_value = ["123", "abd"]
+        mock_get_events.return_value = ([], None)
+        partner = self.env['res.partner'].create({'name': 'Jean-Luc', 'email': 'jean-luc@opoo.com'})
+        event = self.env['calendar.event'].with_user(self.organizer_user).create({
+            'name': 'Event',
+            'start': datetime(2020, 1, 15, 8, 0),
+            'stop': datetime(2020, 1, 15, 18, 0),
+            'partner_ids': [(4, partner.id)],
+            'videocall_location': 'https://www.odoo.com',
+            'description': "test\nhttps://www.odoo.com",
+        })
+        self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar()
+        self.call_post_commit_hooks()
+        event.invalidate_recordset()
+        mock_insert.assert_called_once()
+        args, _ = mock_insert.call_args
+        self.assertEqual(args[0].get('body')['content'], event.description)
