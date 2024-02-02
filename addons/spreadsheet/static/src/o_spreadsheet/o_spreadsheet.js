@@ -1673,6 +1673,9 @@
     function formatValue(value, format) {
         switch (typeof value) {
             case "string":
+                if (value.includes('\\"')) {
+                    return value.replace(/\\"/g, '"');
+                }
                 return value;
             case "boolean":
                 return value ? "TRUE" : "FALSE";
@@ -3875,14 +3878,8 @@
                         : undefined));
                 }
             }
-            else if (zone.left === zone.right && zone.top === zone.bottom) {
-                // A single cell. If it's only the title, the dataset is not added.
-                if (!dataSetsHaveTitle) {
-                    dataSets.push(createDataSet(getters, dataSetSheetId, zone, undefined));
-                }
-            }
             else {
-                /* 1 row or 1 column */
+                /* 1 cell, 1 row or 1 column */
                 dataSets.push(createDataSet(getters, dataSetSheetId, zone, dataSetsHaveTitle
                     ? {
                         top: zone.top,
@@ -44592,9 +44589,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.1.33';
-    __info__.date = '2024-01-29T15:36:52.604Z';
-    __info__.hash = 'b8e0395';
+    __info__.version = '16.1.34';
+    __info__.date = '2024-02-02T14:03:56.859Z';
+    __info__.hash = '72d92c1';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
