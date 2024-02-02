@@ -13,6 +13,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models, _, Command
 from odoo.addons.web.controllers.utils import clean_action
 from odoo.exceptions import UserError, ValidationError
+from odoo.osv import expression
 from odoo.tools import float_compare, float_round, float_is_zero, format_datetime
 from odoo.tools.misc import OrderedSet, format_date, groupby as tools_groupby
 
@@ -26,7 +27,7 @@ class MrpProduction(models.Model):
     _name = 'mrp.production'
     _description = 'Production Order'
     _date_name = 'date_start'
-    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'product.catalog.mixin']
     _order = 'priority desc, date_start asc,id'
 
     @api.model
@@ -2763,3 +2764,46 @@ class MrpProduction(models.Model):
                 'context': {'default_production_ids': self.ids},
             }
         return self.action_open_label_layout()
+
+    # -------------------------------------------------------------------------
+    # CATALOG
+    # -------------------------------------------------------------------------
+
+    def _default_order_line_values(self, child_field=False):
+        default_data = super()._default_order_line_values(child_field)
+        new_default_data = self.env['stock.move']._get_product_catalog_lines_data(parent_record=self)
+
+        return {**default_data, **new_default_data}
+
+    def _get_product_catalog_order_data(self, products, **kwargs):
+        return {product.id: self._get_product_price_and_data(product) for product in products}
+
+    def _get_product_price_and_data(self, product):
+        return {'price': product.standard_price}
+
+    def _get_product_catalog_record_lines(self, product_ids, child_field=False, **kwargs):
+        if not child_field:
+            return {}
+        lines = self[child_field].filtered(lambda line: line.product_id.id in product_ids)
+        return lines.grouped(lambda line: line.product_id)
+
+    def _update_order_line_info(self, product_id, quantity, child_field=False, **kwargs):
+        if not child_field:
+            return 0
+        entity = self[child_field].filtered(lambda line: line.product_id.id == product_id)
+        if entity:
+            if quantity != 0:
+                entity.product_uom_qty = quantity
+            else:
+                entity.unlink()
+        elif quantity > 0:
+            command = Command.create({
+                'product_uom_qty': quantity,
+                'product_id': product_id,
+            })
+            self.write({child_field: [command]})
+
+        return self.env['product.product'].browse(product_id).standard_price
+
+    def _get_product_catalog_domain(self):
+        return expression.AND([super()._get_product_catalog_domain(), [('id', '!=', self.product_id.id)]])

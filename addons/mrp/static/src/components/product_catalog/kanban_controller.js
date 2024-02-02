@@ -8,6 +8,8 @@ patch(ProductCatalogKanbanController.prototype, {
     async _defineButtonContent() {
         if (this.orderResModel === "mrp.bom") {
             this.buttonString = _t("Back to BoM");
+        } else if (this.orderResModel === "mrp.production") {
+            this.buttonString = _t("Back to Production");
         } else {
             super._defineButtonContent();
         }
