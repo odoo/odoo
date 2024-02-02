@@ -2700,6 +2700,28 @@ class Model(models.AbstractModel):
             'context': dict(self._context),
         }
 
+    def _get_records_action(self, **kwargs):
+        """ Return an action to open given records.
+            If there's more than one record, it will be a List, otherwise it's a Form.
+            Given keyword arguments will overwrite default ones. """
+        if len(self) == 0:
+            length_dependent = {'views': [(False, 'form')]}
+        elif len(self) == 1:
+            length_dependent = {'views': [(False, 'form')], 'res_id': self.id}
+        else:
+            length_dependent = {
+                'views': [(False, 'list'), (False, 'form')],
+                'domain': [('id', 'in', self.ids)]
+            }
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': self._name,
+            'target': 'current',
+            'context': dict(self._context),
+            **length_dependent,
+            **kwargs
+        }
+
     @api.model
     def _onchange_spec(self, view_info=None):
         """ Return the onchange spec from a view description; if not given, the
