@@ -1100,3 +1100,26 @@ class TestHttp(common.HttpCase):
             "_id": obj.id,
             "_model": obj._name,
         })
+
+    def test_on_change_get_views_cache(self):
+        model_name = "base.automation.lead.test"
+        my_view = self.env["ir.ui.view"].create({
+            "name": "My View",
+            "model": model_name,
+            "type": "form",
+            "arch": "<form><field name='active'/></form>",
+        })
+        self.assertEqual(
+            self.env[model_name].get_view(my_view.id)["arch"],
+            '<form><field name="active"/></form>'
+        )
+        model = self.env["ir.model"]._get(model_name)
+        active_field = self.env["ir.model.fields"]._get(model_name, "active")
+        create_automation(self, trigger="on_change", model_id=model.id, on_change_field_ids=[Command.set([active_field.id])], _actions={
+            "state": "code",
+            "code": "",
+        })
+        self.assertEqual(
+            self.env[model_name].get_view(my_view.id)["arch"],
+            '<form><field name="active" on_change="1"/></form>'
+        )
