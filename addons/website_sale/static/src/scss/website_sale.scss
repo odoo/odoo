@@ -43,27 +43,6 @@ $input-border-color: $gray-400;
     }
 }
 
-@mixin o-wsale-scrollbar-subdle($-vertical: true) {
-    $-o-scrollbar-subdle-bg: rgba($dark, 0.05);
-
-    scrollbar-color: currentColor $-o-scrollbar-subdle-bg;
-    scrollbar#{if($-vertical, -width, -height)}: 2px;
-    cursor: grab;
-
-    &::-webkit-scrollbar {
-        #{if($-vertical, width, height)}: 2px;
-    }
-
-    &::-webkit-scrollbar-thumb {
-        border-radius: $btn-border-radius-sm;
-        background: currentColor;
-    }
-
-    &::-webkit-scrollbar-track {
-        background: $-o-scrollbar-subdle-bg;
-    }
-}
-
 .oe_website_sale {
     // ==== Products list designs
     .o_wsale_design_cards {
@@ -104,7 +83,34 @@ $input-border-color: $gray-400;
     }
 
     .o_wsale_filmstip_container {
-        &:hover {
+        $-o-scrollbar-subdle-bg: rgba($dark, 0.05);
+
+        transform: translateZ(0);
+
+        &.o_wsale_filmstip_fancy_disabled {
+            scrollbar-color: currentColor $-o-scrollbar-subdle-bg;
+        }
+
+        .o_wsale_filmstip_wrapper {
+            margin-bottom: map-get($spacers, 2);
+            scroll-snap-type: x mandatory;
+            cursor: grab;
+
+            &::-webkit-scrollbar {
+                height: 2px;
+            }
+
+            &::-webkit-scrollbar-thumb {
+                border-radius: $btn-border-radius-sm;
+                background: currentColor;
+            }
+
+            &::-webkit-scrollbar-track {
+                background: $-o-scrollbar-subdle-bg;
+            }
+        }
+
+        &:not(.o_wsale_filmstip_fancy_disabled):hover {
             .o_wsale_filmstip_wrapper {
                 margin-bottom: map-get($spacers, 1);
 
@@ -112,16 +118,6 @@ $input-border-color: $gray-400;
                     height: 6px;
                 }
             }
-        }
-    }
-
-    .o_wsale_filmstip_wrapper {
-        margin-bottom: map-get($spacers, 2);
-        scroll-snap-type: x mandatory;
-        @include o-wsale-scrollbar-subdle($-vertical: false);
-
-        .o_wsale_filmstip {
-            transform: translateX(0);
         }
     }
 
@@ -187,10 +183,6 @@ $input-border-color: $gray-400;
     *:not(#product_attributes_simple) > .table-sm tbody td {
         padding-top: 0.75rem;
         padding-bottom: 0.75rem;
-    }
-
-    #o_wsale_offcanvas_content {
-        @include o-wsale-scrollbar-subdle();
     }
 
     #products_grid_before {
