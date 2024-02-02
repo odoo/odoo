@@ -1667,6 +1667,10 @@ const Wysiwyg = Widget.extend({
                     });
                     colorpicker.on('color_leave', null, ev => {
                         this.odooEditor.historyRevertCurrentStep();
+                        // Compute the selection to ensure it's preserved
+                        // between selectionchange events in case this gets
+                        // triggered multiple times quickly.
+                        this.odooEditor._computeHistorySelection();
                     });
                     const $childElement = $dropdown.children('.dropdown-toggle');
                     const dropdownToggle = new Dropdown($childElement);
@@ -1717,7 +1721,7 @@ const Wysiwyg = Widget.extend({
             const range = new Range();
             range.setStart(first, 0);
             range.setEnd(...endPos(last));
-            sel.addRange(range);
+            sel.addRange(getDeepRange(this.odooEditor.editable, { range }));
         }
 
         const hexColor = this._colorToHex(color);
