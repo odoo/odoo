@@ -2264,3 +2264,22 @@ Please change the quantity done or the rounding precision of your unit of measur
         self.move_orig_ids = [Command.unlink(parent_move.id)]
         self.procure_method = 'make_to_stock'
         self._recompute_state()
+
+    def _get_product_catalog_lines_data(self, parent_record=False, **kwargs):
+        if not (parent_record and self):
+            return {
+                'quantity': 0,
+            }
+        self.product_id.ensure_one()
+        return {
+            **parent_record._get_product_price_and_data(self.product_id),
+            'quantity': sum(
+                self.mapped(
+                    lambda line: line.product_uom._compute_quantity(
+                        qty=line.product_qty,
+                        to_unit=line.product_uom,
+                    ),
+                ),
+            ),
+            'readOnly': False,
+        }
