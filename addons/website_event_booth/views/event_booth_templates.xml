@@ -56,20 +56,20 @@
                             <t t-foreach="event.event_booth_category_ids" t-as="booth_category">
                                 <t t-set="booth_category_unavailable" t-value="booth_category not in available_booth_category_ids"/>
                                 <div class="col-md-6 col-lg-4 mb-4">
-                                    <label t-attf-class="d-block h-100 #{'o_wbooth_category_unavailable' if booth_category_unavailable else ''}">
+                                    <label t-attf-class="d-block h-100 #{'o_wbooth_category_unavailable overflow-hidden' if booth_category_unavailable else ''}">
                                         <input type="radio" name="booth_category_id" t-att-value="booth_category.id" t-att-disabled="booth_category_unavailable"
                                             t-att-checked="booth_category.id == selected_booth_category_id"/>
                                         <div class="card h-100">
                                             <div t-field="booth_category.image_1920" class="card-img-top border-bottom"
                                                 t-options='{"widget": "image", "qweb_img_responsive": False, "class": "img img-fluid h-100 w-100 mw-100", "style": "max-height: 208px; min-height: 208px; object-fit: cover"}'/>
-                                            <div class="card-body">
-                                                <h5 name="booth_category_name" class="card-title" t-out="booth_category.name"/>
+                                            <div class="card-body d-flex flex-wrap w-100 gap-2 justify-content-between flex-grow-0 pb-0">
+                                                <h5 name="booth_category_name" class="card-title my-0" t-out="booth_category.name"/>
                                                 <span class="booth_category_price"></span>
-                                                <div class="mx-n3 small" t-attf-id="o_wbooth_booth_description_#{booth_category.id}"
-                                                    t-field="booth_category.description"/>
                                             </div>
+                                            <div class="w-100 small" t-attf-id="o_wbooth_booth_description_#{booth_category.id}"
+                                                t-field="booth_category.description"/>
                                         </div>
-                                        <div t-if="booth_category_unavailable" class="o_ribbon_right bg-danger">
+                                        <div t-if="booth_category_unavailable" class="o_ribbon_right text-bg-danger">
                                             <span class="text-nowrap">Sold Out</span>
                                         </div>
                                     </label>
@@ -101,7 +101,7 @@
                                     </div>
                                 </div>
                                 <div class="my-3" name="booth_registration_submit">
-                                    <div class="d-flex align-items-center justify-content-end pt-3 border-top gap-2 mt-4 mb-5">
+                                    <div class="d-flex align-items-center justify-content-end pt-3 gap-2 mt-4 mb-5">
                                         <button type="submit" class="o_wbooth_registration_submit btn btn-primary btn-block" disabled="true">
                                             <span>Book my Booth(s)</span>
                                         </button>
