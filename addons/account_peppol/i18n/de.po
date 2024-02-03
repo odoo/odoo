@@ -77,6 +77,10 @@ msgid ""
 "deregister from that service, or request a migration key before trying "
 "again."
 msgstr ""
+"Ein Teilnehmer mit diesen Angaben wurde bereits im Netzwerk registriert. "
+"Wenn Sie sich bereits bei einem anderen Peppol-Dienst registriert haben, "
+"melden Sie sich bitte von diesem Dienst ab oder fordern Sie einen "
+"Migrationsschlüssel an, bevor Sie es erneut versuchen."
 
 #. module: account_peppol
 #. odoo-python
@@ -237,7 +241,7 @@ msgstr "Bestätigen"
 #: code:addons/account_peppol/models/res_config_settings.py:0
 #, python-format
 msgid "Connection error, please try again later."
-msgstr ""
+msgstr "Verbindungsfehler, bitte versuchen Sie es später erneut!"
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_res_partner
@@ -784,7 +788,7 @@ msgstr ""
 #: code:addons/account_peppol/models/res_config_settings.py:0
 #, python-format
 msgid "The verification code is not correct"
-msgstr ""
+msgstr "Der Verifizierungscode ist nicht korrekt."
 
 #. module: account_peppol
 #. odoo-python
@@ -799,6 +803,7 @@ msgstr "Der Verifizierungscode sollte 6 Zahlen enthalten."
 #, python-format
 msgid "This verification code has expired. Please request a new one."
 msgstr ""
+"Der Verifizierungscode ist abgelaufen. Bitte fragen Sie einen neuen an."
 
 #. module: account_peppol
 #. odoo-python
@@ -806,6 +811,8 @@ msgstr ""
 #, python-format
 msgid "Too many attempts to request an SMS code. Please try again later."
 msgstr ""
+"Zu viele Versuche, einen SMS-Code anzufragen. Bitte versuchen Sie es später "
+"noch einmal."
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_res_company__peppol_endpoint
@@ -938,4 +945,4 @@ msgstr "Ihr Migrationsschlüssel lautet:"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Your registration should be activated within a day."
-msgstr ""
+msgstr "Ihre Registrierung sollte innerhalb eines Tages aktiviert werden."

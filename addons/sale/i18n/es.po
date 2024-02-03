@@ -6,7 +6,6 @@
 # Lucia Pacheco, 2023
 # Martin Trigaux, 2023
 # Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2023
-# Youssef Bashandy, 2023
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2024
 # David Ramia, 2024
 # Braulio D. López Vázquez <bdl@odoo.com>, 2024
@@ -133,8 +132,8 @@ msgid ""
 "<b>Congratulations</b>, your first quotation is sent!<br>Check your email to"
 " validate the quote."
 msgstr ""
-"<b>Felicidades</b>, envió su primera cotización.<br>Revise su correo "
-"electrónico para validar la cotización."
+"<b>Felicidades</b>, envió su primer presupuesto.<br>Revise su correo "
+"electrónico para validar el presupuesto."
 
 #. module: sale
 #. odoo-javascript
@@ -656,18 +655,18 @@ msgstr ""
 "        <br><br>\n"
 "        Su\n"
 "        <t t-if=\"ctx.get('proforma')\">\n"
-"            factura proforma para la <t t-out=\"doc_name or ''\">cotización</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</span>\n"
+"            factura proforma para el <t t-out=\"doc_name or ''\">presupuesto</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</span>\n"
 "            <t t-if=\"object.origin\">\n"
 "                (con referencia: <t t-out=\"object.origin or ''\"></t> )\n"
 "            </t>\n"
-"            por un importe de <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span> está disponible.\n"
+"            por un importe de <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">10,00 €</span> está disponible.\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
-"            <t t-out=\"doc_name or ''\">cotización</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\"></span>\n"
+"            <t t-out=\"doc_name or ''\">presupuesto</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\"></span>\n"
 "            <t t-if=\"object.origin\">\n"
 "                (con referencia: <t t-out=\"object.origin or ''\">S00052</t> )\n"
 "            </t>\n"
-"            por un importe de <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span> se encuentra disponible para su revisión.\n"
+"            por un importe de <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">10,00 €</span> se encuentra disponible para su revisión.\n"
 "        </t>\n"
 "        <br><br>\n"
 "        Si tiene alguna pregunta, no dude en ponerse en contacto con nosotros.\n"
@@ -708,7 +707,7 @@ msgstr ""
 "        Apreciable <t t-out=\"object.partner_id.name or ''\">usuario</t>,\n"
 "        <br><br>\n"
 "        Tenga en cuenta que su\n"
-"        <t t-out=\"doc_name or ''\">cotización</t> <strong t-out=\"object.name or ''\">S00052</strong>\n"
+"        <t t-out=\"doc_name or ''\">presupuesto</t> <strong t-out=\"object.name or ''\">S00052</strong>\n"
 "        <t t-if=\"object.origin\">\n"
 "            (con referencia: <t t-out=\"object.origin or ''\">S00052</t> )\n"
 "        </t>\n"
@@ -741,12 +740,12 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<i class=\"fa fa-fw fa-check\"/> Authorized"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-check\"/> Autorizado"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<i class=\"fa fa-fw fa-check\"/> Paid"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-check\"/> Pagado"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
@@ -756,7 +755,7 @@ msgstr "<i class=\"fa fa-fw fa-clock-o\"/>Expirado"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<i class=\"fa fa-fw fa-clock-o\"/> Waiting Payment"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-clock-o\"/> Esperando pago"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_kanban
@@ -893,7 +892,7 @@ msgstr "<span>Impuestos</span>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_document_kanban
 msgid "<span>Visibility</span>"
-msgstr ""
+msgstr "<span>Visibilidad</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -943,7 +942,7 @@ msgstr "<strong>Firma</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "<strong>Tax excl.: </strong>"
-msgstr "<strong>Impuestos excl.: </strong>"
+msgstr "<strong>Impuestos no incluidos:</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -1029,14 +1028,14 @@ msgstr ""
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Accept & Pay Quotation"
-msgstr "Aceptar y pagar cotización"
+msgstr "Aceptar y pagar presupuesto"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Accept & Sign Quotation"
-msgstr "Aceptar y firmar cotización"
+msgstr "Aceptar y firmar presupuesto"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -1388,7 +1387,7 @@ msgid ""
 msgstr ""
 "Aumente sus ventas con múltiples tipos de programas: cupones, promociones, "
 "tarjetas de regalo y lealtad. Puede establecer condiciones específicas "
-"(productos, clientes, importe de compra mínimo, periodo). Las recompensas "
+"(productos, clientes, importe de compra mínimo, período). Las recompensas "
 "pueden ser descuentos (% o un importe) o productos gratis."
 
 #. module: sale
@@ -2812,7 +2811,7 @@ msgstr "Idioma"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Last Invoices"
-msgstr ""
+msgstr "Últimas facturas"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__write_uid
@@ -3031,7 +3030,7 @@ msgstr "Mis presupuestos"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "My Sales Order Lines"
-msgstr "Mis líneas de pedidos de venta"
+msgstr "Mis líneas de órdenes de venta"
 
 #. module: sale
 #. odoo-python
@@ -4175,7 +4174,7 @@ msgstr "Informe de análisis de ventas"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 #, python-format
 msgid "Sales Order"
-msgstr "Pedido de venta"
+msgstr "Orden de venta"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_cancel
@@ -4200,14 +4199,14 @@ msgstr "Elemento del pedido de venta"
 #: model:ir.model.fields,field_description:sale.field_product_product__sale_line_warn
 #: model:ir.model.fields,field_description:sale.field_product_template__sale_line_warn
 msgid "Sales Order Line"
-msgstr "Línea de pedido de venta"
+msgstr "Línea de orden de venta"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_move_line__sale_line_ids
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 #: model_terms:ir.ui.view,arch_db:sale.view_order_line_tree
 msgid "Sales Order Lines"
-msgstr "Líneas pedido de ventas"
+msgstr "Líneas orden de ventas"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
@@ -4296,7 +4295,7 @@ msgstr "Ventas: pago realizado"
 #. module: sale
 #: model:mail.template,name:sale.email_template_edi_sale
 msgid "Sales: Send Quotation"
-msgstr "Ventas: Enviar cotización"
+msgstr "Ventas: Enviar presupuesto"
 
 #. module: sale
 #. odoo-python
@@ -4536,7 +4535,7 @@ msgstr "Mostrar márgenes en pedidos"
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Sign & Pay Quotation"
-msgstr "Firmar y pagar cotización"
+msgstr "Firmar y pagar presupuesto"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -4641,9 +4640,9 @@ msgid ""
 "Planned: Future activities."
 msgstr ""
 "Estado basado en actividades\n"
-"Vencida: la fecha tope ya ha pasado\n"
-"Hoy: La fecha tope es hoy\n"
-"Planificada: futuras actividades."
+"Vencida: la fecha límite ya ha pasado\n"
+"Hoy: la fecha límite es hoy\n"
+"Planificada: actividades futuras."
 
 #. module: sale
 #: model:onboarding.onboarding.step,done_text:sale.onboarding_onboarding_step_sale_order_confirmation
@@ -4963,7 +4962,7 @@ msgstr ""
 #: model:ir.model.fields,help:sale.field_res_config_settings__prepayment_percent
 msgid "The percentage of the amount needed to be paid to confirm quotations."
 msgstr ""
-"El porcentaje del importe que se debe pagar para confirmar las cotizaciones."
+"El porcentaje del importe que se debe pagar para confirmar los presupuestos."
 
 #. module: sale
 #. odoo-python
@@ -5287,7 +5286,7 @@ msgstr "Conector con USPS"
 #. module: sale
 #: model:ir.model,name:sale.model_utm_campaign
 msgid "UTM Campaign"
-msgstr "Campaña de UTM"
+msgstr "Campaña UTM"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_unit
@@ -5384,7 +5383,7 @@ msgstr "Oportunidad de venta adicional"
 #: model:mail.template,description:sale.email_template_edi_sale
 msgid "Used by salespeople when they send quotations or proforma to prospects"
 msgstr ""
-"Utilizado por los vendedores cuando envían cotizaciones o proformas a los "
+"Utilizado por los vendedores cuando envían presupuestos o proformas a los "
 "prospectos"
 
 #. module: sale
@@ -5703,7 +5702,7 @@ msgid ""
 "object.name or 'n/a' }})"
 msgstr ""
 "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
-"(ctx.get('proforma') and 'Proforma' or 'Cotización') or 'Orden' }} (Ref {{ "
+"(ctx.get('proforma') and 'Proforma' or 'Presupuesto') or 'Orden' }} (Ref {{ "
 "object.name or 'n/a' }})"
 
 #. module: sale

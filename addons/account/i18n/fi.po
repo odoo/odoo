@@ -28,7 +28,6 @@
 # Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2023
 # Miika Nissi <miika.nissi@tawasta.fi>, 2023
 # Svante Suominen <svante.suominen@web-veistamo.fi>, 2023
-# Kari Lindgren <kari.lindgren@emsystems.fi>, 2023
 # Kim Asplund <kim.asplund@gmail.com>, 2023
 # Kimmo Lehtonen <leban@netzionale.com>, 2023
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2023
@@ -41,10 +40,11 @@
 # Tommi Rintala <tommi.rintala@gmail.com>, 2023
 # Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2023
 # Konsta Aavaranta, 2023
-# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024
 # Joakim Weckman, 2024
 # Simo Suurla <simo@suurla.fi>, 2024
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2024
 # 
 msgid ""
 msgstr ""
@@ -52,7 +52,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Simo Suurla <simo@suurla.fi>, 2024\n"
+"Last-Translator: Kari Lindgren <kari.lindgren@emsystems.fi>, 2024\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -294,7 +294,7 @@ msgstr ").<br/>"
 #: code:addons/account/models/account_tax.py:0
 #, python-format
 msgid "- %(name)s in %(company)s"
-msgstr ""
+msgstr "- %(name)s yrityksessä %(company)s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -1584,7 +1584,7 @@ msgstr ""
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "A temporary number can not be used in a real matching"
-msgstr ""
+msgstr "Väliaikaista numeroa ei voi käyttää todellisessa täsmäytyksessä"
 
 #. module: account
 #: model:res.groups,name:account.group_warning_account
@@ -4271,7 +4271,7 @@ msgstr "Päiväkirjaan liittyvä yritys"
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Complete the partner data with email"
-msgstr ""
+msgstr "Täydennä kumppanin tiedot sähköpostilla"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__use_sections
@@ -6379,6 +6379,8 @@ msgid ""
 "Error while loading the localization. You should probably update your "
 "localization app first."
 msgstr ""
+"Virhe lokalisoinnin lataamisen aikana. Sinun pitäisi luultavasti päivittää "
+"lokalisointisovellus ensin."
 
 #. module: account
 #. odoo-javascript
@@ -8314,10 +8316,39 @@ msgstr "Laskutilastot"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/wizard/account_move_send.py:0
+#, python-format
+msgid "Invoices are being sent in the background."
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Invoices in error"
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 #, python-format
 msgid "Invoices owed to you"
 msgstr "Sinulle avoimet laskut"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Invoices sent"
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Invoices sent successfully."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -10236,7 +10267,7 @@ msgstr ""
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Once your invoice is ready, confirm it."
-msgstr ""
+msgstr "Kun lasku on valmis, vahvista se."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
@@ -10244,6 +10275,13 @@ msgid "One or more Bank Accounts set on this partner are also used by other"
 msgstr ""
 "Yksi tai useampi pankkitili, joka on asetettu tälle partnerille, on myös "
 "muiden käytössä"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "One or more invoices couldn't be processed."
+msgstr ""
 
 #. module: account
 #: model:ir.ui.menu,name:account.root_payment_menu
@@ -10322,8 +10360,11 @@ msgid "Oops"
 msgstr "Oho"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__state__posted
 #: model:ir.model.fields.selection,name:account.selection__account_journal__invoice_reference_type__none
+#, python-format
 msgid "Open"
 msgstr "Avoin"
 
@@ -10821,13 +10862,15 @@ msgstr "Kumppanit"
 #, python-format
 msgid "Partners that are used in hashed entries cannot be merged."
 msgstr ""
+"Yhteistyökumppaneita, joita käytetään hashed-merkinnöissä, ei voida "
+"yhdistää."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_move_send.py:0
 #, python-format
 msgid "Partners without email"
-msgstr ""
+msgstr "Yhteistyökumppanit ilman sähköpostia"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -11265,7 +11308,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_send_form
 msgid "Please specify an email address on the"
-msgstr ""
+msgstr "Määritä sähköpostiosoite lomakkeessa"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -12738,9 +12781,23 @@ msgstr ""
 "mahdollisuuden lähettää rahaa."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_move_send.py:0
+#, python-format
+msgid "Sending invoices"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Sent"
 msgstr "Lähetetty"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Sent invoices"
+msgstr ""
 
 #. module: account
 #: model:mail.template,description:account.mail_template_data_payment_receipt
@@ -14717,6 +14774,10 @@ msgid ""
 "The financial end year detected here is '%(year_end)s'.\n"
 "The incrementing number in this case is '%(formatted_seq)s'."
 msgstr ""
+"Jakso alkaa uudelleen 1:stä jokaisen varainhoitovuoden alussa.\n"
+"Tässä havaittu tilikauden alkuvuosi on \"%(year)s\".\n"
+"Tässä havaittu tilikauden päättymisvuosi on \"%(year_end)s\".\n"
+"Kasvava numero on tässä tapauksessa \"%(formatted_seq)s\"."
 
 #. module: account
 #. odoo-python
@@ -16248,6 +16309,8 @@ msgid ""
 "We can't leave this document without any company. Please select a company "
 "for this document."
 msgstr ""
+"Emme voi jättää asiakirjaa ilman yritystä. Valitse yritys tätä asiakirjaa "
+"varten."
 
 #. module: account
 #. odoo-python
@@ -16930,7 +16993,7 @@ msgstr ""
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid "You cannot merge accounts."
-msgstr ""
+msgstr "Et voi yhdistää tilejä."
 
 #. module: account
 #. odoo-python
@@ -17419,7 +17482,7 @@ msgstr "esim. domain.com"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_send_form
 msgid "following partners."
-msgstr ""
+msgstr "seuraavat kumppanit."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -17478,6 +17541,13 @@ msgstr ""
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__payment_tolerance_type__percentage
 msgid "in percentage"
 msgstr "prosentteina"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_move_send.py:0
+#, python-format
+msgid "invoices"
+msgstr "laskut"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
