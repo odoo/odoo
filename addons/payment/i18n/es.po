@@ -120,7 +120,7 @@ msgid ""
 "                            </span>"
 msgstr ""
 "<span class=\"oe_inline text-muted\" invisible=\"supported_country_ids\">\n"
-"                                Compatible con todos los paises.\n"
+"                                Todos los países son compatibles.\n"
 "                            </span>"
 
 #. module: payment
@@ -131,7 +131,7 @@ msgid ""
 "                            </span>"
 msgstr ""
 "<span class=\"oe_inline text-muted\" invisible=\"supported_currency_ids\">\n"
-"                                Compatible con todas las monedas.\n"
+"                                Todas las monedas son compatibles.\n"
 "                            </span>"
 
 #. module: payment
@@ -184,7 +184,7 @@ msgid ""
 "                    than"
 msgstr ""
 "<strong>¡Advertencia!</strong> No puede capturar una cantidad negativa mayor\n"
-"                    a"
+"                    que"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -207,7 +207,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid "<strong>Warning</strong> The currency is missing or incorrect."
-msgstr "<strong>Advertencia</strong> La moneda falta o en incorrecta."
+msgstr "<strong>Advertencia</strong> La moneda falta o es incorrecta."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -222,8 +222,8 @@ msgid ""
 "A refund request of %(amount)s has been sent. The payment will be created "
 "soon. Refund transaction reference: %(ref)s (%(provider_name)s)."
 msgstr ""
-"Se envió una solicitud de reembolso por %(amount)s. Se creará el pago "
-"pronto. Referencia de transacción de reembolso: %(ref)s (%(provider_name)s)."
+"Se envió una solicitud de reembolso de %(amount)s. Se creará el pago pronto."
+" Referencia de la transacción de reembolso: %(ref)s (%(provider_name)s)."
 
 #. module: payment
 #. odoo-python
@@ -299,7 +299,7 @@ msgstr "Adyen"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__allow_express_checkout
 msgid "Allow Express Checkout"
-msgstr "Permitir el pago rápido"
+msgstr "Permitir el pago exprés"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__allow_tokenization
@@ -309,17 +309,17 @@ msgstr "Permitir guardar métodos de pago"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__captured_amount
 msgid "Already Captured"
-msgstr "Ya capturado "
+msgstr "Ya capturado"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__voided_amount
 msgid "Already Voided"
-msgstr "Ya anulado "
+msgstr "Ya anulado"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_aps
 msgid "Amazon Payment Services"
-msgstr "Servicios de pago de Amazon"
+msgstr "Amazon Payment Services"
 
 #. module: payment
 #. odoo-javascript
@@ -371,8 +371,8 @@ msgid ""
 "Are you sure you want to void the authorized transaction? This action can't "
 "be undone."
 msgstr ""
-"¿Estás seguro de que quieres anular la transacción autorizada? Esta acción "
-"no puede deshacerse."
+"¿Está seguro de que desea anular la transacción autorizada? Esta acción no "
+"puede deshacerse."
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_asiapay
@@ -392,7 +392,7 @@ msgstr "Authorize.net"
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__state__authorized
 msgid "Authorized"
-msgstr "Authorized"
+msgstr "Autorizado"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__authorized_amount
@@ -435,27 +435,27 @@ msgstr "Buckaroo"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_model_id
 msgid "Callback Document Model"
-msgstr "Modelo de documento de devolver llamada"
+msgstr "Modelo de documento para la retrollamada"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_is_done
 msgid "Callback Done"
-msgstr "Se devolvió la llamada"
+msgstr "Retrollamada hecha"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_hash
 msgid "Callback Hash"
-msgstr "Hash de devolver llamada"
+msgstr "Hash de retrollamada"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_method
 msgid "Callback Method"
-msgstr "Método para devolver llamada"
+msgstr "Método para retrollamada"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_res_id
 msgid "Callback Record ID"
-msgstr "ID de registro de llamadas"
+msgstr "Registro del ID de la retrollamada"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_onboarding_wizard_form
@@ -512,9 +512,9 @@ msgid ""
 "Use this if you want to charge your customers cards only when\n"
 "you are sure you can ship the goods to them."
 msgstr ""
-"Capturar el importe de Odoo cuando la entrega se ha completado.\n"
+"Capture el importe de Odoo cuando la entrega se haya completado.\n"
 "Utilícelo si desea hacer el cargo a la tarjeta de sus clientes solo cuando\n"
-"seguro de que puede enviarles los artículos."
+"esté seguro de que puede enviarles los artículos."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__child_transaction_ids
@@ -663,7 +663,7 @@ msgstr "Credenciales"
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider_onboarding_wizard__payment_method__stripe
 #: model:ir.model.fields.selection,name:payment.selection__sale_payment_provider_onboarding_wizard__payment_method__stripe
 msgid "Credit & Debit card (via Stripe)"
-msgstr "Tarjeta de crédito (a través de Stripe)"
+msgstr "Tarjetas de crédito y débito (por Stripe)"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__available_currency_ids
@@ -759,7 +759,7 @@ msgstr "Error: %s"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__express_checkout_form_view_id
 msgid "Express Checkout Form Template"
-msgstr "Plantilla de formulario de pago rápido"
+msgstr "Plantilla de formulario de pago exprés"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__support_express_checkout
@@ -803,7 +803,7 @@ msgstr "Generar enlace de pago de ventas"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
 msgid "Generate and Copy Payment Link"
-msgstr "Generar y copiar un enlace de pago "
+msgstr "Generar y copiar enlace de pago "
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
@@ -1262,7 +1262,7 @@ msgstr "Token de pago"
 #: model:ir.model.fields,field_description:payment.field_res_partner__payment_token_count
 #: model:ir.model.fields,field_description:payment.field_res_users__payment_token_count
 msgid "Payment Token Count"
-msgstr "Número de token de pago"
+msgstr "Número de tókenes de pago"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_token
@@ -1272,7 +1272,7 @@ msgstr "Número de token de pago"
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_list
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_search
 msgid "Payment Tokens"
-msgstr "Token de pago"
+msgstr "Tókenes de pago"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_transaction
@@ -1462,7 +1462,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "Refunds"
-msgstr "Devoluciones"
+msgstr "Reembolsos"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__refunds_count
@@ -2199,7 +2199,7 @@ msgstr "No puedes publicar un proveedor desactivado."
 #: code:addons/payment/controllers/portal.py:0
 #, python-format
 msgid "You do not have access to this payment token."
-msgstr "Usted no tiene acceso a esta ficha de pago."
+msgstr "No tiene acceso a este token de pago."
 
 #. module: payment
 #. odoo-javascript

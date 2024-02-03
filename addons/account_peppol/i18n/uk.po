@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -65,6 +65,20 @@ msgstr ""
 "<span>\n"
 "                                    Я хочу мігрувати моє зʼєдання Peppol з Odoo (необовʼязково):\n"
 "                                </span>"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+#, python-format
+msgid ""
+"A participant with these details has already been registered on the network."
+" If you have previously registered to an alternative Peppol service, please "
+"deregister from that service, or request a migration key before trying "
+"again."
+msgstr ""
+"У мережі вже зареєстрований учасник з такими даними. Якщо ви раніше "
+"реєструвалися в альтернативному сервісі Peppol, скасуйте реєстрацію в цьому "
+"сервісі або попросіть ключ міграції, перш ніж спробувати знову."
 
 #. module: account_peppol
 #. odoo-python
@@ -216,6 +230,13 @@ msgstr "Налаштування"
 #, python-format
 msgid "Confirm"
 msgstr "Підтвердити"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+#, python-format
+msgid "Connection error, please try again later."
+msgstr "Помилка зʼєднання, спробуйте ще раз пізніше."
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_res_partner
@@ -755,8 +776,29 @@ msgstr "Унікальний id, який ідентифікує цього ко
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 #, python-format
+msgid "The verification code is not correct"
+msgstr "Код верифікації невірний"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+#, python-format
 msgid "The verification code should contain six digits."
 msgstr "Код верифікації повинен містити 6 цифр."
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+#, python-format
+msgid "This verification code has expired. Please request a new one."
+msgstr "Цей код верифікації протермінований. Надішліть запит на новий."
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+#, python-format
+msgid "Too many attempts to request an SMS code. Please try again later."
+msgstr "Забагато спроб запиту SMS-коду. Будь-ласка спробуйте пізніше."
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_res_company__peppol_endpoint
@@ -885,3 +927,8 @@ msgstr "Ваш код підтвердження"
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Your migration key is:"
 msgstr "Ваш ключ міграції:"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+msgid "Your registration should be activated within a day."
+msgstr "Ваша реєстрація має бути активована протягом доби."

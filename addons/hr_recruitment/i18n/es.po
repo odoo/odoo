@@ -631,8 +631,8 @@ msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
 msgstr ""
-"Un diccionario Python a evaluar para proporcionar valores por defecto cuando"
-" un nuevo registro se cree para este seudónimo."
+"Un diccionario Python que será evaluado para proporcionar valores por "
+"defecto al crear nuevos registros para este alias."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_needaction
@@ -815,7 +815,7 @@ msgstr "Nombre del candidato"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__applicant_without_email
 msgid "Applicant(s) not having email"
-msgstr "Los candidatos no tienen correo electrónico"
+msgstr "Candidato(s) no tiene(n) correo electrónico"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.crm_case_tree_view_job
@@ -1216,7 +1216,7 @@ msgstr "Días para abrir"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_defaults
 msgid "Default Values"
-msgstr "Valores predeterminados"
+msgstr "Valores por defecto"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
@@ -1417,7 +1417,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__email_cc
 msgid "Email cc"
-msgstr "Correo electrónico cc"
+msgstr "CC del correo electrónico"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -1601,7 +1601,7 @@ msgstr "Verde"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__legend_done
 msgid "Green Kanban Label"
-msgstr "Etiqueta Kanban verde"
+msgstr "Etiqueta kanban verde"
 
 #. module: hr_recruitment
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__kanban_state__normal
@@ -1611,7 +1611,7 @@ msgstr "Gris"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__legend_normal
 msgid "Grey Kanban Label"
-msgstr "Etiqueta Kanban gris"
+msgstr "Etiqueta kanban gris"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_res_config_settings__group_applicant_cv_display
@@ -2119,7 +2119,7 @@ msgstr "Mensajes"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__partner_mobile
 msgid "Mobile"
-msgstr "Celular"
+msgstr "Móvil"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -2221,14 +2221,14 @@ msgstr "Tipo de la siguiente actividad"
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
 #, python-format
 msgid "Next Meeting"
-msgstr "Próxima junta"
+msgstr "Próxima reunión"
 
 #. module: hr_recruitment
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
 #, python-format
 msgid "No Meeting"
-msgstr "Sin juntas"
+msgstr "Sin reuniones"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -2418,19 +2418,19 @@ msgstr "Teléfono"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__phone_sanitized_blacklisted
 msgid "Phone Blacklisted"
-msgstr "Lista negra del Teléfono"
+msgstr "Teléfono en la lista negra"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__phone_mobile_search
 msgid "Phone/Mobile"
-msgstr "Teléfono/Celular"
+msgstr "Teléfono/móvil"
 
 #. module: hr_recruitment
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
 #, python-format
 msgid "Please provide an applicant name."
-msgstr "Proporcione el nombre de quien aplica."
+msgstr "Proporcione el nombre del candidato."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_contact
@@ -2572,7 +2572,7 @@ msgstr "Rojo"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__legend_blocked
 msgid "Red Kanban Label"
-msgstr "Etiqueta Kanban roja"
+msgstr "Etiqueta kanban roja"
 
 #. module: hr_recruitment
 #: model:ir.actions.server,name:hr_recruitment.ir_actions_server_refuse_applicant
@@ -2618,17 +2618,17 @@ msgstr "Rechazado"
 #. module: hr_recruitment
 #: model:hr.applicant.refuse.reason,name:hr_recruitment.refuse_reason_3
 msgid "Refused by Applicant: better offer"
-msgstr "Rechazado por el solicitante: mejor oferta"
+msgstr "Rechazado por el candidato: mejor oferta"
 
 #. module: hr_recruitment
 #: model:hr.applicant.refuse.reason,name:hr_recruitment.refuse_reason_2
 msgid "Refused by Applicant: don't like job"
-msgstr "Rechazado por el solicitante: no le gusta el trabajo"
+msgstr "Rechazado por el candidato: no le gusta el trabajo"
 
 #. module: hr_recruitment
 #: model:hr.applicant.refuse.reason,name:hr_recruitment.refuse_reason_8
 msgid "Refused by Applicant: salary"
-msgstr "Rechazado por el solicitante: sueldo"
+msgstr "Rechazado por el candidato: sueldo"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
@@ -2738,7 +2738,7 @@ msgstr "¡Guárdelo!"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "Schedule Interview"
-msgstr "Agendar entrevista"
+msgstr "Programar entrevista"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
@@ -2900,7 +2900,7 @@ msgstr "Etapa cambiada"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
 msgid "Stage Definition"
-msgstr "Definición de etapa"
+msgstr "Definición de la etapa"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__name
@@ -2938,8 +2938,8 @@ msgid ""
 msgstr ""
 "Estado basado en actividades\n"
 "Vencida: la fecha límite ya ha pasado\n"
-"Hoy: La fecha límite es hoy\n"
-"Planificada: futuras actividades."
+"Hoy: la fecha límite es hoy\n"
+"Planificada: actividades futuras."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__subject
@@ -3152,12 +3152,12 @@ msgstr "Tipo de actividad de excepción en el registro."
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_utm_campaign
 msgid "UTM Campaign"
-msgstr "Campaña de UTM"
+msgstr "Campaña UTM"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_utm_source
 msgid "UTM Source"
-msgstr "UTM Source"
+msgstr "Fuente UTM"
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_utm
@@ -3266,7 +3266,7 @@ msgid ""
 "                            of the default labels."
 msgstr ""
 "Aquí puede definir las etiquetas que serán mostradas en el estado de kanban en lugar de\n"
-"                            las etiquetas predeterminadas."
+"                            las etiquetas por defecto."
 
 #. module: hr_recruitment
 #. odoo-python
@@ -3313,17 +3313,17 @@ msgstr "Ej. John Doe"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_source_tree
 msgid "e.g. LinkedIn"
-msgstr "ej. LinkedIn"
+msgstr "p. ej. LinkedIn"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 msgid "e.g. Sales Manager"
-msgstr "ej. Gerente de Ventas"
+msgstr "p. ej. Gerente de Ventas"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "e.g. Sales Manager 2 year experience"
-msgstr "ej. Gerente de ventas con 2 años de experiencia"
+msgstr "p. ej. Gerente de ventas con 2 años de experiencia"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
@@ -3334,7 +3334,7 @@ msgstr "p. ej. dominio.com"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 msgid "e.g. sales-manager"
-msgstr "ej. Gerente de Ventas"
+msgstr "p. ej. Gerente de Ventas"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_get_refuse_reason_view_form

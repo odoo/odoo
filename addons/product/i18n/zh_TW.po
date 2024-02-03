@@ -29,6 +29,9 @@ msgid ""
 "\n"
 "Note: products that you don't have access to will not be shown above."
 msgstr ""
+"\n"
+"\n"
+"注意：你沒有權限存取的產品不會顯示在上方。"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__product_variant_count
@@ -110,7 +113,7 @@ msgstr "'產品包裝 - %s' % (object.name)"
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid "(e.g: product description, ebook, legal notice, ...)."
-msgstr ""
+msgstr "（例如：產品描述、電子書、法律聲明等）。"
 
 #. module: product
 #. odoo-python
@@ -231,7 +234,7 @@ msgstr "<span class=\"text-bg-danger\">已封存</span>"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_kanban
 msgid "<span class=\"text-bg-secondary\">Variant</span>"
-msgstr ""
+msgstr "<span class=\"text-bg-secondary\">款式變體</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -246,7 +249,7 @@ msgstr "<span>有關此產品的所有通用設定均位於</span>"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_kanban
 msgid "<span>Variant </span>"
-msgstr ""
+msgstr "<span>款式變體 </span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
@@ -1189,7 +1192,7 @@ msgstr "文件數目"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_search
 msgid "Documents of this variant"
-msgstr ""
+msgstr "此變體的文件"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_kanban
@@ -1201,7 +1204,7 @@ msgstr "下載"
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid "Download examples"
-msgstr ""
+msgstr "下載範例"
 
 #. module: product
 #: model:product.template,name:product.product_product_27_product_template
@@ -1861,7 +1864,7 @@ msgstr "多項勾選方格（選項）"
 #: model:ir.model.constraint,message:product.constraint_product_attribute_check_multi_checkbox_no_variant
 msgid ""
 "Multi-checkbox display type is not compatible with the creation of variants"
-msgstr ""
+msgstr "多項勾選方格顯示類型與建立的款式變體不兼容"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_pricelist_setting__basic
@@ -3036,6 +3039,7 @@ msgid ""
 "the sales order. To do so, open the form view of attributes and change the "
 "mode of *Create Variants*."
 msgstr ""
+"要生成的變量數量超過了允許的限制。要麼不為每個組合生成變體，要麼根據銷售訂單的要求生成變體。為此,請打開屬性的表單檢視畫面並更改*創建變量*模式。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__price
@@ -3276,7 +3280,7 @@ msgstr "網址"
 msgid ""
 "Use this feature to store any files you would like to share with your "
 "customers"
-msgstr ""
+msgstr "使用此功能儲存你想與客戶共享的任何文件"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__is_used_on_products
@@ -3587,7 +3591,7 @@ msgstr "您可以從您的電腦上傳一個檔案或者'複製/貼上'一個網
 msgid ""
 "You can upload an image that will be used as the color of the attribute "
 "value."
-msgstr ""
+msgstr "你可上載一張圖片，作為屬性值的顏色。"
 
 #. module: product
 #. odoo-javascript
@@ -3752,6 +3756,8 @@ msgid ""
 "You must define a product for everything you sell or purchase,\n"
 "                            whether it's a storable product, a consumable or a service."
 msgstr ""
+"你必須為所銷售或購買的所有產品定義產品記錄，\n"
+"                            無論是可儲存產品、消耗品或服務。"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_normal_action

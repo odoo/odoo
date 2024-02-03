@@ -10,17 +10,17 @@
 # Csaba Tóth <i3rendszerhaz@gmail.com>, 2023
 # Gergő Kertész <gergo.kertesz@maxflow.hu>, 2023
 # A . <tiboreu@protonmail.com>, 2023
-# Szabolcs Rádi, 2023
+# 5768b353f27900ae76ad88cc42dfd5b8_3bb349f, 2023
 # Kovács Tibor <kovika@gmail.com>, 2023
 # Krisztián Juhász <juhasz.krisztian@josafar.hu>, 2023
 # Ákos Nagy <akos.nagy@oregional.hu>, 2023
 # gezza <geza.nagy@oregional.hu>, 2023
 # sixsix six, 2023
 # Istvan <leki69@gmail.com>, 2023
-# Martin Trigaux, 2023
 # krnkris, 2023
 # Tamás Németh <ntomasz81@gmail.com>, 2023
 # Tamás Dombos, 2024
+# Martin Trigaux, 2024
 # 
 msgid ""
 msgstr ""
@@ -28,7 +28,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Tamás Dombos, 2024\n"
+"Last-Translator: Martin Trigaux, 2024\n"
 "Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1506,6 +1506,13 @@ msgid "About us"
 msgstr "Rólunk"
 
 #. module: website
+#. odoo-python
+#: code:addons/website/models/website.py:0
+#, python-format
+msgid "Access Denied"
+msgstr "Hozzáférés megtagadva"
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__access_token
 msgid "Access Token"
 msgstr "Hozzáférési token"
@@ -1731,6 +1738,11 @@ msgstr "Adjon hozzá egy új mezőt ezután"
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 msgid "Add a new field at the end"
 msgstr "Tegyen egy új mezőt a végére"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.view_view_form_extend
+msgid "Add groups in the \"Access Rights\" tab below."
+msgstr ""
 
 #. module: website
 #. odoo-python
@@ -7812,6 +7824,11 @@ msgstr ""
 #, python-format
 msgid "Next"
 msgstr "Következő"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.step_wizard
+msgid "Next:"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_tabs_options

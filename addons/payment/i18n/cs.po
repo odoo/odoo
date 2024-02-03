@@ -8,6 +8,7 @@
 # Jakub Smolka, 2023
 # Wil Odoo, 2023
 # Tomáš Píšek, 2023
+# Katerina Horylova, 2024
 # Aleš Fiala <f.ales1@seznam.cz>, 2024
 # 
 msgid ""
@@ -73,7 +74,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_method
 msgid "<i class=\"oi oi-arrow-right me-1\"></i> Configure a payment provider"
-msgstr ""
+msgstr "<i class=\"oi oi-arrow-right me-1\"></i>Konfigurace poskytovatele plateb"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -169,6 +170,8 @@ msgid ""
 "<strong>Warning</strong> Creating a payment provider from the <em>CREATE</em> button is not supported.\n"
 "                        Please use the <em>Duplicate</em> action instead."
 msgstr ""
+"<strong>Upozornění</strong> Vytvoření poskytovatele platby z tlačítka <em>VYTVOŘIT</em> není podporováno.\n"
+"Místo toho použijte akci <em>Duplikovat</em>."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -1017,6 +1020,7 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:payment.action_payment_method
 msgid "No payment methods found for your payment providers."
 msgstr ""
+"Pro vašeho poskytovatele plateb nebyly nalezeny žádné platební metody."
 
 #. module: payment
 #. odoo-python
@@ -1084,7 +1088,7 @@ msgstr "Anulovat lze pouze autorizované transakce."
 #: code:addons/payment/models/payment_transaction.py:0
 #, python-format
 msgid "Only confirmed transactions can be refunded."
-msgstr ""
+msgstr "Vrátit lze pouze potvrzené transakce."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__operation
@@ -2085,6 +2089,8 @@ msgid ""
 "You cannot delete the payment provider %s; disable it or uninstall it "
 "instead."
 msgstr ""
+"Poskytovatele plateb %s nelze smazat; deaktivujte jej nebo jej místo toho "
+"odinstalujte."
 
 #. module: payment
 #. odoo-python

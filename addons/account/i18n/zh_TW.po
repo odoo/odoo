@@ -3,8 +3,8 @@
 # 	* account
 # 
 # Translators:
-# Wil Odoo, 2024
 # Tony Ng, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Tony Ng, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -8030,10 +8030,39 @@ msgstr "應收憑單統計"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/wizard/account_move_send.py:0
+#, python-format
+msgid "Invoices are being sent in the background."
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Invoices in error"
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 #, python-format
 msgid "Invoices owed to you"
 msgstr "您的應收憑單"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Invoices sent"
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Invoices sent successfully."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -9912,6 +9941,13 @@ msgid "One or more Bank Accounts set on this partner are also used by other"
 msgstr "此合作夥伴設定的一個或多個銀行賬戶也被其他人使用"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "One or more invoices couldn't be processed."
+msgstr ""
+
+#. module: account
 #: model:ir.ui.menu,name:account.root_payment_menu
 msgid "Online Payments"
 msgstr "網上支付"
@@ -9980,8 +10016,11 @@ msgid "Oops"
 msgstr "哎呀"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__state__posted
 #: model:ir.model.fields.selection,name:account.selection__account_journal__invoice_reference_type__none
+#, python-format
 msgid "Open"
 msgstr "開啟"
 
@@ -12362,9 +12401,23 @@ msgstr ""
 "傳送帶有欺詐性賬戶號碼的虛假發票，是常見的網絡釣魚行為。為保障你自己，請務必驗證新的銀行賬戶號碼，最好是致電供應商，因為網絡釣魚通常在他們電子郵件已外洩時發生。完成驗證後，你便可以啟用匯款功能。"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_move_send.py:0
+#, python-format
+msgid "Sending invoices"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Sent"
 msgstr "發送"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Sent invoices"
+msgstr ""
 
 #. module: account
 #: model:mail.template,description:account.mail_template_data_payment_receipt
@@ -13232,7 +13285,7 @@ msgstr "當有利於公司時，稅務往來科目用作稅務結算分錄的對
 #: model:ir.model.fields,help:account.field_account_move_line__tax_repartition_line_id
 msgid ""
 "Tax distribution line that caused the creation of this move line, if any"
-msgstr "導致建立此傳票明細的税金分配明细(如果有)"
+msgstr "導致建立此分錄行的稅項分配資料行（如有）"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -16784,6 +16837,13 @@ msgstr "不包括與客戶所在國家/地區的稅金法律相關的任何費�
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__payment_tolerance_type__percentage
 msgid "in percentage"
 msgstr "百分比"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_move_send.py:0
+#, python-format
+msgid "invoices"
+msgstr "應收憑單"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account

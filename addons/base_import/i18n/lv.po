@@ -9,6 +9,7 @@
 # ievaputnina <ievai.putninai@gmail.com>, 2023
 # Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2023
 # Anzelika Adejanova, 2023
+# Will Sensors, 2024
 # 
 msgid ""
 msgstr ""
@@ -16,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Anzelika Adejanova, 2023\n"
+"Last-Translator: Will Sensors, 2024\n"
 "Language-Team: Latvian (https://app.transifex.com/odoo/teams/41243/lv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -934,6 +935,22 @@ msgstr "vairāk"
 #, python-format
 msgid "out of"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Cien. <t t-out=\"object.partner_id.name or ''\">Azure Interior</t><br><br>\n"
+"        Paldies par Jūsu maksājumu.\n"
+"        Šeit ir Jūsu maksājuma kvīts <span style=\"font-weight:bold;\" t-out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> par summu\n"
+"       <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount, object.currency_id) or ''\"> 10,00 USD</span> apmērā no <t t-out=\"object.company_id.name or ''\">Jūsu uzņēmuma</t>.\n"
+"       <br><br>\n"
+"        Ja Jums rodas kādi jautājumi, sazinieties ar mums.\n"
+"       <br><br>\n"
+"        Ar sveicieniem,\n"
+"        <t t-if=\"not is_html_empty(user.signature)\">\n"
+"            <br><br>\n"
+"            <t t-out=\"user.signature or ''\">--<br>Mitchell admin</t>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>"
 
 #. module: base_import
 #. odoo-javascript

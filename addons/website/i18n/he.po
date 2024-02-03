@@ -21,9 +21,9 @@
 # NoaFarkash, 2023
 # Yihya Hugirat <hugirat@gmail.com>, 2023
 # ZVI BLONDER <ZVIBLONDER@gmail.com>, 2023
-# Martin Trigaux, 2023
 # yael terner, 2023
 # Netta Waizer, 2024
+# Martin Trigaux, 2024
 # 
 msgid ""
 msgstr ""
@@ -31,7 +31,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Netta Waizer, 2024\n"
+"Last-Translator: Martin Trigaux, 2024\n"
 "Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1506,6 +1506,13 @@ msgid "About us"
 msgstr "עלינו"
 
 #. module: website
+#. odoo-python
+#: code:addons/website/models/website.py:0
+#, python-format
+msgid "Access Denied"
+msgstr "הגישה נדחתה"
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__access_token
 msgid "Access Token"
 msgstr "אסימון גישה"
@@ -1730,6 +1737,11 @@ msgstr "הוסף שדה חדש לאחר השדה הזה"
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 msgid "Add a new field at the end"
 msgstr "הוסף שדה חדש בסוף"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.view_view_form_extend
+msgid "Add groups in the \"Access Rights\" tab below."
+msgstr ""
 
 #. module: website
 #. odoo-python
@@ -7864,6 +7876,11 @@ msgstr "דיוור (ניוזלטר) קופץ"
 #, python-format
 msgid "Next"
 msgstr "הבא"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.step_wizard
+msgid "Next:"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_tabs_options
