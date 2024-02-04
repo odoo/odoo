@@ -100,6 +100,18 @@ msgid ""
 "    </t>\n"
 "</div>"
 msgstr ""
+"<div>\n"
+"    <t t-out=\"object.name or ''\">Oscar Morgan</t> 你好！<br/>\n"
+"    多謝你查詢。<br/>\n"
+"    謹附上「<t t-out=\"object.event_id.name or ''\">OpenWood 系列網上發佈會</t>」活動的識別證。<br/>\n"
+"    若有任何疑問，歡迎聯絡我們。\n"
+"    <br/><br/>\n"
+"    謝謝！\n"
+"    <t t-if=\"object.event_id.user_id.signature\">\n"
+"        <br/>\n"
+"        <t t-out=\"object.event_id.user_id.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"    </t>\n"
+"</div>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
