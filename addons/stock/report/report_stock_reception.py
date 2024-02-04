@@ -34,7 +34,7 @@ class ReceptionReport(models.AbstractModel):
 
         # to support batch pickings we need to track the total already assigned
         move_lines = pickings.move_lines.filtered(lambda m: m.product_id.type == 'product' and m.state != 'cancel')
-        assigned_moves = move_lines.mapped('move_dest_ids')
+        assigned_moves = move_lines.mapped('move_dest_ids').filtered(lambda m: m.state != 'cancel')
         product_to_assigned_qty = defaultdict(float)
         for assigned in assigned_moves:
             product_to_assigned_qty[assigned.product_id] += assigned.product_qty
@@ -42,7 +42,7 @@ class ReceptionReport(models.AbstractModel):
         for move in move_lines:
             qty_already_assigned = 0
             if move.move_dest_ids:
-                qty_already_assigned = min(product_to_assigned_qty[move.product_id], move.product_qty)
+                qty_already_assigned = min(product_to_assigned_qty[move.product_id], move.product_qty, sum(move.move_dest_ids.mapped('product_qty')))
                 product_to_assigned_qty[move.product_id] -= qty_already_assigned
             if qty_already_assigned:
                 product_to_total_assigned[move.product_id][0] += qty_already_assigned
@@ -130,7 +130,7 @@ class ReceptionReport(models.AbstractModel):
         for product_id, qty_and_ins in product_to_total_assigned.items():
             total_assigned = qty_and_ins[0]
             moves_in = self.env['stock.move'].browse(qty_and_ins[1])
-            out_moves = moves_in.move_dest_ids
+            out_moves = moves_in.move_dest_ids.filtered(lambda sm: sm.state != 'cancel')
 
             for out_move in out_moves:
                 if float_is_zero(total_assigned, precision_rounding=out_move.product_id.uom_id.rounding):
@@ -144,7 +144,7 @@ class ReceptionReport(models.AbstractModel):
                     source = (out_move.picking_id, source[0])
                 qty_assigned = min(total_assigned, out_move.product_qty)
                 sources_to_lines[source].append(
-                    self._prepare_report_line(qty_assigned, product_id, out_move, source[0], is_assigned=True, move_ins=moves_in))
+                    self._prepare_report_line(qty_assigned, product_id, out_move, source[0], is_assigned=True, move_ins=moves_in & out_move.move_orig_ids))
 
         # dates aren't auto-formatted when printed in report :(
         sources_to_formatted_scheduled_date = defaultdict(list)
@@ -271,9 +271,8 @@ class ReceptionReport(models.AbstractModel):
             # 1. batch reserved + individual picking unreserved
             # 2. moves linked from backorder generation
             total_still_linked = sum(out.move_orig_ids.mapped('product_qty'))
-            new_move_vals = out._split(out.product_qty - total_still_linked)
+            new_move_vals = out._split(total_still_linked)
             if new_move_vals:
-                new_move_vals[0]['procure_method'] = 'make_to_order'
                 new_out = self.env['stock.move'].create(new_move_vals)
                 # don't do action confirm to avoid creating additional unintentional reservations
                 new_out.write({'state': 'confirmed'})
@@ -295,8 +294,16 @@ class ReceptionReport(models.AbstractModel):
                             move_line_id.move_id = out
                             reserved_amount_to_remain -= move_line_id.product_qty
                     (out | new_out)._compute_reserved_availability()
-                out.move_orig_ids = False
+                # If the origin move was canceled and checked propagate cancel, the out move should be canceled
+                if ins[:1].propagate_cancel and all(state == 'cancel' for state in new_out.move_orig_ids.mapped('state')):
+                    new_out._action_cancel()
                 new_out._recompute_state()
+            out.move_orig_ids = False
         out.procure_method = 'make_to_stock'
+        # After unassigning, the out move should be unreserved
+        out._do_unreserve()
         out._recompute_state()
+        # Try merge picking moves with same product and procure method
+        product_picking_moves = out.picking_id.move_lines.filtered(lambda sm: sm.product_id == out.product_id)
+        product_picking_moves._merge_moves()
         return True
