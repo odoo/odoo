@@ -42,12 +42,12 @@ msgstr "#{'Unfold' if c.id in category.parents_and_self.ids else 'Fold'}"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid "%s review"
-msgstr ""
+msgstr "%s anmeldelse"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid "%s reviews"
-msgstr ""
+msgstr "%s anmeldelser"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
@@ -372,6 +372,8 @@ msgid ""
 "<span>Unfortunately your order can not be confirmed as the amount of your payment does not match the amount of your cart.\n"
 "                        Please contact the responsible of the shop for more information.</span>"
 msgstr ""
+"<span>Din ordre kan desværre ikke bekræftes, da beløbet på din betaling ikke svarer til beløbet på din indkøbskurv.\n"
+"Kontakt venligst butikkens ansvarlige for mere information.</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
@@ -673,7 +675,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_snippet_filter__product_cross_selling
 msgid "About cross selling products"
-msgstr ""
+msgstr "Om tværsalg af produkter"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_image_view_kanban
@@ -836,24 +838,24 @@ msgstr "Banknavn"
 #: model:ir.model.fields,field_description:website_sale.field_product_product__base_unit_count
 #: model:ir.model.fields,field_description:website_sale.field_product_template__base_unit_count
 msgid "Base Unit Count"
-msgstr ""
+msgstr "Antal basisenheder"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__base_unit_name
 #: model:ir.model.fields,field_description:website_sale.field_product_template__base_unit_name
 msgid "Base Unit Name"
-msgstr ""
+msgstr "Basisenhedens navn"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__group_show_uom_price
 msgid "Base Unit Price"
-msgstr ""
+msgstr "Basisenhedspris"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.base_unit_action
 #: model:ir.ui.menu,name:website_sale.website_base_unit_menu
 msgid "Base Units"
-msgstr ""
+msgstr "Basisenheder"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -892,7 +894,7 @@ msgstr "Fakturaadresse"
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 #, python-format
 msgid "Bin"
-msgstr ""
+msgstr "Beholder"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_bins
@@ -920,7 +922,7 @@ msgstr "Bund"
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 #, python-format
 msgid "Box"
-msgstr ""
+msgstr "Boks"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_boxes
@@ -1297,7 +1299,7 @@ msgstr "Land"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_comment
 msgid "Customer Reviews"
-msgstr ""
+msgstr "Kunde anmeldelser"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_orders_customers
@@ -1312,7 +1314,7 @@ msgstr "DHL Express Connector"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid "DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PRODUCTS"
-msgstr ""
+msgstr "SLIP BYGGEKLODENE HER FOR AT GØRE DEM TILGÆNGELIGE PÅ ALLE PRODUKTER"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__currency_id
@@ -1331,6 +1333,8 @@ msgstr "Standard prisliste"
 msgid ""
 "Define a custom unit to display in the price per unit of measure field."
 msgstr ""
+"Definer en brugerdefineret enhed, der skal vises i feltet Pris pr. "
+"måleenhed."
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.product_public_category_action
@@ -1414,11 +1418,13 @@ msgid ""
 "Display base unit price on your eCommerce pages. Set to 0 to hide it for "
 "this product."
 msgstr ""
+"Vis basisenhedsprisen på dine e-handelssider. Indstil til 0 for at skjule "
+"det for dette produkt."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "Displayed in bottom of product pages"
-msgstr ""
+msgstr "Vises nederst på produktsiderne"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__base_unit_name
@@ -1427,6 +1433,8 @@ msgid ""
 "Displays the custom unit for the products if defined or the selected unit of"
 " measure otherwise."
 msgstr ""
+"Viser den tilpassede enhed for produkterne, hvis den er defineret, eller den"
+" valgte måleenhed på anden måde."
 
 #. module: website_sale
 #: code:addons/website_sale/models/digest.py:0
@@ -1738,6 +1746,9 @@ msgid ""
 "backend. If you wish to change your name or email address, please do so in "
 "the account settings or contact your administrator."
 msgstr ""
+"Bestiller du til en ekstern person, bedes du afgive din ordre via backend. "
+"Hvis du ønsker at ændre dit navn eller din e-mailadresse, skal du gøre det i"
+" kontoindstillingerne eller kontakte din administrator."
 
 #. module: website_sale
 #: code:addons/website_sale/controllers/main.py:0
@@ -1793,7 +1804,7 @@ msgstr "KPI Hjemmeside salg total værdi"
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 #, python-format
 msgid "Lamp"
-msgstr ""
+msgstr "Lampe"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_lamps
@@ -1894,7 +1905,7 @@ msgstr ""
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 #, python-format
 msgid "Lightbulb sold separately"
-msgstr ""
+msgstr "Pære sælges separat"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order_line__linked_line_id
@@ -2086,7 +2097,7 @@ msgstr "Antal af produkter i gitteret på shoppen"
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 #, python-format
 msgid "On wheels"
-msgstr ""
+msgstr "På hjul"
 
 #. module: website_sale
 #. openerp-web
@@ -2321,7 +2332,7 @@ msgstr "Paypal bruger type"
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 #, python-format
 msgid "Pedal-based opening system"
-msgstr ""
+msgstr "Pedalbaseret åbningssystem"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -2566,12 +2577,12 @@ msgstr "Varer"
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.dynamic_snippet_recently_sold_with_action
 msgid "Products Recently Sold With"
-msgstr ""
+msgstr "Produkter, der for nylig er solgt med"
 
 #. module: website_sale
 #: model:website.snippet.filter,name:website_sale.dynamic_filter_cross_selling_recently_sold_with
 msgid "Products Recently Sold With Product"
-msgstr ""
+msgstr "Produkter, der for nylig er solgt med produkt"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_visitor__product_count
@@ -2707,7 +2718,7 @@ msgstr "Indhentnings email til afsending"
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 #, python-format
 msgid "Reinforced for heavy loads"
-msgstr ""
+msgstr "Forstærket til tunge belastninger"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
@@ -2783,7 +2794,7 @@ msgstr "Salg"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_graph_website
 msgid "Sale Analysis"
-msgstr ""
+msgstr "Salgsanalyse"
 
 #. module: website_sale
 #. openerp-web
@@ -3034,7 +3045,7 @@ msgstr "Tilmeld"
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 #, python-format
 msgid "Sit comfortably"
-msgstr ""
+msgstr "Sid behageligt"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -3148,7 +3159,7 @@ msgstr "Foreslåede tilbehør:"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "Suggested accessories in the eCommerce cart"
-msgstr ""
+msgstr "Foreslået tilbehør i e-handelsvognen"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_b2b
@@ -3258,6 +3269,8 @@ msgid ""
 "The value of Base Unit Count must be greater than 0. Use 0 to hide the price"
 " per unit on this product."
 msgstr ""
+"Værdien af Base Unit Count skal være større end 0. Brug 0 for at skjule "
+"prisen pr. enhed på dette produkt."
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.action_orders_ecommerce
@@ -3348,11 +3361,13 @@ msgid ""
 "True only for product filters that require a product_id because they relate "
 "to cross selling"
 msgstr ""
+"Gælder kun for produktfiltre, der kræver et product_id, fordi de vedrører "
+"krydssalg"
 
 #. module: website_sale
 #: model:res.groups,name:website_sale.group_show_uom_price
 msgid "UOM Price Display for eCommerce"
-msgstr ""
+msgstr "UOM-prisvisning for e-handel"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -3377,7 +3392,7 @@ msgstr "USPS"
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website_base_unit
 msgid "Unit of Measure for price per unit on eCommerce products."
-msgstr ""
+msgstr "Måleenhed for pris pr. enhed på e-handelsprodukter."
 
 #. module: website_sale
 #: model:product.product,uom_name:website_sale.product_product_1
@@ -3645,7 +3660,7 @@ msgstr ""
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 #, python-format
 msgid "With three feet"
-msgstr ""
+msgstr "Med tre fødder"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -3739,7 +3754,7 @@ msgstr "Kode..."
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_template_options
 msgid "e.g. lamp,bin"
-msgstr ""
+msgstr "f.eks. lampe, beholder"
 
 #. module: website_sale
 #: code:addons/website_sale/models/website.py:0
@@ -3758,7 +3773,7 @@ msgstr "Webshop kategorier"
 #: model_terms:ir.ui.view,arch_db:website_sale.attribute_tree_view
 #: model_terms:ir.ui.view,arch_db:website_sale.product_attribute_view_form
 msgid "eCommerce Filter Visibility"
-msgstr ""
+msgstr "Synlighed af e-handelsfilter"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_digest_digest__kpi_website_sale_total
@@ -3773,7 +3788,7 @@ msgstr "eHandel leveringsomkostninger"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "eCommerce Shop"
-msgstr ""
+msgstr "e-handelsbutik"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.search_count_box
