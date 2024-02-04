@@ -40,8 +40,8 @@
 # Martin Trigaux, 2023
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2023
 # Konsta Aavaranta, 2023
-# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
 # 
 msgid ""
 msgstr ""
@@ -49,7 +49,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024\n"
+"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -7882,6 +7882,13 @@ msgstr "Virheellinen \"Posti alue\", määritä se oikein."
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_report.py:0
+#, python-format
+msgid "Invalid domain for expression '%s' of line '%s': %s"
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Invalid fiscal year last day"
@@ -10741,6 +10748,8 @@ msgstr "Kumppanit"
 #, python-format
 msgid "Partners that are used in hashed entries cannot be merged."
 msgstr ""
+"Yhteistyökumppaneita, joita käytetään hashed-merkinnöissä, ei voida "
+"yhdistää."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -14727,6 +14736,10 @@ msgid ""
 "The financial end year detected here is '%(year_end)s'.\n"
 "The incrementing number in this case is '%(formatted_seq)s'."
 msgstr ""
+"Jakso alkaa uudelleen 1:stä jokaisen varainhoitovuoden alussa.\n"
+"Tässä havaittu tilikauden alkuvuosi on \"%(year)s\".\n"
+"Tässä havaittu tilikauden päättymisvuosi on \"%(year_end)s\".\n"
+"Kasvava numero on tässä tapauksessa \"%(formatted_seq)s\"."
 
 #. module: account
 #. odoo-python
@@ -16844,7 +16857,7 @@ msgstr ""
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid "You cannot merge accounts."
-msgstr ""
+msgstr "Et voi yhdistää tilejä."
 
 #. module: account
 #. odoo-python

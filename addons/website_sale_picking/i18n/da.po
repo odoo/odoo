@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux, 2022
 # lhmflexerp <lhm@flexerp.dk>, 2023
+# Sanne Kristensen <sanne@vkdata.dk>, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-20 09:02+0000\n"
 "PO-Revision-Date: 2022-09-22 05:57+0000\n"
-"Last-Translator: lhmflexerp <lhm@flexerp.dk>, 2023\n"
+"Last-Translator: Sanne Kristensen <sanne@vkdata.dk>, 2024\n"
 "Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,11 +27,13 @@ msgid ""
 "<i>Your order has been saved.</i> Please come to the store to pay for your "
 "products"
 msgstr ""
+"<i>Din ordre er blevet gemt.</i> Kom venligst til butikken for at betale for"
+" dine produkter"
 
 #. module: website_sale_picking
 #: model_terms:ir.ui.view,arch_db:website_sale_picking.payment_confirmation_status
 msgid "<span class=\"text-muted\"> (On site picking)</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\"> (Udvalg på stedet)</span>"
 
 #. module: website_sale_picking
 #: model:ir.model,name:website_sale_picking.model_res_config_settings
@@ -40,12 +43,12 @@ msgstr "Konfigurer opsætning"
 #. module: website_sale_picking
 #: model:ir.model.fields,field_description:website_sale_picking.field_payment_provider__custom_mode
 msgid "Custom Mode"
-msgstr ""
+msgstr "Brugerdefineret tilstand"
 
 #. module: website_sale_picking
 #: model_terms:ir.ui.view,arch_db:website_sale_picking.res_config_settings_view_form
 msgid "Customize Pickup Sites"
-msgstr ""
+msgstr "Tilpas afhentningssteder"
 
 #. module: website_sale_picking
 #. openerp-web
@@ -55,6 +58,8 @@ msgid ""
 "If you believe that it is an error, please contact the website "
 "administrator."
 msgstr ""
+"Hvis du mener, at det er en fejl, bedes du kontakte hjemmesidens "
+"administrator."
 
 #. module: website_sale_picking
 #. openerp-web
@@ -66,13 +71,13 @@ msgstr ""
 #. module: website_sale_picking
 #: model:ir.model.fields.selection,name:website_sale_picking.selection__payment_provider__custom_mode__onsite
 msgid "On Site"
-msgstr ""
+msgstr "På side"
 
 #. module: website_sale_picking
 #: model:product.product,name:website_sale_picking.onsite_delivery_product
 #: model:product.template,name:website_sale_picking.onsite_delivery_product_product_template
 msgid "On site picking"
-msgstr ""
+msgstr "Vælg på stedet"
 
 #. module: website_sale_picking
 #: model:payment.provider,name:website_sale_picking.payment_provider_onsite
@@ -91,12 +96,12 @@ msgstr "Betalingsudbyder"
 #: model:ir.model.fields,field_description:website_sale_picking.field_website__picking_site_ids
 #: model_terms:ir.ui.view,arch_db:website_sale_picking.res_config_settings_view_form
 msgid "Picking sites"
-msgstr ""
+msgstr "Udvælgelsessteder"
 
 #. module: website_sale_picking
 #: model:ir.model.fields.selection,name:website_sale_picking.selection__delivery_carrier__delivery_type__onsite
 msgid "Pickup in store"
-msgstr ""
+msgstr "Afhentning i butik"
 
 #. module: website_sale_picking
 #: model:ir.model.fields,field_description:website_sale_picking.field_delivery_carrier__delivery_type
@@ -112,7 +117,7 @@ msgstr "Leveringsmetoder"
 #: code:addons/website_sale_picking/models/delivery_carrier.py:0
 #, python-format
 msgid "The picking site and warehouse must share the same company"
-msgstr ""
+msgstr "Afhentingsstedet og lageret skal dele samme virksomhed"
 
 #. module: website_sale_picking
 #: model:product.product,uom_name:website_sale_picking.onsite_delivery_product
@@ -134,7 +139,7 @@ msgstr "Hjemmeside"
 #: code:addons/website_sale_picking/controllers/main.py:0
 #, python-format
 msgid "You cannot pay onsite if the delivery is not onsite"
-msgstr ""
+msgstr "Du kan ikke betale på stedet, hvis leveringen ikke er på stedet"
 
 #. module: website_sale_picking
 #: model_terms:payment.provider,auth_msg:website_sale_picking.payment_provider_onsite
@@ -154,4 +159,4 @@ msgstr "Din betaling er gennemført. Mange tak!"
 #. module: website_sale_picking
 #: model:delivery.carrier,name:website_sale_picking.default_onsite_carrier
 msgid "[On Site Pick] My Shop 1"
-msgstr ""
+msgstr "[Vælg på stedet] Min butik 1"
