@@ -32,9 +32,6 @@
     ],
     'assets': {
         'web.assets_backend': [
-            'energy/static/src/js/loadshape_details.js',
-            'energy/static/src/js/form_controller_extension.js',
-
         ],
     },
     'category': 'Productivity'
