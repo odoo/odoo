@@ -472,14 +472,7 @@ This module provides the core of the Odoo Web Client.
             '/web/static/lib/Chart/Chart.js',
             '/web/static/lib/chartjs-adapter-luxon/chartjs-adapter-luxon.js',
         ],
-        "web._fullcalendar_lib" : [
-            '/web/static/lib/fullcalendar/core/main.css',
-            '/web/static/lib/fullcalendar/daygrid/main.css',
-            '/web/static/lib/fullcalendar/timegrid/main.css',
-            '/web/static/lib/fullcalendar/list/main.css'
-        ],
         "web.fullcalendar_lib" : [
-            ('include', 'web._fullcalendar_lib'),
             '/web/static/lib/fullcalendar/core/index.global.js',
             '/web/static/lib/fullcalendar/core/locales-all.global.js',
             '/web/static/lib/fullcalendar/interaction/index.global.js',
