@@ -1,0 +1,399 @@
+/* Copyright 2018 Tecnativa - Jairo Llopis
+ * Copyright 2021 ITerra - Sergey Shebanin
+ * Copyright 2023 Onestein - Anjeel Haria
+ * License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). */
+
+$chatter_zone_width: 35% !important;
+
+// Support for long titles
+@include media-breakpoint-up(md) {
+    .o_form_view .oe_button_box + .oe_title,
+    .o_form_view .oe_button_box + .oe_avatar + .oe_title {
+        /* Button-box has a hardcoded width of 132px per button and have three columns */
+        width: calc(100% - 450px);
+    }
+}
+
+// Scroll all but top bar
+html .o_web_client .o_action_manager .o_action {
+    @include media-breakpoint-down(sm) {
+        overflow: auto;
+
+        .o_content {
+            overflow: visible !important;
+        }
+    }
+    max-width: 100%;
+}
+
+@include media-breakpoint-down(sm) {
+    .ui-menu .ui-menu-item {
+        height: 35px;
+        font-size: 15px;
+    }
+    .o_calendar_view .o_calendar_widget {
+        .fc-timeGridDay-view .fc-axis,
+        .fc-timeGridWeek-view .fc-axis {
+            padding-left: 0px;
+        }
+        .fc-dayGridMonth-view {
+            padding-left: 0px;
+            .fc-week-number {
+                display: none;
+            }
+        }
+        .fc-dayGridYear-view {
+            padding-left: 0px;
+            > .fc-month-container {
+                width: 95%;
+            }
+        }
+        .fc-timeGridDay-view {
+            .fc-week-number {
+                padding: 0 4px;
+                width: 1em;
+                white-space: normal;
+                text-align: center;
+            }
+            .fc-day-header {
+                vertical-align: middle;
+            }
+        }
+        .fc-timeGridWeek-view .fc-widget-header {
+            word-spacing: 4em;
+            white-space: normal;
+            text-align: center;
+        }
+    }
+    .o_base_settings .o_setting_container {
+        display: block;
+        .settings_tab {
+            flex-flow: row nowrap;
+            padding-top: 0px;
+            .tab {
+                padding-right: 16px;
+            }
+            .selected {
+                background-color: #212529;
+                box-shadow: inset 0 -5px #7c7bad;
+            }
+        }
+        .settings > .app_settings_block .o_settings_container {
+            padding-left: 0;
+            padding-right: 0;
+        }
+    }
+    .o_kanban_view .o_control_panel .o_cp_bottom_right .o_cp_pager .btn-group {
+        top: -1px;
+    }
+    .o_kanban_renderer {
+        width: 100%;
+    }
+}
+
+// Normal views
+.o_content,
+.modal-content {
+    max-width: 100%;
+
+    // Form views
+    .o_form_editable {
+        .o_form_sheet {
+            max-width: calc(100% - 32px) !important;
+            overflow-x: auto;
+        }
+
+        .o_cell .o_form_label:not(.o_status):not(.o_calendar_invitation) {
+            min-height: 23px;
+            @include media-breakpoint-up(md) {
+                margin-bottom: 10px;
+            }
+        }
+        .o_horizontal_separator {
+            font-size: 14px;
+        }
+
+        // Some UX improvements for form in edit mode
+        @include media-breakpoint-down(sm) {
+            .nav-item {
+                border-bottom: 1px solid #dee2e6;
+            }
+            .nav-tabs {
+                border-bottom: none;
+            }
+            &.o_form_editable .o_field_widget {
+                &:not(.o_stat_info):not(.o_readonly_modifier):not(.oe_form_field_html):not(.o_field_image) {
+                    min-height: 35px;
+                }
+                .o_x2m_control_panel {
+                    margin-bottom: 10px;
+                }
+                &.o_field_float_percentage,
+                &.o_field_monetary,
+                &.o_field_many2many_selection,
+                .o_field_many2one_selection {
+                    align-items: center;
+                }
+                .o_field_many2one_selection .o_input_dropdown,
+                &.o_datepicker,
+                &.o_partner_autocomplete_info {
+                    input {
+                        min-height: 35px;
+                    }
+                }
+                .o_external_button {
+                    margin-left: 10px;
+                }
+                .o_dropdown_button,
+                .o_datepicker_button {
+                    top: 8px;
+                    right: 6px;
+                    bottom: auto;
+                }
+                .o_field_many2many_selection .o_dropdown_button {
+                    top: 0 !important;
+                }
+            }
+        }
+
+        // Sticky statusbar
+
+        .o_form_statusbar {
+            position: sticky !important;
+            top: 0;
+            z-index: 2;
+        }
+
+        // Support for long title (with ellipsis)
+        .oe_title {
+            .o_field_widget:not(.oe_inline) {
+                display: block;
+                span:not(.o_field_translate) {
+                    display: block;
+                    max-width: 100%;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    width: initial;
+                    &:active {
+                        white-space: normal;
+                    }
+                }
+            }
+        }
+
+        @include media-breakpoint-down(sm) {
+            min-width: auto;
+
+            // More buttons border
+            .oe_button_box {
+                .o_dropdown_more {
+                    button:last-child {
+                        border-right: 1px solid $gray-400 !important;
+                    }
+                }
+            }
+
+            .oe_button_box + .oe_title,
+            .oe_button_box + .oe_avatar + .oe_title {
+                width: 100%;
+            }
+
+            // Avoid overflow on modals
+            .o_form_sheet {
+                min-width: auto;
+            }
+
+            // Render website inputs properly in phones
+            .o_group .o_field_widget.o_text_overflow {
+                // Overrides another !important
+                width: auto !important;
+            }
+
+            // Full width in form sheets
+            .o_form_sheet,
+            .o_FormRenderer_chatterContainer {
+                min-width: auto;
+                max-width: 98% !important;
+            }
+
+            // Settings pages
+            .app_settings_block {
+                .row {
+                    margin: 0;
+                }
+            }
+
+            .o_FormRenderer_chatterContainer {
+                padding-top: initial;
+
+                // Display send button on small screens
+                .o_Chatter_composer {
+                    &.o-has-current-partner-avatar {
+                        grid-template-columns: 0px 1fr;
+                        padding: 1rem 1rem 1.5rem 1rem !important;
+                    }
+
+                    .o_Composer_sidebarMain {
+                        display: none;
+                    }
+                }
+            }
+        }
+    }
+
+    //No content message improvements on mobile
+    @include media-breakpoint-down(md) {
+        .o_view_nocontent {
+            top: 80px;
+        }
+        .o_nocontent_help {
+            box-shadow: none;
+        }
+        .o_sample_data_disabled {
+            display: none;
+        }
+    }
+}
+
+// Sticky Header & Footer in List View
+.o_list_view {
+    .table-responsive {
+        overflow: visible;
+        .o_list_table {
+            // th & td are here for compatibility with chrome
+            thead tr:nth-child(1) th {
+                position: sticky !important;
+                top: 0;
+                z-index: 999;
+            }
+            thead tr:nth-child(1) th {
+                background-color: var(--ListRenderer-thead-bg-color);
+                border-top: none !important;
+                border-bottom: none !important;
+                border-left: transparent;
+                box-shadow: inset 0 0 0 $o-community-color,
+                    inset 0 -1px 0 $o-community-color;
+            }
+            tfoot,
+            tfoot tr:nth-child(1) td {
+                position: sticky;
+                bottom: 0;
+            }
+            tfoot tr:nth-child(1) td {
+                background-color: $o-list-footer-bg-color;
+                border-top: none !important;
+                border-bottom: none !important;
+                box-shadow: inset 0 1px 0 $o-community-color,
+                    inset 0 0 0 $o-community-color;
+            }
+        }
+        .table {
+            thead tr:nth-child(1) th {
+                z-index: 1;
+            }
+        }
+    }
+}
+
+// Big checkboxes
+.o_list_view,
+.o_setting_container .o_setting_box {
+    .o_setting_right_pane {
+        margin-left: 34px;
+    }
+    .o-checkbox:not(.o_boolean_toggle) {
+        margin-right: 10px;
+        margin-top: -6px;
+        &.d-inline-block {
+            display: block !important;
+        }
+        .form-check-input {
+            height: 24px;
+            width: 24px;
+        }
+    }
+    .o_optional_columns_dropdown,
+    .o_add_favorite {
+        .o-checkbox {
+            margin-top: 0;
+        }
+        .form-check-input {
+            height: 1em !important;
+            width: 1em !important;
+        }
+    }
+}
+
+.o_setting_container .o_setting_box {
+    .o_setting_right_pane {
+        margin-left: 34px;
+    }
+    .o-checkbox:not(.o_boolean_toggle) {
+        margin-right: 10px;
+        .form-check-label {
+            &::after {
+                width: 24px;
+                height: 24px;
+            }
+            &::before {
+                outline: none !important;
+                border: 1px solid #4c4c4c;
+                width: 24px;
+                height: 24px;
+            }
+        }
+    }
+}
+
+.o_chatter_header_container {
+    padding-top: $grid-gutter-width * 0.5;
+    top: 0;
+    position: sticky;
+    background-color: $o-view-background-color;
+    z-index: 1;
+}
+
+.o_FormRenderer_chatterContainer {
+    &.o-isInFormSheetBg:not(.o-aside) {
+        background-color: $white;
+        &:not(.o-aside) {
+            width: auto;
+            border-top: 1px solid $border-color;
+        }
+    }
+    &.o-aside {
+        flex: 0 0 $chatter_zone_width;
+        max-width: initial;
+        min-width: initial;
+        overflow: auto;
+    }
+}
+
+body:not(.o_statusbar_buttons) {
+    .oe-toolbar {
+        z-index: 0 !important;
+    }
+}
+
+.o_inner_group > .mb-sm-0 {
+    margin-bottom: 0 !important;
+}
+
+.w-26 {
+    width: 26%;
+}
+
+// Color clue to tell the difference between a note and a public message
+.o_Chatter_composer {
+    // HACK: has() pseudo class is broadly supported in desktop, even FF will deploy
+    // full support soon (now it's available behind a config flag)
+    // https://caniuse.com/css-has
+    &:has(div.o_Composer_coreHeader) {
+        background-color: lighten($o-brand-primary, 40%);
+    }
+}
+
+.o_searchview_autocomplete {
+    z-index: 999;
+}

@@ -1,0 +1,46 @@
+<?xml version="1.0" ?>
+<!--
+    Copyright 2019
+    @author Alexandre Díaz <dev@redneboa.es>
+    License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
+-->
+<odoo>
+    <record id="view_company_form" model="ir.ui.view">
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form" />
+        <field name="arch" type="xml">
+            <notebook position="inside">
+                <page
+                    string="Company Styles"
+                    name="company_styles"
+                    groups="base.group_system"
+                >
+                    <group string="Colors" name="navbar_colors">
+                        <field name="color_navbar_bg" widget="color" />
+                        <field name="color_navbar_bg_hover" widget="color" />
+                        <field name="color_navbar_text" widget="color" />
+                        <field name="color_button_bg" widget="color" />
+                        <field name="color_button_bg_hover" widget="color" />
+                        <field name="color_button_text" widget="color" />
+                        <field name="color_link_text" widget="color" />
+                        <field name="color_link_text_hover" widget="color" />
+                    </group>
+                    <button
+                        class="btn-primary"
+                        name="button_compute_color"
+                        type="object"
+                        string="Compute colors from logo"
+                    />
+                    <div
+                        class="alert alert-info info_icon mt-2 d-flex align-items-center"
+                        role="alert"
+                    >
+                        <span class="fa fa-info fa-2x me-2" />
+                        In order for the changes to take effect, please refresh
+                        the page.
+                    </div>
+                </page>
+            </notebook>
+        </field>
+    </record>
+</odoo>

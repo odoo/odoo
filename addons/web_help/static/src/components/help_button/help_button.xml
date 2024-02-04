@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="web_help.HelpButton" owl="1">
+        <button
+            class="btn ml-2 js_web_help_btn"
+            t-att-class="props.btnClass || 'btn-light'"
+            t-on-click="onClick"
+            tabindex="-1"
+            t-if="state.TripClass"
+        >
+            <i class="fa fa-question" />
+        </button>
+    </t>
+    <t t-inherit="web.ControlPanel.Regular" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o_cp_bottom_right')]" t-operation="inside">
+            <nav class="btn-group">
+                <HelpButton
+                    resModel="env.searchModel.resModel"
+                    viewType="env.config.viewType"
+                />
+            </nav>
+        </xpath>
+    </t>
+    <t t-inherit="web.ControlPanel.Small" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o_cp_bottom_right')]" t-operation="inside">
+            <nav class="btn-group">
+                <HelpButton
+                    resModel="env.searchModel.resModel"
+                    viewType="env.config.viewType"
+                />
+            </nav>
+        </xpath>
+    </t>
+
+    <t t-inherit="web.ActionDialog.header" t-inherit-mode="extension">
+        <xpath expr="//h4[hasclass('modal-title')]" t-operation="after">
+            <HelpButton
+                resModel="props.actionProps.resModel"
+                viewType="props.actionProps.type"
+                btnClass="env.isSmall and 'btn-link p-1 text-white' or 'btn-link p-1'"
+            />
+        </xpath>
+    </t>
+</templates>

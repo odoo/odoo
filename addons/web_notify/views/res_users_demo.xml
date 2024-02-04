@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2018 Aitor Bouzas <aitor.bouzas@adaptivecity.com>
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="view_users_form_simple_modif_inherit" model="ir.ui.view">
+        <field name="name">res.users.form.simple.view.modif.inherit</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//notebook/page[1]" position="after">
+                <page string="Test web notify" name="test_web_notify">
+                <group>
+                    <group>
+                    <button
+                                name="notify_success"
+                                type="object"
+                                string="Test success notification"
+                                class="oe_highlight"
+                            />
+                    </group>
+                    <group>
+                    <button
+                                name="notify_danger"
+                                type="object"
+                                string="Test danger notification"
+                                class="oe_highlight"
+                            />
+                    </group>
+                </group>
+                <group>
+                    <group>
+                    <button
+                                name="notify_warning"
+                                type="object"
+                                string="Test warning notification"
+                                class="oe_highlight"
+                            />
+                    </group>
+                    <group>
+                    <button
+                                name="notify_info"
+                                type="object"
+                                string="Test info notification"
+                                class="oe_highlight"
+                            />
+                    </group>
+                </group>
+                <group>
+                    <group>
+                    <button
+                                name="notify_default"
+                                type="object"
+                                string="Test default notification"
+                                class="oe_highlight"
+                            />
+                    </group>
+                </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

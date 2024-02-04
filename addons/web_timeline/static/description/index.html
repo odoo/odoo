@@ -1,0 +1,626 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils: https://docutils.sourceforge.io/" />
+<title>Web timeline</title>
+<style type="text/css">
+
+/*
+:Author: David Goodger (goodger@python.org)
+:Id: $Id: html4css1.css 8954 2022-01-20 10:10:25Z milde $
+:Copyright: This stylesheet has been placed in the public domain.
+
+Default cascading style sheet for the HTML output of Docutils.
+
+See https://docutils.sourceforge.io/docs/howto/html-stylesheets.html for how to
+customize this style sheet.
+*/
+
+/* used to remove borders from tables and images */
+.borderless, table.borderless td, table.borderless th {
+  border: 0 }
+
+table.borderless td, table.borderless th {
+  /* Override padding for "table.docutils td" with "! important".
+     The right padding separates the table cells. */
+  padding: 0 0.5em 0 0 ! important }
+
+.first {
+  /* Override more specific margin styles with "! important". */
+  margin-top: 0 ! important }
+
+.last, .with-subtitle {
+  margin-bottom: 0 ! important }
+
+.hidden {
+  display: none }
+
+.subscript {
+  vertical-align: sub;
+  font-size: smaller }
+
+.superscript {
+  vertical-align: super;
+  font-size: smaller }
+
+a.toc-backref {
+  text-decoration: none ;
+  color: black }
+
+blockquote.epigraph {
+  margin: 2em 5em ; }
+
+dl.docutils dd {
+  margin-bottom: 0.5em }
+
+object[type="image/svg+xml"], object[type="application/x-shockwave-flash"] {
+  overflow: hidden;
+}
+
+/* Uncomment (and remove this text!) to get bold-faced definition list terms
+dl.docutils dt {
+  font-weight: bold }
+*/
+
+div.abstract {
+  margin: 2em 5em }
+
+div.abstract p.topic-title {
+  font-weight: bold ;
+  text-align: center }
+
+div.admonition, div.attention, div.caution, div.danger, div.error,
+div.hint, div.important, div.note, div.tip, div.warning {
+  margin: 2em ;
+  border: medium outset ;
+  padding: 1em }
+
+div.admonition p.admonition-title, div.hint p.admonition-title,
+div.important p.admonition-title, div.note p.admonition-title,
+div.tip p.admonition-title {
+  font-weight: bold ;
+  font-family: sans-serif }
+
+div.attention p.admonition-title, div.caution p.admonition-title,
+div.danger p.admonition-title, div.error p.admonition-title,
+div.warning p.admonition-title, .code .error {
+  color: red ;
+  font-weight: bold ;
+  font-family: sans-serif }
+
+/* Uncomment (and remove this text!) to get reduced vertical space in
+   compound paragraphs.
+div.compound .compound-first, div.compound .compound-middle {
+  margin-bottom: 0.5em }
+
+div.compound .compound-last, div.compound .compound-middle {
+  margin-top: 0.5em }
+*/
+
+div.dedication {
+  margin: 2em 5em ;
+  text-align: center ;
+  font-style: italic }
+
+div.dedication p.topic-title {
+  font-weight: bold ;
+  font-style: normal }
+
+div.figure {
+  margin-left: 2em ;
+  margin-right: 2em }
+
+div.footer, div.header {
+  clear: both;
+  font-size: smaller }
+
+div.line-block {
+  display: block ;
+  margin-top: 1em ;
+  margin-bottom: 1em }
+
+div.line-block div.line-block {
+  margin-top: 0 ;
+  margin-bottom: 0 ;
+  margin-left: 1.5em }
+
+div.sidebar {
+  margin: 0 0 0.5em 1em ;
+  border: medium outset ;
+  padding: 1em ;
+  background-color: #ffffee ;
+  width: 40% ;
+  float: right ;
+  clear: right }
+
+div.sidebar p.rubric {
+  font-family: sans-serif ;
+  font-size: medium }
+
+div.system-messages {
+  margin: 5em }
+
+div.system-messages h1 {
+  color: red }
+
+div.system-message {
+  border: medium outset ;
+  padding: 1em }
+
+div.system-message p.system-message-title {
+  color: red ;
+  font-weight: bold }
+
+div.topic {
+  margin: 2em }
+
+h1.section-subtitle, h2.section-subtitle, h3.section-subtitle,
+h4.section-subtitle, h5.section-subtitle, h6.section-subtitle {
+  margin-top: 0.4em }
+
+h1.title {
+  text-align: center }
+
+h2.subtitle {
+  text-align: center }
+
+hr.docutils {
+  width: 75% }
+
+img.align-left, .figure.align-left, object.align-left, table.align-left {
+  clear: left ;
+  float: left ;
+  margin-right: 1em }
+
+img.align-right, .figure.align-right, object.align-right, table.align-right {
+  clear: right ;
+  float: right ;
+  margin-left: 1em }
+
+img.align-center, .figure.align-center, object.align-center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+table.align-center {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.align-left {
+  text-align: left }
+
+.align-center {
+  clear: both ;
+  text-align: center }
+
+.align-right {
+  text-align: right }
+
+/* reset inner alignment in figures */
+div.align-right {
+  text-align: inherit }
+
+/* div.align-center * { */
+/*   text-align: left } */
+
+.align-top    {
+  vertical-align: top }
+
+.align-middle {
+  vertical-align: middle }
+
+.align-bottom {
+  vertical-align: bottom }
+
+ol.simple, ul.simple {
+  margin-bottom: 1em }
+
+ol.arabic {
+  list-style: decimal }
+
+ol.loweralpha {
+  list-style: lower-alpha }
+
+ol.upperalpha {
+  list-style: upper-alpha }
+
+ol.lowerroman {
+  list-style: lower-roman }
+
+ol.upperroman {
+  list-style: upper-roman }
+
+p.attribution {
+  text-align: right ;
+  margin-left: 50% }
+
+p.caption {
+  font-style: italic }
+
+p.credits {
+  font-style: italic ;
+  font-size: smaller }
+
+p.label {
+  white-space: nowrap }
+
+p.rubric {
+  font-weight: bold ;
+  font-size: larger ;
+  color: maroon ;
+  text-align: center }
+
+p.sidebar-title {
+  font-family: sans-serif ;
+  font-weight: bold ;
+  font-size: larger }
+
+p.sidebar-subtitle {
+  font-family: sans-serif ;
+  font-weight: bold }
+
+p.topic-title {
+  font-weight: bold }
+
+pre.address {
+  margin-bottom: 0 ;
+  margin-top: 0 ;
+  font: inherit }
+
+pre.literal-block, pre.doctest-block, pre.math, pre.code {
+  margin-left: 2em ;
+  margin-right: 2em }
+
+pre.code .ln { color: grey; } /* line numbers */
+pre.code, code { background-color: #eeeeee }
+pre.code .comment, code .comment { color: #5C6576 }
+pre.code .keyword, code .keyword { color: #3B0D06; font-weight: bold }
+pre.code .literal.string, code .literal.string { color: #0C5404 }
+pre.code .name.builtin, code .name.builtin { color: #352B84 }
+pre.code .deleted, code .deleted { background-color: #DEB0A1}
+pre.code .inserted, code .inserted { background-color: #A3D289}
+
+span.classifier {
+  font-family: sans-serif ;
+  font-style: oblique }
+
+span.classifier-delimiter {
+  font-family: sans-serif ;
+  font-weight: bold }
+
+span.interpreted {
+  font-family: sans-serif }
+
+span.option {
+  white-space: nowrap }
+
+span.pre {
+  white-space: pre }
+
+span.problematic {
+  color: red }
+
+span.section-subtitle {
+  /* font-size relative to parent (h1..h6 element) */
+  font-size: 80% }
+
+table.citation {
+  border-left: solid 1px gray;
+  margin-left: 1px }
+
+table.docinfo {
+  margin: 2em 4em }
+
+table.docutils {
+  margin-top: 0.5em ;
+  margin-bottom: 0.5em }
+
+table.footnote {
+  border-left: solid 1px black;
+  margin-left: 1px }
+
+table.docutils td, table.docutils th,
+table.docinfo td, table.docinfo th {
+  padding-left: 0.5em ;
+  padding-right: 0.5em ;
+  vertical-align: top }
+
+table.docutils th.field-name, table.docinfo th.docinfo-name {
+  font-weight: bold ;
+  text-align: left ;
+  white-space: nowrap ;
+  padding-left: 0 }
+
+/* "booktabs" style (no vertical lines) */
+table.docutils.booktabs {
+  border: 0px;
+  border-top: 2px solid;
+  border-bottom: 2px solid;
+  border-collapse: collapse;
+}
+table.docutils.booktabs * {
+  border: 0px;
+}
+table.docutils.booktabs th {
+  border-bottom: thin solid;
+  text-align: left;
+}
+
+h1 tt.docutils, h2 tt.docutils, h3 tt.docutils,
+h4 tt.docutils, h5 tt.docutils, h6 tt.docutils {
+  font-size: 100% }
+
+ul.auto-toc {
+  list-style-type: none }
+
+</style>
+</head>
+<body>
+<div class="document" id="web-timeline">
+<h1 class="title">Web timeline</h1>
+
+<!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!! This file is generated by oca-gen-addon-readme !!
+!! changes will be overwritten.                   !!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!! source digest: sha256:83336483b07a21cb0d427e4961bc70735ff1f8d7200f4faf488c3b509e683d6c
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+<p><a class="reference external image-reference" href="https://odoo-community.org/page/development-status"><img alt="Production/Stable" src="https://img.shields.io/badge/maturity-Production%2FStable-green.png" /></a> <a class="reference external image-reference" href="http://www.gnu.org/licenses/agpl-3.0-standalone.html"><img alt="License: AGPL-3" src="https://img.shields.io/badge/licence-AGPL--3-blue.png" /></a> <a class="reference external image-reference" href="https://github.com/OCA/web/tree/16.0/web_timeline"><img alt="OCA/web" src="https://img.shields.io/badge/github-OCA%2Fweb-lightgray.png?logo=github" /></a> <a class="reference external image-reference" href="https://translation.odoo-community.org/projects/web-16-0/web-16-0-web_timeline"><img alt="Translate me on Weblate" src="https://img.shields.io/badge/weblate-Translate%20me-F47D42.png" /></a> <a class="reference external image-reference" href="https://runboat.odoo-community.org/builds?repo=OCA/web&amp;target_branch=16.0"><img alt="Try me on Runboat" src="https://img.shields.io/badge/runboat-Try%20me-875A7B.png" /></a></p>
+<p>Define a new view displaying events in an interactive visualization chart.</p>
+<p>The widget is based on the external library
+<a class="reference external" href="https://visjs.github.io/vis-timeline/examples/timeline">https://visjs.github.io/vis-timeline/examples/timeline</a></p>
+<p><strong>Table of contents</strong></p>
+<div class="contents local topic" id="contents">
+<ul class="simple">
+<li><a class="reference internal" href="#configuration" id="toc-entry-1">Configuration</a></li>
+<li><a class="reference internal" href="#usage" id="toc-entry-2">Usage</a></li>
+<li><a class="reference internal" href="#known-issues-roadmap" id="toc-entry-3">Known issues / Roadmap</a></li>
+<li><a class="reference internal" href="#bug-tracker" id="toc-entry-4">Bug Tracker</a></li>
+<li><a class="reference internal" href="#credits" id="toc-entry-5">Credits</a><ul>
+<li><a class="reference internal" href="#authors" id="toc-entry-6">Authors</a></li>
+<li><a class="reference internal" href="#contributors" id="toc-entry-7">Contributors</a></li>
+<li><a class="reference internal" href="#maintainers" id="toc-entry-8">Maintainers</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="configuration">
+<h1><a class="toc-backref" href="#toc-entry-1">Configuration</a></h1>
+<p>You need to define a view with the tag &lt;timeline&gt; as base element. These are
+the possible attributes for the tag:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="7%" />
+<col width="4%" />
+<col width="90%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">Attribute</th>
+<th class="head">Required?</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>date_start</td>
+<td><strong>Yes</strong></td>
+<td>Defines the name of the field of type date that contains the start of the event.</td>
+</tr>
+<tr><td>date_stop</td>
+<td>No</td>
+<td>Defines the name of the field of type date that contains the end of the event. The date_stop can be equal to the attribute date_start to display events has ‘point’ on the Timeline (instantaneous event).</td>
+</tr>
+<tr><td>date_delay</td>
+<td>No</td>
+<td>Defines the name of the field of type float/integer that contain the duration in hours of the event, default = 1.</td>
+</tr>
+<tr><td>default_group_by</td>
+<td><strong>Yes</strong></td>
+<td>Defines the name of the field that will be taken as default group by when accessing the view or when no other group by is selected.</td>
+</tr>
+<tr><td>zoomKey</td>
+<td>No</td>
+<td>Specifies whether the Timeline is only zoomed when an additional key is down. Available values are ‘’ (does not apply), ‘altKey’, ‘ctrlKey’, or ‘metaKey’. Set this option if you want to be able to use the scroll to navigate vertically on views with a lot of events.</td>
+</tr>
+<tr><td>mode</td>
+<td>No</td>
+<td>Specifies the initial visible window. Available values are: ‘day’ to display the current day, ‘week’, ‘month’ and ‘fit’. Default value is ‘fit’ to adjust the visible window such that it fits all items.</td>
+</tr>
+<tr><td>margin</td>
+<td>No</td>
+<td>Specifies the margins around the items. It should respect the JSON format. For example ‘{“item”:{“horizontal”:-10}}’. Available values are: ‘{“axis”:&lt;number&gt;}’ (The minimal margin in pixels between items and the time axis)
+‘{“item”:&lt;number&gt;}’ (The minimal margin in pixels between items in both horizontal and vertical direction), ‘{“item”:{“horizontal”:&lt;number&gt;}}’ (The minimal horizontal margin in pixels between items),
+‘{“item”:{“vertical”:&lt;number&gt;}}’ (The minimal vertical margin in pixels between items), ‘{“item”:{“horizontal”:&lt;number&gt;,”vertical”:&lt;number&gt;}}’ (Combination between horizontal and vertical margins in pixels between items).</td>
+</tr>
+<tr><td>event_open_popup</td>
+<td>No</td>
+<td>When set to true, it allows to edit the events in a popup. If not (default value), the record is edited changing to form view.</td>
+</tr>
+<tr><td>stack</td>
+<td>No</td>
+<td>When set to false, items will not be stacked on top of each other such that they do overlap.</td>
+</tr>
+<tr><td>colors</td>
+<td>No</td>
+<td>Allows to set certain specific colors if the expressed condition (JS syntax) is met.</td>
+</tr>
+<tr><td>dependency_arrow</td>
+<td>No</td>
+<td>Set this attribute to a x2many field to draw arrows between the records referenced in the x2many field.</td>
+</tr>
+</tbody>
+</table>
+<p>Optionally you can declare a custom template, which will be used to render the
+timeline items. You have to name the template ‘timeline-item’.
+These are the variables available in template rendering:</p>
+<ul class="simple">
+<li><tt class="docutils literal">record</tt>: to access the fields values selected in the timeline definition.</li>
+<li><tt class="docutils literal">field_utils</tt>: used to format and parse values (see available functions in <tt class="docutils literal">web.field_utils</tt>).</li>
+</ul>
+<p>You also need to declare the view in an action window of the involved model.</p>
+<p>Example:</p>
+<pre class="code xml literal-block">
+<span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span><span class="w">
+</span><span class="nt">&lt;odoo&gt;</span><span class="w">
+    </span><span class="nt">&lt;record</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;view_task_timeline&quot;</span><span class="w"> </span><span class="na">model=</span><span class="s">&quot;ir.ui.view&quot;</span><span class="nt">&gt;</span><span class="w">
+        </span><span class="nt">&lt;field</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;model&quot;</span><span class="nt">&gt;</span>project.task<span class="nt">&lt;/field&gt;</span><span class="w">
+        </span><span class="nt">&lt;field</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;type&quot;</span><span class="nt">&gt;</span>timeline<span class="nt">&lt;/field&gt;</span><span class="w">
+        </span><span class="nt">&lt;field</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;arch&quot;</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;xml&quot;</span><span class="nt">&gt;</span><span class="w">
+            </span><span class="nt">&lt;timeline</span><span class="w"> </span><span class="na">date_start=</span><span class="s">&quot;date_assign&quot;</span><span class="w">
+                      </span><span class="na">date_stop=</span><span class="s">&quot;date_end&quot;</span><span class="w">
+                      </span><span class="na">string=</span><span class="s">&quot;Tasks&quot;</span><span class="w">
+                      </span><span class="na">default_group_by=</span><span class="s">&quot;project_id&quot;</span><span class="w">
+                      </span><span class="na">event_open_popup=</span><span class="s">&quot;true&quot;</span><span class="w">
+                      </span><span class="na">colors=</span><span class="s">&quot;white: user_ids == []; #2ecb71: kanban_state == 'done'; #ec7063: kanban_state == 'blocked'&quot;</span><span class="w">
+                      </span><span class="na">dependency_arrow=</span><span class="s">&quot;depend_on_ids&quot;</span><span class="w">
+            </span><span class="nt">&gt;</span><span class="w">
+                </span><span class="nt">&lt;field</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;user_ids&quot;</span><span class="w"> </span><span class="nt">/&gt;</span><span class="w">
+                </span><span class="nt">&lt;field</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;planned_hours&quot;</span><span class="w"> </span><span class="nt">/&gt;</span><span class="w">
+                </span><span class="nt">&lt;templates&gt;</span><span class="w">
+                    </span><span class="nt">&lt;t</span><span class="w"> </span><span class="na">t-name=</span><span class="s">&quot;timeline-item&quot;</span><span class="nt">&gt;</span><span class="w">
+                        </span><span class="nt">&lt;div</span><span class="w"> </span><span class="na">class=</span><span class="s">&quot;o_project_timeline_item&quot;</span><span class="nt">&gt;</span><span class="w">
+                            </span><span class="nt">&lt;t</span><span class="w"> </span><span class="na">t-foreach=</span><span class="s">&quot;record.user_ids&quot;</span><span class="w"> </span><span class="na">t-as=</span><span class="s">&quot;user&quot;</span><span class="nt">&gt;</span><span class="w">
+                                </span><span class="nt">&lt;img</span><span class="w">
+                                    </span><span class="na">t-if=</span><span class="s">&quot;record.user_ids&quot;</span><span class="w">
+                                    </span><span class="na">t-attf-src=</span><span class="s">&quot;/web/image/res.users/#{user}/image_128/16x16&quot;</span><span class="w">
+                                    </span><span class="na">t-att-title=</span><span class="s">&quot;record.user&quot;</span><span class="w">
+                                    </span><span class="na">width=</span><span class="s">&quot;16&quot;</span><span class="w">
+                                    </span><span class="na">height=</span><span class="s">&quot;16&quot;</span><span class="w">
+                                    </span><span class="na">class=</span><span class="s">&quot;mr8&quot;</span><span class="w">
+                                    </span><span class="na">alt=</span><span class="s">&quot;User&quot;</span><span class="w">
+                                </span><span class="nt">/&gt;</span><span class="w">
+                            </span><span class="nt">&lt;/t&gt;</span><span class="w">
+                            </span><span class="nt">&lt;span</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;display_name&quot;</span><span class="nt">&gt;</span><span class="w">
+                                </span><span class="nt">&lt;t</span><span class="w"> </span><span class="na">t-esc=</span><span class="s">&quot;record.display_name&quot;</span><span class="w"> </span><span class="nt">/&gt;</span><span class="w">
+                            </span><span class="nt">&lt;/span&gt;</span><span class="w">
+                            </span><span class="nt">&lt;small</span><span class="w">
+                                </span><span class="na">name=</span><span class="s">&quot;planned_hours&quot;</span><span class="w">
+                                </span><span class="na">class=</span><span class="s">&quot;text-info ml4&quot;</span><span class="w">
+                                </span><span class="na">t-if=</span><span class="s">&quot;record.planned_hours&quot;</span><span class="w">
+                            </span><span class="nt">&gt;</span><span class="w">
+                                </span><span class="nt">&lt;t</span><span class="w">
+                                    </span><span class="na">t-esc=</span><span class="s">&quot;field_utils.format.float_time(record.planned_hours)&quot;</span><span class="w">
+                                </span><span class="nt">/&gt;</span><span class="w">
+                            </span><span class="nt">&lt;/small&gt;</span><span class="w">
+                        </span><span class="nt">&lt;/div&gt;</span><span class="w">
+                    </span><span class="nt">&lt;/t&gt;</span><span class="w">
+                </span><span class="nt">&lt;/templates&gt;</span><span class="w">
+            </span><span class="nt">&lt;/timeline&gt;</span><span class="w">
+        </span><span class="nt">&lt;/field&gt;</span><span class="w">
+    </span><span class="nt">&lt;/record&gt;</span><span class="w">
+
+    </span><span class="nt">&lt;record</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;project.action_view_task&quot;</span><span class="w"> </span><span class="na">model=</span><span class="s">&quot;ir.actions.act_window&quot;</span><span class="nt">&gt;</span><span class="w">
+        </span><span class="nt">&lt;field</span><span class="w">
+            </span><span class="na">name=</span><span class="s">&quot;view_mode&quot;</span><span class="w">
+        </span><span class="nt">&gt;</span>kanban,tree,form,calendar,timeline,pivot,graph,activity<span class="nt">&lt;/field&gt;</span><span class="w">
+    </span><span class="nt">&lt;/record&gt;</span><span class="w">
+</span><span class="nt">&lt;/odoo&gt;</span>
+</pre>
+</div>
+<div class="section" id="usage">
+<h1><a class="toc-backref" href="#toc-entry-2">Usage</a></h1>
+<p>For accessing the timeline view, you have to click on the button with the clock
+icon in the view switcher. The first time you access to it, the timeline window
+is zoomed to fit all the current elements, the same as when you perform a
+search, filter or group by operation.</p>
+<p>You can use the mouse scroll to zoom in or out in the timeline, and click on
+any free area and drag for panning the view in that direction.</p>
+<p>The records of your model will be shown as rectangles whose widths are the
+duration of the event according our definition. You can select them clicking
+on this rectangle. You can also use Ctrl or Shift keys for adding discrete
+or range selections. Selected records are hightlighted with a different color
+(but the difference will be more noticeable depending on the background color).
+Once selected, you can drag and move the selected records across the timeline.</p>
+<p>When a record is selected, a red cross button appears on the upper left corner
+that allows to remove that record. This doesn’t work for multiple records
+although they were selected.</p>
+<p>Records are grouped in different blocks depending on the group by criteria
+selected (if none is specified, then the default group by is applied).
+Dragging a record from one block to another change the corresponding field to
+the value that represents the block. You can also click on the group name to
+edit the involved record directly.</p>
+<p>Double-click on the record to edit it. Double-click in open area to create a
+new record with the group and start date linked to the area you clicked in.
+By holding the Ctrl key and dragging left to right, you can create a new record
+with the dragged start and end date.</p>
+</div>
+<div class="section" id="known-issues-roadmap">
+<h1><a class="toc-backref" href="#toc-entry-3">Known issues / Roadmap</a></h1>
+<ul class="simple">
+<li>Implement a more efficient way of refreshing timeline after a record update;</li>
+<li>Make <cite>attrs</cite> attribute work;</li>
+<li>Make action attributes work (create, edit, delete) like in form and tree views.</li>
+<li>When grouping by m2m and more than one record is set, the timeline item appears only
+on one group. Allow showing in both groups.</li>
+<li>When grouping by m2m and dragging for changing the time or the group, the changes on
+the group will not be set, because it could make disappear the records not related
+with the changes that we want to make. When the item is showed in all groups change
+the value according the group of the dragged item.</li>
+</ul>
+</div>
+<div class="section" id="bug-tracker">
+<h1><a class="toc-backref" href="#toc-entry-4">Bug Tracker</a></h1>
+<p>Bugs are tracked on <a class="reference external" href="https://github.com/OCA/web/issues">GitHub Issues</a>.
+In case of trouble, please check there if your issue has already been reported.
+If you spotted it first, help us to smash it by providing a detailed and welcomed
+<a class="reference external" href="https://github.com/OCA/web/issues/new?body=module:%20web_timeline%0Aversion:%2016.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**">feedback</a>.</p>
+<p>Do not contact contributors directly about support or help with technical issues.</p>
+</div>
+<div class="section" id="credits">
+<h1><a class="toc-backref" href="#toc-entry-5">Credits</a></h1>
+<div class="section" id="authors">
+<h2><a class="toc-backref" href="#toc-entry-6">Authors</a></h2>
+<ul class="simple">
+<li>ACSONE SA/NV</li>
+<li>Tecnativa</li>
+<li>Monk Software</li>
+<li>Onestein</li>
+<li>Trobz</li>
+</ul>
+</div>
+<div class="section" id="contributors">
+<h2><a class="toc-backref" href="#toc-entry-7">Contributors</a></h2>
+<ul class="simple">
+<li>Laurent Mignon &lt;<a class="reference external" href="mailto:laurent.mignon&#64;acsone.eu">laurent.mignon&#64;acsone.eu</a>&gt;</li>
+<li>Adrien Peiffer &lt;<a class="reference external" href="mailto:adrien.peiffer&#64;acsone.eu">adrien.peiffer&#64;acsone.eu</a>&gt;</li>
+<li>Leonardo Donelli &lt;<a class="reference external" href="mailto:donelli&#64;webmonks.it">donelli&#64;webmonks.it</a>&gt;</li>
+<li>Adrien Didenot &lt;<a class="reference external" href="mailto:adrien.didenot&#64;horanet.com">adrien.didenot&#64;horanet.com</a>&gt;</li>
+<li>Thong Nguyen Van &lt;<a class="reference external" href="mailto:thongnv&#64;trobz.com">thongnv&#64;trobz.com</a>&gt;</li>
+<li>Murtaza Mithaiwala &lt;<a class="reference external" href="mailto:mmithaiwala&#64;opensourceintegrators.com">mmithaiwala&#64;opensourceintegrators.com</a>&gt;</li>
+<li>Ammar Officewala &lt;<a class="reference external" href="mailto:aofficewala&#64;opensourceintegrators.com">aofficewala&#64;opensourceintegrators.com</a>&gt;</li>
+<li><a class="reference external" href="https://www.tecnativa.com">Tecnativa</a>:<ul>
+<li>Pedro M. Baeza</li>
+<li>Alexandre Díaz</li>
+<li>César A. Sánchez</li>
+</ul>
+</li>
+<li><dl class="first docutils">
+<dt><a class="reference external" href="https://www.onestein.nl">Onestein</a>:</dt>
+<dd><ul class="first last">
+<li>Dennis Sluijk &lt;<a class="reference external" href="mailto:d.sluijk&#64;onestein.nl">d.sluijk&#64;onestein.nl</a>&gt;</li>
+<li>Anjeel Haria</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</div>
+<div class="section" id="maintainers">
+<h2><a class="toc-backref" href="#toc-entry-8">Maintainers</a></h2>
+<p>This module is maintained by the OCA.</p>
+<a class="reference external image-reference" href="https://odoo-community.org"><img alt="Odoo Community Association" src="https://odoo-community.org/logo.png" /></a>
+<p>OCA, or the Odoo Community Association, is a nonprofit organization whose
+mission is to support the collaborative development of Odoo features and
+promote its widespread use.</p>
+<p>Current <a class="reference external" href="https://odoo-community.org/page/maintainer-role">maintainer</a>:</p>
+<p><a class="reference external image-reference" href="https://github.com/tarteo"><img alt="tarteo" src="https://github.com/tarteo.png?size=40px" /></a></p>
+<p>This module is part of the <a class="reference external" href="https://github.com/OCA/web/tree/16.0/web_timeline">OCA/web</a> project on GitHub.</p>
+<p>You are welcome to contribute. To learn how please visit <a class="reference external" href="https://odoo-community.org/page/Contribute">https://odoo-community.org/page/Contribute</a>.</p>
+</div>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-inherit="web.ListRenderer.RecordRow" t-inherit-mode="extension">
+        <xpath expr="//tr[@class='o_data_row']/td/CheckBox" position="attributes">
+                <attribute
+                name="t-on-click.capture"
+            >(ev) => this._onClickSelectRecord(record,ev)</attribute>
+        </xpath>
+    </t>
+</templates>

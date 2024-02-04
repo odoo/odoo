@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record model="ir.actions.server" id="demo_pager_previous">
+        <field name="name">Previous partner</field>
+        <field name="model_id" ref="base.model_res_partner" />
+        <field name="state">code</field>
+        <field name="code">action = {"type": "ir.actions.act_window.page.prev"}</field>
+    </record>
+
+    <record model="ir.actions.server" id="demo_pager_next">
+        <field name="name">Next partner</field>
+        <field name="model_id" ref="base.model_res_partner" />
+        <field name="state">code</field>
+        <field name="code">action = {"type": "ir.actions.act_window.page.next"}</field>
+    </record>
+
+    <!-- Adding some redundant buttons to the partner form so that this module can be tested on runbot.
+    You might be more interested in returning this action type from a method in your code. -->
+    <record id="view_partner_form" model="ir.ui.view">
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form" />
+        <field name="arch" type="xml">
+            <div class="oe_button_box" position="inside">
+                <button
+                    name="%(web_ir_actions_act_window_page.demo_pager_previous)d"
+                    type="action"
+                    string="Previous Partner"
+                    icon="fa-arrow-left"
+                    class="oe_stat_button"
+                />
+                <button
+                    name="%(web_ir_actions_act_window_page.demo_pager_next)d"
+                    type="action"
+                    string="Next Partner"
+                    icon="fa-arrow-right"
+                    class="oe_stat_button"
+                />
+            </div>
+        </field>
+    </record>
+
+</odoo>

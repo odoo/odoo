@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="web_widget_x2many_2d_matrix.X2Many2DMatrixRenderer" owl="1">
+        <table
+            class="o_list_table table table-responsive table-sm table-hover position-relative mb-0 o_list_table_ungrouped table-striped"
+            t-if="rows.length > 0"
+        >
+            <thead>
+                <tr>
+                    <th />
+                    <th
+                        t-foreach="columns"
+                        t-as="column"
+                        t-key="column.value"
+                        class="text-center"
+                    >
+                        <t t-esc="column.text" />
+                    </th>
+                    <th t-if="props.showRowTotals" />
+                </tr>
+            </thead>
+            <tbody>
+                <tr t-foreach="rows" t-as="row" t-key="row.value">
+                    <td>
+                        <t t-esc="row.text" />
+                    </td>
+                    <td t-foreach="columns" t-as="column" t-key="column.value">
+                        <t
+                            t-component="ValueFieldComponent"
+                            t-props="getValueFieldProps(column.value, row.value)"
+                        />
+                    </td>
+                    <td
+                        t-if="props.showRowTotals and _canAggregate()"
+                        class="row-total"
+                    >
+                        <t
+                            t-component="ValueFieldComponent"
+                            readonly="true"
+                            value="_aggregateRow(row.value)"
+                        />
+                    </td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr t-if="props.showColumnTotals and _canAggregate()">
+                    <th />
+                    <th t-foreach="columns" t-as="column" t-key="column.value">
+                        <t
+                            t-component="ValueFieldComponent"
+                            readonly="true"
+                            value="_aggregateColumn(column.value)"
+                        />
+                    </th>
+                    <th t-if="props.showRowTotals" class="col-total">
+                        <t
+                            t-component="ValueFieldComponent"
+                            readonly="true"
+                            value="_aggregateAll()"
+                        />
+                    </th>
+                </tr>
+            </tfoot>
+        </table>
+        <div t-else="" class="alert alert-info">
+            Nothing to display.
+        </div>
+    </t>
+</templates>

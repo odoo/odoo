@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+    Copyright 2019 Alexandre Díaz
+    License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
+-->
+<odoo>
+    <!-- Workarround to use custom assets bundle
+        This specific 't-call-assets' xmlid will be handled in a 'special' way
+    -->
+    <template
+        id="webclient_bootstrap"
+        name="web_company_color assets"
+        inherit_id="web.webclient_bootstrap"
+    >
+        <xpath expr="//t[@t-set='head_web']">
+            <t t-call-assets="web_company_color.company_color_assets" />
+        </xpath>
+    </template>
+</odoo>

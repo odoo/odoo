@@ -1,0 +1,65 @@
+.o_form_status_indicator_buttons {
+    margin-left: 10px;
+
+    .o_form_button_save,
+    .o_form_button_cancel {
+        width: 100%;
+
+        &.o_form_button_save {
+            background-color: $primary;
+
+            &:hover {
+                filter: brightness(0.9);
+            }
+        }
+
+        &.o_form_button_cancel {
+            margin-left: 5px;
+
+            &:hover {
+                background-color: #f6f7fa;
+                border-color: #e0e2e6;
+            }
+        }
+
+        .save_button {
+            width: 100%;
+            font-weight: 500;
+            color: white;
+            display: inline-block;
+            text-align: center;
+            vertical-align: middle;
+            user-select: none;
+            background-color: transparent;
+            border: 1px solid transparent;
+            padding: 0.3rem 2px;
+            font-size: 1.08333333rem;
+            line-height: 1.5;
+            border-radius: 0;
+            transition: none;
+            width: 100%;
+            text-transform: uppercase;
+            font-family: $o-system-fonts;
+        }
+
+        .discard_button {
+            width: 100%;
+            font-weight: 500;
+            color: white;
+            display: inline-block;
+            text-align: center;
+            vertical-align: middle;
+            user-select: none;
+            color: $primary;
+            background-color: transparent;
+            padding: 0.3rem 2px;
+            font-size: 1.08333333rem;
+            line-height: 1.5;
+            border-radius: 0;
+            transition: none;
+            width: 100%;
+            text-transform: uppercase;
+            font-family: $o-system-fonts;
+        }
+    }
+}

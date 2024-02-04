@@ -1,8 +1,10 @@
 from odoo import models, fields
 
+
 class LoadShapeDetails(models.Model):
     _name = "loadshape_details"
     _description = "Description of the LoadShapeDetails model"
+
     name = fields.Char()
     contract_id = fields.Many2one('contract', string='Contract')
     powerdate = fields.Date(string='Power Date')

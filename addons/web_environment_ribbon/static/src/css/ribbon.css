@@ -1,0 +1,36 @@
+/* Copyright 2015 Francesco OpenCode Apruzzese <cescoap@gmail.com>
+   Copyright 2017 Thomas Binsfeld <thomas.binsfeld@acsone.eu>
+   Copyright 2021 Andreas Perhab <a.perhab@wtioit.at>
+ * License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). */
+
+.test-ribbon {
+    width: 300px;
+    top: 25px;
+    left: -100px;
+    text-align: center;
+    padding: 10px;
+    line-height: 20px;
+    letter-spacing: 1px;
+    color: #f0f0f0;
+    -webkit-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    -moz-transform: rotate(-45deg);
+    -o-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+    z-index: 9999;
+    position: fixed;
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+    background: rgba(255, 0, 0, 0.6);
+    pointer-events: none;
+}
+
+.test-ribbon b {
+    font-size: 20px;
+}
+
+header:hover ~ .test-ribbon,
+nav:hover ~ .test-ribbon {
+    /* Ease out ribbon when user is using the navigation in Odoo */
+    opacity: 0;
+    transition: 0.2s ease;
+}

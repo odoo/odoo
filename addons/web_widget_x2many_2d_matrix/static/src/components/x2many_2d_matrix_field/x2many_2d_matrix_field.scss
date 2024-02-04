@@ -1,0 +1,73 @@
+$x2many_2d_matrix_max_height: 450px;
+
+.o_form_view .o_field_x2many_2d_matrix {
+    .table-responsive {
+        max-height: $x2many_2d_matrix_max_height;
+        overflow-y: auto;
+    }
+
+    .table {
+        > thead > tr > th {
+            white-space: pre-line;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+            background-color: $o-list-footer-bg-color;
+
+            &.total {
+                right: 0;
+            }
+        }
+
+        > tbody {
+            > tr {
+                &:nth-of-type(2n + 1) td.row-total,
+                &:nth-of-type(2n + 1) td:first-child {
+                    background-color: mix(#000, #fff, 1%);
+                }
+                &:nth-of-type(2n) td.row-total,
+                &:nth-of-type(2n) td:first-child {
+                    background-color: white;
+                }
+
+                > td {
+                    text-align: left;
+
+                    &:first-child {
+                        position: sticky;
+                        left: 0;
+                        border-right-width: 1px;
+                        border-right-color: $gray-300;
+                        border-right-style: solid;
+                        box-shadow: -1px 5px 10px $gray-300;
+                    }
+                    &.row-total {
+                        padding: 0.75rem;
+                        font-weight: bold;
+                        position: sticky;
+                        right: 0;
+                        border-left-width: 1px;
+                        border-left-color: $gray-300;
+                        border-left-style: solid;
+                        box-shadow: -1px 5px 10px $gray-300;
+                    }
+                }
+            }
+        }
+
+        > tfoot > tr > th {
+            padding: 0.75rem;
+            text-align: left;
+            background-color: $o-list-footer-bg-color;
+            position: sticky;
+            bottom: 0;
+
+            &.col-total {
+                right: 0;
+                border-left-width: 1px;
+                border-left-color: $gray-300;
+                border-left-style: solid;
+            }
+        }
+    }
+}

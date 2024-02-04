@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="web_help.TripStep" owl="1">
+        <div>
+            <div class="pb-4">
+                <t t-out="content" />
+            </div>
+
+            <button class="btn btn-lg btn-outline-light web_help_cb_button mr8"><t
+                    t-esc="cbBtnText"
+                /></button>
+            <button class="btn btn-lg btn-outline-light web_help_close pull-right"><t
+                    t-esc="closeBtnText"
+                /></button>
+        </div>
+    </t>
+
+    <t t-name="web_help.TripStepLast" owl="1">
+        <div>
+            <div class="pb-4">
+                <t t-out="content" />
+            </div>
+
+            <button class="btn btn-lg btn-outline-light web_help_cb_button"><t
+                    t-esc="cbBtnText"
+                /></button>
+        </div>
+    </t>
+</templates>

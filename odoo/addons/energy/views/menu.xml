@@ -10,14 +10,23 @@
         <menuitem id="menu_company" sequence="4" name="Companies" parent="menu_energy_trading" action="action_company"/>
         <menuitem id="menu_loadshape_details" sequence="5" name="LoadShape" parent="menu_energy_trading" action="action_loadshape_details"/>
 
+        <!-- Distribution menus -->
+        <menuitem id="menu_distribution" sequence="6" name="Distributions" parent="menu_energy_trading"/>
+        <menuitem id="menu_sale_distribution" sequence="1"
+                  name="Sale Distribution" action="action_sale_distribution" parent="menu_distribution"/>
+        <menuitem id="menu_purchase_distribution" sequence="2"
+                  name="Purchase Distribution" action="action_purchase_distribution" parent="menu_distribution"/>
+        <menuitem id="menu_distribution_order_lines" sequence="3"
+                  name="Distribution Details" action="action_distribution_order_lines" parent="menu_distribution"/>
+
         <!-- Create a Submenu under the Parent "Settings" Menu -->
-        <menuitem id="menu_settings" sequence="6" name="Settings" parent="menu_energy_trading"/>
-        <menuitem id="menu_period" sequence="7" name="Period" parent="menu_settings" action="action_period"/>
-        <menuitem id="menu_profile" sequence="8" name="Profile" parent="menu_settings" action="action_profile"/>
-        <menuitem id="menu_price" sequence="9" name="Price Components" parent="menu_settings" action="action_price_components_tree"/>
-        <menuitem id="menu_border" sequence="10" name="Borders" parent="menu_settings" action="action_border"/>
-        <menuitem id="menu_voltage" sequence="11" name="Voltage Level" parent="menu_settings" action="action_voltage"/>
-        <menuitem id="menu_payment_terms" sequence="12" name="Payment Terms" parent="menu_settings" action="action_payment_terms"/>
+        <menuitem id="menu_settings" sequence="100" name="Settings" parent="menu_energy_trading"/>
+        <menuitem id="menu_period" sequence="1" name="Period" parent="menu_settings" action="action_period"/>
+        <menuitem id="menu_profile" sequence="2" name="Profile" parent="menu_settings" action="action_profile"/>
+        <menuitem id="menu_price" sequence="3" name="Price Components" parent="menu_settings" action="action_price_components_tree"/>
+        <menuitem id="menu_border" sequence="4" name="Borders" parent="menu_settings" action="action_border"/>
+        <menuitem id="menu_voltage" sequence="5" name="Voltage Level" parent="menu_settings" action="action_voltage"/>
+        <menuitem id="menu_payment_terms" sequence="6" name="Payment Terms" parent="menu_settings" action="action_payment_terms"/>
 
 
     </data>

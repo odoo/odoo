@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2015 Francesco OpenCode Apruzzese <cescoap@gmail.com>
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo noupdate="1">
+    <!-- Add ribbon name default configuration parameter -->
+    <record id="default_ribbon_name" model="ir.config_parameter">
+        <field name="key">ribbon.name</field>
+        <field name="value"><![CDATA[TEST<br/>({db_name})]]></field>
+    </record>
+    <!-- Add ribbon color configuration parameter -->
+    <record id="set_ribbon_color" model="ir.config_parameter">
+        <field name="key">ribbon.color</field>
+        <field name="value">#f0f0f0</field>
+    </record>
+    <!-- Add ribbon background color configuration parameter -->
+    <record id="set_ribbon_background_color" model="ir.config_parameter">
+        <field name="key">ribbon.background.color</field>
+        <field name="value">rgba(255,0,0,.6)</field>
+    </record>
+</odoo>

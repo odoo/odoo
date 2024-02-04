@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="web_widget_x2many_2d_matrix.X2Many2DMatrixField" owl="1">
+        <div class="table-responsive">
+            <X2Many2DMatrixRenderer
+                list="list"
+                matrixFields="props.matrixFields"
+                showRowTotals="props.showRowTotals"
+                showColumnTotals="props.showColumnTotals"
+                setDirty="(isDirty) => this.setDirty(isDirty)"
+                onUpdate="(x, y, value) => this.commitChange(x, y, value)"
+                readonly="props.readonly"
+            />
+        </div>
+    </t>
+</templates>

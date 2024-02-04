@@ -1,0 +1,14 @@
+// Copyright 2023 Moduon Team S.L.
+// License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
+
+.widget_numeric_step {
+    // Hide the buttons until the user hovers if possible
+    @media (hover: hover) {
+        .btn_numeric_step {
+            visibility: hidden;
+        }
+    }
+    &:hover .btn_numeric_step {
+        visibility: visible;
+    }
+}
