@@ -42,24 +42,32 @@ declare module "@spreadsheet" {
     }
 
     // Spreadsheet Table
-    interface SPTableColumn {
+    export interface SPTableColumn {
         fields: string[];
         values: string[];
         width: number;
         offset: number;
     }
 
-    interface SPTableRow {
+    export interface SPTableRow {
         fields: string[];
         values: string[];
         indent: number;
     }
 
-    interface SPTableData {
+    export interface SPTableData {
         cols: SPTableColumn[][];
         rows: SPTableRow[];
         measures: string[];
         rowTitle: string;
+    }
+
+    export interface SPTableCell {
+        isHeader: boolean;
+        domain?: string[];
+        content?: string;
+        style?: object;
+        measure?: string;
     }
 
     /* Params used for the odoo pivot model */

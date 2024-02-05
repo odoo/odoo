@@ -15,8 +15,8 @@ const { DEFAULT_LOCALE } = constants;
 
 /**
  * @typedef {import("@spreadsheet").Field} Field
- * @typedef {import("@spreadsheet/pivot/pivot_table").Row} Row
- * @typedef {import("@spreadsheet/pivot/pivot_table").Column} Column
+ * @typedef {import("@spreadsheet").SPTableColumn} SPTableColumn
+ * @typedef {import("@spreadsheet").SPTableRow} SPTableRow
  */
 
 /**
@@ -468,10 +468,10 @@ export class SpreadsheetPivotModel extends PivotModel {
 
     /**
      * Get the row structure
-     * @returns {Row[]}
+     * @returns {SPTableRow[]}
      */
     _getSpreadsheetRows(tree) {
-        /**@type {Row[]}*/
+        /**@type {SPTableRow[]}*/
         let rows = [];
         const group = tree.root;
         const indent = group.labels.length;
@@ -493,7 +493,7 @@ export class SpreadsheetPivotModel extends PivotModel {
 
     /**
      * Get the col structure
-     * @returns {Column[][]}
+     * @returns {SPTableColumn[][]}
      */
     _getSpreadsheetCols() {
         const colGroupBys = this.metaData.fullColGroupBys;

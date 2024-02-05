@@ -12,7 +12,7 @@
  * @property {Record<string, FieldMatching>} fieldMatching
  *
  * @typedef {import("@spreadsheet/global_filters/plugins/global_filters_core_plugin").FieldMatching} FieldMatching
- * @typedef {import("../pivot_table.js").PivotCell} PivotCell
+ * @typedef {import("@spreadsheet").SPTableCell} SPTableCell
  */
 
 import { helpers } from "@odoo/o-spreadsheet";
@@ -392,7 +392,7 @@ export class PivotCorePlugin extends OdooCorePlugin {
      * @param {string} sheetId
      * @param {string} pivotId
      * @param {{ col: number, row: number }} position
-     * @param {PivotCell} pivotCell
+     * @param {SPTableCell} pivotCell
      */
     _addPivotFormula(sheetId, pivotId, { col, row }, pivotCell) {
         const formula = pivotCell.isHeader ? "ODOO.PIVOT.HEADER" : "ODOO.PIVOT";
