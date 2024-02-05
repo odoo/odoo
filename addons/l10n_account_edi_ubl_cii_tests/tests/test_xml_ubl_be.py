@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import base64
 from lxml import etree
 
@@ -825,7 +824,7 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
                     'price_unit': 99,
                     'quantity': 2,
                     'discount': 10,
-                    'price_subtotal': 178.20000000000002,
+                    'price_subtotal': 178.2,
                     'tax_ids': (tax_21 + self.recupel).ids,
                 }]
             },
