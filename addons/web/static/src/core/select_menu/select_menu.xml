@@ -7,7 +7,7 @@
             togglerClass="`o_select_menu_toggler btn w-100 bg-light ${props.togglerClass || ''} ${canDeselect ? 'o_can_deselect' : ''}`"
             menuClass="`o_select_menu_menu${props.searchable ? ' py-0' : ''}${props.multiSelect ? ' o_select_menu_multi_select' : ''} border`"
             position="'bottom-fit'"
-            beforeOpen.bind="filterOptions"
+            beforeOpen.bind="onBeforeOpen"
             onScroll.bind="onScroll"
             onStateChanged.bind="onStateChanged"
         >
