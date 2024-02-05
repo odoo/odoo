@@ -67,6 +67,15 @@ function pytypeIndex(val) {
 }
 
 /**
+ * @param {any} val
+ * @returns {boolean} boolean type
+ */
+function is_date(val) {
+    const dateRegexp = /^(\d{1,4})[\/-\s](\d{1,2})[\/-\s](\d{1,2})(?:\s(\d{1,2}):(\d{1,2}):(\d{1,2}))?$/;
+    return typeof val === "string" && dateRegexp.test(val) && !isNaN(new Date(val).getTime());
+}
+
+/**
  * @param {Object} obj
  * @returns {boolean}
  */
@@ -82,9 +91,6 @@ function isConstructor(obj) {
  * @returns {boolean}
  */
 function isLess(left, right) {
-    if (typeof left === "number" && typeof right === "number") {
-        return left < right;
-    }
     if (typeof left === "boolean") {
         left = left ? 1 : 0;
     }
@@ -96,7 +102,14 @@ function isLess(left, right) {
     if (leftIndex === rightIndex) {
         return left < right;
     }
-    return leftIndex < rightIndex;
+    if ((left == 0 && rightIndex == 4) || (leftIndex == 4 && right == 0)) {
+        if (is_date(left) || is_date(right)) {
+            return leftIndex < rightIndex;
+        }
+    }
+    throw new TypeError(
+        `Cannot compare values of different types ${typeof left} and ${typeof right}`
+    );
 }
 
 /**

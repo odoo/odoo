@@ -216,33 +216,40 @@ describe("comparisons", () => {
     });
 
     test("mixed types comparisons", () => {
-        expect(evaluateExpr("None < 42")).toBe(true);
-        expect(evaluateExpr("None > 42")).toBe(false);
-        expect(evaluateExpr("42 > None")).toBe(true);
-        expect(evaluateExpr("None < False")).toBe(true);
-        expect(evaluateExpr("None < True")).toBe(true);
-        expect(evaluateExpr("False > None")).toBe(true);
-        expect(evaluateExpr("True > None")).toBe(true);
-        expect(evaluateExpr("None > False")).toBe(false);
-        expect(evaluateExpr("None > True")).toBe(false);
-        expect(evaluateExpr("0 > True")).toBe(false);
-        expect(evaluateExpr("0 < True")).toBe(true);
-        expect(evaluateExpr("1 <= True")).toBe(true);
-        expect(evaluateExpr('False < ""')).toBe(true);
-        expect(evaluateExpr('"" > False')).toBe(true);
-        expect(evaluateExpr('False > ""')).toBe(false);
-        expect(evaluateExpr('0 < ""')).toBe(true);
-        expect(evaluateExpr('"" > 0')).toBe(true);
-        expect(evaluateExpr('0 > ""')).toBe(false);
-        expect(evaluateExpr("3 < True")).toBe(false);
-        expect(evaluateExpr("3 > True")).toBe(true);
-        expect(evaluateExpr("{} > None")).toBe(true);
-        expect(evaluateExpr("{} < None")).toBe(false);
-        expect(evaluateExpr("{} > False")).toBe(true);
-        expect(evaluateExpr("{} < False")).toBe(false);
-        expect(evaluateExpr("3 < 'foo'")).toBe(true);
-        expect(evaluateExpr("'foo' < 4444")).toBe(false);
-        expect(evaluateExpr("{} < []")).toBe(true);
+        expect(evaluateExpr('False < "2024-02-09"')).toBe(true);
+        expect(evaluateExpr('"2024-02-09" > False')).toBe(true);
+        expect(evaluateExpr('0 > "2024-02-09"')).toBe(false);
+        expect(evaluateExpr('0 < "2024-02-09"')).toBe(true);
+        expect(() => evaluateExpr('0 > ""')).toThrow(
+            /Cannot compare values of different types string and number/
+        );
+        expect(() => evaluateExpr('"" > 0')).toThrow(
+            /Cannot compare values of different types number and string/
+        );
+        expect(() => evaluateExpr('{} < False')).toThrow(
+            /Cannot compare values of different types object and number/
+        );
+        expect(() => evaluateExpr('3 < "foo"')).toThrow(
+            /Cannot compare values of different types number and string/
+        );
+        expect(() => evaluateExpr('"foo" < 3')).toThrow(
+            /Cannot compare values of different types string and number/
+        );
+        expect(() => evaluateExpr('None > 42')).toThrow(
+            /Cannot compare values of different types number and object/
+        );
+        expect(() => evaluateExpr('42 > None')).toThrow(
+            /Cannot compare values of different types object and number/
+        );
+        expect(() => evaluateExpr('"" > None')).toThrow(
+            /Cannot compare values of different types object and string/
+        );
+        expect(() => evaluateExpr('0 > {}')).toThrow(
+            /Cannot compare values of different types object and number/
+        );
+        expect(() => evaluateExpr('{} > 0')).toThrow(
+            /Cannot compare values of different types number and object/
+        );
     });
 });
 
