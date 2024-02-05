@@ -5,8 +5,10 @@
         <t t-call="web.basic_layout">
         <t t-foreach="docs" t-as="o">
             <div class="o_employee_cv page">
+            <div class="row">
                 <t t-call="hr_skills.report_employee_cv_company"/>
                 <t t-call="hr_skills.report_employee_cv_sidepanel"/>
+            </div>
                 <t t-call="hr_skills.report_employee_cv_main_panel"/>
                 <p class="o_new_page"/>
             </div>
@@ -15,7 +17,7 @@
     </template>
 
     <template id="report_employee_cv_company">
-        <div class="o_company row">
+        <div class="o_company row col">
             <div class="col-12 mb-4">
                 <img t-if="o.company_id.logo" t-att-src="image_data_uri(o.company_id.logo)" style="max-height: 45px;" alt="Logo"/>
                 <div class="oe_structure"></div>
@@ -30,6 +32,7 @@
     </template>
 
     <template id="report_employee_cv_sidepanel">
+    <div class="col">
         <div class="oe_structure"></div>
         <div class="o_sidebar" t-attf-style="
             background: #{color_primary};
@@ -58,6 +61,7 @@
             </div>
         </div>
         <div class="oe_structure"></div>
+    </div>
     </template>
     
     <template id="report_employee_cv_main_panel">
