@@ -231,47 +231,49 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
 
     def test_sending_to_public_admin(self):
         """ A public administration has no VAT, but has an arbitrary number (see:
-        https://pch.gouvernement.lu/fr/peppol.html). When a partner has no VAT, the node PartyTaxScheme should
-        not appear. In addition, the `EndpointID` node should be filled with this arbitrary number (use the field
-        `peppol_endpoint`).
+        https://pch.gouvernement.lu/fr/peppol.html). Then, the `EndpointID` node should be filled with this arbitrary
+        number (use the field `peppol_endpoint`).
+        In addition, when the Seller has no VAT, the node PartyTaxScheme and PartyLegalEntity may contain the Seller
+        identifier or the Seller legal registration identifier.
         """
-        # Setup a public admin in Luxembourg
+        def check_attachment(invoice, expected_file):
+            self._assert_invoice_attachment(
+                invoice.ubl_cii_xml_id,
+                xpaths=f'''
+                    <xpath expr="./*[local-name()='PaymentMeans']/*[local-name()='PaymentID']" position="replace">
+                        <PaymentID>___ignore___</PaymentID>
+                    </xpath>
+                    <xpath expr=".//*[local-name()='InvoiceLine'][1]/*[local-name()='ID']" position="replace">
+                        <ID>___ignore___</ID>
+                    </xpath>
+                    <xpath expr=".//*[local-name()='AdditionalDocumentReference']/*[local-name()='Attachment']/*[local-name()='EmbeddedDocumentBinaryObject']" position="attributes">
+                        <attribute name="mimeCode">application/pdf</attribute>
+                        <attribute name="filename">{invoice.invoice_pdf_report_id.name}</attribute>
+                    </xpath>
+                ''',
+                expected_file_path=expected_file,
+            )
+        # Setup a public admin in Luxembourg without VAT
         self.partner_2.write({
             'vat': None,
             'peppol_eas': '9938',
             'peppol_endpoint': '00005000041',
             'country_id': self.env.ref('base.lu').id,
         })
-
-        invoice = self._generate_move(
-            self.partner_1,
-            self.partner_2,
-            move_type='out_invoice',
-            invoice_line_ids=[
-                {
-                    'product_id': self.product_a.id,
-                    'quantity': 2,
-                    'price_unit': 100,
-                    'tax_ids': [(6, 0, self.tax_21.ids)],
-                }
-            ],
-        )
-        self._assert_invoice_attachment(
-            invoice.ubl_cii_xml_id,
-            xpaths=f'''
-                <xpath expr="./*[local-name()='PaymentMeans']/*[local-name()='PaymentID']" position="replace">
-                    <PaymentID>___ignore___</PaymentID>
-                </xpath>
-                <xpath expr=".//*[local-name()='InvoiceLine'][1]/*[local-name()='ID']" position="replace">
-                    <ID>___ignore___</ID>
-                </xpath>
-                <xpath expr=".//*[local-name()='AdditionalDocumentReference']/*[local-name()='Attachment']/*[local-name()='EmbeddedDocumentBinaryObject']" position="attributes">
-                    <attribute name="mimeCode">application/pdf</attribute>
-                    <attribute name="filename">{invoice.invoice_pdf_report_id.name}</attribute>
-                </xpath>
-            ''',
-            expected_file_path='from_odoo/bis3_out_invoice_public_admin.xml',
-        )
+        invoice_vals = {
+            'move_type': 'out_invoice',
+            'invoice_line_ids': [{
+                'product_id': self.product_a.id,
+                'quantity': 2,
+                'price_unit': 100,
+                'tax_ids': [(6, 0, self.tax_21.ids)],
+            }],
+        }
+        invoice1 = self._generate_move(self.partner_1, self.partner_2, **invoice_vals)
+        check_attachment(invoice1, "from_odoo/bis3_out_invoice_public_admin_1.xml")
+        # Switch the partner's roles
+        invoice2 = self._generate_move(self.partner_2, self.partner_1, **invoice_vals)
+        check_attachment(invoice2, "from_odoo/bis3_out_invoice_public_admin_2.xml")
 
     def test_rounding_price_unit(self):
         """ OpenPeppol states that:
