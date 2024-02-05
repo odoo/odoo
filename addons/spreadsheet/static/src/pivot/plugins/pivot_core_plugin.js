@@ -196,7 +196,7 @@ export class PivotCorePlugin extends OdooCorePlugin {
      * @returns {PivotDefinition}
      */
     getPivotDefinition(id) {
-        return deepCopy(this.pivots[id].definition);
+        return this.pivots[id].definition;
     }
 
     /**
