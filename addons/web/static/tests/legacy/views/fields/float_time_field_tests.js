@@ -92,7 +92,7 @@ QUnit.module("Fields", (hooks) => {
                 if (route === "/web/dataset/call_kw/partner/web_save") {
                     assert.strictEqual(
                         args.args[1].qux,
-                        9.5,
+                        9.083333333333334,
                         "the correct float value should be saved"
                     );
                 }
@@ -109,14 +109,14 @@ QUnit.module("Fields", (hooks) => {
         await editInput(target.querySelector(".o_field_float_time[name=qux] input"), null, "9.5");
         assert.strictEqual(
             target.querySelector(".o_field_float_time[name=qux] input").value,
-            "09:30",
+            "09:05",
             "The new value should be displayed properly in the input."
         );
 
         await clickSave(target);
         assert.strictEqual(
             target.querySelector(".o_field_widget input").value,
-            "09:30",
+            "09:05",
             "The new value should be saved and displayed properly."
         );
     });
