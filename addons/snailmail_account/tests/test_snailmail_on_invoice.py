@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo.tests import TransactionCase
+from odoo.tests import TransactionCase, tagged
 from odoo import Command
 
-
+@tagged('post_install', '-at_install')
 class TestSnailmailOnInvoice(TransactionCase):
     def test_snailmail_on_invoice_for_partner_without_email(self):
         """"
