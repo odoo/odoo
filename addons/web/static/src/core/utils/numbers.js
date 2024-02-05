@@ -52,36 +52,42 @@ export function roundPrecision(value, precision, method = "HALF-UP") {
     } else if (!precision || precision < 0) {
         precision = 1;
     }
-    let normalizedValue = value / precision;
+    let roundingFactor = precision;
+    let normalize = (val) => val / roundingFactor;
+    let denormalize = (val) => val * roundingFactor;
+    // inverting small rounding factors reduces rounding errors
+    if (roundingFactor < 1) {
+        roundingFactor = invertFloat(roundingFactor);
+        [normalize, denormalize] = [denormalize, normalize];
+    }
+    const normalizedValue = normalize(value);
     const sign = Math.sign(normalizedValue);
     const epsilonMagnitude = Math.log2(Math.abs(normalizedValue));
-    const epsilon = Math.pow(2, epsilonMagnitude - 52);
-    let roundedValue = normalizedValue;
+    const epsilon = Math.pow(2, epsilonMagnitude - 50);
+    let roundedValue;
 
     switch (method) {
         case "DOWN": {
-            normalizedValue += sign * epsilon;
-            roundedValue = sign * Math.floor(Math.abs(normalizedValue));
+            roundedValue = Math.trunc(normalizedValue + sign * epsilon);
             break;
         }
         case "HALF-DOWN": {
-            normalizedValue -= sign * epsilon;
-            roundedValue = sign * Math.round(Math.abs(normalizedValue));
+            roundedValue = Math.round(normalizedValue - sign * epsilon);
             break;
         }
         case "HALF-UP": {
-            normalizedValue += sign * epsilon;
-            roundedValue = sign * Math.round(Math.abs(normalizedValue));
+            roundedValue = Math.round(normalizedValue + sign * epsilon);
             break;
         }
         case "HALF-EVEN": {
-            const r = Math.round(normalizedValue);
-            roundedValue = Math.abs(normalizedValue) % 1 === 0.5 ? (r % 2 === 0 ? r : r - 1) : r;
+            const integral = Math.floor(normalizedValue);
+            const remainder = Math.abs(normalizedValue - integral);
+            const isHalf = Math.abs(0.5 - remainder) < epsilon;
+            roundedValue = isHalf ? integral + (integral & 1) : Math.round(normalizedValue);
             break;
         }
         case "UP": {
-            normalizedValue -= sign * epsilon;
-            roundedValue = sign * Math.ceil(Math.abs(normalizedValue));
+            roundedValue = Math.trunc(normalizedValue + sign * (1 - epsilon));
             break;
         }
         default: {
@@ -89,7 +95,7 @@ export function roundPrecision(value, precision, method = "HALF-UP") {
         }
     }
 
-    return roundedValue * precision;
+    return denormalize(roundedValue);
 }
 
 export function roundDecimals(value, decimals) {
@@ -110,7 +116,7 @@ export function roundDecimals(value, decimals) {
  * @returns {boolean}
  */
 export function floatIsZero(value, decimals) {
-    return roundDecimals(value, decimals) === 0;
+    return value === 0 || roundDecimals(value, decimals) === 0;
 }
 
 /**
@@ -223,4 +229,28 @@ export function formatFloat(value, options = {}) {
         formatted[1] = formatted[1].replace(/0+$/, "");
     }
     return formatted[1] ? formatted.join(decimalPoint) : formatted[0];
+}
+
+const _INVERTDICT = Object.freeze({
+    1e-1: 1e+1, 1e-2: 1e+2, 1e-3: 1e+3, 1e-4: 1e+4, 1e-5: 1e+5,
+    1e-6: 1e+6, 1e-7: 1e+7, 1e-8: 1e+8, 1e-9: 1e+9, 1e-10: 1e+10,
+    2e-1: 5e+0, 2e-2: 5e+1, 2e-3: 5e+2, 2e-4: 5e+3, 2e-5: 5e+4,
+    2e-6: 5e+5, 2e-7: 5e+6, 2e-8: 5e+7, 2e-9: 5e+8, 2e-10: 5e+9,
+    5e-1: 2e+0, 5e-2: 2e+1, 5e-3: 2e+2, 5e-4: 2e+3, 5e-5: 2e+4,
+    5e-6: 2e+5, 5e-7: 2e+6, 5e-8: 2e+7, 5e-9: 2e+8, 5e-10: 2e+9,
+});
+
+/**
+ * Invert a number with increased accuracy.
+ *
+ * @param {number} value
+ * @returns {number}
+ */
+export function invertFloat(value) {
+    let res = _INVERTDICT[value];
+    if (res === undefined) {
+        const [coeff, expt] = value.toExponential().split("e").map(Number.parseFloat);
+        res = Number.parseFloat(`${coeff}e${-expt}`) / Math.pow(coeff, 2);
+    }
+    return res;
 }

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import heapq
 import logging
@@ -1199,7 +1198,7 @@ class StockQuant(models.Model):
         self.ensure_one()
         if self.env.context.get('inventory_name'):
             name = self.env.context.get('inventory_name')
-        elif fields.Float.is_zero(qty, 0, precision_rounding=self.product_uom_id.rounding):
+        elif fields.Float.is_zero(qty, precision_rounding=self.product_uom_id.rounding):
             name = _('Product Quantity Confirmed')
         else:
             name = _('Product Quantity Updated')
