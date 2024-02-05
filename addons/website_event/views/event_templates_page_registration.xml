@@ -51,7 +51,7 @@
                             </div>
                             <!-- Date & Time -->
                             <div class="o_wevent_sidebar_block border-bottom pb-3 my-3">
-                                <h6 class="o_wevent_sidebar_title text-muted text-uppercase">Date &amp; Time</h6>
+                                <h6 class="o_wevent_sidebar_title text-muted">Date &amp; Time</h6>
                                 <div class="d-flex">
                                     <h6 t-field="event.date_begin" class="my-1" t-options="{'tz_name': event.date_tz, 'format': 'full', 'date_only': 'true'}" t-att-datetime="event.date_begin"/>
                                 </div>
@@ -82,7 +82,7 @@
                             </div>
                             <!-- Location -->
                             <div t-if="event.address_id" class="o_wevent_sidebar_block border-bottom pb-3 mb-3">
-                                <h6 class="o_wevent_sidebar_title text-muted text-uppercase">Location</h6>
+                                <h6 class="o_wevent_sidebar_title text-muted">Location</h6>
                                 <h4 t-field="event.address_id" class="" t-options='{
                                     "widget": "contact",
                                     "fields": ["name"]
@@ -102,13 +102,13 @@
                             </div>
                             <!-- Organizer -->
                             <div t-if="event.organizer_id" class="o_wevent_sidebar_block border-bottom pb-3 mb-3">
-                                <h6 class="o_wevent_sidebar_title text-muted text-uppercase">Organizer</h6>
+                                <h6 class="o_wevent_sidebar_title text-muted">Organizer</h6>
                                 <h4 t-field="event.organizer_id"/>
                                 <div itemprop="location" t-field="event.organizer_id" t-options="{'widget': 'contact', 'fields': ['phone', 'mobile', 'email']}"/>
                             </div>
                             <!-- Social -->
                             <div class="o_wevent_sidebar_block">
-                                <h6 class="o_wevent_sidebar_title text-muted text-uppercase">SHARE</h6>
+                                <h6 class="o_wevent_sidebar_title text-muted">Share</h6>
                                 <p class="mb-2">Find out what people see and say about this event, and join the conversation.</p>
                                 <t t-snippet-call="website.s_share">
                                     <t t-set="_no_title" t-value="True"/>
