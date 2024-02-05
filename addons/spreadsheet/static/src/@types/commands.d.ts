@@ -59,7 +59,7 @@ declare module "@spreadsheet" {
     col: number;
     row: number;
     table: SPTableData;
-    definition: PivotRuntime;
+    definition: PivotDefinition;
   }
 
   export interface ReInsertPivotCommand {
