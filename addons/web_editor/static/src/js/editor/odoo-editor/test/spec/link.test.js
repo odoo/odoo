@@ -707,14 +707,10 @@ describe('Link', () => {
                 stepFunction: async editor => {
                     await clickOnLink(editor);
                     await deleteBackward(editor);
+                    console.log(a.closest('.odoo-editor-editable').outerHTML);
+                    window.chai.expect(a.parentElement.isContentEditable).to.be.equal(false);
                 },
-                contentAfterEdit: '<p>a<a href="#/" data-oe-zws-empty-inline="" class="o_link_in_selection">' +
-                        '<span data-o-link-zws="start" contenteditable="false">\u200B</span>' + // start zws
-                        '[]\u200B' + // content: empty inline zws
-                        '<span data-o-link-zws="end">\u200B</span>' + // end zws
-                    '</a>' +
-                    '<span data-o-link-zws="after" contenteditable="false">\u200B</span>' + // after zws
-                    'c</p>',
+                contentAfterEdit: '<p>a<a href="#/" contenteditable="true" oe-zws-empty-inline="">[]\u200B</a>c</p>',
                 contentAfter: '<p>a[]c</p>',
             });
         });
@@ -722,11 +718,16 @@ describe('Link', () => {
             await testEditor(BasicEditor, {
                 contentBefore: '<p>a<a href="#/">b[]</a>c</p>',
                 stepFunction: async editor => {
-                    await clickOnLink(editor);
+                    const a = await clickOnLink(editor);
+                    window.chai.expect(a.parentElement.isContentEditable).to.be.equal(false);
                     await deleteBackward(editor);
+                    window.chai.expect(a.parentElement.isContentEditable).to.be.equal(false);
                     await insertText(editor, '1');
+                    window.chai.expect(a.parentElement.isContentEditable).to.be.equal(false);
                     await insertText(editor, '2');
+                    window.chai.expect(a.parentElement.isContentEditable).to.be.equal(false);
                     await insertText(editor, '3');
+                    window.chai.expect(a.parentElement.isContentEditable).to.be.equal(false);
                 },
                 contentAfter: '<p>a<a href="#/">123[]</a>c</p>',
             });
