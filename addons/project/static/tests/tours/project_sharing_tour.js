@@ -7,7 +7,7 @@ const projectSharingSteps = [...stepUtils.goToAppSteps("project.menu_main_pm", '
     trigger: '.o_kanban_record:contains("Project Sharing") .o_dropdown_kanban .dropdown-toggle',
     content: 'Open the project dropdown.'
 }, {
-    trigger: '.o_kanban_record:contains("Project Sharing") .dropdown-menu a:contains("Share")',
+    trigger: '.dropdown-menu a:contains("Share")',
     content: 'Start editing the project.',
 }, {
     trigger: 'div.o_field_radio[name="access_mode"] div.o_radio_item > input[data-value="edit"]',
@@ -103,7 +103,7 @@ registry.category("web_tour.tours").add('project_sharing_tour', {
     url: '/web',
     steps: () => {
         return projectSharingSteps;
-    } 
+    }
 });
 
 registry.category("web_tour.tours").add("portal_project_sharing_tour", {

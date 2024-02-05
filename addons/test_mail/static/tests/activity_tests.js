@@ -499,31 +499,20 @@ QUnit.module("test_mail", {}, function () {
         });
         const $activity = $(document);
         assert.notOk(
-            $activity.find(
-                "table thead tr:first th:nth-child(2) span:nth-child(2) .dropdown-menu.show"
-            ).length,
+            $activity.find(".dropdown-menu.show").length,
             "dropdown shouldn't be displayed"
         );
 
         testUtils.dom.click(
             $activity.find("table thead tr:first th:nth-child(2) span:nth-child(2) i.fa-ellipsis-v")
         );
-        assert.ok(
-            $activity.find(
-                "table thead tr:first th:nth-child(2) span:nth-child(2) .dropdown-menu.show"
-            ).length,
-            "dropdown should have appeared"
-        );
+        assert.ok($activity.find(".dropdown-menu.show").length, "dropdown should have appeared");
 
         testUtils.dom.click(
-            $activity.find(
-                "table thead tr:first th:nth-child(2) span:nth-child(2) .dropdown-menu.show .o_send_mail_template:contains(Template2)"
-            )
+            $activity.find(".dropdown-menu.show .o_send_mail_template:contains(Template2)")
         );
         assert.notOk(
-            $activity.find(
-                "table thead tr:first th:nth-child(2) span:nth-child(2) .dropdown-menu.show"
-            ).length,
+            $activity.find(".dropdown-menu.show").length,
             "dropdown shouldn't be displayed"
         );
 
@@ -531,9 +520,7 @@ QUnit.module("test_mail", {}, function () {
             $activity.find("table thead tr:first th:nth-child(2) span:nth-child(2) i.fa-ellipsis-v")
         );
         testUtils.dom.click(
-            $activity.find(
-                "table thead tr:first th:nth-child(2) span:nth-child(2) .dropdown-menu.show .o_send_mail_template:contains(Template1)"
-            )
+            $activity.find(".dropdown-menu.show .o_send_mail_template:contains(Template1)")
         );
         assert.verifySteps([
             `[[${mailTestActivityIds[0]},${mailTestActivityIds[1]}],${mailTemplateIds[1]}]`, // send mail template 1 on mail.test.activity 1 and 2
@@ -762,18 +749,19 @@ QUnit.module("test_mail", {}, function () {
 
         await doAction(webClient, 1);
         await toggleSearchBarMenu(document);
+
         assert.containsN(
             document.body,
-            ".o_cp_searchview .o_dropdown_container",
+            ".o-dropdown--menu .o_dropdown_container",
             2,
             "only two elements should be available in view search"
         );
         assert.isVisible(
-            document.querySelector(".o_cp_searchview .o_dropdown_container.o_filter_menu"),
+            document.querySelector(".o-dropdown--menu .o_dropdown_container.o_filter_menu"),
             "filter should be available in view search"
         );
         assert.isVisible(
-            document.querySelector(".o_cp_searchview .o_dropdown_container.o_favorite_menu"),
+            document.querySelector(".o-dropdown--menu .o_dropdown_container.o_favorite_menu"),
             "favorites should be available in view search"
         );
     });

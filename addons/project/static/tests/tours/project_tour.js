@@ -82,8 +82,8 @@ registry.category("web_tour.tours").add('project_test_tour', {
         trigger: ".o_kanban_record .o_widget_subtask_kanban_list .subtask_list_row:first-child .o_field_project_task_state_selection button",
         content: 'Change the subtask state',
     }, {
-        trigger: ".o_widget_subtask_kanban_list .o_field_project_task_state_selection .dropdown-menu span.text-danger",
-        extra_trigger: ".o_field_project_task_state_selection .dropdown-menu",
+        trigger: ".dropdown-menu span.text-danger",
+        extra_trigger: ".dropdown-menu",
         content: 'Mark the task as Canceled',
     }, {
         trigger: ".o_kanban_record .oe_kanban_content .o_widget_subtask_counter .subtask_list_button:contains('1/2')",

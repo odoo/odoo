@@ -60,7 +60,7 @@ QUnit.test("reply: discard on pressing escape", async () => {
     openDiscuss();
     await contains(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
-    await click(".o-mail-Message [title='Reply']");
+    await click(".o-mail-Message-moreMenu [title='Reply']");
     await contains(".o-mail-Composer");
 
     // Escape on emoji picker does not stop replying

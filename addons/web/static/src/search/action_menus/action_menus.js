@@ -67,6 +67,15 @@ export class ActionMenus extends Component {
         }));
     }
 
+    asDropdownItems(items) {
+        return items.map((item) => ({
+            id: item.key,
+            label: item.description,
+            onSelected: () => this.onItemSelected(item),
+            class: "o_menu_item",
+        }));
+    }
+
     //---------------------------------------------------------------------
     // Private
     //---------------------------------------------------------------------

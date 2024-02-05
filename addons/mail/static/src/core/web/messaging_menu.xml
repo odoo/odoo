@@ -2,15 +2,17 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.MessagingMenu">
-    <Dropdown t-if="!env.inDiscussApp" autoOpen="false" beforeOpen.bind="beforeOpen" onStateChanged="state => this.state.isOpen = state.open" position="'bottom-end'" menuClass="discussSystray.menuClass" class="discussSystray.class">
-        <t t-set-slot="toggler">
-            <i class="fa fa-lg fa-comments" role="img" aria-label="Messages" t-on-click="() => store.discuss.activeTab = ui.isSmall and store.discuss.activeTab === 'main' ? 'main' : store.discuss.activeTab"></i>
-            <span t-if="counter" class="o-mail-MessagingMenu-counter badge rounded-pill"><t t-esc="counter"/></span>
-        </t>
-        <t t-set-slot="default">
-            <t t-call="mail.MessagingMenu.content"/>
-        </t>
-    </Dropdown>
+    <div t-if="!env.inDiscussApp" t-att-class="discussSystray.class">
+        <Dropdown state="dropdown" beforeOpen.bind="beforeOpen" position="'bottom-end'" menuClass="discussSystray.menuClass">
+            <button>
+                <i class="fa fa-lg fa-comments" role="img" aria-label="Messages" t-on-click="() => store.discuss.activeTab = ui.isSmall and store.discuss.activeTab === 'main' ? 'main' : store.discuss.activeTab"></i>
+                <span t-if="counter" class="o-mail-MessagingMenu-counter badge rounded-pill"><t t-esc="counter"/></span>
+            </button>
+            <t t-set-slot="content">
+                <t t-call="mail.MessagingMenu.content"/>
+            </t>
+        </Dropdown>
+    </div>
     <t t-else="" t-call="mail.MessagingMenu.content"/>
 </t>
 

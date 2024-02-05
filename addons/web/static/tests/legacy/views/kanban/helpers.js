@@ -1,7 +1,7 @@
 /** @odoo-module alias=@web/../tests/views/kanban/helpers default=false */
 
 import { makeFakeDialogService } from "@web/../tests/helpers/mock_services";
-import { click, editInput, nextTick } from "@web/../tests/helpers/utils";
+import { click, editInput, getDropdownMenu, nextTick } from "@web/../tests/helpers/utils";
 
 import { registry } from "@web/core/registry";
 
@@ -27,6 +27,15 @@ export function getColumn(target, groupIndex = 0, ignoreFolded = false) {
         selector += ":not(.o_column_folded)";
     }
     return target.querySelectorAll(selector)[groupIndex];
+}
+
+export function getColumnDropdownMenu(target, groupIndex = 0, ignoreFolded = false) {
+    let selector = ".o_kanban_group";
+    if (ignoreFolded) {
+        selector += ":not(.o_column_folded)";
+    }
+    const column = target.querySelectorAll(selector)[groupIndex];
+    return getDropdownMenu(target, column);
 }
 
 export function getCardTexts(target, groupIndex) {
@@ -98,7 +107,7 @@ export async function validateColumn(target) {
 export async function toggleColumnActions(target, columnIndex) {
     const group = getColumn(target, columnIndex);
     await click(group, ".o_kanban_config .dropdown-toggle");
-    const buttons = group.querySelectorAll(".o_kanban_config .dropdown-menu .dropdown-item");
+    const buttons = getDropdownMenu(target, group).querySelectorAll(".dropdown-item");
     return (buttonText) => {
         const re = new RegExp(`\\b${buttonText}\\b`, "i");
         const button = [...buttons].find((b) => re.test(b.innerText));

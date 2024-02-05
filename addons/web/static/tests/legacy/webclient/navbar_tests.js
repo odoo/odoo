@@ -14,13 +14,14 @@ import {
     click,
     destroy,
     getFixture,
-    mount,
     nextTick,
     patchWithCleanup,
     mockTimeout,
 } from "../helpers/utils";
 
 import { Component, xml, onRendered } from "@odoo/owl";
+import { popoverService } from "@web/core/popover/popover_service";
+import { mountInFixture } from "@web/../tests/helpers/mount_in_fixture";
 
 const systrayRegistry = registry.category("systray");
 const serviceRegistry = registry.category("services");
@@ -41,6 +42,7 @@ QUnit.module("Navbar", {
         serviceRegistry.add("notification", notificationService);
         serviceRegistry.add("hotkey", hotkeyService);
         serviceRegistry.add("ui", uiService);
+        serviceRegistry.add("popover", popoverService);
         systrayRegistry.add("addon.myitem", { Component: MySystrayItem });
         patchWithCleanup(browser, {
             setTimeout: (handler, delay, ...args) => handler(...args),
@@ -57,7 +59,7 @@ QUnit.module("Navbar", {
 
 QUnit.test("can be rendered", async (assert) => {
     const env = await makeTestEnv(baseConfig);
-    await mount(NavBar, target, { env });
+    await mountInFixture(NavBar, target, { env });
     assert.containsOnce(
         target,
         ".o_navbar_apps_menu button.dropdown-toggle",
@@ -67,12 +69,12 @@ QUnit.test("can be rendered", async (assert) => {
 
 QUnit.test("dropdown menu can be toggled", async (assert) => {
     const env = await makeTestEnv(baseConfig);
-    await mount(NavBar, target, { env });
+    await mountInFixture(NavBar, target, { env });
     const dropdown = target.querySelector(".o_navbar_apps_menu");
     await click(dropdown, "button.dropdown-toggle");
-    assert.containsOnce(dropdown, ".dropdown-menu");
+    assert.containsOnce(target, ".dropdown-menu");
     await click(dropdown, "button.dropdown-toggle");
-    assert.containsNone(dropdown, ".dropdown-menu");
+    assert.containsNone(target, ".dropdown-menu");
 });
 
 QUnit.test("href attribute on apps menu items", async (assert) => {
@@ -81,10 +83,10 @@ QUnit.test("href attribute on apps menu items", async (assert) => {
         1: { id: 1, children: [2], name: "My app", appID: 1, actionID: 339 },
     };
     const env = await makeTestEnv(baseConfig);
-    await mount(NavBar, target, { env });
+    await mountInFixture(NavBar, target, { env });
     const appsMenu = target.querySelector(".o_navbar_apps_menu");
     await click(appsMenu, "button.dropdown-toggle");
-    const dropdownItem = target.querySelector(".o_navbar_apps_menu .dropdown-item");
+    const dropdownItem = target.querySelector(".o-dropdown--menu .dropdown-item");
     assert.strictEqual(dropdownItem.getAttribute("href"), "#menu_id=1&action=339");
 });
 
@@ -103,10 +105,9 @@ QUnit.test("many sublevels in app menu items", async (assert) => {
     };
     const env = await makeTestEnv(baseConfig);
     env.services.menu.setCurrentMenu(1);
-    await mount(NavBar, target, { env });
-    const firstSectionMenu = target.querySelector(".o_menu_sections .dropdown");
-    await click(firstSectionMenu, "button.dropdown-toggle");
-    const menuChildren = [...firstSectionMenu.querySelectorAll(".dropdown-menu > *")];
+    await mountInFixture(NavBar, target, { env });
+    await click(target, ".o_menu_sections .o-dropdown");
+    const menuChildren = [...target.querySelectorAll(".o-dropdown--menu > *")];
     assert.deepEqual(
         menuChildren.map((el) => ({
             text: el.textContent,
@@ -135,12 +136,11 @@ QUnit.test("data-menu-xmlid attribute on AppsMenu items", async (assert) => {
         5: { id: 5, children: [], name: "Sub menu", appID: 1, xmlid: "menu_5" },
     };
     const env = await makeTestEnv(baseConfig);
-    await mount(NavBar, target, { env });
+    await mountInFixture(NavBar, target, { env });
 
     // check apps
-    const appsMenu = target.querySelector(".o_navbar_apps_menu");
-    await click(appsMenu, "button.dropdown-toggle");
-    const menuItems = appsMenu.querySelectorAll("a");
+    await click(target, ".o_navbar_apps_menu button.dropdown-toggle");
+    const menuItems = target.querySelectorAll(".o-dropdown--menu a");
     assert.strictEqual(
         menuItems[0].dataset.menuXmlid,
         "wowl",
@@ -162,18 +162,18 @@ QUnit.test("data-menu-xmlid attribute on AppsMenu items", async (assert) => {
 
     // check sub menus
     await click(target.querySelector(".o_menu_sections .dropdown-toggle"));
-    assert.containsOnce(target, ".o_menu_sections .dropdown-item[data-menu-xmlid=menu_5]");
+    assert.containsOnce(target, ".o-dropdown--menu .dropdown-item[data-menu-xmlid=menu_5]");
 });
 
 QUnit.test("navbar can display current active app", async (assert) => {
     const env = await makeTestEnv(baseConfig);
-    await mount(NavBar, target, { env });
+    await mountInFixture(NavBar, target, { env });
     const dropdown = target.querySelector(".o_navbar_apps_menu");
     // Open apps menu
     await click(dropdown, "button.dropdown-toggle");
     assert.containsOnce(
-        dropdown,
-        ".dropdown-menu .dropdown-item:not(.focus)",
+        target,
+        ".o-dropdown--menu .dropdown-item:not(.focus)",
         "should not show the current active app as the menus service has not loaded an app yet"
     );
 
@@ -181,15 +181,15 @@ QUnit.test("navbar can display current active app", async (assert) => {
     env.services.menu.setCurrentMenu(1);
     await nextTick();
     assert.containsOnce(
-        dropdown,
-        ".dropdown-menu .dropdown-item.focus",
+        target,
+        ".o-dropdown--menu .dropdown-item.focus",
         "should show the current active app"
     );
 });
 
 QUnit.test("navbar can display systray items", async (assert) => {
     const env = await makeTestEnv(baseConfig);
-    await mount(NavBar, target, { env });
+    await mountInFixture(NavBar, target, { env });
     assert.containsOnce(target, "li.my-item");
 });
 
@@ -217,7 +217,7 @@ QUnit.test("navbar can display systray items ordered based on their sequence", a
     systrayRegistry.add("addon.myitem3", { Component: MyItem3 }, { sequence: 100 });
     systrayRegistry.add("addon.myitem4", { Component: MyItem4 });
     const env = await makeTestEnv(baseConfig);
-    await mount(NavBar, target, { env });
+    await mountInFixture(NavBar, target, { env });
     const menuSystray = target.getElementsByClassName("o_menu_systray")[0];
     assert.containsN(menuSystray, "li", 4, "four systray items should be displayed");
     assert.strictEqual(menuSystray.innerText, "my item 3\nmy item 4\nmy item 2\nmy item 1");
@@ -249,7 +249,7 @@ QUnit.test("navbar updates after adding a systray item", async (assert) => {
         },
     });
 
-    await mount(NavBar, target, { env });
+    await mountInFixture(NavBar, target, { env });
     const menuSystray = target.getElementsByClassName("o_menu_systray")[0];
     assert.containsN(menuSystray, "li", 2, "2 systray items should be displayed");
 });
@@ -281,7 +281,7 @@ QUnit.test("can adapt with 'more' menu sections behavior", async (assert) => {
 
     // Set menu and mount
     env.services.menu.setCurrentMenu(1);
-    await mount(MyNavbar, target, { env });
+    await mountInFixture(MyNavbar, target, { env });
     assert.containsN(
         target,
         ".o_menu_sections > *:not(.o_menu_sections_more):not(.d-none)",
@@ -363,7 +363,7 @@ QUnit.test(
         target.style.width = "600px";
 
         const env = await makeTestEnv(baseConfig);
-        const navbar = await mount(MyNavbar, target, { env });
+        const navbar = await mountInFixture(MyNavbar, target, { env });
         assert.strictEqual(navbar.currentAppSections.length, 0, "0 app sub menus");
         assert.strictEqual(target.querySelector(".o_navbar").offsetWidth, 600);
         assert.strictEqual(adaptCount, 1);
@@ -464,7 +464,7 @@ QUnit.test("'more' menu sections properly updated on app change", async (assert)
 
     // Set App1 menu and mount
     env.services.menu.setCurrentMenu(1);
-    await mount(NavBar, target, { env });
+    await mountInFixture(NavBar, target, { env });
 
     // Force minimal width and dispatch window resize event
     target.style.width = "0%";
@@ -518,7 +518,7 @@ QUnit.test("Do not execute adapt when navbar is destroyed", async (assert) => {
 
     // Set menu and mount
     env.services.menu.setCurrentMenu(1);
-    const navbar = await mount(MyNavbar, target, { env });
+    const navbar = await mountInFixture(MyNavbar, target, { env });
     assert.verifySteps(["adapt NavBar"]);
     window.dispatchEvent(new Event("resize"));
     execRegisteredTimeouts();

@@ -15,16 +15,20 @@
                       t-on-mouseenter="onTitleMouseEnter" t-on-mouseleave="onTitleMouseLeave"
                     />
                 <t t-if="env.isSmall or !group.isFolded">
-                    <Dropdown class="'o_kanban_config'" togglerClass="'btn px-2'" position="'bottom-end'" container="() => this._configDropdownContainer">
-                        <t t-set-slot="toggler">
-                            <i class="fa fa-gear opacity-50 opacity-100-hover" role="img" aria-label="Settings" title="Settings"/>
-                        </t>
-                        <t t-foreach="configItems" t-as="item" t-key="item.key">
-                            <DropdownItem t-if="item.isVisible" class="item.class" onSelected="() => this[item.method]()">
-                                <t t-esc="item.label"/>
-                            </DropdownItem>
-                        </t>
-                    </Dropdown>
+                    <div class="o_kanban_config">
+                        <Dropdown menuClass="'o-dropdown--kanban-config-menu'" position="'bottom-end'">
+                            <button class="btn px-2">
+                                <i class="fa fa-gear opacity-50 opacity-100-hover" role="img" aria-label="Settings" title="Settings"/>
+                            </button>
+                            <t t-set-slot="content">
+                                <t t-foreach="configItems" t-as="item" t-key="item.key">
+                                    <DropdownItem t-if="item.isVisible" class="item.class" onSelected="() => this[item.method]()">
+                                        <t t-esc="item.label"/>
+                                    </DropdownItem>
+                                </t>
+                            </t>
+                        </Dropdown>
+                    </div>
                     <button t-if="canQuickCreate()" class="o_kanban_quick_add btn pe-2 me-n2" t-on-click="() => this.quickCreate()">
                         <i class="fa fa-plus opacity-75 opacity-100-hover" role="img" aria-label="Quick add" title="Quick add"/>
                     </button>

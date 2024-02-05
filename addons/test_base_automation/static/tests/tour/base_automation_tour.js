@@ -56,10 +56,8 @@ registry.category("web_tour.tours").add("test_base_automation", {
         },
         {
             content: "Select model contact",
-            extra_trigger:
-                '.o_form_renderer .o_group div[name="model_id"] .dropdown-menu:contains(Contact)',
-            trigger:
-                '.o_form_renderer .o_group div[name="model_id"] .dropdown-menu li a:contains(Contact):not(:has(.fa-spin))',
+            extra_trigger: ".dropdown-menu:contains(Contact)",
+            trigger: ".dropdown-menu li a:contains(Contact):not(:has(.fa-spin))",
         },
         {
             content: "Open select",
@@ -127,7 +125,7 @@ registry.category("web_tour.tours").add("test_base_automation_on_tag_added", {
         },
         {
             trigger:
-                '.o_form_renderer .o_group div[name="model_id"] .dropdown-menu li a:contains(test_base_automation.project):not(:has(.fa-spin))',
+                ".dropdown-menu li a:contains(test_base_automation.project):not(:has(.fa-spin))",
         },
         {
             trigger: ".o_form_renderer #trigger_0",
@@ -167,8 +165,7 @@ registry.category("web_tour.tours").add("test_base_automation_on_tag_added", {
             run: "text test",
         },
         {
-            trigger:
-                '.o_form_renderer div[name="trg_field_ref"] .dropdown-menu li a:contains(test):not(:has(.fa-spin))',
+            trigger: ".dropdown-menu li a:contains(test):not(:has(.fa-spin))",
         },
         {
             trigger: '.o_form_renderer div[name="action_server_ids"] button',
@@ -228,8 +225,7 @@ registry.category("web_tour.tours").add("test_base_automation_on_tag_added", {
             run: "text High",
         },
         {
-            trigger:
-                '.modal-content .o_form_renderer div[name="selection_value"] .dropdown-menu li a:contains(High):not(:has(.fa-spin))',
+            trigger: ".dropdown-menu li a:contains(High):not(:has(.fa-spin))",
         },
         {
             trigger: ".modal-content .o_form_button_save",
@@ -259,10 +255,10 @@ registry.category("web_tour.tours").add("test_open_automation_from_grouped_kanba
     test: true,
     steps: () => [
         {
-            trigger: ".o_kanban_view .o-dropdown.o_kanban_config button",
+            trigger: ".o_kanban_view .o_kanban_config button.dropdown-toggle",
         },
         {
-            trigger: ".o_kanban_view .o-dropdown.o_kanban_config .o_column_automations",
+            trigger: ".dropdown-menu .o_column_automations",
         },
         {
             trigger: ".o_base_automation_kanban_view .o_control_panel button.o-kanban-button-new",
@@ -466,8 +462,7 @@ registry.category("web_tour.tours").add("test_form_view_model_id", {
             run: "text base.automation.line.test",
         },
         {
-            trigger:
-                ".o_field_widget[name='model_id'] .dropdown-menu li a:contains(Automated Rule Line Test)",
+            trigger: ".dropdown-menu li a:contains(Automated Rule Line Test)",
         },
         {
             trigger: ".o_field_widget[name='trigger']",
@@ -488,8 +483,7 @@ registry.category("web_tour.tours").add("test_form_view_model_id", {
             run: "text test_base_automation.project",
         },
         {
-            trigger:
-                ".o_field_widget[name='model_id'] .dropdown-menu li a:contains(test_base_automation.project)",
+            trigger: ".dropdown-menu li a:contains(test_base_automation.project)",
             run(helpers) {
                 waitOrmCalls = observeOrmCalls();
                 helpers.click(this.$anchor);
@@ -535,8 +529,7 @@ registry.category("web_tour.tours").add("test_form_view_custom_reference_field",
             run: "text test_base_automation.project",
         },
         {
-            trigger:
-                ".o_field_widget[name='model_id'] .dropdown-menu li a:contains(test_base_automation.project)",
+            trigger: ".dropdown-menu li a:contains(test_base_automation.project)",
         },
         {
             extra_trigger: "body:not(:has(.o_field_widget[name='trg_field_ref']))",
@@ -585,8 +578,7 @@ registry.category("web_tour.tours").add("test_form_view_mail_triggers", {
             run: "text base.automation.lead.test",
         },
         {
-            trigger:
-                ".o_field_widget[name='model_id'] .dropdown-menu li a:contains(Automated Rule Test)",
+            trigger: ".dropdown-menu li a:contains(Automated Rule Test)",
         },
         {
             trigger: ".o_field_widget[name='trigger'] select",
@@ -599,8 +591,7 @@ registry.category("web_tour.tours").add("test_form_view_mail_triggers", {
             run: "text base.automation.lead.thread.test",
         },
         {
-            trigger:
-                ".o_field_widget[name='model_id'] .dropdown-menu li a:contains(Threaded Lead Test)",
+            trigger: ".dropdown-menu li a:contains(Threaded Lead Test)",
             run(helpers) {
                 waitOrmCalls = observeOrmCalls();
                 helpers.click(this.$anchor);

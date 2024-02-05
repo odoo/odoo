@@ -3,10 +3,11 @@
 
     <t t-name="web.GraphView.Buttons">
         <div class="btn-group" role="toolbar" aria-label="Main actions">
-            <t t-call="web.ReportViewMeasures">
-                <t t-set="measures" t-value="model.metaData.measures"/>
-                <t t-set="activeMeasures" t-value="[model.metaData.measure]"/>
-            </t>
+            <ReportViewMeasures
+                measures="model.metaData.measures"
+                activeMeasures="[model.metaData.measure]"
+                onMeasureSelected.bind="this.onMeasureSelected"
+            />
         </div>
         <div class="btn-group" role="toolbar" aria-label="Change graph">
             <button class="btn btn-secondary fa fa-bar-chart o_graph_button" data-tooltip="Bar Chart" aria-label="Bar Chart" data-mode="bar"

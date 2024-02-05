@@ -13,13 +13,13 @@
 </t>
 
 <t t-name="mail.ChatWindowHiddenMenu">
-    <Dropdown position="'top-end'" menuClass="'o-mail-ChatWindowHiddenMenu p-0'" togglerClass="'o-mail-ChatWindowHiddenToggler btn d-flex align-items-center rounded-top-3 bg-900'">
-        <t t-set-slot="toggler">
+    <Dropdown position="'top-end'" menuClass="'o-mail-ChatWindowHiddenMenu p-0'">
+        <button class="o-mail-ChatWindowHiddenToggler btn d-flex align-items-center rounded-top-3 bg-900">
             <div class="me-1 fa fa-comments-o"/>
             <div class="mx-1 text-truncate" t-esc="chatWindowService.hidden.length"/>
             <div t-if="unread > 0" class="o-mail-ChatWindowHiddenMenu-unreadCounter position-absolute end-0 top-0 badge rounded-pill text-bg-primary" t-esc="unread"/>
-        </t>
-        <t t-set-slot="default">
+        </button>
+        <t t-set-slot="content">
             <ul class="m-0 p-0 overflow-auto" role="menu" t-ref="list">
                 <li t-foreach="[...chatWindowService.hidden].reverse()" t-as="chatWindow" t-key="chatWindow.thread?.localId" class="o-mail-ChatWindowHiddenMenu-item dropdown-item p-0" t-att-class="{ 'border-bottom' : !chatWindow_last }" role="menuitem">
                     <ChatWindow chatWindow="chatWindow"/>

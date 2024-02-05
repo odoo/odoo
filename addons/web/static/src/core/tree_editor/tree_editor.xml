@@ -95,12 +95,14 @@
         </t>
         <t t-else="">
             <div aria-atomic="true">
-                <Dropdown togglerClass="'btn btn-link btn-primary py-0 px-1'" showCaret="true">
-                    <t t-set-slot="toggler">
+                <Dropdown>
+                    <button class="btn btn-link btn-primary py-0 px-1 o-dropdown-caret">
                         <t t-call="web.TreeEditor.connector.title" />
+                    </button>
+                    <t t-set-slot="content">
+                        <DropdownItem onSelected="() => this.updateConnector(node, '&amp;')">all</DropdownItem>
+                        <DropdownItem onSelected="() => this.updateConnector(node, '|')">any</DropdownItem>
                     </t>
-                    <DropdownItem onSelected="() => this.updateConnector(node, '&amp;')">all</DropdownItem>
-                    <DropdownItem onSelected="() => this.updateConnector(node, '|')">any</DropdownItem>
                 </Dropdown>
             </div>
         </t>

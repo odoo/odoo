@@ -64,30 +64,18 @@ QUnit.module("Mobile Views", ({ beforeEach }) => {
 
         assert.containsOnce(
             fixture,
-            ".o_statusbar_buttons .dropdown",
+            ".o_statusbar_buttons .o-dropdown",
             "statusbar should contain a button 'Action'"
         );
-        assert.containsNone(
-            fixture,
-            ".o_statusbar_buttons .dropdown-menu",
-            "statusbar should contain a dropdown"
-        );
-        assert.containsNone(
-            fixture,
-            ".o_statusbar_buttons .dropdown-menu:visible",
-            "dropdown should be hidden"
-        );
+        assert.containsNone(fixture, ".o-dropdown--menu", "statusbar should contain a dropdown");
+        assert.containsNone(fixture, ".o-dropdown--menu:visible", "dropdown should be hidden");
 
         // open the dropdown
         await click(fixture, ".o_statusbar_buttons .dropdown-toggle");
-        assert.containsOnce(
-            fixture,
-            ".o_statusbar_buttons .dropdown-menu:visible",
-            "dropdown should be visible"
-        );
+        assert.containsOnce(fixture, ".o-dropdown--menu:visible", "dropdown should be visible");
         assert.containsN(
             fixture,
-            ".o_statusbar_buttons .dropdown-menu button",
+            ".o-dropdown--menu button",
             2,
             "dropdown should contain 2 buttons"
         );
@@ -128,7 +116,7 @@ QUnit.module("Mobile Views", ({ beforeEach }) => {
             await clickSave(fixture);
             assert.containsOnce(
                 fixture,
-                ".o_statusbar_buttons .dropdown",
+                ".o_statusbar_buttons .o-dropdown",
                 "statusbar should contain a dropdown"
             );
         }
@@ -160,7 +148,7 @@ QUnit.module("Mobile Views", ({ beforeEach }) => {
             // There should be a simple statusbar button and no action dropdown
             assert.containsNone(
                 fixture,
-                ".o_statusbar_buttons .dropdown",
+                ".o_statusbar_buttons .o-dropdown",
                 "should have no 'Action' dropdown"
             );
             assert.containsOnce(
@@ -175,7 +163,7 @@ QUnit.module("Mobile Views", ({ beforeEach }) => {
             // Now there should an action dropdown, because there are two visible buttons
             assert.containsOnce(
                 fixture,
-                ".o_statusbar_buttons .dropdown",
+                ".o_statusbar_buttons .o-dropdown",
                 "should have no 'Action' dropdown"
             );
         }
@@ -211,14 +199,14 @@ QUnit.module("Mobile Views", ({ beforeEach }) => {
             // Now there should an action dropdown, because there are two visible buttons
             assert.containsOnce(
                 fixture,
-                ".o_statusbar_buttons .dropdown",
+                ".o_statusbar_buttons .o-dropdown",
                 "should have 'Action' dropdown"
             );
 
             await click(fixture, ".o_statusbar_buttons .dropdown-toggle");
             assert.containsN(
                 fixture,
-                ".o_statusbar_buttons .dropdown-menu button",
+                ".o-dropdown--menu button",
                 2,
                 "should have 2 buttons in the dropdown"
             );
@@ -229,7 +217,7 @@ QUnit.module("Mobile Views", ({ beforeEach }) => {
             // There should be a simple statusbar button and no action dropdown
             assert.containsNone(
                 fixture,
-                ".o_statusbar_buttons .dropdown",
+                ".o_statusbar_buttons .o-dropdown",
                 "shouldn't have 'Action' dropdown"
             );
             assert.containsOnce(
@@ -263,11 +251,11 @@ QUnit.module("Mobile Views", ({ beforeEach }) => {
 
             assert.containsOnce(
                 fixture,
-                ".o_statusbar_buttons .dropdown",
+                ".o_statusbar_buttons .o-dropdown",
                 "statusbar should contain a dropdown"
             );
             assert.doesNotHaveClass(
-                fixture.querySelector(".o_statusbar_buttons .dropdown"),
+                fixture.querySelector(".o_statusbar_buttons .o-dropdown"),
                 "show",
                 "dropdown should be closed"
             );
@@ -275,7 +263,7 @@ QUnit.module("Mobile Views", ({ beforeEach }) => {
             // open the dropdown
             await click(fixture, ".o_statusbar_buttons .dropdown-toggle");
             assert.hasClass(
-                fixture.querySelector(".o_statusbar_buttons .dropdown"),
+                fixture.querySelector(".o_statusbar_buttons .o-dropdown"),
                 "show",
                 "dropdown should be opened"
             );
@@ -284,11 +272,11 @@ QUnit.module("Mobile Views", ({ beforeEach }) => {
             await editInput(fixture, ".o_field_widget[name=display_name] input", "test");
             assert.containsOnce(
                 fixture,
-                ".o_statusbar_buttons .dropdown",
+                ".o_statusbar_buttons .o-dropdown",
                 "statusbar should contain a dropdown"
             );
             assert.hasClass(
-                fixture.querySelector(".o_statusbar_buttons .dropdown"),
+                fixture.querySelector(".o_statusbar_buttons .o-dropdown"),
                 "show",
                 "dropdown should still be opened"
             );
@@ -328,11 +316,11 @@ QUnit.module("Mobile Views", ({ beforeEach }) => {
 
             assert.containsOnce(
                 fixture,
-                ".o_statusbar_buttons .dropdown",
+                ".o_statusbar_buttons .o-dropdown",
                 "statusbar should contain a dropdown"
             );
             assert.doesNotHaveClass(
-                fixture.querySelector(".o_statusbar_buttons .dropdown"),
+                fixture.querySelector(".o_statusbar_buttons .o-dropdown"),
                 "show",
                 "dropdown should be closed"
             );
@@ -340,7 +328,7 @@ QUnit.module("Mobile Views", ({ beforeEach }) => {
             await editInput(fixture, ".o_field_widget[name=display_name] input", "before onchange");
             await click(fixture, ".o_statusbar_buttons .dropdown-toggle");
             assert.hasClass(
-                fixture.querySelector(".o_statusbar_buttons .dropdown"),
+                fixture.querySelector(".o_statusbar_buttons .o-dropdown"),
                 "show",
                 "dropdown should be opened"
             );
@@ -352,7 +340,7 @@ QUnit.module("Mobile Views", ({ beforeEach }) => {
                 "after onchange"
             );
             assert.hasClass(
-                fixture.querySelector(".o_statusbar_buttons .dropdown"),
+                fixture.querySelector(".o_statusbar_buttons .o-dropdown"),
                 "show",
                 "dropdown should still be opened"
             );

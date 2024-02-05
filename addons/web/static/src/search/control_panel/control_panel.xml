@@ -46,18 +46,22 @@
                         <Pager t-props="pagerProps"/>
                     </div>
                     <t t-if="env.config.viewSwitcherEntries?.length > 1">
-                        <Dropdown class="'o_cp_switch_buttons d-xl-none btn-group'" togglerClass="'btn btn-secondary'" showCaret="true">
-                            <t t-set-slot="toggler">
-                                <t t-set="activeView" t-value="env.config.viewSwitcherEntries.find((view) => view.active)"/>
-                                <i class="oi-fw" t-att-class="activeView.icon"/>
-                            </t>
-                            <t t-foreach="env.config.viewSwitcherEntries" t-as="view" t-key="view.type">
-                                <DropdownItem onSelected="() => this.switchView(view.type)" class="view.active ? 'selected' : ''">
-                                    <i class="oi-fw" t-att-class="view.icon"/>
-                                    <span class="ms-1" t-out="view.name"/>
-                                </DropdownItem>
-                            </t>
-                        </Dropdown>
+                        <div class="o_cp_switch_buttons d-xl-none btn-group">
+                            <Dropdown>
+                                <button class="btn btn-secondary o-dropdown-caret">
+                                    <t t-set="activeView" t-value="env.config.viewSwitcherEntries.find((view) => view.active)"/>
+                                    <i class="oi-fw" t-att-class="activeView.icon"/>
+                                </button>
+                                <t t-set-slot="content">
+                                    <t t-foreach="env.config.viewSwitcherEntries" t-as="view" t-key="view.type">
+                                        <DropdownItem onSelected="() => this.switchView(view.type)" class="view.active ? 'selected' : ''">
+                                            <i class="oi-fw" t-att-class="view.icon"/>
+                                            <span class="ms-1" t-out="view.name"/>
+                                        </DropdownItem>
+                                    </t>
+                                </t>
+                            </Dropdown>
+                        </div>
                         <nav class="o_cp_switch_buttons d-print-none d-none d-xl-inline-flex btn-group">
                             <t t-foreach="env.config.viewSwitcherEntries" t-as="view" t-key="view.type">
                                 <button class="btn btn-secondary o_switch_view "
@@ -92,14 +96,16 @@
             <t t-else="">
                 <ol class="breadcrumb flex-nowrap text-nowrap small lh-sm">
                     <li t-if="collapsedBreadcrumbs.length" class="breadcrumb-item d-inline-flex min-w-0">
-                        <Dropdown togglerClass="'btn btn-light btn-sm px-1 p-0'">
-                            <t t-set-slot="toggler">
+                        <Dropdown>
+                            <button class="btn btn-light btn-sm px-1 p-0">
                                 <i class="fa fa-ellipsis-h"/>
-                            </t>
-                            <t t-foreach="collapsedBreadcrumbs" t-as="breadcrumb" t-key="breadcrumb.jsId">
-                                <DropdownItem onSelected="() => this.onBreadcrumbClicked(breadcrumb.jsId)">
-                                    <t t-call="web.Breadcrumb.Name"/>
-                                </DropdownItem>
+                            </button>
+                            <t t-set-slot="content">
+                                <t t-foreach="collapsedBreadcrumbs" t-as="breadcrumb" t-key="breadcrumb.jsId">
+                                    <DropdownItem onSelected="() => this.onBreadcrumbClicked(breadcrumb.jsId)">
+                                        <t t-call="web.Breadcrumb.Name"/>
+                                    </DropdownItem>
+                                </t>
                             </t>
                         </Dropdown>
                     </li>

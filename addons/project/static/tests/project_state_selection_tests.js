@@ -58,7 +58,7 @@ QUnit.module("Project", (hooks) => {
             QUnit.test("Check that ProjectStateSelectionField does not propose `Set Status`", async function (assert) {
                 await makeView(makeViewParams);
                 await click(target, 'div[name="last_update_status"] button.dropdown-toggle');
-                assert.containsNone(target, 'div[name="last_update_status"] .dropdown-menu .dropdown-item:contains("Set Status")');
+                assert.containsNone(target, '.dropdown-menu .dropdown-item:contains("Set Status")');
             });
         });
     });

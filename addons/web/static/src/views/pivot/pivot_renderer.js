@@ -5,16 +5,18 @@ import { registry } from "@web/core/registry";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { formatPercentage } from "@web/views/fields/formatters";
-import { PivotGroupByMenu } from "@web/views/pivot/pivot_group_by_menu";
+import { PivotHeader } from "@web/views/pivot/pivot_header";
 
 import { Component, onWillUpdateProps, useRef } from "@odoo/owl";
 import { download } from "@web/core/network/download";
 import { useService } from "@web/core/utils/hooks";
+import { ReportViewMeasures } from "@web/views/view_components/report_view_measures";
+
 const formatters = registry.category("formatters");
 
 export class PivotRenderer extends Component {
     static template = "web.PivotRenderer";
-    static components = { Dropdown, DropdownItem, CheckBox, PivotGroupByMenu };
+    static components = { Dropdown, DropdownItem, CheckBox, PivotHeader, ReportViewMeasures };
     static props = ["model"];
 
     setup() {
@@ -59,14 +61,19 @@ export class PivotRenderer extends Component {
         }
         return formatPercentage(cell.value, this.model.metaData.fields[cell.measure]);
     }
-    /**
-     * Retrieve the padding of a left header.
-     *
-     * @param {Object} cell
-     * @returns {Number} Padding
-     */
-    getPadding(cell) {
-        return 5 + cell.indent * 30;
+
+    getHeaderProps({ cell, isXAxis = false, isInHead = false }) {
+        const type = isXAxis ? "col" : "row";
+        return {
+            cell,
+            isXAxis,
+            isInHead,
+            customGroupBys: this.model.metaData.customGroupBys,
+            onItemSelected: (payload) => this.onGroupBySelected(type, payload),
+            onAddCustomGroupBy: (fieldName) =>
+                this.onAddCustomGroupBy(type, cell.groupId, fieldName),
+            onClick: () => this.onHeaderClick(cell, type),
+        };
     }
 
     //----------------------------------------------------------------------

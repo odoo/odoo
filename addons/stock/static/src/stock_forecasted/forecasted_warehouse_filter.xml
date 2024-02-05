@@ -2,15 +2,13 @@
 <templates xml:space="preserve">
 
     <t t-name="stock.ForecastedWarehouseFilter">
-        <Dropdown t-if="displayWarehouseFilter" menuClass="o_filter_menu"
-        class="'btn-group'" togglerClass="'btn btn-secondary'">
-            <t t-set-slot="toggler">
-                <span class="fa fa-home"/> Warehouse: <t t-out="activeWarehouse.name"/>
-            </t>
-            <t t-foreach="warehouses" t-as="wh" t-key='wh.id'>
-                <DropdownItem onSelected="() => this._onSelected(wh.id)"><t t-out="wh.name"/></DropdownItem>
-            </t>
-        </Dropdown>
+        <div t-if="displayWarehouseFilter" class="btn-group">
+            <Dropdown menuClass="o_filter_menu" items="warehousesItems">
+                <button class="btn btn-secondary">
+                    <span class="fa fa-home"/> Warehouse: <t t-out="activeWarehouse.name"/>
+                </button>
+            </Dropdown>
+        </div>
     </t>
 
 </templates>

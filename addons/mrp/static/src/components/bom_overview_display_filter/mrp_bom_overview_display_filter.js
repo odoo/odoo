@@ -38,6 +38,12 @@ export class BomOverviewDisplayFilter extends Component {
     //---- Getters ----
 
     get displayableOptions() {
-        return Object.keys(this.displayOptions);
+        return Object.keys(this.displayOptions).map(optionKey => ({
+            id: optionKey,
+            label: this.displayOptions[optionKey],
+            onSelected: () => this.props.changeDisplay(optionKey),
+            class: { o_menu_item: true, selected: this.props.showOptions[optionKey] },
+            closingMode: "none",
+        }));
     }
 }

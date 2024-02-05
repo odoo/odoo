@@ -11,6 +11,7 @@ import { Component, onWillUnmount, useEffect, useRef, onWillStart } from "@odoo/
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { cookie } from "@web/core/browser/cookie";
+import { ReportViewMeasures } from "@web/views/view_components/report_view_measures";
 
 const NO_DATA = _t("No data");
 
@@ -44,7 +45,7 @@ function shortenLabel(label) {
 
 export class GraphRenderer extends Component {
     static template = "web.GraphRenderer";
-    static components = { Dropdown, DropdownItem };
+    static components = { Dropdown, DropdownItem, ReportViewMeasures };
     static props = ["class?", "model", "buttonTemplate"];
 
     setup() {

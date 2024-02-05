@@ -8,6 +8,7 @@ import {
     patchDate,
     patchWithCleanup,
     nextTick,
+    getDropdownMenu,
 } from "@web/../tests/helpers/utils";
 import { browser } from "@web/core/browser/browser";
 import {
@@ -1132,8 +1133,6 @@ QUnit.module("Search", (hooks) => {
             await toggleSearchBarMenu(target);
             await toggleMenuItem(target, "Date");
 
-            const optionEls = target.querySelectorAll(".dropdown .o_item_option");
-
             // default filter should be activated with the global default period 'this_month'
             assert.deepEqual(getDomain(controlPanel), [
                 "&",
@@ -1144,6 +1143,7 @@ QUnit.module("Search", (hooks) => {
             assert.ok(isOptionSelected(target, "Date", "March"));
 
             // check option descriptions
+            const optionEls = target.querySelectorAll(".o-dropdown--menu .o_item_option");
             const optionDescriptions = [...optionEls].map((e) => e.innerText.trim());
             const expectedDescriptions = [
                 "March",
@@ -1694,8 +1694,9 @@ QUnit.module("Search", (hooks) => {
             await openAddCustomFilterDialog(target);
             await dsHelpers.clickOnButtonAddNewRule(target);
 
-            await click(target.querySelector(".o_domain_selector .dropdown .dropdown-toggle"));
-            await click(target.querySelector(".o_domain_selector .dropdown .dropdown-item"));
+            await click(target.querySelector(".o_domain_selector .dropdown-toggle"));
+            const domainSelectorMenu = getDropdownMenu(target, ".o_domain_selector");
+            await click(domainSelectorMenu.querySelector(".dropdown-item"));
 
             await dsHelpers.clickOnButtonAddBranch(target, -1);
             await dsHelpers.clickOnButtonAddBranch(target, -1);

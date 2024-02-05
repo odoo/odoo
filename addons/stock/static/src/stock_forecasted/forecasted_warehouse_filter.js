@@ -29,4 +29,12 @@ export class ForecastedWarehouseFilter extends Component {
             this.warehouses.find(w => w.id == this.context.warehouse) :
             this.warehouses[0];
     }
+
+    get warehousesItems() {
+        return this.warehouses.map(warehouse => ({
+            id: warehouse.id,
+            label: warehouse.name,
+            onSelected: () => this._onSelected(warehouse.id),
+        }));
+    }
 }

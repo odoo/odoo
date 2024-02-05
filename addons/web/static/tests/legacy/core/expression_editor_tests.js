@@ -61,7 +61,7 @@ async function editExpression(target, value, index = 0) {
 async function selectConnector(target, value, index = 0) {
     const toggler = get(target, `${SELECTORS.connector} .dropdown-toggle`, index);
     await click(toggler);
-    const dropdownMenu = get(target, `${SELECTORS.connector} .dropdown-menu `, index);
+    const dropdownMenu = get(target, `.o-dropdown--menu `, index);
     const items = [...dropdownMenu.querySelectorAll(".dropdown-item")];
     const item = items.find((i) => i.innerText === value);
     await click(item);

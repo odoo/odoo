@@ -70,13 +70,18 @@
 
                         <div class="col-auto division ms-auto"></div>
 
-                        <Dropdown t-if="state.signMode === 'auto'" class="'o_web_sign_auto_select_style col-auto'" showCaret="true" togglerClass="'btn btn-link fa fa-font'">
-                            <t t-foreach="fonts" t-as="font" t-key="font_index">
-                                <DropdownItem onSelected="() => this.onSelectFont(font_index)">
-                                    <img class="img-fluid" t-att-src="getSVGTextFont(font)"/>
-                                </DropdownItem>
-                            </t>
-                        </Dropdown>
+                        <div t-if="state.signMode === 'auto'" class="o_web_sign_auto_select_style col-auto">
+                            <Dropdown>
+                                <button type="button" class="btn btn-link fa fa-font o-dropdown-caret"/>
+                                <t t-set-slot="content">
+                                    <t t-foreach="fonts" t-as="font" t-key="font_index">
+                                        <DropdownItem onSelected="() => this.onSelectFont(font_index)">
+                                            <img class="img-fluid" t-att-src="getSVGTextFont(font)"/>
+                                        </DropdownItem>
+                                    </t>
+                                </t>
+                            </Dropdown>
+                        </div>
 
                         <div t-if="state.signMode === 'draw'" t-attf-class="o_web_sign_draw_clear col-auto">
                             <a role="button" href="#" t-on-click.prevent="onClickSignDrawClear" class="btn btn-link fa fa-trash"/>

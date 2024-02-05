@@ -7,6 +7,8 @@ import { click, getFixture, mount } from "@web/../tests/helpers/utils";
 import { registry } from "@web/core/registry";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { uiService } from "@web/core/ui/ui_service";
+import { mountInFixture } from "@web/../tests/helpers/mount_in_fixture";
+import { popoverService } from "@web/core/popover/popover_service";
 
 const serviceRegistry = registry.category("services");
 let target;
@@ -16,6 +18,7 @@ QUnit.module("ViewComponents", (hooks) => {
         target = getFixture();
         serviceRegistry.add("ui", uiService);
         serviceRegistry.add("hotkey", hotkeyService);
+        serviceRegistry.add("popover", popoverService);
     });
 
     QUnit.module("ViewScaleSelector");
@@ -59,7 +62,7 @@ QUnit.module("ViewComponents", (hooks) => {
             }
         }
 
-        await mount(Parent, target, { env });
+        await mountInFixture(Parent, target, { env });
         assert.containsOnce(target, ".o_view_scale_selector");
         assert.verifySteps([]);
         assert.strictEqual(
@@ -74,15 +77,14 @@ QUnit.module("ViewComponents", (hooks) => {
         );
 
         await click(target, ".scale_button_selection");
-        assert.containsOnce(target, ".o_view_scale_selector .dropdown-menu", "a dropdown appeared");
+        assert.containsOnce(target, ".o-dropdown--menu", "a dropdown appeared");
         assert.strictEqual(
-            target.querySelector(".o_view_scale_selector .dropdown-menu .active").textContent,
+            target.querySelector(".o-dropdown--menu .active").textContent,
             "Weekly",
             "the active option is selected"
         );
         assert.strictEqual(
-            target.querySelector(".o_view_scale_selector .dropdown-menu span:nth-child(2)").dataset
-                .hotkey,
+            target.querySelector(".o-dropdown--menu span:nth-child(2)").dataset.hotkey,
             "o",
             "'week' scale has the right hotkey"
         );
@@ -170,7 +172,7 @@ QUnit.module("ViewComponents", (hooks) => {
                 }
             }
 
-            await mount(Parent, target, { env });
+            await mountInFixture(Parent, target, { env });
 
             assert.containsOnce(target, ".o_view_scale_selector");
             await click(target, ".scale_button_selection");

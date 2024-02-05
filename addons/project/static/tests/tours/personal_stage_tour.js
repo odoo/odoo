@@ -46,10 +46,7 @@ registry.category("web_tour.tours").add('personal_stage_tour', {
     run: function () {},
 }, {
     content: 'Open column edit dropdown',
-    trigger: '.o_kanban_header:eq(0)',
-    run: function () {
-        document.querySelector('.o_kanban_config.dropdown .dropdown-toggle').dispatchEvent(new Event('click'));
-    },
+    trigger: '.o_kanban_header:contains("Never") .dropdown-toggle',
 }, {
     content: "Try editing inbox",
     trigger: ".dropdown-item.o_column_edit",
