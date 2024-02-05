@@ -33,7 +33,7 @@ class Meeting(models.Model):
     @api.model
     def _get_google_synced_fields(self):
         return {'name', 'description', 'allday', 'start', 'date_end', 'stop',
-                'attendee_ids', 'alarm_ids', 'location', 'privacy', 'active'}
+                'attendee_ids', 'alarm_ids', 'location', 'privacy', 'active', 'show_as'}
 
     @api.model
     def _restart_google_sync(self):
@@ -296,6 +296,8 @@ class Meeting(models.Model):
             values['conferenceData'] = {'createRequest': {'requestId': uuid4().hex}}
         if self.privacy:
             values['visibility'] = self.privacy
+        if self.show_as:
+            values['transparency'] = 'opaque' if self.show_as == 'busy' else 'transparent'
         if not self.active:
             values['status'] = 'cancelled'
         if self.user_id and self.user_id != self.env.user and not bool(self.user_id.sudo().google_calendar_token):
