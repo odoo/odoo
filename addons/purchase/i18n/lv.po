@@ -3,6 +3,7 @@
 # 	* purchase
 # 
 # Translators:
+<<<<<<< HEAD
 # Aleksejs Ivanovs, 2023
 # Artjoms Ustinovs <artyom.ustinov2010@yandex.ru>, 2023
 # InfernalLV <karlisdreizis@gmail.com>, 2023
@@ -15,25 +16,74 @@
 # ievaputnina <ievai.putninai@gmail.com>, 2024
 # Will Sensors, 2024
 # 
+||||||| parent of eac5db33f168 (temp)
+# Artjoms Ustinovs <artyom.ustinov2010@yandex.ru>, 2022
+# ievaputnina <ievai.putninai@gmail.com>, 2022
+# JanisJanis <jbojars@gmail.com>, 2022
+# Anzelika Adejanova, 2022
+# Konstantins Zabogonskis <inculin4ik@gmail.com>, 2022
+# InfernalLV <karlisdreizis@gmail.com>, 2022
+# Martin Trigaux, 2022
+# Arnis Putniņš <arnis@allegro.lv>, 2022
+# Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2023
+#
+=======
+# Aleksejs Ivanovs, 2023
+# Artjoms Ustinovs <artyom.ustinov2010@yandex.ru>, 2023
+# InfernalLV <karlisdreizis@gmail.com>, 2023
+# Arnis Putniņš <arnis@allegro.lv>, 2023
+# Martin Trigaux, 2023
+# Anzelika Adejanova, 2023
+# JanisJanis <jbojars@gmail.com>, 2023
+# Konstantins Zabogonskis <inculin4ik@gmail.com>, 2023
+# Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2024
+# ievaputnina <ievai.putninai@gmail.com>, 2024
+# Will Sensors, 2024
+#
+>>>>>>> eac5db33f168 (temp)
 msgid ""
 msgstr ""
+<<<<<<< HEAD
 "Project-Id-Version: Odoo Server 17.0\n"
+||||||| parent of eac5db33f168 (temp)
+"Project-Id-Version: Odoo Server 16.0\n"
+=======
+"Project-Id-Version: Odoo Server saas~16.4\n"
+>>>>>>> eac5db33f168 (temp)
 "Report-Msgid-Bugs-To: \n"
+<<<<<<< HEAD
 "POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Will Sensors, 2024\n"
+||||||| parent of eac5db33f168 (temp)
+"POT-Creation-Date: 2023-05-16 13:48+0000\n"
+"PO-Revision-Date: 2022-09-22 05:54+0000\n"
+"Last-Translator: Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2023\n"
+=======
+"POT-Creation-Date: 2024-02-05 16:24+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Will Sensors, 2024\n"
+>>>>>>> eac5db33f168 (temp)
 "Language-Team: Latvian (https://app.transifex.com/odoo/teams/41243/lv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+<<<<<<< HEAD
 "Language: lv\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);\n"
+||||||| parent of eac5db33f168 (temp)
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);\n"
+=======
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : "
+"2);\n"
+>>>>>>> eac5db33f168 (temp)
 
 #. module: purchase
 #: model:ir.actions.report,print_report_name:purchase.action_report_purchase_order
 msgid ""
 "\n"
-"                (object.state in ('draft', 'sent') and 'Request for Quotation - %s' % (object.name) or\n"
+"                (object.state in ('draft', 'sent') and 'Request for "
+"Quotation - %s' % (object.name) or\n"
 "                'Purchase Order - %s' % (object.name))"
 msgstr ""
 
@@ -111,16 +161,20 @@ msgid ""
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Dear <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>\n"
 "        <t t-if=\"object.partner_id.parent_id\">\n"
-"            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)\n"
+"            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure "
+"Interior</t>)\n"
 "        </t>\n"
 "        <br><br>\n"
-"        Here is a reminder that the delivery of the purchase order <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
+"        Here is a reminder that the delivery of the purchase order <span "
+"style=\"font-weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
 "        <t t-if=\"object.partner_ref\">\n"
-"            <span style=\"font-weight:bold;\">(<t t-out=\"object.partner_ref or ''\">REF_XXX</t>)</span>\n"
+"            <span style=\"font-weight:bold;\">(<t t-out=\"object.partner_ref "
+"or ''\">REF_XXX</t>)</span>\n"
 "        </t>\n"
 "        is expected for \n"
 "        <t t-if=\"object.date_planned\">\n"
-"            <span style=\"font-weight:bold;\" t-out=\"format_date(object.date_planned) or ''\">05/05/2021</span>.\n"
+"            <span style=\"font-weight:bold;\" t-out=\"format_date(object."
+"date_planned) or ''\">05/05/2021</span>.\n"
 "        </t>\n"
 "         <t t-else=\"\">\n"
 "            <span style=\"font-weight:bold;\">undefined</span>.\n"
@@ -128,7 +182,8 @@ msgid ""
 "        Could you please confirm it will be delivered on time?\n"
 "        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
 "            <br><br>\n"
-"            <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
+"            <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell "
+"Admin</t>\n"
 "        </t>\n"
 "        <br><br>\n"
 "    </p>\n"
@@ -142,24 +197,31 @@ msgid ""
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Dear <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>\n"
 "        <t t-if=\"object.partner_id.parent_id\">\n"
-"            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)\n"
+"            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure "
+"Interior</t>)\n"
 "        </t>\n"
 "        <br><br>\n"
-"        Here is in attachment a purchase order <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
+"        Here is in attachment a purchase order <span style=\"font-weight:"
+"bold;\" t-out=\"object.name or ''\">P00015</span>\n"
 "        <t t-if=\"object.partner_ref\">\n"
-"            with reference: <t t-out=\"object.partner_ref or ''\">REF_XXX</t>\n"
+"            with reference: <t t-out=\"object.partner_ref or ''\">REF_XXX</"
+"t>\n"
 "        </t>\n"
-"        amounting in <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span>\n"
+"        amounting in <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
+"10.00</span>\n"
 "        from <t t-out=\"object.company_id.name or ''\">YourCompany</t>. \n"
 "        <br><br>\n"
 "        <t t-if=\"object.date_planned\">\n"
-"            The receipt is expected for <span style=\"font-weight:bold;\" t-out=\"format_date(object.date_planned) or ''\">05/05/2021</span>.\n"
+"            The receipt is expected for <span style=\"font-weight:bold;\" t-"
+"out=\"format_date(object.date_planned) or ''\">05/05/2021</span>.\n"
 "            <br><br>\n"
 "            Could you please acknowledge the receipt of this order?\n"
 "        </t>\n"
 "        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
 "            <br><br>\n"
-"            <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
+"            <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell "
+"Admin</t>\n"
 "        </t>\n"
 "        <br><br>\n"
 "    </p>\n"
@@ -173,12 +235,15 @@ msgid ""
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Dear <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>\n"
 "        <t t-if=\"object.partner_id.parent_id\">\n"
-"            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)\n"
+"            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure "
+"Interior</t>)\n"
 "        </t>\n"
 "        <br><br>\n"
-"        Here is in attachment a request for quotation <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
+"        Here is in attachment a request for quotation <span style=\"font-"
+"weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
 "        <t t-if=\"object.partner_ref\">\n"
-"            with reference: <t t-out=\"object.partner_ref or ''\">REF_XXX</t>\n"
+"            with reference: <t t-out=\"object.partner_ref or ''\">REF_XXX</"
+"t>\n"
 "        </t>\n"
 "        from <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
 "        <br><br>\n"
@@ -187,7 +252,8 @@ msgid ""
 "        Best regards,\n"
 "        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
 "            <br><br>\n"
-"            <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
+"            <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell "
+"Admin</t>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>"
@@ -246,7 +312,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
 msgid ""
 "<span class=\"d-none d-md-inline\">Confirmation Date</span>\n"
-"                          <span class=\"d-block d-md-none\">Confirmation</span>"
+"                          <span class=\"d-block d-md-none\">Confirmation</"
+"span>"
 msgstr ""
 
 #. module: purchase
@@ -268,8 +335,18 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid ""
+<<<<<<< HEAD
 "<span class=\"o_form_label\" invisible=\"state not in ('draft', 'sent')\">Request for Quotation </span>\n"
 "                        <span class=\"o_form_label\" invisible=\"state in ('draft', 'sent')\">Purchase Order </span>"
+||||||| parent of eac5db33f168 (temp)
+"<span class=\"o_form_label\" attrs=\"{'invisible': [('state','not in',('draft','sent'))]}\">Request for Quotation </span>\n"
+"                        <span class=\"o_form_label\" attrs=\"{'invisible': [('state','in',('draft','sent'))]}\">Purchase Order </span>"
+=======
+"<span class=\"o_form_label\" attrs=\"{'invisible': [('state','not in',"
+"('draft','sent'))]}\">Request for Quotation </span>\n"
+"                        <span class=\"o_form_label\" attrs=\"{'invisible': "
+"[('state','in',('draft','sent'))]}\">Purchase Order </span>"
+>>>>>>> eac5db33f168 (temp)
 msgstr ""
 
 #. module: purchase
@@ -280,16 +357,32 @@ msgstr "Nopirkts"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+<<<<<<< HEAD
 msgid ""
 "<span class=\"text-muted\" invisible=\"not "
 "mail_reception_confirmed\">(confirmed by vendor)</span>"
+||||||| parent of eac5db33f168 (temp)
+msgid "<span class=\"text-muted\" attrs=\"{'invisible': [('mail_reception_confirmed','=', False)]}\">(confirmed by vendor)</span>"
+=======
+msgid ""
+"<span class=\"text-muted\" attrs=\"{'invisible': "
+"[('mail_reception_confirmed','=', False)]}\">(confirmed by vendor)</span>"
+>>>>>>> eac5db33f168 (temp)
 msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+<<<<<<< HEAD
 msgid ""
 "<span class=\"text-muted\" invisible=\"not "
 "mail_reminder_confirmed\">(confirmed by vendor)</span>"
+||||||| parent of eac5db33f168 (temp)
+msgid "<span class=\"text-muted\" attrs=\"{'invisible': [('mail_reminder_confirmed', '=', False)]}\">(confirmed by vendor)</span>"
+=======
+msgid ""
+"<span class=\"text-muted\" attrs=\"{'invisible': "
+"[('mail_reminder_confirmed', '=', False)]}\">(confirmed by vendor)</span>"
+>>>>>>> eac5db33f168 (temp)
 msgstr ""
 
 #. module: purchase
@@ -432,11 +525,19 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__product_type
 msgid ""
-"A storable product is a product for which you manage stock. The Inventory app has to be installed.\n"
+"A storable product is a product for which you manage stock. The Inventory "
+"app has to be installed.\n"
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
+<<<<<<< HEAD
 "Noliktavas produkts ir produkts, kuram Jūs pārvaldat krājumus. Jābūt instalētam \"Inventory\" modulim.\n"
+||||||| parent of eac5db33f168 (temp)
+"Uzglabājams produkts ir produkts, kuram Jūs pārvaldat krājumus. Jābūt instalētam \"Inventory\" modulim.\n"
+=======
+"Noliktavas produkts ir produkts, kuram Jūs pārvaldat krājumus. Jābūt "
+"instalētam \"Inventory\" modulim.\n"
+>>>>>>> eac5db33f168 (temp)
 "Palīgmateriāls ir produkts, kuram krājumi netiek pārvaldīti.\n"
 "Pakalpojums ir nemateriāls produkts, ko jūs sniedzat."
 
@@ -467,7 +568,8 @@ msgstr "Piekļuves brīdinājums"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__qty_received_method
 msgid ""
-"According to product configuration, the received quantity can be automatically computed by mechanism:\n"
+"According to product configuration, the received quantity can be "
+"automatically computed by mechanism:\n"
 "  - Manual: the quantity is set manually on the line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
@@ -763,9 +865,17 @@ msgstr "Kalendāra skats"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
+<<<<<<< HEAD
 msgid ""
 "Calls for tenders are when you want to generate requests for quotations with"
 " several vendors for a given set of products to compare offers."
+||||||| parent of eac5db33f168 (temp)
+msgid "Calls for tenders are when you want to generate requests for quotations with several vendors for a given set of products to compare offers."
+=======
+msgid ""
+"Calls for tenders are when you want to generate requests for quotations with "
+"several vendors for a given set of products to compare offers."
+>>>>>>> eac5db33f168 (temp)
 msgstr ""
 
 #. module: purchase
@@ -1377,9 +1487,17 @@ msgstr ""
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 #, python-format
+<<<<<<< HEAD
 msgid ""
 "Let's try the Purchase app to manage the flow from purchase to reception and"
 " invoice control."
+||||||| parent of eac5db33f168 (temp)
+msgid "Let's try the Purchase app to manage the flow from purchase to reception and invoice control."
+=======
+msgid ""
+"Let's try the Purchase app to manage the flow from purchase to reception and "
+"invoice control."
+>>>>>>> eac5db33f168 (temp)
 msgstr ""
 
 #. module: purchase
@@ -1419,9 +1537,17 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Manage your purchase agreements (call for tenders, blanket orders)"
+<<<<<<< HEAD
 msgstr ""
 "Pārvaldiet pirkuma līgumus (uzaicinājumi uz konkursiem, vispārējie "
 "pasūtījumi)"
+||||||| parent of eac5db33f168 (temp)
+msgstr "Pārvaldiet pirkuma līgumus (uzaicinājumi uz konkursiem, vispārējie pasūtījumi)"
+=======
+msgstr "Pārvaldiet pirkuma līgumus (uzaicinājumi uz konkursiem, vispārējie pasūtījumi)"
+"Pārvaldiet pirkuma līgumus (uzaicinājumi uz konkursiem, vispārējie "
+"pasūtījumi)"
+>>>>>>> eac5db33f168 (temp)
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order_line__qty_received_method__manual
@@ -1441,6 +1567,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_company__po_lead
 #: model:ir.model.fields,help:purchase.field_res_config_settings__po_lead
+<<<<<<< HEAD
 msgid ""
 "Margin of error for vendor lead times. When the system generates Purchase "
 "Orders for procuring products, they will be scheduled that many days earlier"
@@ -1449,13 +1576,35 @@ msgstr ""
 "Margin of error for vendor lead times. When the system generates Purchase "
 "Orders for procuring products, they will be scheduled that many days earlier"
 " to cope with unexpected vendor delays."
+||||||| parent of eac5db33f168 (temp)
+msgid "Margin of error for vendor lead times. When the system generates Purchase Orders for procuring products, they will be scheduled that many days earlier to cope with unexpected vendor delays."
+msgstr "Margin of error for vendor lead times. When the system generates Purchase Orders for procuring products, they will be scheduled that many days earlier to cope with unexpected vendor delays."
+=======
+msgid ""
+"Margin of error for vendor lead times. When the system generates Purchase "
+"Orders for procuring products, they will be scheduled that many days earlier "
+"to cope with unexpected vendor delays."
+msgstr ""
+"Margin of error for vendor lead times. When the system generates Purchase "
+"Orders for procuring products, they will be scheduled that many days earlier "
+"to cope with unexpected vendor delays."
+>>>>>>> eac5db33f168 (temp)
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_config_settings__use_po_lead
+<<<<<<< HEAD
 msgid ""
 "Margin of error for vendor lead times. When the system generates Purchase "
 "Orders for reordering products,they will be scheduled that many days earlier"
 " to cope with unexpected vendor delays."
+||||||| parent of eac5db33f168 (temp)
+msgid "Margin of error for vendor lead times. When the system generates Purchase Orders for reordering products,they will be scheduled that many days earlier to cope with unexpected vendor delays."
+=======
+msgid ""
+"Margin of error for vendor lead times. When the system generates Purchase "
+"Orders for reordering products,they will be scheduled that many days earlier "
+"to cope with unexpected vendor delays."
+>>>>>>> eac5db33f168 (temp)
 msgstr ""
 
 #. module: purchase
@@ -1559,11 +1708,20 @@ msgid "Newest"
 msgstr "Jaunākais"
 
 #. module: purchase
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
 msgstr "Nākamās darbības kalendāra pasākums"
 
 #. module: purchase
+||||||| parent of eac5db33f168 (temp)
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Nākamais aktivitāšu kalendāra pasākums"
+
+#. module: purchase
+=======
+>>>>>>> eac5db33f168 (temp)
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_date_deadline
 msgid "Next Activity Deadline"
 msgstr "Nākamās darbības beigu termiņš"
@@ -2221,11 +2379,20 @@ msgid "RFQs and Purchases"
 msgstr "RFQs and Purchases"
 
 #. module: purchase
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__rating_ids
 msgid "Ratings"
 msgstr "Reitingi"
 
 #. module: purchase
+||||||| parent of eac5db33f168 (temp)
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__rating_ids
+msgid "Ratings"
+msgstr ""
+
+#. module: purchase
+=======
+>>>>>>> eac5db33f168 (temp)
 #: model:ir.model.fields,help:purchase.field_purchase_order__currency_rate
 msgid "Ratio between the purchase order currency and the company currency"
 msgstr ""
@@ -2309,12 +2476,24 @@ msgstr "Atsauces mērvienība"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__origin
+<<<<<<< HEAD
 msgid ""
 "Reference of the document that generated this purchase order request (e.g. a"
 " sales order)"
 msgstr ""
 "Atsauce uz dokumentu, kas radījis šo pirkuma pasūtījuma pieprasījumu "
 "(piemēram, pārdošanas pasūtījums)"
+||||||| parent of eac5db33f168 (temp)
+msgid "Reference of the document that generated this purchase order request (e.g. a sales order)"
+msgstr "Atsauce uz dokumentu, kas radījis šo pirkuma pasūtījuma pieprasījumu (piemēram, pārdošanas pasūtījums)"
+=======
+msgid ""
+"Reference of the document that generated this purchase order request (e.g. a "
+"sales order)"
+msgstr ""
+"Atsauce uz dokumentu, kas radījis šo pirkuma pasūtījuma pieprasījumu "
+"(piemēram, pārdošanas pasūtījums)"
+>>>>>>> eac5db33f168 (temp)
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__partner_ref
@@ -2375,8 +2554,10 @@ msgstr "Kvotas pieprasījumi"
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.purchase_rfq
 msgid ""
-"Requests for quotation are documents that will be sent to your suppliers to request prices for different products you consider buying.\n"
-"                Once an agreement has been found with the supplier, they will be confirmed and turned into purchase orders."
+"Requests for quotation are documents that will be sent to your suppliers to "
+"request prices for different products you consider buying.\n"
+"                Once an agreement has been found with the supplier, they "
+"will be confirmed and turned into purchase orders."
 msgstr ""
 
 #. module: purchase
@@ -2538,8 +2719,15 @@ msgstr "Dalīties"
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Show all records which has next action date is before today"
+<<<<<<< HEAD
 msgstr ""
 "Rādīt visus ierakstus, kuriem  nākamais darbības datums ir pirms šodienas"
+||||||| parent of eac5db33f168 (temp)
+msgstr "Rādīt visus ierakstus, kuriem  nākamais darbības datums ir pirms šodienas"
+=======
+msgstr "Rādīt visus ierakstus, kuriem  nākamais darbības datums ir pirms šodienas"
+"Rādīt visus ierakstus, kuriem  nākamais darbības datums ir pirms šodienas"
+>>>>>>> eac5db33f168 (temp)
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__reference
@@ -2710,11 +2898,13 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
 msgid ""
 "The request for quotation is the first step of the purchases flow. Once\n"
-"                    converted into a purchase order, you will be able to control the receipt\n"
+"                    converted into a purchase order, you will be able to "
+"control the receipt\n"
 "                    of the products and the vendor bill."
 msgstr ""
 "The request for quotation is the first step of the purchases flow. Once\n"
-"                    converted into a purchase order, you will be able to control the receipt\n"
+"                    converted into a purchase order, you will be able to "
+"control the receipt\n"
 "                    of the products and the vendor bill."
 
 #. module: purchase
@@ -2739,8 +2929,10 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.action_purchase_order_report_all
 msgid ""
-"This analysis allows you to easily check and analyse your company purchase history and performance.\n"
-"                You can track your negotiation performance, the delivery performance of your vendors, etc"
+"This analysis allows you to easily check and analyse your company purchase "
+"history and performance.\n"
+"                You can track your negotiation performance, the delivery "
+"performance of your vendors, etc"
 msgstr ""
 
 #. module: purchase
@@ -3049,12 +3241,18 @@ msgstr ""
 #: code:addons/purchase/models/purchase_order.py:0
 #, python-format
 msgid "View"
+<<<<<<< HEAD
 msgstr "Skatījums"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 msgid "View Details"
 msgstr ""
+||||||| parent of eac5db33f168 (temp)
+msgstr "Skatīt"
+=======
+msgstr "Skatījums"
+>>>>>>> eac5db33f168 (temp)
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__volume
@@ -3125,6 +3323,7 @@ msgstr "Tīmekļa vietnes saziņas vēsture"
 
 #. module: purchase
 #: model_terms:digest.tip,tip_description:purchase.digest_tip_purchase_0
+<<<<<<< HEAD
 msgid ""
 "When creating a purchase order, have a look at the vendor's <i>On Time "
 "Delivery</i> rate: the percentage of products shipped on time. If it is too "
@@ -3132,6 +3331,17 @@ msgid ""
 "shipment, Odoo will send the vendor an email to ask confirmation of shipment"
 " dates and keep you informed in case of any delays. To get the vendor's "
 "performance statistics, click on the OTD rate."
+||||||| parent of eac5db33f168 (temp)
+msgid "When creating a purchase order, have a look at the vendor's <i>On Time Delivery</i> rate: the percentage of products shipped on time. If it is too low, activate the <i>automated reminders</i>. A few days before the due shipment, Odoo will send the vendor an email to ask confirmation of shipment dates and keep you informed in case of any delays. To get the vendor's performance statistics, click on the OTD rate."
+=======
+msgid ""
+"When creating a purchase order, have a look at the vendor's <i>On Time "
+"Delivery</i> rate: the percentage of products shipped on time. If it is too "
+"low, activate the <i>automated reminders</i>. A few days before the due "
+"shipment, Odoo will send the vendor an email to ask confirmation of shipment "
+"dates and keep you informed in case of any delays. To get the vendor's "
+"performance statistics, click on the OTD rate."
+>>>>>>> eac5db33f168 (temp)
 msgstr ""
 
 #. module: purchase
@@ -3177,8 +3387,10 @@ msgstr ""
 #: code:addons/purchase/models/purchase_order.py:0
 #, python-format
 msgid ""
-"Your quotation contains products from company %(product_company)s whereas your quotation belongs to company %(quote_company)s. \n"
-" Please change the company of your quotation or remove the products from other companies (%(bad_products)s)."
+"Your quotation contains products from company %(product_company)s whereas "
+"your quotation belongs to company %(quote_company)s. \n"
+" Please change the company of your quotation or remove the products from "
+"other companies (%(bad_products)s)."
 msgstr ""
 
 #. module: purchase
