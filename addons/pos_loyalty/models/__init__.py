@@ -9,6 +9,7 @@ from . import loyalty_reward
 from . import loyalty_rule
 from . import pos_config
 from . import pos_order_line
+from . import pos_loyalty_points_change
 from . import pos_order
 from . import pos_session
 from . import res_config_settings

@@ -50,6 +50,12 @@ class pos_order(models.Model):
     l10n_fr_secure_sequence_number = fields.Integer(string="Inalteralbility No Gap Sequence #", readonly=True, copy=False)
     l10n_fr_string_to_hash = fields.Char(compute='_compute_string_to_hash', readonly=True, store=False)
 
+    @api.model
+    def _get_create_from_ui_returned_fields_name(self):
+        fields_name = super()._get_create_from_ui_returned_fields_name()
+        fields_name.append('l10n_fr_hash')
+        return fields_name
+
     def _get_new_hash(self, secure_seq_number):
         """ Returns the hash to write on pos orders when they get posted"""
         self.ensure_one()

@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import fields, models, _
+from odoo.exceptions import UserError
 
 class LoyaltyCard(models.Model):
     _inherit = 'loyalty.card'
@@ -31,3 +32,9 @@ class LoyaltyCard(models.Model):
         count_per_coupon = {coupon.id: count for coupon, count in read_group_res}
         for card in self:
             card.use_count += count_per_coupon.get(card.id, 0)
+
+    def write(self, vals):
+        if set(vals.keys()) & {'code', 'points'} and not self.env.context.get('bypass_pos_loyalty_card_modifiable_check', False) and self.env['pos.loyalty.points.change'].sudo().search_count(['&', ('coupon_id', 'in', self.ids), ('order_id.state', '!=', 'cancel')], limit=1):
+            raise UserError(_('Cannot modify this loyalty card essential data now because there is a pending POS order that will modify it.'))
+
+        return super().write(vals)

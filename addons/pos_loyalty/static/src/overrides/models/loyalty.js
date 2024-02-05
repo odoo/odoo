@@ -149,7 +149,109 @@ patch(Order.prototype, {
         json.codeActivatedProgramRules = this.codeActivatedProgramRules;
         json.codeActivatedCoupons = this.codeActivatedCoupons;
         json.couponPointChanges = this.couponPointChanges;
+        json.loyalty_coupons_data = this.getCouponsData() || [];
         return json;
+    },
+    getCouponsData() {
+        // Code moved here from payment_screen override:
+        // Compile data for our function
+        const reward_by_id = this.pos.models["loyalty.reward"].getAllBy("id");
+        const program_by_id = this.pos.models["loyalty.program"].getAllBy("id");
+        const rewardLines = this._get_reward_lines();
+        const partner = this.get_partner();
+        let couponData = Object.values(this.couponPointChanges).reduce((agg, pe) => {
+            agg[pe.coupon_id] = Object.assign({}, pe, {
+                points: pe.points - this._getPointsCorrection(program_by_id[pe.program_id]),
+            });
+            const program = program_by_id[pe.program_id];
+            if (program.is_nominative && partner) {
+                agg[pe.coupon_id].partner_id = partner.id;
+            }
+            return agg;
+        }, {});
+        for (const line of rewardLines) {
+            const reward = reward_by_id[line.reward_id];
+            if (!couponData[line.coupon_id]) {
+                couponData[line.coupon_id] = {
+                    points: 0,
+                    program_id: reward.program_id.id,
+                    coupon_id: line.coupon_id,
+                    barcode: false,
+                };
+            }
+            if (!couponData[line.coupon_id].line_codes) {
+                couponData[line.coupon_id].line_codes = [];
+            }
+            if (!couponData[line.coupon_id].line_codes.includes(line.reward_identifier_code)) {
+                !couponData[line.coupon_id].line_codes.push(line.reward_identifier_code);
+            }
+            couponData[line.coupon_id].points -= line.points_cost;
+        }
+        // We actually do not care about coupons for 'current' programs that did not claim any reward, they will be lost if not validated
+        couponData = Object.fromEntries(
+            Object.entries(couponData).filter(([key, value]) => {
+                const program = program_by_id[value.program_id];
+                if (program.applies_on === "current") {
+                    return value.line_codes && value.line_codes.length;
+                }
+                return true;
+            })
+        );
+        return couponData;
+    },
+    async updateWithServerData(data) {
+        await super.updateWithServerData(data);
+
+        const extra_data = data.extra_data;
+        if (!extra_data) {
+            return;
+        }
+        // Code moved here from payment_screen override:
+        const { couponCache } = this.pos;
+        const program_by_id = this.pos.models["loyalty.program"].getAllBy("id");
+        if (extra_data.coupon_updates) {
+            for (const couponUpdate of extra_data.coupon_updates) {
+                let dbCoupon = couponCache[couponUpdate.old_id];
+                if (dbCoupon) {
+                    dbCoupon.id = couponUpdate.id;
+                    dbCoupon.balance = couponUpdate.points;
+                    dbCoupon.code = couponUpdate.code;
+                } else {
+                    dbCoupon = new PosLoyaltyCard(
+                        couponUpdate.code,
+                        couponUpdate.id,
+                        couponUpdate.program_id,
+                        couponUpdate.partner_id,
+                        couponUpdate.points
+                    );
+                }
+                delete couponCache[couponUpdate.old_id];
+                couponCache[couponUpdate.id] = dbCoupon;
+            }
+        }
+        // Update the usage count since it is checked based on local data
+        if (extra_data.program_updates) {
+            for (const programUpdate of extra_data.program_updates) {
+                const program = program_by_id[programUpdate.program_id];
+                if (program) {
+                    program.total_order_count = programUpdate.usages;
+                }
+            }
+        }
+        if (extra_data.coupon_report) {
+            const reportService = this.pos.env.services.report;
+            if (reportService) {
+                for (const [actionId, active_ids] of Object.entries(extra_data.coupon_report)) {
+                    await reportService.doAction(actionId, active_ids);
+                }
+            } else {
+                console.log(
+                    "WARN: The report service could not be found, the coupon report(s) could therefore not be printed"
+                );
+            }
+            this.has_pdf_gift_card = Object.keys(extra_data.coupon_report).length > 0;
+        }
+        this.new_coupon_info = extra_data.new_coupon_info;
     },
     init_from_JSON(json) {
         this.couponPointChanges = json.couponPointChanges;
@@ -166,7 +268,6 @@ patch(Order.prototype, {
                     continue;
                 }
                 const newId = nextId--;
-                delete this.oldCouponMapping[pe.coupon_id];
                 pe.coupon_id = newId;
                 this.couponPointChanges[newId] = pe;
             }
@@ -219,13 +320,6 @@ patch(Order.prototype, {
             }
             this._updateRewards();
         }
-    },
-    wait_for_push_order() {
-        return (
-            Object.keys(this.couponPointChanges || {}).length > 0 ||
-            this._get_reward_lines().length ||
-            super.wait_for_push_order(...arguments)
-        );
     },
     /**
      * Add additional information for our ticket, such as new coupons and loyalty point gains.
@@ -360,6 +454,9 @@ patch(Order.prototype, {
 
         updateRewardsMutex.exec(() => {
             return this._updateLoyaltyPrograms().then(async () => {
+                if (this.finalized) {
+                    return;
+                }
                 // Try auto claiming rewards
                 const claimableRewards = this.getClaimableRewards(false, false, true);
                 let changed = false;
@@ -1030,14 +1127,15 @@ patch(Order.prototype, {
             const globalDiscountLines = this._getGlobalDiscountLines();
             if (globalDiscountLines.length) {
                 const rewardId = globalDiscountLines[0].reward_id;
-                if (
-                    rewardId != reward.id &&
-                    this.pos.models["loyalty.reward"].get(rewardId).discount >= reward.discount
-                ) {
-                    return _t("A better global discount is already applied.");
-                } else if (rewardId != rewardId.id) {
-                    for (const line of globalDiscountLines) {
-                        this._unlinkOrderline(line);
+                if (rewardId != reward.id) {
+                    if (
+                        this.pos.models["loyalty.reward"].get(rewardId).discount >= reward.discount
+                    ) {
+                        return _t("A better global discount is already applied.");
+                    } else {
+                        for (const line of globalDiscountLines) {
+                            this._unlinkOrderline(line);
+                        }
                     }
                 }
             }
@@ -1578,7 +1676,7 @@ patch(Order.prototype, {
                     payload.program_id,
                     payload.partner_id,
                     payload.points,
-                    payload.expiration_date,
+                    payload.expiration_date
                 );
                 this.pos.couponCache[coupon.id] = coupon;
                 this.codeActivatedCoupons.push(coupon);

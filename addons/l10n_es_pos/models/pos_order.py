@@ -29,3 +29,14 @@ class PosOrder(models.Model):
 
     def get_invoice_name(self):
         return self.account_move.name
+
+    @api.model
+    def _get_create_from_ui_returned_fields_name(self):
+        fields_name = super()._get_create_from_ui_returned_fields_name()
+        fields_name.append('l10n_es_simplified_invoice_number')
+        return fields_name
+
+    def _export_for_ui(self, order):
+        res = super()._export_for_ui(order)
+        res['l10n_es_simplified_invoice_number'] = order.l10n_es_simplified_invoice_number
+        return res

@@ -262,9 +262,9 @@ export class PaymentScreen extends Component {
             }
             // 2. Invoice.
             if (this.shouldDownloadInvoice() && this.currentOrder.is_to_invoice()) {
-                if (syncOrderResult[0]?.account_move) {
+                if (this.currentOrder.account_move) {
                     await this.report.doAction("account.account_invoices", [
-                        syncOrderResult[0].account_move,
+                        this.currentOrder.account_move,
                     ]);
                 } else {
                     throw {
@@ -286,25 +286,7 @@ export class PaymentScreen extends Component {
             this.env.services.ui.unblock()
         }
 
-        // 3. Post process.
-        if (
-            syncOrderResult &&
-            syncOrderResult.length > 0 &&
-            this.currentOrder.wait_for_push_order()
-        ) {
-            await this.postPushOrderResolve(syncOrderResult.map((res) => res.id));
-        }
-
         await this.afterOrderValidation(!!syncOrderResult && syncOrderResult.length > 0);
-    }
-    async postPushOrderResolve(ordersServerId) {
-        const postPushResult = await this._postPushOrderResolve(this.currentOrder, ordersServerId);
-        if (!postPushResult) {
-            this.dialog.add(AlertDialog, {
-                title: _t("Error: no internet connection."),
-                body: _t("Some, if not all, post-processing after syncing order failed."),
-            });
-        }
     }
     async afterOrderValidation(suggestToSync = true) {
         // Remove the order from the local storage so that when we refresh the page, the order
@@ -508,9 +490,6 @@ export class PaymentScreen extends Component {
             return false;
         }
 
-        return true;
-    }
-    async _postPushOrderResolve(order, order_server_ids) {
         return true;
     }
     async sendPaymentRequest(line) {

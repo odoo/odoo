@@ -24,10 +24,10 @@ class PosOrder(models.Model):
         self.send_table_count_notification(tables)
         return order_ids
 
-    def _process_saved_order(self, draft):
-        order_id = super()._process_saved_order(draft)
+    def _process_saved_order(self, draft, order_data=None):
+        res = super()._process_saved_order(draft, order_data)
         self.send_table_count_notification(self.table_id)
-        return order_id
+        return res
 
     def send_table_count_notification(self, table_ids):
         messages = []

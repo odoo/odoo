@@ -219,7 +219,8 @@ patch(PaymentScreen.prototype, {
         // order is paid with an online payment and the server saves the order as paid.
         // Without that update, the payment lines printed on the receipt ticket would
         // be invalid.
-        const isInvoiceRequested = this.currentOrder.is_to_invoice();
+        const isInvoiceRequested =
+            this.shouldDownloadInvoice() && this.currentOrder.is_to_invoice();
         const orderJSONInArray = [orderJSON];
         await this.pos._loadMissingProducts(orderJSONInArray);
         await this.pos._loadMissingPartners(orderJSONInArray);
@@ -233,6 +234,16 @@ patch(PaymentScreen.prototype, {
         }
         this.pos.orders.push(updatedOrder);
         const oldLocalOrder = this.currentOrder;
+
+        for (const [key, value] of Object.entries(oldLocalOrder)) {
+            if (
+                !Object.prototype.hasOwnProperty.call(updatedOrder, key) ||
+                updatedOrder[key] === false ||
+                updatedOrder[key] === undefined
+            ) {
+                updatedOrder[key] = value;
+            }
+        }
         this.pos.set_order(updatedOrder);
         this.pos.removeOrder(oldLocalOrder, false);
         this.pos.validated_orders_name_server_id_map[this.currentOrder.name] = this.currentOrder.id;
@@ -254,13 +265,11 @@ patch(PaymentScreen.prototype, {
                     body: _t("The invoice could not be generated."),
                 });
             } else {
-                await this.report.download("account.account_invoices", [
+                await this.report.doAction("account.account_invoices", [
                     this.currentOrder.account_move,
                 ]);
             }
         }
-
-        await this.postPushOrderResolve([this.currentOrder.server_id]);
 
         this.afterOrderValidation(true);
     },

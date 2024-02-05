@@ -10,8 +10,17 @@ patch(Order.prototype, {
                 this.pos.config.l10n_es_simplified_invoice_limit
         );
     },
-    wait_for_push_order() {
-        return this.pos.config.is_spanish ? true : super.wait_for_push_order(...arguments);
+    async updateWithServerData(data) {
+        await super.updateWithServerData(data);
+        if (data.l10n_es_simplified_invoice_number) {
+            this.invoice_name = data.l10n_es_simplified_invoice_number;
+        }
+    },
+    init_from_JSON(json) {
+        super.init_from_JSON(...arguments);
+        if (json.l10n_es_simplified_invoice_number) {
+            this.invoice_name = json.l10n_es_simplified_invoice_number;
+        }
     },
     export_as_JSON() {
         const json = super.export_as_JSON(...arguments);
