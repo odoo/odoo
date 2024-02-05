@@ -63,7 +63,7 @@ declare module "@spreadsheet" {
     }
 
     /* Params used for the odoo pivot model */
-    export interface PivotRuntime {
+    export interface WebPivotModelParams {
         metaData: PivotMetaData;
         searchParams: PivotSearchParams;
         name: string;
