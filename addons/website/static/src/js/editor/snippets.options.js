@@ -247,7 +247,7 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
             googleLocalFontsEls.forEach((el, index) => {
                 $(el).append(renderToFragment('website.delete_google_font_btn', {
                     index: index,
-                    local: true,
+                    local: "true",
                 }));
             });
         }
