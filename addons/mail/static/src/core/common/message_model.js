@@ -49,7 +49,7 @@ export class Message extends Record {
     is_note;
     /** @type {boolean} */
     is_transient;
-    linkPreviews = Record.many("LinkPreview", { inverse: "message" });
+    linkPreviews = Record.many("LinkPreview", { inverse: "message", onDelete: (r) => r.delete() });
     /** @type {number[]} */
     needaction_partner_ids = [];
     /** @type {number[]} */
