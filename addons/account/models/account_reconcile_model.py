@@ -699,7 +699,7 @@ class AccountReconcileModel(models.Model):
             amount_percentage = (line_residual_to_compare / total_residual_to_compare) * 100 if total_residual_to_compare else 0.0
         else:
             return False
-        return amount_percentage >= self.match_total_amount_param
+        return amount_percentage <= self.match_total_amount_param
 
     def _apply_rules(self, st_lines, excluded_ids=None, partner_map=None):
         ''' Apply criteria to get candidates for all reconciliation models.
@@ -833,7 +833,7 @@ class AccountReconcileModel(models.Model):
                             results[line.id]['status'] = 'write_off'
 
                         # Process auto-reconciliation.
-                        if (first_batch_candidates or second_batch_candidates) and model.auto_reconcile:
+                        if (first_batch_candidates or second_batch_candidates or third_batch_candidates) and model.auto_reconcile:
                             # An open balance is needed but no partner has been found.
                             if reconciliation_results['open_balance_dict'] is False:
                                 break
