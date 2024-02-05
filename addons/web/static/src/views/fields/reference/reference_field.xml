@@ -15,7 +15,10 @@
                 </select>
             </t>
             <t t-if="relation">
-                <Many2OneField t-props="m2oProps" />
+                <Many2OneField
+                    t-key="m2oProps.relation"
+                    t-props="m2oProps"
+                />
             </t>
         </div>
     </t>
