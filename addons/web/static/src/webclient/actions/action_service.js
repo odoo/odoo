@@ -127,9 +127,46 @@ export function makeActionManager(env, router = _router) {
     let actionCache = {};
     let dialog = null;
 
+    // ---------------------------------------------------------------------------
+    if ("actionStack" in router.current && router.current.actionStack.length > 1) {
+        for (var i = 0; i < router.current.actionStack.length - 1; i++) {
+            const action = router.current.actionStack[i];
+            // create a better display name :
+            const controller = {
+                jsId: `controller_${++id}`,
+                displayName: action.resId
+                    ? `${action.model || action.action}:${action.resId}`
+                    : action.model || `act-${action.action}`,
+                virtual: true,
+                action: {},
+                props: {},
+                state: action,
+            };
+            if (action.action) {
+                controller.action.id = action.action;
+                if (action.active_id) {
+                    controller.action.context = { active_id: action.active_id };
+                }
+            }
+            if (action.model) {
+                controller.action.type = "ir.actions.act_window";
+                controller.props.resModel = action.model;
+            }
+            if (action.resId) {
+                controller.state.id = action.resId;
+                controller.action.type = "ir.actions.act_window";
+                controller.props.resId = action.resId;
+                controller.state.view_type = "form";
+                controller.props.viewType = "form";
+            }
+            controllerStack.push(controller);
+        }
+    }
+    // ---------------------------------------------------------------------------
+
     // The state action (or default user action if none) is loaded as soon as possible
     // so that the next "doAction" will have its action ready when needed.
-    const actionParams = _getActionParams();
+    const actionParams = _getActionParams(false);
     if (actionParams && typeof actionParams.actionRequest === "number") {
         const { actionRequest, options } = actionParams;
         _loadAction(actionRequest, options.additionalContext);
@@ -313,7 +350,7 @@ export function makeActionManager(env, router = _router) {
      */
     function _getActionParams() {
         const state = router.current;
-        const options = { clearBreadcrumbs: true };
+        const options = {};
         let actionRequest = null;
         if (state.action) {
             // ClientAction
@@ -611,10 +648,21 @@ export function makeActionManager(env, router = _router) {
             reject = _rej;
         });
         const action = controller.action;
-        const index = _computeStackIndex(options);
+        let index = _computeStackIndex(options);
         const controllerArray = [controller];
         if (options.lazyController) {
             controllerArray.unshift(options.lazyController);
+            if (index !== 0 && controllerStack.length > 0) {
+                const lastCtrl = controllerStack[index - 1];
+                if (
+                    lastCtrl.virtual &&
+                    lastCtrl.props.viewType !== "form" &&
+                    (lastCtrl.action.id === options.lazyController.action.id ||
+                        lastCtrl.action.id === options.lazyController.action.path)
+                ) {
+                    index--;
+                }
+            }
         }
         const nextStack = controllerStack.slice(0, index).concat(controllerArray);
         // Compute breadcrumbs
@@ -946,6 +994,7 @@ export function makeActionManager(env, router = _router) {
         const updateUIOptions = {
             clearBreadcrumbs: options.clearBreadcrumbs,
             onClose: options.onClose,
+            index: options.index,
             stackPosition: options.stackPosition,
             onActionReady: options.onActionReady,
             noEmptyTransition: options.noEmptyTransition,
@@ -1009,6 +1058,7 @@ export function makeActionManager(env, router = _router) {
                 clearBreadcrumbs: options.clearBreadcrumbs,
                 stackPosition: options.stackPosition,
                 onClose: options.onClose,
+                index: options.index,
                 onActionReady: options.onActionReady,
                 noEmptyTransition: options.noEmptyTransition,
             });
@@ -1043,6 +1093,7 @@ export function makeActionManager(env, router = _router) {
         };
 
         return _updateUI(controller, {
+            index: options.index,
             clearBreadcrumbs: options.clearBreadcrumbs,
             stackPosition: options.stackPosition,
             onClose: options.onClose,
@@ -1349,6 +1400,16 @@ export function makeActionManager(env, router = _router) {
             return;
         }
         const controller = controllerStack[index];
+        if (controller.virtual) {
+            const actionParams = _getActionParams(controller.state);
+            if (actionParams) {
+                // Params valid => performs a "doAction"
+                const { actionRequest, options } = actionParams;
+                options.index = index;
+                await doAction(actionRequest, options);
+                return true;
+            }
+        }
         if (controller.action.type === "ir.actions.act_window") {
             const { action, exportedState, view, views } = controller;
             const props = { ...controller.props };
