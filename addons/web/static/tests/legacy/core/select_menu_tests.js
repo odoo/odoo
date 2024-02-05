@@ -2,7 +2,7 @@
 
 import { Component, useState, xml } from "@odoo/owl";
 import { makeTestEnv } from "@web/../tests/legacy/helpers/mock_env";
-import { mountInFixture } from "@web/../tests/legacy/helpers/mountInFixture";
+import { mountInFixture } from "@web/../tests/legacy/helpers/mount_in_fixture";
 import {
     click,
     editInput,

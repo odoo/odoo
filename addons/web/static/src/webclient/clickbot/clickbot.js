@@ -6,6 +6,7 @@
 import { App, reactive } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { rpcBus } from "@web/core/network/rpc";
+import { getPopoverForTarget } from "@web/core/popover/popover";
 
 const MOUSE_EVENTS = ["mouseover", "mouseenter", "mousedown", "mouseup", "click"];
 const BLACKLISTED_MENUS = [
@@ -196,11 +197,11 @@ async function ensureHomeMenu() {
  * Make sure the apps menu is open (community only)
  */
 async function ensureAppsMenu() {
-    const appsMenu = document.querySelector(".o_navbar_apps_menu .dropdown-menu");
-    if (!appsMenu) {
+    const apps = document.querySelectorAll(".o-dropdown--menu .o_app");
+    if (!apps || !apps.length) {
         const toggler = document.querySelector(".o_navbar_apps_menu .dropdown-toggle");
         await triggerClick(toggler, "apps menu toggle button");
-        await waitForCondition(() => document.querySelector(".o_navbar_apps_menu .dropdown-menu"));
+        await waitForCondition(() => document.querySelector(".o-dropdown--menu .o_app"));
     }
 }
 
@@ -210,27 +211,27 @@ async function ensureAppsMenu() {
  * @returns {DomElement}
  */
 async function getNextMenu() {
-    const menus = document.querySelectorAll(
+    const menuToggles = document.querySelectorAll(
         ".o_menu_sections > .dropdown > .dropdown-toggle, .o_menu_sections > .dropdown-item"
     );
-    if (state.menuIndex === menus.length) {
+    if (state.menuIndex === menuToggles.length) {
         state.menuIndex = 0;
         return; // all menus done
     }
-    let menu = menus[state.menuIndex];
-    if (menu.classList.contains("dropdown-toggle")) {
+    let menuToggle = menuToggles[state.menuIndex];
+    if (menuToggle.classList.contains("dropdown-toggle")) {
         // the current menu is a dropdown toggler -> open it and pick a menu inside the dropdown
-        if (!menu.nextElementSibling) {
+        if (!menuToggle.nextElementSibling) {
             // might already be opened if the last menu was blacklisted
-            await triggerClick(menu, "menu toggler");
+            await triggerClick(menuToggle, "menu toggler");
         }
-        const dropdown = menu.nextElementSibling;
-        if (!dropdown) {
+        const dropdownMenu = getPopoverForTarget(menuToggle);
+        if (!dropdownMenu) {
             state.menuIndex = 0; // empty More menu has no dropdown (FIXME?)
             return;
         }
-        const items = dropdown.querySelectorAll(".dropdown-item");
-        menu = items[state.subMenuIndex];
+        const items = dropdownMenu.querySelectorAll(".dropdown-item");
+        menuToggle = items[state.subMenuIndex];
         if (state.subMenuIndex === items.length - 1) {
             // this is the last item, so go to the next menu
             state.menuIndex++;
@@ -243,7 +244,7 @@ async function getNextMenu() {
         // the current menu isn't a dropdown, so go to the next menu
         state.menuIndex++;
     }
-    return menu;
+    return menuToggle;
 }
 
 /**
@@ -252,13 +253,18 @@ async function getNextMenu() {
  * @returns {DomElement}
  */
 async function getNextApp() {
-    if (!apps) {
+    if (!apps || !apps.length) {
         if (isEnterprise) {
             await ensureHomeMenu();
             apps = document.querySelectorAll(".o_apps .o_app");
         } else {
             await ensureAppsMenu();
-            apps = document.querySelectorAll(".o_navbar_apps_menu .dropdown-item");
+            apps = document.querySelectorAll(".o-dropdown--menu .o_app");
+        }
+        if (apps.length === 0) {
+            throw new Error(
+                "No app found, it's possible that we are not on the home menu/app menu"
+            );
         }
     }
     const appName = apps[state.appIndex]?.dataset?.menuXmlid;
@@ -301,18 +307,15 @@ async function testFilters() {
     }
     // Open the search bar menu dropdown
     await triggerClick(searchBarMenu);
-    const filterMenuButton = document.querySelector(
-        ".o_control_panel .o_dropdown_container.o_filter_menu"
-    );
+    const filterMenuButton = document.querySelector(".o_dropdown_container.o_filter_menu");
     // Is there a filter menu in the search bar
     if (!filterMenuButton) {
         return;
     }
 
     // Avoid the "Custom Filter" menu item (it don't have the class .o_menu_item)
-    const simpleFilterSel =
-        ".o_control_panel .o_filter_menu > .dropdown-item.o_menu_item:not(.o_add_custom_filter)";
-    const dateFilterSel = ".o_control_panel .o_filter_menu > .o_accordion";
+    const simpleFilterSel = ".o_filter_menu > .dropdown-item.o_menu_item:not(.o_add_custom_filter)";
+    const dateFilterSel = ".o_filter_menu > .o_accordion";
     const filterMenuItems = document.querySelectorAll(`${simpleFilterSel},${dateFilterSel}`);
     browser.console.log(`Testing ${filterMenuItems.length} filters`);
     state.testedFilters += filterMenuItems.length;
@@ -442,7 +445,7 @@ async function testApp() {
         } else {
             await ensureAppsMenu();
             element = document.querySelector(
-                `.o_navbar_apps_menu .dropdown-item[data-menu-xmlid="${state.app}"]`
+                `.o-dropdown--menu .dropdown-item[data-menu-xmlid="${state.app}"]`
             );
         }
         if (!element) {

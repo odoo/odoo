@@ -695,6 +695,7 @@ QUnit.test("basic rendering", async (assert) => {
     await contains("button", { text: "New Message" });
     await contains(".o-mail-MessagingMenu div.text-muted", { text: "No conversation yet..." });
     await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
+    await contains(".o-dropdown--menu", { count: 0 });
     assert.doesNotHaveClass(
         $('.o_menu_systray .dropdown-toggle:has(i[aria-label="Messages"])'),
         "show"

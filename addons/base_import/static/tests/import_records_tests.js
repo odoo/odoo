@@ -58,7 +58,7 @@ QUnit.module("Base Import Tests", (hooks) => {
         });
 
         await toggleActionMenu(target);
-        assert.containsOnce(target, ".o_cp_action_menus .o-dropdown--menu");
+        assert.containsOnce(target, ".o-dropdown--menu");
         assert.containsOnce(target, ".o_import_menu");
         await click(target.querySelector(".o_import_menu"));
     });
@@ -104,13 +104,13 @@ QUnit.module("Base Import Tests", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree/>',
+            arch: "<tree/>",
             config: {
                 actionType: "ir.actions.act_window",
             },
         });
         await triggerHotkey("alt+u");
-        assert.containsOnce(target, ".o_cp_action_menus .o-dropdown--menu");
+        assert.containsOnce(target, ".o-dropdown--menu");
     });
 
     QUnit.test("import in cog menu dropdown in kanban", async function (assert) {
@@ -145,7 +145,7 @@ QUnit.module("Base Import Tests", (hooks) => {
         });
 
         await toggleActionMenu(target);
-        assert.containsOnce(target, ".o_cp_action_menus .o-dropdown--menu");
+        assert.containsOnce(target, ".o-dropdown--menu");
         assert.containsOnce(target, ".o_import_menu");
         await click(target.querySelector(".o_import_menu"));
     });

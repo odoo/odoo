@@ -13,20 +13,14 @@
                     <tr t-foreach="table.headers" t-as="row" t-key="'header_' + row_index" class="border-top-0">
                         <t t-foreach="row" t-as="cell" t-key="'header_row_' + cell_index">
                             <t t-if="cell.measure" t-call="web.PivotMeasure"/>
-                            <t t-elif="cell.isLeaf !== undefined" t-call="web.PivotHeader">
-                                <t t-set="isXAxis" t-value="true"/>
-                                <t t-set="isInHead" t-value="true"/>
-                            </t>
+                            <PivotHeader t-elif="cell.isLeaf !== undefined" t-props="this.getHeaderProps({ cell: cell, isXAxis: true, isInHead: true })"/>
                             <th t-else="" t-att-colspan="cell.width" t-att-rowspan="cell.height" class="border-0 bg-100 fw-normal" t-att-class="{ 'border-0': cell_index != 0 }"/>
                         </t>
                     </tr>
                 </thead>
                 <tbody>
                     <tr t-foreach="table.rows" t-as="row" t-key="'row_' + row_index">
-                        <t t-call="web.PivotHeader">
-                            <t t-set="isXAxis" t-value="false"/>
-                            <t t-set="cell" t-value="row"/>
-                        </t>
+                        <PivotHeader t-props="this.getHeaderProps({ cell: row, isXAxis: false, isInHead: false })"/>
                         <t t-foreach="row.subGroupMeasurements" t-as="cell" t-key="'row_cell_' + cell_index">
                             <td class="o_pivot_cell_value bg-100" t-att-class="{
                                     o_empty: cell.value === undefined,
@@ -51,42 +45,6 @@
                 </tbody>
             </table>
         </div>
-    </t>
-
-    <t t-name="web.PivotHeader">
-        <th
-            class="bg-view text-nowrap cursor-pointer fw-normal user-select-none"
-            t-att-colspan="isXAxis ? cell.width : undefined"
-            t-att-rowspan="isXAxis ? cell.height : undefined"
-            t-att-class="{
-                o_pivot_header_cell_closed: cell.isLeaf,
-                o_pivot_header_cell_opened: !cell.isLeaf,
-                'border-top': isInHead,                
-            }"
-            t-attf-style="{{
-                isXAxis
-                    ? undefined
-                    : l10n.direction === 'ltr'
-                        ? 'padding-left: ' + getPadding(cell) + 'px;'
-                        : 'padding-right: ' + getPadding(cell) + 'px;'
-            }}"
-            t-att-data-tooltip="cell.label"
-            t-attf-data-tooltip-position="{{ l10n.direction === 'ltr' ? 'right' : 'left' }}"
-            t-on-click.prevent="() => this.onHeaderClick(cell, isXAxis ? 'col' : 'row')"
-        >
-            <t t-if="cell.isLeaf and !cell.isFolded">
-                <PivotGroupByMenu
-                    toggler="'parent'"
-                    position="isXAxis ? 'bottom-start' : 'bottom-end'"
-                    cell="cell"
-                    customGroupBys="model.metaData.customGroupBys"
-                    onItemSelected="(payload) => this.onGroupBySelected(isXAxis ? 'col' : 'row', payload)"
-                    onAddCustomGroupBy="fieldName => this.onAddCustomGroupBy(isXAxis ? 'col' : 'row', cell.groupId, fieldName)"
-                />
-            </t>
-            <i t-attf-class="fa fa-{{ cell.isLeaf ? 'plus-square' : 'minus-square-o' }} me-1"/>
-            <span t-esc="cell.title"/>
-        </th>
     </t>
 
     <t t-name="web.PivotMeasure">

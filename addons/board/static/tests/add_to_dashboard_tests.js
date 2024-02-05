@@ -8,6 +8,7 @@ import {
     patchWithCleanup,
     mouseEnter,
     triggerEvent,
+    getDropdownMenu,
 } from "@web/../tests/helpers/utils";
 import {
     openAddCustomFilterDialog,
@@ -29,6 +30,10 @@ const favoriteMenuRegistry = registry.category("favoriteMenu");
 
 let serverData;
 let target;
+
+function getAddToDashboardMenu() {
+    return getDropdownMenu(target, ".o_add_to_board button.dropdown-toggle");
+}
 
 QUnit.module("Board", (hooks) => {
     hooks.beforeEach(() => {
@@ -143,8 +148,8 @@ QUnit.module("Board", (hooks) => {
 
         // add this action to dashboard
         await testUtils.dom.triggerEvent($(".o_add_to_board button.dropdown-toggle"), "mouseenter");
-        await testUtils.fields.editInput($(".o_add_to_board input"), "a name");
-        await testUtils.dom.click($(".o_add_to_board .dropdown-menu button"));
+        await testUtils.fields.editInput(getAddToDashboardMenu().querySelector("input"), "a name");
+        await testUtils.dom.click(getAddToDashboardMenu().querySelector("button"));
     });
 
     QUnit.test("save two searches to dashboard", async function (assert) {
@@ -200,7 +205,7 @@ QUnit.module("Board", (hooks) => {
 
         // Add it to dashboard
         await testUtils.dom.triggerEvent($(".o_add_to_board button.dropdown-toggle"), "mouseenter");
-        await testUtils.dom.click($(".o_add_to_board .dropdown-menu button"));
+        await testUtils.dom.click(getAddToDashboardMenu().querySelector("button"));
 
         // Remove it
         await removeFacet(target);
@@ -214,7 +219,7 @@ QUnit.module("Board", (hooks) => {
             target.querySelector(".o_add_to_board button.dropdown-toggle"),
             "mouseenter"
         );
-        await testUtils.dom.click(target.querySelector(".o_add_to_board .dropdown-menu button"));
+        await testUtils.dom.click(getAddToDashboardMenu().querySelector("button"));
     });
 
     QUnit.test("save an action domain to dashboard", async function (assert) {
@@ -263,7 +268,7 @@ QUnit.module("Board", (hooks) => {
             "mouseenter"
         );
         // add
-        await testUtils.dom.click(target.querySelector(".o_add_to_board .dropdown-menu button"));
+        await testUtils.dom.click(getAddToDashboardMenu().querySelector("button"));
     });
 
     QUnit.test("add to dashboard with no action id", async function (assert) {
@@ -362,9 +367,9 @@ QUnit.module("Board", (hooks) => {
             // add the view to the dashboard
 
             await mouseEnter(target.querySelector(".o_add_to_board .dropdown-toggle"));
-            const input = target.querySelector(".o_add_to_board .dropdown-menu input");
+            const input = getAddToDashboardMenu().querySelector("input");
             await testUtils.fields.editInput(input, "Pipeline");
-            await testUtils.dom.click($(".o_add_to_board div button"));
+            await testUtils.dom.click(getAddToDashboardMenu().querySelector("button"));
 
             unpatchDate();
         }
@@ -396,7 +401,7 @@ QUnit.module("Board", (hooks) => {
 
         await toggleSearchBarMenu(target);
         await mouseEnter(target.querySelector(".o_add_to_board .dropdown-toggle"));
-        const input = target.querySelector(".o_add_to_board .dropdown-menu input");
+        const input = getAddToDashboardMenu().querySelector("input");
         await testUtils.fields.editInput(input, "Pipeline");
         await triggerEvent(input, null, "keydown", { key: "Enter" });
 
@@ -436,7 +441,7 @@ QUnit.module("Board", (hooks) => {
 
         await toggleSearchBarMenu(target);
         await mouseEnter(target.querySelector(".o_add_to_board .dropdown-toggle"));
-        const input = target.querySelector(".o_add_to_board .dropdown-menu input");
+        const input = getAddToDashboardMenu().querySelector("input");
         await testUtils.fields.editInput(input, "Pipeline");
         await triggerEvent(input, null, "keydown", { key: "Enter" });
     });
@@ -501,7 +506,7 @@ QUnit.module("Board", (hooks) => {
         // Add to dashboard
         await toggleSearchBarMenu(target);
         await mouseEnter(target.querySelector(".o_add_to_board .dropdown-toggle"));
-        const input = target.querySelector(".o_add_to_board .dropdown-menu input");
+        const input = getAddToDashboardMenu().querySelector("input");
         await testUtils.fields.editInput(input, "Pipeline");
         await triggerEvent(input, null, "keydown", { key: "Enter" });
     });
@@ -529,14 +534,14 @@ QUnit.module("Board", (hooks) => {
 
         // sanity check
         await click(target, ".o_cp_action_menus .dropdown-toggle");
-        assert.containsOnce(target, ".o_cp_action_menus .dropdown-menu .o_add_to_board");
+        assert.containsOnce(target, ".o-dropdown--menu .o_add_to_board");
 
         // open form view
         await click(target.querySelector(".o_data_cell"));
         assert.containsOnce(target, ".o_form_view");
 
         await click(target, ".o_cp_action_menus .dropdown-toggle");
-        assert.containsOnce(target, ".o_cp_action_menus .dropdown-menu");
-        assert.containsNone(target, ".o_cp_action_menus .dropdown-menu .o_add_to_board");
+        assert.containsOnce(target, ".o-dropdown--menu");
+        assert.containsNone(target, ".o-dropdown--menu .o_add_to_board");
     });
 });

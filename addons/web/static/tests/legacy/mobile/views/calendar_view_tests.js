@@ -116,7 +116,7 @@ QUnit.module("Views", ({ beforeEach }) => {
 
         // switch to day mode
         await click(target, ".o_calendar_container .o_calendar_header .dropdown-toggle");
-        await click(target, ".o_calendar_container .o_calendar_header .o_scale_button_day");
+        await click(target, ".o-dropdown--menu .o_scale_button_day");
         await nextTick();
         assert.equal(
             target.querySelector(".o_calendar_container .o_calendar_header .dropdown-toggle")
@@ -127,7 +127,7 @@ QUnit.module("Views", ({ beforeEach }) => {
 
         // switch to month mode
         await click(target, ".o_calendar_container .o_calendar_header .dropdown-toggle");
-        await click(target, ".o_calendar_container .o_calendar_header .o_scale_button_month");
+        await click(target, ".o-dropdown--menu .o_scale_button_month");
         await nextTick();
         assert.equal(
             target.querySelector(".o_calendar_container .o_calendar_header .dropdown-toggle")
@@ -138,7 +138,7 @@ QUnit.module("Views", ({ beforeEach }) => {
 
         // switch to year mode
         await click(target, ".o_calendar_container .o_calendar_header .dropdown-toggle");
-        await click(target, ".o_calendar_container .o_calendar_header .o_scale_button_year");
+        await click(target, ".o-dropdown--menu .o_scale_button_year");
         await nextTick();
         assert.equal(
             target.querySelector(".o_calendar_container .o_calendar_header .dropdown-toggle")

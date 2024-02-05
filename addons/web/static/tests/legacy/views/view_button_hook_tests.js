@@ -9,6 +9,7 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 
 import { useRef, Component, xml } from "@odoo/owl";
+import { mountInFixture } from "@web/../tests/helpers/mount_in_fixture";
 
 QUnit.module("UseViewButton tests", (hooks) => {
     let target;
@@ -100,7 +101,7 @@ QUnit.module("UseViewButton tests", (hooks) => {
             static template = xml`
                 <div t-ref="root" class="myComponent">
                     <Dropdown>
-                        <t t-set-slot="toggler">dropdown</t>
+                        <button>dropdown</button>
                         <DropdownItem>
                             <ViewButton tag="'a'" clickParams="{ type:'action' }" string="'coucou'" record="{ resId: 1 }" />
                         </DropdownItem>
@@ -115,7 +116,7 @@ QUnit.module("UseViewButton tests", (hooks) => {
         }
 
         const env = await makeTestEnv();
-        await mount(MyComponent, target, { env });
+        await mountInFixture(MyComponent, target, { env });
 
         await click(target, ".dropdown-toggle");
         assert.containsOnce(target, ".dropdown-menu");

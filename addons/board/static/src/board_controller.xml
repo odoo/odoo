@@ -14,16 +14,18 @@
 
     <t t-name="board.Content">
         <div t-if="!env.isSmall" class="o-dashboard-header d-flex justify-content-end">
-            <Dropdown togglerClass="'btn btn-secondary m-2 p-2'">
-                <t t-set-slot="toggler">
+            <Dropdown>
+                <button class="btn btn-secondary m-2 p-2">
                     <img t-attf-src="/board/static/img/layout_{{board.layout}}.png" width="16" height="16" alt=""/>
                     Change Layout
-                </t>
-                <t t-foreach="'1 1-1 1-1-1 1-2 2-1'.split(' ')" t-as="layout" t-key="layout">
-                    <DropdownItem onSelected="() => this.selectLayout(layout)">
-                        <img t-attf-src="/board/static/img/layout_{{layout}}.png" alt=""/>
-                        <i t-if="layout == board.layout" class="fa fa-check fa-lg text-success" aria-label='Layout' role="img" title="Layout"/>
-                    </DropdownItem>
+                </button>
+                <t t-set-slot="content">
+                    <t t-foreach="'1 1-1 1-1-1 1-2 2-1'.split(' ')" t-as="layout" t-key="layout">
+                        <DropdownItem onSelected="() => this.selectLayout(layout)">
+                            <img t-attf-src="/board/static/img/layout_{{layout}}.png" alt=""/>
+                            <i t-if="layout == board.layout" class="fa fa-check fa-lg text-success" aria-label='Layout' role="img" title="Layout"/>
+                        </DropdownItem>
+                    </t>
                 </t>
             </Dropdown>
         </div>

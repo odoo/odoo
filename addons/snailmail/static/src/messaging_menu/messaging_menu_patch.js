@@ -22,6 +22,6 @@ patch(MessagingMenu.prototype, {
             res_model: failure.resModel,
             domain: [["message_ids.snailmail_error", "=", true]],
         });
-        this.close();
+        this.dropdown.close();
     },
 });

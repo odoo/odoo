@@ -2023,12 +2023,12 @@ QUnit.module("ActionManager", (hooks) => {
         await doAction(webClient, 1);
         assert.containsNone(
             target,
-            ".o_debug_manager .dropdown-item:contains('Edit View: Kanban')"
+            ".o-dropdown--menu .o-dropdown-item:contains('Edit View: Kanban')"
         );
         await click(target.querySelector(".o_debug_manager .dropdown-toggle"));
         assert.containsOnce(
             target,
-            ".o_debug_manager .dropdown-item:contains('Edit View: Kanban')"
+            ".o-dropdown--menu .o-dropdown-item:contains('Edit View: Kanban')"
         );
     });
 

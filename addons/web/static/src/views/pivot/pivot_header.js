@@ -1,16 +1,17 @@
+import { Component } from "@odoo/owl";
+import { CheckboxItem } from "@web/core/dropdown/checkbox_item";
 import { Dropdown } from "@web/core/dropdown/dropdown";
+import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
+import { localization } from "@web/core/l10n/localization";
 import { sortBy } from "@web/core/utils/arrays";
 import { useBus } from "@web/core/utils/hooks";
 import { CustomGroupByItem } from "@web/search/custom_group_by_item/custom_group_by_item";
 import { PropertiesGroupByItem } from "@web/search/properties_group_by_item/properties_group_by_item";
-import { CheckboxItem } from "@web/core/dropdown/checkbox_item";
 import { getIntervalOptions } from "@web/search/utils/dates";
 import { FACET_ICONS, GROUPABLE_TYPES } from "@web/search/utils/misc";
 
-import { Component } from "@odoo/owl";
-
-export class PivotGroupByMenu extends Component {
-    static template = "web.PivotGroupByMenu";
+export class PivotHeader extends Component {
+    static template = "web.PivotHeader";
     static components = {
         CustomGroupByItem,
         Dropdown,
@@ -18,22 +19,23 @@ export class PivotGroupByMenu extends Component {
         PropertiesGroupByItem,
     };
     static defaultProps = {
+        isInHead: false,
+        isXAxis: false,
         showCaretDown: false,
     };
     static props = {
-        ...Dropdown.props,
-        showCaretDown: { type: Boolean, optional: true },
         cell: Object,
+        isInHead: { type: Boolean, optional: true },
+        isXAxis: { type: Boolean, optional: true },
         customGroupBys: Object,
         onAddCustomGroupBy: Function,
         onItemSelected: Function,
+        onClick: Function,
+        slots: { optional: true },
     };
 
     setup() {
         this.icon = FACET_ICONS.groupBy;
-        this.dropdownProps = Object.keys(this.props)
-            .filter((key) => key in Dropdown.props)
-            .reduce((obj, key) => ({ ...obj, [key]: this.props[key] }), {});
         const fields = [];
         for (const [fieldName, field] of Object.entries(this.env.searchModel.searchViewFields)) {
             if (this.validateField(fieldName, field)) {
@@ -41,6 +43,8 @@ export class PivotGroupByMenu extends Component {
             }
         }
         this.fields = sortBy(fields, "string");
+        this.l10n = localization;
+        this.dropdownState = useDropdownState();
 
         useBus(this.env.searchModel, "update", this.render);
     }
@@ -83,6 +87,18 @@ export class PivotGroupByMenu extends Component {
         }));
     }
 
+    get cell() {
+        return this.props.cell;
+    }
+
+    /**
+     * Retrieve the padding of a left header.
+     * @returns {Number} Padding
+     */
+    get padding() {
+        return 5 + this.cell.indent * 30;
+    }
+
     /**
      * @param {string} fieldName
      * @param {Object} field
@@ -112,7 +128,7 @@ export class PivotGroupByMenu extends Component {
             optionId,
             fieldName: item.fieldName,
             interval: optionId,
-            groupId: this.props.cell.groupId,
+            groupId: this.cell.groupId,
         });
     }
 
@@ -121,5 +137,15 @@ export class PivotGroupByMenu extends Component {
      */
     onAddCustomGroup(fieldName) {
         this.props.onAddCustomGroupBy(fieldName);
+    }
+
+    /**
+     * @param {Event} event
+     */
+    onClick(event) {
+        if (this.cell.isLeaf && !this.cell.isFolded) {
+            this.dropdownState.open();
+        }
+        this.props.onClick();
     }
 }

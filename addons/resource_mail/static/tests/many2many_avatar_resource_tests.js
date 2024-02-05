@@ -123,7 +123,7 @@ QUnit.module("M2MAvatarResourceWidgetTests", {
         await click(document.querySelector(".o_avatar_card_buttons button"));
         await contains(".o-mail-ChatWindow");
         assert.strictEqual(
-            document.querySelector(".o-mail-ChatWindow-header > .o-dropdown > button.o-mail-ChatWindow-command > .text-truncate").textContent,
+            document.querySelector(".o-mail-ChatWindow-header button.o-dropdown.o-mail-ChatWindow-command > .text-truncate").textContent,
             "Pierre"
         );
     });
@@ -179,7 +179,7 @@ QUnit.module("M2MAvatarResourceWidgetTests", {
         await click(document.querySelector(".o_avatar_card_buttons button"));
         await contains(".o-mail-ChatWindow");
         assert.strictEqual(
-            document.querySelector(".o-mail-ChatWindow-header > .o-dropdown > button.o-mail-ChatWindow-command > .text-truncate").textContent,
+            document.querySelector(".o-mail-ChatWindow-header button.o-dropdown.o-mail-ChatWindow-command > .text-truncate").textContent,
             "Pierre"
         );
     });

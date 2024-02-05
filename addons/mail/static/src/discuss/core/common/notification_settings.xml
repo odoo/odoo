@@ -11,9 +11,9 @@
                     </div>
                 </button>
             </t>
-            <t t-else="">
-                <Dropdown position="'right-start'" onStateChanged="state => {}" togglerClass="`d-flex btn w-100 align-items-center text-truncate p-0`" menuClass="'d-flex flex-column py-0 my-0'" class="'d-flex text-truncate'">
-                    <t t-set-slot="toggler">
+            <div t-else="" class="d-flex text-truncate">
+                <Dropdown position="'right-start'" menuClass="'d-flex flex-column py-0 my-0'">
+                    <button class="d-flex btn w-100 align-items-center text-truncate p-0">
                         <button class="btn w-100 d-flex p-1 opacity-75 opacity-100-hover" title="Mute Channel">
                             <div class="d-flex flex-grow-1 align-items-center px-2 py-1 rounded">
                                 <span class="">Mute Channel</span>
@@ -21,14 +21,14 @@
                                 <i class="fa fa-arrow-right"/>
                             </div>
                         </button>
-                    </t>
-                    <t t-set-slot="default">
+                    </button>
+                    <t t-set-slot="content">
                         <t t-foreach="props.thread.MUTES" t-as="item" t-key="item.id">
-                            <DropdownItem class="'o-mail-NotificationSettings-muteDuration btn rounded-0 d-flex align-items-center px-2 py-2 m-0 opacity-75 opacity-100-hover'" title="item.name" onSelected="()=>this.setMute(item.value)"><span class="mx-2" t-out="item.name"/></DropdownItem>
+                            <DropdownItem class="'o-mail-NotificationSettings-muteDuration btn rounded-0 d-flex align-items-center px-2 py-2 m-0 opacity-75 opacity-100-hover'" attrs="{ 'title': item.name }" onSelected="()=>this.setMute(item.value)"><span class="mx-2" t-out="item.name"/></DropdownItem>
                         </t>
                     </t>
                 </Dropdown>
-            </t>
+            </div>
             <hr class="solid mx-2 my-1"/>
             <t t-foreach="props.thread.SETTINGS" t-as="setting" t-key="setting.id">
                 <button class="btn w-100 d-flex px-1 py-0 opacity-75 opacity-100-hover" t-on-click="() => this.setSetting(setting)">

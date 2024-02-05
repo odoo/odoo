@@ -49,10 +49,7 @@ async function changeType(target, propertyType) {
     const propertyTypeIndex = TYPES_INDEX[propertyType];
     await click(target, ".o_field_property_definition_type input");
     await nextTick();
-    await click(
-        target,
-        `.o_field_property_definition_type .dropdown-item:nth-child(${propertyTypeIndex})`
-    );
+    await click(target, `.o-dropdown--menu .dropdown-item:nth-child(${propertyTypeIndex})`);
 }
 
 // -----------------------------------------
@@ -363,8 +360,8 @@ QUnit.module("Fields", (hooks) => {
         await toggleActionMenu(target);
         assert.containsOnce(
             target,
-            ".o_cp_action_menus span:contains(Add Properties)",
-            "Show Add Properties btn in cog menu",
+            ".o-dropdown--menu span:contains(Add Properties)",
+            "Show Add Properties btn in cog menu"
         );
 
         const editButton = field.querySelector(".o_field_property_open_popover");
@@ -409,8 +406,8 @@ QUnit.module("Fields", (hooks) => {
         await toggleActionMenu(target);
         assert.containsOnce(
             target,
-            ".o_cp_action_menus span:contains(Add Properties)",
-            "The add button must be in the cog menu",
+            ".o-dropdown--menu span:contains(Add Properties)",
+            "The add button must be in the cog menu"
         );
 
         const editButton = field.querySelectorAll(".o_field_property_open_popover");
@@ -434,6 +431,7 @@ QUnit.module("Fields", (hooks) => {
         // Change the property type to "Date & Time"
         await editInput(target, ".o_field_property_definition_header", "My Datetime");
         await changeType(target, "datetime");
+        console.log(type.value);
         assert.strictEqual(type.value, "Date & Time", "Should have changed the property type");
 
         // Choosing a date in the date picker should not close the definition popover
@@ -512,12 +510,12 @@ QUnit.module("Fields", (hooks) => {
         await toggleActionMenu(target);
         assert.containsOnce(
             target,
-            ".o_cp_action_menus span:contains(Add Properties)",
-            "The add button must be in the cog menu",
+            ".o-dropdown--menu span:contains(Add Properties)",
+            "The add button must be in the cog menu"
         );
 
         // Create a new property
-        await click(target, ".o_cp_action_menus span .fa-cogs");
+        await click(target, ".o-dropdown--menu span .fa-cogs");
 
         await nextTick();
 
@@ -1832,7 +1830,7 @@ QUnit.module("Fields", (hooks) => {
         // edit the default value and close the popover definition
         // because we just created the property, the default value should be propagated
         await toggleActionMenu(target);
-        await click(target, ".o_cp_action_menus span .fa-cogs");
+        await click(target, ".o-dropdown--menu span .fa-cogs");
         await nextTick();
         await editInput(target, ".o_field_property_definition_value input", "First Default Value");
         await closePopover(target);
@@ -1994,7 +1992,7 @@ QUnit.module("Fields", (hooks) => {
 
             // create the first property
             await toggleActionMenu(target);
-            await click(target, ".o_cp_action_menus span .fa-cogs");
+            await click(target, ".o-dropdown--menu span .fa-cogs");
             assert.ok(target.querySelector(".o_test_properties_not_empty"));
         }
     );
@@ -2063,7 +2061,7 @@ QUnit.module("Fields", (hooks) => {
 
         // create 3 new properties
         await toggleActionMenu(target);
-        await click(target, ".o_cp_action_menus span .fa-cogs");
+        await click(target, ".o-dropdown--menu span .fa-cogs");
         await click(target, ".o_field_property_add button");
         await click(target, ".o_field_property_add button");
         await nextTick();
@@ -2306,7 +2304,7 @@ QUnit.module("Fields", (hooks) => {
 
         // now, create a new property, it must unfold the last group
         await toggleActionMenu(target);
-        await click(target, ".o_cp_action_menus span .fa-cogs");
+        await click(target, ".o-dropdown--menu span .fa-cogs");
         assert.deepEqual(getGroups(), [
             [
                 ["SEPARATOR 2", "property_2"],
@@ -2503,7 +2501,7 @@ QUnit.module("Fields", (hooks) => {
         assert.containsOnce(
             target,
             ".o_field_property_add button",
-            "The add button must be in the view",
+            "The add button must be in the view"
         );
     });
 
@@ -2519,8 +2517,8 @@ QUnit.module("Fields", (hooks) => {
                 actionMenus: {},
             });
             await toggleActionMenu(target);
-            assert.containsNone(target, ".o_cp_action_menus span:contains(Add Properties)");
-        },
+            assert.containsNone(target, ".o-dropdown--menu span:contains(Add Properties)");
+        }
     );
 
     QUnit.test("properties: onChange return new properties", async function (assert) {

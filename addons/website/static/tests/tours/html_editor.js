@@ -47,7 +47,7 @@ wTourUtils.registerWebsitePreviewTour('html_editor_multiple_templates', {
         },
         {
             content: "open oe_structure_test_ui view",
-            trigger: ".o_resource_editor .o_select_menu_item:contains(oe_structure_test_ui)",
+            trigger: ".o-dropdown--menu .o-dropdown-item:contains(oe_structure_test_ui)",
         },
         {
             content: "add something in the oe_structure specific view",
@@ -92,7 +92,7 @@ wTourUtils.registerWebsitePreviewTour('test_html_editor_scss', {
         },
         {
             content: "select scss files",
-            trigger: '.o_resource_editor_type_switcher .dropdown-item:contains("SCSS")',
+            trigger: '.o-dropdown--menu .dropdown-item:contains("SCSS")',
         },
         {
             content: "select 'user_custom_rules'",
@@ -177,7 +177,7 @@ wTourUtils.registerWebsitePreviewTour('test_html_editor_scss_2', {
         },
         {
             content: "select scss files",
-            trigger: '.o_resource_editor_type_switcher .dropdown-item:contains("SCSS")',
+            trigger: '.o-dropdown--menu .dropdown-item:contains("SCSS")',
         },
         {
             content: "select 'user_custom_rules'",
