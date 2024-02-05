@@ -40,36 +40,16 @@ patch(ThreadService.prototype, {
             thread_id: thread.id,
             thread_model: thread.model,
         });
-        thread.canPostOnReadonly = result.canPostOnReadonly;
-        thread.hasReadAccess = result.hasReadAccess;
-        thread.hasWriteAccess = result.hasWriteAccess;
-        if ("activities" in result) {
-            const existingIds = new Set();
-            for (const activity of result.activities) {
-                existingIds.add(this.store.Activity.insert(activity, { html: true }).id);
-            }
-            for (const activity of thread.activities) {
-                if (!existingIds.has(activity.id)) {
-                    this.activityService.delete(activity);
-                }
-            }
-        }
-        thread.attachments = result.attachments;
+        this.store.Thread.insert(result, { html: true });
         if ("attachments" in result) {
             Object.assign(thread, {
                 areAttachmentsLoaded: true,
                 isLoadingAttachments: false,
             });
         }
-        thread.mainAttachment = result.mainAttachment;
         if (!thread.mainAttachment && thread.attachmentsInWebClientView.length > 0) {
             this.setMainAttachmentFromIndex(thread, 0);
         }
-        thread.selfFollower = result.selfFollower;
-        thread.followersCount = result.followersCount;
-        thread.followers = result.followers;
-        thread.recipientsCount = result.recipientsCount;
-        thread.recipients = result.recipients;
         if ("suggestedRecipients" in result) {
             this.insertSuggestedRecipients(thread, result.suggestedRecipients);
         }

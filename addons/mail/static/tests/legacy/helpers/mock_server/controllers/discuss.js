@@ -589,6 +589,8 @@ patch(MockServer.prototype, {
         const res = {
             hasWriteAccess: true, // mimic user with write access by default
             hasReadAccess: true,
+            id: thread_id,
+            model: thread_model,
         };
         const thread = this.pyEnv[thread_model].searchRead([["id", "=", thread_id]])[0];
         if (!thread) {

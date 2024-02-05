@@ -11,23 +11,19 @@ patch(Thread.prototype, {
     setup() {
         super.setup();
         this.recipients = Record.many("Follower");
-    },
-    get recipientsFullyLoaded() {
-        return this.recipientsCount === this.recipients.length;
-    },
-    /**
-     * @returns {import("models").Activity[]}
-     */
-    get activities() {
-        return Object.values(this._store.Activity.records)
-            .filter((activity) => {
-                return activity.res_model === this.model && activity.res_id === this.id;
-            })
-            .sort(function (a, b) {
+        this.activities = Record.many("Activity", {
+            sort: (a, b) => {
                 if (a.date_deadline === b.date_deadline) {
                     return a.id - b.id;
                 }
                 return a.date_deadline < b.date_deadline ? -1 : 1;
-            });
+            },
+            onDelete(r) {
+                this._store.env.services["mail.activity"].delete(r);
+            },
+        });
+    },
+    get recipientsFullyLoaded() {
+        return this.recipientsCount === this.recipients.length;
     },
 });
