@@ -138,17 +138,25 @@ export class SelectMenu extends Component {
         });
     }
 
+    async onBeforeOpen() {
+        if (this.state.searchValue.length) {
+            this.state.searchValue = "";
+            if (this.props.onInput) {
+                // This props can be used by the parent to fetch items dynamically depending
+                // the search value. It must be called with the empty search value.
+                await this.executeOnInput("");
+            }
+        }
+        this.filterOptions();
+    }
+
     onStateChanged({ open }) {
         this.isOpen = open;
-
-        if (!open) {
-            this.state.searchValue = "";
-            return;
-        }
-
-        const selectedElement = document.querySelector(".o_select_active");
-        if (selectedElement) {
-            scrollTo(selectedElement);
+        if (open) {
+            const selectedElement = document.querySelector(".o_select_active");
+            if (selectedElement) {
+                scrollTo(selectedElement);
+            }
         }
     }
 
