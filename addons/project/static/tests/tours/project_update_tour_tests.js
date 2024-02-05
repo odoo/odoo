@@ -85,10 +85,7 @@ registry.category("web_tour.tours").add('project_update_tour', {
     trigger: '.o_kanban_quick_create .o_kanban_add',
     extra_trigger: '.o_kanban_project_tasks'
 }, {
-    trigger: '.o_kanban_group:nth-child(2) .o_kanban_header',
-    run: function () {
-        document.querySelector('.o_kanban_group:nth-child(2) .o_kanban_config.dropdown .dropdown-toggle').dispatchEvent(new Event('click'));
-    }
+    trigger: '.o_kanban_group:nth-child(2) .o_kanban_header .o_kanban_config .dropdown-toggle',
 }, {
     trigger: ".dropdown-item.o_column_edit",
 }, {

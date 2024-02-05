@@ -52,11 +52,7 @@ QUnit.module("Mobile Fields", ({ beforeEach }) => {
         assert.containsN(fixture, ".o_statusbar_status .o_arrow_button:visible", 4);
         assert.containsOnce(fixture, ".o_statusbar_status .o_arrow_button.dropdown-toggle:visible");
         assert.containsOnce(fixture, ".o_statusbar_status .o_arrow_button.o_arrow_button_current");
-        assert.containsNone(
-            fixture,
-            ".o_statusbar_status .dropdown-menu",
-            "dropdown should be hidden"
-        );
+        assert.containsNone(fixture, ".o-dropdown--menu", "dropdown should be hidden");
         assert.strictEqual(
             fixture.querySelector(".o_statusbar_status button.dropdown-toggle").textContent.trim(),
             "..."
@@ -65,12 +61,8 @@ QUnit.module("Mobile Fields", ({ beforeEach }) => {
         // open the dropdown
         await click(fixture, ".o_statusbar_status .dropdown-toggle.o_last");
 
-        assert.containsOnce(
-            fixture,
-            ".o_statusbar_status .dropdown-menu",
-            "dropdown should be visible"
-        );
-        assert.containsOnce(fixture, ".o_statusbar_status .dropdown-menu .dropdown-item.disabled");
+        assert.containsOnce(fixture, ".o-dropdown--menu", "dropdown should be visible");
+        assert.containsOnce(fixture, ".o-dropdown--menu .dropdown-item.disabled");
     });
 
     QUnit.test("statusbar with no status on extra small screens", async (assert) => {
@@ -94,16 +86,17 @@ QUnit.module("Mobile Fields", ({ beforeEach }) => {
             "statusbar widget should have class o_field_empty in edit"
         );
         assert.containsOnce(fixture, ".o_statusbar_status button.dropdown-toggle:visible");
-        assert.strictEqual($(".o_statusbar_status button.dropdown-toggle:visible").text(), "...");
+        assert.strictEqual(
+            $(".o_statusbar_status button.dropdown-toggle:visible").text().trim(),
+            "..."
+        );
 
         await click($(".o_statusbar_status button.dropdown-toggle:visible")[0]);
 
-        assert.containsOnce(fixture, ".o_statusbar_status .dropdown-menu");
-        assert.containsOnce(fixture, ".o_statusbar_status .dropdown-menu .dropdown-item");
+        assert.containsOnce(fixture, ".o-dropdown--menu");
+        assert.containsOnce(fixture, ".o-dropdown--menu .dropdown-item");
         assert.strictEqual(
-            fixture
-                .querySelector(".o_statusbar_status .dropdown-menu .dropdown-item")
-                .textContent.trim(),
+            fixture.querySelector(".o-dropdown--menu .dropdown-item").textContent.trim(),
             "first record",
             "statusbar widget dropdown first item should display the first record display_name"
         );
@@ -127,9 +120,9 @@ QUnit.module("Mobile Fields", ({ beforeEach }) => {
         // Open dropdown
         await click($(".o_statusbar_status .dropdown-toggle:visible")[0]);
 
-        assert.containsOnce(fixture, ".o_statusbar_status .dropdown-item");
+        assert.containsOnce(fixture, ".o-dropdown--menu .dropdown-item");
 
-        await click(fixture, ".o_statusbar_status .dropdown-item");
+        await click(fixture, ".o-dropdown--menu .dropdown-item");
 
         assert.strictEqual($(".o_arrow_button_current").text(), "first record");
         assert.containsN(fixture, ".o_statusbar_status .o_arrow_button:visible", 3);
@@ -138,6 +131,6 @@ QUnit.module("Mobile Fields", ({ beforeEach }) => {
         // Open second dropdown
         await click($(".o_statusbar_status .dropdown-toggle:visible")[0]);
 
-        assert.containsN(fixture, ".o_statusbar_status .dropdown-item", 2);
+        assert.containsN(fixture, ".o-dropdown--menu .dropdown-item", 2);
     });
 });

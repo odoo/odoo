@@ -8,6 +8,7 @@ import { Component, useState } from "@odoo/owl";
 
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { Dropdown } from "@web/core/dropdown/dropdown";
+import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
@@ -31,8 +32,9 @@ export class MessagingMenu extends Component {
         this.state = useState({
             addingChat: false,
             addingChannel: false,
-            isOpen: false,
         });
+        this.dropdown = useDropdownState();
+
         onExternalClick("selector", () => {
             Object.assign(this.state, { addingChat: false, addingChannel: false });
         });
@@ -140,7 +142,7 @@ export class MessagingMenu extends Component {
 
     openDiscussion(thread) {
         this.threadService.open(thread, undefined, { openMessagingMenuOnClose: true });
-        this.close();
+        this.dropdown.close();
     }
 
     onClickNewMessage() {
@@ -148,7 +150,7 @@ export class MessagingMenu extends Component {
             this.state.addingChat = true;
         } else {
             this.chatWindowService.openNewMessage({ openMessagingMenuOnClose: true });
-            this.close();
+            this.dropdown.close();
         }
     }
 
@@ -160,7 +162,7 @@ export class MessagingMenu extends Component {
             this.openThread(message.thread);
         } else {
             this.openFailureView(failure);
-            this.close();
+            this.dropdown.close();
         }
     }
 
@@ -178,7 +180,7 @@ export class MessagingMenu extends Component {
         } else {
             this.threadService.open(thread, undefined, { openMessagingMenuOnClose: true });
         }
-        this.close();
+        this.dropdown.close();
     }
 
     openFailureView(failure) {
@@ -205,12 +207,6 @@ export class MessagingMenu extends Component {
         return this.env.services.orm.call(failure.resModel, "notify_cancel_by_type", [], {
             notification_type: failure.type,
         });
-    }
-
-    close() {
-        // hack: click on window to close dropdown, because we use a dropdown
-        // without dropdownitem...
-        document.body.click();
     }
 
     onClickNavTab(tabId) {

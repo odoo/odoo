@@ -1,32 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
+
     <t t-name="web.StatusBarField.Dropdown">
-        <Dropdown toggler="'parent'">
-            <t t-foreach="items" t-as="item" t-key="item.value">
-                <DropdownItem
-                    class="getDropdownItemClassNames(item)"
-                    onSelected="() => this.selectItem(item)"
-                >
-                    <span t-esc="item.label" />
-                </DropdownItem>
-            </t>
-        </Dropdown>
-        <!-- Must be below the dropdown menu to align with the caret (if any) -->
-        <t t-esc="label" />
+        <t t-foreach="items" t-as="item" t-key="item.value">
+            <DropdownItem
+                class="getDropdownItemClassNames(item)"
+                onSelected="() => this.selectItem(item)"
+            >
+                <span t-esc="item.label" />
+            </DropdownItem>
+        </t>
     </t>
 
     <t t-name="web.StatusBarField">
         <div class="o_statusbar_status" t-ref="root" role="radiogroup">
-            <button
-                t-ref="after"
-                type="button"
-                class="btn btn-secondary dropdown-toggle o_arrow_button o_first"
-            >
-                <t t-call="web.StatusBarField.Dropdown">
-                    <t t-set="label">...</t>
-                    <t t-set="items" t-value="items.after" />
+            <Dropdown position="'bottom-end'">
+                <button
+                    t-ref="after"
+                    type="button"
+                    class="btn btn-secondary dropdown-toggle o_arrow_button o_first"
+                >
+                    ...
+                </button>
+                <t t-set-slot="content">
+                    <t t-call="web.StatusBarField.Dropdown">
+                        <t t-set="items" t-value="items.after" />
+                    </t>
                 </t>
-            </button>
+            </Dropdown>
             <t t-foreach="items.inline" t-as="item" t-key="item.value">
                 <button
                     type="button"
@@ -46,22 +47,30 @@
                     t-on-click="() => this.selectItem(item)"
                 />
             </t>
-            <button
-                t-ref="before"
-                type="button"
-                class="btn btn-secondary dropdown-toggle o_arrow_button o_last"
-            >
-                <t t-call="web.StatusBarField.Dropdown">
-                    <t t-set="label">...</t>
-                    <t t-set="items" t-value="items.before" />
+            <Dropdown position="'bottom-start'">
+                <button
+                    t-ref="before"
+                    type="button"
+                    class="btn btn-secondary dropdown-toggle o_arrow_button o_last"
+                >
+                    ...
+                </button>
+                <t t-set-slot="content">
+                    <t t-call="web.StatusBarField.Dropdown">
+                        <t t-set="items" t-value="items.before" />
+                    </t>
                 </t>
-            </button>
-            <button t-ref="dropdown" type="button" class="btn btn-secondary dropdown-toggle">
-                <t t-call="web.StatusBarField.Dropdown">
-                    <t t-set="label" t-value="getCurrentLabel()" />
-                    <t t-set="items" t-value="getAllItems()" />
+            </Dropdown>
+            <Dropdown position="'bottom-end'">
+                <button t-ref="dropdown" type="button" class="btn btn-secondary dropdown-toggle">
+                    <t t-out="getCurrentLabel()" />
+                </button>
+                <t t-set-slot="content">
+                    <t t-call="web.StatusBarField.Dropdown">
+                        <t t-set="items" t-value="getAllItems()" />
+                    </t>
                 </t>
-            </button>
+            </Dropdown>
         </div>
     </t>
 </templates>

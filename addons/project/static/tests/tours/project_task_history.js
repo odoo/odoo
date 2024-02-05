@@ -60,8 +60,8 @@ registry.category("web_tour.tours").add("project_task_history_tour", {
         extra_trigger: ".o_form_view",
     }, {
         content: "Open History Dialog",
-        trigger: ".o_cp_action_menus .o_menu_item i.fa-history",
-        extra_trigger: ".o_cp_action_menus .dropdown-menu",
+        trigger: ".o_menu_item i.fa-history",
+        extra_trigger: ".dropdown-menu",
     }, {
         content: "Verify that 4 revisions are displayed (default empty description after the creation of the task + 3 edits)",
         trigger: ".html-history-dialog .revision-list .btn",

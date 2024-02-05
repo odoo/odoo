@@ -81,7 +81,7 @@ wTourUtils.registerWebsitePreviewTour('test_reset_page_view_complete_flow_part2'
         },
         {
             content: "select oe_structure view",
-            trigger: '.o_resource_editor_title .o_select_menu_item:contains(Test Page View)',
+            trigger: '.o_select_menu_menu .o_select_menu_item:contains(Test Page View)',
         },
         {
             content: "add a broken t-field in page DOM",

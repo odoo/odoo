@@ -3,9 +3,9 @@
 
 <t t-name="mail.FollowerList">
     <t t-if="props.thread.hasWriteAccess">
-        <a class="dropdown-item" href="#" role="menuitem" t-on-click.prevent="onClickAddFollowers">
+        <DropdownItem onSelected="() => this.onClickAddFollowers()" attrs="{ href: '#' }">
             Add Followers
-        </a>
+        </DropdownItem>
         <div t-if="props.thread.followers.length > 0" role="separator" class="dropdown-divider"/>
     </t>
     <t t-if="props.thread.selfFollower">

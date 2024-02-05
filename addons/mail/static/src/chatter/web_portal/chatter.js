@@ -26,6 +26,7 @@ import {
 
 import { browser } from "@web/core/browser/browser";
 import { Dropdown } from "@web/core/dropdown/dropdown";
+import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { user } from "@web/core/user";
@@ -113,6 +114,7 @@ export class Chatter extends Component {
         this.onScrollDebounced = useThrottleForAnimation(this.onScroll);
         this.recipientsPopover = usePopover(RecipientList);
         this.messageHighlight = useMessageHighlight();
+        this.followerListDropdown = useDropdownState();
         useChildSubEnv({
             inChatter: true,
             messageHighlight: this.messageHighlight,

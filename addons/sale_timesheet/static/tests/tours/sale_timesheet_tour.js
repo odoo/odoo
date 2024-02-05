@@ -205,7 +205,7 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
     trigger: '.o_kanban_record:contains("Project for Freeman") .o_dropdown_kanban .dropdown-toggle',
     content: 'Open the project dropdown',
 }, {
-    trigger: '.o_kanban_record:contains("Project for Freeman") .dropdown-menu a:contains("Settings")',
+    trigger: '.dropdown-menu a:contains("Settings")',
     content: 'Start editing the project',
     // timer: 300,
 }, {

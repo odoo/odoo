@@ -4,14 +4,18 @@
     <t t-name="website.ResourceEditor">
         <div class="o_resource_editor w-100 h-100">
             <div class="o_resource_editor_title">
-                <Dropdown class="'btn-group o_resource_editor_type_switcher'" togglerClass="'btn btn-info'">
-                    <t t-set-slot="toggler"><t t-esc="types[state.type]"/></t>
-                    <t t-foreach="Object.keys(types)" t-as="type" t-key="type">
-                        <DropdownItem onSelected="() => this.onFileTypeChange(type)">
-                            <t t-esc="types[type]"/>
-                        </DropdownItem>
-                    </t>
-                </Dropdown>
+                <div class="btn-group o_resource_editor_type_switcher">
+                    <Dropdown>
+                        <button class="btn btn-info"><t t-esc="types[state.type]"/></button>
+                        <t t-set-slot="content">
+                            <t t-foreach="Object.keys(types)" t-as="type" t-key="type">
+                                <DropdownItem onSelected="() => this.onFileTypeChange(type)">
+                                    <t t-esc="types[type]"/>
+                                </DropdownItem>
+                            </t>
+                        </t>
+                    </Dropdown>
+                </div>
                 <SelectMenu t-props="selectMenuProps" class="'o_resource_editor_resource_list'">
                     <t t-call="website.ResourceEditor.ResourceLabel">
                         <t t-set="resource" t-value="state.currentResource"/>
@@ -25,24 +29,32 @@
                     </t>
                 </SelectMenu>
                 <label t-if="state.type === 'xml' and debug" class="o_resource_editor_filter">
-                    <Dropdown class="'btn-group o_resource_editor_type_switcher'" togglerClass="'btn btn-primary'">
-                        <t t-set-slot="toggler">Filter</t>
-                        <t t-foreach="Object.keys(xmlFilters)" t-as="filter" t-key="filter">
-                            <CheckboxItem class="{ selected: state.xmlFilter === filter }" checked="state.xmlFilter === filter" onSelected="() => this.onFilterChange('xml', filter)">
-                                <t t-esc="xmlFilters[filter]"/>
-                            </CheckboxItem>
-                        </t>
-                    </Dropdown>
+                    <div class="btn-group o_resource_editor_type_switcher">
+                        <Dropdown>
+                            <button class="btn btn-primary">Filter</button>
+                            <t t-set-slot="content">
+                                <t t-foreach="Object.keys(xmlFilters)" t-as="filter" t-key="filter">
+                                    <CheckboxItem class="{ selected: state.xmlFilter === filter }" checked="state.xmlFilter === filter" onSelected="() => this.onFilterChange('xml', filter)">
+                                        <t t-esc="xmlFilters[filter]"/>
+                                    </CheckboxItem>
+                                </t>
+                            </t>
+                        </Dropdown>
+                    </div>
                 </label>
                 <label t-if="state.type === 'scss' and debug" class="o_resource_editor_filter">
-                    <Dropdown class="'btn-group o_resource_editor_type_switcher'" togglerClass="'btn btn-primary'">
-                        <t t-set-slot="toggler">Filter</t>
-                        <t t-foreach="Object.keys(scssFilters)" t-as="filter" t-key="filter">
-                            <CheckboxItem class="{ selected: state.scssFilter === filter }" checked="state.scssFilter === filter" onSelected="() => this.onFilterChange('scss', filter)">
-                                <t t-esc="scssFilters[filter]"/>
-                            </CheckboxItem>
-                        </t>
-                    </Dropdown>
+                    <div class="btn-group o_resource_editor_type_switcher">
+                        <Dropdown>
+                            <button class="btn btn-primary">Filter</button>
+                            <t t-set-slot="content">
+                                <t t-foreach="Object.keys(scssFilters)" t-as="filter" t-key="filter">
+                                    <CheckboxItem class="{ selected: state.scssFilter === filter }" checked="state.scssFilter === filter" onSelected="() => this.onFilterChange('scss', filter)">
+                                        <t t-esc="scssFilters[filter]"/>
+                                    </CheckboxItem>
+                                </t>
+                            </t>
+                        </Dropdown>
+                    </div>
                 </label>
                 <div>
                     <button class="btn btn-primary" t-on-click="onSave"><i t-if="state.saving" class="fa fa-spin fa-spinner mr8"/>Save</button>

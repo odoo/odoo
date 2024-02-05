@@ -8801,10 +8801,7 @@ QUnit.module("Fields", (hooks) => {
             await nextTick();
             // check name_search result
             assert.strictEqual(target.querySelector(".o_field_many2one input").value, "first");
-            assert.containsOnce(
-                target,
-                ".o_field_many2one .dropdown-menu li:not(.o_m2o_dropdown_option)"
-            );
+            assert.containsOnce(target, ".dropdown-menu li:not(.o_m2o_dropdown_option)");
         }
     );
 
@@ -11322,7 +11319,7 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(target.querySelector('th[data-name="date"]').offsetWidth, width);
 
         await click(target, ".o_optional_columns_dropdown_toggle");
-        await click(target, ".o_optional_columns_dropdown .dropdown-item input");
+        await click(target, ".dropdown-item input");
 
         assert.strictEqual(target.querySelector('th[data-name="date"]').offsetWidth, width);
     });
@@ -12353,12 +12350,12 @@ QUnit.module("Fields", (hooks) => {
 
             await click(target.querySelector(".o_optional_columns_dropdown .dropdown-toggle"));
             assert.containsN(
-                target.querySelector(".o_field_one2many"),
-                ".o_optional_columns_dropdown .dropdown-item",
+                target,
+                ".o-dropdown--menu .dropdown-item",
                 2,
                 "dropdown have 2 advanced field foo with checked and bar with unchecked"
             );
-            await click(target.querySelectorAll(".o_optional_columns_dropdown .dropdown-item")[1]);
+            await click(target.querySelectorAll(".o-dropdown--menu .dropdown-item")[1]);
             assert.containsN(
                 target.querySelector(".o_field_one2many"),
                 "th",
@@ -12366,7 +12363,7 @@ QUnit.module("Fields", (hooks) => {
                 "should be 3 th in the one2many after enabling bar column from advanced dropdown"
             );
 
-            await click(target.querySelector(".o_optional_columns_dropdown .dropdown-item"));
+            await click(target.querySelector(".o-dropdown--menu .dropdown-item"));
             assert.containsN(
                 target.querySelector(".o_field_one2many"),
                 "th",
@@ -12374,18 +12371,14 @@ QUnit.module("Fields", (hooks) => {
                 "should be 2 th in the one2many after disabling foo column from advanced dropdown"
             );
             assert.containsN(
-                target.querySelector(".o_field_one2many"),
-                ".o_optional_columns_dropdown .dropdown-item",
+                target,
+                ".o-dropdown--menu .dropdown-item",
                 2,
                 "dropdown is still open"
             );
 
             await addRow(target);
-            assert.containsNone(
-                target.querySelector(".o_field_one2many"),
-                ".o_optional_columns_dropdown .dropdown-menu",
-                "dropdown is closed"
-            );
+            assert.containsNone(target, ".o-dropdown--menu", "dropdown is closed");
             assert.containsOnce(
                 target.querySelector(".o_field_one2many"),
                 "tr.o_selected_row",
@@ -12393,7 +12386,7 @@ QUnit.module("Fields", (hooks) => {
             );
 
             await click(target.querySelector(".o_optional_columns_dropdown .dropdown-toggle"));
-            await click(target.querySelector(".o_optional_columns_dropdown .dropdown-item"));
+            await click(target.querySelector(".o-dropdown--menu .dropdown-item"));
             assert.containsOnce(
                 target.querySelector(".o_field_one2many"),
                 "tr.o_selected_row",

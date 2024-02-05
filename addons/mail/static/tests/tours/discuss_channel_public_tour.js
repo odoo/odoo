@@ -78,7 +78,7 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
         },
         {
             content: "Click on edit",
-            trigger: ".o-mail-Message [title='Edit']",
+            trigger: ".o-mail-Message-moreMenu [title='Edit'], .o-mail-Message [title='Edit']",
         },
         {
             content: "Edit message",
