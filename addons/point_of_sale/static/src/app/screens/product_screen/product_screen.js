@@ -347,7 +347,7 @@ export class ProductScreen extends Component {
         let list = [];
 
         if (this.searchWord !== "") {
-            const product = this.pos.selectedCategory.id
+            const product = this.pos.selectedCategory?.id
                 ? this.pos.models["product.product"].getBy(
                       "pos_categ_ids",
                       this.pos.selectedCategory.id
