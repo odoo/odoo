@@ -191,7 +191,7 @@ class AccountMove(models.Model):
                 raise RedirectWarning(msg, action.id, _('Go to Journals'))
 
     def _post(self, soft=True):
-        ar_invoices = self.filtered(lambda x: x.company_id.account_fiscal_country_id.code == "AR" and x.l10n_latam_use_documents)
+        ar_invoices = self.filtered(lambda x: x.company_id.account_fiscal_country_id.code == "AR")
         # We make validations here and not with a constraint because we want validation before sending electronic
         # data on l10n_ar_edi
         ar_invoices._check_argentinean_invoice_taxes()
