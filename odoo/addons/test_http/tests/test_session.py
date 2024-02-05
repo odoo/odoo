@@ -3,12 +3,16 @@
 import datetime
 import json
 import pytz
+from freezegun import freeze_time
 from urllib.parse import urlparse
 from unittest.mock import patch
+from tempfile import TemporaryDirectory
 
 import odoo
+from odoo.addons.base.tests.common import HttpCaseWithUserDemo
+from odoo.http import SESSION_LIFETIME
 from odoo.tests.common import get_db_name
-from odoo.tools import mute_logger
+from odoo.tools import config, lazy_property, mute_logger
 from .test_common import TestHttpBase
 
 
@@ -206,3 +210,75 @@ class TestHttpSession(TestHttpBase):
             self.assertEqual(check_session_attr(value), False)
         for value in not_recommended_values:
             self.assertEqual(check_session_attr(value), None)
+
+class TestSessionStore(HttpCaseWithUserDemo):
+    def setUp(self):
+        super().setUp()
+        self.tmpdir = TemporaryDirectory()
+        self.addCleanup(self.tmpdir.cleanup)
+
+        lazy_property.reset_all(odoo.http.root)
+        self.addCleanup(lazy_property.reset_all, odoo.http.root)
+        patcher = patch.dict(config.options, {'data_dir': self.tmpdir.name})
+        self.startPatcher(patcher)
+
+    @mute_logger('odoo.http')
+    def test01_session_nan(self):
+        self.env['ir.config_parameter'].set_param('sessions.max_inactivity_seconds', 'adminCantSetupThisValueLikeANormalPerson')
+
+        with self.assertLogs('odoo.http', level='WARNING') as logs:
+            self.assertEqual(odoo.http.get_session_max_inactivity(self.env), SESSION_LIFETIME)
+            self.assertEqual(logs.output[0], "WARNING:odoo.http:Invalid value for 'sessions.max_inactivity_seconds', using default value.")
+
+    @mute_logger('odoo.http')
+    def test02_session_lifetime_1week(self):
+        # default lifetime is 1 week
+        with freeze_time() as freeze:
+            session = self.authenticate(None, None)
+
+            freeze.tick(delta=datetime.timedelta(seconds=SESSION_LIFETIME - 1))
+            self.env['ir.http']._gc_sessions()
+            session_from_store = odoo.http.root.session_store.get(session.sid)
+            self.assertEqual(session.sid, session_from_store.sid, "the session should still be valid")
+
+            freeze.tick(delta=datetime.timedelta(seconds=2))
+            self.env['ir.http']._gc_sessions()
+            session_from_store = odoo.http.root.session_store.get(session.sid)
+            self.assertNotEqual(session.sid, session_from_store.sid, "the old session as been removed")
+
+    @mute_logger('odoo.http')
+    def test03_session_lifetime_1min(self):
+        # changing the lifetime to 1 minute
+        self.env['ir.config_parameter'].set_param('sessions.max_inactivity_seconds', 60)
+        with freeze_time() as freeze:
+            session = self.authenticate(None, None)
+
+            freeze.tick(delta=datetime.timedelta(seconds=59))
+            self.env['ir.http']._gc_sessions()
+            session_from_store = odoo.http.root.session_store.get(session.sid)
+            self.assertEqual(session.sid, session_from_store.sid, "the session should still be valid")
+
+            freeze.tick(delta=datetime.timedelta(seconds=2))
+            self.env['ir.http']._gc_sessions()
+            session_from_store = odoo.http.root.session_store.get(session.sid)
+            self.assertNotEqual(session.sid, session_from_store.sid, "the old session as been removed")
+
+    @mute_logger('odoo.http')
+    def test04_session_lifetime_nodb(self):
+        # in case of requesting session in a no db scenario
+        self.env['ir.config_parameter'].set_param('sessions.max_inactivity_seconds', SESSION_LIFETIME // 2)
+        with freeze_time() as freeze:
+            self.authenticate(None, None)
+            res = TestHttpBase.nodb_url_open(self, '/')
+            res.raise_for_status()
+            session = res.cookies.get('session_id')
+
+            freeze.tick(delta=datetime.timedelta(seconds=(SESSION_LIFETIME // 2) - 1))
+            self.env['ir.http']._gc_sessions()
+            session_from_store = odoo.http.root.session_store.get(session)
+            self.assertEqual(session, session_from_store.sid, "the session should still be valid")
+
+            freeze.tick(delta=datetime.timedelta(seconds=2))
+            self.env['ir.http']._gc_sessions()
+            session_from_store = odoo.http.root.session_store.get(session)
+            self.assertNotEqual(session, session_from_store.sid, "the old session as been removed")

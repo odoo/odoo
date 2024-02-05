@@ -270,9 +270,7 @@ class IrHttp(models.AbstractModel):
 
     @api.autovacuum
     def _gc_sessions(self):
-        ICP = self.env["ir.config_parameter"]
-        max_lifetime = int(ICP.get_param('sessions.max_inactivity_seconds', http.SESSION_LIFETIME))
-        http.root.session_store.vacuum(max_lifetime=max_lifetime)
+        http.root.session_store.vacuum(max_lifetime=http.get_session_max_inactivity(self.env))
 
     @api.model
     def get_translations_for_webclient(self, modules, lang):
