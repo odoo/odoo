@@ -75,51 +75,6 @@ export const PERIODS = {
 };
 
 /**
- * Convert a pivot model definition (used to instantiate Pivot Model) to
- * a raw definition (used to instantiate OdooPivotDataSource)
- *
- * @param {import("@spreadsheet").PivotRuntime} runtime
- *
- * @returns {import("@spreadsheet").PivotDefinition}
- */
-export function convertRuntimeDefinition(runtime) {
-    return {
-        domain: runtime.searchParams.domain,
-        context: runtime.searchParams.context,
-        sortedColumn: runtime.metaData.sortedColumn,
-        measures: runtime.metaData.activeMeasures,
-        model: runtime.metaData.resModel,
-        colGroupBys: runtime.metaData.colGroupBys,
-        rowGroupBys: runtime.metaData.rowGroupBys,
-        name: runtime.name,
-    };
-}
-
-/**
- * @param {import("@spreadsheet").PivotDefinition} definition
- *
- * @returns {import("@spreadsheet").PivotRuntime}
- */
-export function convertRawDefinition(definition) {
-    return {
-        searchParams: {
-            domain: definition.domain,
-            context: definition.context,
-            groupBy: [],
-            orderBy: [],
-        },
-        metaData: {
-            sortedColumn: definition.sortedColumn,
-            activeMeasures: definition.measures,
-            resModel: definition.model,
-            colGroupBys: definition.colGroupBys,
-            rowGroupBys: definition.rowGroupBys,
-        },
-        name: definition.name,
-    };
-}
-
-/**
  * @typedef {import("@spreadsheet").Field} Field
  */
 

@@ -3,7 +3,6 @@
 /**
  *
  * @typedef {import("@spreadsheet").PivotDefinition} PivotDefinition
- * @typedef {import("@spreadsheet").PivotRuntime} PivotRuntime
  * @typedef {import("@spreadsheet").AllCoreCommand} AllCoreCommand
  *
  * @typedef {Object} LocalPivot
@@ -16,7 +15,7 @@
  */
 
 import { helpers } from "@odoo/o-spreadsheet";
-import { makePivotFormula, convertRuntimeDefinition } from "../pivot_helpers";
+import { makePivotFormula } from "../pivot_helpers";
 import { getMaxObjectId } from "@spreadsheet/helpers/helpers";
 import { SpreadsheetPivotTable } from "../pivot_table";
 import { CommandResult } from "../../o_spreadsheet/cancelled_reason";
@@ -105,8 +104,7 @@ export class PivotCorePlugin extends OdooCorePlugin {
                 const position = { col, row };
                 const { cols, rows, measures, rowTitle } = cmd.table;
                 const table = new SpreadsheetPivotTable(cols, rows, measures, rowTitle);
-                const def = convertRuntimeDefinition(definition);
-                this._addPivot(id, def);
+                this._addPivot(id, definition);
                 this._insertPivot(sheetId, position, id, table);
                 this.history.update("nextId", parseInt(id, 10) + 1);
                 break;

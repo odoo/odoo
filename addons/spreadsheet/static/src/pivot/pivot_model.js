@@ -9,7 +9,7 @@ import { helpers, constants, EvaluationError } from "@odoo/o-spreadsheet";
 import { SpreadsheetPivotTable } from "@spreadsheet/pivot/pivot_table";
 import { pivotTimeAdapter } from "./pivot_time_adapters";
 import { OdooPivotDataSource } from "./pivot_runtime";
-import { convertRawDefinition, parseGroupField } from "./pivot_helpers";
+import { parseGroupField } from "./pivot_helpers";
 
 const { toString, toNumber, toBoolean } = helpers;
 const { DEFAULT_LOCALE } = constants;
@@ -31,6 +31,33 @@ function throwUnsupportedFieldError(field) {
     throw new EvaluationError(
         sprintf(_t("Field %s is not supported because of its type (%s)"), field.string, field.type)
     );
+}
+
+/**
+ * @param {import("@spreadsheet").PivotDefinition} definition
+ * @param {Record<string, Field | undefined>} [fields]
+ *
+ * @returns {import("@spreadsheet").WebPivotModelParams}
+ */
+function definitionForPivotModel(definition, fields) {
+    return {
+        searchParams: {
+            domain: definition.domain,
+            context: definition.context,
+            groupBy: [],
+            orderBy: [],
+        },
+        metaData: {
+            sortedColumn: definition.sortedColumn,
+            activeMeasures: definition.measures,
+            resModel: definition.model,
+            colGroupBys: definition.colGroupBys,
+            rowGroupBys: definition.rowGroupBys,
+            fieldAttrs: {},
+            fields,
+        },
+        name: definition.name,
+    };
 }
 
 /**
@@ -84,18 +111,17 @@ export function toNormalizedPivotValue(field, groupValue, aggregateOperator) {
  */
 export class SpreadsheetPivotModel extends PivotModel {
     /**
-     * @param {import("@spreadsheet").PivotRuntime} params
+     * @param {import("@spreadsheet").WebPivotModelParams} params
      * @param {Object} services
      * @param {import("../data_sources/metadata_repository").MetadataRepository} services.metadataRepository
      */
     setup(params, services) {
-        const p = convertRawDefinition(params.definition);
-        // fieldAttrs is required, but not needed in Spreadsheet, so we define it as empty
-        p.metaData.fieldAttrs = {};
-        p.searchParams = params.searchParams;
-        p.searchParams.groupBy = [];
-        p.searchParams.orderBy = [];
-        p.metaData.fields = params.metaData.fields;
+        /** This is necessary to ensure the compatibility with the PivotModel from web */
+        const p = definitionForPivotModel(params.definition, params.metaData.fields);
+        p.searchParams = {
+            ...p.searchParams,
+            ...params.searchParams,
+        };
         super.setup(p);
 
         this.metadataRepository = services.metadataRepository;
