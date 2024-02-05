@@ -2,7 +2,7 @@
 
 import { FloatField, floatField } from "@web/views/fields/float/float_field";
 import { formatDate } from "@web/core/l10n/dates";
-import { formatFloat } from "@web/core/utils/numbers";
+import { formatFloat } from "@web/views/fields/formatters";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 

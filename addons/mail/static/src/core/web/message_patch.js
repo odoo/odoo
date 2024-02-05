@@ -12,11 +12,11 @@ import {
 import { _t } from "@web/core/l10n/translation";
 import {
     formatChar,
+    formatFloat,
     formatInteger,
     formatMonetary,
     formatText,
 } from "@web/views/fields/formatters";
-import { formatFloat } from "@web/core/utils/numbers";
 import { useService } from "@web/core/utils/hooks";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { patch } from "@web/core/utils/patch";
