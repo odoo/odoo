@@ -50,7 +50,7 @@ class Session(http.Controller):
                 http.root.session_store.rotate(request.session, env)
                 request.future_response.set_cookie(
                     'session_id', request.session.sid,
-                    max_age=http.SESSION_LIFETIME, httponly=True
+                    max_age=http.get_session_max_inactivity(env), httponly=True
                 )
             return env['ir.http'].session_info()
 
