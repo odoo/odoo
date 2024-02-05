@@ -46,8 +46,12 @@ export class ActivityMailTemplate extends Component {
                 force_email: true,
             },
         };
+        const thread = this.store.Thread.get({
+            model: this.props.activity.res_model,
+            id: this.props.activity.res_id,
+        });
         this.env.services.action.doAction(action, {
-            onClose: () => this.props.onUpdate(),
+            onClose: () => this.props.onUpdate(thread),
         });
     }
 

@@ -22,6 +22,10 @@ const views = {
                 <field name="message_ids"/>
             </div>
         </form>`,
+        "mail.compose.message,false,form": `
+        <form>
+            <field name="partner_ids"/>
+        </form>`,
 };
 
 QUnit.module("activity");
@@ -301,6 +305,7 @@ QUnit.test("activity with mail template: preview mail", async (assert) => {
             assert.strictEqual(action.context.default_template_id, mailTemplateId);
             assert.strictEqual(action.type, "ir.actions.act_window");
             assert.strictEqual(action.res_model, "mail.compose.message");
+            return super.doAction(...arguments);
         },
     });
     await contains(".o-mail-Activity");
@@ -308,6 +313,8 @@ QUnit.test("activity with mail template: preview mail", async (assert) => {
 
     await click(".o-mail-ActivityMailTemplate-preview");
     assert.verifySteps(["do_action"]);
+    await click(".btn-close");
+    await contains(".o-mail-Activity"); // Just to make sure that closing the modal doesn't cause traceback
 });
 
 QUnit.test("activity with mail template: send mail", async (assert) => {
