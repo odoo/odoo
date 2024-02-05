@@ -4462,7 +4462,7 @@ class MailThread(models.AbstractModel):
         return self.env['ir.attachment'].search([('res_id', '=', self.id), ('res_model', '=', self._name)], order='id desc')
 
     def _get_mail_thread_data(self, request_list):
-        res = {'hasWriteAccess': False, 'hasReadAccess': True}
+        res = {'hasWriteAccess': False, 'hasReadAccess': True, "id": self.id, "model": self._name}
         if not self:
             res['hasReadAccess'] = False
             return res
