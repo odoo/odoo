@@ -53,9 +53,9 @@ export class ActivityRenderer extends Component {
      * @returns filtered resIds first then the rest.
      */
     get activityResIds() {
-        return [...this.props.activityResIds].sort((a) =>
-            this.activeFilter.resIds.includes(a) ? -1 : 0
-        );
+        const recordResIds = new Set(this.props.records.map(record => record.resId));
+        const updatedActivityResIds = [...this.props.activityResIds].filter((resId) => recordResIds.has(resId));
+        return updatedActivityResIds.sort((a) => this.activeFilter.resIds.includes(a) ? -1 : 0);
     }
 
     getGroupInfo(group) {
