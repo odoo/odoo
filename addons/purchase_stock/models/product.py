@@ -117,5 +117,6 @@ class SupplierInfo(models.Model):
             return
         orderpoint.route_id = self.env['stock.rule'].search([('action', '=', 'buy')], limit=1).route_id.id
         orderpoint.supplier_id = self
-        if orderpoint.qty_to_order < self.min_qty:
-            orderpoint.qty_to_order = self.min_qty
+        supplier_min_qty = self.product_uom._compute_quantity(self.min_qty, orderpoint.product_id.uom_id)
+        if orderpoint.qty_to_order < supplier_min_qty:
+            orderpoint.qty_to_order = supplier_min_qty
