@@ -5,8 +5,10 @@
         <t t-call="web.basic_layout">
         <t t-foreach="docs" t-as="o">
             <div class="o_employee_cv page">
+            <div class="row">
                 <t t-call="hr_skills.report_employee_cv_company"/>
                 <t t-call="hr_skills.report_employee_cv_sidepanel"/>
+            </div>
                 <t t-call="hr_skills.report_employee_cv_main_panel"/>
                 <p class="o_new_page"/>
             </div>
@@ -15,7 +17,7 @@
     </template>
 
     <template id="report_employee_cv_company">
-        <div class="o_company row">
+        <div class="o_company row col">
             <div class="col-12 mb-4">
                 <img t-if="o.company_id.logo" t-att-src="image_data_uri(o.company_id.logo)" style="max-height: 45px;" alt="Logo"/>
                 <div class="oe_structure"></div>
@@ -30,6 +32,7 @@
     </template>
 
     <template id="report_employee_cv_sidepanel">
+    <div class="col">
         <div class="oe_structure"></div>
         <div class="o_sidebar" t-attf-style="
             background: #{color_primary};
@@ -58,6 +61,7 @@
             </div>
         </div>
         <div class="oe_structure"></div>
+    </div>
     </template>
     
     <template id="report_employee_cv_main_panel">
@@ -66,8 +70,9 @@
             <div class="o_main_panel">
                 <div class="o_main_panel_section">
                     <h2 class="o_main_panel_title mt-4" t-attf-style="color: #{color_secondary};">
-                        <span class="o_main_panel_icon" t-attf-style="background: #{color_secondary};">
-                            <i class="fa fa-solid fa-briefcase"/>
+                        <span class="fa-stack">
+                            <i class="fa fa-solid fa-circle fa-stack-2x" t-attf-style="color: #{color_secondary};"/>
+                            <i class="fa fa-solid fa-briefcase fa-stack-1x fa-inverse"/>
                         </span>
                         <span t-out="line_type">Experience</span>
                     </h2>
@@ -96,9 +101,10 @@
         <div class="o_main_panel mt-4" t-if="has_languages">
             <div class="o_main_panel_section" t-if="skill_type_language">
                 <h2 class="o_main_panel_title" t-attf-style="color: #{color_secondary};">
-                    <span class="o_main_panel_icon" t-attf-style="background: #{color_secondary};">
-                        <i class="fa fa-solid fa-language"/>
-                    </span>
+                        <span class="fa-stack">
+                            <i class="fa fa-solid fa-circle fa-stack-2x" t-attf-style="color: #{color_secondary};"/>
+                            <i class="fa fa-solid fa-language fa-stack-1x fa-inverse"/>
+                        </span>
                     Languages
                 </h2>
                 <t t-foreach="o.employee_skill_ids" t-as="skill_line">
@@ -118,9 +124,10 @@
         <div class="o_main_panel mt-4" t-if="has_skills">
             <div class="o_main_panel_section">
                 <h2 class="o_main_panel_title" t-attf-style="color: #{color_secondary};">
-                    <span class="o_main_panel_icon" t-attf-style="background: #{color_secondary};">
-                        <i class="fa fa-solid fa-rocket"/>
-                    </span>
+                        <span class="fa-stack">
+                            <i class="fa fa-solid fa-circle fa-stack-2x" t-attf-style="color: #{color_secondary};"/>
+                            <i class="fa fa-solid fa-rocket fa-stack-1x fa-inverse"/>
+                        </span>
                     Skills
                 </h2>
                 <t t-set="valid_skills" t-value="[skill for skill in o.employee_skill_ids if skill.skill_type_id != skill_type_language]"/>

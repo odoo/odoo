@@ -48,7 +48,7 @@
                             <tbody>
                                 <tr t-foreach="o.expense_line_ids" t-as="line">
                                     <td class="text-start"><span t-field="line.date"></span></td>
-                                    <td t-att-class="'text-start' + (' o_overflow' if len(line.name) > 30 else '')">
+                                    <td t-att-class="'text-start' + ('text-wrap text-break' if len(line.name) > 30 else '')">
                                         <span t-field="line.name">Flight Ticket</span><br/>
                                         <span>
                                             <span t-foreach="line.analytic_distribution" t-as="distribution">
