@@ -28,8 +28,8 @@ class PosDeliverooController(http.Controller):
         pos_config_sudo = pos_delivery_service_sudo.config_ids[0]
         order = data['body']['order']
         if not pos_config_sudo.has_active_session:
-            request.env['pos.delivery.service'].sudo().search([])[0].sudo()._reject_order(data['body']['order']['id'], "closing_early")
-        if not request.env['pos.order'].sudo().search([('delivery_id', '=', data['body']['order']['id'])]):
+            request.env['pos.delivery.service'].sudo().search([])[0].sudo()._reject_order(order['id'], "closing_early")
+        if not request.env['pos.order'].sudo().search([('delivery_id', '=', order['id'])]):
             order_prepare_for = order['prepare_for'].replace('T', ' ')[:-1]
             notes = ''
             amount_paid = formatPrice(order['partner_order_total']) - formatPrice(order['cash_due'])
@@ -42,11 +42,13 @@ class PosDeliverooController(http.Controller):
                 notes += order['cutlery_notes']
             delivery_order = request.env["pos.order"].sudo().create({
                 # TODO: add all the missing fields
-                # 'user_id':      ui_order['user_id'] or False,
                 'delivery_id': order['id'],
                 'delivery_status': 'awaiting',
                 'delivery_display': order['display_id'],
                 'delivery_service_id': pos_delivery_service_sudo.id,
+                'delivery_asap': order['asap'],
+                'delivery_confirm_at': order['confirm_at'].replace('T', ' ')[:-1],
+                'delivery_start_preparing_at': order['start_preparing_at'].replace('T', ' ')[:-1],
                 'delivery_prepare_for': order_prepare_for,
                 'company_id': pos_config_sudo.current_session_id.company_id.id,
                 'session_id':   pos_config_sudo.current_session_id.id,
@@ -99,8 +101,10 @@ class PosDeliverooController(http.Controller):
         if data['event'] == 'order.status_update':
             # TODO: in the 'order.status_update' event, deliveroo tells us if they have accepted the order or not
             # we should only start preparing the order if it has been accepted by deliveroo
-            if data['body']['order']['status'] == 'accepted' and not data['body']['order']['asap']:
-                request.env['pos.delivery.service'].sudo().search([])[0].sudo()._confirm_accepted_order(data['body']['order']['id'])
+            if data['body']['order']['status'] == 'accepted':
+                pass
+                #should move the order to preparing state.
+                # request.env['pos.delivery.service'].sudo().search([])[0].sudo()._confirm_accepted_order(data['body']['order']['id']) -> this should be called when the order goes to the cooking stage.
             elif data['body']['order']['status'] == 'cancelled':
                 #should cancel the order here
                 pass

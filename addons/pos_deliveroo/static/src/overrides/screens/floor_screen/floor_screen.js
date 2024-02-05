@@ -24,12 +24,12 @@ patch(FloorScreen.prototype, {
             } finally {
                 this.pos.setLoadingOrderState(false);
                 this.pos.showScreen("TicketScreen", {
-                    ui: { filter: "SYNCED", searchDetails },
+                    ui: { filter: "DELIVERY", searchDetails },
                 });
             }
         } else {
             this.pos.showScreen("TicketScreen", {
-                ui: { filter: "SYNCED", searchDetails },
+                ui: { filter: "DELIVERY", searchDetails },
             });
         }
     },

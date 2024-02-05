@@ -24,6 +24,8 @@ patch(PosStore.prototype, {
         const res = super.getDeliveryData(...arguments);
         res["display"] = order.delivery_display;
         res["prepare_for"] = new Date(order.delivery_prepare_for).toLocaleString();
+        res["start_preparing_at"] = new Date(order.delivery_start_preparing_at).toLocaleString();
+        res["confirm_at"] = new Date(order.delivery_confirm_at).toLocaleString();
         return res;
     },
     ws_syncDeliveryCount(data) {

@@ -209,6 +209,11 @@
                                             <span class="fs-1 d-block">Mark As Prepared</span>
                                         </button>
                                     </t>
+                                    <t t-elif="_selectedSyncedOrder.delivery_status == 'ready'">
+                                        <button class="button validation load-order-button w-100 btn btn-lg btn-primary rounded-0 fw-bolder py-3" t-on-click="() => this._markAsDeliveredDeliveryOrder(_selectedSyncedOrder)">
+                                            <span class="fs-1 d-block">Mark As Delivered</span>
+                                        </button>
+                                    </t>
                                     <t t-elif="_selectedSyncedOrder.delivery_status == 'complete'">
                                         <button class="button validation load-order-button w-100 btn btn-lg rounded-0 fw-bolder py-3" disabled="True">
                                             <span class="fs-1 d-block">Completed</span>

@@ -92,6 +92,9 @@ export class TicketScreen extends Component {
         if (this._state.ui.filter == "SYNCED") {
             await this._fetchSyncedOrders();
         }
+        if (this._state.ui.filter == "DELIVERY") {
+            await this._fetchDeliveryOrders();
+        }
     }
     getNumpadButtons() {
         return [
@@ -118,6 +121,10 @@ export class TicketScreen extends Component {
         if (this._state.ui.filter == "SYNCED") {
             this._state.syncedOrders.currentPage = 1;
             await this._fetchSyncedOrders();
+        }
+        if (this._state.ui.filter == "DELIVERY") {
+            this._state.deliveryOrders.currentPage = 1;
+            await this._fetchDeliveryOrders();
         }
     }
     onClickOrder(clickedOrder) {
@@ -644,6 +651,7 @@ export class TicketScreen extends Component {
     _getFilterOptions() {
         const orderStates = this._getOrderStates();
         orderStates.set("SYNCED", { text: _t("Paid") });
+        orderStates.set("DELIVERY", { text: _t("Delivery") });
         return orderStates;
     }
     /**
@@ -737,6 +745,21 @@ export class TicketScreen extends Component {
             return [];
         }
     }
+    _computeDeliveryOrdersDomain() {
+        const { fieldName, searchTerm } = this._state.ui.searchDetails;
+        if (!searchTerm) {
+            return [["delivery_id", "!=", ""]];
+        }
+        const modelField = this._getSearchFields()[fieldName].modelField;
+        if (modelField) {
+            return [
+                [modelField, "ilike", `%${searchTerm}%`],
+                ["delivery_id", "!=", ""],
+            ];
+        } else {
+            return [];
+        }
+    }
     /**
      * Fetches the done orders from the backend that needs to be shown.
      * If the order is already in cache, the full information about that
@@ -744,6 +767,13 @@ export class TicketScreen extends Component {
      */
     async _fetchSyncedOrders() {
         const domain = this._computeSyncedOrdersDomain();
+        await this._fetchPaidOrders(domain);
+    }
+    async _fetchDeliveryOrders() {
+        const domain = this._computeDeliveryOrdersDomain();
+        await this._fetchPaidOrders(domain);
+    }
+    async _fetchPaidOrders(domain) {
         const limit = this._state.syncedOrders.nPerPage;
         const offset =
             (this._state.syncedOrders.currentPage - 1) * this._state.syncedOrders.nPerPage;
@@ -763,7 +793,9 @@ export class TicketScreen extends Component {
         const idsNotUpToDate = ordersInfo.filter((orderInfo) => {
             return deserializeDateTime(orderInfo[1]) > cacheDate;
         });
-        const idsToLoad = idsNotInCache.concat(idsNotUpToDate).map((info) => info[0]);
+        const idsToLoad = [...new Set([...idsNotInCache, ...idsNotUpToDate])].map(
+            (info) => info[0]
+        );
         if (idsToLoad.length > 0) {
             const fetchedOrders = await this.pos.data.call("pos.order", "export_for_ui", [
                 idsToLoad,
@@ -820,6 +852,10 @@ export class TicketScreen extends Component {
     }
 
     _markAsPreparedDeliveryOrder(order) {
+        order.delivery_status = "ready";
+    }
+
+    _markAsDeliveredDeliveryOrder(order) {
         order.delivery_status = "complete";
     }
     //#endregion
