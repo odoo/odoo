@@ -52,7 +52,7 @@ declare module "@spreadsheet" {
     interface SPTableRow {
         fields: string[];
         values: string[];
-        intend: number;
+        indent: number;
     }
 
     interface SPTableData {
