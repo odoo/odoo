@@ -44,12 +44,8 @@
     </t>
     <t t-name="pos_restaurant.ReceiptHeader" t-inherit="point_of_sale.ReceiptHeader" t-inherit-mode="extension">
         <xpath expr="//div[hasclass('cashier')]" position="after">
-            <t t-if="props.data.table">
-                at table <t t-esc="props.data.table" />
-            </t>
-            <t t-if="props.data.table and props.data.customer_count">
-                <div>Guests: <t t-esc="props.data.customer_count" /></div>
-            </t>
+            <t t-if="props.data.table">Table <t t-esc="props.data.table" /></t>
+            <t t-if="props.data.table and props.data.customer_count">, Guests: <t t-esc="props.data.customer_count" /></t>
         </xpath>
     </t>
 
