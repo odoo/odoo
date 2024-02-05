@@ -50,7 +50,10 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
         vals_list = super()._get_partner_party_tax_scheme_vals_list(partner, role)
 
         if not partner.vat:
-            return []
+            return [{
+                'company_id': partner.peppol_endpoint,
+                'tax_scheme_vals': {'id': partner.peppol_eas},
+            }]
 
         for vals in vals_list:
             vals.pop('registration_name', None)
@@ -89,6 +92,8 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
                 # DK-R-014: For Danish Suppliers it is mandatory to specify schemeID as "0184" (DK CVR-number) when
                 # PartyLegalEntity/CompanyID is used for AccountingSupplierParty
                 vals['company_id_attrs'] = {'schemeID': '0184'}
+            if not vals['company_id']:
+                vals['company_id'] = partner.peppol_endpoint
 
         return vals_list
 
