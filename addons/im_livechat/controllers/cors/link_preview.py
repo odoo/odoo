@@ -7,11 +7,11 @@ from odoo.addons.im_livechat.tools.misc import force_guest_env
 
 class LivechatLinkPreviewController(LinkPreviewController):
     @route("/im_livechat/cors/link_preview", methods=["POST"], type="json", auth="public", cors="*")
-    def livechat_link_preview(self, guest_token, message_id, clear=None):
+    def livechat_link_preview(self, guest_token, message_id):
         force_guest_env(guest_token)
-        self.mail_link_preview(message_id, clear)
+        self.mail_link_preview(message_id)
 
-    @route("/im_livechat/cors/link_preview/delete", methods=["POST"], type="json", auth="public", cors="*")
-    def livechat_link_preview_delete(self, guest_token, link_preview_ids):
+    @route("/im_livechat/cors/link_preview/hide", methods=["POST"], type="json", auth="public", cors="*")
+    def livechat_link_preview_hide(self, guest_token, link_preview_ids):
         force_guest_env(guest_token)
-        self.mail_link_preview_delete(link_preview_ids)
+        self.mail_link_preview_hide(link_preview_ids)

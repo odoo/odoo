@@ -930,7 +930,7 @@ class Message(models.Model):
                 'notifications': message_sudo.notification_ids._filtered_for_web_client()._notification_format(),
                 'attachments': sorted(message_sudo.attachment_ids._attachment_format(), key=lambda a: a["id"]),
                 'trackingValues': displayed_tracking_ids._tracking_value_format(),
-                'linkPreviews': message_sudo.link_preview_ids._link_preview_format(),
+                'linkPreviews': message_sudo.link_preview_ids.filtered(lambda preview: not preview.is_hidden)._link_preview_format(),
                 'reactions': reaction_groups,
                 'pinned_at': message_sudo.pinned_at,
                 'record_name': record_name,

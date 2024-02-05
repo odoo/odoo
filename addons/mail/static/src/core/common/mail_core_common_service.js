@@ -30,13 +30,6 @@ export class MailCoreCommon {
                     this.attachmentService.remove(attachment);
                 }
             });
-            this.busService.subscribe("mail.link.preview/delete", (payload) => {
-                const { id, message_id } = payload;
-                const message = this.store.Message.get(message_id);
-                if (message) {
-                    message.linkPreviews.delete({ id });
-                }
-            });
             this.busService.subscribe("mail.message/delete", (payload) => {
                 for (const messageId of payload.message_ids) {
                     const message = this.store.Message.get(messageId);
