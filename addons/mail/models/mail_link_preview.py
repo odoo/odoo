@@ -8,6 +8,7 @@ from urllib.parse import urlparse
 import requests
 
 from odoo import api, models, fields, tools
+from odoo.tools.misc import OrderedSet
 from odoo.addons.mail.tools import link_preview
 
 
@@ -16,6 +17,7 @@ class LinkPreview(models.Model):
     _description = "Store link preview data"
 
     message_id = fields.Many2one('mail.message', string='Message', index=True, ondelete='cascade', required=True)
+    is_hidden = fields.Boolean()
     source_url = fields.Char('URL', required=True)
     og_type = fields.Char('Type')
     og_title = fields.Char('Title')
@@ -30,7 +32,7 @@ class LinkPreview(models.Model):
     def _create_from_message_and_notify(self, message):
         if tools.is_html_empty(message.body):
             return self
-        urls = set(html.fromstring(message.body).xpath('//a[not(@data-oe-model)]/@href'))
+        urls = OrderedSet(html.fromstring(message.body).xpath('//a[not(@data-oe-model)]/@href'))
         link_previews = self.env['mail.link.preview']
         requests_session = requests.Session()
         # Some websites are blocking non browser user agent.
@@ -38,17 +40,48 @@ class LinkPreview(models.Model):
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; rv:91.0) Gecko/20100101 Firefox/91.0'
         })
         link_preview_values = []
+        link_previews_by_url = {
+            preview.source_url: preview for preview in message.sudo().link_preview_ids
+        }
         for url in list(urls):
+            if url in link_previews_by_url:
+                preview = link_previews_by_url.pop(url)
+                if not preview.is_hidden:
+                    link_previews += preview
+                continue
             if preview := link_preview.get_link_preview_from_url(url, requests_session):
                 preview['message_id'] = message.id
                 link_preview_values.append(preview)
-            if len(link_preview_values) > 5:
+            if len(link_preview_values) + len(link_previews) > 5:
                 break
+        for unused_preview in link_previews_by_url.values():
+            unused_preview._unlink_and_notify()
         if link_preview_values:
-            link_previews = self.env['mail.link.preview'].create(link_preview_values)
+            link_previews += link_previews.create(link_preview_values)
+        if link_previews:
             self.env['bus.bus']._sendone(message._bus_notification_target(), 'mail.record/insert', {
-                'LinkPreview': link_previews._link_preview_format()
+                'Message': {
+                    'linkPreviews': link_previews.sorted(key=lambda preview: list(urls).index(preview.source_url))._link_preview_format(),
+                    'id': message.id,
+                },
             })
+
+    def _hide_and_notify(self):
+        if not self:
+            return True
+        notifications = [
+            (
+                link_preview.message_id._bus_notification_target(),
+                'mail.record/insert', {
+                    'Message': {
+                        'linkPreviews': [('DELETE', {'id': link_preview.id})],
+                        'id': link_preview.message_id.id,
+                    }
+                }
+            ) for link_preview in self
+        ]
+        self.is_hidden = True
+        self.env['bus.bus']._sendmany(notifications)
 
     def _unlink_and_notify(self):
         if not self:
@@ -56,7 +89,12 @@ class LinkPreview(models.Model):
         notifications = [
             (
                 link_preview.message_id._bus_notification_target(),
-                'mail.link.preview/delete', {'id': link_preview.id, 'message_id': link_preview.message_id.id}
+                'mail.record/insert', {
+                    'Message': {
+                        'linkPreviews': [('DELETE', {'id': link_preview.id})],
+                        'id': link_preview.message_id.id,
+                    }
+                }
             ) for link_preview in self
         ]
         self.env['bus.bus']._sendmany(notifications)

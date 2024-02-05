@@ -129,18 +129,21 @@ class TestLinkPreview(MailCommon):
                 message_items=[{
                     'type': 'mail.record/insert',
                     'payload': {
-                        'LinkPreview': [{
-                            'id': message.link_preview_ids.id,
-                            'message': {'id': message.id},
-                            'image_mimetype': False,
-                            'og_description': self.og_description,
-                            'og_image': self.og_image,
-                            'og_mimetype': False,
-                            'og_title': self.og_title,
-                            'og_type': False,
-                            'og_site_name': False,
-                            'source_url': self.source_url,
-                        }]
-                    }
+                        "Message": {
+                            'linkPreviews': [{
+                                'id': message.link_preview_ids.id,
+                                'message': {'id': message.id},
+                                'image_mimetype': False,
+                                'og_description': self.og_description,
+                                'og_image': self.og_image,
+                                'og_mimetype': False,
+                                'og_title': self.og_title,
+                                'og_type': False,
+                                'og_site_name': False,
+                                'source_url': self.source_url,
+                            }],
+                            "id":message.id,
+                        },
+                    },
                 }]
             )

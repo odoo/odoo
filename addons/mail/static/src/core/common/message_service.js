@@ -46,7 +46,7 @@ export class MessageService {
         });
         this.store.Message.insert(messageData, { html: true });
         if (!message.isEmpty && this.store.hasLinkPreviewFeature) {
-            rpc("/mail/link_preview", { message_id: message.id, clear: true }, { silent: true });
+            rpc("/mail/link_preview", { message_id: message.id }, { silent: true });
         }
     }
 

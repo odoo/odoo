@@ -24,7 +24,7 @@ livechatRoutingMap
     .add("/mail/action", "/im_livechat/cors/action")
     .add("/mail/data", "/im_livechat/cors/data")
     .add("/mail/link_preview", "/im_livechat/cors/link_preview")
-    .add("/mail/link_preview/delete", "/im_livechat/cors/link_preview/delete")
+    .add("/mail/link_preview/hide", "/im_livechat/cors/link_preview/hide")
     .add("/mail/message/post", "/im_livechat/cors/message/post")
     .add("/mail/message/reaction", "/im_livechat/cors/message/reaction")
     .add("/mail/message/update_content", "/im_livechat/cors/message/update_content")

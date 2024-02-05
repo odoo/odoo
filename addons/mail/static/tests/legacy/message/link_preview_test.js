@@ -266,7 +266,7 @@ QUnit.test("No crash on receiving link preview of non-known message", async (ass
     openDiscuss();
     rpc("/mail/link_preview", { message_id: messageId });
     assert.ok(true);
-    rpc("/mail/link_preview/delete", { link_preview_ids: [linkPreviewId] });
+    rpc("/mail/link_preview/hide", { link_preview_ids: [linkPreviewId] });
     assert.ok(true);
 });
 

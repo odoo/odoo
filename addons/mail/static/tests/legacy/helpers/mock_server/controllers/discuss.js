@@ -78,19 +78,21 @@ patch(MockServer.prototype, {
             return this._mockRouteMailMessageInbox(search_term, after, before, around, limit);
         }
         if (route === "/mail/link_preview") {
-            return this._mockRouteMailLinkPreview(args.message_id, args.clear);
+            return this._mockRouteMailLinkPreview(args.message_id);
         }
-        if (route === "/mail/link_preview/delete") {
+        if (route === "/mail/link_preview/hide") {
             const linkPreviews = this.pyEnv["mail.link.preview"].searchRead([
                 ["id", "in", args.link_preview_ids],
             ]);
             for (const linkPreview of linkPreviews) {
                 this.pyEnv["bus.bus"]._sendone(
                     this._mockMailMessage__busNotificationTarget(linkPreview.message_id[0]),
-                    "mail.link.preview/delete",
+                    "mail.record/insert",
                     {
-                        id: linkPreview.id,
-                        message_id: linkPreview.message_id[0],
+                        Message: {
+                            id: linkPreview.message_id[0],
+                            linkPreviews: [["DELETE", [{ id: linkPreview.id }]]],
+                        },
                     }
                 );
             }
@@ -302,24 +304,10 @@ patch(MockServer.prototype, {
      * @param {integer} message_id
      * @returns {Object}
      */
-    _mockRouteMailLinkPreview(message_id, clear = false) {
+    _mockRouteMailLinkPreview(message_id) {
         const linkPreviews = [];
         const [message] = this.pyEnv["mail.message"].searchRead([["id", "=", message_id]]);
         if (message.body.includes("https://make-link-preview.com")) {
-            if (clear) {
-                const [linkPreview] = this.pyEnv["mail.link.preview"].searchRead([
-                    ["message_id", "=", message_id],
-                ]);
-                this.pyEnv["bus.bus"]._sendone(
-                    this._mockMailMessage__busNotificationTarget(linkPreview.message_id),
-                    "mail.link.preview/delete",
-                    {
-                        id: linkPreview.id,
-                        message_id: linkPreview.message_id,
-                    }
-                );
-            }
-
             const linkPreviewId = this.pyEnv["mail.link.preview"].create({
                 message_id: message.id,
                 og_description: "test description",

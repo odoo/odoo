@@ -28,7 +28,7 @@ export class LinkPreviewConfirmDelete extends Component {
 
     onClickOk() {
         rpc(
-            "/mail/link_preview/delete",
+            "/mail/link_preview/hide",
             { link_preview_ids: [this.props.linkPreview.id] },
             { silent: true }
         );
@@ -37,7 +37,7 @@ export class LinkPreviewConfirmDelete extends Component {
 
     onClickDeleteAll() {
         rpc(
-            "/mail/link_preview/delete",
+            "/mail/link_preview/hide",
             { link_preview_ids: this.message.linkPreviews.map((lp) => lp.id) },
             { silent: true }
         );
