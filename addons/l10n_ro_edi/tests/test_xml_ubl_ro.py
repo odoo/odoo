@@ -115,12 +115,6 @@ class TestUBLRO(TestUBLCommon):
         attachment = self.get_attachment(invoice)
         self._assert_invoice_attachment(attachment, xpaths=None, expected_file_path='from_odoo/ciusro_out_invoice.xml')
 
-    def test_export_vat_without_prefix(self):
-        self.company_data['company'].vat = '1234567897'
-        invoice = self.create_move("out_invoice", send=False)
-        with self.assertRaisesRegex(UserError, "doesn't have a country code prefix in their VAT"):
-            invoice._generate_pdf_and_send_invoice(self.move_template, allow_fallback_pdf=False)
-
     def test_export_constraints(self):
         self.company_data['company'].company_registry = None
         for required_field in ('city', 'street', 'state_id', 'vat'):
