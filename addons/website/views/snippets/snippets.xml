@@ -606,7 +606,7 @@
     </div>
 
     <!-- Move snippets around -->
-    <div data-js="SnippetMove" data-selector="section, .accordion > .card, .s_showcase .row:not(.s_col_no_resize) > div" data-no-scroll=".accordion > .card">
+    <div data-js="SnippetMove" data-selector="section, .accordion > .card, .s_showcase .row:not(.s_col_no_resize) > div, .s_hr" data-no-scroll=".accordion > .card">
         <we-button class="fa fa-fw fa-angle-up" data-move-snippet="prev" data-no-preview="true" data-name="move_up_opt"/>
         <we-button class="fa fa-fw fa-angle-down" data-move-snippet="next" data-no-preview="true" data-name="move_down_opt"/>
     </div>
@@ -619,8 +619,8 @@
     </div>
 
     <!-- Background -->
-    <t t-set="only_bg_color_selector" t-value="'section .row > div, .s_text_highlight, .s_mega_menu_thumbnails_footer'"/>
-    <t t-set="only_bg_color_exclude" t-value="'.s_col_no_bgcolor, .s_col_no_bgcolor.row > div, .s_masonry_block .row > div, .s_color_blocks_2 .row > div, .s_image_gallery .row > div, .s_text_cover .row > .o_not_editable'"/>
+    <t t-set="only_bg_color_selector" t-value="'section .row > div, .s_text_highlight, .s_mega_menu_thumbnails_footer, .s_hr'"/>
+    <t t-set="only_bg_color_exclude" t-value="'.s_col_no_bgcolor, .s_col_no_bgcolor.row > div, .s_masonry_block .row > div, .s_color_blocks_2 .row > div, .s_image_gallery .row > div, .s_text_cover .row > .o_not_editable, [data-snippet] :not(.oe_structure) > .s_hr'"/>
 
     <t t-set="base_only_bg_image_selector" t-value="'.s_tabs .oe_structure > *, footer .oe_structure > *'"/>
     <t t-set="only_bg_image_selector" t-value="base_only_bg_image_selector"/>
@@ -689,7 +689,7 @@
         data-drop-near=".row.o_grid_mode > div"
         data-exclude=".s_col_no_resize.row > div, .s_col_no_resize"/>
 
-    <t t-set="so_snippet_addition_selector" t-translation="off">section, .parallax</t>
+    <t t-set="so_snippet_addition_selector" t-translation="off">section, .parallax, .s_hr</t>
     <div id="so_snippet_addition"
         t-att-data-selector="so_snippet_addition_selector"
         data-drop-in=":not(p).oe_structure:not(.oe_structure_solo), :not(.o_mega_menu):not(p)[data-oe-type=html], :not(p).oe_structure.oe_structure_solo:not(:has(> section, > div))"/>
@@ -1418,7 +1418,7 @@
             data-img="/website/static/src/img/snippets_options/mobile_invisible.svg"
         />
     </t>
-    <div data-js="ConditionalVisibility" data-selector="section">
+    <div data-js="ConditionalVisibility" data-selector="section, .s_hr">
         <t t-set="current_website" t-value="request.env['website'].get_current_website()"/>
         <we-collapse>
             <we-row string="Visibility">
