@@ -1,7 +1,5 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from __future__ import print_function
 import builtins
 import math
 
@@ -22,15 +20,21 @@ def round(f):
     # copysign ensures round(-0.) -> -0 *and* result is a float
     return math.copysign(roundf, f)
 
+
 def _float_check_precision(precision_digits=None, precision_rounding=None):
-    assert (precision_digits is not None or precision_rounding is not None) and \
-        not (precision_digits and precision_rounding),\
-         "exactly one of precision_digits and precision_rounding must be specified"
-    assert precision_rounding is None or precision_rounding > 0,\
-         "precision_rounding must be positive, got %s" % precision_rounding
-    if precision_digits is not None:
-        return 10 ** -precision_digits
+    if precision_rounding is not None and precision_digits is None:
+        assert precision_rounding > 0,\
+            f"precision_rounding must be positive, got {precision_rounding}"
+    elif precision_digits is not None and precision_rounding is None:
+        # TODO: `int`s will also get the `is_integer` method starting from python 3.12
+        assert float(precision_digits).is_integer() and precision_digits >= 0,\
+            f"precision_digits must be a non-negative integer, got {precision_digits}"
+        precision_rounding = 10 ** -precision_digits
+    else:
+        msg = "exactly one of precision_digits and precision_rounding must be specified"
+        raise AssertionError(msg)
     return precision_rounding
+
 
 def float_round(value, precision_digits=None, precision_rounding=None, rounding_method='HALF-UP'):
     """Return ``value`` rounded to ``precision_digits`` decimal digits,
@@ -43,7 +47,7 @@ def float_round(value, precision_digits=None, precision_rounding=None, rounding_
        :param float value: the value to round
        :param int precision_digits: number of fractional digits to round to.
        :param float precision_rounding: decimal number representing the minimum
-           non-zero value at the desired precision (for example, 0.01 for a 
+           non-zero value at the desired precision (for example, 0.01 for a
            2-digit precision).
        :param rounding_method: the rounding method used:
            - 'HALF-UP' will round to the closest number with ties going away from zero.
@@ -63,7 +67,20 @@ def float_round(value, precision_digits=None, precision_rounding=None, rounding_
     # In order to easily support rounding to arbitrary 'steps' (e.g. coin values),
     # we normalize the value before rounding it as an integer, and de-normalize
     # after rounding: e.g. float_round(1.3, precision_rounding=.5) == 1.5
-    # Due to IEE754 float/double representation limits, the approximation of the
+    def normalize(val):
+        return val / rounding_factor
+
+    def denormalize(val):
+        return val * rounding_factor
+
+    # inverting small rounding factors reduces rounding errors
+    if rounding_factor < 1:
+        rounding_factor = float_invert(rounding_factor)
+        normalize, denormalize = denormalize, normalize
+
+    normalized_value = normalize(value)
+
+    # Due to IEEE-754 float/double representation limits, the approximation of the
     # real value may be slightly below the tie limit, resulting in an error of
     # 1 unit in the last place (ulp) after rounding.
     # For example 2.675 == 2.6749999999999998.
@@ -71,47 +88,32 @@ def float_round(value, precision_digits=None, precision_rounding=None, rounding_
     # the order of magnitude of the value, to tip the tie-break in the right
     # direction.
     # Credit: discussion with OpenERP community members on bug 882036
+    epsilon_magnitude = math.log2(abs(normalized_value))
+    # `2**(epsilon_magnitude - 52)` would be the minimal size, but we increase it to be
+    # more tolerant of inaccuracies accumulated after multiple floating point operations
+    epsilon = 2**(epsilon_magnitude - 50)
 
-    normalized_value = value / rounding_factor # normalize
-    sign = math.copysign(1.0, normalized_value)
-    epsilon_magnitude = math.log(abs(normalized_value), 2)
-    epsilon = 2**(epsilon_magnitude-52)
+    match rounding_method:
+        case 'HALF-UP':  # 0.5 rounds away from 0
+            result = round(normalized_value + math.copysign(epsilon, normalized_value))
+        case 'HALF-EVEN':  # 0.5 rounds towards closest even number
+            integral = math.floor(normalized_value)
+            remainder = abs(normalized_value - integral)
+            is_half = abs(0.5 - remainder) < epsilon
+            # if is_half & integral is odd, add odd bit to make it even
+            result = integral + (integral & 1) if is_half else round(normalized_value)
+        case 'HALF-DOWN':  # 0.5 rounds towards 0
+            result = round(normalized_value - math.copysign(epsilon, normalized_value))
+        case 'UP':  # round to number furthest from zero
+            result = math.trunc(normalized_value + math.copysign(1 - epsilon, normalized_value))
+        case 'DOWN':  # round to number closest to zero
+            result = math.trunc(normalized_value + math.copysign(epsilon, normalized_value))
+        case _:
+            msg = f"unknown rounding method: {rounding_method}"
+            raise ValueError(msg)
 
-    # TIE-BREAKING: UP/DOWN (for ceiling[resp. flooring] operations)
-    # When rounding the value up[resp. down], we instead subtract[resp. add] the epsilon value
-    # as the approximation of the real value may be slightly *above* the
-    # tie limit, this would result in incorrectly rounding up[resp. down] to the next number
-    # The math.ceil[resp. math.floor] operation is applied on the absolute value in order to
-    # round "away from zero" and not "towards infinity", then the sign is
-    # restored.
+    return denormalize(result)
 
-    if rounding_method == 'UP':
-        normalized_value -= sign*epsilon
-        rounded_value = math.ceil(abs(normalized_value)) * sign
-
-    elif rounding_method == 'DOWN':
-        normalized_value += sign*epsilon
-        rounded_value = math.floor(abs(normalized_value)) * sign
-
-    # TIE-BREAKING: HALF-EVEN
-    # We want to apply HALF-EVEN tie-breaking rules, i.e. 0.5 rounds towards closest even number.
-    elif rounding_method == 'HALF-EVEN':
-        rounded_value = math.copysign(builtins.round(normalized_value), normalized_value)
-
-    # TIE-BREAKING: HALF-DOWN
-    # We want to apply HALF-DOWN tie-breaking rules, i.e. 0.5 rounds towards 0.
-    elif rounding_method == 'HALF-DOWN':
-        normalized_value -= math.copysign(epsilon, normalized_value)
-        rounded_value = round(normalized_value)
-
-    # TIE-BREAKING: HALF-UP (for normal rounding)
-    # We want to apply HALF-UP tie-breaking rules, i.e. 0.5 rounds away from 0.
-    else:
-        normalized_value += math.copysign(epsilon, normalized_value)
-        rounded_value = round(normalized_value)     # round to integer
-
-    result = rounded_value * rounding_factor # de-normalize
-    return result
 
 def float_is_zero(value, precision_digits=None, precision_rounding=None):
     """Returns true if ``value`` is small enough to be treated as
@@ -120,23 +122,24 @@ def float_is_zero(value, precision_digits=None, precision_rounding=None):
        is used as the zero *epsilon*: values less than that are considered
        to be zero.
        Precision must be given by ``precision_digits`` or ``precision_rounding``,
-       not both! 
+       not both!
 
        Warning: ``float_is_zero(value1-value2)`` is not equivalent to
        ``float_compare(value1,value2) == 0``, as the former will round after
        computing the difference, while the latter will round before, giving
-       different results for e.g. 0.006 and 0.002 at 2 digits precision. 
+       different results for e.g. 0.006 and 0.002 at 2 digits precision.
 
        :param int precision_digits: number of fractional digits to round to.
        :param float precision_rounding: decimal number representing the minimum
-           non-zero value at the desired precision (for example, 0.01 for a 
+           non-zero value at the desired precision (for example, 0.01 for a
            2-digit precision).
        :param float value: value to compare with the precision's zero
        :return: True if ``value`` is considered zero
     """
     epsilon = _float_check_precision(precision_digits=precision_digits,
-                                             precision_rounding=precision_rounding)
-    return abs(float_round(value, precision_rounding=epsilon)) < epsilon
+                                     precision_rounding=precision_rounding)
+    return value == 0.0 or abs(float_round(value, precision_rounding=epsilon)) < epsilon
+
 
 def float_compare(value1, value2, precision_digits=None, precision_rounding=None):
     """Compare ``value1`` and ``value2`` after rounding them according to the
@@ -152,27 +155,33 @@ def float_compare(value1, value2, precision_digits=None, precision_rounding=None
        because they respectively round to 0.01 and 0.0, even though
        0.006-0.002 = 0.004 which would be considered zero at 2 digits precision.
 
-       Warning: ``float_is_zero(value1-value2)`` is not equivalent to 
+       Warning: ``float_is_zero(value1-value2)`` is not equivalent to
        ``float_compare(value1,value2) == 0``, as the former will round after
        computing the difference, while the latter will round before, giving
-       different results for e.g. 0.006 and 0.002 at 2 digits precision. 
+       different results for e.g. 0.006 and 0.002 at 2 digits precision.
 
-       :param int precision_digits: number of fractional digits to round to.
-       :param float precision_rounding: decimal number representing the minimum
-           non-zero value at the desired precision (for example, 0.01 for a 
-           2-digit precision).
        :param float value1: first value to compare
        :param float value2: second value to compare
+       :param int precision_digits: number of fractional digits to round to.
+       :param float precision_rounding: decimal number representing the minimum
+           non-zero value at the desired precision (for example, 0.01 for a
+           2-digit precision).
        :return: (resp.) -1, 0 or 1, if ``value1`` is (resp.) lower than,
            equal to, or greater than ``value2``, at the given precision.
     """
     rounding_factor = _float_check_precision(precision_digits=precision_digits,
                                              precision_rounding=precision_rounding)
+    # equal numbers round equally, so we can skip that step
+    # doing this after _float_check_precision to validate parameters first
+    if value1 == value2:
+        return 0
     value1 = float_round(value1, precision_rounding=rounding_factor)
     value2 = float_round(value2, precision_rounding=rounding_factor)
     delta = value1 - value2
-    if float_is_zero(delta, precision_rounding=rounding_factor): return 0
+    if float_is_zero(delta, precision_rounding=rounding_factor):
+        return 0
     return -1 if delta < 0.0 else 1
+
 
 def float_repr(value, precision_digits):
     """Returns a string representation of a float with the
@@ -189,7 +198,6 @@ def float_repr(value, precision_digits):
     # precision. e.g. str(123456789.1234) == str(123456789.123)!!
     return ("%%.%sf" % precision_digits) % value
 
-_float_repr = float_repr
 
 def float_split_str(value, precision_digits):
     """Splits the given float 'value' in its unitary and decimal parts,
@@ -217,6 +225,7 @@ def float_split_str(value, precision_digits):
     value_repr = float_repr(value, precision_digits)
     return tuple(value_repr.split('.')) if precision_digits else (value_repr, '')
 
+
 def float_split(value, precision_digits):
     """ same as float_split_str() except that it returns the unitary and decimal
         parts as integers instead of strings. In case ``precision_digits`` is zero,
@@ -228,6 +237,7 @@ def float_split(value, precision_digits):
     if not cents:
         return int(units), 0
     return int(units), int(cents)
+
 
 def json_float_round(value, precision_digits, rounding_method='HALF-UP'):
     """Not suitable for float calculations! Similar to float_repr except that it
@@ -259,20 +269,44 @@ def json_float_round(value, precision_digits, rounding_method='HALF-UP'):
     return float(rounded_repr)
 
 
+_INVERTDICT = {
+    1e-1: 1e+1, 1e-2: 1e+2, 1e-3: 1e+3, 1e-4: 1e+4, 1e-5: 1e+5,
+    1e-6: 1e+6, 1e-7: 1e+7, 1e-8: 1e+8, 1e-9: 1e+9, 1e-10: 1e+10,
+    2e-1: 5e+0, 2e-2: 5e+1, 2e-3: 5e+2, 2e-4: 5e+3, 2e-5: 5e+4,
+    2e-6: 5e+5, 2e-7: 5e+6, 2e-8: 5e+7, 2e-9: 5e+8, 2e-10: 5e+9,
+    5e-1: 2e+0, 5e-2: 2e+1, 5e-3: 2e+2, 5e-4: 2e+3, 5e-5: 2e+4,
+    5e-6: 2e+5, 5e-7: 2e+6, 5e-8: 2e+7, 5e-9: 2e+8, 5e-10: 2e+9,
+}
+
+
+def float_invert(value):
+    """Inverts a floating point number with increased accuracy.
+
+    :param float value: value to invert.
+    :param bool store: whether store the result in memory for future calls.
+    :return: rounded float.
+    """
+    result = _INVERTDICT.get(value)
+    if result is None:
+        coefficient, exponent = f'{value:.15e}'.split('e')
+        # invert exponent by changing sign, and coefficient by dividing by its square
+        result = float(f'{coefficient}e{-int(exponent)}') / float(coefficient)**2
+    return result
+
+
 if __name__ == "__main__":
 
     import time
     start = time.time()
     count = 0
-    errors = 0
 
     def try_round(amount, expected, precision_digits=3):
-        global count, errors; count += 1
         result = float_repr(float_round(amount, precision_digits=precision_digits),
                             precision_digits=precision_digits)
         if result != expected:
-            errors += 1
             print('###!!! Rounding error: got %s , expected %s' % (result, expected))
+            return complex(1, 1)
+        return 1
 
     # Extended float range test, inspired by Cloves Almeida's test on bug #882036.
     fractions = [.0, .015, .01499, .675, .67499, .4555, .4555, .45555]
@@ -280,14 +314,15 @@ if __name__ == "__main__":
     precisions = [2, 2, 2, 2, 2, 2, 3, 4]
     for magnitude in range(7):
         for frac, exp, prec in zip(fractions, expecteds, precisions):
-            for sign in [-1,1]:
+            for sign in [-1, 1]:
                 for x in range(0, 10000, 97):
                     n = x * 10**magnitude
                     f = sign * (n + frac)
                     f_exp = ('-' if f != 0 and sign == -1 else '') + str(n) + exp
-                    try_round(f, f_exp, precision_digits=prec)
+                    count += try_round(f, f_exp, precision_digits=prec)
 
     stop = time.time()
+    count, errors = int(count.real), int(count.imag)
 
     # Micro-bench results:
     # 47130 round calls in 0.422306060791 secs, with Python 2.6.7 on Core i3 x64

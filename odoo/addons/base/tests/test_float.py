@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from math import log10
@@ -14,9 +13,9 @@ class TestFloatPrecision(TransactionCase):
         """ Test rounding methods with 2 digits. """
         currency = self.env.ref('base.EUR')
 
-        def try_round(amount, expected):
-            digits = max(0, -int(log10(currency.rounding)))
-            result = float_repr(currency.round(amount), precision_digits=digits)
+        def try_round(amount, expected, digits=2, method='HALF-UP'):
+            value = float_round(amount, precision_digits=digits, rounding_method=method)
+            result = float_repr(value, precision_digits=digits)
             self.assertEqual(result, expected, 'Rounding error: got %s, expected %s' % (result, expected))
 
         try_round(2.674,'2.67')
@@ -29,6 +28,10 @@ class TestFloatPrecision(TransactionCase):
         try_round(-0.005,'-0.01') # the rule is to round half away from zero
         try_round(6.6 * 0.175, '1.16') # 6.6 * 0.175 is rounded to 1.15 with epsilon = 53
         try_round(-6.6 * 0.175, '-1.16')
+        try_round(5.015, '5.02', method='HALF-EVEN')
+        try_round(5.025, '5.02', method='HALF-EVEN')
+        try_round(-5.015, '-5.02', method='HALF-EVEN')
+        try_round(-5.025, '-5.02', method='HALF-EVEN')
 
         def try_zero(amount, expected):
             self.assertEqual(currency.is_zero(amount), expected,
@@ -107,8 +110,8 @@ class TestFloatPrecision(TransactionCase):
         try_round(-2.6744, '-2.674', method='HALF-EVEN')
         try_round(0.0004, '0.000', method='HALF-EVEN')
         try_round(-0.0004, '-0.000', method='HALF-EVEN')
-        try_round(357.4555, '357.455', method='HALF-EVEN')
-        try_round(-357.4555, '-357.455', method='HALF-EVEN')
+        try_round(357.4555, '357.456', method='HALF-EVEN')
+        try_round(-357.4555, '-357.456', method='HALF-EVEN')
         try_round(457.4554, '457.455', method='HALF-EVEN')
         try_round(-457.4554, '-457.455', method='HALF-EVEN')
 
@@ -264,10 +267,19 @@ class TestFloatPrecision(TransactionCase):
             float_round(0.01, precision_digits=3, precision_rounding=0.01)
 
         with self.assertRaises(AssertionError):
+            float_round(-1.0, precision_digits=0, precision_rounding=0.1)
+
+        with self.assertRaises(AssertionError):
             float_round(1.25, precision_rounding=0.0)
 
         with self.assertRaises(AssertionError):
             float_round(1.25, precision_rounding=-0.1)
+
+        with self.assertRaises(AssertionError):
+            float_round(1.25, precision_digits=-1)
+
+        with self.assertRaises(AssertionError):
+            float_round(1.25, precision_digits=0.5)
 
     def test_amount_to_text_10(self):
         """ verify that amount_to_text works as expected """

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests.common import TransactionCase
@@ -356,7 +355,7 @@ class TestAnalyticAccount(TestMrpAnalyticAccount):
         self.assertEqual(mo.state, 'progress')
         aals = mo.move_raw_ids.analytic_account_line_ids
         self.assertEqual(len(aals), 3)
-        self.assertEqual(sum(aals.mapped('amount')), -49.99)
+        self.assertEqual(sum(aals.mapped('amount')), -50.00)
 
         # increase qty_producing to 10.0
         mo_form = Form(mo)
