@@ -36,21 +36,6 @@ class AccountPayment(models.Model):
     l10n_latam_check_number = fields.Char(
         compute='_compute_l10n_latam_check_number', inverse='_inverse_l10n_latam_check_number',
     )
-    # New third party check info
-    l10n_latam_check_bank_id = fields.Many2one(
-        comodel_name='res.bank',
-        string='Check Bank',
-        #compute='_compute_l10n_latam_check_bank_id', store=True, readonly=False,
-    )
-    l10n_latam_check_issuer_vat = fields.Char(
-        string='Check Issuer VAT',
-        #compute='_compute_l10n_latam_check_issuer_vat', store=True, readonly=False,
-    )
-    l10n_latam_check_payment_date = fields.Date(
-        string='Check Cash-In Date',
-        help="Date from when you can cash in the check, turn the check into cash",
-        readonly=False,
-    )
 
     # This is a technical field for the view only
     l10n_latam_manual_checks = fields.Boolean(
@@ -92,64 +77,35 @@ class AccountPayment(models.Model):
             lambda x: x.l10n_latam_manual_checks or x.payment_method_line_id.code == 'new_third_party_checks')
         return super(AccountPayment, self - avoid_inverse)._inverse_check_number()
 
-    # @api.depends('payment_method_line_id.code', 'partner_id')
-    # def _compute_l10n_latam_check_bank_id(self):
-    #     new_third_party_checks = self.filtered(lambda x: x.payment_method_line_id.code == 'new_third_party_checks')
-    #     for rec in new_third_party_checks:
-    #         rec.l10n_latam_check_bank_id = rec.partner_id.bank_ids[:1].bank_id
-    #     (self - new_third_party_checks).l10n_latam_check_bank_id = False
-
-    # @api.depends('payment_method_line_id.code', 'partner_id')
-    # def _compute_l10n_latam_check_issuer_vat(self):
-    #     new_third_party_checks = self.filtered(lambda x: x.payment_method_line_id.code == 'new_third_party_checks')
-    #     for rec in new_third_party_checks:
-    #         rec.l10n_latam_check_issuer_vat = rec.partner_id.vat
-    #     (self - new_third_party_checks).l10n_latam_check_issuer_vat = False
-
-    # @api.onchange('l10n_latam_check_issuer_vat')
-    # def _clean_l10n_latam_check_issuer_vat(self):
-    #     for rec in self.filtered(lambda x: x.l10n_latam_check_issuer_vat and x.company_id.country_id.code):
-    #         stdnum_vat = stdnum.util.get_cc_module(rec.company_id.country_id.code, 'vat')
-    #         if hasattr(stdnum_vat, 'compact'):
-    #             rec.l10n_latam_check_issuer_vat = stdnum_vat.compact(rec.l10n_latam_check_issuer_vat)
-
-    # @api.constrains('l10n_latam_check_issuer_vat', 'company_id')
-    # def _check_l10n_latam_check_issuer_vat(self):
-    #     for rec in self.filtered(lambda x: x.l10n_latam_check_issuer_vat and x.company_id.country_id):
-    #         if not self.env['res.partner']._run_vat_test(rec.l10n_latam_check_issuer_vat, rec.company_id.country_id):
-    #             error_message = self.env['res.partner']._build_vat_error_message(
-    #                 rec.company_id.country_id.code.lower(), rec.l10n_latam_check_issuer_vat, 'Check Issuer VAT')
-    #             raise ValidationError(error_message)
-
-    @api.depends('payment_method_line_id', 'l10n_latam_check_issuer_vat', 'l10n_latam_check_bank_id', 'company_id',
-                 'l10n_latam_check_number', 'l10n_latam_check_id', 'state', 'date', 'is_internal_transfer', 'amount', 'currency_id')
-    def _compute_l10n_latam_check_warning_msg(self):
-        """
-        Compute warning message for latam checks checks
-        We use l10n_latam_check_number as de dependency because on the interface this is the field the user is using.
-        Another approach could be to add an onchange on _inverse_l10n_latam_check_number method
-        """
-        self.l10n_latam_check_warning_msg = False
-        latam_draft_checks = self.filtered(
-            lambda x: x.state == 'draft' and (x.l10n_latam_manual_checks or x.payment_method_line_id.code in [
-                'in_third_party_checks', 'out_third_party_checks', 'new_third_party_checks']))
-        for rec in latam_draft_checks:
-            msgs = rec._get_blocking_l10n_latam_warning_msg()
-            # new third party check
-            if rec.l10n_latam_check_number and rec.payment_method_line_id.code == 'new_third_party_checks' and \
-                    rec.l10n_latam_check_bank_id and rec.l10n_latam_check_issuer_vat:
-                same_checks = self.search([
-                    ('company_id', '=', rec.company_id.id),
-                    ('l10n_latam_check_bank_id', '=', rec.l10n_latam_check_bank_id.id),
-                    ('l10n_latam_check_issuer_vat', '=', rec.l10n_latam_check_issuer_vat),
-                    ('check_number', '=', rec.l10n_latam_check_number),
-                    ('id', '!=', rec._origin.id)])
-                if same_checks:
-                    msgs.append(_(
-                        "Other checks were found with same number, issuer and bank. Please double check you are not "
-                        "encoding the same check more than once. List of other payments/checks: %s",
-                        ", ".join(same_checks.mapped('display_name'))))
-            rec.l10n_latam_check_warning_msg = msgs and '* %s' % '\n* '.join(msgs) or False
+    # @api.depends('payment_method_line_id', 'l10n_latam_check_issuer_vat', 'l10n_latam_check_bank_id', 'company_id',
+    #              'l10n_latam_check_number', 'l10n_latam_check_id', 'state', 'date', 'is_internal_transfer', 'amount', 'currency_id')
+    # def _compute_l10n_latam_check_warning_msg(self):
+    #     """
+    #     Compute warning message for latam checks checks
+    #     We use l10n_latam_check_number as de dependency because on the interface this is the field the user is using.
+    #     Another approach could be to add an onchange on _inverse_l10n_latam_check_number method
+    #     """
+    #     self.l10n_latam_check_warning_msg = False
+    #     latam_draft_checks = self.filtered(
+    #         lambda x: x.state == 'draft' and (x.l10n_latam_manual_checks or x.payment_method_line_id.code in [
+    #             'in_third_party_checks', 'out_third_party_checks', 'new_third_party_checks']))
+    #     for rec in latam_draft_checks:
+    #         msgs = rec._get_blocking_l10n_latam_warning_msg()
+    #         # new third party check
+    #         if rec.l10n_latam_check_number and rec.payment_method_line_id.code == 'new_third_party_checks' and \
+    #                 rec.l10n_latam_check_bank_id and rec.l10n_latam_check_issuer_vat:
+    #             same_checks = self.search([
+    #                 ('company_id', '=', rec.company_id.id),
+    #                 ('l10n_latam_check_bank_id', '=', rec.l10n_latam_check_bank_id.id),
+    #                 ('l10n_latam_check_issuer_vat', '=', rec.l10n_latam_check_issuer_vat),
+    #                 ('check_number', '=', rec.l10n_latam_check_number),
+    #                 ('id', '!=', rec._origin.id)])
+    #             if same_checks:
+    #                 msgs.append(_(
+    #                     "Other checks were found with same number, issuer and bank. Please double check you are not "
+    #                     "encoding the same check more than once. List of other payments/checks: %s",
+    #                     ", ".join(same_checks.mapped('display_name'))))
+    #         rec.l10n_latam_check_warning_msg = msgs and '* %s' % '\n* '.join(msgs) or False
 
     def _get_blocking_l10n_latam_warning_msg(self):
         msgs = []
@@ -335,6 +291,7 @@ class AccountPayment(models.Model):
                             'credit': -liquidity_balance if liquidity_balance < 0.0 else 0.0,
                             'partner_id': self.partner_id.id,
                             'account_id': self.outstanding_account_id.id,
+                            # 'latam_check_id': check_id.id
                         })
             # document_name = (_('Check %s received') if self.payment_type == 'inbound' else _('Check %s delivered')) % (
             #     check.check_number)

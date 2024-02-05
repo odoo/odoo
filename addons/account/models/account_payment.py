@@ -844,6 +844,11 @@ class AccountPayment(models.Model):
             'date', 'amount', 'payment_type', 'partner_type', 'payment_reference', 'is_internal_transfer',
             'currency_id', 'partner_id', 'destination_account_id', 'partner_bank_id', 'journal_id'
         )
+    def _get_line_ids_commands(self, line_vals_list, liquidity_lines, counterpart_lines):
+        return [
+                Command.update(liquidity_lines.id, line_vals_list[0]) if liquidity_lines else Command.create(line_vals_list[0]),
+                Command.update(counterpart_lines.id, line_vals_list[1]) if counterpart_lines else Command.create(line_vals_list[1])
+            ]
 
     def _synchronize_to_moves(self, changed_fields):
         ''' Update the account.move regarding the modified account.payment.
@@ -874,10 +879,8 @@ class AccountPayment(models.Model):
 
             line_vals_list = pay._prepare_move_line_default_vals(write_off_line_vals=write_off_line_vals)
 
-            line_ids_commands = [
-                Command.update(liquidity_lines.id, line_vals_list[0]) if liquidity_lines else Command.create(line_vals_list[0]),
-                Command.update(counterpart_lines.id, line_vals_list[1]) if counterpart_lines else Command.create(line_vals_list[1])
-            ]
+            # TODO: multiple  liquidity_lines vrs line_vals_list
+            line_ids_commands self._get_line_ids_commands(line_vals_list, liquidity_lines, counterpart_lines)
 
             for line in writeoff_lines:
                 line_ids_commands.append((2, line.id))
