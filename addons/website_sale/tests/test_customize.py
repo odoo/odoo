@@ -454,3 +454,6 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
         ])
 
         self.start_tour("/", 'test_09_pills_variant', login="portal")
+
+    def test_10_shop_editor_set_product_ribbon(self):
+        self.start_tour("/", 'shop_editor_set_product_ribbon', login="admin")

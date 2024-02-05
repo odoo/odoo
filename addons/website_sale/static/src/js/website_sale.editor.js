@@ -586,6 +586,10 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
         if (!this.ribbons[ribbonId]) {
             $editableDocument.find(`[data-ribbon-id="${ribbonId}"]`).each((index, product) => delete product.dataset.ribbonId);
         }
+
+        // The ribbon does not have a savable parent, so we need to trigger the
+        // saving process manually by flagging the ribbon as dirty.
+        this.$ribbon.addClass('o_dirty');
     },
 
     //--------------------------------------------------------------------------
