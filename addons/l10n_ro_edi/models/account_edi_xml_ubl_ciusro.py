@@ -98,11 +98,6 @@ class AccountEdiXmlUBLRO(models.AbstractModel):
                     "At least one of them is required. ",
                     partner.name)
 
-            if partner.vat and not partner.vat.startswith(partner.country_code):
-                constraints[f"ciusro_{partner_type}_country_code_vat_required"] = _(
-                    "The following partner's doesn't have a country code prefix in their VAT: %s.",
-                    partner.name)
-
             if (not partner.vat and partner.company_registry
                     and not partner.company_registry.startswith(partner.country_code)):
                 constraints[f"ciusro_{partner_type}_country_code_company_registry_required"] = _(
