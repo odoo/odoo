@@ -1,17 +1,21 @@
 import { markRaw } from "@odoo/owl";
-import { registry } from "../registry";
 import { Popover, POPOVER_SYMBOL } from "@web/core/popover/popover";
+import { registry } from "@web/core/registry";
 
 /**
  * @typedef {{
- *   closeOnClickAway?: boolean | (target: HTMLElement) => boolean;
- *   onClose?: () => void;
- *   popoverClass?: string;
  *   animation?: Boolean;
  *   arrow?: Boolean;
- *   position?: import("@web/core/position/position_hook").UsePositionOptions["position"];
+ *   closeOnClickAway?: boolean | (target: HTMLElement) => boolean;
+ *   closeOnEscape?: boolean;
+ *   env?: object;
  *   fixedPosition?: boolean;
+ *   onClose?: () => void;
  *   onPositioned?: import("@web/core/position/position_hook").UsePositionOptions["onPositioned"];
+ *   popoverClass?: string;
+ *   popoverRole?: string;
+ *   position?: import("@web/core/position/position_hook").UsePositionOptions["position"];
+ *   ref?: Function;
  * }} PopoverServiceAddOptions
  */
 
@@ -38,17 +42,25 @@ export const popoverService = {
                     target,
                     close: () => remove(),
                     closeOnClickAway,
-                    subPopovers: options[POPOVER_SYMBOL],
+                    closeOnEscape: options.closeOnEscape,
+                    parentSubPopovers: options[POPOVER_SYMBOL],
                     component,
                     componentProps: markRaw(props),
+                    ref: options.ref,
                     class: options.popoverClass,
                     animation: options.animation,
                     arrow: options.arrow,
+                    role: options.popoverRole,
                     position: options.position,
                     onPositioned: options.onPositioned,
                     fixedPosition: options.fixedPosition,
+                    holdOnHover: options.holdOnHover,
+                    setActiveElement: options.setActiveElement ?? true,
                 },
-                { onRemove: options.onClose }
+                {
+                    env: options.env,
+                    onRemove: options.onClose,
+                }
             );
 
             return remove;

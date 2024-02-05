@@ -1,11 +1,7 @@
-import { DROPDOWN } from "./dropdown";
-
 import { Component } from "@odoo/owl";
+import { useDropdownCloser } from "@web/core/dropdown/dropdown_hooks";
 
-/**
- * @enum {string}
- */
-const ParentClosingMode = {
+const ClosingMode = {
     None: "none",
     ClosestParent: "closest",
     AllParents: "all",
@@ -14,79 +10,45 @@ const ParentClosingMode = {
 export class DropdownItem extends Component {
     static template = "web.DropdownItem";
     static props = {
-        onSelected: {
-            type: Function,
-            optional: true,
-        },
         class: {
             type: [String, Object],
             optional: true,
         },
-        parentClosingMode: {
-            type: ParentClosingMode,
+        onSelected: {
+            type: Function,
             optional: true,
         },
-        hotkey: {
-            type: String,
+        closingMode: {
+            type: ClosingMode,
             optional: true,
         },
-        href: {
-            type: String,
-            optional: true,
-        },
-        slots: {
+        attrs: {
             type: Object,
             optional: true,
         },
-        title: {
-            type: String,
-            optional: true,
-        },
-        dataset: {
-            type: Object,
-            optional: true,
-        },
+        slots: { Object, optional: true },
     };
     static defaultProps = {
-        parentClosingMode: ParentClosingMode.AllParents,
+        closingMode: ClosingMode.AllParents,
+        attrs: {},
     };
 
-    /**
-     * Tells the parent dropdown that an item was selected and closes the
-     * parent(s) dropdown according the parentClosingMode prop.
-     *
-     * @param {MouseEvent} ev
-     */
+    setup() {
+        this.dropdownControl = useDropdownCloser();
+    }
+
     onClick(ev) {
-        const { href, onSelected, parentClosingMode } = this.props;
-        if (href) {
+        if (this.props.attrs && this.props.attrs.href) {
             ev.preventDefault();
         }
-        if (onSelected) {
-            onSelected();
-        }
-        const dropdown = this.env[DROPDOWN];
-        if (!dropdown) {
-            return;
-        }
-        const { ClosestParent, AllParents } = ParentClosingMode;
-        switch (parentClosingMode) {
-            case ClosestParent:
-                dropdown.close();
+        this.props.onSelected?.();
+        switch (this.props.closingMode) {
+            case ClosingMode.ClosestParent:
+                this.dropdownControl.close();
                 break;
-            case AllParents:
-                dropdown.closeAllParents();
+            case ClosingMode.AllParents:
+                this.dropdownControl.closeAll();
                 break;
         }
-    }
-    get dataAttributes() {
-        const { dataset } = this.props;
-        if (this.props.dataset) {
-            const attributes = Object.entries(dataset).map(([key, value]) => {
-                return [`data-${key.replace(/[A-Z]/g, (char) => `-${char.toLowerCase()}`)}`, value];
-            });
-            return Object.fromEntries(attributes);
-        }
-        return {};
     }
 }
