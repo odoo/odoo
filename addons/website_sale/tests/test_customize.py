@@ -503,3 +503,6 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
         })]
 
         self.start_tour("/", 'tour_shop_multi_checkbox', login="portal")
+
+    def test_11_shop_editor_set_product_ribbon(self):
+        self.start_tour("/", 'shop_editor_set_product_ribbon', login="admin")

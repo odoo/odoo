@@ -22,3 +22,24 @@ wTourUtils.registerWebsitePreviewTour("shop_editor", {
     content: "Check pricelist dropdown opened",
     isCheck: true,
 }]);
+
+wTourUtils.registerWebsitePreviewTour("shop_editor_set_product_ribbon", {
+    test: true,
+    url: "/shop",
+    edition: true,
+}, () => [{
+    content: "Click on first product",
+    trigger: "iframe .oe_product:first",
+}, {
+    content: "Open the ribbon selector",
+    trigger: ".o_wsale_ribbon_select we-toggler",
+}, {
+    content: "Select a ribbon",
+    trigger: '.o_wsale_ribbon_select we-button:contains("Sale")',
+},
+...wTourUtils.clickOnSave(),
+{
+    content: "Check that the ribbon was properly saved",
+    trigger: 'iframe .oe_product:first .o_ribbon:contains("Sale")',
+    isCheck: true,
+}]);
