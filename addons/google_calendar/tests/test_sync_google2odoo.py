@@ -387,6 +387,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             'reminders': {'useDefault': True},
             'start': {'date': '2020-01-6'},
             'end': {'date': '2020-01-7'},
+            'transparency': 'opaque',
         }
         self.env['calendar.recurrence']._sync_google2odoo(GoogleEvent([values]))
         recurrence = self.env['calendar.recurrence'].search([('google_id', '=', values.get('id'))])
@@ -1098,6 +1099,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
                 'timeZone': 'Europe/Brussels',
                 'date': None
             },
+            'transparency': 'opaque',
         }
         self.env['calendar.event']._sync_google2odoo(GoogleEvent([values]))
         self.assertEqual(event.attendee_ids.state, 'declined')
@@ -1135,6 +1137,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
                                               '%s_owner_id' % self.env.cr.dbname: other_user.id}},
             'reminders': {'overrides': [], 'useDefault': False},
             'visibility': 'public',
+            'transparency': 'opaque',
         }, timeout=3)
 
     @patch_api
