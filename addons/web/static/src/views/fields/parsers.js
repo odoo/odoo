@@ -101,12 +101,12 @@ export function parseFloatTime(value) {
         value = value.slice(1);
         sign = -1;
     }
-    const values = value.split(":");
-    if (values.length > 2) {
-        throw new InvalidNumberError(`"${value}" is not a correct number`);
-    }
+    const values = value.split(/:|\./);
     if (values.length === 1) {
         return sign * parseFloat(value);
+    }
+    if (values.length > 2 || values[1].length > 2) {
+        throw new InvalidNumberError(`"${value}" is not a correct number`);
     }
     const hours = parseInteger(values[0]);
     const minutes = parseInteger(values[1]);
