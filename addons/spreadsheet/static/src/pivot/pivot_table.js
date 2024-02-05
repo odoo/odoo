@@ -4,29 +4,10 @@
 import { HEADER_STYLE, TOP_LEVEL_STYLE, MEASURE_STYLE } from "@spreadsheet/helpers/constants";
 
 /**
- * @typedef {Object} Column
- * @property {string[]} fields
- * @property {string[]} values
- * @property {number} width
- * @property {number} offset
- *
- * @typedef {Object} Row
- * @property {string[]} fields
- * @property {string[]} values
- * @property {number} indent
- *
- * @typedef {Object} PivotCell
- * @property {boolean} isHeader
- * @property {string[]} [domain] Domain of the pivot formula. Undefined for constant cells or empty cells
- * @property {string} [content] Content of constant cells in the pivot.
- * @property {Object} [style]
- * @property {string} [measure] Measure for the pivot formula. Undefined for header cells.
- *
- * @typedef {Object} SpreadsheetTableData
- * @property {Column[][]} cols
- * @property {Row[]} rows
- * @property {string[]} measures
- * @property {string} rowTitle
+ * @typedef {import("@spreadsheet").SPTableColumn} SPTableColumn
+ * @typedef {import("@spreadsheet").SPTableRow} SPTableRow
+ * @typedef {import("@spreadsheet").SPTableData} SPTableData
+ * @typedef {import("@spreadsheet").SPTableCell} SPTableCell
  */
 
 /**
@@ -73,13 +54,13 @@ import { HEADER_STYLE, TOP_LEVEL_STYLE, MEASURE_STYLE } from "@spreadsheet/helpe
  */
 export class SpreadsheetPivotTable {
     /**
-     * @param {Column[][]} cols
-     * @param {Row[]} rows
+     * @param {SPTableColumn[][]} cols
+     * @param {SPTableRow[]} rows
      * @param {string[]} measures
      * @param {string} rowTitle
      */
     constructor(cols, rows, measures, rowTitle = "") {
-        /** @type {Column[][]} */
+        /** @type {SPTableColumn[][]} */
         this._cols = cols.map((row) => {
             // offset in the pivot table
             // starts at 1 because the first column is the row title
@@ -98,7 +79,7 @@ export class SpreadsheetPivotTable {
     }
 
     /**
-     * @returns {Column[][]}
+     * @returns {SPTableColumn[][]}
      */
     getColHeaders() {
         return this._cols;
@@ -106,7 +87,7 @@ export class SpreadsheetPivotTable {
 
     /**
      * Get the last row of the columns (i.e. the one with the measures)
-     * @returns {Column[]}
+     * @returns {SPTableColumn[]}
      */
     getMeasureHeaders() {
         return this._cols[this.getNumberOfHeaderRows() - 1];
@@ -129,7 +110,7 @@ export class SpreadsheetPivotTable {
     }
 
     /**
-     * @returns {Row[]}
+     * @returns {SPTableRow[]}
      */
     getRowHeaders() {
         return this._rows;
@@ -166,7 +147,7 @@ export class SpreadsheetPivotTable {
      *
      * @param {number} colIndex
      * @param {number} rowIndex
-     * @returns {Column}
+     * @returns {SPTableColumn}
      */
     getNextColCell(colIndex, rowIndex) {
         return this._cols[rowIndex][colIndex];
@@ -188,7 +169,7 @@ export class SpreadsheetPivotTable {
     }
 
     /**
-     * @returns {PivotCell[][]}
+     * @returns {SPTableCell[][]}
      */
     getPivotCells(includeTotal = true, includeColumnHeaders = true) {
         const key = JSON.stringify({ includeTotal, includeColumnHeaders });
@@ -224,7 +205,7 @@ export class SpreadsheetPivotTable {
     }
 
     /**
-     * @returns {PivotCell}
+     * @returns {SPTableCell}
      */
     _getPivotCell(col, row, includeTotal = true) {
         const colHeadersHeight = this.getNumberOfHeaderRows();
@@ -285,7 +266,7 @@ export class SpreadsheetPivotTable {
     }
 
     /**
-     * @returns {SpreadsheetTableData}
+     * @returns {SPTableData}
      */
     export() {
         return {
