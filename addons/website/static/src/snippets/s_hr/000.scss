@@ -13,3 +13,17 @@
         background-color: transparent;
     }
 }
+
+// Allows clicking on the separator when it has no padding and has a low height.
+.editor_enable .s_hr {
+    position: relative;
+
+    &::after {
+        content: '';
+        @include o-position-absolute(50%, 0, 0, 0);
+        z-index: 1;
+        transform: translateY(-50%);
+        height: 6px;
+        padding: inherit;
+    }
+}
