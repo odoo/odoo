@@ -136,7 +136,7 @@ export function makeActionManager(env, router = _router) {
                 jsId: `controller_${++id}`,
                 displayName: action.resId
                     ? `${action.model || action.action}:${action.resId}`
-                    : action.model || `act-${action.action}`,
+                    : action.model || action.action,
                 virtual: true,
                 action: {},
                 props: {},
@@ -160,6 +160,44 @@ export function makeActionManager(env, router = _router) {
                 controller.props.viewType = "form";
             }
             controllerStack.push(controller);
+        }
+        // actionRegistry.contains(actionRequest)
+        const actionsLoadBreadcrumb = controllerStack
+            .filter(
+                (c) =>
+                    !c.action.id ||
+                    (!actionRegistry.contains(c.action.id) && c.action.id !== "menu")
+            )
+            .map((c) => ({ jsId: c.jsId, ...c.state }));
+        if (actionsLoadBreadcrumb.length) {
+            rpc("/web/action/load_breadcrump", {
+                actions: actionsLoadBreadcrumb,
+            }).then((res) => {
+                for (const r of res) {
+                    const index = controllerStack.findIndex(
+                        (controller) => controller.jsId === r[0]
+                    );
+                    controllerStack[index].displayName = r[1];
+                }
+                if (actionsLoadBreadcrumb.length !== res.length) {
+                    const actionsToRemove = actionsLoadBreadcrumb
+                        .filter((a) => res.filter((r) => r[0] === a.jsId).length === 0)
+                        .map((a) => a.jsId);
+                    for (const jsId of actionsToRemove) {
+                        const index = controllerStack.findIndex(
+                            (controller) => controller.jsId === jsId
+                        );
+                        if (index > -1) {
+                            const deleted = controllerStack.splice(index, 1);
+                            console.error(
+                                "Following element was removed from the breadcrumb and from the url.",
+                                "This could be because the action wasn't found or because the user doesn't have the right to access to the record",
+                                deleted[0].state
+                            );
+                        }
+                    }
+                }
+            });
         }
     }
     // ---------------------------------------------------------------------------
@@ -994,11 +1032,13 @@ export function makeActionManager(env, router = _router) {
         const updateUIOptions = {
             clearBreadcrumbs: options.clearBreadcrumbs,
             onClose: options.onClose,
-            index: options.index,
             stackPosition: options.stackPosition,
             onActionReady: options.onActionReady,
             noEmptyTransition: options.noEmptyTransition,
         };
+        if ("index" in options) {
+            updateUIOptions.index = options.index;
+        }
 
         if (lazyView) {
             updateUIOptions.lazyController = {
@@ -1054,14 +1094,18 @@ export function makeActionManager(env, router = _router) {
                 action,
                 ..._getActionInfo(action, options.props),
             };
-            return _updateUI(controller, {
+            const updateUIOptions = {
                 clearBreadcrumbs: options.clearBreadcrumbs,
                 stackPosition: options.stackPosition,
                 onClose: options.onClose,
                 index: options.index,
                 onActionReady: options.onActionReady,
                 noEmptyTransition: options.noEmptyTransition,
-            });
+            };
+            if ("index" in options) {
+                updateUIOptions.index = options.index;
+            }
+            return _updateUI(controller, updateUIOptions);
         } else {
             const next = await clientAction(env, action);
             if (next) {
@@ -1092,12 +1136,15 @@ export function makeActionManager(env, router = _router) {
             ..._getActionInfo(action, props),
         };
 
-        return _updateUI(controller, {
-            index: options.index,
+        const updateUIOptions = {
             clearBreadcrumbs: options.clearBreadcrumbs,
             stackPosition: options.stackPosition,
             onClose: options.onClose,
-        });
+        };
+        if ("index" in options) {
+            updateUIOptions.index = options.index;
+        }
+        return _updateUI(controller, updateUIOptions);
     }
 
     /**

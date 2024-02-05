@@ -50,3 +50,34 @@ class Action(Controller):
         action = request.env['ir.actions.server'].browse([action_id])
         result = action.run()
         return clean_action(result, env=action.env) if result else False
+
+    @route('/web/action/load_breadcrump', type='json', auth='user', readonly=True)
+    def load_breadcrump(self, actions):
+        value = []
+        for action in actions:
+            act = False
+            if action.get('action'):
+                try:
+                    act = self.load(action.get('action'))
+                except Exception:
+                    continue
+            if action.get("resId") and act:
+                try:
+                    rec = request.env[act["res_model"]].browse([action.get("resId")]).read(['display_name'])
+                    value.append((action.get('jsId'), rec[0].get("display_name")))
+                except Exception:
+                    continue
+                continue
+            if action.get("model") and action.get("resId"):
+                try:
+                    rec = request.env[action.get("model")].browse([action.get("resId")]).read(['display_name'])
+                    value.append((action.get('jsId'), rec[0].get("display_name")))
+                except Exception:
+                    continue
+                continue
+            if action.get("model"):
+                value.append((action.get('jsId'), request.env[action.get("model")]._description))
+            if act:
+                value.append((action.get('jsId'), act["display_name"]))
+                continue
+        return value
