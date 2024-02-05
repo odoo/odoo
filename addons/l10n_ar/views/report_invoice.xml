@@ -233,14 +233,8 @@
             </div>
         </div>
 
-        <!--  we remove the ml auto and also give more space to avoid multiple lines on tax detail -->
-        <xpath expr="//div[@id='total']/div" position="attributes">
-            <attribute name="t-attf-class">#{'col-6' if report_type != 'html' else 'col-sm-7 col-md-6'}</attribute>
-        </xpath>
-
-        <xpath expr="//div[@id='total']/div" position="before">
-            <div t-attf-class="#{'col-6' if report_type != 'html' else 'col-sm-7 col-md-6'}">
-
+        <xpath expr="//div[@id='payment_term']" position="before">
+            <div class="mb-4">
                 <t t-if="o.l10n_ar_afip_concept in ['2', '3', '4'] and o.l10n_ar_afip_service_start and o.l10n_ar_afip_service_end">
                     <strong>Invoiced period: </strong><span t-field="o.l10n_ar_afip_service_start"/> to <span t-field="o.l10n_ar_afip_service_end"/>
                 </t>
