@@ -70,7 +70,7 @@ class ChooseDeliveryCarrier(models.TransientModel):
             self.delivery_message = vals.get('warning_message', False)
             self.delivery_price = vals['price']
             self.display_price = vals['carrier_price']
-            return {}
+            return vals
         return {'error_message': vals['error_message']}
 
     def update_price(self):
