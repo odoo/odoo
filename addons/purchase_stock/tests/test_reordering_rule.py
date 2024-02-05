@@ -1019,3 +1019,31 @@ class TestReorderingRule(TransactionCase):
         picking.with_user(user).action_assign()
         # check that the PO line quantity has been updated
         self.assertEqual(po_line.product_qty, 6, 'The PO line quantity should be 6')
+
+    def test_set_supplier_in_orderpoint(self):
+        """
+        Test that qty_to_order is correctly computed when setting the supplier in an orderpoint
+        Have a product with a uom in Kg and a purchase uom in Tonne (the purchase UOM should be bigger that the UOM)
+        and a supplier with a min_qty of 6T
+        Create an orderpoint with a min_qty of 500Kg and a max_qty of 0Kg
+        Set the supplier in the orderpoint and check that the qty_to_order is correctly updated to 6000Kg
+        """
+        product = self.env['product.product'].create({
+            'name': 'Storable Product',
+            'type': 'product',
+            'uom_id': self.env.ref('uom.product_uom_categ_kgm').uom_ids[3].id,
+            'uom_po_id': self.env.ref('uom.product_uom_categ_kgm').uom_ids[4].id,
+            'seller_ids': [(0, 0, {'partner_id': self.partner.id, 'min_qty': 6})],
+        })
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'warehouse_id': warehouse.id,
+            'location_id': warehouse.lot_stock_id.id,
+            'product_id': product.id,
+            'product_min_qty': 500,
+            'product_max_qty': 0,
+        })
+        product.seller_ids.with_context(orderpoint_id=orderpoint.id).action_set_supplier()
+        self.assertEqual(orderpoint.supplier_id, product.seller_ids, 'The supplier should be set in the orderpoint')
+        self.assertEqual(orderpoint.product_uom, product.uom_id, 'The orderpoint uom should be the same as the product uom')
+        self.assertEqual(orderpoint.qty_to_order, 6000)
