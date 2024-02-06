@@ -40,7 +40,7 @@ export class PosCategory extends Base {
             parent = parent.parent_id;
         }
 
-        return parents;
+        return parents.reverse();
     }
 }
 

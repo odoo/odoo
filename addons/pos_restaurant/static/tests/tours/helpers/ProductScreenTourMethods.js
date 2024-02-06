@@ -30,7 +30,7 @@ export function guestNumberIs(num) {
     return [
         {
             content: `guest number is ${num}`,
-            trigger: ProductScreen.controlButtonTrigger("Dine-in Guests") + `:contains(${num})`,
+            trigger: ProductScreen.controlButtonTrigger("Guests") + `:contains(${num})`,
             run: function () {}, // it's a check
         },
     ];

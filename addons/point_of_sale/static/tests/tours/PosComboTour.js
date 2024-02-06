@@ -15,6 +15,7 @@ registry.category("web_tour.tours").add("PosComboPriceTaxIncludedTour", {
     steps: () =>
         [
             Dialog.confirm("Open session"),
+            ...ProductScreen.clickShowProductsMobile(),
             ...ProductScreen.clickDisplayedProduct("Office Combo"),
             combo.select("Combo Product 3"),
             {

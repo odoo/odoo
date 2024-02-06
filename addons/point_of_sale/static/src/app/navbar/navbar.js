@@ -15,6 +15,7 @@ import { Component, useState, useExternalListener } from "@odoo/owl";
 import { ClosePosPopup } from "@point_of_sale/app/navbar/closing_popup/closing_popup";
 import { _t } from "@web/core/l10n/translation";
 import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
+import { Input } from "@point_of_sale/app/generic_components/inputs/input/input";
 
 export class Navbar extends Component {
     static template = "point_of_sale.Navbar";
@@ -26,6 +27,7 @@ export class Navbar extends Component {
         SaleDetailsButton,
         SyncNotification,
         BackButton,
+        Input,
     };
     static props = {};
     setup() {
@@ -108,9 +110,11 @@ export class Navbar extends Component {
     }
 
     showBackButton() {
+        return this.pos.showBackButton();
+    }
+    showBackButtonMobile() {
         return this.pos.showBackButton() && this.ui.isSmall;
     }
-
     toggleProductView() {
         const newView = this.pos.productListView === "grid" ? "list" : "grid";
         window.localStorage.setItem("productListView", newView);

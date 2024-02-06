@@ -21,6 +21,7 @@ import {
     ControlButtons,
     ControlButtonsPopup,
 } from "@point_of_sale/app/screens/product_screen/control_buttons/control_buttons";
+import { pick } from "@web/core/utils/objects";
 import { unaccent } from "@web/core/utils/strings";
 
 export class ProductScreen extends Component {
@@ -56,7 +57,7 @@ export class ProductScreen extends Component {
             this.pos.openCashControl();
 
             if (this.pos.config.iface_start_categ_id) {
-                this.pos.setSelectedCategoryId(this.pos.config.iface_start_categ_id.id);
+                this.pos.setSelectedCategory(this.pos.config.iface_start_categ_id.id);
             }
 
             // Call `reset` when the `onMounted` callback in `numberBuffer.use` is done.
@@ -84,29 +85,37 @@ export class ProductScreen extends Component {
     setScrollDirection(scroll) {
         this.state.scrollDown = scroll.down;
     }
-    getCategories() {
-        if (this.pos.selectedCategoryId) {
-            const categoriesToDisplay = [];
-            const category = this.pos.models["pos.category"].get(this.pos.selectedCategoryId);
-
-            if (category.parent_id) {
-                categoriesToDisplay.push(...category.allParents);
-            }
-
-            categoriesToDisplay.push(category);
-
-            if (category.child_id) {
-                categoriesToDisplay.push(...category.child_id);
-            }
-
-            return categoriesToDisplay;
-        } else {
-            return this.pos.models["pos.category"].filter((category) => !category.parent_id);
-        }
-    }
     computeImageUrl(category) {
         return `/web/image?model=pos.category&field=image_128&id=${category.id}&unique=${category.write_date}`;
     }
+    getAncestorsAndCurrent() {
+        const selectedCategory = this.pos.selectedCategory;
+        return selectedCategory
+            ? [undefined, ...selectedCategory.allParents, selectedCategory]
+            : [selectedCategory];
+    }
+    getChildCategories(selectedCategory) {
+        return selectedCategory
+            ? [...selectedCategory.child_id]
+            : this.pos.models["pos.category"].filter((category) => !category.parent_id);
+    }
+    getCategoriesAndSub() {
+        return this.getAncestorsAndCurrent().flatMap((category) =>
+            this.getChildCategoriesInfo(category)
+        );
+    }
+    getChildCategoriesInfo(selectedCategory) {
+        return this.getChildCategories(selectedCategory).map((category) => ({
+            ...pick(category, "id", "name", "color"),
+            imgSrc:
+                this.pos.show_category_images && category.has_image
+                    ? this.computeImageUrl(category)
+                    : undefined,
+            isSelected: this.getAncestorsAndCurrent().includes(category) && !this.ui.isSmall,
+            isChildren: this.getChildCategories(this.pos.selectedCategory).includes(category),
+        }));
+    }
+
     getNumpadButtons() {
         return [
             { value: "1" },
@@ -359,7 +368,7 @@ export class ProductScreen extends Component {
             .filter((product) => !this.getProductListToNotDisplay().includes(product.id))
             .slice(0, 100);
 
-        return this.searchWord !== "" 
+        return this.searchWord !== ""
             ? list
             : list.sort((a, b) => a.display_name.localeCompare(b.display_name));
     }
@@ -369,23 +378,25 @@ export class ProductScreen extends Component {
             ? this.getProductsByCategory(this.pos.selectedCategoryId)
             : this.pos.models["product.product"].getAll();
 
-        const fuzzyMatches = fuzzyLookup(
-            unaccent(searchWord, false),
-            products,
-            (product) => unaccent(product.searchString, false)
+        const fuzzyMatches = fuzzyLookup(unaccent(searchWord, false), products, (product) =>
+            unaccent(product.searchString, false)
         );
 
-        const barcodeMatches = products.filter((product) => product.barcode && product.barcode.includes(searchWord));
+        const barcodeMatches = products.filter(
+            (product) => product.barcode && product.barcode.includes(searchWord)
+        );
 
         return Array.from(new Set([...barcodeMatches, ...fuzzyMatches]));
     }
 
     getProductsByCategory(categoryId) {
-        let products = new Set(this.pos.models['product.product'].getBy('pos_categ_ids', categoryId) || []);
-        let childCategories = this.pos.models['pos.category'].get(categoryId).child_id;
+        const products = new Set(
+            this.pos.models["product.product"].getBy("pos_categ_ids", categoryId) || []
+        );
+        const childCategories = this.pos.models["pos.category"].get(categoryId).child_id;
         for (const { id } of childCategories) {
-            let childProducts = this.getProductsByCategory(id);
-            childProducts.forEach(product => products.add(product));
+            const childProducts = this.getProductsByCategory(id);
+            childProducts.forEach((product) => products.add(product));
         }
         return Array.from(products);
     }

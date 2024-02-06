@@ -15,7 +15,6 @@ registry.category("web_tour.tours").add("GiftCardProgramCreateSetTour1", {
     steps: () =>
         [
             Dialog.confirm("Open session"),
-            ProductScreen.clickHomeCategory(),
             ProductScreen.clickDisplayedProduct("Gift Card"),
             PosLoyalty.orderTotalIs("50.00"),
             PosLoyalty.finalizeOrder("Cash", "50"),
@@ -29,7 +28,6 @@ registry.category("web_tour.tours").add("GiftCardProgramCreateSetTour2", {
     url: "/pos/web",
     steps: () =>
         [
-            ProductScreen.clickHomeCategory(),
             ProductScreen.clickDisplayedProduct("Whiteboard Pen"),
             PosLoyalty.enterCode("044123456"),
             PosLoyalty.orderTotalIs("0.00"),
@@ -45,7 +43,6 @@ registry.category("web_tour.tours").add("GiftCardProgramScanUseTour", {
     steps: () =>
         [
             Dialog.confirm("Open session"),
-            ProductScreen.clickHomeCategory(),
             // Pay the 5$ gift card.
             ProductScreen.clickDisplayedProduct("Gift Card"),
             TextInputPopup.inputText("044123456"),
@@ -72,7 +69,6 @@ registry.category("web_tour.tours").add("GiftCardWithRefundtTour", {
     steps: () =>
         [
             Dialog.confirm("Open session"),
-            ProductScreen.clickHomeCategory(),
             ProductScreen.addOrderline("Magnetic Board", "1"), // 1.98
             PosLoyalty.orderTotalIs("1.98"),
             PosLoyalty.finalizeOrder("Cash", "20"),

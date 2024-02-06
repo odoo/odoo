@@ -11,7 +11,6 @@ registry.category("web_tour.tours").add("PosLoyaltyLoyaltyProgram1", {
     steps: () =>
         [
             Dialog.confirm("Open session"),
-            ProductScreen.clickHomeCategory(),
 
             // Order1: Generates 2 points.
             ProductScreen.addOrderline("Whiteboard Pen", "2"),
@@ -75,8 +74,6 @@ registry.category("web_tour.tours").add("PosLoyaltyLoyaltyProgram2", {
     url: "/pos/web",
     steps: () =>
         [
-            ProductScreen.clickHomeCategory(),
-
             // Order1: Immediately set the customer to Test Partner AAA which has 4 points.
             // - He has enough points to purchase a free product but since there is still
             //   no product in the order, reward button should not yet be highlighted.
@@ -153,7 +150,6 @@ registry.category("web_tour.tours").add("PosLoyaltyLoyaltyProgram3", {
     steps: () =>
         [
             Dialog.confirm("Open session"),
-            ProductScreen.clickHomeCategory(),
 
             // Generates 10.2 points and use points to get the reward product with zero sale price
             ProductScreen.addOrderline("Desk Organizer", "2"),
@@ -177,7 +173,6 @@ registry.category("web_tour.tours").add("PosLoyaltyPromotion", {
     steps: () =>
         [
             Dialog.confirm("Open session"),
-            ProductScreen.clickHomeCategory(),
             ProductScreen.clickPartnerButton(),
             ProductScreen.clickCustomer("AAA Partner"),
             ProductScreen.addOrderline("Test Product 1", "1.00", "100"),
