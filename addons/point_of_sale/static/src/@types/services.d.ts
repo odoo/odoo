@@ -13,7 +13,6 @@ declare module "services" {
         debug: ReturnType<typeof barcodeReaderService.start>;
         hardware_proxy: ReturnType<typeof hardwareProxyService.start>;
         number_buffer: ReturnType<typeof numberBufferService.start>;
-        pos_notification: ReturnType<typeof notificationService.start>;
         customer_display: ReturnType<typeof customerDisplayService.start>;
         report: ReturnType<typeof reportService.start>;
         sound: ReturnType<typeof soundService.start>;

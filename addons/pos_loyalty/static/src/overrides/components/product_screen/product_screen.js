@@ -8,7 +8,7 @@ import { useService } from "@web/core/utils/hooks";
 patch(ProductScreen.prototype, {
     setup() {
         super.setup(...arguments);
-        this.notification = useService("pos_notification");
+        this.notification = useService("notification");
         useBarcodeReader({
             coupon: this._onCouponScan,
         });

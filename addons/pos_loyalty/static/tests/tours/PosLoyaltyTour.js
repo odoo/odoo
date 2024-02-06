@@ -4,6 +4,7 @@ import * as PosLoyalty from "@pos_loyalty/../tests/tours/PosLoyaltyTourMethods";
 import * as ProductScreen from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
 import * as SelectionPopup from "@point_of_sale/../tests/tours/helpers/SelectionPopupTourMethods";
 import * as Dialog from "@point_of_sale/../tests/tours/helpers/DialogTourMethods";
+import * as Notification from "@point_of_sale/../tests/tours/helpers/generic_components/NotificationTourMethods";
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("PosLoyaltyTour1", {
@@ -44,7 +45,7 @@ registry.category("web_tour.tours").add("PosLoyaltyTour1", {
             PosLoyalty.removeRewardLine("90% on the cheapest product"),
             PosLoyalty.orderTotalIs("45.90"),
             PosLoyalty.enterCode("invalid_code"),
-            PosLoyalty.notificationMessageContains("invalid_code"),
+            Notification.has("invalid_code"),
             PosLoyalty.enterCode("1234"),
             PosLoyalty.hasRewardLine("Free Product - Desk Organizer", "-15.30"),
             PosLoyalty.finalizeOrder("Cash", "50"),

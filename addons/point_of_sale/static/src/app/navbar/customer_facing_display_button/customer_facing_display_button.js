@@ -11,7 +11,7 @@ export class CustomerFacingDisplayButton extends Component {
     setup() {
         this.pos = usePos();
         this.customerDisplay = useState(useService("customer_display"));
-        this.notification = useService("pos_notification");
+        this.notification = useService("notification");
     }
     get message() {
         const msg = {
@@ -36,7 +36,7 @@ export class CustomerFacingDisplayButton extends Component {
             if (message.length == 0) {
                 message = "Connected";
             }
-            this.notification.add("Customer Display : " + message, 3000);
+            this.notification.add("Customer Display : " + message);
         }
     }
 }

@@ -34,7 +34,7 @@ export class PaymentScreen extends Component {
         this.ui = useState(useService("ui"));
         this.dialog = useService("dialog");
         this.report = useService("report");
-        this.notification = useService("pos_notification");
+        this.notification = useService("notification");
         this.hardwareProxy = useService("hardware_proxy");
         this.printer = useService("printer");
         this.payment_methods_from_config = this.pos.config.payment_method_ids;
@@ -281,7 +281,7 @@ export class PaymentScreen extends Component {
                 throw error;
             }
         } finally {
-            this.env.services.ui.unblock()
+            this.env.services.ui.unblock();
         }
 
         // 3. Post process.

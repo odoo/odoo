@@ -31,7 +31,7 @@ export class PartnerList extends Component {
     setup() {
         this.pos = usePos();
         this.ui = useState(useService("ui"));
-        this.notification = useService("pos_notification");
+        this.notification = useService("notification");
         this.dialog = useService("dialog");
 
         this.state = useState({
@@ -52,7 +52,7 @@ export class PartnerList extends Component {
                 3000
             );
         } else {
-            this.notification.add(_t('No more customer found for "%s".', this.state.query), 3000);
+            this.notification.add(_t('No more customer found for "%s".', this.state.query));
         }
     }
 
