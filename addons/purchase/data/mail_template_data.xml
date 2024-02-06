@@ -51,7 +51,7 @@
         amounting in <strong t-out="format_amount(object.amount_total, object.currency_id) or ''">$ 10.00</strong>
         from <t t-out="object.company_id.name or ''">YourCompany</t>. 
         <br/><br/>
-        <t t-if="object.date_planned">
+        <t t-if="object.date_planned and not object.state in ['purchase', 'done', 'cancel']">
             The receipt is expected for <strong t-out="format_date(object.get_localized_date_planned()) or ''">05/05/2021</strong>.
             <br/><br/>
             Could you please acknowledge the receipt of this order?
