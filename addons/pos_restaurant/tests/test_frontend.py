@@ -234,3 +234,8 @@ class TestFrontend(AccountTestInvoicingCommon, HttpCaseWithUserDemo):
     def test_07_refund_stay_current_table(self):
         self.pos_config.with_user(self.user_demo).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'RefundStayCurrentTableTour', login="demo")
+
+    def test_11_bill_screen_qrcode(self):
+        self.env.company.point_of_sale_use_ticket_qr_code = True
+        self.pos_config.with_user(self.user_demo).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'BillScreenTour', login="demo")
