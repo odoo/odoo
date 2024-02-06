@@ -552,8 +552,14 @@
                         data-img="/mass_mailing/static/src/img/snippets_options/content_width_full.svg"
                         title="Full"/>
         </we-button-group>
-        <we-colorpicker string="Background Color"
+        <we-colorpicker string="Mailing Background"
                         data-apply-to=".o_layout, > div:not(.o_layout)"
+                        data-select-style="true"
+                        data-no-transparency="true"
+                        data-css-property="background-color"
+                        data-color-prefix="bg-"/>
+        <we-colorpicker string="Content Background"
+                        data-apply-to=".o_mail_wrapper_td > div"
                         data-select-style="true"
                         data-no-transparency="true"
                         data-css-property="background-color"
