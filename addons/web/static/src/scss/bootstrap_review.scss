@@ -297,3 +297,30 @@ $-color-for-gray-200-bg: adjust-color-to-background($body-color, $gray-200);
         color: $-color-for-gray-200-bg;
     }
 }
+
+// offcanvas
+.offcanvas {
+    @if $offcanvas-color == null {
+        color: adjust-color-to-background($body-color, $offcanvas-bg-color);
+
+        @if $form-check-input-bg == $body-bg {
+            .form-check-input:where(:not(:checked)) {
+                background-color: $offcanvas-bg-color;
+            }
+        }
+        @if $form-range-thumb-bg == $body-bg {
+            .form-range{
+                &::-webkit-slider-thumb {
+                    &:where(:not(:active)) {
+                        background-color: $offcanvas-bg-color;
+                    }
+                }
+                &::-moz-range-thumb {
+                    &:where(:not(:active)) {
+                        background-color: $offcanvas-bg-color;
+                    }
+                }
+            }
+        }
+    }
+}
