@@ -1557,6 +1557,7 @@ export class Order extends PosModel {
             change: this.locked ? this.amount_return : this.get_change(),
             name: this.get_name(),
             invoice_id: null, //TODO
+<<<<<<< HEAD
             cashier: this.cashier?.name,
             date: this.receiptDate,
             pos_qr_code:
@@ -1568,6 +1569,75 @@ export class Order extends PosModel {
             ticket_code: this.pos.company.point_of_sale_ticket_unique_code &&
                 this.finalized &&
                 this.ticketCode,
+||||||| parent of ab403dd0c93c (temp)
+            cashier: cashier ? cashier.name : null,
+            precision: {
+                price: 2,
+                money: 2,
+                quantity: 3,
+            },
+            date: {
+                year: date.getFullYear(),
+                month: date.getMonth(),
+                date: date.getDate(), // day of the month
+                day: date.getDay(), // day of the week
+                hour: date.getHours(),
+                minute: date.getMinutes(),
+                isostring: date.toISOString(),
+                localestring: this.formatted_validation_date,
+                validation_date: this.validation_date,
+            },
+            company: {
+                email: company.email,
+                website: company.website,
+                company_registry: company.company_registry,
+                contact_address: company.partner_id[1],
+                vat: company.vat,
+                vat_label: (company.country && company.country.vat_label) || _t("Tax ID"),
+                name: company.name,
+                phone: company.phone,
+                logo: this.pos.company_logo_base64,
+            },
+            currency: this.pos.currency,
+            pos_qr_code: this._get_qr_code_data(),
+            ticket_code: this.pos.company.point_of_sale_ticket_unique_code
+                ? this.ticketCode
+                : false,
+=======
+            cashier: cashier ? cashier.name : null,
+            precision: {
+                price: 2,
+                money: 2,
+                quantity: 3,
+            },
+            date: {
+                year: date.getFullYear(),
+                month: date.getMonth(),
+                date: date.getDate(), // day of the month
+                day: date.getDay(), // day of the week
+                hour: date.getHours(),
+                minute: date.getMinutes(),
+                isostring: date.toISOString(),
+                localestring: this.formatted_validation_date,
+                validation_date: this.validation_date,
+            },
+            company: {
+                email: company.email,
+                website: company.website,
+                company_registry: company.company_registry,
+                contact_address: company.partner_id[1],
+                vat: company.vat,
+                vat_label: (company.country && company.country.vat_label) || _t("Tax ID"),
+                name: company.name,
+                phone: company.phone,
+                logo: this.pos.company_logo_base64,
+            },
+            currency: this.pos.currency,
+            pos_qr_code: this.finalized && this._get_qr_code_data(),
+            ticket_code: this.pos.company.point_of_sale_ticket_unique_code
+                ? (this.finalized && this.ticketCode)
+                : false,
+>>>>>>> ab403dd0c93c (temp)
             base_url: this.pos.base_url,
             footer: this.pos.config.receipt_footer,
             // FIXME: isn't there a better way to handle this date?

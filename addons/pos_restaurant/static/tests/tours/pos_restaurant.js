@@ -1,5 +1,6 @@
 /** @odoo-module */
 
+<<<<<<< HEAD
 import * as BillScreen from "@pos_restaurant/../tests/tours/helpers/BillScreenTourMethods";
 import * as PaymentScreen from "@point_of_sale/../tests/tours/helpers/PaymentScreenTourMethods";
 import * as ReceiptScreen from "@point_of_sale/../tests/tours/helpers/ReceiptScreenTourMethods";
@@ -10,6 +11,24 @@ import * as ProductScreenResto from "@pos_restaurant/../tests/tours/helpers/Prod
 import * as Order from "@point_of_sale/../tests/tours/helpers/generic_components/OrderWidgetMethods";
 import * as TicketScreen from "@point_of_sale/../tests/tours/helpers/TicketScreenTourMethods";
 import { inLeftSide, negateStep } from "@point_of_sale/../tests/tours/helpers/utils";
+||||||| parent of ab403dd0c93c (temp)
+import { PaymentScreen } from "@point_of_sale/../tests/tours/helpers/PaymentScreenTourMethods";
+import { ReceiptScreen } from "@point_of_sale/../tests/tours/helpers/ReceiptScreenTourMethods";
+import { Chrome } from "@pos_restaurant/../tests/tours/helpers/ChromeTourMethods";
+import { FloorScreen } from "@pos_restaurant/../tests/tours/helpers/FloorScreenTourMethods";
+import { ProductScreen } from "@pos_restaurant/../tests/tours/helpers/ProductScreenTourMethods";
+import { TicketScreen } from "@point_of_sale/../tests/tours/helpers/TicketScreenTourMethods";
+import { getSteps, startSteps } from "@point_of_sale/../tests/tours/helpers/utils";
+=======
+import { BillScreen } from "@pos_restaurant/../tests/tours/helpers/BillScreenTourMethods";
+import { PaymentScreen } from "@point_of_sale/../tests/tours/helpers/PaymentScreenTourMethods";
+import { ReceiptScreen } from "@point_of_sale/../tests/tours/helpers/ReceiptScreenTourMethods";
+import { Chrome } from "@pos_restaurant/../tests/tours/helpers/ChromeTourMethods";
+import { FloorScreen } from "@pos_restaurant/../tests/tours/helpers/FloorScreenTourMethods";
+import { ProductScreen } from "@pos_restaurant/../tests/tours/helpers/ProductScreenTourMethods";
+import { TicketScreen } from "@point_of_sale/../tests/tours/helpers/TicketScreenTourMethods";
+import { getSteps, startSteps } from "@point_of_sale/../tests/tours/helpers/utils";
+>>>>>>> ab403dd0c93c (temp)
 import { registry } from "@web/core/registry";
 
 const ProductScreen = { ...ProductScreenPos, ...ProductScreenResto };
@@ -163,6 +182,7 @@ registry.category("web_tour.tours").add("SaveLastPreparationChangesTour", {
             ProductScreen.orderlinesHaveNoChange()
         ].flat(),
     });
+<<<<<<< HEAD
 
 registry.category("web_tour.tours").add("BillScreenTour", {
     test: true,
@@ -179,3 +199,25 @@ registry.category("web_tour.tours").add("BillScreenTour", {
         BillScreen.isQRCodeShown(),
     ].flat(),
 });
+||||||| parent of ab403dd0c93c (temp)
+=======
+
+registry
+    .category("web_tour.tours")
+    .add("BillScreenTour", {
+        test: true,
+        steps: () => {
+            startSteps();
+            ProductScreen.do.confirmOpeningPopup();
+            FloorScreen.do.clickTable("5");
+            ProductScreen.do.clickDisplayedProduct("Coca-Cola");
+            BillScreen.do.clickBillButton();
+            BillScreen.check.isShown();
+            BillScreen.do.clickOk();
+            ProductScreen.do.clickPayButton();
+            PaymentScreen.do.clickPaymentMethod("Bank");
+            PaymentScreen.do.clickValidate();
+            return getSteps();
+        }
+    });
+>>>>>>> ab403dd0c93c (temp)
