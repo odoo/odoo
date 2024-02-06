@@ -336,6 +336,7 @@ class HolidaysAllocation(models.Model):
     @api.depends("allocation_type", "holiday_status_id", "accrual_plan_id")
     def _compute_type_request_unit(self):
         for allocation in self:
+<<<<<<< HEAD
             if allocation.allocation_type == "accrual" and allocation.accrual_plan_id:
                 allocation.type_request_unit = allocation.accrual_plan_id.sudo().added_value_type
             elif allocation.allocation_type == "regular":
@@ -364,6 +365,55 @@ class HolidaysAllocation(models.Model):
         self.number_of_days += days_to_add
         if current_level.cap_accrued_time:
             self.number_of_days = min(self.number_of_days, current_level_maximum_leave + leaves_taken)
+||||||| parent of 17ad1a118e78 (temp)
+            current_level = allocation._get_current_accrual_plan_level_id(first_day_this_year)[0]
+            if not current_level:
+                continue
+            # lastcall has two cases:
+            # 1. The period was fully ran until the last day of last year
+            # 2. The period was not fully ran until the last day of last year
+            # For case 2, we need to prorata the number of days so need to check if the lastcall within the current level period
+            lastcall = current_level._get_previous_date(last_day_last_year) if allocation.lastcall < current_level._get_previous_date(last_day_last_year) else allocation.lastcall
+            nextcall = current_level._get_next_date(last_day_last_year)
+            if current_level.action_with_unused_accruals == 'lost':
+                # Allocations are lost but number_of_days should not be lower than leaves_taken
+                allocation.write({'number_of_days': allocation.leaves_taken, 'lastcall': lastcall, 'nextcall': nextcall})
+            elif current_level.action_with_unused_accruals == 'postponed' and current_level.postpone_max_days:
+                # Make sure the period was ran until the last day of last year
+                if allocation.nextcall:
+                    allocation.nextcall = first_day_this_year
+                # date_to should be first day of this year so the prorata amount is computed correctly
+                allocation._process_accrual_plans(first_day_this_year, True)
+                number_of_days = min(allocation.number_of_days - allocation.leaves_taken, current_level.postpone_max_days) + allocation.leaves_taken
+                allocation.write({'number_of_days': number_of_days, 'lastcall': lastcall, 'nextcall': nextcall})
+=======
+            current_level = allocation._get_current_accrual_plan_level_id(first_day_this_year)[0]
+            if not current_level:
+                continue
+            # lastcall has two cases:
+            # 1. The period was fully ran until the last day of last year
+            # 2. The period was not fully ran until the last day of last year
+            # For case 2, we need to prorata the number of days so need to check if the lastcall within the current level period
+            lastcall = current_level._get_previous_date(last_day_last_year) if allocation.lastcall < current_level._get_previous_date(last_day_last_year) else allocation.lastcall
+            nextcall = current_level._get_next_date(last_day_last_year)
+            if current_level.action_with_unused_accruals == 'lost':
+                # Allocations are lost but number_of_days should not be lower than leaves_taken
+                # `lastcall` and `nextcall` must be those of the last period in order
+                # to receive the full period allocation during the next call of the current year.
+                allocation.write({'number_of_days': allocation.leaves_taken, 'lastcall': lastcall, 'nextcall': nextcall})
+            elif current_level.action_with_unused_accruals == 'postponed' and current_level.postpone_max_days:
+                # Make sure the period was ran until the last day of last year
+                if allocation.nextcall:
+                    allocation.nextcall = first_day_this_year
+                # date_to should be first day of this year so the prorata amount is computed correctly
+                allocation._process_accrual_plans(first_day_this_year, True)
+                allocation.lastcall = first_day_this_year
+                # `lastcall` and `nextcall` must be the first day of this year in order
+                # to receive the part (according to the prorata) of period allocation
+                # during the next call of the current year.
+                number_of_days = allocation.number_of_days - allocation.leaves_taken + allocation.leaves_taken
+                allocation.write({'number_of_days': number_of_days})
+>>>>>>> 17ad1a118e78 (temp)
 
     def _get_current_accrual_plan_level_id(self, date, level_ids=False):
         """
