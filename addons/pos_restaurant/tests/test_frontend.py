@@ -217,3 +217,8 @@ class TestFrontend(AccountTestInvoicingCommon, odoo.tests.HttpCase):
     def test_07_refund_stay_current_table(self):
         self.pos_config.with_user(self.env.ref('base.user_admin')).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'RefundStayCurrentTableTour', login="admin")
+
+    def test_11_bill_screen_qrcode(self):
+        self.env.company.point_of_sale_use_ticket_qr_code = True
+        self.pos_config.with_user(self.env.ref('base.user_admin')).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'BillScreenTour', login="admin")

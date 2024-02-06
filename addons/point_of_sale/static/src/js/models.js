@@ -2948,7 +2948,7 @@ export class Order extends PosModel {
                 logo: this.pos.company_logo_base64,
             },
             currency: this.pos.currency,
-            pos_qr_code: this._get_qr_code_data(),
+            pos_qr_code: this.finalized && this._get_qr_code_data(),
         };
 
         if (is_html(this.pos.config.receipt_header)) {
