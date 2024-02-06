@@ -21,3 +21,4 @@ from . import test_holidays_calendar
 from . import test_negative
 from . import test_past_accruals
 from . import test_allocations
+from . import test_multicompany
