@@ -18,7 +18,9 @@ patch(BackButton.prototype, {
                     this.pos.mobile_pane == "right") ||
                 this.pos.mainScreen.component === TipScreen
             ) {
-                this.pos.showScreen("FloorScreen", { floor: this.floor });
+                if (!this._mobile_back_button()) {
+                    this.pos.showScreen("FloorScreen", { floor: this.floor });
+                }
             } else {
                 super.onClick(...arguments);
             }

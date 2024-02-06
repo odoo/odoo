@@ -178,6 +178,7 @@ export class PosStore extends Reactive {
             selectedOrder: null,
             selectedPartner: null,
             selectedCategory: null,
+            showResultMobile: false,
             // FIXME POSREF this piece of state should probably be private to the product screen
             // but it currently needs to be available to the ProductInfo screen for dubious functional reasons
             searchProductWord: "",
@@ -556,7 +557,15 @@ export class PosStore extends Reactive {
     }
 
     setSelectedCategory(categoryId) {
-        this.selectedCategory = this.models["pos.category"].get(categoryId);
+        if (categoryId === this.selectedCategory?.id) {
+            if (this.selectedCategory.parent_id) {
+                this.selectedCategory = this.selectedCategory.parent_id;
+            } else {
+                this.selectedCategory = this.models["pos.category"].get(0);
+            }
+        } else {
+            this.selectedCategory = this.models["pos.category"].get(categoryId);
+        }
     }
 
     /**
@@ -1703,9 +1712,15 @@ export class PosStore extends Reactive {
     showBackButton() {
         return (
             this.mainScreen.component === PaymentScreen ||
-            (this.mainScreen.component === ProductScreen && this.mobile_pane == "left") ||
+            (this.mainScreen.component === ProductScreen &&
+                (this.selectedCategory || this.showResultMobile || this.mobile_pane == "left") &&
+                this.ui.isSmall) ||
             this.mainScreen.component === TicketScreen
         );
+    }
+
+    showSearchButton() {
+        return this.mainScreen.component === ProductScreen;
     }
 
     doNotAllowRefundAndSales() {

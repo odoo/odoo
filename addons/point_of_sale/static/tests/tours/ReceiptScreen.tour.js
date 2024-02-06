@@ -16,6 +16,7 @@ registry.category("web_tour.tours").add("ReceiptScreenTour", {
     url: "/pos/ui",
     steps: () =>
         [
+            ProductScreen.clickShowProductsMobile(),
             // press close button in receipt screen
             ProductScreen.addOrderline("Letter Tray", "10", "5"),
             ProductScreen.selectedOrderlineHas("Letter Tray", "10"),
@@ -29,7 +30,6 @@ registry.category("web_tour.tours").add("ReceiptScreenTour", {
             ReceiptScreen.clickNextOrder(),
 
             // send email in receipt screen
-            ProductScreen.clickHomeCategory(),
             ProductScreen.addOrderline("Desk Pad", "6", "5", "30.0"),
             ProductScreen.addOrderline("Whiteboard Pen", "6", "6", "36.0"),
             ProductScreen.addOrderline("Monitor Stand", "6", "1", "6.0"),
@@ -80,7 +80,7 @@ registry.category("web_tour.tours").add("ReceiptScreenDiscountWithPricelistTour"
     steps: () =>
         [
             Dialog.confirm("Open session"),
-            ProductScreen.clickHomeCategory(),
+            ProductScreen.clickShowProductsMobile(),
             ProductScreen.addOrderline("Test Product", "1"),
             ProductScreen.selectPriceList("special_pricelist"),
             inLeftSide(Order.hasLine({ productName: "Test Product", oldPrice: "7.0" })),
@@ -97,6 +97,7 @@ registry.category("web_tour.tours").add("OrderPaidInCash", {
     steps: () =>
         [
             Dialog.confirm("Open session"),
+            ProductScreen.clickShowProductsMobile(),
             ProductScreen.addOrderline("Desk Pad", "5", "5"),
             ProductScreen.selectedOrderlineHas("Desk Pad", "5"),
             ProductScreen.clickPayButton(),
@@ -121,7 +122,7 @@ registry.category("web_tour.tours").add("ReceiptTrackingMethodTour", {
     steps: () =>
         [
             Dialog.confirm("Open session"),
-            ProductScreen.clickHomeCategory(),
+            ProductScreen.clickShowProductsMobile(),
             ProductScreen.clickDisplayedProduct("Product A"),
             ProductScreen.enterLotNumber("123456789"),
             ProductScreen.clickPayButton(),

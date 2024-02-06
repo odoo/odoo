@@ -48,11 +48,7 @@ function set_fiscal_position_on_order(fp_name) {
             ...Dialog.cancel(),
             mobile: true,
         },
-        {
-            content: "go back to the products",
-            trigger: ".floor-button",
-            mobile: true,
-        },
+        ProductScreen.goBackToMainScreen(),
     ];
 }
 
@@ -159,7 +155,7 @@ var steps = [
         run: function () {},
     },
 ];
-steps = steps.concat(...ProductScreen.clickHomeCategory());
+steps = steps.concat(ProductScreen.clickShowProductsMobile());
 steps = steps.concat(add_product_to_order("Desk Organizer"));
 steps = steps.concat(inLeftSide(Order.hasTotal("5.10")));
 

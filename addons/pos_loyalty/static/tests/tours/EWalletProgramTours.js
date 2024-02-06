@@ -14,7 +14,6 @@ registry.category("web_tour.tours").add("EWalletProgramTour1", {
     steps: () =>
         [
             Dialog.confirm("Open session"),
-            ProductScreen.clickHomeCategory(),
 
             // Topup 50$ for partner_aaa
             ProductScreen.clickDisplayedProduct("Top-up eWallet"),
@@ -41,7 +40,6 @@ registry.category("web_tour.tours").add("EWalletProgramTour2", {
     url: "/pos/web",
     steps: () =>
         [
-            ProductScreen.clickHomeCategory(),
             ProductScreen.addOrderline("Whiteboard Pen", "2", "6", "12.00"),
             PosLoyalty.eWalletButtonState({ highlighted: false }),
             ProductScreen.clickPartnerButton(),
@@ -111,7 +109,6 @@ registry.category("web_tour.tours").add("ExpiredEWalletProgramTour", {
     steps: () =>
         [
             Dialog.confirm("Open session"),
-            ProductScreen.clickHomeCategory(),
             ProductScreen.clickPartnerButton(),
             ProductScreen.clickCustomer("AAAA"),
             ProductScreen.addOrderline("Whiteboard Pen", "2", "6", "12.00"),

@@ -12,8 +12,8 @@ registry.category("web_tour.tours").add("ProductConfiguratorTour", {
     steps: () =>
         [
             Dialog.confirm("Open session"),
-            // Go by default to home category
-            ProductScreen.clickHomeCategory(),
+
+            ProductScreen.clickShowProductsMobile(),
 
             // Click on Configurable Chair product
             ProductScreen.clickDisplayedProduct("Configurable Chair"),
@@ -48,7 +48,6 @@ registry.category("web_tour.tours").add("ProductConfiguratorTour", {
             ),
 
             // Orderlines with the same attributes should be merged
-            ProductScreen.clickHomeCategory(),
             ProductScreen.clickDisplayedProduct("Configurable Chair"),
             ProductConfigurator.pickColor("Red"),
             ProductConfigurator.pickSelect("Metal"),
@@ -62,7 +61,6 @@ registry.category("web_tour.tours").add("ProductConfiguratorTour", {
             ),
 
             // Orderlines with different attributes shouldn't be merged
-            ProductScreen.clickHomeCategory(),
             ProductScreen.clickDisplayedProduct("Configurable Chair"),
             ProductConfigurator.pickColor("Blue"),
             ProductConfigurator.pickSelect("Metal"),

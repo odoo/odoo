@@ -51,16 +51,18 @@ export function clickSubcategory(name) {
         },
         {
             content: `'${name}' subcategory selected`,
-            trigger: `i.fa-caret-right ~ button.category-button:contains("${name}")`,
+            trigger: `button.category-button:contains("${name}")`,
+            mobile: false,
             run: () => {},
         },
     ];
 }
-export function clickHomeCategory() {
+export function clickShowProductsMobile() {
     return [
         {
-            content: `click Home subcategory`,
-            trigger: `button.category-button i.fa-home`,
+            content: `Click on show products in mobile mode`,
+            trigger: `button.show-products-mobile`,
+            mobile: true,
         },
     ];
 }
