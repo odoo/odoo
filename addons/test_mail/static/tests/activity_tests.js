@@ -69,6 +69,10 @@ QUnit.module('activity view', {
                                 '</div>' +
                             '</templates>' +
                     '</activity>',
+                'mail.test.activity,false,form':
+                    '<form string="MailTestActivity">' +
+                        '<field name="name"/>' +
+                    '</form>',
             },
         };
     }
@@ -79,7 +83,7 @@ var activityDateFormat = function (date) {
 };
 
 QUnit.test('activity view: simple activity rendering', async function (assert) {
-    assert.expect(14);
+    assert.expect(15);
     const mailTestActivityIds = pyEnv['mail.test.activity'].search([]);
     const mailActivityTypeIds = pyEnv['mail.activity.type'].search([]);
 
@@ -88,7 +92,7 @@ QUnit.test('activity view: simple activity rendering', async function (assert) {
     });
     await openView({
         res_model: "mail.test.activity",
-        views: [[false, "activity"]],
+        views: [[false, "activity"], [false, "form"]],
     });
     patchWithCleanup(env.services.action, {
         doAction(action, options) {
@@ -144,6 +148,12 @@ QUnit.test('activity view: simple activity rendering', async function (assert) {
     await testUtils.fields.editAndTrigger($activity.find(td + ':first'), null, ['mouseenter', 'click']);
     assert.containsOnce($activity, 'table tfoot tr .o_record_selector',
         'should contain search more selector to choose the record to schedule an activity for it');
+
+    // Ensure that the form view is opened in edit mode
+    await click(document.querySelector(".o_activity_record"));
+    const $form = $(document.querySelector('.o_form_view'));
+    assert.containsOnce($form, '.o_form_editable',
+        'Form view should be opened in edit mode');
 });
 
 QUnit.test('activity view: no content rendering', async function (assert) {
