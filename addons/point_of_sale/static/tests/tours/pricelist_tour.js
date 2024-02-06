@@ -117,7 +117,6 @@ registry.category("web_tour.tours").add("pos_pricelist", {
                 run: function () {}, // it's a check
             },
             Dialog.confirm("Open session"),
-            ProductScreen.clickHomeCategory(),
             {
                 content: "click review button",
                 trigger: ".btn-switchpane.review-button",
@@ -188,9 +187,10 @@ registry.category("web_tour.tours").add("pos_pricelist", {
                 run: function () {}, // it's a check
             },
             Dialog.cancel(),
+            ProductScreen.goBackToMainScreen(),
             {
-                content: "go back to the products",
-                trigger: ".floor-button",
+                content: "show all the products",
+                trigger: ".show-products-mobile",
                 mobile: true,
             },
             {
