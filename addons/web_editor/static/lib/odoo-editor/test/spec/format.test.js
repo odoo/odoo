@@ -961,6 +961,13 @@ describe('setTagName', () => {
                 contentAfter: '<h1 class="text-uppercase">[abcd]</h1>',
             });
         });
+        it('should not transfer attributes of list to heading 1', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<ul><li class="nav-item">[abcd]</li></ul>',
+                stepFunction: editor => editor.execCommand('setTag', 'h1'),
+                contentAfter: '<ul><li class="nav-item"><h1>[abcd]</h1></li></ul>',
+            });
+        });
     });
     describe('to heading 2', () => {
         it('should turn a heading 1 into a heading 2', async () => {
@@ -1003,6 +1010,13 @@ describe('setTagName', () => {
                 contentBefore: '<table><tbody><tr><td><p>[a</p></td><td><p>b</p></td><td><p>c]</p></td></tr></tbody></table>',
                 stepFunction: editor => editor.execCommand('setTag', 'h2'),
                 contentAfter: '<table><tbody><tr><td><h2>[a</h2></td><td><h2>b</h2></td><td><h2>c]</h2></td></tr></tbody></table>',
+            });
+        });
+        it('should not transfer attributes of list to heading 2', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<ul><li class="nav-item">[abcd]</li></ul>',
+                stepFunction: editor => editor.execCommand('setTag', 'h2'),
+                contentAfter: '<ul><li class="nav-item"><h2>[abcd]</h2></li></ul>',
             });
         });
     });
@@ -1049,6 +1063,13 @@ describe('setTagName', () => {
                 contentAfter: '<table><tbody><tr><td><h3>[a</h3></td><td><h3>b</h3></td><td><h3>c]</h3></td></tr></tbody></table>',
             });
         });
+        it('should not transfer attributes of list to heading 3', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<ul><li class="nav-item">[abcd]</li></ul>',
+                stepFunction: editor => editor.execCommand('setTag', 'h3'),
+                contentAfter: '<ul><li class="nav-item"><h3>[abcd]</h3></li></ul>',
+            });
+        });
     });
     describe('to pre', () => {
         it('should turn a heading 1 into a pre', async () => {
@@ -1084,6 +1105,13 @@ describe('setTagName', () => {
                 contentBefore: '<p>abcd<br>[]<br></p>',
                 stepFunction: editor => editor.execCommand('setTag', 'pre'),
                 contentAfter: '<pre>abcd<br>[]<br></pre>',
+            });
+        });
+        it('should not transfer attributes of list to pre', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<ul><li class="nav-item" id="test">[abcd]</li></ul>',
+                stepFunction: editor => editor.execCommand('setTag', 'pre'),
+                contentAfter: '<ul><li class="nav-item" id="test"><pre>[abcd]</pre></li></ul>',
             });
         });
     });
@@ -1136,6 +1164,13 @@ describe('setTagName', () => {
                 contentBefore: '<h4 class="h5">[abcd]</h4>',
                 stepFunction: editor => editor.execCommand('setTag', 'blockquote'),
                 contentAfter: '<blockquote>[abcd]</blockquote>',
+            });
+        });
+        it('should not transfer attributes of list to blockquote', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<ul><li class="nav-item" style="color: red;">[abcd]</li></ul>',
+                stepFunction: editor => editor.execCommand('setTag', 'blockquote'),
+                contentAfter: '<ul><li class="nav-item" style="color: red;"><blockquote>[abcd]</blockquote></li></ul>',
             });
         });
     });
