@@ -253,7 +253,6 @@ class TestFrontend(AccountTestInvoicingCommon, HttpCaseWithUserDemo):
         self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'SplitBillScreenTour3', login="pos_admin")
 
     def test_08_refund_stay_current_table(self):
-
         self.pos_config.with_user(self.pos_admin).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'RefundStayCurrentTableTour', login="pos_admin")
 
@@ -275,3 +274,7 @@ class TestFrontend(AccountTestInvoicingCommon, HttpCaseWithUserDemo):
         self.pos_config.company_id.point_of_sale_use_ticket_qr_code = True
         self.pos_config.with_user(self.pos_admin).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'BillScreenTour', login="pos_admin")
+
+    def test_12_merge_table(self):
+        self.pos_config.with_user(self.pos_admin).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'MergeTableTour', login="pos_admin")
