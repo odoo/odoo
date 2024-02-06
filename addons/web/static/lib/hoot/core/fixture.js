@@ -30,6 +30,7 @@ const FIXTURE_DEBUG_STYLE = [
     "color: inherit",
     "left: 0",
     "top: 81px",
+    "z-index: 9999",
 ].join(";");
 const FIXTURE_STYLE = [
     ...FIXTURE_COMMON_STYLE,
