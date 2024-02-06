@@ -562,6 +562,8 @@ class HolidaysAllocation(models.Model):
 
         fake_allocation = self.env['hr.leave.allocation'].new(origin=self)
         fake_allocation.sudo()._process_accrual_plans(accrual_date, log=False)
+        if self.type_request_unit in ['hour']:
+            return float_round(fake_allocation.number_of_hours_display - self.number_of_hours_display, precision_digits=2)
         return round((fake_allocation.number_of_days - self.number_of_days), 2)
 
     ####################################################
