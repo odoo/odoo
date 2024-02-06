@@ -88,8 +88,8 @@
     </template>
 
     <template id="portal_invoice_page_inherit" inherit_id="account.portal_invoice_page">
-        <xpath expr="//t[@t-set='entries']/div/div/div[hasclass('o_download_pdf')]" position="inside">
-            <div t-if="invoice.timesheet_count > 0" class="flex-grow-1">
+        <xpath expr="//t[@t-set='entries']/div/div/div[hasclass('o_download_pdf')]" position="after">
+            <div t-if="invoice.timesheet_count > 0" class="flex-grow-1 mt-2">
                 <t t-set="search_value" t-value="invoice.name"/>
                 <t t-if="invoice.state == 'draft'" t-set="search_value" t-value="invoice.id"/>
                 <a t-if="invoice.move_type == 'out_invoice' and invoice.state in ('draft', 'posted') and invoice.timesheet_count > 0"
