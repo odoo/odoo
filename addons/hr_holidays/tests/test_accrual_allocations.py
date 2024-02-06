@@ -1446,3 +1446,40 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             # The amount being already computed, the amount should stay the same after the cron
             # running on the same day.
             self.assertAlmostEqual(accrual_allocation.number_of_days, 34.0, places=0)
+
+    def test_future_accural_time(self):
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Test Leave Type',
+            'time_type': 'leave',
+            'requires_allocation': 'yes',
+            'allocation_validation_type': 'no',
+            'request_unit': 'hour',
+        })
+        with freeze_time("2023-12-31"):
+            accrual_plan = self.env['hr.leave.accrual.plan'].create({
+                'name': 'Accrual Plan For Test',
+                'is_based_on_worked_time': False,
+                'accrued_gain_time': 'end',
+                'carryover_date': 'year_start',
+                'level_ids': [(0, 0, {
+                    'start_count': 1,
+                    'start_type': 'day',
+                    'added_value': 1,
+                    'added_value_type': 'hour',
+                    'frequency': 'monthly',
+                    'cap_accrued_time': True,
+                    'maximum_leave': 100,
+                })],
+            })
+            allocation = self.env['hr.leave.allocation'].create({
+                'name': 'Accrual allocation for employee',
+                'accrual_plan_id': accrual_plan.id,
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': leave_type.id,
+                'number_of_days': 0.125,
+                'allocation_type': 'accrual',
+                'holiday_type': 'employee',
+            })
+            allocation.action_validate()
+            allocation_data = leave_type.get_allocation_data(self.employee_emp, datetime.date(2024, 2, 1))
+            self.assertEqual(allocation_data[self.employee_emp][0][1]['virtual_remaining_leaves'], 2)
