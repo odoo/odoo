@@ -10,6 +10,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 import { beforeEach, expect, test } from "@odoo/hoot";
 import { click, queryAll, queryAllTexts } from "@odoo/hoot-dom";
+import { markup } from "@odoo/owl";
 
 const userMenuRegistry = registry.category("user_menuitems");
 
@@ -65,11 +66,20 @@ test.tags("mobile")("can be rendered", async () => {
             expect.step("callback eye_item");
         },
     }));
+    userMenuRegistry.add("html_item", () => ({
+        type: "item",
+        id: "html",
+        description: markup(`<div>HTML<i class="fa fa-check px-2"></i></div>`),
+        callback: () => {
+            expect.step("callback html_item");
+        },
+        sequence: 20,
+    }));
     await mountWithCleanup(BurgerUserMenu);
-    expect("a").toHaveCount(3);
+    expect("a").toHaveCount(4);
     expect(".form-switch input.form-check-input").toHaveCount(1);
     expect("hr").toHaveCount(1);
-    expect(queryAllTexts("a, .form-switch")).toEqual(["Ring", "Bad", "Frodo", "Eye"]);
+    expect(queryAllTexts("a, .form-switch")).toEqual(["Ring", "Bad", "Frodo", "HTML", "Eye"]);
     for (const item of queryAll("a, .form-switch")) {
         await click(item);
     }
@@ -77,6 +87,7 @@ test.tags("mobile")("can be rendered", async () => {
         "callback ring_item",
         "callback bad_item",
         "callback frodo_item",
+        "callback html_item",
         "callback eye_item",
     ]);
 });
