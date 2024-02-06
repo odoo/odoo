@@ -14,7 +14,8 @@ class TestFrontend(AccountTestInvoicingCommon, HttpCaseWithUserDemo):
     @classmethod
     def setUpClass(cls, chart_template_ref=None):
         super().setUpClass(chart_template_ref=chart_template_ref)
-        cls.user_demo.groups_id += cls.env.ref('point_of_sale.group_pos_manager') + cls.env.ref('account.group_account_invoice')
+        cls.user_demo.groups_id += cls.env.ref('point_of_sale.group_pos_manager') + cls.env.ref(
+            'account.group_account_invoice')
 
         user_admin = cls.env.ref('base.user_admin')
         (cls.user_demo + user_admin).write({
@@ -136,14 +137,14 @@ class TestFrontend(AccountTestInvoicingCommon, HttpCaseWithUserDemo):
             'code': 'TSJ',
             'type': 'sale',
             'company_id': main_company.id
-            })
+        })
 
         cash_journal = cls.env['account.journal'].create({
             'name': 'Cash Test',
             'code': 'TCJ',
             'type': 'cash',
             'company_id': main_company.id
-            })
+        })
 
         pos_config.write({
             'journal_id': test_sale_journal.id,
@@ -203,7 +204,6 @@ class TestFrontend(AccountTestInvoicingCommon, HttpCaseWithUserDemo):
         cls.pos_admin.partner_id.email = 'pos_admin@test.com'
 
     def test_01_pos_restaurant(self):
-
         self.pos_config.with_user(self.pos_admin).open_ui()
 
         self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'pos_restaurant_sync', login="pos_admin")
@@ -211,7 +211,8 @@ class TestFrontend(AccountTestInvoicingCommon, HttpCaseWithUserDemo):
         self.assertEqual(1, self.env['pos.order'].search_count([('amount_total', '=', 4.4), ('state', '=', 'draft')]))
         self.assertEqual(1, self.env['pos.order'].search_count([('amount_total', '=', 4.4), ('state', '=', 'paid')]))
 
-        self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'pos_restaurant_sync_second_login', login="pos_admin")
+        self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'pos_restaurant_sync_second_login',
+                        login="pos_admin")
 
         self.assertEqual(0, self.env['pos.order'].search_count([('amount_total', '=', 4.4), ('state', '=', 'draft')]))
         self.assertEqual(1, self.env['pos.order'].search_count([('amount_total', '=', 2.2), ('state', '=', 'draft')]))
@@ -228,7 +229,8 @@ class TestFrontend(AccountTestInvoicingCommon, HttpCaseWithUserDemo):
         self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'PosResTicketScreenTour', login="pos_admin")
 
     def test_05_tip_screen(self):
-        self.pos_config.write({'set_tip_after_payment': True, 'iface_tipproduct': True, 'tip_product_id': self.env.ref('point_of_sale.product_product_tip')})
+        self.pos_config.write({'set_tip_after_payment': True, 'iface_tipproduct': True,
+                               'tip_product_id': self.env.ref('point_of_sale.product_product_tip')})
         self.pos_config.with_user(self.pos_admin).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'PosResTipScreenTour', login="pos_admin")
 
@@ -253,7 +255,6 @@ class TestFrontend(AccountTestInvoicingCommon, HttpCaseWithUserDemo):
         self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'SplitBillScreenTour3', login="pos_admin")
 
     def test_08_refund_stay_current_table(self):
-
         self.pos_config.with_user(self.pos_admin).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'RefundStayCurrentTableTour', login="pos_admin")
 
@@ -266,6 +267,14 @@ class TestFrontend(AccountTestInvoicingCommon, HttpCaseWithUserDemo):
     def test_10_save_last_preparation_changes(self):
         self.pos_config.write({'printer_ids': False})
         self.pos_config.with_user(self.pos_admin).open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'SaveLastPreparationChangesTour', login="pos_admin")
-        self.assertTrue(self.pos_config.current_session_id.order_ids.last_order_preparation_change, "There should be a last order preparation change")
-        self.assertTrue("Coca" in self.pos_config.current_session_id.order_ids.last_order_preparation_change, "The last order preparation change should contain 'Coca'")
+        self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'SaveLastPreparationChangesTour',
+                        login="pos_admin")
+        self.assertTrue(self.pos_config.current_session_id.order_ids.last_order_preparation_change,
+                        "There should be a last order preparation change")
+        self.assertTrue("Coca" in self.pos_config.current_session_id.order_ids.last_order_preparation_change,
+                        "The last order preparation change should contain 'Coca'")
+
+    def test_11_merge_table(self):
+        self.pos_config.with_user(self.pos_admin).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'MergeTableTour', login="pos_admin", watch=False,
+                        step_delay=1000)
