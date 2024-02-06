@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { expect, test } from "@odoo/hoot";
 import { contains, mountWithCleanup } from "../web_test_helpers";
 

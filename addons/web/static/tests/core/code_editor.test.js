@@ -1,4 +1,3 @@
-/** @odoo-module */
 import { Component, xml, useState, markup } from "@odoo/owl";
 
 import { after, afterEach, expect, getFixture, onError, test } from "@odoo/hoot";
