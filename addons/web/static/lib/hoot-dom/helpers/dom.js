@@ -66,6 +66,7 @@ const {
     MutationObserver,
     Number,
     Object,
+    ontouchstart,
     Promise,
     Reflect,
     RegExp,
@@ -330,6 +331,9 @@ const matchesQuery = (query, width, height) =>
  * @param {number} height
  */
 const matchesQueryPart = (query, width, height) => {
+    if (/pointer:\s*coarse/.test(query)) {
+        return ontouchstart !== undefined;
+    }
     const minWidth = query.match(/min-width:\s*(\d+)/)?.[1];
     const maxWidth = query.match(/max-width:\s*(\d+)/)?.[1];
     const minHeight = query.match(/min-height:\s*(\d+)/)?.[1];
