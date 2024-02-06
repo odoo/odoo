@@ -656,3 +656,81 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         self.assertEqual(picking.backorder_ids.state, 'cancel')
         po.order_line.product_qty = 2.0
         self.assertEqual(po.order_line.product_qty, 2.0)
+
+    def test_mrp_report_bom_structure_subcontracting_quantities(self):
+        """Testing quantities and availablility states in subcontracted BoM report
+        1. Create a BoM of a finished product with a single component
+        2. Update the on hand quantity of BoM to 100
+        3. Move 20 components to subcontracting location
+        4. Check that the free/on-hand quantity of component is 100 (sum of warehouse stock and subcontracting location stock)
+        5. Check that producible quantity of 'Product' is equal to only subcontractor location stock
+        6. Check availability states when:
+            6a. Search quantity <= subcontractor quantity: component is available
+            6b. Subcontractor quantity <= search quantity <= total quantity: component is available
+            6c. Total quantity < search quantity: component is unavailable
+        """
+        search_qty_less_than_or_equal_moved = 10
+        moved_quantity_to_subcontractor = 20
+        search_qty_less_than_or_equal_total = 90
+        total_component_quantity = 100
+        search_qty_more_than_total = 110
+
+        resupply_route = self.env['stock.route'].search([('name', '=', 'Resupply Subcontractor on Order')])
+        finished, component = self.env['product.product'].create([{
+            'name': 'Finished Product',
+            'type': 'product',
+            'seller_ids': [(0, 0, {'partner_id': self.subcontractor_partner1.id})]
+        }, {
+            'name': 'Component',
+            'type': 'product',
+            'route_ids': [(4, resupply_route.id)],
+        }])
+
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': finished.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'type': 'subcontract',
+            'subcontractor_ids': [(4, self.subcontractor_partner1.id)],
+            'bom_line_ids': [(0, 0, {'product_id': component.id, 'product_qty': 1.0})],
+        })
+
+        inventory_wizard = self.env['stock.change.product.qty'].create({
+            'product_id': component.id,
+            'product_tmpl_id': component.product_tmpl_id.id,
+            'new_quantity': total_component_quantity,
+        })
+        inventory_wizard.change_product_qty()
+        # Check quantity was updated
+        self.assertEqual(component.virtual_available, total_component_quantity)
+        self.assertEqual(component.qty_available, total_component_quantity)
+
+        quantity_before_move = self.env['stock.quant']._get_available_quantity(component, self.subcontractor_partner1.property_stock_subcontractor, allow_negative=True)
+        picking_form = Form(self.env['stock.picking'])
+        picking_form.picking_type_id = self.warehouse.subcontracting_resupply_type_id
+        picking_form.partner_id = self.subcontractor_partner1
+        with picking_form.move_ids_without_package.new() as move:
+            move.product_id = component
+            move.product_uom_qty = moved_quantity_to_subcontractor
+        picking = picking_form.save()
+        picking.action_confirm()
+        picking.move_ids.quantity = moved_quantity_to_subcontractor
+        picking.move_ids.picked = True
+        picking.button_validate()
+        quantity_after_move = self.env['stock.quant']._get_available_quantity(component, self.subcontractor_partner1.property_stock_subcontractor, allow_negative=True)
+        self.assertEqual(quantity_after_move, quantity_before_move + moved_quantity_to_subcontractor)
+
+        report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom.id, searchQty=search_qty_less_than_or_equal_moved, searchVariant=False)
+        self.assertEqual(report_values['lines']['components'][0]['quantity_available'], total_component_quantity)
+        self.assertEqual(report_values['lines']['components'][0]['quantity_on_hand'], total_component_quantity)
+        self.assertEqual(report_values['lines']['quantity_available'], 0)
+        self.assertEqual(report_values['lines']['quantity_on_hand'], 0)
+        self.assertEqual(report_values['lines']['producible_qty'], moved_quantity_to_subcontractor)
+        self.assertEqual(report_values['lines']['stock_avail_state'], 'unavailable')
+
+        self.assertEqual(report_values['lines']['components'][0]['stock_avail_state'], 'available')
+
+        report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom.id, searchQty=search_qty_less_than_or_equal_total, searchVariant=False)
+        self.assertEqual(report_values['lines']['components'][0]['stock_avail_state'], 'available')
+
+        report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom.id, searchQty=search_qty_more_than_total, searchVariant=False)
+        self.assertEqual(report_values['lines']['components'][0]['stock_avail_state'], 'unavailable')
