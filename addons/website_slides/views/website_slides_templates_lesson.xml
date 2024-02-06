@@ -28,7 +28,7 @@
                                 </div>
                                 <div t-else="" t-attf-class="o_wslides_channel_completion_progressbar #{'d-none' if slide.channel_id.completed else 'd-flex'} align-items-center pb-3">
                                     <div class="progress w-50 bg-black-25" style="height: 10px;">
-                                        <div class="progress-bar rounded-start" role="progressbar"
+                                        <div class="progress-bar rounded-start bg-info" role="progressbar"
                                             t-att-aria-valuenow="slide.channel_id.completion" aria-valuemin="0" aria-valuemax="100"
                                             t-attf-style="width: #{slide.channel_id.completion}%;">
                                         </div>
