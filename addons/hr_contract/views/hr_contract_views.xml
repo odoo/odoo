@@ -115,8 +115,8 @@
                     <filter string="Running Contracts" name="running" domain="[('state', '=', 'open')]"/>
                     <filter string="Contracts to review" name="not_running" domain="[('state', 'in', ['draft', 'close'])]"/>
                     <separator />
-                    <filter string="Start Date" name="start_date"/>
-                    <filter string="End Date" name="end_date"/>
+                    <filter string="Start Date" name="start_date" date="date_start"/>
+                    <filter string="End Date" name="end_date" date="date_end"/>
                     <separator/>
                     <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                     <separator/>
