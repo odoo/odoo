@@ -1,5 +1,6 @@
 /** @odoo-module */
 
+import { BillScreen } from "@pos_restaurant/../tests/tours/helpers/BillScreenTourMethods";
 import { PaymentScreen } from "@point_of_sale/../tests/tours/helpers/PaymentScreenTourMethods";
 import { ReceiptScreen } from "@point_of_sale/../tests/tours/helpers/ReceiptScreenTourMethods";
 import { Chrome } from "@pos_restaurant/../tests/tours/helpers/ChromeTourMethods";
@@ -104,3 +105,19 @@ Chrome.do.backToFloor();
 FloorScreen.check.orderCountSyncedInTableIs("T4", "1");
 
 Tour.register("pos_restaurant_sync_second_login", { test: true, url: "/pos/ui" }, getSteps());
+
+startSteps();
+
+ProductScreen.do.confirmOpeningPopup();
+FloorScreen.do.clickTable("T5");
+ProductScreen.do.clickDisplayedProduct("Coca-Cola");
+BillScreen.do.clickBillButton();
+BillScreen.check.isShown();
+BillScreen.check.isQRCodeNotShown();
+BillScreen.do.clickOk();
+ProductScreen.do.clickPayButton();
+PaymentScreen.do.clickPaymentMethod("Bank");
+PaymentScreen.do.clickValidate();
+BillScreen.check.isQRCodeShown();
+
+Tour.register('BillScreenTour', { test: true, url: "/pos/ui" }, getSteps());
