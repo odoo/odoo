@@ -87,7 +87,7 @@ export class HootSideBar extends Component {
         <div class="${HootSideBar.name} flex-col w-64 h-full overflow-x-hidden overflow-y-auto resize-x shadow bg-gray-200 dark:bg-gray-800 z-1 hidden md:flex">
             <ul>
                 <t t-foreach="state.items" t-as="item" t-key="item.id">
-                    <li class="flex items-center h-7">
+                    <li class="flex items-center h-7 animate-slide-down">
                         <button
                             class="flex items-center w-full h-full px-2"
                             t-att-class="{ 'bg-gray-300 dark:bg-gray-700': state.hovered === item.id or uiState.selectedSuiteId === item.id }"
@@ -163,6 +163,7 @@ export class HootSideBar extends Component {
     toggleItem(id) {
         if (this.uiState.selectedSuiteId !== id) {
             this.uiState.selectedSuiteId = id;
+            this.uiState.resultsPage = 0;
 
             if (this.state.unfolded.has(id)) {
                 return;
