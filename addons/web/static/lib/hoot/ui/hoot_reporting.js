@@ -4,7 +4,7 @@ import { Component, onWillRender, useState, xml } from "@odoo/owl";
 import { parseRegExp } from "../../hoot-dom/hoot_dom_utils";
 import { Test } from "../core/test";
 import { EXCLUDE_PREFIX, subscribeToURLParams } from "../core/url";
-import { batch, formatTime, getFuzzyScore, normalize } from "../hoot_utils";
+import { formatTime, getFuzzyScore, normalize } from "../hoot_utils";
 import { HootJobButtons } from "./hoot_job_buttons";
 import { HootTestPath } from "./hoot_test_path";
 import { HootTestResult } from "./hoot_test_result";
@@ -20,7 +20,7 @@ import { HootTestResult } from "./hoot_test_result";
 // Global
 //-----------------------------------------------------------------------------
 
-const { Boolean, RegExp } = globalThis;
+const { Boolean, Math, RegExp } = globalThis;
 
 //-----------------------------------------------------------------------------
 // Internal
@@ -45,7 +45,8 @@ export class HootReporting extends Component {
 
     static template = xml`
         <div class="${HootReporting.name} flex-1 overflow-y-auto">
-            <t t-foreach="filteredResults" t-as="result" t-key="result.id">
+            <t t-set="resultStart" t-value="uiState.resultsPage * uiState.resultsPerPage" />
+            <t t-foreach="filteredResults.slice(resultStart, resultStart + uiState.resultsPerPage)" t-as="result" t-key="result.id">
                 <HootTestResult
                     open="state.openTests.includes(result.test.id)"
                     test="result.test"
@@ -100,18 +101,17 @@ export class HootReporting extends Component {
 
         this.urlParams = subscribeToURLParams("filter");
 
+        this.runnerState = useState(runner.state);
         this.state = useState({
             /** @type {string[]} */
             openGroups: [],
             /** @type {string[]} */
             openTests: [],
-            /** @type {Record<string, Test>} */
-            tests: {},
         });
         this.uiState = useState(ui);
 
-        const [addTest] = batch((test) => {
-            this.state.tests[test.id] = test;
+        let didShowDetail = false;
+        runner.afterEach((test) => {
             if (
                 showdetail &&
                 !(showdetail === "first-fail" && didShowDetail) &&
@@ -120,20 +120,76 @@ export class HootReporting extends Component {
                 didShowDetail = true;
                 this.state.openTests.push(test.id);
             }
-        }, 100);
-
-        let didShowDetail = false;
-        runner.beforeAll(() => {
-            for (const id of runner.tests.keys()) {
-                this.state.tests[id] = null;
-            }
         });
-        runner.afterTestDone(addTest);
-        runner.onTestSkipped(addTest);
 
         onWillRender(() => {
-            this.filteredResults = this.getFilteredResults();
+            this.filteredResults = this.computeFilteredResults();
+            this.uiState.totalResults = this.filteredResults.length;
         });
+    }
+
+    computeFilteredResults() {
+        const { selectedSuiteId, sortResults, statusFilter } = this.uiState;
+
+        const queryFilter = this.getQueryFilter();
+
+        const results = [];
+        for (const test of Object.values(this.runnerState.done)) {
+            if (!test) {
+                continue; // Test not yet registered
+            }
+            let matchFilter = false;
+            switch (statusFilter) {
+                case "failed": {
+                    matchFilter = !test.config.skip && test.results.some((r) => !r.pass);
+                    break;
+                }
+                case "passed": {
+                    matchFilter =
+                        !test.config.todo && !test.config.skip && test.results.every((r) => r.pass);
+                    break;
+                }
+                case "skipped": {
+                    matchFilter = test.config.skip;
+                    break;
+                }
+                case "todo": {
+                    matchFilter = test.config.todo;
+                    break;
+                }
+                default: {
+                    matchFilter = Boolean(selectedSuiteId) || test.results.some((r) => !r.pass);
+                    break;
+                }
+            }
+            if (matchFilter && selectedSuiteId) {
+                matchFilter = test.path.some((suite) => suite.id === selectedSuiteId);
+            }
+            if (matchFilter && queryFilter) {
+                matchFilter = queryFilter(test.key);
+            }
+            if (!matchFilter) {
+                continue;
+            }
+            results.push({
+                duration: test.lastResults?.duration,
+                status: test.status,
+                id: `test#${test.id}`,
+                test: test,
+            });
+        }
+
+        let predicate;
+        if (sortResults) {
+            predicate =
+                sortResults === "asc"
+                    ? (a, b) => a.duration - b.duration
+                    : (a, b) => b.duration - a.duration;
+        } else {
+            predicate = (a, b) => b.status - a.status;
+        }
+
+        return results.sort(predicate);
     }
 
     getEmptyMessage() {
@@ -219,72 +275,6 @@ export class HootReporting extends Component {
         const isExcluding = nFilter.startsWith(EXCLUDE_PREFIX);
         const pattern = isExcluding ? nFilter.slice(EXCLUDE_PREFIX.length) : nFilter;
         return (key) => getFuzzyScore(pattern, key) > 0;
-    }
-
-    getFilteredResults() {
-        const makeResult = (test) => ({
-            duration: test.lastResults?.duration,
-            status: test.status,
-            id: `test#${test.id}`,
-            test: test,
-        });
-
-        const { selectedSuiteId, sortResults, statusFilter } = this.uiState;
-
-        const queryFilter = this.getQueryFilter();
-
-        const results = [];
-        for (const test of Object.values(this.state.tests)) {
-            if (!test) {
-                continue; // Test not yet registered
-            }
-            let matchFilter = false;
-            switch (statusFilter) {
-                case "failed": {
-                    matchFilter = !test.config.skip && test.results.some((r) => !r.pass);
-                    break;
-                }
-                case "passed": {
-                    matchFilter =
-                        !test.config.todo && !test.config.skip && test.results.every((r) => r.pass);
-                    break;
-                }
-                case "skipped": {
-                    matchFilter = test.config.skip;
-                    break;
-                }
-                case "todo": {
-                    matchFilter = test.config.todo;
-                    break;
-                }
-                default: {
-                    matchFilter = Boolean(selectedSuiteId) || test.results.some((r) => !r.pass);
-                    break;
-                }
-            }
-            if (matchFilter && selectedSuiteId) {
-                matchFilter = test.path.some((suite) => suite.id === selectedSuiteId);
-            }
-            if (matchFilter && queryFilter) {
-                matchFilter = queryFilter(test.key);
-            }
-            if (!matchFilter) {
-                continue;
-            }
-            results.push(makeResult(test));
-        }
-
-        let predicate;
-        if (sortResults) {
-            predicate =
-                sortResults === "asc"
-                    ? (a, b) => a.duration - b.duration
-                    : (a, b) => b.duration - a.duration;
-        } else {
-            predicate = (a, b) => b.status - a.status;
-        }
-
-        return results.sort(predicate);
     }
 
     /**
