@@ -48,17 +48,21 @@ class AnalyticMixin(models.AbstractModel):
         pass
 
     def _search_analytic_distribution(self, operator, value):
-        if operator not in ['=', '!=', 'ilike', 'not ilike'] or not isinstance(value, (str, bool)):
+        if operator == 'in' and isinstance(value, (tuple, list)):
+            account_ids = value
+            operator_inselect = 'inselect'
+        elif operator in ('=', '!=', 'ilike', 'not ilike') and isinstance(value, (str, bool)):
+            operator_name_search = '=' if operator in ('=', '!=') else 'ilike'
+            account_ids = list(self.env['account.analytic.account']._name_search(name=value, operator=operator_name_search))
+            operator_inselect = 'inselect' if operator in ('=', 'ilike') else 'not inselect'
+        else:
             raise UserError(_('Operation not supported'))
-        operator_name_search = '=' if operator in ('=', '!=') else 'ilike'
-        account_ids = list(self.env['account.analytic.account']._name_search(name=value, operator=operator_name_search))
 
         query = f"""
-            SELECT id 
+            SELECT id
             FROM {self._table}
             WHERE analytic_distribution ?| array[%s]
         """
-        operator_inselect = 'inselect' if operator in ('=', 'ilike') else 'not inselect'
         return [('id', operator_inselect, (query, [[str(account_id) for account_id in account_ids]]))]
 
     @api.model
@@ -108,6 +112,8 @@ class AnalyticMixin(models.AbstractModel):
 
     def _apply_analytic_distribution_domain(self, domain):
         return [
-            ('analytic_distribution_search', leaf[1], leaf[2]) if len(leaf) == 3 and leaf[0] == 'analytic_distribution' and isinstance(leaf[2], str) else leaf
+            ('analytic_distribution_search', leaf[1], leaf[2])
+            if len(leaf) == 3 and leaf[0] == 'analytic_distribution' and isinstance(leaf[2], (str, tuple, list))
+            else leaf
             for leaf in domain
         ]
