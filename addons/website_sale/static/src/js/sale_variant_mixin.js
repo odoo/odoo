@@ -730,8 +730,7 @@ var VariantMixin = {
     /**
      * Return true if the current object has been destroyed.
      * This function has been added as a fix to know if the result of a rpc
-     * should be handled. Indeed, "this._rpc()" can not be used as it is not
-     * supported by some elements that use this mixin.
+     * should be handled.
      *
      * @private
      */
