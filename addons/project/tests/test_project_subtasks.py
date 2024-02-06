@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 
+from datetime import datetime, timedelta
+
 from odoo import Command
 from odoo.addons.project.tests.test_project_base import TestProjectCommon
 from odoo.tests import Form, tagged
+
 
 @tagged('-at_install', 'post_install')
 class TestProjectSubtasks(TestProjectCommon):
@@ -199,11 +202,9 @@ class TestProjectSubtasks(TestProjectCommon):
         })
 
         task_count_with_subtasks_including_archived = 8
-        task_count_in_project_pigs = self.project_pigs.task_count
-        self.project_goats._compute_task_count()  # recompute without archived tasks and subtasks
-        task_count_in_project_goats = self.project_goats.task_count
+        task_count_in_project_pigs = len(self.project_pigs.task_ids)
+        task_count_in_project_goats = len(self.project_goats.task_ids)
         project_goats_duplicated = self.project_goats.copy()
-        self.project_pigs._compute_task_count()  # retrigger since a new task should be added in the project after the duplication of Project Goats
 
         def dfs(task):
             # ABGH: i used dfs to avoid visiting a task 2 times as it can be a direct task for the project and a subtask for another task like child 6
@@ -225,8 +226,8 @@ class TestProjectSubtasks(TestProjectCommon):
             task_count_with_subtasks_including_archived - 1,
             'The number of duplicated tasks (subtasks included) should be equal to the number of all tasks (with active subtasks included) of both projects, '
             'that is only the active subtasks are duplicated.')
-        self.assertEqual(self.project_goats.task_count, task_count_in_project_goats, 'The number of tasks should be the same before and after the duplication of this project.')
-        self.assertEqual(self.project_pigs.task_count, task_count_in_project_pigs + 1, 'The project pigs should an additional task after the duplication of the project goats.')
+        self.assertEqual(len(self.project_goats.task_ids), task_count_in_project_goats, 'The number of tasks should be the same before and after the duplication of this project.')
+        self.assertEqual(len(self.project_pigs.task_ids), task_count_in_project_pigs + 1, 'The project pigs should an additional task after the duplication of the project goats.')
 
     def test_subtask_creation_with_form(self):
         """
@@ -466,3 +467,23 @@ class TestProjectSubtasks(TestProjectCommon):
         self.assertEqual(2, len(parent_task.child_ids), "Should have 2 direct non archived subtasks")
         self.assertEqual(parent_task.child_ids, child_3 + child_4, "Should have 2 direct non archived subtasks")
         self.assertEqual(4, len(parent_task._get_all_subtasks().filtered('active')), "Should have 4 non archived subtasks")
+
+    def test_compute_task_count_consider_one_year_only(self):
+        """This test case is to ensure that method _compute_task_count account the tasks that were created/updated
+        within the last 365 days so that the count remains relevant"""
+        myProject = self.env['project.project'].with_context({'mail_create_nolog': True}).create({
+            'name': "My project",
+            })
+        self.env['project.task'].with_context({'mail_create_nolog': True}).create([
+            {
+                'name': "Task-1",
+                'project_id': myProject.id,
+                'date_last_stage_update': datetime.now(),
+            },
+            {
+                'name': "Task-2",
+                'project_id': myProject.id,
+                'date_last_stage_update': datetime.now() - timedelta(days=800),
+            }
+            ])
+        self.assertEqual(myProject.task_count, 1, "The task count only refers to tasks created/update within in a year")
