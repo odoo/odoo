@@ -42,6 +42,7 @@ class AccountMoveSend(models.TransientModel):
         # To be removed -- Proxy feature to be replaced with actionable_errors as soon as the user updates the module
         for wizard in self:
             messages = []
+            wizard.l10n_it_edi_warning_message = False
             if wizard.l10n_it_edi_actionable_errors:
                 messages.append(_("Please upgrade the Italian EDI module to update this widget."))
                 messages.append(_("Go to Applications page and update the 'Italia - Fatturazione Elettronica' module."))
@@ -54,13 +55,13 @@ class AccountMoveSend(models.TransientModel):
                         'move': 'account.move',
                         'company': 'res.company'
                     }.get(split[0], None)):
-                        action = error_data['action']
-                        if 'res_id' in action:
-                            record_ids = [action['res_id']]
-                        else:
-                            record_ids = action['domain'][0][2]
-                        records = self.env[model_id].browse(record_ids)
-                        message = f"{message} - {', '.join(records.mapped('display_name'))}"
+                        if action := error_data.get('action'):
+                            if 'res_id' in action:
+                                record_ids = [action['res_id']]
+                            else:
+                                record_ids = action['domain'][0][2]
+                            records = self.env[model_id].browse(record_ids)
+                            message = f"{message} - {', '.join(records.mapped('display_name'))}"
                     messages.append(nl2br(escape(message)))
                 wizard.l10n_it_edi_warning_message = Markup("<br/>").join(messages)
 
