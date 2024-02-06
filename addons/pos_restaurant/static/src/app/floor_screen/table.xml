@@ -5,7 +5,7 @@
         <t t-set="isOccupied" t-value="pos.getCustomerCount(props.table.id) > 0 || tNotif?.order_count > 0"/>
         <div class="table d-flex flex-column align-items-center justify-content-between cursor-pointer"
             t-ref="root"
-            t-att-class="{'selected': isSelected}"
+            t-att-class="{'selected': isSelected, 'isLinked': props.table.parent_id}"
             t-attf-class="{{props.class}}"
             t-on-click.stop="(ev) => props.onClick(props.table, ev)"
             t-attf-style="border: 3px solid {{props.table.color}};
