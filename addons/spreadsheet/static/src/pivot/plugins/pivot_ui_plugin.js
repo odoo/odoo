@@ -326,7 +326,6 @@ export class PivotUIPlugin extends OdooUIPlugin {
      */
     computeOdooPivotHeaderValue(pivotId, domainArgs) {
         const dataSource = this.getters.getPivotDataSource(pivotId);
-        dataSource.markAsHeaderUsed(domainArgs);
         return dataSource.computeOdooPivotHeaderValue(domainArgs);
     }
 
@@ -369,7 +368,6 @@ export class PivotUIPlugin extends OdooUIPlugin {
      */
     getPivotCellValue(pivotId, measure, domain) {
         const dataSource = this.getters.getPivotDataSource(pivotId);
-        dataSource.markAsValueUsed(domain, measure);
         return dataSource.getPivotCellValue(measure, domain);
     }
 
@@ -514,7 +512,6 @@ export class PivotUIPlugin extends OdooUIPlugin {
      */
     _refreshOdooPivot(pivotId) {
         const dataSource = this.getters.getPivotDataSource(pivotId);
-        dataSource.clearUsedValues();
         dataSource.load({ reload: true });
     }
 
