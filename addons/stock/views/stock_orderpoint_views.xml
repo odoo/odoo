@@ -163,8 +163,8 @@
                             <field name="allowed_location_ids" invisible="1"/>
                             <field name="warehouse_id" options="{'no_open': True, 'no_create': True}" groups="stock.group_stock_multi_locations"/>
                             <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" domain="[('id', 'in', allowed_location_ids)]"/>
-                            <label for="group_id" groups="base.group_no_one"/>
-                            <div groups="base.group_no_one">
+                            <label for="group_id" technical-chm="1"/>
+                            <div technical-chm="1">
                                 <field name="group_id" groups="stock.group_adv_location"/>
                             </div>
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>

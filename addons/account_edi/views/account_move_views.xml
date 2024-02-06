@@ -54,10 +54,10 @@
             <field name="inherit_id" ref="account.view_account_invoice_filter"/>
             <field name="arch" type="xml">
                 <xpath expr="//search/group/filter[@name='status']" position="after">
-                    <filter string="Electronic invoicing state" name="edi_state" groups="base.group_no_one"
+                    <filter string="Electronic invoicing state" name="edi_state"
                             context="{'group_by': 'edi_state'}"/>
                     <separator/>
-                    <filter string="Electronic invoicing processing needed" name="edi_to_process" groups="base.group_no_one" 
+                    <filter string="Electronic invoicing processing needed" name="edi_to_process"
                             domain="[('edi_state', 'in', [('to_send'), ('to_cancel')])]"/>
                 </xpath>
             </field>
@@ -122,7 +122,8 @@
                     <page id="edi_documents"
                           string="EDI Documents"
                           name="page_edi_documents"
-                          groups="base.group_no_one"
+                          technical-chm="1"
+                          groups="account.group_account_readonly,account.group_account_invoice"
                           invisible="not edi_document_ids">
                         <field name="edi_document_ids">
                             <tree create="false" delete="false" edit="false" decoration-danger="error" no_open="1">
@@ -135,7 +136,7 @@
                                         type="object"
                                         class="oe_link oe_inline"
                                         string="Download"
-                                        groups="base.group_no_one"
+                                        technical-chm="1"
                                         invisible="not error or blocking_level == 'info'"/>
                             </tree>
                         </field>

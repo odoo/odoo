@@ -28,14 +28,14 @@
                        invisible="not booth_category_id"/>
             </field>
             <group name="renter" position="after">
-                <group name="sales" groups="base.group_no_one"
+                <group name="sales" technical-chm="1"
                        invisible="not sale_order_line_id">
                     <field name="sale_order_id"/>
                     <field name="sale_order_line_id" readonly="state != 'available'"/>
                 </group>
             </group>
             <xpath expr="//sheet" position="inside">
-                <notebook groups="base.group_no_one">
+                <notebook technical-chm="1">
                     <page string="Registrations" name="page_registrations">
                         <field name="event_booth_registration_ids" readonly="1"/>
                     </page>

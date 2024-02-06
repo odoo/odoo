@@ -2295,7 +2295,7 @@
         <div class="oe_structure">
             <section class="container">
                 <h1><t t-esc="res_company.name"/>
-                    <small groups='base.group_no_one'>Odoo Version <t t-out="version.get('server_version')"/></small>
+                    <small technical-chm="1">Odoo Version <t t-out="version.get('server_version')"/></small>
                 </h1>
                 <p>
                     Information about the <t t-esc="res_company.name"/> instance of Odoo, the <a target="_blank" href="https://www.odoo.com">Open Source ERP</a>.
@@ -2317,7 +2317,7 @@
                     </dt>
                     <dd>
                         <span t-out="app.summary"/>
-                    </dd><dd class="text-muted" groups='base.group_no_one'>
+                    </dd><dd class="text-muted" technical-chm="1">
                         Technical name: <span t-field="app.name"/>, author: <span t-field="app.author"/>
                     </dd>
                 </dl>
@@ -2332,7 +2332,7 @@
                         </dt>
                         <dd>
                             <span t-out="app.summary"/>
-                        </dd><dd class="text-muted" groups='base.group_no_one'>
+                        </dd><dd class="text-muted" technical-chm="1">
                             Technical name: <span t-field="app.name"/>, author: <span t-field="app.author"/>
                         </dd>
                     </dl>

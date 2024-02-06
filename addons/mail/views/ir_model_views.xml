@@ -6,9 +6,9 @@
         <field name="inherit_id" ref="base.view_model_form"/>
         <field name="arch" type="xml">
             <field name="transient" position="after">
-                <field name="is_mail_thread" readonly="state != 'manual'" groups="base.group_no_one"/>
-                <field name="is_mail_activity" readonly="state != 'manual'" groups="base.group_no_one"/>
-                <field name="is_mail_blacklist" readonly="state != 'manual'" groups="base.group_no_one"/>
+                <field name="is_mail_thread" readonly="state != 'manual'" technical-chm="1"/>
+                <field name="is_mail_activity" readonly="state != 'manual'" technical-chm="1"/>
+                <field name="is_mail_blacklist" readonly="state != 'manual'" technical-chm="1"/>
             </field>
             <xpath expr="//field[@name='field_id']//field[@name='copied']" position="after">
                 <field name="state" invisible="1"/>

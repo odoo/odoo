@@ -16,9 +16,9 @@
                             <label for="datas" class="mt-1"/>
                             <field name="datas" nolabel="1" class="w-100" filename="name" invisible="type == 'url'"/>
                             <field name="url" widget="url" invisible="type == 'binary'"/>
-                            <field name="mimetype" groups="base.group_no_one"/>
+                            <field name="mimetype" technical-chm="1"/>
                         </group>
-                        <group string="Attached To" groups="base.group_no_one">
+                        <group string="Attached To" technical-chm="1">
                             <field name="res_model"/>
                             <field name="res_field"/>
                             <field name="res_id"/>
@@ -26,17 +26,17 @@
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                             <field name="public"/>
                         </group>
-                        <group string="History" groups="base.group_no_one" invisible="not create_date">
+                        <group string="History" technical-chm="1" invisible="not create_date">
                             <label for="create_uid" string="Creation"/>
                             <div name="creation_div">
                                 <field name="create_uid" readonly="1" class="oe_inline"/> on
                                 <field name="create_date" readonly="1" class="oe_inline"/>
                             </div>
                         </group>
-                        <group name="description_group" string="Description" groups="base.group_no_one" colspan="4">
+                        <group name="description_group" string="Description" technical-chm="1" colspan="4">
                             <field name="description" nolabel="1" colspan="2"/>
                         </group>
-                        <group groups="base.group_no_one" string="Indexed Content" colspan="4">
+                        <group technical-chm="1" string="Indexed Content" colspan="4">
                             <field name="index_content" nolabel="1" colspan="2"/>
                         </group>
                     </group>
@@ -77,7 +77,7 @@
                     <field name="type"/>
                     <group expand="0" string="Group By">
                         <filter name="owner" string="Owner" domain="[]" context="{'group_by':'create_uid'}"/>
-                        <filter string="Type" name="type" domain="[]" context="{'group_by':'type'}" groups="base.group_no_one"/>
+                        <filter string="Type" name="type" domain="[]" context="{'group_by':'type'}"/>
                         <filter string="Company" name="company" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                         <filter string="Creation Date" name="creation_month" domain="[]" context="{'group_by':'create_date'}"/>
                     </group>

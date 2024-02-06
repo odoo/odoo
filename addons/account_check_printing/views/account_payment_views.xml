@@ -11,7 +11,7 @@
                     <button name="action_void_check" invisible="payment_method_code != 'check_printing' or state != 'posted' or not is_move_sent" string="Void Check" type="object" data-hotkey="o" />
                 </xpath>
                 <xpath expr="//div[@name='amount_div']" position="after">
-                    <field name="check_amount_in_words" invisible="payment_method_code != 'check_printing'" groups="base.group_no_one"/>
+                    <field name="check_amount_in_words" invisible="payment_method_code != 'check_printing'" technical-chm="1"/>
                 </xpath>
                 <xpath expr="//field[@name='payment_method_line_id']" position="after">
                     <field name="check_manual_sequencing" invisible="1"/>

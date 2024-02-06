@@ -67,15 +67,15 @@
                         <group string="Event Information" name="event">
                             <field class="text-break" name="event_id" readonly="event_id and state != 'draft' and id"
                                    context="{'name_with_seats_availability': True}" options="{'no_create': True}"/>
-                            <field name="barcode" groups="base.group_no_one"/>
+                            <field name="barcode" technical-chm="1"/>
                             <field name="event_ticket_id" invisible="not event_id" readonly="event_ticket_id and state != 'draft' and id"
                                    context="{'name_with_seats_availability': True}" options="{'no_open': True, 'no_create': True}"
                                    domain="[('event_id', '=', event_id)]"/>
                             <field name="partner_id"/>
-                            <field name="create_date" string="Registration Date" groups="base.group_no_one"/>
-                            <field name="date_closed" groups="base.group_no_one"/>
+                            <field name="create_date" string="Registration Date" technical-chm="1"/>
+                            <field name="date_closed" technical-chm="1"/>
                         </group>
-                        <group string="Marketing" name="utm_link" groups="base.group_no_one">
+                        <group string="Marketing" name="utm_link" technical-chm="1">
                             <field name="utm_campaign_id"/>
                             <field name="utm_medium_id"/>
                             <field name="utm_source_id"/>

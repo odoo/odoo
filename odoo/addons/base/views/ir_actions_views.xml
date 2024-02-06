@@ -334,13 +334,13 @@
                             <label for="state"/>
                             <field name="state" widget="selection_badge" options="{'size': 'sm'}"/>
                         </div>
-                        <group string="Technical Settings" groups="base.group_no_one">
+                        <group string="Technical Settings" technical-chm="1">
                             <group>
                                 <field name="model_id" options="{'no_create': True, 'no_open': True}" />
                                 <field name="groups_id" widget="many2many_tags" />
                             </group>
                         </group>
-                        <separator string="Action Details" groups="base.group_no_one" />
+                        <separator string="Action Details" technical-chm="1" />
                         <div class="d-flex flex-row flex-wrap gap-2" invisible="state != 'object_write'">
                             <field name="evaluation_type" class="oe_inline"/>
                             <field name="update_path" widget="DynamicModelFieldSelectorChar" class="oe_inline" options="{'model': 'model_name'}"/>
@@ -378,7 +378,7 @@
                             <group name="action_content">
                                 <field name="model_name" invisible="1"/>
                                 <field name="available_model_ids" invisible="1"/>
-                                <field name="model_id" options="{'no_create': True, 'no_open': True}" groups="!base.group_no_one" invisible="context.get('default_model_id')"
+                                <field name="model_id" options="{'no_create': True, 'no_open': True}" technical-chm="0" invisible="context.get('default_model_id')"
                                        domain="[('id', 'in', available_model_ids)]"/>
 
                                 <field name="type" invisible="1"/>

@@ -99,7 +99,7 @@
 
                     <field name="image_1920" widget='image' class="oe_avatar" options='{"preview_image": "avatar_128"}'/>
                     <div class="oe_title">
-                        <field name="company_type" options="{'horizontal': true}" widget="radio" groups="base.group_no_one"/>
+                        <field name="company_type" options="{'horizontal': true}" widget="radio" technical-chm="1"/>
                         <h1>
                             <field id="company" name="name" default_focus="1" placeholder="e.g. Lumber Inc" invisible="not is_company" required="type == 'contact' and is_company"/>
                             <field id="individual" name="name" default_focus="1" placeholder="e.g. Brandom Freeman" invisible="is_company" required="type == 'contact' and not is_company"/>
@@ -138,8 +138,8 @@
                     <field name="parent_id" invisible="1"/>
                     <group>
                         <group>
-                            <label for="type" invisible="not parent_id" groups="base.group_no_one"/>
-                            <div invisible="not parent_id" name="div_type" groups="base.group_no_one">
+                            <label for="type" invisible="not parent_id" technical-chm="1"/>
+                            <div invisible="not parent_id" name="div_type" technical-chm="1">
                                 <field name="type" class="oe_inline"/>
                             </div>
                             <label for="street" string="Address"/>

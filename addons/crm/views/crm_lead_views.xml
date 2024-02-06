@@ -87,7 +87,6 @@
                         <group>
                             <group name="lead_partner" invisible="type == 'opportunity'">
                                 <!-- Preload all the partner's information -->
-                                <field name="is_partner_visible" invisible='1'/>
                                 <field name="partner_id" widget="res_partner_many2one"
                                     context="{
                                         'default_name': contact_name,
@@ -107,7 +106,27 @@
                                         'default_website': website,
                                         'default_lang': lang_code,
                                         'show_vat': True
-                                    }" invisible="not is_partner_visible"/>
+                                    }" invisible="type != 'opportunity' and not partner_id"/>
+                                <field name="partner_id" widget="res_partner_many2one"
+                                    context="{
+                                        'default_name': contact_name,
+                                        'default_title': title,
+                                        'default_street': street,
+                                        'default_street2': street2,
+                                        'default_city': city,
+                                        'default_state_id': state_id,
+                                        'default_zip': zip,
+                                        'default_country_id': country_id,
+                                        'default_function': function,
+                                        'default_phone': phone,
+                                        'default_mobile': mobile,
+                                        'default_email': email_from,
+                                        'default_user_id': user_id,
+                                        'default_team_id': team_id,
+                                        'default_website': website,
+                                        'default_lang': lang_code,
+                                        'show_vat': True
+                                    }" invisible="type == 'opportunity' or partner_id" technical-chm="1"/>
                                 <field name="partner_name"/>
                                 <label for="street" string="Address"/>
                                 <div class="o_address_format">
@@ -208,7 +227,7 @@
                                         title="By saving this change, the customer email will also be updated."
                                         invisible="not partner_email_update"/>
                                 </div>
-                                <field name="email_cc" groups="base.group_no_one"/>
+                                <field name="email_cc" technical-chm="1"/>
                                 <field name="function"/>
                                 <label for="phone_group_lead_info" class="oe_inline"/>
                                 <div class="o_row o_row_readonly">
@@ -260,7 +279,7 @@
                             </page>
                             <page name="extra" string="Extra Info" invisible="type == 'opportunity'">
                                 <group>
-                                    <group string="Email" groups="base.group_no_one">
+                                    <group string="Email" technical-chm="1">
                                         <field name="message_bounce" readonly="1"/>
                                     </group>
                                     <group string="Marketing" name="categorization">

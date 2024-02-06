@@ -18,7 +18,7 @@
         <field name="inherit_id" ref="event.view_event_registration_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='phone']" position="after">
-                <field name="visitor_id" groups="base.group_no_one"/>
+                <field name="visitor_id" technical-chm="1"/>
             </xpath>
             <sheet position="inside">
                 <notebook>
@@ -70,7 +70,7 @@
         <field name="inherit_id" ref="event.view_event_registration_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='partner_id']" position="after">
-                <field name="visitor_id" optional="hide" groups="base.group_no_one"/>
+                <field name="visitor_id" optional="hide" technical-chm="1"/>
             </xpath>
             <field name="state" position="before">
                 <field name="registration_answer_ids" string="Selected Answers" widget="many2many_tags" optional="hide" readonly="1"/>

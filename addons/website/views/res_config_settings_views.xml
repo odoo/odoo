@@ -111,7 +111,7 @@
                                 </a>
                             </div>
                         </setting>
-                        <setting id="cdn_setting" title="A CDN helps you serve your website’s content with high availability and high performance to any visitor wherever they are located." groups="base.group_no_one" help="Use a CDN to optimize the availability of your website's content">
+                        <setting id="cdn_setting" title="A CDN helps you serve your website’s content with high availability and high performance to any visitor wherever they are located." technical-chm="1" help="Use a CDN to optimize the availability of your website's content">
                             <field name="cdn_activated"/>
                             <div class="content-group" invisible="not cdn_activated">
                                 <div class="row mt16">
@@ -204,7 +204,7 @@
         id="menu_website_websites_list"
         action="action_website_list"
         parent="menu_website_global_configuration"
-        groups="base.group_no_one"
+        technical-chm="1"
         sequence="10"
         />
 
@@ -213,6 +213,6 @@
         action="action_website_menu"
         parent="menu_website_global_configuration"
         sequence="45"
-        groups="base.group_no_one"/>
+        technical-chm="1"/>
 
 </odoo>

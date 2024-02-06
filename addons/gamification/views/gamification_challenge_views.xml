@@ -21,7 +21,7 @@
                 <header>
                     <button string="Start Challenge" type="object" name="action_start" invisible="state != 'draft'" class="oe_highlight"/>
                     <button string="Refresh Challenge" type="object" name="action_check" invisible="state != 'inprogress'"/>
-                    <button string="Send Report" type="object" name="action_report_progress" invisible="state not in ('inprogress', 'done')" groups="base.group_no_one"/>
+                    <button string="Send Report" type="object" name="action_report_progress" invisible="state not in ('inprogress', 'done')" technical-chm="1"/>
                     <field name="state" widget="statusbar" options="{'clickable': '1'}"/>
                 </header>
                 <sheet>
@@ -110,7 +110,7 @@
                                     <field name="remind_update_delay" class="oe_inline"/> days
                                 </div>
                             </group>
-                            <group string="Category" groups="base.group_no_one">
+                            <group string="Category" technical-chm="1">
                                 <field name="challenge_category" widget="radio" />
                             </group>
                         </page>

@@ -56,7 +56,7 @@
                 <field name="receipt_status" invisible="state not in ('purchase', 'done')"/>
             </field>
             <xpath expr="//field[@name='order_line']/form//field[@name='analytic_distribution']" position="before">
-                <field name="propagate_cancel" groups="base.group_no_one"/>
+                <field name="propagate_cancel" technical-chm="1"/>
             </xpath>
             <xpath expr="//field[@name='order_line']/tree//field[@name='qty_received']" position="attributes">
                 <attribute name="column_invisible">parent.state not in ('purchase', 'done')</attribute>

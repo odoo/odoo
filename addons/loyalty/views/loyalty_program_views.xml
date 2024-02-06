@@ -47,7 +47,7 @@
                                 <field name="program_type" widget="filterable_selection" readonly="coupon_count != 0" options="{'blacklisted_values': ['gift_card', 'ewallet']}"/>
                                 <p class="text-muted" invisible="program_type != 'coupons'" colspan="2">
                                     Generate &amp; share coupon codes manually. It can be used in eCommerce, Point of Sale or regular orders to claim the Reward. You can define constraints on its usage through conditional rule.
-                                    <div groups="base.group_no_one">
+                                    <div technical-chm="1">
                                         When generating coupon, you can define a specific points value that can be exchanged for rewards.
                                     </div>
                                 </p>
@@ -56,7 +56,7 @@
                                 </p>
                                 <p class="text-muted" invisible="program_type != 'promotion'" colspan="2">
                                     Set up conditional rules on the order that will give access to rewards for customers
-                                    <div groups="base.group_no_one">
+                                    <div technical-chm="1">
                                         Each rule can grant points to the customer he will be able to exchange against rewards
                                     </div>
                                 </p>
@@ -82,7 +82,7 @@
                             </div>
                             <field name="trigger_product_ids" string="Gift Card Products" widget="many2many_tags" invisible="program_type != 'gift_card'"/>
                             <field name="trigger_product_ids" string="eWallet Products" widget="many2many_tags" invisible="program_type != 'ewallet'"/>
-                            <field name="payment_program_discount_product_id" groups="base.group_no_one" invisible="program_type not in ('gift_card', 'ewallet')"/>
+                            <field name="payment_program_discount_product_id" technical-chm="1" invisible="program_type not in ('gift_card', 'ewallet')"/>
                             <field name="mail_template_id" invisible="program_type not in ('gift_card', 'ewallet')"/>
                             <field name="currency_id"/>
                             <field name="currency_symbol" invisible="1"/>
@@ -90,14 +90,14 @@
                                    widget="many2many_tags"
                                    invisible="program_type in ('gift_card', 'ewallet')"
                                    groups="product.group_product_pricelist"/>
-                            <field name="portal_point_name" invisible="program_type in ('loyalty', 'gift_card', 'ewallet')" string="Points Unit" groups="base.group_no_one"/>
+                            <field name="portal_point_name" invisible="program_type in ('loyalty', 'gift_card', 'ewallet')" string="Points Unit" technical-chm="1"/>
                             <field name="portal_point_name" invisible="program_type in ('gift_card', 'ewallet') or program_type != 'loyalty'" string="Points Unit"/>
                             <field name="portal_visible" invisible="1"/>
-                            <field name="portal_visible" groups="base.group_no_one" string="Show points Unit" invisible="program_type in ('gift_card', 'ewallet')"/>
+                            <field name="portal_visible" technical-chm="1" string="Show points Unit" invisible="program_type in ('gift_card', 'ewallet')"/>
                             <field name="trigger" invisible="1"/>
-                            <field name="trigger" string="Program trigger" groups="base.group_no_one" widget="selection" readonly="1" force_save="1"/>
+                            <field name="trigger" string="Program trigger" technical-chm="1" widget="selection" readonly="1" force_save="1"/>
                             <field name="applies_on" invisible="1"/>
-                            <field name="applies_on" string="Use points on" groups="base.group_no_one" widget="radio" force_save="1" readonly="program_type != 'loyalty'"/>
+                            <field name="applies_on" string="Use points on" technical-chm="1" widget="radio" force_save="1" readonly="program_type != 'loyalty'"/>
                         </group>
                         <group>
                             <field name="date_from" invisible="program_type in ('gift_card', 'ewallet')"/>
@@ -112,7 +112,7 @@
                             <field name="available_on" invisible="1"/>
                             <label class="o_form_label" for="available_on" string="Available On" invisible="1"/>
                             <div id="o_loyalty_program_availabilities" invisible="1"/>
-                            <field name="portal_point_name" invisible="program_type not in ('gift_card', 'ewallet')" string="Displayed as" groups="base.group_no_one"/>
+                            <field name="portal_point_name" invisible="program_type not in ('gift_card', 'ewallet')" string="Displayed as" technical-chm="1"/>
                         </group>
                     </group>
                     <notebook invisible="program_type in ('gift_card', 'ewallet')">

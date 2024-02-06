@@ -28,7 +28,7 @@
                                     <img t-att-src="kanban_image('discuss.channel', 'avatar_128', record.id.raw_value)" class="oe_module_icon" alt="Channel"/>
                                     <div class="oe_module_desc">
                                         <h4 class="o_kanban_record_title">#<field name="name"/></h4>
-                                        <field name="channel_type" groups="base.group_no_one"/>
+                                        <field name="channel_type" technical-chm="1"/>
                                         <p class="oe_module_name" t-att-class="!record.active.raw_value ? 'o_module_desc_short': ''">
                                             <field name="description"/>
                                         </p>
@@ -63,10 +63,10 @@
                         </div>
                         <group class="o_label_nowrap">
                             <field name="active" invisible="1"/>
-                            <field name="channel_type" groups="base.group_no_one"/>
+                            <field name="channel_type" technical-chm="1"/>
                             <field name="description" placeholder="Topics discussed in this group..."/>
                         </group>
-                        <group class="o_label_nowrap" groups="base.group_no_one">
+                        <group class="o_label_nowrap" technical-chm="1">
                             <field name="sfu_channel_uuid"/>
                             <field name="sfu_server_url"/>
                         </group>

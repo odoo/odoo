@@ -78,7 +78,7 @@
                         <h6 class="text-muted mt-2" invisible="not has_iap">Contains In-App Purchases</h6>
                     </div>
                     <div class="clearfix"/>
-                    <notebook groups="base.group_no_one">
+                    <notebook technical-chm="1">
                         <page string="Information" name="information">
                             <group>
                                 <group>
@@ -138,7 +138,7 @@
                         <button name="button_immediate_upgrade" type="object" string="Upgrade" groups="base.group_system"/>
                     </header>
                     <field name="shortdesc"/>
-                    <field name="name" groups="base.group_no_one"/>
+                    <field name="name" technical-chm="1"/>
                     <field name="author"/>
                     <field name="website"/>
                     <field name="installed_version"/>
@@ -182,8 +182,8 @@
                             <field name="shortdesc"/>&amp;nbsp;
                           </h4>
                           <p class="oe_module_name">
-                            <field groups="!base.group_no_one" name="summary"/>
-                            <code groups="base.group_no_one"><field name="name"/></code>
+                            <field technical-chm="0" name="summary"/>
+                            <code technical-chm="1"><field name="name"/></code>
                           </p>
                           <div class="oe_module_action d-flex flex-wrap justify-content-between">
                             <button type="object" class="btn btn-primary btn-sm" name="button_immediate_install" invisible="state != 'uninstalled'" t-if="! record.to_buy.raw_value" groups="base.group_system">Activate</button>
