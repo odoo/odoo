@@ -1,5 +1,6 @@
 /** @odoo-module */
 
+import * as BillScreen from "@pos_restaurant/../tests/tours/helpers/BillScreenTourMethods";
 import * as PaymentScreen from "@point_of_sale/../tests/tours/helpers/PaymentScreenTourMethods";
 import * as ReceiptScreen from "@point_of_sale/../tests/tours/helpers/ReceiptScreenTourMethods";
 import * as Chrome from "@point_of_sale/../tests/tours/helpers/ChromeTourMethods";
@@ -8,7 +9,7 @@ import * as ProductScreenPos from "@point_of_sale/../tests/tours/helpers/Product
 import * as ProductScreenResto from "@pos_restaurant/../tests/tours/helpers/ProductScreenTourMethods";
 import * as Order from "@point_of_sale/../tests/tours/helpers/generic_components/OrderWidgetMethods";
 import * as TicketScreen from "@point_of_sale/../tests/tours/helpers/TicketScreenTourMethods";
-import { inLeftSide } from "@point_of_sale/../tests/tours/helpers/utils";
+import { inLeftSide, negateStep } from "@point_of_sale/../tests/tours/helpers/utils";
 import { registry } from "@web/core/registry";
 
 const ProductScreen = { ...ProductScreenPos, ...ProductScreenResto };
@@ -162,3 +163,19 @@ registry.category("web_tour.tours").add("SaveLastPreparationChangesTour", {
             ProductScreen.orderlinesHaveNoChange()
         ].flat(),
     });
+
+registry.category("web_tour.tours").add("BillScreenTour", {
+    test: true,
+    steps: () => [
+        ProductScreen.confirmOpeningPopup(),
+        FloorScreen.clickTable("5"),
+        ProductScreen.clickDisplayedProduct("Coca-Cola"),
+        BillScreen.clickBillButton(),
+        negateStep(BillScreen.isQRCodeShown()),
+        BillScreen.clickOk(),
+        ProductScreen.clickPayButton(),
+        PaymentScreen.clickPaymentMethod("Bank"),
+        PaymentScreen.clickValidate(),
+        BillScreen.isQRCodeShown(),
+    ].flat(),
+});
