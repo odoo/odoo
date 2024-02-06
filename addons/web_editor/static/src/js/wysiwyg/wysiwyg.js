@@ -151,6 +151,7 @@ export class Wysiwyg extends Component {
         this.notification = useService("notification");
         this.popover = useService("popover");
         this.busService = this.env.services.bus_service;
+        this.user = user;
 
         const getColorPickedHandler = (colorType) => {
             return (params) => {
@@ -2407,13 +2408,13 @@ export class Wysiwyg extends Component {
                 fontawesome: 'fa-pencil-square-o',
                 isDisabled: () => !this.odooEditor.isSelectionInBlockRoot(),
                 callback: async () => {
-                    const [user] = await this.orm.read(
+                    const [currentUser] = await this.orm.read(
                         'res.users',
-                        [user.userId],
+                        [this.user.userId],
                         ['signature'],
                     );
-                    if (user && user.signature) {
-                        this.odooEditor.execCommand('insert', parseHTML(this.odooEditor.document, user.signature));
+                    if (currentUser && currentUser.signature) {
+                        this.odooEditor.execCommand('insert', parseHTML(this.odooEditor.document, currentUser.signature));
                     }
                 },
             },
