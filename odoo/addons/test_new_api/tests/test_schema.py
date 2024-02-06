@@ -90,6 +90,12 @@ class TestReflection(common.TransactionCase):
                 elif field.store and field.column_type:
                     self.assertTrue(field_description['sortable'])
 
+                field_description = field.get_description(self.env)
+                if field.type in ('many2many', 'one2many'):
+                    self.assertFalse(field_description['sortable'])
+                elif field.store and field.column_type:
+                    self.assertTrue(field_description['sortable'])
+
 
 class TestSchema(common.TransactionCase):
 
