@@ -18,6 +18,11 @@ HTMLElement.prototype.oToggleList = function (offset, mode = 'UL') {
     if (!isBlock(this)) {
         return this.parentElement.oToggleList(childNodeIndex(this));
     }
+    if (this.tagName === 'DIV') {
+        const newNode = this.ownerDocument.createElement('p');
+        this.appendChild(newNode);
+        return newNode.oToggleList(childNodeIndex(newNode));
+    }
     const inLI = this.closest('li');
     if (inLI) {
         return inLI.oToggleList(0, mode);
