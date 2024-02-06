@@ -18,24 +18,37 @@
     }
 }
 
+@mixin email_designer_btn {
+    align-items: center;
+    width: 24px;
+    height: 24px;
+    background-color: #337ab7 !important;
+    border: 1px solid #2e6da4 !important;
+    border-radius: 4px;
+    padding: 0;
+    margin-left: 5px;
+}
+
 .o_field_mass_mailing_html #oe_snippets {
     position: sticky;
     top: 0;
     z-index: $zindex-dropdown - 1;
+
+    .o_we_external_history_buttons {
+        display: flex;
+        margin: auto 130px auto auto;
+
+        .btn {
+            @include email_designer_btn;
+        }
+    }
 
     .email_designer_top_actions {
         display: flex;
         margin: auto 9px auto auto;
 
         .btn {
-            align-items: center;
-            width: 24px;
-            height: 24px;
-            background-color: #337ab7;
-            border: 1px solid #2e6da4;
-            border-radius: 4px;
-            padding: 0;
-            margin-left: 5px;
+            @include email_designer_btn;
         }
         .o_fullscreen_btn img {
             margin: auto;
