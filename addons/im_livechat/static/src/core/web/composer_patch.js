@@ -26,8 +26,8 @@ patch(Composer.prototype, {
         return (
             this.thread?.type === "livechat" &&
             !this.env.inChatWindow &&
-            this.store.discuss.livechat.threads.some(
-                (thread) => thread.notEq(this.thread) && thread.isUnread
+            Object.values(this.store.Thread.records).some(
+                (thread) => thread.type === "livechat" && thread.isUnread
             )
         );
     },

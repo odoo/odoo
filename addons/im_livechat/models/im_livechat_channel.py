@@ -102,11 +102,19 @@ class ImLivechatChannel(models.Model):
     # --------------------------
     def action_join(self):
         self.ensure_one()
-        return self.write({'user_ids': [(4, self._uid)]})
+        self.write({'user_ids': [(4, self._uid)]})
+        self.env["bus.bus"]._sendone(self.env.user.partner_id, "mail.record/insert", {
+            "LivechatChannel": {"id": self.id, "hasSelfAsMember": True}
+        })
+        return True
 
     def action_quit(self):
         self.ensure_one()
-        return self.write({'user_ids': [(3, self._uid)]})
+        self.write({'user_ids': [(3, self._uid)]})
+        self.env["bus.bus"]._sendone(self.env.user.partner_id, "mail.record/insert", {
+            "LivechatChannel": {"id": self.id, "hasSelfAsMember": False}
+        })
+        return True
 
     def action_view_rating(self):
         """ Action to display the rating relative to the channel, so all rating of the
@@ -133,6 +141,17 @@ class ImLivechatChannel(models.Model):
     # --------------------------
     # Channel Methods
     # --------------------------
+
+    def _format_for_frontend(self):
+        result = []
+        for record in self:
+            result.append({
+                'id': record.id,
+                'name': record.name,
+                'hasSelfAsMember': record.env.user.partner_id in record.user_ids.partner_id,
+            })
+        return result
+
     def _get_livechat_discuss_channel_vals(
         self, anonymous_name, previous_operator_id=None, chatbot_script=None, user_id=None, country_id=None, lang=None
     ):

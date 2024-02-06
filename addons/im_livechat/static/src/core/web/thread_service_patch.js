@@ -22,8 +22,8 @@ patch(ThreadService.prototype, {
      * @returns {boolean} Whether the livechat thread changed.
      */
     goToOldestUnreadLivechatThread() {
-        const oldestUnreadThread = this.store.discuss.livechat.threads
-            .filter((thread) => thread.isUnread)
+        const oldestUnreadThread = Object.values(this.store.Thread.records)
+            .filter((thread) => thread.type === "livechat" && thread.isUnread)
             .sort(
                 (t1, t2) =>
                     compareDatetime(t1.lastInterestDateTime, t2.lastInterestDateTime) ||

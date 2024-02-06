@@ -11,3 +11,10 @@ class WebClient(WebclientController):
         return request.render("im_livechat.qunit_embed_suite", {
             "server_url": request.env["ir.config_parameter"].get_base_url(),
         })
+
+    def _process_request_for_internal_user(self, store, **kwargs):
+        super()._process_request_for_internal_user(store, **kwargs)
+        if kwargs.get("get_livechat_channels"):
+            store.add({
+                "LivechatChannel": request.env["im_livechat.channel"].search([])._format_for_frontend()
+            })

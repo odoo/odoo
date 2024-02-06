@@ -1,13 +1,20 @@
 /* @odoo-module */
 
+import { Record } from "@mail/core/common/record";
 import { Thread } from "@mail/core/common/thread_model";
 
 import { patch } from "@web/core/utils/patch";
 
 patch(Thread.prototype, {
+    setup() {
+        super.setup(...arguments);
+        this.livechatChannel = Record.one("LivechatChannel");
+    },
     _computeDiscussAppCategory() {
         return this.channel_type === "livechat"
-            ? this._store.discuss.livechat
+            ? this._store.DiscussAppCategory.get({
+                  id: `im_livechat.channel_${this.livechatChannel.id}`,
+              })
             : super._computeDiscussAppCategory();
     },
     get hasMemberList() {
