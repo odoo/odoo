@@ -3,12 +3,20 @@
 
     <t t-name="point_of_sale.Navbar">
         <div class="pos-topheader d-flex w-100 p-0 m-0 bg-white border-bottom">
-            <div t-if="!ui.isSmall" class="pos-branding d-flex justify-content-start flex-grow-1 h-100 p-0 my-0 text-start">
-                <img class="pos-logo h-75 ms-3 me-auto align-self-center" t-on-click="() => debug.toggleWidget()" src="/web/static/img/logo.png" alt="Logo" />
-            </div>
-            <div class="pos-rightheader d-flex flex-grow-1 h-100" t-if="pos.shouldShowNavbarButtons()">
+            <div t-if="!ui.isSmall" class="pos-branding d-flex justify-content-between flex-grow-1 h-100 p-0 my-0 text-start">
+                <img class="pos-logo h-75 ms-3 align-self-center" t-on-click="() => debug.toggleWidget()" src="/web/static/img/logo.png" alt="Logo" />
                 <BackButton t-if="showBackButton()"/>
-                <div class="status-buttons d-flex flex-grow-1 flex-basis-0 justify-content-end h-100">
+            </div>
+            <div class="pos-rightheader d-flex flex-grow-1 w-60 h-100" t-if="pos.shouldShowNavbarButtons()">
+                <BackButton t-if="showBackButtonMobile()"/>
+                <div class="status-buttons d-flex flex-grow-1  justify-content-end h-100">
+                    <Input tModel="[pos, 'searchProductWord']"
+                        class="'p-2'"
+                        isSmall="ui.isSmall"
+                        placeholder="'Search products...'"
+                        icon="{type: 'fa', value: 'fa-search'}"
+                        debounceMillis="100"
+                        t-if="pos.showSearchButton()" />
                     <CashierName />
                     <SaleDetailsButton t-if="hardwareProxy.printer" isHeaderButton="true"/>
                     <ProxyStatus t-if="pos.config.use_proxy" />

@@ -8,15 +8,15 @@
                 <sheet>
                     <field name="image_128" widget="image" class="oe_avatar"/>
                     <div class="oe_title">
-                        <label for="name"/>
                         <h1>
                             <field name="name" class="o_text_overflow" placeholder="e.g. Soft Drinks" required="True"/>
                         </h1>
                     </div>
                     <group>
-                        <group name="sequence">
+                        <group>
                             <field name="parent_id" class="o_text_overflow"/>
-                            <field name="sequence" groups="base.group_no_one" />
+                        </group>
+                        <group name="sequence">
                             <field name="color" widget="color_picker" />
                         </group>
                     </group>
@@ -31,6 +31,8 @@
             <tree string="Product Product Categories">
                 <field name="sequence" widget="handle"/>
                 <field name="display_name" string="PoS Product Category"/>
+                <field name="parent_id" optional="hide"/>
+                <field name="color" widget="color_picker" optional="hide"/>
             </tree>
         </field>
     </record>

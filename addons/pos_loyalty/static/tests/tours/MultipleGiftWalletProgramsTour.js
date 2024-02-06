@@ -14,7 +14,6 @@ registry.category("web_tour.tours").add("MultipleGiftWalletProgramsTour", {
         [
             // One card for gift_card_1.
             Dialog.confirm("Open session"),
-            ProductScreen.clickHomeCategory(),
             ProductScreen.clickDisplayedProduct("Gift Card"),
             SelectionPopup.has("gift_card_1"),
             SelectionPopup.has("gift_card_2"),

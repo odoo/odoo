@@ -12,7 +12,6 @@ registry.category("web_tour.tours").add("PosLoyaltyFreeProductTour", {
     steps: () =>
         [
             Dialog.confirm("Open session"),
-            ProductScreen.clickHomeCategory(),
 
             ProductScreen.addOrderline("Desk Organizer", "2"),
 
@@ -141,7 +140,6 @@ registry.category("web_tour.tours").add("PosLoyaltyFreeProductTour2", {
     steps: () =>
         [
             Dialog.confirm("Open session"),
-            ProductScreen.clickHomeCategory(),
 
             ProductScreen.clickPartnerButton(),
             ProductScreen.clickCustomer("AAA Partner"),
@@ -160,7 +158,6 @@ registry.category("web_tour.tours").add("PosLoyaltySpecificDiscountTour", {
     steps: () =>
         [
             Dialog.confirm("Open session"),
-            ProductScreen.clickHomeCategory(),
 
             ProductScreen.clickDisplayedProduct("Test Product A"),
             ProductScreen.selectedOrderlineHas("Test Product A", "1.00", "40.00"),
@@ -179,7 +176,6 @@ registry.category("web_tour.tours").add("PosLoyaltySpecificDiscountWithFreeProdu
     steps: () =>
         [
             Dialog.confirm("Open session"),
-            ProductScreen.clickHomeCategory(),
             ProductScreen.clickDisplayedProduct("Test Product A"),
             ProductScreen.clickDisplayedProduct("Test Product C"),
             PosLoyalty.orderTotalIs("130.00"),
@@ -196,7 +192,6 @@ registry.category("web_tour.tours").add("PosLoyaltySpecificDiscountWithRewardPro
     steps: () =>
         [
             Dialog.confirm("Open session"),
-            ProductScreen.clickHomeCategory(),
 
             ProductScreen.clickDisplayedProduct("Product A"),
             ProductScreen.selectedOrderlineHas("Product A", "1.00", "15.00"),

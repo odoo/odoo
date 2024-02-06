@@ -1,18 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="pos_restaurant.ActionpadWidget" t-inherit="point_of_sale.ActionpadWidget" t-inherit-mode="extension">
-        <xpath expr="//div[hasclass('actionpad')]" position="attributes">
-            <attribute name="t-att-class">{'w-50' : this.swapButton}</attribute>
-        </xpath>
-
         <!-- Replace the payment button by the order button -->
         <xpath expr="//button[hasclass('validation')]" position="after">
             <button
                 t-if="this.swapButton"
                 t-attf-class="submit-order h-100 {{getMainButtonClasses()}}"
                 t-att-class="swapButtonClasses"
-                t-on-click="submitOrder"
-                style="width: 170px;">
+                t-on-click="submitOrder">
                 <i class="fa fa-cutlery"></i>
                 Order
                 <div t-if="displayCategoryCount.length" class="break-line fw-normal fs-6 w-100  border-top mt-1 pt-1">

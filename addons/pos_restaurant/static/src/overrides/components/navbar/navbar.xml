@@ -9,8 +9,11 @@
                 <a class="dropdown-item py-2">Switch Floor View</a>
             </li>
         </xpath>
-        <xpath expr="//BackButton" position="after">
-            <span t-if="pos.selectedTable?.name" t-esc="pos.selectedTable.name" t-attf-style="background-color: {{pos.selectedTable.color}};" class="btn text-white fw-bolder my-2 px-3 d-flex align-items-center" />
+        <xpath expr="//BackButton" position="before">
+            <span t-if="pos.selectedTable?.name" t-esc="pos.selectedTable.name" t-attf-style="background-color: {{pos.selectedTable.color}};border-radius: 0.25rem;" class="text-white fw-bolder my-2 px-3 d-flex align-items-center" />
+        </xpath>
+        <xpath expr="//BackButton[@t-if='showBackButtonMobile()']" position="after">
+            <span t-if="pos.selectedTable?.name and showBackButtonMobile()" t-esc="pos.selectedTable.name" t-attf-style="background-color: {{pos.selectedTable.color}};border-radius: 0.25rem;" class="text-white fw-bolder my-2 px-3 d-flex align-items-center" />
         </xpath>
     </t>
 </templates>

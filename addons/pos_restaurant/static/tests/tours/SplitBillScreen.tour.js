@@ -138,8 +138,6 @@ registry.category("web_tour.tours").add("SplitBillScreenTour4PosCombo", {
         [
             Dialog.confirm("Open session"),
             FloorScreen.clickTable("2"),
-
-            ProductScreen.clickHomeCategory(),
             ProductScreen.clickDisplayedProduct("Office Combo"),
             combo.select("Combo Product 3"),
             combo.select("Combo Product 5"),

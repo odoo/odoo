@@ -13,7 +13,6 @@ registry.category("web_tour.tours").add("PosLoyaltyValidity1", {
             // First tour should not get any automatic rewards
 
             Dialog.confirm("Open session"),
-            ProductScreen.clickHomeCategory(),
 
             // Not valid -> date
             ProductScreen.addOrderline("Whiteboard Pen", "5"),
@@ -28,9 +27,6 @@ registry.category("web_tour.tours").add("PosLoyaltyValidity2", {
     steps: () =>
         [
             // Second tour
-
-            ProductScreen.clickHomeCategory(),
-
             // Valid
             ProductScreen.addOrderline("Whiteboard Pen", "5"),
             PosLoyalty.hasRewardLine("90% on the cheapest product", "-2.88"),
