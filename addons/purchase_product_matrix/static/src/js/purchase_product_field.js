@@ -3,33 +3,39 @@
 import { registry } from '@web/core/registry';
 import { Many2OneField, many2OneField } from '@web/views/fields/many2one/many2one_field';
 import { ProductMatrixDialog } from "@product_matrix/js/product_matrix_dialog";
-import { useService } from "@web/core/utils/hooks";
-
-const { onWillUpdateProps } = owl;
+import { useEffect } from '@odoo/owl';
 
 
 export class PurchaseOrderLineProductField extends Many2OneField {
 
     setup() {
         super.setup();
-        this.dialog = useService("dialog");
-        this.currentValue = this.value;
-
-        onWillUpdateProps(async (nextProps) => {
-            if (nextProps.record.mode === 'edit' && nextProps.record.data[nextProps.name]) {
-                if (
-                    !this.currentValue ||
-                    this.currentValue[0] != nextProps.record.data[nextProps.name][0]
-                ) {
-                    // Field was updated if line was open in edit mode,
-                    //      field is not emptied,
-                    //      new value is different than existing value.
-
-                    this._onProductTemplateUpdate();
+        let isMounted = false;
+        let isInternalUpdate = false;
+        const super_update = this.update;
+        this.update = (recordlist) => {
+            isInternalUpdate = true;
+            super_update(recordlist);
+        };
+        if (this.props.canQuickCreate) {
+            this.quickCreate = (name, params = {}) => {
+                if (params.triggeredOnBlur) {
+                    return this.openConfirmationDialog(name);
                 }
+                isInternalUpdate = true;
+                return this.props.update([false, name]);
+            };
+        }
+        useEffect(value => {
+            if (!isMounted) {
+                isMounted = true;
+            } else if (value && isInternalUpdate) {
+                // we don't want to trigger product update when update comes from an external sources,
+                // such as an onchange, or the product configuration dialog itself
+                this._onProductTemplateUpdate();
             }
-            this.currentValue = nextProps.record.data[nextProps.name];
-        });
+            isInternalUpdate = false;
+        }, () => [Array.isArray(this.value) && this.value[0]]);
     }
 
     get configurationButtonHelp() {
