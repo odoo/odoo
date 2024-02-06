@@ -13,11 +13,7 @@ export function clickDiscard() {
             trigger: ".ticket-screen button.discard",
             mobile: false,
         },
-        {
-            content: "go back",
-            trigger: ".pos-rightheader .floor-button",
-            mobile: true,
-        },
+        ProductScreen.goBackToMainScreen(),
     ];
 }
 export function selectOrder(orderName) {

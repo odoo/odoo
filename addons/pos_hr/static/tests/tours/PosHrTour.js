@@ -55,7 +55,6 @@ registry.category("web_tour.tours").add("PosHrTour", {
             NumberPopup.isShown("••••"),
             Dialog.confirm(),
             ProductScreen.isShown(),
-            ProductScreen.clickHomeCategory(),
 
             // Create orders and check if the ticket list has the right employee for each order
             // order for employee 2
