@@ -70,11 +70,7 @@ export class HootMain extends Component {
     createURL = createURL;
 
     setup() {
-        const { runner } = this.env;
-
-        useSubEnv({ runner });
-
-        if (!runner.config.headless) {
+        if (!this.env.runner.config.headless) {
             useWindowListener("keydown", this.onWindowKeyDown, { capture: true });
         }
     }

@@ -280,6 +280,10 @@ input[type="checkbox"]:checked {
     animation: animation-slide-down 0.1s ease-in-out;
 }
 
+.animate-slide-left {
+    animation: animation-slide-left 0.1s ease-in-out;
+}
+
 .animate-spin {
     animation: animation-spin 1s linear infinite;
 }
@@ -852,6 +856,9 @@ input[type="checkbox"]:checked {
 .h-full {
     height: 100%;
 }
+.h-fit {
+    height: fit-content;
+}
 
 .h-7 {
     height: 1.75rem;
@@ -1378,6 +1385,13 @@ input[type="checkbox"]:checked {
 @keyframes animation-slide-down {
     from {
         margin-top: -0.5rem;
+        opacity: 0.25;
+    }
+}
+
+@keyframes animation-slide-left {
+    from {
+        margin-right: -0.5rem;
         opacity: 0.25;
     }
 }

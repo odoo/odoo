@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { mount, whenReady } from "@odoo/owl";
+import { mount, reactive, whenReady } from "@odoo/owl";
 import { patchWindow } from "../mock/window";
 import { generateStyleSheets, setColorRoot } from "./hoot_colors";
 import { HootMain } from "./hoot_main";
@@ -19,14 +19,18 @@ const { customElements, document, HTMLElement } = globalThis;
 // Internal
 //-----------------------------------------------------------------------------
 
-const makeUiState = () => ({
-    /** @type {string | null} */
-    selectedSuiteId: null,
-    /** @type {"asc" | "desc" | false} */
-    sortResults: false,
-    /** @type {"failed" | "passed" | "skipped" | "todo" | null} */
-    statusFilter: null,
-});
+const makeUiState = () =>
+    reactive({
+        resultsPage: 0,
+        resultsPerPage: 50,
+        /** @type {string | null} */
+        selectedSuiteId: null,
+        /** @type {"asc" | "desc" | false} */
+        sortResults: false,
+        /** @type {"failed" | "passed" | "skipped" | "todo" | null} */
+        statusFilter: null,
+        totalResults: 0,
+    });
 
 class HootContainer extends HTMLElement {
     constructor() {

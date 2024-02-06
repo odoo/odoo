@@ -8,6 +8,7 @@ import { isIterable, parseRegExp } from "@web/../lib/hoot-dom/hoot_dom_utils";
 import {
     HootError,
     Markup,
+    batch,
     createReporting,
     ensureArray,
     ensureError,
@@ -179,6 +180,11 @@ export class TestRunner {
     state = reactive({
         /** @type {Test | null} */
         currentTest: null,
+        /**
+         * List of tests that have been run
+         * @type {Record<string, Test>}
+         */
+        done: {},
         /**
          * Dictionnary containing whether a job is included or excluded from the
          * current run.
@@ -462,20 +468,6 @@ export class TestRunner {
     }
 
     /**
-     * ! This is not meant to be exported and should be used in HOOT internally.
-     * Registers a callback that will be executed at the end of any test, before
-     * any other "after" callbacks have been called and regardless of the debug
-     * state.
-     *
-     * @param {...Callback<Test>} callbacks
-     */
-    afterTestDone(...callbacks) {
-        for (const callback of callbacks) {
-            this.#callbacks.add("test-done", callback);
-        }
-    }
-
-    /**
      * Registers a callback that will be executed at the end of each test in the
      * current test entity:
      *
@@ -599,13 +591,6 @@ export class TestRunner {
     }
 
     /**
-     * @param {Callback<Test>} callback
-     */
-    onTestSkipped(callback) {
-        this.#callbacks.add("test-skipped", callback);
-    }
-
-    /**
      * @param {Job[]} [jobs]
      * @param {boolean} [implicitInclude] fallback include value for sub-jobs
      * @returns {Job[]}
@@ -678,6 +663,7 @@ export class TestRunner {
             };
         }
 
+        // Config log
         const table = { ...toRaw(this.config) };
         for (const key of FILTER_KEYS) {
             if (isIterable(table[key])) {
@@ -697,7 +683,9 @@ export class TestRunner {
         }
 
         // Register default hooks
+        const [addTestDone, flushTestDone] = batch((test) => (this.state.done[test.id] = test), 10);
         this.afterAll(
+            flushTestDone,
             on(window, "error", (ev) => this.#onError(ev)),
             on(window, "unhandledrejection", (ev) => this.#onError(ev)),
             watchListeners(window, document, document.head, document.body)
@@ -786,9 +774,7 @@ export class TestRunner {
             const test = job;
             if (test.config.skip) {
                 // Skipped test
-                for (const callbackRegistry of callbackChain) {
-                    await callbackRegistry.call("test-skipped", test);
-                }
+                addTestDone(test);
                 test.parent.reporting.add({ skipped: +1 });
                 nextJob();
                 continue;
@@ -853,9 +839,7 @@ export class TestRunner {
             test.visited++;
 
             // After test
-            for (const callbackRegistry of callbackChain) {
-                await callbackRegistry.call("test-done", test);
-            }
+            addTestDone(test);
 
             const { lastResults } = test;
             await this.#execAfterCallback(async () => {

@@ -1,7 +1,8 @@
 /** @odoo-module */
 
 import { Component, onWillRender, useEffect, useRef, useState, xml } from "@odoo/owl";
-import { batch, formatTime } from "../hoot_utils";
+import { Test } from "../core/test";
+import { formatTime } from "../hoot_utils";
 import { getTitle, setTitle } from "../mock/window";
 import { getColors } from "./hoot_colors";
 import { HootTestPath } from "./hoot_test_path";
@@ -71,18 +72,6 @@ const updateTitle = (failed) => {
     setTitle(`${toAdd} ${title}`);
 };
 
-const COLORS_BY_ID = {
-    0: "pass",
-    1: "fail",
-    2: "skip",
-    3: "todo",
-};
-const COLORS_BY_NAME = {
-    pass: 0,
-    fail: 1,
-    skip: 2,
-    todo: 3,
-};
 const TITLE_PREFIX = {
     fail: "✖",
     pass: "✔",
@@ -134,7 +123,7 @@ export class HootStatusPanel extends Component {
                     <span class="text-skip" t-esc="formatTime(state.timer, 's')" />
                 </t>
             </div>
-            <div class="flex gap-1">
+            <div class="flex items-center gap-1">
                 <t t-if="runnerReporting.passed">
                     <t t-set="color" t-value="!uiState.statusFilter or uiState.statusFilter === 'passed' ? 'pass' : 'muted'" />
                     <button
@@ -190,6 +179,30 @@ export class HootStatusPanel extends Component {
                         t-att-class="{ 'rotate-180': uiState.sortResults === 'asc' }"
                     />
                 </button>
+                <t t-if="uiState.totalResults gt uiState.resultsPerPage">
+                    <t t-set="lastPage" t-value="Math.floor(uiState.totalResults / uiState.resultsPerPage)" />
+                    <div class="flex gap-1 animate-slide-left">
+                        <button
+                            class="px-1 transition-color"
+                            title="Previous page"
+                            t-att-disabled="uiState.resultsPage === 0"
+                            t-on-click="previousPage"
+                        >
+                            <i class="fa fa-chevron-left" />
+                        </button>
+                        <strong class="text-primary" t-esc="uiState.resultsPage + 1" />
+                        <span class="text-muted">/</span>
+                        <t t-esc="lastPage + 1" />
+                        <button
+                            class="px-1 transition-color"
+                            title="Next page"
+                            t-att-disabled="uiState.resultsPage === lastPage"
+                            t-on-click="nextPage"
+                        >
+                            <i class="fa fa-chevron-right" />
+                        </button>
+                    </div>
+                </t>
             </div>
         </div>
         <canvas t-ref="progress-canvas" class="flex h-1 w-full" />
@@ -198,16 +211,6 @@ export class HootStatusPanel extends Component {
     formatTime = formatTime;
 
     setup() {
-        const [addResult, flushResults] = batch((config, lastResults) => {
-            if (!lastResults.pass) {
-                this.results.push(COLORS_BY_NAME.fail);
-            } else if (config.todo) {
-                this.results.push(COLORS_BY_NAME.todo);
-            } else {
-                this.results.push(COLORS_BY_NAME.pass);
-            }
-        });
-
         const startTimer = () => {
             stopTimer();
 
@@ -227,7 +230,6 @@ export class HootStatusPanel extends Component {
         };
 
         const { runner, ui } = this.env;
-        let currentTestStart;
         this.canvasRef = useRef("progress-canvas");
         this.runnerReporting = useState(runner.reporting);
         this.runnerState = useState(runner.state);
@@ -236,13 +238,12 @@ export class HootStatusPanel extends Component {
             timer: null,
         });
         this.uiState = useState(ui);
-        /** @type {number[]} */
-        this.results = [];
+        this.progressBarIndex = 0;
 
+        let currentTestStart;
         let intervalId = 0;
 
         runner.beforeAll(() => {
-            this.results = [];
             this.state.debug = runner.debug;
         });
 
@@ -250,8 +251,6 @@ export class HootStatusPanel extends Component {
             if (!runner.config.headless) {
                 stopTimer();
             }
-            flushResults();
-
             updateTitle(this.runnerReporting.failed > 0);
 
             if (runner.config.fun) {
@@ -270,22 +269,16 @@ export class HootStatusPanel extends Component {
             runner.afterEach(stopTimer);
         }
 
-        runner.afterTestDone((test) => {
-            addResult(test.config, test.lastResults);
-        });
-
-        runner.onTestSkipped(() => {
-            this.results.push(COLORS_BY_NAME.skip);
-        });
-
         useEffect(
             (el) => {
                 if (el) {
                     [el.width, el.height] = [el.clientWidth, el.clientHeight];
+                    el.getContext("2d").clearRect(0, 0, el.width, el.height);
                 }
             },
             () => [this.canvasRef.el]
         );
+
         onWillRender(() => this.updateProgressBar());
     }
 
@@ -293,6 +286,7 @@ export class HootStatusPanel extends Component {
      * @param {typeof this.uiState.statusFilter} status
      */
     filterResults(status) {
+        this.uiState.resultsPage = 0;
         if (this.uiState.statusFilter === status) {
             this.uiState.statusFilter = null;
         } else {
@@ -300,7 +294,19 @@ export class HootStatusPanel extends Component {
         }
     }
 
+    nextPage() {
+        this.uiState.resultsPage = Math.min(
+            this.uiState.resultsPage + 1,
+            Math.floor(this.uiState.totalResults / this.uiState.resultsPerPage)
+        );
+    }
+
+    previousPage() {
+        this.uiState.resultsPage = Math.max(this.uiState.resultsPage - 1, 0);
+    }
+
     sortResults() {
+        this.uiState.resultsPage = 0;
         if (!this.uiState.sortResults) {
             this.uiState.sortResults = "desc";
         } else if (this.uiState.sortResults === "desc") {
@@ -318,15 +324,30 @@ export class HootStatusPanel extends Component {
 
         const ctx = canvas.getContext("2d");
         const { width, height } = canvas;
-        const cellSize = width / this.runnerState.tests.length;
+        const { done, tests } = this.runnerState;
+        const cellSize = width / tests.length;
         const colors = getColors();
 
-        ctx.clearRect(0, 0, width, height);
-
-        for (let i = 0; i < this.results.length; i++) {
-            const x = Math.floor(i * cellSize);
-            ctx.fillStyle = colors[COLORS_BY_ID[this.results[i]]];
+        const doneTests = Object.values(done);
+        while (this.progressBarIndex < doneTests.length) {
+            const test = doneTests[this.progressBarIndex];
+            const x = Math.floor(this.progressBarIndex * cellSize);
+            switch (test.status) {
+                case Test.ABORTED:
+                    ctx.fillStyle = colors.abort;
+                    break;
+                case Test.FAILED:
+                    ctx.fillStyle = colors.fail;
+                    break;
+                case Test.PASSED:
+                    ctx.fillStyle = test.config.todo ? colors.todo : colors.pass;
+                    break;
+                case Test.SKIPPED:
+                    ctx.fillStyle = colors.skip;
+                    break;
+            }
             ctx.fillRect(x, 0, Math.ceil(cellSize), height);
+            this.progressBarIndex++;
         }
     }
 }
