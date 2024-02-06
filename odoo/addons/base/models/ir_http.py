@@ -147,8 +147,8 @@ class IrHttp(models.AbstractModel):
     @classmethod
     def _auth_method_public(cls):
         if request.env.uid is None:
-            public_user = request.env.ref('base.public_user')
-            request.update_env(user=public_user.id)
+            public_user_id = cls._get_public_users()[0]
+            request.update_env(user=public_user_id)
 
     @classmethod
     def _authenticate(cls, endpoint):
