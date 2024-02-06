@@ -575,6 +575,7 @@ class AccountTestInvoicingCommon(TransactionCase):
             for child_node_dict, expected_child_node_dict in zip(node_dict['children'], expected_node_dict['children']):
                 assertNodeDictEqual(child_node_dict, expected_child_node_dict)
 
+        self.assertDictEqual(xml_tree.nsmap, expected_xml_tree.nsmap)
         assertNodeDictEqual(
             self._turn_node_as_dict_hierarchy(xml_tree),
             self._turn_node_as_dict_hierarchy(expected_xml_tree),

@@ -100,7 +100,7 @@ class TestEsEdiTbaiCommon(AccountEdiTestCommon):
         })
 
     L10N_ES_TBAI_SAMPLE_XML_POST = """<?xml version='1.0' encoding='UTF-8'?>
-<T:TicketBai xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" xmlns:T="urn:ticketbai:emision" xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+<T:TicketBai xmlns:T="urn:ticketbai:emision">
   <Cabecera>
     <IDVersionTBAI>1.2</IDVersionTBAI>
   </Cabecera>
