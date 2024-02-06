@@ -9,31 +9,32 @@ import { ProductConfiguratorDialog } from "./product_configurator_dialog/product
 
 async function applyProduct(record, product) {
     // handle custom values & no variants
-    const contextRecords = [];
+    const customAttributesCommands = [
+        x2ManyCommands.set([]),  // Command.clear isn't supported in static_list/_applyCommands
+    ];
     for (const ptal of product.attribute_lines) {
         const selectedCustomPTAV = ptal.attribute_values.find(
             ptav => ptav.is_custom && ptal.selected_attribute_value_ids.includes(ptav.id)
         );
         if (selectedCustomPTAV) {
-            contextRecords.push({
-                default_custom_product_template_attribute_value_id: selectedCustomPTAV.id,
-                default_custom_value: ptal.customValue,
-            });
+            customAttributesCommands.push(
+                x2ManyCommands.create(undefined, {
+                    custom_product_template_attribute_value_id: [selectedCustomPTAV.id, "we don't care"],
+                    custom_value: ptal.customValue,
+                })
+            );
         };
     }
-
-    const proms = [];
-    proms.push(record.data.product_custom_attribute_value_ids.createAndReplace(contextRecords));
 
     const noVariantPTAVIds = product.attribute_lines.filter(
         ptal => ptal.create_variant === "no_variant" && ptal.attribute_values.length > 1
     ).flatMap(ptal => ptal.selected_attribute_value_ids);
 
-    await Promise.all(proms);
     await record.update({
         product_id: [product.id, product.display_name],
         product_uom_qty: product.quantity,
         product_no_variant_attribute_value_ids: [x2ManyCommands.set(noVariantPTAVIds)],
+        product_custom_attribute_value_ids: customAttributesCommands,
     });
 };
 

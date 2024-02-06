@@ -141,34 +141,6 @@ export class StaticList extends DataPoint {
         return this.handleField && this.orderBy.length && this.orderBy[0].name === this.handleField;
     }
 
-    /**
-     * TODO: We should probably delete this function.
-     * It is only used for the product configurator.
-     * It will take a list of contexts containing default
-     * values used to create the new records in the static list.
-     * It will then delete the old records from the static list
-     * and replace them with the new ones we have just created.
-     */
-    createAndReplace(contextRecords) {
-        return this.model.mutex.exec(async () => {
-            const proms = [];
-            for (const context of contextRecords) {
-                proms.push(
-                    this._createNewRecordDatapoint({
-                        context,
-                        manuallyAdded: true,
-                    })
-                );
-            }
-            this.records = await Promise.all(proms);
-            this._commands = this.records.map((record) => [
-                x2ManyCommands.CREATE,
-                record._virtualId,
-            ]);
-            this._currentIds = this.records.map((record) => record._virtualId);
-        });
-    }
-
     delete(record) {
         return this.model.mutex.exec(async () => {
             await this._applyCommands([[x2ManyCommands.DELETE, record.resId || record._virtualId]]);
