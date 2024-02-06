@@ -18,7 +18,6 @@ export class PivotDataSource extends OdooViewsDataSource {
         const params = {
             metaData: {
                 resModel: definition.model,
-                fields: definition.fields,
             },
             searchParams: {
                 domain: definition.domain,
@@ -26,7 +25,6 @@ export class PivotDataSource extends OdooViewsDataSource {
             },
         };
         super(services, params);
-        definition.fields = undefined;
         this._rawDefinition = definition;
         this.setup();
     }
