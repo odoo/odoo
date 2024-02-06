@@ -216,3 +216,13 @@ class TestProductConfiguratorUi(HttpCase, TestProductConfiguratorCommon):
         self.start_tour(
             "/web", 'sale_product_configurator_recursive_optional_products_tour', login='salesman'
         )
+
+    def test_product_configurator_update_custom_values(self):
+        self.start_tour(
+            "/web", 'sale_product_configurator_custom_value_update_tour', login='salesman',
+        )
+        order = self.env['sale.order'].search([], order='id desc', limit=1)
+        self.assertEqual(
+            order.order_line.product_custom_attribute_value_ids.custom_value,
+            "123456",
+        )
