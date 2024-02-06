@@ -418,13 +418,18 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
             raise UserError(_("You cannot report expenses for different companies in the same report."))
 
         todo = self.filtered(lambda x: x.payment_mode=='own_account') or self.filtered(lambda x: x.payment_mode=='company_account')
+        expense_name = False
         if len(todo) == 1:
             expense_name = todo.name
         else:
             dates = todo.mapped('date')
-            min_date = format_date(self.env, min(dates))
-            max_date = format_date(self.env, max(dates))
-            expense_name = min_date if max_date == min_date else "%s - %s" % (min_date, max_date)
+            if False not in dates:  # If at least one date isn't set, we don't set a default name
+                min_date = format_date(self.env, min(dates))
+                max_date = format_date(self.env, max(dates))
+                if min_date == max_date:
+                    expense_name = min_date
+                else:
+                    expense_name = _("%(date_from)s - %(date_to)s", date_from=min_date, date_to=max_date)
 
         values = {
             'default_company_id': self.company_id.id,

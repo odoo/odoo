@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.addons.hr_expense.tests.common import TestExpenseCommon
 from odoo.tests import tagged, Form
-from odoo.tools.misc import formatLang
+from odoo.tools.misc import formatLang, format_date
 from odoo import fields
 
 
@@ -533,3 +533,48 @@ class TestExpenses(TestExpenseCommon):
         self.env['hr.expense'].create_expense_from_attachments(attachment.id)
         expense = self.env['hr.expense'].search([], order='id desc', limit=1)
         self.assertEqual(expense.account_id, product.property_account_expense_id, "The expense account should be the default one of the product")
+
+    def test_create_report_name(self):
+        """
+            When an expense sheet is created from one or more expense, the report name is generated through the expense name or date.
+            As the expense sheet is created directly from the hr.expense._get_default_expense_sheet_values method,
+            we only need to test the method.
+        """
+        expense_with_date_1, expense_with_date_2, expense_without_date = self.env['hr.expense'].create([{
+            'company_id': self.company_data['company'].id,
+            'name': f'test expense {i}',
+            'employee_id': self.expense_employee.id,
+            'product_id': self.product_a.id,
+            'unit_amount': self.product_a.standard_price,
+            'date': '2021-01-01',
+            'quantity': i,
+        } for i in range(3)])
+        expense_without_date.date = False
+
+        # CASE 1: only one expense with or without date -> expense name
+        sheet_name = expense_with_date_1._get_default_expense_sheet_values()['default_name']
+        self.assertEqual(expense_with_date_1.name, sheet_name, "The report name should be the same as the expense name")
+        sheet_name = expense_without_date._get_default_expense_sheet_values()['default_name']
+        self.assertEqual(expense_without_date.name, sheet_name, "The report name should be the same as the expense name")
+
+        # CASE 2: two expenses with the same date -> expense date
+        expenses = expense_with_date_1 | expense_with_date_2
+        sheet_name = expenses._get_default_expense_sheet_values()['default_name']
+        self.assertEqual(format_date(self.env, expense_with_date_1.date), sheet_name, "The report name should be the same as the expense date")
+
+        # CASE 3: two expenses with different dates -> date range
+        expense_with_date_2.date = '2021-01-02'
+        sheet_name = expenses._get_default_expense_sheet_values()['default_name']
+        self.assertEqual(
+            f"{format_date(self.env, expense_with_date_1.date)} - {format_date(self.env, expense_with_date_2.date)}",
+            sheet_name,
+            "The report name should be the date range of the expenses"
+        )
+
+        # CASE 4: One or more expense doesn't have a date -> No name
+        expenses |= expense_without_date
+        sheet_name = expenses._get_default_expense_sheet_values()['default_name']
+        self.assertFalse(sheet_name, "The report name should be empty if one of the expenses doesn't have a date")
+        expenses.date = False
+        sheet_name = expenses._get_default_expense_sheet_values()['default_name']
+        self.assertFalse(sheet_name, "The report name should be empty if one of the expenses doesn't have a date")
