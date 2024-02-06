@@ -23,8 +23,12 @@ import { mount, parseUrl } from "../local_helpers";
 
 /**
  * @param {import("../../helpers/dom").Target} target
+ * @param {(ev: Event) => void} callback
  */
-const monitorEvents = (target) => {
+const monitorEvents = (
+    target,
+    callback = (ev) => expect.step([ev.currentTarget.tagName.toLowerCase(), ev.type].join("."))
+) => {
     const element = queryOne(target);
     for (const prop in element) {
         const type = prop.match(/^on(\w+)/)?.[1];
@@ -32,7 +36,7 @@ const monitorEvents = (target) => {
             continue;
         }
         const off = on(element, type, (ev) => {
-            expect.step([ev.currentTarget.tagName.toLowerCase(), ev.type].join("."));
+            callback(ev);
             if (ev.type === "submit") {
                 ev.preventDefault();
             }
@@ -497,6 +501,51 @@ describe(parseUrl(import.meta.url), () => {
         press("Backspace");
 
         expect("input").toHaveValue(4);
+    });
+
+    test("compose shift, alt and control and a key", async () => {
+        await mount(/* xml */ `<input />`);
+
+        click("input");
+
+        monitorEvents("input", (ev) =>
+            expect.step(
+                `${ev.type}${ev.key ? `:${ev.key}` : ""}${ev.altKey ? ".alt" : ""}${
+                    ev.ctrlKey ? ".ctrl" : ""
+                }${ev.shiftKey ? ".shift" : ""}`
+            )
+        );
+
+        press(["ctrl", "b"]);
+
+        expect([
+            "keydown:Control.ctrl",
+            "keydown:b.ctrl",
+            "keyup:b.ctrl",
+            "keyup:Control.ctrl",
+        ]).toVerifySteps();
+
+        press("shift+b");
+
+        expect([
+            "keydown:Shift.shift",
+            "keydown:b.shift",
+            "keypress:b.shift",
+            "input",
+            "keyup:b.shift",
+            "keyup:Shift.shift",
+        ]).toVerifySteps();
+
+        press("Alt+Control+b");
+
+        expect([
+            "keydown:Alt.alt",
+            "keydown:Control.alt.ctrl",
+            "keydown:b.alt.ctrl",
+            "keyup:b.alt.ctrl",
+            "keyup:Control.alt.ctrl",
+            "keyup:Alt.alt",
+        ]).toVerifySteps();
     });
 
     test.todo("scroll", async () => {

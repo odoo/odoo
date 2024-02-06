@@ -352,11 +352,12 @@ const logEvents = (actionName) => {
 
 /**
  * @param {KeyStrokes} keyStrokes
+ * @returns {KeyboardEventInit}
  */
 const parseKeyStroke = (keyStrokes) =>
     (isIterable(keyStrokes) ? [...keyStrokes] : [keyStrokes])
         .flatMap((keyStroke) => keyStroke.split(/[,+]+/))
-        .map((key) => ({ key }));
+        .map((key) => ({ key: KEY_ALIASES[key.toLowerCase()] || key }));
 
 /**
  * @param {EventTarget} target
@@ -383,24 +384,22 @@ const registerForChange = (target, initialValue) => {
  * @param {boolean} toggle
  */
 const registerSpecialKey = (eventInit, toggle) => {
-    switch (eventInit.key.toLowerCase()) {
-        case "alt":
+    switch (eventInit.key) {
+        case "Alt":
             if (isMacOS()) {
                 specialKeys.ctrlKey = toggle;
             } else {
                 specialKeys.altKey = toggle;
             }
             break;
-        case "ctrl":
-        case "control":
+        case "Control":
             if (isMacOS()) {
                 specialKeys.metaKey = toggle;
             } else {
                 specialKeys.ctrlKey = toggle;
             }
             break;
-        case "caps":
-        case "shift":
+        case "Shift":
             specialKeys.shiftKey = toggle;
             break;
     }
@@ -518,7 +517,7 @@ const _clear = (target, options) => {
     const initialValue = target.value;
 
     // Simulates 2 key presses:
-    // - Ctrl + A: selects all the text
+    // - Control + A: selects all the text
     // - Backspace: deletes the text
     fullClear = true;
     const events = [
@@ -609,8 +608,10 @@ const _fill = (target, value, options) => {
  * @param {KeyboardEventInit} eventInit
  */
 const _keyDown = (target, eventInit) => {
-    const events = [dispatch(target, "keydown", eventInit)];
     registerSpecialKey(eventInit, true);
+
+    const events = [dispatch(target, "keydown", eventInit)];
+    const { ctrlKey, key, shiftKey } = events[0];
 
     let inputData = null;
     let inputType = null;
@@ -619,7 +620,7 @@ const _keyDown = (target, eventInit) => {
 
     if (!prevented) {
         if (isEditable(target)) {
-            switch (eventInit.key) {
+            switch (key) {
                 case "Backspace": {
                     const { selectionStart, selectionEnd, value } = target;
                     if (fullClear) {
@@ -657,13 +658,11 @@ const _keyDown = (target, eventInit) => {
                     break;
                 }
                 default: {
-                    if (eventInit.key.length === 1 && !eventInit.ctrlKey) {
+                    if (key.length === 1 && !ctrlKey) {
                         // Character coming from the keystroke
                         // ! TODO: Doesn't work with non-roman locales
                         const { selectionStart, selectionEnd, value } = target;
-                        inputData = eventInit.shiftKey
-                            ? eventInit.key.toUpperCase()
-                            : eventInit.key.toLowerCase();
+                        inputData = shiftKey ? key.toUpperCase() : key.toLowerCase();
                         // Insert character in target value
                         if (isNil(selectionStart) && isNil(selectionEnd)) {
                             nextValue += inputData;
@@ -680,7 +679,7 @@ const _keyDown = (target, eventInit) => {
         }
 
         // Trigger 'keypress' event for printable characters
-        if (!eventInit.ctrlKey && /^[\w ]$/.test(eventInit.key)) {
+        if (!ctrlKey && /^[\w ]$/.test(key)) {
             const keyPressEvent = dispatch(target, "keypress", eventInit);
             events.push(keyPressEvent);
             prevented = isPrevented(keyPressEvent);
@@ -688,9 +687,9 @@ const _keyDown = (target, eventInit) => {
     }
 
     if (!prevented) {
-        switch (eventInit.key) {
+        switch (key) {
             case "a": {
-                if (eventInit.ctrlKey) {
+                if (ctrlKey) {
                     // Select all
                     if (isEditable(target)) {
                         events.push(dispatch(target, "select"));
@@ -707,12 +706,10 @@ const _keyDown = (target, eventInit) => {
             /**
              * Special action: shift focus
              *  On: unprevented 'Tab' keydown
-             *  Do: focus next (or previous with 'shift') focusable element
+             *  Do: focus next (or previous with 'Shift') focusable element
              */
             case "Tab": {
-                const next = eventInit.shiftKey
-                    ? getPreviousFocusableElement()
-                    : getNextFocusableElement();
+                const next = shiftKey ? getPreviousFocusableElement() : getNextFocusableElement();
                 if (next) {
                     events.push(...triggerFocus(next));
                 }
@@ -720,11 +717,11 @@ const _keyDown = (target, eventInit) => {
             }
             /**
              * Special action: copy
-             *  On: unprevented 'ctrl + c' keydown
+             *  On: unprevented 'Control + c' keydown
              *  Do: copy current selection to clipboard
              */
             case "c": {
-                if (eventInit.ctrlKey) {
+                if (ctrlKey) {
                     // Get selection from window
                     const text = globalThis.getSelection().toString();
                     globalThis.navigator.clipboard.writeTextSync(text);
@@ -733,11 +730,11 @@ const _keyDown = (target, eventInit) => {
             }
             /**
              * Special action: paste
-             *  On: unprevented 'ctrl + v' keydown on editable element
+             *  On: unprevented 'Control + v' keydown on editable element
              *  Do: paste current clipboard content to current element
              */
             case "v": {
-                if (eventInit.ctrlKey && isEditable(target)) {
+                if (ctrlKey && isEditable(target)) {
                     // Set target value (synchonously)
                     const value = globalThis.navigator.clipboard.readTextSync();
                     nextValue = value;
@@ -748,11 +745,11 @@ const _keyDown = (target, eventInit) => {
             }
             /**
              * Special action: cut
-             *  On: unprevented 'ctrl + x' keydown on editable element
+             *  On: unprevented 'Control + x' keydown on editable element
              *  Do: cut current selection to clipboard and remove selection
              */
             case "x": {
-                if (eventInit.ctrlKey && isEditable(target)) {
+                if (ctrlKey && isEditable(target)) {
                     // Get selection from window
                     const text = globalThis.getSelection().toString();
                     globalThis.navigator.clipboard.writeTextSync(text);
@@ -783,8 +780,39 @@ const _keyDown = (target, eventInit) => {
  * @param {KeyboardEventInit} eventInit
  */
 const _keyUp = (target, eventInit) => {
+    const events = [dispatch(target, "keyup", eventInit)];
+
     registerSpecialKey(eventInit, false);
-    return [dispatch(target, "keyup", eventInit)];
+
+    if (eventInit.key === "Enter") {
+        let parentForm;
+        if (getTag(target) === "button" && target.type === "button") {
+            /**
+             * Special action: button 'Enter'
+             *  On: unprevented 'Enter' keydown & keypress on a <button type="button"/>
+             *  Do: triggers a 'click' event on the button
+             */
+            events.push(...triggerClick(target, { button: 0 }));
+        } else if ((parentForm = target.closest("form"))) {
+            /**
+             * Special action: form 'Enter'
+             *  On: unprevented 'Enter' keydown & keypress on any element that
+             *      is not a <button type="button"/> in a form element
+             *  Do: triggers a 'submit' event on the form
+             */
+            events.push(dispatch(parentForm, "submit"));
+        }
+    }
+    if (eventInit.key === " " && getTag(target) === "input" && target.type === "checkbox") {
+        /**
+         * Special action: input[type=checkbox] 'Space'
+         *  On: unprevented ' ' keydown & keypress on an <input type="checkbox"/>
+         *  Do: triggers a 'click' event on the input
+         */
+        events.push(...triggerClick(target, { button: 0 }));
+    }
+
+    return events;
 };
 
 /**
@@ -864,40 +892,7 @@ const _pointerUp = (target, eventInit) => {
  * @param {KeyboardEventInit} eventInit
  */
 const _press = (target, eventInit) => {
-    const keyDownEvents = _keyDown(target, eventInit);
-    const events = [...keyDownEvents, ..._keyUp(target, eventInit)];
-
-    if (!isPrevented(keyDownEvents[0])) {
-        if (eventInit.key === "Enter") {
-            let parentForm;
-            if (getTag(target) === "button" && target.type === "button") {
-                /**
-                 * Special action: button 'Enter'
-                 *  On: unprevented 'Enter' keydown & keypress on a <button type="button"/>
-                 *  Do: triggers a 'click' event on the button
-                 */
-                events.push(...triggerClick(target, { button: 0 }));
-            } else if ((parentForm = target.closest("form"))) {
-                /**
-                 * Special action: form 'Enter'
-                 *  On: unprevented 'Enter' keydown & keypress on any element that
-                 *      is not a <button type="button"/> in a form element
-                 *  Do: triggers a 'submit' event on the form
-                 */
-                events.push(dispatch(parentForm, "submit"));
-            }
-        }
-        if (eventInit.key === " " && getTag(target) === "input" && target.type === "checkbox") {
-            /**
-             * Special action: input[type=checkbox] 'Space'
-             *  On: unprevented ' ' keydown & keypress on an <input type="checkbox"/>
-             *  Do: triggers a 'click' event on the input
-             */
-            events.push(...triggerClick(target, { button: 0 }));
-        }
-    }
-
-    return events;
+    return [..._keyDown(target, eventInit), ..._keyUp(target, eventInit)];
 };
 
 /**
@@ -923,6 +918,23 @@ const _select = (target, value) => {
 };
 
 const DOUBLE_CLICK_DELAY = 500;
+const KEY_ALIASES = {
+    alt: "Alt",
+    caps: "Shift",
+    cmd: "Meta",
+    command: "Meta",
+    control: "Control",
+    ctrl: "Control",
+    del: "Delete",
+    delete: "Delete",
+    esc: "Escape",
+    escape: "Escape",
+    meta: "Meta",
+    shift: "Shift",
+    space: " ",
+    tab: "Tab",
+    win: "Meta",
+};
 const LOG_COLORS = {
     blue: "#5db0d7",
     orange: "#f29364",
@@ -1649,12 +1661,17 @@ export function pointerUp(target, options) {
  * @example
  *  keyDown("Shift+Tab"); // Focuses previous focusable element
  * @example
- *  keyDown(["Ctrl", "v"]); // Pastes current clipboard content
+ *  keyDown(["ctrl", "v"]); // Pastes current clipboard content
  */
 export function press(keyStrokes) {
     const eventInits = parseKeyStroke(keyStrokes);
+    const activeElement = getActiveElement();
+
     for (const eventInit of eventInits) {
-        _press(getActiveElement(), eventInit);
+        _keyDown(activeElement, eventInit);
+    }
+    for (const eventInit of eventInits.reverse()) {
+        _keyUp(activeElement, eventInit);
     }
 
     return logEvents("press");
