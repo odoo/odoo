@@ -301,7 +301,7 @@ export class MockServer {
             }
 
             // Try to find a parent model method
-            for (const parentName of model._inherit) {
+            for (const parentName of safeSplit(model._inherit)) {
                 const parentModel = this.env[parentName];
                 if (typeof parentModel[method] === "function") {
                     const expectedLength = parentModel[method].length;
