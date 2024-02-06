@@ -90,6 +90,9 @@ class SaleOrder(models.Model):
                 else:
                     price = line.price_unit
 
+                if self.env.context.get('force_copy_price_unit', False):
+                    price = line.price_unit
+
                 data.update({
                     'price_unit': price,
                     'discount': 100 - ((100 - discount) * (100 - line.discount) / 100),

@@ -397,13 +397,18 @@ class Project(models.Model):
 
     @api.model
     def _create_analytic_account_from_values(self, values):
+        company_id = self.get_company_id_for_analytic_account_creation(values)
         analytic_account = self.env['account.analytic.account'].create({
             'name': values.get('name', _('Unknown Analytic Account')),
-            'company_id': values.get('company_id') or self.env.company.id,
+            'company_id': company_id,
             'partner_id': values.get('partner_id'),
             'active': True,
         })
         return analytic_account
+
+    @api.model
+    def get_company_id_for_analytic_account_creation(self, values):
+        return values.get('company_id') or self.env.company.id
 
     def _create_analytic_account(self):
         for project in self:
