@@ -161,3 +161,18 @@ button {
 .pos .button.validation.with-more-button {
     height: calc(var(--btn-height-size) * 2);
 }
+
+// Set all the colors but the "no-color" one
+@for $size from 2 through length($o-colors) {
+    .o_colorlist_item_color_transparent_#{$size - 1} {
+        $-bg: adjust-color(nth($o-colors, $size), $lightness: 35%, $saturation: 15%);
+        $-color: adjust-color(nth($o-colors, $size), $lightness: -40%, $saturation: -15%);
+        @include o-print-color($-bg, background-color, bg-opacity);
+        @include o-print-color($-color, color, text-opacity);
+    }
+}
+
+.pos-rightheader .status-buttons .btn-secondary{
+    background-color: #fff;
+    border: 0;
+}

@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.CategorySelector">
-        <div t-attf-class="{{props.class}} d-flex overflow-auto w-100 flex-grow-1">
-            <div t-foreach="props.categories" t-as="category" t-key="category.id" class="d-flex align-items-center">
-                <i t-if="category_index !== 0" t-attf-class="pe-2 fa fa-caret-right" t-attf-style="opacity: {{category.showSeparator ? 1 : 0}}" aria-hidden="true" />
-                <button t-on-click="() => props.onClick(category.id)" t-attf-class="o_colorlist_item_color_{{category.color or 'none'}}" class="category-button btn btn-light d-flex flex-column align-items-center justify-content-center p-1 h-100" style="width: 3rem;">
+        <div t-attf-class="{{props.class}}">
+            <t t-foreach="props.categories" t-as="category" t-key="category.id">
+                <button t-on-click="() => props.onClick(category.id)" t-attf-class="o_colorlist_item_color_{{!category.isSelected and !category.isChildren ? 'transparent_': ''}}{{category.color or 'none'}} {{!category.isSelected ? 'border-0': ''}}" class="category-button col btn btn-light align-items-stretch" t-att-style="`${category.isSelected ? ' border-color: #714b67;' : '' };`">
                     <img t-if="category.imgSrc" t-att-src="category.imgSrc" style="height: 3rem;" alt="Category" />
-                    <i t-if="category.icon" t-attf-class="fa {{category.icon}}" aria-hidden="true" />
-                    <span t-if="category.name" class="text-center fs-5 mx-2" t-esc="category.name" />
+                    <span t-if="category.name" class="text-wrap-categ text-center fs-5"  t-esc="category.name" />
                 </button>
-            </div>
+            </t>
         </div>
     </t>
 </templates>

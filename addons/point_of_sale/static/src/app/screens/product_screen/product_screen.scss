@@ -6,9 +6,21 @@
     grid-template-columns: repeat(auto-fill, minmax(122px, 1fr));
 }
 
-@media only screen and (max-width: 768px) {
+.actionpad {
+    width: 40%;
+}
+.subpads .numpad{
+    width: 60%;
+}
+@media only screen and (max-width: 992px) {
     .product-list.grid {
         grid-template-columns: repeat(3, 1fr);
+    }
+    .actionpad {
+        width: 30%;
+    }
+    .subpads .numpad{
+        width: 70%;
     }
 }
 
@@ -23,4 +35,23 @@
     &::-webkit-scrollbar {
         display: none;
     }
+}
+.category-box {
+    .category-button {
+        min-height: 60px;
+        max-height: 80px;
+    }
+}
+
+
+.category-selector {
+    grid-template-columns: repeat(auto-fill, minmax(122px, 1fr));
+}
+
+.text-wrap-categ {
+    box-sizing: border-box;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }

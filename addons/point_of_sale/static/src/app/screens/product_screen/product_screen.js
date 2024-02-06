@@ -83,34 +83,41 @@ export class ProductScreen extends Component {
         });
         this.scrollDirection = useScrollDirection("products");
     }
-    getCategories() {
+    getAncestorsAndCurrent() {
         const selectedCategory = this.pos.selectedCategory;
-        const categoriesToDisplay = selectedCategory
-            ? [...selectedCategory.allParents, selectedCategory, ...selectedCategory.child_id]
-            : this.pos.models["pos.category"].filter((category) => !category.parent_id);
-        return [
-            {
-                id: 0,
-                name: "",
-                icon: "fa-home fa-2x",
-            },
-            ...categoriesToDisplay.map((category) => {
-                return {
-                    ...pick(category, "id", "name", "color"),
-                    showSeparator:
-                        selectedCategory &&
-                        [
-                            ...selectedCategory.allParents.map((p) => p.id),
-                            this.pos.selectedCategory.id,
-                        ].includes(category.id),
-                    imgSrc:
-                        this.pos.config.show_category_images && category.has_image
-                            ? `/web/image?model=pos.category&field=image_128&id=${category.id}`
-                            : undefined,
-                };
-            }),
-        ];
+        return selectedCategory
+            ? [undefined, ...selectedCategory.allParents, selectedCategory]
+            : [selectedCategory];
     }
+    getChildCategories(selectedCategory) {
+        return selectedCategory
+            ? [...selectedCategory.child_id]
+            : this.pos.models["pos.category"].filter((category) => !category.parent_id);
+    }
+    getChildCategoriesInfo(selectedCategory) {
+        return this.getCategoriesInfo(this.getChildCategories(selectedCategory), selectedCategory);
+    }
+    getCategoriesAndSub() {
+        return this.getAncestorsAndCurrent().flatMap((category) =>
+            this.getChildCategoriesInfo(category)
+        );
+    }
+
+    getCategoriesInfo(categories, selectedCategory) {
+        return categories.map((category) => ({
+            ...pick(category, "id", "name", "color"),
+            imgSrc:
+                this.pos.config.show_category_images && category.has_image
+                    ? `/web/image?model=pos.category&field=image_128&id=${category.id}`
+                    : undefined,
+            isSelected:
+                selectedCategory &&
+                this.getAncestorsAndCurrent().includes(category) &&
+                !this.ui.isSmall,
+            isChildren: this.getChildCategories(this.pos.selectedCategory).includes(category),
+        }));
+    }
+
     getNumpadButtons() {
         return [
             { value: "1" },
@@ -341,6 +348,9 @@ export class ProductScreen extends Component {
             const product = this.pos.selectedCategory?.id
                 ? this.getProductsByCategory(this.pos.selectedCategory.id)
                 : this.pos.models["product.product"].getAll();
+            if (!product) {
+                return list;
+            }
             list = fuzzyLookup(
                 this.searchWord,
                 product,

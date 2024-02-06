@@ -16,7 +16,6 @@ registry.category("web_tour.tours").add("PosLoyaltyTour1", {
             // Generate coupons for PosLoyaltyTour2.
 
             Dialog.confirm("Open session"),
-            ProductScreen.clickHomeCategory(),
 
             // basic order
             // just accept the automatically applied promo program
@@ -87,7 +86,6 @@ registry.category("web_tour.tours").add("PosLoyaltyTour2", {
         [
             // --- PoS Loyalty Tour Basic Part 2 ---
             // Using the coupons generated from PosLoyaltyTour1.
-            ProductScreen.clickHomeCategory(),
 
             // Test that global discount and cheapest product discounts can be accumulated.
             // Applied programs:
@@ -175,7 +173,6 @@ registry.category("web_tour.tours").add("PosLoyaltyTour3", {
             // --- PoS Loyalty Tour Basic Part 3 ---
 
             Dialog.confirm("Open session"),
-            ProductScreen.clickHomeCategory(),
 
             ProductScreen.clickDisplayedProduct("Promo Product"),
             PosLoyalty.orderTotalIs("34.50"),
@@ -197,7 +194,6 @@ registry.category("web_tour.tours").add("PosLoyaltyTour4", {
     steps: () =>
         [
             Dialog.confirm("Open session"),
-            ProductScreen.clickHomeCategory(),
 
             ProductScreen.addOrderline("Test Product 1", "1"),
             ProductScreen.addOrderline("Test Product 2", "1"),
@@ -215,7 +211,6 @@ registry.category("web_tour.tours").add("PosCouponTour5", {
     steps: () =>
         [
             Dialog.confirm("Open session"),
-            ProductScreen.clickHomeCategory(),
             ProductScreen.addOrderline("Test Product 1", "1.00", "100"),
             PosLoyalty.clickDiscountButton(),
             Dialog.confirm(),
@@ -230,7 +225,6 @@ registry.category("web_tour.tours").add("PosLoyaltyTour6", {
     steps: () =>
         [
             Dialog.confirm("Open session"),
-            ProductScreen.clickHomeCategory(),
 
             ProductScreen.clickPartnerButton(),
             ProductScreen.clickCustomer("AAA Partner"),
@@ -247,7 +241,6 @@ registry.category("web_tour.tours").add("PosLoyaltyTour7", {
     steps: () =>
         [
             Dialog.confirm("Open session"),
-            ProductScreen.clickHomeCategory(),
 
             ProductScreen.addOrderline("Test Product", "1"),
             PosLoyalty.orderTotalIs("100"),
@@ -262,7 +255,6 @@ registry.category("web_tour.tours").add("PosLoyaltyTour8", {
     steps: () =>
         [
             Dialog.confirm("Open session"),
-            ProductScreen.clickHomeCategory(),
 
             ProductScreen.clickDisplayedProduct("Product B"),
             ProductScreen.clickDisplayedProduct("Product A"),
@@ -276,7 +268,6 @@ registry.category("web_tour.tours").add("PosLoyaltySpecificDiscountCategoryTour"
     steps: () =>
         [
             Dialog.confirm("Open session"),
-            ProductScreen.clickHomeCategory(),
 
             ProductScreen.clickDisplayedProduct("Product A"),
             ProductScreen.selectedOrderlineHas("Product A", "1.00", "15.00"),
@@ -294,7 +285,6 @@ registry.category("web_tour.tours").add("PosLoyaltyTour9", {
     steps: () =>
         [
             Dialog.confirm("Open session"),
-            ProductScreen.clickHomeCategory(),
 
             ProductScreen.clickPartnerButton(),
             ProductScreen.clickCustomer("AAA Partner"),

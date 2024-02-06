@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from typing import List, Tuple
+import random
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError, UserError
@@ -17,12 +18,15 @@ class PosCategory(models.Model):
         if not self._check_recursion():
             raise ValidationError(_('Error! You cannot create recursive categories.'))
 
+    def get_default_color(self):
+        return random.randint(0, 10)
+
     name = fields.Char(string='Category Name', required=True, translate=True)
     parent_id = fields.Many2one('pos.category', string='Parent Category', index=True)
     child_id = fields.One2many('pos.category', 'parent_id', string='Children Categories')
     sequence = fields.Integer(help="Gives the sequence order when displaying a list of product categories.")
     image_128 = fields.Image("Image", max_width=128, max_height=128)
-    color = fields.Integer('Color', required=False, default=0)
+    color = fields.Integer('Color', required=False, default=get_default_color)
 
     # During loading of data, the image is not loaded so we expose a lighter
     # field to determine whether a pos.category has an image or not.
@@ -48,3 +52,19 @@ class PosCategory(models.Model):
     def _compute_has_image(self):
         for category in self:
             category.has_image = bool(category.image_128)
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get("parent_id"):
+                vals["color"] = self.search_read([("id", "=", vals["parent_id"])])[0][
+                    "color"
+                ]
+        return super().create(vals_list)
+
+    def write(self, vals):
+        if "parent_id" in vals and not ("color" in vals):
+            vals["color"] = self.search_read([("id", "=", vals["parent_id"])])[0][
+                "color"
+            ]
+        return super().write(vals)

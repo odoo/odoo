@@ -15,8 +15,7 @@ registry.category("web_tour.tours").add("ProductScreenTour", {
     steps: () =>
         [
             // Go by default to home category
-            ProductScreen.clickHomeCategory(),
-
+            ProductScreen.clickShowProductsMobile(),
             // Clicking product multiple times should increment quantity
             ProductScreen.clickDisplayedProduct("Desk Organizer"),
             ProductScreen.selectedOrderlineHas("Desk Organizer", "1.0", "5.10"),
@@ -63,17 +62,21 @@ registry.category("web_tour.tours").add("ProductScreenTour", {
             ProductScreen.orderIsEmpty(),
 
             // Check different subcategories
+            ProductScreen.goBackToMainScreen(),
             ProductScreen.clickSubcategory("Desk test"),
             ProductScreen.productIsDisplayed("Desk Pad"),
-            ProductScreen.clickHomeCategory(),
+            ProductScreen.goBackToMainScreen(),
             ProductScreen.clickSubcategory("Misc test"),
             ProductScreen.productIsDisplayed("Whiteboard Pen"),
-            ProductScreen.clickHomeCategory(),
+            ProductScreen.goBackToMainScreen(),
             ProductScreen.clickSubcategory("Chair test"),
             ProductScreen.productIsDisplayed("Letter Tray"),
-            ProductScreen.clickHomeCategory(),
+            ProductScreen.goBackToMainScreen(),
+            ProductScreen.clickSubcategory("Chair test"),
+            ProductScreen.goBackToMainScreen(),
 
             // Add two orderlines and update quantity
+            ProductScreen.clickShowProductsMobile(),
             ProductScreen.clickDisplayedProduct("Whiteboard Pen"),
             ProductScreen.clickDisplayedProduct("Wall Shelf Unit"),
             ProductScreen.clickOrderline("Whiteboard Pen", "1.0"),
@@ -144,7 +147,7 @@ registry.category("web_tour.tours").add("FiscalPositionNoTax", {
     steps: () =>
         [
             Dialog.confirm("Open session"),
-            ProductScreen.clickHomeCategory(),
+            ProductScreen.clickShowProductsMobile(),
             ProductScreen.clickDisplayedProduct("Test Product"),
             ProductScreen.totalAmountIs("100.00"),
             ProductScreen.changeFiscalPosition("No Tax"),
@@ -177,8 +180,7 @@ registry.category("web_tour.tours").add("ShowTaxExcludedTour", {
         [
             Dialog.confirm("Open session"),
 
-            ProductScreen.clickHomeCategory(),
-
+            ProductScreen.clickShowProductsMobile(),
             ProductScreen.clickDisplayedProduct("Test Product"),
             ProductScreen.selectedOrderlineHas("Test Product", "1.0", "100.0"),
             ProductScreen.totalAmountIs("110.0"),

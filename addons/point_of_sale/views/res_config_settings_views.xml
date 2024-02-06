@@ -100,13 +100,6 @@
                             <div class="o_notification_alert alert alert-warning" invisible="pos_company_has_template" role="alert">
                                 There is no Chart of Accounts configured on the company. Please go to the invoicing settings to install a Chart of Accounts.
                             </div>
-                            <setting help="Start selling from a default product POS category">
-                                <field name="pos_start_category"/>
-                                <div class="content-group mt16" invisible="not pos_start_category">
-                                    <field name="pos_iface_start_categ_id" domain="[('id', 'in', pos_selectable_categ_ids)]"/>
-                                </div>
-                            </setting>
-
                             <setting id="multiple_employee_session" title="Employees can scan their badge or enter a PIN to log in to a PoS session. These credentials are configurable in the *HR Settings* tab of the employee form." string="Log in with Employees" help="Allow to log and switch between selected Employees">
                                 <field name="pos_module_pos_hr" readonly="pos_has_active_session"/>
                                 <div class="content-group mt16" invisible="not pos_module_pos_hr">
@@ -115,20 +108,8 @@
                                     </div>
                                 </div>
                             </setting>
-                            <setting help="Pick which product POS categories are available">
-                                <field name="pos_limit_categories" readonly="pos_has_active_session"/>
-                                <div class="content-group mt16" invisible="not pos_limit_categories">
-                                    <field name="pos_iface_available_categ_ids" widget="many2many_tags" readonly="pos_has_active_session"/>
-                                </div>
-                                <div class="content-group mt16" invisible="not pos_limit_categories">
-                                    <button name="%(product_pos_category_action)d" icon="oi-arrow-right" type="action" string="PoS Product Categories" class="btn-link"/>
-                                </div>
-                            </setting>
                             <setting invisible="is_kiosk_mode" help="Improve navigation for imprecise industrial touchscreens">
                                 <field name="pos_iface_big_scrollbars"/>
-                            </setting>
-                            <setting id="margin_and_cost" string="Show margins &amp; Costs" help="Show margins &amp; costs on product information">
-                                <field name="pos_is_margins_costs_accessible_to_every_user"/>
                             </setting>
                             <setting string="Share Open Orders" help="Allow to access each other's active orders" id="is_order_shared" invisible="pos_module_pos_restaurant or is_kiosk_mode">
                                 <div class="content-group">
@@ -152,6 +133,26 @@
                                         <label for="pos_show_category_images" string="Show category images" class="fw-normal me-1"/>
                                     </div>
                                 </div>
+                            </setting>
+                        </block>
+                        <block title="Product &amp; PoS catefories">
+                            <setting help="Start selling from a default product PoS category">
+                                <field name="pos_start_category"/>
+                                <div class="content-group mt16" invisible="not pos_start_category">
+                                    <field name="pos_iface_start_categ_id" domain="[('id', 'in', pos_selectable_categ_ids)]"/>
+                                </div>
+                            </setting>
+                            <setting help="Pick which product PoS categories are available">
+                                <field name="pos_limit_categories" readonly="pos_has_active_session"/>
+                                <div class="content-group mt16" invisible="not pos_limit_categories">
+                                    <field name="pos_iface_available_categ_ids" widget="many2many_tags" readonly="pos_has_active_session"/>
+                                </div>
+                                <div class="content-group mt16" invisible="not pos_limit_categories">
+                                    <button name="%(product_pos_category_action)d" icon="oi-arrow-right" type="action" string="PoS Product Categories" class="btn-link"/>
+                                </div>
+                            </setting>
+                            <setting id="margin_and_cost" string="Show margins &amp; costs" help="Show margins &amp; costs on product information">
+                                <field name="pos_is_margins_costs_accessible_to_every_user"/>
                             </setting>
                         </block>
                         <block title="Accounting" id="pos_accounting_section">

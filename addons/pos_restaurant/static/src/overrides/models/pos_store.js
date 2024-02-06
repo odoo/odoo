@@ -94,6 +94,9 @@ patch(PosStore.prototype, {
                 // We check that it's in ReceiptScreen because we want to keep the order if it's in a tipping state
                 this.removeOrder(order);
             }
+            this.setSelectedCategory(
+                (this.config.start_category && this.config.iface_start_categ_id?.[0]) || 0
+            );
             this.showScreen("FloorScreen", { floor: table?.floor });
         }
     },

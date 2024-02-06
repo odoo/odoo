@@ -72,7 +72,6 @@ class TestFrontend(AccountTestInvoicingCommon, HttpCaseWithUserDemo):
             'iface_splitbill': True,
             'iface_printbill': True,
             'iface_orderline_notes': True,
-            'iface_start_categ_id': drinks_category.id,
             'start_category': True,
             'is_order_printer': True,
             'printer_ids': [(4, printer.id)],
