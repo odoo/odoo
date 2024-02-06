@@ -13,7 +13,7 @@
                   <attribute name="invisible">activity_category == 'meeting'</attribute>
             </xpath>
             <xpath expr="//button[@name='action_schedule_activities']" position="attributes">
-                  <attribute name="invisible">activity_category in ('meeting', 'phonecall') or id</attribute>
+                  <attribute name="invisible">has_error or activity_category == 'meeting' or id</attribute>
             </xpath>
             <xpath expr="//field[@name='note']" position="attributes">
                 <attribute name="invisible">activity_category == 'meeting'</attribute>
