@@ -35,16 +35,16 @@ class AccountPaymentLatamCheck(models.Model):
 
     @api.depends('payment_id.payment_method_line_id.code', 'payment_id.partner_id')
     def _compute_l10n_latam_check_bank_id(self):
-        new_third_party_checks = self.payment_id.filtered(lambda x: x.payment_method_line_id.code == 'new_third_party_checks')
+        new_third_party_checks = self.filtered(lambda x: x.payment_id.payment_method_line_id.code == 'new_third_party_checks')
         for rec in new_third_party_checks:
-            rec.l10n_latam_check_bank_id = rec.partner_id.bank_ids[:1].bank_id
+            rec.l10n_latam_check_bank_id = rec.payment_id.partner_id.bank_ids[:1].bank_id
         (self - new_third_party_checks).l10n_latam_check_bank_id = False
 
     @api.depends('payment_id.payment_method_line_id.code', 'payment_id.partner_id')
     def _compute_l10n_latam_check_issuer_vat(self):
-        new_third_party_checks = self.payment_id.filtered(lambda x: x.payment_method_line_id.code == 'new_third_party_checks')
+        new_third_party_checks = self.filtered(lambda x: x.payment_id.payment_method_line_id.code == 'new_third_party_checks')
         for rec in new_third_party_checks:
-            rec.l10n_latam_check_issuer_vat = rec.partner_id.vat
+            rec.l10n_latam_check_issuer_vat = rec.payment_id.partner_id.vat
         (self - new_third_party_checks).l10n_latam_check_issuer_vat = False
 
     # @api.onchange('l10n_latam_check_issuer_vat')

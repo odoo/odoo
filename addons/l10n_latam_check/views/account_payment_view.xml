@@ -14,11 +14,11 @@
             <filter name="date" position="after">
                 <separator/>
             </filter>
-            <filter name="groupby_date" position="after">
+            <!-- <filter name="groupby_date" position="after">
                 <filter string="Check Cash-In Date"
                     name="groupby_l10n_latam_check_payment_date"
                     context="{'group_by': 'l10n_latam_check_payment_date'}"/>
-            </filter>
+            </filter> -->
         </field>
     </record>
 
@@ -50,11 +50,11 @@
             <filter name="unmatched" position="attributes">
                 <attribute name="invisible">1</attribute>
             </filter>
-            <filter name="groupby_date" position="after">
+            <!-- <filter name="groupby_date" position="after">
                 <filter string="Check Cash-In Date"
                     name="groupby_l10n_latam_check_payment_date"
                     context="{'group_by': 'l10n_latam_check_payment_date'}"/>
-            </filter>
+            </filter> -->
         </field>
     </record>
     <record id="view_account_payment_form" model="ir.ui.view">
@@ -147,7 +147,7 @@
         <field name="arch" type="xml">
             <calendar
                     mode="month"
-                    date_start="l10n_latam_check_payment_date"
+                    date_start="date"
                     color="journal_id">
                 <field name="amount"/>
             </calendar>
@@ -159,8 +159,8 @@
         <field name="model">account.payment</field>
         <field name="arch" type="xml">
             <pivot>
-                <field name="l10n_latam_check_payment_date" type="row" interval="month"/>
-                <field name="l10n_latam_check_payment_date" type="row" interval="week"/>
+                <field name="date" type="row" interval="month"/>
+                <field name="date" type="row" interval="week"/>
             <field name="amount" type="measure"/>
             </pivot>
         </field>
@@ -183,9 +183,6 @@
             </field>
             <field name="payment_method_line_id" position="attributes">
                 <attribute name="invisible">1</attribute>
-            </field>
-            <field name="date" position="after">
-                <field name="l10n_latam_check_payment_date" optional="show" readonly="state != 'draft'"/>
             </field>
             <tree>
                 <field name="is_matched"/>

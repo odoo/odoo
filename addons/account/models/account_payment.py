@@ -783,7 +783,7 @@ class AccountPayment(models.Model):
                 all_lines = move.line_ids
                 liquidity_lines, counterpart_lines, writeoff_lines = pay._seek_for_lines()
                 liquidity_lines_count = pay._expected_liquidity_lines_count()
-                if len(liquidity_lines) != liquidity_lines_count :
+                if len(liquidity_lines) != liquidity_lines_count:
                     raise UserError(_(
                         "Journal Entry %s is not valid. In order to proceed, the journal items must "
                         "include %s and only %s outstanding payments/receipts account.",
@@ -844,11 +844,32 @@ class AccountPayment(models.Model):
             'date', 'amount', 'payment_type', 'partner_type', 'payment_reference', 'is_internal_transfer',
             'currency_id', 'partner_id', 'destination_account_id', 'partner_bank_id', 'journal_id'
         )
-    def _get_line_ids_commands(self, line_vals_list, liquidity_lines, counterpart_lines):
-        return [
-                Command.update(liquidity_lines.id, line_vals_list[0]) if liquidity_lines else Command.create(line_vals_list[0]),
-                Command.update(counterpart_lines.id, line_vals_list[1]) if counterpart_lines else Command.create(line_vals_list[1])
-            ]
+
+    # uggly code only for a test
+    def _get_base_line_commands(self, line_vals_list, liquidity_lines, counterpart_lines):
+        commands = []
+        liquidity_lines_vals = [x for x in line_vals_list if x['account_id'] == self.outstanding_account_id.id]
+        for index in range(0, len(liquidity_lines_vals)):
+            if index < len(liquidity_lines):
+                commands.append(Command.update(liquidity_lines[index].id, liquidity_lines_vals[index]))
+            else:
+                commands.append(Command.create(liquidity_lines_vals[index]))
+        lines_to_unlink =  len(liquidity_lines_vals) - len(liquidity_lines)
+        if lines_to_unlink < 0:
+            for line in liquidity_lines[:lines_to_unlink]:
+                commands.append((2, line.id))
+
+        counterpart_lines_vals = [x for x in  line_vals_list if x['account_id'] == self.destination_account_id.id]
+        for index in range(0, len(counterpart_lines_vals)):
+            if index < len(counterpart_lines):
+                commands.append(Command.update(counterpart_lines[index].id, counterpart_lines_vals[index]))
+            else:
+                commands.append(Command.create(counterpart_lines_vals[index]))
+        lines_to_unlink =  len(counterpart_lines_vals) - len(counterpart_lines)
+        if lines_to_unlink < 0:
+            for line in counterpart_lines[:lines_to_unlink]:
+                commands.append((2, line.id))
+        return commands
 
     def _synchronize_to_moves(self, changed_fields):
         ''' Update the account.move regarding the modified account.payment.
@@ -879,14 +900,14 @@ class AccountPayment(models.Model):
 
             line_vals_list = pay._prepare_move_line_default_vals(write_off_line_vals=write_off_line_vals)
 
-            # TODO: multiple  liquidity_lines vrs line_vals_list
-            line_ids_commands self._get_line_ids_commands(line_vals_list, liquidity_lines, counterpart_lines)
+            line_ids_commands = pay._get_base_line_commands(line_vals_list, liquidity_lines, counterpart_lines)
 
             for line in writeoff_lines:
                 line_ids_commands.append((2, line.id))
 
-            for extra_line_vals in line_vals_list[2:]:
-                line_ids_commands.append((0, 0, extra_line_vals))
+            for extra_line_vals in line_vals_list:
+                if extra_line_vals['account_id'] not in (pay.outstanding_account_id.id, pay.destination_account_id.id):
+                    line_ids_commands.append((0, 0, extra_line_vals))
 
             # Update the existing journal items.
             # If dealing with multiple write-off lines, they are dropped and a new one is generated.
