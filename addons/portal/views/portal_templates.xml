@@ -850,19 +850,17 @@
                 <t t-set="_classes" t-value="'w-md-50 bg-primary border border-primary'"/>
             </t>
             <h4 class="mt32">Other Addresses</h4>
-            <div t-if="partner.child_ids" class="row row-cols-md-2 row-cols-lg-3 g-3 flex-nowrap flex-md-wrap mb-2">
+            <div t-if="partner.child_ids" class="o_portal_all_addresses row row-cols-md-2 row-cols-lg-3 g-3 flex-nowrap flex-md-wrap mb-2">
                 <t t-foreach="partner.child_ids" t-as="partner">
-                    <t t-call="portal.address_card">
-                        <t t-set="_classes" t-value="'col-md'"/>
-                    </t>
+                    <t t-call="portal.address_card"/>
                 </t>
             </div>
-            <a href="/my/addresses/new" class="btn btn-primary justify-content-start align-items-center gap-3 h-100">Add an address</a>
+            <a href="/my/addresses/new" class="btn btn-primary justify-content-start align-items-center gap-3 h-100">Add address</a>
         </t>
     </template>
 
     <template id="address_card">
-        <div class="address_card-container">
+        <div class="address_card-container col-md">
             <div t-attf-class="card h-100 {{ _classes }}">
                 <div class="card-body">
                     <a t-attf-href="/my/account?address={{partner.id}}" t-att-title="title" class="float-end ms-2">
