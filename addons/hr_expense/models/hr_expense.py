@@ -542,19 +542,28 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
 
         sheets = [own_expenses, company_expenses] if create_two_reports else [expenses_with_amount]
         values = []
+
+        # We use a fallback name only when several expense sheets are created,
+        # else we use the form view required name to force the user to set a name
         for todo in sheets:
+            paid_by = 'company' if todo[0].payment_mode == 'company_account' else 'employee'
+            sheet_name = _("New Expense Report, paid by %(paid_by)s", paid_by=paid_by) if len(sheets) > 1 else False
             if len(todo) == 1:
-                expense_name = todo.name
+                sheet_name = todo.name
             else:
                 dates = todo.mapped('date')
-                min_date = format_date(self.env, min(dates))
-                max_date = format_date(self.env, max(dates))
-                expense_name = min_date if max_date == min_date else "%s - %s" % (min_date, max_date)
+                if False not in dates:  # If at least one date isn't set, we don't set a default name
+                    min_date = format_date(self.env, min(dates))
+                    max_date = format_date(self.env, max(dates))
+                    if min_date == max_date:
+                        sheet_name = min_date
+                    else:
+                        sheet_name = _("%(date_from)s - %(date_to)s", date_from=min_date, date_to=max_date)
 
             vals = {
                 'company_id': self.company_id.id,
                 'employee_id': self[0].employee_id.id,
-                'name': expense_name,
+                'name': sheet_name,
                 'expense_line_ids': [Command.set(todo.ids)],
                 'state': 'draft',
             }
