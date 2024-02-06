@@ -57,7 +57,6 @@ class LoyaltyReward(models.Model):
         ('discount', 'Discount')],
         default='discount', required=True,
     )
-    user_has_debug = fields.Boolean(compute='_compute_user_has_debug')
 
     # Discount rewards
     discount = fields.Float('Discount', default=10)
@@ -206,11 +205,6 @@ class LoyaltyReward(models.Model):
             reward.is_global_discount = reward.reward_type == 'discount' and\
                                         reward.discount_applicability == 'order' and\
                                         reward.discount_mode == 'percent'
-
-    @api.depends_context('uid')
-    @api.depends("reward_type")
-    def _compute_user_has_debug(self):
-        self.user_has_debug = self.env.user.has_group('base.group_no_one')
 
     def _create_missing_discount_line_products(self):
         # Make sure we create the product that will be used for our discounts
