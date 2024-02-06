@@ -28,7 +28,10 @@ export class PivotDataSource extends OdooViewsDataSource {
         super(services, params);
         definition.fields = undefined;
         this._rawDefinition = definition;
+        this.setup();
     }
+
+    setup() {}
 
     async _load() {
         await super._load();
@@ -115,50 +118,6 @@ export class PivotDataSource extends OdooViewsDataSource {
     getLastPivotGroupValue(domainArgs) {
         this._assertDataIsLoaded();
         return this._model.getLastPivotGroupValue(domainArgs);
-    }
-
-    /**
-     * @param {string} measure Field name of the measures
-     * @param {string[]} domain
-     */
-    markAsValueUsed(measure, domain) {
-        if (this._model) {
-            this._model.markAsValueUsed(measure, domain);
-        }
-    }
-
-    /**
-     * @param {string[]} domain
-     */
-    markAsHeaderUsed(domain) {
-        if (this._model) {
-            this._model.markAsHeaderUsed(domain);
-        }
-    }
-
-    /**
-     * @param {string} measure Field name of the measures
-     * @param {string[]} domain
-     * @returns {boolean}
-     */
-    isUsedValue(measure, domain) {
-        this._assertDataIsLoaded();
-        return this._model.isUsedValue(measure, domain);
-    }
-
-    /**
-     * @param {string[]} domain
-     * @returns {boolean}
-     */
-    isUsedHeader(domain) {
-        this._assertDataIsLoaded();
-        return this._model.isUsedHeader(domain);
-    }
-
-    clearUsedValues() {
-        if (this._model) {
-            this._model.clearUsedValues();
-        }
     }
 
     getTableStructure() {
