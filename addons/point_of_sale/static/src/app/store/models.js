@@ -1538,9 +1538,9 @@ export class Order extends PosModel {
                 logo: this.pos.company_logo_base64,
             },
             currency: this.pos.currency,
-            pos_qr_code: this._get_qr_code_data(),
+            pos_qr_code: this.finalized && this._get_qr_code_data(),
             ticket_code: this.pos.company.point_of_sale_ticket_unique_code
-                ? this.ticketCode
+                ? (this.finalized && this.ticketCode)
                 : false,
             base_url: this.pos.base_url,
         };

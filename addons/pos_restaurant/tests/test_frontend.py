@@ -260,3 +260,8 @@ class TestFrontend(AccountTestInvoicingCommon, HttpCaseWithUserDemo):
         self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'SaveLastPreparationChangesTour', login="pos_admin")
         self.assertTrue(self.pos_config.current_session_id.order_ids.last_order_preparation_change, "There should be a last order preparation change")
         self.assertTrue("Coca" in self.pos_config.current_session_id.order_ids.last_order_preparation_change, "The last order preparation change should contain 'Coca'")
+
+    def test_11_bill_screen_qrcode(self):
+        self.env.company.point_of_sale_use_ticket_qr_code = True
+        self.pos_config.with_user(self.user_demo).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'BillScreenTour', login="demo")
