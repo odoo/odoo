@@ -41,8 +41,14 @@
                     </header>
                 <sheet string="Project">
                     <div class="oe_button_box" name="button_box" groups="base.group_user">
-                        <button class="oe_stat_button" type="object" name="action_view_tasks" icon="fa-tasks">
-                            <field string="Tasks" name="open_task_count" widget="statinfo"/>
+                        <button class="oe_stat_button" type="object" name="action_view_tasks" icon="fa-check">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_text">Tasks</span>
+                                <span class="o_stat_value">
+                                    <field name="closed_task_count"/> / <field name="task_count"/>
+                                    (<field name="task_completion_percentage" widget="percentage" options="{'digits': [1, 0]}"/>)
+                                </span>
+                            </div>
                         </button>
                         <button class="oe_stat_button" name="project_update_all_action" type="object" groups="project.group_project_user">
                             <field name="last_update_color" invisible="1"/>

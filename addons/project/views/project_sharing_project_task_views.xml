@@ -151,12 +151,13 @@
                                 class="oe_stat_button" icon="fa-repeat" context="{'default_user_ids': [(6, 0, [uid])]}">
                             <field name="recurring_count" widget="statinfo" string="Recurring Tasks"/>
                         </button>
-                        <button name="action_project_sharing_open_subtasks" type="object" class="oe_stat_button" icon="fa-tasks"
+                        <button name="action_project_sharing_open_subtasks" type="object" class="oe_stat_button" icon="fa-check"
                             invisible="not id or subtask_count == 0" context="{
                                 'default_user_ids': [(6, 0, [uid])],
                                 'default_project_id': project_id,
                                 'default_display_in_project': False,
-                            }">
+                            }"
+                        >
                             <field name="subtask_count" widget="statinfo" string="Sub-tasks"/>
                             <field name="display_in_project" invisible="True"/>
                         </button>

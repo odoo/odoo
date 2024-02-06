@@ -8,6 +8,7 @@ from odoo import api, fields, models, _, Command
 from odoo.exceptions import UserError
 from odoo.tools.safe_eval import safe_eval
 from odoo.osv.expression import AND
+from odoo.addons.project.models.project_task import CLOSED_STATES
 
 
 class SaleOrder(models.Model):
@@ -24,6 +25,8 @@ class SaleOrder(models.Model):
     show_create_project_button = fields.Boolean(compute='_compute_show_project_and_task_button', groups='project.group_project_user', export_string_translation=False)
     show_project_button = fields.Boolean(compute='_compute_show_project_and_task_button', groups='project.group_project_user', export_string_translation=False)
     show_task_button = fields.Boolean(compute='_compute_show_project_and_task_button', groups='project.group_project_user', export_string_translation=False)
+    closed_task_count = fields.Integer(compute='_compute_tasks_ids', export_string_translation=False)
+    completed_task_percentage = fields.Float(compute="_compute_completed_task_percentage", export_string_translation=False)
 
     def _compute_milestone_count(self):
         read_group = self.env['project.milestone']._read_group(
@@ -76,14 +79,15 @@ class SaleOrder(models.Model):
     def _compute_tasks_ids(self):
         tasks_per_so = self.env['project.task']._read_group(
             domain=['&', ('project_id', '!=', False), '|', ('sale_line_id', 'in', self.order_line.ids), ('sale_order_id', 'in', self.ids)],
-            groupby=['sale_order_id'],
+            groupby=['sale_order_id', 'state'],
             aggregates=['id:recordset', '__count']
         )
         so_with_tasks = self.env['sale.order']
-        for order, tasks_ids, tasks_count in tasks_per_so:
+        for order, state, tasks_ids, tasks_count in tasks_per_so:
             if order:
-                order.tasks_ids = tasks_ids
-                order.tasks_count = tasks_count
+                order.tasks_ids += tasks_ids
+                order.tasks_count += tasks_count
+                order.closed_task_count += state in CLOSED_STATES and tasks_count
                 so_with_tasks += order
             else:
                 # tasks that have no sale_order_id need to be associated with the SO from their sale_line_id
@@ -91,11 +95,13 @@ class SaleOrder(models.Model):
                     task_so = task.sale_line_id.order_id
                     task_so.tasks_ids = [Command.link(task.id)]
                     task_so.tasks_count += 1
+                    task_so.closed_task_count += state in CLOSED_STATES
                     so_with_tasks += task_so
         remaining_orders = self - so_with_tasks
         if remaining_orders:
             remaining_orders.tasks_ids = [Command.clear()]
             remaining_orders.tasks_count = 0
+            remaining_orders.closed_task_count = 0
 
     @api.depends('order_line.product_id.service_tracking')
     def _compute_visible_project(self):
@@ -317,3 +323,7 @@ class SaleOrder(models.Model):
         project_plan, _other_plans = self.env['account.analytic.plan']._get_all_plans()
         result['plan_id'] = project_plan.id or result['plan_id']
         return result
+
+    def _compute_completed_task_percentage(self):
+        for so in self:
+            so.completed_task_percentage = so.tasks_count and so.closed_task_count / so.tasks_count

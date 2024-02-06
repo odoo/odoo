@@ -225,6 +225,7 @@ class Task(models.Model):
     subtask_count = fields.Integer("Sub-task Count", compute='_compute_subtask_count', export_string_translation=False)
     closed_subtask_count = fields.Integer("Closed Sub-tasks Count", compute='_compute_subtask_count', export_string_translation=False)
     project_privacy_visibility = fields.Selection(related='project_id.privacy_visibility', string="Project Visibility")
+    subtask_completion_percentage = fields.Float(compute="_compute_subtask_completion_percentage", export_string_translation=False)
     # Computed field about working time elapsed between record creation and assignation/closing.
     working_hours_open = fields.Float(compute='_compute_elapsed', string='Working Hours to Assign', digits=(16, 2), store=True, aggregator="avg")
     working_hours_close = fields.Float(compute='_compute_elapsed', string='Working Hours to Close', digits=(16, 2), store=True, aggregator="avg")
@@ -1982,3 +1983,8 @@ class Task(models.Model):
         else:
             self.sudo().message_subscribe(self.env.user.partner_id.ids)
         return not is_follower
+
+    @api.depends('subtask_count', 'closed_subtask_count')
+    def _compute_subtask_completion_percentage(self):
+        for task in self:
+            task.subtask_completion_percentage = task.subtask_count and task.closed_subtask_count / task.subtask_count

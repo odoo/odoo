@@ -346,7 +346,7 @@
                         </button>
                         <!-- Dummy tag used to organize buttons -->
                         <span id="end_rating_buttons" invisible="1"/>
-                        <button name="action_open_parent_task" type="object" class="oe_stat_button" icon="fa-tasks" invisible="not parent_id">
+                        <button name="action_open_parent_task" type="object" class="oe_stat_button" icon="fa-check" invisible="not parent_id">
                             <div class="o_stat_info">
                                 <span class="o_stat_text">Parent Task</span>
                             </div>
@@ -354,30 +354,25 @@
                         <button name="action_recurring_tasks" type="object" invisible="not active or not recurrence_id" class="oe_stat_button" icon="fa-repeat" groups="project.group_project_recurring_tasks">
                             <field name="recurring_count" widget="statinfo" string="Recurring Tasks"/>
                         </button>
-                        <button name="%(project_task_action_sub_task)d" type="action" class="oe_stat_button" icon="fa-tasks"
-                            invisible="not id or subtask_count == 0" context="{
+                        <button name="%(project_task_action_sub_task)d" type="action" class="oe_stat_button" icon="fa-check"
+                            invisible="not id or subtask_count == 0"
+                            context="{
                                 'default_project_id': project_id,
                                 'default_display_in_project': False,
                                 'default_user_ids': user_ids,
                                 'default_milestone_id': milestone_id,
                                 'subtask_action': True,
-                            }">
+                            }"
+                        >
                             <div class="o_field_widget o_stat_info">
-                                <div class="d-flex align-items-baseline gap-1">
-                                    <span class="o_stat_value order-1">
-                                        <field name="subtask_count" widget="statinfo" nolabel="1"/>
-                                    </span>
-                                    <span class="o_stat_text order-2">Sub-tasks</span>
-                                </div>
-                                <div class="d-flex align-items-baseline gap-1">
-                                    <span class="o_stat_value">
-                                        <field name="closed_subtask_count" widget="statinfo" nolabel="1"/>
-                                    </span>
-                                    <span class="o_stat_text order-2">Closed</span>
-                                </div>
+                                <span class="o_stat_text">Sub-tasks</span>
+                                <span class="o_stat_value">
+                                    <field name="closed_subtask_count"/> / <field name="subtask_count"/>
+                                    (<field name="subtask_completion_percentage" widget="percentage" options="{'digits': [1, 0]}"/>)
+                                </span>
                             </div>
                         </button>
-                        <button name="action_dependent_tasks" type="object" invisible="dependent_tasks_count == 0" class="oe_stat_button" icon="fa-tasks" groups="project.group_project_task_dependencies">
+                        <button name="action_dependent_tasks" type="object" invisible="dependent_tasks_count == 0" class="oe_stat_button" icon="fa-check" groups="project.group_project_task_dependencies">
                             <field name="dependent_tasks_count" widget="statinfo" string="Blocking Tasks" />
                         </button>
                         <!-- Dummy tag used to organize buttons -->
