@@ -19,7 +19,7 @@ echo "export LC_ALL=en_US.UTF-8" >> ~/.bashrc
 locale-gen
 source ~/.bashrc
 
-apt-get update && apt-get -y upgrade
+apt-get update
 
 # At the first start it is necessary to configure a password
 # This will be modified by a unique password on the first start of Odoo
