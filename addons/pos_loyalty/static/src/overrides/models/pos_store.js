@@ -123,7 +123,7 @@ patch(PosStore.prototype, {
                     options.giftCardId = giftCard.id;
                 }
             } else {
-                this.env.services.pos_notification.add("Please enter a valid gift card code.");
+                this.env.services.notification.add("Please enter a valid gift card code.");
                 return false;
             }
         }

@@ -21,7 +21,7 @@ export class ControlButtons extends Component {
         this.pos = usePos();
         this.ui = useState(useService("ui"));
         this.dialog = useService("dialog");
-        this.notification = useService("pos_notification");
+        this.notification = useService("notification");
     }
     get partner() {
         return this.pos.get_order()?.get_partner();
@@ -101,11 +101,11 @@ export class ControlButtons extends Component {
     onClickSave() {
         const orderline = this.pos.get_order().get_selected_orderline();
         if (!orderline) {
-            this.notification.add(_t("You cannot save an empty order"), 3000);
+            this.notification.add(_t("You cannot save an empty order"));
             return;
         }
         this._selectEmptyOrder();
-        this.notification.add(_t("Order saved for later"), 3000);
+        this.notification.add(_t("Order saved for later"));
     }
     _selectEmptyOrder() {
         const orders = this.pos.get_order_list();

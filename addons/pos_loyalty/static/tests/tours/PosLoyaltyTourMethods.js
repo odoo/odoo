@@ -92,14 +92,6 @@ export function customerIs(name) {
         },
     ];
 }
-export function notificationMessageContains(str) {
-    return [
-        {
-            trigger: `.o_notification span:contains("${str}")`,
-            run: function () {},
-        },
-    ];
-}
 export function finalizeOrder(paymentMethod, amount) {
     return [
         ...ProductScreen.clickPayButton(),
