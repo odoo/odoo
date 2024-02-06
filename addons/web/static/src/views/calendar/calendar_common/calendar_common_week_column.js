@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 export function makeWeekColumn({ el, showWeek, weekColumn, weekText }) {
     const firstRows = el.querySelectorAll(".fc-col-header-cell:nth-child(1), .fc-day:nth-child(1)");
     for (const element of firstRows) {
