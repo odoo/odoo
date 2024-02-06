@@ -605,11 +605,11 @@ class StockQuant(models.Model):
         product_id = product_id.sudo()
         location_id = location_id.sudo()
         if product_id.categ_id.removal_strategy_id:
-            return product_id.categ_id.removal_strategy_id.method
+            return product_id.categ_id.removal_strategy_id.with_context(lang=None).method
         loc = location_id
         while loc:
             if loc.removal_strategy_id:
-                return loc.removal_strategy_id.method
+                return loc.removal_strategy_id.with_context(lang=None).method
             loc = loc.location_id
         return 'fifo'
 
