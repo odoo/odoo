@@ -228,19 +228,24 @@ class ImLivechatChannel(models.Model):
         if not self.available_operator_ids:
             return False
         self.env.cr.execute("""
-            SELECT COUNT(DISTINCT c.id), COUNT(DISTINCT rtc.id) > 0 as in_call, c.livechat_operator_id
+            WITH operator_rtc_session AS (
+                SELECT COUNT(DISTINCT s.id) as nbr, member.partner_id as partner_id
+                  FROM discuss_channel_rtc_session s
+                  JOIN discuss_channel_member member ON (member.id = s.channel_member_id)
+                  GROUP BY member.partner_id
+            )
+            SELECT COUNT(DISTINCT c.id), COALESCE(rtc.nbr, 0) > 0 as in_call, c.livechat_operator_id
             FROM discuss_channel c
             LEFT OUTER JOIN mail_message m ON c.id = m.res_id AND m.model = 'discuss.channel'
-            LEFT OUTER JOIN discuss_channel_member member ON member.partner_id = c.livechat_operator_id
-            LEFT OUTER JOIN discuss_channel_rtc_session rtc ON rtc.channel_member_id = member.id
-            WHERE c.channel_type = 'livechat'
+            LEFT OUTER JOIN operator_rtc_session rtc ON rtc.partner_id = c.livechat_operator_id
+            WHERE c.channel_type = 'livechat' AND c.create_date > ((now() at time zone 'UTC') - interval '24 hours')
             AND (
                 c.livechat_active IS TRUE
                 OR m.create_date > ((now() at time zone 'UTC') - interval '30 minutes')
             )
             AND c.livechat_operator_id in %s
-            GROUP BY c.livechat_operator_id
-            ORDER BY COUNT(DISTINCT c.id) < 2 OR COUNT(DISTINCT rtc.id) = 0 DESC, COUNT(DISTINCT c.id) ASC, COUNT(DISTINCT rtc.id) = 0 DESC""",
+            GROUP BY c.livechat_operator_id, rtc.nbr
+            ORDER BY COUNT(DISTINCT c.id) < 2 OR rtc.nbr IS NULL DESC, COUNT(DISTINCT c.id) ASC, rtc.nbr IS NULL DESC""",
             (tuple(self.available_operator_ids.partner_id.ids),)
         )
         operator_statuses = self.env.cr.dictfetchall()
