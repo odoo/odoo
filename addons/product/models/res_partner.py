@@ -21,7 +21,7 @@ class Partner(models.Model):
         company = self.env.company.id
         res = self.env['product.pricelist']._get_partner_pricelist_multi(self.ids, company_id=company)
         for p in self:
-            p.property_product_pricelist = res.get(p.id)
+            p.property_product_pricelist = res.get(p._origin.id)
 
     def _inverse_product_pricelist(self):
         for partner in self:
