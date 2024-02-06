@@ -19,7 +19,7 @@ class BaseLanguageImport(models.TransientModel):
     _description = "Language Import"
 
     name = fields.Char('Language Name', required=True)
-    code = fields.Char('ISO Code', size=6, required=True,
+    code = fields.Char('ISO Code', required=True,
                        help="ISO Language and Country code, e.g. en_US")
     data = fields.Binary('File', required=True, attachment=False)
     filename = fields.Char('File Name', required=True)
