@@ -525,13 +525,13 @@ export const editorCommands = {
             } else {
                 // Ensure nav-item lists are excluded from toggling
                 const isNavItemList = node => node.nodeName === 'LI' && node.classList.contains('nav-item');
-                let block = closestBlock(node);
-                block = isNavItemList(block) ? node : block;
-                if (!['OL', 'UL'].includes(block.tagName) && (block.isContentEditable || block.nodeType === Node.TEXT_NODE)) {
-                    const closestLi = closestElement(block, 'li');
-                    block = closestLi && !isNavItemList(closestLi) ? closestLi : block;
-                    const ublock = block.nodeName === 'LI' && block.closest('ol, ul');
-                    ublock && getListMode(ublock) == mode ? li.add(block) : blocks.add(block);
+                let nodeToToggle = closestBlock(node);
+                nodeToToggle = isNavItemList(nodeToToggle) ? node : nodeToToggle;
+                if (!['OL', 'UL'].includes(nodeToToggle.tagName) && (nodeToToggle.isContentEditable || nodeToToggle.nodeType === Node.TEXT_NODE)) {
+                    const closestLi = closestElement(nodeToToggle, 'li');
+                    nodeToToggle = closestLi && !isNavItemList(closestLi) ? closestLi : nodeToToggle;
+                    const ublock = nodeToToggle.nodeName === 'LI' && nodeToToggle.closest('ol, ul');
+                    ublock && getListMode(ublock) == mode ? li.add(nodeToToggle) : blocks.add(nodeToToggle);
                 }
             }
         }
