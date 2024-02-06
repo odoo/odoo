@@ -261,7 +261,7 @@ class MrpUnbuild(models.Model):
             'name': self.name,
             'date': self.create_date,
             'product_id': move.product_id.id,
-            'product_uom_qty': move.product_uom_qty * factor,
+            'product_uom_qty': move.quantity_done * factor,
             'product_uom': move.product_uom.id,
             'procure_method': 'make_to_stock',
             'location_dest_id': location_dest_id.id,
