@@ -107,16 +107,16 @@
                                                invisible="not prerequisite_of_channel_ids"/>
                                         <field name="visibility" widget="radio" options="{'horizontal': true}"/>
                                         <field name="enroll" widget="radio" options="{'horizontal': true}" invisible="visibility == 'members'"/>
-                                        <field name="upload_group_ids" widget="many2many_tags" groups="base.group_no_one"/>
-                                        <field name="enroll_group_ids" widget="many2many_tags" groups="base.group_no_one"/>
+                                        <field name="upload_group_ids" widget="many2many_tags" technical-chm="1"/>
+                                        <field name="enroll_group_ids" widget="many2many_tags" technical-chm="1"/>
                                         <field name="enroll_msg" invisible="enroll != 'invite' or visibility == 'members'"/>
                                     </group>
                                 </group>
                                 <group>
                                     <group name="communication" string="Communication">
                                         <field string="Allow Reviews" name="allow_comment"/>
-                                        <field name="share_slide_template_id" domain="[('model','=','slide.slide')]" groups="base.group_no_one"/>
-                                        <field name="share_channel_template_id" domain="[('model', '=', 'slide.channel')]" groups="base.group_no_one"/>
+                                        <field name="share_slide_template_id" domain="[('model','=','slide.slide')]" technical-chm="1"/>
+                                        <field name="share_channel_template_id" domain="[('model', '=', 'slide.channel')]" technical-chm="1"/>
                                         <field name="publish_template_id" placeholder="No Notification"/>
                                         <field name="completed_template_id" placeholder="No Notification"/>
                                     </group>

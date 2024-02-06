@@ -29,7 +29,7 @@
                         <field name="default_layout" invisible="page_type != 'listing'" />
                     </group>
                 </group>
-                <notebook groups="base.group_no_one">
+                <notebook technical-chm="1">
                     <page string="View">
                         <group>
                             <field name="view_id" context="{'display_website': True}"/>
@@ -77,7 +77,7 @@
     parent="menu_content"
     sequence="10"
     name="Model Pages"
-    groups="base.group_no_one"
+    technical-chm="1"
     action="action_website_controller_pages_list"
     active="False" />
 

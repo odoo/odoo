@@ -47,7 +47,7 @@
                                     <div class="mt8">
                                         <button name="%(base.action_view_base_language_install)d" icon="oi-arrow-right" type="action" string="Add Languages" class="btn-link"/>
                                     </div>
-                                    <div class="mt8" groups="base.group_no_one">
+                                    <div class="mt8" technical-chm="1">
                                         <button name="%(base.res_lang_act_window)d" icon="oi-arrow-right" type="action" string="Manage Languages" class="btn-link"/>
                                     </div>
                                 </setting>
@@ -79,15 +79,15 @@
                                 </setting>
                                 <setting id="document_layout_setting" string="Document Layout" help="Choose the layout of your documents" company_dependent="1">
                                     <div class="content-group">
-                                        <div class="mt16" groups="base.group_no_one">
+                                        <div class="mt16" technical-chm="1">
                                             <label for="external_report_layout_id" string="Layout" class="col-3 col-lg-3 o_light_label"/>
                                             <field name="external_report_layout_id" domain="[('type','=', 'qweb')]" class="oe_inline"/>
                                         </div>
                                             <button name="%(web.action_base_document_layout_configurator)d" string="Configure Document Layout" type="action" class="oe_link" icon="oi-arrow-right"/>
-                                            <br groups="base.group_no_one"/>
-                                            <button name="edit_external_header" string="Edit Layout" type="object" class="oe_link" groups="base.group_no_one" icon="oi-arrow-right"/>
-                                            <br groups="base.group_no_one"/>
-                                            <button name="%(web.action_report_externalpreview)d" string="Preview Document" type="action" class="oe_link" groups="base.group_no_one" icon="oi-arrow-right"/>
+                                            <br technical-chm="1"/>
+                                            <button name="edit_external_header" string="Edit Layout" type="object" class="oe_link" technical-chm="1" icon="oi-arrow-right"/>
+                                            <br technical-chm="1"/>
+                                            <button name="%(web.action_report_externalpreview)d" string="Preview Document" type="action" class="oe_link" technical-chm="1" icon="oi-arrow-right"/>
                                     </div>
                                 </setting>
                                 <field name="company_id" invisible="1"/>
@@ -122,15 +122,15 @@
                         <setting string="API Keys" help="API Keys allow your users to access Odoo with external tools when multi-factor authentication is enabled." groups="base.group_system">
                             <button type="action" name="%(base.action_apikeys_admin)d" string="Manage API Keys" icon="oi-arrow-right" class="btn-link"/>
                         </setting>
-                        <setting string="Import &amp; Export" help="Allow users to import data from CSV/XLS/XLSX/ODS files" documentation="/applications/general/export_import_data.html" groups="base.group_no_one" id="allow_import">
+                        <setting string="Import &amp; Export" help="Allow users to import data from CSV/XLS/XLSX/ODS files" documentation="/applications/general/export_import_data.html" technical-chm="1" id="allow_import">
                             <field name="module_base_import" />
                         </setting>
-                        <setting id="feedback_motivate_setting" help="Add fun feedback and motivate your employees" groups="base.group_no_one">
+                        <setting id="feedback_motivate_setting" help="Add fun feedback and motivate your employees" technical-chm="1">
                             <field name="show_effect"/>
                         </setting>
                     </block>
 
-                    <block title="Progressive Web App" id="pwa_settings" groups="base.group_no_one">
+                    <block title="Progressive Web App" id="pwa_settings" technical-chm="1">
                         <setting help="This name will be used for the application when Odoo is installed through the browser.">
                             <field name="web_app_name" placeholder="Odoo"/>
                         </setting>
@@ -180,7 +180,7 @@
 
                         </block>
 
-                        <block title="Performance" groups="base.group_no_one" name="performance">
+                        <block title="Performance" technical-chm="1" name="performance">
                             <setting id="profiling_enabled_until" help="Enable the profiling tool. Profiling may impact performance while being active.">
                                 <field name="profiling_enabled_until"/>
                             </setting>

@@ -128,7 +128,7 @@
             <field name="context">{'search_default_filter_no_share': 1}</field>
             <field name="help">A group is a set of functional areas that will be assigned to the user in order to give them access and rights to specific applications and tasks in the system. You can create custom groups or edit the ones existing by default in order to customize the view of the menu that users will be able to see. Whether they can have a read, write, create and delete access right can be managed from here.</field>
         </record>
-        <menuitem action="action_res_groups" id="menu_action_res_groups" parent="base.menu_users" groups="base.group_no_one" sequence="3"/>
+        <menuitem action="action_res_groups" id="menu_action_res_groups" parent="base.menu_users" technical-chm="1" sequence="3"/>
 
         <!-- res.users -->
         <record id="view_users_simple_form" model="ir.ui.view">
@@ -157,8 +157,8 @@
                         <group name="phone_numbers">
                             <field name="company_id" context="{'user_preference': 0}" groups="base.group_multi_company"/>
                             <label for="groups_id" string="Access Rights"
-                                    invisible="id &gt; 0" groups="base.group_no_one"/>
-                            <div invisible="id &gt; 0" groups="base.group_no_one">
+                                    invisible="id &gt; 0" technical-chm="1"/>
+                            <div invisible="id &gt; 0" technical-chm="1">
                                 <field name="groups_id" readonly="1" widget="many2many_tags" options="{'color_field': 'color'}" style="display: inline;"/> You will be able to define additional access rights by editing the newly created user under the Settings / Users menu.
                             </div>
                             <field name="phone" widget="phone"/>
@@ -178,13 +178,13 @@
                     <sheet>
                         <field name="id" invisible="1"/>
                         <div class="oe_button_box" name="button_box">
-                            <button name="action_show_groups" type="object" groups="base.group_no_one" class="oe_stat_button" icon="fa-users">
+                            <button name="action_show_groups" type="object" technical-chm="1" class="oe_stat_button" icon="fa-users">
                                 <field string="Groups" name="groups_count" widget="statinfo"/>
                             </button>
-                            <button name="action_show_accesses" type="object" groups="base.group_no_one" class="oe_stat_button" icon="fa-list">
+                            <button name="action_show_accesses" type="object" technical-chm="1" class="oe_stat_button" icon="fa-list">
                                 <field string="Access Rights" name="accesses_count" widget="statinfo"/>
                             </button>
-                            <button name="action_show_rules" type="object" groups="base.group_no_one" class="oe_stat_button" icon="fa-list-ul">
+                            <button name="action_show_rules" type="object" technical-chm="1" class="oe_stat_button" icon="fa-list-ul">
                                 <field string="Record Rules" name="rules_count" widget="statinfo"/>
                             </button>
                         </div>
@@ -210,7 +210,7 @@
                             <label for="login" string="Email Address"/>
                             <h2><field name="login" placeholder="e.g. email@yourcompany.com"/></h2>
                             <group>
-                                <field name="partner_id" groups="base.group_no_one"
+                                <field name="partner_id" technical-chm="1"
                                         readonly="1"
                                         required="0"
                                         invisible="not id"/>
@@ -243,7 +243,7 @@
                                         <field name="tz" widget="timezone_mismatch" options="{'tz_offset_field': 'tz_offset'}" />
                                         <field name="tz_offset" invisible="1"/>
                                     </group>
-                                    <group string="Menus Customization" groups="base.group_no_one"
+                                    <group string="Menus Customization" technical-chm="1"
                                         invisible="share">
                                         <field name="action_id"/>
                                     </group>
@@ -335,7 +335,6 @@
             </field>
         </record>
         <!-- dummy update on group, to force the view above to be update -->
-        <record model="res.groups" id="group_no_one"/>
         <record id="action_res_users" model="ir.actions.act_window">
             <field name="name">Users</field>
             <field name="res_model">res.users</field>

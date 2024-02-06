@@ -289,7 +289,7 @@
                             <setting help="Add a 5-digit code on the receipt to allow the user to request the invoice for an order on the portal.">
                                 <field name="point_of_sale_ticket_unique_code"/>
                             </setting>
-                            <setting id="order_reference" groups="base.group_no_one" string="Order Reference" help="Generation of your order references">
+                            <setting id="order_reference" technical-chm="1" string="Order Reference" help="Generation of your order references">
                                 <field name="pos_sequence_id" readonly="1"/>
                             </setting>
                         </block>
@@ -430,7 +430,7 @@
                                     <field name="barcode_nomenclature_id"/>
                                 </div>
                             </setting>
-                            <setting id="update_quantities_stock_setting" groups="base.group_no_one" string="Inventory Management" company_dependent="1" help="Update quantities in stock">
+                            <setting id="update_quantities_stock_setting" technical-chm="1" string="Inventory Management" company_dependent="1" help="Update quantities in stock">
                                 <field name="update_stock_quantities" colspan="4" widget="radio"/>
                             </setting>
                         </block>

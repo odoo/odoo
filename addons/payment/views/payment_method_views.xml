@@ -13,7 +13,7 @@
                         <h1><field name="name" placeholder="Name"/></h1>
                     </div>
                     <group>
-                        <field name="code" readonly="id" groups="base.group_no_one"/>
+                        <field name="code" readonly="id" technical-chm="1"/>
                         <field name="primary_payment_method_id" invisible="is_primary"/>
                         <field name="active"/>
                         <label for="supported_country_ids"/>
@@ -53,7 +53,7 @@
                         </page>
                         <page string="Configuration"
                               name="configuration"
-                              groups="base.group_no_one"
+                              technical-chm="1"
                         >
                             <div class="alert alert-warning" role="alert">
                                 <i class="fa fa-exclamation-triangle"/> These properties are set to

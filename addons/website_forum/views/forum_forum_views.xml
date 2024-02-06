@@ -70,8 +70,8 @@
                                         <field name="default_order" string="Default Sort"/>
                                         <field name="privacy" widget="radio" required="True"/>
                                         <field name="authorized_group_id" options="{'no_create': True}" invisible="privacy != 'private'" required="privacy == 'private'"/>
-                                        <label for="relevancy_post_vote" string="Relevance Computation" groups="base.group_no_one" invisible="default_order != 'relevancy desc'"/>
-                                        <div groups="base.group_no_one" class="o_row" invisible="default_order != 'relevancy desc'">
+                                        <label for="relevancy_post_vote" string="Relevance Computation" technical-chm="1" invisible="default_order != 'relevancy desc'"/>
+                                        <div technical-chm="1" class="o_row" invisible="default_order != 'relevancy desc'">
                                             (votes - 1) ** <field name="relevancy_post_vote"/> / (days + 2) ** <field name="relevancy_time_decay"/>
                                         </div>
                                     </group>

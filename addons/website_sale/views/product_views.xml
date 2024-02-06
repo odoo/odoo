@@ -165,9 +165,9 @@
                 <group string="eCommerce Shop" name="shop" invisible="not sale_ok">
                     <field name="website_url" invisible="1"/>
                     <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
-                    <field name="website_sequence" groups="base.group_no_one"/>
+                    <field name="website_sequence" technical-chm="1"/>
                     <field name="public_categ_ids" widget="many2many_tags" string="Categories"/>
-                    <field name="website_ribbon_id" groups="base.group_no_one" options="{'no_quick_create': True}"/>
+                    <field name="website_ribbon_id" technical-chm="1" options="{'no_quick_create': True}"/>
                 </group>
                 <group name="product_template_images" string="Extra Product Media" invisible="not sale_ok">
                     <field name="product_template_image_ids" class="o_website_sale_image_list" context="{'default_name': name}" mode="kanban" add-label="Add a Media" nolabel="1"/>
@@ -195,7 +195,7 @@
                 <group name="product_variant_images" string="Extra Variant Media">
                     <field name="product_variant_image_ids" class="o_website_sale_image_list" context="{'default_name': name}" mode="kanban" add-label="Add a Media" nolabel="1"/>
                 </group>
-                <group name="sales" string="Sales" groups="base.group_no_one">
+                <group name="sales" string="Sales" technical-chm="1">
                     <field name="ribbon_id" options="{'no_quick_create': True}"/>
                 </group>
             </group>

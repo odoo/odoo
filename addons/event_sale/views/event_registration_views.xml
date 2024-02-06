@@ -70,7 +70,7 @@
                     invisible="sale_status in ('sold', 'free') or not id"/>
             </xpath>
             <group name="utm_link" position="before">
-                <group string="Transaction" groups="base.group_no_one">
+                <group string="Transaction" technical-chm="1">
                     <field name="sale_order_id"/>
                     <field name="sale_order_line_id" readonly="1" invisible="not sale_order_id"/>
                 </group>

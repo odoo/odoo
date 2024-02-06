@@ -41,16 +41,16 @@
                             <field name="email" required="send_by == 'mail'"/>
                             <field name="phone" class="o_force_ltr" required="send_by == 'phone'"/>
                             <field name="company_id" groups="base.group_multi_company"/>
-                            <field name="responsible_id" required="send_by == 'mail'" groups="base.group_no_one" domain="[('share', '=', False)]"/>
+                            <field name="responsible_id" required="send_by == 'mail'" technical-chm="1" domain="[('share', '=', False)]"/>
                         </group>
                     </group>
                     <group>
                         <group string="Availability">
-                            <field name="tz" groups="base.group_no_one"/>
+                            <field name="tz" technical-chm="1"/>
                             <label for="sun" class="d-none"/>
                             <field name="sun" invisible="1"/>
                             <widget name="week_days"/>
-                            <field name="recurrency_end_date" groups="base.group_no_one"/>
+                            <field name="recurrency_end_date" technical-chm="1"/>
                         </group>
                         <group string="Orders">
                             <field name="delivery"/>

@@ -95,9 +95,9 @@
         <field name="inherit_id" ref="account.view_account_invoice_filter"/>
         <field name="arch" type="xml">
             <xpath expr="//search/field[@name='journal_id']" position="after">
-                <field name="l10n_it_edi_transaction" groups="base.group_no_one"/>
-                <field name="l10n_it_edi_attachment_id" groups="base.group_no_one"/>
-                <field name="l10n_it_edi_state" groups="base.group_no_one"/>
+                <field name="l10n_it_edi_transaction" technical-chm="1"/>
+                <field name="l10n_it_edi_attachment_id" technical-chm="1"/>
+                <field name="l10n_it_edi_state" technical-chm="1"/>
             </xpath>
         </field>
     </record>
@@ -143,8 +143,8 @@
                         invisible="move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund') or country_code != 'IT'">
                         <group>
                             <group>
-                                <field name="l10n_it_edi_transaction" groups="base.group_no_one" readonly="1"/>
-                                <field name="l10n_it_edi_attachment_id" groups="base.group_no_one" readonly="1"/>
+                                <field name="l10n_it_edi_transaction" technical-chm="1" readonly="1"/>
+                                <field name="l10n_it_edi_attachment_id" technical-chm="1" readonly="1"/>
                                 <field name="l10n_it_stamp_duty" readonly="state != 'draft'"/>
                                 <field name="l10n_it_ddt_id" readonly="state != 'draft'" invisible="move_type not in ('out_invoice', 'out_refund')"/>
                             </group>
@@ -206,5 +206,5 @@
             action="action_ddt_account"
             id="menu_action_ddt_account"
             sequence="15"
-            groups="base.group_no_one"/>
+            technical-chm="1"/>
 </odoo>

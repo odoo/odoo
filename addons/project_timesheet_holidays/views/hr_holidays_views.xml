@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="hr_holidays.edit_holiday_status_form"/>
         <field name="arch" type="xml">
             <xpath expr="//group[@name='visual']" position="before">
-                <group name="timesheet" groups="base.group_no_one" string="Timesheets">
+                <group name="timesheet" technical-chm="1" string="Timesheets">
                     <div class="text-muted mb-4" colspan="2">
                         Generate timesheets when validating time off requests of this type
                     </div>

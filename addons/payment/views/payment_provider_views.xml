@@ -65,7 +65,7 @@
                     </div>
                     <group>
                         <group name="payment_state" invisible="module_state not in ('installed', False)">
-                            <field name="code" groups="base.group_no_one" readonly="id"/>
+                            <field name="code" technical-chm="1" readonly="id"/>
                             <field name="state" widget="radio"/>
                             <field name="company_id" groups="base.group_multi_company" options='{"no_open":True}'/>
                         </group>
@@ -143,7 +143,7 @@
             <tree string="Payment Providers" create="false">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
-                <field name="code" groups="base.group_no_one"/>
+                <field name="code" technical-chm="1"/>
                 <field name="state"/>
                 <field name="available_country_ids" widget="many2many_tags" optional="hide"/>
                 <field name="company_id" groups="base.group_multi_company" optional="show"/>

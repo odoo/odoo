@@ -372,19 +372,19 @@
                                             readonly="state in ('sending', 'done')"/>
                                         <field name="medium_id"
                                              string="Medium"
-                                             groups="base.group_no_one"
+                                             technical-chm="1"
                                              required="True"
                                              readonly="state in ('sending', 'done')"/>
                                         <field name="source_id"
                                             string="Source"
                                             class="o_text_overflow"
-                                            groups="base.group_no_one"
+                                            technical-chm="1"
                                             readonly="1"
                                             required="False"/>
                                         <field name="user_id" widget="many2one_avatar_user"
                                             domain="[('share', '=', False)]"/>
                                     </group>
-                                    <group string="Advanced" groups="base.group_no_one">
+                                    <group string="Advanced" technical-chm="1">
                                         <field name="mail_server_available" invisible="1"/>
                                         <field name="name" string="Name" required="False" readonly="state in ('sending', 'done')"/>
                                         <field name="mail_server_id" invisible="not mail_server_available" readonly="state in ('sending', 'done')"/>

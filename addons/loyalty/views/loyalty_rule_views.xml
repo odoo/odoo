@@ -6,7 +6,6 @@
         <field name="arch" type="xml">
             <form class="loyalty-rule-form">
                 <field name="program_type" invisible="1"/> 
-                <field name="user_has_debug" invisible="1"/>
                 <sheet>
                     <group invisible="program_type != 'promo_code'">
                         <group>
@@ -24,12 +23,12 @@
                                 <field name="minimum_amount_tax_mode" class="ms-1"/>
                             </div>
                             <separator string="Among" colspan="2"/>
-                            <field name="product_domain" groups="base.group_no_one" widget="domain" options="{'model': 'product.product', 'in_dialog': true}"/>
+                            <field name="product_domain" technical-chm="1" widget="domain" options="{'model': 'product.product', 'in_dialog': true}"/>
                             <field name="product_ids" widget="many2many_tags"/>
                             <field name="product_category_id"/>
                             <field name="product_tag_id"/>
                         </group>
-                        <group invisible="not user_has_debug and program_type not in ('loyalty', 'buy_x_get_y')">
+                        <group invisible="program_type not in ('loyalty', 'buy_x_get_y')" technical-chm="0">
                             <separator string="Point(s)" colspan="2"/>
                             <span colspan="2" invisible="program_type != 'coupons'">Grant the amount of coupon points defined as the coupon value</span>
                             <label for="reward_point_amount" string="Grant" invisible="program_type not in ('promotion', 'promo_code', 'next_order_coupons', 'loyalty', 'buy_x_get_y')"/>
@@ -68,7 +67,6 @@
                 <field name="mode"/>
                 <field name="code"/>
                 <field name="program_type"/>
-                <field name="user_has_debug"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_global_click_edit mx-0 d-flex flex-row">
@@ -94,13 +92,13 @@
                                     <t t-if="record.product_ids.raw_value.length === 0 &amp;&amp; !record.product_category_id.raw_value &amp;&amp; !record.product_tag_id.raw_value">
                                         <div class="d-flex"><i class="fa fa-cube fa-fw" title="Products"/><span>All Products</span></div>
                                     </t>
-                                    <t t-if="record.product_domain.raw_value &amp;&amp; record.product_domain.raw_value !== '[]'" groups="base.group_no_one">
+                                    <t t-if="record.product_domain.raw_value &amp;&amp; record.product_domain.raw_value !== '[]'" technical-chm="1">
                                         <div class="d-flex"><i class="fa fa-search fa-fw" title="Product Domain"/> <field name="product_domain" class="d-inline"/></div>
                                     </t>
                                 </t>
                             </div>
 
-                            <div class="o_loyalty_kanban_card_right" invisible="not user_has_debug and program_type not in ('loyalty', 'buy_x_get_y')">
+                            <div class="o_loyalty_kanban_card_right" invisible="program_type not in ('loyalty', 'buy_x_get_y')" technical-chm="1">
                                 <p class="text-muted" invisible="program_type != 'coupons'">
                                     <span class="fw-bold text-decoration-underline">Grant</span>
                                     <br/>
