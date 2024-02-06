@@ -1,10 +1,10 @@
 /** @odoo-module */
 
-export function clickOk() {
+export function closeBillPopup() {
     return [
         {
-            content: `go back`,
-            trigger: `.receipt-screen .button.next`,
+            content: `Close bill popup`,
+            trigger: `.btn-close`,
         },
     ];
 }
@@ -14,6 +14,16 @@ export function isShown() {
         {
             content: "Bill screen is shown",
             trigger: '.receipt-screen h2:contains("Bill Printing")',
+            run: () => {},
+        },
+    ];
+}
+
+export function isQRCodeShown() {
+    return [
+        {
+            content: "QR codes are shown",
+            trigger: '#posqrcode',
             run: () => {},
         },
     ];
