@@ -191,6 +191,29 @@ class TestAccountAccount(AccountTestInvoicingCommon):
         new_account.code = alternate_code
         self.assertEqual(new_account.account_type, existing_account.account_type)
 
+    def test_get_closest_parent_account(self):
+        self.env['account.account'].create({
+            'code': 99998,
+            'name': 'This name will be transferred to the child one',
+            'company_id': self.company_data['company'].id,
+            'account_type': 'expense',
+            'tag_ids': [
+                Command.create({'name': 'Test tag'}),
+            ],
+        })
+        account_to_process = self.env['account.account'].create({
+            'code': 99999,
+            'name': 'This name will be erase',
+            'company_id': self.company_data['company'].id,
+        })
+
+        self.env['account.account']._get_closest_parent_account(account_to_process, "name", default_value='The name was not given by the parent')
+        self.assertEqual(account_to_process.name, 'This name will be transferred to the child one')
+
+        #  The account type and tags will be transferred automatically with the computes
+        self.assertEqual(account_to_process.account_type, 'expense')
+        self.assertEqual(account_to_process.tag_ids.name, 'Test tag')
+
     def test_search_new_account_code(self):
         """ Test whether the account codes tested for availability are the ones we expect. """
         # pylint: disable=bad-whitespace
