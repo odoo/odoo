@@ -36,6 +36,7 @@ Sheet, now only Vertical format has been permitted Which is Supported By Odoo.
         'data/l10n_in.port.code.csv',
         'data/res_country_state_data.xml',
         'data/uom_data.xml',
+        'data/res_partner_industry.xml',
         'data/account_cash_rounding.xml',
         'views/account_invoice_views.xml',
         'views/account_journal_views.xml',
