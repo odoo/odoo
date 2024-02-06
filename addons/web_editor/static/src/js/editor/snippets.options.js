@@ -6068,6 +6068,15 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
         }
         return this._super(...arguments);
     },
+    /**
+     * @override
+     */
+    _computeWidgetTranslateVisibility(widgetName, params) {
+        if (widgetName === "media_url_opt") {
+            return this.$target[0].parentElement.matches("a[href]");
+        }
+        return this._super(...arguments);
+    },
 });
 
 /*

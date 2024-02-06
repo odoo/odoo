@@ -47,7 +47,7 @@
             </a>
         </li>
     </xpath>
-    <xpath expr="//a[@href='#track_list']" position="attributes">
+    <xpath expr="//a[@aria-controls='track_list']" position="attributes">
         <attribute name="t-attf-class">#{'nav-link' if track.is_youtube_chat_available and not is_mobile_chat_disabled else 'nav-link active'}</attribute>
     </xpath>
     <xpath expr="//div[hasclass('o_wesession_track_aside_tabs')]" position="inside">

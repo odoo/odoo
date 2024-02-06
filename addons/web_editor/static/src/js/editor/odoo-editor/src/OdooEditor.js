@@ -4234,7 +4234,8 @@ export class OdooEditor extends EventTarget {
             selection.anchorNode === container &&
             selection.focusNode === container &&
             selection.anchorOffset === 0 &&
-            selection.focusOffset === [...container.childNodes].length
+            selection.focusOffset === [...container.childNodes].length &&
+            !container.parentElement.closest(containerSelector)
         ) {
             getDeepRange(container, {select: true});
             // The selection is changed in `getDeepRange` and will therefore
