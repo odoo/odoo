@@ -13,7 +13,6 @@ import {
     pointerDown,
     pointerUp,
     press,
-    queryOne,
     scroll,
     select,
     uncheck,
@@ -23,25 +22,25 @@ import { mount, parseUrl } from "../local_helpers";
 
 /**
  * @param {import("../../helpers/dom").Target} target
- * @param {(ev: Event) => void} callback
+ * @param {(ev: Event) => string} [formatStep]
  */
-const monitorEvents = (
-    target,
-    callback = (ev) => expect.step([ev.currentTarget.tagName.toLowerCase(), ev.type].join("."))
-) => {
-    const element = queryOne(target);
-    for (const prop in element) {
-        const type = prop.match(/^on(\w+)/)?.[1];
-        if (!type) {
-            continue;
-        }
-        const off = on(element, type, (ev) => {
-            callback(ev);
-            if (ev.type === "submit") {
-                ev.preventDefault();
+const monitorEvents = (target, formatStep) => {
+    formatStep ||= (ev) => `${ev.currentTarget.tagName.toLowerCase()}.${ev.type}`;
+
+    for (const element of document.querySelectorAll(target)) {
+        for (const prop in element) {
+            const type = prop.match(/^on(\w+)/)?.[1];
+            if (!type) {
+                continue;
             }
-        });
-        after(off);
+            const off = on(element, type, (ev) => {
+                expect.step(formatStep(ev));
+                if (ev.type === "submit") {
+                    ev.preventDefault();
+                }
+            });
+            after(off);
+        }
     }
 };
 
@@ -129,26 +128,297 @@ describe(parseUrl(import.meta.url), () => {
         ]).toVerifySteps();
     });
 
-    test("drag", async () => {
+    test("drag & drop: draggable items", async () => {
         await mount(/* xml */ `
-            <ul class="list">
-                <li class="item" draggable="true">Item 1</li>
-                <li class="item" draggable="true">Item 2</li>
+            <ul>
+                <li id="first-item" draggable="true">Item 1</li>
+                <li id="second-item" draggable="true">Item 2</li>
+                <li id="third-item" draggable="true">Item 3</li>
             </ul>
         `);
-        monitorEvents(".item:first");
 
-        const { drop } = drag(".item:first");
-        drop(".item:last");
+        monitorEvents("body");
+        monitorEvents("li", (ev) => `${ev.target.id}.${ev.type}`);
+
+        // Drag & cancel
+        drag("#first-item").cancel();
 
         expect([
-            "li.pointerdown",
-            "li.mousedown",
-            "li.dragstart",
-            "li.pointermove",
-            "li.mousemove",
-            "li.drag",
-            "li.mouseenter",
+            // Drag first
+            "first-item.pointerdown",
+            "body.pointerdown",
+            "first-item.mousedown",
+            "body.mousedown",
+            "first-item.dragstart",
+            "body.dragstart",
+            // Cancel
+            "body.keydown",
+            "body.keyup",
+        ]).toVerifySteps();
+
+        // Drag & drop
+        drag("#first-item").drop("#third-item");
+
+        expect([
+            // Drag first
+            "first-item.pointerdown",
+            "body.pointerdown",
+            "first-item.mousedown",
+            "body.mousedown",
+            "first-item.dragstart",
+            "body.dragstart",
+            // Move to third
+            "first-item.pointermove",
+            "body.pointermove",
+            "first-item.mousemove",
+            "body.mousemove",
+            "first-item.drag",
+            "body.drag",
+            "third-item.pointerenter",
+            "third-item.mouseenter",
+            "third-item.dragenter",
+            "body.dragenter",
+            // Drop
+            "third-item.pointerup",
+            "body.pointerup",
+            "third-item.mouseup",
+            "body.mouseup",
+            "third-item.dragend",
+            "body.dragend",
+        ]).toVerifySteps();
+
+        // Drag, move & cancel
+        drag("#first-item").moveTo("#third-item").cancel();
+
+        expect([
+            // Drag first
+            "first-item.pointerdown",
+            "body.pointerdown",
+            "first-item.mousedown",
+            "body.mousedown",
+            "first-item.dragstart",
+            "body.dragstart",
+            // Move to third
+            "first-item.pointermove",
+            "body.pointermove",
+            "first-item.mousemove",
+            "body.mousemove",
+            "first-item.drag",
+            "body.drag",
+            "third-item.pointerenter",
+            "third-item.mouseenter",
+            "third-item.dragenter",
+            "body.dragenter",
+            // Cancel
+            "body.keydown",
+            "body.keyup",
+        ]).toVerifySteps();
+
+        // Drag, move & drop
+        drag("#first-item").moveTo("#third-item").drop();
+
+        expect([
+            // Drag first
+            "first-item.pointerdown",
+            "body.pointerdown",
+            "first-item.mousedown",
+            "body.mousedown",
+            "first-item.dragstart",
+            "body.dragstart",
+            // Move to third
+            "first-item.pointermove",
+            "body.pointermove",
+            "first-item.mousemove",
+            "body.mousemove",
+            "first-item.drag",
+            "body.drag",
+            "third-item.pointerenter",
+            "third-item.mouseenter",
+            "third-item.dragenter",
+            "body.dragenter",
+            // Drop
+            "third-item.pointerup",
+            "body.pointerup",
+            "third-item.mouseup",
+            "body.mouseup",
+            "third-item.dragend",
+            "body.dragend",
+        ]).toVerifySteps();
+
+        // Drag, move & drop (different target)
+        drag("#first-item").moveTo("#second-item").drop("#third-item");
+
+        expect([
+            // Drag first
+            "first-item.pointerdown",
+            "body.pointerdown",
+            "first-item.mousedown",
+            "body.mousedown",
+            "first-item.dragstart",
+            "body.dragstart",
+            // Move to second
+            "first-item.pointermove",
+            "body.pointermove",
+            "first-item.mousemove",
+            "body.mousemove",
+            "first-item.drag",
+            "body.drag",
+            "second-item.pointerenter",
+            "second-item.mouseenter",
+            "second-item.dragenter",
+            "body.dragenter",
+            // Move to third
+            "first-item.pointermove",
+            "body.pointermove",
+            "first-item.mousemove",
+            "body.mousemove",
+            "first-item.drag",
+            "body.drag",
+            "third-item.pointerenter",
+            "third-item.mouseenter",
+            "third-item.dragenter",
+            "body.dragenter",
+            // Drop
+            "third-item.pointerup",
+            "body.pointerup",
+            "third-item.mouseup",
+            "body.mouseup",
+            "third-item.dragend",
+            "body.dragend",
+        ]).toVerifySteps();
+    });
+
+    test("drag & drop: non-draggable items", async () => {
+        await mount(/* xml */ `
+            <ul>
+                <li id="first-item">Item 1</li>
+                <li id="second-item">Item 2</li>
+                <li id="third-item">Item 3</li>
+            </ul>
+        `);
+
+        monitorEvents("body");
+        monitorEvents("li", (ev) => `${ev.target.id}.${ev.type}`);
+
+        // Drag & cancel
+        drag("#first-item").cancel();
+
+        expect([
+            // Drag first
+            "first-item.pointerdown",
+            "body.pointerdown",
+            "first-item.mousedown",
+            "body.mousedown",
+
+            // Cancel
+            "body.keydown",
+            "body.keyup",
+        ]).toVerifySteps();
+
+        // Drag & drop
+        drag("#first-item").drop("#third-item");
+
+        expect([
+            // Drag first
+            "first-item.pointerdown",
+            "body.pointerdown",
+            "first-item.mousedown",
+            "body.mousedown",
+
+            // Move to third
+            "first-item.pointermove",
+            "body.pointermove",
+            "first-item.mousemove",
+            "body.mousemove",
+            "third-item.pointerenter",
+            "third-item.mouseenter",
+
+            // Drop
+            "third-item.pointerup",
+            "body.pointerup",
+            "third-item.mouseup",
+            "body.mouseup",
+        ]).toVerifySteps();
+
+        // Drag, move & cancel
+        drag("#first-item").moveTo("#third-item").cancel();
+
+        expect([
+            // Drag first
+            "first-item.pointerdown",
+            "body.pointerdown",
+            "first-item.mousedown",
+            "body.mousedown",
+
+            // Move to third
+            "first-item.pointermove",
+            "body.pointermove",
+            "first-item.mousemove",
+            "body.mousemove",
+            "third-item.pointerenter",
+            "third-item.mouseenter",
+
+            // Cancel
+            "body.keydown",
+            "body.keyup",
+        ]).toVerifySteps();
+
+        // Drag, move & drop
+        drag("#first-item").moveTo("#third-item").drop();
+
+        expect([
+            // Drag first
+            "first-item.pointerdown",
+            "body.pointerdown",
+            "first-item.mousedown",
+            "body.mousedown",
+
+            // Move to third
+            "first-item.pointermove",
+            "body.pointermove",
+            "first-item.mousemove",
+            "body.mousemove",
+            "third-item.pointerenter",
+            "third-item.mouseenter",
+
+            // Drop
+            "third-item.pointerup",
+            "body.pointerup",
+            "third-item.mouseup",
+            "body.mouseup",
+        ]).toVerifySteps();
+
+        // Drag, move & drop (different target)
+        drag("#first-item").moveTo("#second-item").drop("#third-item");
+
+        expect([
+            // Drag first
+            "first-item.pointerdown",
+            "body.pointerdown",
+            "first-item.mousedown",
+            "body.mousedown",
+
+            // Move to second
+            "first-item.pointermove",
+            "body.pointermove",
+            "first-item.mousemove",
+            "body.mousemove",
+            "second-item.pointerenter",
+            "second-item.mouseenter",
+
+            // Move to third
+            "first-item.pointermove",
+            "body.pointermove",
+            "first-item.mousemove",
+            "body.mousemove",
+            "third-item.pointerenter",
+            "third-item.mouseenter",
+
+            // Drop
+            "third-item.pointerup",
+            "body.pointerup",
+            "third-item.mouseup",
+            "body.mouseup",
         ]).toVerifySteps();
     });
 
@@ -508,12 +778,12 @@ describe(parseUrl(import.meta.url), () => {
 
         click("input");
 
-        monitorEvents("input", (ev) =>
-            expect.step(
+        monitorEvents(
+            "input",
+            (ev) =>
                 `${ev.type}${ev.key ? `:${ev.key}` : ""}${ev.altKey ? ".alt" : ""}${
                     ev.ctrlKey ? ".ctrl" : ""
                 }${ev.shiftKey ? ".shift" : ""}`
-            )
         );
 
         press(["ctrl", "b"]);

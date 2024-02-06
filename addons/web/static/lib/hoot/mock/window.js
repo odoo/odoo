@@ -25,7 +25,6 @@ import {
     mockedSetInterval,
     mockedSetTimeout,
 } from "./time";
-import { createMock } from "../hoot_utils";
 
 //-----------------------------------------------------------------------------
 // Global

@@ -4,6 +4,7 @@
  * @typedef {import("./helpers/dom").QueryOptions} QueryOptions
  * @typedef {import("./helpers/dom").Target} Target
  *
+ * @typedef {import("./helpers/events").DragHelpers} DragHelpers
  * @typedef {import("./helpers/events").EventType} EventType
  * @typedef {import("./helpers/events").FillOptions} FillOptions
  * @typedef {import("./helpers/events").InputValue} InputValue

@@ -16,6 +16,7 @@ import { animationFrame } from "@odoo/hoot-mock";
 import { ensureArray } from "@web/core/utils/arrays";
 
 /**
+ * @typedef {import("@odoo/hoot-dom").DragHelpers} DragHelpers
  * @typedef {import("@odoo/hoot-dom").FillOptions} FillOptions
  * @typedef {import("@odoo/hoot-dom").InputValue} InputValue
  * @typedef {import("@odoo/hoot-dom").KeyStrokes} KeyStrokes
@@ -135,8 +136,12 @@ export function contains(target, options) {
         },
         /**
          * @param {PointerOptions} [options]
+         * @returns {Promise<DragHelpers>}
          */
-        drag: (options) => run(options, drag),
+        drag: async (options) => {
+            const [helpers] = await run(drag, options);
+            return helpers;
+        },
         /**
          * @param {InputValue} value
          * @param {FillOptions} [options]

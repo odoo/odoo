@@ -4,6 +4,7 @@ import { HootDomError, getTag, isFirefox, isIterable } from "../hoot_dom_utils";
 import {
     getActiveElement,
     getDefaultRootNode,
+    getDocument,
     getNextFocusableElement,
     getPreviousFocusableElement,
     getRect,
@@ -11,6 +12,7 @@ import {
     isCheckable,
     isEditable,
     isEventTarget,
+    isNode,
     isNodeFocusable,
     parsePosition,
     queryAll,
@@ -322,7 +324,7 @@ const logEvents = (actionName) => {
 
         const typeString = typeList.map((t) => `%c"${t}"%c`).join(", ");
         let message = `%c${event.constructor.name}%c<${typeString}>`;
-        if (event.target) {
+        if (isNode(event.target)) {
             const targetParts = toSelector(event.target, { object: true });
             colors.push("blue");
             if (targetParts.id) {
@@ -1269,10 +1271,11 @@ export function drag(target, options) {
                         `cannot execute drag helper \`${fn.name}\`: drag sequence has been ended by \`${dragEndReason}\``
                     );
                 }
-                fn(...args);
+                const result = fn(...args);
                 if (endDrag) {
                     dragEndReason = fn.name;
                 }
+                return result;
             },
         }[fn.name];
     };
@@ -1280,7 +1283,7 @@ export function drag(target, options) {
     const cancel = expectIsDragging(
         /** @type {DragHelpers["cancel"]} */
         function cancel() {
-            _press(getWindow(), { key: "Escape" });
+            _press(getDocument().body, { key: "Escape" });
             return logEvents("cancel");
         },
         true
@@ -1312,7 +1315,7 @@ export function drag(target, options) {
         function moveTo(to, options) {
             currentTarget = queryOne(to);
             if (!currentTarget) {
-                return;
+                return dragHelpers;
             }
 
             // Recompute target position
@@ -1320,9 +1323,7 @@ export function drag(target, options) {
 
             // Move, enter and drop the element on the target
             dispatch(source, "pointermove", targetPosition);
-            if (!hasTouch()) {
-                dispatch(source, "mousemove", targetPosition);
-            }
+            dispatch(source, hasTouch() ? "touchmove" : "mousemove", targetPosition);
             if (canTriggerDragEvents) {
                 dispatch(source, "drag", targetPosition);
             }
@@ -1332,7 +1333,7 @@ export function drag(target, options) {
             for (const parent of getDifferentParents(source, currentTarget)) {
                 dispatch(parent, "pointerenter", targetPosition);
                 if (!hasTouch()) {
-                    dispatch(source, "mouseenter", targetPosition);
+                    dispatch(parent, "mouseenter", targetPosition);
                 }
                 if (canTriggerDragEvents) {
                     dispatch(parent, "dragenter", targetPosition);
@@ -1449,6 +1450,7 @@ export function fill(value, options) {
  *  - [desktop] `mouseenter`
  *  - `pointermove`
  *  - [desktop] `mousemove`
+ *  - [touch] `touchmove`
  *
  * @param {Target} target
  * @param {PointerOptions} [options]
@@ -1468,9 +1470,7 @@ export function hover(target, options) {
         dispatch(element, "mouseenter", position);
     }
     dispatch(element, "pointermove", position);
-    if (!hasTouch()) {
-        dispatch(element, "mousemove", position);
-    }
+    dispatch(element, hasTouch() ? "touchmove" : "mousemove", position);
 
     return logEvents("hover");
 }
@@ -1532,6 +1532,7 @@ export function keyUp(keyStrokes) {
  * The event sequence is as follow:
  *  - `pointermove`
  *  - [desktop] `mousemove`
+ *  - [touch] `touchmove`
  *  - `pointerout`
  *  - [desktop] `mouseout`
  *  - `pointerleave`
@@ -1547,9 +1548,7 @@ export function leave(target, options) {
     for (const element of queryAll(target, options)) {
         const position = getPosition(options);
         dispatch(element, "pointermove", position);
-        if (!hasTouch()) {
-            dispatch(element, "mousemove", position);
-        }
+        dispatch(element, hasTouch() ? "touchmove" : "mousemove", position);
         dispatch(element, "pointerout", position);
         if (!hasTouch()) {
             dispatch(element, "mouseout", position);
