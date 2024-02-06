@@ -366,11 +366,11 @@
         <div t-attf-class="header o_company_#{company.id}_layout" t-att-style="report_header_style">
             <div class="o_boxed_header">
             <div class="row mb8">
-                <div class="col-6">
-                    <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" alt="Logo"/>
+                <div class="col-auto">
+                    <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" alt="Logo" style="max-height: 130px;"/>
                 </div>
-                <div class="col-6 text-end mb4">
-                    <div class="mt0 h4" t-if="company.report_header" t-field="company.report_header">Company tagline</div>
+                <div class="col text-end ms-auto">
+                    <div class="mt0 h4 company_tagline" t-if="company.report_header" t-field="company.report_header">Company tagline</div>
                     <div name="company_address" class="float-end mb4">
                         <ul class="list-unstyled" name="company_address_list">
                             <li t-if="company.is_company_details_empty"><span t-field="company.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'>
@@ -425,7 +425,7 @@
             <div class="o_clean_header">
                 <div class="row">
                     <div class="col-6">
-                        <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" alt="Logo"/>
+                        <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" alt="Logo" style="max-height: 120px;"/>
                     </div>
                     <div class="col-5 offset-1" name="company_address">
                         <ul class="list-unstyled" name='company_address_list'>
@@ -486,7 +486,7 @@
                 <div class="col-3 mb4">
                     <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" style="max-height: 45px;" alt="Logo"/>
                 </div>
-                <div class="col-9 text-end" style="margin-top:22px;" t-if="company.report_header" t-field="company.report_header" name="moto">Company tagline</div>
+                <div class="col-9 text-end company_tagline" style="margin-top:22px;" t-if="company.report_header" t-field="company.report_header" name="moto">Company tagline</div>
             </div>
             <div t-if="company.logo or company.report_header" class="row zero_min_height">
                 <div class="col-12">
@@ -719,6 +719,9 @@
                         }
                     }
                 }
+                .company_tagline{
+                    color: <t t-esc='primary'/>;
+                }
             </t>
             <t t-elif="layout == 'web.external_layout_bold'" >
                 &amp;.o_clean_footer {
@@ -777,6 +780,9 @@
                             color: <t t-esc='secondary'/>;
                         }
                     }
+                }
+                .company_tagline{
+                    color: <t t-esc='primary'/>;
                 }
             </t>
             }
