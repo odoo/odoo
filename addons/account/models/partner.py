@@ -172,52 +172,49 @@ class AccountFiscalPosition(models.Model):
                 vals['zip_from'], vals['zip_to'] = self._convert_zip_values(zip_from or rec.zip_from, zip_to or rec.zip_to)
         return super(AccountFiscalPosition, self).write(vals)
 
-    @api.model
-    def _get_fpos_by_region(self, country_id=False, state_id=False, zipcode=False, vat_required=False):
-        if not country_id:
-            return False
-        base_domain = self._prepare_fpos_base_domain(vat_required)
-        null_state_dom = state_domain = [('state_ids', '=', False)]
-        null_zip_dom = zip_domain = [('zip_from', '=', False), ('zip_to', '=', False)]
-        null_country_dom = [('country_id', '=', False), ('country_group_id', '=', False)]
-
-        if zipcode:
-            zip_domain = [('zip_from', '<=', zipcode), ('zip_to', '>=', zipcode)]
-
-        if state_id:
-            state_domain = [('state_ids', '=', state_id)]
-
-        domain_country = base_domain + [('country_id', '=', country_id)]
-        domain_group = base_domain + [('country_group_id.country_ids', '=', country_id)]
-
-        # Build domain to search records with exact matching criteria
-        fpos = self.search(domain_country + state_domain + zip_domain, limit=1)
-        # return records that fit the most the criteria, and fallback on less specific fiscal positions if any can be found
-        if not fpos and state_id:
-            fpos = self.search(domain_country + null_state_dom + zip_domain, limit=1)
-        if not fpos and zipcode:
-            fpos = self.search(domain_country + state_domain + null_zip_dom, limit=1)
-        if not fpos and state_id and zipcode:
-            fpos = self.search(domain_country + null_state_dom + null_zip_dom, limit=1)
-
-        # fallback: country group with no state/zip range
-        if not fpos:
-            fpos = self.search(domain_group + null_state_dom + null_zip_dom, limit=1)
-
-        if not fpos:
-            # Fallback on catchall (no country, no group)
-            fpos = self.search(base_domain + null_country_dom, limit=1)
-        return fpos
-
     def _get_vat_valid(self, delivery, company=None):
         """ Hook for determining VAT validity with more complex VAT requirements """
         return bool(delivery.vat)
 
-    def _prepare_fpos_base_domain(self, vat_required):
+    def _get_fpos_ranking_functions(self, partner):
+        """Get comparison functions to rank fiscal positions.
+
+        All functions are applied to the fiscal position and return a value.
+        These values are taken in order to build a tuple that will be the comparator
+        value between fiscal positions.
+
+        If the value returned by one of the function is falsy, the fiscal position is
+        filtered out and not even considered for the ranking.
+
+        :param partner: the partner to consider for the ranking of the fiscal positions
+        :type partner: :class:`res.partner`
+        :return: a list of tuples with a name and the function to apply. The name is only
+            used to facilitate extending the comparators.
+        :rtype: list[tuple[str, function]
+        """
         return [
-            *self._check_company_domain(self.env.company),
-            ('auto_apply', '=', True),
-            ('vat_required', '=', vat_required),
+            ('vat_required', lambda fpos: (
+                not fpos.vat_required
+                or (self._get_vat_valid(partner, self.env.company) and 2)
+            )),
+            ('company_id', lambda fpos: len(fpos.company_id.parent_ids)),
+            ('zipcode', lambda fpos:(
+                not (fpos.zip_from and fpos.zip_to)
+                or (partner.zip and (fpos.zip_from <= partner.zip <= fpos.zip_to) and 2)
+            )),
+            ('state_id', lambda fpos: (
+                not fpos.state_ids
+                or (partner.state_id in fpos.state_ids and 2)
+            )),
+            ('country_id', lambda fpos: (
+                not fpos.country_id
+                or (partner.country_id == fpos.country_id and 2)
+            )),
+            ('country_group', lambda fpos: (
+                not fpos.country_group_id
+                or (partner.country_id in fpos.country_group_id.country_ids and 2)
+            )),
+            ('sequence', lambda fpos: fpos.sequence or 0.1),  # do not filter out sequence=0
         ]
 
     @api.model
@@ -248,15 +245,22 @@ class AccountFiscalPosition(models.Model):
         if manual_fiscal_position:
             return manual_fiscal_position
 
-        # First search only matching VAT positions
-        vat_valid = self._get_vat_valid(delivery, company)
-        fp = self._get_fpos_by_region(delivery.country_id.id, delivery.state_id.id, delivery.zip, vat_valid)
+        if not partner.country_id:
+            return self.env['account.fiscal.position']
 
-        # Then if VAT required found no match, try positions that do not require it
-        if not fp and vat_valid:
-            fp = self._get_fpos_by_region(delivery.country_id.id, delivery.state_id.id, delivery.zip, False)
+        # Search for a an auto applied fiscal position matching the partner
+        ranking_subfunctions = self._get_fpos_ranking_functions(delivery)
+        def ranking_function(fpos):
+            return tuple(rank[1](fpos) for rank in ranking_subfunctions)
 
-        return fp or self.env['account.fiscal.position']
+        all_auto_apply_fpos = self.search(self._check_company_domain(self.env.company) + [('auto_apply', '=', True)])
+        fpo_with_ranking = ((fpos, ranking_function(fpos)) for fpos in all_auto_apply_fpos)
+        valid_auto_apply_fpos = filter(lambda x: all(x[1]), fpo_with_ranking)
+        return max(
+            valid_auto_apply_fpos,
+            key=lambda x: x[1],
+            default=(self.env['account.fiscal.position'], False)
+        )[0]
 
     def action_create_foreign_taxes(self):
         self.ensure_one()
