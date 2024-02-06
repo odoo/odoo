@@ -112,6 +112,19 @@ class SaleOrderLine(models.Model):
                 components[product] = {'qty': qty, 'uom': to_uom.id}
         return components
 
+    @api.model
+    def _get_incoming_outgoing_moves_filter(self):
+        """ Method to be override: will get incoming moves and outgoing moves.
+
+        :return: Dictionary with incoming moves and outgoing moves
+        :rtype: dict
+        """
+        return {
+            'incoming_moves': lambda m: m.location_dest_id.usage == 'customer' and \
+                        (not m.origin_returned_move_id or (m.origin_returned_move_id and m.to_refund)),
+            'outgoing_moves': lambda m: m.location_dest_id.usage != 'customer' and m.to_refund
+        }
+
     def _get_qty_procurement(self, previous_product_uom_qty=False):
         self.ensure_one()
         # Specific case when we change the qty on a SO for a kit product.
@@ -120,10 +133,7 @@ class SaleOrderLine(models.Model):
         bom = self.env['mrp.bom']._bom_find(self.product_id, bom_type='phantom')[self.product_id]
         if bom:
             moves = self.move_ids.filtered(lambda r: r.state != 'cancel' and not r.scrapped)
-            filters = {
-                'incoming_moves': lambda m: m.location_dest_id.usage == 'customer' and (not m.origin_returned_move_id or (m.origin_returned_move_id and m.to_refund)),
-                'outgoing_moves': lambda m: m.location_dest_id.usage != 'customer' and m.to_refund
-            }
+            filters = self._get_incoming_outgoing_moves_filter()
             order_qty = previous_product_uom_qty.get(self.id, 0) if previous_product_uom_qty else self.product_uom_qty
             order_qty = self.product_uom._compute_quantity(order_qty, bom.product_uom_id)
             qty = moves._compute_kit_quantities(self.product_id, order_qty, bom, filters)
