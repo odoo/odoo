@@ -11,6 +11,7 @@ from odoo.exceptions import UserError
 from odoo.osv.expression import AND
 from odoo.tools import get_lang, SQL
 from .project_update import STATUS_COLOR
+from .project_task import CLOSED_STATES
 
 
 class Project(models.Model):
@@ -49,6 +50,12 @@ class Project(models.Model):
         self.__compute_task_count(
             count_field='open_task_count',
             additional_domain=[('state', 'in', self.env['project.task'].OPEN_STATES)],
+        )
+
+    def _compute_closed_task_count(self):
+        self.__compute_task_count(
+            count_field='closed_task_count',
+            additional_domain=[('state', 'in', [*CLOSED_STATES])],
         )
 
     def _default_stage_id(self):
@@ -134,6 +141,8 @@ class Project(models.Model):
     allow_milestones = fields.Boolean('Milestones', default=lambda self: self.env.user.has_group('project.group_project_milestone'))
     tag_ids = fields.Many2many('project.tags', relation='project_project_project_tags_rel', string='Tags')
     task_properties_definition = fields.PropertiesDefinition('Task Properties')
+    closed_task_count = fields.Integer(compute="_compute_closed_task_count", export_string_translation=False)
+    task_completion_percentage = fields.Float(compute="_compute_task_completion_percentage", export_string_translation=False)
 
     # Project Sharing fields
     collaborator_ids = fields.One2many('project.collaborator', 'project_id', string='Collaborators', copy=False, export_string_translation=False)
@@ -1025,3 +1034,8 @@ class Project(models.Model):
                     "model": "project.project",
                 },
             )
+
+    @api.depends('task_count', 'open_task_count')
+    def _compute_task_completion_percentage(self):
+        for task in self:
+            task.task_completion_percentage = task.task_count and 1 - task.open_task_count / task.task_count

@@ -9,6 +9,7 @@ from odoo.tests import Form, tagged
 from odoo.tools import mute_logger
 from odoo.exceptions import ValidationError
 
+
 @tagged('-at_install', 'post_install')
 class TestProjectSubtasks(TestProjectCommon):
 
