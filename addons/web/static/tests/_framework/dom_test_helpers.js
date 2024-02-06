@@ -9,6 +9,7 @@ import {
     pointerDown,
     press,
     queryOne,
+    select,
     uncheck,
     waitFor,
 } from "@odoo/hoot-dom";
@@ -155,6 +156,10 @@ export function contains(target, options) {
          * @param {KeyStrokes} keyStrokes
          */
         press: (keyStrokes) => run(pointerDown, bind(press, keyStrokes)),
+        /**
+         * @param {InputValue} value
+         */
+        select: (value) => run(pointerDown, bind(select, value)),
         /**
          * @param {PointerOptions} [options]
          */
