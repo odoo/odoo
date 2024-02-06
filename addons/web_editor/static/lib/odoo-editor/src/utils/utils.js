@@ -1837,9 +1837,14 @@ export function setTagName(el, newTagName) {
     // If the element or its parent is a <li>, do not wrap said <li> in a <p>
     // when converting it to normal text.
     const containerEl = el.tagName === 'LI' ? el : el.parentElement;
-    if (el.tagName === 'LI' && newTagName !== 'p') {
+    if (el.tagName === 'LI' && (newTagName !== 'p' || el.classList.contains('nav-item'))) {
         el.append(n);
-    } else if (containerEl && containerEl.tagName === 'LI' && newTagName === 'p') {
+    } else if (
+        containerEl &&
+        containerEl.tagName === 'LI' &&
+        newTagName === 'p' &&
+        !containerEl.classList.contains('nav-item')
+    ) {
         containerEl.replaceChildren(...n.childNodes);
     } else {
         el.parentNode.replaceChild(n, el);

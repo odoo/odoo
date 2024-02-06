@@ -882,11 +882,25 @@ describe('setTagName', () => {
                 contentAfter: `<ul><li>[abcd]</li></ul>`
             });
         });
+        it('should add paragraph tag when selection is changed to normal in nav-item list', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<ul><li class="nav-item"><h1>[abcd]</h1></li></ul>',
+                stepFunction: editor => editor.execCommand('setTag', 'p'),
+                contentAfter: '<ul><li class="nav-item"><p>[abcd]</p></li></ul>',
+            });
+        });
         it('should not add paragraph tag to normal text in list', async () => {
             await testEditor(BasicEditor, {
                 contentBefore: '<ul><li>[abcd]</li></ul>',
                 stepFunction: editor => editor.execCommand('setTag', "p"),
                 contentAfter: `<ul><li>[abcd]</li></ul>`
+            });
+        });
+        it('should add paragraph tag to normal text in nav-item list', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<ul><li class="nav-item">[abcd]</li></ul>',
+                stepFunction: editor => editor.execCommand('setTag', 'p'),
+                contentAfter: '<ul><li class="nav-item"><p>[abcd]</p></li></ul>',
             });
         });
         it('should add paragraph tag to normal text in list when text is deeply nested', async () => {
