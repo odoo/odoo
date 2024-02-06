@@ -38,7 +38,7 @@
                                     <field name="seats"/>
                                     <field name="doors"/>
                                     <field name="color"/>
-                                    <field name="model_year"/>
+                                    <field name="model_year" widget="char"/>
                                     <field name="trailer_hook"/>
                                 </group>
                                 <group id="vehicle_information" string="Vehicle Information" invisible="vehicle_type != 'bike'">
@@ -93,6 +93,11 @@
                         </page>
                     </notebook>
                 </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
             </form>
         </field>
     </record>
