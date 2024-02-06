@@ -432,9 +432,17 @@ class Project(models.Model):
     def _get_revenues_items_from_sol(self, domain=None, with_action=True):
         sale_line_read_group = self.env['sale.order.line'].sudo()._read_group(
             self._get_profitability_sale_order_items_domain(domain),
-            ['currency_id', 'product_id', 'is_downpayment'],
+            ['currency_id', 'product_id', 'is_downpayment', 'price_subtotal'],
             ['id:array_agg', 'untaxed_amount_to_invoice:sum', 'untaxed_amount_invoiced:sum'],
         )
+
+        analytic_account_lines = self.env['account.move.line'].sudo().search_fetch(
+            expression.AND([
+                [('analytic_distribution', 'in', self.analytic_account_id.ids)]
+            ]),
+            ['price_subtotal', 'parent_state', 'currency_id', 'analytic_distribution', 'move_type']
+        )
+
         display_sol_action = with_action and len(self) == 1 and self.user_has_groups('sales_team.group_sale_salesman')
         revenues_dict = {}
         total_to_invoice = total_invoiced = 0.0
@@ -447,7 +455,7 @@ class Project(models.Model):
             sols_per_product = defaultdict(lambda: [0.0, 0.0, []])
             downpayment_amount_invoiced = 0
             downpayment_sol_ids = []
-            for currency, product, is_downpayment, sol_ids, untaxed_amount_to_invoice, untaxed_amount_invoiced in sale_line_read_group:
+            for currency, product, is_downpayment, price_subtotal, sol_ids, untaxed_amount_to_invoice, untaxed_amount_invoiced in sale_line_read_group:
                 if is_downpayment:
                     downpayment_amount_invoiced += currency._convert(untaxed_amount_invoiced, convert_company.currency_id, convert_company, round=False)
                     downpayment_sol_ids += sol_ids
@@ -492,6 +500,18 @@ class Project(models.Model):
                     if product_id in product_ids:
                         invoice_type = service_policy_to_invoice_type.get(service_policy, 'materials')
                         revenue = revenues_dict.setdefault(invoice_type, {'invoiced': 0.0, 'to_invoice': 0.0})
+                        if (analytic_account_lines and service_policy == "ordered_prepaid"):
+                            amount_invoiced = amount_to_invoice = 0.0
+                            for account_line in analytic_account_lines:
+                                currency = account_line.currency_id
+                                price_subtotal = currency._convert(account_line.price_subtotal, self.currency_id, self.company_id)
+                                analytic_contribution = account_line.analytic_distribution[str(self.analytic_account_id.id)] / 100.
+                                if account_line.parent_state == "draft":
+                                    multiplier = 1 if account_line.move_type == 'out_invoice' else -1
+                                    amount_to_invoice += price_subtotal * analytic_contribution * multiplier
+                                else:
+                                    multiplier = 1 if account_line.move_type == 'out_invoice' else -1
+                                    amount_invoiced += price_subtotal * analytic_contribution * multiplier
                         revenue['to_invoice'] += amount_to_invoice
                         total_to_invoice += amount_to_invoice
                         revenue['invoiced'] += amount_invoiced
