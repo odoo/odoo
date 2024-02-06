@@ -99,7 +99,13 @@ class AccountAccount(models.Model):
     note = fields.Text('Internal Notes', tracking=True)
     company_id = fields.Many2one('res.company', string='Company', required=True, readonly=False,
         default=lambda self: self.env.company)
-    tag_ids = fields.Many2many('account.account.tag', 'account_account_account_tag', string='Tags', help="Optional tags you may want to assign for custom reporting", ondelete='restrict')
+    tag_ids = fields.Many2many(
+        'account.account.tag', 'account_account_account_tag',
+        compute='_compute_account_tags', readonly=False, store=True, precompute=True,
+        string='Tags',
+        help="Optional tags you may want to assign for custom reporting",
+        ondelete='restrict',
+    )
     group_id = fields.Many2one('account.group', compute='_compute_account_group', store=True, readonly=True,
                                help="Account prefixes can determine account groups.")
     root_id = fields.Many2one('account.root', compute='_compute_account_root', store=True, precompute=True)
@@ -460,25 +466,38 @@ class AccountAccount(models.Model):
 
     @api.depends('code')
     def _compute_account_type(self):
-        """ Compute the account type based on the account code.
-        Search for the closest parent account code and sets the account type according to the parent.
-        If there is no parent (e.g. the account code is lower than any other existing account code),
-        the account type will be set to 'asset_current'.
+        accounts_to_process = self.filtered(lambda account: account.code and not account.account_type)
+        self._get_closest_parent_account(accounts_to_process, 'account_type', default_value='asset_current')
+
+    @api.depends('code')
+    def _compute_account_tags(self):
+        accounts_to_process = self.filtered(lambda account: account.code and not account.tag_ids)
+        self._get_closest_parent_account(accounts_to_process, 'tag_ids', default_value=[])
+
+    def _get_closest_parent_account(self, accounts_to_process, field_name, default_value):
         """
-        accounts_to_process = self.filtered(lambda r: r.code and not r.account_type)
+            This helper function retrieves the closest parent account based on account codes
+            for the given accounts to process and assigns the value of the parent to the specified field.
+
+            :param accounts_to_process: Records of accounts to be processed.
+            :param field_name: Name of the field to be updated with the closest parent account value.
+            :param default_value: Default value to be assigned if no parent account is found.
+        """
+        assert field_name in self._fields
+
         all_accounts = self.search_read(
             domain=[('company_id', 'in', accounts_to_process.company_id.ids)],
-            fields=['code', 'account_type', 'company_id'],
+            fields=['code', field_name, 'company_id'],
             order='code',
         )
         accounts_with_codes = defaultdict(dict)
         # We want to group accounts by company to only search for account codes of the current company
         for account in all_accounts:
-            accounts_with_codes[account['company_id'][0]][account['code']] = account['account_type']
+            accounts_with_codes[account['company_id'][0]][account['code']] = account[field_name]
         for account in accounts_to_process:
             codes_list = list(accounts_with_codes[account.company_id.id].keys())
             closest_index = bisect_left(codes_list, account.code) - 1
-            account.account_type = accounts_with_codes[account.company_id.id][codes_list[closest_index]] if closest_index != -1 else 'asset_current'
+            account[field_name] = accounts_with_codes[account.company_id.id][codes_list[closest_index]] if closest_index != -1 else default_value
 
     @api.depends('account_type')
     def _compute_include_initial_balance(self):
