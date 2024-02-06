@@ -340,7 +340,7 @@ export class OdooEditor extends EventTarget {
         this.editable.setAttribute('dir', this.options.direction);
 
         // Set contenteditable before clone as FF updates the content at this point.
-        this._activateContenteditable();
+        this.activateContenteditable();
 
         this._currentStep = {
             selection: {},
@@ -1402,7 +1402,7 @@ export class OdooEditor extends EventTarget {
         // Clear current step from all previous changes.
         this._currentStep.mutations = [];
 
-        this._activateContenteditable();
+        this.activateContenteditable();
         this.historySetSelection(this._currentStep);
     }
     /**
@@ -2120,15 +2120,6 @@ export class OdooEditor extends EventTarget {
         return didDeselectTable;
     }
 
-    /**
-     * `activateContenteditable` serves as an interface for external use,
-     * allowing users to conveniently trigger `_activateContenteditable`
-     * from outside the odooEditor.
-     */
-    activateContenteditable() {
-        this._activateContenteditable();
-    }
-
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -2576,8 +2567,8 @@ export class OdooEditor extends EventTarget {
         element.querySelectorAll('.o_link_in_selection').forEach(link => link.classList.remove('o_link_in_selection'));
         this.observerActive('_resetLinkZws');
     }
-    _activateContenteditable() {
-        this.observerUnactive('_activateContenteditable');
+    activateContenteditable() {
+        this.observerUnactive('activateContenteditable');
         this.editable.setAttribute('contenteditable', this.options.isRootEditable);
 
         const editableAreas = this.options.getContentEditableAreas(this);
@@ -2596,7 +2587,7 @@ export class OdooEditor extends EventTarget {
         for (const element of this.options.getUnremovableElements()) {
             element.classList.add("oe_unremovable");
         }
-        this.observerActive('_activateContenteditable');
+        this.observerActive('activateContenteditable');
     }
     _stopContenteditable() {
         this.observerUnactive('_stopContenteditable');
@@ -4596,7 +4587,7 @@ export class OdooEditor extends EventTarget {
         this._currentMouseState = ev.type;
         this._lastMouseClickPosition = [ev.x, ev.y];
 
-        this._activateContenteditable();
+        this.activateContenteditable();
 
         // Ignore any changes that might have happened before this point.
         this.observer.takeRecords();
