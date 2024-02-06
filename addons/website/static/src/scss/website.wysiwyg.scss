@@ -21,23 +21,42 @@
     }
 }
 
-html[lang] > body.editor_enable [data-oe-translation-state] {
+@mixin translationStateStyles($property, $valueToTranslate, $valueJustTranslated, $valueTranslated) {
     &, .o_translation_select_option, &[data-oe-field="mega_menu_content"] * {
-        background: rgba($o-we-content-to-translate-color, 0.5) !important;
+        #{$property}: $valueToTranslate !important;
     }
 
     &[data-oe-translation-state="translated"] {
         &, .o_translation_select_option, &[data-oe-field="mega_menu_content"] * {
-            background: rgba($o-we-translated-content-color, 0.5) !important;
+            #{$property}: $valueTranslated !important;
         }
     }
 
     &.o_dirty, &.oe_translated, .oe_translated {
-        background: rgba($o-we-translated-content-color, 0.25) !important;
+        #{$property}: $valueJustTranslated !important;
 
         &[data-oe-field="mega_menu_content"] * {
-            background: rgba($o-we-translated-content-color, 0.25) !important;
+            #{$property}: $valueJustTranslated !important;
         }
+    }
+}
+
+html[lang] > body.editor_enable {
+    [data-oe-translation-state]:not(img) {
+        @include translationStateStyles(
+            background,
+            rgba($o-we-content-to-translate-color, 0.5),
+            rgba($o-we-translated-content-color, 0.25),
+            rgba($o-we-translated-content-color, 0.5)
+        );
+    }
+    img[data-oe-translation-state] {
+        @include translationStateStyles(
+            border,
+            5px solid rgba($o-we-content-to-translate-color, 0.5),
+            5px solid rgba($o-we-translated-content-color, 0.25),
+            5px solid rgba($o-we-translated-content-color, 0.5)
+        );
     }
 }
 
