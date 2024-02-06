@@ -180,7 +180,8 @@ function sanitizeNode(node, root) {
         node = parent; // The node has been removed, update the reference.
     } else if (
         node.nodeName === 'P' && // Note: not sure we should limit to <p>.
-        node.parentElement.nodeName === 'LI'
+        node.parentElement.nodeName === 'LI' &&
+        !node.parentElement.classList.contains('nav-item')
     ) {
         // Remove empty paragraphs in <li>.
         const classes = node.classList;
