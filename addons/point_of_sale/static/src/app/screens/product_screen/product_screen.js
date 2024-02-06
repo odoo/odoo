@@ -45,7 +45,7 @@ export class ProductScreen extends Component {
         this.pos = usePos();
         this.ui = useState(useService("ui"));
         this.dialog = useService("dialog");
-        this.notification = useService("pos_notification");
+        this.notification = useService("notification");
         this.numberBuffer = useService("number_buffer");
         this.state = useState({
             showProductReminder: false,
@@ -439,7 +439,7 @@ export class ProductScreen extends Component {
                 3000
             );
         } else {
-            this.notification.add(_t('No more product found for "%s".', searchProductWord), 3000);
+            this.notification.add(_t('No more product found for "%s".', searchProductWord));
         }
         if (this.state.previousSearchWord === searchProductWord) {
             this.state.currentOffset += result.length;

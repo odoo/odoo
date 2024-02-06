@@ -37,7 +37,7 @@ export class SaleOrderManagementScreen extends Component {
         this.root = useRef("root");
         this.numberBuffer = useService("number_buffer");
         this.saleOrderFetcher = useService("sale_order_fetcher");
-        this.notification = useService("pos_notification");
+        this.notification = useService("notification");
 
         useBus(this.saleOrderFetcher, "update", this.render);
 
@@ -118,7 +118,7 @@ export class SaleOrderManagementScreen extends Component {
                 linkedSO.partner_shipping_id !== sale_order.partner_shipping_id
             ) {
                 currentPOSOrder = this.pos.add_new_order();
-                this.notification.add(_t("A new order has been created."), 4000);
+                this.notification.add(_t("A new order has been created."));
             }
         }
 

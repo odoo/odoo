@@ -9,7 +9,7 @@ import { useService } from "@web/core/utils/hooks";
 patch(OrderSummary.prototype, {
     setup() {
         super.setup(...arguments);
-        this.notification = useService("pos_notification");
+        this.notification = useService("notification");
     },
     async updateSelectedOrderline({ buffer, key }) {
         const selectedLine = this.currentOrder.get_selected_orderline();

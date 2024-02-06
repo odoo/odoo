@@ -11,7 +11,7 @@ import { patch } from "@web/core/utils/patch";
 patch(TicketScreen.prototype, {
     setup() {
         super.setup(...arguments);
-        this.notification = useService("pos_notification");
+        this.notification = useService("notification");
     },
     _onUpdateSelectedOrderline() {
         const order = this.getSelectedOrder();

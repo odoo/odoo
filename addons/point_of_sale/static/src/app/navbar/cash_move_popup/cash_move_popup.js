@@ -17,7 +17,7 @@ export class CashMovePopup extends Component {
     static props = ["confirmKey?", "close"];
     setup() {
         super.setup();
-        this.notification = useService("pos_notification");
+        this.notification = useService("notification");
         this.pos = usePos();
         this.dialog = useService("dialog");
         this.hardwareProxy = useService("hardware_proxy");
@@ -35,7 +35,7 @@ export class CashMovePopup extends Component {
         const amount = parseFloat(this.state.amount);
         const formattedAmount = this.env.utils.formatCurrency(amount);
         if (!amount) {
-            this.notification.add(_t("Cash in/out of %s is ignored.", formattedAmount), 3000);
+            this.notification.add(_t("Cash in/out of %s is ignored.", formattedAmount));
             return this.props.close();
         }
 

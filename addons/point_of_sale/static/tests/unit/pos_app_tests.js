@@ -57,7 +57,7 @@ QUnit.module("Chrome", {
         for (const service of [
             "hardware_proxy",
             "debug",
-            "pos_notification",
+            "notification",
             "sound",
             "action",
             "hotkey",

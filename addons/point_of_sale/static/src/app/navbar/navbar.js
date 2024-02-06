@@ -33,7 +33,7 @@ export class Navbar extends Component {
         this.ui = useState(useService("ui"));
         this.debug = useService("debug");
         this.dialog = useService("dialog");
-        this.notification = useService("pos_notification");
+        this.notification = useService("notification");
         this.hardwareProxy = useService("hardware_proxy");
         this.state = useState({ isMenuOpened: false });
         useExternalListener(window, "mouseup", this.onOutsideClick);
@@ -63,7 +63,7 @@ export class Navbar extends Component {
                     this.pos.setLoadingOrderState(true);
                     const message = await this.pos._syncAllOrdersFromServer();
                     if (message) {
-                        this.notification.add(message, 5000);
+                        this.notification.add(message);
                     }
                 } finally {
                     this.pos.setLoadingOrderState(false);

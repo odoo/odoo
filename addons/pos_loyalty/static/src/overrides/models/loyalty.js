@@ -1578,7 +1578,7 @@ patch(Order.prototype, {
                     payload.program_id,
                     payload.partner_id,
                     payload.points,
-                    payload.expiration_date,
+                    payload.expiration_date
                 );
                 this.pos.couponCache[coupon.id] = coupon;
                 this.codeActivatedCoupons.push(coupon);
@@ -1609,7 +1609,7 @@ patch(Order.prototype, {
     async activateCode(code) {
         const res = await this._activateCode(code);
         if (res !== true) {
-            this.env.services.pos_notification.add(res, 5000);
+            this.env.services.notification.add(res);
         }
     },
     isProgramsResettable() {
