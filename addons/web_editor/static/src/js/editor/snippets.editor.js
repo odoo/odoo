@@ -2639,6 +2639,7 @@ var SnippetsMenu = Widget.extend({
             && $snippet[0]
             && !$snippet[0].matches(".o_translatable_attribute")
             && !$snippet[0].querySelector(".o_translatable_attribute")
+            && !$snippet[0].closest(".s_newsletter_subscribe_form, .s_newsletter_block")
         ) {
             return;
         }
