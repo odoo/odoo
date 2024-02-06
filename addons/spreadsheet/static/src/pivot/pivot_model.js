@@ -126,18 +126,6 @@ export class SpreadsheetPivotModel extends PivotModel {
 
         this.metadataRepository = services.metadataRepository;
 
-        /**
-         * Contains the domain of the values used during the evaluation of the formula =Pivot(...)
-         * Is used to know if a pivot cell is missing or not
-         * */
-
-        this._usedValueDomains = new Set();
-        /**
-         * Contains the domain of the headers used during the evaluation of the formula =Pivot.header(...)
-         * Is used to know if a pivot cell is missing or not
-         * */
-        this._usedHeaderDomains = new Set();
-
         this.runtime = new OdooPivotDataSource(params.definition, this.metaData.fields);
     }
 
@@ -149,46 +137,6 @@ export class SpreadsheetPivotModel extends PivotModel {
         searchParams.groupBy = [];
         searchParams.orderBy = [];
         await super.load(searchParams);
-    }
-
-    //--------------------------------------------------------------------------
-    // Cell missing
-    //--------------------------------------------------------------------------
-
-    /**
-     * Reset the used values and headers
-     */
-    clearUsedValues() {
-        this._usedHeaderDomains.clear();
-        this._usedValueDomains.clear();
-    }
-
-    /**
-     * Check if the given domain with the given measure has been used
-     */
-    isUsedValue(domain, measure) {
-        return this._usedValueDomains.has(measure + "," + domain.join());
-    }
-
-    /**
-     * Check if the given domain has been used
-     */
-    isUsedHeader(domain) {
-        return this._usedHeaderDomains.has(domain.join());
-    }
-
-    /**
-     * Indicate that the given domain has been used with the given measure
-     */
-    markAsValueUsed(domain, measure) {
-        this._usedValueDomains.add(measure + "," + domain.join());
-    }
-
-    /**
-     * Indicate that the given domain has been used
-     */
-    markAsHeaderUsed(domain) {
-        this._usedHeaderDomains.add(domain.join());
     }
 
     //--------------------------------------------------------------------------
