@@ -95,7 +95,7 @@ class TableCompute:
 
 class WebsiteSale(payment_portal.PaymentPortal):
     _express_checkout_route = '/shop/express_checkout'
-    _express_checkout_shipping_route = '/shop/express/shipping_address_change'
+    _express_checkout_delivery_route = '/shop/express/shipping_address_change'
 
     WRITABLE_PARTNER_FIELDS = [
         'name',
@@ -1178,6 +1178,25 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 new_values['parent_id'] = commercial_partner.id
         return new_values, errors, error_msg
 
+    def should_skip_delivery_step(self, delivery_methods):
+        """ Check if the delivery step should be skipped based on the available delivery methods.
+
+        :param delivery.carrier delivery_methods: The available delivery methods.
+        :return: Whether the delivery step should be skipped.
+        :rtype: bool
+        """
+        if not delivery_methods or len(delivery_methods) > 1:
+            # The user must choose the carrier or see a warning if no available ones.
+            return False
+        delivery_method = delivery_methods[0]
+        if hasattr(delivery_method, delivery_method.delivery_type + '_use_locations'):
+            # Check if the user must choose a pickup point.
+            use_location = getattr(
+                delivery_method, delivery_method.delivery_type + '_use_locations'
+            )
+            return not use_location
+        return True
+
     @route(['/shop/address'], type='http', methods=['GET', 'POST'], auth="public", website=True, sitemap=False)
     def address(self, **kw):
         Partner = request.env['res.partner'].with_context(show_address=1).sudo()
@@ -1298,7 +1317,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 # -> TDE: you are the guy that did what we should never do in commit e6f038a
                 order.message_partner_ids = [(4, partner_id), (3, request.website.partner_id.id)]
                 if not errors:
-                    return request.redirect(kw.get('callback') or '/shop/confirm_order')
+                    return request.redirect(kw.get('callback') or '/shop/checkout?express=1')
 
         is_public_user = request.website.is_public_user()
         render_values = {
@@ -1394,9 +1413,12 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 order_sudo.partner_shipping_id = child_partner_id or self._create_or_edit_partner(
                     shipping_address, type='delivery', parent_id=order_sudo.partner_id.id
                 )
-            # Process the delivery carrier
+            # Process the delivery method.
             if shipping_option:
-                order_sudo._check_carrier_quotation(force_carrier_id=int(shipping_option['id']))
+                delivery_method_sudo = request.env['delivery.carrier'].sudo().browse(
+                    int(shipping_option['id'])
+                ).exists()
+                order_sudo._set_delivery_method(delivery_method_sudo)
 
         return order_sudo.partner_id.id
 
@@ -1521,10 +1543,23 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if redirection:
             return redirection
 
-        if post.get('express'):
-            return request.redirect('/shop/confirm_order')
-
         values = self.checkout_values(order_sudo, **post)
+
+        should_skip_delivery = True  # Delivery is only needed for deliverable products.
+        if order_sudo._has_deliverable_products():
+            available_dms = values['delivery_methods'] = order_sudo._get_delivery_methods()
+            delivery_method = order_sudo._get_preferred_delivery_method(available_dms)
+            rate = delivery_method.rate_shipment(order_sudo)
+            if (
+                not order_sudo.carrier_id
+                or not rate.get('success')
+                or order_sudo.amount_delivery != rate['price']
+            ):
+                order_sudo._set_delivery_method(delivery_method, rate=rate)
+            should_skip_delivery = self.should_skip_delivery_step(available_dms)
+
+        if post.get('express') and should_skip_delivery:
+            return request.redirect('/shop/confirm_order')
 
         # Avoid useless rendering if called in ajax
         if post.get('xhr'):
@@ -1563,9 +1598,11 @@ class WebsiteSale(payment_portal.PaymentPortal):
             and partner_sudo != order_sudo.partner_shipping_id
         ):
             order_sudo.partner_shipping_id = partner_id
-            if order_sudo.carrier_id:
-                # update carrier rates on shipping address change
-                order_sudo._check_carrier_quotation(force_carrier_id=order_sudo.carrier_id.id)
+            if order_sudo.carrier_id and order_sudo._has_deliverable_products():
+                # Update the delivery method on shipping address change.
+                delivery_methods = order_sudo._get_delivery_methods()
+                delivery_method = order_sudo._get_preferred_delivery_method(delivery_methods)
+                order_sudo._set_delivery_method(delivery_method)
         else:
             # TODO someday we should gracefully handle invalid addresses
             return
@@ -1637,14 +1674,11 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'express_checkout_route': self._express_checkout_route,
             'landing_route': '/shop/payment/validate',
             'payment_method_unknown_id': request.env.ref('payment.payment_method_unknown').id,
+            'shipping_info_required': order._has_deliverable_products(),
+            'shipping_address_update_route': self._express_checkout_delivery_route,
         })
         if request.website.is_public_user():
             payment_form_values['partner_id'] = -1
-        if request.website.enabled_delivery:
-            payment_form_values.update({
-                'shipping_info_required': not order.only_services,
-                'shipping_address_update_route': self._express_checkout_shipping_route,
-            })
         return payment_form_values
 
     def _get_shop_payment_values(self, order, **kwargs):
@@ -1664,23 +1698,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'landing_route': '/shop/payment/validate',
             'sale_order_id': order.id,  # Allow Stripe to check if tokenization is required.
         }
-        values = {**checkout_page_values, **payment_form_values}
-        if request.website.enabled_delivery:
-            has_storable_products = any(
-                line.product_id.type in ['consu', 'product'] for line in order.order_line
-            )
-            if has_storable_products:
-                if order.carrier_id and not order.delivery_rating_success:
-                    order._remove_delivery_line()
-                    order._check_carrier_quotation()
-                values['deliveries'] = order._get_delivery_methods().sudo()
-
-            values['delivery_has_storable'] = has_storable_products
-            values['delivery_action_id'] = request.env.ref(
-                'delivery.action_delivery_carrier_form'
-            ).id
-
-        return values
+        return checkout_page_values | payment_form_values
 
     def _get_shop_payment_errors(self, order):
         """ Check that there is no error that should block the payment.
@@ -1691,11 +1709,11 @@ class WebsiteSale(payment_portal.PaymentPortal):
         """
         errors = []
 
-        if not order.only_services and not order._get_delivery_methods():
+        if order._has_deliverable_products() and not order._get_delivery_methods():
             errors.append((
-                _('Sorry, we are unable to ship your order'),
-                _('No shipping method is available for your current order and shipping address. '
-                   'Please contact us for more information.'),
+                _("Sorry, we are unable to ship your order."),
+                _("No shipping method is available for your current order and shipping address."
+                  " Please contact us for more information."),
             ))
         return errors
 
@@ -1711,20 +1729,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
            paying / canceling
         """
         order = request.website.sale_get_order()
-
-        if order and not order.only_services and (request.httprequest.method == 'POST' or not order.carrier_id):
-            # Update order's carrier_id (will be the one of the partner if not defined)
-            # If a carrier_id is (re)defined, redirect to "/shop/payment" (GET method to avoid infinite loop)
-            carrier_id = post.get('carrier_id')
-            keep_carrier = post.get('keep_carrier', False)
-            if keep_carrier:
-                keep_carrier = bool(int(keep_carrier))
-            if carrier_id:
-                carrier_id = int(carrier_id)
-            order._check_carrier_quotation(force_carrier_id=carrier_id, keep_carrier=keep_carrier)
-            if carrier_id:
-                return request.redirect("/shop/payment")
-
         redirection = self.checkout_redirection(order) or self.checkout_check_address(order)
         if redirection:
             return redirection

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo import http, _
 from odoo.addons.website_sale.controllers.main import WebsiteSale
-from odoo.addons.website_sale.controllers.delivery import WebsiteSaleDelivery
+from odoo.addons.website_sale.controllers.delivery import Delivery
 
 from odoo.exceptions import AccessDenied, UserError
 from odoo.http import request
@@ -28,6 +28,7 @@ class MondialRelay(http.Controller):
             'zip': data['CP'],
             'city': data['Ville'],
             'country_code': data['Pays'][:2].lower(),
+            'phone': order.partner_id.phone,
         })
         if order.partner_shipping_id != partner_shipping:
             order.partner_shipping_id = partner_shipping
@@ -53,16 +54,16 @@ class WebsiteSaleMondialrelay(WebsiteSale):
         return res
 
     def _check_shipping_partner_mandatory_fields(self, partner_id):
-        # skip check for mondialrelay partners as the user can not edit them
+        # skip check for mondialrelay partners as the customer can not edit them
         if partner_id.is_mondialrelay:
             return True
         return super()._check_shipping_partner_mandatory_fields(partner_id)
 
 
-class WebsiteSaleDeliveryMondialrelay(WebsiteSaleDelivery):
+class WebsiteSaleDeliveryMondialrelay(Delivery):
 
-    def _update_website_sale_delivery_return(self, order, **post):
-        res = super()._update_website_sale_delivery_return(order, **post)
+    def _order_summary_values(self, order, **post):
+        res = super()._order_summary_values(order, **post)
         if order.carrier_id.is_mondialrelay:
             res['mondial_relay'] = {
                 'brand': order.carrier_id.mondialrelay_brand,

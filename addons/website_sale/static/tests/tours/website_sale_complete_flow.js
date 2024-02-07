@@ -78,7 +78,7 @@
     {
         content: "Fulfill shipping address form",
         trigger: 'select[name="country_id"]',
-        extra_trigger: 'h3:contains("Shipping address")',
+        extra_trigger: 'h3:contains("Delivery address")',
         run: "selectByLabel Afghanistan",
     },
     {
@@ -149,10 +149,7 @@
         content: "Click on next button",
         trigger: '.oe_cart .btn:contains("Save address")',
     },
-    {
-        content: "Confirm Address",
-        trigger: 'a.btn:contains("Confirm")',
-    },
+        tourUtils.confirmOrder(),
     {
         content: "Check selected billing address is same as typed in previous step",
         trigger: '#shipping_and_billing:contains(SO1 Billing Street Edited, 33):contains(SO1BillingCityEdited):contains(Afghanistan)',
@@ -297,7 +294,7 @@
     },
     {
         content: "Add new shipping address",
-        trigger: '.all_shipping a[href^="/shop/address"]:contains("Add address")',
+        trigger: '.all_delivery a[href^="/shop/address"]:contains("Add address")',
     },
     {
         content: "Fulfill shipping address form",

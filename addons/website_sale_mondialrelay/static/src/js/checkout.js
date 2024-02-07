@@ -1,11 +1,11 @@
 /** @odoo-module **/
 
 import publicWidget from "@web/legacy/js/public/public_widget";
-import "@website_sale/js/website_sale_delivery";
+import "@website_sale/js/checkout";
 import { rpc } from "@web/core/network/rpc";
 import { renderToElement } from "@web/core/utils/render";
 
-const WebsiteSaleDeliveryWidget = publicWidget.registry.websiteSaleDelivery;
+const websiteSaleCheckoutWidget = publicWidget.registry.websiteSaleCheckout;
 
 // temporary for OnNoResultReturned bug
 import {registry} from "@web/core/registry";
@@ -18,10 +18,10 @@ function corsIgnoredErrorHandler(env, error) {
     }
 }
 
-WebsiteSaleDeliveryWidget.include({
+websiteSaleCheckoutWidget.include({
     events: Object.assign({
         "click #btn_confirm_relay": "_onClickBtnConfirmRelay",
-    }, WebsiteSaleDeliveryWidget.prototype.events),
+    }, websiteSaleCheckoutWidget.prototype.events),
 
     //--------------------------------------------------------------------------
     // Private
@@ -32,13 +32,13 @@ WebsiteSaleDeliveryWidget.include({
      *
      * @override
      */
-    _handleCarrierUpdateResult: async function (carrierInput) {
-        await this._super(...arguments);
-        if (this.result.mondial_relay) {
+    _updateAmountBadge(radio, result) {
+        this._super(...arguments);
+        if (result.mondial_relay) {
             if (!$('#modal_mondialrelay').length) {
-                this._loadMondialRelayModal(this.result);
+                this._loadMondialRelayModal(result);
             } else {
-                this.$modal_mondialrelay.find('#btn_confirm_relay').toggleClass('disabled', !this.result.mondial_relay.current);
+                this.$modal_mondialrelay.find('#btn_confirm_relay').toggleClass('disabled', !result.mondial_relay.current);
                 this.$modal_mondialrelay.modal('show');
             }
         }
@@ -49,7 +49,7 @@ WebsiteSaleDeliveryWidget.include({
      *
      * @private
      *
-     * @param {Object} result: dict returned by call of _update_website_sale_delivery_return (python)
+     * @param {Object} result: dict returned by call of _order_summary_values (python)
      */
     _loadMondialRelayModal: function (result) {
         // add modal to body and bind 'save' button

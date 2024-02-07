@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
 
-    <template id="checkout_delivery" inherit_id="website_sale.payment_delivery_methods">
-        <xpath expr="//input[@name='delivery_type']" position="attributes">
-            <attribute name="t-att-data-delivery-type">delivery.delivery_type</attribute>
-        </xpath>
-    </template>
-
     <template id="payment_method_form" inherit_id="payment.method_form">
         <xpath expr="//input[@name='o_payment_radio']" position="attributes">
             <attribute name="t-att-data-is-onsite">1 if provider_sudo.custom_mode == 'onsite' else 0</attribute>

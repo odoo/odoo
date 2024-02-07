@@ -160,6 +160,14 @@ class SaleOrder(models.Model):
             request.session.pop('successful_code')
         return code
 
+    def _set_delivery_method(self, *args, **kwargs):
+        super()._set_delivery_method(*args, **kwargs)
+        self._update_programs_and_rewards()
+
+    def _remove_delivery_line(self):
+        super()._remove_delivery_line()
+        self._update_programs_and_rewards()
+
     def _cart_update(self, *args, **kwargs):
         product_id, set_qty = kwargs['product_id'], kwargs.get('set_qty')
 
