@@ -402,97 +402,233 @@
         <field name="color" eval="4"/>
       </record>
 
-      <record id="model_category_1" model="fleet.vehicle.model.category">
-        <field name="name">Break</field>
-      </record>
-
-      <record id="model_category_2" model="fleet.vehicle.model.category">
-        <field name="name">SUV</field>
-      </record>
-
-      <record id="model_category_3" model="fleet.vehicle.model.category">
-        <field name="name">Sport Car</field>
-      </record>
-
-      <record id="model_category_4" model="fleet.vehicle.model.category">
+    <record id="model_category_sedan" model="fleet.vehicle.model.category">
+        <field name="name">Sedan</field>
+    </record>
+    <record id="model_category_estate" model="fleet.vehicle.model.category">
+        <field name="name">Estate</field>
+    </record>
+    <record id="model_category_compact" model="fleet.vehicle.model.category">
         <field name="name">Compact</field>
-      </record>
+    </record>
+    <record id="model_category_suv" model="fleet.vehicle.model.category">
+        <field name="name">SUV</field>
+    </record>
+    <record id="model_category_coupe" model="fleet.vehicle.model.category">
+        <field name="name">Coupe</field>
+    </record>
+    <record id="model_category_convertible" model="fleet.vehicle.model.category">
+        <field name="name">Convertible</field>
+    </record>
+    <record id="model_category_mpv" model="fleet.vehicle.model.category">
+        <field name="name">MPU</field>
+    </record>
+    <record id="model_category_bmx" model="fleet.vehicle.model.category">
+        <field name="name">BMX</field>
+    </record>
+    <record id="model_category_vtt" model="fleet.vehicle.model.category">
+        <field name="name">VTT</field>
+    </record>
+    <record id="model_category_city" model="fleet.vehicle.model.category">
+        <field name="name">City</field>
+    </record>
 
-      <record id="vehicle_1" model="fleet.vehicle">
-          <field name="license_plate">1-ACK-205</field>
-          <field name="vin_sn">5454541</field>
-          <field name="model_id" ref="model_astra"/>
-          <field name="color">Black</field>
-          <field name="location">Grand-Rosiere</field>
-          <field name="doors">5</field>
-          <field name="driver_id" ref="base.partner_demo" />
-          <field name="acquisition_date" eval="(DateTime.now() - timedelta(days=336)).strftime('%Y-%m-%d')" />
-          <field name="state_id" ref="fleet_vehicle_state_registered"/>
-          <field name="odometer_unit">kilometers</field>
-          <field name="car_value">20000</field>
-          <field name="manager_id" ref="base.user_admin"/>
-          <field eval="[(6,0,[ref('vehicle_tag_leasing'),ref('fleet.vehicle_tag_purchased'),ref('fleet.vehicle_tag_senior')])]" name="tag_ids"/>
-      </record>
+    <record id="model_corolla_ts" model="fleet.vehicle.model">
+        <field name="name">Corolla TS</field>
+        <field name="brand_id" ref="brand_toyota"/>
+        <field name="vehicle_type">car</field>
+        <field name="category_id" ref="model_category_estate"/>
+        <field name="seats">5</field>
+        <field name="doors">5</field>
+        <field name="model_year">0</field>
+        <field name="default_fuel_type">full_hybrid</field>
+        <field name="default_co2">102.00</field>
+        <field name="co2_standard">WLTP</field>
+        <field name="transmission">automatic</field>
+        <field name="power">90</field>
+        <field name="horsepower">122</field>
+        <field name="horsepower_tax">0.00</field>
+    </record>
+    <record id="model_golf_8" model="fleet.vehicle.model">
+        <field name="name">Golf 8</field>
+        <field name="brand_id" ref="brand_volkswagen"/>
+        <field name="vehicle_type">car</field>
+        <field name="category_id" ref="model_category_compact"/>
+        <field name="seats">5</field>
+        <field name="doors">5</field>
+        <field name="model_year">2024</field>
+        <field name="default_fuel_type">gasoline</field>
+        <field name="default_co2">117.00</field>
+        <field name="co2_standard">WLTP</field>
+        <field name="transmission">manual</field>
+        <field name="power">81</field>
+        <field name="horsepower">110</field>
+        <field name="horsepower_tax">0.00</field>
+    </record>
+    <record id="model_micra" model="fleet.vehicle.model">
+        <field name="name">Micra</field>
+        <field name="brand_id" ref="brand_nissan"/>
+        <field name="vehicle_type">car</field>
+        <field name="category_id" ref="model_category_compact"/>
+        <field name="seats">5</field>
+        <field name="doors">5</field>
+        <field name="model_year">2022</field>
+        <field name="default_fuel_type">gasoline</field>
+        <field name="default_co2">95.00</field>
+        <field name="co2_standard">WLTP</field>
+        <field name="transmission">manual</field>
+        <field name="power">89</field>
+        <field name="horsepower">121</field>
+        <field name="horsepower_tax">0.00</field>
+    </record>
+    <record id="model_focus" model="fleet.vehicle.model">
+        <field name="name">Focus</field>
+        <field name="brand_id" ref="brand_ford"/>
+        <field name="vehicle_type">car</field>
+        <field name="category_id" ref="model_category_sedan"/>
+        <field name="seats">5</field>
+        <field name="doors">5</field>
+        <field name="model_year">2024</field>
+        <field name="default_fuel_type">diesel</field>
+        <field name="default_co2">134.00</field>
+        <field name="co2_standard">WLTP</field>
+        <field name="transmission">manual</field>
+        <field name="power">85</field>
+        <field name="horsepower">115</field>
+        <field name="horsepower_tax">0.00</field>
+    </record>
+    <record id="model_clio" model="fleet.vehicle.model">
+        <field name="name">Clio</field>
+        <field name="brand_id" ref="brand_renault" />
+        <field name="vehicle_type">car</field>
+        <field name="category_id" ref="model_category_compact"/>
+        <field name="seats">5</field>
+        <field name="doors">5</field>
+        <field name="model_year">2023</field>
+        <field name="default_fuel_type">gasoline</field>
+        <field name="default_co2">118.00</field>
+        <field name="co2_standard">WLTP</field>
+        <field name="power">49</field>
+        <field name="horsepower">67</field>
+        <field name="horsepower_tax">0.00</field>
+    </record>
 
-      <record id="vehicle_2" model="fleet.vehicle">
-          <field name="license_plate">1-SYN-404</field>
-          <field name="vin_sn">1337</field>
-          <field name="model_id" ref="model_corsa"/>
-          <field name="color">Red</field>
-          <field name="location">Grand-Rosiere</field>
-          <field name="doors">5</field>
-          <field name="driver_id" ref="base.res_partner_address_25" />
-          <field name="acquisition_date" eval="(DateTime.now() - timedelta(days=233)).strftime('%Y-%m-%d')" />
-          <field name="state_id" ref="fleet_vehicle_state_downgraded"/>
-          <field name="odometer_unit">kilometers</field>
-          <field name="car_value">16000</field>
-          <field eval="[(6,0,[ref('vehicle_tag_leasing'),ref('fleet.vehicle_tag_purchased'),ref('fleet.vehicle_tag_junior')])]" name="tag_ids"/>
-      </record>
+    <record id="vehicle_1" model="fleet.vehicle">
+        <field name="license_plate">1-ACK-205</field>
+        <field name="vin_sn">5454541</field>
+        <field name="model_id" ref="model_micra"/>
+        <field name="color">Black</field>
+        <field name="location">Grand-Rosiere</field>
+        <field name="driver_id" ref="base.partner_demo" />
+        <field name="acquisition_date" eval="(DateTime.now() - timedelta(days=336)).strftime('%Y-%m-%d')" />
+        <field name="state_id" ref="fleet_vehicle_state_registered"/>
+        <field name="odometer_unit">kilometers</field>
+        <field name="car_value">20000</field>
+        <field name="category_id" ref="model_category_compact"/>
+        <field name="seats">5</field>
+        <field name="doors">5</field>
+        <field name="model_year">2022</field>
+        <field name="fuel_type">gasoline</field>
+        <field name="co2">95.00</field>
+        <field name="co2_standard">WLTP</field>
+        <field name="transmission">manual</field>
+        <field name="power">89</field>
+        <field name="horsepower">121</field>
+        <field name="manager_id" ref="base.user_admin"/>
+        <field eval="[(6,0,[ref('vehicle_tag_leasing'),ref('fleet.vehicle_tag_purchased'),ref('fleet.vehicle_tag_senior')])]" name="tag_ids"/>
+    </record>
 
-      <record id="vehicle_3" model="fleet.vehicle">
-          <field name="license_plate">1-BMW-001</field>
-          <field name="vin_sn">54818</field>
-          <field name="model_id" ref="model_serie1"/>
-          <field name="color">Titanium Grey</field>
-          <field name="location">Grand-Rosiere</field>
-          <field name="doors">3</field>
-          <field name="driver_id" ref="base.res_partner_address_17" />
-          <field name="acquisition_date" eval="time.strftime('%Y-%m-%d 2:00:00')" />
-          <field name="state_id" ref="fleet_vehicle_state_registered"/>
-          <field name="odometer_unit">kilometers</field>
-          <field name="car_value">20000</field>
-          <field eval="[(6,0,[ref('vehicle_tag_leasing'),ref('fleet.vehicle_tag_purchased'),ref('fleet.vehicle_tag_senior')])]" name="tag_ids"/>
-      </record>
+    <record id="vehicle_2" model="fleet.vehicle">
+        <field name="license_plate">1-SYN-404</field>
+        <field name="vin_sn">1337</field>
+        <field name="model_id" ref="model_focus"/>
+        <field name="color">Red</field>
+        <field name="location">Grand-Rosiere</field>
+        <field name="driver_id" ref="base.res_partner_address_25" />
+        <field name="acquisition_date" eval="(DateTime.now() - timedelta(days=233)).strftime('%Y-%m-%d')" />
+        <field name="state_id" ref="fleet_vehicle_state_downgraded"/>
+        <field name="odometer_unit">kilometers</field>
+        <field name="car_value">16000</field>
+        <field name="seats">5</field>
+        <field name="doors">5</field>
+        <field name="model_year">2024</field>
+        <field name="fuel_type">diesel</field>
+        <field name="co2">134.00</field>
+        <field name="co2_standard">WLTP</field>
+        <field name="transmission">manual</field>
+        <field name="power">85</field>
+        <field name="horsepower">115</field>
+        <field eval="[(6,0,[ref('vehicle_tag_leasing'),ref('fleet.vehicle_tag_purchased'),ref('fleet.vehicle_tag_junior')])]" name="tag_ids"/>
+    </record>
 
-       <record id="vehicle_4" model="fleet.vehicle">
-          <field name="license_plate">1-AUD-001</field>
-          <field name="vin_sn">455257985</field>
-          <field name="model_id" ref="model_a1"/>
-          <field name="color">White</field>
-          <field name="location">Grand-Rosiere</field>
-          <field name="doors">3</field>
-          <field name="driver_id" ref="base.res_partner_address_16" />
-          <field name="acquisition_date" eval="time.strftime('%Y-%m-%d 2:00:00')" />
-          <field name="state_id" ref="fleet_vehicle_state_registered"/>
-          <field name="odometer_unit">kilometers</field>
-          <field name="car_value">20000</field>
-          <field eval="[(6,0,[ref('vehicle_tag_leasing'),ref('fleet.vehicle_tag_purchased'),ref('fleet.vehicle_tag_senior')])]" name="tag_ids"/>
-      </record>
+    <record id="vehicle_3" model="fleet.vehicle">
+        <field name="license_plate">1-BMW-001</field>
+        <field name="vin_sn">54818</field>
+        <field name="model_id" ref="model_clio"/>
+        <field name="color">Titanium Grey</field>
+        <field name="location">Grand-Rosiere</field>
+        <field name="category_id" ref="model_category_compact"/>
+        <field name="seats">5</field>
+        <field name="doors">5</field>
+        <field name="model_year">2023</field>
+        <field name="fuel_type">gasoline</field>
+        <field name="co2">118.00</field>
+        <field name="co2_standard">WLTP</field>
+        <field name="power">49</field>
+        <field name="horsepower">67</field>
+        <field name="driver_id" ref="base.res_partner_address_17" />
+        <field name="acquisition_date" eval="time.strftime('%Y-%m-%d 2:00:00')" />
+        <field name="state_id" ref="fleet_vehicle_state_registered"/>
+        <field name="odometer_unit">kilometers</field>
+        <field name="car_value">20000</field>
+        <field eval="[(6,0,[ref('vehicle_tag_leasing'),ref('fleet.vehicle_tag_purchased'),ref('fleet.vehicle_tag_senior')])]" name="tag_ids"/>
+    </record>
 
-      <record id="vehicle_5" model="fleet.vehicle">
-          <field name="license_plate">1-MER-001</field>
-          <field name="vin_sn">789546128</field>
-          <field name="model_id" ref="model_classa"/>
-          <field name="color">Brown</field>
-          <field name="location">Grand-Rosiere</field>
-          <field name="doors">5</field>
-          <field name="driver_id" ref="base.res_partner_address_15" />
-          <field name="acquisition_date" eval="time.strftime('%Y-%m-%d 2:00:00')" />
-          <field name="state_id" ref="fleet_vehicle_state_registered"/>
-          <field name="odometer_unit">kilometers</field>
-          <field name="car_value">18000</field>
-          <field eval="[(6,0,[ref('vehicle_tag_leasing'),ref('fleet.vehicle_tag_purchased'),ref('fleet.vehicle_tag_senior')])]" name="tag_ids"/>
-      </record>
+    <record id="vehicle_4" model="fleet.vehicle">
+        <field name="license_plate">1-AUD-001</field>
+        <field name="vin_sn">455257985</field>
+        <field name="model_id" ref="model_golf_8"/>
+        <field name="color">White</field>
+        <field name="seats">5</field>
+        <field name="doors">5</field>
+        <field name="model_year">2024</field>
+        <field name="fuel_type">gasoline</field>
+        <field name="co2">117.00</field>
+        <field name="co2_standard">WLTP</field>
+        <field name="transmission">manual</field>
+        <field name="power">81</field>
+        <field name="horsepower">110</field>
+        <field name="location">Grand-Rosiere</field>
+        <field name="driver_id" ref="base.res_partner_address_16" />
+        <field name="acquisition_date" eval="time.strftime('%Y-%m-%d 2:00:00')" />
+        <field name="state_id" ref="fleet_vehicle_state_registered"/>
+        <field name="odometer_unit">kilometers</field>
+        <field name="car_value">20000</field>
+        <field eval="[(6,0,[ref('vehicle_tag_leasing'),ref('fleet.vehicle_tag_purchased'),ref('fleet.vehicle_tag_senior')])]" name="tag_ids"/>
+    </record>
+
+    <record id="vehicle_5" model="fleet.vehicle">
+        <field name="license_plate">1-MER-001</field>
+        <field name="vin_sn">789546128</field>
+        <field name="model_id" ref="model_corolla_ts"/>
+        <field name="color">Brown</field>
+        <field name="location">Grand-Rosiere</field>
+        <field name="seats">5</field>
+        <field name="doors">5</field>
+        <field name="model_year">0</field>
+        <field name="fuel_type">full_hybrid</field>
+        <field name="co2">102.00</field>
+        <field name="co2_standard">WLTP</field>
+        <field name="transmission">automatic</field>
+        <field name="power">90</field>
+        <field name="horsepower">122</field>
+        <field name="driver_id" ref="base.res_partner_address_15" />
+        <field name="acquisition_date" eval="time.strftime('%Y-%m-%d 2:00:00')" />
+        <field name="state_id" ref="fleet_vehicle_state_registered"/>
+        <field name="odometer_unit">kilometers</field>
+        <field name="car_value">18000</field>
+        <field eval="[(6,0,[ref('vehicle_tag_leasing'),ref('fleet.vehicle_tag_purchased'),ref('fleet.vehicle_tag_senior')])]" name="tag_ids"/>
+    </record>
 
       <record id="log_odometer_1" model="fleet.vehicle.odometer">
           <field name="vehicle_id" ref="vehicle_1" />
