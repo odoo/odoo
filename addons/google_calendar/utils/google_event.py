@@ -233,6 +233,6 @@ class GoogleEvent(abc.Set):
 
     def get_odoo_event(self, env):
         if self._get_model(env)._name == 'calendar.event':
-            return env['calendar.event'].browse(self.odoo_id(self.env))
+            return env['calendar.event'].browse(self.odoo_id(env))
         else:
-            return env['calendar.recurrence'].browse(self.odoo_id(self.env)).base_event_id
+            return env['calendar.recurrence'].browse(self.odoo_id(env)).base_event_id

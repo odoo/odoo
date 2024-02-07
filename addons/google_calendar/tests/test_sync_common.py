@@ -85,4 +85,4 @@ class TestSyncGoogle(HttpCase):
     def assertGoogleEventHasVideocallLocationInDescription(self, description=""):
         GoogleSync._google_insert.assert_called_once()
         args, _ = GoogleSync._google_insert.call_args
-        self.assertEqual(args[1].get('description'), description)
+        self.assertEqual(args[1].get('description').unescape(), description.unescape())

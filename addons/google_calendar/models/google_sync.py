@@ -73,7 +73,11 @@ class GoogleSync(models.AbstractModel):
         if self.env.user._get_google_sync_status() != "sync_paused":
             for record in self:
                 if record.need_sync and record.google_id:
-                    record.with_user(record._get_event_user())._google_patch(google_service, record.google_id, record._google_values(), timeout=3)
+                    record.with_user(record._get_event_user())._google_patch(
+                        google_service, record.google_id,
+                        record._google_values(),
+                        timeout=3
+                    )
 
         return result
 

@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import pytz
+import re
 from markupsafe import Markup
 from dateutil.parser import parse
 from dateutil.relativedelta import relativedelta
@@ -45,7 +46,7 @@ class Meeting(models.Model):
 
     @api.model
     def _get_google_synced_fields(self):
-        return {'name', 'description', 'allday', 'start', 'date_end', 'stop',
+        return {'name', 'description', 'videocall_location', 'allday', 'start', 'date_end', 'stop',
                 'attendee_ids', 'alarm_ids', 'location', 'privacy', 'active'}
 
     @api.model
@@ -94,7 +95,10 @@ class Meeting(models.Model):
         notify_context = self.env.context.get('dont_notify', False)
         if not notify_context and ([self.env.user.id != record.user_id.id for record in self]):
             self._check_modify_event_permission(values)
-        res = super(Meeting, self.with_context(dont_notify=notify_context)).write(values)
+        # check if the google url was deleted from odoo and needs to be cleared in google side
+        has_google_videocall_location = any(rec.videocall_location and rec.videocall_source == "google_meet" for rec in self)
+        clear_meet_url = has_google_videocall_location and 'videocall_location' in values and self.MEET_ROUTE not in values.get('videocall_location', '')
+        res = super(Meeting, self.with_context(dont_notify=notify_context, clear_meet_url=clear_meet_url)).write(values)
         if recurrence_update_setting in ('all_events',) and len(self) == 1 and values.keys() & self._get_google_synced_fields():
             self.recurrence_id.need_sync = True
         return res
@@ -135,7 +139,7 @@ class Meeting(models.Model):
             reminder_command = google_event.reminders.get('useDefault') and default_reminders or ()
         alarm_commands = self._odoo_reminders_commands(reminder_command)
         attendee_commands, partner_commands = self._odoo_attendee_commands(google_event)
-        related_event = self.search([('google_id', '=', google_event.id)], limit=1)
+        related_event = google_event.get_odoo_event(self.env)
         name = google_event.summary or related_event and related_event.name or _("(No title)")
         values = {
             'name': name,
@@ -146,10 +150,13 @@ class Meeting(models.Model):
             'attendee_ids': attendee_commands,
             'alarm_ids': alarm_commands,
             'recurrency': google_event.is_recurrent(),
-            'videocall_location': google_event.get_meeting_url() or related_event.videocall_location,
             'show_as': 'free' if google_event.is_available() else 'busy',
             'guests_readonly': not bool(google_event.guestsCanModify)
         }
+        if videocall_location := google_event.get_meeting_url():
+            values['videocall_location'] = videocall_location
+        elif related_event.videocall_source == "google_meet":
+            values["videocall_source"] = "discuss"
         if partner_commands:
             # Add partner_commands only if set from Google. The write method on calendar_events will
             # override attendee commands if the partner_ids command is set but empty.
@@ -316,6 +323,8 @@ class Meeting(models.Model):
         }
         if not self.google_id and not self.videocall_location and not self.location:
             values['conferenceData'] = {'createRequest': {'requestId': uuid4().hex}}
+        if self.google_id and self.env.context.get("clear_meet_url", False):
+            values['conferenceData'] = None
         if self.privacy:
             values['visibility'] = self.privacy
         if not self.active:
@@ -357,11 +366,13 @@ class Meeting(models.Model):
         return self.env.user
 
     def _google_description(self):
+        videocall_location_regex = r"\<a id=(?:'|\")o_videocall_location_url(?:'|\").+\<\/a\>"
         description = tools.html_sanitize(self.description) if not tools.is_html_empty(self.description) else ''
         if self.videocall_source and self.videocall_source != 'google_meet' and self.videocall_location:
-            if self.videocall_location in description:
-                return description
-            button = Markup("<a href='%s'>%s</a>") % (self.videocall_location, _('Join meeting'))
+            description = re.sub(videocall_location_regex, "", description)
+            description = description if not tools.is_html_empty(description) else ''
+            button = Markup("<a id='o_videocall_location_url' href='%s'>%s</a>") % (self.videocall_location, _('Join meeting'))
             new_description = button + description
             return new_description
-        return description
+        description = re.sub(videocall_location_regex, "", description)
+        return description if not tools.is_html_empty(description) else ''
