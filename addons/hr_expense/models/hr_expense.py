@@ -298,6 +298,10 @@ class HrExpense(models.Model):
         self.analytic_account_id = self.analytic_account_id or rec.analytic_id.id
         self.analytic_tag_ids = self.analytic_tag_ids or rec.analytic_tag_ids.ids
 
+    @api.onchange('company_id')
+    def _onchange_company_id(self):
+        self.account_id = False
+
     @api.constrains('payment_mode')
     def _check_payment_mode(self):
         self.sheet_id._check_payment_mode()
@@ -310,6 +314,23 @@ class HrExpense(models.Model):
                     'Selected Unit of Measure for expense %(expense)s does not belong to the same category as the Unit of Measure of product %(product)s.',
                     expense=expense.name, product=expense.product_id.name,
                 ))
+
+    @api.constrains('account_id', 'currency_id', 'payment_mode')
+    def _check_account_currency_consistency(self):
+        for expense in self:
+            account_currency = expense.account_id.currency_id
+            if account_currency and account_currency != expense.company_currency_id:
+                if account_currency != expense.currency_id:
+                    raise ValidationError(_(
+                        "The currency of the account %(account)s must be the same as the expense or the company's one.",
+                        account=expense.account_id.code
+                    ))
+                if expense.payment_mode == 'own_account':
+                    raise ValidationError(_(
+                        'The currency of the account %(account)s do not match the currency of the company '
+                        'because the employee needs to be reimbursed in this currency.',
+                        account=expense.account_id.code,
+                    ))
 
     def create_expense_from_attachments(self, attachment_ids=None, view_type='tree'):
         ''' Create the expenses from files.
