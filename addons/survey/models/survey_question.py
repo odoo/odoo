@@ -69,6 +69,7 @@ class SurveyQuestion(models.Model):
     survey_id = fields.Many2one('survey.survey', string='Survey', ondelete='cascade')
     scoring_type = fields.Selection(related='survey_id.scoring_type', string='Scoring Type', readonly=True)
     sequence = fields.Integer('Sequence', default=10)
+    session_available = fields.Boolean(related='survey_id.session_available', string='Live Session available', readonly=True)
     # page specific
     is_page = fields.Boolean('Is a page?')
     question_ids = fields.One2many('survey.question', string='Questions', compute="_compute_question_ids")
