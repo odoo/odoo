@@ -606,21 +606,14 @@ class MassMailing(models.Model):
 
     def action_duplicate(self):
         self.ensure_one()
-        mass_mailing_copy = self.copy()
-        if mass_mailing_copy:
-            context = dict(self.env.context)
-            action = {
+        if mass_mailing_copy := self.copy():
+            return {
                 'type': 'ir.actions.act_window',
                 'view_mode': 'form',
                 'res_model': 'mailing.mailing',
                 'res_id': mass_mailing_copy.id,
-                'context': context,
+                'context': dict(self.env.context),
             }
-            if self.mailing_type == 'mail':
-                action['views'] = [
-                    (self.env.ref('mass_mailing.mailing_mailing_view_form_full_width').id, 'form'),
-                ]
-            return action
         return False
 
     def action_test(self):
@@ -819,22 +812,17 @@ class MassMailing(models.Model):
         self.ensure_one()
         if not self.campaign_id:
             raise ValueError(_("No mailing campaign has been found"))
-        action = {
+        return {
             'name': _('A/B Tests'),
             'type': 'ir.actions.act_window',
             'view_mode': 'tree,kanban,form,calendar,graph',
             'res_model': 'mailing.mailing',
-            'domain': [('campaign_id', '=', self.campaign_id.id), ('ab_testing_enabled', '=', True), ('mailing_type', '=', self.mailing_type)],
+            'domain': expression.AND([
+                [('campaign_id', '=', self.campaign_id.id)],
+                [('ab_testing_enabled', '=', True)],
+                [('mailing_type', '=', self.mailing_type)]
+            ]),
         }
-        if self.mailing_type == 'mail':
-            action['views'] = [
-                (False, 'tree'),
-                (False, 'kanban'),
-                (self.env.ref('mass_mailing.mailing_mailing_view_form_full_width').id, 'form'),
-                (False, 'calendar'),
-                (False, 'graph'),
-            ]
-        return action
 
     def action_send_winner_mailing(self):
         """Send the winner mailing based on the winner selection field.
@@ -867,16 +855,12 @@ class MassMailing(models.Model):
             raise ValueError(_("A/B test option has not been enabled"))
         final_mailing = self.copy({
             'ab_testing_pc': 100,
-            'name': _(" %(subject)s (final)", subject=self.name) # Add suffix on name to show it's the final mailing
+            'name': _(" %(subject)s (final)", subject=self.name)  # Add suffix on name to show it's the final mailing
         })
         self.campaign_id.ab_testing_winner_mailing_id = final_mailing
         final_mailing.action_launch()
         action = self.env['ir.actions.act_window']._for_xml_id('mass_mailing.action_ab_testing_open_winner_mailing')
         action['res_id'] = final_mailing.id
-        if self.mailing_type == 'mail':
-            action['views'] = [
-                (self.env.ref('mass_mailing.mailing_mailing_view_form_full_width').id, 'form'),
-            ]
         return action
 
     def _get_ab_testing_description_values(self):
