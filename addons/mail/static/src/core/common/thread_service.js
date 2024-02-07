@@ -635,7 +635,10 @@ export class ThreadService {
      * @param {import("@mail/core/common/thread_model").Thread} thread
      * @param {boolean} pushState
      */
-    setDiscussThread(thread, pushState = true) {
+    setDiscussThread(thread, pushState) {
+        if (pushState === undefined) {
+            pushState = thread.localId !== this.store.discuss.threadLocalId;
+        }
         this.store.discuss.threadLocalId = thread.localId;
         const activeId =
             typeof thread.id === "string"
