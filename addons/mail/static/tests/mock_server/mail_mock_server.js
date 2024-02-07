@@ -47,7 +47,8 @@ async function attachmentUpload(request) {
 /** @type {RouteCallback} */
 async function attachmentDelete(request) {
     const { attachment_id } = await parseRequestParams(request);
-    this.env["bus.bus"]._sendone(this.env.partner, "ir.attachment/delete", {
+    const [partner] = this.env["res.partner"].read(this.env.partner_id);
+    this.env["bus.bus"]._sendone(partner, "ir.attachment/delete", {
         id: attachment_id,
     });
     return this.env["ir.attachment"].unlink([attachment_id]);
@@ -202,7 +203,8 @@ async function channelMute(request) {
         model: "discuss.channel",
         mute_until_dt,
     };
-    this.env["bus.bus"]._sendone(this.env.partner, "mail.record/insert", {
+    const [partner] = this.env["res.partner"].read(this.env.partner_id);
+    this.env["bus.bus"]._sendone(partner, "mail.record/insert", {
         MailThread: channel_data,
     });
     return "dummy";

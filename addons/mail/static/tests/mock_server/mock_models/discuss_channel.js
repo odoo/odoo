@@ -52,7 +52,8 @@ export class DiscussChannel extends models.ServerModel {
         this.write([channel.id], {
             channel_member_ids: [Command.delete(channelMember.id)],
         });
-        this.env["bus.bus"]._sendone(this.env.partner, "discuss.channel/leave", {
+        const [partner] = this.env["res.partner"].read(this.env.partner_id);
+        this.env["bus.bus"]._sendone(partner, "discuss.channel/leave", {
             id: channel.id,
         });
         this.env["bus.bus"]._sendone(channel, "mail.record/insert", {
@@ -182,7 +183,8 @@ export class DiscussChannel extends models.ServerModel {
             body: `<div class="o_mail_notification">created <a href="#" class="o_channel_redirect" data-oe-id="${id}">#${name}</a></div>`,
             message_type: "notification",
         });
-        this._broadcast(id, [this.env.partner]);
+        const [partner] = this.env["res.partner"].read(this.env.partner_id);
+        this._broadcast(id, [partner]);
         return this.channel_info([id])[0];
     }
 
@@ -431,12 +433,13 @@ export class DiscussChannel extends models.ServerModel {
                 is_pinned: pinned,
             });
         }
+        const [partner] = this.env["res.partner"].read(this.env.partner_id);
         if (!pinned) {
-            this.env["bus.bus"]._sendone(this.env.partner, "discuss.channel/unpin", {
+            this.env["bus.bus"]._sendone(partner, "discuss.channel/unpin", {
                 id: channel.id,
             });
         } else {
-            this.env["bus.bus"]._sendone(this.env.partner, "mail.record/insert", {
+            this.env["bus.bus"]._sendone(partner, "mail.record/insert", {
                 Thread: this.channel_info([channel.id])[0],
             });
         }
@@ -472,7 +475,8 @@ export class DiscussChannel extends models.ServerModel {
         this.env["discuss.channel.member"].write([memberIdOfCurrentUser], {
             custom_channel_name: name,
         });
-        this.env["bus.bus"]._sendone(this.env.partner, "mail.record/insert", {
+        const [partner] = this.env["res.partner"].read(this.env.partner_id);
+        this.env["bus.bus"]._sendone(partner, "mail.record/insert", {
             Thread: {
                 custom_channel_name: name,
                 id: channelId,
@@ -530,7 +534,8 @@ export class DiscussChannel extends models.ServerModel {
             Type <b>#channel</b> to mention a channel.<br>
             Type <b>/command</b> to execute a command.<br></span>
         `;
-        this.env["bus.bus"]._sendone(this.env.partner, "discuss.channel/transient_message", {
+        const [partner] = this.env["res.partner"].read(this.env.partner_id);
+        this.env["bus.bus"]._sendone(partner, "discuss.channel/transient_message", {
             body: notifBody,
             thread: { model: "discuss.channel", id: channel.id },
         });
@@ -573,7 +578,8 @@ export class DiscussChannel extends models.ServerModel {
                     .map((partner) => partner.name)
                     .join(", ")} and you`;
             }
-            this.env["bus.bus"]._sendone(this.env.partner, "discuss.channel/transient_message", {
+            const [partner] = this.env["res.partner"].read(this.env.partner_id);
+            this.env["bus.bus"]._sendone(partner, "discuss.channel/transient_message", {
                 body: `<span class="o_mail_notification">${message}</span>`,
                 thread: { model: "discuss.channel", id: channel.id },
             });
@@ -745,8 +751,9 @@ export class DiscussChannel extends models.ServerModel {
     set_message_pin(id, { message_id, pinned } = {}) {
         const pinnedAt = pinned && serializeDateTime(DateTime.now());
         this.env["mail.message"].write([message_id], { pinned_at: pinnedAt });
+        const [partner] = this.env["res.partner"].read(this.env.partner_id);
         const notification = `<div data-oe-type="pin" class="o_mail_notification">
-                ${this.env.partner.display_name} pinned a
+                ${partner.display_name} pinned a
                 <a href="#" data-oe-type="highlight" data-oe-id='${message_id}'>message</a> to this channel.
                 <a href="#" data-oe-type="pin-menu">See all pinned messages</a>
             </div>`;
@@ -871,8 +878,9 @@ export class DiscussChannel extends models.ServerModel {
             return;
         }
         this._setLastSeenMessage([channel.id], last_message_id);
+        const [partner] = this.env["res.partner"].read(this.env.partner_id);
         this.env["bus.bus"]._sendone(
-            channel.channel_type === "chat" ? channel : this.env.partner,
+            channel.channel_type === "chat" ? channel : partner,
             "discuss.channel.member/seen",
             {
                 channel_id: channel.id,
