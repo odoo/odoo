@@ -183,9 +183,7 @@ def url_for(url_from, lang_code=None):
         :param lang_code: Must be the lang `code`. It could also be something
                           else, such as `'[lang]'` (used for url_return).
     '''
-    new_url = False
     path, _, qs = (url_from or '').partition('?')
-
     routing = getattr(request, 'website_routing', None)  # not modular, but not overridable
     if (
         path
@@ -198,10 +196,10 @@ def url_for(url_from, lang_code=None):
             and not path.startswith('/web/')
         )
     ):
-        new_url, _ = request.env['ir.http'].url_rewrite(path)
-        new_url = new_url if not qs else new_url + '?%s' % qs
+        url_from, _ = request.env['ir.http'].url_rewrite(path)
+        url_from = url_from if not qs else url_from + '?%s' % qs
 
-    return url_lang(new_url or url_from, lang_code=lang_code)
+    return url_lang(url_from, lang_code=lang_code)
 
 
 def is_multilang_url(local_url, lang_url_codes=None):
