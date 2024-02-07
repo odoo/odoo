@@ -39,12 +39,18 @@
     min-width: fit-content;
     max-height: 350px !important;
 
-    .o_select_menu_sticky {
-        background-color: $dropdown-bg !important;
+    input {
         cursor: text !important;
     }
+    .o_select_menu_sticky {
+        background-color: $dropdown-bg !important;
+
+        &.o_select_menu_item.focus {
+            background: $dropdown-border-color !important;
+        }
+    }
     .o_select_menu_group {
-        top: 32px !important;
+        top: 40px !important;
         &:not(.o_select_menu_searchable_group) {
             top: -4px;
         }
