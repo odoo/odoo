@@ -51,3 +51,18 @@ class TestHttpCase(HttpCase):
                 self.assertEqual(text, "Object(custom=Object, value=1, description='dummy')")
                 console_log_count +=1
         self.assertEqual(console_log_count, 1)
+
+@tagged('-at_install', 'post_install')
+class TestRunbotLog(HttpCase):
+    def test_runbot_js_log(self):
+        """Test that a ChromeBrowser console.dir is handled server side as a log of level RUNBOT."""
+        log_message = 'this is a small test'
+        with self.assertLogs() as log_catcher:
+            self.browser_js("about:blank", f"console.runbot = console.dir; console.runbot('{log_message}'); console.log('test successful');")
+        found = False
+        for record in log_catcher.records:
+            if record.message == log_message:
+                self.assertEqual(record.levelno, logging.RUNBOT)
+                self.assertTrue(record.name.endswith('browser'))
+                found = True
+        self.assertTrue(found, "Runbot log not found")
