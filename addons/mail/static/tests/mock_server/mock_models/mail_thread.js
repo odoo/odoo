@@ -190,7 +190,8 @@ export class MailThread extends models.ServerModel {
             { notification_status: "canceled" }
         );
         // Send bus notifications to update status of notifications in the web client
-        this.env["bus.bus"]._sendone(this.env.partner, "mail.message/notification_update", {
+        const [partner] = this.env["res.partner"].read(this.env.partner_id);
+        this.env["bus.bus"]._sendone(partner, "mail.message/notification_update", {
             elements: this.env["mail.message"]._messageNotificationFormat(
                 notifications.map((notification) => notification.mail_message_id)
             ),

@@ -14,11 +14,8 @@ export class IrWebSocket extends models.ServerModel {
     _updatePresence(inactivityPeriod, imStatusIdsByModel) {
         const imStatusNotifications = this._getImStatus(imStatusIdsByModel);
         if (Object.keys(imStatusNotifications).length > 0) {
-            this.env["bus.bus"]._sendone(
-                this.env.partner,
-                "mail.record/insert",
-                imStatusNotifications
-            );
+            const [partner] = this.env["res.partner"].read(this.env.partner_id);
+            this.env["bus.bus"]._sendone(partner, "mail.record/insert", imStatusNotifications);
         }
     }
 

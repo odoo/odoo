@@ -52,7 +52,8 @@ export class DiscussChannelMember extends models.ServerModel {
                 is_minimized: foldState !== "closed",
             };
             this.write([memberOfCurrentUser.id], vals);
-            this.env["bus.bus"]._sendone(this.env.partner, "discuss.Thread/fold_state", {
+            const [partner] = this.env["res.partner"].read(this.env.partner_id);
+            this.env["bus.bus"]._sendone(partner, "discuss.Thread/fold_state", {
                 foldStateCount: state_count,
                 id: channel.id,
                 model: "discuss.channel",
