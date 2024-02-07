@@ -168,10 +168,8 @@ export class WebsitePreview extends Component {
             const backendIconEl = document.querySelector("link[rel~='icon']");
             // Save initial backend values.
             const backendIconHref = backendIconEl.href;
-            const { zopenerp } = this.title.getParts();
             this.iframe.el.addEventListener('load', () => {
                 // Replace backend values with frontend's ones.
-                this.title.setParts({ zopenerp: null });
                 const frontendIconEl = this.iframe.el.contentDocument.querySelector("link[rel~='icon']");
                 if (frontendIconEl) {
                     backendIconEl.href = frontendIconEl.href;
@@ -179,7 +177,6 @@ export class WebsitePreview extends Component {
             }, { once: true });
             return () => {
                 // Restore backend initial values when leaving.
-                this.title.setParts({ zopenerp, action: null });
                 backendIconEl.href = backendIconHref;
             };
         }, () => []);
