@@ -92,7 +92,7 @@ export function mockSession(getSession) {
 export function mockSessionFactory() {
     return () => ({
         get session() {
-            return { ...sessionValue };
+            return JSON.parse(JSON.stringify(sessionValue));
         },
     });
 }

@@ -16,11 +16,22 @@ declare module "@odoo/hoot-mock" {
     export * from "@web/../lib/hoot/hoot-mock";
 }
 
-type Factory<T = string> = (require: (dependency: T) => any) => any;
+interface OdooModule {
+    deps: string[];
+    fn: OdooModuleFactory;
+    ignoreMissingDeps: boolean;
+}
+
+type OdooModuleFactory<T = string> = (require: (dependency: T) => any) => any;
 
 class ModuleLoader {
-    define: <T = string>(name: string, deps: T[], factory: Factory<T>, lazy?: boolean) => void;
-    factories: Map<string, { fn: Factory; deps: string[] }>;
+    define: <T = string>(
+        name: string,
+        deps: T[],
+        factory: OdooModuleFactory<T>,
+        lazy?: boolean
+    ) => void;
+    factories: Map<string, OdooModule>;
     failed: Set<string>;
     jobs: Set<string>;
     modules: Map<string, any>;
