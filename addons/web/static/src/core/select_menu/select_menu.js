@@ -1,12 +1,13 @@
-import { Component, useState, useRef, onWillUpdateProps, useEffect } from "@odoo/owl";
+import { Component, onWillUpdateProps, useEffect, useRef, useState } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
-import { useDebounced } from "@web/core/utils/timing";
+import { TagsList } from "@web/core/tags_list/tags_list";
+import { mergeClasses } from "@web/core/utils/classname";
+import { useChildRef } from "@web/core/utils/hooks";
 import { scrollTo } from "@web/core/utils/scrolling";
 import { fuzzyLookup } from "@web/core/utils/search";
-import { TagsList } from "@web/core/tags_list/tags_list";
-import { useAutofocus } from "@web/core/utils/hooks";
+import { useDebounced } from "@web/core/utils/timing";
 
 export class SelectMenu extends Component {
     static template = "web.SelectMenu";
@@ -61,6 +62,7 @@ export class SelectMenu extends Component {
             },
         },
         class: { type: String, optional: true },
+        menuClass: { type: String, optional: true },
         togglerClass: { type: String, optional: true },
         required: { type: Boolean, optional: true },
         searchable: { type: Boolean, optional: true },
@@ -86,6 +88,7 @@ export class SelectMenu extends Component {
             searchValue: "",
         });
         this.inputRef = useRef("inputRef");
+        this.menuRef = useChildRef();
         this.debouncedOnInput = useDebounced(
             () => this.onInput(this.inputRef.el ? this.inputRef.el.value.trim() : ""),
             250
@@ -107,7 +110,6 @@ export class SelectMenu extends Component {
             },
             () => [this.props.choices, this.props.groups]
         );
-        useAutofocus({ refName: "inputRef" });
     }
 
     get displayValue() {
@@ -136,15 +138,28 @@ export class SelectMenu extends Component {
         });
     }
 
-    onStateChanged({ open }) {
+    get menuClass() {
+        return mergeClasses(
+            {
+                "o_select_menu_menu border bg-light": true,
+                "py-0": this.props.searchable,
+                o_select_menu_multi_select: this.props.multiSelect,
+            },
+            this.props.menuClass
+        );
+    }
+
+    onStateChanged(open) {
         this.isOpen = open;
+        this.inputRef.el?.focus();
+        this.menuRef.el?.addEventListener("scroll", (ev) => this.onScroll(ev));
 
         if (!open) {
             this.state.searchValue = "";
             return;
         }
 
-        const selectedElement = document.querySelector(".o_select_active");
+        const selectedElement = this.menuRef.el?.querySelectorAll(".o_select_active")[0];
         if (selectedElement) {
             scrollTo(selectedElement);
         }
@@ -180,21 +195,6 @@ export class SelectMenu extends Component {
         }
         if (this.props.onInput) {
             this.executeOnInput(searchString);
-        }
-    }
-
-    onSearchKeydown(ev) {
-        if (ev.key === "ArrowDown" || ev.key === "Enter") {
-            // Focus the first choice when navigating from the input using the arrow down key
-            const target = ev.target.parentElement.querySelector(".o_select_menu_item");
-            ev.target.classList.remove("focus");
-            target?.classList.add("focus");
-            target?.focus();
-            ev.preventDefault();
-        }
-        if (ev.key === "Enter" && this.state.choices.length === 1) {
-            // When there is only one displayed option, the enter key selects the value
-            ev.target.parentElement.querySelector(".o_select_menu_item").click();
         }
     }
 
@@ -264,18 +264,6 @@ export class SelectMenu extends Component {
         }
 
         this.sliceDisplayedOptions();
-    }
-
-    /**
-     * Returns each group starting index.
-     * @param {[]} choices
-     * @returns {[]}
-     */
-    getGroupsIndex(choices) {
-        if (choices.length === 0) {
-            return [];
-        }
-        return choices.flatMap((choice, index) => (index === 0 ? 0 : choice.isGroup ? index : []));
     }
 
     // ==========================================================================================

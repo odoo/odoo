@@ -53,16 +53,16 @@ QUnit.module('Task State Tests', {
             views: [[false, "kanban"]],
         });
 
-        assert.containsNone(target, '.o_field_project_task_state_selection .dropdown-menu', "If the state button has not been pressed yet, no dropdown should be displayed");
+        assert.containsNone(target, '.o-dropdown--menu', "If the state button has not been pressed yet, no dropdown should be displayed");
         await click(target.querySelector('div[name="state"]:first-child button.dropdown-toggle'));
-        assert.containsOnce(target, '.o_field_project_task_state_selection .dropdown-menu', "Once the button has been pressed the dropdown should appear");
+        assert.containsOnce(target, '.o-dropdown--menu', "Once the button has been pressed the dropdown should appear");
 
-        await click(target.querySelector('div[name="state"] .dropdown-menu span.text-danger'));
+        await click(target.querySelector('.o-dropdown--menu span.text-danger'));
         const times_button = target.querySelector('div[name="state"]:first-child button.dropdown-toggle i.fa-times-circle');
         assert.ok(times_button, "If the canceled state as been selected, the fa-times-circle icon should be displayed");
 
         await click(target.querySelector('div[name="state"] i.fa-hourglass-o'));
-        const waiting_dropdown_menu = target.querySelector('div[name="state"]:nth-of-type(3) button.dropdown-toggle dropdown-menu');
+        const waiting_dropdown_menu = target.querySelector('.o-dropdown--menu');
         assert.notOk(waiting_dropdown_menu , "When trying to click on the waiting icon, no dropdown menu should display");
     });
 });

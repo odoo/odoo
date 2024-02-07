@@ -1,5 +1,6 @@
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { DropdownGroup } from "@web/core/dropdown/dropdown_group";
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { debounce } from "@web/core/utils/timing";
@@ -17,35 +18,11 @@ const systrayRegistry = registry.category("systray");
 
 const getBoundingClientRect = Element.prototype.getBoundingClientRect;
 
-class NavBarDropdownItem extends DropdownItem {
-    static template = "web.NavBar.DropdownItem";
-    static props = {
-        ...DropdownItem.props,
-        style: { type: String, optional: true },
-    };
-}
-
-export class MenuDropdown extends Dropdown {
-    setup() {
-        super.setup();
-        useEffect(
-            () => {
-                if (this.props.xmlid) {
-                    this.togglerRef.el.dataset.menuXmlid = this.props.xmlid;
-                }
-            },
-            () => []
-        );
-    }
-}
-MenuDropdown.props.xmlid = {
-    type: String,
-    optional: true,
-};
+export class MenuDropdown extends Dropdown {}
 
 export class NavBar extends Component {
     static template = "web.NavBar";
-    static components = { Dropdown, DropdownItem: NavBarDropdownItem, MenuDropdown, ErrorHandler };
+    static components = { Dropdown, DropdownItem, DropdownGroup, MenuDropdown, ErrorHandler };
     static props = {};
 
     setup() {

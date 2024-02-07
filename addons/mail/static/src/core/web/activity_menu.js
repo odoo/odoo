@@ -3,8 +3,8 @@
 import { Component, useState } from "@odoo/owl";
 
 import { useDiscussSystray } from "@mail/utils/common/hooks";
-
 import { Dropdown } from "@web/core/dropdown/dropdown";
+import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { Domain } from "@web/core/domain";
@@ -22,6 +22,7 @@ export class ActivityMenu extends Component {
         this.action = useService("action");
         this.userId = user.userId;
         this.ui = useState(useService("ui"));
+        this.dropdown = useDropdownState();
     }
 
     onBeforeOpen() {
@@ -38,7 +39,7 @@ export class ActivityMenu extends Component {
     }
 
     openActivityGroup(group) {
-        document.body.click(); // hack to close dropdown
+        this.dropdown.close();
         const context = {
             // Necessary because activity_ids of mail.activity.mixin has auto_join
             // So, duplicates are faking the count and "Load more" doesn't show up

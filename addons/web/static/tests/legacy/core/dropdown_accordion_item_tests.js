@@ -1,14 +1,8 @@
 /** @odoo-module alias=@web/../tests/core/dropdown_accordion_item_tests default=false */
 
 import { Component, xml } from "@odoo/owl";
-import { browser } from "@web/core/browser/browser";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { AccordionItem } from "@web/core/dropdown/accordion_item";
-import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
-import { registry } from "@web/core/registry";
-import { uiService } from "@web/core/ui/ui_service";
-import { makeTestEnv } from "../helpers/mock_env";
+import { makeTestEnv } from "@web/../tests/helpers/mock_env";
+import { mountInFixture } from "@web/../tests/helpers/mount_in_fixture";
 import {
     click,
     getFixture,
@@ -16,7 +10,15 @@ import {
     nextTick,
     patchWithCleanup,
     triggerHotkey,
-} from "../helpers/utils";
+} from "@web/../tests/helpers/utils";
+import { browser } from "@web/core/browser/browser";
+import { AccordionItem } from "@web/core/dropdown/accordion_item";
+import { Dropdown } from "@web/core/dropdown/dropdown";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
+import { popoverService } from "@web/core/popover/popover_service";
+import { registry } from "@web/core/registry";
+import { uiService } from "@web/core/ui/ui_service";
 
 const serviceRegistry = registry.category("services");
 
@@ -27,6 +29,7 @@ QUnit.module("Components", ({ beforeEach }) => {
     beforeEach(async () => {
         serviceRegistry.add("hotkey", hotkeyService);
         serviceRegistry.add("ui", uiService);
+        serviceRegistry.add("popover", popoverService);
         target = getFixture();
         patchWithCleanup(browser, {
             setTimeout: (fn) => fn(),
@@ -44,11 +47,8 @@ QUnit.module("Components", ({ beforeEach }) => {
         }
         env = await makeTestEnv();
         await mount(Parent, target, { env });
-        assert.strictEqual(
-            target.querySelector(".o_accordion").outerHTML,
-            `<div class="o_accordion position-relative"><button class="o_menu_item o_accordion_toggle dropdown-item text-primary" tabindex="0" aria-expanded="false">Test</button></div>`
-        );
-        assert.containsOnce(target, "button.o_accordion_toggle");
+        assert.containsOnce(target, "div.o_accordion");
+        assert.containsOnce(target, ".o_accordion button.o_accordion_toggle");
         assert.containsNone(target, ".o_accordion_values");
 
         await click(target, "button.o_accordion_toggle");
@@ -63,20 +63,24 @@ QUnit.module("Components", ({ beforeEach }) => {
         class Parent extends Component {
             static template = xml`
                 <Dropdown>
-                    <DropdownItem>item 1</DropdownItem>
-                    <AccordionItem description="'item 2'" selected="false">
-                        <DropdownItem>item 2-1</DropdownItem>
-                        <DropdownItem>item 2-2</DropdownItem>
-                    </AccordionItem>
-                    <DropdownItem>item 3</DropdownItem>
+                    <button>dropdown</button>
+                    <t t-set-slot="content">
+                        <DropdownItem>item 1</DropdownItem>
+                        <AccordionItem description="'item 2'" selected="false">
+                            <DropdownItem>item 2-1</DropdownItem>
+                            <DropdownItem>item 2-2</DropdownItem>
+                        </AccordionItem>
+                        <DropdownItem>item 3</DropdownItem>
+                    </t>
                 </Dropdown>
             `;
             static components = { Dropdown, DropdownItem, AccordionItem };
             static props = ["*"];
         }
+
         env = await makeTestEnv();
-        await mount(Parent, target, { env });
-        await click(target, ".o-dropdown .dropdown-toggle");
+        await mountInFixture(Parent, target, { env });
+        await click(target, ".o-dropdown.dropdown-toggle");
 
         // Navigate with arrows
         assert.containsNone(
@@ -109,18 +113,19 @@ QUnit.module("Components", ({ beforeEach }) => {
             { key: "home", expected: "item 1" },
         ];
 
-        for (const step of scenarioSteps) {
+        for (let i = 0; i < scenarioSteps.length; i++) {
+            const step = scenarioSteps[i];
             triggerHotkey(step.key);
             await nextTick();
             assert.strictEqual(
                 target.querySelector(".dropdown-menu .focus").innerText,
                 step.expected,
-                `selected menu should be ${step.expected}`
+                `Step ${i}: selected menu should be ${step.expected}`
             );
             assert.strictEqual(
                 document.activeElement.innerText,
                 step.expected,
-                `document.activeElement should be ${step.expected}`
+                `Step ${i}: document.activeElement should be ${step.expected}`
             );
         }
     });

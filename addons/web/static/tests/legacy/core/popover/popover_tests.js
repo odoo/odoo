@@ -192,7 +192,7 @@ QUnit.test("reposition popover should properly change classNames", async (assert
     container.appendChild(popoverTarget);
     const sheet = document.createElement("style");
     sheet.textContent = `
-        [role=tooltip] {
+        .o_popover {
             background-color: cyan;
             height: 100px;
             width: 100px;
@@ -220,13 +220,13 @@ QUnit.test("reposition popover should properly change classNames", async (assert
         env,
         props: { target: popoverTarget, component: Content },
     });
-    const popover = container.querySelector("[role=tooltip]");
-    const arrow = popover.querySelector(".popover-arrow");
 
     // Should have classes for a "bottom-middle" placement
+    const popover = container.querySelector(".o_popover");
+    const arrow = container.querySelector(".popover-arrow");
     assert.strictEqual(
         popover.className,
-        "o_popover popover mw-100 bs-popover-bottom o-popover-bottom o-popover--bm"
+        "o_popover popover mw-100 o-popover--with-arrow bs-popover-bottom o-popover-bottom o-popover--bm"
     );
     assert.strictEqual(arrow.className, "popover-arrow start-0 end-0 mx-auto");
 
@@ -239,7 +239,7 @@ QUnit.test("reposition popover should properly change classNames", async (assert
     // Should have classes for a "right-end" placement
     assert.strictEqual(
         popover.className,
-        "o_popover popover mw-100 bs-popover-end o-popover-right o-popover--re"
+        "o_popover popover mw-100 o-popover--with-arrow bs-popover-end o-popover-right o-popover--re"
     );
     assert.strictEqual(arrow.className, "popover-arrow top-auto");
 });
@@ -264,7 +264,7 @@ QUnit.test("within iframe", async (assert) => {
     popoverTarget = iframe.contentDocument.getElementById("target");
     await mount(TestPopover, fixture, {
         env,
-        props: { target: popoverTarget, component: Content },
+        props: { target: popoverTarget, component: Content, animation: false },
     });
     assert.verifySteps(["bottom"]);
 
@@ -276,12 +276,13 @@ QUnit.test("within iframe", async (assert) => {
     );
 
     // The popover should be rendered in the correct position
+    const marginTop = parseFloat(getComputedStyle(popoverEl).marginTop);
     const { top: targetTop, left: targetLeft } = popoverTarget.getBoundingClientRect();
     const { top: iframeTop, left: iframeLeft } = iframe.getBoundingClientRect();
     let popoverBox = popoverEl.getBoundingClientRect();
-    let expectedTop = iframeTop + targetTop + popoverTarget.offsetHeight;
-    let expectedLeft =
-        iframeLeft + targetLeft + popoverTarget.offsetWidth / 2 - popoverBox.width / 2;
+    let expectedTop = iframeTop + targetTop + popoverTarget.offsetHeight + marginTop;
+    const expectedLeft =
+        iframeLeft + targetLeft + (popoverTarget.offsetWidth - popoverBox.width) / 2;
     assert.strictEqual(popoverBox.top, expectedTop);
     assert.strictEqual(popoverBox.left, expectedLeft);
 
@@ -292,8 +293,7 @@ QUnit.test("within iframe", async (assert) => {
     await nextTick();
     assert.verifySteps(["bottom"]);
     popoverBox = popoverEl.getBoundingClientRect();
-    expectedTop = iframeTop + targetTop + popoverTarget.offsetHeight - scrollOffset;
-    expectedLeft = iframeLeft + targetLeft + popoverTarget.offsetWidth / 2 - popoverBox.width / 2;
+    expectedTop -= scrollOffset;
     assert.strictEqual(popoverBox.top, expectedTop);
     assert.strictEqual(popoverBox.left, expectedLeft);
 });

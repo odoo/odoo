@@ -135,7 +135,7 @@
             'position-absolute top-0 mt-n3': env.inChatWindow or ui.isSmall,
             'ms-2 mt-1': !env.inChatWindow and !ui.isSmall,
             'invisible': !isActive,
-            'o-expanded': state.expandOptions
+            'o-expanded': optionsDropdown.isOpen
         }"
     >
         <div class="d-flex rounded-1 bg-view shadow-sm overflow-hidden" t-att-class="{
@@ -148,19 +148,21 @@
                     <i class="fa fa-lg" t-att-class="action.icon"/>
                 </button>
             </t>
-            <Dropdown t-if="messageActions.actions.length gt quickActionCount" onStateChanged="state => this.state.expandOptions = state.open" position="props.message.eq(props.thread?.newestMessage)  ? 'top-start' : 'bottom-start'" togglerClass="`btn p-0 rounded-0 ${ state.expandOptions ? 'bg-200' : '' }`" menuClass="'d-flex flex-column py-0 o-mail-Message-moreMenu'" class="'d-flex rounded-0'" title="expandText">
-                <t t-set-slot="toggler">
-                    <i class="btn px-1 py-0 fa fa-lg fa-ellipsis-h rounded-0" t-att-class="{ 'order-1': props.isInChatWindow }" tabindex="1"/>
-                </t>
-                <t t-set-slot="default">
-                    <t t-foreach="messageActions.actions.slice(quickActionCount)" t-as="action" t-key="action.id">
-                        <DropdownItem class="'px-2 d-flex align-items-center rounded-0'" title="action.title" onSelected="action.onClick">
-                            <i class="fa fa-lg fa-fw pe-2" t-att-class="action.icon"/>
-                            <t t-esc="action.title"/>
-                        </DropdownItem>
+            <div t-if="messageActions.actions.length gt quickActionCount" class="d-flex rounded-0">
+                <Dropdown state="optionsDropdown" position="props.message.eq(props.thread?.newestMessage)  ? 'top-start' : 'bottom-start'" menuClass="'d-flex flex-column py-0 o-mail-Message-moreMenu'" >
+                    <button t-att-class="`btn p-0 rounded-0 ${ optionsDropdown.isOpen ? 'bg-200' : '' }`" t-att-title="expandText">
+                        <i class="btn px-1 py-0 fa fa-lg fa-ellipsis-h rounded-0" t-att-class="{ 'order-1': props.isInChatWindow }" tabindex="1"/>
+                    </button>
+                    <t t-set-slot="content">
+                        <t t-foreach="messageActions.actions.slice(quickActionCount)" t-as="action" t-key="action.id">
+                            <DropdownItem class="'px-2 d-flex align-items-center rounded-0'" onSelected="action.onClick" attrs="{ title: action.title}">
+                                <i class="fa fa-lg fa-fw pe-2" t-att-class="action.icon"/>
+                                <t t-esc="action.title"/>
+                            </DropdownItem>
+                        </t>
                     </t>
-                </t>
-            </Dropdown>
+                </Dropdown>
+            </div>
         </div>
     </div>
 </t>

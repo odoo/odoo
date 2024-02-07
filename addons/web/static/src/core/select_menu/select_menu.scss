@@ -26,32 +26,37 @@
         color: red;
     }
 
-    .o_select_menu_menu {
-        min-width: fit-content;
-        max-height: 350px;
-
-        .o_select_menu_sticky {
-            background-color: $dropdown-bg !important;
-            cursor: text !important;
-        }
-        .o_select_menu_group {
-            top: 50px;
-        }
+    .o_tag {
+        margin: 2px;
     }
 
+    &--sticky {
+        position: sticky;
+    }
+}
+
+.o_select_menu_menu {
+    min-width: fit-content;
+    max-height: 350px !important;
+
+    .o_select_menu_sticky {
+        background-color: $dropdown-bg !important;
+        cursor: text !important;
+    }
+    .o_select_menu_group {
+        top: 32px !important;
+        &:not(.o_select_menu_searchable_group) {
+            top: -4px;
+        }
+    }
     .o_select_active {
         color: white;
     }
-
-    .o_select_menu_multi_select {
+    &.o_select_menu_multi_select {
         .o_select_active:hover {
             background: $o-danger !important;
             transition: background .5s;
         }
-    }
-
-    .o_tag {
-        margin: 2px;
     }
 }
 

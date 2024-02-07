@@ -28,27 +28,27 @@
                 </div>
             </th>
             <th class="align-middle" style="width: 32px; min-width: 32px">
-                <Dropdown
-                    class="'o_optional_columns_dropdown text-center border-top-0'"
-                    togglerClass="'btn p-0'"
-                    skipTogglerTabbing="true"
-                    position="'bottom-end'">
-                    <t t-set-slot="toggler">
-                        <i class="o_optional_columns_dropdown_toggle oi oi-fw oi-settings-adjust"/>
-                    </t>
+                <div class="o_optional_columns_dropdown text-center border-top-0">
+                    <Dropdown position="'bottom-end'">
+                        <button class="btn p-0" tabindex="-1">
+                            <i class="o_optional_columns_dropdown_toggle oi oi-fw oi-settings-adjust"/>
+                        </button>
 
-                    <t t-foreach="props.activityTypes" t-as="type" t-key="type_index">
-                        <DropdownItem parentClosingMode="'none'" onSelected="() => this.toggleDisplayColumn(type.id)">
-                            <CheckBox
-                                onChange="() => this.toggleDisplayColumn(type.id)"
-                                value="storageActiveColumns[type.id]"
-                                name="type.name"
-                            >
-                                <t t-esc="type.name"/>
-                            </CheckBox>
-                        </DropdownItem>
-                    </t>
-                </Dropdown>
+                        <t t-set-slot="content">
+                            <t t-foreach="props.activityTypes" t-as="type" t-key="type_index">
+                                <DropdownItem closingMode="'none'" onSelected="() => this.toggleDisplayColumn(type.id)">
+                                    <CheckBox
+                                        onChange="() => this.toggleDisplayColumn(type.id)"
+                                        value="storageActiveColumns[type.id]"
+                                        name="type.name"
+                                    >
+                                        <t t-esc="type.name"/>
+                                    </CheckBox>
+                                </DropdownItem>
+                            </t>
+                        </t>
+                    </Dropdown>
+                </div>
             </th>
         </tr>
     </thead>

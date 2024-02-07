@@ -15,16 +15,30 @@
     >
         <div class="o-mail-ChatWindow-header d-flex align-items-center flex-shrink-0 bg-100" t-on-click="onClickHeader" t-att-class="{ 'cursor-pointer': !ui.isSmall, 'border-bottom': !props.chatWindow.folded }">
             <t t-if="threadActions.actions.length > 3">
-                <Dropdown position="'bottom-start'" onStateChanged="state => this.onActionsMenuStateChanged(state)" togglerClass="`o-mail-ChatWindow-command d-flex btn align-items-center text-truncate p-0 p-1 ${ !ui.isSmall ? 'ms-2' : '' } ${state.actionsMenuOpened ? 'o-active' : ''}`" menuClass="'d-flex flex-column py-0'" class="'d-flex text-truncate'" disabled="state.editingName" title="actionsMenuTitleText">
-                    <t t-set-slot="toggler">
-                        <t t-call="mail.ChatWindow.headerContent"/>
-                    </t>
-                    <t t-set-slot="default">
-                        <t t-if="ui.isSmall" t-set="actions" t-value="threadActions.actions.slice(1, -1)"/>
-                        <t t-else="" t-set="actions" t-value="threadActions.actions.slice(1, -2)"/>
-                        <DropdownItem t-foreach="actions" t-as="action" t-key="action.id" class="'o-mail-ChatWindow-command btn rounded-0 d-flex align-items-center px-2 py-2 m-0 opacity-75 opacity-100-hover'" title="action.name" onSelected="() => action.onSelect()"><i t-att-class="action.icon"/><span class="mx-2" t-out="action.name"/></DropdownItem>
-                    </t>
-                </Dropdown>
+                <div class="d-flex text-truncate">
+                    <Dropdown position="'bottom-start'" onStateChanged="isOpen => this.onActionsMenuStateChanged(isOpen)" menuClass="'d-flex flex-column py-0'">
+                        <button
+                            class="o-mail-ChatWindow-command btn rounded-0 d-flex align-items-center px-2 py-2 m-0 opacity-75 opacity-100-hover"
+                            t-att-class="{ 'ms-2': !ui.isSmall, 'o-active': state.actionsMenuOpened }"
+                            t-att-disabled="state.editingName"
+                            t-att-title="actionsMenuTitleText"
+                        >
+                            <t t-call="mail.ChatWindow.headerContent"/>
+                        </button>
+                        <t t-set-slot="content">
+                            <t t-if="ui.isSmall" t-set="actions" t-value="threadActions.actions.slice(1, -1)"/>
+                            <t t-else="" t-set="actions" t-value="threadActions.actions.slice(1, -2)"/>
+                            <DropdownItem t-foreach="actions" t-as="action" t-key="action.id"
+                                class="'o-mail-ChatWindow-command btn rounded-0 d-flex align-items-center px-2 py-2 m-0 opacity-75 opacity-100-hover'"
+                                attrs="{ title: action.name }"
+                                onSelected="() => action.onSelect()"
+                            >
+                                <i t-att-class="action.icon"/>
+                                <span class="mx-2" t-out="action.name"/>
+                            </DropdownItem>
+                        </t>
+                    </Dropdown>
+                </div>
                 <AutoresizeInput
                     t-if="state.editingName"
                     className="'text-truncate fw-bold flex-shrink-1 me-1 py-0'"

@@ -434,7 +434,7 @@ function switchWebsite(websiteId, websiteName) {
     }, {
         content: `Switch to website '${websiteName}'`,
         extra_trigger: `iframe html:not([data-website-id="${websiteId}"])`,
-        trigger: `.o_website_switcher_container .dropdown-item:contains("${websiteName}")`,
+        trigger: `.o-dropdown--menu .dropdown-item:contains("${websiteName}")`,
     }, {
         content: "Wait for the iframe to be loaded",
         // The page reload generates assets for the new website, it may take

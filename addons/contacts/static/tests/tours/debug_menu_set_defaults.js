@@ -1,5 +1,5 @@
 /** @odoo-module **/
-    
+
     import { registry } from "@web/core/registry";
     import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
@@ -27,7 +27,7 @@
             },
             {
                 content: "Click the Set Defaults menu",
-                trigger: '.o_debug_manager .dropdown-item:contains(Set Defaults)',
+                trigger: '.dropdown-item:contains(Set Defaults)',
             },
             {
                 content: "Choose Company Type = Individual",

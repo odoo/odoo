@@ -26,7 +26,7 @@
         <t t-foreach="websiteSelection" t-as="website" t-key="website.id">
             <CheckboxItem class="{ o_menu_item: true, selected: state.activeWebsite.id === website.id }"
                 checked="state.activeWebsite.id === website.id"
-                parentClosingMode="'none'"
+                closingMode="'none'"
                 t-esc="website.name"
                 onSelected="() => this.onSelectWebsite(website)"
             />

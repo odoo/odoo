@@ -237,8 +237,9 @@ QUnit.test("share dashboard from dashboard view", async function (assert) {
             }
         },
     });
-    assert.strictEqual(target.querySelector(".spreadsheet_share_dropdown"), null);
+    assert.containsNone(target, ".spreadsheet_share_dropdown");
     await click(target, "i.fa-share-alt");
+    await nextTick();
     assert.equal(
         target.querySelector(".spreadsheet_share_dropdown")?.innerText,
         "Generating sharing link"

@@ -1,73 +1,105 @@
-// = New Owl Dropdown specific rules
-// -----------------------------------------------------------------------------
 .o-dropdown {
-  &--menu {
-    // Makes sure the dropdown menus are already in a
-    // fixed position before the positioning computations begin.
-    position: fixed;
-    margin-top: var(--Dropdown_menu-margin-y, #{map-get($spacers, 1)});
-    margin-bottom: var(--Dropdown_menu-margin-y, #{map-get($spacers, 1)});
-
-    &.o-dropdown--menu-submenu {
-      --Dropdown_menu-margin-y: 0;
+    &.dropdown-toggle::after {
+        content: none;
+        border: none;
     }
 
-    .dropdown-toggle:focus, .dropdown-item:focus {
-      background-color: transparent;
-      outline: none;
-    }
-    .dropdown-toggle.focus, .dropdown-item.focus {
-      background-color: $dropdown-link-hover-bg;
-    }
-    .dropdown-item:not(.disabled):not(:disabled) {
-      // Needed 'cause <DropdownItem> generate <span> html tags that for
-      // browsers are normally not clickable.
-      &, label {
-        cursor: pointer;
-      }
-    }
-
-    // Correctly align sub dropdowns items with its parent's
-    .o-dropdown > .o-dropdown--menu {
-      // the value comes from bootstrap's ".dropdown-menu" padding and border style
-      --o-dropdown--submenu-margin: calc(-.5rem - 1px);
-      margin-top: var(--o-dropdown--submenu-margin);
-      margin-bottom: var(--o-dropdown--submenu-margin);
-    }
-  }
-  /*!rtl:begin:ignore*/
-  &.dropup > .o-dropdown--menu,
-  &.dropdown > .o-dropdown--menu,
-  &.dropstart > .o-dropdown--menu,
-  &.dropend > .o-dropdown--menu {
-    // Also makes sure that left/right stuffs are not polluted
-    // by bootstrap rules processed by rtlcss
-    left: auto;
-    right: auto;
-    margin-left: 0;
-    margin-right: 0;
-  }
-  /*!rtl:end:ignore*/
-
-  &--no-caret {
-    > .dropdown-toggle {
-        &::before, &::after {
-            content: normal;
+    &button {
+        &.active,
+        &:hover,
+        &:focus,
+        &:active {
+            outline: none;
+            box-shadow: none !important;
         }
     }
-  }
 
-  button.dropdown-toggle {
-    &.active, &:hover, &:focus, &:active {
-      outline: none;
-      box-shadow: none !important;
+    /*!rtl:begin:ignore*/
+    &.dropup>.o-dropdown--menu,
+    &.dropdown>.o-dropdown--menu,
+    &.dropstart>.o-dropdown--menu,
+    &.dropend>.o-dropdown--menu {
+        // Also makes sure that left/right stuffs are not polluted
+        // by bootstrap rules processed by rtlcss
+        left: auto;
+        right: auto;
+        margin-left: 0;
+        margin-right: 0;
     }
-    &.dropdown-item {
-      &::after, &::before {
-        // Changes the placement of bootstrap dropdown carets for subdropdowns
-        @include o-position-absolute($right: 0, $top: 0);
-        transform: translate(-.6em, .6em) #{"/*rtl:translate(.6em, .6em) scaleX(-1)*/"};
-      }
+    /*!rtl:end:ignore*/
+}
+
+.o-dropdown,
+.o-dropdopwn-item,
+.o_menu_item {
+    &.o-dropdown-caret:not(.o-dropdown-no-caret) {
+        padding-right: 25px;
+
+        &:after {
+            content: "\f0d7";
+            font-family: FontAwesome;
+            margin-left: 10px;
+            display: inline-block;
+            vertical-align: middle;
+
+            transform: rotate(0deg);
+            transition: .25s ease-in-out;
+
+            position: absolute;
+            right: 10px;
+        }
+
+        &.show:after {
+            transform: rotate(180deg);
+        }
+
+        &.o-dropdown--has-parent {
+            &:after {
+                transform: rotate(-90deg);
+            }
+
+            &.o-dropdown--open:after {
+                transform: rotate(90deg);
+            }
+        }
     }
-  }
+}
+
+.o-dropdown--menu {
+    font-size: $dropdown-font-size;
+    margin-top: var(--Dropdown_menu-margin-y, #{map-get($spacers, 1)});
+    margin-bottom: var(--Dropdown_menu-margin-y, #{map-get($spacers, 1)});
+    background-color: $dropdown-bg;
+
+    &.popover {
+        // Sets the z-index to be the same as dialogs, this should ensure dropdowns
+        // appear behind or in front of dialogs based on the order they are opened.
+        z-index: 1055;
+    }
+
+    .dropdown-toggle:focus,
+    .dropdown-item:focus {
+        background-color: transparent;
+        outline: none;
+    }
+
+    .dropdown-toggle.focus,
+    .dropdown-item.focus {
+        background-color: $dropdown-link-hover-bg;
+    }
+
+    &.o-dropdown--menu-submenu {      // the value comes from bootstrap's ".dropdown-menu" padding and border style
+        --o-dropdown--submenu-margin: calc(-.5rem - 1px);
+        margin-top: var(--o-dropdown--submenu-margin);
+        margin-bottom: var(--o-dropdown--submenu-margin);
+    }
+
+    .dropdown-item:not(.disabled):not(:disabled) {
+
+        // Needed 'cause <DropdownItem> generate <span> html tags that for
+        // browsers are normally not clickable.
+        &, label {
+            cursor: pointer;
+        }
+    }
 }

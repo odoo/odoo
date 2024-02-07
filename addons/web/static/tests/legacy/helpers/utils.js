@@ -4,6 +4,7 @@ import { getTemplate } from "@web/core/templates";
 import { browser } from "@web/core/browser/browser";
 import { isMacOS } from "@web/core/browser/feature_detection";
 import { download } from "@web/core/network/download";
+import { getPopoverForTarget } from "@web/core/popover/popover";
 import { Deferred } from "@web/core/utils/concurrency";
 import { patch } from "@web/core/utils/patch";
 import { isVisible } from "@web/core/utils/ui";
@@ -616,7 +617,7 @@ export function editSelect(el, selector, value) {
 export async function editSelectMenu(el, selector, value) {
     const dropdown = el.querySelector(selector);
     await click(dropdown.querySelector(".dropdown-toggle"));
-    for (const item of Array.from(dropdown.querySelectorAll(".dropdown-item"))) {
+    for (const item of Array.from(el.querySelectorAll(".o_select_menu_menu .dropdown-item"))) {
         if (item.textContent === value) {
             return click(item);
         }
@@ -1022,6 +1023,31 @@ export async function drag(from, pointerType = "mouse") {
     });
 
     return dragHelpers;
+}
+
+/**
+ * Returns the dropdown menu for a specific toggler.
+ *
+ * @param {HTMLElement} target
+ * @param {String|HTMLElement} togglerSelector
+ * @returns {HTMLElement|undefined}
+ */
+export function getDropdownMenu(target, togglerSelector) {
+    if (!(target instanceof HTMLElement)) {
+        throw new Error(`getDropdownMenu: target is not an HTMLElement.`);
+    }
+    let el =
+        togglerSelector instanceof HTMLElement
+            ? togglerSelector
+            : target.querySelector(togglerSelector);
+
+    if (el && !el.classList.contains("o-dropdown")) {
+        el = el.querySelector(".o-dropdown");
+    }
+    if (!el) {
+        throw new Error(`getDropdownMenu: Could not find element "${togglerSelector}".`);
+    }
+    return getPopoverForTarget(el);
 }
 
 export async function clickDropdown(target, fieldName) {

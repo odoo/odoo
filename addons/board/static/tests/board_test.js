@@ -176,7 +176,7 @@ QUnit.module("Board", (hooks) => {
 
         // change layout to 1-1
         await click(target, ".o-dashboard-header .dropdown img");
-        await click(target, ".o-dashboard-header .dropdown-item:nth-child(2)");
+        await click(target, ".dropdown-item:nth-child(2)");
         assert.containsOnce(
             target,
             ".o-dashboard-header .dropdown img[data-src='/board/static/img/layout_1-1.png']"

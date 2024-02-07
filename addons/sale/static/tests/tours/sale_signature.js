@@ -26,7 +26,8 @@ registry.category("web_tour.tours").add('sale_signature', {
     },
     {
         content: "click style 4",
-        trigger: '.o_web_sign_auto_select_style .dropdown-item:eq(3)',
+        trigger: ".o-dropdown-item:eq(3)",
+        in_modal: false,
     },
     {
         content: "click submit",

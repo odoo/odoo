@@ -50,19 +50,10 @@
             }
         }
 
-        .dropdown.show > .dropdown-toggle {
+        .dropdown.show.dropdown-toggle {
             border-color: var(--NavBar-entry-borderColor-active, transparent);
             background: var(--NavBar-entry-backgroundColor--active, #{$o-navbar-entry-bg--active});
             color: var(--NavBar-entry-color--active, #{$o-navbar-entry-color--active});
-        }
-    }
-
-    .dropdown-menu {
-        border-top: $o-navbar-dropdown-menu-border-top;
-        border-radius: $o-navbar-dropdown-menu-border-radius;
-
-        .disabled {
-            cursor: default;
         }
     }
 

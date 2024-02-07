@@ -90,7 +90,7 @@ registry.category("web_tour.tours").add('project_todo_main_functions', {
     trigger: '.o_breadcrumb .o_control_panel_breadcrumbs_actions button',
     content: 'Convert the Todo to a task belonging to a project',
 }, {
-    trigger: '.o_breadcrumb .o_control_panel_breadcrumbs_actions .o_menu_item:contains("Convert to Task")',
+    trigger: '.o_menu_item:contains("Convert to Task")',
     content: "Click on the action menu 'Convert to task'",
 }, {
     trigger: '.o_todo_conversion_form_view .o_field_many2one[name=project_id] input',
