@@ -2,7 +2,7 @@
 
 import { after, before, describe, globals, start } from "@odoo/hoot";
 import { watchKeys } from "@odoo/hoot-dom";
-import { Deferred } from "@odoo/hoot-mock";
+import { Deferred, mockLocation } from "@odoo/hoot-mock";
 import { CONFIG_SUFFIX, TEST_SUFFIX } from "./mock_module_loader";
 import { mockSessionFactory } from "./mock_session.hoot";
 
@@ -116,6 +116,28 @@ const makeFixedFactory = (name) => {
 };
 
 /**
+ * Browser module needs to be mocked to patch the `location` global object since
+ * it can't be directly mocked on the window object.
+ *
+ * @param {string} name
+ * @param {OdooModule} module
+ */
+const mockBrowserFactory = (name, { fn }) => {
+    return (...args) => {
+        const browserModule = fn(...args);
+        Object.defineProperty(browserModule.browser, "location", {
+            set(value) {
+                mockLocation.href = value;
+            },
+            get() {
+                return mockLocation;
+            },
+        });
+        return browserModule;
+    };
+};
+
+/**
  * Toned-down version of the RPC + ORM features since this file cannot depend on
  * them.
  *
@@ -207,13 +229,12 @@ const runTests = async () => {
 
 const DEFAULT_MOCKS = {
     // Fixed modules
-    "@web/core/template_inheritance": makeFixedFactory("@web/core/template_inheritance"),
-    "@web/core/templates": makeFixedFactory("@web/core/templates"),
-    "web.assets_unit_tests_setup.bundle.xml": makeFixedFactory(
-        "web.assets_unit_tests_setup.bundle.xml"
-    ),
+    "@web/core/template_inheritance": makeFixedFactory,
+    "@web/core/templates": makeFixedFactory,
+    "web.assets_unit_tests_setup.bundle.xml": makeFixedFactory,
     // Other mocks
-    "@web/session": mockSessionFactory(),
+    "@web/core/browser/browser": mockBrowserFactory,
+    "@web/session": mockSessionFactory,
 };
 
 const dependencyCache = {};
@@ -254,7 +275,11 @@ export async function defineModuleSet(entryPoints, params) {
     for (const name of moduleNames) {
         if (name in mocks) {
             // Use mock
-            subLoader.factories.set(name, { deps: [], fn: mocks[name] });
+            const originalFactory = loader.factories.get(name);
+            subLoader.factories.set(name, {
+                deps: [],
+                fn: mocks[name](name, originalFactory),
+            });
             subLoader.startModule(name);
         } else if (loader.modules.has(name)) {
             // Keep the original instance

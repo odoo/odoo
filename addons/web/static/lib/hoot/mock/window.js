@@ -5,7 +5,9 @@ import { isInDOM, mockedMatchMedia } from "@web/../lib/hoot-dom/helpers/dom";
 import { MockMath } from "./math";
 import { mockNavigator } from "./navigator";
 import {
+    MockCookie,
     MockHistory,
+    MockLocation,
     MockRequest,
     MockResponse,
     MockSharedWorker,
@@ -149,18 +151,25 @@ const unregisterListener = (listeners, type, callback) => {
     }
 };
 
+// Early export: needed for mockHistory
+export const mockLocation = new MockLocation();
+
 /** @type {{ descriptor: PropertyDescriptor; owner: any; property: string; target: any }[]} */
 const originalDescriptors = [];
 const listenerMap = new Map();
 
-const mockHistory = new MockHistory();
+const mockCookie = new MockCookie();
+const mockHistory = new MockHistory(mockLocation);
 const mockLocalStorage = new MockStorage();
-// const mockLocation = new MockLocation(); // TODO: does not work
 const mockSessionStorage = new MockStorage();
 let mockTitle = "";
 
 // Mock descriptors
 const DOCUMENT_MOCK_DESCRIPTORS = {
+    cookie: {
+        get: () => mockCookie.get(),
+        set: (value) => mockCookie.set(value),
+    },
     title: {
         get: () => mockTitle,
         set: (value) => (mockTitle = value),
@@ -182,7 +191,6 @@ const WINDOW_MOCK_DESCRIPTORS = {
     fetch: { value: mockedFetch },
     history: { value: mockHistory },
     localStorage: { value: mockLocalStorage },
-    // location: { value: mockLocation }, // TODO: does not work
     matchMedia: { value: mockedMatchMedia },
     navigator: { value: mockNavigator },
     requestAnimationFrame: { value: mockedRequestAnimationFrame },
@@ -196,6 +204,13 @@ const WINDOW_MOCK_DESCRIPTORS = {
 //-----------------------------------------------------------------------------
 
 export function cleanupWindow() {
+    // Cookies
+    mockCookie.clear();
+
+
+    // Title
+    mockTitle = "";
+
     // Listeners
     for (const [target, listeners] of listenerMap) {
         if (!isInDOM(target)) {
