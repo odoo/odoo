@@ -10,28 +10,9 @@ patch(FloorScreen.prototype, {
     },
     async showDeliverooOrders() {
         const searchDetails = { fieldName: "RECEIPT_NUMBER", searchTerm: "Deliveroo" };
-        if (this.pos.shouldLoadOrders()) {
-            try {
-                this.pos.setLoadingOrderState(true);
-                const domain = [
-                    ["config_id", "=", this.pos.config.id],
-                    ["state", "=", "paid"],
-                ];
-                const message = await this.pos._syncAllOrdersFromServer(domain);
-                if (message) {
-                    this.notification.add(message, 5000);
-                }
-            } finally {
-                this.pos.setLoadingOrderState(false);
-                this.pos.showScreen("TicketScreen", {
-                    ui: { filter: "DELIVERY", searchDetails },
-                });
-            }
-        } else {
-            this.pos.showScreen("TicketScreen", {
-                ui: { filter: "DELIVERY", searchDetails },
-            });
-        }
+        this.pos.showScreen("TicketScreen", {
+            ui: { filter: "DELIVERY", searchDetails },
+        });
     },
     get deliverooOrderCount() {
         return this.pos.delivery_order_count.deliveroo.awaiting > 0

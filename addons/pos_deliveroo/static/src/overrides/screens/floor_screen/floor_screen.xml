@@ -3,7 +3,7 @@
     <t t-name="pos_delivroo.FloorScreen" t-inherit="pos_restaurant.FloorScreen" t-inherit-mode="extension">
         <xpath expr="//div[hasclass('floor-screen')]" position="inside">
             <div class="position-absolute bottom-0 start-50 translate-middle d-flex align-items-center justify-content-center">
-                <div class="delivery-logo position-relative">
+                <div t-if="pos.config.raw.delivery_service_ids.length" class="delivery-logo position-relative">
                     <img class="cursor-pointer ratio ratio-1x1 rounded-3" src="/pos_deliveroo/static/img/deliveroo.png" t-on-click="showDeliverooOrders" />
                     <span t-att-class="deliverooOrderCountClass" class="badge position-absolute start-100 top-0 translate-middle d-flex align-items-center justify-content-center rounded-circle">
                         <t t-esc="deliverooOrderCount"/>

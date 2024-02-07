@@ -62,6 +62,7 @@
                             </div>
                             <t t-if="!ui.isSmall" t-foreach="_filteredOrderList" t-as="order" t-key="order.cid">
                                 <div class="order-row" t-att-class="{ 'highlight bg-primary text-white': isHighlighted(order) }"
+                                    t-attf-class="{{ order.bgClass or '' }}"
                                     t-on-click="() => this.onClickOrder(order)" t-on-dblclick="() => order.locked ? ()=>{} : this._setOrder(order)" >
                                     <div class="col wide p-2 ">
                                         <div><t t-esc="getDate(order)"></t></div>

@@ -345,7 +345,7 @@ class PosOrder(models.Model):
     )
     delivery_service_id = fields.Many2one('pos.delivery.service', string='Delivery Service')
     delivery_id = fields.Char(string='Delivery ID')
-    delivery_status = fields.Selection([('awaiting', 'Awaiting'), ('preparing', 'Preparing'), ('complete', 'Complete'), ('cancelled', 'Cancelled')], string='Delivery Status')
+    delivery_status = fields.Selection([('awaiting', 'Awaiting'), ('accepted', 'Accepted'), ('preparing', 'Preparing'), ('complete', 'Complete'), ('cancelled', 'Cancelled')], string='Delivery Status')
     delivery_note = fields.Text(string='Delivery Note')
     payment_ids = fields.One2many('pos.payment', 'pos_order_id', string='Payments', readonly=True)
     session_move_id = fields.Many2one('account.move', string='Session Journal Entry', related='session_id.move_id', readonly=True, copy=False)
@@ -1237,11 +1237,15 @@ class PosOrder(models.Model):
 
     def accept_delivery_order(self):
         self.ensure_one()
-        self.env['pos.delivery.service'].search([('config_ids', 'in', self.config_id.id), ('service', 'ilike', self.delivery_service_id.name)])._accept_order(self.delivery_id)
+        status_to_send = 'accepted' if self.delivery_status == 'awaiting' else 'confirmed'
+        self.env['pos.delivery.service'].search([('config_ids', 'in', self.config_id.id), ('service', 'ilike', self.delivery_service_id.name)])._accept_order(self.delivery_id, status_to_send)
         self._post_delivery_accept_order()
 
     def _post_delivery_accept_order(self):
-        self.delivery_status = 'preparing'
+        if self.delivery_status == 'awaiting' and not self.delivery_asap:
+            self.delivery_status = 'accepted'
+        else:
+            self.delivery_status = 'preparing'
         self.session_id.config_id._send_delivery_order_count(self.id)
 
     def reject_delivery_order(self, reject_reason):

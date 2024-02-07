@@ -16,10 +16,12 @@ class PosDeliveryService(models.Model):
     def _get_available_services(self):
         return super()._get_available_services() + [("deliveroo", "Deliveroo")]
 
-    def _accept_order(self, id: int):
+    def _accept_order(self, id: int, status: str = ""):
         """
         used for tablet-less flow
         """
+        if not status:
+            status = "accepted"
         response = requests.patch(
             f"https://api-sandbox.developers.deliveroo.com/order/v1/orders/{id}",
             headers={
@@ -27,7 +29,7 @@ class PosDeliveryService(models.Model):
                 "content-type": "application/json",
                 "Authorization": f"Bearer {self._get_access_token()}",
             },
-            json={"status": "accepted"},
+            json={"status": status},
         )
         return response.status_code == 204
 

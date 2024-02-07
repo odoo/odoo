@@ -27,8 +27,12 @@ class PosDeliverooController(http.Controller):
         # is_order_duplicate = request.env['pos.order'].sudo().search([('pos_reference', '=', data['pos_reference'])])
         pos_config_sudo = pos_delivery_service_sudo.config_ids[0]
         order = data['body']['order']
-        if not pos_config_sudo.has_active_session:
+        if order['status'] == 'canceled' or not pos_config_sudo.has_active_session:
             request.env['pos.delivery.service'].sudo().search([])[0].sudo()._reject_order(order['id'], "closing_early")
+        if order['status'] == 'canceled':
+            pos_order = request.env['pos.order'].sudo().search([('delivery_id', '=', order['id'])])
+            if pos_order:
+                pos_order._post_delivery_reject_order()
         if not request.env['pos.order'].sudo().search([('delivery_id', '=', order['id'])]):
             order_prepare_for = order['prepare_for'].replace('T', ' ')[:-1]
             notes = ''

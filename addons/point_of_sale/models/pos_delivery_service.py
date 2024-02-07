@@ -35,7 +35,7 @@ class PosDeliveryService(models.Model):
     def _upload_menu(self):
         pass
 
-    def _accept_order(self, id: int):
+    def _accept_order(self, id: int, status: str = ""):
         pass
 
     def _reject_order(self, id: int, rejected_reason: str = "busy"):

@@ -363,7 +363,7 @@ export class TicketScreen extends Component {
         return this._state.ui.selectedOrder?.locked;
     }
     getFilteredOrderList() {
-        if (this._state.ui.filter == "SYNCED") {
+        if (this._state.ui.filter == "SYNCED" || this._state.ui.filter == "DELIVERY") {
             return this._state.syncedOrders.toShow;
         }
         const filterCheck = (order) => {
@@ -411,6 +411,7 @@ export class TicketScreen extends Component {
     getDeliveryStatus(order) {
         const statusCombination = {
             awaiting: "Awaiting",
+            accepted: "Accepted",
             preparing: "Preparing",
             complete: "Complete",
             cancelled: "Cancelled",
@@ -748,13 +749,17 @@ export class TicketScreen extends Component {
     _computeDeliveryOrdersDomain() {
         const { fieldName, searchTerm } = this._state.ui.searchDetails;
         if (!searchTerm) {
-            return [["delivery_id", "!=", ""]];
+            return [
+                ["delivery_id", "!=", ""],
+                ["amount_total", ">=", 0],
+            ];
         }
         const modelField = this._getSearchFields()[fieldName].modelField;
         if (modelField) {
             return [
                 [modelField, "ilike", `%${searchTerm}%`],
                 ["delivery_id", "!=", ""],
+                ["amount_total", ">=", 0],
             ];
         } else {
             return [];
@@ -772,6 +777,38 @@ export class TicketScreen extends Component {
     async _fetchDeliveryOrders() {
         const domain = this._computeDeliveryOrdersDomain();
         await this._fetchPaidOrders(domain);
+        this._state.syncedOrders.toShow.sort((a, b) => {
+            const delivery_status_value = {
+                awaiting: 1,
+                accepted: 2,
+                preparing: 3,
+                ready: 4,
+                complete: 5,
+                cancelled: 6,
+            };
+            return (
+                delivery_status_value[a.delivery_status] - delivery_status_value[b.delivery_status]
+            );
+        });
+        for (const order of this._state.syncedOrders.toShow) {
+            switch (order.delivery_status) {
+                case "awaiting":
+                    order.bgClass = "bg-warning";
+                    break;
+                case "accepted":
+                    order.bgClass = "bg-secondary";
+                    break;
+                case "preparing":
+                    order.bgClass = "bg-success";
+                    break;
+                case "ready":
+                    order.bgClass = "bg-info";
+                    break;
+                default:
+                    order.bgClass = "";
+                    break;
+            }
+        }
     }
     async _fetchPaidOrders(domain) {
         const limit = this._state.syncedOrders.nPerPage;
