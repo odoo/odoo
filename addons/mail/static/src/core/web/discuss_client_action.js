@@ -3,7 +3,7 @@
 import { Discuss } from "@mail/core/common/discuss";
 import { useMessaging, useStore } from "@mail/core/common/messaging_hook";
 
-import { Component, onWillStart, onWillUpdateProps } from "@odoo/owl";
+import { Component, onMounted, onWillUpdateProps } from "@odoo/owl";
 
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
@@ -27,7 +27,7 @@ export class DiscussClientAction extends Component {
         this.store = useStore();
         this.messaging = useMessaging();
         this.threadService = useService("mail.thread");
-        onWillStart(() => this.restoreDiscussThread(this.props));
+        onMounted(() => this.restoreDiscussThread(this.props));
         onWillUpdateProps((nextProps) => this.restoreDiscussThread(nextProps));
     }
 
@@ -63,8 +63,9 @@ export class DiscussClientAction extends Component {
             if (!thread.is_pinned) {
                 await this.threadService.pin(thread);
             }
-            this.threadService.setDiscussThread(thread);
+            this.threadService.setDiscussThread(thread, false);
         }
+        this.store.discuss.hasRestoredThread = true;
     }
 }
 

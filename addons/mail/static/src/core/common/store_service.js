@@ -106,6 +106,7 @@ export class Store {
         activeTab: "all", // can be 'mailbox', 'all', 'channel' or 'chat'
         isActive: false,
         threadLocalId: null,
+        hasRestoredThread: false,
         channels: {
             extraClass: "o-mail-DiscussCategory-channel",
             id: "channels",
