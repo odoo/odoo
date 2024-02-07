@@ -44,3 +44,9 @@ def post_init_hook(env):
     if request:
         env = env(context=request.default_context())
         request.website_routing = env['website'].get_current_website().id
+
+    # We need to do this after the module installation because the creation of
+    # the website.design triggers write in scss files and we cannot find the
+    # asset during the installation.
+    for website in env['website'].search([]):
+        env['website.design'].create({'website_id': website.id})

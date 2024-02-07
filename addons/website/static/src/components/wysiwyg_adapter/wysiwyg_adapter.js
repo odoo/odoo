@@ -414,6 +414,39 @@ export class WysiwygAdapterComponent extends Wysiwyg {
         }
     }
     /**
+     * Fetches and returns the design data related to the current website.
+     *
+     * @returns {Promise<Object>} the website design record.
+     */
+    async getWebsiteDesignData() {
+        if (this.designDataUpToDate) {
+            return this.designData;
+        }
+        if (!this.websiteDesignId) {
+            await this._fetchWebsiteDesignId();
+        }
+        [this.designData] = await this.orm.searchRead(
+            "website.design",
+            [["id", "=", this.websiteDesignId]],
+            [],
+        );
+        console.log("design record", this.designData);
+        this.designDataUpToDate = true;
+        return this.designData;
+    }
+    /**
+     * Customizes the website design record.
+     *
+     * @param {Object} vals - A dictionary of fields to update.
+     */
+    async customizeWebsiteDesignData(vals) {
+        this.designDataUpToDate = false;
+        if (!this.websiteDesignId) {
+            await this._fetchWebsiteDesignId();
+        }
+        await this.orm.write("website.design", [this.websiteDesignId], vals);
+    }
+    /**
      * @override
      */
     async destroy() {
@@ -437,6 +470,19 @@ export class WysiwygAdapterComponent extends Wysiwyg {
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * Fetches the website design id related to the current website.
+     *
+     * @private
+     */
+    async _fetchWebsiteDesignId() {
+        const [website] = await this.orm.searchRead(
+            "website",
+            [["id", "=", this.websiteService.currentWebsite.id.toString()]],
+            ["design_ids"]
+        );
+        this.websiteDesignId = website.design_ids[0];
+    }
     /**
      * Nothing to render for the website specialization.
      *
