@@ -6,5 +6,5 @@ import { patch } from "@web/core/utils/patch";
 patch(TicketScreen.prototype, {
     shouldHideDeleteButton() {
         return this.pos.is_french_country() || super.shouldHideDeleteButton(...arguments);
-    }
+    },
 });

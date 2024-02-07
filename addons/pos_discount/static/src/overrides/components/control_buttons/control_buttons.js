@@ -67,7 +67,13 @@ patch(ControlButtons.prototype, {
                     description:
                         `${pc}%, ` +
                         (tax_ids_array.length
-                            ? _t("Tax: %s", this.pos.mapTaxValues(taxIds).map(taxValues => `${taxValues.amount}%`).join(", "))
+                            ? _t(
+                                  "Tax: %s",
+                                  this.pos
+                                      .mapTaxValues(taxIds)
+                                      .map((taxValues) => `${taxValues.amount}%`)
+                                      .join(", ")
+                              )
                             : _t("No tax")),
                     extras: {
                         price_type: "automatic",

@@ -7,13 +7,16 @@ import { onMounted } from "@odoo/owl";
 patch(PaymentScreen.prototype, {
     setup() {
         super.setup(...arguments);
-            onMounted(() => {
-                const pendingPaymentLine = this.currentOrder.paymentlines.find(
-                    paymentLine => paymentLine.payment_method.use_payment_terminal === 'paytm' && (!paymentLine.is_done() && paymentLine.get_payment_status() !== 'pending')
-                );
-                if (pendingPaymentLine) {
-                    pendingPaymentLine.set_payment_status('force_done');
-                }
-            });
-        }
+        onMounted(() => {
+            const pendingPaymentLine = this.currentOrder.paymentlines.find(
+                (paymentLine) =>
+                    paymentLine.payment_method.use_payment_terminal === "paytm" &&
+                    !paymentLine.is_done() &&
+                    paymentLine.get_payment_status() !== "pending"
+            );
+            if (pendingPaymentLine) {
+                pendingPaymentLine.set_payment_status("force_done");
+            }
+        });
+    },
 });

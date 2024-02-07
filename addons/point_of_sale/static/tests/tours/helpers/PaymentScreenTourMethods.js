@@ -259,9 +259,9 @@ export function pay(method, amount) {
 export function isInvoiceButtonChecked() {
     return [
         {
-            content: 'check invoice button is checked',
-            trigger: '.js_invoice.highlight',
+            content: "check invoice button is checked",
+            trigger: ".js_invoice.highlight",
             run: () => {},
-        }
-    ]
+        },
+    ];
 }

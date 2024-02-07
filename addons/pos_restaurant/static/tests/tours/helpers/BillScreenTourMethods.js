@@ -23,7 +23,7 @@ export function isQRCodeShown() {
     return [
         {
             content: "QR codes are shown",
-            trigger: '#posqrcode',
+            trigger: "#posqrcode",
             run: () => {},
         },
     ];

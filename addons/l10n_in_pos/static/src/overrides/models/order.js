@@ -10,8 +10,8 @@ patch(Order.prototype, {
         if (this.get_partner()) {
             result.partner = this.get_partner();
         }
-        if (this.pos.company.country_id?.code === 'IN') {
-            result.l10n_in_hsn_summary = this._prepareL10nInHsnSummary()
+        if (this.pos.company.country_id?.code === "IN") {
+            result.l10n_in_hsn_summary = this._prepareL10nInHsnSummary();
         }
         return result;
     },
@@ -21,12 +21,12 @@ patch(Order.prototype, {
         const baseLines = [];
         this.orderlines.forEach((line) => {
             const hsnCode = line.get_product()?.l10n_in_hsn_code;
-            if(!hsnCode){
+            if (!hsnCode) {
                 return;
             }
 
             let taxes = line.tax_ids || line.product.taxes_id;
-            if(fiscalPosition){
+            if (fiscalPosition) {
                 taxes = this.pos.getTaxesAfterFiscalPosition(taxes, fiscalPosition);
             }
 
@@ -40,13 +40,18 @@ patch(Order.prototype, {
         });
 
         const hsnSummary = l10n_in_get_hsn_summary_table(baseLines, false);
-        if(hsnSummary){
-            for(const item of hsnSummary.items){
-                for(const key of ["tax_amount_igst", "tax_amount_cgst", "tax_amount_sgst", "tax_amount_cess"]){
+        if (hsnSummary) {
+            for (const item of hsnSummary.items) {
+                for (const key of [
+                    "tax_amount_igst",
+                    "tax_amount_cgst",
+                    "tax_amount_sgst",
+                    "tax_amount_cess",
+                ]) {
                     item[key] = this.env.utils.formatCurrency(item[key], true);
                 }
             }
         }
         return hsnSummary;
-    }
+    },
 });

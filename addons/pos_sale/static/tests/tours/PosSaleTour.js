@@ -151,35 +151,36 @@ registry.category("web_tour.tours").add("PosSettleOrderNotGroupable", {
             ProductScreen.selectedOrderlineHas("Product A", "0.50"),
             ProductScreen.checkOrderlinesNumber(4),
         ].flat(),
-    });
+});
 
-registry.category("web_tour.tours").add('PosSettleOrderWithNote', {
-        test: true,
-        url: '/pos/ui',
-        steps: () => [
+registry.category("web_tour.tours").add("PosSettleOrderWithNote", {
+    test: true,
+    url: "/pos/ui",
+    steps: () =>
+        [
             Dialog.confirm("Open session"),
             ProductScreen.controlButton("Quotation/Order"),
             ProductScreen.selectFirstOrder(),
             ProductScreen.checkCustomerNotes("Customer note 2--Customer note 3"),
             ProductScreen.clickPayButton(),
-            PaymentScreen.clickPaymentMethod('Bank'),
+            PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
             ReceiptScreen.checkCustomerNotes("Customer note 2--Customer note 3"),
             ReceiptScreen.clickNextOrder(),
-
         ].flat(),
-    });
+});
 
-registry.category("web_tour.tours").add('PosSettleAndInvoiceOrder', {
+registry.category("web_tour.tours").add("PosSettleAndInvoiceOrder", {
     test: true,
-    url: '/pos/ui',
-    steps: () => [
-        Dialog.confirm("Open session"),
-        ProductScreen.controlButton("Quotation/Order"),
-        ProductScreen.selectFirstOrder(),
-        ProductScreen.clickPayButton(),
-        PaymentScreen.clickPaymentMethod("Bank"),
-        PaymentScreen.clickInvoiceButton(),
-        PaymentScreen.clickValidate(),
-    ].flat(),
+    url: "/pos/ui",
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+            ProductScreen.controlButton("Quotation/Order"),
+            ProductScreen.selectFirstOrder(),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickInvoiceButton(),
+            PaymentScreen.clickValidate(),
+        ].flat(),
 });
