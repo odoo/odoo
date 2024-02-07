@@ -12,6 +12,7 @@
         'point_of_sale'
     ],
     'data': [
+        'security/ir.model.access.csv',
         'views/pos_order_line_views.xml',
     ],
     'demo': [
