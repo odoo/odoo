@@ -291,9 +291,9 @@
                                         readonly="not product_id"/>
                                     <field name="product_uom_qty" string="Demand" readonly="not is_initial_demand_editable"/>
                                     <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart"
-                                        invisible="quantity == 0 and forecast_availability &lt;= 0 or (parent.picking_type_code == 'outgoing' and state != 'draft')"/>
+                                        invisible="not product_id or product_uom_qty == 0 or quantity == 0 and forecast_availability &lt;= 0 or (parent.picking_type_code == 'outgoing' and state != 'draft')"/>
                                     <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart text-danger"
-                                        invisible="quantity &gt; 0 or forecast_availability &gt; 0 or (parent.picking_type_code == 'outgoing' and state != 'draft')"/>
+                                        invisible="not product_id or product_uom_qty == 0 or quantity &gt; 0 or forecast_availability &gt; 0 or (parent.picking_type_code == 'outgoing' and state != 'draft')"/>
                                     <field name="forecast_expected_date" column_invisible="True"/>
                                     <field name="forecast_availability" string="Forecast" optional="hide"
                                         column_invisible="parent.state in ('draft', 'done') or parent.picking_type_code != 'outgoing'" widget="forecast_widget"/>
