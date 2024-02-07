@@ -1226,4 +1226,43 @@ QUnit.module("Web Components", (hooks) => {
             "options have been filtered since the choices changed"
         );
     });
+
+    QUnit.test("search value is cleared when reopening the menu", async (assert) => {
+        class Parent extends Component {
+            static components = { SelectMenu };
+            static props = ["*"];
+            static template = xml`
+                <SelectMenu
+                    choices="state.choices"
+                    groups="state.groups"
+                    value="state.value"
+                    onInput.bind="onInput"
+                />
+            `;
+            setup() {
+                this.state = useState({
+                    choices: [
+                        { label: "Option A", value: "optionA" },
+                    ],
+                    value: "hello",
+                });
+            }
+
+            onInput(searchValue) {
+                assert.step("search=" + searchValue);
+            }
+        }
+
+        await mountInFixture(Parent, target, { env });
+        await open();
+        assert.verifySteps([], "onInput props has not been called initially");
+        await editInput(target, "input.o_select_menu_sticky", "a");
+        assert.verifySteps(["search=a"], "onInput props has been called with the right search string");
+
+        // opening the menu should clear the search string, trigger onInput and update the props
+        await triggerEvent(target, ".o_select_menu_toggler", "keydown", { key: "Escape" });
+        await open();
+        assert.verifySteps(["search="], "onInput props has been called with the empty search string");
+        assert.strictEqual(target.querySelector(".o_select_menu_sticky").value, "", "search input is empty");
+    });
 });
