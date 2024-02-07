@@ -155,7 +155,7 @@ class HolidaysAllocation(models.Model):
         self.is_officer = self.env.user.has_group("hr_holidays.group_hr_holidays_user")
 
     # Useless depends, so that name is computed on new, before saving the record
-    @api.depends_context('uid')
+    @api.depends_context('uid', 'form_view_ref')
     @api.depends('holiday_status_id')
     def _compute_description(self):
         self.check_access_rights('read')
@@ -654,6 +654,8 @@ class HolidaysAllocation(models.Model):
         allocations = super(HolidaysAllocation, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
         allocations._add_lastcalls()
         for allocation in allocations:
+            if self._context.get('form_view_ref') == 'hr_holidays.hr_leave_allocation_view_form_dashboard':
+                allocation.private_name = allocation.name
             partners_to_subscribe = set()
             if allocation.employee_id.user_id:
                 partners_to_subscribe.add(allocation.employee_id.user_id.partner_id.id)
