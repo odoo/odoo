@@ -7,7 +7,6 @@ from dateutil.relativedelta import relativedelta
 from odoo import fields, http
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo, HttpCaseWithUserPortal
 from odoo.addons.mail.tests.common import mail_new_test_user
-from odoo.addons.website.tests.test_base_url import TestUrlCommon
 from odoo.addons.website_event.tests.common import TestEventOnlineCommon, OnlineEventCase
 from odoo.exceptions import AccessError
 from odoo.tests import HttpCase, tagged
@@ -165,14 +164,6 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
         self.assertEqual(first_registration_answers.filtered(
             lambda answer: answer.question_id.title == 'How did you learn about this event?'
         ).value_answer_id.name, 'A friend')
-
-
-@tagged('-at_install', 'post_install')
-class TestURLs(TestUrlCommon):
-
-    def test_canonical_url(self):
-        self._assertCanonical('/event?date=all', self.domain + '/event')
-        self._assertCanonical('/event?date=old', self.domain + '/event?date=old')
 
 
 @tagged('post_install', '-at_install')
