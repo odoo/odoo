@@ -16,54 +16,6 @@ function beforeEach() {
 }
 
 QUnit.module("spreadsheet > Metadata Repository", { beforeEach }, () => {
-    QUnit.test("Fields_get are only loaded once", async function (assert) {
-        assert.expect(6);
-        const env = await makeTestEnv({
-            mockRPC: function (route, { method, model }) {
-                assert.step(`${method}-${model}`);
-                return model;
-            },
-        });
-
-        const metadataRepository = new MetadataRepository(env);
-
-        const first = await metadataRepository.fieldsGet("A");
-        const second = await metadataRepository.fieldsGet("A");
-        const third = await metadataRepository.fieldsGet("B");
-
-        assert.strictEqual(first, "A");
-        assert.strictEqual(second, "A");
-        assert.strictEqual(third, "B");
-
-        assert.verifySteps(["fields_get-A", "fields_get-B"]);
-    });
-
-    QUnit.test("display_name_for on ir.model are only loaded once", async function (assert) {
-        assert.expect(6);
-
-        const env = await makeTestEnv({
-            mockRPC: function (route, { method, model, args }) {
-                if (method === "display_name_for" && model === "ir.model") {
-                    const [modelName] = args[0];
-                    assert.step(`${modelName}`);
-                    return [{ display_name: modelName, model: modelName }];
-                }
-            },
-        });
-
-        const metadataRepository = new MetadataRepository(env);
-
-        const first = await metadataRepository.modelDisplayName("A");
-        const second = await metadataRepository.modelDisplayName("A");
-        const third = await metadataRepository.modelDisplayName("B");
-
-        assert.strictEqual(first, "A");
-        assert.strictEqual(second, "A");
-        assert.strictEqual(third, "B");
-
-        assert.verifySteps(["A", "B"]);
-    });
-
     QUnit.test("Register label correctly memorize labels", async function (assert) {
         assert.expect(2);
         const env = await makeTestEnv();

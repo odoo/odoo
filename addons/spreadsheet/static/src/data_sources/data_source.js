@@ -20,6 +20,8 @@ export class LoadableDataSource {
     constructor(params) {
         this._orm = params.orm;
         this._metadataRepository = params.metadataRepository;
+        /** @type {import("@spreadsheet/data_sources/server_data").ServerData} */
+        this.serverData = params.serverData;
         this._notifyWhenPromiseResolves = params.notifyWhenPromiseResolves;
         this._cancelPromise = params.cancelPromise;
 

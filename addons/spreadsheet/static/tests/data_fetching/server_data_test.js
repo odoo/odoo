@@ -3,6 +3,7 @@
 import { nextTick } from "@web/../tests/helpers/utils";
 import { LoadingDataError } from "@spreadsheet/o_spreadsheet/errors";
 import { BatchEndpoint, Request, ServerData } from "@spreadsheet/data_sources/server_data";
+import { Deferred } from "@web/core/utils/concurrency";
 
 QUnit.module("spreadsheet server data", {}, () => {
     QUnit.test("simple synchronous get", async (assert) => {
@@ -13,15 +14,15 @@ QUnit.module("spreadsheet server data", {}, () => {
             },
         };
         const serverData = new ServerData(orm, {
-            whenDataIsFetched: () => assert.step("data-fetched-notification"),
+            whenDataStartLoading: () => assert.step("data-fetching-notification"),
         });
         assert.throws(
             () => serverData.get("partner", "get_something", [5]),
             LoadingDataError,
             "it should throw when it's not loaded"
         );
+        assert.verifySteps(["partner/get_something", "data-fetching-notification"]);
         await nextTick();
-        assert.verifySteps(["partner/get_something", "data-fetched-notification"]);
         assert.deepEqual(serverData.get("partner", "get_something", [5]), 5);
         assert.verifySteps([]);
     });
@@ -34,15 +35,15 @@ QUnit.module("spreadsheet server data", {}, () => {
             },
         };
         const serverData = new ServerData(orm, {
-            whenDataIsFetched: () => assert.step("data-fetched-notification"),
+            whenDataStartLoading: () => assert.step("data-fetching-notification"),
         });
         assert.throws(
             () => serverData.get("partner", "get_something", [5]),
             LoadingDataError,
             "it should throw when it's not loaded"
         );
+        assert.verifySteps(["partner/get_something", "data-fetching-notification"]);
         await nextTick();
-        assert.verifySteps(["partner/get_something", "data-fetched-notification"]);
         assert.throws(() => serverData.get("partner", "get_something", [5]), Error);
         assert.verifySteps([]);
     });
@@ -55,7 +56,7 @@ QUnit.module("spreadsheet server data", {}, () => {
             },
         };
         const serverData = new ServerData(orm, {
-            whenDataIsFetched: () => assert.step("data-fetched-notification"),
+            whenDataStartLoading: () => assert.step("data-fetching-notification"),
         });
         const result = await serverData.fetch("partner", "get_something", [5]);
         assert.deepEqual(result, 5);
@@ -72,7 +73,7 @@ QUnit.module("spreadsheet server data", {}, () => {
             },
         };
         const serverData = new ServerData(orm, {
-            whenDataIsFetched: () => assert.step("data-fetched-notification"),
+            whenDataStartLoading: () => assert.step("data-fetching-notification"),
         });
         assert.rejects(serverData.fetch("partner", "get_something", [5]));
         assert.verifySteps(["partner/get_something"]);
@@ -88,7 +89,7 @@ QUnit.module("spreadsheet server data", {}, () => {
             },
         };
         const serverData = new ServerData(orm, {
-            whenDataIsFetched: () => assert.step("data-fetched-notification"),
+            whenDataStartLoading: () => assert.step("data-fetching-notification"),
         });
         const [result1, result2] = await Promise.all([
             serverData.fetch("partner", "get_something", [5]),
@@ -101,22 +102,27 @@ QUnit.module("spreadsheet server data", {}, () => {
     });
 
     QUnit.test("batch get with a single item", async (assert) => {
+        const deferred = new Deferred();
         const orm = {
             call: async (model, method, args) => {
+                await deferred;
                 assert.step(`${model}/${method}`);
                 return args[0];
             },
         };
         const serverData = new ServerData(orm, {
-            whenDataIsFetched: () => assert.step("data-fetched-notification"),
+            whenDataStartLoading: () => assert.step("data-fetching-notification"),
         });
         assert.throws(
             () => serverData.batch.get("partner", "get_something_in_batch", 5),
             LoadingDataError,
             "it should throw when it's not loaded"
         );
+        await nextTick(); // wait for the next tick for the batch to be called
+        assert.verifySteps(["data-fetching-notification"]);
+        deferred.resolve();
         await nextTick();
-        assert.verifySteps(["partner/get_something_in_batch", "data-fetched-notification"]);
+        assert.verifySteps(["partner/get_something_in_batch"]);
         assert.deepEqual(serverData.batch.get("partner", "get_something_in_batch", 5), 5);
         assert.verifySteps([]);
     });
@@ -129,7 +135,7 @@ QUnit.module("spreadsheet server data", {}, () => {
             },
         };
         const serverData = new ServerData(orm, {
-            whenDataIsFetched: () => assert.step("data-fetched-notification"),
+            whenDataStartLoading: () => assert.step("data-fetching-notification"),
         });
         assert.throws(
             () => serverData.batch.get("partner", "get_something_in_batch", 5),
@@ -142,7 +148,7 @@ QUnit.module("spreadsheet server data", {}, () => {
             "it should throw when it's not loaded"
         );
         await nextTick();
-        assert.verifySteps(["partner/get_something_in_batch", "data-fetched-notification"]);
+        assert.verifySteps(["partner/get_something_in_batch", "data-fetching-notification"]);
         assert.deepEqual(serverData.batch.get("partner", "get_something_in_batch", 5), 5);
         assert.deepEqual(serverData.batch.get("partner", "get_something_in_batch", 6), 6);
         assert.verifySteps([]);
@@ -159,7 +165,7 @@ QUnit.module("spreadsheet server data", {}, () => {
             },
         };
         const serverData = new ServerData(orm, {
-            whenDataIsFetched: () => assert.step("data-fetched-notification"),
+            whenDataStartLoading: () => assert.step("data-fetching-notification"),
         });
         assert.throws(
             () => serverData.batch.get("partner", "get_something_in_batch", 4),
@@ -180,11 +186,11 @@ QUnit.module("spreadsheet server data", {}, () => {
         assert.verifySteps([
             // one call for the batch
             "partner/get_something_in_batch",
+            "data-fetching-notification",
             // retries one by one
             "partner/get_something_in_batch",
             "partner/get_something_in_batch",
             "partner/get_something_in_batch",
-            "data-fetched-notification",
         ]);
         assert.deepEqual(serverData.batch.get("partner", "get_something_in_batch", 4), 4);
         assert.throws(() => serverData.batch.get("partner", "get_something_in_batch", 5), Error);
@@ -200,16 +206,16 @@ QUnit.module("spreadsheet server data", {}, () => {
             },
         };
         const serverData = new ServerData(orm, {
-            whenDataIsFetched: () => assert.step("data-fetched-notification"),
+            whenDataStartLoading: () => assert.step("data-fetching-notification"),
         });
         const promise = serverData.fetch("partner", "get_something", [5]);
         assert.throws(() => serverData.get("partner", "get_something", [5]), LoadingDataError);
-        const result = await promise;
-        await nextTick();
         assert.verifySteps(
-            ["partner/get_something", "partner/get_something", "data-fetched-notification"],
+            ["partner/get_something", "partner/get_something", "data-fetching-notification"],
             "it loads the data independently"
         );
+        const result = await promise;
+        await nextTick();
         assert.deepEqual(result, 5);
         assert.deepEqual(serverData.get("partner", "get_something", [5]), 5);
         assert.verifySteps([]);
@@ -223,12 +229,12 @@ QUnit.module("spreadsheet server data", {}, () => {
             },
         };
         const serverData = new ServerData(orm, {
-            whenDataIsFetched: () => assert.step("data-fetched-notification"),
+            whenDataStartLoading: () => assert.step("data-fetching-notification"),
         });
         assert.throws(() => serverData.get("partner", "get_something", [5]), LoadingDataError);
         const result = await serverData.fetch("partner", "get_something", [5]);
         assert.verifySteps(
-            ["partner/get_something", "partner/get_something", "data-fetched-notification"],
+            ["partner/get_something", "data-fetching-notification", "partner/get_something"],
             "it should have fetch the data once"
         );
         assert.deepEqual(result, 5);
@@ -244,13 +250,13 @@ QUnit.module("spreadsheet server data", {}, () => {
             },
         };
         const serverData = new ServerData(orm, {
-            whenDataIsFetched: () => assert.step("data-fetched-notification"),
+            whenDataStartLoading: () => assert.step("data-fetching-notification"),
         });
         assert.throws(() => serverData.batch.get("partner", "get_something", 5), LoadingDataError);
         const result = await serverData.fetch("partner", "get_something", [5]);
         await nextTick();
         assert.verifySteps(
-            ["partner/get_something", "partner/get_something", "data-fetched-notification"],
+            ["partner/get_something", "partner/get_something", "data-fetching-notification"],
             "it should have fetch the data once"
         );
         assert.deepEqual(result, 5);
@@ -266,13 +272,13 @@ QUnit.module("spreadsheet server data", {}, () => {
             },
         };
         const serverData = new ServerData(orm, {
-            whenDataIsFetched: () => assert.step("data-fetched-notification"),
+            whenDataStartLoading: () => assert.step("data-fetching-notification"),
         });
         assert.throws(() => serverData.batch.get("partner", "get_something", 5), LoadingDataError);
         assert.throws(() => serverData.get("partner", "get_something", [5]), LoadingDataError);
         await nextTick();
         assert.verifySteps(
-            ["partner/get_something", "data-fetched-notification"],
+            ["partner/get_something", "data-fetching-notification"],
             "it should have fetch the data once"
         );
         assert.deepEqual(serverData.get("partner", "get_something", [5]), 5);
@@ -290,7 +296,7 @@ QUnit.module("spreadsheet server data", {}, () => {
             },
         };
         const batchEndpoint = new BatchEndpoint(orm, "partner", "get_something", {
-            whenDataIsFetched: () => {},
+            whenDataStartLoading: () => {},
             successCallback: () => assert.step("success-callback"),
             failureCallback: () => assert.step("failure-callback"),
         });
