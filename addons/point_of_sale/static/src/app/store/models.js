@@ -515,7 +515,7 @@ export class Orderline extends PosModel {
             price_subtotal_incl: this.get_price_with_tax(),
             discount: this.get_discount(),
             product_id: product.id,
-            tax_ids: [[6, false, taxes.map(tax => tax.id)]],
+            tax_ids: [[6, false, taxes.map((tax) => tax.id)]],
             id: this.id,
             pack_lot_ids: pack_lot_ids,
             attribute_value_ids: this.attribute_value_ids || [],
@@ -599,7 +599,7 @@ export class Orderline extends PosModel {
 
         // Fiscal position.
         const order = this.pos.get_order();
-        if(order.fiscal_position){
+        if (order.fiscal_position) {
             taxes = this.pos.getTaxesAfterFiscalPosition(taxes, order.fiscal_position);
         }
 
@@ -630,7 +630,7 @@ export class Orderline extends PosModel {
         return this.pos.models["account.tax"].filter((tax) => taxes_ids.includes(tax.id));
     }
     getTaxIds() {
-        return this.get_taxes().map(tax => tax.id);
+        return this.get_taxes().map((tax) => tax.id);
     }
     /**
      * Calculate the amount of taxes of a specific Orderline, that are included in the price.
@@ -654,7 +654,7 @@ export class Orderline extends PosModel {
 
         // Fiscal position.
         const fiscalPosition = this.order.fiscal_position;
-        if(fiscalPosition){
+        if (fiscalPosition) {
             taxes = this.pos.getTaxesAfterFiscalPosition(taxes, fiscalPosition);
         }
 
@@ -670,7 +670,7 @@ export class Orderline extends PosModel {
 
         // Fiscal position.
         const fiscalPosition = this.order.fiscal_position;
-        if(fiscalPosition){
+        if (fiscalPosition) {
             taxes = this.pos.getTaxesAfterFiscalPosition(taxes, fiscalPosition);
         }
 
@@ -679,7 +679,7 @@ export class Orderline extends PosModel {
 
         // Tax details.
         const taxDetails = {};
-        for(const taxValues of taxesData.tax_values_list){
+        for (const taxValues of taxesData.tax_values_list) {
             taxDetails[taxValues.taxId] = {
                 amount: taxValues.tax_amount_factorized,
                 base: taxValues.display_base,
@@ -705,7 +705,7 @@ export class Orderline extends PosModel {
 
         // Fiscal position.
         const order = this.pos.get_order();
-        if(order && order.fiscal_position){
+        if (order && order.fiscal_position) {
             price = this.pos.getPriceUnitAfterFiscalPosition(taxes, price, order.fiscal_position);
         }
         return price;
@@ -1232,7 +1232,8 @@ export class Order extends PosModel {
                 qrCodeSrc(
                     `${this.pos.base_url}/pos/ticket/validate?access_token=${this.access_token}`
                 ),
-            ticket_code: this.pos.company.point_of_sale_ticket_unique_code &&
+            ticket_code:
+                this.pos.company.point_of_sale_ticket_unique_code &&
                 this.finalized &&
                 this.ticketCode,
             base_url: this.pos.base_url,
@@ -2110,12 +2111,8 @@ export class Order extends PosModel {
             const taxValuesList = line.get_all_prices().taxValuesList;
             for (const [i, taxValues] of taxValuesList.entries()) {
                 const taxId = taxValues.id;
-                if (!taxDetails.hasOwnProperty(taxId)) {
-                    taxDetails[taxId] = Object.assign(
-                        {},
-                        taxValues,
-                        { amount: 0.0, base: 0.0 },
-                    );
+                if (!taxDetails[taxId]) {
+                    taxDetails[taxId] = Object.assign({}, taxValues, { amount: 0.0, base: 0.0 });
                 }
                 if (i === 0) {
                     taxDetails[taxId].base += taxValues.display_base;
@@ -2360,7 +2357,8 @@ export class Order extends PosModel {
         let newPartnerPricelist, newPartnerFiscalPositionId;
         const defaultFiscalPositionId = this.pos.config.default_fiscal_position_id?.id;
         if (newPartner) {
-            newPartnerFiscalPositionId = newPartner.property_account_position_id?.id || defaultFiscalPositionId;
+            newPartnerFiscalPositionId =
+                newPartner.property_account_position_id?.id || defaultFiscalPositionId;
             newPartnerPricelist =
                 this.pos.models["product.pricelist"].find(
                     (pricelist) => pricelist.id === newPartner.property_product_pricelist?.id
@@ -2369,8 +2367,9 @@ export class Order extends PosModel {
             newPartnerFiscalPositionId = defaultFiscalPositionId;
             newPartnerPricelist = this.pos.default_pricelist;
         }
-        const fiscalPosition = this.pos.models["account.fiscal.position"]
-            .find(fp => fp.id === newPartnerFiscalPositionId);
+        const fiscalPosition = this.pos.models["account.fiscal.position"].find(
+            (fp) => fp.id === newPartnerFiscalPositionId
+        );
         this.set_fiscal_position(fiscalPosition);
         this.set_pricelist(newPartnerPricelist);
     }

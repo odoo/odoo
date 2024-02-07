@@ -10,7 +10,8 @@ patch(PosStore.prototype, {
         if (this.isPeruvianCompany()) {
             this["res.city"] = this.data["res.city"];
             this.consumidorFinalAnonimoId = this.data.custom["consumidor_final_anonimo_id"];
-            this.default_l10n_latam_identification_type_id = this.data.custom["default_l10n_latam_identification_type_id"];
+            this.default_l10n_latam_identification_type_id =
+                this.data.custom["default_l10n_latam_identification_type_id"];
             this["l10n_latam.identification.type"] = this.data["l10n_latam.identification.type"];
             this["l10n_pe.res.city.district"] = this.data["l10n_pe.res.city.district"];
         }

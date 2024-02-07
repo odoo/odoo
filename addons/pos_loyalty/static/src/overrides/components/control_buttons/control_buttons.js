@@ -13,7 +13,11 @@ patch(ControlButtons.prototype, {
         const claimableRewards = order.getClaimableRewards();
         return claimableRewards.filter((reward_line) => {
             const coupon = this.pos.couponCache[reward_line.coupon_id];
-            return coupon && reward_line.reward.program_id.program_type == 'ewallet' && !coupon.isExpired();
+            return (
+                coupon &&
+                reward_line.reward.program_id.program_type == "ewallet" &&
+                !coupon.isExpired()
+            );
         });
     },
     _getEWalletPrograms() {
@@ -26,8 +30,10 @@ patch(ControlButtons.prototype, {
         const eWalletRewards = this._getEWalletRewards(order);
         if (eWalletRewards.length === 0 && orderTotal >= 0) {
             this.dialog.add(AlertDialog, {
-                title: _t('No valid eWallet found'),
-                body: _t('You either have not created an eWallet or all your eWallets have expired.'),
+                title: _t("No valid eWallet found"),
+                body: _t(
+                    "You either have not created an eWallet or all your eWallets have expired."
+                ),
             });
             return;
         }

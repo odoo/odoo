@@ -5,6 +5,6 @@ export function checkCustomerNotes(note) {
         {
             content: `check customer notes`,
             trigger: `.customer-note:contains(${note})`,
-        }
+        },
     ];
 }

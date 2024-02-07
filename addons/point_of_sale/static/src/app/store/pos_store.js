@@ -388,7 +388,7 @@ export class PosStore extends Reactive {
 
         // Fiscal position.
         const order = this.get_order();
-        if(order && order.fiscal_position){
+        if (order && order.fiscal_position) {
             price = this.getPriceUnitAfterFiscalPosition(taxes, price, order.fiscal_position);
             taxes = this.getTaxesAfterFiscalPosition(taxes, order.fiscal_position);
         }
@@ -701,7 +701,7 @@ export class PosStore extends Reactive {
                     orders.push(this.createReactiveOrder(json));
                 } catch (error) {
                     console.warn(error);
-            }
+                }
             } else if (json.pos_session_id !== this.session.id) {
                 this.db.remove_unpaid_order(jsons[i]);
             }
@@ -1311,10 +1311,10 @@ export class PosStore extends Reactive {
 
     mapTaxValues(taxes) {
         const taxValuesMap = this.data.custom["account.tax"];
-        return taxes.filter(tax => taxValuesMap.hasOwnProperty(tax.id)).map(tax => taxValuesMap[tax.id]);
+        return taxes.filter((tax) => taxValuesMap[tax.id]).map((tax) => taxValuesMap[tax.id]);
     }
 
-    getTaxesAfterFiscalPosition(taxes, fiscalPosition){
+    getTaxesAfterFiscalPosition(taxes, fiscalPosition) {
         if (!fiscalPosition) {
             return taxes;
         }
@@ -1322,18 +1322,18 @@ export class PosStore extends Reactive {
         const fiscalPositionValues = this.data.custom["account.fiscal.position"][fiscalPosition.id];
         const newTaxIds = [];
         for (const tax of taxes) {
-            if (fiscalPositionValues.tax_mapping_by_id.hasOwnProperty(tax.id)) {
-                for (const mapTaxId of fiscalPositionValues.tax_mapping_by_id[tax.id]){
+            if (fiscalPositionValues.tax_mapping_by_id[tax.id]) {
+                for (const mapTaxId of fiscalPositionValues.tax_mapping_by_id[tax.id]) {
                     newTaxIds.push(mapTaxId);
                 }
             } else {
                 newTaxIds.push(tax.id);
             }
         }
-        return this.data["account.tax"].filter(tax => newTaxIds.includes(tax.id));
+        return this.data["account.tax"].filter((tax) => newTaxIds.includes(tax.id));
     }
 
-    getPriceUnitAfterFiscalPosition(taxes, priceUnit, fiscalPosition){
+    getPriceUnitAfterFiscalPosition(taxes, priceUnit, fiscalPosition) {
         if (!fiscalPosition) {
             return priceUnit;
         }
@@ -1342,8 +1342,8 @@ export class PosStore extends Reactive {
         return adapt_price_unit_to_another_taxes(
             priceUnit,
             this.mapTaxValues(taxes),
-            this.mapTaxValues(newTaxes),
-        )
+            this.mapTaxValues(newTaxes)
+        );
     }
 
     getTaxesValues(taxes, priceUnit, quantity, product) {
@@ -1529,7 +1529,7 @@ export class PosStore extends Reactive {
         // If there are orders in the db left unsynced, we try to sync.
         const syncSuccess = await this.push_orders_with_closing_popup();
         if (syncSuccess) {
-            window.location = '/web#action=point_of_sale.action_client_pos_menu';
+            window.location = "/web#action=point_of_sale.action_client_pos_menu";
         }
     }
     shouldShowNavbarButtons() {

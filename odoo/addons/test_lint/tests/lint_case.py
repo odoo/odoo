@@ -11,11 +11,11 @@ class LintCase(BaseCase):
     """ Utility method for lint-type cases
     """
 
-    def iter_module_files(self, *globs):
+    def iter_module_files(self, *globs, modules=None):
         """ Yields the paths of all the module files matching the provided globs
         (AND-ed)
         """
-        for modroot in map(get_module_path, get_modules()):
+        for modroot in map(get_module_path, modules or get_modules()):
             for root, _, fnames in os.walk(modroot):
                 fnames = [j(root, n) for n in fnames]
                 for glob in globs:

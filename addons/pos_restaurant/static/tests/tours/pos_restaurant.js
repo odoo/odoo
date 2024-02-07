@@ -158,32 +158,34 @@ registry.category("web_tour.tours").add("pos_restaurant_sync_second_login", {
 });
 
 registry.category("web_tour.tours").add("SaveLastPreparationChangesTour", {
-        test: true,
-        url: "/pos/ui",
-        steps: () => [
+    test: true,
+    url: "/pos/ui",
+    steps: () =>
+        [
             Dialog.confirm("Open session"),
             FloorScreen.clickTable("5"),
             ProductScreen.clickDisplayedProduct("Coca-Cola"),
             ProductScreen.selectedOrderlineHas("Coca-Cola", "1.0"),
             ProductScreen.clickOrderButton(),
-            ProductScreen.orderlinesHaveNoChange()
+            ProductScreen.orderlinesHaveNoChange(),
         ].flat(),
-    });
+});
 
 registry.category("web_tour.tours").add("BillScreenTour", {
     test: true,
-    steps: () => [
-        Dialog.confirm("Open session"),
-        FloorScreen.clickTable("5"),
-        ProductScreen.clickDisplayedProduct("Coca-Cola"),
-        ProductScreen.controlButton("Bill"),
-        negateStep(BillScreen.isQRCodeShown()),
-        BillScreen.closeBillPopup(),
-        ProductScreen.clickPayButton(),
-        PaymentScreen.clickPaymentMethod("Bank"),
-        PaymentScreen.clickValidate(),
-        BillScreen.isQRCodeShown(),
-    ].flat(),
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            ProductScreen.controlButton("Bill"),
+            negateStep(BillScreen.isQRCodeShown()),
+            BillScreen.closeBillPopup(),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            BillScreen.isQRCodeShown(),
+        ].flat(),
 });
 
 function mergeTableHelpers(childName, parentName) {

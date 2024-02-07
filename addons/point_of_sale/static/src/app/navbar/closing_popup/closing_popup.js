@@ -53,10 +53,7 @@ export class ClosePosPopup extends Component {
     }
 
     async confirm() {
-        if (
-            !this.pos.config.cash_control ||
-            this.env.utils.floatIsZero(this.getMaxDifference())
-        ) {
+        if (!this.pos.config.cash_control || this.env.utils.floatIsZero(this.getMaxDifference())) {
             await this.closeSession();
             return;
         }
@@ -106,9 +103,7 @@ export class ClosePosPopup extends Component {
         });
     }
     async downloadSalesReport() {
-        return this.report.doAction("point_of_sale.sale_details_report", [
-            this.pos.session.id,
-        ]);
+        return this.report.doAction("point_of_sale.sale_details_report", [this.pos.session.id]);
     }
     setManualCashInput(amount) {
         if (this.env.utils.isValidFloat(amount) && this.moneyDetails) {
