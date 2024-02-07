@@ -26,6 +26,6 @@ class PaymentPortalOnsite(PaymentPortal):
         ):
             raise ValidationError(_("You cannot pay onsite if the delivery is not onsite"))
 
-        # TODO should be managed in a `_compute_warehouse_id` or `update_eshop_carrier` override
+        # TODO should be managed in a `_compute_warehouse_id` override
         if sale_order.carrier_id.delivery_type == 'onsite' and sale_order.carrier_id.warehouse_id:
             sale_order.warehouse_id = sale_order.carrier_id.warehouse_id

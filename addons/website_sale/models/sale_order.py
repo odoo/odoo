@@ -627,48 +627,59 @@ class SaleOrder(models.Model):
             and not has_later_sale_order.get(abandoned_sale_order.partner_id, False)
         )
 
-    def _check_carrier_quotation(self, force_carrier_id=None, keep_carrier=False):
+    def _has_deliverable_products(self):
+        """ Return whether the order has lines with products that should be delivered.
+
+        :return: Whether the order has deliverable products.
+        :rtype: bool
+        """
+        return not self.only_services
+
+    def _remove_delivery_line(self):
+        super()._remove_delivery_line()
+        self.access_point_address = {}  # Reset the pickup point address.
+
+    def _get_preferred_delivery_method(self, available_delivery_methods):
+        """ Get the preferred delivery method based on available delivery methods for the order.
+
+        The preferred delivery method is selected as follows:
+
+        1. The one that is already set if it is compatible.
+        2. The default one if compatible.
+        3. The first compatible one.
+
+        :param delivery.carrier available_delivery_methods: The available delivery methods for
+               the order.
+        :return: The preferred delivery method for the order.
+        :rtype: delivery.carrier
+        """
         self.ensure_one()
-        DeliveryCarrier = self.env['delivery.carrier']
 
-        if self.only_services:
-            self._remove_delivery_line()
-            return True
-
-        self = self.with_company(self.company_id)
-        # attempt to use partner's preferred carrier
-        if not force_carrier_id and self.partner_shipping_id.property_delivery_carrier_id and not keep_carrier:
-            force_carrier_id = self.partner_shipping_id.property_delivery_carrier_id.id
-
-        carrier = force_carrier_id and DeliveryCarrier.browse(force_carrier_id) or self.carrier_id
-        available_carriers = self._get_delivery_methods()
-        if carrier:
-            if carrier not in available_carriers:
-                carrier = DeliveryCarrier
+        delivery_method = self.carrier_id
+        if available_delivery_methods and delivery_method not in available_delivery_methods:
+            if self.partner_shipping_id.property_delivery_carrier_id in available_delivery_methods:
+                delivery_method = self.partner_shipping_id.property_delivery_carrier_id
             else:
-                # set the forced carrier at the beginning of the list to be verfied first below
-                available_carriers -= carrier
-                available_carriers = carrier + available_carriers
-        if force_carrier_id or not carrier or carrier not in available_carriers:
-            for delivery in available_carriers:
-                verified_carrier = delivery._match_address(self.partner_shipping_id)
-                if verified_carrier:
-                    carrier = delivery
-                    break
-            self.write({'carrier_id': carrier.id})
+                delivery_method = available_delivery_methods[0]
+        return delivery_method
+
+    def _set_delivery_method(self, delivery_method, rate=None):
+        """ Set the delivery method on the order and create a delivery line if the shipment rate can
+         be retrieved.
+
+        :param delivery.carrier delivery_method: The delivery_method to set on the order.
+        :param dict rate: The rate of the delivery method.
+        :return: None
+        """
+        self.ensure_one()
+
         self._remove_delivery_line()
-        if carrier:
-            res = carrier.rate_shipment(self)
-            if res.get('success'):
-                self.set_delivery_line(carrier, res['price'])
-                self.delivery_rating_success = True
-                self.delivery_message = res['warning_message']
-            else:
-                self.set_delivery_line(carrier, 0.0)
-                self.delivery_rating_success = False
-                self.delivery_message = res['error_message']
+        if not delivery_method or not self._has_deliverable_products():
+            return
 
-        return bool(carrier)
+        rate = rate or delivery_method.rate_shipment(self)
+        if rate.get('success'):
+            self.set_delivery_line(delivery_method, rate['price'])
 
     def _get_delivery_methods(self):
         # searching on website_published will also search for available website (_search method on computed field)

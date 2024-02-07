@@ -34,20 +34,11 @@ class PaymentProvider(models.Model):
             report=report,
             **kwargs,
         )
-        # Show on site picking only if delivery carriers onsite exists
-        onsite_carriers = self.env['delivery.carrier'].search([
-            ('website_published', '=', True),
-            ('delivery_type', '=', 'onsite'),
-            ('company_id', 'in', [False, company_id]),
-            '|',
-                ('website_id', '=?', website_id),
-                ('website_id', '=', False),
-        ])
         order = self.env['sale.order'].browse(sale_order_id).exists()
 
         # Show onsite providers only if onsite carriers exists
         # and the order contains physical products
-        if not onsite_carriers or not any(
+        if order.carrier_id.delivery_type != 'onsite' or not any(
             product.type in ('consu', 'product')
             for product in order.order_line.product_id
         ):
