@@ -17,6 +17,7 @@ condition/math builtins.
 import dis
 import functools
 import logging
+import sys
 import types
 from opcode import HAVE_ARGUMENT, opmap, opname
 from types import CodeType
@@ -36,6 +37,17 @@ __all__ = ['test_expr', 'safe_eval', 'const_eval']
 # but some code, e.g. datetime.datetime.now() (Windows/Python 2.5.2, bug
 # lp:703841), does import time.
 _ALLOWED_MODULES = ['_strptime', 'math', 'time']
+
+# Mock __import__ function, as called by cpython's import emulator `PyImport_Import` inside
+# timemodule.c, _datetimemodule.c and others.
+# This function does not actually need to do anything, its expected side-effect is to make the
+# imported module available in `sys.modules`. The _ALLOWED_MODULES are imported below to make it so.
+def _import(name, globals=None, locals=None, fromlist=None, level=-1):
+    if name not in sys.modules:
+        raise ImportError(f'module {name} should be imported before calling safe_eval()')
+
+for module in _ALLOWED_MODULES:
+    __import__(module)
 
 _UNSAFE_ATTRIBUTES = ['f_builtins', 'f_globals', 'f_locals', 'gi_frame', 'gi_code',
                       'co_code', 'func_globals']
@@ -264,16 +276,6 @@ def expr_eval(expr):
     c = test_expr(expr, _EXPR_OPCODES)
     return unsafe_eval(c)
 
-def _import(name, globals=None, locals=None, fromlist=None, level=-1):
-    if globals is None:
-        globals = {}
-    if locals is None:
-        locals = {}
-    if fromlist is None:
-        fromlist = []
-    if name in _ALLOWED_MODULES:
-        return __import__(name, globals, locals, level)
-    raise ImportError(name)
 _BUILTINS = {
     '__import__': _import,
     'True': True,
