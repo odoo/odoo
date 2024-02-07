@@ -1,6 +1,7 @@
 /** @odoo-module */
 
 import { Command, fields, models } from "@web/../tests/web_test_helpers";
+import { session } from "@web/session";
 
 /**
  * @typedef {import("@web/core/domain").DomainListRepr} DomainListRepr
@@ -14,7 +15,7 @@ import { Command, fields, models } from "@web/../tests/web_test_helpers";
 export class MailMessage extends models.ServerModel {
     _name = "mail.message";
 
-    author_id = fields.Generic({ default: () => this.env.partner_id });
+    author_id = fields.Generic({ default: () => session.partner_id });
     history_partner_ids = fields.Many2many({
         relation: "res.partner",
         string: "Partners with History",
@@ -37,7 +38,7 @@ export class MailMessage extends models.ServerModel {
     mark_all_as_read(domain, kwargs = {}) {
         domain = kwargs.domain || domain || [];
         const notifDomain = [
-            ["res_partner_id", "=", this.env.partner_id],
+            ["res_partner_id", "=", session.partner_id],
             ["is_read", "=", false],
         ];
         if (domain) {
@@ -63,15 +64,15 @@ export class MailMessage extends models.ServerModel {
             this.write([message.id], {
                 needaction: false,
                 needaction_partner_ids: message.needaction_partner_ids.filter(
-                    (partnerId) => partnerId !== this.env.partner_id
+                    (partnerId) => partnerId !== session.partner_id
                 ),
             });
         }
-        const [partner] = this.env["res.partner"].read(this.env.partner_id);
+        const [partner] = this.env["res.partner"].read(session.partner_id);
         this.env["bus.bus"]._sendone(partner, "mail.message/mark_as_read", {
             message_ids: messageIds,
             needaction_inbox_counter: this.env["res.partner"]._getNeedactionCount(
-                this.env.partner_id
+                session.partner_id
             ),
         });
         return messageIds;
@@ -247,7 +248,7 @@ export class MailMessage extends models.ServerModel {
         const messages = this._filter([["id", "in", ids]]);
 
         const notifications = this.env["mail.notification"]._filter([
-            ["res_partner_id", "=", this.env.partner_id],
+            ["res_partner_id", "=", session.partner_id],
             ["is_read", "=", false],
             ["mail_message_id", "in", messages.map((messages) => messages.id)],
         ]);
@@ -263,14 +264,14 @@ export class MailMessage extends models.ServerModel {
             this.write([message.id], {
                 needaction: false,
                 needaction_partner_ids: message.needaction_partner_ids.filter(
-                    (partnerId) => partnerId !== this.env.partner_id
+                    (partnerId) => partnerId !== session.partner_id
                 ),
             });
-            const [partner] = this.env["res.partner"].read(this.env.partner_id);
+            const [partner] = this.env["res.partner"].read(session.partner_id);
             this.env["bus.bus"]._sendone(partner, "mail.message/mark_as_read", {
                 message_ids: [message.id],
                 needaction_inbox_counter: this.env["res.partner"]._getNeedactionCount(
-                    this.env.partner_id
+                    session.partner_id
                 ),
             });
         }
@@ -285,11 +286,11 @@ export class MailMessage extends models.ServerModel {
     toggle_message_starred(ids, kwargs = {}) {
         const messages = this._filter([["id", "in", ids]]);
         for (const message of messages) {
-            const wasStared = message.starred_partner_ids.includes(this.env.partner_id);
+            const wasStared = message.starred_partner_ids.includes(session.partner_id);
             this.write([message.id], {
-                starred_partner_ids: [[wasStared ? 3 : 4, this.env.partner_id]],
+                starred_partner_ids: [[wasStared ? 3 : 4, session.partner_id]],
             });
-            const [partner] = this.env["res.partner"].read(this.env.partner_id);
+            const [partner] = this.env["res.partner"].read(session.partner_id);
             this.env["bus.bus"]._sendone(partner, "mail.message/toggle_star", {
                 message_ids: [message.id],
                 starred: !wasStared,
@@ -303,12 +304,12 @@ export class MailMessage extends models.ServerModel {
      * @param {KwArgs} [kwargs]
      */
     unstar_all(kwargs = {}) {
-        const messages = this._filter([["starred_partner_ids", "in", this.env.partner_id]]);
+        const messages = this._filter([["starred_partner_ids", "in", session.partner_id]]);
         this.write(
             messages.map((message) => message.id),
-            { starred_partner_ids: [Command.unlink(this.env.partner_id)] }
+            { starred_partner_ids: [Command.unlink(session.partner_id)] }
         );
-        const [partner] = this.env["res.partner"].read(this.env.partner_id);
+        const [partner] = this.env["res.partner"].read(session.partner_id);
         this.env["bus.bus"]._sendone(partner, "mail.message/toggle_star", {
             message_ids: messages.map((message) => message.id),
             starred: false,
@@ -328,7 +329,7 @@ export class MailMessage extends models.ServerModel {
         if (this.env.user?.is_public) {
             this.env["mail.guest"]._getGuestFromContext();
         }
-        return this.env["res.partner"].read(this.env.partner_id)[0];
+        return this.env["res.partner"].read(session.partner_id)[0];
     }
 
     /**
@@ -342,13 +343,13 @@ export class MailMessage extends models.ServerModel {
         const [reaction] = this.env["mail.message.reaction"].search_read([
             ["content", "=", content],
             ["message_id", "=", messageId],
-            ["partner_id", "=", this.env.partner_id],
+            ["partner_id", "=", session.partner_id],
         ]);
         if (action === "add" && !reaction) {
             this.env["mail.message.reaction"].create({
                 content,
                 message_id: messageId,
-                partner_id: this.env.partner_id,
+                partner_id: session.partner_id,
             });
         }
         if (action === "remove" && reaction) {
@@ -359,7 +360,7 @@ export class MailMessage extends models.ServerModel {
             ["content", "=", content],
         ]);
         const guest = this.env["mail.guest"]._getGuestFromContext();
-        const [partner] = this.env["res.partner"].read(this.env.partner_id);
+        const [partner] = this.env["res.partner"].read(session.partner_id);
         const result = {
             id: messageId,
             reactions: [
@@ -373,7 +374,7 @@ export class MailMessage extends models.ServerModel {
                             [
                                 action === "add" ? "ADD" : "DELETE",
                                 {
-                                    id: guest ? guest.id : this.env.partner_id,
+                                    id: guest ? guest.id : session.partner_id,
                                     name: guest ? guest.name : partner.name,
                                     type: guest ? "guest" : "partner",
                                 },
@@ -444,13 +445,13 @@ export class MailMessage extends models.ServerModel {
                 const follower = this.env["mail.followers"]._filter([
                     ["res_model", "=", message.model],
                     ["res_id", "=", message.res_id],
-                    ["partner_id", "=", this.env.partner_id],
+                    ["partner_id", "=", session.partner_id],
                 ]);
                 if (follower.length !== 0) {
                     message.thread.selfFollower = {
                         id: follower[0].id,
                         is_active: true,
-                        partner: { id: this.env.partner_id, type: "partner" },
+                        partner: { id: session.partner_id, type: "partner" },
                     };
                 }
             }

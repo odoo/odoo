@@ -130,11 +130,6 @@ class MockServerBaseEnvironment {
         return this.server.env["res.users"].read(this.uid)[0];
     }
 
-    // Note: the following getter does not exist in the actual server environment
-    get partner_id() {
-        return session.partner_id;
-    }
-
     /**
      * @param {MockServer} server
      */
@@ -557,6 +552,12 @@ export class MockServer {
                 model._rec_name = "x_name";
             }
 
+            if (model._name in this.env) {
+                throw new MockServerError(
+                    `cannot register model "${model._name}": a model or a server environment property with the same name already exists`
+                );
+            }
+
             this.models[model._name] = model;
         }
 
@@ -636,6 +637,7 @@ export class MockServer {
                 }
                 return model;
             },
+            has: (target, p) => p in target || p in this.models,
         });
     }
 
