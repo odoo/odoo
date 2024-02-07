@@ -206,38 +206,28 @@ QUnit.module("ActionManager", (hooks) => {
     });
 
     QUnit.test("document's title is updated when an action is executed", async function (assert) {
-        const defaultTitle = { zopenerp: "Odoo" };
         const webClient = await createWebClient({ serverData });
         await nextTick();
         let currentTitle = webClient.env.services.title.getParts();
-        assert.deepEqual(currentTitle, defaultTitle);
+        assert.deepEqual(currentTitle, {});
         let currentState = router.current;
         assert.deepEqual(currentState, {});
         await doAction(webClient, 4);
         await nextTick();
         currentTitle = webClient.env.services.title.getParts();
-        assert.deepEqual(currentTitle, {
-            ...defaultTitle,
-            action: "Partners Action 4",
-        });
+        assert.deepEqual(currentTitle, { action: "Partners Action 4" });
         currentState = router.current;
         assert.deepEqual(currentState, { action: 4, model: "partner", view_type: "kanban" });
         await doAction(webClient, 8);
         await nextTick();
         currentTitle = webClient.env.services.title.getParts();
-        assert.deepEqual(currentTitle, {
-            ...defaultTitle,
-            action: "Favorite Ponies",
-        });
+        assert.deepEqual(currentTitle, { action: "Favorite Ponies" });
         currentState = router.current;
         assert.deepEqual(currentState, { action: 8, model: "pony", view_type: "list" });
         await click(target.querySelector(".o_data_row .o_data_cell"));
         await nextTick();
         currentTitle = webClient.env.services.title.getParts();
-        assert.deepEqual(currentTitle, {
-            ...defaultTitle,
-            action: "Twilight Sparkle",
-        });
+        assert.deepEqual(currentTitle, { action: "Twilight Sparkle" });
         currentState = router.current;
         assert.deepEqual(currentState, { action: 8, id: 4, model: "pony", view_type: "form" });
     });
