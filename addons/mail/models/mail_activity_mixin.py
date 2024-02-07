@@ -178,7 +178,7 @@ class MailActivityMixin(models.AbstractModel):
                     ON res_users.id = mail_activity.user_id
              LEFT JOIN res_partner
                     ON res_partner.id = res_users.partner_id
-                 WHERE mail_activity.res_model = %(res_model_table)s
+                 WHERE mail_activity.res_model = %(res_model_table)s AND mail_activity.active = TRUE
               GROUP BY res_id
             ) AS res_record
           WHERE %(search_states_int)s @> ARRAY[activity_state]
