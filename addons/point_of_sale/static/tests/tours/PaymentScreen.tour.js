@@ -275,3 +275,21 @@ registry.category("web_tour.tours").add("PaymentScreenTotalDueWithOverPayment", 
             PaymentScreen.totalDueIs("1.95"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("InvoiceShipLaterAccessRight", {
+    test: true,
+    url: "/pos/ui",
+    steps: () =>
+        [
+            ProductScreen.confirmOpeningPopup(),
+            ProductScreen.clickHomeCategory(),
+            ProductScreen.addOrderline("Whiteboard Pen", "1"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("Deco Addict"),
+            ProductScreen.clickPayButton(),
+
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickShipLaterButton(),
+            PaymentScreen.clickValidate(),
+        ].flat(),
+});

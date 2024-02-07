@@ -66,6 +66,12 @@
         <field name="model_id" ref="model_pos_payment" />
         <field name="domain_force">[('company_id', 'in', company_ids)]</field>
     </record>
+    <record id="rule_invoice_pos_user" model="ir.rule">
+        <field name="name">Invoice POS User</field>
+        <field name="model_id" ref="account.model_account_move" />
+        <field name="groups" eval="[(4, ref('group_pos_user'))]"/>
+        <field name="domain_force">[('pos_order_ids', '!=', False)]</field>
+    </record>
 
         <record id="base.default_user" model="res.users">
             <field name="groups_id" eval="[(4,ref('point_of_sale.group_pos_manager'))]"/>
