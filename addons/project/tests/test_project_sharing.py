@@ -173,6 +173,20 @@ class TestProjectSharing(TestProjectSharingCommon):
         with self.assertRaisesRegex(AccessError, "not allowed to modify 'Task'"):
             Task.create({'name': 'foo', 'child_ids': [Command.set([self.task_no_collabo.id])]})
 
+        # Same thing but using context defaults
+        with self.assertRaisesRegex(AccessError, "You cannot write on description"):
+            Task.with_context(default_child_ids=[Command.create({'name': 'Foo', 'description': 'Foo'})]).create({'name': 'foo'})
+        with self.assertRaisesRegex(AccessError, "not allowed to modify 'Task'"):
+            Task.with_context(default_child_ids=[Command.update(self.task_no_collabo.id, {'name': 'Foo'})]).create({'name': 'foo'})
+        with self.assertRaisesRegex(AccessError, "not allowed to delete 'Task'"):
+            Task.with_context(default_child_ids=[Command.delete(self.task_no_collabo.id)]).create({'name': 'foo'})
+        with self.assertRaisesRegex(AccessError, "not allowed to modify 'Task'"):
+            Task.with_context(default_child_ids=[Command.unlink(self.task_no_collabo.id)]).create({'name': 'foo'})
+        with self.assertRaisesRegex(AccessError, "not allowed to modify 'Task'"):
+            Task.with_context(default_child_ids=[Command.link(self.task_no_collabo.id)]).create({'name': 'foo'})
+        with self.assertRaisesRegex(AccessError, "not allowed to modify 'Task'"):
+            Task.with_context(default_child_ids=[Command.set([self.task_no_collabo.id])]).create({'name': 'foo'})
+
         # Create/update a tag through tag_ids
         with self.assertRaisesRegex(AccessError, "not allowed to create 'Project Tags'"):
             Task.create({'name': 'foo', 'tag_ids': [Command.create({'name': 'Bar'})]})
@@ -180,6 +194,14 @@ class TestProjectSharing(TestProjectSharingCommon):
             Task.create({'name': 'foo', 'tag_ids': [Command.update(self.task_tag.id, {'name': 'Bar'})]})
         with self.assertRaisesRegex(AccessError, "not allowed to delete 'Project Tags'"):
             Task.create({'name': 'foo', 'tag_ids': [Command.delete(self.task_tag.id)]})
+
+        # Same thing but using context defaults
+        with self.assertRaisesRegex(AccessError, "not allowed to create 'Project Tags'"):
+            Task.with_context(default_tag_ids=[Command.create({'name': 'Bar'})]).create({'name': 'foo'})
+        with self.assertRaisesRegex(AccessError, "not allowed to modify 'Project Tags'"):
+            Task.with_context(default_tag_ids=[Command.update(self.task_tag.id, {'name': 'Bar'})]).create({'name': 'foo'})
+        with self.assertRaisesRegex(AccessError, "not allowed to delete 'Project Tags'"):
+            Task.with_context(default_tag_ids=[Command.delete(self.task_tag.id)]).create({'name': 'foo'})
 
         task = Task.create({'name': 'foo', 'tag_ids': [Command.link(self.task_tag.id)]})
         self.assertEqual(task.tag_ids, self.task_tag)
