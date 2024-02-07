@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
+from datetime import datetime, timedelta
+from unittest.mock import patch
+
 from freezegun import freeze_time
 
 from odoo import fields
@@ -897,3 +899,40 @@ class TestCrmLeadMailTrackingDuration(MailTrackingDurationMixinCase):
 
     def test_crm_lead_queries_batch_mail_tracking_duration(self):
         self._test_queries_batch_duration_tracking()
+
+    def test_crm_lead_mail_tracking_duration2(self):
+        with patch.object(self.env.cr, 'now', return_value=self.mock_start_time) as now:
+            lead = self.env['crm.lead'].create({
+                'name': 'Lead 1',
+                'stage_id': self.stage_1.id
+            })
+            self.flush_tracking()
+            self.assertEqual(len(lead.duration_tracking), 1)
+            self.assertEqual(lead.duration_tracking.get(str(self.stage_1.id)), 0)
+
+        # Switch to Stage 2
+            now.return_value += timedelta(minutes=3)
+            lead.write({'stage_id': self.stage_2.id})
+            lead._compute_duration_tracking()
+            self.flush_tracking()
+            self.assertEqual(len(lead.duration_tracking), 2)
+            self.assertEqual(lead.duration_tracking.get(str(self.stage_1.id)), 180)
+            self.assertEqual(lead.duration_tracking.get(str(self.stage_2.id)), 0)
+
+        # Switch back to Stage 1
+            now.return_value += timedelta(minutes=4)
+            lead.write({'stage_id': self.stage_1.id})
+            lead._compute_duration_tracking()
+            self.flush_tracking()
+            self.assertEqual(len(lead.duration_tracking), 2)
+            self.assertEqual(lead.duration_tracking.get(str(self.stage_1.id)), 180)
+            self.assertEqual(lead.duration_tracking.get(str(self.stage_2.id)), 240)
+
+        # Switch back to Stage 1
+            now.return_value += timedelta(minutes=5)
+            lead.write({'stage_id': self.stage_2.id})
+            lead._compute_duration_tracking()
+            self.flush_tracking()
+            self.assertEqual(len(lead.duration_tracking), 2)
+            self.assertEqual(lead.duration_tracking.get(str(self.stage_1.id)), 480)
+            self.assertEqual(lead.duration_tracking.get(str(self.stage_2.id)), 240)

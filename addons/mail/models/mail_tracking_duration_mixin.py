@@ -47,7 +47,8 @@ class MailTrackingDurationMixin(models.AbstractModel):
         query = """
                SELECT m.res_id,
                       v.create_date,
-                      v.old_value_integer
+                      v.old_value_integer,
+                      v.new_value_integer
                  FROM mail_tracking_value v
             LEFT JOIN mail_message m
                    ON m.id = v.mail_message_id
@@ -58,6 +59,31 @@ class MailTrackingDurationMixin(models.AbstractModel):
         """
         self.env.cr.execute(query, {"field_id": field.id, "model_name": self._name, "record_ids": tuple(self.ids)})
         trackings = self.env.cr.dictfetchall()
+
+        if not trackings:
+            parent_id = self.env['mail.message'].search(
+                [('model', '=', self._name), ('res_id', '=', self.id), ('parent_id', '=', None)])
+
+            mail_message = self.env['mail.message'].create({
+                'parent_id': min(parent_id.ids) if parent_id.ids else None,
+                # If we have two mail_message we are taking the one that got created first
+                'res_id': self.id,
+                'record_company_id': self.env.company.id,
+                'model': self._name,
+                'message_type': 'notification'
+            })
+
+            stage = self.env[self[self._track_duration_field]._name].search(
+                [('id', '=', self[self._track_duration_field].id)])
+
+            self.env['mail.tracking.value'].sudo().create({
+                'field_id': field.id,
+                'old_value_integer': self[self._track_duration_field].id,
+                'new_value_integer': self[self._track_duration_field].id,
+                'mail_message_id': mail_message.id,
+                'new_value_char': stage.name,
+                'create_date': self.create_date
+            })
 
         for record in self:
             record_trackings = [tracking for tracking in trackings if tracking['res_id'] == record._origin.id]
@@ -79,15 +105,36 @@ class MailTrackingDurationMixin(models.AbstractModel):
         self.ensure_one()
         json = defaultdict(lambda: 0)
         previous_date = self.create_date
+        first_selection = trackings and not any(
+            self[self._track_duration_field].id
+            in (d["new_value_integer"], d["old_value_integer"])
+            for d in trackings
+        )
 
         # add "fake" tracking for time spent in the current value
         trackings.append({
             'create_date': self.env.cr.now(),
             'old_value_integer': self[self._track_duration_field].id,
+            'first_selection': first_selection
         })
 
-        for tracking in trackings:
-            json[tracking['old_value_integer']] += int((tracking['create_date'] - previous_date).total_seconds())
+        for idx, tracking in enumerate(trackings):
+            # This condition to avoid including the previous stage duration
+            # in the calculation of the new stage duration
+            if ('new_value_integer' in trackings[idx - 1] and
+                    trackings[idx]['old_value_integer'] != trackings[idx - 1]['new_value_integer']):
+                json[trackings[idx - 1]['new_value_integer']] += int((tracking['create_date'] - previous_date).total_seconds())
+                json[tracking['old_value_integer']] += 0
+                continue
+            elif idx == 0 and len(trackings) > 1 and ('new_value_integer' in tracking
+                                                      and tracking['new_value_integer'] == tracking['old_value_integer']):
+                tracking['create_date'] = self.env.cr.now()
+
+            if not tracking.get('first_selection'):
+                json[tracking['old_value_integer']] += int((tracking['create_date'] - previous_date).total_seconds())
+            else:
+                json[tracking['old_value_integer']] = 0
+
             previous_date = tracking['create_date']
 
         return json
