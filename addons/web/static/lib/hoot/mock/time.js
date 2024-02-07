@@ -459,13 +459,15 @@ export class Deferred extends Promise {
 
 export class MockDate extends Date {
     constructor(...args) {
-        if (args.length !== 1) {
+        if (args.length === 1) {
+            super(args[0]);
+        } else {
             const params = getDateParams();
             for (let i = 0; i < params.length; i++) {
                 args[i] ??= params[i];
             }
+            super(Date.UTC(...args));
         }
-        super(...args);
     }
 
     getTimezoneOffset() {
