@@ -283,6 +283,11 @@ class Company(models.Model):
             'sequence', # user._get_company_ids and other potential cached search
         }
 
+    @api.ondelete(at_uninstall=False)
+    def _unlink_if_company_has_no_children(self):
+        if any(company.child_ids for company in self):
+            raise UserError(_("Companies that have associated branches cannot be deleted. Consider archiving them instead."))
+
     def write(self, values):
         invalidation_fields = self.cache_invalidation_fields()
         asset_invalidation_fields = {'font', 'primary_color', 'secondary_color', 'external_report_layout_id'}
