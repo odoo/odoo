@@ -780,6 +780,8 @@ class Picking(models.Model):
     @api.onchange('picking_type_id', 'partner_id')
     def _onchange_picking_type(self):
         if self.picking_type_id and self.state == 'draft':
+            picking_type = self.env['stock.picking.type'].browse(self.picking_type_id.id)
+            self.name = picking_type.sequence_id.next_by_id()
             self = self.with_company(self.company_id)
             (self.move_ids | self.move_ids_without_package).update({
                 "picking_type_id": self.picking_type_id,  # The compute store doesn't work in case of One2many inverse (move_ids_without_package)
@@ -851,6 +853,9 @@ class Picking(models.Model):
         return pickings
 
     def write(self, vals):
+        if vals.get('picking_type_id'):
+            picking_type = self.env['stock.picking.type'].browse(vals.get('picking_type_id'))
+            vals['name'] = picking_type.sequence_id.next_by_id()
         if vals.get('picking_type_id') and any(picking.state != 'draft' for picking in self):
             raise UserError(_("Changing the operation type of this record is forbidden at this point."))
         # set partner as a follower and unfollow old partner
