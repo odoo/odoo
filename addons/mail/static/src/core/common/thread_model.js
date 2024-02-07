@@ -247,8 +247,18 @@ export class Thread extends Record {
     });
     /** @type {string} */
     defaultDisplayMode;
-    /** @type {SuggestedRecipient[]} */
-    suggestedRecipients = [];
+    suggestedRecipients = Record.attr([], {
+        onUpdate() {
+            for (const recipient of this.suggestedRecipients) {
+                if (recipient.checked === undefined) {
+                    recipient.checked = true;
+                }
+                recipient.persona = recipient.partner_id
+                    ? { type: "partner", id: recipient.partner_id }
+                    : false;
+            }
+        },
+    });
     hasLoadingFailed = false;
     canPostOnReadonly;
     /** @type {String} */

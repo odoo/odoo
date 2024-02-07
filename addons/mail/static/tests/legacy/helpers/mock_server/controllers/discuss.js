@@ -650,8 +650,8 @@ patch(MockServer.prototype, {
         if (request_list.includes("suggestedRecipients")) {
             res["suggestedRecipients"] = this._mockMailThread_MessageGetSuggestedRecipients(
                 thread_model,
-                [thread.id]
-            )[thread_id];
+                thread.id
+            );
         }
         return res;
     },
