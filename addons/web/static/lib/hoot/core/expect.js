@@ -3,6 +3,7 @@
 
 import {
     getActiveElement,
+    getNodeAttribute,
     getNodeText,
     getNodeValue,
     getStyle,
@@ -1307,7 +1308,7 @@ export class Matchers {
             transform: queryAll,
             predicate: each((node) =>
                 expectsValue
-                    ? match(node.getAttribute(attribute), value)
+                    ? match(getNodeAttribute(node, attribute), value)
                     : node.hasAttribute(attribute)
             ),
             message: (pass) =>
@@ -1320,7 +1321,7 @@ export class Matchers {
                       }`
                     : `element does not have the correct attribute${expectsValue ? " value" : ""}`),
             details: (actual) => {
-                const attrValue = actual[0].getAttribute(attribute);
+                const attrValue = getNodeAttribute(actual[0], attribute);
                 const details = [
                     [Markup.green("Expected:"), value],
                     [Markup.red("Received:"), attrValue],

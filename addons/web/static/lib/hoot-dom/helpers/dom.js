@@ -850,6 +850,15 @@ export function getNextFocusableElement(parent) {
 
 /**
  * @param {Node} node
+ * @param {string} attribute
+ * @returns {string | null}
+ */
+export function getNodeAttribute(node, attribute) {
+    return node.getAttribute?.(attribute) ?? null;
+}
+
+/**
+ * @param {Node} node
  * @returns {NodeValue}
  */
 export function getNodeValue(node) {
@@ -1442,7 +1451,33 @@ export function queryAll(target, options) {
 }
 
 /**
- * Performs a {@link queryOne} with the given arguments and returns a list of the
+ * Performs a {@link queryOne} with the given arguments and returns the value of
+ * the given *attribute* of the matching node.
+ *
+ * @param {Target} target
+ * @param {string} attribute
+ * @param {QueryOptions} [options]
+ * @returns {string | null}
+ */
+export function queryAttribute(target, attribute, options) {
+    return getNodeAttribute(queryOne(target, options), attribute);
+}
+
+/**
+ * Performs a {@link queryAll} with the given arguments and returns a list of the
+ * *attribute values* of the matching nodes.
+ *
+ * @param {Target} target
+ * @param {string} attribute
+ * @param {QueryOptions} [options]
+ * @returns {string[]}
+ */
+export function queryAllAttributes(target, attribute, options) {
+    return queryAll(target, options).map((node) => getNodeAttribute(node, attribute));
+}
+
+/**
+ * Performs a {@link queryAll} with the given arguments and returns a list of the
  * *texts* of the matching nodes.
  *
  * @param {Target} target
@@ -1454,7 +1489,7 @@ export function queryAllTexts(target, options) {
 }
 
 /**
- * Performs a {@link queryOne} with the given arguments and returns a list of the
+ * Performs a {@link queryAll} with the given arguments and returns a list of the
  * *values* of the matching nodes.
  *
  * @param {Target} target
