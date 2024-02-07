@@ -262,6 +262,8 @@ class PaymentScreen extends PosComponent {
                 }
             }
         } catch (error) {
+            // unblock the UI before showing the error popup
+            this.env.services.ui.unblock();
             if (error.code == 700 || error.code == 701) {
                 this.error = true;
             }
