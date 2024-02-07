@@ -106,7 +106,7 @@ patch(MockServer.prototype, {
      *
      * @private
      * @param {string} model
-     * @param {integer[]} ids
+     * @param {integer} id
      * @param {Object} result
      * @param {Object} [param3={}]
      * @param {string} [param3.email]
@@ -116,20 +116,31 @@ patch(MockServer.prototype, {
      */
     _mockMailThread_MessageAddSuggestedRecipient(
         model,
-        ids,
+        id,
         result,
-        { email, partner, lang, reason = "" } = {}
+        { email, name, partner, lang, reason = "" } = {}
     ) {
-        const record = this.getRecords(model, [["id", "in", ids]])[0];
         if (email !== undefined && partner === undefined) {
             const partnerInfo = parseEmail(email);
             partner = this.getRecords("res.partner", [["email", "=", partnerInfo[1]]])[0];
         }
         if (partner) {
-            result[record.id].push([partner.id, partner.display_name, lang, reason, {}]);
+            result.push({
+                partner_id: partner.id,
+                name: partner.display_name,
+                lang,
+                reason,
+                create_values: {},
+            });
         } else {
-            const partnerCreateValues = this._mockMailThread_GetCustomerInformation(model, ids);
-            result[record.id].push([false, email, reason, lang, partnerCreateValues]);
+            const partnerCreateValues = this._mockMailThread_GetCustomerInformation(model, id);
+            result.push({
+                email,
+                name,
+                lang,
+                reason,
+                create_values: partnerCreateValues,
+            });
         }
 
         return result;
@@ -167,27 +178,25 @@ patch(MockServer.prototype, {
      *
      * @private
      * @param {string} model
-     * @param {integer[]} ids
+     * @param {integer} id
      * @returns {Object}
      */
-    _mockMailThread_MessageGetSuggestedRecipients(model, ids) {
+    _mockMailThread_MessageGetSuggestedRecipients(model, id) {
         if (model === "res.fake") {
-            return this._mockResFake_MessageGetSuggestedRecipients(model, ids);
+            return this._mockResFake_MessageGetSuggestedRecipients(model, id);
         }
-        const result = ids.reduce((result, id) => (result[id] = []), {});
-        const records = this.getRecords(model, [["id", "in", ids]]);
-        for (const record in records) {
-            if (record.user_id) {
-                const user = this.getRecords("res.users", [["id", "=", record.user_id]]);
-                if (user.partner_id) {
-                    const reason = this.models[model].fields["user_id"].string;
-                    const partner = this.getRecords("res.partner", [["id", "=", user.partner_id]]);
-                    this._mockMailThread_MessageAddSuggestedRecipient(model, ids, result, {
-                        email: partner.email,
-                        partner,
-                        reason,
-                    });
-                }
+        const result = [];
+        const record = this.getRecords(model, [["id", "=", id]])[0];
+        if (record.user_id) {
+            const user = this.getRecords("res.users", [["id", "=", record.user_id]]);
+            if (user.partner_id) {
+                const reason = this.models[model].fields["user_id"].string;
+                const partner = this.getRecords("res.partner", [["id", "=", user.partner_id]]);
+                this._mockMailThread_MessageAddSuggestedRecipient(model, id, result, {
+                    email: partner.email,
+                    partner,
+                    reason,
+                });
             }
         }
         return result;

@@ -1,15 +1,12 @@
 /* @odoo-module */
 
 import { ThreadService, threadService } from "@mail/core/common/thread_service";
-import { parseEmail } from "@mail/utils/common/format";
 
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { patch } from "@web/core/utils/patch";
 import { Record } from "@mail/core/common/record";
 import { assignDefined, compareDatetime } from "@mail/utils/common/misc";
-
-let nextId = 1;
 
 patch(ThreadService.prototype, {
     /**
@@ -50,9 +47,6 @@ patch(ThreadService.prototype, {
         if (!thread.mainAttachment && thread.attachmentsInWebClientView.length > 0) {
             this.setMainAttachmentFromIndex(thread, 0);
         }
-        if ("suggestedRecipients" in result) {
-            this.insertSuggestedRecipients(thread, result.suggestedRecipients);
-        }
         return result;
     },
     getThread(model, id) {
@@ -77,31 +71,6 @@ patch(ThreadService.prototype, {
             });
         }
         return thread;
-    },
-    /**
-     * @param {import("models").Thread} thread
-     * @param {import("@mail/core/web/suggested_recipient").SuggestedRecipient[]} dataList
-     */
-    async insertSuggestedRecipients(thread, dataList) {
-        const recipients = [];
-        for (const data of dataList) {
-            const [partner_id, emailInfo, lang, reason, defaultCreateValues] = data;
-            let [name, email] = emailInfo ? parseEmail(emailInfo) : [];
-            if ((!name || name === email) && defaultCreateValues?.name) {
-                name = defaultCreateValues.name;
-            }
-            recipients.push({
-                id: nextId++,
-                name,
-                email,
-                lang,
-                reason,
-                persona: partner_id ? { type: "partner", id: partner_id } : false,
-                checked: true,
-                defaultCreateValues,
-            });
-        }
-        thread.suggestedRecipients = recipients;
     },
     closeChatWindow(channel) {
         const chatWindow = this.store.discuss.chatWindows.find((c) => c.thread?.eq(channel));
