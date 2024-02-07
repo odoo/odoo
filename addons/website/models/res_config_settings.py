@@ -225,13 +225,3 @@ class ResConfigSettings(models.TransientModel):
             "views": [[False, "form"]],
             'target': 'new',
         }
-
-    def action_ping_sitemap(self):
-        return {
-            'type': 'ir.actions.client',
-            'tag': 'display_notification',
-            'params': {
-                'message': _("Google doesn't need to be pinged anymore. It will automatically fetch your /sitemap.xml."),
-                'sticky': True,
-            }
-        }
