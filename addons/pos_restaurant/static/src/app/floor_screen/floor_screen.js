@@ -441,7 +441,7 @@ export class FloorScreen extends Component {
         for (const table of childrenTables) {
             table.update({ parent_id: parentTable });
         }
-        this.pos.updateTables(...this.childrenTables);
+        this.pos.updateTables(...childrenTables);
     }
     isLinkingDisabled() {
         return (
