@@ -747,6 +747,7 @@ class TestActivityMixin(TestActivityCommon):
 class TestActivitySystray(TestActivityCommon, HttpCase):
     """Test for systray_get_activities"""
 
+    @freeze_time("2024-01-15 14:00:00 UTC")
     @users("employee")
     def test_systray_activities_for_archived_records(self):
         """Check that activities made on archived records are shown in the
