@@ -239,7 +239,7 @@ export class ListRenderer extends Component {
     }
 
     displaySaveNotification() {
-        this.notificationService.add(_t('Please click on the "save" button first'), {
+        this.notificationService.add(_t("Please save your changes first"), {
             type: "danger",
         });
     }
