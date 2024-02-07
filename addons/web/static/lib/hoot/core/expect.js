@@ -628,6 +628,40 @@ export class Matchers {
     }
 
     /**
+     * Expects the received value to be an instance of the given `cls`.
+     *
+     * @param {Function} cls
+     * @param {ExpectOptions} [options]
+     * @example
+     *  expect({ foo: 1 }).not.toBeInstanceOf(Object);
+     * @example
+     *  expect(document.createElement("div")).toBeInstanceOf(HTMLElement);
+     */
+    toBeInstanceOf(cls, options) {
+        this.#saveStack();
+
+        ensureArguments([
+            [cls, "function"],
+            [options, ["object", null]],
+        ]);
+
+        return this.#resolve({
+            name: "toBeInstanceOf",
+            acceptedType: "any",
+            predicate: (actual) => actual instanceof cls,
+            message: (pass) =>
+                options?.message ||
+                (pass
+                    ? `%actual% is[! not] an instance of ${cls.name}`
+                    : `expected value[! not] to be an instance of the given class`),
+            details: (actual) => [
+                [Markup.green("Expected:"), cls],
+                [Markup.red("Actual parent class:"), actual.constructor.name],
+            ],
+        });
+    }
+
+    /**
      * Expects the received value to be strictly less than `max`.
      *
      * @param {number} max
