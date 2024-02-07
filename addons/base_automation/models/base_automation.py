@@ -828,8 +828,8 @@ class BaseAutomation(models.Model):
             if Model is None:
                 _logger.warning(
                     "Automation rule with name '%s' (ID %d) depends on model %s (ID: %d)",
-                    automation_rule.id,
                     automation_rule.name,
+                    automation_rule.id,
                     automation_rule.model_name,
                     automation_rule.model_id.id)
                 continue
