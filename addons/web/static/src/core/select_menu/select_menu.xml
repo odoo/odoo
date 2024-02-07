@@ -7,7 +7,7 @@
                 menuClass="this.menuClass"
                 menuRef="this.menuRef"
                 position="'bottom-fit'"
-                beforeOpen.bind="filterOptions"
+                beforeOpen.bind="onBeforeOpen"
                 onStateChanged.bind="onStateChanged"
                 virtualFocus="this.props.searchable"
             >
