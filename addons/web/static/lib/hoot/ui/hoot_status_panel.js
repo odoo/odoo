@@ -328,9 +328,8 @@ export class HootStatusPanel extends Component {
         const cellSize = width / tests.length;
         const colors = getColors();
 
-        const doneTests = Object.values(done);
-        while (this.progressBarIndex < doneTests.length) {
-            const test = doneTests[this.progressBarIndex];
+        while (this.progressBarIndex < done.length) {
+            const test = done[this.progressBarIndex];
             const x = Math.floor(this.progressBarIndex * cellSize);
             switch (test.status) {
                 case Test.ABORTED:

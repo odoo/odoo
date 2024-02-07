@@ -129,7 +129,15 @@ export class HootSideBar extends Component {
             unfolded: new Set(),
         });
 
-        runner.beforeAll(() => this.computeItems());
+        runner.beforeAll(() => {
+            const singleRootSuite = runner.rootSuites.filter((suite) => suite.currentJobs.length);
+            if (singleRootSuite.length === 1) {
+                // Unfolds only root suite containing jobs
+                this.unfoldAndSelect(singleRootSuite[0]);
+            }
+
+            this.computeItems();
+        });
     }
 
     computeItems() {
@@ -173,18 +181,26 @@ export class HootSideBar extends Component {
         if (this.state.unfolded.has(id)) {
             this.state.unfolded.delete(id);
         } else {
-            this.state.unfolded.add(id);
-
-            const { suites } = this.runnerState;
-            let suite = this.env.runner.suites.get(id);
-            let filteredJobs = suite.jobs.filter((job) => suites.includes(job));
-            while (filteredJobs.length === 1) {
-                suite = filteredJobs[0];
-                filteredJobs = suite.jobs.filter((job) => suites.includes(job));
-                this.state.unfolded.add(suite.id);
-            }
+            this.unfoldAndSelect(this.env.runner.suites.get(id));
         }
 
         this.computeItems();
+    }
+
+    /**
+     * @param {Suite} suite
+     */
+    unfoldAndSelect(suite) {
+        this.state.unfolded.add(suite.id);
+
+        while (suite.currentJobs.length === 1) {
+            suite = suite.currentJobs[0];
+            if (!(suite instanceof Suite)) {
+                break;
+            }
+            this.state.unfolded.add(suite.id);
+            this.uiState.selectedSuiteId = suite.id;
+            this.uiState.resultsPage = 0;
+        }
     }
 }
