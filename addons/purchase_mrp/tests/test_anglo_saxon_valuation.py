@@ -177,7 +177,7 @@ class TestAngloSaxonValuationPurchaseMRP(AccountTestInvoicingCommon):
 
         wizard_form = Form(self.env['stock.return.picking'].with_context(active_id=delivery.id, active_model='stock.picking'))
         wizard = wizard_form.save()
-        action = wizard.create_returns()
+        action = wizard.action_create_returns()
         return_picking = self.env["stock.picking"].browse(action["res_id"])
         return_picking.move_ids.move_line_ids.quantity = 1
         return_picking.button_validate()

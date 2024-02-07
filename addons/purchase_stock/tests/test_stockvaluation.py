@@ -414,7 +414,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         wizard = wizard_form.save()
         qty = qty or wizard.product_return_moves.quantity
         wizard.product_return_moves.quantity = qty
-        action = wizard.create_returns()
+        action = wizard.action_create_returns()
         return_picking = self.env["stock.picking"].browse(action["res_id"])
         return_picking.move_ids.move_line_ids.quantity = qty
         return_picking.move_ids.picked = True
@@ -556,7 +556,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             active_ids=receipt_po2.ids, active_id=receipt_po2.ids[0], active_model='stock.picking'))
         stock_return_picking = stock_return_picking_form.save()
         stock_return_picking.product_return_moves.quantity = 10
-        stock_return_picking_action = stock_return_picking.create_returns()
+        stock_return_picking_action = stock_return_picking.action_create_returns()
         return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
         return_pick.move_ids[0].move_line_ids[0].quantity = 10
         return_pick.move_ids[0].picked = True

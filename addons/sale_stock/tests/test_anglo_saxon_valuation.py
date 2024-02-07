@@ -513,7 +513,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         return_wiz = stock_return_picking_form.save()
         return_wiz.product_return_moves.quantity = 1
         return_wiz.product_return_moves.to_refund = False
-        res = return_wiz.create_returns()
+        res = return_wiz.action_create_returns()
 
         return_pick = self.env['stock.picking'].browse(res['res_id'])
         return_pick.move_ids.write({'quantity': 1, 'picked': True})
@@ -1159,7 +1159,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         )
         stock_return_picking = stock_return_picking_form.save()
         stock_return_picking.product_return_moves.quantity = 1.0
-        stock_return_picking_action = stock_return_picking.create_returns()
+        stock_return_picking_action = stock_return_picking.action_create_returns()
         return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
         return_pick.action_assign()
         return_pick.move_ids.write({'quantity': 1, 'picked': True})
@@ -1203,7 +1203,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         )
         stock_redeliver_picking = stock_redeliver_picking_form.save()
         stock_redeliver_picking.product_return_moves.quantity = 1.0
-        stock_redeliver_picking_action = stock_redeliver_picking.create_returns()
+        stock_redeliver_picking_action = stock_redeliver_picking.action_create_returns()
         redeliver_pick = self.env['stock.picking'].browse(stock_redeliver_picking_action['res_id'])
         redeliver_pick.action_assign()
         redeliver_pick.move_ids.write({'quantity': 1, 'picked': True})
@@ -1435,8 +1435,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         # Return the second picking (i.e. 1@20)
         ctx = {'active_id': pickings[1].id, 'active_model': 'stock.picking'}
         return_wizard = Form(self.env['stock.return.picking'].with_context(ctx)).save()
-        return_picking_id, dummy = return_wizard._create_returns()
-        return_picking = self.env['stock.picking'].browse(return_picking_id)
+        return_picking = return_wizard._create_return()
         return_picking.move_ids.write({'quantity': 1, 'picked': True})
         return_picking.button_validate()
 
@@ -1529,8 +1528,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         # Return the second picking (i.e. 1@20)
         ctx = {'active_id': pickings[1].id, 'active_model': 'stock.picking'}
         return_wizard = Form(self.env['stock.return.picking'].with_context(ctx)).save()
-        return_picking_id, dummy = return_wizard._create_returns()
-        return_picking = self.env['stock.picking'].browse(return_picking_id)
+        return_picking = return_wizard._create_return()
         return_picking.move_ids.write({'quantity': 1, 'picked': True})
         return_picking.button_validate()
 

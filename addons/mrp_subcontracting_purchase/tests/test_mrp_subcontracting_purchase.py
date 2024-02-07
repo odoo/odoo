@@ -147,9 +147,7 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         return_wizard = return_form.save()
         return_wizard.product_return_moves.quantity = 3
         return_wizard.product_return_moves.to_refund = True
-        return_id, _ = return_wizard._create_returns()
-
-        return_picking = self.env['stock.picking'].browse(return_id)
+        return_picking = return_wizard._create_return()
         return_picking.move_ids.quantity = 3
         return_picking.move_ids.picked = True
         return_picking.button_validate()
@@ -192,9 +190,7 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         return_wizard = return_form.save()
         return_wizard.product_return_moves.quantity = 3
         return_wizard.product_return_moves.to_refund = False
-        return_id, _ = return_wizard._create_returns()
-
-        return_picking = self.env['stock.picking'].browse(return_id)
+        return_picking = return_wizard._create_return()
         return_picking.move_ids.quantity = 3
         return_picking.move_ids.picked = True
         return_picking.button_validate()
@@ -297,9 +293,7 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         return_wizard = return_form.save()
         return_wizard.product_return_moves.quantity = 3
         return_wizard.product_return_moves.to_refund = True
-        return_id, _ = return_wizard._create_returns()
-
-        return_picking = self.env['stock.picking'].browse(return_id)
+        return_picking = return_wizard._create_return()
         return_picking.move_ids.quantity = 3
         return_picking.move_ids.picked = True
         return_picking.button_validate()
@@ -486,9 +480,7 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         return_form = Form(self.env['stock.return.picking'].with_context(active_id=receipt.id, active_model='stock.picking'))
         wizard = return_form.save()
         wizard.product_return_moves.quantity = 1.0
-        return_picking_id, _pick_type_id = wizard._create_returns()
-
-        return_picking = self.env['stock.picking'].browse(return_picking_id)
+        return_picking = wizard._create_return()
         return_picking.move_ids.quantity = 1.0
         return_picking.button_validate()
 

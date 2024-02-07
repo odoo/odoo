@@ -451,7 +451,7 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
                 'quantity': expected_quantities[return_move.product_id],
                 'to_refund': True
             })
-        res = return_wiz.create_returns()
+        res = return_wiz.action_create_returns()
         return_pick = self.env['stock.picking'].browse(res['res_id'])
 
         # Process all components and validate the picking
@@ -466,7 +466,7 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         return_wiz = stock_return_picking_form.save()
         for move in return_wiz.product_return_moves:
             move.quantity = expected_quantities[move.product_id]
-        res = return_wiz.create_returns()
+        res = return_wiz.action_create_returns()
         return_of_return_pick = self.env['stock.picking'].browse(res['res_id'])
 
         # Process all components except one of each
@@ -983,7 +983,7 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
                 'quantity': 10,
                 'to_refund': True
             })
-        res = return_wiz.create_returns()
+        res = return_wiz.action_create_returns()
         return_pick = self.env['stock.picking'].browse(res['res_id'])
 
         # Process all components and validate the return

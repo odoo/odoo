@@ -258,9 +258,7 @@ class TestSubcontractingDropshippingFlows(TestMrpSubcontractingCommon):
             line.quantity = 1.0
         return_form.location_id = stock_location
         return_wizard = return_form.save()
-        return_picking_id, _pick_type_id = return_wizard._create_returns()
-
-        delivery_return01 = self.env['stock.picking'].browse(return_picking_id)
+        delivery_return01 = return_wizard._create_return()
         delivery_return01.move_line_ids.quantity = 1.0
         delivery_return01.move_ids.picked = True
         delivery_return01.button_validate()
@@ -276,9 +274,7 @@ class TestSubcontractingDropshippingFlows(TestMrpSubcontractingCommon):
             line.quantity = 1.0
         return_form.location_id = supplier_location
         return_wizard = return_form.save()
-        return_picking_id, _pick_type_id = return_wizard._create_returns()
-
-        delivery_return02 = self.env['stock.picking'].browse(return_picking_id)
+        delivery_return02 = return_wizard._create_return()
         delivery_return02.move_line_ids.quantity = 1.0
         delivery_return02.move_ids.picked = True
         delivery_return02.button_validate()
