@@ -47,8 +47,19 @@ tour.register("snippet_image_gallery", {
     content: "Click on move to next",
     trigger: ".snippet-option-gallery_img we-button[data-position='next']",
 }, {
+    content: "Check that the image has been moved",
+    trigger: ".s_image_gallery .carousel-item.active img[data-index='1']",
+    run: () => null, // This is a check.
+}, {
+    content: "Click on the footer to reload the editor panel",
+    trigger: "#footer",
+}, {
+    content: "Check that the footer options have been loaded",
+    trigger: ".snippet-option-HideFooter we-button:contains('Page Visibility')",
+    run: () => null, // This is a check.
+}, {
     content: "Click on the moved image",
-    trigger: "#wrap .s_image_gallery .carousel-item.active img[data-index='1']",
+    trigger: "#wrap .s_image_gallery .carousel-item.active img[data-index='1'][data-gl-filter='blur']",
 }, {
     content: "Check that the image still has the correct filter",
     trigger: ".snippet-option-ImageOptimize we-select:contains('Filter') we-toggler:contains('Blur')",
