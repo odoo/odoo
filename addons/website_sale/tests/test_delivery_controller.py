@@ -9,7 +9,7 @@ from odoo.tests import tagged
 from odoo.addons.payment.tests.common import PaymentCommon
 from odoo.addons.sale.tests.common import SaleCommon
 from odoo.addons.website.tools import MockRequest
-from odoo.addons.website_sale.controllers.delivery import WebsiteSaleDelivery
+from odoo.addons.website_sale.controllers.delivery import Delivery
 
 
 
@@ -18,7 +18,7 @@ class TestWebsiteSaleDeliveryController(PaymentCommon, SaleCommon):
     def setUp(self):
         super().setUp()
         self.website = self.env.ref('website.default_website')
-        self.Controller = WebsiteSaleDelivery()
+        self.Controller = Delivery()
 
     # test that changing the carrier while there is a pending transaction raises an error
     def test_controller_change_carrier_when_transaction(self):
@@ -29,14 +29,14 @@ class TestWebsiteSaleDeliveryController(PaymentCommon, SaleCommon):
                 'odoo.addons.website_sale.models.website.Website.sale_get_order',
                 return_value=order,
             ):  # Patch to retrieve the order even if it is linked to a pending transaction.
-                self.Controller.update_eshop_carrier(carrier_id=1)
+                self.Controller.shop_set_delivery_method(dm_id='1')
 
     # test that changing the carrier while there is a draft transaction doesn't raise an error
     def test_controller_change_carrier_when_draft_transaction(self):
         with MockRequest(self.env, website=self.website):
             order = self.website.sale_get_order(force_create=True)
             order.transaction_ids = self._create_transaction(flow='redirect', state='draft')
-            self.Controller.update_eshop_carrier(carrier_id=1)
+            self.Controller.shop_set_delivery_method(dm_id='1')
 
     def test_address_states(self):
         US = self.env.ref('base.us')

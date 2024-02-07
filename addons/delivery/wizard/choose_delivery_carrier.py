@@ -33,7 +33,7 @@ class ChooseDeliveryCarrier(models.TransientModel):
     def _onchange_carrier_id(self):
         self.delivery_message = False
         if self.delivery_type in ('fixed', 'base_on_rule'):
-            vals = self._get_shipment_rate()
+            vals = self._get_delivery_rate()
             if vals.get('error_message'):
                 return {'error': vals['error_message']}
         else:
@@ -44,7 +44,7 @@ class ChooseDeliveryCarrier(models.TransientModel):
     def _onchange_order_id(self):
         # fixed and base_on_rule delivery price will computed on each carrier change so no need to recompute here
         if self.carrier_id and self.order_id.delivery_set and self.delivery_type not in ('fixed', 'base_on_rule'):
-            vals = self._get_shipment_rate()
+            vals = self._get_delivery_rate()
             if vals.get('error_message'):
                 warning = {
                     'title': _("%(carrier)s Error", carrier=self.carrier_id.name),
@@ -64,7 +64,7 @@ class ChooseDeliveryCarrier(models.TransientModel):
             carriers = self.env['delivery.carrier'].search(self.env['delivery.carrier']._check_company_domain(rec.order_id.company_id))
             rec.available_carrier_ids = carriers.available_carriers(rec.order_id.partner_shipping_id) if rec.partner_id else carriers
 
-    def _get_shipment_rate(self):
+    def _get_delivery_rate(self):
         vals = self.carrier_id.with_context(order_weight=self.total_weight).rate_shipment(self.order_id)
         if vals.get('success'):
             self.delivery_message = vals.get('warning_message', False)
@@ -74,7 +74,7 @@ class ChooseDeliveryCarrier(models.TransientModel):
         return {'error_message': vals['error_message']}
 
     def update_price(self):
-        vals = self._get_shipment_rate()
+        vals = self._get_delivery_rate()
         if vals.get('error_message'):
             raise UserError(vals.get('error_message'))
         return {

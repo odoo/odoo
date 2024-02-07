@@ -119,6 +119,14 @@ function goToCheckout() {
     };
 }
 
+function confirmOrder() {
+    return {
+        content: 'Confirm',
+        trigger: 'a[href^="/shop/confirm_order"]',
+        run: 'click',
+    };
+}
+
 function pay() {
     return {
         content: 'Pay',
@@ -216,6 +224,7 @@ export default {
     fillAdressForm,
     goToCart,
     goToCheckout,
+    confirmOrder,
     pay,
     payWithDemo,
     payWithTransfer,
