@@ -25,6 +25,9 @@ class MailPush(models.Model):
         if not web_push_notifications_sudo:
             return
 
+        web_push_notifications_count = len(web_push_notifications_sudo) if len(web_push_notifications_sudo) < batch_size else self.sudo().search_count([])
+        self.env['ir.cron']._log_progress(len(web_push_notifications_sudo), web_push_notifications_count)
+
         ir_parameter_sudo = self.env['ir.config_parameter'].sudo()
         vapid_private_key = ir_parameter_sudo.get_param('mail.web_push_vapid_private_key')
         vapid_public_key = ir_parameter_sudo.get_param('mail.web_push_vapid_public_key')
@@ -62,7 +65,3 @@ class MailPush(models.Model):
         # clean up obsolete devices
         if devices_to_unlink:
             self.env['mail.push.device'].sudo().browse(devices_to_unlink).unlink()
-
-        # restart the cron if needed
-        if self.search_count([]) > 0:
-            self.env.ref('mail.ir_cron_web_push_notification')._trigger()

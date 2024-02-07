@@ -197,7 +197,7 @@ class MailMail(models.Model):
         return self.write({'state': 'cancel'})
 
     @api.model
-    def process_email_queue(self, ids=None):
+    def process_email_queue(self, ids=None, batch_size=10000):
         """Send immediately queued messages, committing after each
            message is sent - this is not transactional and should
            not be called during another transaction!
@@ -220,9 +220,11 @@ class MailMail(models.Model):
         ]
         if 'filters' in self._context:
             filters.extend(self._context['filters'])
-        # TODO: make limit configurable
-        filtered_ids = self.search(filters, limit=10000).ids
+        filtered_ids = self.search(filters, limit=batch_size).ids
+
         if not ids:
+            ids_count = len(filtered_ids) if len(filtered_ids) < batch_size else self.search_count(filters)
+            self.env['ir.cron']._log_progress(0, ids_count)
             ids = filtered_ids
         else:
             ids = list(set(filtered_ids) & set(ids))
@@ -725,7 +727,7 @@ class MailMail(models.Model):
                             value = '. '.join(e.args)
                         raise MailDeliveryException(value)
                     raise
-
-            if auto_commit is True:
+            self.env._log_progress(1)
+            if auto_commit is True: # FLDA TODO see if commit every mail is a good idea ? (See ODO)
                 self._cr.commit()
         return True

@@ -48,6 +48,7 @@ class MailMessageSchedule(models.Model):
         )
         if messages_scheduled:
             _logger.info('Send %s scheduled messages', len(messages_scheduled))
+            self.env['ir.cron']._log_progress(len(messages_scheduled), len(messages_scheduled))
             messages_scheduled._send_notifications()
 
     def force_send(self):

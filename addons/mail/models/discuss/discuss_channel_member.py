@@ -163,9 +163,11 @@ class ChannelMember(models.Model):
         self.env['bus.bus']._sendmany(notifications)
 
     @api.model
-    def _unmute(self):
+    def _unmute(self, batch_size=1000):
         # Unmute notifications for the all the channel members whose mute date is passed.
-        members = self.search([("mute_until_dt", "<=", fields.Datetime.now())])
+        members = self.search([("mute_until_dt", "<=", fields.Datetime.now())], limit=batch_size)
+        members_count = len(members) if len(members) < batch_size else self.search_count([("mute_until_dt", "<=", fields.Datetime.now())])
+        self.env['ir.cron']._log_progress(len(members), members_count - len(members))
         members.write({"mute_until_dt": False})
         notifications = []
         for member in members:
