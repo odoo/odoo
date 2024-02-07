@@ -265,6 +265,12 @@ export function setupQUnit() {
             errorMessages.push(`${result.failed} / ${result.total} tests failed.`);
         }
         if (!result.failed && !moduleLoadingError) {
+            // use console.dir for this log to appear on runbot sub-builds page
+            console.dir(
+                `QUnit: passed ${testPassedCount} tests (${
+                    result.passed
+                } assertions), took ${Math.round(result.runtime / 1000)}s`
+            );
             console.log("QUnit test suite done.");
             console.log("test successful"); // for ChromeBowser to know it's over and ok
         } else {
@@ -277,7 +283,9 @@ export function setupQUnit() {
      */
     QUnit.moduleDone(async (result) => {
         if (!result.failed) {
-            console.log('"' + result.name + '"', "passed", result.total, "tests.");
+            console.log(
+                `"${result.name}" passed ${result.tests.length} tests (${result.total} assertions).`
+            );
         } else {
             console.log(
                 '"' + result.name + '"',
