@@ -19,6 +19,7 @@
                     t-ref="after"
                     type="button"
                     class="btn btn-secondary dropdown-toggle o_arrow_button o_first"
+                    t-att-disabled="props.isDisabled"
                 >
                     ...
                 </button>
@@ -52,6 +53,7 @@
                     t-ref="before"
                     type="button"
                     class="btn btn-secondary dropdown-toggle o_arrow_button o_last"
+                    t-att-disabled="props.isDisabled"
                 >
                     ...
                 </button>
@@ -62,7 +64,12 @@
                 </t>
             </Dropdown>
             <Dropdown position="'bottom-end'">
-                <button t-ref="dropdown" type="button" class="btn btn-secondary dropdown-toggle">
+                <button
+                    t-ref="dropdown" 
+                    type="button" 
+                    class="btn btn-secondary dropdown-toggle"
+                    t-att-disabled="props.isDisabled"
+                >
                     <t t-out="getCurrentLabel()" />
                 </button>
                 <t t-set-slot="content">

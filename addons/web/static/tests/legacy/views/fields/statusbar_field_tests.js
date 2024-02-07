@@ -169,7 +169,7 @@ QUnit.module("Fields", (hooks) => {
             "search_read should only fetch field display_name"
         );
         assert.containsN(target, ".o_statusbar_status button:not(.dropdown-toggle)", 2);
-        assert.containsN(target, ".o_statusbar_status button:disabled", 2);
+        assert.containsN(target, ".o_statusbar_status button:disabled", 5);
         assert.hasClass(
             target.querySelector('.o_statusbar_status button[data-value="4"]'),
             "o_arrow_button_current"
@@ -381,7 +381,7 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
         });
 
-        assert.containsN(target, ".o_statusbar_status button:disabled", 2);
+        assert.containsN(target, ".o_statusbar_status button:disabled", 5);
     });
 
     QUnit.test(
@@ -439,7 +439,7 @@ QUnit.module("Fields", (hooks) => {
 
             const status = target.querySelectorAll(".o_statusbar_status");
             assert.containsOnce(getDropdownMenu(target, status[0]), ".dropdown-item.disabled");
-            assert.containsOnce(status[status.length - 1], "button:disabled");
+            assert.containsN(status[status.length - 1], "button:disabled", 4);
         }
     );
 
@@ -510,11 +510,11 @@ QUnit.module("Fields", (hooks) => {
             },
         });
 
-        assert.containsN(target, ".o_statusbar_status button:disabled", 3);
+        assert.containsN(target, ".o_statusbar_status button:disabled", 6);
         assert.strictEqual(rpcCount, 1, "should have done 1 search_read rpc");
         await editInput(target, ".o_field_widget[name='qux'] input", 9.5);
         await nextTick();
-        assert.containsN(target, ".o_statusbar_status button:disabled", 2);
+        assert.containsN(target, ".o_statusbar_status button:disabled", 5);
         assert.strictEqual(rpcCount, 2, "should have done 1 more search_read rpc");
         await editInput(target, ".o_field_widget[name='qux'] input", "hey");
         assert.strictEqual(rpcCount, 2, "should not have done 1 more search_read rpc");
