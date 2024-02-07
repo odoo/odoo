@@ -264,10 +264,36 @@ export class PaymentScreen extends Component {
                 }
             }
         } catch (error) {
+<<<<<<< HEAD:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js
             if (error instanceof ConnectionLostError) {
                 this.pos.showScreen(this.nextScreen);
                 Promise.reject(error);
                 return error;
+||||||| parent of 3da1ab4a1bae (temp):addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js
+            if (error.code == 700 || error.code == 701) {
+                this.error = true;
+            }
+
+            if ("code" in error) {
+                // We started putting `code` in the rejected object for invoicing error.
+                // We can continue with that convention such that when the error has `code`,
+                // then it is an error when invoicing. Besides, _handlePushOrderError was
+                // introduce to handle invoicing error logic.
+                await this._handlePushOrderError(error);
+=======
+            // unblock the UI before showing the error popup
+            this.env.services.ui.unblock();
+            if (error.code == 700 || error.code == 701) {
+                this.error = true;
+            }
+
+            if ("code" in error) {
+                // We started putting `code` in the rejected object for invoicing error.
+                // We can continue with that convention such that when the error has `code`,
+                // then it is an error when invoicing. Besides, _handlePushOrderError was
+                // introduce to handle invoicing error logic.
+                await this._handlePushOrderError(error);
+>>>>>>> 3da1ab4a1bae (temp):addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js
             } else {
                 throw error;
             }
