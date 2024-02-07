@@ -2,6 +2,7 @@
 
 import { registry } from "@web/core/registry";
 import { usePopover } from "@web/core/popover/popover_hook";
+import { _t } from "@web/core/l10n/translation";
 import {
     Many2ManyTagsAvatarUserField,
     many2ManyTagsAvatarUserField,
@@ -27,7 +28,7 @@ class AvatarResourceMany2XAutocomplete extends AvatarMany2XAutocomplete {
         return this.orm.call(
             this.props.resModel,
             "search_read",
-            [this.getDomain(request), ["id", "display_name", "resource_type"]],
+            [this.getDomain(request), ["id", "display_name", "resource_type", "color"]],
             {
                 context: this.props.context,
                 limit: this.props.searchLimit + 1,
@@ -52,6 +53,7 @@ class AvatarResourceMany2XAutocomplete extends AvatarMany2XAutocomplete {
             resModel: this.props.resModel,
             value: result.id,
             resourceType: result.resource_type,
+            colorIndex: result.color,
             label: result.display_name,
         };
     }
@@ -83,6 +85,7 @@ export class Many2ManyAvatarResourceField extends Many2ManyTagsAvatarUserField {
         return {
             ...super.getTagProps(...arguments),
             icon: record.data.resource_type === "user" ? null : "fa-wrench",
+            colorIndex: record.data.color,
             img: record.data.resource_type === "user"
                 ? `/web/image/${this.relation}/${record.resId}/avatar_128`
                 : null,
@@ -100,6 +103,14 @@ export const many2ManyAvatarResourceField = {
             {
                 name: "resource_type",
                 type: "selection",
+                selection: [
+                    ["user", _t("Human")],
+                    ["material", _t("Material")],
+                ],
+            },
+            {
+                name: "color",
+                type: "integer",
             },
         ];
     },
