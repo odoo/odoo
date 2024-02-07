@@ -9,9 +9,13 @@ import { Input } from "@point_of_sale/app/generic_components/inputs/input/input"
 import { parseFloat } from "@web/views/fields/parsers";
 import { Dialog } from "@web/core/dialog/dialog";
 
+class CustomDialog extends Dialog {
+    onEscape() {}
+}
+
 export class CashOpeningPopup extends Component {
     static template = "point_of_sale.CashOpeningPopup";
-    static components = { Input, Dialog };
+    static components = { Input, Dialog: CustomDialog };
     static props = {
         close: Function,
     };
