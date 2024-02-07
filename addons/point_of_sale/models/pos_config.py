@@ -741,6 +741,22 @@ class PosConfig(models.Model):
             if invoice_journal_id:
                 pos_config.write({'invoice_journal_id': invoice_journal_id.id})
 
+    def _get_available_categories(self):
+        return (
+            self.env["pos.category"]
+            .search(
+                [
+                    *(
+                        self.limit_categories
+                        and self.iface_available_categ_ids
+                        and [("id", "in", self.iface_available_categ_ids._get_descendants().ids)]
+                        or []
+                    ),
+                ],
+                order="sequence",
+            )
+        )
+
     def _get_available_product_domain(self):
         domain = [
             *self.env['product.product']._check_company_domain(self.company_id),
@@ -748,7 +764,7 @@ class PosConfig(models.Model):
             ('sale_ok', '=', True),
         ]
         if self.limit_categories and self.iface_available_categ_ids:
-            domain.append(('pos_categ_ids', 'in', self.iface_available_categ_ids.ids))
+            domain.append(('pos_categ_ids', 'in', self._get_available_categories().ids))
         if self.iface_tipproduct:
             domain = OR([domain, [('id', '=', self.tip_product_id.id)]])
         return domain
