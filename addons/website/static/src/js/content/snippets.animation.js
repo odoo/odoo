@@ -454,10 +454,10 @@ registry.slider = publicWidget.Widget.extend({
         $(window).on('resize.slider', _.debounce(() => this._computeHeights(), 250));
         if (this.editableMode) {
             // Prevent carousel slide to be an history step.
-            this.$target.on('slide.bs.carousel', () => {
+            this.$target.on('slide.bs.carousel.slider', () => {
                 this.options.wysiwyg.odooEditor.observerUnactive();
             });
-            this.$target.on('slid.bs.carousel', () => {
+            this.$target.on('slid.bs.carousel.slider', () => {
                 this.options.wysiwyg.odooEditor.observerActive();
             });
         }
@@ -475,7 +475,7 @@ registry.slider = publicWidget.Widget.extend({
             $(el).css('min-height', '');
         });
         $(window).off('.slider');
-        this.$target.off('.carousel');
+        this.$target.off('.slider');
     },
 
     //--------------------------------------------------------------------------
