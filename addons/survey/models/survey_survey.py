@@ -155,6 +155,7 @@ class Survey(models.Model):
     certification_badge_id = fields.Many2one('gamification.badge', 'Certification Badge', copy=False)
     certification_badge_id_dummy = fields.Many2one(related='certification_badge_id', string='Certification Badge ')
     # live sessions
+    session_available = fields.Boolean('Live session available', compute='_compute_session_available')
     session_state = fields.Selection([
         ('ready', 'Ready'),
         ('in_progress', 'In Progress'),
@@ -358,6 +359,11 @@ class Survey(models.Model):
                 survey.scoring_type = 'scoring_without_answers'
             elif not survey.scoring_type:
                 survey.scoring_type = 'no_scoring'
+
+    @api.depends('survey_type')
+    def _compute_session_available(self):
+        for survey in self:
+            survey.session_available = survey.survey_type in {'live_session', 'custom'}
 
     @api.onchange('survey_type')
     def _onchange_survey_type(self):
