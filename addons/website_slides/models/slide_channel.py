@@ -71,7 +71,8 @@ class ChannelUsersRelation(models.Model):
 
             if not record.channel_id.active:
                 continue
-            elif not record.completed and record.completed_slides_count >= record.channel_id.total_slides:
+            # Add record to completed unless there are no slides in the channel (can happen when unlinking)
+            elif not record.completed and record.channel_id.total_slides and record.completed_slides_count >= record.channel_id.total_slides:
                 completed_records += record
             elif slides_marked_uncompleted and record.completed and record.completed_slides_count < record.channel_id.total_slides:
                 uncompleted_records += record
