@@ -908,7 +908,7 @@ export class TestRunner {
         } else {
             // This statement acts as a success code for the server to know when
             // all suites have passed.
-            console.log(...hootLog("test successful"));
+            console.log(...hootLog("test suite succeeded"));
         }
     }
 

@@ -35,12 +35,12 @@ class WebSuite(odoo.tests.HttpCase):
     @odoo.tests.no_retry
     def test_unit_desktop(self):
         # Unit tests suite (desktop)
-        self.browser_js('/web/tests/next?headless&tag=-mobile', "", "", login='admin', timeout=1800, error_checker=unit_test_error_checker)
+        self.browser_js('/web/tests/next?headless&tag=-mobile', "", "", login='admin', timeout=1800, success_signal="[HOOT] test suite succeeded", error_checker=unit_test_error_checker)
 
     @odoo.tests.no_retry
     def test_qunit_desktop(self):
         # ! DEPRECATED
-        self.browser_js('/web/tests?mod=web', "", "", login='admin', timeout=1800, error_checker=qunit_error_checker)
+        self.browser_js('/web/tests?mod=web', "", "", login='admin', timeout=1800, success_signal="QUnit test suite done.", error_checker=qunit_error_checker)
 
     def test_check_suite(self):
         self._check_forbidden_statements('web.assets_unit_tests')
@@ -94,8 +94,8 @@ class MobileWebSuite(odoo.tests.HttpCase):
     @odoo.tests.no_retry
     def test_unit_mobile(self):
         # Unit tests suite (mobile)
-        self.browser_js('/web/tests/next?headless&tag=-desktop&tag=-headless', "", "", login='admin', timeout=1800, error_checker=unit_test_error_checker)
+        self.browser_js('/web/tests/next?headless&tag=-desktop&tag=-headless', "", "", login='admin', timeout=1800, success_signal="[HOOT] test suite succeeded", error_checker=unit_test_error_checker)
 
     def test_qunit_mobile(self):
         # ! DEPRECATED
-        self.browser_js('/web/tests/mobile?mod=web', "", "", login='admin', timeout=1800, error_checker=qunit_error_checker)
+        self.browser_js('/web/tests/mobile?mod=web', "", "", login='admin', timeout=1800, success_signal="QUnit test suite done.", error_checker=qunit_error_checker)
