@@ -69,11 +69,10 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         }]
 
     def _get_partner_contact_vals(self, partner):
-        phone = partner.phone or partner.mobile
         return {
             'id': partner.id,
             'name': partner.name,
-            'telephone': phone and phone.strip(),
+            'telephone': partner.phone or partner.mobile,
             'electronic_mail': partner.email,
         }
 
