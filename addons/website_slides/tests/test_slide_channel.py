@@ -102,7 +102,8 @@ class TestSlidesManagement(slides_common.SlidesCase):
         channel_2 = self.env['slide.channel'].create({
             'name': 'Test Course 2',
             'slide_ids': [(0, 0, {
-                'name': 'Test Slide 2'
+                'name': 'Test Slide 2',
+                'is_published': True
             })],
             'completed_template_id': mail_template.id
         })
