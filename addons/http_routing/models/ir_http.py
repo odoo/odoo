@@ -175,30 +175,29 @@ def url_lang(path_or_uri, lang_code=None):
     return location
 
 
-def url_for(url_from, lang_code=None, no_rewrite=False):
+def url_for(url_from, lang_code=None):
     ''' Return the url with the rewriting applied.
         Nothing will be done for absolute URL, invalid URL, or short URL from 1 char.
 
         :param url_from: The URL to convert.
         :param lang_code: Must be the lang `code`. It could also be something
                           else, such as `'[lang]'` (used for url_return).
-        :param no_rewrite: don't try to match route with website.rewrite.
     '''
     new_url = False
-    rewrite = not no_rewrite
-    # don't try to match route if we know that no rewrite has been loaded.
-    routing = getattr(request, 'website_routing', None)  # not modular, but not overridable
-    if not request.env['ir.http']._rewrite_len(routing):
-        rewrite = False
-
     path, _, qs = (url_from or '').partition('?')
 
-    if (rewrite and path and (
+    routing = getattr(request, 'website_routing', None)  # not modular, but not overridable
+    if (
+        path
+        # don't try to match route if we know that no rewrite has been loaded.
+        and request.env['ir.http']._rewrite_len(routing)
+        and (
             len(path) > 1
             and path.startswith('/')
             and '/static/' not in path
             and not path.startswith('/web/')
-    )):
+        )
+    ):
         new_url, _ = request.env['ir.http'].url_rewrite(path)
         new_url = new_url if not qs else new_url + '?%s' % qs
 
