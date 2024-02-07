@@ -1564,6 +1564,11 @@ actual arch.
         name_manager.has_field(node, name, {'id': node.get('id'), 'select': node.get('select')})
 
         if validate:
+            class dict_get_bool(dict):
+                def __getitem__(self, *args, **kwargs):
+                    return bool(super().__getitem__(*args, **kwargs))
+                def get(self, *args, **kwargs):
+                    return bool(super().get(*args, **kwargs))
             for attribute in ('invisible', 'readonly', 'required'):
                 val = node.get(attribute)
                 if val:
@@ -1571,7 +1576,8 @@ actual arch.
                         # most (~95%) elements are 1/True/0/False
                         res = str2bool(val)
                     except ValueError:
-                        res = safe_eval.safe_eval(val, {'context': self._context})
+                        context = dict_get_bool(**self._context)
+                        res = safe_eval.safe_eval(val, {'context': context})
                     if res not in (1, 0, True, False, None):
                         msg = _(
                             'Attribute %(attribute)s evaluation expects a boolean, got %(value)s',

@@ -2292,6 +2292,7 @@ class TestViews(ViewCase):
         for context, expected in [
             ({}, {}),
             ({'foo': True}, {'invisible': True}),
+            ({"foo": "someString"}, {"invisible": True}),
             ({'bar': True}, {'readonly': True}),
             ({'baz': True}, {'required': True}),
             ({'foo': True, 'bar': True}, {'invisible': True, 'readonly': True}),
@@ -2302,6 +2303,16 @@ class TestViews(ViewCase):
             self.assertEqual(modifiers.get('invisible'), expected.get('invisible'))
             self.assertEqual(modifiers.get('readonly'), expected.get('readonly'))
             self.assertEqual(modifiers.get('required'), expected.get('required'))
+
+    def test_modifier_attribute_using_context_write(self):
+        view = self.View.with_context({"default_brol": "echt brol"}).create({
+            "arch": """<tree><field name="function" invisible="context.get('default_brol')"/></tree>""",
+            "type": "tree",
+            "model": "res.partner"
+        })
+        arch = view.get_view(view_id=view.id)["arch"]
+        self.assertEqual(arch, """<tree><field name="function" modifiers="{&quot;column_invisible&quot;: true}"/></tree>""")
+
 
     def test_modifier_attribute_priority(self):
         view = self.assertValid("""
