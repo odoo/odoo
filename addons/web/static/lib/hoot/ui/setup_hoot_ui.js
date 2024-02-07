@@ -22,7 +22,7 @@ const { customElements, document, HTMLElement } = globalThis;
 const makeUiState = () =>
     reactive({
         resultsPage: 0,
-        resultsPerPage: 50,
+        resultsPerPage: 40,
         /** @type {string | null} */
         selectedSuiteId: null,
         /** @type {"asc" | "desc" | false} */

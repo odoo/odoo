@@ -134,10 +134,7 @@ export class HootReporting extends Component {
         const queryFilter = this.getQueryFilter();
 
         const results = [];
-        for (const test of Object.values(this.runnerState.done)) {
-            if (!test) {
-                continue; // Test not yet registered
-            }
+        for (const test of this.runnerState.done) {
             let matchFilter = false;
             switch (statusFilter) {
                 case "failed": {
