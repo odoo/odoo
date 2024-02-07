@@ -1687,7 +1687,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 f.date_from = '2024-01-01'
                 f.employee_ids.add(self.employee_emp)
                 f.holiday_status_id = self.leave_type
-                f.name = "Employee Allocation"
+                f.private_name = "Employee Allocation"
 
             accrual_allocation = f.record
             accrual_allocation.action_validate()
@@ -1902,7 +1902,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 f.employee_ids.add(self.employee_emp)
                 f.holiday_status_id = leave_type
                 f.date_from = '2024-02-01'
-                f.name = "Accrual allocation for employee"
+                f.private_name = "Accrual allocation for employee"
 
             allocation = f.record
             allocation.action_validate()
@@ -2034,7 +2034,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 f.date_from = '2024-08-07'
                 f.holiday_status_id = self.leave_type
                 f.employee_ids.add(self.employee_emp)
-                f.name = "Employee Allocation"
+                f.private_name = "Employee Allocation"
 
             accrual_allocation = f.record
             allocation_days = accrual_allocation.number_of_days
