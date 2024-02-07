@@ -100,6 +100,7 @@ export function contains(target, options) {
     if (target?.raw) {
         return contains(String.raw(...arguments));
     }
+
     /**
      * @template T
      * @param  {...T} actions

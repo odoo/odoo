@@ -56,5 +56,6 @@ export {
     press,
     scroll,
     select,
+    setInputFiles,
     uncheck,
 } from "./helpers/events";

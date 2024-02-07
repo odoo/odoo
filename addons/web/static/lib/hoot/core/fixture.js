@@ -2,7 +2,7 @@
 
 import { App, Component } from "@odoo/owl";
 import { defineRootNode, getActiveElement } from "@web/../lib/hoot-dom/helpers/dom";
-import { resetEventActions } from "@web/../lib/hoot-dom/helpers/events";
+import { setupEventActions } from "@web/../lib/hoot-dom/helpers/events";
 import { HootError } from "../hoot_utils";
 
 /**
@@ -60,14 +60,14 @@ export function makeFixtureManager(runner) {
 
     const getFixture = () => {
         if (!fixture) {
-            resetEventActions();
-
             fixture = document.createElement("hoot-fixture");
             if (runner.debug) {
                 fixture.setAttribute("style", FIXTURE_DEBUG_STYLE);
             } else {
                 fixture.setAttribute("style", FIXTURE_STYLE);
             }
+
+            setupEventActions(fixture);
 
             document.body.appendChild(fixture);
         }
