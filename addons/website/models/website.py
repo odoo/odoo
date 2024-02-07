@@ -139,6 +139,8 @@ class Website(models.Model):
     favicon = fields.Binary(string="Website Favicon", help="This field holds the image used to display a favicon on the website.", default=_default_favicon)
     theme_id = fields.Many2one('ir.module.module', help='Installed theme')
 
+    design_ids = fields.One2many(comodel_name='website.design', inverse_name='website_id', string='Website Design')
+
     specific_user_account = fields.Boolean('Specific User Account', help='If True, new accounts will be associated to the current website')
     auth_signup_uninvited = fields.Selection([
         ('b2b', 'On invitation'),
@@ -209,8 +211,13 @@ class Website(models.Model):
 
         websites = super().create(vals_list)
         websites.company_id._compute_website_id()
+        self.env['website']._force()
         for website in websites:
             website._bootstrap_homepage()
+            if not self.env.context.get('install_mode'):
+                # We don't do it when installing website because we cannot find
+                # the asset to write scss in it.
+                self.env['website.design'].create({'website_id': website.id})
 
         if not self.env.user.has_group('website.group_multi_website') and self.search_count([]) > 1:
             all_user_groups = 'base.group_portal,base.group_user,base.group_public'
