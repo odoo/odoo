@@ -1910,7 +1910,7 @@ class Task(models.Model):
                     error_message = _('You cannot write on %s fields in task.', ', '.join(unauthorized_fields))
                 raise AccessError(error_message)
 
-    def _get_sudo_portal_vals(self, vals):
+    def _get_portal_sudo_vals(self, vals, defaults=False):
         """ returns the values which must be written without and with sudo when a portal user creates / writes a task.
             :param vals: dict of {field: value}, the values to create/write
             :return: a tuple with 2 dicts:
@@ -1918,8 +1918,24 @@ class Task(models.Model):
                 - the second with the values to write with sudo
         """
         vals_no_sudo = {key: val for key, val in vals.items() if self._fields[key].type in ('one2many', 'many2many')}
+        if defaults:
+            vals_no_sudo.update({
+                key[8:]: value
+                for key, value in self.env.context.items()
+                if key.startswith('default_') and key[8:] in self.SELF_WRITABLE_FIELDS and self._fields[key[8:]].type in ('one2many', 'many2many')
+            })
         vals_sudo = {key: val for key, val in vals.items() if key not in vals_no_sudo}
         return vals_no_sudo, vals_sudo
+
+    @api.model
+    def _get_portal_sudo_context(self):
+        return {
+            key: value for key, value in self.env.context.items()
+            if key == 'default_project_id'
+            or key == 'default_user_ids' and value is False \
+            or not key.startswith('default_')
+            or key[8:] in (field for field in self.SELF_WRITABLE_FIELDS if self._fields[field].type not in ('one2many', 'many2many'))
+        }
 
     def read(self, fields=None, load='_classic_read'):
         self._ensure_fields_are_accessible(fields)
@@ -2045,19 +2061,12 @@ class Task(models.Model):
         # in order to compute the field tracking
         was_in_sudo = self.env.su
         if is_portal_user:
-            ctx = {
-                key: value for key, value in self.env.context.items()
-                if key == 'default_project_id' \
-                    or key == 'default_user_ids' and value is False \
-                    or not key.startswith('default_') \
-                    or key[8:] in self.SELF_WRITABLE_FIELDS
-            }
-            self = self.with_context(ctx).sudo()
-            vals_list_no_sudo, vals_list = zip(*(self._get_sudo_portal_vals(vals) for vals in vals_list))
-        tasks = super(Task, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
+            vals_list_no_sudo, vals_list = zip(*(self._get_portal_sudo_vals(vals, defaults=True) for vals in vals_list))
+            self_no_sudo, self = self, self.with_context(self._get_portal_sudo_context()).sudo()
+        tasks = super(Task, self).create(vals_list)
         if is_portal_user:
-            for task, vals in zip(tasks, vals_list_no_sudo):
-                task.sudo(was_in_sudo).write(vals)
+            for task, vals in zip(tasks.with_env(self_no_sudo.env), vals_list_no_sudo):
+                task.write(vals)
         tasks._populate_missing_personal_stages()
         self._task_message_auto_subscribe_notify({task: task.user_ids - self.env.user for task in tasks})
 
@@ -2137,7 +2146,7 @@ class Task(models.Model):
         # in order to keep the same name than the task.
         if portal_can_write:
             tasks_no_sudo, tasks = tasks, tasks.sudo()
-            vals_no_sudo, vals = self._get_sudo_portal_vals(vals)
+            vals_no_sudo, vals = self._get_portal_sudo_vals(vals)
 
         # Track user_ids to send assignment notifications
         old_user_ids = {t: t.user_ids for t in self}
