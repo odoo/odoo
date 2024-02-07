@@ -11,8 +11,23 @@
     </t>
 
     <t t-name="resource_mail.Many2ManyAvatarResourceTagsList" t-inherit="mail.Many2ManyAvatarUserTagsList">
-        <xpath expr="//span[hasclass('o_tag')]/i" position="attributes">
+        <i position="attributes">
             <attribute name="t-on-click.stop.prevent">tag.onImageClicked</attribute>
+            <attribute name="class">o_avatar o_m2m_avatar position-relative rounded</attribute>
+            <attribute name="t-attf-class" separator=" " add="o_colorlist_item_color_{{ tag.colorIndex }}"/>
+        </i>
+        <xpath expr="//span[hasclass('o_tag')]" position="attributes">
+            <attribute name="t-attf-class"/>
+            <attribute name="t-att-class"/>
+            <attribute name="class" separator=" " add="o_avatar opacity-trigger-hover"/>
         </xpath>
+        <xpath expr="//div[hasclass('o_tag_badge_text')]" position="attributes">
+            <attribute name="t-attf-class"/>
+            <attribute name="class" separator=" " add="position-relative ms-1"/>
+        </xpath>
+        <a position="attributes">
+            <attribute name="t-attf-class"/>
+            <attribute name="class" separator=" " add="btn btn-link position-relative py-0 px-1 text-danger opacity-0"/>
+        </a>
     </t>
 </templates>
