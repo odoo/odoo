@@ -155,7 +155,7 @@ export class MockServer {
 
     // Server params
     lang_parameters = {
-        date_format: "%d/%m/%Y",
+        date_format: "%m/%d/%Y",
         decimal_point: ".",
         direction: "ltr",
         grouping: "[3,0]",
