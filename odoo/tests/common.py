@@ -1378,6 +1378,7 @@ which leads to stray network requests and inconsistencies."""
         'info': logging.INFO,
         'warning': logging.WARNING,
         'error': logging.ERROR,
+        'dir': logging.RUNBOT,
         # TODO: what do with
         # dir, dirxml, table, trace, clear, startGroup, startGroupCollapsed,
         # endGroup, assert, profile, profileEnd, count, timeEnd
