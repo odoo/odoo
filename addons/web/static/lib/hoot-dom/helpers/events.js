@@ -364,18 +364,17 @@ const parseKeyStroke = (keyStrokes) =>
  */
 const registerForChange = (target, initialValue) => {
     const triggerChange = () => {
-        for (const removeListener of removeChangeTargetListeners) {
-            removeListener();
-        }
+        removeChangeTargetListeners();
+
         if (target.value !== initialValue) {
             dispatch(target, "change");
         }
     };
 
-    removeChangeTargetListeners = [
-        on(target, "keydown", (ev) => ev.key === "Enter" && triggerChange()),
+    changeTargetListeners.push(
+        on(target, "keydown", (ev) => !isPrevented(ev) && ev.key === "Enter" && triggerChange()),
         on(target, "blur", triggerChange),
-    ];
+    );
 };
 
 /**
@@ -403,6 +402,12 @@ const registerSpecialKey = (eventInit, toggle) => {
         case "shift":
             specialKeys.shiftKey = toggle;
             break;
+    }
+};
+
+const removeChangeTargetListeners = () => {
+    while (changeTargetListeners.length) {
+        changeTargetListeners.pop()();
     }
 };
 
@@ -936,6 +941,7 @@ let currentEvents = [];
 let fullClear = false;
 
 // Keyboard global variables
+const changeTargetListeners = [];
 const specialKeys = {
     altKey: false,
     ctrlKey: false,
@@ -943,7 +949,6 @@ const specialKeys = {
     shiftKey: false,
 };
 let isComposing = false;
-let removeChangeTargetListeners = [];
 
 // Pointer global variables
 let currentClickCount = 0;
@@ -1664,12 +1669,10 @@ export function resetEventActions() {
     if (currentPointerTimeout) {
         globalThis.clearTimeout(currentPointerTimeout);
     }
-    for (const removeListener of removeChangeTargetListeners) {
-        removeListener();
-    }
+
+    removeChangeTargetListeners();
 
     isComposing = false;
-    removeChangeTargetListeners = [];
 
     currentClickCount = 0;
     currentPointerTarget = null;
