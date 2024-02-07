@@ -82,6 +82,7 @@ class HolidaysRequest(models.Model):
         defaults = super(HolidaysRequest, self).default_get(fields_list)
         defaults = self._default_get_request_dates(defaults)
 
+        lt = self.env['hr.leave.type']
         if self.env.context.get('holiday_status_display_name', True) and 'holiday_status_id' in fields_list and not defaults.get('holiday_status_id'):
             lt = self.env['hr.leave.type'].search(['|', ('requires_allocation', '=', 'no'), ('has_valid_allocation', '=', True)], limit=1, order='sequence')
             if lt:
@@ -89,7 +90,7 @@ class HolidaysRequest(models.Model):
                 defaults['request_unit_custom'] = False
 
         if 'state' in fields_list and not defaults.get('state'):
-            defaults['state'] = 'confirm' if lt and lt.leave_validation_type != 'no_validation' else 'draft'
+            defaults['state'] = 'confirm' if lt.leave_validation_type != 'no_validation' else 'draft'
 
         if 'request_date_from' in fields_list and 'request_date_from' not in defaults:
             defaults['request_date_from'] = fields.Date.today()
