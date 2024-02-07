@@ -182,9 +182,9 @@ export class TestRunner {
         currentTest: null,
         /**
          * List of tests that have been run
-         * @type {Record<string, Test>}
+         * @type {Test[]}
          */
-        done: {},
+        done: [],
         /**
          * Dictionnary containing whether a job is included or excluded from the
          * current run.
@@ -683,7 +683,7 @@ export class TestRunner {
         }
 
         // Register default hooks
-        const [addTestDone, flushTestDone] = batch((test) => (this.state.done[test.id] = test), 10);
+        const [addTestDone, flushTestDone] = batch((test) => this.state.done.push(test), 10);
         this.afterAll(
             flushTestDone,
             on(window, "error", (ev) => this.#onError(ev)),
