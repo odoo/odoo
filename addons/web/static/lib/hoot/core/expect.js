@@ -839,7 +839,7 @@ export class Matchers {
                 options?.message ||
                 (pass
                     ? `received value is[! not] deeply equal to %actual%`
-                    : `expected values to be deeply equal`),
+                    : `expected values to[! not] be deeply equal`),
             details: (actual) => {
                 const details = [
                     [Markup.green("Expected:"), expected],
