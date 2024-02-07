@@ -455,7 +455,7 @@ export class Wysiwyg extends Component {
                     const [deepestNode] = getDeepestPosition(selection.anchorNode, selection.anchorOffset);
                     const elementSelectors = [
                         'LI:not([t-field])',
-                        'DIV:not([t-field]):not(.o_not_editable)',
+                        "DIV:not([t-field]):not(.o_not_editable):not([contenteditable='false'])",
                         ...paragraphRelatedElements.map(tag => `${tag}:not([t-field])`),
                     ];
                     const baseNode = closestElement(deepestNode, elementSelectors.join(', '));
