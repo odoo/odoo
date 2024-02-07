@@ -24,10 +24,7 @@ patch(PaymentPage.prototype, {
     },
     get selectedPaymentIsOnline() {
         const paymentMethods = this.selectedPaymentMethod;
-        return (
-            paymentMethods &&
-            paymentMethods.is_online_payment
-        );
+        return paymentMethods && paymentMethods.is_online_payment;
     },
     generateQrcodeImg(url) {
         const codeWriter = new window.ZXing.BrowserQRCodeSvgWriter();

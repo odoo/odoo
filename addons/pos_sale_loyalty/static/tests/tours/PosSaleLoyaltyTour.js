@@ -8,19 +8,18 @@ import * as ProductScreenSale from "@pos_sale/../tests/helpers/ProductScreenTour
 const ProductScreen = { ...ProductScreenPos, ...ProductScreenSale };
 import { registry } from "@web/core/registry";
 
-registry
-    .category("web_tour.tours")
-    .add('PosSaleLoyaltyTour1', {
-        test: true,
-        url: '/pos/ui',
-        steps: () => [
+registry.category("web_tour.tours").add("PosSaleLoyaltyTour1", {
+    test: true,
+    url: "/pos/ui",
+    steps: () =>
+        [
             Dialog.confirm("Open session"),
             ProductScreen.controlButton("Quotation/Order"),
             ProductScreen.selectFirstOrder(),
-            ProductScreen.clickDisplayedProduct('Desk Pad'),
+            ProductScreen.clickDisplayedProduct("Desk Pad"),
             ProductScreen.clickPayButton(),
-            PaymentScreen.clickPaymentMethod('Bank'),
+            PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
             ReceiptScreen.isShown(),
         ].flat(),
-    });
+});
