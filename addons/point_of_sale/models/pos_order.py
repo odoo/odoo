@@ -592,7 +592,7 @@ class PosOrder(models.Model):
                             })
 
                     else:
-                        self.env['account.move.line'].with_context(skip_invoice_sync=True).create({
+                        self.env['account.move.line'].sudo().with_context(skip_invoice_sync=True).create({
                             'balance': -rounding_applied,
                             'quantity': 1.0,
                             'partner_id': new_move.partner_id.id,
@@ -984,7 +984,7 @@ class PosOrder(models.Model):
     def _create_order_picking(self):
         self.ensure_one()
         if self.shipping_date:
-            self.lines._launch_stock_rule_from_pos_order_lines()
+            self.sudo().lines._launch_stock_rule_from_pos_order_lines()
         else:
             if self._should_create_picking_real_time():
                 picking_type = self.config_id.picking_type_id
