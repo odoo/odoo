@@ -6,11 +6,11 @@
                 <DettaglioLinee>
                     <NumeroLinea t-out="line_dict['line_number']"/>
                     <CodiceArticolo t-if="line.product_id.barcode">
-                        <CodiceTipo>EAN</CodiceTipo>
+                        <CodiceTipo t-translation="off">EAN</CodiceTipo>
                         <CodiceValore t-out="format_alphanumeric(line.product_id.barcode)[:35]"/>
                     </CodiceArticolo>
                     <CodiceArticolo t-elif="line.product_id.default_code">
-                        <CodiceTipo>INTERNAL</CodiceTipo>
+                        <CodiceTipo t-translation="off">INTERNAL</CodiceTipo>
                         <CodiceValore t-out="format_alphanumeric(line.product_id.default_code)[:35]"/>
                     </CodiceArticolo>
                     <Descrizione t-out="format_alphanumeric(line_dict['description'])[:1000]"/>
@@ -26,12 +26,12 @@
                     <AliquotaIVA t-elif="vat_tax.amount_type != 'percent'" t-out="'0.00'"/>
                     <Natura t-if="vat_tax.l10n_it_has_exoneration" t-out="vat_tax.l10n_it_kind_exoneration"/>
                     <AltriDatiGestionali t-if="conversion_rate">
-                        <TipoDato>Currency</TipoDato>
+                        <TipoDato t-translation="off">DIVISA</TipoDato>
                         <RiferimentoTesto t-out="format_alphanumeric(record.currency_id.name)"/>
                         <RiferimentoNumero t-out="'%.06f' % line.price_subtotal"/>
                     </AltriDatiGestionali>
                     <AltriDatiGestionali t-if="conversion_rate">
-                        <TipoDato>Exch.Rate</TipoDato>
+                        <TipoDato t-translation="off">CAMBIO</TipoDato>
                         <RiferimentoNumero t-out="conversion_rate"/>
                         <RiferimentoData t-out="format_date(record.invoice_date)"/>
                     </AltriDatiGestionali>
@@ -143,7 +143,7 @@
                 <Data t-out="format_date(record.invoice_date)"/>
                 <Numero t-out="format_alphanumeric(record.name[-20:])"/>
                 <DatiBollo t-if="record.l10n_it_stamp_duty">
-                    <BolloVirtuale>SI</BolloVirtuale>
+                    <BolloVirtuale t-translation="off">SI</BolloVirtuale>
                     <ImportoBollo t-out="format_numbers(record.l10n_it_stamp_duty)"/>
                 </DatiBollo>
                 <ImportoTotaleDocumento t-out="format_monetary(document_total, currency)"/>
@@ -202,10 +202,10 @@
         </DatiBeniServizi>
         <DatiPagamento t-if="partner_bank and record.move_type != 'out_refund'">
             <t t-set="payments" t-value="record.line_ids.filtered(lambda line: line.account_id.account_type in ('asset_receivable', 'liability_payable'))"/>
-            <CondizioniPagamento><t t-if="len(payments) == 1">TP02</t><t t-else="">TP01</t></CondizioniPagamento>
+            <CondizioniPagamento t-translation="off"><t t-if="len(payments) == 1">TP02</t><t t-else="">TP01</t></CondizioniPagamento>
             <t t-foreach="payments" t-as="payment">
                 <DettaglioPagamento>
-                    <ModalitaPagamento>MP05</ModalitaPagamento>
+                    <ModalitaPagamento t-translation="off">MP05</ModalitaPagamento>
                     <DataScadenzaPagamento t-out="format_date(payment.date_maturity)"/>
                     <ImportoPagamento t-out="format_monetary(abs(payment.amount_currency), currency)"/>
                     <IstitutoFinanziario t-if="partner_bank.bank_id" t-out="format_alphanumeric(partner_bank.bank_id.name[:80])"/>
@@ -217,7 +217,7 @@
         </DatiPagamento>
         <Allegati t-if="pdf">
             <NomeAttachment t-out="format_alphanumeric(pdf_name[:60])"/>
-            <FormatoAttachment>PDF</FormatoAttachment>
+            <FormatoAttachment t-translation="off">PDF</FormatoAttachment>
             <Attachment t-out="pdf"/>
         </Allegati>
     </FatturaElettronicaBody>
