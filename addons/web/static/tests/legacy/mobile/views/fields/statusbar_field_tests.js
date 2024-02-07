@@ -85,21 +85,12 @@ QUnit.module("Mobile Fields", ({ beforeEach }) => {
             "o_field_empty",
             "statusbar widget should have class o_field_empty in edit"
         );
-        assert.containsOnce(fixture, ".o_statusbar_status button.dropdown-toggle:visible");
+        assert.containsOnce(fixture, ".o_statusbar_status button.dropdown-toggle:visible:disabled");
         assert.strictEqual(
-            $(".o_statusbar_status button.dropdown-toggle:visible").text().trim(),
+            $(".o_statusbar_status button.dropdown-toggle:visible:disabled").text().trim(),
             "..."
         );
 
-        await click($(".o_statusbar_status button.dropdown-toggle:visible")[0]);
-
-        assert.containsOnce(fixture, ".o-dropdown--menu");
-        assert.containsOnce(fixture, ".o-dropdown--menu .dropdown-item");
-        assert.strictEqual(
-            fixture.querySelector(".o-dropdown--menu .dropdown-item").textContent.trim(),
-            "first record",
-            "statusbar widget dropdown first item should display the first record display_name"
-        );
     });
 
     QUnit.test("clickable statusbar widget on mobile view", async (assert) => {
