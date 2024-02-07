@@ -223,11 +223,10 @@ class TestLeaveRequests(TestHrHolidaysCommon):
     def test_allocation_request(self):
         """ Create an allocation request """
         # employee should be set to current user
-        allocation_form = Form(self.env['hr.leave.allocation'].with_user(self.user_employee))
+        allocation_form = Form(self.env['hr.leave.allocation'].with_user(self.user_employee), view='hr_holidays.hr_leave_allocation_view_form')
         allocation_form.holiday_status_id = self.holidays_type_2
-        allocation_form.date_from = date(2019, 5, 6)
-        allocation_form.date_to = date(2019, 5, 6)
-        allocation_form.name = 'New Allocation Request'
+        allocation_form.number_of_days_display = 1
+        allocation_form.notes = ":)"
         allocation_form.save()
 
     def test_allocation_constrain_dates_check(self):
