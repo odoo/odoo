@@ -76,8 +76,8 @@
            t-nocache-_btn_class="_btn_class"
            t-nocache-_txt_class="_txt_class"
            t-nocache-_dropdown_menu_class="_dropdown_menu_class">
-            <t t-set="active_lang" t-value="list(filter(lambda lg : lg[0] == lang, languages))[0]"/>
-            <t t-set="language_selector_visible" t-value="len(languages) &gt; 1"/>
+            <t t-set="active_lang" t-value="list(filter(lambda lg : lg[0] == lang, frontend_languages))[0]"/>
+            <t t-set="language_selector_visible" t-value="len(frontend_languages) &gt; 1"/>
             <div t-attf-class="js_language_selector #{_div_classes} d-print-none" t-if="language_selector_visible">
                 <button t-attf-class="btn border-0 dropdown-toggle #{_btn_class or 'btn-sm btn-outline-secondary'}" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                     <span t-if="not no_text"
@@ -86,7 +86,7 @@
                     <span t-elif="codes" class="align-middle" t-esc="active_lang[1].split('_').pop(0).upper()"/>
                 </button>
                 <div t-attf-class="dropdown-menu #{_dropdown_menu_class}" role="menu">
-                    <t t-foreach="languages" t-as="lg">
+                    <t t-foreach="frontend_languages" t-as="lg">
                         <a class="dropdown-item" t-att-href="url_for(request.httprequest.path + '?' + keep_query(), lang_code=lg[0])"
                         t-attf-class="dropdown-item js_change_lang #{active_lang == lg and 'active'}"
                         t-att-data-url_code="lg[1]" t-att-title="lg[2].split('/').pop()">

@@ -2079,7 +2079,7 @@
     </xpath>
 
     <xpath expr="//t[@t-set='active_lang']" position="before">
-        <t t-if="lang not in (lg[0] for lg in languages)">
+        <t t-if="lang not in (lg[0] for lg in frontend_languages)">
             <t t-set="lang" t-value="website.default_lang_id.code"/>
         </t>
     </xpath>
@@ -2110,7 +2110,7 @@
     <xpath expr="//*[contains(@t-attf-class,'dropdown-item')]" position="attributes">
         <attribute name="t-attf-class" remove="dropdown-item" add="list-inline-item" separator=" "/>
     </xpath>
-    <xpath expr="//t[@t-foreach='languages']" position="inside">
+    <xpath expr="//t[@t-foreach='frontend_languages']" position="inside">
         <t t-if="not lg_last and not no_text">
             <span class="list-inline-item">|</span>
         </t>
