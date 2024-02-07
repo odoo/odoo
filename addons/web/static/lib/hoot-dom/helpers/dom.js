@@ -41,7 +41,7 @@ import { HootDomError, getTag, isFirefox, isIterable, parseRegExp } from "../hoo
  * @typedef {MaybeIterable<Node> | string | null | undefined | false} Target
  *
  * @typedef {{
- *  message?: string;
+ *  message?: string | () => string;
  *  timeout?: number;
  * }} WaitOptions
  */
@@ -1636,7 +1636,8 @@ export function waitForNone(target, options) {
             return !count;
         },
         {
-            message: `Could still find ${count} elements matching "${target}" after %timeout% milliseconds`,
+            message: () =>
+                `Could still find ${count} elements matching "${target}" after %timeout% milliseconds`,
             ...options,
         }
     );
@@ -1670,7 +1671,10 @@ export async function waitUntil(predicate, options) {
     let disconnect = () => {};
     return new Promise((resolve, reject) => {
         const timeout = Math.floor(options?.timeout ?? 1_000);
-        const message = options?.message || `'waitUntil' timed out after %timeout% milliseconds`;
+        let message = options?.message || `'waitUntil' timed out after %timeout% milliseconds`;
+        if (typeof message === "function") {
+            message = message();
+        }
         const timeoutId = setTimeout(
             () => reject(new HootDomError(message.replace("%timeout%", String(timeout)))),
             timeout
