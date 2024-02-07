@@ -262,8 +262,12 @@
                                 </group>
                                 <group string="Live Sessions">
                                     <field name="is_time_customized" invisible="True"/>
-                                    <label for="is_time_limited" string="Time Limit (seconds)"/>
-                                    <div>
+                                    <field name="session_available" invisible="True"/>
+                                    <p class="text-muted" colspan="2" invisible="session_available">
+                                        Time limits are only available for Live Sessions.
+                                    </p>
+                                    <label for="is_time_limited" string="Time Limit (seconds)" invisible="not session_available"/>
+                                    <div invisible="not session_available">
                                         <field name="is_time_limited" nolabel="1" class="oe_inline"
                                             widget="boolean_update_flag"
                                             options="{'flagFieldName': 'is_time_customized'}"
