@@ -19,29 +19,15 @@
                         </a>
                     </t>
                 </div>
-                <div class="history-container o_notebook">
-                    <ul class="nav nav-tabs" role="tablist">
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link active" id="history-content" data-bs-toggle="tab"
-                                    data-bs-target="#history-content-tab" type="button" role="tab"
-                                    aria-controls="content" aria-selected="true">Content</button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="history-comparison" data-bs-toggle="tab"
-                                    data-bs-target="#history-comparison-tab" type="button" role="tab"
-                                    aria-controls="comparison" aria-selected="false">Comparison</button>
-                        </li>
-                    </ul>
-                    <div class="tab-content">
-                        <div class="tab-pane fade show active" id="history-content-tab" role="tabpanel"
-                             aria-labelledby="history-content">
+                <div class="history-container">
+                    <Notebook defaultPage="'history'">
+                        <t t-set-slot="history" name="'history'" isVisible="true" title="notebookTabs[0]">
                             <t t-out="state.revisionContent"/>
-                        </div>
-                        <div class="tab-pane fade" id="history-comparison-tab" role="tabpanel"
-                             aria-labelledby="history-comparison">
+                        </t>
+                        <t t-set-slot="comparison" name="'comparison'" isVisible="true" title="notebookTabs[1]">
                             <t t-out="state.revisionComparison"/>
-                        </div>
-                    </div>
+                        </t>
+                    </Notebook>
                 </div>
             </div>
             <t t-set-slot="footer">

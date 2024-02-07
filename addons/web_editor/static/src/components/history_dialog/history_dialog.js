@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { Dialog } from '@web/core/dialog/dialog';
+import { Notebook } from '@web/core/notebook/notebook';
 import { formatDateTime } from '@web/core/l10n/dates';
 import { useService } from '@web/core/utils/hooks';
 import { memoize } from '@web/core/utils/functions';
@@ -12,7 +13,7 @@ const { DateTime } = luxon;
 
 class HistoryDialog extends Component {
     static template = 'web_editor.HistoryDialog';
-    static components = { Dialog };
+    static components = { Dialog, Notebook };
     static props = {
         recordId: Number,
         recordModel: String,
@@ -33,6 +34,7 @@ class HistoryDialog extends Component {
         this.size = 'xl';
         this.title = _t('History');
         this.orm = useService('orm');
+        this.notebookTabs = [_t("Content"), _t("Comparison")];
 
         onMounted(() => this.init());
     }
