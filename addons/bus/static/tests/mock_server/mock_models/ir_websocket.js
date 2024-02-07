@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { models } from "@web/../tests/web_test_helpers";
+import { session } from "@web/session";
 
 export class IrWebSocket extends models.ServerModel {
     _name = "ir.websocket";
@@ -14,7 +15,7 @@ export class IrWebSocket extends models.ServerModel {
     _updatePresence(inactivityPeriod, imStatusIdsByModel) {
         const imStatusNotifications = this._getImStatus(imStatusIdsByModel);
         if (Object.keys(imStatusNotifications).length > 0) {
-            const [partner] = this.env["res.partner"].read(this.env.partner_id);
+            const [partner] = this.env["res.partner"].read(session.partner_id);
             this.env["bus.bus"]._sendone(partner, "mail.record/insert", imStatusNotifications);
         }
     }
