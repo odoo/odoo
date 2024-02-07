@@ -12,7 +12,6 @@ import requests
 from lxml import etree, html
 from psycopg2 import sql
 from werkzeug import urls
-from werkzeug.datastructures import OrderedMultiDict
 from werkzeug.exceptions import NotFound
 
 from odoo import api, fields, models, tools, http, release, registry
@@ -1024,10 +1023,10 @@ class Website(models.Model):
     # Languages
     # ----------------------------------------------------------
 
-    def _get_alternate_languages(self, canonical_params):
+    def _get_alternate_languages(self):
         self.ensure_one()
 
-        if not self._is_canonical_url(canonical_params=canonical_params):
+        if not self._is_canonical_url():
             # no hreflang on non-canonical pages
             return []
 
@@ -1047,7 +1046,7 @@ class Website(models.Model):
             langs.append({
                 'hreflang': ('-'.join(lg_codes)).lower(),
                 'short': short,
-                'href': self_prefetch_langs._get_canonical_url_localized(lang=lg, canonical_params=canonical_params),
+                'href': self_prefetch_langs._get_canonical_url_localized(lang=lg),
             })
 
         # if there is only one region for a language, use only the language code
@@ -1058,7 +1057,7 @@ class Website(models.Model):
         # add the default
         langs.append({
             'hreflang': 'x-default',
-            'href': self._get_canonical_url_localized(lang=self.default_lang_id, canonical_params=canonical_params),
+            'href': self._get_canonical_url_localized(lang=self.default_lang_id),
         })
 
         return langs
@@ -1468,7 +1467,7 @@ class Website(models.Model):
             path = url_for(path, self.default_lang_id.url_code)
         return self.get_client_action(path, mode_edit)
 
-    def _get_canonical_url_localized(self, lang, canonical_params):
+    def _get_canonical_url_localized(self, lang):
         """Returns the canonical URL for the current request with translatable
         elements appropriately translated in `lang`.
 
@@ -1496,29 +1495,22 @@ class Website(models.Model):
             path = urls.url_quote_plus(request.httprequest.path, safe='/')
         if lang != self.default_lang_id:
             path = f'/{lang.url_code}{path if path != "/" else ""}'
-        canonical_query_string = f'?{urls.url_encode(canonical_params)}' if canonical_params else ''
-        return self.get_base_url() + path + canonical_query_string
+        return self.get_base_url() + path
 
-    def _get_canonical_url(self, canonical_params):
+    def _get_canonical_url(self):
         """Returns the canonical URL for the current request."""
         self.ensure_one()
         lang = getattr(request, 'lang', self.env['ir.http']._get_default_lang())
-        return self._get_canonical_url_localized(lang=lang, canonical_params=canonical_params)
+        return self._get_canonical_url_localized(lang=lang)
 
-    def _is_canonical_url(self, canonical_params):
+    def _is_canonical_url(self):
         """Returns whether the current request URL is canonical."""
         self.ensure_one()
-        # Compare OrderedMultiDict because the order is important, there must be
-        # only one canonical and not params permutations.
-        params = request.httprequest.args
-        canonical_params = canonical_params or OrderedMultiDict()
-        if params != canonical_params:
-            return False
         # Compare URL at the first routing iteration because it's the one with
         # the language in the path. It is important to also test the domain of
         # the current URL.
         current_url = request.httprequest.url_root[:-1] + request.httprequest.environ['REQUEST_URI']
-        canonical_url = self._get_canonical_url_localized(lang=request.lang, canonical_params=None)
+        canonical_url = self._get_canonical_url_localized(lang=request.lang)
         # A request path with quotable characters (such as ",") is never
         # canonical because request.httprequest.base_url is always unquoted,
         # and canonical url is always quoted, so it is never possible to tell

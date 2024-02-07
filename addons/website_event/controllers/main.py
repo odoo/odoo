@@ -5,7 +5,6 @@ import re
 import werkzeug
 
 from ast import literal_eval
-from werkzeug.datastructures import OrderedMultiDict
 from werkzeug.exceptions import NotFound
 
 from odoo import fields, http, _
@@ -129,10 +128,6 @@ class WebsiteEventController(http.Controller):
             'original_search': fuzzy_search_term and search,
             'website': website
         }
-
-        if searches['date'] == 'old':
-            # the only way to display this content is to set date=old so it must be canonical
-            values['canonical_params'] = OrderedMultiDict([('date', 'old')])
 
         return request.render("website_event.index", values)
 
