@@ -153,7 +153,6 @@ class MassMailingList(models.Model):
 
     def action_send_mailing(self):
         """Open the mailing form view, with the current lists set as recipients."""
-        view = self.env.ref('mass_mailing.mailing_mailing_view_form_full_width')
         action = self.env["ir.actions.actions"]._for_xml_id('mass_mailing.mailing_mailing_action_mail')
 
         action.update({
@@ -165,7 +164,6 @@ class MassMailingList(models.Model):
             },
             'target': 'current',
             'view_type': 'form',
-            'views': [(view.id, 'form')],
         })
 
         return action
