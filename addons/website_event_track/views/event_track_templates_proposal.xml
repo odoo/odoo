@@ -35,11 +35,11 @@
                         <br/>
                     </section>
                 </div>
-                    <div>
+                    <div class="oe_structure">
                         <section id="forms" t-if="event.website_track_proposal">
-                            <form class="js_website_submit_form o_website_event_track_proposal_form mt-3" t-att-data-event-id="event.id" enctype="multipart/form-data">
+                            <form class="js_website_submit_form o_website_event_track_proposal_form row mt-3" t-att-data-event-id="event.id" enctype="multipart/form-data">
                                 <input name="csrf_token" type="hidden" t-att-value="request.csrf_token()"/>
-                                <div id="track_intro">
+                                <div id="track_intro" class="col-12">
                                     <h4 class="mt-3">Talk Intro</h4>
                                     <div class="form-text text-muted mb16">
                                         What is your talk about?
@@ -70,7 +70,7 @@
                                     </div>
                                 </div>
                                 <br/>
-                                <div id="speaker_profile">
+                                <div id="speaker_profile" class="col-12">
                                     <h4 class="mt-3">Speaker Profile</h4>
                                     <div class="form-text text-muted mb16">
                                         Who will give this talk? We will show this to attendees to showcase your talk.
@@ -101,7 +101,7 @@
                                     </div>
                                 </div>
                                 <t t-call="website_event_track.event_track_proposal_contact_details"/>
-                                <div class="o_form_buttons d-flex justify-content-end pb-5">
+                                <div class="o_form_buttons col-12 d-flex justify-content-end pb-5">
                                     <button type="submit" class="btn btn-primary o_wetrack_proposal_submit_button">Submit Proposal</button>
                                     <span class="o_wetrack_proposal_error_section text-danger d-none ml8">
                                         <i class="fa fa-close mr4" role="img" aria-label="Error" title="Error"/>
@@ -146,7 +146,7 @@
 </template>
 
 <template id="event_track_proposal_contact_details">
-    <div id="event_track_proposal_additional_contact_section">
+    <div id="event_track_proposal_additional_contact_section" class="col-12">
         <div class="mb-3">
             <input name="add_contact_information" type= "checkbox" class="o_wetrack_add_contact_information_checkbox"/>
             <label class="fw-normal" for="add_contact_information">Contact me through a different email/phone</label>
