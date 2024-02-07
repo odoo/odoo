@@ -8,9 +8,16 @@
                 <sheet>
                     <widget name="web_ribbon" text="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <div class="oe_button_box" name="button_box">
-                        <button name="action_model_vehicle" type="object" icon="fa-car" class="oe_stat_button"
-                            invisible="vehicle_count == 0">
-                            <field name="vehicle_count" widget="statinfo" string="Vehicles"/>
+                        <button name="action_model_vehicle" type="object" icon="fa-car" class="oe_stat_button">
+                            <field
+                                name="vehicle_count"
+                                widget="statinfo"
+                                string="Vehicles"
+                                invisible="not vehicle_count"/>
+                            <div class="o_stat_info" invisible="vehicle_count">
+                                <span class="o_stat_value">New</span>
+                                <span class="o_stat_text">Vehicle</span>
+                            </div>
                         </button>
                     </div>
                     <field name="image_128" widget='image' class="oe_avatar"/>
@@ -37,16 +44,13 @@
                                 <group string="Model" invisible="vehicle_type != 'car'">
                                     <field name="seats"/>
                                     <field name="doors"/>
-                                    <field name="color"/>
                                     <field name="model_year" widget="char"/>
                                     <field name="trailer_hook"/>
                                 </group>
                                 <group id="vehicle_information" string="Vehicle Information" invisible="vehicle_type != 'bike'">
                                     <field name="electric_assistance"/>
                                 </group>
-                            </group>
-                            <group string="Engine" invisible="vehicle_type != 'car'">
-                                <group>
+                                <group string="Engine" invisible="vehicle_type != 'car'" name="group_engine">
                                     <field name="default_fuel_type" required="1"/>
                                     <label for="vehicle_range"/>
                                     <div class="o_row" name="vehicle_range">
@@ -58,14 +62,13 @@
                                     </div>
                                     <field name="co2_standard"/>
                                     <field name="transmission"/>
-                                </group>
-                                <group>
-                                    <label for="power"/>
-                                    <div class="o_row">
+                                    <field name="power_unit"/>
+                                    <label for="power" invisible="power_unit != 'power'"/>
+                                    <div class="o_row" invisible="power_unit != 'power'">
                                         <field name="power"/><span>kW</span>
                                     </div>
-                                    <field name="horsepower"/>
-                                    <field name="horsepower_tax"/>
+                                    <field name="horsepower" invisible="power_unit != 'horsepower'"/>
+                                    <field name="horsepower_tax" invisible="power_unit != 'horsepower'"/>
                                 </group>
                             </group>
                         </page>
@@ -238,6 +241,7 @@
         <field name="name">Manufacturers</field>
         <field name="res_model">fleet.vehicle.model.brand</field>
         <field name="view_mode">kanban,tree,form</field>
+        <field name="context">{'search_default_with_models': 1}</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
             Create a new manufacturer

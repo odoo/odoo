@@ -130,9 +130,9 @@
                         </page>
                         <page string="Model" name="page_model">
                             <group>
-                                <group string="Model">
+                                <group string="Model" name="group_model">
                                     <field name="model_year"/>
-                                    <field name="transmission"/>
+                                    <field name="transmission" invisible="vehicle_type != 'car'"/>
                                     <field name="color"/>
                                     <field name="seats" invisible="vehicle_type != 'car'"/>
                                     <field name="doors" invisible="vehicle_type != 'car'"/>
@@ -145,11 +145,12 @@
                                     <field name="electric_assistance" invisible="vehicle_type != 'bike'"/>
                                 </group>
                                 <group string="Engine" invisible="vehicle_type != 'car'">
-                                    <field name="horsepower"/>
-                                    <label for="power"/>
-                                    <div class="o_row">
+                                    <field name="power_unit"/>
+                                    <label for="power" invisible="power_unit != 'power'"/>
+                                    <div class="o_row" invisible="power_unit != 'power'">
                                         <field name="power"/><span>kW</span>
                                     </div>
+                                    <field name="horsepower" invisible="power_unit != 'horsepower'"/>
                                     <label for="vehicle_range"/>
                                     <div class="o_row">
                                         <field name="vehicle_range"/><span>km</span>
