@@ -291,8 +291,7 @@ class TestSaleMRPAngloSaxonValuation(ValuationReconciliationTestCommon):
         # Return the second picking (i.e. one component @20)
         ctx = {'active_id': pickings[1].id, 'active_model': 'stock.picking'}
         return_wizard = Form(self.env['stock.return.picking'].with_context(ctx)).save()
-        return_picking_id, dummy = return_wizard._create_returns()
-        return_picking = self.env['stock.picking'].browse(return_picking_id)
+        return_picking = return_wizard._create_return()
         return_picking.move_ids.write({'quantity': 1, 'picked': True})
         return_picking.button_validate()
 
@@ -396,8 +395,7 @@ class TestSaleMRPAngloSaxonValuation(ValuationReconciliationTestCommon):
         # Return the second picking (i.e. one component @20)
         ctx = {'active_id': pickings[1].id, 'active_model': 'stock.picking'}
         return_wizard = Form(self.env['stock.return.picking'].with_context(ctx)).save()
-        return_picking_id, dummy = return_wizard._create_returns()
-        return_picking = self.env['stock.picking'].browse(return_picking_id)
+        return_picking = return_wizard._create_return()
         return_picking.move_ids.write({'quantity': 1, 'picked': True})
         return_picking.button_validate()
 

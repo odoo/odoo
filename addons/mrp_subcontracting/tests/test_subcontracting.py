@@ -133,8 +133,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         # Ensure returns to subcontractor location
         return_form = Form(self.env['stock.return.picking'].with_context(active_id=picking_receipt.id, active_model='stock.picking'))
         return_wizard = return_form.save()
-        return_picking_id, pick_type_id = return_wizard._create_returns()
-        return_picking = self.env['stock.picking'].browse(return_picking_id)
+        return_picking = return_wizard._create_return()
         self.assertEqual(len(return_picking), 1)
         self.assertEqual(return_picking.move_ids.location_dest_id, self.subcontractor_partner1.property_stock_subcontractor)
 

@@ -128,7 +128,7 @@ class TestStockValuationCommon(TransactionCase):
             .with_context(active_ids=[move.picking_id.id], active_id=move.picking_id.id, active_model='stock.picking'))
         stock_return_picking = stock_return_picking.save()
         stock_return_picking.product_return_moves.quantity = quantity_to_return
-        stock_return_picking_action = stock_return_picking.create_returns()
+        stock_return_picking_action = stock_return_picking.action_create_returns()
         return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
         return_pick.move_ids[0].move_line_ids[0].quantity = quantity_to_return
         return_pick.move_ids[0].picked = True
@@ -1193,7 +1193,7 @@ class TestAngloSaxonAccounting(AccountTestInvoicingCommon, TestStockValuationCom
             .with_context(active_ids=[move.picking_id.id], active_id=move.picking_id.id, active_model='stock.picking'))
         stock_return_picking = stock_return_picking.save()
         stock_return_picking.product_return_moves.quantity = quantity_to_return
-        stock_return_picking_action = stock_return_picking.create_returns()
+        stock_return_picking_action = stock_return_picking.action_create_returns()
         return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
         return_pick.move_ids[0].move_line_ids[0].quantity = quantity_to_return
         return_pick.move_ids.picked = True
@@ -1319,7 +1319,7 @@ class TestAngloSaxonAccounting(AccountTestInvoicingCommon, TestStockValuationCom
         stock_return_picking = stock_return_picking.save()
         stock_return_picking.product_return_moves.quantity = 2
         stock_return_picking.location_id = self.stock_location
-        stock_return_picking_action = stock_return_picking.create_returns()
+        stock_return_picking_action = stock_return_picking.action_create_returns()
         return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
         return_pick.move_ids[0].move_line_ids[0].quantity = 2
         return_pick.move_ids[0].picked = True

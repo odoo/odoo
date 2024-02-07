@@ -595,7 +595,7 @@ class TestSaleMrpKitBom(TransactionCase):
                 'quantity': 10,
                 'to_refund': True
             })
-        res = return_wiz.create_returns()
+        res = return_wiz.action_create_returns()
         return_pick = self.env['stock.picking'].browse(res['res_id'])
 
         # Process all components and validate the return
@@ -612,7 +612,7 @@ class TestSaleMrpKitBom(TransactionCase):
                 'quantity': 5,
                 'to_refund': True
             })
-        res = return_wiz.create_returns()
+        res = return_wiz.action_create_returns()
 
         # Validate the return
         self.env['stock.picking'].browse(res['res_id']).button_validate()

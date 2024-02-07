@@ -101,8 +101,7 @@ class TestSubcontractingDropshippingValuation(ValuationReconciliationTestCommon)
         with return_form.product_return_moves.edit(0) as line:
             line.quantity = 1
         return_wizard = return_form.save()
-        return_id, _ = return_wizard._create_returns()
-        return_picking = self.env['stock.picking'].browse(return_id)
+        return_picking = return_wizard._create_return()
         return_picking.move_ids.quantity = 1
         return_picking.move_ids.picked = True
         return_picking.button_validate()
@@ -123,8 +122,7 @@ class TestSubcontractingDropshippingValuation(ValuationReconciliationTestCommon)
         with return_form.product_return_moves.edit(0) as line:
             line.quantity = 1
         return_wizard = return_form.save()
-        return_id, _ = return_wizard._create_returns()
-        return_picking = self.env['stock.picking'].browse(return_id)
+        return_picking = return_wizard._create_return()
         return_picking.move_ids.quantity = 1
         return_picking.move_ids.picked = True
         return_picking.button_validate()

@@ -131,7 +131,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
             active_model='stock.picking'))
         return_wiz = stock_return_picking_form.save()
         return_wiz.product_return_moves.write({'quantity': 2.0, 'to_refund': True})  # Return only 2
-        res = return_wiz.create_returns()
+        res = return_wiz.action_create_returns()
         return_pick = self.env['stock.picking'].browse(res['res_id'])
 
         # Validate picking
@@ -206,7 +206,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
                 'quantity': 5,
                 'to_refund': True
             })
-        res = return_wiz.create_returns()
+        res = return_wiz.action_create_returns()
         return_pick = self.env['stock.picking'].browse(res['res_id'])
         return_pick.button_validate()
 
@@ -662,7 +662,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
 
         wizard = Form(self.env['stock.return.picking'].with_context(active_ids=receipt01.ids, active_id=receipt01.id, active_model='stock.picking')).save()
         wizard.product_return_moves.to_refund = False
-        res = wizard.create_returns()
+        res = wizard.action_create_returns()
 
         return_pick = self.env['stock.picking'].browse(res['res_id'])
         return_pick.move_ids.quantity = 5
@@ -670,7 +670,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
 
         wizard = Form(self.env['stock.return.picking'].with_context(active_ids=return_pick.ids, active_id=return_pick.id, active_model='stock.picking')).save()
         wizard.product_return_moves.to_refund = False
-        res = wizard.create_returns()
+        res = wizard.action_create_returns()
 
         receipt02 = self.env['stock.picking'].browse(res['res_id'])
         receipt02.move_ids.quantity = 5
