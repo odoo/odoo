@@ -71,7 +71,7 @@ class AccountMove(models.Model):
         if self.country_code == 'IN':
             # TODO: remove the view mode check in master, only for stable releases
             in_invoice_view = self.env.ref('l10n_in.l10n_in_report_invoice_document_inherit', raise_if_not_found=False)
-            if (in_invoice_view and in_invoice_view.mode == "primary"):
+            if (in_invoice_view and in_invoice_view.sudo().mode == "primary"):
                 return 'l10n_in.l10n_in_report_invoice_document_inherit'
         return super()._get_name_invoice_report()
 
