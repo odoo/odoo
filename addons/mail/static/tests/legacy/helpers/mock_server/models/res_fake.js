@@ -30,31 +30,29 @@ patch(MockServer.prototype, {
      *
      * @private
      * @param {string} model
-     * @param {integer[]} ids
+     * @param {integer} id
      * @returns {Object}
      */
-    _mockResFake_MessageGetSuggestedRecipients(model, ids) {
-        const result = {};
-        const records = this.getRecords(model, [["id", "in", ids]]);
+    _mockResFake_MessageGetSuggestedRecipients(model, id) {
+        const result = [];
+        const record = this.getRecords(model, [["id", "=", id]])[0];
 
-        for (const record of records) {
-            result[record.id] = [];
-            if (record.email_cc) {
-                this._mockMailThread_MessageAddSuggestedRecipient(model, ids, result, {
-                    email: record.email_cc,
-                    partner: undefined,
-                    reason: "CC email",
+        if (record.email_cc) {
+            this._mockMailThread_MessageAddSuggestedRecipient(model, id, result, {
+                name: record.email_cc,
+                email: record.email_cc,
+                partner: undefined,
+                reason: "CC email",
+            });
+        }
+        const partners = this.getRecords("res.partner", [["id", "in", record.partner_ids]]);
+        if (partners.length) {
+            for (const partner of partners) {
+                this._mockMailThread_MessageAddSuggestedRecipient(model, id, result, {
+                    email: partner.email,
+                    partner,
+                    reason: "Email partner",
                 });
-            }
-            const partners = this.getRecords("res.partner", [["id", "in", record.partner_ids]]);
-            if (partners.length) {
-                for (const partner of partners) {
-                    this._mockMailThread_MessageAddSuggestedRecipient(model, ids, result, {
-                        email: partner.email,
-                        partner,
-                        reason: "Email partner",
-                    });
-                }
             }
         }
         return result;

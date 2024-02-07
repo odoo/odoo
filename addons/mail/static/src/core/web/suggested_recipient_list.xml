@@ -5,7 +5,7 @@
             <SuggestedRecipient
                 t-foreach="suggestedRecipients"
                 t-as="recipient"
-                t-key="recipient.id"
+                t-key="recipient_index"
                 thread="props.thread"
                 recipient="recipient"
                 onSuggestedRecipientAdded="props.onSuggestedRecipientAdded"

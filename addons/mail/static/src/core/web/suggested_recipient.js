@@ -42,7 +42,7 @@ export class SuggestedRecipient extends Component {
                     default_name: this.props.recipient.name,
                     default_lang: this.props.recipient.lang,
                     ...Object.fromEntries(
-                        Object.entries(this.props.recipient.defaultCreateValues).map(([k, v]) => [
+                        Object.entries(this.props.recipient.create_values).map(([k, v]) => [
                             "default_" + k,
                             v,
                         ])

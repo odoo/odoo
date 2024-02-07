@@ -31,7 +31,7 @@ from odoo.exceptions import MissingError, AccessError
 from odoo.osv import expression
 from odoo.tools import (
     is_html_empty, html_escape, html2plaintext, parse_contact_from_email,
-    clean_context, split_every, Query, SQL,
+    clean_context, split_every, Query, SQL, email_normalize_all,
 )
 
 from requests import Session
@@ -1800,35 +1800,49 @@ class MailThread(models.AbstractModel):
 
     def _message_add_suggested_recipient(self, result, partner=None, email=None, lang=None, reason=''):
         """ Called by _message_get_suggested_recipients, to add a suggested
-            recipient in the result dictionary. The form is :
-                partner_id, partner_name<partner_email> or partner_name, lang,
-                reason, create_values """
+            recipient as a dictionary in the result list """
         self.ensure_one()
         partner_info = {}
+        recipient_data = {'lang': lang, 'reason': reason}
         if email and not partner:
             # get partner info from email
             partner_info = self._message_partner_info_from_emails([email])[0]
             if partner_info.get('partner_id'):
                 partner = self.env['res.partner'].sudo().browse([partner_info['partner_id']])[0]
-        if email and email in [val[1] for val in result]:  # already existing email -> skip
+        if email and email in [val['email'] for val in result]:  # already existing email -> skip
             return result
         if partner and partner in self.message_partner_ids:  # recipient already in the followers -> skip
             return result
-        if partner and partner.id in [val[0] for val in result]:  # already existing partner ID -> skip
+        if partner and partner.id in [val['partner_id'] for val in result]:  # already existing partner ID -> skip
             return result
         if partner and partner.email:  # complete profile: id, name <email>
-            result.append((partner.id, partner.email_formatted, lang, reason, {}))
+            email_normalized = ','.join(email_normalize_all(partner.email))
+            recipient_data.update({'partner_id': partner.id, 'name': partner.name or '', 'email': email_normalized})
         elif partner:  # incomplete profile: id, name
-            result.append((partner.id, partner.name or '', lang, reason, {}))
+            recipient_data.update({'partner_id': partner.id, 'name': partner.name})
         else:  # unknown partner, we are probably managing an email address
             _, parsed_email_normalized = parse_contact_from_email(email)
             partner_create_values = self._get_customer_information().get(parsed_email_normalized, {})
-            result.append((False, partner_info.get('full_name') or email, lang, reason, partner_create_values))
+            name = partner_create_values.get('name') or partner_info.get('full_name') or email
+            recipient_data.update({
+                'name': name,
+                'email': partner_info.get('full_name') or email,
+                'create_values': partner_create_values,
+            })
+        result.append(recipient_data)
         return result
 
     def _message_get_suggested_recipients(self):
-        """ Returns suggested recipients as a list of tuple (partner_id, partner_name, reason, default_create_value),
-         to be managed by Chatter. """
+        """ Get suggested recipients to be managed by Chatter
+
+        :returns: list of dictionaries (per suggested recipient) containing:
+            * partner_id:       int: recipient partner id
+            * name:             str: name of the recipient
+            * email:            str: email of recipient
+            * lang:             str: language code
+            * reason:           str
+            * create_values:    dict: data for unknown partner
+        """
         self.ensure_one()
         result = []
         if 'user_id' in self._fields:

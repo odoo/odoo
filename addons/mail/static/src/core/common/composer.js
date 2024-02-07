@@ -445,8 +445,7 @@ export class Composer extends Component {
                 const recipientAdditionalValues = {};
                 newPartners.forEach((recipient) => {
                     recipientEmails.push(recipient.email);
-                    recipientAdditionalValues[recipient.email] =
-                        recipient.defaultCreateValues || {};
+                    recipientAdditionalValues[recipient.email] = recipient.create_values || {};
                 });
                 const partners = await rpc("/mail/partner/from_email", {
                     emails: recipientEmails,
