@@ -5,7 +5,7 @@ import json
 import lxml.html
 from urllib.parse import urlparse
 
-from odoo.addons.http_routing.models.ir_http import url_lang
+from odoo.addons.http_routing.models.ir_http import url_for
 from odoo.addons.website.tools import MockRequest
 from odoo.tests import HttpCase, tagged
 
@@ -24,7 +24,7 @@ class TestLangUrl(HttpCase):
 
     def test_01_url_lang(self):
         with MockRequest(self.env, website=self.website):
-            self.assertEqual(url_lang('', '[lang]'), '/[lang]/mockrequest', "`[lang]` is used to be replaced in the url_return after installing a language, it should not be replaced or removed.")
+            self.assertEqual(url_for('', '[lang]'), '/[lang]/mockrequest', "`[lang]` is used to be replaced in the url_return after installing a language, it should not be replaced or removed.")
 
     def test_02_url_redirect(self):
         url = '/fr_WHATEVER/contactus'
