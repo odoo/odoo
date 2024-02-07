@@ -8,6 +8,8 @@ import { browser } from "@web/core/browser/browser";
 import { rpcBus } from "@web/core/network/rpc";
 import { getPopoverForTarget } from "@web/core/popover/popover";
 
+export const SUCCESS_SIGNAL = "clickbot test succeeded";
+
 const MOUSE_EVENTS = ["mouseover", "mouseenter", "mousedown", "mouseup", "click"];
 const BLACKLISTED_MENUS = [
     "base.menu_theme_store", // Open a new tab
@@ -502,7 +504,7 @@ async function _clickEverywhere(xmlId, light, currentState) {
         if (state.studioCount > 0) {
             browser.console.log(`Successfully tested ${state.studioCount} views in Studio`);
         }
-        browser.console.log("test successful");
+        browser.console.log(SUCCESS_SIGNAL);
     } catch (err) {
         console.log(`Test took ${(performance.now() - startTime) / 1000} seconds`);
         browser.console.error(err || "test failed");

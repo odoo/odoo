@@ -258,7 +258,7 @@ export const tourService = {
                     }
                     pointer.stop();
                     // Used to signal the python test runner that the tour finished without error.
-                    browser.console.log("test successful");
+                    browser.console.log("tour succeeded");
                     runningTours.delete(name);
                 },
             });
