@@ -21,6 +21,7 @@
         'mail_bot',
         'project_todo',
         'website_livechat',
+        'website_slides',
     ],
     'installable': True,
     'license': 'LGPL-3',
