@@ -319,6 +319,11 @@ export class SelfOrder extends Reactive {
             product.pos_categ_ids.map((categ) => {
                 acc[categ.id] = acc[categ.id] || [];
                 acc[categ.id].push(product);
+                while (categ.parent_id) {
+                    acc[categ.parent_id[0]] = acc[categ.parent_id[0]] || [];
+                    acc[categ.parent_id[0]].push(product);
+                    categ = categ.parent_id;
+                }
             });
             return acc;
         }, {});

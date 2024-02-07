@@ -296,7 +296,7 @@ export class ProductScreen extends Component {
         if (this.searchWord !== "") {
             list = this.getProductsBySearchWord(this.searchWord);
         } else if (this.pos.selectedCategory?.id) {
-            list = this.getProductsByCategory(this.pos.selectedCategory.id);
+            list = this.getProductsByCategory(this.pos.selectedCategory);
         } else {
             list = this.pos.models["product.product"].getAll();
         }
@@ -316,7 +316,7 @@ export class ProductScreen extends Component {
 
     getProductsBySearchWord(searchWord) {
         const products = this.pos.selectedCategory?.id
-            ? this.getProductsByCategory(this.pos.selectedCategory.id)
+            ? this.getProductsByCategory(this.pos.selectedCategory)
             : this.pos.models["product.product"].getAll();
 
         const fuzzyMatches = fuzzyLookup(unaccent(searchWord, false), products, (product) =>
@@ -330,16 +330,11 @@ export class ProductScreen extends Component {
         return Array.from(new Set([...barcodeMatches, ...fuzzyMatches]));
     }
 
-    getProductsByCategory(categoryId) {
-        const products = new Set(
-            this.pos.models["product.product"].getBy("pos_categ_ids", categoryId) || []
+    getProductsByCategory(category) {
+        const allCategories = category.getAllChildren();
+        return this.pos.models["product.product"].filter((p) =>
+            p.pos_categ_ids.some((categId) => allCategories.includes(categId))
         );
-        const childCategories = this.pos.models["pos.category"].get(categoryId).child_id;
-        for (const { id } of childCategories) {
-            const childProducts = this.getProductsByCategory(id);
-            childProducts.forEach((product) => products.add(product));
-        }
-        return Array.from(products);
     }
 
     getProductListToNotDisplay() {
