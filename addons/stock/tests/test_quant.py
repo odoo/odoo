@@ -843,7 +843,7 @@ class StockQuant(TransactionCase):
         wizard_form = Form(self.env['stock.return.picking'].with_context(active_ids=receipt01.ids, active_id=receipt01.ids[0], active_model='stock.picking'))
         wizard = wizard_form.save()
         wizard.product_return_moves.quantity = 1.0
-        stock_return_picking_action = wizard.create_returns()
+        stock_return_picking_action = wizard.action_create_returns()
 
         return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
         return_pick.move_ids.move_line_ids.quantity = 1.0

@@ -207,7 +207,7 @@ class StockMoveInvoice(AccountTestInvoicingCommon):
         # Return picking
         return_form = Form(self.env["stock.return.picking"].with_context(active_id=sale_order.picking_ids.id, active_model="stock.picking"))
         return_wizard = return_form.save()
-        action = return_wizard.create_returns()
+        action = return_wizard.action_create_returns()
         return_picking = self.env["stock.picking"].browse(action["res_id"])
 
         # add new product so new picking is created

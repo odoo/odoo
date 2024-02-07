@@ -98,7 +98,7 @@ class TestReturnPicking(TestStockCommon):
             'picking_id': picking.id,
         })
         return_wizard._compute_moves_locations()
-        res = return_wizard.create_returns()
+        res = return_wizard.action_create_returns()
         picking2 = self.PickingObj.browse(res["res_id"])
 
         # Assigned user should not be copied
@@ -144,7 +144,7 @@ class TestReturnPicking(TestStockCommon):
 
         # Create return
         return_wizard = self.env['stock.return.picking'].with_context(active_id=delivery_picking.id, active_model='stock.picking').create({})
-        res = return_wizard.create_returns()
+        res = return_wizard.action_create_returns()
         return_picking = self.PickingObj.browse(res["res_id"])
         self.assertEqual(return_picking.location_dest_id, return_location)
 
@@ -174,7 +174,7 @@ class TestReturnPicking(TestStockCommon):
             active_model='stock.picking'))
         stock_return_picking = stock_return_picking_form.save()
         stock_return_picking.product_return_moves.quantity = 1.0
-        stock_return_picking_action = stock_return_picking.create_returns()
+        stock_return_picking_action = stock_return_picking.action_create_returns()
         return_picking = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
         return_picking.button_validate()
         self.assertEqual(return_picking.move_ids[0].partner_id.id, receipt.partner_id.id)

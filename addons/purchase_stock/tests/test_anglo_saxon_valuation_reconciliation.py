@@ -103,7 +103,7 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
                 active_ids=picking.ids, active_id=picking.ids[0], active_model='stock.picking'))
             stock_return_picking = stock_return_picking_form.save()
             stock_return_picking.product_return_moves.quantity = 1.0
-            stock_return_picking_action = stock_return_picking.create_returns()
+            stock_return_picking_action = stock_return_picking.action_create_returns()
             return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
             return_pick.action_assign()
             return_pick.move_ids.quantity = 1
@@ -476,7 +476,7 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
             active_model='stock.picking'))
         stock_return_picking = stock_return_picking_form.save()
         stock_return_picking.product_return_moves.write({'quantity': 1000.0})
-        stock_return_picking_action = stock_return_picking.create_returns()
+        stock_return_picking_action = stock_return_picking.action_create_returns()
         return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
         return_pick.move_line_ids.write({'quantity': 1000})
         return_pick.button_validate()

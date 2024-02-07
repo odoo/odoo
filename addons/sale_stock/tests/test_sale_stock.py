@@ -220,7 +220,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         return_wiz = stock_return_picking_form.save()
         return_wiz.product_return_moves.quantity = 2.0 # Return only 2
         return_wiz.product_return_moves.to_refund = True # Refund these 2
-        res = return_wiz.create_returns()
+        res = return_wiz.action_create_returns()
         return_pick = self.env['stock.picking'].browse(res['res_id'])
 
         # Validate picking
@@ -540,7 +540,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
                 'quantity': 5,
                 'to_refund': True
             })
-        res = return_wiz.create_returns()
+        res = return_wiz.action_create_returns()
         return_pick = self.env['stock.picking'].browse(res['res_id'])
         return_pick.button_validate()
 
@@ -640,7 +640,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         self.assertEqual(return_wizard.product_return_moves.quantity, 10)
 
         # Valids the return picking.
-        res = return_wizard.create_returns()
+        res = return_wizard.action_create_returns()
         return_picking = self.env['stock.picking'].browse(res['res_id'])
         return_picking.move_ids.write({'quantity': 10, 'picked': True})
         return_picking.button_validate()
@@ -674,7 +674,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         self.assertEqual(return_wizard.product_return_moves.quantity, 10)
         return_wizard.product_return_moves.to_refund = False
         # Valids the return picking.
-        res = return_wizard.create_returns()
+        res = return_wizard.action_create_returns()
         return_picking = self.env['stock.picking'].browse(res['res_id'])
         return_picking.move_ids.write({'quantity': 10, 'picked': True})
         return_picking.button_validate()
@@ -1220,7 +1220,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         self.assertEqual(return_wizard.product_return_moves.quantity, 10)
         return_wizard.product_return_moves.quantity = 2
         # Valids the return picking.
-        res = return_wizard.create_returns()
+        res = return_wizard.action_create_returns()
         return_picking = self.env['stock.picking'].browse(res['res_id'])
         return_picking.move_ids.write({'quantity': 2, 'picked': True})
         return_picking.button_validate()
@@ -1635,7 +1635,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         self.assertEqual(return_wizard.product_return_moves.quantity, 1)
 
         # validates the return picking.
-        res = return_wizard.create_returns()
+        res = return_wizard.action_create_returns()
         return_picking = self.env['stock.picking'].browse(res['res_id'])
         return_picking.button_validate()
         # Checks the delivery amount (must be 0).
@@ -1647,7 +1647,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         self.assertEqual(return_wizard.product_return_moves.quantity, 1)
 
         # validates the return picking.
-        res = return_wizard.create_returns()
+        res = return_wizard.action_create_returns()
         return_picking_2 = self.env['stock.picking'].browse(res['res_id'])
         return_picking_2.button_validate()
         self.assertEqual(return_wizard.product_return_moves.quantity, 1)

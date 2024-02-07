@@ -74,10 +74,9 @@ class TestFifoReturns(ValuationReconciliationTestCommon):
             .with_context(active_ids=picking.ids, active_id=picking.ids[0],
             active_model='stock.picking'))
         return_pick_wiz = stock_return_picking_form.save()
-        return_picking_id, dummy = return_pick_wiz.with_context(active_id=picking.id)._create_returns()
+        return_picking = return_pick_wiz.with_context(active_id=picking.id)._create_return()
 
         # Important to pass through confirmation and assignation
-        return_picking = self.env['stock.picking'].browse(return_picking_id)
         return_picking.action_confirm()
         return_picking.move_ids[0].quantity = return_picking.move_ids[0].product_uom_qty
         return_picking.move_ids[0].picked = True
