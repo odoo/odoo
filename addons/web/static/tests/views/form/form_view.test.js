@@ -9944,7 +9944,7 @@ test(`action button in x2many should display a notification if the record is vir
 
     await contains(`.o_field_one2many .o_field_x2many_list_row_add a`).click();
     await contains(`button.oe_stat_button[name='test_action']`).click();
-    expect([`danger:Please click on the "save" button first`]).toVerifySteps();
+    expect([`danger:Please save your changes first`]).toVerifySteps();
 });
 
 test(`open form view action in x2many should display a notification if the record is virtual`, async () => {
@@ -9970,7 +9970,7 @@ test(`open form view action in x2many should display a notification if the recor
 
     await contains(`.o_field_one2many .o_field_x2many_list_row_add a`).click();
     await contains(`.o_list_record_open_form_view`).click();
-    expect([`danger:Please click on the "save" button first`]).toVerifySteps();
+    expect([`danger:Please save your changes first`]).toVerifySteps();
 });
 
 test(`prevent recreating a deleted record`, async () => {
