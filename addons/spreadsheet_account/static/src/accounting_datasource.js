@@ -2,7 +2,6 @@
 import { camelToSnakeObject, toServerDateString } from "@spreadsheet/helpers/helpers";
 import { _t } from "@web/core/l10n/translation";
 
-import { ServerData } from "@spreadsheet/data_sources/server_data";
 import { EvaluationError } from "@odoo/o-spreadsheet";
 
 /**
@@ -10,10 +9,9 @@ import { EvaluationError } from "@odoo/o-spreadsheet";
  */
 
 export class AccountingDataSource {
-    constructor(services) {
-        this.serverData = new ServerData(services.orm, {
-            whenDataIsFetched: () => services.notify(),
-        });
+    constructor(params) {
+        /** @type {import("@spreadsheet/data_sources/server_data").ServerData} */
+        this.serverData = params.serverData;
     }
 
     /**

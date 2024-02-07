@@ -5,11 +5,13 @@ import { LoadableDataSource } from "./data_source";
 import { MetadataRepository } from "./metadata_repository";
 
 import { EventBus } from "@odoo/owl";
+import { ServerData } from "./server_data";
 
 /** *
  * @typedef {object} DataSourceServices
  * @property {MetadataRepository} metadataRepository
  * @property {import("@web/core/orm_service").ORM} orm
+ * @property {ServerData} serverData
  * @property {() => void} notify
  * @property {(promise: Promise) => void} notifyWhenPromiseResolves
  * @property {(promise: Promise) => void} cancelPromise
@@ -24,6 +26,9 @@ export class DataSources extends EventBus {
     constructor(env) {
         super();
         this._orm = env.services.orm.silent;
+        this.serverData = new ServerData(this._orm, {
+            whenDataStartLoading: (promise) => this.notifyWhenPromiseResolves(promise),
+        });
         this._metadataRepository = new MetadataRepository(env);
         this._metadataRepository.addEventListener("labels-fetched", () => this.notify());
         /** @type {Object.<string, any>} */
@@ -47,6 +52,7 @@ export class DataSources extends EventBus {
                 notify: () => this.notify(),
                 notifyWhenPromiseResolves: this.notifyWhenPromiseResolves.bind(this),
                 cancelPromise: (promise) => this.pendingPromises.delete(promise),
+                serverData: this.serverData,
             },
             params
         );

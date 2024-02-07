@@ -1,7 +1,7 @@
 /** @odoo-module */
+// @ts-check
 
 import { _t } from "@web/core/l10n/translation";
-import { ServerData } from "../data_sources/server_data";
 import { toServerDateString } from "../helpers/helpers";
 import { EvaluationError } from "@odoo/o-spreadsheet";
 
@@ -14,10 +14,9 @@ import { EvaluationError } from "@odoo/o-spreadsheet";
  * @property {"before" | "after"} position
  */
 export class CurrencyDataSource {
-    constructor(services) {
-        this.serverData = new ServerData(services.orm, {
-            whenDataIsFetched: () => services.notify(),
-        });
+    constructor(params) {
+        /** @type {import("../data_sources/server_data").ServerData} */
+        this.serverData = params.serverData;
     }
 
     /**
