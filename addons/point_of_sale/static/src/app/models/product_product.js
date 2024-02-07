@@ -77,27 +77,6 @@ export class ProductProduct extends Base {
         return current;
     }
 
-    get childPosCategIds() {
-        const current = [];
-        const categories = this.pos_categ_ids;
-
-        const getChild = (categ) => {
-            if (categ.child_id) {
-                for (const child of categ.child_id) {
-                    current.push(child.id);
-                    getChild(child);
-                }
-            }
-        };
-
-        for (const category of categories) {
-            current.push(category.id);
-            getChild(category);
-        }
-
-        return current;
-    }
-
     isPricelistItemUsable(item, date) {
         return (
             (!item.categ_id || this.parentCategories.includes(item.categ_id.id)) &&

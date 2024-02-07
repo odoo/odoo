@@ -134,7 +134,7 @@ class PosSession(models.Model):
                 'fields': ['id', 'name', 'proxy_ip', 'product_categories_ids', 'printer_type'],
             },
             'pos.category': {
-                'domain': [('id', 'in', config_id.iface_available_categ_ids.ids)] if config_id.limit_categories and config_id.iface_available_categ_ids else [],
+                'domain': [('id', 'in', self.config_id._get_available_categories().ids)] if config_id.limit_categories and config_id.iface_available_categ_ids else [],
                 'fields': ['id', 'name', 'parent_id', 'child_id', 'write_date', 'has_image', 'color']
             },
             'pos.bill': {

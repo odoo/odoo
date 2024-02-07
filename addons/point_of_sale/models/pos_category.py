@@ -68,3 +68,10 @@ class PosCategory(models.Model):
                 "color"
             ]
         return super().write(vals)
+
+    def _get_descendants(self):
+        available_categories = self
+        for child in self.child_id:
+            available_categories |= child
+            available_categories |= child._get_descendants()
+        return available_categories

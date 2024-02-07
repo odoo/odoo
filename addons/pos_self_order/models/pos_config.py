@@ -292,23 +292,6 @@ class PosConfig(models.Model):
 
         return product_ids + available_product_ids
 
-    def _get_available_categories(self):
-        self.ensure_one()
-        return (
-            self.env["pos.category"]
-            .search(
-                [
-                    *(
-                        self.limit_categories
-                        and self.iface_available_categ_ids
-                        and [("id", "in", self.iface_available_categ_ids.ids)]
-                        or []
-                    ),
-                ],
-                order="sequence",
-            )
-        )
-
     def _get_kitchen_printer(self):
         self.ensure_one()
         printerData = {}
@@ -344,7 +327,7 @@ class PosConfig(models.Model):
             "currency_id": self.currency_id.id,
             "pos_payment_methods": payment_methods if self.self_ordering_mode == "kiosk" else [],
             "currency_decimals": self.currency_id.decimal_places,
-            "pos_category": self._get_available_categories().read(["name", "sequence", "has_image", "hour_until", "hour_after"]),
+            "pos_category": self._get_available_categories().read(["name", "sequence", "has_image", "hour_until", "hour_after", "parent_id"]),
             "products": self._get_available_products()._get_self_order_data(self),
             "combos": self._get_combos_data(),
             "config": {
