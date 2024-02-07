@@ -44,6 +44,14 @@
             </t>
         </xpath>
 
+        <xpath expr="//div[@id='right-elements']" position="inside">
+            <t t-if="o.company_id.account_fiscal_country_id.code == 'IN' and o.invoice_line_ids.tax_ids.filtered('l10n_in_reverse_charge')">
+                <div class="mb-2">
+                    <p class="text-end">Tax is Payable on Reverse Charge Basis</p>
+                </div>
+            </t>
+        </xpath>
+
         <xpath expr="//h2" position="replace">
             <h2>
                 <span t-if="o.move_type == 'out_invoice' and o.state == 'posted'" t-field="o.journal_id.name"/>
