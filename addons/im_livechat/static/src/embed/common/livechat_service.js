@@ -35,7 +35,7 @@ export const ODOO_VERSION_KEY = `${location.origin.replace(
 )}_im_livechat.odoo_version`;
 
 export class LivechatService {
-    TEMPORARY_ID = "livechat_temporary_thread";
+    static TEMPORARY_ID = "livechat_temporary_thread";
     SESSION_COOKIE = "im_livechat_session";
     OPERATOR_COOKIE = "im_livechat_previous_operator_pid";
     GUEST_TOKEN_STORAGE_KEY = "im_livechat_guest_token";
@@ -160,7 +160,7 @@ export class LivechatService {
             this.persistThreadPromise = null;
         }
         const chatWindow = this.store.discuss.chatWindows.find(
-            (c) => c.thread.id === this.TEMPORARY_ID
+            (c) => c.thread.id === LivechatService.TEMPORARY_ID
         );
         if (chatWindow) {
             chatWindow.thread?.delete();
@@ -213,7 +213,7 @@ export class LivechatService {
         this.updateSession(threadData);
         const thread = this.store.Thread.insert({
             ...threadData,
-            id: threadData.id ?? this.TEMPORARY_ID,
+            id: threadData.id ?? LivechatService.TEMPORARY_ID,
             isLoaded: !threadData.id || isNewlyCreated,
             model: "discuss.channel",
             type: "livechat",
@@ -264,7 +264,8 @@ export class LivechatService {
     get thread() {
         return Object.values(this.store.Thread.records).find(
             ({ id, type }) =>
-                type === "livechat" && id === (this.sessionCookie?.id ?? this.TEMPORARY_ID)
+                type === "livechat" &&
+                id === (this.sessionCookie?.id ?? LivechatService.TEMPORARY_ID)
         );
     }
 
