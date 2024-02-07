@@ -362,6 +362,17 @@ const parseKeyStroke = (keyStrokes) =>
         .map((key) => ({ key: KEY_ALIASES[key.toLowerCase()] || key }));
 
 /**
+ * @param {Event} ev
+ */
+const registerFileInput = ({ target }) => {
+    if (getTag(target) === "input" && target.type === "file") {
+        currentFileInput = target;
+    } else {
+        currentFileInput = null;
+    }
+};
+
+/**
  * @param {EventTarget} target
  * @param {string} initialValue
  */
@@ -376,7 +387,7 @@ const registerForChange = (target, initialValue) => {
 
     changeTargetListeners.push(
         on(target, "keydown", (ev) => !isPrevented(ev) && ev.key === "Enter" && triggerChange()),
-        on(target, "blur", triggerChange),
+        on(target, "blur", triggerChange)
     );
 };
 
@@ -565,13 +576,11 @@ const _fill = (target, value, options) => {
 
     if (getTag(target) === "input" && target.type === "file") {
         const dataTransfer = new DataTransfer();
-        if (target.multiple) {
-            // Keep previous files
-            for (const file of target.files) {
-                dataTransfer.items.add(file);
-            }
+        const files = ensureArray(value);
+        if (files.length > 1 && !target.multiple) {
+            throw new HootDomError(`input[type="file"] does not support multiple files`);
         }
-        for (const file of ensureArray(value)) {
+        for (const file of files) {
             if (!(file instanceof File)) {
                 throw new TypeError(`file input only accept 'File' objects`);
             }
@@ -966,6 +975,7 @@ let isComposing = false;
 
 // Pointer global variables
 let currentClickCount = 0;
+let currentFileInput = null;
 let currentPointerTarget = null;
 let currentPointerTimeout = 0;
 let previousPointerTarget = null;
@@ -1681,16 +1691,42 @@ export function press(keyStrokes) {
     return logEvents("press");
 }
 
-export function resetEventActions() {
+/**
+ * Gives the given {@link File} list to the current file input. This helper only
+ * works if a file input has been previously interacted with (by clicking on it).
+ *
+ * @param {MaybeIterable<File>} files
+ */
+export function setInputFiles(files) {
+    if (!currentFileInput) {
+        throw new HootDomError(
+            `cannot call \`setInputFiles()\`: no file input has been interacted with`
+        );
+    }
+
+    _fill(currentFileInput, files);
+
+    currentFileInput = null;
+
+    return logEvents("setInputFiles");
+}
+
+/**
+ * @param {HTMLElement} fixture
+ */
+export function setupEventActions(fixture) {
     if (currentPointerTimeout) {
         globalThis.clearTimeout(currentPointerTimeout);
     }
 
     removeChangeTargetListeners();
 
+    fixture.addEventListener("click", registerFileInput, { capture: true });
+
     isComposing = false;
 
     currentClickCount = 0;
+    currentFileInput = null;
     currentPointerTarget = null;
     currentPointerTimeout = 0;
 

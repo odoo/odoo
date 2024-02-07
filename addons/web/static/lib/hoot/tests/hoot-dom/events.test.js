@@ -13,11 +13,14 @@ import {
     pointerDown,
     pointerUp,
     press,
+    queryOne,
     scroll,
     select,
+    setInputFiles,
     uncheck,
 } from "../../../hoot-dom/hoot-dom";
 import { after, describe, expect, test } from "../../hoot";
+import { mockDate } from "../../mock/time";
 import { mount, parseUrl } from "../local_helpers";
 
 /**
@@ -484,7 +487,7 @@ describe(parseUrl(import.meta.url), () => {
         expect("input").toHaveValue("john@doe.com");
     });
 
-    test("fill: single file", async () => {
+    test("setInputFiles: single file", async () => {
         await mount(/* xml */ `<input type="file" />`);
         const file1 = new File([""], "file1.txt");
         const file2 = new File([""], "file2.txt");
@@ -492,18 +495,19 @@ describe(parseUrl(import.meta.url), () => {
         expect("input").not.toHaveValue();
 
         click("input");
-        fill(file1);
+        setInputFiles(file1);
 
         expect("input").toHaveValue(/file1\.txt/);
         expect("input").toHaveValue([file1]);
 
-        fill(file2);
+        click("input");
+        setInputFiles(file2);
 
         expect("input").toHaveValue(/file2\.txt/);
         expect("input").toHaveValue([file2]);
     });
 
-    test("fill: multiple files", async () => {
+    test("setInputFiles: multiple files", async () => {
         await mount(/* xml */ `<input type="file" multiple="multiple" />`);
         const file1 = new File([""], "file1.txt");
         const file2 = new File([""], "file2.txt");
@@ -511,14 +515,49 @@ describe(parseUrl(import.meta.url), () => {
         expect("input").not.toHaveValue();
 
         click("input");
-        fill(file1);
+        setInputFiles(file1);
 
         expect("input").toHaveValue(/file1\.txt/);
         expect("input").toHaveValue([file1]);
 
-        fill(file2);
+        click("input");
+        setInputFiles([file1, file2]);
 
         expect("input").toHaveValue([file1, file2]);
+    });
+
+    test("setInputFiles: hidden input with label", async () => {
+        await mount(/* xml */ `
+            <label for="file-input">Label</label>
+            <input id="file-input" style="display: none" type="file" />
+        `);
+
+        expect("input").not.toBeVisible();
+        expect("input").not.toHaveValue();
+        expect("label").toBeVisible();
+
+        click("label");
+        setInputFiles(new File([""], "file.txt"));
+
+        expect("input").toHaveValue(/file\.txt/);
+    });
+
+    test("setInputFiles: hidden input with programmatic click", async () => {
+        await mount(/* xml */ `
+            <button>upload</button>
+            <input style="display: none" type="file" />
+        `);
+
+        on("button", "click", () => queryOne("input").click());
+
+        expect("input").not.toBeVisible();
+        expect("input").not.toHaveValue();
+        expect("button").toBeVisible();
+
+        click("button");
+        setInputFiles(new File([""], "file.txt"));
+
+        expect("input").toHaveValue(/file\.txt/);
     });
 
     test("hover", async () => {
