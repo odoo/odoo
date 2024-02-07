@@ -67,7 +67,8 @@ export class MailMessage extends models.ServerModel {
                 ),
             });
         }
-        this.env["bus.bus"]._sendone(this.env.partner, "mail.message/mark_as_read", {
+        const [partner] = this.env["res.partner"].read(this.env.partner_id);
+        this.env["bus.bus"]._sendone(partner, "mail.message/mark_as_read", {
             message_ids: messageIds,
             needaction_inbox_counter: this.env["res.partner"]._getNeedactionCount(
                 this.env.partner_id
@@ -265,7 +266,8 @@ export class MailMessage extends models.ServerModel {
                     (partnerId) => partnerId !== this.env.partner_id
                 ),
             });
-            this.env["bus.bus"]._sendone(this.env.partner, "mail.message/mark_as_read", {
+            const [partner] = this.env["res.partner"].read(this.env.partner_id);
+            this.env["bus.bus"]._sendone(partner, "mail.message/mark_as_read", {
                 message_ids: [message.id],
                 needaction_inbox_counter: this.env["res.partner"]._getNeedactionCount(
                     this.env.partner_id
@@ -287,7 +289,8 @@ export class MailMessage extends models.ServerModel {
             this.write([message.id], {
                 starred_partner_ids: [[wasStared ? 3 : 4, this.env.partner_id]],
             });
-            this.env["bus.bus"]._sendone(this.env.partner, "mail.message/toggle_star", {
+            const [partner] = this.env["res.partner"].read(this.env.partner_id);
+            this.env["bus.bus"]._sendone(partner, "mail.message/toggle_star", {
                 message_ids: [message.id],
                 starred: !wasStared,
             });
@@ -305,7 +308,8 @@ export class MailMessage extends models.ServerModel {
             messages.map((message) => message.id),
             { starred_partner_ids: [Command.unlink(this.env.partner_id)] }
         );
-        this.env["bus.bus"]._sendone(this.env.partner, "mail.message/toggle_star", {
+        const [partner] = this.env["res.partner"].read(this.env.partner_id);
+        this.env["bus.bus"]._sendone(partner, "mail.message/toggle_star", {
             message_ids: messages.map((message) => message.id),
             starred: false,
         });
@@ -324,7 +328,7 @@ export class MailMessage extends models.ServerModel {
         if (this.env.user?.is_public) {
             this.env["mail.guest"]._getGuestFromContext();
         }
-        return this.env.partner;
+        return this.env["res.partner"].read(this.env.partner_id)[0];
     }
 
     /**
@@ -355,6 +359,7 @@ export class MailMessage extends models.ServerModel {
             ["content", "=", content],
         ]);
         const guest = this.env["mail.guest"]._getGuestFromContext();
+        const [partner] = this.env["res.partner"].read(this.env.partner_id);
         const result = {
             id: messageId,
             reactions: [
@@ -369,7 +374,7 @@ export class MailMessage extends models.ServerModel {
                                 action === "add" ? "ADD" : "DELETE",
                                 {
                                     id: guest ? guest.id : this.env.partner_id,
-                                    name: guest ? guest.name : this.env.partner.name,
+                                    name: guest ? guest.name : partner.name,
                                     type: guest ? "guest" : "partner",
                                 },
                             ],
