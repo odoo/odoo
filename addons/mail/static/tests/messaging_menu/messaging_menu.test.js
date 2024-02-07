@@ -43,7 +43,7 @@ test.skip("counter is taking into account failure notification", async () => {
     });
     const memberIds = env["discuss.channel.member"].search([
         ["channel_id", "=", channelId],
-        ["partner_id", "=", env.partner_id],
+        ["partner_id", "=", session.partner_id],
     ]);
     env["discuss.channel.member"].write(memberIds, {
         seen_message_id: messageId,

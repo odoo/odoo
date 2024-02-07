@@ -1,6 +1,7 @@
 /** @odoo-module */
 
 import { webModels } from "@web/../tests/web_test_helpers";
+import { session } from "@web/session";
 
 /**
  * @typedef {import("@web/../tests/web_test_helpers").ModelRecord} ModelRecord
@@ -192,7 +193,7 @@ export class ResPartner extends webModels.ResPartner {
                     return false;
                 }
                 // not current partner
-                if (partner.id === this.env.partner_id) {
+                if (partner.id === session.partner_id) {
                     return false;
                 }
                 // no name is considered as return all
@@ -289,7 +290,7 @@ export class ResPartner extends webModels.ResPartner {
                             return false;
                         }
                         // not current partner
-                        if (partner.id === this.env.partner_id) {
+                        if (partner.id === session.partner_id) {
                             return false;
                         }
                         // no name is considered as return all

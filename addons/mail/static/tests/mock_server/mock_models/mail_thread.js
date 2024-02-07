@@ -2,6 +2,7 @@
 
 import { Command, models } from "@web/../tests/web_test_helpers";
 import { serializeDateTime, today } from "@web/core/l10n/dates";
+import { session } from "@web/session";
 
 /**
  * @typedef {import("@web/core/domain").DomainListRepr} DomainListRepr
@@ -35,7 +36,7 @@ export class MailThread extends models.ServerModel {
             domain.push(["id", ">", after]);
         }
         if (kwargs.filter_recipients) {
-            domain.push(["partner_id", "!=", this.env.partner_id]);
+            domain.push(["partner_id", "!=", session.partner_id]);
         }
         const followers = this.env["mail.followers"]._filter(domain).sort(
             (f1, f2) => (f1.id < f2.id ? -1 : 1) // sorted from lowest ID to highest ID (i.e. from oldest to youngest)
@@ -182,7 +183,7 @@ export class MailThread extends models.ServerModel {
                 const message = this.env["mail.message"]._filter([
                     ["id", "=", notification.mail_message_id],
                 ])[0];
-                return message.model === modelName && message.author_id === this.env.partner_id;
+                return message.model === modelName && message.author_id === session.partner_id;
             });
         // Update notification status
         this.env["mail.notification"].write(
@@ -190,7 +191,7 @@ export class MailThread extends models.ServerModel {
             { notification_status: "canceled" }
         );
         // Send bus notifications to update status of notifications in the web client
-        const [partner] = this.env["res.partner"].read(this.env.partner_id);
+        const [partner] = this.env["res.partner"].read(session.partner_id);
         this.env["bus.bus"]._sendone(partner, "mail.message/notification_update", {
             elements: this.env["mail.message"]._messageNotificationFormat(
                 notifications.map((notification) => notification.mail_message_id)
@@ -222,7 +223,7 @@ export class MailThread extends models.ServerModel {
         if (!authorId) {
             // For simplicity partner is not guessed from email_from here, but
             // that would be the first step on the server.
-            const author = this.env["res.partner"]._filter([["id", "=", this.env.partner_id]], {
+            const author = this.env["res.partner"]._filter([["id", "=", session.partner_id]], {
                 active_test: false,
             })[0];
             authorId = author.id;
@@ -331,7 +332,7 @@ export class MailThread extends models.ServerModel {
                         message: Object.assign(messageFormat, { temporary_id: temporaryId }),
                     },
                 ]);
-                if (message.author_id === this.env.partner_id) {
+                if (message.author_id === session.partner_id) {
                     this.env["discuss.channel"]._channelSeen(ids, message.id);
                 }
             }
