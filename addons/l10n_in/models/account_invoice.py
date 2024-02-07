@@ -77,7 +77,19 @@ class AccountMove(models.Model):
     def _get_name_invoice_report(self):
         self.ensure_one()
         if self.country_code == 'IN':
+<<<<<<< HEAD
             return 'l10n_in.l10n_in_report_invoice_document_inherit'
+||||||| parent of b9824d0d6378 (temp)
+            # TODO: remove the view mode check in master, only for stable releases
+            in_invoice_view = self.env.ref('l10n_in.l10n_in_report_invoice_document_inherit', raise_if_not_found=False)
+            if (in_invoice_view and in_invoice_view.mode == "primary"):
+                return 'l10n_in.l10n_in_report_invoice_document_inherit'
+=======
+            # TODO: remove the view mode check in master, only for stable releases
+            in_invoice_view = self.env.ref('l10n_in.l10n_in_report_invoice_document_inherit', raise_if_not_found=False)
+            if (in_invoice_view and in_invoice_view.sudo().mode == "primary"):
+                return 'l10n_in.l10n_in_report_invoice_document_inherit'
+>>>>>>> b9824d0d6378 (temp)
         return super()._get_name_invoice_report()
 
     def _post(self, soft=True):
