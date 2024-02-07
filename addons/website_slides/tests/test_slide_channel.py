@@ -175,6 +175,21 @@ class TestSlidesManagement(slides_common.SlidesCase):
         self.assertFalse(self.channel.exists(),
             "Should have deleted channel along with the slides even if there are slides with quiz and participant(s)")
 
+    def test_unlink_all_slides_from_channel_affects_participant_completion_state(self):
+        """When all content (slide.slide) are deleted from the course (slide.channel),
+        the course participants (slide.channel.partner) SHALL NOT become completers."""
+
+        # 1. Setup: make sure there's channel with slides, that nobody completed
+        self.assertTrue(len(self.channel.slide_ids) > 0, "Channel shall have at least one slide.")
+        self.assertTrue(len(self.channel.channel_partner_ids) > 0, "Channel shall have at least one participant (channel_partner_ids)")
+        self.assertTrue(self.channel.members_done_count == 0, "Someone completed the channel (nobody should have)")
+
+        # 2. Action: Delete all slides 3.
+        self.channel.slide_ids.with_user(self.user_manager).unlink()
+
+        # 3. Check: are there any completers? (shouldn't be any)
+        self.assertTrue(self.channel.members_done_count == 0, "Deleting content grants 'completed' status to it's users. It shouldn't!")
+
     def test_default_completion_time(self):
         """Verify whether the system calculates the completion time when it is not specified,
         but if the user does provide a completion time, the default time should not be applied."""
