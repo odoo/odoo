@@ -1788,14 +1788,14 @@ class HttpCase(TransactionCase):
 
         return session
 
-    def browser_js(self, url_path, code, ready='', login=None, timeout=60, cookies=None, error_checker=None, watch=False, success_signal=None, **kw):
+    def browser_js(self, url_path, code, ready='', login=None, timeout=60, cookies=None, error_checker=None, watch=False, success_signal='test successful', **kw):
         """ Test js code running in the browser
         - optionnally log as 'login'
         - load page given by url_path
         - wait for ready object to be available
         - eval(code) inside the page
 
-        To signal success test do: console.log('test successful')
+        To signal success test do: console.log() with the expected success signal ("test successful" by default)
         To signal test failure raise an exception or call console.error with a message.
         Test will stop when a failure occurs if error_checker is not defined or returns True for this message
 
@@ -1810,7 +1810,10 @@ class HttpCase(TransactionCase):
         if watch:
             self._logger.warning('watch mode is only suitable for local testing')
 
-        browser = ChromeBrowser(self, headless=not watch, success_signal=success_signal or (lambda s: 'test successful' in s))
+        if isinstance(success_signal, str):
+            ss = lambda s: s == success_signal
+
+        browser = ChromeBrowser(self, headless=not watch, success_signal=ss)
         try:
             self.authenticate(login, login, browser=browser)
             # Flush and clear the current transaction.  This is useful in case
@@ -1871,7 +1874,7 @@ class HttpCase(TransactionCase):
         }
         code = kwargs.pop('code', f"odoo.startTour({tour_name!r}, {json.dumps(options)})")
         ready = kwargs.pop('ready', f"odoo.isTourReady({tour_name!r})")
-        return self.browser_js(url_path=url_path, code=code, ready=ready, **kwargs)
+        return self.browser_js(url_path=url_path, code=code, ready=ready, success_signal="tour succeeded", **kwargs)
 
     def profile(self, **kwargs):
         """

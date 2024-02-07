@@ -272,7 +272,6 @@ export function setupQUnit() {
                 } assertions), took ${Math.round(result.runtime / 1000)}s`
             );
             console.log("QUnit test suite done.");
-            console.log("test successful"); // for ChromeBowser to know it's over and ok
         } else {
             logErrors();
         }

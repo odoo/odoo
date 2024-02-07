@@ -5,6 +5,7 @@ import { createWebClient } from "./helpers";
 import { makeDeferred, patchDate, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { browser } from "@web/core/browser/browser";
 import { ListRenderer } from "@web/views/list/list_renderer";
+import { SUCCESS_SIGNAL } from "@web/webclient/clickbot/clickbot";
 import { onWillStart, onWillUpdateProps } from "@odoo/owl";
 
 let serverData;
@@ -130,7 +131,7 @@ QUnit.module("clickbot", (hooks) => {
             console: {
                 log: (msg) => {
                     assert.step(msg);
-                    if (msg === "test successful") {
+                    if (msg === SUCCESS_SIGNAL) {
                         clickEverywhereDef.resolve();
                     }
                 },
@@ -183,7 +184,7 @@ QUnit.module("clickbot", (hooks) => {
             "Successfully tested 2 menus",
             "Successfully tested 0 modals",
             "Successfully tested 10 filters",
-            "test successful",
+            SUCCESS_SIGNAL,
         ]);
     });
 
@@ -205,7 +206,7 @@ QUnit.module("clickbot", (hooks) => {
         patchWithCleanup(browser, {
             console: {
                 log: (msg) => {
-                    if (msg === "test successful") {
+                    if (msg === SUCCESS_SIGNAL) {
                         assert.step(msg);
                         clickEverywhereDef.resolve();
                     }
@@ -239,7 +240,7 @@ QUnit.module("clickbot", (hooks) => {
             "response",
             "web_search_read called", // click on the Second Filter
             "response",
-            "test successful",
+            SUCCESS_SIGNAL,
         ]);
     });
 
@@ -261,7 +262,7 @@ QUnit.module("clickbot", (hooks) => {
         patchWithCleanup(browser, {
             console: {
                 log: (msg) => {
-                    if (msg === "test successful") {
+                    if (msg === SUCCESS_SIGNAL) {
                         assert.step(msg);
                         clickEverywhereDef.resolve();
                     }
@@ -303,7 +304,7 @@ QUnit.module("clickbot", (hooks) => {
             "response",
             "onWillUpdateProps called", // click on second filter
             "response",
-            "test successful",
+            SUCCESS_SIGNAL,
         ]);
     });
 
@@ -339,7 +340,7 @@ QUnit.module("clickbot", (hooks) => {
             console: {
                 log: (msg) => {
                     assert.step(msg);
-                    if (msg === "test successful") {
+                    if (msg === SUCCESS_SIGNAL) {
                         clickEverywhereDef.resolve();
                     }
                 },
@@ -378,7 +379,7 @@ QUnit.module("clickbot", (hooks) => {
             "Successfully tested 0 menus",
             "Successfully tested 1 modals",
             "Successfully tested 4 filters",
-            "test successful",
+            SUCCESS_SIGNAL,
         ]);
     });
 });
