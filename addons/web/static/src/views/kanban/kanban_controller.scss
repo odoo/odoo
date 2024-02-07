@@ -312,21 +312,11 @@
                 position: relative;
                 z-index: $zindex-dropdown + 1;
             }
-            .dropdown-menu {
-                margin-top: -1px;
-                margin-bottom: 0px;
-                min-width: 9rem;
-            }
         }
 
         &:hover .o_dropdown_kanban,
         .o_dropdown_kanban.show {
             visibility: visible;
-        }
-
-        // Kanban Record - Dropdown colorpicker
-        .oe_kanban_colorpicker {
-            @include o-kanban-colorpicker;
         }
 
         // Kanban Record - Inner elements
@@ -521,10 +511,6 @@
                 @include media-breakpoint-down(md) {
                     visibility: visible;
                 }
-
-                > .dropdown-menu {
-                    cursor: default;
-                }
             }
         }
         &.o_kanban_hover {
@@ -699,4 +685,22 @@
 .modal .o_kanban_cover_container .o_kanban_cover_image {
     height: 120px;
     width: 120px;
+}
+
+// Kanban Record - Dropdown colorpicker
+.oe_kanban_colorpicker {
+    @include o-kanban-colorpicker;
+}
+
+.o-dropdown--kanban-config-menu {
+    cursor: default;
+}
+
+.o-dropdown--kanban-record-menu {
+    margin-top: -1px;
+    margin-bottom: 0px;
+    min-width: 9rem;
+
+    // Records colours
+    @include o-kanban-record-color;
 }

@@ -51,14 +51,14 @@
                             <i class="fa fa-video-camera fa-stack-1x" t-att-class="{ 'fa-lg': !isSmall, 'text-success': rtc.state.sendCamera }"/>
                         </div>
                     </button>
-                    <Dropdown position="'top-end'" togglerClass="`btn d-flex m-1 border-0 rounded-circle shadow-none opacity-100 opacity-75-hover ${ isSmall ? 'p-2' : 'p-3' }`" menuClass="'d-flex flex-column py-0'" title="MORE">
-                        <t t-set-slot="toggler">
+                    <Dropdown position="'top-end'" menuClass="'d-flex flex-column py-0'">
+                        <button t-att-class="`btn d-flex m-1 border-0 rounded-circle shadow-none opacity-100 opacity-75-hover ${ isSmall ? 'p-2' : 'p-3' }`" t-att-title="MORE">
                             <div class="fa-stack">
                                 <i class="fa fa-ellipsis-v fa-stack-1x" t-att-class="{ 'fa-lg': !isSmall }"/>
                             </div>
-                        </t>
-                        <t t-set-slot="default">
-                            <DropdownItem t-foreach="moreActions" t-as="action" t-key="action.id" class="'btn rounded-0 d-flex align-items-center px-2 py-2 m-0 opacity-75 opacity-100-hover'" title="action.name" onSelected="action.onSelect">
+                        </button>
+                        <t t-set-slot="content">
+                            <DropdownItem t-foreach="moreActions" t-as="action" t-key="action.id" class="'btn rounded-0 d-flex align-items-center px-2 py-2 m-0 opacity-75 opacity-100-hover'" attrs="{ title: action.name }" onSelected="action.onSelect">
                                 <i t-att-class="action.icon"/>
                                 <span class="mx-2" t-out="action.name"/>
                             </DropdownItem>

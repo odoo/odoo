@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { browser } from '@web/core/browser/browser';
 import wTourUtils from '@website/js/tours/tour_utils';
 
 const makeSteps = (steps = []) => [
@@ -27,10 +28,15 @@ const makeSteps = (steps = []) => [
         // Makes sure the dirty flag does not happen after a setTimeout or
         // something like that.
         content: "Click elsewhere and wait for a few ms",
-        trigger: 'iframe #wrap',
-        run: function (actions) {
+        trigger: "iframe #wrap",
+        async run(actions) {
             actions.auto();
-            setTimeout(() => document.body.classList.add('o_test_delay'), 999);
+            await new Promise((resolve) => {
+                browser.setTimeout(() => {
+                    document.body.classList.add("o_test_delay");
+                    resolve();
+                }, 999);
+            });
         },
     }, {
         content: "Click on Discard",

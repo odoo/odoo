@@ -89,7 +89,7 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
         await contains(".o-mail-ChatWindow");
         assert.strictEqual(
             document.querySelector(
-                ".o-mail-ChatWindow-header > .o-dropdown > button.o-mail-ChatWindow-command > .text-truncate"
+                ".o-mail-ChatWindow-header button.o-dropdown.o-mail-ChatWindow-command > .text-truncate"
             ).textContent,
             "Mario"
         );
@@ -110,7 +110,7 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
         await contains(".o-mail-ChatWindow", { count: 2 });
         assert.strictEqual(
             document.querySelectorAll(
-                ".o-mail-ChatWindow-header > .o-dropdown > button.o-mail-ChatWindow-command > .text-truncate"
+                ".o-mail-ChatWindow-header button.o-dropdown.o-mail-ChatWindow-command > .text-truncate"
             )[1].textContent,
             "Luigi"
         );
@@ -364,7 +364,7 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
         await contains(".o-mail-ChatWindow");
         assert.strictEqual(
             document.querySelector(
-                ".o-mail-ChatWindow-header > .o-dropdown > button.o-mail-ChatWindow-command > .text-truncate"
+                ".o-mail-ChatWindow-header button.o-dropdown.o-mail-ChatWindow-command > .text-truncate"
             ).textContent,
             "Mario"
         );
@@ -387,7 +387,7 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
         await contains(".o-mail-ChatWindow", { count: 2 });
         assert.strictEqual(
             document.querySelectorAll(
-                ".o-mail-ChatWindow-header > .o-dropdown > button.o-mail-ChatWindow-command > .text-truncate"
+                ".o-mail-ChatWindow-header button.o-dropdown.o-mail-ChatWindow-command > .text-truncate"
             )[1].textContent,
             "Luigi"
         );
@@ -528,7 +528,7 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
         await contains(".o-mail-ChatWindow");
         assert.strictEqual(
             document.querySelector(
-                ".o-mail-ChatWindow-header > .o-dropdown > button.o-mail-ChatWindow-command > .text-truncate"
+                ".o-mail-ChatWindow-header button.o-dropdown.o-mail-ChatWindow-command > .text-truncate"
             ).textContent,
             "Mario"
         );
@@ -549,7 +549,7 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
         await contains(".o-mail-ChatWindow", { count: 2 });
         assert.strictEqual(
             document.querySelectorAll(
-                ".o-mail-ChatWindow-header > .o-dropdown > button.o-mail-ChatWindow-command > .text-truncate"
+                ".o-mail-ChatWindow-header button.o-dropdown.o-mail-ChatWindow-command > .text-truncate"
             )[1].textContent,
             "Yoshi"
         );
@@ -643,7 +643,7 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
         await contains(".o-mail-ChatWindow");
         assert.strictEqual(
             document.querySelector(
-                ".o-mail-ChatWindow-header > .o-dropdown > button.o-mail-ChatWindow-command > .text-truncate"
+                ".o-mail-ChatWindow-header button.o-dropdown.o-mail-ChatWindow-command > .text-truncate"
             ).textContent,
             "Mario"
         );
@@ -664,7 +664,7 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
         await contains(".o-mail-ChatWindow", { count: 2 });
         assert.strictEqual(
             document.querySelectorAll(
-                ".o-mail-ChatWindow-header > .o-dropdown > button.o-mail-ChatWindow-command > .text-truncate"
+                ".o-mail-ChatWindow-header button.o-dropdown.o-mail-ChatWindow-command > .text-truncate"
             )[1].textContent,
             "Luigi"
         );
@@ -743,7 +743,7 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
             await contains(".o-mail-ChatWindow", { count: 1 });
             assert.strictEqual(
                 document.querySelector(
-                    ".o-mail-ChatWindow-header > .o-dropdown > button.o-mail-ChatWindow-command > .text-truncate"
+                    ".o-mail-ChatWindow-header button.o-dropdown.o-mail-ChatWindow-command > .text-truncate"
                 ).textContent,
                 "Luigi"
             );

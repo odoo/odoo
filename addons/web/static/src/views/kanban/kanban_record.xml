@@ -14,19 +14,17 @@
         </div>
     </t>
     <t t-name="web.KanbanRecordMenu">
-        <t t-if="showMenu">
-            <Dropdown class="'o_dropdown_kanban bg-transparent position-absolute end-0'"
-                      menuClass="'dropdown-menu'"
-                      togglerClass="'btn o-no-caret rounded-0'"
-                      position="'bottom-end'"
-                      title="'Dropdown menu'">
-                <t t-set-slot="toggler">
+        <div t-if="showMenu" class="o_dropdown_kanban bg-transparent position-absolute end-0">
+            <Dropdown menuClass="'o-dropdown--kanban-record-menu'" position="'bottom-end'">
+                <button class="btn o-no-caret rounded-0" title="Dropdown menu">
                     <span class="fa fa-ellipsis-v"/>
+                </button>
+                <t t-set-slot="content">
+                    <KanbanDropdownMenuWrapper>
+                        <t t-call="{{ templates[this.constructor.KANBAN_MENU_ATTRIBUTE] }}" t-call-context="renderingContext"/>
+                    </KanbanDropdownMenuWrapper>
                 </t>
-                <KanbanDropdownMenuWrapper>
-                    <t t-call="{{ templates[this.constructor.KANBAN_MENU_ATTRIBUTE] }}" t-call-context="renderingContext"/>
-                </KanbanDropdownMenuWrapper>
             </Dropdown>
-        </t>
+        </div>
     </t>
 </templates>

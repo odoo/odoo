@@ -13,7 +13,7 @@ registry.category("web_tour.tours").add('burndown_chart_tour', {
     trigger: '.o_kanban_record:contains("Burndown Chart Test") .o_dropdown_kanban .dropdown-toggle',
 }, {
     content: `Open "Burndown Chart Test" project's "Burndown Chart" view`,
-    trigger: '.o_kanban_record:contains("Burndown Chart Test") .o_kanban_manage_reporting div[role="menuitem"] a:contains("Burndown Chart")',
+    trigger: '.o_kanban_manage_reporting div[role="menuitem"] a:contains("Burndown Chart")',
 }, {
     content: 'The sort buttons are not rendered',
     trigger: '.o_graph_renderer:not(:has(.btn-group[role=toolbar][aria-label="Sort graph"]))',

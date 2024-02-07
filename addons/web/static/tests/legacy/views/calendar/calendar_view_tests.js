@@ -4668,10 +4668,10 @@ QUnit.module("Views", ({ beforeEach }) => {
         });
 
         await click(target, ".o_view_scale_selector .scale_button_selection");
-        assert.containsOnce(target, ".o_view_scale_selector .o_scale_button_day");
-        assert.containsOnce(target, ".o_view_scale_selector .o_scale_button_week");
-        assert.containsNone(target, ".o_view_scale_selector .o_scale_button_month");
-        assert.containsNone(target, ".o_view_scale_selector .o_scale_button_year");
+        assert.containsOnce(target, ".o-dropdown--menu .o_scale_button_day");
+        assert.containsOnce(target, ".o-dropdown--menu .o_scale_button_week");
+        assert.containsNone(target, ".o-dropdown--menu .o_scale_button_month");
+        assert.containsNone(target, ".o-dropdown--menu .o_scale_button_year");
     });
 
     QUnit.test(`click outside the popup should close it`, async (assert) => {

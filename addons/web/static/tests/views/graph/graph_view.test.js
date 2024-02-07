@@ -2817,7 +2817,7 @@ test("not use a many2one as a measure by default", async () => {
 
     await toggleMenu("Measures");
 
-    expect(queryAllTexts(".o-dropdown .o_menu_item")).toEqual(["Foo", "Revenue", "Count"]);
+    expect(queryAllTexts(".o-dropdown--menu .o_menu_item")).toEqual(["Foo", "Revenue", "Count"]);
 });
 
 test`desktop`("graph view crash when moving from search view using Down key", async () => {
@@ -2844,7 +2844,12 @@ test("graph measures should be alphabetically sorted (exception: 'Count' is last
 
     await toggleMenu("Measures");
 
-    expect(queryAllTexts(".o-dropdown .o_menu_item")).toEqual(["Bouh", "Foo", "Revenue", "Count"]);
+    expect(queryAllTexts(".o-dropdown--menu .o_menu_item")).toEqual([
+        "Bouh",
+        "Foo",
+        "Revenue",
+        "Count",
+    ]);
 });
 
 test("a many2one field can be added as measure in arch", async () => {

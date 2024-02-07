@@ -23,6 +23,6 @@ patch(MessagingMenu.prototype, {
             domain: [["message_has_sms_error", "=", true]],
             context: { create: false },
         });
-        this.close();
+        this.dropdown.close();
     },
 });

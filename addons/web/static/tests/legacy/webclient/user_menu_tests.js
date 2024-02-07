@@ -1,16 +1,18 @@
 /** @odoo-module alias=@web/../tests/webclient/user_menu_tests default=false */
 
+import { makeTestEnv } from "@web/../tests/helpers/mock_env";
+import { mountInFixture } from "@web/../tests/helpers/mount_in_fixture";
+import { click, getFixture, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { browser } from "@web/core/browser/browser";
+import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { ormService } from "@web/core/orm_service";
+import { popoverService } from "@web/core/popover/popover_service";
 import { registry } from "@web/core/registry";
 import { uiService } from "@web/core/ui/ui_service";
-import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
+import { getOrigin } from "@web/core/utils/urls";
 import { UserMenu } from "@web/webclient/user_menu/user_menu";
 import { odooAccountItem, preferencesItem } from "@web/webclient/user_menu/user_menu_items";
-import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { makeFakeLocalizationService, patchUserWithCleanup } from "../helpers/mock_services";
-import { click, getFixture, mount, patchWithCleanup } from "@web/../tests/helpers/utils";
-import { getOrigin } from "@web/core/utils/urls";
 
 const serviceRegistry = registry.category("services");
 const userMenuRegistry = registry.category("user_menuitems");
@@ -22,6 +24,7 @@ QUnit.module("UserMenu", {
         patchUserWithCleanup({ name: "Sauron", writeDate: "2024-01-01 12:00:00" });
         serviceRegistry.add("hotkey", hotkeyService);
         serviceRegistry.add("ui", uiService);
+        serviceRegistry.add("popover", popoverService);
         target = getFixture();
     },
 });
@@ -87,7 +90,7 @@ QUnit.test("can be rendered", async (assert) => {
             },
         };
     });
-    await mount(UserMenu, target, { env });
+    await mountInFixture(UserMenu, target, { env });
     assert.containsOnce(target, "img.o_user_avatar");
     assert.strictEqual(
         target.querySelector("img.o_user_avatar").dataset.src,
@@ -126,7 +129,7 @@ QUnit.test("can be rendered", async (assert) => {
 QUnit.test("display the correct name in debug mode", async (assert) => {
     patchWithCleanup(odoo, { debug: "1" });
     env = await makeTestEnv();
-    await mount(UserMenu, target, { env });
+    await mountInFixture(UserMenu, target, { env });
     assert.containsOnce(target, "img.o_user_avatar");
     assert.containsOnce(target, "small.oe_topbar_name");
     assert.strictEqual(target.querySelector(".oe_topbar_name").textContent, "Sauron" + "test");
@@ -160,7 +163,7 @@ QUnit.test("can execute the callback of settings", async (assert) => {
 
     env = await makeTestEnv(testConfig);
     userMenuRegistry.add("profile", preferencesItem);
-    await mount(UserMenu, target, { env });
+    await mountInFixture(UserMenu, target, { env });
     await click(target.querySelector("button.dropdown-toggle"));
     assert.containsOnce(target, ".dropdown-menu .dropdown-item");
     const item = target.querySelector(".dropdown-menu .dropdown-item");
@@ -176,10 +179,10 @@ QUnit.test("click on odoo account item", async (assert) => {
     const mockRPC = (route) => assert.step(route);
     env = await makeTestEnv({ mockRPC });
     userMenuRegistry.add("odoo_account", odooAccountItem);
-    await mount(UserMenu, target, { env });
+    await mountInFixture(UserMenu, target, { env });
     await click(target.querySelector("button.dropdown-toggle"));
-    assert.containsOnce(target, ".dropdown-menu .dropdown-item");
-    const item = target.querySelector(".dropdown-menu .dropdown-item");
+    assert.containsOnce(target, ".o-dropdown--menu .dropdown-item");
+    const item = target.querySelector(".o-dropdown--menu .dropdown-item");
     assert.strictEqual(item.textContent, "My Odoo.com account");
     await click(item);
     assert.verifySteps(["/web/session/account", "open https://accounts.odoo.com/account"]);

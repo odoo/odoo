@@ -22,7 +22,7 @@ const serviceRegistry = registry.category("services");
 
 async function exportAllAction(target) {
     await click(target, ".o_cp_action_menus .dropdown-toggle");
-    await click(target, ".o_cp_action_menus .dropdown-item");
+    await click(target, ".o-dropdown--menu .dropdown-item");
 }
 
 QUnit.module("ViewDialogs", (hooks) => {
@@ -31,16 +31,14 @@ QUnit.module("ViewDialogs", (hooks) => {
     let fetchedFields;
 
     const clickExportMenuAction = async () => {
-        const o_control_panel = target.querySelector(".o_control_panel .o_cp_action_menus");
-        const menus = o_control_panel.querySelectorAll(".dropdown-menu span");
+        const menus = target.querySelectorAll(".dropdown-menu span");
         const export_menu = [...menus].find((menu) => menu.textContent === "Export");
         await click(export_menu);
     };
 
     const openExportDataDialog = async () => {
         await click(target.querySelector(".o_list_record_selector input[type='checkbox'"));
-        const o_control_panel = target.querySelector(".o_control_panel .o_cp_action_menus");
-        await click(o_control_panel.querySelector(".dropdown-toggle"));
+        await click(target.querySelector(".o_control_panel .o_cp_action_menus .dropdown-toggle"));
         await clickExportMenuAction();
         await nextTick();
     };
@@ -784,6 +782,7 @@ QUnit.module("ViewDialogs", (hooks) => {
         const ui = {
             activateElement: () => {},
             deactivateElement: () => {},
+            getActiveElementOf: () => {},
             size: 4,
             isSmall: true,
         };
@@ -1289,7 +1288,7 @@ QUnit.module("ViewDialogs", (hooks) => {
         });
 
         await click(target, "table .o_optional_columns_dropdown .dropdown-toggle");
-        await click(target, "div.o_optional_columns_dropdown span.dropdown-item:first-child");
+        await click(target, "span.dropdown-item:first-child");
         assert.containsN(
             target,
             "th",

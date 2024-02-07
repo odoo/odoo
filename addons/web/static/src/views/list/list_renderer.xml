@@ -44,33 +44,33 @@
                         </t>
                         <th t-if="props.onOpenFormView" t-on-keydown="(ev) => this.onCellKeydown(ev)" class="o_list_open_form_view"/>
                         <th t-if="displayOptionalFields or activeActions.onDelete" t-on-keydown="(ev) => this.onCellKeydown(ev)" class="o_list_controller o_list_actions_header position-sticky end-0">
-                            <Dropdown t-if="displayOptionalFields"
-                                class="'o_optional_columns_dropdown text-center border-top-0'"
-                                togglerClass="'btn p-0'"
-                                skipTogglerTabbing="true"
-                                position="'bottom-end'">
-                                <t t-set-slot="toggler">
-                                    <i class="o_optional_columns_dropdown_toggle oi oi-fw oi-settings-adjust"/>
-                                </t>
+                            <div t-if="displayOptionalFields" class="o_optional_columns_dropdown text-center border-top-0">
+                                <Dropdown position="'bottom-end'">
+                                    <button class="btn p-0" tabindex="-1">
+                                        <i class="o_optional_columns_dropdown_toggle oi oi-fw oi-settings-adjust"/>
+                                    </button>
 
-                                <t t-foreach="optionalFieldGroups" t-as="group" t-key="group_index">
-                                    <div t-if="!group_first" role="separator" class="dropdown-divider"/>
-                                    <DropdownItem t-if="group.displayName" parentClosingMode="'none'" onSelected="() => this.toggleOptionalFieldGroup(group.id)">
-                                        <div class="fw-bold" t-esc="group.displayName"/>
-                                    </DropdownItem>
-                                    <t t-foreach="group.optionalFields" t-as="field" t-key="field_index">
-                                        <DropdownItem parentClosingMode="'none'" onSelected="() => this.toggleOptionalField(field.name)">
-                                            <CheckBox
-                                                onChange="() => this.toggleOptionalField(field.name)"
-                                                value="field.value"
-                                                name="field.name"
-                                            >
-                                                <span class="d-flex align-items-center"><span class="text-truncate" t-esc="field.label"/><span class="ps-1" t-if="env.debug" t-esc="' (' + field.name + ')'" /></span>
-                                            </CheckBox>
-                                        </DropdownItem>
+                                    <t t-set-slot="content">
+                                        <t t-foreach="optionalFieldGroups" t-as="group" t-key="group_index">
+                                            <div t-if="!group_first" role="separator" class="dropdown-divider"/>
+                                            <DropdownItem t-if="group.displayName" closingMode="'none'" onSelected="() => this.toggleOptionalFieldGroup(group.id)">
+                                                <div class="fw-bold" t-esc="group.displayName"/>
+                                            </DropdownItem>
+                                            <t t-foreach="group.optionalFields" t-as="field" t-key="field_index">
+                                                <DropdownItem closingMode="'none'" onSelected="() => this.toggleOptionalField(field.name)">
+                                                    <CheckBox
+                                                        onChange="() => this.toggleOptionalField(field.name)"
+                                                        value="field.value"
+                                                        name="field.name"
+                                                    >
+                                                        <span class="d-flex align-items-center"><span class="text-truncate" t-esc="field.label"/><span class="ps-1" t-if="env.debug" t-esc="' (' + field.name + ')'" /></span>
+                                                    </CheckBox>
+                                                </DropdownItem>
+                                            </t>
+                                        </t>
                                     </t>
-                                </t>
-                            </Dropdown>
+                                </Dropdown>
+                            </div>
                         </th>
                     </tr>
                 </thead>

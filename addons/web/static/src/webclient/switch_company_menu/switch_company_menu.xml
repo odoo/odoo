@@ -2,23 +2,29 @@
 <templates xml:space="preserve">
 
 <t t-name="web.SwitchCompanyMenu">
-    <Dropdown class="'o_switch_company_menu d-none d-md-block'" position="'bottom-end'">
-        <t t-set-slot="toggler">
-            <i class="fa fa-building d-lg-none"/>
-            <span class="oe_topbar_name d-none d-lg-block" t-esc="companyService.currentCompany.name"/>
-        </t>
-        <t t-foreach="Object.values(companyService.allowedCompaniesWithAncestors)
-                      .filter((c) => !c.parent_id)
-                      .sort((c1, c2) => c1.sequence - c2.sequence)
-                     " t-as="company" t-key="company.id">
-            <SwitchCompanyItem company="company" level="0"/>
-        </t>
-    </Dropdown>
+    <div class="o_switch_company_menu d-none d-md-block">
+        <DropdownGroup group="'web-navbar-group'">
+            <Dropdown position="'bottom-end'">
+                <button>
+                    <i class="fa fa-building d-lg-none"/>
+                    <span class="oe_topbar_name d-none d-lg-block" t-esc="companyService.currentCompany.name"/>
+                </button>
+                <t t-set-slot="content">
+                    <t t-foreach="Object.values(companyService.allowedCompaniesWithAncestors)
+                        .filter((c) => !c.parent_id)
+                        .sort((c1, c2) => c1.sequence - c2.sequence)
+                        " t-as="company" t-key="company.id">
+                        <SwitchCompanyItem company="company" level="0"/>
+                    </t>
+                </t>
+            </Dropdown>
+        </DropdownGroup>
+    </div>
 </t>
 
 
 <t t-name="web.SwitchCompanyItem">
-    <DropdownItem class="'p-0'" parentClosingMode="!isCompanyAllowed ? 'none' : 'all'">
+    <DropdownItem class="'p-0'" closingMode="!isCompanyAllowed ? 'none' : 'all'">
         <div
             class="d-flex"
             t-att-class="{ 'disabled': !isCompanyAllowed }"

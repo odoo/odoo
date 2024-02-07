@@ -1,60 +1,46 @@
-import { Component, onWillDestroy, useExternalListener, useRef, useSubEnv } from "@odoo/owl";
-import { useForwardRefToParent } from "@web/core/utils/hooks";
+import {
+    Component,
+    onMounted,
+    onWillDestroy,
+    useExternalListener,
+    useRef,
+    useSubEnv,
+} from "@odoo/owl";
+import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { usePosition } from "@web/core/position/position_hook";
 import { useActiveElement } from "@web/core/ui/ui_service";
-import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
+import { addClassesToElement, mergeClasses } from "@web/core/utils/classname";
+import { useForwardRefToParent } from "@web/core/utils/hooks";
+
+const POPOVERS = new WeakMap();
+/**
+ * Can be used to retrieve the popover element for a given target.
+ * @param {HTMLElement} target
+ * @returns {HTMLElement | undefined} the popover element if it exists
+ */
+export function getPopoverForTarget(target) {
+    return POPOVERS.get(target);
+}
 
 export const POPOVER_SYMBOL = Symbol("popover");
 
 export class Popover extends Component {
     static template = "web.Popover";
     static defaultProps = {
-        position: "bottom",
-        class: "",
-        fixedPosition: false,
-        arrow: true,
         animation: true,
-        componentProps: {},
+        arrow: true,
+        class: "",
         closeOnClickAway: () => true,
+        closeOnEscape: true,
+        componentProps: {},
+        fixedPosition: false,
+        position: "bottom",
+        setActiveElement: false,
     };
     static props = {
+        // Main props
         component: { type: Function },
-        componentProps: { type: Object, optional: true },
-        ref: {
-            type: Function,
-            optional: true,
-        },
-        class: {
-            optional: true,
-            type: String,
-        },
-        position: {
-            type: String,
-            validate: (p) => {
-                const [d, v = "middle"] = p.split("-");
-                return (
-                    ["top", "bottom", "left", "right"].includes(d) &&
-                    ["start", "middle", "end", "fit"].includes(v)
-                );
-            },
-            optional: true,
-        },
-        onPositioned: {
-            type: Function,
-            optional: true,
-        },
-        fixedPosition: {
-            type: Boolean,
-            optional: true,
-        },
-        arrow: {
-            type: Boolean,
-            optional: true,
-        },
-        animation: {
-            type: Boolean,
-            optional: true,
-        },
+        componentProps: { optional: true, type: Object },
         target: {
             validate: (target) => {
                 // target may be inside an iframe, so get the Element constructor
@@ -67,36 +53,72 @@ export class Popover extends Component {
                 );
             },
         },
-        slots: {
-            type: Object,
+
+        // Styling and semantical props
+        animation: { optional: true, type: Boolean },
+        arrow: { optional: true, type: Boolean },
+        class: { optional: true },
+        role: { optional: true, type: String },
+
+        // Positioning props
+        fixedPosition: { optional: true, type: Boolean },
+        holdOnHover: { optional: true, type: Boolean },
+        onPositioned: { optional: true, type: Function },
+        position: {
             optional: true,
-            shape: {
-                default: { optional: true },
+            type: String,
+            validate: (p) => {
+                const [d, v = "middle"] = p.split("-");
+                return (
+                    ["top", "bottom", "left", "right"].includes(d) &&
+                    ["start", "middle", "end", "fit"].includes(v)
+                );
             },
         },
-        close: {
-            type: Function,
-            optional: true,
-        },
-        closeOnClickAway: {
-            type: Function,
-            optional: true,
-        },
-        subPopovers: {
-            optional: true,
-        },
+
+        // Control props
+        close: { optional: true, type: Function },
+        closeOnClickAway: { optional: true, type: Function },
+        closeOnEscape: { optional: true, type: Boolean },
+        setActiveElement: { optional: true, type: Boolean },
+
+        // Technical props
+        parentSubPopovers: { optional: true },
+        ref: { optional: true, type: Function },
+        slots: { optional: true, type: Object },
     };
 
     static animationTime = 200;
     setup() {
-        useActiveElement("ref");
+        if (this.props.setActiveElement) {
+            useActiveElement("ref");
+        }
+
         useForwardRefToParent("ref");
         this.popoverRef = useRef("ref");
-        this.shouldAnimate = this.props.animation;
 
+        let shouldAnimate = this.props.animation;
         this.position = usePosition("ref", () => this.props.target, {
             onPositioned: (el, solution) => {
                 (this.props.onPositioned || this.onPositioned.bind(this))(el, solution);
+
+                // opening animation
+                if (shouldAnimate) {
+                    shouldAnimate = false; // animate only once
+                    const transform = {
+                        top: ["translateY(-5%)", "translateY(0)"],
+                        right: ["translateX(5%)", "translateX(0)"],
+                        bottom: ["translateY(5%)", "translateY(0)"],
+                        left: ["translateX(-5%)", "translateX(0)"],
+                    }[solution.direction];
+                    this.position.lock();
+                    const animation = el.animate(
+                        { opacity: [0, 1], transform },
+                        this.constructor.animationTime
+                    );
+                    animation.finished.then(this.position.unlock);
+                }
+
                 if (this.props.fixedPosition) {
                     // Prevent further positioning updates if fixed position is wanted
                     this.position.lock();
@@ -105,22 +127,34 @@ export class Popover extends Component {
             position: this.props.position,
         });
 
-        this.props.subPopovers?.add(this);
+        this.props.parentSubPopovers?.add(this);
         this.subPopovers = new Set();
         useSubEnv({ [POPOVER_SYMBOL]: this.subPopovers });
 
         if (this.props.target.isConnected) {
             useExternalListener(window, "pointerdown", this.onClickAway, { capture: true });
-            useHotkey("escape", () => this.props.close());
+            if (this.props.closeOnEscape) {
+                useHotkey("escape", () => this.props.close());
+            }
             const targetObserver = new MutationObserver(this.onTargetMutate.bind(this));
             targetObserver.observe(this.props.target.parentElement, { childList: true });
             onWillDestroy(() => {
                 targetObserver.disconnect();
-                this.props.subPopovers?.delete(this);
+                this.props.parentSubPopovers?.delete(this);
             });
         } else {
             this.props.close();
         }
+        onMounted(() => POPOVERS.set(this.props.target, this.popoverRef.el));
+        onWillDestroy(() => POPOVERS.delete(this.props.target));
+    }
+
+    get defaultClassObj() {
+        return mergeClasses(
+            "o_popover popover mw-100",
+            { "o-popover--with-arrow": this.props.arrow },
+            this.props.class
+        );
     }
 
     isInside(target) {
@@ -147,25 +181,24 @@ export class Popover extends Component {
         const position = `${direction[0]}${variant[0]}`;
 
         // reset all popover classes
+        el.classList = [];
         const directionMap = {
             top: "top",
             bottom: "bottom",
             left: "start",
             right: "end",
         };
-        el.classList = [
-            "o_popover popover mw-100",
+        addClassesToElement(
+            el,
+            this.defaultClassObj,
             `bs-popover-${directionMap[direction]}`,
             `o-popover-${direction}`,
-            `o-popover--${position}`,
-        ].join(" ");
-        if (this.props.class) {
-            el.classList.add(...this.props.class.split(" "));
-        }
+            `o-popover--${position}`
+        );
 
-        // reset all arrow classes
         if (this.props.arrow) {
             const arrowEl = el.querySelector(":scope > .popover-arrow");
+            // reset all arrow classes
             arrowEl.className = "popover-arrow";
             switch (position) {
                 case "tm": // top-middle
@@ -197,23 +230,6 @@ export class Popover extends Component {
                     arrowEl.classList.add("top-auto");
                     break;
             }
-        }
-
-        // opening animation
-        if (this.shouldAnimate) {
-            this.shouldAnimate = false; // animate only once
-            const transform = {
-                top: ["translateY(-5%)", "translateY(0)"],
-                right: ["translateX(5%)", "translateX(0)"],
-                bottom: ["translateY(5%)", "translateY(0)"],
-                left: ["translateX(-5%)", "translateX(0)"],
-            }[direction];
-            this.position.lock();
-            const animation = el.animate(
-                { opacity: [0, 1], transform },
-                this.constructor.animationTime
-            );
-            animation.finished.then(this.position.unlock);
         }
     }
 }

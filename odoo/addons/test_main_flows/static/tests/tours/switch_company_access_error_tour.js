@@ -37,7 +37,7 @@ registry.category("web_tour.tours").add("test_company_switch_access_error", {
         },
         {
             trigger:
-                ".o_switch_company_menu .dropdown-item:contains(second company) .toggle_company",
+                ".o-dropdown--menu .dropdown-item:contains(second company) .toggle_company",
         },
         {
             trigger: ".o_view_controller.o_list_view",

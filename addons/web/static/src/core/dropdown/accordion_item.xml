@@ -3,7 +3,7 @@
 
     <t t-name="web.AccordionItem">
         <div class="o_accordion position-relative">
-            <button class="o_menu_item o_accordion_toggle dropdown-item" tabindex="0"
+            <button class="o_menu_item o_accordion_toggle dropdown-item o-navigable" tabindex="0"
                     t-att-class="{'selected': props.selected, 'open': state.open}"
                     t-attf-class="{{ props.class }}"
                     t-att-aria-expanded="state.open ? 'true' : 'false'"

@@ -8,6 +8,7 @@ import {
     click,
     clickSave,
     editInput,
+    getDropdownMenu,
     getFixture,
     getNodesTextContent,
     nextTick,
@@ -437,7 +438,7 @@ QUnit.module("Fields", (hooks) => {
             await click(target, ".o_statusbar_status .dropdown-toggle:not(.d-none)");
 
             const status = target.querySelectorAll(".o_statusbar_status");
-            assert.containsOnce(status[0], ".dropdown-item.disabled");
+            assert.containsOnce(getDropdownMenu(target, status[0]), ".dropdown-item.disabled");
             assert.containsOnce(status[status.length - 1], "button:disabled");
         }
     );
@@ -476,7 +477,7 @@ QUnit.module("Fields", (hooks) => {
         );
 
         await click(target, ".o_statusbar_status .dropdown-toggle:not(.d-none)");
-        await click(target, ".o-dropdown .dropdown-item");
+        await click(target, ".o-dropdown--menu .dropdown-item");
         assert.strictEqual(
             target.querySelector("[aria-label='Current state']").textContent,
             "second record",
@@ -815,7 +816,8 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
             });
             await click(target, ".o_statusbar_status .dropdown-toggle:not(.d-none)");
-            await click(target, ".o-dropdown .dropdown-item");
+            const dropdownMenu = getDropdownMenu(target, ".o_statusbar_status .dropdown-toggle:not(.d-none)");
+            await click(dropdownMenu, ".dropdown-item");
 
             const button = target.querySelector(".o_statusbar_status button[data-value='3']");
             assert.notEqual(button.style.borderTopRightRadius, "0px");

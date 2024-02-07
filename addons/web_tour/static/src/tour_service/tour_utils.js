@@ -540,7 +540,7 @@ export const stepUtils = {
                 },
             },
             {
-                trigger: `.o_statusbar_buttons button:enabled:contains('${innerTextButton}')`,
+                trigger: `.o_statusbar_buttons button:enabled:contains('${innerTextButton}'), .dropdown-item button:enabled:contains('${innerTextButton}')`,
                 content: description,
                 position: "bottom",
             },
@@ -561,7 +561,7 @@ export const stepUtils = {
         return {
             mobile: true,
             trigger: ".o_searchview_input",
-            extra_trigger: ".modal:not(.o_inactive_modal) .dropdown-menu.o_searchview_autocomplete",
+            extra_trigger: ".dropdown-menu.o_searchview_autocomplete",
             position: "bottom",
             run: (action) => {
                 const keyEventEnter = new KeyboardEvent("keydown", {

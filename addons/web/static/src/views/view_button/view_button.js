@@ -1,8 +1,7 @@
-import { DROPDOWN } from "@web/core/dropdown/dropdown";
+import { Component } from "@odoo/owl";
+import { useDropdownCloser } from "@web/core/dropdown/dropdown_hooks";
 import { pick } from "@web/core/utils/objects";
 import { debounce as debounceFn } from "@web/core/utils/timing";
-
-import { Component } from "@odoo/owl";
 
 const explicitRankClasses = [
     "btn-primary",
@@ -87,6 +86,7 @@ export class ViewButton extends Component {
             context: this.props.record && this.props.record.context,
             model: (this.props.record && this.props.record.resModel) || this.props.resModel,
         });
+        this.dropdownControl = useDropdownCloser();
     }
 
     get clickParams() {
@@ -122,11 +122,7 @@ export class ViewButton extends Component {
             clickParams: this.clickParams,
             getResParams: () =>
                 pick(this.props.record, "context", "evalContext", "resModel", "resId", "resIds"),
-            beforeExecute: () => {
-                if (this.env[DROPDOWN]) {
-                    this.env[DROPDOWN].close();
-                }
-            },
+            beforeExecute: () => this.dropdownControl.close(),
         });
     }
 

@@ -5,6 +5,7 @@ import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { FollowerSubtypeDialog } from "./follower_subtype_dialog";
 import { useVisible } from "@mail/utils/common/hooks";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 
 /**
  * @typedef {Object} Props
@@ -13,9 +14,11 @@ import { useVisible } from "@mail/utils/common/hooks";
  * @property {import('@mail/core/common/thread_model').Thread} thread
  * @extends {Component<Props, Env>}
  */
+
 export class FollowerList extends Component {
     static template = "mail.FollowerList";
-    static props = ["onAddFollowers?", "onFollowerChanged?", "thread"];
+    static components = { DropdownItem };
+    static props = ["onAddFollowers?", "onFollowerChanged?", "thread", "dropdown"];
 
     setup() {
         this.action = useService("action");
@@ -29,7 +32,6 @@ export class FollowerList extends Component {
     }
 
     onClickAddFollowers() {
-        document.body.click(); // hack to close dropdown
         const action = {
             type: "ir.actions.act_window",
             res_model: "mail.wizard.invite",
@@ -55,7 +57,7 @@ export class FollowerList extends Component {
      */
     onClickDetails(ev, follower) {
         this.messaging.openDocument({ id: follower.partner.id, model: "res.partner" });
-        document.body.click(); // hack to close dropdown
+        this.props.dropdown.close();
     }
 
     /**
@@ -67,7 +69,7 @@ export class FollowerList extends Component {
             follower,
             onFollowerChanged: () => this.props.onFollowerChanged?.(this.props.thread),
         });
-        document.body.click(); // hack to close dropdown
+        this.props.dropdown.close();
     }
 
     /**

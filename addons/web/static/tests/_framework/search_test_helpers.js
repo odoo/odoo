@@ -22,7 +22,7 @@ const ensureSearchBarMenu = async () => {
  * @param {string} label
  */
 export async function toggleMenu(label) {
-    await contains(`.dropdown button.dropdown-toggle:contains(/^${label}$/)`).click();
+    await contains(`button.o-dropdown:contains(/^${label}$/)`).click();
 }
 
 /**

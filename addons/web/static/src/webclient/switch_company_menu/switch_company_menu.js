@@ -1,4 +1,5 @@
 import { Dropdown } from "@web/core/dropdown/dropdown";
+import { DropdownGroup } from "@web/core/dropdown/dropdown_group";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { registry } from "@web/core/registry";
 
@@ -96,7 +97,7 @@ export class SwitchCompanyItem extends Component {
 
 export class SwitchCompanyMenu extends Component {
     static template = "web.SwitchCompanyMenu";
-    static components = { Dropdown, DropdownItem, SwitchCompanyItem };
+    static components = { Dropdown, DropdownItem, SwitchCompanyItem, DropdownGroup };
     static props = {};
     static toggleDelay = 1000;
 

@@ -2,17 +2,21 @@
 <templates xml:space="preserve">
 
     <t t-name="board.AddToBoard">
-        <Dropdown class="'o_add_to_board'">
-            <t t-set-slot="toggler">
-                <t t-call="Dashboard.DashboardIcon"/>
-                Dashboard
-            </t>
-            <div class="px-3 pb-2">
-                <label class="mb-2">Add to my dashboard</label>
-                <input type="text" class="o_input mb-3" t-ref="autofocus" t-model.trim="state.name" t-on-keydown="onInputKeydown" />
-                <button type="button" class="btn btn-primary" t-on-click="addToBoard">Add</button>
-            </div>
-        </Dropdown>
+        <div class="o_add_to_board">
+            <Dropdown>
+                <button>
+                    <t t-call="Dashboard.DashboardIcon"/>
+                    Dashboard
+                </button>
+                <t t-set-slot="content">
+                    <div class="px-3 pb-2">
+                        <label class="mb-2">Add to my dashboard</label>
+                        <input type="text" class="o_input mb-3" t-ref="autofocus" t-model.trim="state.name" t-on-keydown="onInputKeydown" />
+                        <button type="button" class="btn btn-primary" t-on-click="addToBoard">Add</button>
+                    </div>
+                </t>
+            </Dropdown>
+        </div>
     </t>
 
     <t t-name="Dashboard.DashboardIcon">

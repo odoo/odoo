@@ -52,10 +52,8 @@
                                 t-attf-src="/web/static/src/views/fields/properties/icons/{{state.propertyDefinition.type}}.png"/>
                             <span t-out="state.typeLabel"/>
                         </div>
-                        <Dropdown
-                            t-else=""
-                            title="state.typeLabel" togglerClass="'btn btn-link d-flex p-0 w-100'">
-                            <t t-set-slot="toggler">
+                        <Dropdown t-else="">
+                            <button class="btn btn-link d-flex p-0 w-100" t-att-title="state.typeLabel">
                                 <div class="o_input_dropdown w-100 o_field_property_dropdown">
                                     <img t-attf-src="/web/static/src/views/fields/properties/icons/{{state.propertyDefinition.type}}.png"
                                         class="position-relative z-index-1 me-n4"/>
@@ -64,15 +62,17 @@
                                         t-att-value="state.typeLabel" readonly=""/>
                                     <span class="o_dropdown_button" />
                                 </div>
-                            </t>
-                            <t t-foreach="availablePropertyTypes" t-as="option" t-key="option[0]">
-                                <DropdownItem onSelected.bind="() => this.onPropertyTypeChange(option[0])">
-                                    <div class="d-flex align-items-center">
-                                        <img class="me-2"
-                                            t-attf-src="/web/static/src/views/fields/properties/icons/{{option[0]}}.png"/>
-                                        <span t-out="option[1]"/>
-                                    </div>
-                                </DropdownItem>
+                            </button>
+                            <t t-set-slot="content">
+                                <t t-foreach="availablePropertyTypes" t-as="option" t-key="option[0]">
+                                    <DropdownItem onSelected.bind="() => this.onPropertyTypeChange(option[0])">
+                                        <div class="d-flex align-items-center">
+                                            <img class="me-2"
+                                                t-attf-src="/web/static/src/views/fields/properties/icons/{{option[0]}}.png"/>
+                                            <span t-out="option[1]"/>
+                                        </div>
+                                    </DropdownItem>
+                                </t>
                             </t>
                         </Dropdown>
                     </div>
