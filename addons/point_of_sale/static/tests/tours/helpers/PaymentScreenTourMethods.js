@@ -265,3 +265,16 @@ export function isInvoiceButtonChecked() {
         },
     ];
 }
+
+export function clickShipLaterButton() {
+    return [
+        {
+            content: "click ship later button",
+            trigger: ".button:contains('Ship Later')",
+        },
+        {
+            content: "click confirm button",
+            trigger: ".button.confirm",
+        },
+    ];
+}
