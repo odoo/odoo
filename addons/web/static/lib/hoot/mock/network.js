@@ -261,6 +261,34 @@ export function mockWorker(onWorkerConnected) {
     };
 }
 
+export class MockCookie {
+    /** @type {Record<string, string>} */
+    #jar = {};
+
+    clear() {
+        this.#jar = {};
+    }
+
+    get() {
+        return Object.entries(this.#jar)
+            .filter(([, value]) => value !== "kill")
+            .map((entry) => entry.join("="))
+            .join("; ");
+    }
+
+    /**
+     * @param {string} value
+     */
+    set(value) {
+        for (const cookie of String(value).split(/\s*;\s*/)) {
+            const [key, value] = cookie.split(/=(.*)/);
+            if (!["path", "max-age"].includes(key)) {
+                this.#jar[key] = value;
+            }
+        }
+    }
+}
+
 export class MockDedicatedWorkerGlobalScope {
     /**
      * @param {SharedWorker | Worker} worker
@@ -284,6 +312,9 @@ export class MockDedicatedWorkerGlobalScope {
 
 export class MockHistory {
     #index = 0;
+    /** @type {Location} */
+    #loc;
+    /** @type {[any, string][]} */
     #stack = [];
 
     /** @type {typeof History.prototype.length} */
@@ -302,14 +333,23 @@ export class MockHistory {
         return "auto";
     }
 
+    /**
+     * @param {Location} location
+     */
+    constructor(location) {
+        this.#loc = location;
+    }
+
     /** @type {typeof History.prototype.back} */
     back() {
         this.#index = Math.max(0, this.#index - 1);
+        this.#loc.assign(this.#stack[this.#index][1]);
     }
 
     /** @type {typeof History.prototype.forward} */
     forward() {
         this.#index = Math.min(this.#stack.length - 1, this.#index + 1);
+        this.#loc.assign(this.#stack[this.#index][1]);
     }
 
     /** @type {typeof History.prototype.go} */
@@ -320,11 +360,13 @@ export class MockHistory {
     /** @type {typeof History.prototype.pushState} */
     pushState(data, unused, url) {
         this.#index = this.#stack.push([data ?? null, url]) - 1;
+        this.#loc.assign(url);
     }
 
     /** @type {typeof History.prototype.replaceState} */
     replaceState(data, unused, url) {
         this.#stack[this.#index] = [data ?? null, url];
+        this.#loc.assign(url);
     }
 }
 

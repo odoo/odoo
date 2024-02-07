@@ -21,3 +21,4 @@ export {
     setFrameRate,
     tick,
 } from "./mock/time";
+export { mockLocation } from "./mock/window";
