@@ -73,21 +73,21 @@ registry.category("web_tour.tours").add("project_task_history_tour", {
         },
     }, {
         content: "Verify that the active revision (revision 4) is related to the third edit",
-        trigger: `#history-content-tab:contains("${baseDescriptionContent} 2")`,
+        trigger: `.history-container .tab-pane:contains("${baseDescriptionContent} 2")`,
     }, {
         content: "Go to the third revision related to the second edit",
         trigger: '.html-history-dialog .revision-list .btn:nth-child(2)',
     }, {
         content: "Verify that the active revision is the one clicked in the previous step",
-        trigger: `#history-content-tab:contains("${baseDescriptionContent} 1")`,
+        trigger: `.history-container .tab-pane:contains("${baseDescriptionContent} 1")`,
     }, {
-        content: "Go to comparaison tab",
-        trigger: "#history-comparison",
+        content: "Go to comparison tab",
+        trigger: ".history-container .nav-item:contains(Comparison) a",
     }, {
         content: "Verify comparaison text",
-        trigger: "#history-comparison-tab",
+        trigger: ".history-container .tab-pane",
         run: function () {
-            const comparaisonHtml = document.querySelector("#history-comparison-tab").innerHTML;
+            const comparaisonHtml = document.querySelector(".history-container .tab-pane").innerHTML;
             const correctHtml = `<p><removed>${baseDescriptionContent} 3</removed><added>${baseDescriptionContent} 1</added></p>`;
             if (comparaisonHtml !== correctHtml) {
                 throw new Error(`Expect comparison to be ${correctHtml}, got ${comparaisonHtml}`);
