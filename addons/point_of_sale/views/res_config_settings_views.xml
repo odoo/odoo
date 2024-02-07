@@ -49,6 +49,11 @@
                                 </div>
                             </setting>
                         </block>
+                        <block title="Preparation Display" id="preparation_display_section">
+                            <setting string="Preparation Display" help="Display orders on the preparation display" id="preparation_display">
+                                <field name="module_pos_preparation_display" widget="upgrade_boolean"/>
+                            </setting>
+                        </block>
                         <block title="Payment" id="pos_payment_section">
                             <setting id="payment_methods_new" string="Payment Methods" help="Payment methods available">
                                 <field name="pos_payment_method_ids" colspan="4" widget="many2many_tags" readonly="pos_has_active_session" required="pos_company_has_template" options="{'no_create': True}" />
@@ -362,9 +367,6 @@
                                         <button name="%(point_of_sale.action_pos_printer_form)d" icon="oi-arrow-right" type="action" string="Printers" class="btn-link"/>
                                     </div>
                                 </div>
-                            </setting>
-                            <setting string="Preparation Display" help="Display orders on the preparation display" id="preparation_display">
-                                <field name="module_pos_preparation_display" widget="upgrade_boolean"/>
                             </setting>
                         </block>
 

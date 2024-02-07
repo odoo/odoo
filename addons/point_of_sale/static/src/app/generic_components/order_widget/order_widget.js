@@ -10,6 +10,10 @@ export class OrderWidget extends Component {
         slots: { type: Object },
         total: { type: String, optional: true },
         tax: { type: String, optional: true },
+        groupBy: {
+            type: [Object, { value: null }],
+            optional: true,
+        },
     };
     static components = { CenteredIcon };
     setup() {
@@ -19,5 +23,52 @@ export class OrderWidget extends Component {
                 ?.querySelector(".orderline.selected")
                 ?.scrollIntoView({ behavior: "smooth", block: "start" });
         });
+    }
+
+    getGroupedLines() {
+        const check = this.props.groupBy.check;
+        const filteredLines = this.props.lines.reduce((acc, line) => {
+            for (const d of this.props.groupBy.data) {
+                const result = check(d.id, line);
+
+                if (result === true) {
+                    if (!acc[d.id]) {
+                        acc[d.id] = {
+                            id: d.id,
+                            sequence: d.sequence,
+                            lines: [],
+                            group: d.name,
+                            onClick: () => this.props.groupBy.onClick(d),
+                        };
+                    }
+
+                    acc[d.id].lines.push(line);
+                } else if (result === false) {
+                    if (!acc["no_group"]) {
+                        acc["no_group"] = {
+                            id: "no_group",
+                            sequence: 9999,
+                            lines: [],
+                            group: "Others",
+                            onClick: () => this.props.groupBy.onClick(null),
+                        };
+                    }
+
+                    acc["no_group"].lines.push(line);
+                    return acc;
+                }
+            }
+
+            return acc;
+        }, {});
+
+        const data = Object.values(filteredLines);
+        data.sort((a, b) => a.sequence - b.sequence);
+
+        for (const d of data) {
+            d.lines = d.lines.sort((a, b) => a.id - b.id);
+        }
+
+        return data;
     }
 }

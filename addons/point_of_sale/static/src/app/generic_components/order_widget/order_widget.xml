@@ -3,8 +3,24 @@
     <t t-name="point_of_sale.OrderWidget">
         <t t-if="props.lines?.length">
             <div t-ref="scrollable" class="order-container bg-view overflow-y-auto flex-grow-1 d-flex flex-column text-start">
-                <t t-foreach="props.lines" t-as="line" t-key="line_index">
-                    <t t-slot="default" line="line"/>
+                <t t-if="props.groupBy">
+                    <t t-foreach="getGroupedLines()" t-as="data" t-key="data.id">
+                        <div t-if="data.group" t-on-click="() => data.onClick(data.id)" class="cursor-pointer d-flex w-100 justify-content-center align-items-center gap-3 px-2">
+                            <span>
+                                <i class="fa fa-fire me-1" />
+                                <t t-esc="data.group"/>
+                            </span>
+                            <hr class="hr flex-grow-1" />
+                        </div>
+                        <t t-foreach="data.lines" t-as="line" t-key="line.uuid">
+                            <t t-slot="default" line="line"/>
+                        </t>
+                    </t>
+                </t>
+                <t t-else="">
+                    <t t-foreach="props.lines" t-as="line" t-key="line_index">
+                        <t t-slot="default" line="line"/>
+                    </t>
                 </t>
             </div>
             <div t-if="props.total or props.tax" class="order-summary w-100 py-2 px-3 bg-100 text-end fw-bolder fs-2 lh-sm">
