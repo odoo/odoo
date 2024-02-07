@@ -190,7 +190,9 @@ export class DiscussCoreCommon {
         }
         this.store.Message.get(messageData.temporary_id)?.delete();
         messageData.temporary_id = null;
-        const message = this.store.Message.insert(messageData, { html: true });
+        let message = this.store.Message.get(messageData.id);
+        const alreadyInNeedaction = message?.in(message.thread?.needactionMessages);
+        message = this.store.Message.insert(messageData, { html: true });
         if (message.notIn(channel.messages)) {
             if (!channel.loadNewer) {
                 channel.messages.push(message);
@@ -211,11 +213,8 @@ export class DiscussCoreCommon {
                             inbox.counter++;
                         }
                     }
-                    if (message.notIn(channel.needactionMessages)) {
-                        channel.needactionMessages.push(message);
-                        if (notifId > this.store.initBusId) {
-                            channel.message_needaction_counter++;
-                        }
+                    if (notifId > this.store.initBusId && !alreadyInNeedaction) {
+                        channel.message_needaction_counter++;
                     }
                 }
             }

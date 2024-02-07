@@ -14,12 +14,11 @@ patch(MessagingMenu.prototype, {
     },
     get counter() {
         const count = super.counter;
-        const channelsContribution =
-            this.store.fetchChannelsState !== "fetched"
-                ? this.store.initChannelsUnreadCounter
-                : Object.values(this.store.Thread.records).filter(
-                      (thread) => thread.displayToSelf && thread.message_unread_counter > 0
-                  ).length;
+        const channelsContribution = !this.store.hasFetchedChannels
+            ? this.store.initChannelsUnreadCounter
+            : Object.values(this.store.Thread.records).filter(
+                  (thread) => thread.displayToSelf && thread.message_unread_counter > 0
+              ).length;
         return count + channelsContribution;
     },
 });

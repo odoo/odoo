@@ -1,6 +1,7 @@
 /* @odoo-module */
 
 import { BaseStore, makeStore, Record } from "@mail/core/common/record";
+import { makeCachedFetchData } from "@mail/utils/common/misc";
 
 import { router } from "@web/core/browser/router";
 import { rpc } from "@web/core/network/rpc";
@@ -59,9 +60,6 @@ export class Store extends BaseStore {
 
     /** @type {number} */
     action_discuss_id;
-    /** @type {"not_fetched"|"fetching"|"fetched"} */
-    fetchCannedResponseState = "not_fetched";
-    fetchCannedResponseDeferred;
     lastChannelSubscription = "";
     /** This is the current logged partner / guest */
     self = Record.one("Persona");
@@ -202,24 +200,7 @@ export class Store extends BaseStore {
     fetchReadonly = true;
     fetchSilent = true;
 
-    async fetchCannedResponses() {
-        if (["fetching", "fetched"].includes(this.fetchCannedResponseState)) {
-            return this.fetchCannedResponseDeferred;
-        }
-        this.fetchCannedResponseState = "fetching";
-        this.fetchCannedResponseDeferred = new Deferred();
-        this.fetchData({ canned_responses: true }).then(
-            (recordsByModel) => {
-                this.fetchCannedResponseState = "fetched";
-                this.fetchCannedResponseDeferred.resolve(recordsByModel);
-            },
-            (error) => {
-                this.fetchCannedResponseState = "not_fetched";
-                this.fetchCannedResponseDeferred.reject(error);
-            }
-        );
-        return this.fetchCannedResponseDeferred;
-    }
+    fetchCannedResponses = makeCachedFetchData(this, "canned_responses");
 
     async fetchData(params, { readonly = true, silent = true } = {}) {
         Object.assign(this.fetchParams, params);

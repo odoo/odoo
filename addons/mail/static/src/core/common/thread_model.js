@@ -64,6 +64,11 @@ export class Thread extends Record {
     model;
     allMessages = Record.many("Message", {
         inverse: "thread",
+        onAdd(message) {
+            if (message.needaction) {
+                this.needactionMessages.add(message);
+            }
+        },
     });
     /** @type {boolean} */
     areAttachmentsLoaded = false;

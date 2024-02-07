@@ -1,6 +1,7 @@
 /* @odoo-module */
 
 import { reactive } from "@odoo/owl";
+import { Deferred } from "@web/core/utils/concurrency";
 
 export function assignDefined(obj, data, keys = Object.keys(data)) {
     for (const key of keys) {
@@ -90,4 +91,38 @@ export function compareDatetime(date1, date2) {
         return 1;
     }
     return date1.ts - date2.ts;
+}
+
+/**
+ * Create a cacheable version of the `store.fetchData` The result of the request
+ * is cached once acquired. In case of failure, the deferred is rejected and the
+ * cache is reset allowing to retry the request when calling the function again.
+ *
+ * @param {import("@mail/core/common/store_service").Store} store
+ * @param {string} key
+ * @returns {() => import("@web/core/utils/concurrency").Deferred}
+ */
+export function makeCachedFetchData(store, key) {
+    /**
+     * @type {{ status: "not_fetched"|"fetching"|"fetched", deferred: import("@web/core/utils/concurrency").Deferred?}}
+     */
+    const state = { status: "not_fetched", deferred: null };
+    return () => {
+        if (["fetching", "fetched"].includes(state.status)) {
+            return state.deferred;
+        }
+        state.status = "fetching";
+        state.deferred = new Deferred();
+        store.fetchData({ [key]: true }).then(
+            (result) => {
+                state.status = "fetched";
+                state.deferred.resolve(result);
+            },
+            (error) => {
+                state.status = "not_fetched";
+                state.deferred.reject(error);
+            }
+        );
+        return state.deferred;
+    };
 }

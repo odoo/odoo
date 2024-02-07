@@ -1,17 +1,17 @@
 /* @odoo-module */
 
 import { Store } from "@mail/core/common/store_service";
+import { makeCachedFetchData } from "@mail/utils/common/misc";
 
-import { Deferred } from "@web/core/utils/concurrency";
 import { patch } from "@web/core/utils/patch";
 
 /** @type {import("models").Store} */
 const StorePatch = {
     setup() {
         super.setup(...arguments);
-        this.fetchChannelsState = "not_fetched";
-        this.fetchChannelsDeferred = undefined;
         this.initChannelsUnreadCounter = 0;
+        this.hasFetchedChannels = false;
+        this._cachedFetchChannels = makeCachedFetchData(this, "channels_as_member");
     },
     onStarted() {
         super.onStarted();
@@ -19,31 +19,8 @@ const StorePatch = {
             this.fetchChannels();
         }
     },
-    async fetchChannels() {
-        if (["fetching", "fetched"].includes(this.fetchChannelsState)) {
-            return this.fetchChannelsDeferred;
-        }
-        this.fetchChannelsState = "fetching";
-        this.fetchChannelsDeferred = new Deferred();
-        this.fetchData({ channels_as_member: true }).then(
-            /**
-             * @param {{ Message: import("models").Message[] }} recordsByModel
-             */
-            ({ Message: messages }) => {
-                for (const message of messages) {
-                    if (message.isNeedaction) {
-                        message.thread.needactionMessages.add(message);
-                    }
-                }
-                this.fetchChannelsState = "fetched";
-                this.fetchChannelsDeferred.resolve();
-            },
-            (error) => {
-                this.fetchChannelsState = "not_fetched";
-                this.fetchChannelsDeferred.reject(error);
-            }
-        );
-        return this.fetchChannelsDeferred;
+    fetchChannels() {
+        return this._cachedFetchChannels().then(() => (this.hasFetchedChannels = true));
     },
 };
 patch(Store.prototype, StorePatch);
