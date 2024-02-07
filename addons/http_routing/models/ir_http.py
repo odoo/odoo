@@ -25,7 +25,7 @@ from odoo.addons.base.models.ir_http import RequestUID
 from odoo.addons.base.models.ir_qweb import QWebException
 from odoo.http import request, HTTPRequest, Response
 from odoo.osv import expression
-from odoo.tools import config, ustr, pycompat
+from odoo.tools import ustr, pycompat
 
 _logger = logging.getLogger(__name__)
 
