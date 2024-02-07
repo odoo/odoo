@@ -241,15 +241,6 @@ class Lang(models.Model):
         grouping = self.grouping
         return grouping, thousands_sep, decimal_point
 
-    @api.model
-    @tools.ormcache()
-    def get_available(self):
-        """ Return the available languages as a list of (code, url_code, name,
-            active) sorted by name.
-        """
-        langs = self.with_context(active_test=False).search([])
-        return langs.get_sorted()
-
     def get_sorted(self):
         return sorted([(lang.code, lang.url_code, lang.name, lang.active, lang.flag_image_url) for lang in self], key=itemgetter(2))
 
@@ -265,14 +256,6 @@ class Lang(models.Model):
 
     def _get_cached(self, field):
         return self._get_cached_values()[field]
-
-    @api.model
-    @tools.ormcache('code')
-    def _lang_code_to_urlcode(self, code):
-        for c, urlc, name, *_ in self.get_available():
-            if c == code:
-                return urlc
-        return self._lang_get(code).url_code
 
     @api.model
     @tools.ormcache()
