@@ -566,7 +566,7 @@ class AccountMove(models.Model):
 
     def cron_l10n_it_edi_download_and_update(self):
         """ Crons run with sudo(), with empty recordset. Remember that. """
-        retrigger = False
+        retrigger = 0
         for proxy_user in self.env['account_edi_proxy_client.user'].search([('proxy_type', '=', 'l10n_it_edi')]):
             proxy_user = proxy_user.with_company(proxy_user.company_id)
             if proxy_user.edi_mode != 'demo':
@@ -577,12 +577,13 @@ class AccountMove(models.Model):
                 ])
                 if moves_to_check:
                     moves_to_check._l10n_it_edi_update_send_state()
-                retrigger = retrigger or self._l10n_it_edi_download_invoices(proxy_user)
+                self.env['ir.cron']._log_progress(len(moves_to_check))
+                retrigger += 1 if self._l10n_it_edi_download_invoices(proxy_user) else 0
 
         # Retrigger download if there are still some on the server
         if retrigger:
             _logger.info('Retriggering "Receive invoices from the SdI"...')
-            self.env.ref('l10n_it_edi.ir_cron_l10n_it_edi_download_and_update')._trigger()
+            self.env['ir.cron']._log_progress(0, retrigger)
 
     def _l10n_it_edi_download_invoices(self, proxy_user):
         """ Check the proxy for incoming invoices for a specified proxy user.
