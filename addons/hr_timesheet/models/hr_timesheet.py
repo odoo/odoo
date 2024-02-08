@@ -67,6 +67,7 @@ class AccountAnalyticLine(models.Model):
     encoding_uom_id = fields.Many2one('uom.uom', compute='_compute_encoding_uom_id')
     partner_id = fields.Many2one(compute='_compute_partner_id', store=True, readonly=False)
     readonly_timesheet = fields.Boolean(string="Readonly Timesheet", compute="_compute_readonly_timesheet", compute_sudo=True)
+    milestone_id = fields.Many2one('project.milestone', related='task_id.milestone_id')
 
     @api.depends('project_id', 'task_id')
     def _compute_display_name(self):

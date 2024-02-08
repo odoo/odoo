@@ -24,6 +24,7 @@ class TimesheetsAnalysisReport(models.Model):
     amount = fields.Monetary("Amount", readonly=True)
     unit_amount = fields.Float("Hours Spent", readonly=True)
     partner_id = fields.Many2one('res.partner', string="Partner", readonly=True)
+    milestone_id = fields.Many2one('project.milestone', related='task_id.milestone_id')
 
     @property
     def _table_query(self):
