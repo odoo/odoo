@@ -67,18 +67,7 @@ import {
 // Global
 //-----------------------------------------------------------------------------
 
-const {
-    console,
-    DataTransfer,
-    document,
-    matchMedia,
-    navigator,
-    Object,
-    ontouchstart,
-    String,
-    Touch,
-    TypeError,
-} = globalThis;
+const { console, DataTransfer, document, Object, String, Touch, TypeError } = globalThis;
 
 //-----------------------------------------------------------------------------
 // Internal
@@ -286,9 +275,10 @@ const getPosition = (element, options) => {
  */
 const hasTagName = (node, ...tagNames) => tagNames.includes(getTag(node));
 
-const hasTouch = () => ontouchstart !== undefined || matchMedia("(pointer:coarse)").matches;
+const hasTouch = () =>
+    globalThis.ontouchstart !== undefined || globalThis.matchMedia("(pointer:coarse)").matches;
 
-const isMacOS = () => /Mac/i.test(navigator.userAgent);
+const isMacOS = () => /Mac/i.test(globalThis.navigator.userAgent);
 
 /**
  * @param {unknown} value
@@ -411,6 +401,9 @@ const registerSpecialKey = (eventInit, toggle) => {
             } else {
                 specialKeys.ctrlKey = toggle;
             }
+            break;
+        case "Meta":
+            specialKeys.metaKey = toggle;
             break;
         case "Shift":
             specialKeys.shiftKey = toggle;
@@ -591,7 +584,7 @@ const _fill = (target, value, options) => {
     } else {
         if (options?.instantly) {
             // Simulates filling the clipboard with the value (can be from external source)
-            navigator.clipboard.writeTextSync(value);
+            globalThis.navigator.clipboard.writeTextSync(value);
             events.push(..._press(target, { ctrlKey: true, key: "v" }));
         } else {
             if (options?.composition) {
