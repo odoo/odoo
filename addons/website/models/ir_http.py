@@ -234,19 +234,17 @@ class Http(models.AbstractModel):
         super()._post_dispatch(response)
         cls._register_website_track(response)
 
-    @classmethod
-    def _get_frontend_langs(cls):
-        # _get_frontend_langs() is used by @http_routing:IrHttp._match
+    @api.model
+    def get_nearest_lang(self, lang_code):
+        # get_nearest_lang() is used by @http_routing:IrHttp._match
         # where is_frontend is not yet set and when no backend endpoint
         # matched. We have to assume we are going to match a frontend
         # route, hence the default True. Elsewhere, request.is_frontend
         # is set.
+        website_id = False
         if getattr(request, 'is_frontend', True):
-            website_id = request.env.get('website_id', request.website_routing)
-            res_lang = request.env['res.lang'].with_context(website_id=website_id)
-            return [code for code, *_ in res_lang.get_available()]
-        else:
-            return super()._get_frontend_langs()
+            website_id = self.env.get('website_id', request.website_routing)
+        return super(Http, self.with_context(website_id=website_id)).get_nearest_lang(lang_code)
 
     @classmethod
     def _get_default_lang(cls):

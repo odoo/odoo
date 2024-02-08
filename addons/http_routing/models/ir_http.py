@@ -333,19 +333,15 @@ class IrHttp(models.AbstractModel):
         """
         return ['web']
 
-    @classmethod
-    def _get_frontend_langs(cls):
-        return [code for code, _ in request.env['res.lang'].get_installed()]
-
-    @classmethod
-    def get_nearest_lang(cls, lang_code):
+    @api.model
+    def get_nearest_lang(self, lang_code):
         """ Try to find a similar lang. Eg: fr_BE and fr_FR
             :param lang_code: the lang `code` (en_US)
         """
         if not lang_code:
             return None
 
-        lang_codes = cls._get_frontend_langs()
+        lang_codes = [lg[0] for lg in self.env['res.lang'].get_available()]
         if lang_code in lang_codes:
             return lang_code
 
@@ -434,9 +430,9 @@ class IrHttp(models.AbstractModel):
         real_env = request.env
         try:
             request.registry['ir.http']._auth_method_public()  # it calls update_env
-            nearest_url_lang = cls.get_nearest_lang(request.env['res.lang']._lang_get_code(url_lang_str))
-            cookie_lang = cls.get_nearest_lang(request.httprequest.cookies.get('frontend_lang'))
-            context_lang = cls.get_nearest_lang(real_env.context.get('lang'))
+            nearest_url_lang = request.env['ir.http'].get_nearest_lang(request.env['res.lang']._lang_get_code(url_lang_str))
+            cookie_lang = request.env['ir.http'].get_nearest_lang(request.httprequest.cookies.get('frontend_lang'))
+            context_lang = request.env['ir.http'].get_nearest_lang(real_env.context.get('lang'))
             default_lang = cls._get_default_lang()
             request.lang = request.env['res.lang']._lang_get(
                 nearest_url_lang or cookie_lang or context_lang or default_lang._get_cached('code')
