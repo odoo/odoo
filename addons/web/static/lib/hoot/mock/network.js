@@ -459,7 +459,7 @@ export class MockLocation {
     }
 
     constructor() {
-        this.href = location.href;
+        this.href = "https://www.hoot.test/";
     }
 
     assign(url) {
