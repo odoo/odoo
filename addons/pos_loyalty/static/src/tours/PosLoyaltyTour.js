@@ -335,3 +335,47 @@ registry
         PosLoyalty.check.isRewardButtonHighlighted(false);
         return getSteps();
     }});
+
+registry
+    .category("web_tour.tours")
+    .add('PosLoyaltyTour11.1', { test: true, url: '/pos/web', steps: () => {
+        ProductScreen.do.clickHomeCategory();
+        ProductScreen.do.confirmOpeningPopup();
+
+        ProductScreen.do.clickPartnerButton();
+        ProductScreen.do.clickCustomer('AAA Partner');
+        PosLoyalty.check.customerIs('AAA Partner');
+        ProductScreen.exec.addOrderline('Product Test', '3');
+        ProductScreen.check.totalAmountIs('150.00');
+        PosLoyalty.check.isRewardButtonHighlighted(false);
+        PosLoyalty.exec.finalizeOrder('Cash', '150');
+        return getSteps();
+    }});
+
+registry
+    .category("web_tour.tours")
+    .add('PosLoyaltyTour11.2', { test: true, url: '/pos/web', steps: () => {
+        ProductScreen.do.clickPartnerButton();
+        ProductScreen.do.clickCustomer('AAA Partner');
+        PosLoyalty.check.customerIs('AAA Partner');
+        ProductScreen.do.clickDisplayedProduct('Product Test');
+        ProductScreen.check.totalAmountIs('50.00');
+        PosLoyalty.check.isRewardButtonHighlighted(false);
+        PosLoyalty.do.enterCode('123456');
+        PosLoyalty.check.isRewardButtonHighlighted(true);
+        PosLoyalty.do.clickRewardButton();
+        SelectionPopup.do.clickItem('Free Product');
+        PosLoyalty.check.hasRewardLine('Free Product', '-1.00');
+        PosLoyalty.check.isRewardButtonHighlighted(true);
+        PosLoyalty.do.clickRewardButton();
+        SelectionPopup.do.clickItem('Free Product');
+        PosLoyalty.check.hasRewardLine('Free Product', '-2.00');
+        PosLoyalty.check.isRewardButtonHighlighted(true);
+        PosLoyalty.do.clickRewardButton();
+        SelectionPopup.do.clickItem('Free Product');
+        PosLoyalty.check.hasRewardLine('Free Product', '-3.00');
+        PosLoyalty.check.isRewardButtonHighlighted(false);
+        ProductScreen.check.totalAmountIs('50.00');
+        PosLoyalty.exec.finalizeOrder('Cash', '50');
+        return getSteps();
+    }});
