@@ -1,5 +1,4 @@
 import { after, registerDebugInfo } from "@odoo/hoot";
-import { on } from "@odoo/hoot-dom";
 import { createDebugContext } from "@web/core/debug/debug_context";
 import { registry } from "@web/core/registry";
 import { makeEnv, startServices } from "@web/env";
@@ -22,29 +21,15 @@ import { MockServer, makeMockServer } from "./mock_server/mock_server";
  *
  * @param {typeof registry} registry
  */
-const __monitorRegistry = (registry) => {
-    const added = new Set();
-    const removed = new Map();
-
-    const off = on(registry, "UPDATE", ({ detail: { operation, key, value } }) => {
-        if (operation === "add") {
-            added.add(key);
-        } else if (operation === "remove" && !removed.has(key)) {
-            removed.set(key, value);
-        }
-    });
-
+const restoreRegistryAfterTest = (registry) => {
+    const content = Object.entries(registry.content).map(([key, value]) => [key, value.slice()]);
     after(() => {
-        off();
-        for (const key of added) {
-            registry.remove(key);
-        }
-        for (const [key, value] of removed) {
-            registry.add(key, value);
-        }
+        registry.content = Object.fromEntries(content);
+        registry.elements = null;
+        registry.entries = null;
     });
     for (const subRegistry of Object.values(registry.subRegistries)) {
-        __monitorRegistry(subRegistry);
+        restoreRegistryAfterTest(subRegistry);
     }
 };
 
@@ -88,8 +73,8 @@ export async function makeMockEnv(partialEnv) {
     Object.assign(currentEnv, partialEnv, createDebugContext(currentEnv)); // This is needed if the views are in debug mode
 
     registerDebugInfo(currentEnv);
+    restoreRegistryAfterTest(registry);
 
-    __monitorRegistry(registry);
     await startServices(currentEnv);
 
     after(() => (currentEnv = null));
