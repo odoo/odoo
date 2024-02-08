@@ -225,11 +225,19 @@ class PosGlobalState extends PosModel {
         if (!(pricelist.id in correspondingProduct.applicablePricelistItems)) {
             correspondingProduct.applicablePricelistItems[pricelist.id] = [];
         }
+<<<<<<< HEAD
         correspondingProduct.applicablePricelistItems[pricelist.id].push(pricelistItem);
     }
     _loadProductProduct(products) {
         const productMap = {};
         const productTemplateMap = {};
+||||||| parent of a75f9bdc679a (temp)
+        if(this.config.partner_load_background )
+            this.loadPartnersBackground();
+=======
+        if(this.config.limited_partners_loading && this.config.partner_load_background )
+            this.loadPartnersBackground();
+>>>>>>> a75f9bdc679a (temp)
 
         const modelProducts = products.map(product => {
             product.pos = this;
