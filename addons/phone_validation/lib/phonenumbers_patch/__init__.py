@@ -27,5 +27,17 @@ try:
         # loading updated region_CI.py from current directory
         # https://github.com/daviddrysdale/python-phonenumbers/blob/v8.12.32/python/phonenumbers/data/region_CI.py
         phonenumbers.phonemetadata.PhoneMetadata.register_region_loader('CI', _local_load_region)
+    # MONKEY PATCHING phonemetadata to fix Brazilian phonenumbers following 2016 changes
+    def _hook_load_region(code):
+        phonenumbers.data._load_region(code)
+        if code == 'BR':
+            phonenumbers.data.region_BR.PHONE_METADATA_BR.intl_number_format.append(
+                phonenumbers.phonemetadata.NumberFormat(
+                    pattern='(\\d{2})(\\d{4})(\\d{4})',
+                    format='\\1 9\\2-\\3',
+                    leading_digits_pattern=['(?:[14689][1-9]|2[12478]|3[1-578]|5[13-5]|7[13-579][689])'],
+                )
+            )
+    phonenumbers.phonemetadata.PhoneMetadata.register_region_loader('BR', _hook_load_region)
 except ImportError:
     pass
