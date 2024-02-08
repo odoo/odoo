@@ -24,7 +24,7 @@
                         <field name="delivery_type" invisible="True"/>
                         <label for="carrier_tracking_ref"/>
                         <div name="tracking">
-                            <field name="carrier_tracking_ref" class="oe_inline text-break" readonly="state in ('done', 'cancel')"/>
+                            <field name="carrier_tracking_ref" class="oe_inline text-break"/>
                             <button type='object' class="oe_link" icon="oi-arrow-right" confirm="Cancelling a delivery may not be undoable. Are you sure you want to continue?" name="cancel_shipment" string="Cancel" invisible="not carrier_tracking_ref or delivery_type in ['fixed', 'base_on_rule'] or not delivery_type or state != 'done'"/>
                         </div>
                         <label for="weight" string="Weight"/>
@@ -41,7 +41,7 @@
                 </xpath>
                 <div name="button_box" position="inside">
                     <button type="object" name="open_website_url" class="oe_stat_button" icon='fa-truck' string="Tracking"
-                         invisible="not carrier_tracking_ref or not carrier_id or delivery_type == 'grid'" />
+                         invisible="not carrier_tracking_url or delivery_type == 'grid'" />
                 </div>
                 <xpath expr="/form/header/button[last()]" position="after">
                     <button name="send_to_shipper" string="Send to Shipper" type="object" invisible="carrier_tracking_ref or delivery_type in ['fixed', 'base_on_rule'] or not delivery_type or state != 'done' or picking_type_code == 'incoming'" data-hotkey="shift+v"/>
