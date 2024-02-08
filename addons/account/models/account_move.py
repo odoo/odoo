@@ -4429,33 +4429,36 @@ class AccountMove(models.Model):
     # CRON
     # -------------------------------------------------------------------------
 
-    def _autopost_draft_entries(self):
+    def _autopost_draft_entries(self, batch_size=100):
         ''' This method is called from a cron job.
         It is used to post entries such as those created by the module
         account_asset and recurring entries created in _post().
         '''
-        moves = self.search([
+        domain = [
             ('state', '=', 'draft'),
             ('date', '<=', fields.Date.context_today(self)),
             ('auto_post', '!=', 'no'),
             ('to_check', '=', False),
-        ], limit=100)
+        ]
+        moves = self.search(domain, limit=batch_size)
+        moves_count = len(moves) if len(moves) < batch_size else self.search_count(domain)
+        self.env['ir.cron']._log_progress(0, moves_count)
 
         try:  # try posting in batch
             with self.env.cr.savepoint():
+                self.env['ir.cron']._log_progress(len(moves))
                 moves._post()
         except UserError:  # if at least one move cannot be posted, handle moves one by one
             for move in moves:
                 try:
                     with self.env.cr.savepoint():
+                        self.env['ir.cron']._log_progress(1)
                         move._post()
                 except UserError as e:
                     move.to_check = True
                     msg = _('The move could not be posted for the following reason: %(error_message)s', error_message=e)
                     move.message_post(body=msg, message_type='comment')
 
-        if len(moves) == 100:  # assumes there are more whenever search hits limit
-            self.env.ref('account.ir_cron_auto_post_draft_entry')._trigger()
 
     @api.model
     def _cron_account_move_send(self, job_count=10):
@@ -4487,10 +4490,11 @@ class AccountMove(models.Model):
             aggregates=['id:recordset'],
             limit=limit,
         )
-        need_retrigger = len(to_process) > job_count
         if not to_process:
             return
 
+        done = min(len(to_process), job_count)
+        self.env['ir.cron']._log_progress(done, len(to_process) - done)
         for _company, moves in to_process[:job_count]:
             try:
                 # Lock moves
@@ -4525,8 +4529,6 @@ class AccountMove(models.Model):
 
             self.env['bus.bus']._sendmany(notifications)
 
-        if need_retrigger:
-            self.env.ref('account.ir_cron_account_move_send')._trigger()
 
     # -------------------------------------------------------------------------
     # HELPER METHODS
