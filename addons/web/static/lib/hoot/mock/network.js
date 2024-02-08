@@ -1,4 +1,5 @@
 /** @odoo-module */
+/* eslint-disable no-restricted-syntax */
 
 import { ensureArray, makePublicListeners } from "../hoot_utils";
 import { mockedCancelAnimationFrame, mockedRequestAnimationFrame } from "./time";
@@ -16,7 +17,6 @@ const {
     SharedWorker,
     WebSocket,
     Worker,
-    XMLHttpRequest,
     console,
     document,
     fetch,
@@ -726,7 +726,7 @@ export class MockXMLHttpRequest extends EventTarget {
             this.#response = await response.text();
             this.dispatchEvent(new ProgressEvent("load"));
         } catch (error) {
-            this.dispatchEvent(new ProgressEvent("error"));
+            this.dispatchEvent(new ProgressEvent("error", { error }));
         }
     }
 

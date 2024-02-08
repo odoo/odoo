@@ -20,7 +20,6 @@ import {
     uncheck,
 } from "../../../hoot-dom/hoot-dom";
 import { after, describe, expect, test } from "../../hoot";
-import { mockDate } from "../../mock/time";
 import { mount, parseUrl } from "../local_helpers";
 
 /**

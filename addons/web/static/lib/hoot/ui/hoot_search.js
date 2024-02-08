@@ -24,7 +24,7 @@ import { HootTagButton } from "./hoot_tag_button";
 // Global
 //-----------------------------------------------------------------------------
 
-const { document, Object } = globalThis;
+const { Object } = globalThis;
 
 //-----------------------------------------------------------------------------
 // Internal

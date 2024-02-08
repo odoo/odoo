@@ -14,6 +14,7 @@ import {
     isEventTarget,
     isNode,
     isNodeFocusable,
+    parseDimensions,
     parsePosition,
     queryAll,
     queryOne,

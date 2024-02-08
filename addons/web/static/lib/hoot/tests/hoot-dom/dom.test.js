@@ -143,24 +143,6 @@ const FULL_HTML_TEMPLATE = /* html */ `
     `;
 const SVG_URL = "http://www.w3.org/2000/svg";
 
-const SUITES = 100;
-const TESTS_PER_SUITE = 100;
-const ASSERTS_PER_TEST = 20;
-
-// for (let suiteId = 0; suiteId < SUITES; suiteId++) {
-//     describe(`suite_${suiteId}`, () => {
-//         for (let testId = 0; testId < TESTS_PER_SUITE; testId++) {
-//             test(`test_${testId}_suite_${suiteId}`, async () => {
-//                 for (let assertId = 0; assertId < ASSERTS_PER_TEST; assertId++) {
-//                     expect(assertId).toBe(assertId);
-//                 }
-
-//                 await new Promise((r) => setTimeout(r));
-//             });
-//         }
-//     });
-// }
-
 describe`ui`(parseUrl(import.meta.url), () => {
     test.todo("should crash", async () => {
         expect().toBeFalsy();

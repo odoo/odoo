@@ -850,7 +850,7 @@ export class Markup {
         return new this({
             technical: true,
             content: dmp.diff_main(formatTechnical(a), formatTechnical(b)).map((diff) => {
-                let classList = ["no-underline"];
+                const classList = ["no-underline"];
                 let tagName = "t";
                 if (diff[0] === DIFF_INSERT) {
                     classList.push("text-pass", "bg-pass-900");
