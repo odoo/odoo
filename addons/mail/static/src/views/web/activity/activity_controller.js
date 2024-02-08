@@ -54,6 +54,11 @@ export class ActivityController extends Component {
         });
     }
 
+    getSearchProps() {
+        const { comparision, context, domain, groupBy, orderBy } = this.env.searchModel;
+        return { comparision, context, domain, groupBy, orderBy };
+    }
+
     scheduleActivity() {
         this.dialog.add(SelectCreateDialog, {
             resModel: this.props.resModel,
@@ -64,7 +69,7 @@ export class ActivityController extends Component {
             context: this.props.context,
             onSelected: async (resIds) => {
                 await this.activity.schedule(this.props.resModel, resIds);
-                this.model.load(this.props);
+                this.model.load(this.getSearchProps());
             },
         });
     }
@@ -86,7 +91,7 @@ export class ActivityController extends Component {
                 },
             },
             {
-                onClose: () => this.model.load(this.props),
+                onClose: () => this.model.load(this.getSearchProps()),
             }
         );
     }
@@ -119,7 +124,7 @@ export class ActivityController extends Component {
             archInfo: this.props.archInfo,
             groupedActivities: this.model.activityData.grouped_activities,
             scheduleActivity: this.scheduleActivity.bind(this),
-            onReloadData: () => this.model.load(this.props),
+            onReloadData: () => this.model.load(this.getSearchProps()),
             onEmptyCell: this.openActivityFormView.bind(this),
             onSendMailTemplate: this.sendMailTemplate.bind(this),
             openRecord: this.openRecord.bind(this),
