@@ -517,15 +517,15 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         self.assertEqual(timesheet_count2, 1, "One timesheet in project_template")
         self.assertEqual(len(task.timesheet_ids), 1, "The timesheet should be linked to task")
 
-        # change project of task, it has no impact on timesheet. never.
+        # change project of task, non-validated timesheets will follow the project of task
         task.write({
             'project_id': self.project_global.id
         })
 
         timesheet_count1 = Timesheet.search_count([('project_id', '=', self.project_global.id)])
         timesheet_count2 = Timesheet.search_count([('project_id', '=', self.project_template.id)])
-        self.assertEqual(timesheet_count1, 0, "No timesheet in project_global")
-        self.assertEqual(timesheet_count2, 1, "One timesheet in project_template")
+        self.assertEqual(timesheet_count1, 1, "One timesheet in project_global")
+        self.assertEqual(timesheet_count2, 0, "No timesheet in project_template")
         self.assertEqual(len(task.timesheet_ids), 1, "The timesheet still should be linked to task")
 
         # Create an invoice
@@ -549,16 +549,16 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
             'unit_amount': 6,
         })
 
-        self.assertEqual(Timesheet.search_count([('project_id', '=', self.project_global.id)]), 1, "1 timesheets in project_global")
+        self.assertEqual(Timesheet.search_count([('project_id', '=', self.project_global.id)]), 2, "2 timesheets in project_global")
 
-        # change project of task, it has no impact on timesheet. never.
+        # change project of task, only the timesheet not billed gets its project changed
         task.write({
             'project_id': self.project_template.id
         })
 
         timesheet_count1 = Timesheet.search_count([('project_id', '=', self.project_global.id)])
         timesheet_count2 = Timesheet.search_count([('project_id', '=', self.project_template.id)])
-        self.assertEqual(timesheet_count1, 1, "Still one timesheet in project_global")
+        self.assertEqual(timesheet_count1, 1, "One timesheet in project_global")
         self.assertEqual(timesheet_count2, 1, "One timesheet in project_template")
         self.assertEqual(len(task.timesheet_ids), 2, "The 2 timesheets still should be linked to task")
 
