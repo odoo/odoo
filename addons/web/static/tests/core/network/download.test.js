@@ -5,21 +5,21 @@ import { download } from "@web/core/network/download";
 import { ConnectionLostError, RPCError } from "@web/core/network/rpc";
 import { Deferred, mockFetch } from "@odoo/hoot-mock";
 
-test`headless`("handles connection error when behind a server", async () => {
+test.tags("headless")("handles connection error when behind a server", async () => {
     const restoreFetch = mockFetch(() => new Response("", { status: 502 }));
     after(restoreFetch);
     const error = new ConnectionLostError("/some_url");
     await expect(download({ data: {}, url: "/some_url" })).rejects.toThrow(error.message);
 });
 
-test`headless`("handles connection error when network unavailable", async () => {
+test.tags("headless")("handles connection error when network unavailable", async () => {
     const restoreFetch = mockFetch(() => Promise.reject());
     after(restoreFetch);
     const error = new ConnectionLostError("/some_url");
     await expect(download({ data: {}, url: "/some_url" })).rejects.toThrow(error.message);
 });
 
-test`headless`("handles business error from server", async () => {
+test.tags("headless")("handles business error from server", async () => {
     const serverError = {
         code: 200,
         data: {
@@ -49,7 +49,7 @@ test`headless`("handles business error from server", async () => {
     expect(error.data).toEqual(serverError.data);
 });
 
-test`headless`("handles arbitrary error", async () => {
+test.tags("headless")("handles arbitrary error", async () => {
     const serverError = /* xml */ `<html><body><div>HTML error message</div></body></html>`;
 
     const restoreFetch = mockFetch(() => {
@@ -73,7 +73,7 @@ test`headless`("handles arbitrary error", async () => {
     expect(error.data.debug.trim()).toBe("200\nHTML error message");
 });
 
-test`headless`("handles success download", async () => {
+test.tags("headless")("handles success download", async () => {
     // This test relies on a implementation detail of the lowest layer of download
     // That is, a link will be created with the download attribute
 

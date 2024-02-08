@@ -2,7 +2,7 @@ import { expect, test } from "@odoo/hoot";
 
 import { parseExpr } from "@web/core/py_js/py";
 
-test`headless`("can parse basic elements", () => {
+test.tags("headless")("can parse basic elements", () => {
     expect(parseExpr("1")).toEqual({ type: 0 /* Number */, value: 1 });
     expect(parseExpr('"foo"')).toEqual({ type: 1 /* String */, value: "foo" });
     expect(parseExpr("foo")).toEqual({ type: 5 /* Name */, value: "foo" });
@@ -11,11 +11,11 @@ test`headless`("can parse basic elements", () => {
     expect(parseExpr("None")).toEqual({ type: 3 /* None */ });
 });
 
-test`headless`("cannot parse empty string", () => {
+test.tags("headless")("cannot parse empty string", () => {
     expect(() => parseExpr("")).toThrow(/Error: Missing token/);
 });
 
-test`headless`("can parse unary operator -", () => {
+test.tags("headless")("can parse unary operator -", () => {
     expect(parseExpr("-1")).toEqual({
         type: 6 /* UnaryOperator */,
         op: "-",
@@ -33,7 +33,7 @@ test`headless`("can parse unary operator -", () => {
     });
 });
 
-test`headless`("can parse parenthesis", () => {
+test.tags("headless")("can parse parenthesis", () => {
     expect(parseExpr("(1 + 2)")).toEqual({
         type: 7 /* BinaryOperator */,
         op: "+",
@@ -42,7 +42,7 @@ test`headless`("can parse parenthesis", () => {
     });
 });
 
-test`headless`("can parse binary operators", () => {
+test.tags("headless")("can parse binary operators", () => {
     expect(parseExpr("1 < 2")).toEqual({
         type: 7 /* BinaryOperator */,
         op: "<",
@@ -57,7 +57,7 @@ test`headless`("can parse binary operators", () => {
     });
 });
 
-test`headless`("can parse boolean operators", () => {
+test.tags("headless")("can parse boolean operators", () => {
     expect(parseExpr('True and "foo"')).toEqual({
         type: 14 /* BooleanOperator */,
         op: "and",
@@ -72,7 +72,7 @@ test`headless`("can parse boolean operators", () => {
     });
 });
 
-test`headless`("expression with == and or", () => {
+test.tags("headless")("expression with == and or", () => {
     expect(parseExpr("False == True and False")).toEqual({
         type: 14 /* BooleanOperator */,
         op: "and",
@@ -86,7 +86,7 @@ test`headless`("expression with == and or", () => {
     });
 });
 
-test`headless`("expression with + and ==", () => {
+test.tags("headless")("expression with + and ==", () => {
     expect(parseExpr("1 + 2 == 3")).toEqual({
         type: 7 /* BinaryOperator */,
         op: "==",
@@ -100,7 +100,7 @@ test`headless`("expression with + and ==", () => {
     });
 });
 
-test`headless`("can parse chained comparisons", () => {
+test.tags("headless")("can parse chained comparisons", () => {
     expect(parseExpr("1 < 2 <= 3")).toEqual({
         type: 14 /* BooleanOperator */,
         op: "and",
@@ -145,7 +145,7 @@ test`headless`("can parse chained comparisons", () => {
     });
 });
 
-test`headless`("can parse lists", () => {
+test.tags("headless")("can parse lists", () => {
     expect(parseExpr("[]")).toEqual({
         type: 4 /* List */,
         value: [],
@@ -168,7 +168,7 @@ test`headless`("can parse lists", () => {
     expect(() => parseExpr("[1 1]")).toThrow();
 });
 
-test`headless`("can parse lists lookup", () => {
+test.tags("headless")("can parse lists lookup", () => {
     expect(parseExpr("[1,2][1]")).toEqual({
         type: 12 /* Lookup */,
         target: {
@@ -182,7 +182,7 @@ test`headless`("can parse lists lookup", () => {
     });
 });
 
-test`headless`("can parse tuples", () => {
+test.tags("headless")("can parse tuples", () => {
     expect(parseExpr("()")).toEqual({
         type: 10 /* Tuple */,
         value: [],
@@ -201,7 +201,7 @@ test`headless`("can parse tuples", () => {
     expect(() => parseExpr("(1 1)")).toThrow();
 });
 
-test`headless`("can parse dictionary", () => {
+test.tags("headless")("can parse dictionary", () => {
     expect(parseExpr("{}")).toEqual({
         type: 11 /* Dictionary */,
         value: {},
@@ -223,7 +223,7 @@ test`headless`("can parse dictionary", () => {
     });
 });
 
-test`headless`("can parse dictionary lookup", () => {
+test.tags("headless")("can parse dictionary lookup", () => {
     expect(parseExpr("{}['a']")).toEqual({
         type: 12 /* Lookup */,
         target: { type: 11 /* Dictionary */, value: {} },
@@ -231,7 +231,7 @@ test`headless`("can parse dictionary lookup", () => {
     });
 });
 
-test`headless`("can parse assignment", () => {
+test.tags("headless")("can parse assignment", () => {
     expect(parseExpr("a=1")).toEqual({
         type: 9 /* Assignment */,
         name: { type: 5 /* Name */, value: "a" },
@@ -239,7 +239,7 @@ test`headless`("can parse assignment", () => {
     });
 });
 
-test`headless`("can parse function calls", () => {
+test.tags("headless")("can parse function calls", () => {
     expect(parseExpr("f()")).toEqual({
         type: 8 /* FunctionCall */,
         fn: { type: 5 /* Name */, value: "f" },
@@ -274,7 +274,7 @@ test`headless`("can parse function calls", () => {
     });
 });
 
-test`headless`("can parse function calls with kwargs", () => {
+test.tags("headless")("can parse function calls with kwargs", () => {
     expect(parseExpr("f(a = 1)")).toEqual({
         type: 8 /* FunctionCall */,
         fn: { type: 5 /* Name */, value: "f" },
@@ -289,7 +289,7 @@ test`headless`("can parse function calls with kwargs", () => {
     });
 });
 
-test`headless`("can parse not a in b", () => {
+test.tags("headless")("can parse not a in b", () => {
     expect(parseExpr("not a in b")).toEqual({
         type: 6 /* UnaryOperator */,
         op: "not",
@@ -311,7 +311,7 @@ test`headless`("can parse not a in b", () => {
     });
 });
 
-test`headless`("can parse if statement", () => {
+test.tags("headless")("can parse if statement", () => {
     expect(parseExpr("1 if True else 2")).toEqual({
         type: 13 /* If */,
         condition: { type: 2 /* Boolean */, value: true },
@@ -331,7 +331,7 @@ test`headless`("can parse if statement", () => {
     });
 });
 
-test`headless`("tuple in list", () => {
+test.tags("headless")("tuple in list", () => {
     expect(parseExpr("[(1,2)]")).toEqual({
         type: 4 /* List */,
         value: [
@@ -346,7 +346,7 @@ test`headless`("tuple in list", () => {
     });
 });
 
-test`headless`("cannot parse []a", () => {
+test.tags("headless")("cannot parse []a", () => {
     expect(() => parseExpr("[]a")).toThrow(/Error: Token\(s\) unused/);
     expect(() => parseExpr("[]a b")).toThrow(/Error: Token\(s\) unused/);
 });

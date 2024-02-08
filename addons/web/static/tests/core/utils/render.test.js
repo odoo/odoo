@@ -2,7 +2,7 @@ import { expect, test } from "@odoo/hoot";
 
 import { renderToElement, renderToString } from "@web/core/utils/render";
 
-test`headless`("renderToElement always returns an element", () => {
+test.tags("headless")("renderToElement always returns an element", () => {
     renderToString.app.addTemplate(
         "test.render.template.1",
         `<t t-if="False">
