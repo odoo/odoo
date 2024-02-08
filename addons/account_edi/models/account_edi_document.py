@@ -241,6 +241,7 @@ class AccountEdiDocument(models.Model):
                 else:
                     raise e
             self._process_job(job)
+            self.env['ir.cron']._log_progress(1)
             if with_commit and len(jobs_to_process) > 1:
                 self.env.cr.commit()
 
@@ -253,11 +254,10 @@ class AccountEdiDocument(models.Model):
         :param job_count: Limit explicitely the number of web service calls. If not provided, process all.
         '''
         edi_documents = self.search([('state', 'in', ('to_send', 'to_cancel')), ('move_id.state', '=', 'posted')])
+        self.env['ir.cron']._log_progress(0, job_count)
         nb_remaining_jobs = edi_documents._process_documents_web_services(job_count=job_count)
-
+        self.env['ir.cron']._log_progress(0, nb_remaining_jobs)
         # Mark the CRON to be triggered again asap since there is some remaining jobs to process.
-        if nb_remaining_jobs > 0:
-            self.env.ref('account_edi.ir_cron_edi_network')._trigger()
 
     def _filter_edi_attachments_for_mailing(self):
         """
