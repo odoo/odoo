@@ -111,16 +111,14 @@ class AccountEdiFormat(models.Model):
             error_message.append(_("%s number should be set and not more than 16 characters",
                 (is_purchase and "Bill Reference" or "Invoice")))
         for line in goods_lines:
-            if line.product_id:
+            if line.display_type == 'product':
                 hsn_code = self._l10n_in_edi_extract_digits(line.l10n_in_hsn_code)
                 if not hsn_code:
-                    error_message.append(_("HSN code is not set in product %s", line.product_id.name))
-                elif not re.match("^[0-9]+$", hsn_code):
+                    error_message.append(_("HSN code is not set in product line %s", line.name))
+                elif not re.match(r'^\d{4}$|^\d{6}$|^\d{8}$', hsn_code):
                     error_message.append(_(
-                        "Invalid HSN Code (%s) in product %s", hsn_code, line.product_id.name
+                        "Invalid HSN Code (%s) in product line %s", hsn_code, line.name
                     ))
-            else:
-                error_message.append(_("product is required to get HSN code"))
         if error_message:
             error_message.insert(0, _("Impossible to send the Ewaybill."))
         return error_message
@@ -507,7 +505,7 @@ class AccountEdiFormat(models.Model):
         extract_digits = self._l10n_in_edi_extract_digits
         tax_details_by_code = self._get_l10n_in_tax_details_by_line_code(line_tax_details.get("tax_details", {}))
         line_details = {
-            "productName": line.product_id.name,
+            "productName": line.product_id.name or line.name,
             "hsnCode": extract_digits(line.l10n_in_hsn_code),
             "productDesc": line.name,
             "quantity": line.quantity,
