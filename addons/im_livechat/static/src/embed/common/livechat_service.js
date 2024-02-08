@@ -119,16 +119,14 @@ export class LivechatService {
         const temporaryThread = this.thread;
         await this._createThread({ persist: true });
         if (temporaryThread) {
-            const chatWindow = this.store.discuss.chatWindows.find(
-                (c) => c.thread?.id === temporaryThread.id
-            );
+            const chatWindow = this.store.ChatWindow.get({ thread: temporaryThread });
             temporaryThread.delete();
             chatWindow.close();
         }
         if (!this.thread) {
             return;
         }
-        this.store.ChatWindow.insert({ thread: this.thread }).autofocus++;
+        this.store.chatHub.opened.add({ thread: this.thread }).autofocus++;
         await this.busService.addChannel(`mail.guest_${this.guestToken}`);
         await this.env.services["mail.store"].initialize();
         return this.thread;

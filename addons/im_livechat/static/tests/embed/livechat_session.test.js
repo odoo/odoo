@@ -73,7 +73,7 @@ test("Fold state is saved on the server", async () => {
         ["channel_id", "=", getService("im_livechat.livechat").thread.id],
     ]);
     expect(member.fold_state).toBe("folded");
-    await click(".o-mail-ChatWindow-header");
+    await click(".o-mail-ChatBubble");
 });
 
 test("Seen message is saved on the server [REQUIRE FOCUS]", async () => {

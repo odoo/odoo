@@ -29,7 +29,7 @@ test("open/close temporary channel", async () => {
     await contains(".o-mail-ChatWindow");
     await contains(".o-livechat-LivechatButton", { count: 0 });
     expect(Boolean(env.services["im_livechat.livechat"].thread)).toBe(true);
-    await click("[title='Close Chat Window']");
+    await click("[title*='Close Chat Window']");
     await contains(".o-mail-ChatWindow", { count: 0 });
     expect(Boolean(env.services["im_livechat.livechat"].thread)).toBe(false);
     await contains(".o-livechat-LivechatButton", { count: 1 });
@@ -51,9 +51,9 @@ test("open/close persisted channel", async () => {
     await assertSteps(["persisted"]);
     await contains(".o-mail-Message-content", { text: "How can I help?" });
     await waitNotifications([env, "discuss.channel/new_message"]);
-    await click("[title='Close Chat Window']");
+    await click("[title*='Close Chat Window']");
     await contains(".o-mail-ChatWindow", { text: "Did we correctly answer your question?" });
-    await click("[title='Close Chat Window']");
+    await click("[title*='Close Chat Window']");
     await contains(".o-mail-ChatWindow", { count: 0 });
     await contains(".o-livechat-LivechatButton", { count: 1 });
 });
@@ -64,7 +64,7 @@ test("livechat not available", async () => {
     onRpc("/im_livechat/init", () => ({ available_for_me: false }));
     await start({ authenticateAs: false });
     await mountWithCleanup(LivechatButton);
-    await contains(".o-mail-ChatWindowContainer");
+    await contains(".o-mail-ChatHub");
     await contains(".o-livechat-LivechatButton", { count: 0 });
 });
 

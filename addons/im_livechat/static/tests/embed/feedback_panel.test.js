@@ -29,7 +29,7 @@ test("Do not ask feedback if empty", async () => {
     await mountWithCleanup(LivechatButton);
     await click(".o-livechat-LivechatButton");
     await contains(".o-mail-ChatWindow");
-    await click("[title='Close Chat Window']");
+    await click("[title*='Close Chat Window']");
 });
 
 test("Close without feedback", async () => {
@@ -50,7 +50,7 @@ test("Close without feedback", async () => {
     await insertText(".o-mail-Composer-input", "Hello World!");
     triggerHotkey("Enter");
     await contains(".o-mail-Message-content", { text: "Hello World!" });
-    await click("[title='Close Chat Window']");
+    await click("[title*='Close Chat Window']");
     await click("button", { text: "Close conversation" });
     await contains(".o-livechat-LivechatButton");
     await assertSteps(["/im_livechat/visitor_leave_session"]);
@@ -76,7 +76,7 @@ test("Feedback with rating and comment", async () => {
     await insertText(".o-mail-Composer-input", "Hello World!");
     triggerHotkey("Enter");
     await contains(".o-mail-Message-content", { text: "Hello World!" });
-    await click("[title='Close Chat Window']");
+    await click("[title*='Close Chat Window']");
     await assertSteps(["/im_livechat/visitor_leave_session"]);
     await click(`img[data-alt="${RATING.GOOD}"]`);
     await insertText("textarea[placeholder='Explain your note']", "Good job!");
@@ -96,8 +96,8 @@ test("Closing folded chat window should open it with feedback", async () => {
     await contains(".o-mail-Message-content", { text: "Hello World!" });
     await click("[title='Fold']");
     await waitNotifications([env, "discuss.Thread/fold_state"]);
-    await contains(".o-mail-ChatWindow.o-folded");
-    await click("[title='Close Chat Window']");
-    await contains(".o-mail-ChatWindow.o-folded", { count: 0 });
+    await contains(".o-mail-ChatBubble");
+    await click("[title*='Close Chat Window']");
+    await contains(".o-mail-ChatBubble", { count: 0 });
     await contains(".o-mail-ChatWindow p", { text: "Did we correctly answer your question?" });
 });
