@@ -10,12 +10,13 @@ import { getFirstPivotFunction, getNumberOfPivotFormulas } from "./pivot_helpers
  */
 export const SEE_RECORDS_PIVOT = async (position, env) => {
     const pivotId = env.model.getters.getPivotIdFromPosition(position);
-    const { model } = env.model.getters.getPivotRuntime(pivotId);
-    const dataSource = await env.model.getters.getAsyncPivotDataSource(pivotId);
+    const pivot = env.model.getters.getPivot(pivotId);
+    await pivot.load();
+    const { model } = pivot.definition;
 
     const argsDomain = env.model.getters.getPivotDomainArgsFromPosition(position);
-    const domain = dataSource.getPivotCellDomain(argsDomain);
-    const name = await dataSource.getModelLabel();
+    const domain = pivot.getPivotCellDomain(argsDomain);
+    const name = await pivot.getModelLabel();
     await env.services.action.doAction({
         type: "ir.actions.act_window",
         name,

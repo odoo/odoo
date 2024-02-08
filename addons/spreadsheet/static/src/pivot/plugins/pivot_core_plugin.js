@@ -2,12 +2,12 @@
 // @ts-check
 /**
  *
- * @typedef {import("@spreadsheet").PivotDefinition} PivotDefinition
+ * @typedef {import("@spreadsheet").OdooPivotDefinition} OdooPivotDefinition
  * @typedef {import("@spreadsheet").AllCoreCommand} AllCoreCommand
  *
  * @typedef {Object} LocalPivot
  * @property {string} id
- * @property {PivotDefinition} definition
+ * @property {OdooPivotDefinition} definition
  * @property {Record<string, FieldMatching>} fieldMatching
  *
  * @typedef {import("@spreadsheet/global_filters/plugins/global_filters_core_plugin").FieldMatching} FieldMatching
@@ -191,7 +191,7 @@ export class PivotCorePlugin extends OdooCorePlugin {
     /**
      * @param {string} id Id of the pivot
      *
-     * @returns {PivotDefinition}
+     * @returns {OdooPivotDefinition}
      */
     getPivotDefinition(id) {
         return this.pivots[id].definition;
@@ -254,7 +254,7 @@ export class PivotCorePlugin extends OdooCorePlugin {
 
     /**
      * @param {string} id
-     * @param {PivotDefinition} definition
+     * @param {OdooPivotDefinition} definition
      * @param {Record<string, FieldMatching>} [fieldMatching]
      */
     _addPivot(id, definition, fieldMatching = undefined) {
@@ -401,7 +401,7 @@ export class PivotCorePlugin extends OdooCorePlugin {
     import(data) {
         if (data.pivots) {
             for (const [id, pivot] of Object.entries(data.pivots)) {
-                /** @type {PivotDefinition} */
+                /** @type {OdooPivotDefinition} */
                 const definition = deepCopy(pivot);
                 definition.measures = pivot.measures.map((elt) => elt.field);
                 this._addPivot(id, definition, pivot.fieldMatching);
