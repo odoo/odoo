@@ -952,7 +952,7 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
             type: "many2one",
         };
         assert.deepEqual(model.getters.getPivotFieldMatching("1", filter.id), matching);
-        assert.deepEqual(model.getters.getPivotDataSource("1").getComputedDomain(), [
+        assert.deepEqual(model.getters.getPivot("1").getComputedDomain(), [
             ["product_id", "in", [41]],
         ]);
         model.dispatch("REMOVE_GLOBAL_FILTER", {
@@ -963,15 +963,15 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
             undefined,
             "it should have removed the pivot and its fieldMatching and datasource altogether"
         );
-        assert.deepEqual(model.getters.getPivotDataSource("1").getComputedDomain(), []);
+        assert.deepEqual(model.getters.getPivot("1").getComputedDomain(), []);
         model.dispatch("REQUEST_UNDO");
         assert.deepEqual(model.getters.getPivotFieldMatching("1", filter.id), matching);
-        assert.deepEqual(model.getters.getPivotDataSource("1").getComputedDomain(), [
+        assert.deepEqual(model.getters.getPivot("1").getComputedDomain(), [
             ["product_id", "in", [41]],
         ]);
         model.dispatch("REQUEST_REDO");
         assert.deepEqual(model.getters.getPivotFieldMatching("1", filter.id), undefined);
-        assert.deepEqual(model.getters.getPivotDataSource("1").getComputedDomain(), []);
+        assert.deepEqual(model.getters.getPivot("1").getComputedDomain(), []);
     });
 
     QUnit.test(

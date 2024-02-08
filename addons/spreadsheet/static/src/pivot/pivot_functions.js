@@ -128,7 +128,7 @@ const ODOO_PIVOT_HEADER = /** @satisfies {CustomFunctionDescription} */ ({
                 ? undefined
                 : this.getters.getPivotFieldFormat(_pivotId, fieldName);
         return {
-            value: this.getters.computeOdooPivotHeaderValue(_pivotId, domainArgs),
+            value: this.getters.computePivotHeaderValue(_pivotId, domainArgs),
             format,
         };
     },

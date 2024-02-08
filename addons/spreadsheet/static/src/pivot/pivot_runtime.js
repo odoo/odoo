@@ -1,59 +1,70 @@
 /** @odoo-module */
+// @ts-check
 
 import { _t } from "@web/core/l10n/translation";
 import { PERIODS, parseGroupField } from "@spreadsheet/pivot/pivot_helpers";
 
-class PivotRuntime {
-    constructor(rawDefinition, fields) {
-        this._sortedColumn = rawDefinition.sortedColumn;
+/**
+ * @typedef {import("@spreadsheet").Fields} Fields
+ * @typedef {import("@spreadsheet").CommonPivotDefinition} CommonPivotDefinition
+ * @typedef {import("@spreadsheet").SortedColumn} SortedColumn
+ */
 
-        this._measures = rawDefinition.measures.map((name) => new PivotMeasure(fields, name));
-        this._columns = rawDefinition.colGroupBys.map((name) => new PivotDimension(fields, name));
-        this._rows = rawDefinition.rowGroupBys.map((name) => new PivotDimension(fields, name));
-    }
-
-    get definition() {
-        return {
-            sortedColumn: this._sortedColumn,
-            measures: this._measures,
-            columns: this._columns,
-            rows: this._rows,
-        };
-    }
-}
-
-export class OdooPivotDataSource extends PivotRuntime {
+/**
+ * Represent a pivot runtime definition. A pivot runtime definition is a pivot
+ * definition that has been enriched to include the display name of its attributes
+ * (measures, columns, rows).
+ */
+export class PivotRuntimeDefinition {
     /**
-     * @param {import("@spreadsheet").PivotDefinition} rawDefinition
-     * @param {Record<string, Field | undefined>} fields All fields of the model
+     *
+     * @param {CommonPivotDefinition} definition
+     * @param {Fields} fields
      */
-    constructor(rawDefinition, fields) {
-        super(rawDefinition, fields);
-        this._domain = rawDefinition.domain;
-        this._context = rawDefinition.context;
-        this._model = rawDefinition.model;
+    constructor(definition, fields) {
+        /** @type {string} */
+        this._name = definition.name;
+        /** @type {SortedColumn} */
+        this._sortedColumn = definition.sortedColumn;
+        /** @type {Array<PivotMeasure>} */
+        this._measures = definition.measures.map((name) => new PivotMeasure(fields, name));
+        /** @type {Array<PivotDimension>} */
+        this._columns = definition.colGroupBys.map((name) => new PivotDimension(fields, name));
+        /** @type {Array<PivotDimension>} */
+        this._rows = definition.rowGroupBys.map((name) => new PivotDimension(fields, name));
     }
 
-    get definition() {
-        return {
-            ...super.definition,
-            domain: this._domain,
-            context: this._context,
-            model: this._model,
-        };
+    get name() {
+        return this._name;
+    }
+
+    get sortedColumn() {
+        return this._sortedColumn;
+    }
+
+    get measures() {
+        return this._measures;
+    }
+
+    get columns() {
+        return this._columns;
+    }
+
+    get rows() {
+        return this._rows;
     }
 }
 
 /**
  * Represent a measure in a pivot. A measure is a field that is aggregated.
  */
-class PivotMeasure {
+export class PivotMeasure {
     /**
-     * @param {Record<string, Field | undefined>} fields All fields of the model
+     * @param {Fields} fields All fields of the model
      * @param {string} measureName Name of the measure
      */
     constructor(fields, measureName) {
-        this._fieldsGet = fields;
+        this._fields = fields;
         this._measureName = measureName;
     }
 
@@ -64,7 +75,7 @@ class PivotMeasure {
     get displayName() {
         return this._measureName === "__count"
             ? _t("Count")
-            : this._fieldsGet[this._measureName].string;
+            : this._fields[this._measureName].string;
     }
 
     /**
@@ -79,13 +90,13 @@ class PivotMeasure {
  * Represent a dimension in a pivot. A dimension is a field that is grouped by.
  * e.g. "stage_id", "create_date:month"
  */
-class PivotDimension {
+export class PivotDimension {
     /**
-     * @param {Record<string, Field | undefined>} fields All fields of the model
+     * @param {Fields} fields All fields of the model
      * @param {string} name Name of the dimension
      */
     constructor(fields, name) {
-        this._fieldsGet = fields;
+        this._fields = fields;
         const { field, aggregateOperator } = parseGroupField(fields, name);
         this._field = field;
         this._aggregateOperator = aggregateOperator;

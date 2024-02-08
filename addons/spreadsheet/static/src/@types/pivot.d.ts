@@ -1,3 +1,9 @@
+import { MetadataRepository } from "@spreadsheet/data_sources/metadata_repository";
+import { OdooPivotRuntimeDefinition } from "@spreadsheet/pivot/pivot_runtime";
+import { ORM } from "@web/core/orm_service";
+import { PivotMeasure } from "@spreadsheet/pivot/pivot_runtime";
+import { SpreadsheetPivotTable } from "@spreadsheet/pivot/pivot_table";
+
 declare module "@spreadsheet" {
     interface SortedColumn {
         groupId: number;
@@ -5,15 +11,28 @@ declare module "@spreadsheet" {
         order: string;
     }
 
-    export interface PivotDefinition {
-        colGroupBys: string[];
-        rowGroupBys: string[];
-        measures: string[];
+
+    export interface Pivot<T> {
+        definition: T;
+        getMeasure: (name: string) => PivotMeasure;
+        computePivotHeaderValue(domain: Array<string | number>): string | boolean | number;
+        getLastPivotGroupValue(domain: Array<string | number>): string | boolean | number;
+        getTableStructure(): SpreadsheetPivotTable;
+        getPivotCellValue(measure: string, domain: Array<string | number>): string | boolean | number;
+    }
+
+    export interface CommonPivotDefinition {
+      colGroupBys: string[];
+      rowGroupBys: string[];
+      measures: string[];
+      name: string;
+      sortedColumn: SortedColumn | null;
+    }
+
+    export interface OdooPivotDefinition extends CommonPivotDefinition{
         model: string;
         domain: Array;
         context: Object;
-        name: string;
-        sortedColumn: SortedColumn | null;
     }
 
     export interface Field {
@@ -24,6 +43,8 @@ declare module "@spreadsheet" {
         searchable?: boolean;
     }
 
+    export type Fields = Record<string, Field | undefined>;
+
     export interface PivotMetaData {
         colGroupBys: string[];
         rowGroupBys: string[];
@@ -32,6 +53,7 @@ declare module "@spreadsheet" {
         fields?: Record<string, Field | undefined>;
         modelLabel?: string;
         sortedColumn: SortedColumn | null;
+        fieldAttrs: any;
     }
 
     export interface PivotSearchParams {
@@ -75,5 +97,22 @@ declare module "@spreadsheet" {
         metaData: PivotMetaData;
         searchParams: PivotSearchParams;
         name: string;
+    }
+
+    export interface OdooPivotModelParams {
+        metaData: {
+            resModel: string;
+            fields: Record<string, Field | undefined>;
+        };
+        definition: OdooPivotRuntimeDefinition;
+        searchParams: {
+            domain: Array;
+            context: Object;
+        };
+    }
+
+    export interface PivotModelServices {
+        metadataRepository: MetadataRepository;
+        orm: ORM;
     }
 }
