@@ -116,6 +116,9 @@ export class Popover extends Component {
         this.position = usePosition("ref", () => this.props.target, {
             onPositioned: (el, solution) => {
                 (this.props.onPositioned || this.onPositioned.bind(this))(el, solution);
+                if (this.props.arrow && this.props.onPositioned) {
+                    this.onPositioned.bind(this)(el, solution);
+                }
 
                 // opening animation
                 if (shouldAnimate) {

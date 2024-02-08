@@ -4,7 +4,7 @@
         <xpath expr="//Typing" position="replace">
             <div class="d-flex justify-content-between align-items-center w-100">
                 <div class="d-flex">$0</div>
-                <span t-if="displayNextLivechatHint()" class="text-muted fst-italic form-text">Tab to next livechat</span>
+                <span t-if="displayNextLivechatHint() and !env.inChatWindow" class="text-muted fst-italic form-text">Tab to next livechat</span>
             </div>
         </xpath>
     </t>

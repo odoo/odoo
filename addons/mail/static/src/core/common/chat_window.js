@@ -103,11 +103,13 @@ export class ChatWindow extends Component {
                 this.close({ escape: true });
                 break;
             case "Tab": {
-                const index = this.store.visibleChatWindows.findIndex((cw) => cw.eq(chatWindow));
-                if (index === 0) {
-                    this.store.visibleChatWindows.at(-1).autofocus++;
+                const index = this.store.chatHub.actuallyOpened.findIndex((cw) =>
+                    cw.eq(chatWindow)
+                );
+                if (index === this.store.chatHub.actuallyOpened.length - 1) {
+                    this.store.chatHub.actuallyOpened[0].focus();
                 } else {
-                    this.store.visibleChatWindows[index - 1].autofocus++;
+                    this.store.chatHub.actuallyOpened[index + 1].focus();
                 }
                 break;
             }
@@ -115,9 +117,10 @@ export class ChatWindow extends Component {
     }
 
     onClickHeader() {
-        if (!this.ui.isSmall && !this.state.editingName) {
-            this.toggleFold();
+        if (this.ui.isSmall || this.state.editingName) {
+            return;
         }
+        this.toggleFold();
     }
 
     toggleFold() {
@@ -125,11 +128,7 @@ export class ChatWindow extends Component {
         if (this.ui.isSmall || this.state.actionsMenuOpened) {
             return;
         }
-        if (chatWindow.hidden) {
-            chatWindow.makeVisible();
-        } else {
-            chatWindow.toggleFold();
-        }
+        chatWindow.fold();
     }
 
     async close(options) {

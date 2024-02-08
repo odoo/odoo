@@ -2,14 +2,13 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.ChatWindow">
-    <div class="o-mail-ChatWindow"
+    <div class="o-mail-ChatWindow fixed-bottom overflow-hidden d-flex flex-column"
         t-att-style="style"
         t-att-class="{
-                'w-100 h-100 o-mobile': ui.isSmall,
-                'o-folded': props.chatWindow.folded or props.chatWindow.hidden,
-                'position-fixed bottom-0 overflow-hidden d-flex flex-column': !props.chatWindow.hidden,
-                'rounded-top-3': !props.chatWindow.hidden and !ui.isSmall,
-                }"
+            'w-100 h-100 o-mobile': ui.isSmall,
+            'o-folded': props.chatWindow.folded,
+            'rounded-top-3': !ui.isSmall,
+        }"
         t-on-keydown="onKeydown"
         tabindex="1"
     >
@@ -69,7 +68,7 @@
                 <t t-set="itemClass" t-value="'me-1'"/>
             </t>
         </div>
-        <div t-if="!props.chatWindow.folded and !props.chatWindow.hidden or ui.isSmall" class="bg-100 d-flex flex-column h-100 overflow-auto position-relative" t-ref="content">
+        <div t-if="!props.chatWindow.folded or ui.isSmall" class="bg-100 d-flex flex-column h-100 overflow-auto position-relative" t-ref="content">
             <t t-if="thread" name="thread content">
                 <div t-if="threadActions.activeAction?.componentCondition" class="h-100" t-attf-class="{{ threadActions.activeAction.panelOuterClass }}">
                     <t t-component="threadActions.activeAction.component" t-props="{ ...threadActions.activeAction.componentProps, thread }"/>

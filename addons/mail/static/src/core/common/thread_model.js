@@ -1,6 +1,6 @@
 import { AND, Record } from "@mail/core/common/record";
 import { prettifyMessageContent } from "@mail/utils/common/format";
-import { compareDatetime, nearestGreaterThanOrEqual } from "@mail/utils/common/misc";
+import { assignDefined, compareDatetime, nearestGreaterThanOrEqual } from "@mail/utils/common/misc";
 import { rpc } from "@web/core/network/rpc";
 import { router } from "@web/core/browser/router";
 
@@ -43,11 +43,15 @@ export class Thread extends Record {
     static new(data) {
         const thread = super.new(data);
         Record.onChange(thread, ["state"], () => {
-            if (thread.state !== "closed" && !this.store.env.services.ui.isSmall) {
-                this.store.ChatWindow.insert({
-                    folded: thread.state === "folded",
-                    thread,
-                });
+            if (thread.state === "open" && !this.store.env.services.ui.isSmall) {
+                const cw = this.store.ChatWindow?.insert({ thread });
+                thread.store.chatHub.opened.delete(cw);
+                thread.store.chatHub.opened.unshift(cw);
+            }
+            if (thread.state === "folded") {
+                const cw = this.store.ChatWindow?.insert({ thread });
+                thread.store.chatHub.folded.delete(cw);
+                thread.store.chatHub.folded.unshift(cw);
             }
         });
         return thread;
@@ -928,29 +932,29 @@ export class Thread extends Record {
                         (channel_notifications === "mentions" &&
                             message.recipients?.includes(this.store.self)))))
         ) {
-            this.store.ChatWindow.insert({ thread: this });
+            const chatWindow = this.store.ChatWindow.get({ thread: this });
+            if (!chatWindow) {
+                this.store.ChatWindow.insert({ thread: this }).fold();
+            }
             this.store.env.services["mail.out_of_focus"].notify(message, this);
         }
     }
 
-    /**
-     * @param {boolean} replaceNewMessageChatWindow
-     * @param {Object} [options]
-     */
-    open(replaceNewMessageChatWindow, options) {
+    /** @param {Object} [options] */
+    open(options) {
         this.setAsDiscussThread();
     }
 
-    openChatWindow(replaceNewMessageChatWindow) {
-        const chatWindow = this.store.ChatWindow.insert({
-            folded: false,
-            thread: this,
-            replaceNewMessageChatWindow,
-        });
-        chatWindow.autofocus++;
+    openChatWindow({ fromMessagingMenu } = {}) {
+        const cw = this.store.ChatWindow.insert(
+            assignDefined({ thread: this }, { fromMessagingMenu })
+        );
+        this.store.chatHub.opened.delete(cw);
+        this.store.chatHub.opened.unshift(cw);
+        cw.focus();
         this.state = "open";
-        chatWindow.notifyState();
-        return chatWindow;
+        cw.notifyState();
+        return cw;
     }
 
     pin() {

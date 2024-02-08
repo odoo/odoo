@@ -52,6 +52,7 @@ export class Dropdown extends Component {
     static template = xml`<t t-slot="default"/>`;
     static components = {};
     static props = {
+        arrow: { optional: true },
         menuClass: { optional: true },
         position: { type: String, optional: true },
         slots: {
@@ -104,6 +105,7 @@ export class Dropdown extends Component {
         navigationOptions: { type: Object, optional: true },
     };
     static defaultProps = {
+        arrow: false,
         disabled: false,
         holdOnHover: false,
         menuClass: "",
@@ -138,7 +140,7 @@ export class Dropdown extends Component {
 
         this.popover = usePopover(DropdownPopover, {
             animation: false,
-            arrow: false,
+            arrow: this.props.arrow,
             closeOnClickAway: (target) => {
                 return this.popoverCloseOnClickAway(target, activeEl);
             },

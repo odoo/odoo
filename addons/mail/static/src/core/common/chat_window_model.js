@@ -1,10 +1,9 @@
 import { Record } from "@mail/core/common/record";
-import { assignDefined } from "@mail/utils/common/misc";
 import { rpc } from "@web/core/network/rpc";
 
 import { _t } from "@web/core/l10n/translation";
 
-/** @typedef {{ thread?: import("models").Thread, folded?: boolean, replaceNewMessageChatWindow?: boolean }} ChatWindowData */
+/** @typedef {{ thread?: import("models").Thread }} ChatWindowData */
 
 export class ChatWindow extends Record {
     static id = "thread";
@@ -18,101 +17,74 @@ export class ChatWindow extends Record {
     static insert() {
         return super.insert(...arguments);
     }
-    /**
-     * @param {ChatWindowData} [data]
-     * @returns {import("models").ChatWindow}
-     */
-    static _insert(data = {}) {
-        const chatWindow = this.store.discuss.chatWindows.find((c) => c.thread?.eq(data.thread));
-        if (!chatWindow) {
-            /** @type {import("models").ChatWindow} */
-            const chatWindow = this.preinsert(data);
-            assignDefined(chatWindow, data);
-            let index;
-            const visible = this.store.visibleChatWindows;
-            const maxVisible = this.store.maxVisibleChatWindows;
-            if (!data.replaceNewMessageChatWindow) {
-                if (maxVisible <= this.store.discuss.chatWindows.length) {
-                    const swaped = visible[visible.length - 1];
-                    index = visible.length - 1;
-                    swaped.hide();
-                } else {
-                    index = this.store.discuss.chatWindows.length;
-                }
-            } else {
-                const newMessageChatWindowIndex = this.store.discuss.chatWindows.findIndex(
-                    (cw) => !cw.thread
-                );
-                index =
-                    newMessageChatWindowIndex !== -1
-                        ? newMessageChatWindowIndex
-                        : this.store.discuss.chatWindows.length;
-            }
-            this.store.discuss.chatWindows.splice(
-                index,
-                data.replaceNewMessageChatWindow ? 1 : 0,
-                chatWindow
-            );
-            return chatWindow; // return reactive version
-        }
-        if (chatWindow.hidden) {
-            chatWindow.makeVisible();
-        }
-        assignDefined(chatWindow, data);
-        return chatWindow;
-    }
 
     thread = Record.one("Thread");
     autofocus = 0;
-    folded = false;
     hidden = false;
-    openMessagingMenuOnClose = false;
+    /** Whether the chat window was created from the messaging menu */
+    fromMessagingMenu = false;
+    hubAsActuallyOpened = Record.one("ChatHub", {
+        /** @this {import("models").ChatWindow} */
+        onDelete() {
+            if (!this.thread && !this.hubAsActuallyOpened) {
+                this.delete();
+            }
+        },
+    });
+    hubAsOpened = Record.one("ChatHub");
+    hubAsFolded = Record.one("ChatHub");
 
     get displayName() {
         return this.thread?.displayName ?? _t("New message");
     }
 
     get isOpen() {
-        return !this.folded && !this.hidden;
+        return Boolean(this.hubAsActuallyOpened);
     }
 
     async close(options = {}) {
         const { escape = false } = options;
-        if (
-            !this.hidden &&
-            this.store.maxVisibleChatWindows < this.store.discuss.chatWindows.length
-        ) {
-            const swaped = this.store.hiddenChatWindows[0];
-            swaped.hidden = false;
-            swaped.folded = false;
-        }
-        const index = this.store.discuss.chatWindows.findIndex((c) => c.eq(this));
-        if (index > -1) {
-            this.store.discuss.chatWindows.splice(index, 1);
-        }
+        const chatHub = this.store.chatHub;
+        const indexAsOpened = chatHub.actuallyOpened.findIndex((w) => w.eq(this));
         const thread = this.thread;
         if (thread) {
             thread.state = "closed";
         }
-        if (escape && this.store.discuss.chatWindows.length > 0) {
-            this.store.discuss.chatWindows.at(index - 1).focus();
-        }
         await this._onClose(options);
         this.delete();
+        if (escape && indexAsOpened !== -1 && chatHub.actuallyOpened.length > 0) {
+            if (indexAsOpened === chatHub.actuallyOpened.length - 1) {
+                chatHub.actuallyOpened.at(indexAsOpened - 1).focus();
+            } else {
+                chatHub.actuallyOpened.at(indexAsOpened).focus();
+            }
+        }
     }
 
     focus() {
         this.autofocus++;
     }
 
-    hide() {
-        this.hidden = true;
+    fold() {
+        if (!this.thread) {
+            return this.close();
+        }
+        this.store.chatHub.folded.delete(this);
+        this.store.chatHub.folded.unshift(this);
+        this.thread.state = "folded";
+        this.notifyState();
     }
 
-    makeVisible() {
-        const swaped = this.store.visibleChatWindows.at(-1);
-        swaped.hide();
-        this.show({ notifyState: false });
+    open({ notifyState = true } = {}) {
+        this.store.chatHub.opened.delete(this);
+        this.store.chatHub.opened.unshift(this);
+        if (this.thread) {
+            this.thread.state = "open";
+            if (notifyState) {
+                this.notifyState();
+            }
+        }
+        this.focus();
     }
 
     notifyState() {
@@ -135,24 +107,6 @@ export class ChatWindow extends Record {
                 { shadow: true }
             );
         }
-    }
-
-    show({ notifyState = true } = {}) {
-        this.hidden = false;
-        this.folded = false;
-        this.thread.state = "open";
-        if (notifyState) {
-            this.notifyState();
-        }
-    }
-
-    toggleFold() {
-        this.folded = !this.folded;
-        const thread = this.thread;
-        if (thread) {
-            thread.state = this.folded ? "folded" : "open";
-        }
-        this.notifyState();
     }
 
     async _onClose({ notifyState = true } = {}) {

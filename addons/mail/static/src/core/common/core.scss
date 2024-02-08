@@ -2,6 +2,10 @@
     background-color: mix($white, $o-gray-100);
 }
 
+.o-mail-brighter {
+    filter: brightness(1.2);
+}
+
 .o-bg-black {
     background-color: rgba(0, 0, 0, var(--bg-opacity, 1));
 }
@@ -129,12 +133,12 @@ a.o-discuss-mention {
 
 .o-visible-short-delay {
     animation: o-visible-short-delay-animation 0s ease-in 0.25s forwards;
-    visibility: hidden;
+    display: none;
 }
 
 @keyframes o-visible-short-delay-animation {
     to {
-        visibility: visible;
+        display: inline-flex;
     }
 }
 

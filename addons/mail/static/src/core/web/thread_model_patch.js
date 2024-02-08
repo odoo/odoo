@@ -2,7 +2,7 @@ import { Thread } from "@mail/core/common/thread_model";
 
 import { patch } from "@web/core/utils/patch";
 import { Record } from "../common/record";
-import { assignDefined, compareDatetime } from "@mail/utils/common/misc";
+import { compareDatetime } from "@mail/utils/common/misc";
 
 patch(Thread.prototype, {
     /** @type {integer|undefined} */
@@ -21,7 +21,7 @@ patch(Thread.prototype, {
         return this.recipientsCount === this.recipients.length;
     },
     closeChatWindow() {
-        const chatWindow = this.store.discuss.chatWindows.find((c) => c.thread?.eq(this));
+        const chatWindow = this.store.ChatWindow.get({ thread: this });
         chatWindow?.close({ notifyState: false });
     },
     async leave() {
@@ -44,13 +44,13 @@ patch(Thread.prototype, {
         );
         this.store.insert(data);
     },
-    open(replaceNewMessageChatWindow, options) {
+    open(options) {
         if (!this.store.discuss.isActive && !this.store.env.services.ui.isSmall) {
-            this._openChatWindow(replaceNewMessageChatWindow, options);
+            this.openChatWindow(options);
             return;
         }
         if (this.store.env.services.ui.isSmall && this.model === "discuss.channel") {
-            this._openChatWindow(replaceNewMessageChatWindow, options);
+            this.openChatWindow(options);
             return;
         }
         if (this.model !== "discuss.channel") {
@@ -62,28 +62,11 @@ patch(Thread.prototype, {
             });
             return;
         }
-        super.open(replaceNewMessageChatWindow);
+        super.open();
     },
     async unpin() {
-        const chatWindow = this.store.discuss.chatWindows.find((c) => c.thread?.eq(this));
+        const chatWindow = this.store.ChatWindow.get({ thread: this });
         await chatWindow?.close();
         super.unpin(...arguments);
-    },
-    _openChatWindow(replaceNewMessageChatWindow, { autofocus = true, openMessagingMenuOnClose } = {}) {
-        const chatWindow = this.store.ChatWindow.insert(
-            assignDefined(
-                {
-                    folded: false,
-                    replaceNewMessageChatWindow,
-                    thread: this,
-                },
-                { openMessagingMenuOnClose }
-            )
-        );
-        if (autofocus) {
-            chatWindow.autofocus++;
-        }
-        this.state = "open";
-        chatWindow.notifyState();
     },
 });
