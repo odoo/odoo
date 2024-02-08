@@ -5,7 +5,7 @@ import { Layout } from "@web/search/layout";
 import { standardViewProps } from "@web/views/standard_view_props";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
 import { sprintf } from "@web/core/utils/strings";
-import { useModel } from "@web/views/model";
+import { useModel, getSearchParams } from "@web/views/model";
 import { useService } from "@web/core/utils/hooks";
 
 export class ActivityController extends Component {
@@ -52,7 +52,7 @@ export class ActivityController extends Component {
                     model: this.props.resModel,
                 });
                 await messaging.openActivityForm({ thread });
-                this.model.load(this.props);
+                this.model.load(getSearchParams(this.props));
             },
         });
     }
@@ -74,7 +74,7 @@ export class ActivityController extends Component {
                 },
             },
             {
-                onClose: () => this.model.load(this.props),
+                onClose: () => this.model.load(getSearchParams(this.props)),
             }
         );
     }
@@ -107,7 +107,7 @@ export class ActivityController extends Component {
             archInfo: this.props.archInfo,
             groupedActivities: this.model.activityData.grouped_activities,
             scheduleActivity: this.scheduleActivity.bind(this),
-            onReloadData: () => this.model.load(this.props),
+            onReloadData: () => this.model.load(getSearchParams(this.props)),
             onEmptyCell: this.openActivityFormView.bind(this),
             onSendMailTemplate: this.sendMailTemplate.bind(this),
             openRecord: this.openRecord.bind(this),

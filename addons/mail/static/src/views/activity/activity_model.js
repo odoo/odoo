@@ -13,7 +13,7 @@ export class ActivityModel extends RelationalModel {
 
     async load(params = {}) {
         this.originalDomain = params.domain ? [...params.domain] : [];
-        params.domain = params.domain ? [...params.domain, ["activity_ids", "!=", false]] : [["activity_ids", "!=", false]];
+        params.domain = [...(params.domain || []),["activity_ids", "!=", false]];
         if (params && "groupBy" in params) {
             params.groupBy = [];
         }
