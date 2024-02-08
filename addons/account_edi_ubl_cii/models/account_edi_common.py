@@ -388,7 +388,7 @@ class AccountEdiCommon(models.AbstractModel):
         else:
             return
 
-        xpath = './{*}AllowanceCharge' if is_ubl else './{*}SupplyChainTradeTransaction/{*}ApplicableHeaderTradeSettlement/{*}SpecifiedTradeAllowanceCharge'
+        xpath = './{*}InvoiceLine/{*}AllowanceCharge' if is_ubl else './{*}SupplyChainTradeTransaction/{*}ApplicableHeaderTradeSettlement/{*}SpecifiedTradeAllowanceCharge'
         allowance_charge_nodes = tree.findall(xpath)
         for allow_el in allowance_charge_nodes:
             with invoice_form.invoice_line_ids.new() as invoice_line_form:
@@ -425,7 +425,7 @@ class AccountEdiCommon(models.AbstractModel):
                     invoice_line_form.price_unit = float(amount_node.text) * charge_factor * qty_factor
 
                 invoice_line_form.tax_ids.clear()  # clear the default taxes applied to the line
-                tax_xpath = './{*}TaxCategory/{*}Percent' if is_ubl else './{*}CategoryTradeTax/{*}RateApplicablePercent'
+                tax_xpath = '../{*}Item/{*}ClassifiedTaxCategory/{*}Percent' if is_ubl else './{*}CategoryTradeTax/{*}RateApplicablePercent'
                 for tax_categ_percent_el in allow_el.findall(tax_xpath):
                     tax = self.env['account.tax'].search([
                         ('company_id', '=', journal.company_id.id),
@@ -635,7 +635,7 @@ class AccountEdiCommon(models.AbstractModel):
         discount = 0
         amount_fixed_taxes = sum(d['tax_amount'] for d in fixed_taxes_list)
         if billed_qty * price_unit != 0 and price_subtotal is not None:
-            discount = 100 * (1 - (price_subtotal - amount_fixed_taxes) / (billed_qty * price_unit))
+            discount = 100 * (1 - (price_subtotal - amount_fixed_taxes + allow_charge_amount) / (billed_qty * price_unit))
 
         # Sometimes, the xml received is very bad: unit price = 0, qty = 1, but price_subtotal = -200
         # for instance, when filling a down payment as an invoice line. The equation in the docstring is not
