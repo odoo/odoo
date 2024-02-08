@@ -120,7 +120,7 @@
             </we-row>
             <we-row class="o_strip_domain d-none" t-attf-class="#{state.isButton ? ' d-none' : ''}">
                 <we-button class="o_we_user_value_widget o_we_checkbox_wrapper o_we_sublevel_1 active">
-                    <we-title class="o_long_title">Autoconvert to relative link</we-title>
+                    <we-title class="o_long_title">Autoconvert to Relative Link</we-title>
                         <div class="o_switch">
                             <we-checkbox name="do_strip_domain"/>
                         </div>
@@ -290,7 +290,7 @@
             </we-row>
             <we-row  t-if="!state.isButton and !props.forceNewWindow">
                 <we-button t-attf-class="o_we_user_value_widget o_we_checkbox_wrapper o_we_sublevel_1 #{this.initialIsNewWindow ? 'active' : ''}">
-                    <we-title class="o_long_title">Open in new window</we-title>
+                    <we-title class="o_long_title">Open in New Window</we-title>
                         <div class="o_switch">
                             <we-checkbox name="is_new_window" t-att-checked="this.initialIsNewWindow ? 'checked' : undefined"/>
                         </div>
