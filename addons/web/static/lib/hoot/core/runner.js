@@ -839,8 +839,6 @@ export class TestRunner {
             test.visited++;
 
             // After test
-            addTestDone(test);
-
             const { lastResults } = test;
             await this.#execAfterCallback(async () => {
                 for (const callbackRegistry of callbackChain) {
@@ -874,6 +872,7 @@ export class TestRunner {
             }
 
             if (!test.config.multi || test.visited === test.config.multi) {
+                addTestDone(test);
                 nextJob();
             }
         }
