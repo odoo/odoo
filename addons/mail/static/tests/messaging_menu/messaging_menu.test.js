@@ -4,8 +4,12 @@ import { defineMailModels } from "@mail/../tests/mail_test_helpers";
 import { expect, test } from "@odoo/hoot";
 import { waitFor } from "@odoo/hoot-dom";
 import { mockPermission } from "@odoo/hoot-mock";
-import { contains, makeMockServer, mountWithCleanup } from "@web/../tests/web_test_helpers";
-import { session } from "@web/session";
+import {
+    constants,
+    contains,
+    makeMockServer,
+    mountWithCleanup,
+} from "@web/../tests/web_test_helpers";
 import { WebClient } from "@web/webclient/webclient";
 
 defineMailModels();
@@ -43,7 +47,7 @@ test.skip("counter is taking into account failure notification", async () => {
     });
     const memberIds = env["discuss.channel.member"].search([
         ["channel_id", "=", channelId],
-        ["partner_id", "=", session.partner_id],
+        ["partner_id", "=", constants.PARTNER_ID],
     ]);
     env["discuss.channel.member"].write(memberIds, {
         seen_message_id: messageId,
@@ -71,6 +75,6 @@ test.skip("rendering with OdooBot has a request (default)", async () => {
     expect(".o-mail-NotificationItem").toContain("OdooBot has a request");
     expect(".o-mail-NotificationItem img").toHaveAttribute(
         "src",
-        `/web/image?field=avatar_128&id=${session.odoobot_id}&model=res.partner`
+        `/web/image?field=avatar_128&id=${constants.ODOOBOT_ID}&model=res.partner`
     );
 });

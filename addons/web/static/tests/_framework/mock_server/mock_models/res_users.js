@@ -1,4 +1,4 @@
-import { session } from "@web/session";
+import { constants } from "../../test_constants.hoot";
 import { ServerModel } from "../mock_model";
 
 export class ResUsers extends ServerModel {
@@ -6,19 +6,19 @@ export class ResUsers extends ServerModel {
 
     _records = [
         {
-            id: session.uid,
+            id: constants.USER_ID,
             active: true,
-            company_id: session.user_companies.current_company,
-            company_ids: Object.keys(session.user_companies.allowed_companies).map(Number),
+            company_id: constants.COMPANY_ID,
+            company_ids: [constants.COMPANY_ID],
             login: "admin",
-            partner_id: session.partner_id,
+            partner_id: constants.PARTNER_ID,
             password: "admin",
         },
         {
-            id: session.public_user_id,
+            id: constants.PUBLIC_USER_ID,
             active: false,
             login: "public",
-            partner_id: session.public_partner_id,
+            partner_id: constants.PUBLIC_PARTNER_ID,
             password: "public",
         },
     ];

@@ -1,6 +1,6 @@
-import { session } from "@web/session";
-import { ServerModel } from "../mock_model";
+import { constants } from "../../test_constants.hoot";
 import * as fields from "../mock_fields";
+import { ServerModel } from "../mock_model";
 
 export class ResCompany extends ServerModel {
     _name = "res.company";
@@ -8,9 +8,12 @@ export class ResCompany extends ServerModel {
     description = fields.Text();
     is_company = fields.Boolean({ default: false });
 
-    _records = Object.values(session.user_companies.allowed_companies).map((companyDef) => ({
-        ...companyDef,
-        active: true,
-        partner_id: companyDef.id,
-    }));
+    _records = [
+        {
+            id: constants.COMPANY_ID,
+            active: true,
+            name: constants.COMPANY_NAME,
+            partner_id: constants.COMPANY_ID,
+        },
+    ];
 }
