@@ -1,7 +1,7 @@
 import { busModels } from "@bus/../tests/bus_test_helpers";
 import { mailGlobal } from "@mail/utils/common/misc";
 import { after, before, getFixture } from "@odoo/hoot";
-import { resize } from "@odoo/hoot-dom";
+import { hover as hootHover, resize } from "@odoo/hoot-dom";
 import { Component, onRendered, onWillDestroy, status } from "@odoo/owl";
 import {
     MockServer,
@@ -58,6 +58,8 @@ import { ResPartner } from "./mock_server/mock_models/res_partner";
 import { ResUsers } from "./mock_server/mock_models/res_users";
 import { ResUsersSettings } from "./mock_server/mock_models/res_users_settings";
 import { ResUsersSettingsVolumes } from "./mock_server/mock_models/res_users_settings_volumes";
+
+import { contains } from "./mail_test_helpers_contains";
 
 export { SIZES } from "@web/core/ui/ui_service";
 export * from "./mail_test_helpers_contains";
@@ -586,4 +588,9 @@ export function isInViewportOf(parent, child) {
     return childRect.top <= parentRect.top
         ? parentRect.top - childRect.top <= childRect.height
         : childRect.bottom - parentRect.bottom <= childRect.height;
+}
+
+export async function hover(selector) {
+    await contains(selector);
+    hootHover(selector);
 }

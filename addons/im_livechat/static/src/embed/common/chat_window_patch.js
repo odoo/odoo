@@ -1,4 +1,3 @@
-import { SESSION_STATE } from "@im_livechat/embed/common/livechat_service";
 import { FeedbackPanel } from "@im_livechat/embed/common/feedback_panel/feedback_panel";
 
 import { ChatWindow } from "@mail/core/common/chat_window";
@@ -15,23 +14,5 @@ patch(ChatWindow.prototype, {
         super.setup(...arguments);
         this.livechatService = useService("im_livechat.livechat");
         this.chatbotService = useState(useService("im_livechat.chatbot"));
-        this.livechatState = useState({ hasFeedbackPanel: false });
-    },
-
-    async close() {
-        if (this.thread?.channel_type !== "livechat") {
-            return super.close();
-        }
-        if (this.livechatService.state === SESSION_STATE.PERSISTED) {
-            this.livechatState.hasFeedbackPanel = true;
-            this.props.chatWindow.show({ notifyState: this.thread?.state !== "open" });
-        } else {
-            await super.close();
-            if (this.thread.isTransient) {
-                this.thread.delete();
-            }
-        }
-        this.livechatService.leave();
-        this.chatbotService.stop();
     },
 });

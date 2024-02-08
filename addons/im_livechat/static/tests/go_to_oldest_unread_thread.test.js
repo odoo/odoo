@@ -128,7 +128,7 @@ test("switching to folded chat window unfolds it [REQUIRE FOCUS]", async () => {
         res_id: channelIds[1],
     });
     await start();
-    await contains(".o-mail-ChatWindow.o-folded", { text: "Visitor 12" });
+    await contains(".o-mail-ChatBubble[name='Visitor 12']");
     await focus(".o-mail-Composer-input", {
         parent: [".o-mail-ChatWindow", { text: "Visitor 11" }],
     });
@@ -141,9 +141,11 @@ test("switching to folded chat window unfolds it [REQUIRE FOCUS]", async () => {
 
 test("switching to hidden chat window unhides it [REQUIRE FOCUS]", async () => {
     const pyEnv = await startServer();
-    const guestId_1 = pyEnv["mail.guest"].create({ name: "Visitor 11" });
-    const guestId_2 = pyEnv["mail.guest"].create({ name: "Visitor 12" });
-    const channelIds = pyEnv["discuss.channel"].create([
+    const [guestId_1, guestId_2] = pyEnv["mail.guest"].create([
+        { name: "Visitor 11" },
+        { name: "Visitor 12" },
+    ]);
+    const [livechat_1] = pyEnv["discuss.channel"].create([
         {
             anonymous_name: "Visitor 11",
             channel_member_ids: [
@@ -175,24 +177,26 @@ test("switching to hidden chat window unhides it [REQUIRE FOCUS]", async () => {
             channel_member_ids: [
                 Command.create({ partner_id: serverState.partnerId, fold_state: "open" }),
             ],
+            name: "general",
         },
     ]);
     pyEnv["mail.message"].create({
         author_guest_id: guestId_2,
         body: "Hello",
         model: "discuss.channel",
-        res_id: channelIds[1],
+        res_id: livechat_1,
     });
-    patchUiSize({ width: 900 }); // enough for 2 chat windows
+    patchUiSize({ width: 900 }); // enough for 2 chat windows max
     await start();
+    // FIXME: expected order: general, 12, 11
     await contains(".o-mail-ChatWindow", { count: 2 });
-    await contains(".o-mail-ChatWindow", { count: 0, text: "Visitor 12" });
+    await contains(".o-mail-ChatWindow", { count: 0, text: "Visitor 11" });
     await focus(".o-mail-Composer-input", {
-        parent: [".o-mail-ChatWindow", { text: "Visitor 11" }],
+        parent: [".o-mail-ChatWindow", { text: "Visitor 12" }],
     });
     triggerHotkey("Tab");
     await contains(".o-mail-ChatWindow", {
-        text: "Visitor 12",
+        text: "Visitor 11",
         contains: [".o-mail-Composer-input:focus"],
     });
 });

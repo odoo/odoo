@@ -30,11 +30,11 @@ test("display banner when ptt extension is not enabled", async () => {
     await click("[title='Open Actions Menu']");
     await click(".o-mail-ChatWindow-command", { text: "Show Call Settings" });
     await click("button", { text: "Push to Talk" });
-    await click("[title='Close Chat Window']");
+    await click("[title*='Close Chat Window']");
     await click("button", { text: "Start a meeting" });
     await contains(".o-discuss-PttAdBanner");
     await click("[title='Show Call Settings']");
     await click("button", { text: "Voice Detection" });
-    await click("[title='Close Chat Window']");
+    await click("[title*='Close Chat Window']");
     await contains(".o-discuss-PttAdBanner", { count: 0 });
 });

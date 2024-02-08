@@ -18,7 +18,7 @@ odoo.livechatReady = new Deferred();
     await whenReady();
     const mainComponentsRegistry = registry.category("main_components");
     mainComponentsRegistry.add("LivechatRoot", { Component: LivechatButton });
-    const env = makeEnv();
+    const env = Object.assign(makeEnv(), { embedLivechat: true });
     await startServices(env);
     odoo.isReady = true;
     const target = await makeShadow(makeRoot(document.body));

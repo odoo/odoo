@@ -1,4 +1,4 @@
-import { assignDefined, compareDatetime } from "@mail/utils/common/misc";
+import { compareDatetime } from "@mail/utils/common/misc";
 import { rpc } from "@web/core/network/rpc";
 import { Store as BaseStore, makeStore, Record } from "@mail/core/common/record";
 import { reactive } from "@odoo/owl";
@@ -11,7 +11,6 @@ import { debounce } from "@web/core/utils/timing";
 import { session } from "@web/session";
 import { _t } from "@web/core/l10n/translation";
 import { cleanTerm, prettifyMessageContent } from "@mail/utils/common/format";
-import { browser } from "@web/core/browser/browser";
 
 /**
  * @typedef {{isSpecial: boolean, channel_types: string[], label: string, displayName: string, description: string}} SpecialMention
@@ -25,10 +24,6 @@ export class Store extends BaseStore {
     static OTHER_LONG_TYPING = 60000;
     FETCH_LIMIT = 30;
     DEFAULT_AVATAR = "/mail/static/src/img/smiley/avatar.jpg";
-    CHAT_WINDOW_END_GAP_WIDTH = 10; // for a single end, multiply by 2 for left and right together.
-    CHAT_WINDOW_INBETWEEN_WIDTH = 5;
-    CHAT_WINDOW_WIDTH = 360; // same value as $o-mail-ChatWindow-width
-    CHAT_WINDOW_HIDDEN_WIDTH = 55;
     isReady = new Deferred();
 
     /** @returns {import("models").Store|import("models").Store[]} */
@@ -112,6 +107,7 @@ export class Store extends BaseStore {
     hasLinkPreviewFeature = true;
     // messaging menu
     menu = { counter: 0 };
+    chatHub = Record.one("ChatHub", { compute: () => ({}) });
     discuss = Record.one("DiscussApp");
     failures = Record.many("Failure", {
         /**
@@ -144,34 +140,6 @@ export class Store extends BaseStore {
         return {
             init_messaging: {},
         };
-    }
-
-    get visibleChatWindows() {
-        return this.discuss.chatWindows.filter((chatWindow) => !chatWindow.hidden);
-    }
-
-    get hiddenChatWindows() {
-        return this.discuss.chatWindows.filter((chatWindow) => chatWindow.hidden);
-    }
-
-    get maxVisibleChatWindows() {
-        const startGap = this.env.services.ui.isSmall
-            ? 0
-            : this.hiddenChatWindows.length > 0
-            ? this.CHAT_WINDOW_END_GAP_WIDTH + this.CHAT_WINDOW_HIDDEN_WIDTH
-            : this.CHAT_WINDOW_END_GAP_WIDTH;
-        const endGap = this.env.services.ui.isSmall ? 0 : this.CHAT_WINDOW_END_GAP_WIDTH;
-        const available = browser.innerWidth - startGap - endGap;
-        const maxAmountWithoutHidden = Math.max(
-            1,
-            Math.floor(available / (this.CHAT_WINDOW_WIDTH + this.CHAT_WINDOW_INBETWEEN_WIDTH))
-        );
-        return maxAmountWithoutHidden;
-    }
-
-    closeNewMessage() {
-        const newMessageChatWindow = this.discuss.chatWindows.find(({ thread }) => !thread);
-        newMessageChatWindow?.close();
     }
 
     messagePostMutex = new Mutex();
@@ -581,12 +549,11 @@ export class Store extends BaseStore {
         });
     }
 
-    openNewMessage({ openMessagingMenuOnClose } = {}) {
-        if (this.discuss.chatWindows.some(({ thread }) => !thread)) {
-            // New message chat window is already opened.
-            return;
-        }
-        this.ChatWindow.insert(assignDefined({}, { openMessagingMenuOnClose }));
+    openNewMessage() {
+        const cw = this.ChatWindow.insert({ thread: undefined, fromMessagingMenu: true });
+        this.chatHub.opened.delete(cw);
+        this.chatHub.opened.unshift(cw);
+        cw.focus();
     }
 
     /**

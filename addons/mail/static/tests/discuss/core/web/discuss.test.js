@@ -169,12 +169,15 @@ test("can join a chat conversation", async () => {
     await click(".o-discuss-ChannelSelector-suggestion");
     await contains(".o-discuss-ChannelSelector-suggestion", { count: 0 });
     triggerHotkey("Enter");
+    await contains(".o-mail-DiscussSidebarChannel");
+    await contains(".o-mail-Message", { count: 0 });
+    const channelId = pyEnv["discuss.channel"].search([["name", "=", "Mitchell Admin, Mario"]]);
     await assertSteps([
         `/web/dataset/call_kw/discuss.channel/channel_get - ${JSON.stringify({
             args: [],
             kwargs: {
                 partners_to: [partnerId],
-                force_open: false,
+                force_open: true,
                 context: {
                     lang: "en",
                     tz: "taht",
@@ -185,11 +188,6 @@ test("can join a chat conversation", async () => {
             method: "channel_get",
             model: "discuss.channel",
         })}`,
-    ]);
-    await contains(".o-mail-DiscussSidebarChannel");
-    await contains(".o-mail-Message", { count: 0 });
-    const channelId = pyEnv["discuss.channel"].search([["name", "=", "Mitchell Admin, Mario"]]);
-    await assertSteps([
         `/discuss/channel/messages - {"channel_id":${channelId},"limit":60,"around":0}`,
     ]);
 });

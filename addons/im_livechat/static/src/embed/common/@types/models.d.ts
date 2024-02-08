@@ -13,6 +13,10 @@ declare module "models" {
     export interface ChatbotScript extends ChatbotScriptClass { }
     export interface LivechatRule extends LivechatRuleClass { }
 
+    export interface ChatWindpw {
+        hasFeedbackPanel: boolean,
+    }
+
     export interface Message {
         chatbotStep: ChatbotStep,
     }

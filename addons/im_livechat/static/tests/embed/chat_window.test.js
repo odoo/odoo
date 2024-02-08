@@ -24,9 +24,7 @@ describe.current.tags("desktop");
 defineLivechatModels();
 
 test("do not save fold state of temporary live chats", async () => {
-    patchWithCleanup(LivechatButton, {
-        DEBOUNCE_DELAY: 0,
-    });
+    patchWithCleanup(LivechatButton, { DEBOUNCE_DELAY: 0 });
     await startServer();
     await loadDefaultEmbedConfig();
     onRpcBefore("/discuss/channel/fold", (args) => {
@@ -44,7 +42,8 @@ test("do not save fold state of temporary live chats", async () => {
     await waitNotifications([env, "discuss.Thread/fold_state"]);
     await contains(".o-mail-Message", { text: "Hello", count: 0 });
     await assertSteps(["fold - folded"]);
-    await click("[title='Close Chat Window']");
+    await contains(".o-mail-ChatBubble");
+    await click("[title*='Close Chat Window']");
     await assertSteps(["fold - open"]); // clicking close shows the feedback panel
     await click("button", { text: "Close conversation" });
     await assertSteps(["fold - closed"]);

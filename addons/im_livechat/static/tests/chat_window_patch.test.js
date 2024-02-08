@@ -24,6 +24,6 @@ test("closing a chat window with no message from admin side unpins it", async ()
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
-    await click(".o-mail-ChatWindow-command[title='Close Chat Window']");
+    await click(".o-mail-ChatWindow-command[title*='Close Chat Window']");
     await contains(".o_notification", { text: "You unpinned your conversation with Demo" });
 });
