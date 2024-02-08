@@ -17,7 +17,6 @@ class IrQWeb(models.AbstractModel):
             is_html_empty=is_html_empty,
             frontend_languages=lazy(lambda: [
                 lang for lang in irQweb.env['res.lang'].get_available()
-                if lang[0] in irQweb.env['ir.http']._get_frontend_langs()
             ])
         )
         for key in irQweb.env.context:
