@@ -2480,3 +2480,48 @@ input[value*="data-oe-translation-initial-sha"] {
 .o_dropdown_without_offset {
     transform: none !important;
 }
+
+// Subtle input-group-text
+// This can be set to an input-group-text placed directly before or after the input.
+.input-group-text.input-group-text-subtle {
+    @include transition($input-transition);
+    border-color: $input-border-color;
+    background-color: $input-bg;
+    background-clip: padding-box;
+    color: $input-color;
+
+    // The input border color is based on "currentColor", so we can't apply this
+    // color to the whole element, otherwise the border color won't match the
+    // input border. To fix that, we need to define the color on a child element
+    // (eg. <i/> for an icon or <span/> for text).
+    > * {
+        color: rgba($input-color, 0.6);
+    }
+    .is-invalid ~ &,
+    &:has(~ .is-invalid) {
+        border-color: $form-feedback-invalid-color;
+    }
+    .is-invalid ~ & + .input-group-text {
+        border-left-color: $form-feedback-invalid-color;
+    }
+    .form-control ~ &, .form-select ~ & {
+        padding-left: $input-group-addon-padding-x * .5;
+    }
+    &:has(~ .form-control), &:has(~ .form-select) {
+        padding-right: $input-group-addon-padding-x * .5;
+    }
+    .form-control:disabled ~ &, .form-control[readonly] ~ &, &:has(~ .form-select:disabled), &:has(~ .form-select[readonly]) {
+        background-color: $input-disabled-bg;
+        border-color: $input-disabled-border-color;
+    }
+}
+
+.input-group-text-subtle ~ .form-control:not(:focus),
+.input-group-text-subtle ~ .form-select:not(:focus):not(:hover) {
+    border-left-width: 0;
+}
+
+.form-control:not(:focus):has(~ .input-group-text-subtle),
+.form-select:not(:focus):not(:hover):has(~ .input-group-text-subtle) {
+    border-right-width: 0;
+}
