@@ -568,8 +568,7 @@ export class HtmlField extends Component {
         // Remove temporarily the class so that css editing will not be converted.
         $odooEditor.removeClass('odoo-editor-editable');
         $editable.html(html);
-
-        await toInline($editable, this.cssRules, this.wysiwyg.$iframe);
+        await toInline($editable, { $iframe: this.wysiwyg.$iframe, wysiwyg:this.wysiwyg });
         $odooEditor.addClass('odoo-editor-editable');
 
         this.wysiwyg.setValue($editable.html());
