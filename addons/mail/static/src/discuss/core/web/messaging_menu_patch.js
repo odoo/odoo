@@ -9,13 +9,13 @@ Object.assign(MessagingMenu.components, { ChannelSelector });
 patch(MessagingMenu.prototype, {
     beforeOpen() {
         const res = super.beforeOpen(...arguments);
-        this.store.fetchChannels();
+        this.store.channels.fetch();
         return res;
     },
     get counter() {
         const count = super.counter;
         const channelsContribution =
-            this.store.fetchChannelsState !== "fetched"
+            this.store.channels.status !== "fetched"
                 ? this.store.initChannelsUnreadCounter
                 : Object.values(this.store.Thread.records).filter(
                       (thread) => thread.displayToSelf && thread.message_unread_counter > 0

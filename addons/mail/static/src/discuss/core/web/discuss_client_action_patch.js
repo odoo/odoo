@@ -6,7 +6,7 @@ import { patch } from "@web/core/utils/patch";
 
 patch(DiscussClientAction.prototype, {
     async restoreDiscussThread() {
-        await this.store.fetchChannels();
+        await this.store.channels.fetch();
         return super.restoreDiscussThread(...arguments);
     },
     parseActiveId(rawActiveId) {

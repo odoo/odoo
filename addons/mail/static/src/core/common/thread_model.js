@@ -2,6 +2,7 @@
 
 import { DEFAULT_AVATAR } from "@mail/core/common/persona_service";
 import { AND, Record } from "@mail/core/common/record";
+import { compareDatetime } from "@mail/utils/common/misc";
 
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
@@ -199,18 +200,11 @@ export class Thread extends Record {
      * when fetching newer messages.
      */
     pendingNewMessages = Record.many("Message");
-    /**
-     * Contains continuous sequence of needaction messages to show in messaging menu.
-     * Messages are ordered from older to most recent.
-     * There should not be any hole in this list: there can be unknown
-     * messages before start and after end, but there should not be any
-     * unknown in-between messages.
-     *
-     * Content should be fetched and inserted in a controlled way.
-     *
-     * @type {import("models").Message[]}
-     */
-    needactionMessages = Record.many("Message");
+    needactionMessages = Record.many("Message", {
+        inverse: "threadAsNeedaction",
+        sort: (t1, t2) =>
+            compareDatetime(t2.lastInterestDateTime, t1.lastInterestDateTime) || t2.id - t1.id,
+    });
     /** @type {string} */
     name;
     /** @type {number|false} */
