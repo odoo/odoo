@@ -290,8 +290,8 @@ class TestTimesheet(TestCommonTimesheet):
 
         timesheet_count1 = Timesheet.search_count([('project_id', '=', self.project_customer.id)])
         timesheet_count2 = Timesheet.search_count([('project_id', '=', self.project_customer2.id)])
-        self.assertEqual(timesheet_count1, 3, "3 timesheets should be linked to Project1")
-        self.assertEqual(timesheet_count2, 0, "No timesheets should be linked to Project2")
+        self.assertEqual(timesheet_count1, 0, "No timesheets should be linked to Project1")
+        self.assertEqual(timesheet_count2, 3, "3 timesheets should be linked to Project2")
         self.assertEqual(len(self.task1.timesheet_ids), 1, "The timesheet still should be linked to task1")
         self.assertEqual(len(task_child.timesheet_ids), 1, "The timesheet still should be linked to task_child")
         self.assertEqual(len(task_grandchild.timesheet_ids), 1, "The timesheet still should be linked to task_grandchild")
@@ -405,7 +405,7 @@ class TestTimesheet(TestCommonTimesheet):
             'project_id': second_project.id
         })
 
-        self.assertEqual(timesheet.project_id, project, 'The project_id of timesheet shouldn\'t have changed')
+        self.assertEqual(timesheet.project_id, second_project, 'The project_id of non-validated timesheet should have changed')
 
     def test_create_timesheet_employee_not_in_company(self):
         ''' ts.employee_id only if the user has an employee in the company or one employee for all companies.
