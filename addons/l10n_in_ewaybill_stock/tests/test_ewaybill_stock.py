@@ -81,7 +81,7 @@ class TestStockEwaybill(L10nInTestInvoicingCommon):
             'actFromStateCode': 24,
             'itemList': [{
                 'productName': 'product_a',
-                'hsnCode': '01111',
+                'hsnCode': '111111',
                 'productDesc': 'product_a',
                 'quantity': 5.0,
                 'qtyUnit': 'UNT',
@@ -142,7 +142,7 @@ class TestStockEwaybill(L10nInTestInvoicingCommon):
           'itemList': [
             {
               'productName': 'product_a',
-              'hsnCode': '01111',
+              'hsnCode': '111111',
               'productDesc': 'product_a',
               'quantity': 5.0,
               'qtyUnit': 'UNT',

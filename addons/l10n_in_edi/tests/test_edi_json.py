@@ -25,7 +25,7 @@ class TestEdiJson(L10nInTestInvoicingCommon):
             'property_account_expense_id': cls.company_data['default_account_expense'].id,
             'taxes_id': [Command.set(cls.sgst_sale_5.ids)],
             'supplier_taxes_id': [Command.set(cls.sgst_purchase_5.ids)],
-            "l10n_in_hsn_code": "01111",
+            "l10n_in_hsn_code": "111111",
         })
         gst_with_cess = cls.env.ref("account.%s_sgst_sale_12" % (cls.company_data["company"].id)
             ) + cls.env.ref("account.%s_cess_5_plus_1591_sale" % (cls.company_data["company"].id))
@@ -38,7 +38,7 @@ class TestEdiJson(L10nInTestInvoicingCommon):
             "property_account_expense_id": cls.company_data["default_account_expense"].id,
             "taxes_id": [Command.set(gst_with_cess.ids)],
             "supplier_taxes_id": [Command.set(cls.sgst_purchase_5.ids)],
-            "l10n_in_hsn_code": "02222",
+            "l10n_in_hsn_code": "333333",
         })
         rounding = cls.env["account.cash.rounding"].create({
             "name": "half-up",
@@ -134,14 +134,14 @@ class TestEdiJson(L10nInTestInvoicingCommon):
                 "GSTIN": "24ABCPM8965E1ZE"},
             "ItemList": [
                 {
-                    "SlNo": "1", "PrdDesc": "product_a", "IsServc": "N", "HsnCd": "01111", "Qty": 1.0,
+                    "SlNo": "1", "PrdDesc": "product_a", "IsServc": "N", "HsnCd": "111111", "Qty": 1.0,
                     "Unit": "UNT", "UnitPrice": 1000.0, "TotAmt": 1000.0, "Discount": 100.0, "AssAmt": 900.0,
                     "GstRt": 5.0, "IgstAmt": 0.0, "CgstAmt": 22.5, "SgstAmt": 22.5, "CesRt": 0.0, "CesAmt": 0.0,
                     "CesNonAdvlAmt": 0.0, "StateCesRt": 0.0, "StateCesAmt": 0.0, "StateCesNonAdvlAmt": 0.0,
                     "OthChrg": 0.0, "TotItemVal": 945.0
                 },
                 {
-                    "SlNo": "2", "PrdDesc": "product_with_cess", "IsServc": "N", "HsnCd": "02222", "Qty": 1.0,
+                    "SlNo": "2", "PrdDesc": "product_with_cess", "IsServc": "N", "HsnCd": "333333", "Qty": 1.0,
                     "Unit": "UNT", "UnitPrice": 1000.0, "TotAmt": 1000.0, "Discount": 100.0, "AssAmt": 900.0,
                     "GstRt": 12.0, "IgstAmt": 0.0, "CgstAmt": 56.8, "SgstAmt": 56.8, "CesRt": 5.0, "CesAmt": 45.0,
                     "CesNonAdvlAmt": 1.59, "StateCesRt": 0.0, "StateCesAmt": 0.0, "StateCesNonAdvlAmt": 0.0,
@@ -160,7 +160,7 @@ class TestEdiJson(L10nInTestInvoicingCommon):
         expected.update({
             "DocDtls": {"Typ": "INV", "No": "INV/2019/00003", "Dt": "01/01/2019"},
             "ItemList": [{
-                "SlNo": "1", "PrdDesc": "product_a", "IsServc": "N", "HsnCd": "01111", "Qty": 1.0,
+                "SlNo": "1", "PrdDesc": "product_a", "IsServc": "N", "HsnCd": "111111", "Qty": 1.0,
                 "Unit": "UNT", "UnitPrice": 1000.0, "TotAmt": 1000.0, "Discount": 1000.0, "AssAmt": 0.0,
                 "GstRt": 0.0, "IgstAmt": 0.0, "CgstAmt": 0.0, "SgstAmt": 0.0, "CesRt": 0.0, "CesAmt": 0.0,
                 "CesNonAdvlAmt": 0.0, "StateCesRt": 0.0, "StateCesAmt": 0.0, "StateCesNonAdvlAmt": 0.0,
@@ -175,7 +175,7 @@ class TestEdiJson(L10nInTestInvoicingCommon):
         expected.update({
             "DocDtls": {"Typ": "INV", "No": "INV/2019/00004", "Dt": "01/01/2019"},
             "ItemList": [{
-                "SlNo": "1", "PrdDesc": "product_a", "IsServc": "N", "HsnCd": "01111", "Qty": 0.0,
+                "SlNo": "1", "PrdDesc": "product_a", "IsServc": "N", "HsnCd": "111111", "Qty": 0.0,
                 "Unit": "UNT", "UnitPrice": 1000.0, "TotAmt": 0.0, "Discount": 0.0, "AssAmt": 0.0,
                 "GstRt": 0.0, "IgstAmt": 0.0, "CgstAmt": 0.0, "SgstAmt": 0.0, "CesRt": 0.0, "CesAmt": 0.0,
                 "CesNonAdvlAmt": 0.0, "StateCesRt": 0.0, "StateCesAmt": 0.0, "StateCesNonAdvlAmt": 0.0,
@@ -189,14 +189,14 @@ class TestEdiJson(L10nInTestInvoicingCommon):
             "DocDtls": {"Typ": "INV", "No": "INV/2019/00005", "Dt": "01/01/2019"},
             "ItemList": [
                 {
-                    "SlNo": "1", "PrdDesc": "product_a", "IsServc": "N", "HsnCd": "01111", "Qty": 1.0,
+                    "SlNo": "1", "PrdDesc": "product_a", "IsServc": "N", "HsnCd": "111111", "Qty": 1.0,
                     "Unit": "UNT", "UnitPrice": 1000.0, "TotAmt": 1000.0, "Discount": 400.0, "AssAmt": 600.0,
                     "GstRt": 5.0, "IgstAmt": 0.0, "CgstAmt": 15.0, "SgstAmt": 15.0, "CesRt": 0.0, "CesAmt": 0.0,
                     "CesNonAdvlAmt": 0.0, "StateCesRt": 0.0, "StateCesAmt": 0.0, "StateCesNonAdvlAmt": 0.0,
                     "OthChrg": 0.0, "TotItemVal": 630.0
                 },
                 {
-                    "SlNo": "3", "PrdDesc": "product_with_cess", "IsServc": "N", "HsnCd": "02222", "Qty": 1.0,
+                    "SlNo": "3", "PrdDesc": "product_with_cess", "IsServc": "N", "HsnCd": "333333", "Qty": 1.0,
                     "Unit": "UNT", "UnitPrice": 1000.0, "TotAmt": 1000.0, "Discount": 0.0, "AssAmt": 1000.0,
                     "GstRt": 12.0, "IgstAmt": 0.0, "CgstAmt": 63.1, "SgstAmt": 63.1, "CesRt": 5.0, "CesAmt": 50.0,
                     "CesNonAdvlAmt": 1.59, "StateCesRt": 0.0, "StateCesAmt": 0.0, "StateCesNonAdvlAmt": 0.0,
@@ -221,7 +221,7 @@ class TestEdiJson(L10nInTestInvoicingCommon):
         expected.update({
             "DocDtls": {"Typ": "INV", "No": "INV/2019/00008", "Dt": "01/01/2019"},
             "ItemList": [{
-                "SlNo": "1", "PrdDesc": "product_a", "IsServc": "N", "HsnCd": "01111", "Qty": 1.0,
+                "SlNo": "1", "PrdDesc": "product_a", "IsServc": "N", "HsnCd": "111111", "Qty": 1.0,
                 "Unit": "UNT", "UnitPrice": 2000.0, "TotAmt": 2000.0, "Discount": 1400.0, "AssAmt": 600.0,
                 "GstRt": 5.0, "IgstAmt": 0.0, "CgstAmt": 15.0, "SgstAmt": 15.0, "CesRt": 0.0, "CesAmt": 0.0,
                 "CesNonAdvlAmt": 0.0, "StateCesRt": 0.0, "StateCesAmt": 0.0, "StateCesNonAdvlAmt": 0.0,
@@ -238,14 +238,14 @@ class TestEdiJson(L10nInTestInvoicingCommon):
         expected.update({
             "DocDtls": {"Typ": "INV", "No": "INV/2019/00009", "Dt": "01/01/2019"},
             "ItemList": [{
-                "SlNo": "1", "PrdDesc": "product_a", "IsServc": "N", "HsnCd": "01111", "Qty": 1.0,
+                "SlNo": "1", "PrdDesc": "product_a", "IsServc": "N", "HsnCd": "111111", "Qty": 1.0,
                 "Unit": "UNT", "UnitPrice": 2000.0, "TotAmt": 2000.0, "Discount": 2000.0, "AssAmt": 0.0,
                 "GstRt": 5.0, "IgstAmt": 0.0, "CgstAmt": 0.0, "SgstAmt": 0.0, "CesRt": 0.0, "CesAmt": 0.0,
                 "CesNonAdvlAmt": 0.0, "StateCesRt": 0.0, "StateCesAmt": 0.0, "StateCesNonAdvlAmt": 0.0,
                 "OthChrg": 0.0, "TotItemVal": 0.0
             },
             {
-                "SlNo": "2", "PrdDesc": "product_b", "IsServc": "N", "HsnCd": "01111", "Qty": 1.0,
+                "SlNo": "2", "PrdDesc": "product_b", "IsServc": "N", "HsnCd": "111111", "Qty": 1.0,
                 "Unit": "UNT", "UnitPrice": 1000.0, "TotAmt": 1000.0, "Discount": 100.0, "AssAmt": 900.0,
                 "GstRt": 5.0, "IgstAmt": 0.0, "CgstAmt": 22.5, "SgstAmt": 22.5, "CesRt": 0.0, "CesAmt": 0.0,
                 "CesNonAdvlAmt": 0.0, "StateCesRt": 0.0, "StateCesAmt": 0.0, "StateCesNonAdvlAmt": 0.0,
