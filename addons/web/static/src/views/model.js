@@ -68,7 +68,7 @@ Model.services = [];
  * @param {Object} props
  * @returns {SearchParams}
  */
-function getSearchParams(props) {
+export function getSearchParams(props) {
     const params = {};
     for (const key of SEARCH_KEYS) {
         params[key] = props[key];

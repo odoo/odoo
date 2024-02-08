@@ -16,9 +16,26 @@ import {
 import { doAction } from "@web/../tests/webclient/helpers";
 import { session } from "@web/session";
 import { toggleSearchBarMenu } from "@web/../tests/search/helpers";
+import { ActivityController } from "@mail/views/activity/activity_controller";
 
 let serverData;
 let pyEnv;
+
+async function openViewAndPatchDoAction(assert) {
+    const { env, openView } = await start({
+        serverData,
+    });
+    await openView({
+        res_model: "mail.test.activity",
+        views: [[false, "activity"]],
+    });
+    patchWithCleanup(env.services.action, {
+        doAction(action, options) {
+            assert.step("doAction");
+            options.onClose();
+        },
+    });
+}
 
 QUnit.module("test_mail", {}, function () {
     QUnit.module("activity view", {
@@ -667,6 +684,69 @@ QUnit.module("test_mail", {}, function () {
                 1,
                 "Should contains only one record after calling schedule activity which load view again"
             );
+        }
+    );
+
+    QUnit.test(
+        "activity view: 'scheduleActivity' does not add activity_ids condition as selectCreateDialog domain",
+        async function (assert) {
+            patchWithCleanup(ActivityController.prototype, {
+                scheduleActivity() {
+                    this._super();
+                    assert.step(JSON.stringify(this.props.domain));
+                },
+            });
+            Object.assign(serverData.views, {
+                "mail.test.activity,false,list":
+                    '<tree string="MailTestActivity"><field name="name"/></tree>',
+            });
+            await openViewAndPatchDoAction(assert);
+
+            // open search create dialog and schedule an activity
+            await click(document.querySelector(".o_activity_view .o_record_selector"));
+            await click(document.querySelectorAll(".modal-lg .o_data_row .o_data_cell")[0]);
+
+            // again open search create dialog
+            await click(document.querySelector(".o_activity_view .o_record_selector"));
+            assert.verifySteps(["[]", "doAction", "[]"]);
+        }
+    );
+
+    QUnit.test(
+        "activity view: 'onClose' of 'openActivityFormView' does not add activity_ids condition as selectCreateDialog domain",
+        async function (assert) {
+            patchWithCleanup(ActivityController.prototype, {
+                openActivityFormView(resId, activityTypeId) {
+                    this._super(resId, activityTypeId);
+                    assert.step(JSON.stringify(this.props.domain));
+                },
+            });
+            await openViewAndPatchDoAction(assert);
+
+            //schedule an activity on an empty activity cell
+            await click(
+                document.querySelector(".o_activity_view .o_data_row .o_activity_empty_cell")
+            );
+            assert.verifySteps(["doAction", "[]"]);
+        }
+    );
+
+    QUnit.test(
+        "activity view: 'onReloadData' does not add activity_ids condition as selectCreateDialog domain",
+        async function (assert) {
+            patchWithCleanup(ActivityController.prototype, {
+                get rendererProps() {
+                    const rendererProps = this._super(...arguments);
+                    assert.step(JSON.stringify(this.props.domain));
+                    return rendererProps;
+                },
+            });
+            await openViewAndPatchDoAction(assert);
+
+            //schedule another activity on an activity cell with a scheduled activity
+            await click(document.querySelector(".today .o-mail-ActivityCell-deadline"));
+            await click($(".o-mail-ActivityListPopover button:contains(Schedule an activity)")[0]);
+            assert.verifySteps(["[]", "doAction", "[]"]);
         }
     );
 
