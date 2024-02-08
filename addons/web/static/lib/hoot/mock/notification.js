@@ -40,7 +40,7 @@ export class MockNotification extends EventTarget {
 
     /** @type {NotificationPermission} */
     get permission() {
-        this.constructor.permission;
+        return this.constructor.permission;
     }
 
     /**

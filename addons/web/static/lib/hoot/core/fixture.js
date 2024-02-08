@@ -1,13 +1,13 @@
 /** @odoo-module */
 
-import { App, Component } from "@odoo/owl";
+import { App } from "@odoo/owl";
 import { defineRootNode, getActiveElement } from "@web/../lib/hoot-dom/helpers/dom";
 import { setupEventActions } from "@web/../lib/hoot-dom/helpers/events";
 import { HootError } from "../hoot_utils";
 
 /**
  * @typedef {{
- *  component: typeof Component;
+ *  component: import("@odoo/owl").ComponentConstructor;
  *  props: unknown;
  * }} TestRootProps
  */

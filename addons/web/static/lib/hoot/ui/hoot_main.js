@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { Component, useSubEnv, xml } from "@odoo/owl";
+import { Component, xml } from "@odoo/owl";
 import { createURL, setParams, urlParams } from "../core/url";
 import { useWindowListener } from "../hoot_utils";
 import { HootButtons } from "./hoot_buttons";
