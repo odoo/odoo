@@ -75,7 +75,9 @@ const makeNetworkLogger = (prefix, title) => {
         }
         const color = `color: ${colorValue}`;
         const styles = [`${color}; font-weight: bold;`, color];
-        console.log(`${bullet} %c${prefix}#${id}%c<${title}>`, ...styles, await getData());
+        console.groupCollapsed(`${bullet} %c${prefix}#${id}%c<${title}>`, ...styles, await getData());
+        console.trace();
+        console.groupEnd();
     };
 
     const id = nextNetworkLogId++;
