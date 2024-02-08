@@ -110,21 +110,19 @@ class AccountEdiFormat(models.Model):
                 if not move._l10n_in_edi_is_managing_invoice_negative_lines_allowed():
                     raise ValidationError(_("Invoice lines having a negative amount are not allowed to generate the IRN. "
                                   "Please create a credit note instead."))
-            if line.display_type == 'product' and line.discount < 0:
-                error_message.append(_("Negative discount is not allowed, set in line %s", line.name))
+            if line.display_type == 'product':
+                if line.discount < 0:
+                    error_message.append(_("Negative discount is not allowed, set in line %s", line.name))
+                hsn_code = self._l10n_in_edi_extract_digits(line.l10n_in_hsn_code)
+                if not hsn_code:
+                    error_message.append(_("HSN code is not set in product line %s", line.name))
+                elif not re.match(r'^\d{4}$|^\d{6}$|^\d{8}$', hsn_code):
+                    error_message.append(_(
+                        "Invalid HSN Code (%s) in product line %s", hsn_code, line.name
+                    ))
             if not line.tax_tag_ids or not any(move_line_tag.id in all_base_tags for move_line_tag in line.tax_tag_ids):
                 error_message.append(_(
                     """Set an appropriate GST tax on line "%s" (if it's zero rated or nil rated then select it also)""", line.product_id.name))
-            if line.product_id:
-                hsn_code = self._l10n_in_edi_extract_digits(line.l10n_in_hsn_code)
-                if not hsn_code:
-                    error_message.append(_("HSN code is not set in product %s", line.product_id.name))
-                elif not re.match("^[0-9]+$", hsn_code):
-                    error_message.append(_(
-                        "Invalid HSN Code (%s) in product %s", hsn_code, line.product_id.name
-                    ))
-            else:
-                error_message.append(_("product is required to get HSN code"))
         return error_message
 
     def _l10n_in_edi_get_iap_buy_credits_message(self, company):

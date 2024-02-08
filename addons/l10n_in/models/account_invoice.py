@@ -33,6 +33,7 @@ class AccountMove(models.Model):
     l10n_in_shipping_port_code_id = fields.Many2one('l10n_in.port.code', 'Port code')
     l10n_in_reseller_partner_id = fields.Many2one('res.partner', 'Reseller', domain=[('vat', '!=', False)], help="Only Registered Reseller")
     l10n_in_journal_type = fields.Selection(string="Journal Type", related='journal_id.type')
+    l10n_in_hsn_code_warning = fields.Json(compute="_compute_hsn_code_warning")
 
     @api.depends('partner_id', 'partner_id.l10n_in_gst_treatment', 'state')
     def _compute_l10n_in_gst_treatment(self):
@@ -81,6 +82,46 @@ class AccountMove(models.Model):
                 )
             }}
         return super()._onchange_name_warning()
+
+    @api.depends('invoice_line_ids.l10n_in_hsn_code', 'company_id.l10n_in_hsn_code_digit')
+    def _compute_hsn_code_warning(self):
+
+        def build_warning(record, action_name, message, views, domain=False):
+            return {
+                'message': message,
+                'action_text': _("View %s", action_name),
+                'action': record._get_records_action(name=_("Check %s", action_name), target='current', views=views, domain=domain or [])
+            }
+
+        indian_invoice = self.filtered(lambda m: m.country_code == 'IN' and m.move_type != 'entry')
+        for move in indian_invoice:
+            filtered_lines = move.invoice_line_ids.filtered(lambda line: line.display_type == 'product' and line.tax_ids and line._origin)
+            if move.company_id.l10n_in_hsn_code_digit and filtered_lines:
+                lines = self.env['account.move.line']
+                for line in filtered_lines:
+                    if (line.l10n_in_hsn_code and (not re.match(r'^\d{4}$|^\d{6}$|^\d{8}$', line.l10n_in_hsn_code) or len(line.l10n_in_hsn_code) < int(move.company_id.l10n_in_hsn_code_digit))) or not line.l10n_in_hsn_code:
+                        lines |= line._origin
+
+                digit_suffixes = {
+                    '4': _("4 digits, 6 digits or 8 digits"),
+                    '6': _("6 digits or 8 digits"),
+                    '8': _("8 digits")
+                }
+                msg = _("Ensure that the HSN/SAC Code consists either %s in invoice lines",
+                    digit_suffixes.get(move.company_id.l10n_in_hsn_code_digit, _("Invalid HSN/SAC Code digit"))
+                )
+                move.l10n_in_hsn_code_warning = {
+                    'invalid_hsn_code_length': build_warning(
+                        message=msg,
+                        action_name=_("Journal Items(s)"),
+                        record=lines,
+                        views=[(self.env.ref("l10n_in.view_move_line_tree_hsn_l10n_in").id, "tree")],
+                        domain=[('id', 'in', lines.ids)]
+                    )
+                } if lines else {}
+            else:
+                move.l10n_in_hsn_code_warning = {}
+        (self - indian_invoice).l10n_in_hsn_code_warning = {}
 
     def _get_name_invoice_report(self):
         if self.country_code == 'IN':
