@@ -52,6 +52,7 @@ class DebugContext {
                     .map((factory) => factory(Object.assign({ env, accessRights }, ...contexts)));
             })
             .filter(Boolean)
+            .filter(x => !x.hide)
             .sort((x, y) => {
                 const xSeq = x.sequence || 1000;
                 const ySeq = y.sequence || 1000;
