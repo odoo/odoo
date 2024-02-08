@@ -67,7 +67,7 @@
 
             .o_stat_text {
                 @extend %-stat-button-text;
-                
+
                 .o_field_empty {
                     display: none;
                 }
@@ -107,18 +107,18 @@
         margin-left: -$border-width;
     }
 
-    .oe_stat_button, 
+    .oe_stat_button,
     .oe_stat_button > button {
         border-radius: 0;
     }
 
-    > .oe_stat_button:first-child, 
+    > .oe_stat_button:first-child,
     > div:first-child > .oe_stat_button {
         @include border-start-radius($border-radius);
     }
 
-    > button.oe_stat_button:last-child, 
-    > div:last-child > .oe_stat_button, 
+    > button.oe_stat_button:last-child,
+    > div:last-child > .oe_stat_button,
     > div.oe_stat_button:last-child > button {
         @include border-end-radius($border-radius);
     }
@@ -134,17 +134,6 @@
             &:after {
                 margin-left: 5px;
                 @include o-caret-down;
-            }
-        }
-
-        .o_dropdown_more {
-
-            .oe_stat_button {
-                height: auto;
-                width: 100%;
-                border: none;
-                padding-top: map-get($spacers, 2);
-                padding-bottom: map-get($spacers, 2);
             }
         }
     }
@@ -167,5 +156,16 @@
 
     .o_pie_value {
         @extend %-stat-button-value;
+    }
+}
+
+.o_dropdown_more {
+
+    .oe_stat_button {
+        height: auto;
+        width: 100%;
+        border: none;
+        padding-top: map-get($spacers, 2);
+        padding-bottom: map-get($spacers, 2);
     }
 }
