@@ -34,8 +34,19 @@ class ProductProduct(models.Model):
     def _website_show_quick_add(self):
         return (self.allow_out_of_stock_order or not self._is_sold_out()) and super()._website_show_quick_add()
 
-    def _send_availability_email(self):
-        for product in self.search([('stock_notification_partner_ids', '!=', False)]):
+    def _send_availability_email(self, batch_size=100):
+        """ Send an email to the partners who asked to be notified when the product is back in stock. """
+        products = self.search([('stock_notification_partner_ids', '!=', False)], limit=batch_size)
+        products_count = len(products) if len(products) < batch_size else self.search_count([('stock_notification_partner_ids', '!=', False)])
+        ids_done = set()
+
+        def post_send_callback(ids):
+            """ Track mail ids that have been sent, and notify cron progress accordingly. """
+            ids_done.update(ids)
+            done = len(ids_done)
+            self.env['ir.cron']._notify_progress(done=done, remaining=products_count - done)
+
+        for product in products:
             if product._is_sold_out():
                 continue
             for partner in product.stock_notification_partner_ids:
@@ -59,5 +70,5 @@ class ProductProduct(models.Model):
                 del context
 
                 mail = self_ctxt.env['mail.mail'].sudo().create(mail_values)
-                mail.send(raise_exception=False)
+                mail.send(raise_exception=False, post_send_callback=post_send_callback)
                 product.stock_notification_partner_ids -= partner
