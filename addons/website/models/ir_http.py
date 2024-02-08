@@ -250,7 +250,7 @@ class Http(models.AbstractModel):
     def _get_default_lang(cls):
         if getattr(request, 'is_frontend', True):
             website = request.env['website'].sudo().get_current_website()
-            return request.env['res.lang'].browse([website._get_cached('default_lang_id')])
+            return request.env['res.lang']._get_data(id=website._get_cached('default_lang_id'))
         return super()._get_default_lang()
 
     @classmethod
@@ -387,7 +387,7 @@ class Http(models.AbstractModel):
             'is_website_user': request.env.user.id == request.website.user_id.id,
             'geoip_country_code': geoip_country_code,
             'geoip_phone_code': geoip_phone_code,
-            'lang_url_code': request.lang._get_cached('url_code'),
+            'lang_url_code': request.lang.url_code,
         })
         if request.env.user.has_group('website.group_website_restricted_editor'):
             session_info.update({

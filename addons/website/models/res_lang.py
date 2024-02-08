@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models, tools, _
+from odoo import models, tools, _
+from odoo.addons.base.models.res_lang import LangDataDict, LangData
 from odoo.exceptions import UserError
 from odoo.http import request
 
@@ -14,11 +15,15 @@ class Lang(models.Model):
                 raise UserError(_("Cannot deactivate a language that is currently used on a website."))
         return super(Lang, self).write(vals)
 
-    @api.model
     @tools.ormcache_context(keys=("website_id",))
-    def get_frontend_langs(self):
+    def _get_frontend(self) -> LangDataDict:
+        """ Return the available languages for current request
+        :return: LangDataDict({code: LangData})
+        """
         if request and getattr(request, 'is_frontend', True):
-            langs = self.env['website'].get_current_website().language_ids.get_sorted()
+            lang_ids = self.env['website'].get_current_website().language_ids.sorted('name').ids
+            ResLang = self.env['res.lang']
+            langs = [dict(ResLang._get_data(id=id_)) for id_ in lang_ids]
             # if only one region for a language, use only the language code
             shorts = [lang['code'].split('_')[0] for lang in langs]
             for lang, short in zip(langs, shorts):
@@ -26,8 +31,8 @@ class Lang(models.Model):
                     lang['hreflang'] = short
                 else:
                     lang['hreflang'] = lang['code'].lower().replace('_', '-')
-            return langs
-        return super().get_frontend_langs()
+            return LangDataDict({lang['code']: LangData(lang) for lang in langs})
+        return super()._get_frontend()
 
     def action_activate_langs(self):
         """
