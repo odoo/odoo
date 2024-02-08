@@ -130,6 +130,7 @@ class ProductTemplate(models.Model):
     def _onchange_type(self):
         res = super(ProductTemplate, self)._onchange_type()
         if self._origin and self.sales_count > 0:
+            self.detailed_type = self._origin.detailed_type
             res['warning'] = {
                 'title': _("Warning"),
                 'message': _("You cannot change the product's type because it is already used in sales orders.")

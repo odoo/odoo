@@ -37,6 +37,7 @@ class ProductProduct(models.Model):
     @api.onchange('type')
     def _onchange_type(self):
         if self._origin and self.sales_count > 0:
+            self.detailed_type = self._origin.detailed_type
             return {'warning': {
                 'title': _("Warning"),
                 'message': _("You cannot change the product's type because it is already used in sales orders.")
