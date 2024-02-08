@@ -87,6 +87,11 @@ class MailNotification(models.Model):
         ]
         return self.search(domain).unlink()
 
+    @api.autovacuum
+    def _gc_notifications_all(self, max_age_days=365):
+        domain = [('mail_message_id.create_date', '<', fields.Datetime.now() - relativedelta(days=max_age_days))]
+        self.sudo().search(domain).unlink()
+
     # ------------------------------------------------------------
     # TOOLS
     # ------------------------------------------------------------
