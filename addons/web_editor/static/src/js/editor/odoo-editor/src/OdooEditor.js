@@ -3899,6 +3899,9 @@ export class OdooEditor extends EventTarget {
         let appliedCustomSelection = false;
         if (selection.rangeCount && selection.getRangeAt(0)) {
             appliedCustomSelection = this._handleSelectionInTable();
+            if (!appliedCustomSelection) {
+                this.deselectTable();
+            }
 
             // Handle selection/navigation at the edges of links.
             const link = getInSelection(this.document, EDITABLE_LINK_SELECTOR);
