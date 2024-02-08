@@ -19,6 +19,6 @@ export class TModelInput extends Component {
     }
     setValue(newValue, tModel = this.props.tModel) {
         const [obj, key] = tModel;
-        obj[key] = newValue;
+        obj[key] = isNaN(newValue) ? 0 : newValue;
     }
 }
