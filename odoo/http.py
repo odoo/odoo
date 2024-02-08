@@ -1771,30 +1771,35 @@ class Request:
         request to ``_serve_ir_http``.
         """
         try:
-            registry = Registry(self.db)
-        except (AttributeError, psycopg2.OperationalError, psycopg2.ProgrammingError):
-            # psycopg2 error or attribute error while constructing
-            # the registry. That means either
-            #  - the database probably does not exists anymore, or
-            #  - the database is corrupted, or
-            #  - the database version doesn't match the server version.
-            # So remove the database from the cookie
-            self.db = None
-            self.session.db = ModuleNotFoundError
-            root.session_store.save(self.session)
-            if request.httprequest.path == '/web':
-                # Internal Server Error
-                raise
-            else:
-                return self._serve_nodb()
-
-        rule = None
-        with contextlib.closing(registry.cursor(readonly=True)) as cr:
-            self.registry = registry.check_signaling(cr)
+            rule = None
+            cr = None
+            try:
+                registry = Registry(self.db)
+                cr = registry.cursor(readonly=True)
+                self.registry = registry.check_signaling(cr)
+            except (AttributeError, psycopg2.OperationalError, psycopg2.ProgrammingError):
+                # psycopg2 error or attribute error while constructing
+                # the registry. That means either
+                #  - the database probably does not exists anymore, or
+                #  - the database is corrupted, or
+                #  - the database version doesn't match the server version.
+                # So remove the database from the cookie
+                self.db = None
+                self.session.db = None
+                root.session_store.save(self.session)
+                if request.httprequest.path == '/web':
+                    # Internal Server Error
+                    raise
+                else:
+                    return self._serve_nodb()
             ir_http = self.registry['ir.http']
             self.env = odoo.api.Environment(cr, self.session.uid, self.session.context)
             with contextlib.suppress(NotFound):
                 rule, args = ir_http._match(self.httprequest.path)
+        finally:
+            if cr is not None:
+                cr.close()
+
         if not rule:
             # _serve_fallback can be readwrite in some rare case, imagine a website.page were the qweb contains insert/update
             # could be interresting to add a field on website.page to define if it is read/write or not and maybe retry just this part or open another cursor?

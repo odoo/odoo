@@ -1,6 +1,7 @@
 # -*- encoding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import logging
 import operator
 import re
 import secrets
@@ -10,6 +11,7 @@ from unittest.mock import patch
 import requests
 
 import odoo
+from odoo.modules.registry import Registry
 from odoo.tests.common import BaseCase, HttpCase, tagged
 from odoo.tools import config
 
@@ -183,3 +185,96 @@ class TestDatabaseOperations(BaseCase):
             ).raise_for_status()
         self.assertDbs([test_db_name])
         self.url_open_drop(test_db_name)
+
+
+    def test_database_http_registries(self):
+        # This test is about dropping a connection inside one worker and
+        # make sure that the other workers behave correctly.
+
+        #
+        # Setup
+        #
+
+        # duplicate this database
+        test_db_name = self.db_name + '-test-database-duplicate'
+        res = self.session.post(self.url('/web/database/duplicate'), data={
+            'master_pwd': self.password,
+            'name': self.db_name,
+            'new_name': test_db_name,
+        }, allow_redirects=False)
+
+        # get a registry and a cursor on that new database
+        registry = Registry(test_db_name)
+        cr = registry.cursor()
+        self.assertIn(test_db_name, Registry.registries)
+
+        # delete the created database but keep the cursor
+        with patch('odoo.sql_db.close_db') as close_db:
+            res = self.url_open_drop(test_db_name)
+        close_db.assert_called_once_with(test_db_name)
+
+        # simulate that some customers were connected to that dropped db
+        session_store = odoo.http.root.session_store
+        session = session_store.new()
+        session.update(odoo.http.get_default_session(), db=test_db_name)
+        session.context['lang'] = odoo.http.DEFAULT_LANG
+        self.session.cookies['session_id'] = session.sid
+
+        # make it possible to inject the registry back
+        patcher = patch.dict(Registry.registries.d, {test_db_name: registry})
+        registries = patcher.start()
+        self.addCleanup(patcher.stop)
+
+        #
+        # Tests
+        #
+
+        # The other worker doesn't have a registry in its LRU cache for
+        # that session database.
+        with self.subTest(msg="Registry.init() fails"):
+            session_store.save(session)
+            registries.pop('test_db_name', None)
+            with self.assertLogs('odoo.sql_db', logging.INFO) as capture:
+                res = self.session.get(self.url('/web/health'))
+            self.assertEqual(res.status_code, 200)
+            self.assertEqual(session_store.get(session.sid)['db'], None)
+            self.assertEqual(capture.output, [
+                "INFO:odoo.sql_db:Connection to the database failed",
+            ])
+
+
+        # The other worker has a registry in its LRU cache for that
+        # session database. But it doesn't have a connection to the sql
+        # database.
+        with self.subTest(msg="Registry.cursor() fails"):
+            session_store.save(session)
+            registries[test_db_name] = registry
+            with self.assertLogs('odoo.sql_db', logging.INFO) as capture, \
+                 patch.object(Registry, '__new__', return_value=registry):
+                res = self.session.get(self.url('/web/health'))
+            self.assertEqual(res.status_code, 200)
+            self.assertEqual(session_store.get(session.sid)['db'], None)
+            self.assertEqual(capture.output, [
+                "INFO:odoo.sql_db:Connection to the database failed",
+            ])
+
+        # The other worker has a registry in its LRU cache for that
+        # session database. It also has a (now broken) connection to the
+        # sql database.
+        with self.subTest(msg="Registry.check_signaling() fails"):
+            session_store.save(session)
+            registries[test_db_name] = registry
+            with self.assertLogs('odoo.sql_db', logging.ERROR) as capture, \
+                 patch.object(Registry, '__new__', return_value=registry), \
+                 patch.object(Registry, 'cursor', return_value=cr):
+                res = self.session.get(self.url('/web/health'))
+            self.assertEqual(res.status_code, 200)
+            self.assertEqual(session_store.get(session.sid)['db'], None)
+            self.maxDiff = None
+            self.assertRegex(capture.output[0], (
+                r"^ERROR:odoo\.sql_db:bad query:(?s:.*?)"
+                r"ERROR: terminating connection due to administrator command\s+"
+                r"server closed the connection unexpectedly\s+"
+                r"This probably means the server terminated abnormally\s+"
+                r"before or while processing the request\.$"
+            ))
