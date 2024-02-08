@@ -3,7 +3,7 @@ import { tick } from "@odoo/hoot-mock";
 
 import { Deferred, Mutex, KeepLast, Race } from "@web/core/utils/concurrency";
 
-describe`headless`("Deferred", () => {
+describe.tags("headless")("Deferred", () => {
     test("basic use", async () => {
         const def1 = new Deferred();
         def1.then((v) => expect.step(`ok (${v})`));
@@ -19,7 +19,7 @@ describe`headless`("Deferred", () => {
     });
 });
 
-describe`headless`("Mutex", () => {
+describe.tags("headless")("Mutex", () => {
     test("simple scheduling", async () => {
         const mutex = new Mutex();
         const def1 = new Deferred();
@@ -125,7 +125,7 @@ describe`headless`("Mutex", () => {
     });
 });
 
-describe`headless`("KeepLast", () => {
+describe.tags("headless")("KeepLast", () => {
     test("basic use", async () => {
         const keepLast = new KeepLast();
         const def = new Deferred();
@@ -191,7 +191,7 @@ describe`headless`("KeepLast", () => {
     });
 });
 
-describe`headless`("Race", () => {
+describe.tags("headless")("Race", () => {
     test("basic use", async () => {
         const race = new Race();
         const def = new Deferred();

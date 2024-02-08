@@ -8,7 +8,7 @@ beforeEach(async () => {
     await makeMockEnv(); // To start the localization service
 });
 
-test`headless`("formatCurrency", async () => {
+test.tags("headless")("formatCurrency", async () => {
     patchWithCleanup(currencies, {
         10: {
             digits: [69, 2],
@@ -41,7 +41,7 @@ test`headless`("formatCurrency", async () => {
     });
 });
 
-test`headless`("formatCurrency without currency", async () => {
+test.tags("headless")("formatCurrency without currency", async () => {
     patchWithCleanup(session, {
         currencies: {},
     });

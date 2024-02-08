@@ -89,7 +89,7 @@ function createGenericExtension() {
     };
 }
 
-test`headless`("one patch/unpatch", () => {
+test.tags("headless")("one patch/unpatch", () => {
     new BaseClass().fn();
     expect(["base.setup", "base.fn"]).toVerifySteps();
 
@@ -102,7 +102,7 @@ test`headless`("one patch/unpatch", () => {
     expect(["base.setup", "base.fn"]).toVerifySteps();
 });
 
-test`headless`("two patch/unpatch (unpatch 1 > 2)", () => {
+test.tags("headless")("two patch/unpatch (unpatch 1 > 2)", () => {
     new BaseClass().fn();
     expect(["base.setup", "base.fn"]).toVerifySteps();
 
@@ -130,7 +130,7 @@ test`headless`("two patch/unpatch (unpatch 1 > 2)", () => {
     expect(["base.setup", "base.fn"]).toVerifySteps();
 });
 
-test`headless`("two patch/unpatch (unpatch 2 > 1)", () => {
+test.tags("headless")("two patch/unpatch (unpatch 2 > 1)", () => {
     new BaseClass().fn();
     expect(["base.setup", "base.fn"]).toVerifySteps();
 
@@ -158,7 +158,7 @@ test`headless`("two patch/unpatch (unpatch 2 > 1)", () => {
     expect(["base.setup", "base.fn"]).toVerifySteps();
 });
 
-test`headless`("patch for specialization", () => {
+test.tags("headless")("patch for specialization", () => {
     let args = [];
     class A {
         constructor() {
@@ -180,7 +180,7 @@ test`headless`("patch for specialization", () => {
     unpatch();
 });
 
-test`headless`("instance fields", () => {
+test.tags("headless")("instance fields", () => {
     const unpatch = patch(BaseClass.prototype, {
         setup() {
             super.setup();
@@ -203,7 +203,7 @@ test`headless`("instance fields", () => {
     expect(instance.obj).toEqual({ base: "base", patch: "patch" });
 });
 
-test`headless`("call instance method defined in patch", () => {
+test.tags("headless")("call instance method defined in patch", () => {
     const instance = new BaseClass();
     expect(["base.setup"]).toVerifySteps();
     expect(instance.f).not.toBeTruthy();
@@ -221,7 +221,7 @@ test`headless`("call instance method defined in patch", () => {
     expect(instance.f).not.toBeTruthy();
 });
 
-test`headless`("class methods", () => {
+test.tags("headless")("class methods", () => {
     BaseClass.staticFn();
     expect(["base.staticFn"]).toVerifySteps();
 
@@ -234,7 +234,7 @@ test`headless`("class methods", () => {
     expect(["base.staticFn"]).toVerifySteps();
 });
 
-test`headless`("class fields", () => {
+test.tags("headless")("class fields", () => {
     expect(BaseClass.staticStr).toBe("base");
     expect(BaseClass.staticArr).toEqual(["base"]);
     expect(BaseClass.staticObj).toEqual({ base: "base" });
@@ -250,7 +250,7 @@ test`headless`("class fields", () => {
     expect(BaseClass.staticObj).toEqual({ base: "base" });
 });
 
-test`headless`("lazy patch", () => {
+test.tags("headless")("lazy patch", () => {
     const instance = new BaseClass();
     const unpatch = applyGenericPatch(BaseClass, "patch");
     instance.fn();
@@ -261,7 +261,7 @@ test`headless`("lazy patch", () => {
     expect(["base.fn"]).toVerifySteps();
 });
 
-test`headless`("getter", () => {
+test.tags("headless")("getter", () => {
     const instance = new BaseClass();
     expect(["base.setup"]).toVerifySteps();
     expect(instance.dynamic).toBe("base");
@@ -277,7 +277,7 @@ test`headless`("getter", () => {
     expect(instance.dynamic).toBe("base");
 });
 
-test`headless`("setter", () => {
+test.tags("headless")("setter", () => {
     const instance = new BaseClass();
     expect(["base.setup"]).toVerifySteps();
     expect(instance.dynamic).toBe("base");
@@ -299,7 +299,7 @@ test`headless`("setter", () => {
     expect(instance.dynamic).toBe("3");
 });
 
-test`headless`("patch getter/setter with value", () => {
+test.tags("headless")("patch getter/setter with value", () => {
     const originalDescriptor = Object.getOwnPropertyDescriptor(BaseClass.prototype, "dynamic");
 
     const unpatch = patch(BaseClass.prototype, { dynamic: "patched" });
@@ -321,7 +321,7 @@ test`headless`("patch getter/setter with value", () => {
     expect(instance.dynamic).toBe("base");
 });
 
-test`headless`("async function", async () => {
+test.tags("headless")("async function", async () => {
     const instance = new BaseClass();
     instance.str = "async1";
     await instance.asyncFn();
@@ -338,7 +338,7 @@ test`headless`("async function", async () => {
     expect(["base.async3"]).toVerifySteps();
 });
 
-test`headless`("async function (multiple patches)", async () => {
+test.tags("headless")("async function (multiple patches)", async () => {
     const instance = new BaseClass();
     instance.str = "async1";
     await instance.asyncFn();
@@ -357,7 +357,7 @@ test`headless`("async function (multiple patches)", async () => {
     expect(["base.async3"]).toVerifySteps();
 });
 
-test`headless`("call another super method", () => {
+test.tags("headless")("call another super method", () => {
     new BaseClass();
     expect(["base.setup"]).toVerifySteps();
 
@@ -379,7 +379,7 @@ test`headless`("call another super method", () => {
     expect(["base.setup"]).toVerifySteps();
 });
 
-describe`headless`("inheritance", () => {
+describe.tags("headless")("inheritance", () => {
     test("extend > patch base > unpatch base", () => {
         const Extension = createGenericExtension();
         new Extension().fn();
@@ -819,7 +819,7 @@ describe`headless`("inheritance", () => {
     });
 });
 
-describe`headless`("other", () => {
+describe.tags("headless")("other", () => {
     test("patch an object", () => {
         const obj = {
             var: "obj",

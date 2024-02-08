@@ -65,7 +65,7 @@ describe(parseUrl(import.meta.url), () => {
         runner.describe("suite", () => {
             let testFn = runner.test.debug.only.skip;
             for (let i = 1; i <= 10; i++) {
-                testFn = testFn`Tag-${i}`;
+                testFn = testFn.tags`Tag-${i}`;
             }
 
             testFn("tagged test", () => {});

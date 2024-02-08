@@ -2820,7 +2820,7 @@ test("not use a many2one as a measure by default", async () => {
     expect(queryAllTexts(".o-dropdown--menu .o_menu_item")).toEqual(["Foo", "Revenue", "Count"]);
 });
 
-test`desktop`("graph view crash when moving from search view using Down key", async () => {
+test.tags("desktop")("graph view crash when moving from search view using Down key", async () => {
     await mountView({ type: "graph", resModel: "foo" });
 
     await contains(".o_searchview input").press("ArrowDown");
@@ -3409,7 +3409,7 @@ test("empty graph view without sample data after filter", async () => {
     expect(".o_view_nocontent").toHaveCount(1);
 });
 
-test`desktop`("reload chart with switchView button keep internal state", async () => {
+test.tags("desktop")("reload chart with switchView button keep internal state", async () => {
     Foo._views.list = /* xml */ `<list />`;
 
     await mountWithCleanup(WebClient);

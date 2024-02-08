@@ -181,7 +181,7 @@ class Users extends models.Model {
 
 defineModels([Partner, PartnerType, Product, Turtle, Users]);
 
-test`desktop`("many2many kanban: edition", async () => {
+test.tags("desktop")("many2many kanban: edition", async () => {
     expect.assertions(24);
 
     onRpc("web_save", (_route, { args, model }) => {

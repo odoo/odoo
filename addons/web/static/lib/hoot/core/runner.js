@@ -931,6 +931,7 @@ export class TestRunner {
          *  readonly debug: typeof taggedFn;
          *  readonly only: typeof taggedFn;
          *  readonly skip: typeof taggedFn;
+         *  readonly tags: typeof tags;
          *  readonly todo: typeof taggedFn;
          * }} TaggedFunction
          */
@@ -942,6 +943,7 @@ export class TestRunner {
          * - `multi`: sets the number of times the current test/suite will be run.
          *
          * @param  {...JobConfig} configs
+         * @returns {TaggedFunction}
          * @example
          *  // Will timeout each of its tests after 10 seconds
          *  describe.config({ timeout: 10_000 })("Expensive tests", () => { ... });
@@ -955,13 +957,32 @@ export class TestRunner {
             return taggedFn;
         };
 
+        /**
+         * Adds tags to the current test/suite.
+         *
+         * Tags can be a string, a list of strings, or a spread of strings.
+         *
+         * @param  {...(string | Iterable<string>)} tags
+         * @returns {TaggedFunction}
+         * @example
+         *  // Will be tagged with "desktop" and "ui"
+         *  test.tags("desktop", "ui")("my test", () => { ... });
+         *  test.tags(["desktop", "ui"])("my test", () => { ... });
+         * @example
+         *  test.tags`mobile,ui`("my mobile test", () => { ... });
+         */
+        const tags = (...tags) => {
+            if (tags[0]?.raw) {
+                tags = String.raw(...tags).split(/\s*,\s*/g);
+            }
+
+            currentConfig.tags.push(...tags.flatMap(ensureArray));
+
+            return taggedFn;
+        };
+
         /** @type {TaggedFunction} */
         const taggedFn = (...args) => {
-            if (args[0]?.raw) {
-                const tagString = String.raw(...args);
-                currentConfig.tags.push(...tagString.split(/\s+/g));
-                return taggedFn;
-            }
             const jobConfig = { ...currentConfig };
             currentConfig = { tags: [] };
             return fn.call(this, jobConfig, ...args);
@@ -970,10 +991,11 @@ export class TestRunner {
         let currentConfig = { tags: [] };
         Object.defineProperties(taggedFn, {
             config: { value: config },
-            debug: { get: () => taggedFn`debug` },
-            only: { get: () => taggedFn`only` },
-            skip: { get: () => taggedFn`skip` },
-            todo: { get: () => taggedFn`todo` },
+            debug: { get: () => tags("debug") },
+            only: { get: () => tags("only") },
+            skip: { get: () => tags("skip") },
+            tags: { get: () => tags },
+            todo: { get: () => tags("todo") },
         });
 
         return taggedFn;

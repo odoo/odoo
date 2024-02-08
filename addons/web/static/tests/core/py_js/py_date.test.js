@@ -27,7 +27,7 @@ const formatDateTime = (d) => {
     return `${formatDate(d)} ${h}:${m}:${s}`;
 };
 
-describe`headless`("time", () => {
+describe.tags("headless")("time", () => {
     test("strftime", () => {
         expect(check("time.strftime('%Y')", (d) => String(d.getFullYear()))).toBe(true);
         expect(
@@ -37,7 +37,7 @@ describe`headless`("time", () => {
     });
 });
 
-describe`headless`("datetime.datetime", () => {
+describe.tags("headless")("datetime.datetime", () => {
     test("datetime.datetime.now", () => {
         expect(check("datetime.datetime.now().year", (d) => d.getFullYear())).toBe(true);
         expect(check("datetime.datetime.now().month", (d) => d.getMonth() + 1)).toBe(true);
@@ -124,7 +124,7 @@ describe`headless`("datetime.datetime", () => {
     });
 });
 
-describe`headless`("datetime.date", () => {
+describe.tags("headless")("datetime.date", () => {
     test("datetime.date.today", () => {
         expect(check("(datetime.date.today()).strftime('%Y-%m-%d')", formatDate)).toBe(true);
     });
@@ -199,7 +199,7 @@ describe`headless`("datetime.date", () => {
     });
 });
 
-describe`headless`("datetime.time", () => {
+describe.tags("headless")("datetime.time", () => {
     test("various operations", () => {
         const expr1 = "datetime.time(hour=3,minute=2. second=1).strftime('%H:%M:%S')";
         expect(evaluateExpr(expr1)).toBe("03:02:01");
@@ -221,7 +221,7 @@ describe`headless`("datetime.time", () => {
     });
 });
 
-describe`headless`("relativedelta relative : period is plural", () => {
+describe.tags("headless")("relativedelta relative : period is plural", () => {
     test("adding date and relative delta", () => {
         const expr1 =
             "(datetime.date(day=3,month=4,year=2001) + relativedelta(days=-1)).strftime('%Y-%m-%d')";
@@ -279,7 +279,7 @@ describe`headless`("relativedelta relative : period is plural", () => {
     });
 });
 
-describe`headless`("relativedelta absolute : period is singular", () => {
+describe.tags("headless")("relativedelta absolute : period is singular", () => {
     test("throws when period negative", () => {
         const expr1 = "relativedelta(day=-1)";
         expect(() => evaluateExpr(expr1)).toThrow("day -1 is out of range");
@@ -336,7 +336,7 @@ describe`headless`("relativedelta absolute : period is singular", () => {
     });
 });
 
-describe`headless`("relative delta weekday", () => {
+describe.tags("headless")("relative delta weekday", () => {
     test("add or substract weekday", () => {
         const expr1 =
             "(datetime.date(day=3,month=4,year=2001) - relativedelta(day=1, weekday=3)).strftime('%Y-%m-%d')";
@@ -372,7 +372,7 @@ describe`headless`("relative delta weekday", () => {
     });
 });
 
-describe`headless`("relative delta yearday nlyearday", () => {
+describe.tags("headless")("relative delta yearday nlyearday", () => {
     test("yearday", () => {
         const expr1 =
             "(datetime.date(day=3,month=4,year=2001) - relativedelta(year=2000, yearday=60)).strftime('%Y-%m-%d')";
@@ -398,7 +398,7 @@ describe`headless`("relative delta yearday nlyearday", () => {
     });
 });
 
-describe`headless`("misc", () => {
+describe.tags("headless")("misc", () => {
     test("context_today", () => {
         expect(check("context_today().strftime('%Y-%m-%d')", formatDate)).toBe(true);
     });

@@ -143,7 +143,7 @@ const FULL_HTML_TEMPLATE = /* html */ `
     `;
 const SVG_URL = "http://www.w3.org/2000/svg";
 
-describe`ui`(parseUrl(import.meta.url), () => {
+describe.tags("ui")(parseUrl(import.meta.url), () => {
     test.todo("should crash", async () => {
         expect().toBeFalsy();
     });

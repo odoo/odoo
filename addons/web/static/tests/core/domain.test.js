@@ -8,7 +8,7 @@ import { PyDate } from "@web/core/py_js/py_date";
 // Basic properties
 //-------------------------------------------------------------------------
 
-describe`headless`("Basic Properties", () => {
+describe.tags("headless")("Basic Properties", () => {
     test("empty", () => {
         expect(new Domain([]).contains({})).toBe(true);
         expect(new Domain([]).toString()).toBe("[]");
@@ -404,7 +404,7 @@ describe`headless`("Basic Properties", () => {
 // ---------------------------------------------------------------------------
 // Normalization
 // ---------------------------------------------------------------------------
-describe`headless`("Normalization", () => {
+describe.tags("headless")("Normalization", () => {
     test("return simple (normalized) domains", () => {
         const domains = ["[]", `[("a", "=", 1)]`, `["!", ("a", "=", 1)]`];
         for (const domain of domains) {
@@ -428,7 +428,7 @@ describe`headless`("Normalization", () => {
 // ---------------------------------------------------------------------------
 // Combining domains
 // ---------------------------------------------------------------------------
-describe`headless`("Combining domains", () => {
+describe.tags("headless")("Combining domains", () => {
     test("combining zero domain", () => {
         expect(Domain.combine([], "AND").toString()).toBe("[]");
         expect(Domain.combine([], "OR").toString()).toBe("[]");
@@ -494,7 +494,7 @@ describe`headless`("Combining domains", () => {
 // ---------------------------------------------------------------------------
 // OPERATOR AND / OR / NOT
 // ---------------------------------------------------------------------------
-describe`headless`("Operator and - or - not", () => {
+describe.tags("headless")("Operator and - or - not", () => {
     test("combining two domains with and/or", () => {
         expect(Domain.and([`[("a", "=", 1)]`, "[]"]).toString()).toBe(`[("a", "=", 1)]`);
         expect(Domain.and([`[("a", "=", 1)]`, []]).toString()).toBe(`[("a", "=", 1)]`);
@@ -540,7 +540,7 @@ describe`headless`("Operator and - or - not", () => {
     });
 });
 
-describe`headless`("Remove domain leaf", () => {
+describe.tags("headless")("Remove domain leaf", () => {
     test("Remove leaf in domain.", () => {
         let domain = [
             ["start_datetime", "!=", false],
