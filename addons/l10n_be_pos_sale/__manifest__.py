@@ -7,7 +7,7 @@
     'category': 'Hidden',
     'sequence': 6,
     'summary': 'Link module between pos_sale and l10n_be',
-    'depends': ['pos_sale', 'l10n_be'],
+    'depends': ['pos_sale', 'l10n_be_account'],
     'auto_install': True,
     'assets': {
         'point_of_sale._assets_pos': [
