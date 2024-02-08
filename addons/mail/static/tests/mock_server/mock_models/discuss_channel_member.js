@@ -1,7 +1,6 @@
 /** @odoo-module */
 
-import { fields, models } from "@web/../tests/web_test_helpers";
-import { session } from "@web/session";
+import { constants, fields, models } from "@web/../tests/web_test_helpers";
 
 export class DiscussChannelMember extends models.ServerModel {
     _name = "discuss.channel.member";
@@ -53,7 +52,7 @@ export class DiscussChannelMember extends models.ServerModel {
                 is_minimized: foldState !== "closed",
             };
             this.write([memberOfCurrentUser.id], vals);
-            const [partner] = this.env["res.partner"].read(session.partner_id);
+            const [partner] = this.env["res.partner"].read(constants.PARTNER_ID);
             this.env["bus.bus"]._sendone(partner, "discuss.Thread/fold_state", {
                 foldStateCount: state_count,
                 id: channel.id,
@@ -113,7 +112,7 @@ export class DiscussChannelMember extends models.ServerModel {
         const guest = this.env["mail.guest"]._getGuestFromContext();
         return this.search_read([
             ["channel_id", "=", channelId],
-            guest ? ["guest_id", "=", guest.id] : ["partner_id", "=", session.partner_id],
+            guest ? ["guest_id", "=", guest.id] : ["partner_id", "=", constants.PARTNER_ID],
         ])[0];
     }
 }
