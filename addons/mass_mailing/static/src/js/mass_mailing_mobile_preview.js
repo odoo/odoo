@@ -10,7 +10,7 @@ export class MassMailingMobilePreviewDialog extends Component {
     static template = "mass_mailing.MobilePreviewDialog";
     static props = {
         title: { type: String },
-        preview: { type: Function },
+        preview: { type: String },
         close: Function,
     };
 
