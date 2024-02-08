@@ -316,3 +316,13 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
             res = message.portal_message_format(options={'rating_include': True})
 
         self.assertEqual(len(res), 1)
+
+    def test_portal_message_format_single_rating(self):
+        record_rating = self.record_ratings[0]
+        mail_record = self.env['mail.message'].create([{
+            'model': record_rating._name,
+            'res_id': record_rating.id,
+        } for x in range(10)])
+
+        with self.assertQueryCount(default=19):
+            mail_record.portal_message_format({'allow_composer': 1, 'rating_include': True})
