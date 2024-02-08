@@ -120,6 +120,7 @@
                                         required="free_over"/>
                             </div>
                             <field name="product_id" context="{'default_detailed_type': 'service', 'default_sale_ok': False, 'default_purchase_ok': False, 'default_invoice_policy': 'order'}" />
+                            <field name="tracking_url" placeholder="i.e. https://ekartlogistics.com/shipmenttrack/&lt;shipmenttrackingnumber&gt;" invisible="delivery_type not in ('fixed', 'base_on_rule')"/>
                             <field name="invoice_policy" widget="radio" invisible="delivery_type in ('fixed', 'base_on_rule') or integration_level == 'rate'"/>
                             <field name="supports_shipping_insurance" invisible="1"/>
                             <label for="shipping_insurance" String="Shipping Insurance" invisible="not supports_shipping_insurance"/>

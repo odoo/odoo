@@ -244,6 +244,8 @@ class DeliveryCarrier(models.Model):
         return res
 
     def fixed_get_tracking_link(self, picking):
+        if self.tracking_url and picking.carrier_tracking_ref:
+            return self.tracking_url.lower().replace("<shipmenttrackingnumber>", picking.carrier_tracking_ref)
         return False
 
     def fixed_cancel_shipment(self, pickings):
@@ -264,6 +266,8 @@ class DeliveryCarrier(models.Model):
         return res
 
     def base_on_rule_get_tracking_link(self, picking):
+        if self.tracking_url and picking.carrier_tracking_ref:
+            return self.tracking_url.lower().replace("<shipmenttrackingnumber>", picking.carrier_tracking_ref)
         return False
 
     def base_on_rule_cancel_shipment(self, pickings):
