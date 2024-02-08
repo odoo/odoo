@@ -277,9 +277,6 @@ class Lang(models.Model):
         """ Return the given language code if active, else return ``False`` """
         return self._get_data(code=code).code
 
-    def _get_cached(self, field: str):
-        return self._get_active_by('id')[self.id].get(field)
-
     @api.model
     def get_installed(self) -> list[tuple[str, str]]:
         """ Return installed languages' (code, name) pairs sorted by name. """

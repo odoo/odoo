@@ -1431,7 +1431,7 @@ class Website(models.Model):
         # the language in the path. It is important to also test the domain of
         # the current URL.
         current_url = request.httprequest.url_root[:-1] + request.httprequest.environ['REQUEST_URI']
-        canonical_url = url_localized(lang_code=request.lang._get_cached('code'), canonical_domain=self.get_base_url())
+        canonical_url = url_localized(lang_code=request.lang.code, canonical_domain=self.get_base_url())
         # A request path with quotable characters (such as ",") is never
         # canonical because request.httprequest.base_url is always unquoted,
         # and canonical url is always quoted, so it is never possible to tell

@@ -78,20 +78,20 @@
            t-nocache-_dropdown_menu_class="_dropdown_menu_class">
             <t t-set="language_selector_visible" t-value="len(frontend_languages) &gt; 1"/>
             <div t-attf-class="js_language_selector #{_div_classes} d-print-none" t-if="language_selector_visible">
-                <t t-set="active_lang" t-value="list(filter(lambda lg : lg['code'] == lang, frontend_languages))[0]"/>
+               <t t-set="active_lang" t-value="frontend_languages[lang]"/>
                 <button t-attf-class="btn border-0 dropdown-toggle #{_btn_class or 'btn-sm btn-outline-secondary'}" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                     <span t-if="not no_text"
                             t-attf-class="#{_txt_class}"
-                            t-esc="active_lang['name'].split('/').pop()"/>
-                    <span t-elif="codes" class="align-middle" t-esc="active_lang['url_code'].split('_').pop(0).upper()"/>
+                            t-esc="active_lang.name.split('/').pop()"/>
+                    <span t-elif="codes" class="align-middle" t-esc="active_lang.url_code.split('_').pop(0).upper()"/>
                 </button>
                 <div t-attf-class="dropdown-menu #{_dropdown_menu_class}" role="menu">
-                    <t t-foreach="frontend_languages" t-as="lg">
-                        <a class="dropdown-item" t-att-href="url_localized(lang_code=lg['code'], prefetch_langs=True, force_default_lang=True)"
+                    <t t-foreach="frontend_languages.values()" t-as="lg">
+                        <a class="dropdown-item" t-att-href="url_localized(lang_code=lg.code, prefetch_langs=True, force_default_lang=True)"
                         t-attf-class="dropdown-item js_change_lang #{active_lang == lg and 'active'}"
-                        t-att-data-url_code="lg['url_code']" t-att-title="lg['name'].split('/').pop()">
-                            <span t-if="not no_text" t-esc="lg['name'].split('/').pop()" t-attf-class="#{_txt_class}"/>
-                            <span t-elif="codes" t-esc="lg['url_code'].split('_').pop(0).upper()" t-attf-class="align-middle #{_txt_class}"/>
+                        t-att-data-url_code="lg.url_code" t-att-title="lg.name.split('/').pop()">
+                            <span t-if="not no_text" t-esc="lg.name.split('/').pop()" t-attf-class="#{_txt_class}"/>
+                            <span t-elif="codes" t-esc="lg.url_code.split('_').pop(0).upper()" t-attf-class="align-middle #{_txt_class}"/>
                         </a>
                     </t>
                 </div>

@@ -128,10 +128,10 @@
         <!-- `alternate`/`canonical` mainly useful to crawlers/bots/SEO tools, which test the website as public user -->
         <!-- no hreflang on non-canonical pages or if no alternate language -->
         <t t-if="request and request.is_frontend_multilang and website and website.is_public_user() and website._is_canonical_url() and len(frontend_languages) &gt; 1">
-            <t t-foreach="frontend_languages" t-as="lg">
-        <link rel="alternate" t-att-hreflang="lg['hreflang']" t-att-href="url_localized(lang_code=lg['code'], prefetch_langs=True, canonical_domain=canonical_domain)"/>
+            <t t-foreach="frontend_languages.values()" t-as="lg">
+        <link rel="alternate" t-att-hreflang="lg.hreflang" t-att-href="url_localized(lang_code=lg.code, prefetch_langs=True, canonical_domain=canonical_domain)"/>
             </t>
-        <link rel="alternate" hreflang="x-default" t-att-href="url_localized(lang_code=website.default_lang_id._get_data(code='code'), canonical_domain=canonical_domain)"/>
+        <link rel="alternate" hreflang="x-default" t-att-href="url_localized(lang_code=website.env['res.lang']._get_data(id=website._get_cached('default_lang_id')).code, canonical_domain=canonical_domain)"/>
         </t>
         <link t-if="request and website and website.is_public_user()" rel="canonical" t-att-href="url_localized(lang_code=lang,canonical_domain=canonical_domain)"/>
         <!-- TODO: Once we have style in DB, add this preconnect only if a
@@ -2081,7 +2081,7 @@
     </xpath>
 
     <xpath expr="//t[@t-set='active_lang']" position="before">
-        <t t-if="lang not in (lg['code'] for lg in frontend_languages)">
+        <t t-if="lang not in frontend_languages">
             <t t-set="lang" t-value="website.default_lang_id.code"/>
         </t>
     </xpath>
@@ -2089,12 +2089,12 @@
     <!-- Add the 'flags' possibility -->
     <xpath expr="//button[contains(@t-attf-class, 'dropdown-toggle')]/span" position="before">
         <t t-if="flags" t-call="website.lang_flag">
-            <t t-set="flag_image_url" t-value="active_lang['flag_image_url']"/>
+            <t t-set="flag_image_url" t-value="active_lang.flag_image_url"/>
         </t>
     </xpath>
     <xpath expr="//*[contains(@t-attf-class, 'js_change_lang')]/span" position="before">
         <t t-if="flags" t-call="website.lang_flag">
-            <t t-set="flag_image_url" t-value="lg['flag_image_url']"/>
+            <t t-set="flag_image_url" t-value="lg.flag_image_url"/>
         </t>
     </xpath>
 </template>
@@ -2112,7 +2112,7 @@
     <xpath expr="//*[contains(@t-attf-class,'dropdown-item')]" position="attributes">
         <attribute name="t-attf-class" remove="dropdown-item" add="list-inline-item" separator=" "/>
     </xpath>
-    <xpath expr="//t[@t-foreach='frontend_languages']" position="inside">
+    <xpath expr="//t[@t-foreach='frontend_languages.values()']" position="inside">
         <t t-if="not lg_last and not no_text">
             <span class="list-inline-item">|</span>
         </t>
