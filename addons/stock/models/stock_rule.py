@@ -601,11 +601,15 @@ class ProcurementGroup(models.Model):
         domain = self._get_moves_to_assign_domain(company_id)
         moves_to_assign = self.env['stock.move'].search(domain, limit=None,
             order='reservation_date, priority desc, date asc, id asc')
+        moves_done = 0
         for moves_chunk in split_every(1000, moves_to_assign.ids):
             self.env['stock.move'].browse(moves_chunk).sudo()._action_assign()
+            moves_done += len(moves_chunk)
             if use_new_cursor:
+                self.env['ir.cron']._notify_progress(done=moves_done, remaining=len(moves_to_assign) - moves_done)
                 self._cr.commit()
                 _logger.info("A batch of %d moves are assigned and committed", len(moves_chunk))
+        self.env['ir.cron']._notify_progress(done=moves_done, remaining=0)
 
         # Merge duplicated quants
         self.env['stock.quant']._quant_tasks()
