@@ -47,7 +47,7 @@
         </t>
         <t t-if="hasattr(object, 'timesheet_count') and object.timesheet_count">
             <br /><br />
-            PS: you can review your timesheets <a t-att-href="'my/timesheets?search_in=invoice&amp;search=%s' % object.name">from the portal.</a>
+            PS: you can review your timesheets <a t-att-href="'/my/timesheets?search_in=invoice&amp;search=%s' % object.name">from the portal.</a>
         </t>
         <br /><br />
         Do not hesitate to contact us if you have any questions.
