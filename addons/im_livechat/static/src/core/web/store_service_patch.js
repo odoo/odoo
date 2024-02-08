@@ -20,11 +20,11 @@ patch(Store.prototype, {
     },
     /** @returns {boolean} Whether the livechat thread changed. */
     goToOldestUnreadLivechatThread() {
-        const oldestUnreadThread = this.discuss.livechats
+        const [oldestUnreadThread] = this.discuss.livechats
             .filter((thread) => thread.isUnread)
             .sort(
                 (t1, t2) => compareDatetime(t1.lastInterestDt, t2.lastInterestDt) || t1.id - t2.id
-            )[0];
+            );
         if (!oldestUnreadThread) {
             return false;
         }
@@ -33,11 +33,7 @@ patch(Store.prototype, {
             return true;
         }
         const chatWindow = this.ChatWindow.insert({ thread: oldestUnreadThread });
-        if (chatWindow.hidden) {
-            chatWindow.makeVisible();
-        } else if (chatWindow.folded) {
-            chatWindow.toggleFold();
-        }
+        chatWindow.open();
         chatWindow.focus();
         return true;
     },

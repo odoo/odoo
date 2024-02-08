@@ -43,6 +43,10 @@ threadActionsRegistry
                 component.props.chatWindow?.isOpen
             );
         },
+        setup() {
+            const component = useComponent();
+            component.actionService = useService("action");
+        },
         icon: "fa fa-fw fa-expand",
         name: _t("Open Form View"),
         open(component) {

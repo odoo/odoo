@@ -254,7 +254,7 @@ test("show new message separator when message is received while chat window is c
             context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
         })}`,
     ]);
-    await click(".o-mail-ChatWindow-command[title='Close Chat Window']");
+    await click(".o-mail-ChatWindow-command[title*='Close Chat Window']");
     await contains(".o-mail-ChatWindow", { count: 0 });
     // send after init_messaging because bus subscription is done after init_messaging
     // simulate receiving a message
@@ -265,7 +265,9 @@ test("show new message separator when message is received while chat window is c
             thread_model: "discuss.channel",
         })
     );
-    await contains(".o-mail-ChatWindow");
+    await contains(".o-mail-ChatBubble");
+    await contains(".o-mail-ChatBubble-counter", { text: "1" });
+    await click(".o-mail-ChatBubble");
     await contains(".o-mail-Thread-newMessage hr + span", { text: "New messages" });
 });
 

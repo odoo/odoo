@@ -19,7 +19,7 @@ import { rpc } from "@web/core/network/rpc";
 describe.current.tags("desktop");
 defineMailModels();
 
-test("Receiving a new message out of discuss app should open a chat window", async () => {
+test("Receiving a new message out of discuss app should open a chat bubble", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Dumbledore" });
     const userId = pyEnv["res.users"].create({ partner_id: partnerId });
@@ -53,10 +53,10 @@ test("Receiving a new message out of discuss app should open a chat window", asy
             thread_model: "discuss.channel",
         })
     );
-    await contains(".o-mail-ChatWindow", { text: "Dumbledore" });
+    await contains(".o-mail-ChatBubble[name='Dumbledore']");
 });
 
-test("Receiving a new message in discuss app should open a chat window after leaving discuss app", async () => {
+test("Receiving a new message in discuss app should open a chat bubble after leaving discuss app", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Dumbledore" });
     const userId = pyEnv["res.users"].create({ partner_id: partnerId });
@@ -93,7 +93,7 @@ test("Receiving a new message in discuss app should open a chat window after lea
     );
     // leaving discuss.
     await openFormView("res.partner", partnerId);
-    await contains(".o-mail-ChatWindow", { text: "Dumbledore" });
+    await contains(".o-mail-ChatBubble[name='Dumbledore']");
 });
 
 test("Posting a message in discuss app should not open a chat window after leaving discuss app", async () => {

@@ -112,7 +112,7 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
         assert.strictEqual(
             document.querySelectorAll(
                 ".o-mail-ChatWindow-header button.o-dropdown.o-mail-ChatWindow-command > .text-truncate"
-            )[1].textContent,
+            )[0].textContent,
             "Luigi"
         );
 
@@ -432,7 +432,7 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
         assert.strictEqual(
             document.querySelectorAll(
                 ".o-mail-ChatWindow-header button.o-dropdown.o-mail-ChatWindow-command > .text-truncate"
-            )[1].textContent,
+            )[0].textContent,
             "Luigi"
         );
     });
@@ -590,7 +590,7 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
         assert.strictEqual(
             document.querySelectorAll(
                 ".o-mail-ChatWindow-header button.o-dropdown.o-mail-ChatWindow-command > .text-truncate"
-            )[1].textContent,
+            )[0].textContent,
             "Yoshi"
         );
     });
@@ -705,7 +705,7 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
         assert.strictEqual(
             document.querySelectorAll(
                 ".o-mail-ChatWindow-header button.o-dropdown.o-mail-ChatWindow-command > .text-truncate"
-            )[1].textContent,
+            )[0].textContent,
             "Luigi"
         );
     });

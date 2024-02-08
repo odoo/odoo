@@ -137,7 +137,7 @@ export class MessagingMenu extends Component {
     }
 
     openDiscussion(thread) {
-        thread.open(undefined, { openMessagingMenuOnClose: true });
+        thread.open({ fromMessagingMenu: true });
         this.dropdown.close();
     }
 
@@ -145,7 +145,7 @@ export class MessagingMenu extends Component {
         if (this.ui.isSmall || this.env.inDiscussApp) {
             this.state.addingChat = true;
         } else {
-            this.store.openNewMessage({ openMessagingMenuOnClose: true });
+            this.store.openNewMessage();
             this.dropdown.close();
         }
     }
@@ -172,9 +172,9 @@ export class MessagingMenu extends Component {
             });
             // Close the related chat window as having both the form view
             // and the chat window does not look good.
-            this.store.discuss.chatWindows.find(({ thr }) => thr?.eq(thread))?.close();
+            this.store.ChatWindow.get({ thread })?.close();
         } else {
-            thread.open(undefined, { openMessagingMenuOnClose: true });
+            thread.open({ fromMessagingMenu: true });
         }
         this.dropdown.close();
     }

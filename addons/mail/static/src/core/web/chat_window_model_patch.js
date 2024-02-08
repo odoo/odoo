@@ -7,7 +7,7 @@ patch(ChatWindow.prototype, {
         if (
             this.store.env.services.ui.isSmall &&
             !this.store.discuss.isActive &&
-            this.openMessagingMenuOnClose
+            this.fromMessagingMenu
         ) {
             // If we are in mobile and discuss is not open, it means the
             // chat window was opened from the messaging menu. In that

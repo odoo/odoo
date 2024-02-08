@@ -10,9 +10,7 @@ threadActionsRegistry
     .add("call", {
         condition(component) {
             return (
-                component.thread?.allowCalls &&
-                !component.thread?.eq(component.rtc.state.channel) &&
-                !component.props.chatWindow?.hidden
+                component.thread?.allowCalls && !component.thread?.eq(component.rtc.state.channel)
             );
         },
         icon: "fa fa-fw fa-phone",

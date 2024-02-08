@@ -16,7 +16,7 @@ threadActionsRegistry.add("restart", {
     name: _t("Restart Conversation"),
     open(component) {
         component.chatbotService.restart();
-        component.props.chatWindow.show();
+        component.props.chatWindow.open();
     },
     sequence: 99,
 });
