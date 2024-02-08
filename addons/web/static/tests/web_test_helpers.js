@@ -48,6 +48,7 @@ export {
     onRpc,
 } from "./_framework/mock_server/mock_server";
 export { serverState } from "./_framework/mock_server_state.hoot";
+export { makeServerError } from "./_framework/mock_server/mock_server_utils";
 export { patchWithCleanup } from "./_framework/patch_test_helpers";
 export {
     deleteFavorite,
