@@ -235,7 +235,9 @@ class Survey(http.Controller):
             return self._redirect_with_error(access_data, access_data['validity_code'])
 
         survey_sudo, answer_sudo = access_data['survey_sudo'], access_data['answer_sudo']
-        if not answer_sudo:
+        # From this controller we want to start the survey and only retake it if it's in progress. If by chance the
+        # browser cookie of our last completed survey wasn't deleted, we won't be able to start a new survey anymore
+        if not answer_sudo or answer_sudo.state == "done":
             try:
                 answer_sudo = survey_sudo._create_answer(user=request.env.user, email=email)
             except UserError:
