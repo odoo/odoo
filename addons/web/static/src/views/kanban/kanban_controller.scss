@@ -124,8 +124,16 @@
             }
         }
 
+<<<<<<< HEAD
         .o_kanban_record_title {
             @include o-kanban-record-title();
+||||||| parent of afa93b56dd9e (temp)
+        .o_kanban_record_title {
+            @include o-kanban-record-title($font-size: 13px);
+=======
+        .o_kanban_record_title, .o_kanban_record_title strong {
+            @include o-kanban-record-title($font-size: 13px);
+>>>>>>> afa93b56dd9e (temp)
             overflow-wrap: break-word;
             word-wrap: break-word;
         }
