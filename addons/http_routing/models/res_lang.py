@@ -12,5 +12,5 @@ class Lang(models.Model):
         """ Return the available languages as a list of (code, url_code, name,
             active) sorted by name.
         """
-        langs = self.with_context(active_test=False).search([])
+        langs = self.with_context(active_test=True).search([])
         return langs.get_sorted()
