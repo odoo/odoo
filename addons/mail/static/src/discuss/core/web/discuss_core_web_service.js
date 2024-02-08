@@ -68,20 +68,19 @@ export class DiscussCoreWeb {
             const thread = await this.store.Thread.getOrFetch(data);
             if (data.fold_state && thread && data.foldStateCount > thread.foldStateCount) {
                 thread.foldStateCount = data.foldStateCount;
-                if (data.fold_state !== thread.state) {
-                    thread.state = data.fold_state;
-                    if (thread.state === "closed") {
-                        const chatWindow = this.store.discuss.chatWindows.find((chatWindow) =>
-                            chatWindow.thread?.eq(thread)
-                        );
-                        if (chatWindow) {
-                            this.chatWindowService.close(chatWindow, { notifyState: false });
-                        }
-                    } else {
-                        this.store.ChatWindow.insert({
-                            thread,
-                            folded: thread.state === "folded",
-                        });
+                thread.state = data.fold_state;
+                if (thread.state === "closed") {
+                    const chatWindow = this.store.discuss.chatWindows.find((chatWindow) =>
+                        chatWindow.thread?.eq(thread)
+                    );
+                    if (chatWindow) {
+                        this.chatWindowService.close(chatWindow, { notifyState: false });
+                    }
+                    const chatBubble = this.store.discuss.chatBubbles.find((chatBubble) =>
+                        chatBubble.thread?.eq(thread)
+                    );
+                    if (chatBubble) {
+                        this.chatWindowService.closeBubble(chatBubble, { notifyState: false });
                     }
                 }
             }

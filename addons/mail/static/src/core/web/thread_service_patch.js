@@ -4,7 +4,7 @@ import { ThreadService, threadService } from "@mail/core/common/thread_service";
 let rpc;
 import { patch } from "@web/core/utils/patch";
 import { Record } from "@mail/core/common/record";
-import { assignDefined, rpcWithEnv, compareDatetime } from "@mail/utils/common/misc";
+import { rpcWithEnv, compareDatetime } from "@mail/utils/common/misc";
 
 patch(ThreadService.prototype, {
     /**
@@ -92,11 +92,11 @@ patch(ThreadService.prototype, {
     /** @override */
     open(thread, replaceNewMessageChatWindow, options) {
         if (!this.store.discuss.isActive && !this.ui.isSmall) {
-            this._openChatWindow(thread, replaceNewMessageChatWindow, options);
+            this.chatWindowService.open(thread, replaceNewMessageChatWindow, options);
             return;
         }
         if (this.ui.isSmall && thread.model === "discuss.channel") {
-            this._openChatWindow(thread, replaceNewMessageChatWindow, options);
+            this.chatWindowService.open(thread, replaceNewMessageChatWindow, options);
             return;
         }
         if (thread.model !== "discuss.channel") {
@@ -130,25 +130,6 @@ patch(ThreadService.prototype, {
             await this.chatWindowService.close(chatWindow);
         }
         super.unpin(...arguments);
-    },
-    _openChatWindow(thread, replaceNewMessageChatWindow, { openMessagingMenuOnClose } = {}) {
-        const chatWindow = this.store.ChatWindow.insert(
-            assignDefined(
-                {
-                    folded: false,
-                    replaceNewMessageChatWindow,
-                    thread,
-                },
-                {
-                    openMessagingMenuOnClose,
-                }
-            )
-        );
-        chatWindow.autofocus++;
-        if (thread) {
-            thread.state = "open";
-        }
-        this.chatWindowService.notifyState(chatWindow);
     },
     getRecentChannels() {
         return Object.values(this.store.Thread.records)

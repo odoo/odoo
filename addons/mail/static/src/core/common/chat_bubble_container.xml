@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <templates xml:space="preserve">
+     <t t-name="mail.ChatBubbleContainer">
+         <div t-if="!store.discuss.isActive" class="o-mail-ChatBubbleContainer d-flex flex-column align-content-start justify-content-end align-items-center">
+             <div class="d-flex flex-column align-content-start justify-content-end align-items-center">
+                <ChatBubbleOption t-if="visible.length" />
+                 <t t-foreach="visible" t-as="bubble" t-key="bubble.localId">
+                     <ChatBubble t-if="bubble.thread" bubble="bubble"/>
+                 </t>
+                 <ChatBubbleHidden />
+             </div>
+         </div>
+     </t>
+
+     <t t-name="mail.ChatBubbleOption">
+        <div class="o-mail-ChatBubbleOptions-wrapper align-items-center">
+            <Transition visible="!!(state.showActions)" name="'o-mail-ChatBubble-fade-y'" t-slot-scope="transition">
+                <div t-att-class="{ 'o-mail-ChatBubble-fade-y-out': transition.className.includes('o-mail-ChatBubble-fade-y-leave') }" class="bg-view o-mail-ChatBubbleOptions p-1 ms-1 o-mail-ChatBubble-fade-y-in">
+                    <div t-on-click="closeBubbles" class="o-mail-ChatBubbleOptions-item d-flex align-items-center justify-content-start"><i class="fa fa-close mx-3"></i>Close all conversations</div>
+                    <span class="o-mail-ChatBubbleOptions-arrow"/>
+                </div>
+            </Transition>
+            <button
+                class="btn o-mail-ChatbubbleContainer-btn o-mail-ChatBubbleOptions-btn shadow fa fa-ellipsis-h bg-view"
+                t-on-click="toggleShowActions"
+            />
+        </div>
+     </t>
+
+     <t t-name="mail.ChatBubbleHidden">
+        <div t-if="hidden.length > 0">
+            <Transition visible="!!(state.showHidden)" name="'o-mail-ChatBubble-fade-x'" t-slot-scope="transition">
+                <div t-att-class="{ 'o-mail-ChatBubble-fade-x-out': transition.className.includes('o-mail-ChatBubble-fade-x-leave') }" class="bg-view o-mail-ChatBubbleHidden p-1 ms-1 o-mail-ChatBubble-fade-x-in">
+                    <ul class="m-0 p-0 overflow-auto" role="menu">
+                        <t t-foreach="hidden" t-as="bubble" t-key="bubble.localId">
+                            <li t-on-click="() => chatWindowService.open(bubble.thread)" class="o-mail-ChatBubbleHidden-item"  role="menuitem" t-att-name="bubble.thread.displayName">
+                                <img class="o-mail-ChatBubbleHidden-avatar mx-3 my-1" t-att-src="bubble.thread.avatarUrl" alt="Thread image"/>
+                                <p class="text-truncate fw-bold mb-0"><t t-esc="bubble.thread.displayName"/></p>
+                                <button class="fa fa-close o-mail-ChatBubbleHidden-close" t-on-click="(e) => {e.stopPropagation();chatWindowService.closeBubble(bubble);}"/>
+                                <div t-if="bubble.thread.importantCounter > 0" class="o-mail-ChatBubbleHidden-counter badge rounded-pill fw-bold o-discuss-badge">
+                                    <t t-out="bubble.thread.importantCounter"/>
+                                </div>
+                            </li>
+                        </t>
+                    </ul>
+                    <span class="o-mail-ChatBubbleHidden-arrow"/>
+                </div>
+            </Transition>
+            <button t-on-click="toggleShowHidden" class="btn o-mail-ChatbubbleContainer-btn o-mail-ChatBubbleHidden-btn shadow">
+                <t>+<t t-esc="hidden.length"/></t>
+            </button>
+        </div>
+     </t>
+ </templates>

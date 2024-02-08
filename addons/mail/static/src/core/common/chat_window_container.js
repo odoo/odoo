@@ -3,6 +3,8 @@ import {
     CHAT_WINDOW_END_GAP_WIDTH,
     CHAT_WINDOW_INBETWEEN_WIDTH,
     CHAT_WINDOW_WIDTH,
+    CHAT_BUBBLE_PADDING,
+    CHAT_BUBBLE_SIZE,
 } from "@mail/core/common/chat_window_service";
 
 import { Component, useExternalListener, useState, onMounted, useRef, useEffect } from "@odoo/owl";
@@ -19,7 +21,7 @@ export class ChatWindowContainer extends Component {
     static template = "mail.ChatWindowContainer";
 
     get CHAT_WINDOW_END_GAP_WIDTH() {
-        return CHAT_WINDOW_END_GAP_WIDTH;
+        return CHAT_BUBBLE_SIZE + CHAT_BUBBLE_PADDING;
     }
 
     get CHAT_WINDOW_INBETWEEN_WIDTH() {

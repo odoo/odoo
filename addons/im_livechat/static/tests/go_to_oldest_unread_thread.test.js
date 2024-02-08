@@ -3,7 +3,6 @@ import {
     focus,
     insertText,
     openDiscuss,
-    patchUiSize,
     start,
     startServer,
     triggerHotkey,
@@ -86,105 +85,6 @@ test("tab on discuss composer goes to oldest unread livechat", async () => {
     await contains(".o-active .o-mail-DiscussSidebar-badge", { count: 0 });
     triggerHotkey("Tab");
     await contains(".o-mail-DiscussSidebarChannel.o-active", { text: "Visitor 12" });
-});
-
-test("switching to folded chat window unfolds it [REQUIRE FOCUS]", async () => {
-    const pyEnv = await startServer();
-    const guestId_1 = pyEnv["mail.guest"].create({ name: "Visitor 11" });
-    const guestId_2 = pyEnv["mail.guest"].create({ name: "Visitor 12" });
-    pyEnv["discuss.channel"].create([
-        {
-            anonymous_name: "Visitor 11",
-            channel_member_ids: [
-                Command.create({
-                    partner_id: serverState.partnerId,
-                    fold_state: "open",
-                }),
-                Command.create({ guest_id: guestId_1 }),
-            ],
-            channel_type: "livechat",
-            livechat_operator_id: serverState.partnerId,
-            name: "Livechat 1",
-        },
-        {
-            anonymous_name: "Visitor 12",
-            channel_member_ids: [
-                Command.create({
-                    partner_id: serverState.partnerId,
-                    fold_state: "folded",
-                    message_unread_counter: 1,
-                    last_interest_dt: "2021-01-02 10:00:00",
-                }),
-                Command.create({ guest_id: guestId_2 }),
-            ],
-            channel_type: "livechat",
-            livechat_operator_id: serverState.partnerId,
-            name: "Livechat 2",
-        },
-    ]);
-    await start();
-    await contains(".o-mail-ChatWindow.o-folded", { text: "Visitor 12" });
-    await focus(".o-mail-Composer-input", {
-        parent: [".o-mail-ChatWindow", { text: "Visitor 11" }],
-    });
-    triggerHotkey("Tab");
-    await contains(".o-mail-ChatWindow", {
-        text: "Visitor 12",
-        contains: [".o-mail-Composer-input:focus"],
-    });
-});
-
-test("switching to hidden chat window unhides it [REQUIRE FOCUS]", async () => {
-    const pyEnv = await startServer();
-    const guestId_1 = pyEnv["mail.guest"].create({ name: "Visitor 11" });
-    const guestId_2 = pyEnv["mail.guest"].create({ name: "Visitor 12" });
-    pyEnv["discuss.channel"].create([
-        {
-            anonymous_name: "Visitor 11",
-            channel_member_ids: [
-                Command.create({
-                    partner_id: serverState.partnerId,
-                    fold_state: "open",
-                }),
-                Command.create({ guest_id: guestId_1 }),
-            ],
-            channel_type: "livechat",
-            livechat_operator_id: serverState.partnerId,
-            name: "Livechat 1",
-        },
-        {
-            anonymous_name: "Visitor 12",
-            channel_member_ids: [
-                Command.create({
-                    partner_id: serverState.partnerId,
-                    fold_state: "open",
-                    message_unread_counter: 1,
-                    last_interest_dt: "2021-01-02 10:00:00",
-                }),
-                Command.create({ guest_id: guestId_2 }),
-            ],
-            channel_type: "livechat",
-            livechat_operator_id: serverState.partnerId,
-            name: "Livechat 2",
-        },
-        {
-            channel_member_ids: [
-                Command.create({ partner_id: serverState.partnerId, fold_state: "open" }),
-            ],
-        },
-    ]);
-    patchUiSize({ width: 900 }); // enough for 2 chat windows
-    await start();
-    await contains(".o-mail-ChatWindow", { count: 2 });
-    await contains(".o-mail-ChatWindow", { count: 0, text: "Visitor 12" });
-    await focus(".o-mail-Composer-input", {
-        parent: [".o-mail-ChatWindow", { text: "Visitor 11" }],
-    });
-    triggerHotkey("Tab");
-    await contains(".o-mail-ChatWindow", {
-        text: "Visitor 12",
-        contains: [".o-mail-Composer-input:focus"],
-    });
 });
 
 test("tab on composer doesn't switch thread if user is typing", async () => {

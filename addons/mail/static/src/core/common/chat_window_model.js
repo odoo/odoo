@@ -34,7 +34,7 @@ export class ChatWindow extends Record {
                 if (maxVisible <= this.store.discuss.chatWindows.length) {
                     const swaped = visible[visible.length - 1];
                     index = visible.length - 1;
-                    this.env.services["mail.chat_window"].hide(swaped);
+                    this.env.services["mail.chat_window"].toggleFold(swaped);
                 } else {
                     index = this.store.discuss.chatWindows.length;
                 }

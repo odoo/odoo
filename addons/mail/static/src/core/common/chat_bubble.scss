@@ -1,0 +1,287 @@
+
+.o-mail-ChatBubbleContainer {
+    position: absolute;
+    width: $o-mail-ChatBubble-medium;
+    bottom: 10px;
+    right: 10px;
+}
+
+.o-mail-ChatbubbleContainer-btn {
+    z-index: 5;
+    transition: filter 0.3s;
+    position: relative;
+    animation: growAnimation 0.3s ease 0s 1 normal forwards;
+    width: $o-mail-ChatBubble-small;
+    height: $o-mail-ChatBubble-small;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+
+    &:hover {
+        filter: brightness(90%);
+    }
+}
+
+.o-mail-ChatBubble-avatar {
+    width: $o-mail-ChatBubble-small;
+    height: $o-mail-ChatBubble-small;
+    border-radius: 50%;
+}
+
+.o-mail-ChatBubble-counter {
+    position: absolute;
+    padding: 3px 6px;
+    z-index: 7;
+    right: 4px;
+    visibility: visible;
+
+    :hover > & {
+        visibility: hidden;
+    }
+}
+
+.o-mail-ChatBubble-close {
+    position: absolute;
+    padding: 2px 4px;
+    right: 0px;
+    z-index: 6;
+    border: none;
+    font-size: 10px;
+    visibility: hidden;
+
+    :hover > & {
+        visibility: visible;
+    }
+}
+
+.o-mail-ChatBubble-status {
+    position: absolute;
+    z-index: 6;
+    bottom: 7px;
+    right: -3px;
+    animation: growAnimation 0.3s ease 0s 1 normal forwards;
+}
+
+.o-mail-ChatBubblePreview {
+    position: absolute;
+    width: 225px;
+    height: 50px;
+    right: 115%;
+    border-radius: 10px;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    padding-left: 10px!important;
+    z-index: 1000;
+}
+
+.o-mail-ChatBubblePreview-arrow {
+    position: absolute;
+    right: -3.5%;
+    top: 0%;
+    width: 0; 
+    height: 0; 
+    border-top: 25px solid transparent;
+    border-bottom: 25px solid transparent;
+    border-left: 25px solid var(--background-color);
+    z-index: -1;
+}
+
+.o-mail-ChatBubbleOptions {
+    width: 225px;
+    height: 30px;
+    background-color: #F9FAFB;
+    border-radius: 10px;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    z-index: 1000;
+    margin-right: -11%;
+    margin-bottom: 21%;
+    align-self: end;
+}
+
+.o-mail-ChatBubbleOptions-btn {
+    font-size: 15px;
+    width: 35px;
+    height: 35px;
+}
+
+.o-mail-ChatBubbleOptions-arrow {
+    position: absolute;
+    right: 1%;
+    top: 50%;
+    width: 0; 
+    height: 0; 
+    border-left: 25px solid transparent;
+    border-right: 25px solid transparent;
+    border-top: 25px solid var(--background-color);
+    z-index: -1;
+}
+
+.o-mail-ChatBubbleOptions-wrapper {
+    max-width: 45px;
+    display: flex;
+    align-items: end;
+    flex-direction: column;
+}
+
+.o-mail-ChatBubbleOptions-item {
+    border-radius: 5px;
+    
+    &:hover, &.o-active {
+        background-color: $o-gray-300;
+        cursor: pointer;
+    }
+}
+
+.o-mail-ChatBubbleHidden{
+    position: absolute;
+    right: 115%;
+    border-radius: 10px;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    padding-left: 10px!important;
+    z-index: 1000;
+    width: 348px;
+    display: flex;
+    flex-direction: column-reverse;
+    bottom: 0px;
+}
+
+.o-mail-ChatBubbleHidden-btn {
+    color: #FFFFFF!important;
+    background-color: #875A7B;
+    font-size: 18px;
+    width: $o-mail-ChatBubble-small;
+    height: $o-mail-ChatBubble-small;
+    animation: none;
+}
+
+.o-mail-ChatBubbleHidden-arrow {
+    position: absolute;
+    right: -3.5%;
+    width: 0; 
+    height: 0; 
+    border-top: 25px solid transparent;
+    border-bottom: 25px solid transparent;
+    border-left: 25px solid var(--background-color);
+    z-index: -1;
+}
+
+.o-mail-ChatBubbleHidden-avatar {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+}
+
+.o-mail-ChatBubbleHidden-item {
+    display: flex;
+    align-items: center;
+    margin: 5px 0px;
+    border-radius: 10px;
+    &:hover, &.o-active {
+        background-color: $o-gray-300;
+        cursor: pointer;
+    }
+}
+
+.o-mail-ChatBubbleHidden-close {
+    margin-left: auto;
+    margin-right: 10px;
+    border: none;
+    background-color: transparent;
+    visibility: hidden;
+
+    :hover > & {
+        visibility: visible;
+    }
+    &:hover {
+        cursor: pointer;
+        color: $o-danger!important;
+    }
+}
+
+.o-mail-ChatBubbleHidden-counter {
+    position: absolute;
+    right: 20px;
+    visibility: visible;
+
+    :hover > & {
+        visibility: hidden;
+    }
+}
+
+// Animations
+.o-mail-ChatBubble-fade-x-in {
+    animation: fadeInX 0.3s ease 0s 1 normal forwards;
+}
+
+.o-mail-ChatBubble-fade-x-out {
+    animation: fadeOutX 0.3s ease 0s 1 normal forwards;
+}
+
+.o-mail-ChatBubble-fade-y-in {
+    animation: fadeInY 0.3s ease 0s 1 normal forwards;
+}
+
+.o-mail-ChatBubble-fade-y-out {
+    animation: fadeOutY 0.3s ease 0s 1 normal forwards;
+}
+
+@keyframes growAnimation {
+    0% {
+        transform: scale(0);
+        transform-origin: 50% 100%;
+    }
+
+    100% {
+        transform: scale(1);
+        transform-origin: 50% 100%;
+    }
+}
+
+@keyframes fadeInX {
+    0% {
+        opacity: 0;
+        transform: translateX(50px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeOutX {
+    0% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateX(50px);
+    }
+}
+
+@keyframes fadeInY {
+    0% {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeOutY {
+    0% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+}

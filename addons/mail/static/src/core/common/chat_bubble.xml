@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <templates xml:space="preserve">
+     <t t-name="mail.ChatBubble">
+         <div class="position-relative o-mail-ChatBubble" t-att-name="props.bubble.thread.displayName" t-on-mouseenter="toggleShowPreview" t-on-mouseleave="toggleShowPreview" t-on-click="onClickOpen">
+             <ChatBubblePreview thread="props.bubble.thread" showPreview="state.showPreview" />
+             <div t-if="props.bubble.thread.importantCounter > 0" class="o-mail-ChatBubble-counter position-absolute badge rounded-pill fw-bold o-discuss-badge">
+                 <t t-out="props.bubble.thread.importantCounter"/>
+             </div>
+             <button class="o-mail-ChatBubble-close rounded-pill fw-bold fa fa-close bg-view" t-on-click="onClickClose"/>
+             <ImStatus t-if="props.bubble.thread.correspondent and props.bubble.thread.correspondent.im_status != 'offline'" className="'o-mail-ChatBubble-status'" persona="props.bubble.thread.correspondent" thread="props.bubble.thread"/>
+             <div class="btn o-mail-ChatbubbleContainer-btn shadow">
+                 <img class="o-mail-ChatBubble-avatar" t-att-src="props.bubble.thread.avatarUrl" alt="Thread image"/>
+             </div>
+         </div>
+     </t>
+
+     <t t-name="mail.ChatBubblePreview">
+         <Transition visible="!!(props.showPreview and previewContent)" name="'o-mail-ChatBubble-fade-x'" t-slot-scope="transition">
+             <div t-att-class="{ 'o-mail-ChatBubble-fade-x-out': transition.className.includes('o-mail-ChatBubble-fade-x-leave') }" class="bg-view o-mail-ChatBubblePreview p-1 ms-1 o-mail-ChatBubble-fade-x-in">
+                 <p class="text-truncate fw-bold mb-0"><t t-esc="props.thread.displayName"/></p>
+                 <p class="text-truncate small"><t t-esc="previewContent"/></p>
+                 <span class="o-mail-ChatBubblePreview-arrow"/>
+             </div>
+         </Transition>
+     </t>
+ </templates>
