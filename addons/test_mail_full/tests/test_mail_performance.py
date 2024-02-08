@@ -324,5 +324,5 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
             'res_id': record_rating.id,
         } for x in range(10)])
 
-        with self.assertQueryCount(default=19):
+        with self.assertQueryCount(default=10):
             mail_record.portal_message_format({'allow_composer': 1, 'rating_include': True})
