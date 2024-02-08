@@ -108,7 +108,9 @@ class Alias(models.Model):
         """ Check for invalid alias domains based on company configuration.
         When having a parent record and/or updating an existing record alias
         domain should match the one used on the related record. """
-        tocheck = self.filtered(lambda domain: domain.alias_domain_id.company_ids)
+
+        # in sudo, to be able to read alias_parent_model_id (ir.model)
+        tocheck = self.sudo().filtered(lambda domain: domain.alias_domain_id.company_ids)
         if not tocheck:
             return
 

@@ -40,7 +40,11 @@ class RecruitmentSource(models.Model):
                 'alias_parent_thread_id': source.job_id.id,
                 'alias_parent_model_id': self.env['ir.model']._get_id('hr.job'),
             }
-            source.alias_id = self.env['mail.alias'].create(vals)
+
+            # check that you can create source before to call mail.alias in sudo with known/controlled vals
+            source.check_access_rights('create')
+            source.check_access_rule('create')
+            source.alias_id = self.env['mail.alias'].sudo().create(vals)
 
     def unlink(self):
         """ Cascade delete aliases to avoid useless / badly configured aliases. """
