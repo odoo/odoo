@@ -11,6 +11,22 @@ from odoo.tools.parse_version import parse_version
 from odoo.addons.phone_validation.lib import phonenumbers_patch
 
 class TestPhonenumbersPatch(BaseCase):
+    def test_region_BR_monkey_patch(self):
+        """ Test Brazil phone numbers patch for added 9 in mobile numbers
+        It should not be added for fixed lines numbers"""
+        if not phonenumbers:
+            self.skipTest('Cannot test without phonenumbers module installed.')
+
+        # Mobile number => 9 should be added
+        parsed = phonenumbers.parse('11 6123 4567', region="BR")
+        formatted = phonenumbers.format_number(parsed, phonenumbers.PhoneNumberFormat.INTERNATIONAL)
+        self.assertEqual(formatted, '+55 11 96123-4567')
+
+        # Fixed line => 9 should not be added
+        parsed = phonenumbers.parse('11 2345 6789', region="BR")
+        formatted = phonenumbers.format_number(parsed, phonenumbers.PhoneNumberFormat.INTERNATIONAL)
+        self.assertEqual(formatted, '+55 11 2345-6789')
+
     def test_region_CI_monkey_patch(self):
         """Test if the  patch is apply on the good version of the lib
         And test some phonenumbers"""
