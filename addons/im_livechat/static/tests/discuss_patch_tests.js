@@ -35,11 +35,15 @@ QUnit.test("add livechat in the sidebar on visitor sending first message", async
     await contains(".o-mail-DiscussSidebar");
     await contains(".o-mail-DiscussSidebarCategory-livechat", { count: 0 });
     // simulate livechat visitor sending a message
-    const [channel] = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]]);
     pyEnv.withGuest(guestId, () =>
-        rpc("/im_livechat/chat_post", {
-            uuid: channel.uuid,
-            message_content: "new message",
+        rpc("/mail/message/post", {
+            post_data: {
+                body: "new message",
+                message_type: "comment",
+                subtype_xmlid: "mail.mt_comment",
+            },
+            thread_id: channelId,
+            thread_model: "discuss.channel",
         })
     );
     await contains(".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel", {

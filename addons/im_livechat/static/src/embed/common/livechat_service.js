@@ -151,9 +151,7 @@ export class LivechatService {
     async leave({ notifyServer = true } = {}) {
         try {
             if (this.thread && this.state === SESSION_STATE.PERSISTED && notifyServer) {
-                await rpc("/im_livechat/visitor_leave_session", {
-                    uuid: this.thread.uuid,
-                });
+                await rpc("/im_livechat/visitor_leave_session", { channel_id: this.thread.id });
             }
         } finally {
             browser.localStorage.removeItem(SAVED_STATE_STORAGE_KEY);

@@ -88,7 +88,7 @@ QUnit.test("Do not show channel when visitor is typing", async () => {
     await pyEnv.withGuest(guestId, () =>
         rpc("/im_livechat/notify_typing", {
             is_typing: true,
-            uuid: channel.uuid,
+            channel_id: channel.id,
         })
     );
     // weak test, no guaranteed that we waited long enough for the livechat to potentially appear
@@ -475,9 +475,14 @@ QUnit.test("Message unread counter", async () => {
     const { openDiscuss } = await start();
     openDiscuss();
     pyEnv.withGuest(guestId, () =>
-        rpc("/im_livechat/chat_post", {
-            message_content: "hu",
-            uuid: pyEnv["discuss.channel"].searchRead([["id", "=", channelId]])[0].uuid,
+        rpc("/mail/message/post", {
+            post_data: {
+                body: "hu",
+                message_type: "comment",
+                subtype_xmlid: "mail.mt_comment",
+            },
+            thread_id: channelId,
+            thread_model: "discuss.channel",
         })
     );
     await contains(".o-mail-DiscussSidebarChannel .badge", { text: "1" });

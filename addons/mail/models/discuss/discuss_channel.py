@@ -699,7 +699,8 @@ class Channel(models.Model):
             user_id = partner.user_ids and partner.user_ids[0] or False
             if user_id:
                 user_channels = self.with_user(user_id).with_context(
-                    allowed_company_ids=user_id.company_ids.ids
+                    # sudo: res.company - context is required by ir.rules
+                    allowed_company_ids=user_id.sudo().company_ids.ids
                 )
                 for channel_info in user_channels._channel_info():
                     notifications.append((partner, 'mail.record/insert', {"Thread": channel_info}))
