@@ -341,6 +341,9 @@ class MailGroup(models.Model):
         elif moderation_rule and moderation_rule.status == 'ban':
             group_message.action_moderate_reject()
 
+        elif email_normalized in map(email_normalize, self.moderator_ids.mapped('email')):
+            group_message.action_moderate_accept()
+
         elif self.moderation_notify:
             self.env['mail.mail'].sudo().create({
                 'author_id': self.env.user.partner_id.id,

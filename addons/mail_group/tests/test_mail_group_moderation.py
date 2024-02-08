@@ -30,7 +30,7 @@ class TestMailGroupModeration(TestMailListCommon):
     def test_constraints(self):
         mail_group = self.env['mail.group'].browse(self.test_group.ids)
         with self.assertRaises(IntegrityError):
-            moderation = self.env['mail.group.moderation'].create({
+            self.env['mail.group.moderation'].create({
                 'mail_group_id': mail_group.id,
                 'email': 'banned_member@test.com',
                 'status': 'ban',
@@ -63,7 +63,7 @@ class TestMailGroupModeration(TestMailListCommon):
 
         self.assertEqual(
             set(mail_group.moderation_rule_ids.mapped('email')),
-            set(['banned_member@test.com', 'std@test.com', 'xss@test.com'])
+            {'banned_member@test.com', 'std@test.com', 'xss@test.com'},
         )
 
         message_1, message_2, message_3 = self.env['mail.group.message'].create([{
@@ -86,7 +86,7 @@ class TestMailGroupModeration(TestMailListCommon):
         self.assertEqual(len(mail_group.moderation_rule_ids), 4, "Should have created only one moderation rule")
         self.assertEqual(
             set(mail_group.moderation_rule_ids.mapped('email')),
-            set(['banned_member@test.com', 'std@test.com', 'xss@test.com', 'bob@test.com'])
+            {'banned_member@test.com', 'std@test.com', 'xss@test.com', 'bob@test.com'},
         )
         self.assertEqual(moderation_1.status, 'allow')
         self.assertEqual(moderation_2.status, 'allow', 'Should have write on the existing moderation rule')
@@ -372,6 +372,34 @@ class TestModeration(TestMailListCommon):
                                     'email_from': self.user_employee.email_formatted,
                                     'subject': 'Test Rejected',
                                    })
+
+    @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.addons.mail_group.models.mail_group_message', 'odoo.models.unlink')
+    @users('employee')
+    def test_moderation_flow_moderator(self):
+        """If a moderator sends an email to the mail group, it is automatically accepted."""
+        mail_group = self.env['mail.group'].browse(self.test_group.ids)
+        moderator_email = mail_group.moderator_ids[0].email
+        self.assertEqual(len(mail_group.mail_group_message_ids), 3)
+
+        with self.mock_mail_gateway():
+            self.format_and_process(
+                GROUP_TEMPLATE, moderator_email, self.test_group.alias_id.display_name,
+                subject='Moderator email', target_model='mail.group')
+
+        self.assertEqual(len(mail_group.mail_group_message_ids), 4)
+        message = mail_group.mail_group_message_ids[-1]
+        self.assertEqual(message.subject, 'Moderator email')
+        self.assertEqual(message.moderation_status, 'accepted')
+
+        # for some reason, the moderator banned himself, his message is not accepted
+        message._create_moderation_rule('ban')
+        with self.mock_mail_gateway():
+            self.format_and_process(
+                GROUP_TEMPLATE, moderator_email, self.test_group.alias_id.display_name,
+                subject='Second moderator email', target_model='mail.group')
+        message = mail_group.mail_group_message_ids[-1]
+        self.assertEqual(message.subject, 'Second moderator email')
+        self.assertEqual(message.moderation_status, 'rejected')
 
     @mute_logger('odoo.addons.mail_group.models.mail_group')
     @users('employee')
