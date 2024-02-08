@@ -358,7 +358,7 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
         const radio = ev.currentTarget.closest('.o_delivery_carrier_select').querySelector(
             'input[type="radio"]'
         );
-        if (radio.checked) {
+        if (radio.checked && !this._shouldDisplayPickupLocations(ev)) {
             return;
         }
 
