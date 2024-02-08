@@ -1386,7 +1386,8 @@ class MrpProduction(models.Model):
         moves_to_confirm._action_confirm(merge=False)
         workorder_to_confirm._action_confirm()
         # run scheduler for moves forecasted to not have enough in stock
-        self.move_raw_ids._trigger_scheduler()
+        ignored_mo_ids = self.env.context.get('ignore_mo_ids', [])
+        self.move_raw_ids.with_context(ignore_mo_ids=ignored_mo_ids + self.ids)._trigger_scheduler()
         self.picking_ids.filtered(
             lambda p: p.state not in ['cancel', 'done']).action_confirm()
         # Force confirm state only for draft production not for more advanced state like
