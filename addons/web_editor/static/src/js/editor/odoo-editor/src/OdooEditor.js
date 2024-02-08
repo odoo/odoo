@@ -4069,13 +4069,14 @@ export class OdooEditor extends EventTarget {
             } else {
                 // Find previous character.
                 let previousCharacter = focusOffset > 0 && focusNode.textContent[focusOffset - 1];
-                if (!previousCharacter) {
-                    focusNode = previousLeaf(focusNode, this.editable);
-                    focusOffset = focusNode && nodeSize(focusNode);
-                    previousCharacter = focusNode && focusNode.textContent[focusOffset - 1];
+                const previousNode = previousLeaf(focusNode, this.editable);
+                if (!previousCharacter && previousNode && closestBlock(previousNode) === closestBlock(focusNode)) {
+                    focusNode = previousNode;
+                    focusOffset = nodeSize(focusNode);
+                    previousCharacter = focusNode.textContent[focusOffset - 1];
                 }
                 // Move selection if previous character is zero-width space
-                if (focusNode && previousCharacter === '\u200B' && !focusNode.parentElement.hasAttribute('data-o-link-zws')) {
+                if (previousCharacter === '\u200B' && !focusNode.parentElement.hasAttribute('data-o-link-zws')) {
                     focusOffset -= 1;
                     while (focusNode && (focusOffset < 0 || !focusNode.textContent[focusOffset])) {
                         focusNode = nextLeaf(focusNode, this.editable);
@@ -4112,10 +4113,11 @@ export class OdooEditor extends EventTarget {
             } else {
                 // Find next character.
                 let nextCharacter = focusNode.textContent[focusOffset];
-                if (!nextCharacter) {
-                    focusNode = nextLeaf(focusNode, this.editable);
+                const nextNode = nextLeaf(focusNode, this.editable);
+                if (!nextCharacter && nextNode && closestBlock(nextNode) === closestBlock(focusNode)) {
+                    focusNode = nextNode;
                     focusOffset = 0;
-                    nextCharacter = focusNode && focusNode.textContent[focusOffset];
+                    nextCharacter = focusNode.textContent[focusOffset];
                 }
                 // Move selection if next character is zero-width space
                 if (nextCharacter === '\u200B' && !focusNode.parentElement.hasAttribute('data-o-link-zws')) {
