@@ -5,7 +5,7 @@ import { patchWithCleanup } from "../../web_test_helpers";
 
 import { memoize, uniqueId } from "@web/core/utils/functions";
 
-test`headless`("memoize", () => {
+test.tags("headless")("memoize", () => {
     let callCount = 0;
     let lastReceivedArgs;
     const func = function () {
@@ -38,14 +38,14 @@ test`headless`("memoize", () => {
     expect(callCount).toBe(3);
 });
 
-test`headless`("memoized function inherit function name if possible", () => {
+test.tags("headless")("memoized function inherit function name if possible", () => {
     const memoized1 = memoize(function test() {});
     expect(memoized1.name).toBe("test (memoized)");
     const memoized2 = memoize(function () {});
     expect(memoized2.name).toBe("memoized");
 });
 
-test`headless`("uniqueId", () => {
+test.tags("headless")("uniqueId", () => {
     patchWithCleanup(uniqueId, { nextId: 0 });
     expect(uniqueId("test_")).toBe("test_1");
     expect(uniqueId("bla")).toBe("bla2");

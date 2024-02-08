@@ -31,7 +31,7 @@ test("can render a main component", async () => {
     expect(`.chocolate`).toHaveCount(1);
 });
 
-test`desktop`("control-click <a href/> in a standalone component", async () => {
+test.tags("desktop")("control-click <a href/> in a standalone component", async () => {
     class MyComponent extends Component {
         static props = {};
         static template = xml`<a href="#" class="MyComponent" t-on-click="onclick">Some link</a>`;
@@ -54,7 +54,7 @@ test`desktop`("control-click <a href/> in a standalone component", async () => {
     expect(["click", "ctrl-click"]).toVerifySteps();
 });
 
-test`desktop`("control-click propagation stopped on <a href/>", async () => {
+test.tags("desktop")("control-click propagation stopped on <a href/>", async () => {
     expect.assertions(3);
 
     patchWithCleanup(WebClient.prototype, {

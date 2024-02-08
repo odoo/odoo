@@ -15,7 +15,7 @@ const expectEquality = (expr1, expr2, ctx) => {
     });
 };
 
-test`headless`("create", () => {
+test.tags("headless")("create", () => {
     expectDelta("td(weeks=1)", "7, 0, 0");
     expectDelta("td(days=1)", "1, 0, 0");
     expectDelta("td(hours=1)", "0, 3600, 0");
@@ -50,7 +50,7 @@ test`headless`("create", () => {
     expectEquality("td(milliseconds=0.001)", "td(microseconds=1)");
 });
 
-test`headless`("massive normalization", () => {
+test.tags("headless")("massive normalization", () => {
     expect.assertions(3);
 
     const td = PyTimeDelta.create({ microseconds: -1 });
@@ -60,7 +60,7 @@ test`headless`("massive normalization", () => {
     expect(td.microseconds).toBe(999999);
 });
 
-test`headless`("attributes", () => {
+test.tags("headless")("attributes", () => {
     expect.assertions(3);
 
     const ctx = { td: PyTimeDelta };
@@ -70,7 +70,7 @@ test`headless`("attributes", () => {
     expect(evaluateExpr("td(1, 7, 31).microseconds", ctx)).toBe(31);
 });
 
-test`headless`("basic operations: +, -, *, //", () => {
+test.tags("headless")("basic operations: +, -, *, //", () => {
     expect.assertions(28);
 
     const ctx = {
@@ -112,7 +112,7 @@ test`headless`("basic operations: +, -, *, //", () => {
     expectEquality("td(999999999, 1, 1) - td(999999999, 1, 0)", "td(0, 0, 1)");
 });
 
-test`headless`("total_seconds", () => {
+test.tags("headless")("total_seconds", () => {
     expect.assertions(6);
 
     const ctx = { td: PyTimeDelta };
@@ -125,7 +125,7 @@ test`headless`("total_seconds", () => {
     expect(evaluateExpr("td(seconds=1000000).total_seconds()", ctx)).toBe(1e6);
 });
 
-test`headless`("bool", () => {
+test.tags("headless")("bool", () => {
     expect.assertions(5);
 
     const ctx = { td: PyTimeDelta };

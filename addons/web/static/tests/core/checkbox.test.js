@@ -64,7 +64,7 @@ test("checkbox with props disabled", async () => {
     expect(`.o-checkbox input`).not.toBeEnabled();
 });
 
-test`desktop`("can toggle value by pressing ENTER", async () => {
+test.tags("desktop")("can toggle value by pressing ENTER", async () => {
     class Parent extends Component {
         static components = { CheckBox };
         static props = {};
@@ -93,7 +93,7 @@ test`desktop`("can toggle value by pressing ENTER", async () => {
     expect(`.o-checkbox input`).not.toBeChecked();
 });
 
-test`desktop`("toggling through multiple ways", async () => {
+test.tags("desktop")("toggling through multiple ways", async () => {
     class Parent extends Component {
         static components = { CheckBox };
         static props = {};
