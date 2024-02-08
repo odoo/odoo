@@ -5,7 +5,7 @@ import { _t } from "@web/core/l10n/translation";
 import { useRecordObserver } from "@web/model/relational_model/utils";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { initializeDesignTabCss } from "@mass_mailing/js/mass_mailing_design_constants"
-import { toInline, getCSSRules } from "@web_editor/js/backend/convert_inline";
+import { toInline } from "@web_editor/js/backend/convert_inline";
 import { loadBundle } from "@web/core/assets";
 import { renderToElement } from "@web/core/utils/render";
 import { useService } from "@web/core/utils/hooks";
@@ -156,8 +156,7 @@ export class MassMailingHtmlField extends HtmlField {
             // Wait for the css and images to be loaded.
             await iframePromise;
             const editableClone = iframe.contentDocument.querySelector('.note-editable');
-            this.cssRules = this.cssRules || getCSSRules($editable[0].ownerDocument);
-            await toInline($(editableClone), this.cssRules, $(iframe));
+            await toInline($(editableClone), { $iframe: $(iframe), wysiwyg: this.wysiwyg });
             iframe.remove();
             this.wysiwyg.odooEditor.observerActive('toInline');
             const inlineHtml = editableClone.innerHTML;

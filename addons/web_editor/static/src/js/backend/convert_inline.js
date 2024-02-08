@@ -675,18 +675,16 @@ function enforceImagesResponsivity(editable) {
  * will be computed for the editable element's owner document.
  *
  * @param {JQuery} $editable
- * @param {Object[]} [cssRules] Array<{selector: string;
- *                                   style: {[styleName]: string};
- *                                   specificity: number;}>
- * @param {JQuery} [$iframe] the iframe containing the editable, if any
+ * @param {Object} options {$iframe: JQuery;
+ *                          wysiwyg: Object}
  */
-export async function toInline($editable, cssRules, $iframe) {
+export async function toInline($editable, options) {
     $editable.removeClass('odoo-editor-editable');
     const editable = $editable.get(0);
-    const iframe = $iframe && $iframe.get(0);
-    const wysiwyg = $editable.data('wysiwyg');
+    const iframe = options.$iframe && options.$iframe.get(0);
+    const wysiwyg = $editable.data('wysiwyg') || options.wysiwyg;
     const doc = editable.ownerDocument;
-    cssRules = cssRules || wysiwyg && wysiwyg._rulesCache;
+    let cssRules = wysiwyg && wysiwyg._rulesCache;
     if (!cssRules) {
         cssRules = getCSSRules(doc);
         if (wysiwyg) {
