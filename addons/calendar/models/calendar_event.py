@@ -300,7 +300,7 @@ class Meeting(models.Model):
         """
         for event in self:
             if event.stop_date and event.start_date:
-                event.write({
+                event.with_context(is_calendar_event_new=True).write({
                     'start': fields.Datetime.from_string(event.start_date).replace(hour=8),
                     'stop': fields.Datetime.from_string(event.stop_date).replace(hour=18),
                 })
