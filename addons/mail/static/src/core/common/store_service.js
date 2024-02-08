@@ -1,6 +1,7 @@
 /* @odoo-module */
 
 import { BaseStore, makeStore, Record } from "@mail/core/common/record";
+import { reactive } from "@odoo/owl";
 
 import { router } from "@web/core/browser/router";
 import { rpc } from "@web/core/network/rpc";
@@ -59,9 +60,6 @@ export class Store extends BaseStore {
 
     /** @type {number} */
     action_discuss_id;
-    /** @type {"not_fetched"|"fetching"|"fetched"} */
-    fetchCannedResponseState = "not_fetched";
-    fetchCannedResponseDeferred;
     lastChannelSubscription = "";
     /** This is the current logged partner / guest */
     self = Record.one("Persona");
@@ -202,25 +200,11 @@ export class Store extends BaseStore {
     fetchReadonly = true;
     fetchSilent = true;
 
-    async fetchCannedResponses() {
-        if (["fetching", "fetched"].includes(this.fetchCannedResponseState)) {
-            return this.fetchCannedResponseDeferred;
-        }
-        this.fetchCannedResponseState = "fetching";
-        this.fetchCannedResponseDeferred = new Deferred();
-        this.fetchData({ canned_responses: true }).then(
-            (recordsByModel) => {
-                this.fetchCannedResponseState = "fetched";
-                this.fetchCannedResponseDeferred.resolve(recordsByModel);
-            },
-            (error) => {
-                this.fetchCannedResponseState = "not_fetched";
-                this.fetchCannedResponseDeferred.reject(error);
-            }
-        );
-        return this.fetchCannedResponseDeferred;
-    }
+    cannedReponses = this.makeCachedFetchData({ canned_responses: true });
 
+    /**
+     * @returns {Deferred}
+     */
     async fetchData(params, { readonly = true, silent = true } = {}) {
         Object.assign(this.fetchParams, params);
         this.fetchReadonly = this.fetchReadonly && readonly;
@@ -228,6 +212,44 @@ export class Store extends BaseStore {
         const fetchDeferred = this.fetchDeferred;
         this._fetchDataDebounced();
         return fetchDeferred;
+    }
+
+    /**
+     * Create a cacheable version of the `fetchData` method. The result of the
+     * request is cached once acquired. In case of failure, the deferred is
+     * rejected and the cache is reset allowing to retry the request when
+     * calling the function again.
+     *
+     * @param {{[key: string]: boolean}} params Parameters to pass to the `fetchData` method.
+     * @returns {{
+     *      fetch: () => ReturnType<Store["fetchData"]>,
+     *      status: "not_fetched"|"fetching"|"fetched"
+     * }}
+     */
+    makeCachedFetchData(params) {
+        let def = null;
+        const r = reactive({
+            status: "not_fetched",
+            fetch: () => {
+                if (["fetching", "fetched"].includes(r.status)) {
+                    return def;
+                }
+                r.status = "fetching";
+                def = new Deferred();
+                this.fetchData(params).then(
+                    (result) => {
+                        r.status = "fetched";
+                        def.resolve(result);
+                    },
+                    (error) => {
+                        r.status = "not_fetched";
+                        def.reject(error);
+                    }
+                );
+                return def;
+            },
+        });
+        return r;
     }
 
     async _fetchDataDebounced() {

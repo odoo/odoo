@@ -37,17 +37,17 @@ export class MailCoreWeb {
                 }
             });
             this.busService.subscribe("mail.message/inbox", (payload) => {
-                const message = this.store.Message.insert(payload, { html: true });
+                let message = this.store.Message.get(payload.id);
+                const alreadyInNeedaction = message?.in(message.thread.needactionMessages);
+                message = this.store.Message.insert(payload, { html: true });
                 const inbox = this.store.discuss.inbox;
                 if (message.notIn(inbox.messages)) {
                     inbox.counter++;
                 }
                 inbox.messages.add(message);
-                const thread = message.thread;
-                if (message.notIn(thread.needactionMessages)) {
-                    thread.message_needaction_counter++;
+                if (!alreadyInNeedaction) {
+                    message.thread.message_needaction_counter++;
                 }
-                thread.needactionMessages.add(message);
             });
             this.busService.subscribe("mail.message/mark_as_read", (payload) => {
                 const { message_ids: messageIds, needaction_inbox_counter } = payload;
@@ -66,7 +66,6 @@ export class MailCoreWeb {
                     const thread = message.thread;
                     if (thread && message.isNeedaction) {
                         thread.message_needaction_counter--;
-                        thread.needactionMessages.delete({ id: messageId });
                     }
                     // move messages from Inbox to history
                     const partnerIndex = message.needaction_partner_ids.find(

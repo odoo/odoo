@@ -59,6 +59,13 @@ export class Message extends Record {
     notifications = Record.many("Notification", { inverse: "message" });
     recipients = Record.many("Persona");
     thread = Record.one("Thread");
+    threadAsNeedaction = Record.one("Thread", {
+        compute() {
+            if (this.isNeedaction) {
+                return this.thread;
+            }
+        },
+    });
     /** @type {string} */
     scheduledDatetime;
     starredPersonas = Record.many("Persona");

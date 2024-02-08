@@ -1,7 +1,6 @@
 /* @odoo-module */
 
 import { loadEmoji } from "@web/core/emoji_picker/emoji_picker";
-import { Record } from "@mail/core/common/record";
 import { prettifyMessageContent } from "@mail/utils/common/format";
 
 import { browser } from "@web/core/browser/browser";
@@ -123,7 +122,6 @@ export class ThreadService {
             ],
         ]);
         Object.assign(thread, {
-            needactionMessages: [],
             message_unread_counter: 0,
             message_needaction_counter: 0,
             seen_message_id: thread.newestPersistentNotEmptyOfAllMessage?.id,
@@ -227,32 +225,6 @@ export class ThreadService {
                         message.id > thread.newestPersistentMessage.id)
             );
             thread.messages.splice(startIndex, 0, ...filtered);
-            // feed needactions
-            // same for needaction messages, special case for mailbox:
-            // kinda "fetch new/more" with needactions on many origin threads at once
-            if (thread.eq(this.store.discuss.inbox)) {
-                Record.MAKE_UPDATE(() => {
-                    for (const message of fetched) {
-                        const thread = message.thread;
-                        if (thread && message.notIn(thread.needactionMessages)) {
-                            thread.needactionMessages.unshift(message);
-                        }
-                    }
-                });
-            } else {
-                const startNeedactionIndex =
-                    after === undefined
-                        ? 0
-                        : thread.messages.findIndex((message) => message.id === after);
-                const filteredNeedaction = fetched.filter(
-                    (message) =>
-                        message.isNeedaction &&
-                        (thread.needactionMessages.length === 0 ||
-                            message.id < thread.needactionMessages[0].id ||
-                            message.id > thread.needactionMessages.at(-1).id)
-                );
-                thread.needactionMessages.splice(startNeedactionIndex, 0, ...filteredNeedaction);
-            }
             Object.assign(thread, {
                 loadOlder:
                     after === undefined && fetched.length === FETCH_LIMIT
