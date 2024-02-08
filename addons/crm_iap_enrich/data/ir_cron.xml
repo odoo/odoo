@@ -5,9 +5,10 @@
         <field name="model_id" ref="crm.model_crm_lead"/>
         <field name="user_id" ref="base.user_root"/>
         <field name="state">code</field>
-        <field name="code">model._iap_enrich_leads_cron()</field>
+        <field name="code">model._iap_enrich_leads_cron(batch_size=1000)</field>
         <field name="interval_number">1</field>
         <field name="interval_type">hours</field>
+        <field name="priority">6</field>
     </record>
 
 </odoo>
