@@ -111,16 +111,16 @@ class AccountEdiFormat(models.Model):
             error_message.append(_("%s number should be set and not more than 16 characters",
                 (is_purchase and "Bill Reference" or "Invoice")))
         for line in goods_lines:
-            if line.product_id:
+            if line.display_type == 'product':
                 hsn_code = self._l10n_in_edi_extract_digits(line.l10n_in_hsn_code)
                 if not hsn_code:
-                    error_message.append(_("HSN code is not set in product %s", line.product_id.name))
-                elif not re.match("^[0-9]+$", hsn_code):
+                    error_message.append(_("HSN code is not set in product line %s", line.name))
+                elif not re.match(r'^\d{4}$|^\d{6}$|^\d{8}$', hsn_code):
                     error_message.append(_(
-                        "Invalid HSN Code (%(hsn_code)s) in product %(product)s", hsn_code=hsn_code, product=line.product_id.name,
-                    ))
-            else:
-                error_message.append(_("product is required to get HSN code"))
+                        "Invalid HSN Code (%(hsn_code)s) in product line %(product_line)s") % {
+                        'hsn_code': hsn_code,
+                        'product_line': line.product_id.name or line.name
+                    })
         if error_message:
             error_message.insert(0, _("Impossible to send the Ewaybill."))
         return error_message
