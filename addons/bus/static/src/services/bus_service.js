@@ -73,6 +73,8 @@ export const busService = {
                 isInitialized = true;
                 connectionInitializedDeferred.resolve();
                 return;
+            } else if (type === "reconnect") {
+                notificationBus.trigger(type, {});
             }
             bus.trigger(type, data);
         }
