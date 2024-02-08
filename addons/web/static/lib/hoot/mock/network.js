@@ -11,6 +11,7 @@ import { mockedCancelAnimationFrame, mockedRequestAnimationFrame } from "./time"
 const {
     AbortController,
     EventTarget,
+    Headers,
     ProgressEvent,
     Request,
     Response,
@@ -96,6 +97,11 @@ const makeNetworkLogger = (prefix, title) => {
 };
 
 const BODY_SYMBOL = Symbol("body");
+const HEADER = {
+    contentType: "Content-Type",
+    json: "application/json",
+    text: "text/plain",
+};
 
 /** @type {Set<WebSocket>} */
 const openClientWebsockets = new Set();
@@ -141,10 +147,20 @@ export async function mockedFetch(input, init) {
     const result = await (mockFetchFn || fetch)(input, init);
     openRequestControllers.delete(controller);
 
+    /** @type {Headers} */
+    let headers;
+    if (result && result.headers instanceof Headers) {
+        headers = result.headers;
+    } else if (init.headers instanceof Headers) {
+        headers = init.headers;
+    } else {
+        headers = new Headers(init.headers);
+    }
+
     if (result instanceof MockResponse) {
         // Mocked response
         logResponse(async () =>
-            result.headers.get("Content-Type") === "application/json"
+            headers.get(HEADER.contentType) === HEADER.json
                 ? await result.json()
                 : await result.text()
         );
@@ -153,17 +169,17 @@ export async function mockedFetch(input, init) {
         // Actual fetch
         logResponse(() => "(go to network tab for request content)");
         return result;
-    } else if (typeof body === "string") {
+    } else if (typeof init.body === "string" && !headers.get(HEADER.contentType)) {
         // String response: considered as plain text
-        logResponse(() => body);
+        logResponse(() => init.body);
         return new MockResponse(result, {
-            headers: { "Content-Type": "text/plain" },
+            headers: { [HEADER.contentType]: HEADER.text },
         });
     } else {
         // JSON response (i.e. anything that isn't a string)
         logResponse(() => result);
         return new MockResponse(JSON.stringify(result), {
-            headers: { "Content-Type": "application/json" },
+            headers: { [HEADER.contentType]: headers.get(HEADER.contentType) || HEADER.json },
         });
     }
 }
