@@ -1,8 +1,8 @@
 /** @odoo-module */
 
+import { constants } from "@web/../tests/web_test_helpers";
 import { serializeDateTime } from "@web/core/l10n/dates";
 import { registry } from "@web/core/registry";
-import { session } from "@web/session";
 
 /**
  * @template [T={}]
@@ -48,7 +48,7 @@ async function attachmentUpload(request) {
 /** @type {RouteCallback} */
 async function attachmentDelete(request) {
     const { attachment_id } = await parseRequestParams(request);
-    const [partner] = this.env["res.partner"].read(session.partner_id);
+    const [partner] = this.env["res.partner"].read(constants.PARTNER_ID);
     this.env["bus.bus"]._sendone(partner, "ir.attachment/delete", {
         id: attachment_id,
     });
@@ -204,7 +204,7 @@ async function channelMute(request) {
         model: "discuss.channel",
         mute_until_dt,
     };
-    const [partner] = this.env["res.partner"].read(session.partner_id);
+    const [partner] = this.env["res.partner"].read(constants.PARTNER_ID);
     this.env["bus.bus"]._sendone(partner, "mail.record/insert", {
         MailThread: channel_data,
     });
@@ -288,7 +288,7 @@ async function historyMessages(request) {
         const notifs = this.env["mail.notification"].search_read([
             ["mail_message_id", "=", message.id],
             ["is_read", "=", true],
-            ["res_partner_id", "=", session.partner_id],
+            ["res_partner_id", "=", constants.PARTNER_ID],
         ]);
         return notifs.length > 0;
     });
@@ -386,7 +386,7 @@ async function linkPreviewDelete(request) {
 
 /** @type {RouteCallback} */
 async function loadMessageFailures(request) {
-    return this.env["res.partner"]._messageFetchFailed(session.partner_id);
+    return this.env["res.partner"]._messageFetchFailed(constants.PARTNER_ID);
 }
 
 /** @type {RouteCallback} */
@@ -503,7 +503,7 @@ async function sessionUpdateAndBroadcast(request) {}
 /** @type {RouteCallback} */
 async function starredMessages(request) {
     const { after, before, limit, search_term } = await parseRequestParams(request);
-    const domain = [["starred_partner_ids", "in", [session.partner_id]]];
+    const domain = [["starred_partner_ids", "in", [constants.PARTNER_ID]]];
     const res = this.env["mail.message"]._messageFetch(
         domain,
         search_term,
@@ -563,7 +563,7 @@ async function threadData(request) {
         ];
         res["followersCount"] = (thread.message_follower_ids || []).length;
         const selfFollower = this.env["mail.followers"].search_read(
-            domain.concat([["partner_id", "=", session.partner_id]])
+            domain.concat([["partner_id", "=", constants.PARTNER_ID]])
         )[0];
         res["selfFollower"] = selfFollower
             ? this.env["mail.followers"]._formatForChatter(selfFollower.id)[0]

@@ -1,11 +1,10 @@
 /** @odoo-module */
 
 import { assignDefined } from "@mail/utils/common/misc";
-import { Command, fields, models } from "@web/../tests/web_test_helpers";
+import { Command, constants, fields, models } from "@web/../tests/web_test_helpers";
 import { serializeDateTime, today } from "@web/core/l10n/dates";
 import { ensureArray } from "@web/core/utils/arrays";
 import { uniqueId } from "@web/core/utils/functions";
-import { session } from "@web/session";
 
 /**
  * @template T
@@ -19,16 +18,16 @@ export class DiscussChannel extends models.ServerModel {
 
     author_id = fields.Many2one({
         relation: "res.partner",
-        default: () => session.partner_id,
+        default: () => constants.PARTNER_ID,
     });
     avatarCacheKey = fields.Datetime({ string: "Avatar Cache Key" });
     channel_member_ids = fields.Generic({
-        default: () => [Command.create({ partner_id: session.partner_id })],
+        default: () => [Command.create({ partner_id: constants.PARTNER_ID })],
     });
     channel_type = fields.Generic({ default: "channel" });
     group_based_subscription = fields.Boolean();
     group_public_id = fields.Generic({
-        default: () => session.group_id,
+        default: () => constants.GROUP_ID,
     });
     uuid = fields.Generic({
         default: () => uniqueId("discuss.channel_uuid-"),
@@ -44,7 +43,7 @@ export class DiscussChannel extends models.ServerModel {
         const channel = this._filter([["id", "in", ids]])[0];
         const [channelMember] = this.env["discuss.channel.member"]._filter([
             ["channel_id", "in", ids],
-            ["partner_id", "=", session.partner_id],
+            ["partner_id", "=", constants.PARTNER_ID],
         ]);
         if (!channelMember) {
             return true;
@@ -52,7 +51,7 @@ export class DiscussChannel extends models.ServerModel {
         this.write([channel.id], {
             channel_member_ids: [Command.delete(channelMember.id)],
         });
-        const [partner] = this.env["res.partner"].read(session.partner_id);
+        const [partner] = this.env["res.partner"].read(constants.PARTNER_ID);
         this.env["bus.bus"]._sendone(partner, "discuss.channel/leave", {
             id: channel.id,
         });
@@ -75,7 +74,7 @@ export class DiscussChannel extends models.ServerModel {
          * together on the bus).
          */
         // this.message_post(channel.id, {
-        //     author_id: session.partner_id,
+        //     author_id: constants.PARTNER_ID,
         //     body: '<div class="o_mail_notification">left the channel</div>',
         //     subtype_xmlid: "mail.mt_comment",
         // });
@@ -94,7 +93,7 @@ export class DiscussChannel extends models.ServerModel {
         const [channel] = this._filter([["id", "in", ids]]);
         const partners = this.env["res.partner"]._filter([["id", "in", partnerIds]]);
         for (const partner of partners) {
-            if (partner.id === session.partner_id) {
+            if (partner.id === constants.PARTNER_ID) {
                 continue; // adding 'yourself' to the conversation is handled below
             }
             const body = `<div class="o_mail_notification">invited ${partner.name} to the channel</div>`;
@@ -116,7 +115,7 @@ export class DiscussChannel extends models.ServerModel {
                 invited_by_user_id: this.env.uid,
             });
         }
-        const selfPartner = partners.find((partner) => partner.id === session.partner_id);
+        const selfPartner = partners.find((partner) => partner.id === constants.PARTNER_ID);
         if (selfPartner) {
             // needs to be done after adding 'self' as a member
             const body = `<div class="o_mail_notification">${selfPartner.name} joined the channel</div>`;
@@ -126,7 +125,7 @@ export class DiscussChannel extends models.ServerModel {
         }
         const isSelfMember =
             this.env["discuss.channel.member"].search_count([
-                ["partner_id", "=", session.partner_id],
+                ["partner_id", "=", constants.PARTNER_ID],
                 ["channel_id", "=", channel.id],
             ]) > 0;
         if (isSelfMember) {
@@ -171,7 +170,7 @@ export class DiscussChannel extends models.ServerModel {
      */
     channel_create(name, group_id) {
         const id = this.create({
-            channel_member_ids: [Command.create({ partner_id: session.partner_id })],
+            channel_member_ids: [Command.create({ partner_id: constants.PARTNER_ID })],
             channel_type: "channel",
             name,
             group_public_id: group_id,
@@ -183,7 +182,7 @@ export class DiscussChannel extends models.ServerModel {
             body: `<div class="o_mail_notification">created <a href="#" class="o_channel_redirect" data-oe-id="${id}">#${name}</a></div>`,
             message_type: "notification",
         });
-        const [partner] = this.env["res.partner"].read(session.partner_id);
+        const [partner] = this.env["res.partner"].read(constants.PARTNER_ID);
         this._broadcast(id, [partner]);
         return this.channel_info([id])[0];
     }
@@ -219,7 +218,7 @@ export class DiscussChannel extends models.ServerModel {
                 channel_id: channel.id,
                 id: memberOfCurrentUser.id,
                 last_message_id: lastMessage.id,
-                partner_id: session.partner_id,
+                partner_id: constants.PARTNER_ID,
             });
         }
     }
@@ -265,8 +264,8 @@ export class DiscussChannel extends models.ServerModel {
         if (partnersTo.length === 0) {
             return false;
         }
-        if (!partnersTo.includes(session.partner_id)) {
-            partnersTo.push(session.partner_id);
+        if (!partnersTo.includes(constants.PARTNER_ID)) {
+            partnersTo.push(constants.PARTNER_ID);
         }
         const partners = this.env["res.partner"]._filter([["id", "in", partnersTo]]);
         const channels = this.search_read([["channel_type", "=", "chat"]]);
@@ -315,7 +314,7 @@ export class DiscussChannel extends models.ServerModel {
                 ["id", "=", channel.group_public_id],
             ]);
             const messageNeedactionCounter = this.env["mail.notification"]._filter([
-                ["res_partner_id", "=", session.partner_id],
+                ["res_partner_id", "=", constants.PARTNER_ID],
                 ["is_read", "=", false],
                 ["mail_message_id", "in", messages.map((message) => message.id)],
             ]).length;
@@ -433,7 +432,7 @@ export class DiscussChannel extends models.ServerModel {
                 is_pinned: pinned,
             });
         }
-        const [partner] = this.env["res.partner"].read(session.partner_id);
+        const [partner] = this.env["res.partner"].read(constants.PARTNER_ID);
         if (!pinned) {
             this.env["bus.bus"]._sendone(partner, "discuss.channel/unpin", {
                 id: channel.id,
@@ -469,13 +468,13 @@ export class DiscussChannel extends models.ServerModel {
         name = kwargs.name || name || "";
         const channelId = ids[0]; // simulate ensure_one.
         const [memberIdOfCurrentUser] = this.env["discuss.channel.member"].search([
-            ["partner_id", "=", session.partner_id],
+            ["partner_id", "=", constants.PARTNER_ID],
             ["channel_id", "=", channelId],
         ]);
         this.env["discuss.channel.member"].write([memberIdOfCurrentUser], {
             custom_channel_name: name,
         });
-        const [partner] = this.env["res.partner"].read(session.partner_id);
+        const [partner] = this.env["res.partner"].read(constants.PARTNER_ID);
         this.env["bus.bus"]._sendone(partner, "mail.record/insert", {
             Thread: {
                 custom_channel_name: name,
@@ -534,7 +533,7 @@ export class DiscussChannel extends models.ServerModel {
             Type <b>#channel</b> to mention a channel.<br>
             Type <b>/command</b> to execute a command.<br></span>
         `;
-        const [partner] = this.env["res.partner"].read(session.partner_id);
+        const [partner] = this.env["res.partner"].read(constants.PARTNER_ID);
         this.env["bus.bus"]._sendone(partner, "discuss.channel/transient_message", {
             body: notifBody,
             thread: { model: "discuss.channel", id: channel.id },
@@ -569,7 +568,7 @@ export class DiscussChannel extends models.ServerModel {
                 ["id", "in", channel.channel_member_ids],
             ]);
             const otherPartnerIds = members
-                .filter((member) => member.partner_id && member.partner_id !== session.partner_id)
+                .filter((member) => member.partner_id && member.partner_id !== constants.PARTNER_ID)
                 .map((member) => member.partner_id);
             const otherPartners = this.env["res.partner"]._filter([["id", "in", otherPartnerIds]]);
             let message = "You are alone in this channel.";
@@ -578,7 +577,7 @@ export class DiscussChannel extends models.ServerModel {
                     .map((partner) => partner.name)
                     .join(", ")} and you`;
             }
-            const [partner] = this.env["res.partner"].read(session.partner_id);
+            const [partner] = this.env["res.partner"].read(constants.PARTNER_ID);
             this.env["bus.bus"]._sendone(partner, "discuss.channel/transient_message", {
                 body: `<span class="o_mail_notification">${message}</span>`,
                 thread: { model: "discuss.channel", id: channel.id },
@@ -593,7 +592,7 @@ export class DiscussChannel extends models.ServerModel {
         const guest = this.env["mail.guest"]._getGuestFromContext();
         const memberDomain = guest
             ? [["guest_id", "=", guest.id]]
-            : [["partner_id", "=", session.partner_id]];
+            : [["partner_id", "=", constants.PARTNER_ID]];
         const members = this.env["discuss.channel.member"]._filter(memberDomain);
         const pinnedMembers = members.filter((member) => member.is_pinned);
         const channels = this._filter([
@@ -723,7 +722,7 @@ export class DiscussChannel extends models.ServerModel {
             message_type,
             model: "discuss.channel",
         });
-        if (kwargs.author_id === session.partner_id) {
+        if (kwargs.author_id === constants.PARTNER_ID) {
             this._setLastSeenMessage([channel.id], messageData.id);
         }
         // simulate compute of message_unread_counter
@@ -751,7 +750,7 @@ export class DiscussChannel extends models.ServerModel {
     set_message_pin(id, { message_id, pinned } = {}) {
         const pinnedAt = pinned && serializeDateTime(DateTime.now());
         this.env["mail.message"].write([message_id], { pinned_at: pinnedAt });
-        const [partner] = this.env["res.partner"].read(session.partner_id);
+        const [partner] = this.env["res.partner"].read(constants.PARTNER_ID);
         const notification = `<div data-oe-type="pin" class="o_mail_notification">
                 ${partner.display_name} pinned a
                 <a href="#" data-oe-type="highlight" data-oe-id='${message_id}'>message</a> to this channel.
@@ -878,14 +877,14 @@ export class DiscussChannel extends models.ServerModel {
             return;
         }
         this._setLastSeenMessage([channel.id], last_message_id);
-        const [partner] = this.env["res.partner"].read(session.partner_id);
+        const [partner] = this.env["res.partner"].read(constants.PARTNER_ID);
         this.env["bus.bus"]._sendone(
             channel.channel_type === "chat" ? channel : partner,
             "discuss.channel.member/seen",
             {
                 channel_id: channel.id,
                 last_message_id: last_message_id,
-                partner_id: session.partner_id,
+                partner_id: constants.PARTNER_ID,
             }
         );
     }

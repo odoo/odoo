@@ -1,7 +1,6 @@
 /** @odoo-module */
 
-import { models } from "@web/../tests/web_test_helpers";
-import { session } from "@web/session";
+import { constants, models } from "@web/../tests/web_test_helpers";
 
 export class MailGuest extends models.ServerModel {
     _name = "mail.guest";
@@ -32,8 +31,8 @@ export class MailGuest extends models.ServerModel {
                 hasLinkPreviewFeature: true,
                 initBusId: this.lastBusNotificationId,
                 menu_id: false,
-                odoobot: this.env["res.partner"].mail_partner_format(session.odoobot_id)[
-                    session.odoobot_id
+                odoobot: this.env["res.partner"].mail_partner_format(constants.ODOOBOT_ID)[
+                    constants.ODOOBOT_ID
                 ],
                 self: { id: guest.id, name: guest.name, type: "guest" },
                 settings: {},

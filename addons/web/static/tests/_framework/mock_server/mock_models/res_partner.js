@@ -1,4 +1,4 @@
-import { session } from "@web/session";
+import { constants } from "../../test_constants.hoot";
 import { ServerModel } from "../mock_model";
 
 export class ResPartner extends ServerModel {
@@ -6,24 +6,23 @@ export class ResPartner extends ServerModel {
 
     _records = [
         {
-            id: session.user_companies.current_company,
+            id: constants.COMPANY_ID,
             active: true,
-            name: session.user_companies.allowed_companies[session.user_companies.current_company]
-                .name,
+            name: constants.COMPANY_NAME,
         },
         {
-            id: session.partner_id,
+            id: constants.PARTNER_ID,
             active: true,
-            name: session.partner_display_name,
+            name: constants.PARTNER_NAME,
         },
         {
-            id: session.public_partner_id,
+            id: constants.PUBLIC_PARTNER_ID,
             active: true,
             is_public: true,
-            name: session.public_partner_display_name,
+            name: constants.PUBLIC_PARTNER_NAME,
         },
         {
-            id: session.odoobot_id,
+            id: constants.ODOOBOT_ID,
             active: false,
             im_status: "bot",
             name: "OdooBot",

@@ -1,4 +1,4 @@
-import { session } from "@web/session";
+import { constants } from "../../test_constants.hoot";
 import { ServerModel } from "../mock_model";
 
 export class ResGroups extends ServerModel {
@@ -6,7 +6,7 @@ export class ResGroups extends ServerModel {
 
     _records = [
         {
-            id: session.group_id,
+            id: constants.GROUP_ID,
             name: "Internal User",
         },
     ];

@@ -1,8 +1,7 @@
 /** @odoo-module */
 
-import { webModels } from "@web/../tests/web_test_helpers";
+import { constants, webModels } from "@web/../tests/web_test_helpers";
 import { serializeDate, today } from "@web/core/l10n/dates";
-import { session } from "@web/session";
 
 /**
  * @template T
@@ -99,7 +98,7 @@ export class ResUsers extends webModels.ResUsers {
                 initChannelsUnreadCounter: members.filter((member) => member.message_unread_counter)
                     .length,
                 menu_id: false, // not useful in QUnit tests
-                odoobot: Partner.mail_partner_format(session.odoobot_id)[session.odoobot_id],
+                odoobot: Partner.mail_partner_format(constants.ODOOBOT_ID)[constants.ODOOBOT_ID],
                 self: Partner.mail_partner_format(user.partner_id)[user.partner_id],
                 settings: Settings.res_users_settings_format(userSettings.id),
             },

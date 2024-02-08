@@ -2,9 +2,9 @@ import { after, before, globals, registerDebugInfo } from "@odoo/hoot";
 import { mockFetch, mockWebSocket } from "@odoo/hoot-mock";
 import { assets } from "@web/core/assets";
 import { registry } from "@web/core/registry";
-import { session } from "@web/session";
 import { fetchModelDefinitions } from "../module_set.hoot";
 import { patchWithCleanup } from "../patch_test_helpers";
+import { constants } from "../test_constants.hoot";
 import { DEFAULT_FIELD_VALUES } from "./mock_fields";
 import {
     FIELD_NOT_FOUND,
@@ -106,16 +106,19 @@ class MockServerBaseEnvironment {
     cookie = new Map();
 
     get companies() {
-        const ids = Object.keys(session.user_companies.allowed_companies);
-        return this.server.env["res.company"].read(ids);
+        return this.server.env["res.company"].read(constants.COMPANY_ID);
     }
 
     get company() {
-        return this.server.env["res.company"].read(session.user_companies.current_company)[0];
+        return this.companies[0];
     }
 
     get context() {
-        return session.user_context;
+        return {
+            lang: constants.LANG,
+            tz: constants.TIMEZONE,
+            uid: constants.USER_ID,
+        };
     }
 
     get lang() {
@@ -123,7 +126,7 @@ class MockServerBaseEnvironment {
     }
 
     get uid() {
-        return session.uid;
+        return constants.USER_ID;
     }
 
     get user() {
