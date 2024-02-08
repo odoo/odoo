@@ -36,7 +36,7 @@ export class TranscriptSender extends Component {
         this.state.status = this.STATUS.SENDING;
         try {
             await rpc("/im_livechat/email_livechat_transcript", {
-                uuid: this.props.thread.uuid,
+                channel_id: this.props.thread.id,
                 email: this.state.email,
             });
             this.state.status = this.STATUS.SENT;

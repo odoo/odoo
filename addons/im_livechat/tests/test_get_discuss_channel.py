@@ -262,7 +262,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
             )["Thread"]["id"]
         )
         self.make_jsonrpc_request(
-            "/im_livechat/visitor_leave_session", {"uuid": inactive_livechat.uuid}
+            "/im_livechat/visitor_leave_session", {"channel_id": inactive_livechat.id}
         )
         guest = inactive_livechat.channel_member_ids.filtered(lambda m: m.guest_id).guest_id
         non_livechat_channel = self.env['discuss.channel'].channel_create(name="General", group_id=None)

@@ -7,9 +7,24 @@ from odoo.addons.im_livechat.tools.misc import force_guest_env
 
 class CorsLivechatController(LivechatController):
     @route("/im_livechat/cors/visitor_leave_session", type="json", auth="public", cors="*")
-    def cors_visitor_leave_session(self, guest_token, uuid):
+    def cors_visitor_leave_session(self, guest_token, channel_id):
         force_guest_env(guest_token)
-        self.visitor_leave_session(uuid)
+        self.visitor_leave_session(channel_id)
+
+    @route("/im_livechat/cors/feedback", type="json", auth="public", cors="*")
+    def cors_feedback(self, guest_token, channel_id, rate, reason=None):
+        force_guest_env(guest_token)
+        self.feedback(channel_id, rate, reason)
+
+    @route("/im_livechat/cors/history", type="json", auth="public", cors="*")
+    def cors_history_pages(self, guest_token, pid, channel_id, page_history=None):
+        force_guest_env(guest_token)
+        return self.history_pages(pid, channel_id, page_history)
+
+    @route("/im_livechat/cors/email_livechat_transcript", type="json", auth="public", cors="*")
+    def cors_email_livechat_transcript(self, guest_token, channel_id, email):
+        force_guest_env(guest_token)
+        return self.email_livechat_transcript(channel_id, email)
 
     @route("/im_livechat/cors/get_session", methods=["POST"], type="json", auth="public", cors="*")
     def cors_get_session(

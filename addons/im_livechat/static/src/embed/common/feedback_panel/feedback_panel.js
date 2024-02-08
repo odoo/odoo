@@ -45,11 +45,11 @@ export class FeedbackPanel extends Component {
         this.state.rating = rating;
     }
 
-    async onClickSendFeedback() {
+    onClickSendFeedback() {
         rpc("/im_livechat/feedback", {
             reason: this.state.feedback,
             rate: this.state.rating,
-            uuid: this.props.thread.uuid,
+            channel_id: this.props.thread.id,
         });
         this.state.step = this.STEP.THANKS;
     }

@@ -57,7 +57,7 @@ QUnit.test('Receives visitor typing status "is typing"', async () => {
     pyEnv.withGuest(guestId, () =>
         rpc("/im_livechat/notify_typing", {
             is_typing: true,
-            uuid: channel.uuid,
+            channel_id: channel.id,
         })
     );
     await contains(".o-discuss-Typing", { text: "Visitor 20 is typing..." });

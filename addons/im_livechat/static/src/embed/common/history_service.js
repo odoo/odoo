@@ -26,7 +26,7 @@ export class HistoryService {
             const history = cookie ? JSON.parse(cookie) : [];
             rpc("/im_livechat/history", {
                 pid: this.livechatService.thread.operator.id,
-                channel_uuid: this.livechatService.thread.uuid,
+                channel_id: this.livechatService.thread.id,
                 page_history: history,
             });
         });

@@ -26,28 +26,22 @@ patch(MockServer.prototype, {
             return this._mockRouteImLivechatInit(args.channel_id);
         }
         if (route === "/im_livechat/visitor_leave_session") {
-            return this._mockRouteVisitorLeaveSession(args.uuid);
+            return this._mockRouteVisitorLeaveSession(args.channel_id);
         }
         if (route === "/im_livechat/notify_typing") {
-            const uuid = args.uuid;
+            const channelid = args.channel_id;
             const is_typing = args.is_typing;
-            return this._mockRouteImLivechatNotifyTyping(uuid, is_typing);
-        }
-        if (route === "/im_livechat/chat_post") {
-            const uuid = args.uuid;
-            const message_content = args.message_content;
-            const context = args.context;
-            return this._mockRouteImLivechatChatPost(uuid, message_content, context);
+            return this._mockRouteImLivechatNotifyTyping(channelid, is_typing);
         }
         if (route === "/im_livechat/feedback") {
-            const { uuid, rate, reason } = args;
-            return this._mockRouteImLivechatFeedback(uuid, rate, reason);
+            const { channel_id, rate, reason } = args;
+            return this._mockRouteImLivechatFeedback(channel_id, rate, reason);
         }
         if (route === "/im_livechat/email_livechat_transcript") {
             return true;
         }
         if (route === "/im_livechat/chat_history") {
-            return this._mockRouteImLivechatChatHistory(args.uuid, args.last_id, args.limit);
+            return this._mockRouteImLivechatChatHistory(args.channel_id, args.last_id, args.limit);
         }
         return super._performRPC(...arguments);
     },
@@ -136,64 +130,24 @@ patch(MockServer.prototype, {
      * Simulates the `/im_livechat/notify_typing` route.
      *
      * @private
-     * @param {string} uuid
+     * @param {string} channelId
      * @param {boolean} is_typing
      * @param {Object} [context={}]
      */
-    _mockRouteImLivechatNotifyTyping(uuid, is_typing) {
-        const [channel] = this.pyEnv["discuss.channel"].searchRead([["uuid", "=", uuid]]);
+    _mockRouteImLivechatNotifyTyping(channelId, is_typing) {
+        const [channel] = this.pyEnv["discuss.channel"].searchRead([["id", "=", channelId]]);
         const memberOfCurrentUser = this._mockDiscussChannelMember__getAsSudoFromContext(
             channel.id
         );
         this._mockDiscussChannelMember_NotifyTyping([memberOfCurrentUser.id], is_typing);
     },
     /**
-     * Simulates the `/im_livechat/chat_post` route.
-     *
-     * @private
-     * @param {string} uuid
-     * @param {string} message_content
-     * @param {Object} [context={}]
-     * @returns {Object} one key for list of followers and one for subtypes
-     */
-    async _mockRouteImLivechatChatPost(uuid, message_content, context = {}) {
-        const channel = this.getRecords("discuss.channel", [["uuid", "=", uuid]])[0];
-        if (!channel) {
-            return false;
-        }
-        let author_id;
-        let email_from;
-        if (this.pyEnv.currentUser && !this.pyEnv.currentUser._is_public()) {
-            const author = this.pyEnv.currentUser;
-            author_id = author.partner_id;
-            email_from = `${author.display_name} <${author.email}>`;
-        } else {
-            author_id = false;
-            // simpler fallback than catchall_formatted
-            email_from = channel.anonymous_name || "catchall@example.com";
-        }
-        // supposedly should convert plain text to html
-        const body = message_content;
-        // ideally should be posted with mail_create_nosubscribe=True
-        return this._mockDiscussChannelMessagePost(
-            channel.id,
-            {
-                author_id,
-                email_from,
-                body,
-                message_type: "comment",
-                subtype_xmlid: "mail.mt_comment",
-            },
-            context
-        );
-    },
-    /**
      * Simulates the `/im_livechat/visitor_leave_session` route.
      *
-     * @param {string} uuid
+     * @param {string} channelId
      */
-    _mockRouteVisitorLeaveSession(uuid) {
-        const channel = this.pyEnv["discuss.channel"].searchRead([["uuid", "=", uuid]]);
+    _mockRouteVisitorLeaveSession(channelId) {
+        const channel = this.pyEnv["discuss.channel"].searchRead([["id", "=", channelId]]);
         if (!channel) {
             return;
         }
@@ -203,13 +157,13 @@ patch(MockServer.prototype, {
     /**
      * Simulates the `/im_livechat/feedback` route.
      *
-     * @param {string} uuid
+     * @param {string} channelId
      * @param {number} rate
      * @param {string|undefined} reason
      * @returns
      */
-    _mockRouteImLivechatFeedback(uuid, rate, reason) {
-        let [channel] = this.pyEnv["discuss.channel"].searchRead([["uuid", "=", uuid]]);
+    _mockRouteImLivechatFeedback(channelId, rate, reason) {
+        let [channel] = this.pyEnv["discuss.channel"].searchRead([["id", "=", channelId]]);
         if (!channel) {
             return false;
         }
@@ -227,15 +181,15 @@ patch(MockServer.prototype, {
         } else {
             this.pyEnv["rating.rating"].write([channel.rating_ids[0]], values);
         }
-        [channel] = this.pyEnv["discuss.channel"].searchRead([["uuid", "=", uuid]]);
+        [channel] = this.pyEnv["discuss.channel"].searchRead([["id", "=", channelId]]);
         return channel.rating_ids[0];
     },
 
     /**
      * Simulates the `/im_livechat/chat_history` route.
      */
-    _mockRouteImLivechatChatHistory(uuid, lastId, limit = 20) {
-        const [channel] = this.pyEnv["discuss.channel"].searchRead([["uuid", "=", uuid]]);
+    _mockRouteImLivechatChatHistory(channelId, lastId, limit = 20) {
+        const [channel] = this.pyEnv["discuss.channel"].searchRead([["id", "=", channelId]]);
         if (!channel) {
             return [];
         }

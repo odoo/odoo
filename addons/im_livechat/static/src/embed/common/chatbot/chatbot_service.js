@@ -86,7 +86,7 @@ export class ChatBotService {
         }
         const message = this.store.Message.insert(
             await rpc("/chatbot/restart", {
-                channel_uuid: this.chatbot.thread.uuid,
+                channel_id: this.chatbot.thread.id,
                 chatbot_script_id: this.chatbot.script.id,
             }),
             { html: true }

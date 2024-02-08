@@ -23,7 +23,6 @@ QUnit.test("Notify message received out of focus", async () => {
             Command.create({ guest_id: guestId }),
         ],
     });
-    const [channel] = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]]);
     await start({
         async mockRPC(route, args, originalRpc) {
             if (route === "/mail/action" && args.init_messaging) {
@@ -50,9 +49,14 @@ QUnit.test("Notify message received out of focus", async () => {
     ]);
     // send after init_messaging because bus subscription is done after init_messaging
     await pyEnv.withGuest(guestId, () =>
-        rpc("/im_livechat/chat_post", {
-            message_content: "Hello",
-            uuid: channel.uuid,
+        rpc("/mail/message/post", {
+            post_data: {
+                body: "Hello",
+                message_type: "comment",
+                subtype_xmlid: "mail.mt_comment",
+            },
+            thread_model: "discuss.channel",
+            thread_id: channelId,
         })
     );
     await contains(".o_notification:has(.o_notification_bar.bg-info)", { text: "Hello" });

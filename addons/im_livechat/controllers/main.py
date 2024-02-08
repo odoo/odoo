@@ -208,10 +208,10 @@ class LivechatController(http.Controller):
         }
         channel.message_post(body=body, message_type='notification', subtype_xmlid='mail.mt_comment')
 
-    @http.route('/im_livechat/feedback', type='json', auth='public', cors="*")
-    def feedback(self, uuid, rate, reason=None, **kwargs):
-        channel = request.env['discuss.channel'].sudo().search([('uuid', '=', uuid)], limit=1)
-        if channel:
+    @http.route("/im_livechat/feedback", type="json", auth="public")
+    @add_guest_to_context
+    def feedback(self, channel_id, rate, reason=None, **kwargs):
+        if channel := request.env["discuss.channel"].search([("id", "=", channel_id)]):
             # limit the creation : only ONE rating per session
             values = {
                 'rating': rate,
@@ -219,13 +219,15 @@ class LivechatController(http.Controller):
                 'feedback': reason,
                 'is_internal': False,
             }
-            if not channel.rating_ids:
+            # sudo: rating.rating - visitor can access rating to check if
+            # feedback was already given
+            if not channel.sudo().rating_ids:
                 values.update({
                     'res_id': channel.id,
                     'res_model_id': request.env['ir.model']._get_id('discuss.channel'),
                 })
-                # find the partner (operator)
-                if channel.channel_partner_ids:
+                # sudo: res.partner - visitor must find the operator to rate
+                if channel.sudo().channel_partner_ids:
                     values['rated_partner_id'] = channel.channel_partner_ids[0].id
                 # if logged in user, set its partner on rating
                 values['partner_id'] = request.env.user.partner_id.id if request.session.uid else False
@@ -238,31 +240,26 @@ class LivechatController(http.Controller):
             return rating.id
         return False
 
-    @http.route('/im_livechat/history', type="json", auth="public", cors="*")
-    def history_pages(self, pid, channel_uuid, page_history=None):
+    @http.route("/im_livechat/history", type="json", auth="public")
+    @add_guest_to_context
+    def history_pages(self, pid, channel_id, page_history=None):
         partner_ids = (pid, request.env.user.partner_id.id)
-        channel = request.env['discuss.channel'].sudo().search([('uuid', '=', channel_uuid), ('channel_partner_ids', 'in', partner_ids)])
-        if channel:
+        if channel := request.env["discuss.channel"].search([("id", "=", channel_id)]):
             channel._send_history_message(pid, page_history)
         return True
 
-    @http.route('/im_livechat/email_livechat_transcript', type='json', auth='public', cors="*")
-    def email_livechat_transcript(self, uuid, email):
-        channel = request.env['discuss.channel'].sudo().search([
-            ('channel_type', '=', 'livechat'),
-            ('uuid', '=', uuid)], limit=1)
-        if channel:
+    @http.route("/im_livechat/email_livechat_transcript", type="json", auth="public")
+    @add_guest_to_context
+    def email_livechat_transcript(self, channel_id, email):
+        if channel := request.env["discuss.channel"].search([("id", "=", channel_id)]):
             channel._email_livechat_transcript(email)
 
     @http.route("/im_livechat/visitor_leave_session", type="json", auth="public")
     @add_guest_to_context
-    def visitor_leave_session(self, uuid):
+    def visitor_leave_session(self, channel_id):
         """Called when the livechat visitor leaves the conversation.
         This will clean the chat request and warn the operator that the conversation is over.
         This allows also to re-send a new chat request to the visitor, as while the visitor is
         in conversation with an operator, it's not possible to send the visitor a chat request."""
-        # sudo: channel access is validated with uuid
-        channel_sudo = request.env["discuss.channel"].sudo().search([("uuid", "=", uuid)])
-        if not channel_sudo:
-            return
-        channel_sudo._close_livechat_session()
+        if channel := request.env["discuss.channel"].search([("id", "=", channel_id)]):
+            channel._close_livechat_session()
