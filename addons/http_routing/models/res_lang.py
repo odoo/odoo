@@ -1,19 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models, tools
+from odoo import models
+from odoo.addons.base.models.res_lang import LangDataDict
 
 
-class Lang(models.Model):
+class ResLang(models.Model):
     _inherit = "res.lang"
 
-    @api.model
-    @tools.ormcache()
-    def get_frontend_langs(self):
-        """ Return the languages available in the frontend as a list of
-            (code, url_code, name, active) sorted by name.
+    def _get_frontend(self) -> LangDataDict:
+        """ Return the available languages for current request
+        :return: LangDataDict({code: LangData})
         """
-        langs = self.with_context(active_test=True).search([])
-        return langs.get_sorted()
-
-    def get_sorted(self):
-        return self.sorted('name').read(['id', 'code', 'url_code', 'name', 'active', 'flag_image_url'])
+        return self._get_active_by('code')

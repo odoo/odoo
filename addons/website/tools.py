@@ -59,7 +59,7 @@ def MockRequest(
         cr=env.cr,
         uid=env.uid,
         context=env.context,
-        lang=env['res.lang']._lang_get(lang_code),
+        lang=env['res.lang']._get_data(code=lang_code),
         website=website,
         render=lambda *a, **kw: '<MockResponse>',
     )

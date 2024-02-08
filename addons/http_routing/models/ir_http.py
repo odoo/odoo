@@ -23,6 +23,7 @@ from odoo import api, models, exceptions, tools, http
 from odoo.addons.base.models import ir_http
 from odoo.addons.base.models.ir_http import RequestUID
 from odoo.addons.base.models.ir_qweb import keep_query, QWebException
+from odoo.addons.base.models.res_lang import LangData
 from odoo.exceptions import AccessError, MissingError
 from odoo.http import request, HTTPRequest, Response
 from odoo.osv import expression
@@ -148,7 +149,7 @@ def url_localized(url=None, lang_code=None, canonical_domain=None, prefetch_lang
     if not lang_code:
         lang = request.lang
     else:
-        lang = request.env['res.lang']._lang_get(lang_code)
+        lang = request.env['res.lang']._get_data(code=lang_code)
 
     if not url:
         qs = keep_query()
@@ -166,7 +167,7 @@ def url_localized(url=None, lang_code=None, canonical_domain=None, prefetch_lang
                 if isinstance(val._uid, RequestUID):
                     args[key] = val = val.with_user(request.uid)
                 if val.env.context.get('lang') != lang.code:
-                    args[key] = val = val.with_context(lang=lang._get_cached('code'))
+                    args[key] = val = val.with_context(lang=lang.code)
                 if prefetch_langs:
                     args[key] = val = val.with_context(prefetch_langs=True)
         router = http.root.get_db_router(request.db).bind('')
@@ -175,7 +176,7 @@ def url_localized(url=None, lang_code=None, canonical_domain=None, prefetch_lang
         # The build method returns a quoted URL so convert in this case for consistency.
         path = werkzeug.urls.url_quote_plus(url, safe='/')
     if force_default_lang or lang != request.env['ir.http']._get_default_lang():
-        path = f'/{lang._get_cached("url_code")}{path if path != "/" else ""}'
+        path = f'/{lang.url_code}{path if path != "/" else ""}'
 
     if canonical_domain:
         # canonical URLs should not have qs
@@ -205,7 +206,7 @@ def url_lang(path_or_uri, lang_code=None):
     # relative URL with either a path or a force_lang
     if url and not url.netloc and not url.scheme and (url.path or force_lang):
         location = werkzeug.urls.url_join(request.httprequest.path, location)
-        lang_url_codes = [lg['url_code'] for lg in Lang.get_frontend_langs()]
+        lang_url_codes = [info.url_code for info in Lang._get_frontend().values()]
         lang_code = pycompat.to_text(lang_code or request.context['lang'])
         lang_url_code = Lang._get_data(code=lang_code).url_code
         lang_url_code = lang_url_code if lang_url_code in lang_url_codes else lang_code
@@ -266,7 +267,7 @@ def is_multilang_url(local_url, lang_url_codes=None):
         2. If not matching 1., everything not under /static/ or /web/ will be translatable
     '''
     if not lang_url_codes:
-        lang_url_codes = [lg['url_code'] for lg in request.env['res.lang'].get_frontend_langs()]
+        lang_url_codes = [lg.url_code for lg in request.env['res.lang']._get_frontend().values()]
     spath = local_url.split('/')
     # if a language is already in the path, remove it
     if spath[1] in lang_url_codes:
@@ -335,11 +336,11 @@ class IrHttp(models.AbstractModel):
         )
 
     @classmethod
-    def _get_default_lang(cls):
+    def _get_default_lang(cls) -> LangData:
         lang_code = request.env['ir.default'].sudo()._get('res.partner', 'lang')
         if lang_code:
-            return request.env['res.lang']._lang_get(lang_code)
-        return request.env['res.lang'].search([], limit=1)
+            return request.env['res.lang']._get_data(code=lang_code)
+        return next(iter(request.env['res.lang']._get_active_by('code').values()))
 
     @api.model
     def get_frontend_session_info(self):
@@ -393,12 +394,12 @@ class IrHttp(models.AbstractModel):
         if not lang_code:
             return None
 
-        lang_codes = [lg['code'] for lg in self.env['res.lang'].get_frontend_langs()]
-        if lang_code in lang_codes:
+        frontend_langs = self.env['res.lang']._get_frontend()
+        if lang_code in frontend_langs:
             return lang_code
 
         short = lang_code.partition('_')[0]
-        return next((code for code in lang_codes if code.startswith(short)), None)
+        return next((code for code in frontend_langs if code.startswith(short)), None)
 
     @classmethod
     def _match(cls, path):
@@ -486,10 +487,10 @@ class IrHttp(models.AbstractModel):
             cookie_lang = request.env['ir.http'].get_nearest_lang(request.httprequest.cookies.get('frontend_lang'))
             context_lang = request.env['ir.http'].get_nearest_lang(real_env.context.get('lang'))
             default_lang = cls._get_default_lang()
-            request.lang = request.env['res.lang']._lang_get(
-                nearest_url_lang or cookie_lang or context_lang or default_lang._get_cached('code')
-            )
-            request_url_code = request.lang._get_cached('url_code')
+            request.lang = request.env['res.lang']._get_data(code=(
+                nearest_url_lang or cookie_lang or context_lang or default_lang.code
+            ))
+            request_url_code = request.lang.url_code
         finally:
             request.env = real_env
 
@@ -513,28 +514,28 @@ class IrHttp(models.AbstractModel):
         elif not url_lang_str:
             _logger.debug("%r (lang: %r) missing lang in url, redirect", path, request_url_code)
             redirect = request.redirect_query(f'/{request_url_code}{path}', request.httprequest.args)
-            redirect.set_cookie('frontend_lang', request.lang._get_cached('code'))
+            redirect.set_cookie('frontend_lang', request.lang.code)
             werkzeug.exceptions.abort(redirect)
 
         # See /6, default lang in url, /en/home -> /home
         elif url_lang_str == default_lang.url_code and allow_redirect:
             _logger.debug("%r (lang: %r) default lang in url, redirect", path, request_url_code)
             redirect = request.redirect_query(path_no_lang, request.httprequest.args)
-            redirect.set_cookie('frontend_lang', default_lang._get_cached('code'))
+            redirect.set_cookie('frontend_lang', default_lang.code)
             werkzeug.exceptions.abort(redirect)
 
         # See /7, lang alias in url, /fr_FR/home -> /fr/home
         elif url_lang_str != request_url_code and allow_redirect:
             _logger.debug("%r (lang: %r) lang alias in url, redirect", path, request_url_code)
             redirect = request.redirect_query(f'/{request_url_code}{path_no_lang}', request.httprequest.args, code=301)
-            redirect.set_cookie('frontend_lang', request.lang._get_cached('code'))
+            redirect.set_cookie('frontend_lang', request.lang.code)
             werkzeug.exceptions.abort(redirect)
 
         # See /8, homepage with trailing slash. /fr_BE/ -> /fr_BE
         elif path == f'/{url_lang_str}/' and allow_redirect:
             _logger.debug("%r (lang: %r) homepage with trailing slash, redirect", path, request_url_code)
             redirect = request.redirect_query(path[:-1], request.httprequest.args, code=301)
-            redirect.set_cookie('frontend_lang', default_lang._get_cached('code'))
+            redirect.set_cookie('frontend_lang', default_lang.code)
             werkzeug.exceptions.abort(redirect)
 
         # See /9, valid lang in url
@@ -624,10 +625,9 @@ class IrHttp(models.AbstractModel):
 
     @classmethod
     def _frontend_pre_dispatch(cls):
-        request.lang = request.lang.with_env(request.env)
-        request.update_context(lang=request.lang._get_cached('code'))
-        if request.httprequest.cookies.get('frontend_lang') != request.lang._get_cached('code'):
-            request.future_response.set_cookie('frontend_lang', request.lang._get_cached('code'))
+        request.update_context(lang=request.lang.code)
+        if request.httprequest.cookies.get('frontend_lang') != request.lang.code:
+            request.future_response.set_cookie('frontend_lang', request.lang.code)
 
     @classmethod
     def _get_exception_code_values(cls, exception):
