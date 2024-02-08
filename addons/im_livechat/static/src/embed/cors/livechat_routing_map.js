@@ -40,4 +40,11 @@ livechatRoutingMap
     )
     .add("/im_livechat/visitor_leave_session", "/im_livechat/cors/visitor_leave_session")
     .add("/im_livechat/get_session", "/im_livechat/cors/get_session")
-    .add("/im_livechat/init", "/im_livechat/cors/init");
+    .add("/im_livechat/init", "/im_livechat/cors/init")
+    .add("/im_livechat/feedback", "/im_livechat/cors/feedback")
+    .add("/im_livechat/history", "/im_livechat/cors/history")
+    .add("/im_livechat/email_livechat_transcript", "/im_livechat/cors/email_livechat_transcript")
+    .add("/chatbot/restart", "/chatbot/cors/restart")
+    .add("/chatbot/answer/save", "/chatbot/cors/answer/save")
+    .add("/chatbot/step/trigger", "/chatbot/cors/step/trigger")
+    .add("/chatbot/step/validate_email", "/chatbot/cors/step/validate_email");

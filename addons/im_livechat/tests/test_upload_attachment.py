@@ -22,7 +22,7 @@ class TestUploadAttachment(HttpCase):
                 "persisted": True,
             },
         )["Thread"]
-        self.make_jsonrpc_request("/im_livechat/visitor_leave_session", {"uuid": channel_info["uuid"]})
+        self.make_jsonrpc_request("/im_livechat/visitor_leave_session", {"channel_id": channel_info["id"]})
         with mute_logger("odoo.http"), file_open("addons/web/__init__.py") as file:
             response = self.url_open(
                 "/mail/attachment/upload",

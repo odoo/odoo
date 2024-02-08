@@ -31,7 +31,7 @@ QUnit.test("Public website visitor is typing", async () => {
     pyEnv.withGuest(guestId, () =>
         rpc("/im_livechat/notify_typing", {
             is_typing: true,
-            uuid: channel.uuid,
+            channel_id: channel.id,
         })
     );
     await contains(".o-mail-Discuss-header .o-discuss-Typing-icon");

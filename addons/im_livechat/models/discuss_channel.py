@@ -114,18 +114,6 @@ class DiscussChannel(models.Model):
             message_body = '<ul>%s</ul>' % (''.join(html_links))
         self._send_transient_message(self.env['res.partner'].browse(pid), message_body)
 
-    def _message_update_content(self, message, body, attachment_ids=None, partner_ids=None, strict=True, **kwargs):
-        super()._message_update_content(
-            message=message, body=body, attachment_ids=attachment_ids, partner_ids=partner_ids, strict=strict, **kwargs
-        )
-        if self.channel_type == 'livechat':
-            self.env['bus.bus']._sendone(self.uuid, 'mail.record/insert', {
-                'Message': {
-                    'id': message.id,
-                    'body': message.body,
-                }
-            })
-
     def _get_visitor_leave_message(self, operator=False, cancel=False):
         return _('Visitor left the conversation.')
 
@@ -138,7 +126,8 @@ class DiscussChannel(models.Model):
                 member.fold_state = "closed"
                 # sudo: discuss.channel.rtc.session - member of current user can leave call
                 member.sudo()._rtc_leave_call()
-            self.livechat_active = False
+            # sudo: discuss.channel - visitor left the conversation, state must be updated
+            self.sudo().livechat_active = False
             # avoid useless notification if the channel is empty
             if not self.message_ids:
                 return
@@ -196,7 +185,8 @@ class DiscussChannel(models.Model):
         """
         values = {}
         filtered_message_ids = self.chatbot_message_ids.filtered(
-            lambda m: m.script_step_id.step_type in step_type_to_field.keys()
+            # sudo: chatbot.script.step - getting the type of the current step
+            lambda m: m.script_step_id.sudo().step_type in step_type_to_field
         )
         for message_id in filtered_message_ids:
             field_name = step_type_to_field[message_id.script_step_id.step_type]
@@ -252,11 +242,10 @@ class DiscussChannel(models.Model):
         return super()._message_post_after_hook(message, msg_vals)
 
     def _chatbot_restart(self, chatbot_script):
-        self.write({
-            'chatbot_current_step_id': False
-        })
-
-        self.chatbot_message_ids.unlink()
+        # sudo: discuss.channel - visitor can clear current step to restart the script
+        self.sudo().chatbot_current_step_id = False
+        # sudo: chatbot.message - visitor can clear chatbot messages to restart the script
+        self.sudo().chatbot_message_ids.unlink()
 
         return self._chatbot_post_message(
             chatbot_script,

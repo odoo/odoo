@@ -93,7 +93,7 @@ export class Chatbot extends Record {
         }
         if (this.steps.at(-1)?.eq(this.currentStep)) {
             const nextStep = await rpc("/chatbot/step/trigger", {
-                channel_uuid: this.thread.uuid,
+                channel_id: this.thread.id,
                 chatbot_script_id: this.script.id,
             });
             if (!nextStep) {
@@ -139,7 +139,7 @@ export class Chatbot extends Record {
         const answer = this.currentStep.answers.find(({ label }) => message.body.includes(label));
         this.currentStep.selectedAnswer = answer;
         await rpc("/chatbot/answer/save", {
-            channel_uuid: this.thread.uuid,
+            channel_id: this.thread.id,
             message_id: this.currentStep.message.id,
             selected_answer_id: answer.id,
         });
@@ -161,7 +161,7 @@ export class Chatbot extends Record {
      */
     async _processAnswerQuestionEmail() {
         const { success, posted_message: message } = await rpc("/chatbot/step/validate_email", {
-            channel_uuid: this.thread.uuid,
+            channel_id: this.thread.id,
         });
         if (message) {
             this.thread.messages.add({ ...message, body: markup(message.body) });

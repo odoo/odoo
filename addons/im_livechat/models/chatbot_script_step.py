@@ -259,8 +259,10 @@ class ChatbotScriptStep(models.Model):
         discuss_channel = discuss_channel or self.env['discuss.channel']
 
         # if it's not a question and if there is no next step, then we end the script
-        if self.step_type != 'question_selection' and not self._fetch_next_step(
-           discuss_channel.chatbot_message_ids.user_script_answer_id):
+        # sudo: chatbot.script.answser - visitor can access their own answers
+        if self.step_type != "question_selection" and not self._fetch_next_step(
+            discuss_channel.sudo().chatbot_message_ids.user_script_answer_id
+        ):
             return True
 
         return False
@@ -296,7 +298,8 @@ class ChatbotScriptStep(models.Model):
                 chatbot_message.write({'user_raw_answer': message_body})
                 self.env.flush_all()
 
-        return self._fetch_next_step(discuss_channel.chatbot_message_ids.user_script_answer_id)
+        # sudo: chatbot.script.answer - visitor can access their own answer
+        return self._fetch_next_step(discuss_channel.sudo().chatbot_message_ids.user_script_answer_id)
 
     def _process_step(self, discuss_channel):
         """ When we reach a chatbot.step in the script we need to do some processing on behalf of
@@ -309,8 +312,8 @@ class ChatbotScriptStep(models.Model):
         Returns the mail.message posted by the chatbot's operator_partner_id. """
 
         self.ensure_one()
-        # We change the current step to the new step
-        discuss_channel.chatbot_current_step_id = self.id
+        # sudo: discuss.channel - updating current step on the channel is allowed
+        discuss_channel.sudo().chatbot_current_step_id = self.id
 
         if self.step_type == 'forward_operator':
             return self._process_step_forward_operator(discuss_channel)
@@ -329,7 +332,8 @@ class ChatbotScriptStep(models.Model):
         posted_message = False
 
         if discuss_channel.livechat_channel_id:
-            human_operator = discuss_channel.livechat_channel_id._get_operator(
+            # sudo: res.users - visitor can access operator of their channel
+            human_operator = discuss_channel.livechat_channel_id.sudo()._get_operator(
                 lang=discuss_channel.livechat_visitor_id.lang_id.code,
                 country_id=discuss_channel.country_id.id
             )
