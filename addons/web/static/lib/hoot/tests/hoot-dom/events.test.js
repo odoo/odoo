@@ -20,7 +20,16 @@ import {
     uncheck,
 } from "../../../hoot-dom/hoot-dom";
 import { after, describe, expect, test } from "../../hoot";
+import { mockUserAgent } from "../../mock/navigator";
 import { mount, parseUrl } from "../local_helpers";
+
+/**
+ * @param {KeyboardEvent} ev
+ */
+const formatKeyBoardEvent = (ev) =>
+    `${ev.type}${ev.key ? `:${ev.key}` : ""}${ev.altKey ? ".alt" : ""}${ev.ctrlKey ? ".ctrl" : ""}${
+        ev.metaKey ? ".meta" : ""
+    }${ev.shiftKey ? ".shift" : ""}`;
 
 /**
  * @param {import("../../helpers/dom").Target} target
@@ -811,18 +820,64 @@ describe(parseUrl(import.meta.url), () => {
         expect("input").toHaveValue(4);
     });
 
+    test("special keys modifiers: Windows", async () => {
+        mockUserAgent("Windows");
+
+        await mount(/* xml */ `<input />`);
+
+        click("input");
+
+        monitorEvents("input", formatKeyBoardEvent);
+
+        press("alt");
+
+        expect(["keydown:Alt.alt", "keyup:Alt.alt"]).toVerifySteps();
+
+        press("ctrl");
+
+        expect(["keydown:Control.ctrl", "keyup:Control.ctrl"]).toVerifySteps();
+
+        press("meta");
+
+        expect(["keydown:Meta.meta", "keyup:Meta.meta"]).toVerifySteps();
+
+        press("shift");
+
+        expect(["keydown:Shift.shift", "keyup:Shift.shift"]).toVerifySteps();
+    });
+
+    test("special keys modifiers: Mac", async () => {
+        mockUserAgent("Macintosh");
+
+        await mount(/* xml */ `<input />`);
+
+        click("input");
+
+        monitorEvents("input", formatKeyBoardEvent);
+
+        press("alt");
+
+        expect(["keydown:Alt.ctrl", "keyup:Alt.ctrl"]).toVerifySteps();
+
+        press("ctrl");
+
+        expect(["keydown:Control.meta", "keyup:Control.meta"]).toVerifySteps();
+
+        press("meta");
+
+        expect(["keydown:Meta.meta", "keyup:Meta.meta"]).toVerifySteps();
+
+        press("shift");
+
+        expect(["keydown:Shift.shift", "keyup:Shift.shift"]).toVerifySteps();
+    });
+
     test("compose shift, alt and control and a key", async () => {
         await mount(/* xml */ `<input />`);
 
         click("input");
 
-        monitorEvents(
-            "input",
-            (ev) =>
-                `${ev.type}${ev.key ? `:${ev.key}` : ""}${ev.altKey ? ".alt" : ""}${
-                    ev.ctrlKey ? ".ctrl" : ""
-                }${ev.shiftKey ? ".shift" : ""}`
-        );
+        monitorEvents("input", formatKeyBoardEvent);
 
         press(["ctrl", "b"]);
 
