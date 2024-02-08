@@ -20,7 +20,7 @@ import { HootTestResult } from "./hoot_test_result";
 // Global
 //-----------------------------------------------------------------------------
 
-const { Boolean, Math, RegExp } = globalThis;
+const { Boolean, RegExp } = globalThis;
 
 //-----------------------------------------------------------------------------
 // Internal

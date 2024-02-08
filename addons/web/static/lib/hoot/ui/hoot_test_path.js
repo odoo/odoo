@@ -1,7 +1,6 @@
 /** @odoo-module */
 
 import { Component, useState, xml } from "@odoo/owl";
-import { Suite } from "../core/suite";
 import { Test } from "../core/test";
 import { HootCopyButton } from "./hoot_copy_button";
 import { HootLink } from "./hoot_link";
@@ -109,7 +108,7 @@ export class HootTestPath extends Component {
     }
 
     /**
-     * @param {Suite} suite
+     * @param {import("../core/suite").Suite} suite
      */
     getSuiteInfo(suite) {
         let suites = 0;

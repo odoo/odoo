@@ -207,7 +207,6 @@ export function cleanupWindow() {
     // Cookies
     mockCookie.clear();
 
-
     // Title
     mockTitle = "";
 

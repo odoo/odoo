@@ -61,7 +61,6 @@ const {
     console,
     document,
     Map,
-    matchMedia,
     Math,
     MutationObserver,
     Number,
@@ -631,7 +630,7 @@ const NEXT_SIBLINGS = (node, selector) => {
 
 /** @type {Map<HTMLElement, { callbacks: Set<MutationCallback>, observer: MutationObserver }>} */
 const observers = new Map();
-let currentDimensions = {
+const currentDimensions = {
     width: null,
     height: null,
 };

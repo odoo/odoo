@@ -34,10 +34,8 @@ export { getService, makeMockEnv, mockService } from "./_framework/env_test_help
 export { Command } from "./_framework/mock_server/mock_model";
 export {
     MockServer,
-    callWorkerBundle,
     defineModels,
     getServerWebSockets,
-    getServerWorkers,
     makeMockServer,
     onRpc,
 } from "./_framework/mock_server/mock_server";

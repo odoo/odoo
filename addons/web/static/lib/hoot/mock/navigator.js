@@ -1,4 +1,5 @@
 /** @odoo-module */
+/* eslint-disable no-restricted-syntax */
 
 import { createMock, makePublicListeners } from "../hoot_utils";
 

@@ -2,7 +2,6 @@
 
 import { HootError, createReporting, makeCallbacks } from "../hoot_utils";
 import { Job } from "./job";
-import { Test } from "./test";
 
 /**
  * @typedef {import("./tag").Tag} Tag
