@@ -3,7 +3,7 @@
 import { PivotArchParser } from "@web/views/pivot/pivot_arch_parser";
 import { nextTick } from "@web/../tests/helpers/utils";
 
-import { PivotDataSource } from "@spreadsheet/pivot/pivot_data_source";
+import { OdooPivot } from "@spreadsheet/pivot/pivot_data_source";
 import { getBasicServerData, getBasicPivotArch } from "./data";
 import { createModelWithDataSource, waitForDataSourcesLoaded } from "./model";
 
@@ -28,11 +28,7 @@ export async function insertPivotInSpreadsheet(model, params) {
     };
     const pivotId = model.getters.getNextPivotId();
     const dataSourceId = model.getters.getPivotDataSourceId(pivotId);
-    const dataSource = model.config.custom.dataSources.add(
-        dataSourceId,
-        PivotDataSource,
-        definition
-    );
+    const dataSource = model.config.custom.dataSources.add(dataSourceId, OdooPivot, definition);
     await dataSource.load();
     const { cols, rows, measures, rowTitle } = dataSource.getTableStructure().export();
     const table = {

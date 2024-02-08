@@ -1,5 +1,5 @@
 /** @odoo-module */
-
+//@ts-check
 import { _t } from "@web/core/l10n/translation";
 import { Domain } from "@web/core/domain";
 import { sprintf } from "@web/core/utils/strings";
@@ -8,7 +8,6 @@ import { PivotModel } from "@web/views/pivot/pivot_model";
 import { helpers, constants, EvaluationError } from "@odoo/o-spreadsheet";
 import { SpreadsheetPivotTable } from "@spreadsheet/pivot/pivot_table";
 import { pivotTimeAdapter } from "./pivot_time_adapters";
-import { OdooPivotDataSource } from "./pivot_runtime";
 import { parseGroupField } from "./pivot_helpers";
 
 const { toString, toNumber, toBoolean } = helpers;
@@ -31,33 +30,6 @@ function throwUnsupportedFieldError(field) {
     throw new EvaluationError(
         sprintf(_t("Field %s is not supported because of its type (%s)"), field.string, field.type)
     );
-}
-
-/**
- * @param {import("@spreadsheet").PivotDefinition} definition
- * @param {Record<string, Field | undefined>} [fields]
- *
- * @returns {import("@spreadsheet").WebPivotModelParams}
- */
-function definitionForPivotModel(definition, fields) {
-    return {
-        searchParams: {
-            domain: definition.domain,
-            context: definition.context,
-            groupBy: [],
-            orderBy: [],
-        },
-        metaData: {
-            sortedColumn: definition.sortedColumn,
-            activeMeasures: definition.measures,
-            resModel: definition.model,
-            colGroupBys: definition.colGroupBys,
-            rowGroupBys: definition.rowGroupBys,
-            fieldAttrs: {},
-            fields,
-        },
-        name: definition.name,
-    };
 }
 
 /**
@@ -109,15 +81,24 @@ export function toNormalizedPivotValue(field, groupValue, aggregateOperator) {
  * This class is an extension of PivotModel with some additional information
  * that we need in spreadsheet (display_name, isUsedInSheet, ...)
  */
-export class SpreadsheetPivotModel extends PivotModel {
+export class OdooPivotModel extends PivotModel {
     /**
-     * @param {import("@spreadsheet").WebPivotModelParams} params
-     * @param {Object} services
-     * @param {import("../data_sources/metadata_repository").MetadataRepository} services.metadataRepository
+     * @param {Object} env
+     * @param {_t} env._t
+     * @param {import("@spreadsheet").OdooPivotModelParams} params
+     * @param {import("@spreadsheet").PivotModelServices} services
+     */
+    constructor(env, params, services) {
+        super(env, params, services);
+    }
+
+    /**
+     * @param {import("@spreadsheet").OdooPivotModelParams} params
+     * @param {import("@spreadsheet").PivotModelServices} services
      */
     setup(params, services) {
         /** This is necessary to ensure the compatibility with the PivotModel from web */
-        const p = definitionForPivotModel(params.definition, params.metaData.fields);
+        const p = params.definition.getDefinitionForPivotModel(params.metaData.fields);
         p.searchParams = {
             ...p.searchParams,
             ...params.searchParams,
@@ -126,11 +107,11 @@ export class SpreadsheetPivotModel extends PivotModel {
 
         this.metadataRepository = services.metadataRepository;
 
-        this.runtime = new OdooPivotDataSource(params.definition, this.metaData.fields);
+        this.definition = params.definition;
     }
 
     getDefinition() {
-        return this.runtime.definition;
+        return this.definition;
     }
 
     async load(searchParams) {
@@ -160,7 +141,7 @@ export class SpreadsheetPivotModel extends PivotModel {
      * getGroupByCellValue("stage_id", 42) // "Won"
      *
      * @param {string} groupFieldString Name of the field
-     * @param {string | number} groupValueString Value of the group by
+     * @param {string | number | boolean} groupValueString Value of the group by
      * @returns {string | number}
      */
     getGroupByCellValue(groupFieldString, groupValueString) {
