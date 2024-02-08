@@ -239,11 +239,11 @@ Contracts:
             # Use sudo otherwise base users can't compute number of days
             contracts = employee.sudo()._get_contracts(date_from, date_to, states=['open', 'close'])
             contracts |= employee.sudo()._get_incoming_contracts(date_from, date_to)
-            calendar = contracts[:1].resource_calendar_id if contracts else self.env.company.resource_calendar_id # Note: if len(contracts)>1, the leave creation will crash because of unicity constaint
+            calendar = contracts[:1].resource_calendar_id if contracts else employee.company_id.resource_calendar_id # Note: if len(contracts)>1, the leave creation will crash because of unicity constaint
             # We force the company in the domain as we are more than likely in a compute_sudo
             domain = [('company_id', 'in', self.env.company.ids + self.env.context.get('allowed_company_ids', []))]
             result = employee._get_work_days_data_batch(date_from, date_to, calendar=calendar, domain=domain)[employee.id]
-            if self.request_unit_half and result['hours'] > 0:
+            if self.request_unit_half and result['hours'] > 0 or result['hours'] <= (calendar.hours_per_day * 3 / 4):
                 result['days'] = 0.5
             return result
 

@@ -767,7 +767,10 @@ class HolidaysRequest(models.Model):
             False)
 
         hours = self.env.company.resource_calendar_id.get_work_hours_count(date_from, date_to)
-        days = hours / (today_hours or HOURS_PER_DAY) if not self.request_unit_half else 0.5
+        if self.request_unit_half or hours <= (self.env.company.resource_calendar_id.hours_per_day * 3 / 4):
+            days = 0.5
+        else:
+            days = hours / (today_hours or HOURS_PER_DAY)
         return {'days': days, 'hours': hours}
 
     def _adjust_date_based_on_tz(self, leave_date, hour):
