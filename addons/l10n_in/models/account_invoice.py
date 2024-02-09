@@ -64,7 +64,7 @@ class AccountMove(models.Model):
 
     @api.onchange('name')
     def _onchange_name_warning(self):
-        if self.country_code == 'IN' and self.journal_id.type == 'sale' and (len(self.name) > 16 or not re.match(r'^[a-zA-Z0-9-\/]+$', self.name)):
+        if self.country_code == 'IN' and self.journal_id.type == 'sale' and self.name and (len(self.name) > 16 or not re.match(r'^[a-zA-Z0-9-\/]+$', self.name)):
             return {'warning': {
                 'title' : _("Invalid sequence as per GST rule 46(b)"),
                 'message': _(
