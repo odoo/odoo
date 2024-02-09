@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { Component, xml } from "@odoo/owl";
+import { Component, useState, xml } from "@odoo/owl";
 import { Tag } from "../core/tag";
 import { Test } from "../core/test";
 import { subscribeToURLParams } from "../core/url";
@@ -43,7 +43,7 @@ export class HootTestResult extends Component {
                 <t t-slot="default" />
             </summary>
             <t t-if="!props.test.config.skip">
-                <div class="hoot-result-detail grid gap-1 rounded overflow-x-auto p-1 m-2 mt-0">
+                <div class="hoot-result-detail grid gap-1 rounded overflow-x-auto p-1 mx-2">
                     <t t-set="lastResults" t-value="props.test.lastResults" />
                     <t t-foreach="lastResults.assertions" t-as="assertion" t-key="assertion.id">
                         <div
@@ -103,6 +103,22 @@ export class HootTestResult extends Component {
                         </t>
                     </t>
                 </div>
+                <div class="m-2 mt-1 flex flex-col">
+                    <button class="hoot-link text-muted text-sm px-1" t-on-click="() => state.showCode = !state.showCode">
+                        <t t-if="state.showCode">
+                            Hide source code
+                        </t>
+                        <t t-else="">
+                            Show source code
+                        </t>
+                    </button>
+                    <t t-if="state.showCode">
+                        <pre
+                            class="px-2 py-1 rounded bg-white text-black dark:bg-black dark:text-white animate-slide-down"
+                            t-esc="props.test.code"
+                        />
+                    </t>
+                </div>
             </t>
         </details>
     `;
@@ -137,6 +153,10 @@ export class HootTestResult extends Component {
 
     setup() {
         subscribeToURLParams("*");
+
+        this.state = useState({
+            showCode: false,
+        });
     }
 
     /**
