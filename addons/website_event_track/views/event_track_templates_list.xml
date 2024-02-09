@@ -386,7 +386,7 @@
             <div class="col-12">
                 <main class="card-body">
                     <!-- Tags> -->
-                    <div class="mb-2">
+                    <div class="mb-2 d-flex flex-wrap gap-1">
                         <t t-foreach="track.tag_ids" t-as="tag">
                             <t t-if="tag.color" t-call="website_event_track.track_tag_badge_info"/>
                         </t>
@@ -425,7 +425,7 @@
 
 <!-- Searched tags -->
 <template id="tracks_search" name="Tracks: search tags">
-    <div t-if="search_wishlist or search_tags" class="d-flex align-items-center my-3">
+    <div t-if="search_wishlist or search_tags" class="d-flex flex-wrap align-items-center my-3 gap-2">
         <span t-if="search_wishlist"
             class="align-items-baseline border d-inline-flex rounded">
             <i class="fa fa-bell mx-2 text-muted"/> Favorite Talks
