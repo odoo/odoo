@@ -445,3 +445,13 @@ class TestProjectFlow(TestProjectCommon, MailCommon):
         # Tag name_search should not raise Error if project_id is False
         task.tag_ids.with_context(project_id=task.project_id.id).name_search(
             args=["!", ["id", "in", []]])
+
+    def test_description_field_history_on_update(self):
+        """Test updating 'description' field in project task and checking history content at revision id."""
+
+        task = self.env['project.task'].create({
+            'name': 'Test Task',
+            'description': 'Hello',
+        })
+        task.description = False
+        self.assertEqual(task.html_field_history_get_content_at_revision('description', 1), '<p>Hello</p>', "should recover previous text for description")
