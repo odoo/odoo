@@ -82,7 +82,7 @@ class NewLeadNotification(TestCrmCommon):
             ]
         ):
             with self.subTest(lead=lead, lead_name=lead.name, email_from=lead.email_from):
-                res = lead._message_get_suggested_recipients()[lead.id]
+                res = lead._message_get_suggested_recipients()
                 self.assertEqual(len(res), 1)
                 self.assertEqual(res[0][:4], expected[:4])
                 customer_data = expected[4]
@@ -117,7 +117,7 @@ class NewLeadNotification(TestCrmCommon):
         ]
         for lead, expected in zip(leads, expected_list):
             with self.subTest(lead=lead):
-                res = lead._message_get_suggested_recipients()[lead.id]
+                res = lead._message_get_suggested_recipients()
                 self.assertEqual(len(res), 1)
                 self.assertEqual(res[0][:4], expected[:4])
                 for partner_fname in expected[4]:
@@ -165,7 +165,7 @@ class NewLeadNotification(TestCrmCommon):
                     'partner_name': partner_name,
                     **lead_details_for_contact,
                 })
-                data = lead1._message_get_suggested_recipients()[lead1.id]
+                data = lead1._message_get_suggested_recipients()
                 suggested_partner_id, suggested_partner_email, suggested_lang, suggested_reason, create_vals = data[0]
                 self.assertFalse(suggested_partner_id)
                 self.assertEqual(suggested_partner_email, formatted_email)

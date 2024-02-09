@@ -425,7 +425,7 @@ class TestDiscuss(MailCommon, TestRecipients):
             'email_from': email,
             'mobile_number': data_from_record_mobile,
         })
-        suggestions = record._message_get_suggested_recipients()[record.id]
+        suggestions = record._message_get_suggested_recipients()
         self.assertEqual(
             suggestions,
             [(False, email, None, 'Customer Email', {'mobile': '+33199001015', 'phone': False})]
