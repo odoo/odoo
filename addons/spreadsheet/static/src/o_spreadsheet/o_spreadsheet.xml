@@ -437,7 +437,7 @@
         t-on-keyup="onKeyup"
         t-on-click="onClick"
         t-on-blur="onBlur"
-        t-on-paste.stop=""
+        t-on-paste="onPaste"
         t-on-compositionstart="onCompositionStart"
         t-on-compositionend="onCompositionEnd"
       />
@@ -532,14 +532,7 @@
       t-esc="cellReference"
     />
     <div class="o-grid-composer" t-att-style="containerStyle" t-ref="gridComposer">
-      <Composer
-        focus="props.focus"
-        inputStyle="composerStyle"
-        rect="composerState.rect"
-        delimitation="composerState.delimitation"
-        onComposerUnmounted="props.onComposerUnmounted"
-        onComposerContentFocused="props.onComposerContentFocused"
-      />
+      <Composer t-props="composerProps"/>
     </div>
   </t>
 
@@ -910,9 +903,10 @@
       class="o-grid"
       tabindex="-1"
       t-att-class="{'o-two-columns': !props.sidePanelIsOpen}"
-      t-on-click="focus"
+      t-on-click="focusDefaultElement"
       t-on-keydown="onKeydown"
       t-on-wheel="onMouseWheel"
+      t-on-contextmenu="onInputContextMenu"
       t-ref="grid">
       <GridOverlay
         onCellClicked.bind="onCellClicked"
@@ -922,27 +916,15 @@
         onGridResized.bind="onGridResized"
         onGridMoved.bind="moveCanvas"
         gridOverlayDimensions="gridOverlayDimensions"
-        onFigureDeleted.bind="focus"
+        onFigureDeleted.bind="focusDefaultElement"
       />
       <HeadersOverlay onOpenContextMenu="(type, x, y) => this.toggleContextMenu(type, x, y)"/>
-
-      <t t-if="env.model.getters.getEditionMode() !== 'inactive'">
-        <GridComposer
-          onComposerUnmounted="() => this.focus()"
-          onComposerContentFocused="props.onComposerContentFocused"
-          focus="props.focusComposer"
-          gridDims="env.model.getters.getSheetViewDimensionWithHeaders()"
-        />
-      </t>
-      <t else="1">
-        <input
-          class="position-absolute"
-          style="z-index:-1000;"
-          t-on-input="onInput"
-          t-on-contextmenu="onInputContextMenu"
-          t-ref="hiddenInput"
-        />
-      </t>
+      <GridComposer
+        focus="props.focusComposer"
+        onComposerContentFocused="props.onComposerContentFocused"
+        onComposerCellFocused="props.onGridComposerCellFocused"
+        gridDims="env.model.getters.getSheetViewDimensionWithHeaders()"
+      />
       <canvas t-ref="canvas"/>
       <t
         t-foreach="env.model.getters.getClientsToDisplay()"
@@ -993,7 +975,7 @@
       t-att-style="props.gridOverlayDimensions"
       t-on-mousedown="onMouseDown"
       t-on-dblclick.self="onDoubleClick"
-      t-on-contextmenu="onContextMenu">
+      t-on-contextmenu.stop.prevent="onContextMenu">
       <FiguresContainer onFigureDeleted="props.onFigureDeleted"/>
     </div>
   </t>
@@ -3875,7 +3857,7 @@ https://fontawesome.com/license -->
   </t>
 </odoo>
 <!--
-  __info__.version = '16.3.24';
-  __info__.date = '2024-02-02T14:05:16.646Z';
-  __info__.hash = '0bf5f45';
+  __info__.version = '16.3.25';
+  __info__.date = '2024-02-09T14:29:22.430Z';
+  __info__.hash = '7711581';
 -->
