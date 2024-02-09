@@ -1,15 +1,19 @@
 /** @odoo-module */
 
-import { helpers, registries } from "@odoo/o-spreadsheet";
-import { CurrencyDataSource } from "../currency_data_source";
+import { EvaluationError, helpers, registries } from "@odoo/o-spreadsheet";
 import { OdooUIPlugin } from "@spreadsheet/plugins";
+import { toServerDateString } from "@spreadsheet/helpers/helpers";
+import { _t } from "@web/core/l10n/translation";
 const { featurePluginRegistry } = registries;
 const { createCurrencyFormat } = helpers;
 
-const DATA_SOURCE_ID = "CURRENCIES";
-
 /**
- * @typedef {import("../currency_data_source").Currency} Currency
+ * @typedef Currency
+ * @property {string} name
+ * @property {string} code
+ * @property {string} symbol
+ * @property {number} decimalPlaces
+ * @property {"before" | "after"} position
  */
 
 export class CurrencyPlugin extends OdooUIPlugin {
@@ -21,10 +25,17 @@ export class CurrencyPlugin extends OdooUIPlugin {
 
     constructor(config) {
         super(config);
-        this.dataSources = config.custom.dataSources;
-        if (this.dataSources) {
-            this.dataSources.add(DATA_SOURCE_ID, CurrencyDataSource);
+        /** @type {import("@spreadsheet/data_sources/server_data").ServerData} */
+        this._serverData = config.custom.dataSources?.serverData;
+    }
+
+    get serverData() {
+        if (!this._serverData) {
+            throw new Error(
+                "'serverData' is not defined, please make sure a 'DataSources' instance is provided to the model."
+            );
         }
+        return this._serverData;
     }
 
     // -------------------------------------------------------------------------
@@ -39,9 +50,16 @@ export class CurrencyPlugin extends OdooUIPlugin {
      * @returns {number|string}
      */
     getCurrencyRate(from, to, date) {
-        return (
-            this.dataSources && this.dataSources.get(DATA_SOURCE_ID).getCurrencyRate(from, to, date)
-        );
+        const data = this.serverData.batch.get("res.currency.rate", "get_rates_for_spreadsheet", {
+            from,
+            to,
+            date: date ? toServerDateString(date) : undefined,
+        });
+        const rate = data !== undefined ? data.rate : undefined;
+        if (rate === false) {
+            throw new EvaluationError(_t("Currency rate unavailable."));
+        }
+        return rate;
     }
 
     /**
@@ -68,10 +86,11 @@ export class CurrencyPlugin extends OdooUIPlugin {
      * @returns {string | undefined}
      */
     getCurrencyFormat(currencyName) {
-        const currency =
-            currencyName &&
-            this.dataSources &&
-            this.dataSources.get(DATA_SOURCE_ID).getCurrency(currencyName);
+        const currency = this.serverData.batch.get(
+            "res.currency",
+            "get_currencies_for_spreadsheet",
+            currencyName
+        );
         return this.computeFormatFromCurrency(currency);
     }
 
@@ -81,9 +100,14 @@ export class CurrencyPlugin extends OdooUIPlugin {
      * @returns {string | undefined}
      */
     getCompanyCurrencyFormat(companyId) {
-        const currency =
-            this.dataSources &&
-            this.dataSources.get(DATA_SOURCE_ID).getCompanyCurrencyFormat(companyId);
+        const currency = this.serverData.get(
+            "res.currency",
+            "get_company_currency_for_spreadsheet",
+            [companyId]
+        );
+        if (currency === false) {
+            throw new EvaluationError(_t("Currency not available for this company."));
+        }
         return this.computeFormatFromCurrency(currency);
     }
 }
