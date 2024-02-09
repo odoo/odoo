@@ -1775,7 +1775,7 @@ registry.ImageShapeHoverEffet = publicWidget.Widget.extend({
      * @private
      */
     _onMouseEnter() {
-        if (!this.originalImgSrc) {
+        if (!this.originalImgSrc || !this.$target[0].dataset.hoverEffect) {
             return;
         }
         this.lastMouseEvent = this.lastMouseEvent.then(() => new Promise((resolve) => {
@@ -1811,7 +1811,7 @@ registry.ImageShapeHoverEffet = publicWidget.Widget.extend({
      */
     _onMouseLeave() {
         this.lastMouseEvent = this.lastMouseEvent.then(() => new Promise((resolve) => {
-            if (!this.originalImgSrc || !this.svgInEl) {
+            if (!this.originalImgSrc || !this.svgInEl || !this.$target[0].dataset.hoverEffect) {
                 resolve();
                 return;
             }
