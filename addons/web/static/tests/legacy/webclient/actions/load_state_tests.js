@@ -77,7 +77,6 @@ QUnit.module("ActionManager", (hooks) => {
                     action: 1001,
                 },
             ],
-            menu_id: 2,
         });
     });
 
@@ -368,7 +367,6 @@ QUnit.module("ActionManager", (hooks) => {
                     action: 3,
                 },
             ],
-            view_type: "list",
         });
         assert.verifySteps(["push_state"], "should have pushed the final state");
         await click(target.querySelector("tr .o_data_cell"));
@@ -386,7 +384,6 @@ QUnit.module("ActionManager", (hooks) => {
                     resId: 1,
                 },
             ],
-            view_type: "form",
         });
         assert.verifySteps(["push_state"], "should push the state of it changes afterwards");
     });

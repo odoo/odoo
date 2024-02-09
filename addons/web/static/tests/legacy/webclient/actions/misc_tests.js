@@ -228,7 +228,6 @@ QUnit.module("ActionManager", (hooks) => {
                     action: 4,
                 },
             ],
-            view_type: "kanban",
         });
         await doAction(webClient, 8);
         await nextTick();
@@ -248,7 +247,6 @@ QUnit.module("ActionManager", (hooks) => {
                     action: 8,
                 },
             ],
-            view_type: "list",
         });
         await click(target.querySelector(".o_data_row .o_data_cell"));
         await nextTick();
@@ -273,7 +271,6 @@ QUnit.module("ActionManager", (hooks) => {
                     resId: 4,
                 },
             ],
-            view_type: "form",
         });
     });
 

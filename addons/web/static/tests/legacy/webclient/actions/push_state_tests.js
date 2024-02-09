@@ -22,7 +22,7 @@ QUnit.module("ActionManager", (hooks) => {
     QUnit.module("Push State");
 
     QUnit.test("basic action as App", async (assert) => {
-        assert.expect(5);
+        assert.expect(4);
         await createWebClient({ serverData });
         let urlState = router.current;
         assert.deepEqual(urlState, {});
@@ -32,7 +32,6 @@ QUnit.module("ActionManager", (hooks) => {
         await nextTick();
         urlState = router.current;
         assert.strictEqual(urlState.action, 1002);
-        assert.strictEqual(urlState.menu_id, 2);
         assert.strictEqual(
             target.querySelector(".test_client_action").textContent.trim(),
             "ClientAction_Id 2"
@@ -41,7 +40,7 @@ QUnit.module("ActionManager", (hooks) => {
     });
 
     QUnit.test("do action keeps menu in url", async (assert) => {
-        assert.expect(9);
+        assert.expect(7);
         const webClient = await createWebClient({ serverData });
         let urlState = router.current;
         assert.deepEqual(urlState, {});
@@ -51,7 +50,6 @@ QUnit.module("ActionManager", (hooks) => {
         await nextTick();
         urlState = router.current;
         assert.strictEqual(urlState.action, 1002);
-        assert.strictEqual(urlState.menu_id, 2);
         assert.strictEqual(
             target.querySelector(".test_client_action").textContent.trim(),
             "ClientAction_Id 2"
@@ -61,7 +59,6 @@ QUnit.module("ActionManager", (hooks) => {
         await nextTick();
         urlState = router.current;
         assert.strictEqual(urlState.action, 1001);
-        assert.strictEqual(urlState.menu_id, 2);
         assert.strictEqual(
             target.querySelector(".test_client_action").textContent.trim(),
             "ClientAction_Id 1"
@@ -127,7 +124,7 @@ QUnit.module("ActionManager", (hooks) => {
     });
 
     QUnit.test("actions override previous state from menu click", async (assert) => {
-        assert.expect(3);
+        assert.expect(2);
         class ClientActionPushes extends Component {
             static template = xml`
                 <div class="test_client_action" t-on-click="_actionPushState">
@@ -150,7 +147,6 @@ QUnit.module("ActionManager", (hooks) => {
         await nextTick();
         urlState = router.current;
         assert.strictEqual(urlState.action, 1002);
-        assert.strictEqual(urlState.menu_id, 2);
     });
 
     QUnit.test("action in target new do not push state", async (assert) => {
@@ -181,7 +177,6 @@ QUnit.module("ActionManager", (hooks) => {
                     action: 4,
                 },
             ],
-            view_type: "kanban",
         });
         await doAction(webClient, 8);
         await nextTick();
@@ -195,7 +190,6 @@ QUnit.module("ActionManager", (hooks) => {
                     action: 8,
                 },
             ],
-            view_type: "list",
         });
         await testUtils.dom.click($(target).find("tr .o_data_cell:first"));
         await nextTick();
@@ -213,7 +207,6 @@ QUnit.module("ActionManager", (hooks) => {
                     resId: 4,
                 },
             ],
-            view_type: "form",
             id: 4,
         });
     });
@@ -240,7 +233,6 @@ QUnit.module("ActionManager", (hooks) => {
                     action: 4,
                 },
             ],
-            view_type: "kanban",
         });
     });
 
@@ -261,7 +253,6 @@ QUnit.module("ActionManager", (hooks) => {
                     action: 8,
                 },
             ],
-            view_type: "list",
         });
         await testUtils.dom.click($(target).find("tr.o_data_row:first"));
         // we make sure here that the list view is still in the dom
@@ -274,7 +265,6 @@ QUnit.module("ActionManager", (hooks) => {
                     action: 8,
                 },
             ],
-            view_type: "list",
         });
     });
 });

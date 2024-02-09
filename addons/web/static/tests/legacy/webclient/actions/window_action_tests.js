@@ -527,8 +527,11 @@ QUnit.module("ActionManager", (hooks) => {
         await nextTick(); // wait for the update of the router
         assert.deepEqual(router.current, {
             action: 3,
-            model: "partner",
-            view_type: "list",
+            actionStack: [
+                {
+                    action: 3,
+                },
+            ],
         });
 
         // Click on the first record
@@ -541,9 +544,16 @@ QUnit.module("ActionManager", (hooks) => {
         await nextTick(); // wait for the update of the router
         assert.deepEqual(router.current, {
             action: 3,
+            actionStack: [
+                {
+                    action: 3,
+                },
+                {
+                    action: 3,
+                    resId: 1,
+                },
+            ],
             id: 1,
-            model: "partner",
-            view_type: "form",
         });
 
         // Delete the current record
@@ -563,18 +573,32 @@ QUnit.module("ActionManager", (hooks) => {
         await nextTick(); // wait for the update of the router
         assert.deepEqual(router.current, {
             action: 3,
+            actionStack: [
+                {
+                    action: 3,
+                },
+                {
+                    action: 3,
+                    resId: 2,
+                },
+            ],
             id: 2,
-            model: "partner",
-            view_type: "form",
         });
 
         // Go back to the previous (now deleted) record
         browser.history.back();
         assert.deepEqual(router.current, {
             action: 3,
+            actionStack: [
+                {
+                    action: 3,
+                },
+                {
+                    action: 3,
+                    resId: 1,
+                },
+            ],
             id: 1, // This is the id of the deleted record
-            model: "partner",
-            view_type: "form",
         });
         // As the previous one is deleted, we go back to the list
         await nextTick(); // wait for the update of the router

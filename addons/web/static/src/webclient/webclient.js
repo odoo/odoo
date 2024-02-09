@@ -57,7 +57,7 @@ export class WebClient extends Component {
     async loadRouterState() {
         const firstAction = router.current.actionStack && router.current.actionStack[0].action;
         let stateLoaded = await this.actionService.loadState();
-        let menuId = Number(router.current.menu_id || 0);
+        let menuId = Number(router.current.menu_id || 0); // This is for retro-compatibility url
 
         if (!stateLoaded && menuId) {
             // Determines the current actionId based on the current menu
@@ -80,9 +80,6 @@ export class WebClient extends Component {
                     menu = this.menuService
                         .getAll()
                         .find((m) => m.actionID === firstAction || m.actionPath === firstAction);
-                    if (menu) {
-                        router.pushState({ menu_id: menu.id });
-                    }
                 }
             }
             menuId = menu && menu.appID;

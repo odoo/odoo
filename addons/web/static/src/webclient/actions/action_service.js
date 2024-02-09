@@ -204,7 +204,7 @@ export function makeActionManager(env, router = _router) {
 
     // The state action (or default user action if none) is loaded as soon as possible
     // so that the next "doAction" will have its action ready when needed.
-    const actionParams = _getActionParams(false);
+    const actionParams = _getActionParams();
     if (actionParams && typeof actionParams.actionRequest === "number") {
         const { actionRequest, options } = actionParams;
         _loadAction(actionRequest, options.additionalContext);
@@ -386,8 +386,7 @@ export function makeActionManager(env, router = _router) {
      * @private
      * @returns {ActionParams | null}
      */
-    function _getActionParams() {
-        const state = router.current;
+    function _getActionParams(state = router.current) {
         const options = {};
         let actionRequest = null;
         if (state.action) {
@@ -412,7 +411,7 @@ export function makeActionManager(env, router = _router) {
                 }
                 Object.assign(options, {
                     additionalContext: context,
-                    viewType: state.view_type,
+                    viewType: state.id ? "form" : state.view_type,
                 });
                 if (state.id) {
                     options.props = { resId: state.id };
@@ -1506,11 +1505,7 @@ export function makeActionManager(env, router = _router) {
         if (lastCtrl.action.tag === "menu") {
             router.pushState(
                 {
-                    actionStack: [
-                        {
-                            action: "menu",
-                        },
-                    ],
+                    actionStack: undefined,
                 },
                 { replace: true }
             );
@@ -1552,6 +1547,13 @@ export function makeActionManager(env, router = _router) {
         }
         if (actions.length) {
             newState.actionStack = actions;
+        }
+        if (
+            lastCtrl.action.type === "ir.actions.act_window" &&
+            lastCtrl.props.type !== "form" &&
+            lastCtrl.props.type !== lastCtrl.action.views[0][1]
+        ) {
+            newState.view_type = lastCtrl.props.type;
         }
         router.pushState(newState, { replace: true });
     }

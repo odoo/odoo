@@ -31,7 +31,7 @@ function forceLocaleAndTimezoneWithCleanup() {
 
 function makeMockLocation() {
     return Object.assign(document.createElement("a"), {
-        href: window.location.origin + window.location.pathname,
+        href: window.location.origin + "/apps",
         assign(url) {
             this.href = url;
         },
@@ -83,8 +83,8 @@ function patchBrowserWithCleanup() {
     let nextAnimationFrameHandle = 1;
     const animationFrameHandles = new Set();
     const mockLocation = makeMockLocation();
-    let historyStack = [];
-    let currentHistoryStack = 0;
+    let historyStack = [mockLocation.href];
+    let currentHistoryStack = 1;
     patchWithCleanup(browser, {
         // patch addEventListner to automatically remove listeners bound (via
         // browser.addEventListener) during a test (e.g. during the deployment of a service)

@@ -101,7 +101,6 @@ export function stateToUrl(state) {
     const tmpState = Object.assign({}, state);
     const pathname = ["/apps"];
     if (tmpState.actionStack) {
-        const breadcrumb = [];
         for (const actIndex in tmpState.actionStack) {
             const action = tmpState.actionStack[actIndex];
             if (action.resId && actIndex > 0) {
@@ -111,7 +110,6 @@ export function stateToUrl(state) {
                     action.model === previousAction.model &&
                     action.active_id === previousAction.active_id
                 ) {
-                    breadcrumb.push(1);
                     pathname.push(action.resId);
                     continue;
                 }
@@ -121,21 +119,17 @@ export function stateToUrl(state) {
                     actIndex === 0 ||
                     action.active_id !== tmpState.actionStack[actIndex - 1]?.resId
                 ) {
-                    breadcrumb.push(0);
                     pathname.push(action.active_id);
                 }
             }
             if (action.action) {
                 if (typeof action.action === "number" || action.action.includes(".")) {
-                    breadcrumb.push(1);
                     pathname.push(`act-${action.action}`);
                 } else {
-                    breadcrumb.push(1);
                     pathname.push(action.action);
                 }
             } else if (action.model) {
                 // Note that the shourtcut don't have "."
-                breadcrumb.push(1);
                 if (action.model.includes(".")) {
                     pathname.push(action.model);
                 } else {
@@ -143,16 +137,8 @@ export function stateToUrl(state) {
                 }
             }
             if (action.resId) {
-                breadcrumb.pop();
-                breadcrumb.push(0);
-                breadcrumb.push(1);
                 pathname.push(action.resId);
             }
-        }
-        tmpState.b = parseInt(breadcrumb.join(""), 2).toString(16);
-        // tmpState.breadcrumbTEST = breadcrumb.join("");
-        if (tmpState.actionStack[tmpState.actionStack.length - 1].view_type) {
-            tmpState.view_type = tmpState.actionStack[tmpState.actionStack.length - 1].view_type;
         }
         delete tmpState.action;
         delete tmpState.active_id;
@@ -163,27 +149,21 @@ export function stateToUrl(state) {
             delete tmpState.id;
         }
     } else {
-        delete tmpState.b;
         if (tmpState.action || tmpState.model) {
             // This is done for retro-compatibility in case of the state has only action or model and not actionStack
-            const breadcrumb = [];
             if (tmpState.active_id) {
-                breadcrumb.push(0);
                 pathname.push(tmpState.active_id);
                 delete tmpState.active_id;
             }
             if (tmpState.action) {
                 if (typeof tmpState.action === "number" || tmpState.action.includes(".")) {
-                    breadcrumb.push(1);
                     pathname.push(`act-${tmpState.action}`);
                 } else {
-                    breadcrumb.push(1);
                     pathname.push(tmpState.action);
                 }
                 delete tmpState.action;
             } else if (tmpState.model) {
                 // Note that the shourtcut don't have "."
-                breadcrumb.push(1);
                 if (tmpState.model.includes(".")) {
                     pathname.push(tmpState.model);
                 } else {
@@ -192,9 +172,6 @@ export function stateToUrl(state) {
                 delete tmpState.model;
             }
             if (tmpState.resId) {
-                breadcrumb.pop();
-                breadcrumb.push(0);
-                breadcrumb.push(1);
                 pathname.push(tmpState.resId);
                 delete tmpState.resId;
             }
@@ -225,7 +202,7 @@ function urlToState(urlObj) {
 
     if (splitPath.length > 1 && splitPath[0] === "apps") {
         splitPath.splice(0, 1);
-        let actions = [];
+        const actions = [];
         let action = {};
         let aid = undefined;
         for (const part of splitPath) {
@@ -282,19 +259,8 @@ function urlToState(urlObj) {
             action.active_id = actions[actions.length - 1].resId;
         }
         actions.push(action);
-        if (actions.length > 0 && state.b) {
-            let breadcrumb = parseInt(state.b, 16).toString(2);
-            if (actions.length !== breadcrumb.length) {
-                breadcrumb = breadcrumb.padStart(actions.length, "0");
-            }
-            breadcrumb = breadcrumb.split("").map((b) => Boolean(parseInt(b)));
-            actions = actions.map((action, i) => ({
-                ...action,
-                onBreadcrumb: breadcrumb[i],
-            }));
-            actions = actions.filter((a) => a.onBreadcrumb);
-            actions.map((a) => delete a.onBreadcrumb);
-            delete state.b;
+        if (actions.length > 0) {
+            actions.filter((a) => a.action || a.resId);
         }
         if (actions[actions.length - 1].resId && actions[actions.length - 1].resId !== "new") {
             state.id = actions[actions.length - 1].resId;
