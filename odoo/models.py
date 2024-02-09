@@ -2399,8 +2399,9 @@ class BaseModel(metaclass=MetaModel):
 
             if field.type in ('many2one', 'many2many') or field_name == 'id':
                 ids = [row[group].id for row in rows_dict if row[group] and isinstance(row[group], BaseModel)]
+                comodel_name = self._name if field_name == 'id' else field.comodel_name
                 # Use `union()` to uniquify the recordset
-                m2x_records = self.env[field.comodel_name].browse(ids).union()
+                m2x_records = self.env[comodel_name].browse(ids).union()
                 name_get_dict = dict(m2x_records.sudo().name_get())
 
             elif field.type in ('date', 'datetime'):
@@ -2412,7 +2413,7 @@ class BaseModel(metaclass=MetaModel):
             for row in rows_dict:
                 value = row[group]
 
-                if field.type in ('many2one', 'many2many') and isinstance(value, BaseModel):
+                if isinstance(value, BaseModel):
                     value = value.id
                     row[group] = (value, name_get_dict[value]) if value else value
 
