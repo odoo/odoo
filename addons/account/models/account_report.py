@@ -650,7 +650,7 @@ class AccountReportExpression(models.Model):
             other_expression_using_tag = self.env['account.report.expression'].sudo().search([
                 ('engine', '=', 'tax_tags'),
                 ('formula', '=', tag.name[1:]),  # we escape the +/- sign
-                ('report_line_id.report_id.country_id.id', '=', tag.country_id.id),
+                ('report_line_id.report_id.country_id', '=', tag.country_id.id),
                 ('id', 'not in', self.ids),
             ], limit=1)
             if not other_expression_using_tag:
