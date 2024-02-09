@@ -557,15 +557,14 @@ class Applicant(models.Model):
         return res
 
     def _message_get_suggested_recipients(self):
-        recipients = super(Applicant, self)._message_get_suggested_recipients()
-        for applicant in self:
-            if applicant.partner_id:
-                applicant._message_add_suggested_recipient(recipients, partner=applicant.partner_id.sudo(), reason=_('Contact'))
-            elif applicant.email_from:
-                email_from = tools.email_normalize(applicant.email_from)
-                if email_from and applicant.partner_name:
-                    email_from = tools.formataddr((applicant.partner_name, email_from))
-                    applicant._message_add_suggested_recipient(recipients, email=email_from, reason=_('Contact Email'))
+        recipients = super()._message_get_suggested_recipients()
+        if self.partner_id:
+            self._message_add_suggested_recipient(recipients, partner=self.partner_id.sudo(), reason=_('Contact'))
+        elif self.email_from:
+            email_from = tools.email_normalize(self.email_from)
+            if email_from and self.partner_name:
+                email_from = tools.formataddr((self.partner_name, email_from))
+                self._message_add_suggested_recipient(recipients, email=email_from, reason=_('Contact Email'))
         return recipients
 
     @api.depends('partner_name')

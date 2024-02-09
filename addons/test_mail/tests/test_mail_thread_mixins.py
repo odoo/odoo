@@ -90,7 +90,7 @@ class TestMailThreadCC(MailCommon):
         record = self.env['mail.test.cc'].create({
             'email_cc': 'cc1@example.com, cc2@example.com, cc3 <cc3@example.com>',
         })
-        suggestions = record._message_get_suggested_recipients()[record.id]
+        suggestions = record._message_get_suggested_recipients()
         self.assertEqual(
             sorted(suggestions),
             [

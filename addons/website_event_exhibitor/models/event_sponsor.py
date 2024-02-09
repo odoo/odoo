@@ -229,12 +229,11 @@ class Sponsor(models.Model):
     # ------------------------------------------------------------
 
     def _message_get_suggested_recipients(self):
-        recipients = super(Sponsor, self)._message_get_suggested_recipients()
-        for sponsor in self:
-            if sponsor.partner_id:
-                sponsor._message_add_suggested_recipient(
-                    recipients,
-                    partner=sponsor.partner_id,
-                    reason=_('Sponsor')
-                )
+        recipients = super()._message_get_suggested_recipients()
+        if self.partner_id:
+            self._message_add_suggested_recipient(
+                recipients,
+                partner=self.partner_id,
+                reason=_('Sponsor')
+            )
         return recipients
