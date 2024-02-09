@@ -39,7 +39,6 @@ export {
     makeMockServer,
     onRpc,
 } from "./_framework/mock_server/mock_server";
-export { mockSession } from "./_framework/mock_session.hoot";
 export { patchWithCleanup } from "./_framework/patch_test_helpers";
 export {
     deleteFavorite,

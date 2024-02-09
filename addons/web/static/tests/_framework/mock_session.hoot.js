@@ -1,15 +1,16 @@
-import { before } from "@odoo/hoot";
+// ! WARNING: this module cannot depend on modules not ending with ".hoot" (except libs) !
+
 import { constants } from "./test_constants.hoot";
 
 /**
- * @typedef {typeof sessionValue} Session
+ * @typedef {typeof SESSION} Session
  */
 
 //-----------------------------------------------------------------------------
 // Internal
 //-----------------------------------------------------------------------------
 
-const sessionValue = {
+const SESSION = Object.freeze({
     active_ids_limit: 20000,
     bundle_params: {
         debug: new URLSearchParams(location.search).get("debug"),
@@ -55,28 +56,17 @@ const sessionValue = {
     user_id: [constants.USER_ID],
     username: "admin",
     ["web.base.url"]: "http://localhost:8069",
-};
+});
 
 //-----------------------------------------------------------------------------
 // Exports
 //-----------------------------------------------------------------------------
 
-/**
- * @param {Partial<Session> | (session: Session) => Partial<Session>} getSession
- */
-export function mockSession(getSession) {
-    before(() => {
-        Object.assign(
-            sessionValue,
-            typeof getSession === "function" ? getSession(sessionValue) : getSession
-        );
-    });
-}
-
 export function mockSessionFactory() {
+    const currentSession = JSON.parse(JSON.stringify(SESSION));
     return () => ({
         get session() {
-            return JSON.parse(JSON.stringify(sessionValue));
+            return currentSession;
         },
     });
 }
