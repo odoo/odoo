@@ -297,3 +297,9 @@ class test_search(TransactionCase):
         """]):
             Model.search([('code', 'ilike', '')])
             Model.search([('code', 'not ilike', '')])
+
+    def test_23_large_domain(self):
+        """ Ensure search and its unerlying SQL mechanism is able to handle large domains"""
+        N = 9500
+        domain = ['|'] * (N - 1) + [('login', '=', 'admin')] * N
+        self.env['res.users'].search(domain)
