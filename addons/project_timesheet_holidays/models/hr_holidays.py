@@ -117,6 +117,7 @@ class Holidays(models.Model):
             ("resource_id", "=", False),
             ("date_to", ">=", min_date),
             ("date_from", "<=", max_date),
+            ("calendar_id", "!=", False),
             ("company_id.internal_project_id", "!=", False),
             ("company_id.leave_timesheet_task_id", "!=", False),
         ])
