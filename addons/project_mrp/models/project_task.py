@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
@@ -7,7 +6,8 @@ from odoo import api, fields, models
 class ProjectTask(models.Model):
     _inherit = "project.task"
 
-    mrp_order_count = fields.Integer('# Manufacturing Order Count', compute='_compute_mrp_order_count', groups='mrp.group_mrp_user')
+    mrp_order_count = fields.Integer('# Manufacturing Order Count', compute='_compute_mrp_order_count',
+        groups='mrp.group_mrp_user', export_string_translation=False)
 
     def _compute_mrp_order_count(self):
         mrp_orders_per_task = {mrp_order.id: count

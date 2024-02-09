@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
@@ -7,7 +6,8 @@ from odoo import api, fields, models, _
 class Project(models.Model):
     _inherit = "project.task"
 
-    purchase_order_count = fields.Integer('# Purchase Orders', compute='_compute_purchase_order_count', groups='purchase.group_purchase_user')
+    purchase_order_count = fields.Integer('# Purchase Orders', compute='_compute_purchase_order_count',
+        groups='purchase.group_purchase_user', export_string_translation=False)
 
     def _compute_purchase_order_count(self):
         purchase_orders_per_task = {purchase_order.id: count
@@ -32,7 +32,7 @@ class Project(models.Model):
                 'default_company_id': self.company_id.id or self.env.company.id,
                 'default_task_id': self.id,
                 'task_id': self.id,
-                'default_partner_id': self.partner_id.id
+                'default_partner_id': self.partner_id.id,
             },
         }
 
