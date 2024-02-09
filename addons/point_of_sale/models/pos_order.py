@@ -345,7 +345,7 @@ class PosOrder(models.Model):
     )
     delivery_service_id = fields.Many2one('pos.delivery.service', string='Delivery Service')
     delivery_id = fields.Char(string='Delivery ID')
-    delivery_status = fields.Selection([('awaiting', 'Awaiting'), ('accepted', 'Accepted'), ('preparing', 'Preparing'), ('complete', 'Complete'), ('cancelled', 'Cancelled')], string='Delivery Status')
+    delivery_status = fields.Selection([('awaiting', 'Awaiting'), ('scheduled', 'Scheduled'), ('confirmed', 'Confirmed'), ('preparing', 'Preparing'), ('ready', 'Ready'), ('delivered', 'Delivered'), ('cancelled', 'Cancelled')], string='Delivery Status')
     delivery_note = fields.Text(string='Delivery Note')
     payment_ids = fields.One2many('pos.payment', 'pos_order_id', string='Payments', readonly=True)
     session_move_id = fields.Many2one('account.move', string='Session Journal Entry', related='session_id.move_id', readonly=True, copy=False)
@@ -1242,8 +1242,11 @@ class PosOrder(models.Model):
         self._post_delivery_accept_order()
 
     def _post_delivery_accept_order(self):
-        if self.delivery_status == 'awaiting' and not self.delivery_asap:
-            self.delivery_status = 'accepted'
+        if not self.delivery_asap:
+            if self.delivery_status == 'awaiting':
+                self.delivery_status = 'scheduled'
+            elif self.delivery_status == 'scheduled':
+                self.delivery_status = 'confirmed'
         else:
             self.delivery_status = 'preparing'
         self.session_id.config_id._send_delivery_order_count(self.id)
@@ -1265,46 +1268,10 @@ class PosOrder(models.Model):
         self.delivery_status = 'cancelled'
         self.session_id.config_id._send_delivery_order_count(self.id)
 
-    # def _prepare_delivery_reject_fields(self):
-    #     return {
-    #         'delivery_id': self.delivery_id,
-    #         'delivery_display': self.delivery_display,
-    #         'delivery_service_id': self.delivery_service_id.id,
-    #         'company_id': self.company_id.id,
-    #         'session_id': self.session_id.id,
-    #         # the creation of lines should be more precise (taxes and other fields)
-    #         'lines': [
-    #             (0,0,{
-    #                 'product_id':   line.product_id.id,
-    #                 'qty':          -line.qty,
-    #                 'price_unit':   -line.price_unit,
-    #                 'price_extra':  -line.price_extra, # Price per unit according to the menu (can be different from Unit Price in case of more expensive substitutions, for example)
-    #                 'discount': 0,
-    #                 'price_subtotal': -line.price_subtotal,
-    #                 'price_subtotal_incl': -line.price_subtotal_incl,
-    #                 'refunded_orderline_id': line.id,
-    #             })
-    #             for line in self.lines
-    #         ],
-    #         # should take into account the "child lines"
-    #         # 'partner_id': False,
-    #         'date_order': date_order,
-    #         'amount_paid':  amount_paid,
-    #         'amount_total':  formatPrice(order['partner_order_total']),
-    #         'amount_tax': 0,
-    #         'amount_return': 0,
-    #         'state': 'paid',
-    #         'delivery_note': notes,
-    #         'payment_ids': [(0,0,{
-    #             'amount': amount_paid,
-    #             'payment_date': date_order,
-    #             'payment_method_id': pos_delivery_service_sudo.payment_method_id.id,
-    #         })],
-    #         'last_order_preparation_change': '{}',
-    #     }
-
-    # def _create_refund_order_for_delivery(self):
-    #     self.create(self._prepare_delivery_reject_fields())
+    def change_order_delivery_status(self, new_status):
+        self.ensure_one()
+        self.delivery_status = new_status
+        self.session_id.config_id._send_delivery_order_count(self.id)
 
 class PosOrderLine(models.Model):
     _name = "pos.order.line"

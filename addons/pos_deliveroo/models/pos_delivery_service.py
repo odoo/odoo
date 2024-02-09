@@ -134,3 +134,11 @@ class PosDeliveryService(models.Model):
             ],
         }
         # TODO: implement sending menu to deliveroo
+
+    def _get_delivery_acceptation_time(self):
+        res = super()._get_delivery_acceptation_time()
+        if self.service == "deliveroo":
+            if self.env.company.country_code in ['KW', 'AE']:
+                return 7
+            return 10
+        return res

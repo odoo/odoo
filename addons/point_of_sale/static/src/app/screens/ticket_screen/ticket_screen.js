@@ -411,11 +411,26 @@ export class TicketScreen extends Component {
     getDeliveryStatus(order) {
         const statusCombination = {
             awaiting: "Awaiting",
-            accepted: "Accepted",
+            scheduled: "Scheduled",
+            confirmed: "Confirmed",
             preparing: "Preparing",
-            complete: "Complete",
+            ready: "Ready",
+            delivered: "Delivered",
             cancelled: "Cancelled",
         };
+        if (
+            !order.delivery_asap &&
+            order.delivery_status &&
+            !["cancelled", "delivered"].includes(order.delivery_status)
+        ) {
+            const dateTimeObject = new Date(order.delivery_prepare_for);
+            const hours = dateTimeObject.getHours().toString().padStart(2, "0");
+            const minutes = dateTimeObject.getMinutes().toString().padStart(2, "0");
+            const prepareFor = `(for ${hours}:${minutes})`;
+            return order.delivery_status
+                ? statusCombination[order.delivery_status].concat(" ", prepareFor)
+                : "";
+        }
         return order.delivery_status ? statusCombination[order.delivery_status] : "";
     }
     getStatus(order) {
@@ -780,11 +795,12 @@ export class TicketScreen extends Component {
         this._state.syncedOrders.toShow.sort((a, b) => {
             const delivery_status_value = {
                 awaiting: 1,
-                accepted: 2,
-                preparing: 3,
-                ready: 4,
-                complete: 5,
-                cancelled: 6,
+                scheduled: 2,
+                confirmed: 3,
+                preparing: 4,
+                ready: 5,
+                delivered: 6,
+                cancelled: 7,
             };
             return (
                 delivery_status_value[a.delivery_status] - delivery_status_value[b.delivery_status]
@@ -795,7 +811,7 @@ export class TicketScreen extends Component {
                 case "awaiting":
                     order.bgClass = "bg-warning";
                     break;
-                case "accepted":
+                case "scheduled" || "confirmed":
                     order.bgClass = "bg-secondary";
                     break;
                 case "preparing":
@@ -870,13 +886,16 @@ export class TicketScreen extends Component {
         this._state.ui.acceptDeliveryOrderLoading = true;
         await this.pos.data.call("pos.order", "accept_delivery_order", [order.server_id]);
         this._state.ui.acceptDeliveryOrderLoading = false;
-        order.delivery_status = "preparing";
+        order.delivery_status =
+            !order.delivery_asap && order.delivery_status == "awaiting" ? "scheduled" : "confirmed";
     }
 
     async _rejectDeliveryOrder(order) {
         const confirmed = await ask(this.dialog, {
             title: _t("Reject order"),
             body: _t("Are you sure you want to reject this order?"),
+            confirmLabel: _t("Confirm"),
+            cancelLabel: _t("Discard"),
         });
         if (!confirmed) {
             return false;
@@ -889,11 +908,13 @@ export class TicketScreen extends Component {
     }
 
     _markAsPreparedDeliveryOrder(order) {
+        this.pos.data.ormWrite("pos.order", [order.server_id], { delivery_status: "ready" });
         order.delivery_status = "ready";
     }
 
     _markAsDeliveredDeliveryOrder(order) {
-        order.delivery_status = "complete";
+        this.pos.data.ormWrite("pos.order", [order.server_id], { delivery_status: "delivered" });
+        order.delivery_status = "delivered";
     }
     //#endregion
     //#endregion

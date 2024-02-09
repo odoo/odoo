@@ -56,8 +56,10 @@
                                 <div class="col wide p-2" t-if="showCardholderName()">Cardholder Name</div>
                                 <div class="col p-2">Cashier</div>
                                 <div class="col end p-2">Total</div>
-                                <div class="col wide p-2">Delivery Status</div>
-                                <div class="col narrow p-2">Status</div>
+                                <div class="col narrow p-2">
+                                    <t t-if="_state.ui.filter == 'DELIVERY'">Prep Status</t>
+                                    <t t-else="">Status</t>
+                                </div>
                                 <div class="col very-narrow p-2" name="delete"></div>
                             </div>
                             <t t-if="!ui.isSmall" t-foreach="_filteredOrderList" t-as="order" t-key="order.cid">
@@ -85,11 +87,11 @@
                                     <div class="col end p-2">
                                         <div><t t-esc="getTotal(order)"></t></div>
                                     </div>
-                                    <div class="col wide p-2">
-                                        <div><t t-esc="getDeliveryStatus(order)"></t></div>
-                                    </div>
                                     <div class="col narrow p-2">
-                                        <div><t t-esc="getStatus(order)"></t></div>
+                                        <div>
+                                            <t t-if="_state.ui.filter == 'DELIVERY'" t-esc="getDeliveryStatus(order)"/>
+                                            <t t-else="" t-esc="getStatus(order)"/>
+                                        </div>
                                     </div>
                                     <div t-if="!shouldHideDeleteButton(order)" class="col very-narrow delete-button p-2" name="delete" t-on-click.stop="() => this.onDeleteOrder(order)">
                                         <i class="fa fa-trash" aria-hidden="true"/>
@@ -193,6 +195,7 @@
                                         <t t-if="!_state.ui.acceptDeliveryOrderLoading">
                                             <button class="button validation load-order-button w-50 btn btn-lg btn-primary rounded-0 fw-bolder py-3" t-on-click="() => this._acceptDeliveryOrder(_selectedSyncedOrder)">
                                                 <span class="fs-2 d-block">Accept Order</span>
+                                                <span t-if="!_selectedSyncedOrder.delivery_asap" class="fs-6">(prepare for <t t-esc="_selectedSyncedOrder.delivery_prepare_for" />)</span>
                                             </button>
                                             <button class="button load-order-button w-50 btn btn-lg rounded-0 fw-bolder py-3 bg-secondary" t-on-click="() => this._rejectDeliveryOrder(_selectedSyncedOrder)">
                                                 <span class="fs-2 d-block">Reject Order</span>
@@ -205,6 +208,11 @@
                                             </div>
                                         </t>
                                     </div>
+                                    <t t-elif="_selectedSyncedOrder.delivery_status in ('scheduled', 'confirmed')">
+                                        <button class="button validation load-order-button w-100 btn btn-lg btn-primary rounded-0 fw-bolder py-3" t-on-click="() => this._acceptDeliveryOrder(_selectedSyncedOrder)">
+                                            <span class="fs-1 d-block">Send To Preparation</span>
+                                        </button>
+                                    </t>
                                     <t t-elif="_selectedSyncedOrder.delivery_status == 'preparing'">
                                         <button class="button validation load-order-button w-100 btn btn-lg btn-primary rounded-0 fw-bolder py-3" t-on-click="() => this._markAsPreparedDeliveryOrder(_selectedSyncedOrder)">
                                             <span class="fs-1 d-block">Mark As Prepared</span>
@@ -215,9 +223,9 @@
                                             <span class="fs-1 d-block">Mark As Delivered</span>
                                         </button>
                                     </t>
-                                    <t t-elif="_selectedSyncedOrder.delivery_status == 'complete'">
+                                    <t t-elif="_selectedSyncedOrder.delivery_status == 'delivered'">
                                         <button class="button validation load-order-button w-100 btn btn-lg rounded-0 fw-bolder py-3" disabled="True">
-                                            <span class="fs-1 d-block">Completed</span>
+                                            <span class="fs-1 d-block">Delivered</span>
                                         </button>
                                     </t>
                                 </div>

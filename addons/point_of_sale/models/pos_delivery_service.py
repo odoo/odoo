@@ -40,3 +40,6 @@ class PosDeliveryService(models.Model):
 
     def _reject_order(self, id: int, rejected_reason: str = "busy"):
         pass
+
+    def _get_delivery_acceptation_time(self):
+        pass

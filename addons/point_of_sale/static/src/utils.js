@@ -88,3 +88,10 @@ export function getOnNotified(bus, channel) {
     bus.addChannel(channel);
     return (notif, callback) => bus.subscribe(`${channel}-${notif}`, callback);
 }
+
+export function getHoursAndMinutesFromDatetimeString(datetimeString) {
+    const dateTimeObject = new Date(datetimeString);
+    const hours = dateTimeObject.getHours().toString().padStart(2, "0");
+    const minutes = dateTimeObject.getMinutes().toString().padStart(2, "0");
+    return `${hours}:${minutes}`;
+}

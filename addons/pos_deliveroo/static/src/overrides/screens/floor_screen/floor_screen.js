@@ -19,18 +19,24 @@ patch(FloorScreen.prototype, {
             ? this.pos.delivery_order_count.deliveroo.awaiting
             : this.pos.delivery_order_count.deliveroo.preparing > 0
             ? this.pos.delivery_order_count.deliveroo.preparing
+            : this.pos.delivery_order_count.deliveroo.scheduled > 0
+            ? this.pos.delivery_order_count.deliveroo.scheduled
             : 0;
     },
     get deliverooOrderCountClass() {
         return {
             "d-none":
                 !this.pos.delivery_order_count.deliveroo.awaiting &&
-                !this.pos.delivery_order_count.deliveroo.preparing,
+                !this.pos.delivery_order_count.deliveroo.preparing &&
+                !this.pos.delivery_order_count.deliveroo.scheduled,
             "text-bg-danger": this.pos.delivery_order_count.deliveroo.awaiting,
-            "text-bg-info": false, //scheduled orders TODO later,
             "text-bg-dark":
                 !this.pos.delivery_order_count.deliveroo.awaiting &&
                 this.pos.delivery_order_count.deliveroo.preparing,
+            "text-bg-info":
+                !this.pos.delivery_order_count.deliveroo.awaiting &&
+                !this.pos.delivery_order_count.deliveroo.preparing &&
+                this.pos.delivery_order_count.deliveroo.scheduled,
         };
     },
 });

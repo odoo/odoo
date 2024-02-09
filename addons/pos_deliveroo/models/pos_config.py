@@ -17,6 +17,7 @@ class PosConfig(models.Model):
             }
         order_count = {
             'awaiting': self.env['pos.order'].search_count([('session_id', '=', self.current_session_id.id), ('delivery_id', '!=', False), ('delivery_status', '=', 'awaiting')]),
+            'scheduled': self.env['pos.order'].search_count([('session_id', '=', self.current_session_id.id), ('delivery_id', '!=', False), ('delivery_status', 'in', ['scheduled', 'confirmed'])]),
             'preparing': self.env['pos.order'].search_count([('session_id', '=', self.current_session_id.id), ('delivery_id', '!=', False), ('delivery_status', '=', 'preparing')]),
         }
         return order_count
