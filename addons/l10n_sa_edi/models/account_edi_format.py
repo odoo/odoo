@@ -221,6 +221,10 @@ class AccountEdiFormat(models.Model):
 
         # Prepare UBL invoice values and render XML file
         unsigned_xml = xml_content or self._l10n_sa_generate_zatca_template(invoice)
+        # Unsigned data (signature, uuid, etc.) is generated and stored in the invoice once it is posted,
+        # however since the information of the customer/seller might change between the moment the invoice is
+        # posted and the moment it is sent to ZATCA, we have to recalculate it before we sign the invoice and send it
+        invoice._l10n_sa_generate_unsigned_data(unsigned_xml)
 
         # Load PCISD data and X509 certificate
         try:
@@ -316,19 +320,17 @@ class AccountEdiFormat(models.Model):
                 'blocking_level': 'error'
             }
 
-        xml_content = None
         if not invoice.l10n_sa_chain_index:
             # If the Invoice doesn't have a chain index, it means it either has not been submitted before,
             # or it was submitted and rejected. Either way, we need to assign it a new Chain Index and regenerate
             # the data that depends on it before submitting (UUID, XML content, signature)
             invoice.l10n_sa_chain_index = invoice.journal_id._l10n_sa_edi_get_next_chain_index()
-            xml_content = invoice._l10n_sa_generate_unsigned_data()
 
         # Generate Invoice name for attachment
         attachment_name = self.env['account.edi.xml.ubl_21.zatca']._export_invoice_filename(invoice)
 
         # Generate XML, sign it, then submit it to ZATCA
-        response_data, submitted_xml = self._l10n_sa_export_zatca_invoice(invoice, xml_content)
+        response_data, submitted_xml = self._l10n_sa_export_zatca_invoice(invoice)
 
         # Check for submission errors
         if response_data.get('error'):
