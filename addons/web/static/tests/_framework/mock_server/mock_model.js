@@ -2493,7 +2493,8 @@ export class Model extends Array {
     _compute_display_name() {
         if (this._rec_name) {
             for (const record of this) {
-                record.display_name = String(record[this._rec_name]);
+                const value = record[this._rec_name];
+                record.display_name = value && String(value);
             }
         } else {
             for (const record of this) {
