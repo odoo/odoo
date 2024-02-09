@@ -1,21 +1,15 @@
 /** @odoo-module */
 
-import { makeMockEnv, getService } from "@web/../tests/web_test_helpers";
-import { expect, test, beforeEach, afterEach, describe } from "@odoo/hoot";
+import { beforeEach, describe, expect, test } from "@odoo/hoot";
+import { getService, makeMockEnv } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("headless");
 
 let titleService;
-let title;
 
 beforeEach(async () => {
-    title = document.title;
     await makeMockEnv();
-    titleService = await getService("title");
-});
-
-afterEach(() => {
-    document.title = title;
+    titleService = getService("title");
 });
 
 test("simple title", () => {
