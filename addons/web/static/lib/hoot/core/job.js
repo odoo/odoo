@@ -1,17 +1,25 @@
 /** @odoo-module */
 
 import { HootError, generateHash, isOfType, normalize } from "../hoot_utils";
-import { createTags } from "./tag";
+import { Tag } from "./tag";
 
 /**
  * @typedef {{
+ *  debug?: boolean;
  *  multi?: number;
+ *  only?: boolean;
  *  skip?: boolean;
  *  tags?: string[];
  *  timeout?: number;
  *  todo?: boolean;
  * }} JobConfig
  */
+
+//-----------------------------------------------------------------------------
+// Global
+//-----------------------------------------------------------------------------
+
+const { Object } = globalThis;
 
 //-----------------------------------------------------------------------------
 // Internal
@@ -34,7 +42,6 @@ const CONFIG_TAG_SCHEMA = {
     multi: "integer",
     only: "boolean",
     skip: "boolean",
-    tags: "string[]",
     timeout: "number",
     todo: "boolean",
 };
@@ -48,16 +55,14 @@ export class Job {
     config = {};
     /** @type {Job[]} */
     path = [this];
-    /** @type {Set<string>} */
-    tagNames = new Set();
-    /** @type {import("./tag").Tag[]} */
+    /** @type {Tag[]} */
     tags = [];
     visited = 0;
 
     /**
      * @param {import("./suite").Suite | null} parent
      * @param {string} name
-     * @param {JobConfig} config
+     * @param {JobConfig & { tags?: Iterable<Tag | string> }} config
      */
     constructor(parent, name, config) {
         this.parent = parent || null;
@@ -65,25 +70,18 @@ export class Job {
 
         if (this.parent) {
             // Assigns parent path and config
-            Object.assign(this.config, this.parent.config);
+            this.configure({
+                ...this.parent.config,
+                tags: this.parent.tags,
+            });
             this.path.unshift(...this.parent.path);
         }
-
-        // Assigns and validates job config
-        Object.assign(this.config, config);
-        validateConfig(this.config);
 
         this.fullName = this.path.map((job) => job.name).join("/");
         this.id = generateHash(this.fullName);
         this.key = normalize(this.fullName);
 
-        // Tags
-        const tags = createTags(this.parent?.tags, config.tags);
-        for (const tag of tags) {
-            this.tags.push(tag);
-            this.tagNames.add(normalize(tag.name));
-        }
-        delete this.config.tags;
+        this.configure(config);
     }
 
     /**
@@ -91,5 +89,21 @@ export class Job {
      */
     canRun() {
         return !this.config.skip;
+    }
+
+    /**
+     * @param {JobConfig & { tags?: Iterable<Tag | string> }} config
+     */
+    configure({ tags, ...config }) {
+        // Assigns and validates job config
+        Object.assign(this.config, config);
+        validateConfig(this.config);
+
+        // Tags
+        for (const tag of Tag.getAll(tags)) {
+            if (!this.tags.includes(tag)) {
+                this.tags.push(tag);
+            }
+        }
     }
 }
