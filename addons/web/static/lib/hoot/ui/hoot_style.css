@@ -30,13 +30,6 @@
     background: var(--gray-700);
 }
 
-/* Selection */
-
-::selection {
-    background: var(--secondary);
-    color: var(--gray-100);
-}
-
 /*---------------------------------------------------------------------------*/
 /* CSS reset                                                                 */
 /*---------------------------------------------------------------------------*/
@@ -91,6 +84,10 @@ button {
     font: inherit;
     padding: 0;
     text-align: start;
+}
+
+pre {
+    margin: 0;
 }
 
 ul {
@@ -300,6 +297,12 @@ input[type="checkbox"]:checked {
     background-color: var(--bg);
 }
 
+.bg-black {
+    background-color: var(--black);
+}
+.bg-white {
+    background-color: var(--white);
+}
 .bg-gray-100 {
     background-color: var(--gray-100);
 }
@@ -328,6 +331,12 @@ input[type="checkbox"]:checked {
     background-color: var(--gray-900);
 }
 
+:host(.dark) .dark\:bg-black {
+    background-color: var(--black);
+}
+:host(.dark) .dark\:bg-white {
+    background-color: var(--white);
+}
 :host(.dark) .dark\:bg-gray-100 {
     background-color: var(--gray-100);
 }
@@ -1218,6 +1227,12 @@ input[type="checkbox"]:checked {
     color: var(--text);
 }
 
+.text-black {
+    color: var(--black);
+}
+.text-white {
+    color: var(--white);
+}
 .text-gray-100 {
     color: var(--gray-100);
 }
@@ -1243,6 +1258,40 @@ input[type="checkbox"]:checked {
     color: var(--gray-800);
 }
 .text-gray-900 {
+    color: var(--gray-900);
+}
+
+:host(.dark) .dark\:text-black {
+    color: var(--black);
+}
+:host(.dark) .dark\:text-white {
+    color: var(--white);
+}
+:host(.dark) .dark\:text-gray-100 {
+    color: var(--gray-100);
+}
+:host(.dark) .dark\:text-gray-200 {
+    color: var(--gray-200);
+}
+:host(.dark) .dark\:text-gray-300 {
+    color: var(--gray-300);
+}
+:host(.dark) .dark\:text-gray-400 {
+    color: var(--gray-400);
+}
+:host(.dark) .dark\:text-gray-500 {
+    color: var(--gray-500);
+}
+:host(.dark) .dark\:text-gray-600 {
+    color: var(--gray-600);
+}
+:host(.dark) .dark\:text-gray-700 {
+    color: var(--gray-700);
+}
+:host(.dark) .dark\:text-gray-800 {
+    color: var(--gray-800);
+}
+:host(.dark) .dark\:text-gray-900 {
     color: var(--gray-900);
 }
 
@@ -1285,7 +1334,7 @@ input[type="checkbox"]:checked {
     line-height: 1rem;
 }
 .text-sm {
-    font-size: 0.875rem;
+    font-size: 0.75rem;
     line-height: 1.25rem;
 }
 

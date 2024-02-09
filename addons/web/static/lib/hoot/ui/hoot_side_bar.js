@@ -89,14 +89,15 @@ export class HootSideBar extends Component {
                 <t t-foreach="state.items" t-as="item" t-key="item.id">
                     <li class="flex items-center h-7 animate-slide-down">
                         <button
-                            class="flex items-center w-full h-full px-2"
+                            class="flex items-center w-full h-full px-2 overflow-hidden"
                             t-att-class="{ 'bg-gray-300 dark:bg-gray-700': state.hovered === item.id or uiState.selectedSuiteId === item.id }"
                             t-attf-style="margin-left: {{ (item.path.length - 1) * 1 + 'rem' }};"
+                            t-att-title="item.name"
                             t-on-click="() => this.toggleItem(item.id)"
                             t-on-pointerenter="() => state.hovered = item.id"
                             t-on-pointerleave="() => state.hovered = null"
                         >
-                            <div class="flex items-center gap-1 flex-1">
+                            <div class="flex items-center truncate gap-1 flex-1">
                                 <HootSideBarSuite
                                     name="item.name"
                                     reporting="item.reporting"
