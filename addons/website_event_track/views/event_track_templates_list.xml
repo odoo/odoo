@@ -73,7 +73,7 @@
             </div>
             <div class="offcanvas-body p-0">
                 <div class="accordion accordion-flush">
-                    <div class="accordion-item">
+                    <div t-if="option_track_wishlist" class="accordion-item">
                         <h2 class="accordion-header">
                             <button class="accordion-button collapsed"
                                 type="button"
@@ -88,19 +88,21 @@
                             <div class="accordion-body pt-0">
                                 <ul class="list-group list-group-flush">
                                     <!-- Optional wishlist filter -->
-                                    <li t-if="option_track_wishlist" class="list-group-item">                         
+                                    <li class="list-group-item border-0 px-0">
                                         <a t-att-href="'/event/%s/track?%s' % (
                                                 slug(event),
                                                 keep_query('*', search_wishlist='')
                                             )"
-                                            class="d-flex align-items-center justify-content-between">
+                                            class="d-flex align-items-center justify-content-between text-reset">
                                             All Talks
                                         </a>
+                                    </li>
+                                    <li class="list-group-item border-0 px-0">
                                         <a t-att-href="'/event/%s/track?%s' % (
                                                 slug(event),
                                                 keep_query('*', search_wishlist='1')
                                             )"
-                                            t-attf-class="d-flex align-items-center justify-content-between #{'active' if search_wishlist else ''}">
+                                            t-attf-class="d-flex align-items-center justify-content-between text-reset #{'active' if search_wishlist else ''}">
                                             Favorites
                                         </a>
                                     </li>
@@ -111,7 +113,7 @@
                     <t t-foreach="tag_categories" t-as="tag_category">
                     <div class="accordion-item">
                         <h2 class="accordion-header">
-                            <button class="accordion-button border-top collapsed"
+                            <button class="accordion-button collapsed"
                                 type="button"
                                 data-bs-toggle="collapse"
                                 t-att-data-bs-target="'.o_wevent_offcanvas_tag_%s' % tag_category.name"
@@ -122,18 +124,18 @@
                         <div t-attf-class="o_wevent_offcanvas_tag_#{tag_category.name} accordion-collapse collapse">
                             <div class="accordion-body pt-0">
                                 <ul class="list-group list-group-flush">
-                                        <li t-if="tag_category.tag_ids and any(tag.color for tag in tag_category.tag_ids)" class="list-group-item">
-                                            <t t-foreach="tag_category.tag_ids" t-as="tag">
+                                    <t t-if="tag_category.tag_ids and any(tag.color for tag in tag_category.tag_ids)" t-foreach="tag_category.tag_ids" t-as="tag">
+                                        <li class="list-group-item border-0 px-0">
                                                 <a t-att-href="'/event/%s/track?%s' % (
                                                         slug(event),
                                                         keep_query('*', tags=str((search_tags - tag).ids if tag in search_tags else (tag | search_tags).ids))
                                                     )"
                                                     t-if="tag.color"
-                                                    t-attf-class="d-flex align-items-center justify-content-between #{'active' if tag in search_tags else ''}">
+                                                    t-attf-class="d-flex align-items-center justify-content-between text-reset #{'active' if tag in search_tags else ''}">
                                                     <t t-out="tag.name"/>
                                                 </a>
-                                            </t>
                                         </li>
+                                    </t>
                                 </ul>
                             </div>
                         </div>
