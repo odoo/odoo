@@ -113,10 +113,80 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
         # EXTENDS account.edi.xml.ubl_21
         vals = super()._get_partner_party_vals(partner, role)
 
+<<<<<<< HEAD
         vals.update({
             'endpoint_id': partner.peppol_endpoint,
             'endpoint_id_attrs': {'schemeID': partner.peppol_eas},
         })
+||||||| parent of b3b952df6915 (temp)
+        vals['endpoint_id'] = partner.vat
+        vals['endpoint_id_attrs'] = {'schemeID': COUNTRY_EAS.get(partner.country_id.code)}
+
+        if partner.country_code == 'NO' and 'l10n_no_bronnoysund_number' in partner._fields:
+            vals.update({
+                'endpoint_id': partner.l10n_no_bronnoysund_number,
+                'endpoint_id_attrs': {'schemeID': '0192'},
+            })
+        # [BR-NL-1] Dutch supplier registration number ( AccountingSupplierParty/Party/PartyLegalEntity/CompanyID );
+        # With a Dutch supplier (NL), SchemeID may only contain 106 (Chamber of Commerce number) or 190 (OIN number).
+        # [BR-NL-10] At a Dutch supplier, for a Dutch customer ( AccountingCustomerParty ) the customer registration
+        # number must be filled with Chamber of Commerce or OIN. SchemeID may only contain 106 (Chamber of
+        # Commerce number) or 190 (OIN number).
+        if partner.country_code == 'NL' and 'l10n_nl_oin' in partner._fields:
+            if partner.l10n_nl_oin:
+                vals.update({
+                    'endpoint_id': partner.l10n_nl_oin,
+                    'endpoint_id_attrs': {'schemeID': '0190'},
+                })
+            elif partner.l10n_nl_kvk:
+                vals.update({
+                    'endpoint_id': partner.l10n_nl_kvk,
+                    'endpoint_id_attrs': {'schemeID': '0106'},
+                })
+        if partner.country_id.code == 'SG' and 'l10n_sg_unique_entity_number' in partner._fields:
+            vals.update({
+                'endpoint_id': partner.l10n_sg_unique_entity_number,
+                'endpoint_id_attrs': {'schemeID': '0195'},
+            })
+        if partner.country_id.code == "LU" and 'l10n_lu_peppol_identifier' in partner._fields and partner.l10n_lu_peppol_identifier:
+            vals['endpoint_id'] = partner.l10n_lu_peppol_identifier
+        if partner.country_id.code == "SE" and partner.vat:
+            vals['endpoint_id'] = partner.vat.replace("SE", "")[:-2]
+=======
+        vals['endpoint_id'] = partner.vat
+        vals['endpoint_id_attrs'] = {'schemeID': COUNTRY_EAS.get(partner.country_id.code)}
+
+        if partner.country_code == 'NO':
+            if 'l10n_no_bronnoysund_number' in partner._fields:
+                vals['endpoint_id'] = partner.l10n_no_bronnoysund_number
+            else:
+                vals['endpoint_id'] = partner.vat.replace("NO", "").replace("MVA", "")
+        # [BR-NL-1] Dutch supplier registration number ( AccountingSupplierParty/Party/PartyLegalEntity/CompanyID );
+        # With a Dutch supplier (NL), SchemeID may only contain 106 (Chamber of Commerce number) or 190 (OIN number).
+        # [BR-NL-10] At a Dutch supplier, for a Dutch customer ( AccountingCustomerParty ) the customer registration
+        # number must be filled with Chamber of Commerce or OIN. SchemeID may only contain 106 (Chamber of
+        # Commerce number) or 190 (OIN number).
+        if partner.country_code == 'NL' and 'l10n_nl_oin' in partner._fields:
+            if partner.l10n_nl_oin:
+                vals.update({
+                    'endpoint_id': partner.l10n_nl_oin,
+                    'endpoint_id_attrs': {'schemeID': '0190'},
+                })
+            elif partner.l10n_nl_kvk:
+                vals.update({
+                    'endpoint_id': partner.l10n_nl_kvk,
+                    'endpoint_id_attrs': {'schemeID': '0106'},
+                })
+        if partner.country_id.code == 'SG' and 'l10n_sg_unique_entity_number' in partner._fields:
+            vals.update({
+                'endpoint_id': partner.l10n_sg_unique_entity_number,
+                'endpoint_id_attrs': {'schemeID': '0195'},
+            })
+        if partner.country_id.code == "LU" and 'l10n_lu_peppol_identifier' in partner._fields and partner.l10n_lu_peppol_identifier:
+            vals['endpoint_id'] = partner.l10n_lu_peppol_identifier
+        if partner.country_id.code == "SE" and partner.vat:
+            vals['endpoint_id'] = partner.vat.replace("SE", "")[:-2]
+>>>>>>> b3b952df6915 (temp)
 
         return vals
 
