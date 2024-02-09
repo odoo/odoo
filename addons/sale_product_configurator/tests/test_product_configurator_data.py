@@ -81,6 +81,32 @@ class TestProductConfiguratorData(HttpCaseWithUserDemo, ProductVariantsCommon, S
             ],
         })
 
+    def create_product_template_with_2_attribute_no_variant(self):
+        return self.env['product.template'].create({
+            'name': 'Chair',
+            'categ_id': self.product_category.id,
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': self.no_variant_attribute.id,
+                    'value_ids': [
+                        Command.set([
+                            self.no_variant_attribute_extra.id,
+                            self.no_variant_attribute_second.id,
+                        ]),
+                    ],
+                }),
+                Command.create({
+                    'attribute_id': self.color_attribute.id,
+                    'value_ids': [
+                        Command.set([
+                            self.color_attribute_red.id,
+                            self.color_attribute_blue.id,
+                        ])
+                    ],
+                }),
+            ],
+        })
+
     def test_dropped_value_isnt_shown(self):
         self.assertEqual(len(self.product_template_sofa.product_variant_ids), 3)
 
@@ -247,6 +273,52 @@ class TestProductConfiguratorData(HttpCaseWithUserDemo, ProductVariantsCommon, S
         )
         result = self.request_get_values(product_template, [ptav_red.id])
         self.assertTrue(result['products'][0]['attribute_lines'][1]['selected_attribute_value_ids'])
+
+    def test_dropped_attribute_value_custom_no_variant(self):
+        product_template = self.create_product_template_with_2_attribute_no_variant()
+
+        # Use variants s.t. they are archived and not deleted when value is removed
+
+        self.empty_order.order_line = [
+            Command.create({
+                'product_id': product.id,
+                'product_no_variant_attribute_value_ids': product.attribute_line_ids.product_template_value_ids.filtered(
+                    lambda p: p.attribute_id.create_variant == 'no_variant'
+                ),
+            })
+            for product in product_template.product_variant_ids]
+        self.empty_order.action_confirm()
+
+        # Remove attribute value extra
+        product_template.attribute_line_ids.filtered(
+            lambda ptal: ptal.attribute_id == self.no_variant_attribute
+        ).value_ids = [Command.unlink(self.no_variant_attribute_extra.id)]
+
+        archived_ptav = product_template.attribute_line_ids.product_template_value_ids.filtered(
+            lambda ptav: ptav.product_attribute_value_id == self.no_variant_attribute_extra
+        )
+        self.assertFalse(archived_ptav.ptav_active)
+        self.assertEqual(
+            product_template.attribute_line_ids.filtered(
+                lambda ptal: ptal.attribute_id == self.no_variant_attribute
+            ).product_template_value_ids[0],
+            archived_ptav,
+        )
+        # Choose the variant (red)
+        variant_ptav_ids = [
+            product_template.attribute_line_ids.product_template_value_ids.filtered(
+                lambda ptav: ptav.product_attribute_value_id == self.color_attribute_red
+            ).id,
+        ]
+        self.authenticate('demo', 'demo')
+        result = self.request_get_values(product_template, variant_ptav_ids)
+        selected_values = [
+            selected_value
+            for product in result['products'][0]['attribute_lines']
+            for selected_value in product['selected_attribute_value_ids']]
+
+        # Make sure that deleted value is not selected
+        self.assertNotIn(archived_ptav.id, selected_values)
 
 
 @tagged('post_install', '-at_install')
