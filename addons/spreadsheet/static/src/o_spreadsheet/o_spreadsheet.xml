@@ -189,7 +189,7 @@
         t-on-keyup="onKeyup"
         t-on-click="onClick"
         t-on-blur="onBlur"
-        t-on-paste.stop=""
+        t-on-paste="onPaste"
         t-on-compositionstart="onCompositionStart"
         t-on-compositionend="onCompositionEnd"
       />
@@ -279,14 +279,7 @@
 
   <t t-name="o-spreadsheet-GridComposer" owl="1">
     <div class="o-grid-composer" t-att-style="containerStyle" t-ref="gridComposer">
-      <Composer
-        focus="props.focus"
-        inputStyle="composerStyle"
-        rect="composerState.rect"
-        delimitation="composerState.delimitation"
-        onComposerUnmounted="props.onComposerUnmounted"
-        onComposerContentFocused="props.onComposerContentFocused"
-      />
+      <Composer t-props="composerProps"/>
     </div>
   </t>
 
@@ -592,9 +585,10 @@
       class="o-grid"
       tabindex="-1"
       t-att-class="{'o-two-columns': !props.sidePanelIsOpen}"
-      t-on-click="focus"
+      t-on-click="focusDefaultElement"
       t-on-keydown="onKeydown"
       t-on-wheel="onMouseWheel"
+      t-on-contextmenu="onInputContextMenu"
       t-ref="grid">
       <GridOverlay
         onCellClicked.bind="onCellClicked"
@@ -605,26 +599,14 @@
         onGridMoved.bind="moveCanvas"
         gridOverlayDimensions="gridOverlayDimensions"
         sidePanelIsOpen="props.sidePanelIsOpen"
-        onFigureDeleted.bind="focus"
+        onFigureDeleted.bind="focusDefaultElement"
       />
       <HeadersOverlay onOpenContextMenu="(type, x, y) => this.toggleContextMenu(type, x, y)"/>
-
-      <t t-if="env.model.getters.getEditionMode() !== 'inactive'">
-        <GridComposer
-          onComposerUnmounted="() => this.focus()"
-          onComposerContentFocused="props.onComposerContentFocused"
-          focus="props.focusComposer"
-        />
-      </t>
-      <t else="1">
-        <input
-          class="position-absolute"
-          style="z-index:-1000;"
-          t-on-input="onInput"
-          t-on-contextmenu="onInputContextMenu"
-          t-ref="hiddenInput"
-        />
-      </t>
+      <GridComposer
+        onComposerContentFocused="props.onComposerContentFocused"
+        onComposerCellFocused="props.onGridComposerCellFocused"
+        focus="props.focusComposer"
+      />
       <canvas t-ref="canvas"/>
       <t
         t-foreach="env.model.getters.getClientsToDisplay()"
@@ -3256,7 +3238,7 @@ https://fontawesome.com/license -->
   </t>
 </odoo>
 <!--
-  __info__.version = '16.0.31';
-  __info__.date = '2024-02-02T14:02:38.655Z';
-  __info__.hash = 'a2e40a9';
+  __info__.version = '16.0.32';
+  __info__.date = '2024-02-09T14:25:31.474Z';
+  __info__.hash = '452dce2';
 -->
