@@ -274,7 +274,13 @@ export class RelationalModel extends Model {
         }
         if (!config.isMonoRecord && this.root) {
             // always reset the offset to 0 when reloading from above
-            config.offset = 0;
+            const resetOffset = (config) => {
+                config.offset = 0;
+                for (const group of Object.values(config.groups || {})) {
+                    resetOffset(group.list);
+                }
+            };
+            resetOffset(config);
             if (!!config.groupBy.length !== !!currentGroupBy.length) {
                 // from grouped to ungrouped or the other way around -> force the limit to be reset
                 delete config.limit;
