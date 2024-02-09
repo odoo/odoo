@@ -8,15 +8,17 @@ class ProductDocument(models.Model):
 
     attached_on = fields.Selection(
         selection=[
-            ('quotation', "Quotation"),
-            ('sale_order', "Confirmed order"),
+            ('hidden', "Hidden"),
+            ('quotation', "On quote"),
+            ('sale_order', "On confirmed order"),
         ],
-        string="Visible at",
+        required=True,
+        default='hidden',
+        string="Visibility",
         help="Allows you to share the document with your customers within a sale.\n"
-            "Leave it empty if you don't want to share this document with sales customer.\n"
-            "Quotation: the document will be sent to and accessible by customers at any time.\n"
+            "On quote: the document will be sent to and accessible by customers at any time.\n"
                 "e.g. this option can be useful to share Product description files.\n"
-            "Confirmed order: the document will be sent to and accessible by customers.\n"
+            "On order confirmation: the document will be sent to and accessible by customers.\n"
                 "e.g. this option can be useful to share User Manual or digital content bought"
                 " on ecommerce. ",
     )

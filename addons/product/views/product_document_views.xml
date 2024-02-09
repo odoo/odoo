@@ -46,6 +46,7 @@
         <field name="model">product.document</field>
         <field name="arch" type="xml">
             <kanban js_class="product_documents_kanban">
+                <field name="sequence" widget="handle"/>
                 <field name="ir_attachment_id"/>
                 <field name="mimetype"/>
                 <field name="type"/>
@@ -89,7 +90,6 @@
                                     </div>
                                     <div class="o_kanban_record_bottom flex-column" name="bottom">
                                         <div class="mt-2" invisible="res_model != 'product.product'">
-                                            <span>Variant </span>
                                             <field name="res_name" style="font-style: italic; text-decoration-line: underline;"/>
                                         </div>
                                     </div>
@@ -107,6 +107,8 @@
         <field name="model">product.document</field>
         <field name="arch" type="xml">
             <tree editable="top" multi_edit="true">
+                <field name="res_model" column_invisible="True"/>
+                <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="company_id" groups="base.group_multi_company" optional="show"/>
             </tree>

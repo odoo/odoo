@@ -10,7 +10,7 @@ class ProductDocument(models.Model):
     _inherits = {
         'ir.attachment': 'ir_attachment_id',
     }
-    _order = 'name'
+    _order = 'sequence, name'
 
     ir_attachment_id = fields.Many2one(
         'ir.attachment',
@@ -19,6 +19,7 @@ class ProductDocument(models.Model):
         ondelete='cascade')
 
     active = fields.Boolean(default=True)
+    sequence = fields.Integer(default=10)
 
     #=== CRUD METHODS ===#
 
