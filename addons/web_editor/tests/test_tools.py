@@ -87,20 +87,22 @@ class TestVideoUtils(common.BaseCase):
         for key in ['vimeo', 'vimeo_player']:
             self.assertEqual(tools.get_video_url_data(TestVideoUtils.urls[key]), {
                 'platform': 'vimeo',
-                'embed_url': '//player.vimeo.com/video/395399735?autoplay=0',
+                'embed_url': '//player.vimeo.com/video/395399735?autoplay=0&dnt=1',
                 'video_id': '395399735',
                 'params': {
-                    'autoplay': 0
+                    'autoplay': 0,
+                    'dnt': 1,
                 }
             })
         for key in ['vimeo_unlisted_video', 'vimeo_player_unlisted_video']:
             self.assertEqual(tools.get_video_url_data(TestVideoUtils.urls[key]), {
                 'platform': 'vimeo',
-                'embed_url': '//player.vimeo.com/video/795669787?autoplay=0&h=0763fdb816',
+                'embed_url': '//player.vimeo.com/video/795669787?autoplay=0&dnt=1&h=0763fdb816',
                 'video_id': '795669787',
                 'params': {
                     'autoplay': 0,
-                    'h': '0763fdb816'
+                    'dnt': 1,
+                    'h': '0763fdb816',
                 }
             })
         #dailymotion
