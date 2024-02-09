@@ -61,6 +61,9 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
             # causing a validation error
             if partner.country_id.code == "AU" and partner.vat and not partner.vat.upper().startswith("AU"):
                 vals['company_id'] = "AU" + partner.vat
+            if partner.country_id.code == 'DK':
+                # PEPPOL-COMMON-R042: Danish organization number (CVR) MUST be stated in the correct format.
+                vals['company_id_attrs'] = {'schemeID': '0184'}
 
         # sources:
         #  https://anskaffelser.dev/postaward/g3/spec/current/billing-3.0/norway/#_applying_foretaksregisteret
