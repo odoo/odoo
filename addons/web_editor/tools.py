@@ -93,10 +93,11 @@ def get_video_url_data(video_url, autoplay=False, loop=False, hide_controls=Fals
             params['fs'] = 0
         if hide_yt_logo:
             params['modestbranding'] = 1
-        yt_extra = platform_match[1] or ''
-        embed_url = f'//www.youtube{yt_extra}.com/embed/{video_id}'
+        embed_url = f'//www.youtube-nocookie.com/embed/{video_id}'
     elif platform == 'vimeo':
         params['autoplay'] = autoplay and 1 or 0
+        # Always enable "do not track" parameter.
+        params['dnt'] = 1
         if autoplay:
             params['muted'] = 1
             params['autopause'] = 0
