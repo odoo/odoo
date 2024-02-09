@@ -1,8 +1,10 @@
-import { expect, test } from "@odoo/hoot";
+import { describe, expect, test } from "@odoo/hoot";
 
 import { humanSize } from "@web/core/utils/binary";
 
-test.tags("headless")("humanSize", () => {
+describe.current.tags("headless");
+
+test("humanSize", () => {
     expect(humanSize(0)).toBe("0.00 Bytes");
     expect(humanSize(3)).toBe("3.00 Bytes");
     expect(humanSize(2048)).toBe("2.00 Kb");

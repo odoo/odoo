@@ -14,7 +14,9 @@ import {
     zipWith,
 } from "@web/core/utils/arrays";
 
-describe.tags("headless")("groupby", () => {
+describe.current.tags("headless");
+
+describe("groupby", () => {
     test("groupBy parameter validations", () => {
         // Safari: TypeError: undefined is not a function
         // Other navigator: array is not iterable
@@ -57,7 +59,7 @@ describe.tags("headless")("groupby", () => {
     });
 });
 
-describe.tags("headless")("sortby", () => {
+describe("sortby", () => {
     test("sortBy parameter validation", () => {
         expect(() => sortBy({})).toThrow(/TypeError: \w+ is not iterable/);
         expect(() => sortBy([Symbol("b"), Symbol("a")])).toThrow(
@@ -149,7 +151,7 @@ describe.tags("headless")("sortby", () => {
     });
 });
 
-describe.tags("headless")("intersection", () => {
+describe("intersection", () => {
     test("intersection of arrays", () => {
         expect(intersection([], [1, 2])).toEqual([]);
         expect(intersection([1, 2], [])).toEqual([]);
@@ -159,7 +161,7 @@ describe.tags("headless")("intersection", () => {
     });
 });
 
-describe.tags("headless")("cartesian", () => {
+describe("cartesian", () => {
     test("cartesian product of zero arrays", () => {
         expect(cartesian()).toEqual([undefined], {
             message: "the unit of the product is a singleton",
@@ -226,7 +228,7 @@ describe.tags("headless")("cartesian", () => {
     });
 });
 
-describe.tags("headless")("ensureArray", () => {
+describe("ensureArray", () => {
     test("ensure array", () => {
         const arrayRef = [];
         expect(ensureArray(arrayRef)).not.toBe(arrayRef, {
@@ -242,14 +244,14 @@ describe.tags("headless")("ensureArray", () => {
     });
 });
 
-describe.tags("headless")("unique", () => {
+describe("unique", () => {
     test("unique array", () => {
         expect(unique([1, 2, 3, 2, 4, 3, 1, 4])).toEqual([1, 2, 3, 4]);
         expect(unique("a d c a b c d b".split(" "))).toEqual("a d c b".split(" "));
     });
 });
 
-describe.tags("headless")("shallowEqual", () => {
+describe("shallowEqual", () => {
     test("simple valid cases", () => {
         expect(shallowEqual([], [])).toBeTruthy();
         expect(shallowEqual([1], [1])).toBeTruthy();
@@ -277,7 +279,7 @@ describe.tags("headless")("shallowEqual", () => {
     });
 });
 
-describe.tags("headless")("zip", () => {
+describe("zip", () => {
     test("zip", () => {
         expect(zip([1, 2], [])).toEqual([]);
         expect(zip([1, 2], ["a"])).toEqual([[1, "a"]]);
@@ -288,7 +290,7 @@ describe.tags("headless")("zip", () => {
     });
 });
 
-describe.tags("headless")("zipWith", () => {
+describe("zipWith", () => {
     test("zipWith", () => {
         expect(zipWith([{ a: 1 }, { b: 2 }], ["a", "b"], (o, k) => o[k])).toEqual([1, 2]);
     });

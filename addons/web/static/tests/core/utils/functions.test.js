@@ -1,11 +1,13 @@
 /** @odoo-module */
 
-import { test, expect } from "@odoo/hoot";
+import { test, expect, describe } from "@odoo/hoot";
 import { patchWithCleanup } from "../../web_test_helpers";
 
 import { memoize, uniqueId } from "@web/core/utils/functions";
 
-test.tags("headless")("memoize", () => {
+describe.current.tags("headless");
+
+test("memoize", () => {
     let callCount = 0;
     let lastReceivedArgs;
     const func = function () {
@@ -38,14 +40,14 @@ test.tags("headless")("memoize", () => {
     expect(callCount).toBe(3);
 });
 
-test.tags("headless")("memoized function inherit function name if possible", () => {
+test("memoized function inherit function name if possible", () => {
     const memoized1 = memoize(function test() {});
     expect(memoized1.name).toBe("test (memoized)");
     const memoized2 = memoize(function () {});
     expect(memoized2.name).toBe("memoized");
 });
 
-test.tags("headless")("uniqueId", () => {
+test("uniqueId", () => {
     patchWithCleanup(uniqueId, { nextId: 0 });
     expect(uniqueId("test_")).toBe("test_1");
     expect(uniqueId("bla")).toBe("bla2");

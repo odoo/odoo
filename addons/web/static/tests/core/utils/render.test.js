@@ -1,8 +1,10 @@
-import { expect, test } from "@odoo/hoot";
+import { describe, expect, test } from "@odoo/hoot";
 
 import { renderToElement, renderToString } from "@web/core/utils/render";
 
-test.tags("headless")("renderToElement always returns an element", () => {
+describe.current.tags("headless");
+
+test("renderToElement always returns an element", () => {
     renderToString.app.addTemplate(
         "test.render.template.1",
         `<t t-if="False">
