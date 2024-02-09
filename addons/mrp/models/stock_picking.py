@@ -112,14 +112,8 @@ class StockPicking(models.Model):
 
     @api.depends('group_id')
     def _compute_mrp_production_ids(self):
-        data = self.env['procurement.group'].read_group(
-            domain=[('id', 'in', self.group_id.ids)],
-            groupby=['id', 'mrp_production_ids'],
-            fields=['mrp_production_ids'])
-        groups_by_id = {group['id'].id: group['id'] for group in data}
         for picking in self:
-            group = groups_by_id.get(picking.group_id.id, self.env['procurement.group'])
-            picking.production_ids = group.mrp_production_ids | picking.move_ids.move_dest_ids.raw_material_production_id
+            picking.production_ids = picking.group_id.mrp_production_ids | picking.move_ids.move_dest_ids.raw_material_production_id
             picking.production_count = len(picking.production_ids)
 
     def action_detailed_operations(self):
