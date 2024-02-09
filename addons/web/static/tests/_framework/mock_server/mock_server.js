@@ -22,6 +22,15 @@ const { fetch: realFetch } = globals;
  *
  * @typedef {import("./mock_fields").FieldDefinition} FieldDefinition
  *
+ * @typedef {{
+ *  id: Number|"root";
+ *  xmlId: string;
+ *  name: string;
+ *  appID?: number;
+ *  actionID?: string|number;
+ *  children?: MenuDefinition[];
+ * }} MenuDefinition
+ *
  * @typedef {MockServerBaseEnvironment & { [modelName: string]: Model }} MockServerEnvironment
  *
  * @typedef {import("./mock_model").Model} Model
@@ -148,6 +157,10 @@ class MockServerBaseEnvironment {
 export class MockServer {
     /** @type {MockServer | null} */
     static current = null;
+    /** @type {Record<string, ActionDefinition>} */
+    static actions = {};
+    /** @type { MenuDefinition[] } */
+    static menus = [{ id: 99999, children: [], name: "App0", appID: 1 }];
     /** @type {MockServerEnvironment | null} */
     static models = [];
     static rpcListeners = [];
@@ -166,10 +179,6 @@ export class MockServer {
         thousands_sep: ",",
         week_start: 7,
     };
-    menus = {
-        root: { id: "root", children: [1], name: "root", appID: "root" },
-        1: { id: 1, children: [], name: "App0", appID: 1 },
-    };
     modules = { web: { messages: [] } };
     multi_lang = false;
 
@@ -179,6 +188,8 @@ export class MockServer {
     // Data
     /** @type {Record<string, ActionDefinition>} */
     actions = {};
+    /** @type {MenuDefinition[]} */
+    menus = [];
     /** @type {Record<string, Model>} */
     models = {};
     /** @type {ModelConstructor[]} */
@@ -316,6 +327,8 @@ export class MockServer {
     configure(params) {
         Object.assign(this.lang_parameters, params?.lang_parameters);
         Object.assign(this.modules, params?.modules);
+        this.menus = this.constructor.menus;
+        this.actions = this.constructor.actions;
 
         if (params?.multi_lang) {
             this.multi_lang = params.multi_lang;
@@ -790,7 +803,23 @@ export class MockServer {
 
     /** @type {RouteCallback} */
     async mockLoadMenus() {
-        return this.menus;
+        const root = { id: "root", children: [], name: "root", appID: "root" };
+        const menuDict = { root };
+
+        const recursive = [{ isRoot: true, menus: this.menus }];
+        for (const { isRoot, menus } of recursive) {
+            for (const _menu of menus) {
+                if (isRoot) {
+                    root.children.push(_menu.id);
+                }
+                const menu = { ..._menu };
+                const children = menu.children || [];
+                menu.children = children.map((m) => m.id);
+                recursive.push({ isRoot: false, menus: children });
+                menuDict[menu.id] = menu;
+            }
+        }
+        return menuDict;
     }
 
     /** @type {RouteCallback} */
@@ -835,6 +864,48 @@ export async function authenticate(login, password) {
     );
     authenticateUser(user);
     env.cookie.set("authenticated_user_sid", env.cookie.get("sid"));
+}
+
+/**
+ *
+ * @param {ActionDefinition[]} actions
+ */
+export function defineActions(actions) {
+    const actionsMap = Object.fromEntries(actions.map((a) => [a.xmlId | a.id, { ...a }]));
+    before(() => {
+        const originalActions = MockServer.actions;
+        MockServer.actions = { ...originalActions, ...actionsMap };
+        return () => (MockServer.menus = originalActions);
+    });
+
+    const current = MockServer.current;
+    if (current) {
+        const originalActions = current.actions;
+        current.actions = { ...originalActions, ...actionsMap };
+        after(() => {
+            current.actions = originalActions;
+        });
+    }
+}
+
+/**
+ * @param {MenuDefinition[]} menus
+ */
+export function defineMenus(menus) {
+    before(() => {
+        const originalMenus = MockServer.menus;
+        MockServer.menus = [...originalMenus, ...menus];
+        return () => (MockServer.menus = originalMenus);
+    });
+
+    const current = MockServer.current;
+    if (current) {
+        const originalMenus = current.menus;
+        current.menus = [...originalMenus, ...menus];
+        after(() => {
+            current.menus = originalMenus;
+        });
+    }
 }
 
 /**
