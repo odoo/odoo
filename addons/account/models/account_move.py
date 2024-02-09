@@ -4228,6 +4228,7 @@ class AccountMove(models.Model):
 
         disabled = container['records'].env.context.get(key, default) == target
         previous_values = {}
+        previous_envs = set(self.env.transaction.envs)
         if not disabled:  # it wasn't disabled yet, disable it now
             for env in self.env.transaction.envs:
                 previous_values[env] = env.context.get(key, EMPTY)
@@ -4239,6 +4240,9 @@ class AccountMove(models.Model):
                 if val != EMPTY:
                     env.context = frozendict({**env.context, key: val})
                 else:
+                    env.context = frozendict({k: v for k, v in env.context.items() if k != key})
+            for env in (self.env.transaction.envs - previous_envs):
+                if key in env.context:
                     env.context = frozendict({k: v for k, v in env.context.items() if k != key})
 
     # ------------------------------------------------------------

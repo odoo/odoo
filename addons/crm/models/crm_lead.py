@@ -1240,13 +1240,17 @@ class Lead(models.Model):
             help_title = _('Create a new lead')
         else:
             help_title = _('Create an opportunity to start playing with your pipeline.')
-        alias_record = self.env['mail.alias'].search([
-            ('alias_name', '!=', False),
-            ('alias_name', '!=', ''),
-            ('alias_model_id.model', '=', 'crm.lead'),
-            ('alias_parent_model_id.model', '=', 'crm.team'),
-            ('alias_force_thread_id', '=', False)
-        ], limit=1)
+        alias_domain = [
+            ('company_id', '=', self.env.company.id),
+            ('alias_id.alias_name', '!=', False),
+            ('alias_id.alias_name', '!=', ''),
+            ('alias_id.alias_model_id.model', '=', 'crm.lead'),
+        ]
+        # sort by use_leads, then by our membership of the team
+        alias_records = self.env['crm.team'].search(alias_domain).sorted(
+            lambda r: (r.use_leads, self.env.user in r.member_ids), reverse=True
+        )
+        alias_record = alias_records[0] if alias_records else None
         if alias_record and alias_record.alias_domain and alias_record.alias_name:
             email = '%s@%s' % (alias_record.alias_name, alias_record.alias_domain)
             email_link = "<b><a href='mailto:%s'>%s</a></b>" % (email, email)
