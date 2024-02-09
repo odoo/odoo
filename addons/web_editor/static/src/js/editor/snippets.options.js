@@ -6754,6 +6754,13 @@ registry.ImageTools = ImageHandlerOption.extend({
             }
         }
         await this._reapplyCurrentShape();
+        // When the hover effects are first activated from the "animationMode"
+        // function of the "WebsiteAnimate" class, the history was paused to
+        // avoid recording intermediate steps. That's why we unpause it here.
+        if (this.firstHoverEffect) {
+            this.options.wysiwyg.odooEditor.historyUnpauseSteps();
+            delete this.firstHoverEffect;
+        }
     },
     /**
      * @see this.selectClass for parameters
@@ -6801,6 +6808,7 @@ registry.ImageTools = ImageHandlerOption.extend({
                     shapeImgSquareWidget.getParent().close(); // FIXME remove this ugly hack asap
                 }
                 // Add the "Overlay" hover effect to the shape.
+                this.firstHoverEffect = true;
                 const hoverEffectOverlayWidget = this._requestUserValueWidgets("hover_effect_overlay_opt")[0];
                 hoverEffectOverlayWidget.enable();
                 hoverEffectOverlayWidget.getParent().close(); // FIXME remove this ugly hack asap
