@@ -367,3 +367,53 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
         self.assertFalse(holiday.timesheet_ids)
 
         self.assertTrue(global_time_off.timesheet_ids.filtered(lambda r: r.employee_id == test_user.employee_id))
+
+    def test_global_time_off_timesheet_creation_without_calendar(self):
+        """ Ensure that a global time off without a calendar does not get restored if it overlaps with a refused leave. """
+        # 5 day leave
+        hr_leave_start_datetime = datetime(2023, 12, 25, 7, 0, 0, 0)
+        hr_leave_end_datetime = datetime(2023, 12, 29, 18, 0, 0, 0)
+
+        self.env.company = self.test_company
+        internal_project = self.test_company.internal_project_id
+        internal_task_leaves = self.test_company.leave_timesheet_task_id
+
+        hr_leave_type_with_ts = self.env['hr.leave.type'].create({
+            'name': 'Leave Type with timesheet generation',
+            'requires_allocation': 'no',
+            'timesheet_generate': True,
+            'timesheet_project_id': internal_project.id,
+            'timesheet_task_id': internal_task_leaves.id,
+        })
+
+        # create and validate a leave for full time employee
+        HrLeave = self.env['hr.leave'].with_context(mail_create_nolog=True, mail_notrack=True)
+        holiday = HrLeave.with_user(self.full_time_employee.user_id).create({
+            'name': 'Leave 1',
+            'employee_id': self.full_time_employee.id,
+            'holiday_status_id': hr_leave_type_with_ts.id,
+            'date_from': hr_leave_start_datetime,
+            'date_to': hr_leave_end_datetime,
+        })
+        holiday.sudo().action_validate()
+        self.assertEqual(len(holiday.timesheet_ids), 5)
+
+        # overlapping leave without calendar
+        global_leave_start_datetime = datetime(2023, 12, 27, 7, 0, 0, 0)
+        global_leave_end_datetime = datetime(2023, 12, 27, 18, 0, 0, 0)
+
+        gto_without_calendar = self.env['resource.calendar.leaves'].create({
+            'name': '2 days afer Christmas',
+            'date_from': global_leave_start_datetime,
+            'date_to': global_leave_end_datetime,
+        })
+
+        # ensure timesheets are not created for a global time off without a calendar
+        self.assertFalse(gto_without_calendar.timesheet_ids)
+
+        # refuse the leave
+        holiday.sudo().action_refuse()
+        self.assertFalse(holiday.timesheet_ids)
+
+        # timesheets should not be restored for a global time off without a calendar
+        self.assertFalse(gto_without_calendar.timesheet_ids)
