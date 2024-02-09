@@ -49,7 +49,7 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
             // the thread has been persisted in the process
             async run() {
                 await contains(".o-mail-Message-actions [title='Add a Reaction']", {
-                    target: this.$anchor[0],
+                    target: this.$anchor[0].getRootNode(),
                     parent: [".o-mail-Message", { text: "I want to buy the software" }],
                 });
             },
