@@ -182,7 +182,7 @@ class SaleOrder(models.Model):
             country = order.env['res.country'].search([('code', '=', order_location['pick_up_point_country'])]).id
             state = order.env['res.country.state'].search([
                 ('code', '=', order_location['pick_up_point_state']),
-                ('country_id.id', '=', country),
+                ('country_id', '=', country),
             ]).id if (order_location['pick_up_point_state'] and country) else None
             parent_id = order.partner_shipping_id.id
             email = order.partner_shipping_id.email
