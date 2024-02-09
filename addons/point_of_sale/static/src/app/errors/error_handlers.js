@@ -7,10 +7,10 @@ import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 
 function rpcErrorHandler(env, error, originalError) {
-    if (error instanceof RPCError) {
-        const { data } = error;
-        if (odooExceptionTitleMap.has(error.exceptionName)) {
-            const title = odooExceptionTitleMap.get(error.exceptionName).toString();
+    if (originalError instanceof RPCError) {
+        const { data } = originalError;
+        if (odooExceptionTitleMap.has(originalError.exceptionName)) {
+            const title = odooExceptionTitleMap.get(originalError.exceptionName).toString();
             env.services.dialog.add(AlertDialog, { title, body: data.message });
         } else {
             env.services.dialog.add(ErrorDialog, {
@@ -23,7 +23,7 @@ function rpcErrorHandler(env, error, originalError) {
 registry.category("error_handlers").add("rpcErrorHandler", rpcErrorHandler);
 
 function offlineErrorHandler(env, error, originalError) {
-    if (error instanceof ConnectionLostError || originalError instanceof ConnectionLostError) {
+    if (originalError instanceof ConnectionLostError) {
         if (!env.services.pos.data.network.warningTriggered) {
             env.services.dialog.add(AlertDialog, {
                 title: _t("Connection Lost"),
