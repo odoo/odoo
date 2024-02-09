@@ -1839,6 +1839,9 @@
     function formatValue(value, { format, locale }) {
         switch (typeof value) {
             case "string":
+                if (value.includes('\\"')) {
+                    return value.replace(/\\"/g, '"');
+                }
                 return value;
             case "boolean":
                 return value ? "TRUE" : "FALSE";
@@ -24079,6 +24082,7 @@
         static components = { TextValueProvider, FunctionDescriptionProvider };
         static defaultProps = {
             inputStyle: "",
+            isDefaultFocus: false,
         };
         composerRef = owl.useRef("o_composer");
         contentHelper = new ContentEditableHelper(this.composerRef.el);
@@ -24131,7 +24135,6 @@
             F2: () => console.warn("Not implemented"),
             F4: this.processF4Key,
             Tab: (ev) => this.processTabKey(ev),
-            " ": (ev) => this.processSpaceKey(ev),
         };
         keyCodeMapping = {
             NumpadDecimal: this.processNumpadDecimal,
@@ -24139,10 +24142,10 @@
         setup() {
             owl.onMounted(() => {
                 const el = this.composerRef.el;
+                if (this.props.isDefaultFocus) {
+                    this.env.focusableElement.setFocusableElement(el);
+                }
                 this.contentHelper.updateEl(el);
-            });
-            owl.onWillUnmount(() => {
-                this.props.onComposerUnmounted?.();
             });
             owl.useEffect(() => {
                 this.processContent();
@@ -24152,7 +24155,8 @@
         // Handlers
         // ---------------------------------------------------------------------------
         processArrowKeys(ev) {
-            if (this.env.model.getters.isSelectingForComposer()) {
+            if (this.env.model.getters.isSelectingForComposer() ||
+                this.env.model.getters.getEditionMode() === "inactive") {
                 this.functionDescriptionState.showDescription = false;
                 // Prevent the default content editable behavior which moves the cursor
                 ev.preventDefault();
@@ -24191,24 +24195,18 @@
         processTabKey(ev) {
             ev.preventDefault();
             ev.stopPropagation();
-            if (this.autoCompleteState.showProvider) {
-                const autoCompleteValue = this.autoCompleteState.values[this.autoCompleteState.selectedIndex]?.text;
-                if (autoCompleteValue) {
-                    this.autoComplete(autoCompleteValue);
-                    return;
+            if (this.env.model.getters.getEditionMode() !== "inactive") {
+                if (this.autoCompleteState.showProvider) {
+                    const autoCompleteValue = this.autoCompleteState.values[this.autoCompleteState.selectedIndex]?.text;
+                    if (autoCompleteValue) {
+                        this.autoComplete(autoCompleteValue);
+                        return;
+                    }
                 }
+                this.env.model.dispatch("STOP_EDITION");
             }
             const direction = ev.shiftKey ? "left" : "right";
-            this.env.model.dispatch("STOP_EDITION");
             this.env.model.selection.moveAnchorCell(direction, 1);
-        }
-        processSpaceKey(ev) {
-            if (ev.ctrlKey) {
-                ev.preventDefault();
-                ev.stopPropagation();
-                this.showAutocomplete("");
-                this.env.model.dispatch("STOP_COMPOSER_RANGE_SELECTION");
-            }
         }
         processEnterKey(ev) {
             ev.preventDefault();
@@ -24261,6 +24259,9 @@
             this.compositionActive = false;
         }
         onKeydown(ev) {
+            if (this.env.model.getters.getEditionMode() === "inactive") {
+                return;
+            }
             let handler = this.keyMapping[ev.key] || this.keyCodeMapping[ev.code];
             if (handler) {
                 handler.call(this, ev);
@@ -24269,14 +24270,33 @@
                 ev.stopPropagation();
             }
         }
+        onPaste(ev) {
+            if (this.env.model.getters.getEditionMode() !== "inactive") {
+                ev.stopPropagation();
+            }
+        }
         /*
          * Triggered automatically by the content-editable between the keydown and key up
          * */
         onInput(ev) {
-            if (this.props.focus === "inactive" || !this.shouldProcessInputEvents) {
+            if (!this.shouldProcessInputEvents) {
                 return;
             }
-            let content = this.contentHelper.getText();
+            if (ev.inputType === "insertFromPaste" &&
+                this.env.model.getters.getEditionMode() === "inactive") {
+                return;
+            }
+            ev.stopPropagation();
+            let content;
+            if (this.env.model.getters.getEditionMode() === "inactive") {
+                content = ev.data || "";
+            }
+            else {
+                content = this.contentHelper.getText();
+            }
+            if (this.props.focus === "inactive") {
+                return this.props.onComposerCellFocused?.(content);
+            }
             let selection = this.contentHelper.getCurrentSelection();
             if (ev.inputType === "insertParagraph") {
                 const start = Math.min(selection.start, selection.end);
@@ -24354,9 +24374,8 @@
             }
             const newSelection = this.contentHelper.getCurrentSelection();
             this.env.model.dispatch("STOP_COMPOSER_RANGE_SELECTION");
-            if (this.props.focus === "inactive") {
-                this.props.onComposerContentFocused(newSelection);
-            }
+            this.props.onComposerContentFocused();
+            if (this.props.focus === "inactive") ;
             this.env.model.dispatch("CHANGE_COMPOSER_CURSOR_SELECTION", newSelection);
             this.processTokenAtCursor();
         }
@@ -24523,7 +24542,7 @@
             const highlights = this.env.model.getters.getHighlights();
             const refSheet = sheetName
                 ? this.env.model.getters.getSheetIdByName(sheetName)
-                : this.env.model.getters.getCurrentEditedCell().sheetId;
+                : this.env.model.getters.getCurrentEditedCell()?.sheetId;
             const highlight = highlights.find((highlight) => {
                 if (highlight.sheetId !== refSheet)
                     return false;
@@ -24603,12 +24622,13 @@
         }
     }
     Composer.props = {
-        focus: { validate: (value) => ["inactive", "cellFocus", "contentFocus"].includes(value) },
-        onComposerContentFocused: Function,
         inputStyle: { type: String, optional: true },
         rect: { type: Object, optional: true },
         delimitation: { type: Object, optional: true },
-        onComposerUnmounted: { type: Function, optional: true },
+        focus: { validate: (value) => ["inactive", "cellFocus", "contentFocus"].includes(value) },
+        onComposerCellFocused: { type: Function, optional: true },
+        onComposerContentFocused: Function,
+        isDefaultFocus: { type: Boolean, optional: true },
     };
 
     const COMPOSER_BORDER_WIDTH = 3 * 0.4 * window.devicePixelRatio || 1;
@@ -24642,51 +24662,26 @@
     class GridComposer extends owl.Component {
         static template = "o-spreadsheet-GridComposer";
         static components = { Composer };
-        gridComposerRef;
-        zone;
-        rect;
+        // TODORAR see if we can keep it undefined
+        rect = this.defaultRect;
+        isEditing = false;
         isCellReferenceVisible;
-        composerState;
+        get defaultRect() {
+            return { x: 0, y: 0, width: 0, height: 0 };
+        }
         setup() {
-            this.gridComposerRef = owl.useRef("gridComposer");
-            this.composerState = owl.useState({
-                rect: undefined,
-                delimitation: undefined,
-            });
-            const { sheetId, col, row } = this.env.model.getters.getActivePosition();
-            this.zone = this.env.model.getters.expandZone(sheetId, positionToZone({ col, row }));
-            this.rect = this.env.model.getters.getVisibleRect(this.zone);
-            this.isCellReferenceVisible = false;
-            owl.onMounted(() => {
-                const el = this.gridComposerRef.el;
-                this.composerState.rect = {
-                    x: this.rect.x,
-                    y: this.rect.y,
-                    width: el.clientWidth,
-                    height: el.clientHeight,
-                };
-                this.composerState.delimitation = {
-                    width: this.props.gridDims.width,
-                    height: this.props.gridDims.height,
-                };
-            });
             owl.onWillUpdateProps(() => {
-                if (this.isCellReferenceVisible) {
-                    return;
-                }
-                const sheetId = this.env.model.getters.getActiveSheetId();
-                const zone = this.env.model.getters.getSelectedZone();
-                const rect = this.env.model.getters.getVisibleRect(zone);
-                if (!deepEquals(rect, this.rect) ||
-                    sheetId !== this.env.model.getters.getCurrentEditedCell().sheetId) {
-                    this.isCellReferenceVisible = true;
-                }
+                this.updateComponentPosition();
+                this.updateCellReferenceVisibility();
             });
         }
         get shouldDisplayCellReference() {
             return this.isCellReferenceVisible;
         }
         get cellReference() {
+            if (!this.env.model.getters.getCurrentEditedCell()) {
+                return "";
+            }
             const { col, row, sheetId } = this.env.model.getters.getCurrentEditedCell();
             const prefixSheet = sheetId !== this.env.model.getters.getActiveSheetId();
             return `${prefixSheet ? getCanonicalSheetName(this.env.model.getters.getSheetName(sheetId)) + "!" : ""}${toXC(col, row)}`;
@@ -24698,7 +24693,27 @@
                 top: `${top - GRID_CELL_REFERENCE_TOP_OFFSET}px`,
             });
         }
+        get composerProps() {
+            const { width, height } = this.env.model.getters.getSheetViewDimensionWithHeaders();
+            return {
+                rect: { ...this.rect },
+                delimitation: {
+                    width,
+                    height,
+                },
+                focus: this.props.focus,
+                isDefaultFocus: true,
+                onComposerContentFocused: this.props.onComposerContentFocused,
+                onComposerCellFocused: this.props.onComposerCellFocused,
+            };
+        }
         get containerStyle() {
+            if (this.env.model.getters.getEditionMode() === "inactive" || !this.rect) {
+                return `
+        position: absolute;
+        z-index: -1000;
+      `;
+            }
             const isFormula = this.env.model.getters.getCurrentContent().startsWith("=");
             const cell = this.env.model.getters.getActiveCell();
             const position = this.env.model.getters.getActivePosition();
@@ -24718,6 +24733,8 @@
             if (!isFormula) {
                 textAlign = style.align || cell.defaultAlign;
             }
+            const maxHeight = this.props.gridDims.height - this.rect.y;
+            const maxWidth = this.props.gridDims.width - this.rect.x;
             /**
              * min-size is on the container, not the composer element, because we want to have the same size as the cell by default,
              * including all the paddings/margins of the composer
@@ -24729,6 +24746,8 @@
                 top: `${top}px`,
                 "min-width": `${width + 1}px`,
                 "min-height": `${height + 1}px`,
+                "max-width": `${maxWidth}px`,
+                "max-height": `${maxHeight}px`,
                 background,
                 color,
                 "font-size": `${fontSizeInPixels(fontSize)}px`,
@@ -24738,20 +24757,38 @@
                 "text-align": textAlign,
             });
         }
-        get composerStyle() {
-            const maxHeight = this.props.gridDims.height - this.rect.y;
-            const maxWidth = this.props.gridDims.width - this.rect.x;
-            return cssPropertiesToCss({
-                "max-width": `${maxWidth}px`,
-                "max-height": `${maxHeight}px`,
-            });
+        updateComponentPosition() {
+            const isEditing = this.env.model.getters.getEditionMode() !== "inactive";
+            if (this.isEditing !== isEditing) {
+                this.isEditing = isEditing;
+                if (!isEditing) {
+                    this.rect = this.defaultRect;
+                    this.env.focusableElement.focus();
+                    return;
+                }
+                const position = this.env.model.getters.getActivePosition();
+                const zone = this.env.model.getters.expandZone(position.sheetId, positionToZone(position));
+                this.rect = this.env.model.getters.getVisibleRect(zone);
+            }
+        }
+        updateCellReferenceVisibility() {
+            if (this.isCellReferenceVisible || this.env.model.getters.getEditionMode() === "inactive") {
+                return;
+            }
+            const sheetId = this.env.model.getters.getActiveSheetId();
+            const zone = this.env.model.getters.getSelectedZone();
+            const rect = this.env.model.getters.getVisibleRect(zone);
+            if (!deepEquals(rect, this.rect) ||
+                sheetId !== this.env.model.getters.getCurrentEditedCell().sheetId) {
+                this.isCellReferenceVisible = true;
+            }
         }
     }
     GridComposer.props = {
         focus: { validate: (value) => ["inactive", "cellFocus", "contentFocus"].includes(value) },
-        onComposerUnmounted: Function,
         onComposerContentFocused: Function,
         gridDims: Object,
+        onComposerCellFocused: Function,
     };
 
     const CSS$1 = css /* scss */ `
@@ -25632,7 +25669,6 @@
             this.props.onCellDoubleClicked(col, row);
         }
         onContextMenu(ev) {
-            ev.preventDefault();
             const [col, row] = this.getCartesianCoordinates(ev);
             this.props.onCellRightClicked(col, row, { x: ev.clientX, y: ev.clientY });
         }
@@ -26725,7 +26761,6 @@
         HEADER_WIDTH = HEADER_WIDTH;
         menuState;
         gridRef;
-        hiddenInput;
         onMouseWheel;
         canvasPosition;
         hoveredCell;
@@ -26736,17 +26771,16 @@
                 menuItems: [],
             });
             this.gridRef = owl.useRef("grid");
-            this.hiddenInput = owl.useRef("hiddenInput");
             this.canvasPosition = useAbsoluteBoundingRect(this.gridRef);
             this.hoveredCell = owl.useState({ col: undefined, row: undefined });
             owl.useChildSubEnv({ getPopoverContainerRect: () => this.getGridRect() });
             owl.useExternalListener(document.body, "cut", this.copy.bind(this, true));
             owl.useExternalListener(document.body, "copy", this.copy.bind(this, false));
             owl.useExternalListener(document.body, "paste", this.paste);
-            owl.onMounted(() => this.focus());
-            this.props.exposeFocus(() => this.focus());
+            owl.onMounted(() => this.focusDefaultElement());
+            this.props.exposeFocus(() => this.focusDefaultElement());
             useGridDrawing("canvas", this.env.model, () => this.env.model.getters.getSheetViewDimensionWithHeaders());
-            owl.useEffect(() => this.focus(), () => [this.env.model.getters.getActiveSheetId()]);
+            owl.useEffect(() => this.focusDefaultElement(), () => [this.env.model.getters.getActiveSheetId()]);
             this.onMouseWheel = useWheelHandler((deltaX, deltaY) => {
                 this.moveCanvas(deltaX, deltaY);
                 this.hoveredCell.col = undefined;
@@ -26769,7 +26803,7 @@
             if (this.env.model.getters.hasOpenedPopover()) {
                 this.closeOpenedPopover();
             }
-            this.focus();
+            this.focusDefaultElement();
         }
         // this map will handle most of the actions that should happen on key down. The arrow keys are managed in the key
         // down itself
@@ -26942,10 +26976,10 @@
             PAGEUP: () => this.env.model.dispatch("SHIFT_VIEWPORT_UP"),
             "CTRL+K": () => INSERT_LINK(this.env),
         };
-        focus() {
+        focusDefaultElement() {
             if (!this.env.model.getters.getSelectedFigureId() &&
                 this.env.model.getters.getEditionMode() === "inactive") {
-                this.hiddenInput.el?.focus();
+                this.env.focusableElement.focus();
             }
         }
         get gridEl() {
@@ -27089,19 +27123,6 @@
                 return;
             }
         }
-        onInput(ev) {
-            // the user meant to paste in the sheet, not open the composer with the pasted content
-            if (!ev.isComposing && ev.inputType === "insertFromPaste") {
-                return;
-            }
-            if (ev.data) {
-                // if the user types a character on the grid, it means he wants to start composing the selected cell with that
-                // character
-                ev.preventDefault();
-                ev.stopPropagation();
-                this.props.onGridComposerCellFocused(ev.data);
-            }
-        }
         // ---------------------------------------------------------------------------
         // Context Menu
         // ---------------------------------------------------------------------------
@@ -27214,7 +27235,7 @@
         }
         closeMenu() {
             this.menuState.isOpen = false;
-            this.focus();
+            this.focusDefaultElement();
         }
     }
     Grid.props = {
@@ -30875,6 +30896,31 @@
             },
         },
         {
+            description: "Fix datafilter duplication",
+            from: 12,
+            to: 12.5,
+            applyMigration(data) {
+                for (let sheet of data.sheets || []) {
+                    let knownDataFilterZones = [];
+                    for (let filterTable of sheet.filterTables || []) {
+                        const zone = toZone(filterTable.range);
+                        // See commit message for the details
+                        const intersectZoneIndex = knownDataFilterZones.findIndex((knownZone) => overlap(knownZone, zone));
+                        if (intersectZoneIndex !== -1) {
+                            knownDataFilterZones[intersectZoneIndex] = zone;
+                        }
+                        else {
+                            knownDataFilterZones.push(zone);
+                        }
+                    }
+                    sheet.filterTables = knownDataFilterZones.map((zone) => ({
+                        range: zoneToXc(zone),
+                    }));
+                }
+                return data;
+            },
+        },
+        {
             description: "Change Border description structure",
             from: 12,
             to: 13,
@@ -31927,10 +31973,6 @@
                         format: cell.format ? getItemId(cell.format, formats) : undefined,
                         content: cell.content || undefined,
                     };
-                    // if there is a formula but no dependencies (maybe because the cell is in error), no need to recompute the formula text
-                    if (cell.isFormula && cell.dependencies.length) {
-                        cells[xc].content = this.buildFormulaContent(_sheet.id, cell, cell.dependencies, true);
-                    }
                 }
                 _sheet.cells = cells;
             }
@@ -37151,7 +37193,13 @@
                 const format = newFormat
                     ? getItemId(newFormat, data.formats)
                     : exportedCellData.format;
-                const content = !isExported ? newContent : exportedCellData.content;
+                let content;
+                if (formulaCell instanceof FormulaCellWithDependencies) {
+                    content = this.getters.buildFormulaContent(exportedSheetData.id, formulaCell, formulaCell.dependencies, true);
+                }
+                else {
+                    content = !isExported ? newContent : exportedCellData.content;
+                }
                 exportedSheetData.cells[xc] = { ...exportedCellData, value, isFormula, content, format };
             }
         }
@@ -43670,7 +43718,7 @@
             this.replaceText(ref, this.selectionInitialStart, this.selectionEnd);
         }
         getZoneReference(zone) {
-            const inputSheetId = this.getters.getCurrentEditedCell().sheetId;
+            const inputSheetId = this.getters.getCurrentEditedCell()?.sheetId || this.getters.getActiveSheetId();
             const sheetId = this.getters.getActiveSheetId();
             const range = this.getters.getRangeFromZone(sheetId, zone);
             return this.getters.getSelectionRangeString(range, inputSheetId);
@@ -43684,7 +43732,7 @@
                 _fixedParts.pop();
             }
             const newRange = range.clone({ parts: _fixedParts });
-            return this.getters.getSelectionRangeString(newRange, this.getters.getCurrentEditedCell().sheetId);
+            return this.getters.getSelectionRangeString(newRange, this.getters.getCurrentEditedCell()?.sheetId || this.getters.getActiveSheetId());
         }
         /**
          * Replace the current selection by a new text.
@@ -43717,7 +43765,7 @@
             if (!this.currentContent.startsWith("=") || this.mode === "inactive") {
                 return;
             }
-            const editionSheetId = this.getters.getCurrentEditedCell().sheetId;
+            const editionSheetId = this.getters.getCurrentEditedCell()?.sheetId || this.getters.getActiveSheetId();
             const XCs = this.getReferencedRanges().map((range) => this.getters.getRangeString(range, editionSheetId));
             const colorsToKeep = {};
             for (const xc of XCs) {
@@ -43746,7 +43794,7 @@
             if (!this.currentContent.startsWith("=") || this.mode === "inactive") {
                 return [];
             }
-            const editionSheetId = this.getters.getCurrentEditedCell().sheetId;
+            const editionSheetId = this.getters.getCurrentEditedCell()?.sheetId || this.getters.getActiveSheetId();
             const rangeColor = (rangeString) => {
                 const colorIndex = this.colorIndexByRange[rangeString];
                 return colors$1[colorIndex % colors$1.length];
@@ -43764,7 +43812,7 @@
          * Return ranges currently referenced in the composer
          */
         getReferencedRanges() {
-            const editionSheetId = this.getters.getCurrentEditedCell().sheetId;
+            const editionSheetId = this.getters.getCurrentEditedCell()?.sheetId || this.getters.getActiveSheetId();
             const referenceRanges = this.currentTokens
                 .filter((token) => token.type === "REFERENCE")
                 .map((token) => this.getters.getRangeFromSheetXC(editionSheetId, token.value));
@@ -45725,6 +45773,16 @@
                 });
                 image.addEventListener("error", reject);
             });
+        }
+    }
+
+    class FocusableElement {
+        focusableElement = undefined;
+        setFocusableElement(element) {
+            this.focusableElement = element;
+        }
+        focus() {
+            this.focusableElement?.focus();
         }
     }
 
@@ -47770,6 +47828,7 @@
                 _t: Spreadsheet._t,
                 clipboard: this.env.clipboard || instantiateClipboard(),
                 startCellEdition: (content) => this.onGridComposerCellFocused(content),
+                focusableElement: new FocusableElement(),
             });
             owl.useExternalListener(window, "resize", () => this.render(true));
             owl.useExternalListener(window, "beforeunload", this.unbindModelEvents.bind(this));
@@ -47876,17 +47935,18 @@
             this.model.dispatch("UNFOCUS_SELECTION_INPUT");
             this.composer.topBarFocus = "contentFocus";
             this.composer.gridFocusMode = "inactive";
-            this.setComposerContent({ selection } || {});
+            this.setComposerContent({ selection });
         }
-        onGridComposerContentFocused() {
+        onGridComposerContentFocused(selection) {
             if (this.model.getters.isReadonly()) {
                 return;
             }
             this.model.dispatch("UNFOCUS_SELECTION_INPUT");
             this.composer.topBarFocus = "inactive";
             this.composer.gridFocusMode = "contentFocus";
-            this.setComposerContent({});
+            this.setComposerContent({ selection });
         }
+        // TODO: either both are defined or none of them. change those args to an object
         onGridComposerCellFocused(content, selection) {
             if (this.model.getters.isReadonly()) {
                 return;
@@ -51612,9 +51672,9 @@
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.4.21';
-    __info__.date = '2024-02-02T14:05:57.857Z';
-    __info__.hash = '73662b1';
+    __info__.version = '16.4.22';
+    __info__.date = '2024-02-09T14:30:22.415Z';
+    __info__.hash = '952543c';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
