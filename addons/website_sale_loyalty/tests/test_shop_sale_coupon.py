@@ -1,10 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from datetime import timedelta
 
-from odoo import fields
+from odoo import fields, http
 from odoo.exceptions import ValidationError
-from odoo.tests import HttpCase, tagged, TransactionCase
+from odoo.fields import Command
+from odoo.tests import HttpCase, tagged
+
 from odoo.addons.sale.tests.test_sale_product_attribute_value_config import TestSaleProductAttributeValueCommon
+from odoo.addons.website.tools import MockRequest
+from odoo.addons.website_sale_loyalty.controllers.main import WebsiteSale
 
 
 @tagged('post_install', '-at_install')
@@ -366,3 +370,55 @@ class TestWebsiteSaleCoupon(HttpCase):
 
         msg = "The coupon should've been removed from the order"
         self.assertEqual(len(order.applied_coupon_ids), 0, msg=msg)
+
+    def test_04_apply_coupon_code_twice(self):
+        """This test ensures that applying a coupon with code twice will:
+            1. Raise an error
+            2. Not delete the coupon
+        """
+        website = self.env['website'].browse(1)
+
+        # Create product
+        product = self.env['product.product'].create({
+            'name': 'Product',
+            'list_price': 100,
+            'sale_ok': True,
+            'taxes_id': [],
+        })
+
+        order = self.empty_order
+        order.write({
+            'website_id': website.id,
+            'order_line': [
+                Command.create({
+                    'product_id': product.id,
+                }),
+            ]
+        })
+
+        WebsiteSaleController = WebsiteSale()
+
+        installed_modules = set(self.env['ir.module.module'].search([
+            ('state', '=', 'installed'),
+        ]).mapped('name'))
+        for _ in http._generate_routing_rules(installed_modules, nodb_only=False):
+            pass
+
+        with MockRequest(self.env, website=website, sale_order_id=order.id) as request:
+            # Check the base cart value
+            self.assertEqual(order.amount_total, 100.0, "The base cart value is incorrect.")
+
+            # Apply coupon for the first time
+            WebsiteSaleController.pricelist(promo=self.coupon.code)
+
+            # Check that the coupon has been applied
+            self.assertEqual(order.amount_total, 90.0, "The coupon is not applied.")
+
+            # Apply the coupon again
+            WebsiteSaleController.pricelist(promo=self.coupon.code)
+            WebsiteSaleController.cart()
+            error_msg = request.session.get('error_promo_code')
+
+            # Check that the coupon stay applied
+            self.assertEqual(bool(error_msg), True, "Apply a coupon twice should display an error message")
+            self.assertEqual(order.amount_total, 90.0, "Apply a coupon twice shouldn't delete it")
