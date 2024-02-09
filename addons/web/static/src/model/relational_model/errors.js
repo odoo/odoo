@@ -1,21 +1,20 @@
 import { registry } from "@web/core/registry";
-import { router } from "@web/core/browser/router";
+import { _t } from "@web/core/l10n/translation";
 
 export class FetchRecordError extends Error {
-    constructor(resIds, resModel) {
-        super();
+    constructor(resIds) {
+        super(
+            _t(
+                "It seems the records with IDs %s cannot be found. They might have been deleted.",
+                resIds
+            )
+        );
         this.resIds = resIds;
-        this.resModel = resModel;
     }
 }
-
-export function fetchRecordErrorHandler(env, error, originalError) {
+function fetchRecordErrorHandler(env, error, originalError) {
     if (originalError instanceof FetchRecordError) {
-        const route = { ...router.current };
-        const { resIds, resModel } = originalError;
-        if (resIds.length === 1 && resIds[0] === route.id && resModel === route.model) {
-            route.pushState({ id: undefined, view_type: undefined }, { reload: true });
-        }
+        env.services.notification.add(originalError.message, { sticky: true, type: "danger" });
         return true;
     }
 }

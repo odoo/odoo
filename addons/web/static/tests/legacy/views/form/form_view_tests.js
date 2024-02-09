@@ -6132,11 +6132,14 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(target.querySelector(".o_pager_value").textContent, "1");
         assert.strictEqual(target.querySelector(".o_pager_limit").textContent, "2");
         assert.strictEqual(router.current.id, 1);
+        await nextTick();
+        assert.containsN(target, ".o_notification_body", 1, "should have a notification");
 
         await click(target.querySelector(".o_pager_next"));
         assert.strictEqual(target.querySelector(".o_pager_value").textContent, "2");
         assert.strictEqual(target.querySelector(".o_pager_limit").textContent, "2");
         assert.strictEqual(router.current.id, 2);
+        assert.containsN(target, ".o_notification_body", 1, "notification should be sticky");
     });
 
     QUnit.test("modifiers are reevaluated when creating new record", async function (assert) {

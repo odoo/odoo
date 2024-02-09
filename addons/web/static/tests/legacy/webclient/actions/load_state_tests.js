@@ -335,7 +335,7 @@ QUnit.module("ActionManager", (hooks) => {
             Object.assign(browser.location, { search: "action=3&id=2&view_type=form" });
             const webClient = await createWebClient({ serverData, mockRPC });
             assert.containsNone(target, ".o_form_view");
-            assert.containsNone(target, ".o_list_view");
+            assert.containsOnce(target, ".o_list_view"); // Show the lazy loaded list view
             await doAction(webClient, 1);
             assert.containsOnce(target, ".o_kanban_view");
         }
@@ -427,21 +427,21 @@ QUnit.module("ActionManager", (hooks) => {
     });
 
     QUnit.test("load state: in a form view, wrong id in the state", async function (assert) {
+        registry.category("services").add("error", errorService);
         serverData.actions[1000] = {
             id: 1000,
             name: "Partner",
             res_model: "partner",
             type: "ir.actions.act_window",
-            view_type: "form",
-            res_id: 999,
             views: [
                 [false, "list"],
                 [false, "form"],
             ],
         };
-        const webClient = await createWebClient({ serverData });
-        await doAction(webClient, 1000);
+        Object.assign(browser.location, { search: "action=1000&view_type=form&id=999" });
+        await createWebClient({ serverData });
         assert.containsOnce(target, ".o_list_view");
+        assert.containsN(target, ".o_notification_body", 1, "should have a notification");
     });
 
     QUnit.test("state with integer active_ids should not crash", async function (assert) {

@@ -168,17 +168,7 @@ export class RelationalModel extends Model {
      */
     async load(params = {}) {
         const config = this._getNextConfig(this.config, params);
-        let data;
-        try {
-            data = await this.keepLast.add(this._loadData(config));
-        } catch (e) {
-            if (e instanceof FetchRecordError) {
-                this._updateConfig(this.config, {
-                    resIds: this.config.resIds.filter(id => id !== config.resId),
-                }, {reload: false});
-            }
-            throw e;
-        }
+        const data = await this.keepLast.add(this._loadData(config));
         this.root = this._createRoot(config, data);
         this.config = config;
     }
@@ -531,7 +521,7 @@ export class RelationalModel extends Model {
             };
             const records = await this.orm.webRead(resModel, resIds, kwargs);
             if (!records.length) {
-                throw new FetchRecordError(resIds, resModel);
+                throw new FetchRecordError(resIds);
             }
 
             return records;
