@@ -68,7 +68,7 @@ export class HootTestPath extends Component {
             </span>
             <t t-if="props.test.tags.length">
                 <ul class="flex items-center gap-1">
-                    <t t-foreach="props.test.tags.slice(0, 5)" t-as="tag" t-key="tag.id">
+                    <t t-foreach="props.test.tags.slice(0, 5)" t-as="tag" t-key="tag.name">
                         <li class="flex">
                             <HootTagButton tag="tag" />
                         </li>

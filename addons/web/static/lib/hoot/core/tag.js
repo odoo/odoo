@@ -8,6 +8,12 @@ import { HootError, normalize, stringToNumber } from "../hoot_utils";
  */
 
 //-----------------------------------------------------------------------------
+// Global
+//-----------------------------------------------------------------------------
+
+const { Set } = globalThis;
+
+//-----------------------------------------------------------------------------
 // Internal
 //-----------------------------------------------------------------------------
 
@@ -39,47 +45,8 @@ let canCreateTag = false;
 //-----------------------------------------------------------------------------
 
 /**
- *
- * @param {string | Tag} tagName
- * @returns {Tag}
- */
-export function createTag(tagName) {
-    if (tagName instanceof Tag) {
-        return tagName;
-    } else {
-        if (!existingTags[tagName]) {
-            canCreateTag = true;
-            existingTags[tagName] = new Tag(tagName);
-            canCreateTag = false;
-        }
-        return existingTags[tagName];
-    }
-}
-
-/**
- * @param  {...(string | Tag)[]} tagLists
- * @returns {Tag[]}
- */
-export function createTags(...tagLists) {
-    /** @type {Tag[]} */
-    const tags = [];
-    for (const tagList of tagLists) {
-        if (!isIterable(tagList)) {
-            continue;
-        }
-        for (const tagName of tagList) {
-            const tag = createTag(tagName);
-            if (tag && !tags.includes(tag)) {
-                tags.push(tag);
-            }
-        }
-    }
-    return tags;
-}
-
-/**
- * Cannot be instantiated outside of {@link createTag}.
- * @see {@link createTag}
+ * Cannot be instantiated outside of {@link Tag.get}.
+ * @see {@link Tag.get}
  */
 export class Tag {
     static DEBUG = SPECIAL_TAGS.debug;
@@ -96,11 +63,41 @@ export class Tag {
         }
 
         this.name = name;
-
         this.id = this.name;
         this.key = normalize(this.name);
 
-        this.special = this.name in SPECIAL_TAGS;
-        this.color = TAG_COLORS[stringToNumber(this.id) % TAG_COLORS.length];
+        this.color = TAG_COLORS[stringToNumber(this.key) % TAG_COLORS.length];
+    }
+
+    /**
+     * @param {Tag | string} tagSpec
+     * @returns {Tag}
+     */
+    static get(tagSpec) {
+        if (tagSpec instanceof this) {
+            return tagSpec;
+        }
+        const tagName = String(tagSpec);
+        if (!existingTags[tagName]) {
+            canCreateTag = true;
+            existingTags[tagName] = new this(tagName);
+            canCreateTag = false;
+        }
+        return existingTags[tagName];
+    }
+
+    /**
+     * @param {Iterable<Tag | string>} [tagSpecs]
+     * @returns {Set<Tag>}
+     */
+    static getAll(tagSpecs) {
+        /** @type {Set<Tag>} */
+        const tags = new Set();
+        if (isIterable(tagSpecs)) {
+            for (const tagSpec of tagSpecs) {
+                tags.add(this.get(tagSpec));
+            }
+        }
+        return tags;
     }
 }

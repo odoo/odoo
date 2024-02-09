@@ -13,7 +13,7 @@ import { HootError } from "../hoot_utils";
  */
 
 //-----------------------------------------------------------------------------
-// Globals
+// Global
 //-----------------------------------------------------------------------------
 
 const { customElements, document, getSelection, HTMLElement } = globalThis;

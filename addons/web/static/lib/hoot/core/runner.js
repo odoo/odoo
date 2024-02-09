@@ -33,6 +33,17 @@ import { Test, testError } from "./test";
 import { EXCLUDE_PREFIX, setParams, urlParams } from "./url";
 
 /**
+ * @typedef {{
+ *  readonly config: (config: JobConfig) => CurrentConfigurators;
+ *  readonly debug: () => CurrentConfigurators;
+ *  readonly multi: (count: number) => CurrentConfigurators;
+ *  readonly only: () => CurrentConfigurators;
+ *  readonly skip: () => CurrentConfigurators;
+ *  readonly tags: (...tags: string[]) => CurrentConfigurators;
+ *  readonly timeout: (ms: number) => CurrentConfigurators;
+ *  readonly todo: () => CurrentConfigurators;
+ * }} CurrentConfigurators
+ *
  * @typedef {Suite | Test} Job
  *
  * @typedef {import("./job").JobConfig} JobConfig
@@ -239,10 +250,10 @@ export class TestRunner {
      */
     constructor(config) {
         // Main test methods
-        this.describe = this.#applyTestModifiers(this.addSuite);
+        this.describe = this.#addConfigurators(this.addSuite, () => this.#suiteStack.at(-1));
         this.expect = makeExpectFunction(this);
         this.fixture = makeFixtureManager(this);
-        this.test = this.#applyTestModifiers(this.addTest);
+        this.test = this.#addConfigurators(this.addTest, false);
 
         const initialConfig = { ...DEFAULT_CONFIG, ...config };
         this.config = reactive({ ...initialConfig, ...urlParams }, () => {
@@ -329,26 +340,9 @@ export class TestRunner {
             }
         }
         this.#suiteStack.push(suite);
-        for (const tag of suite.tags) {
-            if (tag.special) {
-                switch (tag.name) {
-                    case Tag.DEBUG:
-                        this.debug = true;
-                    // fall through
-                    case Tag.ONLY:
-                        this.#include("suites", suite.id);
-                        break;
-                    case Tag.SKIP:
-                        suite.config.skip = true;
-                        break;
-                    case Tag.TODO:
-                        suite.config.todo = true;
-                        break;
-                }
-            } else if (isEmpty(tag.config)) {
-                this.tags.add(tag);
-            }
-        }
+
+        this.#applyTagModifiers(suite);
+
         let result;
         try {
             result = fn();
@@ -404,26 +398,8 @@ export class TestRunner {
             parentSuite.jobs.push(test);
             this.tests.set(test.id, test);
         }
-        for (const tag of test.tags) {
-            if (tag.special) {
-                switch (tag.name) {
-                    case Tag.DEBUG:
-                        this.debug = true;
-                    // fall through
-                    case Tag.ONLY:
-                        this.#include("tests", test.id);
-                        break;
-                    case Tag.SKIP:
-                        test.config.skip = true;
-                        break;
-                    case Tag.TODO:
-                        test.config.todo = true;
-                        break;
-                }
-            } else if (isEmpty(tag.config)) {
-                this.tags.add(tag);
-            }
-        }
+
+        this.#applyTagModifiers(test);
     }
 
     /**
@@ -925,41 +901,25 @@ export class TestRunner {
      * - `tags`: add tags to this test/suite
      *
      * @template {(...args: any[]) => any} T
+     * @template {false | () => Job} C
      * @param {T} fn
+     * @param {C} getCurrent
      * @returns {typeof taggedFn}
      */
-    #applyTestModifiers(fn) {
+    #addConfigurators(fn, getCurrent) {
         /**
-         * @typedef {((...args: DropFirst<Parameters<T>>) => TaggedFunction) & {
-         *  readonly config: typeof config;
+         * @typedef {((...args: DropFirst<Parameters<T>>) => ConfigurableFunction) & {
+         *  readonly config: typeof configure;
+         *  readonly current: C extends false ? never : CurrentConfigurators;
          *  readonly debug: typeof taggedFn;
+         *  readonly multi: (count: number) => typeof taggedFn;
          *  readonly only: typeof taggedFn;
          *  readonly skip: typeof taggedFn;
-         *  readonly tags: typeof tags;
+         *  readonly tags: typeof addTags;
          *  readonly todo: typeof taggedFn;
-         * }} TaggedFunction
+         *  readonly timeout: (ms: number) => typeof taggedFn;
+         * }} ConfigurableFunction
          */
-
-        /**
-         * Modifies the current test/suite configuration.
-         *
-         * - `timeout`: sets the timeout for the current test/suite;
-         * - `multi`: sets the number of times the current test/suite will be run.
-         *
-         * @param  {...JobConfig} configs
-         * @returns {TaggedFunction}
-         * @example
-         *  // Will timeout each of its tests after 10 seconds
-         *  describe.config({ timeout: 10_000 })("Expensive tests", () => { ... });
-         * @example
-         *  // Will be run 100 times
-         *  test.config({ multi: 100 })("non-deterministic test", async () => { ... });
-         */
-        const config = (...configs) => {
-            Object.assign(currentConfig, ...configs);
-
-            return taggedFn;
-        };
 
         /**
          * Adds tags to the current test/suite.
@@ -967,7 +927,7 @@ export class TestRunner {
          * Tags can be a string, a list of strings, or a spread of strings.
          *
          * @param  {...(string | Iterable<string>)} tags
-         * @returns {TaggedFunction}
+         * @returns {ConfigurableFunction}
          * @example
          *  // Will be tagged with "desktop" and "ui"
          *  test.tags("desktop", "ui")("my test", () => { ... });
@@ -975,7 +935,7 @@ export class TestRunner {
          * @example
          *  test.tags`mobile,ui`("my mobile test", () => { ... });
          */
-        const tags = (...tags) => {
+        const addTags = (...tags) => {
             if (tags[0]?.raw) {
                 tags = String.raw(...tags).split(/\s*,\s*/g);
             }
@@ -985,7 +945,28 @@ export class TestRunner {
             return taggedFn;
         };
 
-        /** @type {TaggedFunction} */
+        /**
+         * Modifies the current test/suite configuration.
+         *
+         * - `timeout`: sets the timeout for the current test/suite;
+         * - `multi`: sets the number of times the current test/suite will be run.
+         *
+         * @param  {...JobConfig} configs
+         * @returns {ConfigurableFunction}
+         * @example
+         *  // Will timeout each of its tests after 10 seconds
+         *  describe.config({ timeout: 10_000 })("Expensive tests", () => { ... });
+         * @example
+         *  // Will be run 100 times
+         *  test.config({ multi: 100 })("non-deterministic test", async () => { ... });
+         */
+        const configure = (...configs) => {
+            Object.assign(currentConfig, ...configs);
+
+            return taggedFn;
+        };
+
+        /** @type {ConfigurableFunction} */
         const taggedFn = (...args) => {
             const jobConfig = { ...currentConfig };
             currentConfig = { tags: [] };
@@ -994,15 +975,85 @@ export class TestRunner {
 
         let currentConfig = { tags: [] };
         Object.defineProperties(taggedFn, {
-            config: { value: config },
-            debug: { get: () => tags("debug") },
-            only: { get: () => tags("only") },
-            skip: { get: () => tags("skip") },
-            tags: { get: () => tags },
-            todo: { get: () => tags("todo") },
+            config: { get: configure },
+            debug: { get: () => addTags("debug") },
+            multi: { get: (count) => configure({ multi: count }) },
+            only: { get: () => addTags("only") },
+            skip: { get: () => addTags("skip") },
+            tags: { get: () => addTags },
+            timeout: { get: (ms) => configure({ timeout: ms }) },
+            todo: { get: () => addTags("todo") },
         });
 
+        if (getCurrent) {
+            Object.defineProperties(taggedFn, {
+                current: { get: () => this.#createCurrentConfigurators(getCurrent) },
+            });
+        }
+
         return taggedFn;
+    }
+
+    /**
+     * @param {Job} job
+     */
+    #applyTagModifiers(job) {
+        for (const tag of job.tags) {
+            this.tags.add(tag);
+            switch (tag.name) {
+                case Tag.DEBUG:
+                    this.debug = true;
+                // fall through
+                case Tag.ONLY:
+                    this.#include(job instanceof Suite ? "suites" : "tests", job.id);
+                    break;
+                case Tag.SKIP:
+                    job.config.skip = true;
+                    break;
+                case Tag.TODO:
+                    job.config.todo = true;
+                    break;
+            }
+        }
+    }
+
+    /**
+     * @param {() => Job} getCurrent
+     */
+    #createCurrentConfigurators(getCurrent) {
+        /**
+         * @param {JobConfig} config
+         */
+        const configureCurrent = (config) => {
+            getCurrent().configure(config);
+
+            return currentConfigurators;
+        };
+
+        /**
+         * @param  {...string} tags
+         */
+        const addTagsToCurrent = (...tags) => {
+            const current = getCurrent();
+            current.configure({ tags });
+            this.#applyTagModifiers(current);
+
+            return currentConfigurators;
+        };
+
+        /** @type {CurrentConfigurators} */
+        const currentConfigurators = Object.freeze({
+            config: configureCurrent,
+            debug: () => addTagsToCurrent("debug"),
+            multi: (count) => configureCurrent({ multi: count }),
+            only: () => addTagsToCurrent("only"),
+            skip: () => addTagsToCurrent("skip"),
+            tags: addTagsToCurrent,
+            timeout: (ms) => configureCurrent({ timeout: ms }),
+            todo: () => addTagsToCurrent("todo"),
+        });
+
+        return currentConfigurators;
     }
 
     /**
@@ -1073,14 +1124,14 @@ export class TestRunner {
         // Priority 2: excluded if one of the job tags is in the tag "exlude" set
         const tagEntries = Object.entries(this.state.includeSpecs.tags);
         for (const [tagName, status] of tagEntries) {
-            if (status === false && job.tagNames.has(tagName)) {
+            if (status === false && job.tags.some((tag) => tag.key === tagName)) {
                 return false;
             }
         }
 
         // Priority 3: included if one of the job tags is in the tag "include" set
         for (const [tagName, status] of tagEntries) {
-            if (status === true && job.tagNames.has(tagName)) {
+            if (status === true && job.tags.some((tag) => tag.key === tagName)) {
                 return true;
             }
         }
