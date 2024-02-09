@@ -7,9 +7,7 @@ class ResPartner(models.Model):
 
     def _compute_im_status(self):
         super()._compute_im_status()
-        users = self.env["res.users"].search([
-            ('partner_id.id', 'in', self.ids)])
-        for user in users:
+        for user in self.user_ids:
             dayfield = self.env['hr.employee']._get_current_day_location_field()
             location_type = user[dayfield].location_type
             if not location_type:
@@ -20,6 +18,6 @@ class ResPartner(models.Model):
 
     def get_worklocation(self, start_date, end_date):
         employee_id = self.env['hr.employee'].search([
-            ('work_contact_id.id', 'in', self.ids),
-            ('company_id.id', '=', self.env.company.id)])
+            ('work_contact_id', 'in', self.ids),
+            ('company_id', '=', self.env.company.id)])
         return employee_id._get_worklocation(start_date, end_date)
