@@ -93,6 +93,7 @@ export class Notebook extends Component {
                     scrollTo(matchingEl, { isAnchor: true });
                     this.anchorTarget = null;
                 }
+                this.activePane.el?.classList.add("show");
             },
             () => [this.state.currentPage]
         );
@@ -132,7 +133,8 @@ export class Notebook extends Component {
     }
 
     activatePage(pageIndex) {
-        if (!this.disabledPages.includes(pageIndex)) {
+        if (!this.disabledPages.includes(pageIndex) && this.state.currentPage !== pageIndex) {
+            this.activePane.el?.classList.remove("show");
             this.state.currentPage = pageIndex;
         }
     }
