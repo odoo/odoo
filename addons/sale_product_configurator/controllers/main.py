@@ -47,10 +47,12 @@ class ProductConfiguratorController(Controller):
             combination = request.env['product.template.attribute.value'].browse(ptav_ids).filtered(
                 lambda ptav: ptav.product_tmpl_id.id == product_template_id
             )
-            # Set attributes that are in mode `no_variant` and have only one value
-            unconfigured_ptals = product_template.attribute_line_ids - combination.attribute_line_id
-            combination += unconfigured_ptals.filtered(lambda ptal: ptal.value_count == 1).mapped(
-                lambda ptal: ptal.product_template_value_ids[:1]
+            # Set missing attributes (unsaved no_variant attributes, or new attribute on existing product)
+            unconfigured_ptals = (
+                product_template.attribute_line_ids - combination.attribute_line_id).filtered(
+                lambda ptal: ptal.attribute_id.display_type != 'multi')
+            combination += unconfigured_ptals.mapped(
+                lambda ptal: ptal.product_template_value_ids._only_active()[:1]
             )
         if not combination:
             combination = product_template._get_first_possible_combination()
