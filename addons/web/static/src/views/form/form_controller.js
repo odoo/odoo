@@ -34,6 +34,7 @@ import { FormStatusIndicator } from "./form_status_indicator/form_status_indicat
 import { router } from "@web/core/browser/router";
 
 import { Component, onRendered, useEffect, useRef, useState } from "@odoo/owl";
+import { FetchRecordError } from "@web/model/relational_model/errors";
 
 const viewRegistry = registry.category("views");
 
@@ -367,13 +368,22 @@ export class FormController extends Component {
 
     async onPagerUpdate({ offset, resIds }) {
         const dirty = await this.model.root.isDirty();
-        if (dirty) {
-            return this.model.root.save({
-                onError: this.onSaveError.bind(this),
-                nextId: resIds[offset],
-            });
-        } else {
-            return this.model.load({ resId: resIds[offset] });
+        try {
+            if (dirty) {
+                await this.model.root.save({
+                    onError: this.onSaveError.bind(this),
+                    nextId: resIds[offset],
+                });
+            } else {
+                await this.model.load({ resId: resIds[offset] });
+            }
+        } catch (e) {
+            if (e instanceof FetchRecordError) {
+                this.model.load({
+                    resIds: this.model.config.resIds.filter((id) => !e.resIds.includes(id)),
+                });
+            }
+            throw e;
         }
     }
 
