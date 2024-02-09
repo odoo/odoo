@@ -74,7 +74,6 @@ insertModelFields("discuss.channel", {
         },
     },
     channel_type: { default: "channel" },
-    group_based_subscription: { string: "Group based subscription", type: "boolean" },
     group_public_id: {
         default() {
             return TEST_GROUP_IDS.groupUserId;
