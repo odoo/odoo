@@ -47,14 +47,13 @@ export class ProductListPage extends Component {
                     this.scrollTo(this.currentProductCard, { behavior: "instant" });
                 }
                 const scrollSpyContentEl = document.getElementById("scrollspy-products");
-                const scrollSpy = ScrollSpy.getOrCreateInstance(scrollSpyContentEl);
                 const currentCategId = this.selfOrder.currentCategory.id;
                 const categ = document.querySelectorAll(`[categId="${currentCategId}"]`);
                 if (categ[0]) {
                     categ[0].scrollIntoView();
                 }
-                const onActivateScrollSpy = () => {
-                    const categId = parseInt(scrollSpy._activeTarget.split("_")[1]);
+                const onActivateScrollSpy = ({ relatedTarget }) => {
+                    const categId = parseInt(relatedTarget.split("_")[1]);
                     this.selfOrder.currentCategory = this.selfOrder.pos_category.find(
                         (categ) => categ.id === categId
                     );
