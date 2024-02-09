@@ -11,11 +11,5 @@ const StorePatch = {
         this.initChannelsUnreadCounter = 0;
         this.channels = this.makeCachedFetchData({ channels_as_member: true });
     },
-    onStarted() {
-        super.onStarted();
-        if (this.discuss.isActive) {
-            this.channels.fetch();
-        }
-    },
 };
 patch(Store.prototype, StorePatch);
