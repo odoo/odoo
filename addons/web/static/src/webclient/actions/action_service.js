@@ -680,9 +680,6 @@ export function makeActionManager(env, router = _router) {
                 onError(this.onError);
             }
             onError(error) {
-                if (!this.isMounted) {
-                    reject(error);
-                }
                 if (this.isMounted) {
                     // the error occurred on the controller which is
                     // already in the DOM, so simply show the error
@@ -694,6 +691,22 @@ export function makeActionManager(env, router = _router) {
                     if (action.target === "new") {
                         removeDialogFn?.();
                     } else {
+                        const index = controllerStack.findIndex(
+                            (ct) => ct.jsId === controller.jsId
+                        );
+                        if (index > 0) {
+                            // The error occurred while rendering an existing controller,
+                            // so go back to the previous controller, of the current faulty one.
+                            // This occurs when clicking on the breadcrumbs.
+                            return restore(controllerStack[index - 1].jsId);
+                        }
+                        if (options.lazyController) {
+                            // The error occured while rendering a new controller with a lazyController
+                            // we render this lazyController instead.
+                            const updateUIOptions = { ...options };
+                            delete updateUIOptions.lazyController;
+                            return _updateUI(options.lazyController, updateUIOptions);
+                        }
                         const lastCt = controllerStack[controllerStack.length - 1];
                         if (lastCt) {
                             // the error occurred while rendering a new controller,

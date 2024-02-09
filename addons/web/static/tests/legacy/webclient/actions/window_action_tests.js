@@ -523,8 +523,13 @@ QUnit.module("ActionManager", (hooks) => {
         serviceRegistry.add("error", errorService);
 
         await doAction(webClient, 3);
-        await cpHelpers.switchView(target, "list");
         assert.containsOnce(target, ".o_list_view", "The list view should be displayed");
+        await nextTick(); // wait for the update of the router
+        assert.deepEqual(router.current, {
+            action: 3,
+            model: "partner",
+            view_type: "list",
+        });
 
         // Click on the first record
         await click(target.querySelector(".o_list_view .o_data_row .o_data_cell"));
@@ -533,6 +538,13 @@ QUnit.module("ActionManager", (hooks) => {
             target.querySelector(".o_last_breadcrumb_item").textContent,
             "First record"
         );
+        await nextTick(); // wait for the update of the router
+        assert.deepEqual(router.current, {
+            action: 3,
+            id: 1,
+            model: "partner",
+            view_type: "form",
+        });
 
         // Delete the current record
         await click(target, ".o_cp_action_menus .fa-cog");
@@ -543,17 +555,30 @@ QUnit.module("ActionManager", (hooks) => {
         );
         assert.containsOnce(target, ".modal", "a confirm modal should be displayed");
         await click(target.querySelector(".modal-footer button.btn-primary"));
-        // await nextTick();
         // The form view is automatically switched to the next record
         assert.strictEqual(
             target.querySelector(".o_last_breadcrumb_item").textContent,
             "Second record"
         );
+        await nextTick(); // wait for the update of the router
+        assert.deepEqual(router.current, {
+            action: 3,
+            id: 2,
+            model: "partner",
+            view_type: "form",
+        });
 
         // Go back to the previous (now deleted) record
         browser.history.back();
-        await nextTick();
+        assert.deepEqual(router.current, {
+            action: 3,
+            id: 1, // This is the id of the deleted record
+            model: "partner",
+            view_type: "form",
+        });
         // As the previous one is deleted, we go back to the list
+        await nextTick(); // wait for the update of the router
+        await nextTick(); // wait for the doAction
         assert.containsOnce(target, ".o_list_view", "should still display the list view");
         // Click on the first record
         await click(target.querySelector(".o_list_view .o_data_row .o_data_cell"));
@@ -2347,16 +2372,9 @@ QUnit.module("ActionManager", (hooks) => {
         // click on "First record" in breadcrumbs, which doesn't exist anymore
         await click(target.querySelectorAll(".breadcrumb-item a")[0]);
         await nextTick();
-        assert.containsOnce(target, ".o_form_view");
-        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".breadcrumb-item")), [
-            "",
-            "Partners",
-            "Partners",
-        ]);
-        assert.strictEqual(
-            target.querySelector(".o_breadcrumb .active").innerText,
-            "Second record"
-        );
+        assert.containsOnce(target, ".o_list_view");
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".breadcrumb-item")), []);
+        assert.strictEqual(target.querySelector(".o_breadcrumb .active").innerText, "Partners");
     });
 
     QUnit.test("Uncaught error in target new is catch only once", async (assert) => {
