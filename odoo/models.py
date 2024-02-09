@@ -2448,7 +2448,7 @@ class BaseModel(metaclass=MetaModel):
             for row in rows_dict:
                 value = row[group]
 
-                if field.type in ('many2one', 'many2many') and isinstance(value, BaseModel):
+                if isinstance(value, BaseModel):
                     row[group] = (value.id, value.sudo().display_name) if value else False
                     value = value.id
 
