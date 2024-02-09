@@ -204,7 +204,7 @@
     const BOTTOMBAR_HEIGHT = 36;
     const DEFAULT_CELL_WIDTH = 96;
     const DEFAULT_CELL_HEIGHT = 23;
-    const SCROLLBAR_WIDTH$1 = 15;
+    const SCROLLBAR_WIDTH = 15;
     const AUTOFILL_EDGE_LENGTH = 8;
     const ICON_EDGE_LENGTH = 18;
     const UNHIDE_ICON_EDGE_LENGTH = 14;
@@ -7264,6 +7264,12 @@
         let { col, row } = env.model.getters.getActivePosition();
         env.model.dispatch("OPEN_CELL_POPOVER", { col, row, popoverType: "LinkEditor" });
     };
+    const INSERT_LINK_NAME = (env) => {
+        const sheetId = env.model.getters.getActiveSheetId();
+        const { col, row } = env.model.getters.getActivePosition();
+        const cell = env.model.getters.getEvaluatedCell({ sheetId, col, row });
+        return cell && cell.link ? _lt("Edit link") : _lt("Insert link");
+    };
     //------------------------------------------------------------------------------
     // Filters action
     //------------------------------------------------------------------------------
@@ -7401,7 +7407,7 @@
         action: DELETE_CELL_SHIFT_LEFT,
     })
         .add("insert_link", {
-        name: _lt("Insert link"),
+        name: INSERT_LINK_NAME,
         separator: true,
         sequence: 150,
         action: INSERT_LINK,
@@ -16560,9 +16566,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     break;
             }
         }
-        unsubscribe() {
-            this.mode = "inactive";
-        }
         // ---------------------------------------------------------------------------
         // Getters
         // ---------------------------------------------------------------------------
@@ -17455,12 +17458,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         setup() {
             owl.onMounted(() => {
                 const el = this.composerRef.el;
+                if (this.props.isDefaultFocus) {
+                    this.env.focusableElement.setFocusableElement(el);
+                }
                 this.contentHelper.updateEl(el);
                 this.processContent();
-            });
-            owl.onWillUnmount(() => {
-                var _a, _b;
-                (_b = (_a = this.props).onComposerUnmounted) === null || _b === void 0 ? void 0 : _b.call(_a);
             });
             owl.onPatched(() => {
                 if (!this.isKeyStillDown) {
@@ -17472,7 +17474,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         // Handlers
         // ---------------------------------------------------------------------------
         processArrowKeys(ev) {
-            if (this.env.model.getters.isSelectingForComposer()) {
+            if (this.env.model.getters.isSelectingForComposer() ||
+                this.env.model.getters.getEditionMode() === "inactive") {
                 this.functionDescriptionState.showDescription = false;
                 // Prevent the default content editable behavior which moves the cursor
                 ev.preventDefault();
@@ -17513,21 +17516,23 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             var _a;
             ev.preventDefault();
             ev.stopPropagation();
-            if (this.autoCompleteState.showProvider) {
-                const autoCompleteValue = (_a = this.autoCompleteState.values[this.autoCompleteState.selectedIndex]) === null || _a === void 0 ? void 0 : _a.text;
-                if (autoCompleteValue) {
-                    this.autoComplete(autoCompleteValue);
-                    return;
+            if (this.env.model.getters.getEditionMode() !== "inactive") {
+                if (this.autoCompleteState.showProvider) {
+                    const autoCompleteValue = (_a = this.autoCompleteState.values[this.autoCompleteState.selectedIndex]) === null || _a === void 0 ? void 0 : _a.text;
+                    if (autoCompleteValue) {
+                        this.autoComplete(autoCompleteValue);
+                        return;
+                    }
                 }
-            }
-            else {
-                // when completing with tab, if there is no value to complete, the active cell will be moved to the right.
-                // we can't let the model think that it is for a ref selection.
-                // todo: check if this can be removed someday
-                this.env.model.dispatch("STOP_COMPOSER_RANGE_SELECTION");
+                else {
+                    // when completing with tab, if there is no value to complete, the active cell will be moved to the right.
+                    // we can't let the model think that it is for a ref selection.
+                    // todo: check if this can be removed someday
+                    this.env.model.dispatch("STOP_COMPOSER_RANGE_SELECTION");
+                }
+                this.env.model.dispatch("STOP_EDITION");
             }
             const direction = ev.shiftKey ? "left" : "right";
-            this.env.model.dispatch("STOP_EDITION");
             this.env.model.selection.moveAnchorCell(direction, 1);
         }
         processEnterKey(ev) {
@@ -17560,6 +17565,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.compositionActive = false;
         }
         onKeydown(ev) {
+            if (this.env.model.getters.getEditionMode() === "inactive") {
+                return;
+            }
             let handler = this.keyMapping[ev.key];
             if (handler) {
                 handler.call(this, ev);
@@ -17570,23 +17578,46 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             }
         }
         updateCursorIfNeeded() {
-            if (!this.env.model.getters.isSelectingForComposer()) {
+            const moveCursor = !this.env.model.getters.isSelectingForComposer() &&
+                !(this.env.model.getters.getEditionMode() === "inactive");
+            if (moveCursor) {
                 const { start, end } = this.contentHelper.getCurrentSelection();
                 this.env.model.dispatch("CHANGE_COMPOSER_CURSOR_SELECTION", { start, end });
                 this.isKeyStillDown = true;
             }
         }
+        onPaste(ev) {
+            if (this.env.model.getters.getEditionMode() !== "inactive") {
+                ev.stopPropagation();
+            }
+        }
         /*
          * Triggered automatically by the content-editable between the keydown and key up
          * */
-        onInput() {
-            if (this.props.focus === "inactive" || !this.shouldProcessInputEvents) {
+        onInput(ev) {
+            var _a, _b;
+            if (!this.shouldProcessInputEvents) {
                 return;
             }
+            if (ev.inputType === "insertFromPaste" &&
+                this.env.model.getters.getEditionMode() === "inactive") {
+                return;
+            }
+            ev.stopPropagation();
+            let content;
+            if (this.env.model.getters.getEditionMode() === "inactive") {
+                content = ev.data || "";
+            }
+            else {
+                const el = this.composerRef.el;
+                content = el.childNodes.length ? el.textContent : "";
+            }
+            if (this.props.focus === "inactive") {
+                return (_b = (_a = this.props).onComposerCellFocused) === null || _b === void 0 ? void 0 : _b.call(_a, content);
+            }
             this.env.model.dispatch("STOP_COMPOSER_RANGE_SELECTION");
-            const el = this.composerRef.el;
             this.env.model.dispatch("SET_CURRENT_CONTENT", {
-                content: el.childNodes.length ? el.textContent : "",
+                content,
                 selection: this.contentHelper.getCurrentSelection(),
             });
         }
@@ -17646,9 +17677,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             }
             const newSelection = this.contentHelper.getCurrentSelection();
             this.env.model.dispatch("STOP_COMPOSER_RANGE_SELECTION");
-            if (this.props.focus === "inactive") {
-                this.props.onComposerContentFocused(newSelection);
-            }
+            this.props.onComposerContentFocused();
+            if (this.props.focus === "inactive") ;
             this.env.model.dispatch("CHANGE_COMPOSER_CURSOR_SELECTION", newSelection);
             this.processTokenAtCursor();
         }
@@ -17665,6 +17695,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.contentHelper.removeAll(); // removes the content of the composer, to be added just after
             this.shouldProcessInputEvents = false;
             if (this.props.focus !== "inactive") {
+                this.contentHelper.el.focus();
                 this.contentHelper.selectRange(0, 0); // move the cursor inside the composer at 0 0.
             }
             const content = this.getContent();
@@ -17831,18 +17862,18 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Composer.components = { TextValueProvider, FunctionDescriptionProvider };
     Composer.defaultProps = {
         inputStyle: "",
+        isDefaultFocus: false,
     };
     Composer.props = {
         inputStyle: { type: String, optional: true },
         rect: { type: Object, optional: true },
         delimitation: { type: Object, optional: true },
         focus: { validate: (value) => ["inactive", "cellFocus", "contentFocus"].includes(value) },
-        onComposerUnmounted: { type: Function, optional: true },
+        onComposerCellFocused: { type: Function, optional: true },
         onComposerContentFocused: Function,
+        isDefaultFocus: { type: Boolean, optional: true },
     };
 
-    const SCROLLBAR_WIDTH = 14;
-    const SCROLLBAR_HIGHT = 15;
     const COMPOSER_BORDER_WIDTH = 3 * 0.4 * window.devicePixelRatio || 1;
     css /* scss */ `
   div.o-grid-composer {
@@ -17857,35 +17888,52 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
      * It also applies the style of the cell to the composer input.
      */
     class GridComposer extends owl.Component {
+        constructor() {
+            super(...arguments);
+            this.rect = undefined;
+            this.isEditing = false;
+        }
+        get defaultRect() {
+            return { x: 0, y: 0, width: 0, height: 0 };
+        }
         setup() {
-            this.gridComposerRef = owl.useRef("gridComposer");
-            this.composerState = owl.useState({
-                rect: undefined,
-                delimitation: undefined,
-            });
-            const { sheetId, col, row } = this.env.model.getters.getActivePosition();
-            this.zone = this.env.model.getters.expandZone(sheetId, positionToZone({ col, row }));
-            this.rect = this.env.model.getters.getVisibleRect(this.zone);
-            owl.onMounted(() => {
-                const el = this.gridComposerRef.el;
-                //TODO Should be more correct to have a props that give the parent's clientHeight and clientWidth
-                const maxHeight = el.parentElement.clientHeight - this.rect.y - SCROLLBAR_HIGHT;
-                el.style.maxHeight = (maxHeight + "px");
-                const maxWidth = el.parentElement.clientWidth - this.rect.x - SCROLLBAR_WIDTH;
-                el.style.maxWidth = (maxWidth + "px");
-                this.composerState.rect = {
-                    x: this.rect.x,
-                    y: this.rect.y,
-                    width: el.clientWidth,
-                    height: el.clientHeight,
-                };
-                this.composerState.delimitation = {
-                    width: el.parentElement.clientWidth,
-                    height: el.parentElement.clientHeight,
-                };
+            owl.onWillUpdateProps(() => {
+                const isEditing = this.env.model.getters.getEditionMode() !== "inactive";
+                if (this.isEditing !== isEditing) {
+                    this.isEditing = isEditing;
+                    if (!isEditing) {
+                        this.rect = undefined;
+                        this.env.focusableElement.focus();
+                        return;
+                    }
+                    const position = this.env.model.getters.getActivePosition();
+                    const zone = this.env.model.getters.expandZone(position.sheetId, positionToZone(position));
+                    this.rect = this.env.model.getters.getVisibleRect(zone);
+                }
             });
         }
+        get composerProps() {
+            const { width, height } = this.env.model.getters.getSheetViewDimensionWithHeaders();
+            return {
+                rect: this.rect && { ...this.rect },
+                delimitation: {
+                    width,
+                    height,
+                },
+                inputStyle: this.composerStyle,
+                focus: this.props.focus,
+                isDefaultFocus: true,
+                onComposerContentFocused: this.props.onComposerContentFocused,
+                onComposerCellFocused: this.props.onComposerCellFocused,
+            };
+        }
         get containerStyle() {
+            if (this.env.model.getters.getEditionMode() === "inactive" || !this.rect) {
+                return `
+        position: absolute;
+        z-index: -1000;
+      `;
+            }
             const isFormula = this.env.model.getters.getCurrentContent().startsWith("=");
             const cell = this.env.model.getters.getActiveCell();
             const position = this.env.model.getters.getActivePosition();
@@ -17905,11 +17953,17 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             if (!isFormula) {
                 textAlign = style.align || cell.defaultAlign;
             }
+            const sheetDimensions = this.env.model.getters.getSheetViewDimensionWithHeaders();
+            const maxWidth = sheetDimensions.width - this.rect.x;
+            const maxHeight = sheetDimensions.height - this.rect.y;
             return `
       left: ${left - 1}px;
       top: ${top}px;
       min-width: ${width + 2}px;
       min-height: ${height + 1}px;
+
+      max-width: ${maxWidth}px;
+      max-height: ${maxHeight}px;
 
       background: ${background};
       color: ${color};
@@ -17934,8 +17988,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     GridComposer.components = { Composer };
     GridComposer.props = {
         focus: { validate: (value) => ["inactive", "cellFocus", "contentFocus"].includes(value) },
-        onComposerUnmounted: Function,
         onComposerContentFocused: Function,
+        onComposerCellFocused: Function,
     };
 
     const CSS$2 = css /* scss */ `
@@ -22697,7 +22751,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.props.onCellDoubleClicked(col, row);
         }
         onContextMenu(ev) {
-            ev.preventDefault();
             const [col, row] = this.getCartesianCoordinates(ev);
             this.props.onCellRightClicked(col, row, { x: ev.clientX, y: ev.clientY });
         }
@@ -23631,8 +23684,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     &.corner {
       right: 0px;
       bottom: 0px;
-      height: ${SCROLLBAR_WIDTH$1}px;
-      width: ${SCROLLBAR_WIDTH$1}px;
+      height: ${SCROLLBAR_WIDTH}px;
+      width: ${SCROLLBAR_WIDTH}px;
       border-top: 1px solid #e2e3e3;
       border-left: 1px solid #e2e3e3;
     }
@@ -23705,7 +23758,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             return {
                 left: `${this.props.leftOffset + x}px`,
                 bottom: "0px",
-                height: `${SCROLLBAR_WIDTH$1}px`,
+                height: `${SCROLLBAR_WIDTH}px`,
                 right: `0px`,
             };
         }
@@ -23750,7 +23803,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             return {
                 top: `${this.props.topOffset + y}px`,
                 right: "0px",
-                width: `${SCROLLBAR_WIDTH$1}px`,
+                width: `${SCROLLBAR_WIDTH}px`,
                 bottom: `0px`,
             };
         }
@@ -23924,17 +23977,16 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 menuItems: [],
             });
             this.gridRef = owl.useRef("grid");
-            this.hiddenInput = owl.useRef("hiddenInput");
             this.canvasPosition = useAbsoluteBoundingRect(this.gridRef);
             this.hoveredCell = owl.useState({ col: undefined, row: undefined });
             owl.useChildSubEnv({ getPopoverContainerRect: () => this.getGridRect() });
             owl.useExternalListener(document.body, "cut", this.copy.bind(this, true));
             owl.useExternalListener(document.body, "copy", this.copy.bind(this, false));
             owl.useExternalListener(document.body, "paste", this.paste);
-            owl.onMounted(() => this.focus());
-            this.props.exposeFocus(() => this.focus());
+            owl.onMounted(() => this.focusDefaultElement());
+            this.props.exposeFocus(() => this.focusDefaultElement());
             useGridDrawing("canvas", this.env.model, () => this.env.model.getters.getSheetViewDimensionWithHeaders());
-            owl.useEffect(() => this.focus(), () => [this.env.model.getters.getActiveSheetId()]);
+            owl.useEffect(() => this.focusDefaultElement(), () => [this.env.model.getters.getActiveSheetId()]);
             this.onMouseWheel = useWheelHandler((deltaX, deltaY) => {
                 this.moveCanvas(deltaX, deltaY);
                 this.hoveredCell.col = undefined;
@@ -23949,21 +24001,20 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             return `
       top: ${HEADER_HEIGHT}px;
       left: ${HEADER_WIDTH}px;
-      height: calc(100% - ${HEADER_HEIGHT + SCROLLBAR_WIDTH$1}px);
-      width: calc(100% - ${HEADER_WIDTH + SCROLLBAR_WIDTH$1}px);
+      height: calc(100% - ${HEADER_HEIGHT + SCROLLBAR_WIDTH}px);
+      width: calc(100% - ${HEADER_WIDTH + SCROLLBAR_WIDTH}px);
     `;
         }
         onClosePopover() {
             if (this.env.model.getters.hasOpenedPopover()) {
                 this.closeOpenedPopover();
             }
-            this.focus();
+            this.focusDefaultElement();
         }
-        focus() {
-            var _a;
+        focusDefaultElement() {
             if (!this.env.model.getters.getSelectedFigureId() &&
                 this.env.model.getters.getEditionMode() === "inactive") {
-                (_a = this.hiddenInput.el) === null || _a === void 0 ? void 0 : _a.focus();
+                this.env.focusableElement.focus();
             }
         }
         get gridEl() {
@@ -24108,19 +24159,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 return;
             }
         }
-        onInput(ev) {
-            // the user meant to paste in the sheet, not open the composer with the pasted content
-            if (!ev.isComposing && ev.inputType === "insertFromPaste") {
-                return;
-            }
-            if (ev.data) {
-                // if the user types a character on the grid, it means he wants to start composing the selected cell with that
-                // character
-                ev.preventDefault();
-                ev.stopPropagation();
-                this.props.onGridComposerCellFocused(ev.data);
-            }
-        }
         // ---------------------------------------------------------------------------
         // Context Menu
         // ---------------------------------------------------------------------------
@@ -24217,7 +24255,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         closeMenu() {
             this.menuState.isOpen = false;
-            this.focus();
+            this.focusDefaultElement();
         }
     }
     Grid.template = "o-spreadsheet-Grid";
@@ -27530,7 +27568,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
      * a breaking change is made in the way the state is handled, and an upgrade
      * function should be defined
      */
-    const CURRENT_VERSION = 12;
+    const CURRENT_VERSION = 12.5;
     const INITIAL_SHEET_ID = "Sheet1";
     /**
      * This function tries to load anything that could look like a valid
@@ -27792,6 +27830,31 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             applyMigration(data) {
                 for (let sheet of data.sheets || []) {
                     sheet.isVisible = true;
+                }
+                return data;
+            },
+        },
+        {
+            description: "Fix datafilter duplication",
+            from: 12,
+            to: 12.5,
+            applyMigration(data) {
+                for (let sheet of data.sheets || []) {
+                    let knownDataFilterZones = [];
+                    for (let filterTable of sheet.filterTables || []) {
+                        const zone = toZone(filterTable.range);
+                        // See commit message for the details
+                        const intersectZoneIndex = knownDataFilterZones.findIndex((knownZone) => overlap(knownZone, zone));
+                        if (intersectZoneIndex !== -1) {
+                            knownDataFilterZones[intersectZoneIndex] = zone;
+                        }
+                        else {
+                            knownDataFilterZones.push(zone);
+                        }
+                    }
+                    sheet.filterTables = knownDataFilterZones.map((zone) => ({
+                        range: zoneToXc(zone),
+                    }));
                 }
                 return data;
             },
@@ -28694,10 +28757,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                         format: cell.format ? getItemId(cell.format, formats) : undefined,
                         content: cell.content || undefined,
                     };
-                    // if there is a formula but no dependencies (maybe because the cell is in error), no need to recompute the formula text
-                    if (cell.isFormula && cell.dependencies.length) {
-                        cells[xc].content = this.buildFormulaContent(_sheet.id, cell, cell.dependencies, true);
-                    }
                 }
                 _sheet.cells = cells;
             }
@@ -32741,6 +32800,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                         if (cell.format !== evaluatedCell.format) {
                             exportedCellData.computedFormat = evaluatedCell.format;
                         }
+                        // if there is a formula but no dependencies (maybe because the cell is in error), no need to recompute the formula text
+                        if (cell.isFormula && cell.dependencies.length) {
+                            exportedCellData.content = this.getters.buildFormulaContent(sheet.id, cell, cell.dependencies, true);
+                        }
                     }
                 }
             }
@@ -36304,9 +36367,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 }
             }
         }
-        unsubscribe() {
-            this.unfocus();
-        }
         // ---------------------------------------------------------------------------
         // Getters || only callable by the parent
         // ---------------------------------------------------------------------------
@@ -36524,9 +36584,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     break;
             }
             (_a = this.currentInput) === null || _a === void 0 ? void 0 : _a.handle(cmd);
-        }
-        unsubscribe() {
-            this.unfocus();
         }
         // ---------------------------------------------------------------------------
         // Getters
@@ -39598,6 +39655,19 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
     }
 
+    class FocusableElement {
+        constructor() {
+            this.focusableElement = undefined;
+        }
+        setFocusableElement(element) {
+            this.focusableElement = element;
+        }
+        focus() {
+            var _a;
+            (_a = this.focusableElement) === null || _a === void 0 ? void 0 : _a.focus();
+        }
+    }
+
     // -----------------------------------------------------------------------------
     // SpreadSheet
     // -----------------------------------------------------------------------------
@@ -40841,8 +40911,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
       &.corner {
         right: 0px;
         bottom: 0px;
-        height: ${SCROLLBAR_WIDTH$1}px;
-        width: ${SCROLLBAR_WIDTH$1}px;
+        height: ${SCROLLBAR_WIDTH}px;
+        width: ${SCROLLBAR_WIDTH}px;
         border-top: 1px solid #e2e3e3;
         border-left: 1px solid #e2e3e3;
       }
@@ -40889,6 +40959,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 toggleSidePanel: this.toggleSidePanel.bind(this),
                 _t: Spreadsheet._t,
                 clipboard: this.env.clipboard || instantiateClipboard(),
+                focusableElement: new FocusableElement(),
             });
             owl.useExternalListener(window, "resize", () => this.render(true));
             owl.useExternalListener(window, "beforeunload", this.unbindModelEvents.bind(this));
@@ -40987,17 +41058,18 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.model.dispatch("UNFOCUS_SELECTION_INPUT");
             this.composer.topBarFocus = "contentFocus";
             this.composer.gridFocusMode = "inactive";
-            this.setComposerContent({ selection } || {});
+            this.setComposerContent({ selection });
         }
-        onGridComposerContentFocused() {
+        onGridComposerContentFocused(selection) {
             if (this.model.getters.isReadonly()) {
                 return;
             }
             this.model.dispatch("UNFOCUS_SELECTION_INPUT");
             this.composer.topBarFocus = "inactive";
             this.composer.gridFocusMode = "contentFocus";
-            this.setComposerContent({});
+            this.setComposerContent({ selection });
         }
+        // TODO: either both are defined or none of them. change those args to an object
         onGridComposerCellFocused(content, selection) {
             if (this.model.getters.isReadonly()) {
                 return;
@@ -41978,18 +42050,17 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             if (this.observers.find((sub) => sub.owner === owner)) {
                 throw new Error("You are already subscribed forever");
             }
-            if ((_a = this.mainSubscription) === null || _a === void 0 ? void 0 : _a.owner) {
+            if (((_a = this.mainSubscription) === null || _a === void 0 ? void 0 : _a.owner) && this.mainSubscription.owner !== owner) {
                 (_c = (_b = this.mainSubscription.callbacks).release) === null || _c === void 0 ? void 0 : _c.call(_b);
             }
             this.mainSubscription = { owner, callbacks };
         }
         release(owner) {
-            var _a, _b, _c, _d;
+            var _a;
             if (((_a = this.mainSubscription) === null || _a === void 0 ? void 0 : _a.owner) !== owner ||
                 this.observers.find((sub) => sub.owner === owner)) {
                 return;
             }
-            (_d = (_b = this.mainSubscription) === null || _b === void 0 ? void 0 : (_c = _b.callbacks).release) === null || _d === void 0 ? void 0 : _d.call(_c);
             this.mainSubscription = this.defaultSubscription;
         }
         /**
@@ -44472,7 +44543,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         BOTTOMBAR_HEIGHT,
         DEFAULT_CELL_WIDTH,
         DEFAULT_CELL_HEIGHT,
-        SCROLLBAR_WIDTH: SCROLLBAR_WIDTH$1,
+        SCROLLBAR_WIDTH,
     };
     const registries = {
         autofillModifiersRegistry,
@@ -44589,9 +44660,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.1.34';
-    __info__.date = '2024-02-02T14:03:56.859Z';
-    __info__.hash = '72d92c1';
+    __info__.version = '16.1.35';
+    __info__.date = '2024-02-09T14:27:40.241Z';
+    __info__.hash = '1a4e99f';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
