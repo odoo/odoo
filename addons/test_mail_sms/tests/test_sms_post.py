@@ -52,6 +52,24 @@ class TestSMSPost(SMSCommon, TestSMSRecipients):
 
         self.assertSMSNotification([{'partner': self.partner_1}, {'number': self.random_numbers_san[0]}, {'number': self.random_numbers_san[1]}], self._test_body, messages)
 
+    def test_message_sms_internals_sms_numbers_duplicate(self):
+        """ _message_sms ( which uses _notify_thread_by_sms) allows for specifying additional number to send sms to
+            This test checks for situation where this additional number is the same as partner telephone number.
+            In that case sms shall NOT be sent twice."""
+        with self.with_user('employee'), self.mockSMSGateway():
+            test_record = self.env['mail.test.sms'].browse(self.test_record.id)
+            additional_number_same_as_partner_number = self.partner_1.mobile
+            subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
+            test_record._message_sms(
+                body=self._test_body,
+                partner_ids=self.partner_1.ids,
+                subtype_id=subtype_id,
+                sms_numbers=[additional_number_same_as_partner_number],
+                number_field='mobile'
+            )
+        self.assertEqual(len(self._new_sms.filtered(lambda s: s.number == self.partner_numbers[0])), 1,
+            "There should be one message sent if additional number is the same as partner number")
+
     def test_message_sms_internals_subtype(self):
         with self.with_user('employee'), self.mockSMSGateway():
             test_record = self.env['mail.test.sms'].browse(self.test_record.id)
