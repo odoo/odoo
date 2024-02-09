@@ -100,8 +100,8 @@ patch(PosStore.prototype, {
     getReceiptHeaderData(order) {
         const json = super.getReceiptHeaderData(...arguments);
         if (this.config.module_pos_restaurant && order) {
-            if (this.get_order().getTable()) {
-                json.table = this.get_order().getTable().name;
+            if (order.getTable()) {
+                json.table = order.getTable().name;
             }
             json.customer_count = order.getCustomerCount();
         }
