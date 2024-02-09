@@ -1014,8 +1014,12 @@ class Task(models.Model):
                 project_id = self.browse(vals['parent_id']).project_id.id
                 vals.update({
                     'project_id': project_id,
-                    'display_in_project': False,
+                    'display_in_project': vals.get('display_in_project', False),
                 })
+                if 'milestone_id' in vals:
+                    milestone_project_id = self.env['project.milestone'].browse(vals['milestone_id']).project_id.id
+                    if milestone_project_id != project_id:
+                        vals['milestone_id'] = False
 
             if project_id and not "company_id" in vals:
                 vals["company_id"] = self.env["project.project"].browse(
@@ -1075,7 +1079,7 @@ class Task(models.Model):
             if not all(u.share for u in partner.user_ids)
         }
         if tasks.project_id:
-            tasks._set_stage_on_project_from_task()
+            tasks.sudo()._set_stage_on_project_from_task()
         for task in tasks:
             if task.project_id.privacy_visibility == 'portal':
                 task._portal_ensure_token()
