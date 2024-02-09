@@ -108,6 +108,31 @@ class WebsiteSaleLoyaltyTestUi(TestSaleProductAttributeValueCommon, HttpCase):
             })],
         })
 
+        vip_program = self.env['loyalty.program'].create({
+            'name': 'VIP',
+            'trigger': 'auto',
+            'program_type': 'loyalty',
+            'portal_visible': True,
+            'applies_on': 'both',
+            'rule_ids': [(0, 0, {
+                'mode': 'auto',
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'discount',
+                'discount': 21,
+                'discount_mode': 'percent',
+                'discount_applicability': 'order',
+                'required_points': 50,
+            })],
+        })
+
+        self.env['loyalty.card'].create({
+            'partner_id': self.env.ref('base.partner_admin').id,
+            'program_id': vip_program.id,
+            'point_name': "Points",
+            'points': 371.03,
+        })
+
         self.env.ref("website_sale.reduction_code").write({"active": True})
         self.start_tour("/", 'shop_sale_loyalty', login="admin")
 
