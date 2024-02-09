@@ -117,6 +117,11 @@ registry.category("web_tour.tours").add('project_tour', {
 }, {
     trigger: ".ui-autocomplete > li > a:not(:has(i.fa))",
     auto: true,
+    mobile: false,
+}, {
+    trigger: "div[role='article']",
+    mobile: true,
+    run: "click",
 }, {
     trigger: 'a[name="sub_tasks_page"]',
     content: _t('Open sub-tasks notebook section'),
@@ -135,7 +140,7 @@ registry.category("web_tour.tours").add('project_tour', {
     content: markup(_t("You have unsaved changes - no worries! Odoo will automatically save it as you navigate.<br/> You can discard these changes from here or manually save your task.<br/>Let's save it manually.")),
     position: "bottom",
 }, {
-    trigger: ".breadcrumb-item:not(.active):last",
+    trigger: ".o_breadcrumb .o_back_button",
     extra_trigger: '.o_form_project_tasks',
     content: markup(_t("Let's go back to the <b>kanban view</b> to have an overview of your next tasks.")),
     position: "right",
