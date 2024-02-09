@@ -152,8 +152,13 @@
                             <field name="recurring_count" widget="statinfo" string="Recurring Tasks"/>
                         </button>
                         <button name="action_project_sharing_open_subtasks" type="object" class="oe_stat_button" icon="fa-tasks"
-                            invisible="not id or subtask_count == 0" context="{'default_user_ids': [(6, 0, [uid])], 'default_project_id': project_id }">
+                            invisible="not id or subtask_count == 0" context="{
+                                'default_user_ids': [(6, 0, [uid])],
+                                'default_project_id': project_id,
+                                'default_display_in_project': False,
+                            }">
                             <field name="subtask_count" widget="statinfo" string="Sub-tasks"/>
+                            <field name="display_in_project" invisible="True"/>
                         </button>
                         <button name="action_project_sharing_open_blocking" type="object" invisible="not dependent_tasks_count" class="oe_stat_button" icon="fa-tasks">
                             <div class="o_field_widget o_stat_info">
@@ -216,9 +221,14 @@
                             <field name="description" type="html" options="{'collaborative': true, 'allowCommandImage': false, 'allowCommandVideo': false, 'allowCommandFile': false}"/>
                         </page>
                         <page name="sub_tasks_page" string="Sub-tasks">
-                            <field name="child_ids" context="{'default_parent_id': id, 'default_partner_id': partner_id, 'form_view_ref' : 'project.project_sharing_project_task_view_form'}">
+                            <field name="child_ids" context="{
+                                'default_project_id': project_id, 'default_display_in_project': False, 'default_parent_id': id,
+                                'default_milestone_id': allow_milestones and milestone_id, 'default_partner_id': partner_id,
+                                'form_view_ref' : 'project.project_sharing_project_task_view_form',
+                            }">
                                 <tree editable="bottom">
                                     <field name="project_id" column_invisible="True"/>
+                                    <field name="display_in_project" column_invisible="True"/>
                                     <field name="state" column_invisible="True"/>
                                     <field name="sequence" widget="handle"/>
                                     <field name="priority" widget="priority" optional="show" nolabel="1" width="40px"/>
