@@ -306,7 +306,7 @@ export class GlobalFiltersUIPlugin extends OdooUIPlugin {
 
     /**
      * Returns the possible values a text global filter can take from a range
-     * or any addition raw string value. Removes duplicates.
+     * or any addition raw string value. Removes duplicates and empty string values.
      * @param {object} range
      * @param {string[]} additionalOptionValues
      */
@@ -315,7 +315,7 @@ export class GlobalFiltersUIPlugin extends OdooUIPlugin {
         const uniqueFormattedValues = new Set();
         const uniqueValues = new Set();
         const allowedValues = cells
-            .filter((cell) => !["empty", "error"].includes(cell.type))
+            .filter((cell) => !["empty", "error"].includes(cell.type) && cell.value !== "")
             .map((cell) => ({
                 value: cell.value.toString(),
                 formattedValue: cell.formattedValue,
