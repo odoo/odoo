@@ -116,7 +116,7 @@ class HtmlFieldHistory(models.AbstractModel):
             if i["revision_id"] >= revision_id
         ]
 
-        content = self[field_name]
+        content = self[field_name] or ""
         for revision in revisions:
             content = apply_patch(content, revision["patch"])
 
@@ -137,4 +137,4 @@ class HtmlFieldHistory(models.AbstractModel):
             field_name, revision_id
         )
 
-        return generate_comparison(self[field_name], restored_content)
+        return generate_comparison(self[field_name] or "", restored_content)
