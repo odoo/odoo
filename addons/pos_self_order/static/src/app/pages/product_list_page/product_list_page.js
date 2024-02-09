@@ -53,7 +53,7 @@ export class ProductListPage extends Component {
                     categ[0].scrollIntoView();
                 }
                 const onActivateScrollSpy = ({ relatedTarget }) => {
-                    const categId = parseInt(relatedTarget.split("_")[1]);
+                    const categId = parseInt(relatedTarget.getAttribute("href").split("_")[1]);
                     this.selfOrder.currentCategory = this.selfOrder.pos_category.find(
                         (categ) => categ.id === categId
                     );
