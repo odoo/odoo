@@ -41,13 +41,12 @@
                                             <div class="d-flex flex-row">
                                                 <div class="flex-grow-1">
                                                     <t t-set="program" t-value="reward.program_id"/>
-                                                    <t t-set="points" t-value="website_sale_order._get_real_points_for_coupon(coupon)"/>
+                                                    <t t-set="points" t-value="coupon._format_points(website_sale_order._get_real_points_for_coupon(coupon))"/>
                                                     <t t-if="program.program_type not in ['ewallet', 'promo_code'] and (program.trigger == 'with_code' or (program.trigger == 'auto' and program.applies_on == 'future'))">
                                                         <t t-if="program.program_type == 'gift_card'">
                                                             <strong t-esc="reward.description"/>
                                                             <strong> - </strong>
                                                             <strong t-esc="points"/>
-                                                            <strong t-esc="reward.point_name"/>
                                                         </t>
                                                         <t t-elif="program.program_type == 'coupons'">
                                                             <strong>Coupons - </strong><strong t-esc="reward.description"/>
@@ -73,14 +72,14 @@
                                                         <strong t-esc="reward.description"/>
                                                         <div t-if="program.portal_visible">
                                                             <t t-if="not program.is_nominative">
-                                                                <span t-out="points"/> <span t-out="reward.point_name"/>
+                                                                <span t-out="points"/>
                                                             </t>
                                                             <t t-else="">
-                                                                <span>You have <t t-out="points"/></span> <span t-out="reward.point_name"/>
+                                                                <span>You have <t t-out="points"/></span>
                                                                 <span t-if="program.program_type == 'ewallet'"> in your ewallet</span>
                                                                 <t t-else="">
                                                                     <br/>
-                                                                    <span>Costs <t t-out="reward.required_points"/></span> <span t-out="reward.point_name"/>
+                                                                    <span>Costs <t t-out="coupon._format_points(reward.required_points)"/></span>
                                                                 </t>
                                                             </t>
                                                         </div>

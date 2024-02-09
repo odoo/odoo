@@ -39,6 +39,11 @@ registry.category("web_tour.tours").add('shop_sale_loyalty', {
             trigger: 'div>strong:contains("10.0% discount on total amount")',
             run: function () {}, // it's a check
         },
+        {
+            content: "check loyalty points",
+            trigger: '.oe_website_sale_gift_card span:contains("372.03 Points")',
+            run: function () {}, // it's a check
+        },
         /* 2. Add some cabinet to get a free one, play with quantity */
         {
             content: "go to shop",
