@@ -1795,7 +1795,7 @@ QUnit.test(
             channel_member_ids: [
                 Command.create({ is_pinned: false, partner_id: pyEnv.currentPartnerId }),
             ],
-            group_based_subscription: true,
+            group_ids: [Command.create({ name: "test" })],
         });
         const { openDiscuss } = await start();
         await openDiscuss();
