@@ -493,7 +493,7 @@ class SaleOrder(models.Model):
             city = order_location['pick_up_point_town']
             zip_code = order_location['pick_up_point_postal_code']
             country = order.env['res.country'].search([('code', '=', order_location['pick_up_point_country'])]).id
-            state = order.env['res.country.state'].search(['&', ('code', '=', order_location['pick_up_point_state']), ('country_id.id', '=', country)]).id if (order_location['pick_up_point_state'] and country) else None
+            state = order.env['res.country.state'].search(['&', ('code', '=', order_location['pick_up_point_state']), ('country_id', '=', country)]).id if (order_location['pick_up_point_state'] and country) else None
             parent_id = order.partner_shipping_id.id
             email = order.partner_shipping_id.email
             phone = order.partner_shipping_id.phone

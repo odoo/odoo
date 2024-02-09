@@ -45,7 +45,7 @@ class AutoCompleteController(http.Controller):
                 elif field_standard == 'state':
                     state = request.env['res.country.state'].search(
                         [('code', '=', google_field['short_name'].upper()),
-                         ('country_id.id', '=', standard_data['country'])])
+                         ('country_id', '=', standard_data['country'])])
                     if len(state) == 1:
                         standard_data[field_standard] = state.id
                 else:
