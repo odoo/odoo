@@ -1,4 +1,4 @@
-import { expect, test } from "@odoo/hoot";
+import { describe, expect, test } from "@odoo/hoot";
 
 import { defineModels, fields, makeMockServer, models } from "@web/../tests/web_test_helpers";
 
@@ -170,7 +170,9 @@ const ormRequest = async (params) => {
     return result;
 };
 
-test.tags("headless")("performRPC: search with active_test=false", async () => {
+describe.current.tags("headless");
+
+test("performRPC: search with active_test=false", async () => {
     await makeMockServer();
     const result = await ormRequest({
         model: "res.partner",
@@ -183,7 +185,7 @@ test.tags("headless")("performRPC: search with active_test=false", async () => {
     expect(result).toEqual([1, 2]);
 });
 
-test.tags("headless")("performRPC: search with active_test=true", async () => {
+test("performRPC: search with active_test=true", async () => {
     await makeMockServer();
     const result = await ormRequest({
         model: "res.partner",
@@ -195,7 +197,7 @@ test.tags("headless")("performRPC: search with active_test=true", async () => {
     expect(result).toEqual([1]);
 });
 
-test.tags("headless")("performRPC: search_read with active_test=false", async () => {
+test("performRPC: search_read with active_test=false", async () => {
     await makeMockServer();
     const result = await ormRequest({
         model: "res.partner",
@@ -211,7 +213,7 @@ test.tags("headless")("performRPC: search_read with active_test=false", async ()
     ]);
 });
 
-test.tags("headless")("performRPC: search_read with active_test=true", async () => {
+test("performRPC: search_read with active_test=true", async () => {
     await makeMockServer();
     const result = await ormRequest({
         model: "res.partner",
@@ -224,7 +226,7 @@ test.tags("headless")("performRPC: search_read with active_test=true", async () 
     expect(result).toEqual([{ id: 1, name: "Jean-Michel" }]);
 });
 
-test.tags("headless")("performRPC: search_count", async () => {
+test("performRPC: search_count", async () => {
     await makeMockServer();
     const result = await ormRequest({
         model: "res.partner",
@@ -233,7 +235,7 @@ test.tags("headless")("performRPC: search_count", async () => {
     expect(result).toBe(1);
 });
 
-test.tags("headless")("performRPC: search_count with domain", async () => {
+test("performRPC: search_count with domain", async () => {
     Partner._records.push({ id: 4, name: "José" });
 
     await makeMockServer();
@@ -245,7 +247,7 @@ test.tags("headless")("performRPC: search_count with domain", async () => {
     expect(result).toBe(1);
 });
 
-test.tags("headless")("performRPC: search_count with domain matching no record", async () => {
+test("performRPC: search_count with domain matching no record", async () => {
     await makeMockServer();
     const result = await ormRequest({
         model: "res.partner",
@@ -255,7 +257,7 @@ test.tags("headless")("performRPC: search_count with domain matching no record",
     expect(result).toBe(0);
 });
 
-test.tags("headless")("performRPC: search_count with archived records", async () => {
+test("performRPC: search_count with archived records", async () => {
     await makeMockServer();
     const result = await ormRequest({
         model: "res.partner",
@@ -267,7 +269,7 @@ test.tags("headless")("performRPC: search_count with archived records", async ()
     expect(result).toBe(2);
 });
 
-test.tags("headless")("performRPC: read_group, group by char", async () => {
+test("performRPC: read_group, group by char", async () => {
     await makeMockServer();
     const result = await ormRequest({
         model: "bar",
@@ -287,7 +289,7 @@ test.tags("headless")("performRPC: read_group, group by char", async () => {
     ]);
 });
 
-test.tags("headless")("performRPC: read_group, group by boolean", async () => {
+test("performRPC: read_group, group by boolean", async () => {
     await makeMockServer();
     const result = await ormRequest({
         model: "bar",
@@ -304,7 +306,7 @@ test.tags("headless")("performRPC: read_group, group by boolean", async () => {
     ]);
 });
 
-test.tags("headless")("performRPC: read_group, group by date", async () => {
+test("performRPC: read_group, group by date", async () => {
     await makeMockServer();
     let result = await ormRequest({
         model: "bar",
@@ -498,7 +500,7 @@ test.tags("headless")("performRPC: read_group, group by date", async () => {
     ]);
 });
 
-test.tags("headless")("performRPC: read_group, group by datetime", async () => {
+test("performRPC: read_group, group by datetime", async () => {
     await makeMockServer();
     let result = await ormRequest({
         model: "bar",
@@ -740,7 +742,7 @@ test.tags("headless")("performRPC: read_group, group by datetime", async () => {
     ]);
 });
 
-test.tags("headless")("performRPC: read_group, group by m2m", async () => {
+test("performRPC: read_group, group by m2m", async () => {
     await makeMockServer();
 
     await expect(
@@ -772,7 +774,7 @@ test.tags("headless")("performRPC: read_group, group by m2m", async () => {
     ]);
 });
 
-test.tags("headless")("performRPC: read_group, group by m2o", async () => {
+test("performRPC: read_group, group by m2o", async () => {
     Partner._fields.sequence = fields.Integer();
     Partner._records[0].sequence = 1;
     Partner._records[1].sequence = 0;
@@ -808,7 +810,7 @@ test.tags("headless")("performRPC: read_group, group by m2o", async () => {
     ]);
 });
 
-test.tags("headless")("performRPC: read_group, group by integer", async () => {
+test("performRPC: read_group, group by integer", async () => {
     await makeMockServer();
 
     await expect(
@@ -855,7 +857,7 @@ test.tags("headless")("performRPC: read_group, group by integer", async () => {
     ]);
 });
 
-test.tags("headless")("performRPC: read_group, group by selection", async () => {
+test("performRPC: read_group, group by selection", async () => {
     await makeMockServer();
 
     await expect(
@@ -875,7 +877,7 @@ test.tags("headless")("performRPC: read_group, group by selection", async () => 
     ]);
 });
 
-test.tags("headless")("performRPC: read_group, group by two levels", async () => {
+test("performRPC: read_group, group by two levels", async () => {
     await makeMockServer();
 
     await expect(
@@ -938,7 +940,7 @@ test.tags("headless")("performRPC: read_group, group by two levels", async () =>
     ]);
 });
 
-test.tags("headless")("performRPC: read_group with special measure specifications", async () => {
+test("performRPC: read_group with special measure specifications", async () => {
     Bar._fields.float = fields.Float();
     Bar._records[0].float = 2;
 
@@ -973,7 +975,7 @@ test.tags("headless")("performRPC: read_group with special measure specification
     ]);
 });
 
-test.tags("headless")("performRPC: read_group with array_agg", async () => {
+test("performRPC: read_group with array_agg", async () => {
     await makeMockServer();
 
     const aggregateValue = [null, 2, null, 1, null, 1];
@@ -1012,7 +1014,7 @@ test.tags("headless")("performRPC: read_group with array_agg", async () => {
     ]);
 });
 
-test.tags("headless")("performRPC: read_group with array_agg on id", async () => {
+test("performRPC: read_group with array_agg on id", async () => {
     await makeMockServer();
 
     await expect(
@@ -1049,7 +1051,7 @@ test.tags("headless")("performRPC: read_group with array_agg on id", async () =>
     ]);
 });
 
-test.tags("headless")("performRPC: read_group with array_agg on an integer field", async () => {
+test("performRPC: read_group with array_agg on an integer field", async () => {
     await makeMockServer();
 
     const aggregateValue = [12, 1, 17, 2, 0, 42];
@@ -1088,7 +1090,7 @@ test.tags("headless")("performRPC: read_group with array_agg on an integer field
     ]);
 });
 
-test.tags("headless")("performRPC: read_group with count_distinct", async () => {
+test("performRPC: read_group with count_distinct", async () => {
     await makeMockServer();
 
     await expect(
@@ -1157,7 +1159,7 @@ test.tags("headless")("performRPC: read_group with count_distinct", async () => 
     ]);
 });
 
-test.tags("headless")("performRPC: read_progress_bar grouped by boolean", async () => {
+test("performRPC: read_progress_bar grouped by boolean", async () => {
     await makeMockServer();
 
     await expect(
@@ -1179,7 +1181,7 @@ test.tags("headless")("performRPC: read_progress_bar grouped by boolean", async 
     });
 });
 
-test.tags("headless")("performRPC: read_progress_bar grouped by datetime", async () => {
+test("performRPC: read_progress_bar grouped by datetime", async () => {
     await makeMockServer();
 
     await expect(
@@ -1203,7 +1205,7 @@ test.tags("headless")("performRPC: read_progress_bar grouped by datetime", async
     });
 });
 
-test.tags("headless")("many2one_ref should auto fill inverse field", async () => {
+test("many2one_ref should auto fill inverse field", async () => {
     Bar._records = [{ id: 1 }];
     Foo._records = [{ id: 2, many2one_reference: 1, res_model: "bar" }];
 
@@ -1215,7 +1217,7 @@ test.tags("headless")("many2one_ref should auto fill inverse field", async () =>
     expect(env["bar"][0].one2many_field).toEqual([]);
 });
 
-test.tags("headless")("many2one should auto fill inverse field", async () => {
+test("many2one should auto fill inverse field", async () => {
     Bar._records = [{ id: 1 }];
     Foo._records = [{ id: 2, many2one_field: 1 }];
 
@@ -1227,7 +1229,7 @@ test.tags("headless")("many2one should auto fill inverse field", async () => {
     expect(env["bar"][0].one2many_field).toEqual([]);
 });
 
-test.tags("headless")("one2many should auto fill inverse field", async () => {
+test("one2many should auto fill inverse field", async () => {
     Bar._records = [{ id: 1 }, { id: 2 }];
     Foo._records = [{ id: 3, one2many_field: [1, 2] }];
 
@@ -1241,7 +1243,7 @@ test.tags("headless")("one2many should auto fill inverse field", async () => {
     expect(env["bar"][1].many2one_field).toBe(false);
 });
 
-test.tags("headless")("many2many should auto fill inverse field", async () => {
+test("many2many should auto fill inverse field", async () => {
     Bar._records = [{ id: 1 }];
     Foo._records = [{ id: 2, many2many_field: [1] }];
 
@@ -1253,7 +1255,7 @@ test.tags("headless")("many2many should auto fill inverse field", async () => {
     expect(env["bar"][0].many2many_field).toEqual([]);
 });
 
-test.tags("headless")("one2many update should update inverse field", async () => {
+test("one2many update should update inverse field", async () => {
     Bar._records = [{ id: 1 }, { id: 2 }];
     Foo._records = [{ id: 3, one2many_field: [1, 2] }];
 
@@ -1265,7 +1267,7 @@ test.tags("headless")("one2many update should update inverse field", async () =>
     expect(env["bar"][1].many2one_field).toBe(false);
 });
 
-test.tags("headless")("many2many update should update inverse field", async () => {
+test("many2many update should update inverse field", async () => {
     Bar._records = [{ id: 1 }];
     Foo._records = [{ id: 2, many2many_field: [1] }];
 
@@ -1276,7 +1278,7 @@ test.tags("headless")("many2many update should update inverse field", async () =
     expect(env["bar"][0].many2many_field).toEqual([2]);
 });
 
-test.todo.tags`headless`("many2one update should update inverse field", async () => {
+test.todo("many2one update should update inverse field", async () => {
     Bar._records = [{ id: 1 }];
     Foo._records = [{ id: 2, many2one_field: 1 }];
 
@@ -1287,7 +1289,7 @@ test.todo.tags`headless`("many2one update should update inverse field", async ()
     expect(env["bar"][0].one2many_field).toEqual([]);
 });
 
-test.tags("headless")("many2one_ref update should update inverse field", async () => {
+test("many2one_ref update should update inverse field", async () => {
     Bar._records = [{ id: 1 }];
     Foo._records = [{ id: 2, res_model: "bar", many2one_reference: 1 }];
 
@@ -1298,7 +1300,7 @@ test.tags("headless")("many2one_ref update should update inverse field", async (
     expect(env["bar"][0].one2many_field).toEqual([]);
 });
 
-test.tags("headless")("webRead sub-fields of a many2one field", async () => {
+test("webRead sub-fields of a many2one field", async () => {
     Partner._fields.test_name = fields.Char();
     Partner._fields.test_number = fields.Integer();
 
@@ -1335,7 +1337,7 @@ test.tags("headless")("webRead sub-fields of a many2one field", async () => {
     ]);
 });
 
-test.tags("headless")("List View: invisible on processed Arch", async () => {
+test("List View: invisible on processed Arch", async () => {
     Bar._views[["list", 10001]] = /* xml */ `
         <tree>
             <field name="bool" column_invisible="1"/>
@@ -1366,7 +1368,7 @@ test.tags("headless")("List View: invisible on processed Arch", async () => {
     expect(views.list.arch).toMatch(expectedList.trim());
 });
 
-test.tags("headless")("performRPC: create one record (old API)", async () => {
+test("performRPC: create one record (old API)", async () => {
     await makeMockServer();
 
     await expect(
@@ -1378,7 +1380,7 @@ test.tags("headless")("performRPC: create one record (old API)", async () => {
     ).resolves.toBe(7);
 });
 
-test.tags("headless")("performRPC: create one record (new API)", async () => {
+test("performRPC: create one record (new API)", async () => {
     await makeMockServer();
 
     await expect(
@@ -1390,7 +1392,7 @@ test.tags("headless")("performRPC: create one record (new API)", async () => {
     ).resolves.toEqual([7]);
 });
 
-test.tags("headless")("performRPC: create several records (new API)", async () => {
+test("performRPC: create several records (new API)", async () => {
     await makeMockServer();
 
     await expect(
@@ -1402,7 +1404,7 @@ test.tags("headless")("performRPC: create several records (new API)", async () =
     ).resolves.toEqual([7, 8]);
 });
 
-test.tags("headless")("performRPC: trigger onchange for new record", async () => {
+test("performRPC: trigger onchange for new record", async () => {
     await makeMockServer();
 
     await expect(
@@ -1414,75 +1416,69 @@ test.tags("headless")("performRPC: trigger onchange for new record", async () =>
     ).resolves.toEqual({ value: { foo: 0 } });
 });
 
-test.tags("headless")(
-    "access rights attributes are present on an editable many2one field",
-    async () => {
-        Bar._views[["form", 10001]] = /* xml */ `
+test("access rights attributes are present on an editable many2one field", async () => {
+    Bar._views[["form", 10001]] = /* xml */ `
         <form>
             <field name="partner_id" />
         </form>
     `;
-        Bar._views[["search", 10001]] = /* xml */ `
+    Bar._views[["search", 10001]] = /* xml */ `
         <search></search>
     `;
 
-        await makeMockServer();
+    await makeMockServer();
 
-        const expectedForm = /* xml */ `
+    const expectedForm = /* xml */ `
         <form>
             <field name="partner_id" can_create="true" can_write="true"/>
         </form>
     `;
 
-        const { views } = await ormRequest({
-            method: "get_views",
-            model: "bar",
-            kwargs: {
-                views: [[10001, "form"]],
-                options: {},
-            },
-        });
-        expect(views.form.arch).toMatch(expectedForm.trim());
-    }
-);
+    const { views } = await ormRequest({
+        method: "get_views",
+        model: "bar",
+        kwargs: {
+            views: [[10001, "form"]],
+            options: {},
+        },
+    });
+    expect(views.form.arch).toMatch(expectedForm.trim());
+});
 
-test.tags("headless")(
-    "access rights attributes are missing on an editable many2one field",
-    async () => {
-        // The access rights attributes should be present,
-        // but are actually missing when a field definition is readonly and readonly=0 is on the view.
-        // @see the commit description for more details.
+test("access rights attributes are missing on an editable many2one field", async () => {
+    // The access rights attributes should be present,
+    // but are actually missing when a field definition is readonly and readonly=0 is on the view.
+    // @see the commit description for more details.
 
-        Bar._fields.partner_id = fields.Many2one({
-            string: "Main buddy",
-            relation: "res.partner",
-            readonly: true,
-        });
-        Bar._views[["form", 10001]] = /* xml */ `
+    Bar._fields.partner_id = fields.Many2one({
+        string: "Main buddy",
+        relation: "res.partner",
+        readonly: true,
+    });
+    Bar._views[["form", 10001]] = /* xml */ `
         <form>
             <field name="partner_id" readonly="0" />
         </form>
     `;
-        Bar._views[["search", 10001]] = /* xml */ `
+    Bar._views[["search", 10001]] = /* xml */ `
         <search></search>
     `;
 
-        await makeMockServer();
+    await makeMockServer();
 
-        const expectedForm = /* xml */ `
+    const expectedForm = /* xml */ `
         <form>
             <field name="partner_id" readonly="0"/>
         </form>
     `;
 
-        const { views } = await ormRequest({
-            method: "get_views",
-            model: "bar",
-            kwargs: {
-                views: [[10001, "form"]],
-                options: {},
-            },
-        });
-        expect(views.form.arch).toMatch(expectedForm.trim());
-    }
-);
+    const { views } = await ormRequest({
+        method: "get_views",
+        model: "bar",
+        kwargs: {
+            views: [[10001, "form"]],
+            options: {},
+        },
+    });
+    expect(views.form.arch).toMatch(expectedForm.trim());
+});
