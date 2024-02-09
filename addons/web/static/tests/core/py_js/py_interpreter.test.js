@@ -2,7 +2,9 @@ import { describe, expect, test } from "@odoo/hoot";
 
 import { evaluateBooleanExpr, evaluateExpr } from "@web/core/py_js/py";
 
-describe.tags("headless")("basic values", () => {
+describe.current.tags("headless");
+
+describe("basic values", () => {
     test("evaluate simple values", () => {
         expect(evaluateExpr("12")).toBe(12);
         expect(evaluateExpr('"foo"')).toBe("foo");
@@ -59,7 +61,7 @@ describe.tags("headless")("basic values", () => {
     });
 });
 
-describe.tags("headless")("number properties", () => {
+describe("number properties", () => {
     test("number arithmetic", () => {
         expect(evaluateExpr("1 + 2")).toBe(3);
         expect(evaluateExpr("4 - 2")).toBe(2);
@@ -86,7 +88,7 @@ describe.tags("headless")("number properties", () => {
     });
 });
 
-describe.tags("headless")("boolean properties", () => {
+describe("boolean properties", () => {
     test("boolean arithmetic", () => {
         expect(evaluateExpr("True and False")).toBe(false);
         expect(evaluateExpr("True or False")).toBe(true);
@@ -123,7 +125,7 @@ describe.tags("headless")("boolean properties", () => {
     });
 });
 
-describe.tags("headless")("values from context", () => {
+describe("values from context", () => {
     test("free variable", () => {
         expect(evaluateExpr("a", { a: 3 })).toBe(3);
         expect(evaluateExpr("a + b", { a: 3, b: 5 })).toBe(8);
@@ -149,7 +151,7 @@ describe.tags("headless")("values from context", () => {
     });
 });
 
-describe.tags("headless")("comparisons", () => {
+describe("comparisons", () => {
     test("equality", () => {
         expect(evaluateExpr("1 == 1")).toBe(true);
         expect(evaluateExpr('"foo" == "foo"')).toBe(true);
@@ -244,7 +246,7 @@ describe.tags("headless")("comparisons", () => {
     });
 });
 
-describe.tags("headless")("containment", () => {
+describe("containment", () => {
     test("in tuples", () => {
         expect(evaluateExpr("'bar' in ('foo', 'bar')")).toBe(true);
         expect(evaluateExpr("'bar' in ('foo', 'qux')")).toBe(false);
@@ -277,7 +279,7 @@ describe.tags("headless")("containment", () => {
     });
 });
 
-describe.tags("headless")("conversions", () => {
+describe("conversions", () => {
     test("to bool", () => {
         expect(evaluateExpr("bool('')")).toBe(false);
         expect(evaluateExpr("bool('foo')")).toBe(true);
@@ -286,14 +288,14 @@ describe.tags("headless")("conversions", () => {
     });
 });
 
-describe.tags("headless")("callables", () => {
+describe("callables", () => {
     test("should call function from context", () => {
         expect(evaluateExpr("foo()", { foo: () => 3 })).toBe(3);
         expect(evaluateExpr("1 + foo()", { foo: () => 3 })).toBe(4);
     });
 });
 
-describe.tags("headless")("dicts", () => {
+describe("dicts", () => {
     test("dict", () => {
         expect(evaluateExpr("{}")).toEqual({});
         expect(evaluateExpr("{'foo': 1 + 2}")).toEqual({ foo: 3 });
@@ -328,7 +330,7 @@ describe.tags("headless")("dicts", () => {
     });
 });
 
-describe.tags("headless")("objects", () => {
+describe("objects", () => {
     test("can read values from object", () => {
         expect(evaluateExpr("obj.a", { obj: { a: 123 } })).toBe(123);
         expect(evaluateExpr("obj.a.b.c", { obj: { a: { b: { c: 321 } } } })).toBe(321);
@@ -339,7 +341,7 @@ describe.tags("headless")("objects", () => {
     });
 });
 
-describe.tags("headless")("if expressions", () => {
+describe("if expressions", () => {
     test("simple if expressions", () => {
         expect(evaluateExpr("1 if True else 2")).toBe(1);
         expect(evaluateExpr("1 if 3 < 2 else 'greater'")).toBe("greater");
@@ -352,13 +354,13 @@ describe.tags("headless")("if expressions", () => {
     });
 });
 
-describe.tags("headless")("miscellaneous expressions", () => {
+describe("miscellaneous expressions", () => {
     test("tuple in list", () => {
         expect(evaluateExpr("[(1 + 2,'foo', True)]")).toEqual([[3, "foo", true]]);
     });
 });
 
-describe.tags("headless")("evaluate to boolean", () => {
+describe("evaluate to boolean", () => {
     test("simple expression", () => {
         expect(evaluateBooleanExpr("12")).toBe(true);
         expect(evaluateBooleanExpr("0")).toBe(false);
@@ -395,7 +397,7 @@ describe.tags("headless")("evaluate to boolean", () => {
     });
 });
 
-describe.tags("headless")("sets", () => {
+describe("sets", () => {
     test("static set", () => {
         expect(evaluateExpr("set()")).toEqual(new Set());
         expect(evaluateExpr("set([])")).toEqual(new Set([]));

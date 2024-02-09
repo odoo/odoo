@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { expect, test } from "@odoo/hoot";
+import { describe, expect, test } from "@odoo/hoot";
 
 /**
  * @param {string} folder folder that can only import from `allowedFolders`
@@ -30,7 +30,9 @@ function invalidImportsFrom(folder, allowedFolders) {
     return invalidDeps;
 }
 
-test.tags("headless")("modules only import from allowed folders", () => {
+describe.current.tags("headless");
+
+test("modules only import from allowed folders", () => {
     // FIXME: this dependency should not exist. Temporarily whitelist it so we don't add more, and remove ASAP
     expect(invalidImportsFrom("core", [])).toEqual({ "@web/core/utils/hooks": ["@web/env"] });
     expect(invalidImportsFrom("search", ["core"])).toEqual({

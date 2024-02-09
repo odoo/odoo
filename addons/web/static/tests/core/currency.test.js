@@ -1,14 +1,16 @@
-import { expect, test, beforeEach } from "@odoo/hoot";
+import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { makeMockEnv, patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 import { currencies, formatCurrency } from "@web/core/currency";
 import { session } from "@web/session";
 
+describe.current.tags("headless");
+
 beforeEach(async () => {
     await makeMockEnv(); // To start the localization service
 });
 
-test.tags("headless")("formatCurrency", async () => {
+test("formatCurrency", async () => {
     patchWithCleanup(currencies, {
         10: {
             digits: [69, 2],
@@ -41,7 +43,7 @@ test.tags("headless")("formatCurrency", async () => {
     });
 });
 
-test.tags("headless")("formatCurrency without currency", async () => {
+test("formatCurrency without currency", async () => {
     patchWithCleanup(session, {
         currencies: {},
     });

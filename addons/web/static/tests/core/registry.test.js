@@ -1,8 +1,10 @@
-import { expect, test } from "@odoo/hoot";
+import { describe, expect, test } from "@odoo/hoot";
 
 import { Registry } from "@web/core/registry";
 
-test.tags("headless")("key set and get", () => {
+describe.current.tags("headless");
+
+test("key set and get", () => {
     const registry = new Registry();
     const foo = {};
 
@@ -11,7 +13,7 @@ test.tags("headless")("key set and get", () => {
     expect(registry.get("foo")).toBe(foo);
 });
 
-test.tags("headless")("can set and get falsy values", () => {
+test("can set and get falsy values", () => {
     const registry = new Registry();
     registry.add("foo1", false);
     registry.add("foo2", 0);
@@ -26,7 +28,7 @@ test.tags("headless")("can set and get falsy values", () => {
     expect(registry.get("foo5")).toBe(null);
 });
 
-test.tags("headless")("can set and get falsy values with default value", () => {
+test("can set and get falsy values with default value", () => {
     const registry = new Registry();
     registry.add("foo1", false);
     registry.add("foo2", 0);
@@ -41,7 +43,7 @@ test.tags("headless")("can set and get falsy values with default value", () => {
     expect(registry.get("foo5", 1)).toBe(null);
 });
 
-test.tags("headless")("can get a default value when missing key", () => {
+test("can get a default value when missing key", () => {
     const registry = new Registry();
 
     expect(registry.get("missing", "default")).toBe("default");
@@ -49,12 +51,12 @@ test.tags("headless")("can get a default value when missing key", () => {
     expect(registry.get("missing", false)).toBe(false);
 });
 
-test.tags("headless")("throws if key is missing", () => {
+test("throws if key is missing", () => {
     const registry = new Registry();
     expect(() => registry.get("missing")).toThrow();
 });
 
-test.tags("headless")("contains method", () => {
+test("contains method", () => {
     const registry = new Registry();
 
     registry.add("foo", 1);
@@ -63,7 +65,7 @@ test.tags("headless")("contains method", () => {
     expect(registry.contains("bar")).toBe(false);
 });
 
-test.tags("headless")("can set and get a value, with an order arg", () => {
+test("can set and get a value, with an order arg", () => {
     const registry = new Registry();
     const foo = {};
 
@@ -72,7 +74,7 @@ test.tags("headless")("can set and get a value, with an order arg", () => {
     expect(registry.get("foo")).toBe(foo);
 });
 
-test.tags("headless")("can get ordered list of elements", () => {
+test("can get ordered list of elements", () => {
     const registry = new Registry();
 
     registry
@@ -84,7 +86,7 @@ test.tags("headless")("can get ordered list of elements", () => {
     expect(registry.getAll()).toEqual(["foo1", "foo2", "foo3", "foo5"]);
 });
 
-test.tags("headless")("can get ordered list of entries", () => {
+test("can get ordered list of entries", () => {
     const registry = new Registry();
 
     registry
@@ -101,7 +103,7 @@ test.tags("headless")("can get ordered list of entries", () => {
     ]);
 });
 
-test.tags("headless")("getAll and getEntries returns shallow copies", () => {
+test("getAll and getEntries returns shallow copies", () => {
     const registry = new Registry();
 
     registry.add("foo1", "foo1");
@@ -124,7 +126,7 @@ test.tags("headless")("getAll and getEntries returns shallow copies", () => {
     expect(registry.getEntries()).toEqual([["foo1", "foo1"]]);
 });
 
-test.tags("headless")("can override element with sequence", () => {
+test("can override element with sequence", () => {
     const registry = new Registry();
 
     registry
@@ -138,7 +140,7 @@ test.tags("headless")("can override element with sequence", () => {
     ]);
 });
 
-test.tags("headless")("can override element with sequence 2 ", () => {
+test("can override element with sequence 2 ", () => {
     const registry = new Registry();
 
     registry
@@ -152,7 +154,7 @@ test.tags("headless")("can override element with sequence 2 ", () => {
     ]);
 });
 
-test.tags("headless")("can recursively open sub registry", () => {
+test("can recursively open sub registry", () => {
     const registry = new Registry();
 
     registry.category("sub").add("a", "b");

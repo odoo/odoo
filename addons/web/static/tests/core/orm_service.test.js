@@ -1,4 +1,4 @@
-import { after, expect, test } from "@odoo/hoot";
+import { after, describe, expect, test } from "@odoo/hoot";
 import { on } from "@odoo/hoot-dom";
 import { Component, xml } from "@odoo/owl";
 
@@ -6,7 +6,9 @@ import { makeMockEnv, mountWithCleanup, onRpc } from "@web/../tests/web_test_hel
 import { rpcBus } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
 
-test.tags("headless")("add user context to a simple read request", async () => {
+describe.current.tags("headless");
+
+test("add user context to a simple read request", async () => {
     onRpc(async (route, params) => {
         expect.step(route);
         expect(params).toEqual({
@@ -31,7 +33,7 @@ test.tags("headless")("add user context to a simple read request", async () => {
     expect(["/web/dataset/call_kw/res.partner/read"]).toVerifySteps();
 });
 
-test.tags("headless")("context is combined with user context in read request", async () => {
+test("context is combined with user context in read request", async () => {
     onRpc(async (route, params) => {
         expect.step(route);
         expect(params).toEqual({
@@ -61,7 +63,7 @@ test.tags("headless")("context is combined with user context in read request", a
     expect(["/web/dataset/call_kw/res.partner/read"]).toVerifySteps();
 });
 
-test.tags("headless")("basic method call of model", async () => {
+test("basic method call of model", async () => {
     onRpc(async (route, params) => {
         expect.step(route);
         expect(params).toEqual({
@@ -87,7 +89,7 @@ test.tags("headless")("basic method call of model", async () => {
     expect(["/web/dataset/call_kw/res.partner/test"]).toVerifySteps();
 });
 
-test.tags("headless")("create method: one record", async () => {
+test("create method: one record", async () => {
     onRpc(async (route, params) => {
         expect.step(route);
         expect(params).toEqual({
@@ -112,7 +114,7 @@ test.tags("headless")("create method: one record", async () => {
     expect(["/web/dataset/call_kw/res.partner/create"]).toVerifySteps();
 });
 
-test.tags("headless")("create method: several records", async () => {
+test("create method: several records", async () => {
     onRpc(async (route, params) => {
         expect.step(route);
         expect(params).toEqual({
@@ -137,7 +139,7 @@ test.tags("headless")("create method: several records", async () => {
     expect(["/web/dataset/call_kw/res.partner/create"]).toVerifySteps();
 });
 
-test.tags("headless")("read method", async () => {
+test("read method", async () => {
     onRpc(async (route, params) => {
         expect.step(route);
         expect(params).toEqual({
@@ -170,7 +172,7 @@ test.tags("headless")("read method", async () => {
     expect(["/web/dataset/call_kw/sale.order/read"]).toVerifySteps();
 });
 
-test.tags("headless")("unlink method", async () => {
+test("unlink method", async () => {
     onRpc(async (route, params) => {
         expect.step(route);
         expect(params).toEqual({
@@ -195,7 +197,7 @@ test.tags("headless")("unlink method", async () => {
     expect(["/web/dataset/call_kw/res.partner/unlink"]).toVerifySteps();
 });
 
-test.tags("headless")("write method", async () => {
+test("write method", async () => {
     onRpc(async (route, params) => {
         expect.step(route);
         expect(params).toEqual({
@@ -220,7 +222,7 @@ test.tags("headless")("write method", async () => {
     expect(["/web/dataset/call_kw/res.partner/write"]).toVerifySteps();
 });
 
-test.tags("headless")("webReadGroup method", async () => {
+test("webReadGroup method", async () => {
     onRpc(async (route, params) => {
         expect.step(route);
         expect(params).toEqual({
@@ -255,7 +257,7 @@ test.tags("headless")("webReadGroup method", async () => {
     expect(["/web/dataset/call_kw/sale.order/web_read_group"]).toVerifySteps();
 });
 
-test.tags("headless")("readGroup method", async () => {
+test("readGroup method", async () => {
     onRpc(async (route, params) => {
         expect.step(route);
         expect(params).toEqual({
@@ -290,7 +292,7 @@ test.tags("headless")("readGroup method", async () => {
     expect(["/web/dataset/call_kw/sale.order/read_group"]).toVerifySteps();
 });
 
-test.tags("headless")("test readGroup method removes duplicate values from groupby", async () => {
+test("test readGroup method removes duplicate values from groupby", async () => {
     onRpc(async (route, params) => {
         expect.step(route);
         expect(params.kwargs.groupby).toEqual(["date_order:month"], {
@@ -311,7 +313,7 @@ test.tags("headless")("test readGroup method removes duplicate values from group
     expect(["/web/dataset/call_kw/sale.order/read_group"]).toVerifySteps();
 });
 
-test.tags("headless")("search_read method", async () => {
+test("search_read method", async () => {
     onRpc(async (route, params) => {
         expect.step(route);
         expect(params).toEqual({
@@ -338,7 +340,7 @@ test.tags("headless")("search_read method", async () => {
     expect(["/web/dataset/call_kw/sale.order/search_read"]).toVerifySteps();
 });
 
-test.tags("headless")("search_count method", async () => {
+test("search_count method", async () => {
     onRpc(async (route, params) => {
         expect.step(route);
         expect(params).toEqual({
@@ -363,7 +365,7 @@ test.tags("headless")("search_count method", async () => {
     expect(["/web/dataset/call_kw/sale.order/search_count"]).toVerifySteps();
 });
 
-test.tags("headless")("webRead method", async () => {
+test("webRead method", async () => {
     onRpc(async (route, params) => {
         expect.step(route);
         expect(params).toEqual({
@@ -393,7 +395,7 @@ test.tags("headless")("webRead method", async () => {
     expect(["/web/dataset/call_kw/sale.order/web_read"]).toVerifySteps();
 });
 
-test.tags("headless")("webSearchRead method", async () => {
+test("webSearchRead method", async () => {
     onRpc(async (route, params) => {
         expect.step(route);
         expect(params).toEqual({
@@ -422,7 +424,7 @@ test.tags("headless")("webSearchRead method", async () => {
     expect(["/web/dataset/call_kw/sale.order/web_search_read"]).toVerifySteps();
 });
 
-test.tags("headless")("orm is specialized for component", async () => {
+test("orm is specialized for component", async () => {
     const env = await makeMockEnv();
 
     class MyComponent extends Component {
@@ -438,7 +440,7 @@ test.tags("headless")("orm is specialized for component", async () => {
     expect(component.orm).not.toBe(env.services.orm);
 });
 
-test.tags("headless")("silent mode", async () => {
+test("silent mode", async () => {
     onRpc((route) => {
         expect.step(route);
         return false;
@@ -474,7 +476,7 @@ test.tags("headless")("silent mode", async () => {
     ]).toVerifySteps();
 });
 
-test.tags("headless")("validate some obviously wrong calls", async () => {
+test("validate some obviously wrong calls", async () => {
     expect.assertions(2);
 
     const { services } = await makeMockEnv();
@@ -487,7 +489,7 @@ test.tags("headless")("validate some obviously wrong calls", async () => {
     );
 });
 
-test.tags("headless")("optimize read and unlink if no ids", async () => {
+test("optimize read and unlink if no ids", async () => {
     onRpc((route) => {
         expect.step(route);
         return false;

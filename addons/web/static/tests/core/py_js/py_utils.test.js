@@ -13,7 +13,9 @@ const checkAST = (expr, message = expr) => {
     return true;
 };
 
-describe.tags("headless")("formatAST", () => {
+describe.current.tags("headless");
+
+describe("formatAST", () => {
     test("basic values", () => {
         expect(checkAST("1", "number value")).toBe(true);
         expect(checkAST("1.4", "float value")).toBe(true);
@@ -131,7 +133,7 @@ describe.tags("headless")("formatAST", () => {
     });
 });
 
-describe.tags("headless")("toPyValue", () => {
+describe("toPyValue", () => {
     test("toPyValue a string", () => {
         const ast = toPyValue("test");
         expect(ast.type).toBe(1);

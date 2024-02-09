@@ -1,25 +1,27 @@
 /** @odoo-module **/
 
-import { after, expect, test } from "@odoo/hoot";
+import { after, describe, expect, test } from "@odoo/hoot";
 import { download } from "@web/core/network/download";
 import { ConnectionLostError, RPCError } from "@web/core/network/rpc";
 import { Deferred, mockFetch } from "@odoo/hoot-mock";
 
-test.tags("headless")("handles connection error when behind a server", async () => {
+describe.current.tags("headless");
+
+test("handles connection error when behind a server", async () => {
     const restoreFetch = mockFetch(() => new Response("", { status: 502 }));
     after(restoreFetch);
     const error = new ConnectionLostError("/some_url");
     await expect(download({ data: {}, url: "/some_url" })).rejects.toThrow(error.message);
 });
 
-test.tags("headless")("handles connection error when network unavailable", async () => {
+test("handles connection error when network unavailable", async () => {
     const restoreFetch = mockFetch(() => Promise.reject());
     after(restoreFetch);
     const error = new ConnectionLostError("/some_url");
     await expect(download({ data: {}, url: "/some_url" })).rejects.toThrow(error.message);
 });
 
-test.tags("headless")("handles business error from server", async () => {
+test("handles business error from server", async () => {
     const serverError = {
         code: 200,
         data: {
@@ -49,7 +51,7 @@ test.tags("headless")("handles business error from server", async () => {
     expect(error.data).toEqual(serverError.data);
 });
 
-test.tags("headless")("handles arbitrary error", async () => {
+test("handles arbitrary error", async () => {
     const serverError = /* xml */ `<html><body><div>HTML error message</div></body></html>`;
 
     const restoreFetch = mockFetch(() => {
@@ -73,7 +75,7 @@ test.tags("headless")("handles arbitrary error", async () => {
     expect(error.data.debug.trim()).toBe("200\nHTML error message");
 });
 
-test.tags("headless")("handles success download", async () => {
+test("handles success download", async () => {
     // This test relies on a implementation detail of the lowest layer of download
     // That is, a link will be created with the download attribute
 
