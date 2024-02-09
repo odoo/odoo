@@ -23,7 +23,12 @@ class AccountMove(models.Model):
 
     l10n_id_tax_number = fields.Char(string="Tax Number", copy=False)
     l10n_id_replace_invoice_id = fields.Many2one('account.move', string="Replace Invoice", domain="['|', '&', '&', ('state', '=', 'posted'), ('partner_id', '=', partner_id), ('reversal_move_id', '!=', False), ('state', '=', 'cancel')]", copy=False, index='btree_not_null')
-    l10n_id_attachment_id = fields.Many2one('ir.attachment', readonly=True, copy=False)
+    l10n_id_attachment_id = fields.Many2one(
+        'ir.attachment',
+        compute=lambda self: self._compute_linked_attachment_id('l10n_id_attachment_id', 'l10n_id_attachment_bin'),
+        depends=['l10n_id_attachment_bin'],
+    )
+    l10n_id_attachment_bin = fields.Binary(copy=False)
     l10n_id_csv_created = fields.Boolean('CSV Created', compute='_compute_csv_created', copy=False)
     l10n_id_kode_transaksi = fields.Selection([
             ('01', '01 Kepada Pihak yang Bukan Pemungut PPN (Customer Biasa)'),
@@ -337,17 +342,20 @@ class AccountMove(models.Model):
 
         output_head = self._generate_efaktur_invoice(delimiter)
         my_utf8 = output_head.encode("utf-8")
+
         out = base64.b64encode(my_utf8)
 
         attachment = self.env['ir.attachment'].create({
             'datas': out,
             'name': 'efaktur_%s.csv' % (fields.Datetime.to_string(fields.Datetime.now()).replace(" ", "_")),
             'type': 'binary',
+            'res_model': self._name,
+            'res_id': self.id,
+            'res_field': 'l10n_id_attachment_bin',
         })
 
         for record in self:
             record.message_post(attachment_ids=[attachment.id])
-        self.l10n_id_attachment_id = attachment.id
         return {
             'type': 'ir.actions.client',
             'tag': 'reload',

@@ -8,12 +8,12 @@
             <field name="arch" type="xml">
                 <field name="partner_id" position="after">
                     <field name="l10n_id_need_kode_transaksi" invisible="1"/>
-                    <field name="l10n_id_attachment_id" invisible="1"/>
+                    <field name="l10n_id_attachment_bin" invisible="1"/>
                     <field name="l10n_id_kode_transaksi" invisible="country_code != 'ID' or not l10n_id_need_kode_transaksi" readonly="state in ['cancel', 'posted']" required="l10n_id_need_kode_transaksi"/>
                     <field name="l10n_id_replace_invoice_id" invisible="country_code != 'ID'" readonly="state != 'draft'" options="{'m2o_dialog': False, 'no_create': True}"/>
                 </field>
                 <button name="button_draft" position="after">
-                    <button name="reset_efaktur" string="Reset E-Faktur" type="object" invisible="country_code != 'ID' or not l10n_id_tax_number or state != 'cancel' or l10n_id_attachment_id"/>
+                    <button name="reset_efaktur" string="Reset E-Faktur" type="object" invisible="country_code != 'ID' or not l10n_id_tax_number or state != 'cancel' or l10n_id_attachment_bin"/>
                 </button>
                 <xpath expr=".//group[@id='other_tab_group']" position="inside">
                     <group string="Electronic Tax" invisible="country_code != 'ID'">
@@ -53,7 +53,7 @@
                     <field name="l10n_id_tax_number"/>
                     <field name="l10n_id_attachment_id"/>
                     <group>
-                        <filter string="To Generate e-Faktur" name="tax_csv_upload" domain="[('l10n_id_tax_number', '!=', False), ('l10n_id_attachment_id', '=', False), ('state', '=', 'posted')]" />
+                        <filter string="To Generate e-Faktur" name="tax_csv_upload" domain="[('l10n_id_tax_number', '!=', False), ('l10n_id_attachment_bin', '=', False), ('state', '=', 'posted')]" />
                     </group>
                 </field>
             </field>

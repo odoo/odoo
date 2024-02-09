@@ -45,18 +45,18 @@ def mocked_action_post_sign_invoices(self):
     for invoice in self:
         eta_invoice = self.env['account.edi.format']._l10n_eg_eta_prepare_eta_invoice(self)
         eta_invoice['signatures'] = ETA_TEST_SIGNATURES
-        attachment = self.env['ir.attachment'].create(
+        self.env['ir.attachment'].create(
             {
                 'name': ('ETA_INVOICE_DOC_%s', invoice.name),
                 'res_id': invoice.id,
                 'res_model': invoice._name,
                 'type': 'binary',
+                'res_field': 'l10n_eg_eta_json_doc_bin',
                 'raw': json.dumps(dict(request=eta_invoice)),
                 'mimetype': 'application/json',
                 'description': ('Egyptian Tax authority JSON invoice generated for %s.', invoice.name),
             }
         )
-        invoice.l10n_eg_eta_json_doc_id = attachment.id
     return True
 
 
