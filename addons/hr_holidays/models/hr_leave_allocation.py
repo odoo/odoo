@@ -104,7 +104,8 @@ class HolidaysAllocation(models.Model):
              "\n- By Department: all employees of the specified department"
              "\n- By Employee Tag: all employees of the specific employee group category")
     employee_ids = fields.Many2many(
-        'hr.employee', compute='_compute_from_holiday_type', store=True, string='Employees', readonly=False)
+        'hr.employee', compute='_compute_from_holiday_type', store=True, string='Employees',
+        domain=lambda self: [('company_id', 'in', self.env.companies.ids)], readonly=False)
     multi_employee = fields.Boolean(
         compute='_compute_from_employee_ids', store=True,
         help='Holds whether this allocation concerns more than 1 employee')
