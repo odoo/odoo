@@ -299,22 +299,21 @@ class MailTestTicket(models.Model):
 
     def _message_get_suggested_recipients(self):
         recipients = super()._message_get_suggested_recipients()
-        for ticket in self:
-            if ticket.customer_id:
-                ticket.customer_id._message_add_suggested_recipient(
-                    recipients,
-                    partner=ticket.customer_id,
-                    lang=None,
-                    reason=_('Customer'),
-                )
-            elif ticket.email_from:
-                ticket._message_add_suggested_recipient(
-                    recipients,
-                    partner=None,
-                    email=self.email_from,
-                    lang=None,
-                    reason=_('Customer Email'),
-                )
+        if self.customer_id:
+            self.customer_id._message_add_suggested_recipient(
+                recipients,
+                partner=self.customer_id,
+                lang=None,
+                reason=_('Customer'),
+            )
+        elif self.email_from:
+            self._message_add_suggested_recipient(
+                recipients,
+                partner=None,
+                email=self.email_from,
+                lang=None,
+                reason=_('Customer Email'),
+            )
         return recipients
 
 class MailTestTicketEL(models.Model):

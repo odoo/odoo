@@ -1529,9 +1529,9 @@ class SaleOrder(models.Model):
 
     def _message_get_suggested_recipients(self):
         recipients = super()._message_get_suggested_recipients()
-        for order in self.filtered('partner_id'):
-            order._message_add_suggested_recipient(
-                recipients, partner=order.partner_id, reason=_("Customer")
+        if self.partner_id:
+            self._message_add_suggested_recipient(
+                recipients, partner=self.partner_id, reason=_("Customer")
             )
         return recipients
 

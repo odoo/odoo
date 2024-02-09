@@ -451,17 +451,16 @@ class Track(models.Model):
         }
 
     def _message_get_suggested_recipients(self):
-        recipients = super(Track, self)._message_get_suggested_recipients()
-        for track in self:
-            if track.partner_id:
-                if track.partner_id not in recipients:
-                    track._message_add_suggested_recipient(recipients, partner=track.partner_id, reason=_('Contact'))
-            else:
-                #  Priority: contact information then speaker information
-                if track.contact_email and track.contact_email != track.partner_id.email:
-                    track._message_add_suggested_recipient(recipients, email=track.contact_email, reason=_('Contact Email'))
-                if not track.contact_email and track.partner_email and track.partner_email != track.partner_id.email:
-                    track._message_add_suggested_recipient(recipients, email=track.partner_email, reason=_('Speaker Email'))
+        recipients = super()._message_get_suggested_recipients()
+        if self.partner_id:
+            if self.partner_id not in recipients:
+                self._message_add_suggested_recipient(recipients, partner=self.partner_id, reason=_('Contact'))
+        else:
+            #  Priority: contact information then speaker information
+            if self.contact_email and self.contact_email != self.partner_id.email:
+                self._message_add_suggested_recipient(recipients, email=self.contact_email, reason=_('Contact Email'))
+            if not self.contact_email and self.partner_email and self.partner_email != self.partner_id.email:
+                self._message_add_suggested_recipient(recipients, email=self.partner_email, reason=_('Speaker Email'))
         return recipients
 
     def _message_post_after_hook(self, message, msg_vals):

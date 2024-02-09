@@ -668,13 +668,12 @@ class SurveyUserInput(models.Model):
 
     def _message_get_suggested_recipients(self):
         recipients = super()._message_get_suggested_recipients()
-        for user_input in self:
-            if user_input.partner_id:
-                user_input._message_add_suggested_recipient(
-                    recipients,
-                    partner=user_input.partner_id,
-                    reason=_('Survey Participant')
-                )
+        if self.partner_id:
+            self._message_add_suggested_recipient(
+                recipients,
+                partner=self.partner_id,
+                reason=_('Survey Participant')
+            )
         return recipients
 
     def _notify_new_participation_subscribers(self):

@@ -1810,31 +1810,35 @@ class MailThread(models.AbstractModel):
             partner_info = self._message_partner_info_from_emails([email])[0]
             if partner_info.get('partner_id'):
                 partner = self.env['res.partner'].sudo().browse([partner_info['partner_id']])[0]
-        if email and email in [val[1] for val in result[self.ids[0]]]:  # already existing email -> skip
+        if email and email in [val[1] for val in result]:  # already existing email -> skip
             return result
         if partner and partner in self.message_partner_ids:  # recipient already in the followers -> skip
             return result
-        if partner and partner.id in [val[0] for val in result[self.ids[0]]]:  # already existing partner ID -> skip
+        if partner and partner.id in [val[0] for val in result]:  # already existing partner ID -> skip
             return result
         if partner and partner.email:  # complete profile: id, name <email>
-            result[self.ids[0]].append((partner.id, partner.email_formatted, lang, reason, {}))
+            result.append((partner.id, partner.email_formatted, lang, reason, {}))
         elif partner:  # incomplete profile: id, name
-            result[self.ids[0]].append((partner.id, partner.name or '', lang, reason, {}))
+            result.append((partner.id, partner.name or '', lang, reason, {}))
         else:  # unknown partner, we are probably managing an email address
             _, parsed_email_normalized = parse_contact_from_email(email)
             partner_create_values = self._get_customer_information().get(parsed_email_normalized, {})
-            result[self.ids[0]].append((False, partner_info.get('full_name') or email, lang, reason, partner_create_values))
+            result.append((False, partner_info.get('full_name') or email, lang, reason, partner_create_values))
         return result
 
     def _message_get_suggested_recipients(self):
-        """ Returns suggested recipients for ids. Those are a list of
-        tuple (partner_id, partner_name, reason, default_create_value), to be managed by Chatter. """
-        result = dict((res_id, []) for res_id in self.ids)
+        """ Returns suggested recipients as a list of tuple (partner_id, partner_name, reason, default_create_value),
+         to be managed by Chatter. """
+        self.ensure_one()
+        result = []
         if 'user_id' in self._fields:
-            for obj in self.sudo():  # SUPERUSER because of a read on res.users that would crash otherwise
-                if not obj.user_id or not obj.user_id.partner_id:
-                    continue
-                obj._message_add_suggested_recipient(result, partner=obj.user_id.partner_id, reason=self._fields['user_id'].string)
+            thread = self.sudo()  # SUPERUSER because of a read on res.users that would crash otherwise
+            if thread.user_id and thread.user_id.partner_id:
+                thread._message_add_suggested_recipient(
+                    result,
+                    partner=thread.user_id.partner_id,
+                    reason=self._fields['user_id'].string,
+                )
         return result
 
     def _mail_search_on_user(self, normalized_emails, extra_domain=False):
@@ -4501,5 +4505,5 @@ class MailThread(models.AbstractModel):
             ])
             res['recipients'] = self.message_get_followers(filter_recipients=True)
         if 'suggestedRecipients' in request_list:
-            res['suggestedRecipients'] = self._message_get_suggested_recipients()[self.id]
+            res['suggestedRecipients'] = self._message_get_suggested_recipients()
         return res

@@ -44,9 +44,8 @@ class MailCCMixin(models.AbstractModel):
         return super(MailCCMixin, self).message_update(msg_dict, cc_values)
 
     def _message_get_suggested_recipients(self):
-        recipients = super(MailCCMixin, self)._message_get_suggested_recipients()
-        for record in self:
-            if record.email_cc:
-                for email in tools.email_split_and_format(record.email_cc):
-                    record._message_add_suggested_recipient(recipients, email=email, reason=_('CC Email'))
+        recipients = super()._message_get_suggested_recipients()
+        if self.email_cc:
+            for email in tools.email_split_and_format(self.email_cc):
+                self._message_add_suggested_recipient(recipients, email=email, reason=_('CC Email'))
         return recipients

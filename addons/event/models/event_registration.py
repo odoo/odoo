@@ -331,18 +331,17 @@ class EventRegistration(models.Model):
         )
 
     def _message_get_suggested_recipients(self):
-        recipients = super(EventRegistration, self)._message_get_suggested_recipients()
+        recipients = super()._message_get_suggested_recipients()
         public_users = self.env['res.users'].sudo()
         public_groups = self.env.ref("base.group_public", raise_if_not_found=False)
         if public_groups:
             public_users = public_groups.sudo().with_context(active_test=False).mapped("users")
         try:
-            for attendee in self:
-                is_public = attendee.sudo().with_context(active_test=False).partner_id.user_ids in public_users if public_users else False
-                if attendee.partner_id and not is_public:
-                    attendee._message_add_suggested_recipient(recipients, partner=attendee.partner_id, reason=_('Customer'))
-                elif attendee.email:
-                    attendee._message_add_suggested_recipient(recipients, email=attendee.email, reason=_('Customer Email'))
+            is_public = self.sudo().with_context(active_test=False).partner_id.user_ids in public_users if public_users else False
+            if self.partner_id and not is_public:
+                self._message_add_suggested_recipient(recipients, partner=self.partner_id, reason=_('Customer'))
+            elif self.email:
+                self._message_add_suggested_recipient(recipients, email=self.email, reason=_('Customer Email'))
         except AccessError:     # no read access rights -> ignore suggested recipients
             pass
         return recipients

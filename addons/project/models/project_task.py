@@ -1548,11 +1548,10 @@ class Task(models.Model):
         return super(Task, self).message_update(msg, update_vals=update_vals)
 
     def _message_get_suggested_recipients(self):
-        recipients = super(Task, self)._message_get_suggested_recipients()
-        for task in self:
-            if task.partner_id:
-                reason = _('Customer Email') if task.partner_id.email else _('Customer')
-                task._message_add_suggested_recipient(recipients, partner=task.partner_id, reason=reason)
+        recipients = super()._message_get_suggested_recipients()
+        if self.partner_id:
+            reason = _('Customer Email') if self.partner_id.email else _('Customer')
+            self._message_add_suggested_recipient(recipients, partner=self.partner_id, reason=reason)
         return recipients
 
     def _notify_by_email_get_headers(self, headers=None):
