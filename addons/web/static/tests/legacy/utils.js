@@ -327,7 +327,7 @@ class Contains {
                     this.def.reject(e); // prevents infinite loop in case of programming error
                 }
             });
-            this.observer.observe(document.body, {
+            this.observer.observe(this.options.target, {
                 attributes: true,
                 childList: true,
                 subtree: true,
