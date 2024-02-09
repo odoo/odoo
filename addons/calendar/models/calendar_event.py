@@ -759,7 +759,7 @@ class Meeting(models.Model):
         # don't forget to update recurrences if there are some base events in the set to unlink,
         # but after having removed the events ;-)
         recurrences = self.env["calendar.recurrence"].search([
-            ('base_event_id.id', 'in', [e.id for e in self])
+            ('base_event_id', 'in', [e.id for e in self])
         ])
 
         result = super().unlink()
