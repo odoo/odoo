@@ -82,21 +82,31 @@ class SQL:
     @property
     def code(self) -> str:
         """ Return the combined SQL code string. """
-        return self.__code % tuple(
-            arg.code if isinstance(arg, SQL) else "%s"
-            for arg in self.__args
-        ) if self.__args else self.__code
+        stack = []  # stack of intermediate results
+        for node in self.__postfix():
+            if not isinstance(node, SQL):
+                stack.append("%s")
+            elif arity := len(node.__args):
+                stack[-arity:] = [node.__code % tuple(stack[-arity:])]
+            else:
+                stack.append(node.__code)
+        return stack[0]
 
     @property
     def params(self) -> list:
         """ Return the combined SQL code params as a list of values. """
-        result = []
-        for arg in self.__args:
-            if isinstance(arg, SQL):
-                result.extend(arg.params)
+        return [node for node in self.__postfix() if not isinstance(node, SQL)]
+
+    def __postfix(self):
+        """ Return a postfix iterator for the SQL tree ``self``. """
+        stack = [(self, False)]
+        while stack:
+            node, ispostfix = stack.pop()
+            if ispostfix or not isinstance(node, SQL):
+                yield node
             else:
-                result.append(arg)
-        return result
+                stack.append((node, True))
+                stack.extend((arg, False) for arg in reversed(node.__args))
 
     def __repr__(self):
         return f"SQL({', '.join(map(repr, [self.code, *self.params]))})"
