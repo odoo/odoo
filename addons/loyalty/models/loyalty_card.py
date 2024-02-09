@@ -5,6 +5,8 @@ from uuid import uuid4
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.tools import format_amount
+
 
 class LoyaltyCard(models.Model):
     _name = 'loyalty.card'
@@ -50,7 +52,15 @@ class LoyaltyCard(models.Model):
     @api.depends('points', 'point_name')
     def _compute_points_display(self):
         for card in self:
-            card.points_display = "%.2f %s" % (card.points or 0, card.point_name or '')
+            card.points_display = card._format_points(card.points)
+
+    def _format_points(self, points):
+        self.ensure_one()
+        if self.point_name == self.program_id.currency_id.symbol:
+            return format_amount(self.env, points, self.program_id.currency_id)
+        if points == int(points):
+            return f"{int(points)} {self.point_name or ''}"
+        return f"{points:.2f} {self.point_name or ''}"
 
     # Meant to be overriden
     def _compute_use_count(self):
