@@ -40,6 +40,10 @@ const GRAYS = {
 /** @type {Record<ColorScheme, Record<string, string>>} */
 const COLOR_VALUES = {
     default: {
+        // Generic colors
+        "black": "#000000",
+        "white": "#ffffff",
+
         // Grays
         "gray-100": GRAYS[100],
         "gray-200": GRAYS[200],
@@ -163,9 +167,9 @@ export function generateStyleSheets() {
     for (const [scheme, values] of Object.entries(COLOR_VALUES)) {
         const content = [];
         for (const [key, value] of Object.entries(values)) {
-            content.push(`--${key}: ${value};`);
+            content.push(`--${key}:${value};`);
         }
-        styles[scheme] = content.join("\n");
+        styles[scheme] = content.join("");
     }
     return styles;
 }

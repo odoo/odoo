@@ -132,7 +132,7 @@ export class HootSearch extends Component {
                                     title="Run this filter"
                                     t-on-pointerdown="() => this.updateParams(true)"
                                 >
-                                    <h6 class="text-primary text-sm m-0">
+                                    <h4 class="text-primary m-0">
                                         Filter using
                                         <t t-if="useRegExp">
                                             regular expression
@@ -140,7 +140,7 @@ export class HootSearch extends Component {
                                         <t t-else="">
                                             text
                                         </t>
-                                    </h6>
+                                    </h4>
                                     <t t-esc="wrappedQuery" />
                                 </button>
                             </t>
@@ -153,12 +153,12 @@ export class HootSearch extends Component {
                         <t t-foreach="categories" t-as="category" t-key="category">
                             <t t-if="state.categories[category].length">
                                 <div class="flex flex-col mb-2">
-                                    <h6 class="text-primary text-sm font-bold flex items-center mb-2">
+                                    <h4 class="text-primary font-bold flex items-center mb-2">
                                         <span class="w-full">
                                             <t t-esc="title(category)" />
                                             (<t t-esc="state.categories[category].length" />)
                                         </span>
-                                    </h6>
+                                    </h4>
                                     <ul class="flex flex-col overflow-y-auto gap-1">
                                         <t t-foreach="state.categories[category]" t-as="job" t-key="job.id">
                                             <t t-set="checked" t-value="runnerState.includeSpecs[category]" />

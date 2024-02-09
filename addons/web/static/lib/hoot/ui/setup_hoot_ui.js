@@ -42,7 +42,7 @@ class HootContainer extends HTMLElement {
         let colorStyleContent = "";
         for (const [className, content] of Object.entries(generateStyleSheets())) {
             const selector = className === "default" ? ":host" : `:host(.${className})`;
-            colorStyleContent += `${selector}{\n${content}}\n`;
+            colorStyleContent += `${selector}{${content}}`;
         }
         colorStyleElement.innerText = colorStyleContent;
         this.shadowRoot.appendChild(colorStyleElement);

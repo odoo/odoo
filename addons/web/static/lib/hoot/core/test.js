@@ -10,6 +10,36 @@ import { Job } from "./job";
  */
 
 /**
+ * @param {Function} fn
+ */
+const formatFunctionSource = (fn) => {
+    const lines = String(fn).split("\n");
+
+    if (lines.length > 2) {
+        lines.shift();
+        lines.pop();
+    }
+
+    let toTrim = null;
+    for (const line of lines) {
+        if (!line.trim()) {
+            continue;
+        }
+        const [, whiteSpaces] = line.match(/^(\s*)/);
+        if (toTrim === null || whiteSpaces.length < toTrim) {
+            toTrim = whiteSpaces.length;
+        }
+    }
+    if (toTrim) {
+        for (let i = 0; i < lines.length; i++) {
+            lines[i] = lines[i].slice(toTrim);
+        }
+    }
+
+    return lines.join("\n");
+};
+
+/**
  * @param {Pick<Test, "name" | "parent">} test
  * @returns {HootError}
  */
@@ -55,6 +85,6 @@ export class Test extends Job {
     setRunFn(fn) {
         // Makes the function async
         this.run = typeof fn === "function" ? async (...args) => fn(...args) : null;
-        this.code = String(fn);
+        this.code = formatFunctionSource(fn);
     }
 }
