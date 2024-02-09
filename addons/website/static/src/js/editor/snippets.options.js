@@ -1865,14 +1865,6 @@ options.registry.Carousel = options.registry.CarouselHandler.extend({
     /**
      * @override
      */
-    cleanForSave: function () {
-        const $items = this.$target.find('.carousel-item');
-        $items.removeClass('next prev left right active').first().addClass('active');
-        this.$indicators.find('li').removeClass('active').empty().first().addClass('active');
-    },
-    /**
-     * @override
-     */
     notify: function (name, data) {
         this._super(...arguments);
         if (name === 'add_slide') {
