@@ -477,3 +477,13 @@ class TestProjectFlow(TestProjectCommon, MailCommon):
 
         project = self.project_pigs.copy({'name': 'Pigs 2'})
         self.assertEqual(project.name, 'Pigs 2', "The name of the copied project should be 'Pigs 2'")
+
+    def test_description_field_history_on_update(self):
+        """Test updating 'description' field in project task and checking history content at revision id."""
+
+        task = self.env['project.task'].create({
+            'name': 'Test Task',
+            'description': 'Hello',
+        })
+        task.description = False
+        self.assertEqual(task.html_field_history_get_content_at_revision('description', 1), '<p>Hello</p>', "should recover previous text for description")
