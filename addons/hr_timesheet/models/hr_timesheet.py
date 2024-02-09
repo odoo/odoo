@@ -368,7 +368,7 @@ class AccountAnalyticLine(models.Model):
                 if not account or not account.active:
                     raise ValidationError(_('Timesheets must be created on a project or a task with an active analytic account.'))
                 vals['account_id'] = account.id
-                vals['company_id'] = account.company_id.id or data.company_id.id
+                vals['company_id'] = account.company_id.id or data.company_id.id or vals.get('company_id')
             if not vals.get('partner_id'):
                 vals['partner_id'] = data.partner_id.id
             if not vals.get('product_uom_id'):
