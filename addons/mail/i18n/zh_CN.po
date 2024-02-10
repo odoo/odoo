@@ -7,8 +7,8 @@
 # Chill Liao <chill421@qq.com>, 2023
 # Jeffery CHEN <jeffery9@gmail.com>, 2023
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2024
-# Chloe Wang, 2024
 # Wil Odoo, 2024
+# Chloe Wang, 2024
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Chloe Wang, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -122,6 +122,9 @@ msgid ""
 "%(bold_start)s#channel%(bold_end)s to mention a channel.%(new_line)sType "
 "%(bold_start)s/command%(bold_end)s to execute a command."
 msgstr ""
+"%(new_line)s%(new_line)s输入 %(bold_start)s@username%(bold_end)s "
+"提及某人，以吸引他们注意。%(new_line)s输入 %(bold_start)s#channel%(bold_end)s "
+"以提及该频道。%(new_line)s输入%(bold_start)s/command%(bold_end)s 以执行指令。"
 
 #. module: mail
 #. odoo-javascript
@@ -130,7 +133,7 @@ msgstr ""
 msgid ""
 "%(open_button)s%(icon)s%(open_em)sDiscard "
 "editing%(close_em)s%(close_button)s"
-msgstr ""
+msgstr "%(open_button)s%(icon)s%(open_em)s放弃编辑%(close_em)s%(close_button)s"
 
 #. module: mail
 #. odoo-javascript
@@ -142,6 +145,9 @@ msgid ""
 "Enter%(close_samp)s %(open_em)sto "
 "%(open_save)ssave%(close_save)s%(close_em)s"
 msgstr ""
+"按 %(open_samp)sEsc%(close_samp)s "
+"%(open_em)s以%(open_cancel)s取消%(close_cancel)s%(close_em)s，%(open_samp)sCtrl+Enter%(close_samp)s"
+" %(open_em)s以%(open_save)s储存%(close_save)s%(close_em)s"
 
 #. module: mail
 #. odoo-javascript
@@ -153,6 +159,9 @@ msgid ""
 "%(open_samp)sEnter%(close_samp)s %(open_em)sto "
 "%(open_save)ssave%(close_save)s%(close_em)s"
 msgstr ""
+"按 %(open_samp)sEsc%(close_samp)s "
+"%(open_em)s以%(open_cancel)s取消%(close_cancel)s%(close_em)s，%(open_samp)sEnter%(close_samp)s"
+" %(open_em)s以%(open_save)s储存%(close_save)s%(close_em)s"
 
 #. module: mail
 #. odoo-javascript
@@ -3484,7 +3493,7 @@ msgstr "加载 gif 失败 ..."
 #: code:addons/mail/static/src/discuss/call/common/rtc_service.js:0
 #, python-format
 msgid "Failed to load the SFU server, falling back to peer-to-peer"
-msgstr ""
+msgstr "加载 SFU 服务器失败，退回到点对点模式"
 
 #. module: mail
 #. odoo-python
@@ -4589,7 +4598,7 @@ msgstr "错误的表达式，必须是字面python字典定义，例如： \"{'f
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 #, python-format
 msgid "Invalid field “%(field_name)s” when creating a channel with members."
-msgstr ""
+msgstr "建立包含成员的频道时，栏位%(field_name)s无效。"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__mail_from_invalid
@@ -5243,7 +5252,7 @@ msgstr "记录步骤："
 #: code:addons/mail/static/src/discuss/core/public/welcome_page.js:0
 #, python-format
 msgid "Logged in as %s"
-msgstr ""
+msgstr "已登入为%s"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
@@ -10122,7 +10131,7 @@ msgstr "您即将离开此群组对话，除非再次受到邀请，否则将无
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 #, python-format
 msgid "You are alone in a private conversation."
-msgstr ""
+msgstr "您正独自一人在私人对话内。"
 
 #. module: mail
 #. odoo-python
@@ -10136,14 +10145,14 @@ msgstr "您是此频道的唯一用户."
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 #, python-format
 msgid "You are in a private conversation with %(member_names)s."
-msgstr ""
+msgstr "你正在私人对话内，其他成员有：%(member_names)s。"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 #, python-format
 msgid "You are in channel %(bold_start)s#%(channel_name)s%(bold_end)s."
-msgstr ""
+msgstr "你正在频道 %(bold_start)s#%(channel_name)s%(bold_end)s。"
 
 #. module: mail
 #. odoo-javascript
@@ -10421,7 +10430,7 @@ msgstr "本电子邮件的附件。"
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #, python-format
 msgid "available bitrate:"
-msgstr ""
+msgstr "可用位元率："
 
 #. module: mail
 #. odoo-javascript
@@ -10479,7 +10488,7 @@ msgstr "频道"
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #, python-format
 msgid "clock rate:"
-msgstr ""
+msgstr "时钟频率："
 
 #. module: mail
 #. odoo-javascript
@@ -10495,7 +10504,7 @@ msgstr "关闭"
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #, python-format
 msgid "codec:"
-msgstr ""
+msgstr "编解码器："
 
 #. module: mail
 #. odoo-python
@@ -10556,14 +10565,14 @@ msgstr "完成"
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #, python-format
 msgid "down DTLS:"
-msgstr ""
+msgstr "down DTLS:"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #, python-format
 msgid "down ICE:"
-msgstr ""
+msgstr "down ICE:"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
@@ -10941,14 +10950,14 @@ msgstr "位置目标模型 %s"
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #, python-format
 msgid "up DTLS:"
-msgstr ""
+msgstr "up DTLS:"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #, python-format
 msgid "up ICE:"
-msgstr ""
+msgstr "up ICE:"
 
 #. module: mail
 #. odoo-javascript

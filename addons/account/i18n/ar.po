@@ -3,16 +3,16 @@
 # 	* account
 # 
 # Translators:
-# Malaz Abuidris <msea@odoo.com>, 2024
 # Wil Odoo, 2024
+# Malaz Abuidris <msea@odoo.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-01-29 10:44+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2024\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -6297,6 +6297,16 @@ msgid "Epd Needed"
 msgstr "Epd Needed"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/account_type_selection/account_type_selection.js:0
+#: model:ir.model.fields.selection,name:account.selection__account_account__account_type__equity
+#: model:ir.model.fields.selection,name:account.selection__account_account__internal_group__equity
+#: model_terms:ir.ui.view,arch_db:account.view_account_search
+#, python-format
+msgid "Equity"
+msgstr "رأس المال "
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #, python-format
@@ -6306,16 +6316,6 @@ msgid ""
 msgstr ""
 "حدث خطأ أثناء تحميل الأقلمة. ربما ينبغي عليك تحديث تطبيق الأقلمة الخاص بك "
 "أولاً. "
-
-#. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/components/account_type_selection/account_type_selection.js:0
-#: model:ir.model.fields.selection,name:account.selection__account_account__account_type__equity
-#: model:ir.model.fields.selection,name:account.selection__account_account__internal_group__equity
-#: model_terms:ir.ui.view,arch_db:account.view_account_search
-#, python-format
-msgid "Equity"
-msgstr "رأس المال "
 
 #. module: account
 #. odoo-python
@@ -7932,6 +7932,13 @@ msgstr "نطاق الرمز البريدي خاطئ. الرجاء تكوينه �
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_report.py:0
+#, python-format
+msgid "Invalid domain for expression '%s' of line '%s': %s"
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Invalid fiscal year last day"
@@ -8218,7 +8225,7 @@ msgstr "إحصائيات الفواتير"
 #: code:addons/account/wizard/account_move_send.py:0
 #, python-format
 msgid "Invoices are being sent in the background."
-msgstr ""
+msgstr "يتم إرسال الفواتير في الخلفية. "
 
 #. module: account
 #. odoo-python
@@ -8226,7 +8233,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Invoices in error"
-msgstr ""
+msgstr "الفواتير التي تحتوي على خطأ "
 
 #. module: account
 #. odoo-python
@@ -8240,14 +8247,14 @@ msgstr "الفواتير المستحقة لك"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Invoices sent"
-msgstr ""
+msgstr "الفواتير المرسلة "
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Invoices sent successfully."
-msgstr ""
+msgstr "تم إرسال الفواتير بنجاح. "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -10167,7 +10174,7 @@ msgstr "يوجد حساب بنكي واحد أو أكثر لهذا الشريك 
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "One or more invoices couldn't be processed."
-msgstr ""
+msgstr "تعذرت معالجة فاتورة واحدة أو أكثر. "
 
 #. module: account
 #: model:ir.ui.menu,name:account.root_payment_menu
@@ -12656,7 +12663,7 @@ msgstr ""
 #: code:addons/account/wizard/account_move_send.py:0
 #, python-format
 msgid "Sending invoices"
-msgstr ""
+msgstr "جاري إرسال الفواتير "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
@@ -12668,7 +12675,7 @@ msgstr "تم الإرسال"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Sent invoices"
-msgstr ""
+msgstr "الفواتير المرسلة "
 
 #. module: account
 #: model:mail.template,description:account.mail_template_data_payment_receipt
@@ -16783,8 +16790,8 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot import the \"openning_balance\" if the opening move (%s) is "
-"already posted.                         If you are absolutely sure you want "
-"to modify the opening balance of your accounts, reset the move to draft."
+"already posted. If you are absolutely sure you want to modify the opening "
+"balance of your accounts, reset the move to draft."
 msgstr ""
 "لا يمكنك استيراد \"openning_balance\" إذا تم ترحيل الحركة الافتتاحية (%s) "
 "بالفعل. إذا كنت متأكداً تماماً من أنك ترغب في تعديل الرصيد الافتتاحي "

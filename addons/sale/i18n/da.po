@@ -7,17 +7,17 @@
 # lhmflexerp <lhm@flexerp.dk>, 2024
 # Sammi Iversen <sammi@vkdata.dk>, 2024
 # Ejner Sønniksen <ejner@vkdata.dk>, 2024
-# Martin Trigaux, 2024
 # Mads Søndergaard, 2024
 # Sanne Kristensen <sanne@vkdata.dk>, 2024
+# Martin Trigaux, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-15 10:38+0000\n"
+"POT-Creation-Date: 2024-01-29 10:45+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Sanne Kristensen <sanne@vkdata.dk>, 2024\n"
+"Last-Translator: Martin Trigaux, 2024\n"
 "Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1162,14 +1162,9 @@ msgid ""
 "Quotation: the document will be sent to and accessible by customers at any time.\n"
 "e.g. this option can be useful to share Product description files.\n"
 "Confirmed order: the document will be sent to and accessible by customers.\n"
-"e.g. this option can be useful to share User Manual or digital content bought on ecommerce. "
+"e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
+"Inside quote: The document will be included in the pdf of the quotation between the header pages and the quote table. "
 msgstr ""
-"Giver dig mulighed for at dele dokumentet med dine kunder i et salg.\n"
-"Lad det stå tomt, hvis du ikke ønsker at dele dette dokument med salgskunden.\n"
-"Tilbud: Dokumentet vil blive sendt til og tilgængeligt for kunder til enhver tid.\n"
-"f.eks. denne mulighed kan være nyttig til at dele produktbeskrivelsesfiler.\n"
-"Bekræftet ordre: Dokumentet sendes til og er tilgængeligt for kunder.\n"
-"f.eks. denne mulighed kan være nyttig til at dele brugervejledning eller digitalt indhold købt på e-handel."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__amount_paid
@@ -1993,10 +1988,14 @@ msgstr "Levering antal"
 #: model:ir.model.fields,help:sale.field_sale_order__expected_date
 msgid ""
 "Delivery date you can promise to the customer, computed from the minimum "
-"lead time of the order lines."
+"lead time of the order lines in case of Service products. In case of "
+"shipping, the shipping policy of the order will be taken into account to "
+"either use the minimum or maximum lead time of the order lines."
 msgstr ""
-"Leveringsdato, du kan love kunden, beregnet ud fra ordrelinjernes "
-"minimumsgennemløbstid."
+"Leveringsdatoen du kan love din kunde, udregnet fra minimums ledetiden for "
+"ordrelinjerne i tilfælde af service produkter. I tilfælde af forsendelser, "
+"vil der blive taget højde for forsendelsens policen for ordren, til enten at"
+" bruge minimum eller maksimum ledetiden for ordrelinjerne."
 
 #. module: sale
 #: model:product.template,name:sale.advance_product_0_product_template
@@ -3325,11 +3324,6 @@ msgid "Order Date: Last 365 Days"
 msgstr "Ordredato: seneste 365 dage"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
-msgid "Order Detail"
-msgstr "Bestillingsdetaljer"
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__order_line
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Order Lines"
@@ -3414,6 +3408,11 @@ msgstr "Oscar Morgan"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Other Info"
 msgstr "Anden info"
+
+#. module: sale
+#: model:ir.actions.report,name:sale.action_report_saleorder
+msgid "PDF Quote"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_pdf_quote_builder
@@ -3792,11 +3791,6 @@ msgid "Quotation #"
 msgstr "Tilbud #"
 
 #. module: sale
-#: model:ir.actions.report,name:sale.action_report_saleorder
-msgid "Quotation / Order"
-msgstr "Tilbud / ordre"
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__quotation_count
 msgid "Quotation Count"
 msgstr "Antal tilbud"
@@ -3879,6 +3873,11 @@ msgstr "Tilbud og salg"
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 msgid "Quotations to review"
 msgstr "Tilbud til gennemsyn"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order__rating_ids
+msgid "Ratings"
+msgstr "Bedømmelser"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__expense_policy
@@ -4243,6 +4242,14 @@ msgstr "Salgsteams"
 #: model:ir.model.fields,field_description:sale.field_res_users__sale_warn
 msgid "Sales Warnings"
 msgstr "Advarsler på salg"
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_account_analytic_line__so_line
+msgid ""
+"Sales order item to which the time spent will be added in order to be "
+"invoiced to your customer. Remove the sales order item for the timesheet "
+"entry to be non-billable."
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__sales_price

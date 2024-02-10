@@ -7,6 +7,7 @@
 # Aleš Fiala <f.ales1@seznam.cz>, 2023
 # Wil Odoo, 2023
 # Jakub Smolka, 2023
+# Stanislav Kurinec, 2024
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Jakub Smolka, 2023\n"
+"Last-Translator: Stanislav Kurinec, 2024\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,11 +43,27 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Vážený <t t-out=\"object.partner_id.name or ''\"></t><br><br>\n"
+"        <t t-out=\"user.name  or ''\"></t> požádal o aktivaci dvoufaktorové autentizace pro ochranu vašeho účtu.<br><br>\n"
+"        Dvoufaktorová autentizace (\"2FA\") je systém dvojí autentizace.\n"
+"        První se provádí pomocí vašeho hesla a druhá pomocí kódu, který získáte ze speciální mobilní aplikace.\n"
+"        Mezi oblíbené aplikace patří Authy, Google Authenticator nebo Microsoft Authenticator.\n"
+"\n"
+"        <p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"            <a t-att-href=\"object.get_totp_invite_url()\" style=\"background-color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">\n"
+"                Aktivovat moji dvoufaktorovou autentizaci\n"
+"            </a>\n"
+"        </p>\n"
+"    </p>\n"
+"</div>\n"
+"        "
 
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.account_security_setting_update
 msgid "<span>Consider</span>"
-msgstr ""
+msgstr "<span>Zvažte</span>"
 
 #. module: auth_totp_mail
 #. odoo-python
@@ -54,6 +71,7 @@ msgstr ""
 #, python-format
 msgid "A trusted device has just been added to your account: %(device_name)s"
 msgstr ""
+"Do vašeho účtu bylo právě přidáno důvěryhodné zařízení: %(device_name)s"
 
 #. module: auth_totp_mail
 #. odoo-python
@@ -62,6 +80,7 @@ msgstr ""
 msgid ""
 "A trusted device has just been removed from your account: %(device_names)s"
 msgstr ""
+"Z vašeho účtu bylo právě odstraněno důvěryhodné zařízení: %(device_names)s"
 
 #. module: auth_totp_mail
 #. odoo-python
@@ -78,7 +97,7 @@ msgstr "Autentikační zařízení"
 #. module: auth_totp_mail
 #: model:mail.template,subject:auth_totp_mail.mail_template_totp_invite
 msgid "Invitation to activate two-factor authentication on your Odoo account"
-msgstr ""
+msgstr "Pozvánka k aktivaci dvoufaktorové autentizace na vašem účtu Odoo"
 
 #. module: auth_totp_mail
 #. odoo-python
@@ -88,6 +107,8 @@ msgid ""
 "Invitation to use two-factor authentication sent for the following user(s): "
 "%s"
 msgstr ""
+"Pozvánka k použití dvoufaktorového ověření byla odeslaná pro následující "
+"uživatele: %s"
 
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.view_users_form
@@ -97,7 +118,7 @@ msgstr "Pozvat na použití 2FA"
 #. module: auth_totp_mail
 #: model:ir.actions.server,name:auth_totp_mail.action_invite_totp
 msgid "Invite to use two-factor authentication"
-msgstr ""
+msgstr "Pozvat k použití dvoufaktorového ověřování"
 
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.res_users_view_form
@@ -107,54 +128,54 @@ msgstr "Název"
 #. module: auth_totp_mail
 #: model:ir.actions.server,name:auth_totp_mail.action_activate_two_factor_authentication
 msgid "Open two-factor authentication configuration"
-msgstr ""
+msgstr "Otevřete konfiguraci dvoufaktorového ověření"
 
 #. module: auth_totp_mail
 #. odoo-python
 #: code:addons/auth_totp_mail/models/res_users.py:0
 #, python-format
 msgid "Security Update: 2FA Activated"
-msgstr ""
+msgstr "Aktualizace zabezpečení: Aktivováno 2FA"
 
 #. module: auth_totp_mail
 #. odoo-python
 #: code:addons/auth_totp_mail/models/res_users.py:0
 #, python-format
 msgid "Security Update: 2FA Deactivated"
-msgstr ""
+msgstr "Aktualizace zabezpečení: Deaktivováno 2FA"
 
 #. module: auth_totp_mail
 #. odoo-python
 #: code:addons/auth_totp_mail/models/auth_totp_device.py:0
 #, python-format
 msgid "Security Update: Device Added"
-msgstr ""
+msgstr "Aktualizace zabezpečení: Přidáno zařízení"
 
 #. module: auth_totp_mail
 #. odoo-python
 #: code:addons/auth_totp_mail/models/auth_totp_device.py:0
 #, python-format
 msgid "Security Update: Device Removed"
-msgstr ""
+msgstr "Aktualizace zabezpečení: Odebráno zařízení"
 
 #. module: auth_totp_mail
 #: model:mail.template,name:auth_totp_mail.mail_template_totp_invite
 msgid "Settings: 2Fa Invitation"
-msgstr ""
+msgstr "Nastavení: 2FA Pozvánka"
 
 #. module: auth_totp_mail
 #. odoo-python
 #: code:addons/auth_totp_mail/models/res_users.py:0
 #, python-format
 msgid "Two-factor authentication has been activated on your account"
-msgstr ""
+msgstr "Na vašem účtu byla aktivována dvoufaktorová autentizace"
 
 #. module: auth_totp_mail
 #. odoo-python
 #: code:addons/auth_totp_mail/models/res_users.py:0
 #, python-format
 msgid "Two-factor authentication has been deactivated on your account"
-msgstr ""
+msgstr "Dvoufaktorové ověření bylo na vašem účtu deaktivováno"
 
 #. module: auth_totp_mail
 #: model:ir.model,name:auth_totp_mail.model_res_users
@@ -164,4 +185,4 @@ msgstr "Uživatel"
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.account_security_setting_update
 msgid "activating Two-factor Authentication"
-msgstr ""
+msgstr "aktivace dvoufaktorové autentizace"

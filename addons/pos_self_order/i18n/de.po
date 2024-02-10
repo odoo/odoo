@@ -3,16 +3,16 @@
 # 	* pos_self_order
 # 
 # Translators:
-# Larissa Manderfeld, 2023
 # Wil Odoo, 2024
+# Larissa Manderfeld, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-01-29 10:45+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Larissa Manderfeld, 2024\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,6 +35,13 @@ msgid ""
 msgstr ""
 "%s ist nicht mehr verfügbar. Es wurde daher aus Ihrer Bestellung entfernt. "
 "Bitte prüfen Sie Ihre Bestellung und validieren Sie sie erneut."
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/store/order_change_receipt_template.xml:0
+#, python-format
+msgid "/ Tracker number:"
+msgstr "/Verfolgungsnummer:"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
@@ -411,7 +418,7 @@ msgid ""
 "Each table in your floor plan is assigned a unique QR code based on your configuration. For security reasons,\n"
 "                    both the point of sale and table names are encrypted in the generated URL, as shown in the example below:."
 msgstr ""
-"Jedem Tisch in Ihres Lageplans wird ein eindeutiger QR-Code zugewiesen, der auf Ihrer Konfiguration basiert. Aus Sicherheitsgründen\n"
+"Jedem Tisch in Ihrem Raumplan wird ein eindeutiger QR-Code zugewiesen, der auf Ihrer Konfiguration basiert. Aus Sicherheitsgründen\n"
 "                    werden sowohl der Name des Kassensystems als auch der Name des Tisches in der generierten URL verschlüsselt, wie im folgenden Beispiel gezeigt:"
 
 #. module: pos_self_order
@@ -673,6 +680,20 @@ msgstr "Meine Bestellung"
 #, python-format
 msgid "My Orders"
 msgstr "Meine Bestellungen"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/store/order_change_receipt_template.xml:0
+#, python-format
+msgid "NEW"
+msgstr "NEU"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/store/order_change_receipt_template.xml:0
+#, python-format
+msgid "NOTE"
+msgstr "NOTIZ"
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_image_brand_name
@@ -937,6 +958,20 @@ msgstr "Produktvariante"
 #, python-format
 msgid "Product image"
 msgstr "Produktbild"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/self_order_service.js:0
+#, python-format
+msgid "Product is not available"
+msgstr "Produkt ist nicht verfügbar"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/self_order_service.js:0
+#, python-format
+msgid "Product not found"
+msgstr "Produkt nicht gefunden"
 
 #. module: pos_self_order
 #: model:ir.actions.report,name:pos_self_order.report_self_order_qr_codes_page
@@ -1252,6 +1287,13 @@ msgstr "Nicht kategorisiert"
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_self_order_custom_link__style__warning
 msgid "Warning"
 msgstr "Warnung"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/self_order_service.js:0
+#, python-format
+msgid "We're currently closed"
+msgstr "Wir haben derzeit geschlossen."
 
 #. module: pos_self_order
 #. odoo-javascript

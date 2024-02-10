@@ -8,9 +8,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~17.1\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-17 10:11+0000\n"
+"POT-Creation-Date: 2023-10-26 21:56+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Tony Ng, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -24,6 +24,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/phone_validation/models/phone_blacklist.py:0
 #: code:addons/phone_validation/models/phone_blacklist.py:0
+#, python-format
 msgid " Please correct the number and try again."
 msgstr " 請更正號碼，然後重試。"
 
@@ -52,6 +53,7 @@ msgstr "已封存"
 #. module: phone_validation
 #. odoo-python
 #: code:addons/phone_validation/models/phone_blacklist.py:0
+#, python-format
 msgid "Are you sure you want to unblacklist this Phone Number?"
 msgstr "您確定要將該電話號碼從黑名單中刪除嗎?"
 
@@ -99,6 +101,7 @@ msgstr "列入黑名單的電話號碼將不再接收簡訊。"
 #. module: phone_validation
 #. odoo-python
 #: code:addons/phone_validation/models/res_users.py:0
+#, python-format
 msgid ""
 "Blocked by deletion of portal account %(portal_user_name)s by %(user_name)s "
 "(#%(user_id)s)"
@@ -190,18 +193,21 @@ msgstr "如果已清理的電話號碼在黑名單中，則該聯絡人將不會
 #. module: phone_validation
 #. odoo-python
 #: code:addons/phone_validation/tools/phone_validation.py:0
+#, python-format
 msgid "Impossible number %s: not a valid country prefix."
 msgstr "不可能的數字%s:不是有效的國家前綴。"
 
 #. module: phone_validation
 #. odoo-python
 #: code:addons/phone_validation/tools/phone_validation.py:0
+#, python-format
 msgid "Impossible number %s: not enough digits."
 msgstr "不可能的數字%s:位數不足。"
 
 #. module: phone_validation
 #. odoo-python
 #: code:addons/phone_validation/tools/phone_validation.py:0
+#, python-format
 msgid "Impossible number %s: probably invalid number of digits."
 msgstr "號碼錯誤 %s：可能無效的位數。"
 
@@ -210,6 +216,7 @@ msgstr "號碼錯誤 %s：可能無效的位數。"
 #: code:addons/phone_validation/tools/phone_validation.py:0
 #: code:addons/phone_validation/tools/phone_validation.py:0
 #: code:addons/phone_validation/tools/phone_validation.py:0
+#, python-format
 msgid "Impossible number %s: too many digits."
 msgstr "不可能的數字%s:數字太多。"
 
@@ -232,6 +239,7 @@ msgstr "指示列入黑名單的已清理電話號碼是否為電話號碼。當
 #. module: phone_validation
 #. odoo-python
 #: code:addons/phone_validation/tools/phone_validation.py:0
+#, python-format
 msgid "Invalid number %s: probably incorrect prefix."
 msgstr "無效號碼 %s：前綴可能不正確。"
 
@@ -239,6 +247,7 @@ msgstr "無效號碼 %s：前綴可能不正確。"
 #. odoo-python
 #: code:addons/phone_validation/models/mail_thread_phone.py:0
 #: code:addons/phone_validation/models/mail_thread_phone.py:0
+#, python-format
 msgid "Invalid primary phone field on model %s"
 msgstr "模型 %s 上不正確主電話欄位"
 
@@ -275,6 +284,7 @@ msgstr "訊息"
 #. module: phone_validation
 #. odoo-python
 #: code:addons/phone_validation/models/mail_thread_phone.py:0
+#, python-format
 msgid "Missing definition of phone fields."
 msgstr "缺少電話欄位的定義。"
 
@@ -350,6 +360,7 @@ msgstr "電話/手機"
 #. module: phone_validation
 #. odoo-python
 #: code:addons/phone_validation/models/mail_thread_phone.py:0
+#, python-format
 msgid ""
 "Please enter at least 3 characters when searching a Phone/Mobile number."
 msgstr "搜索電話/手機號碼時，請至少輸入 3 個字符。"
@@ -373,6 +384,7 @@ msgstr "消毒數量"
 #. module: phone_validation
 #. odoo-python
 #: code:addons/phone_validation/tools/phone_validation.py:0
+#, python-format
 msgid "Unable to parse %(phone)s: %(error)s"
 msgstr "無法解析 %(phone)s：%(error)s"
 
@@ -384,6 +396,7 @@ msgstr "取消黑名單"
 #. module: phone_validation
 #. odoo-python
 #: code:addons/phone_validation/wizard/phone_blacklist_remove.py:0
+#, python-format
 msgid "Unblock Reason: %(reason)s"
 msgstr "解除封鎖原因： %(reason)s"
 

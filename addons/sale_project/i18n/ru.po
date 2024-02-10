@@ -1,20 +1,31 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_project
-#
+# 
 # Translators:
+# sergeiruzkiicode <sergei.ruzki@icode.by>, 2023
+# alenafairy, 2023
+# ILMIR <karamov@it-projects.info>, 2023
+# Диляра Дельтаева <dilya.kz93@gmail.com>, 2023
+# Константин Коровин <korovin74@gmail.com>, 2023
+# Сергей Шебанин <sergey@shebanin.ru>, 2023
+# Oleg Kuryan <oleg@ventor.tech>, 2023
+# Martin Trigaux, 2023
+# Sergey Vilizhanin, 2023
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
-"PO-Revision-Date: 2024-01-30 15:14+0400\n"
-"Last-Translator: \n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
-"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ru\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: sale_project
@@ -54,8 +65,12 @@ msgstr "заказы на продажу %(name)s"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.product_template_form_view_invoice_policy_inherit_sale_project
-msgid "<span class=\"fa fa-lg fa-building-o fa-fw\" title=\"Values set here are company-specific.\" groups=\"base.group_multi_company\"/>"
-msgstr "<span class=\"fa fa-lg fa-building-o fa-fw\" title=\"Values set here are company-specific.\" groups=\"base.group_multi_company\"/>"
+msgid ""
+"<span class=\"fa fa-lg fa-building-o fa-fw\" title=\"Values set here are "
+"company-specific.\" groups=\"base.group_multi_company\"/>"
+msgstr ""
+"<span class=\"fa fa-lg fa-building-o fa-fw\" title=\"Values set here are "
+"company-specific.\" groups=\"base.group_multi_company\"/>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
@@ -242,56 +257,95 @@ msgstr "Количество Счетов"
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid "Invoice ordered quantities as soon as this service is sold."
-msgstr "Выставляйте счета за заказанные объемы, как только эта услуга будет продана."
+msgstr ""
+"Выставляйте счета за заказанные объемы, как только эта услуга будет продана."
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
-msgid "Invoice ordered quantities as soon as this service is sold. Create a project for the order with a task for each sales order line to track the time spent."
-msgstr "Выставляйте счета за заказанные объемы, как только услуга будет продана. Создайте проект для этого заказа с задачей для каждой строки заказа на продажу, чтобы отслеживать потраченное время."
+msgid ""
+"Invoice ordered quantities as soon as this service is sold. Create a project"
+" for the order with a task for each sales order line to track the time "
+"spent."
+msgstr ""
+"Выставляйте счета за заказанные объемы, как только услуга будет продана. "
+"Создайте проект для этого заказа с задачей для каждой строки заказа на "
+"продажу, чтобы отслеживать потраченное время."
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
-msgid "Invoice ordered quantities as soon as this service is sold. Create a task in an existing project to track the time spent."
-msgstr "Выставляйте счета за заказанные объемы, как только услуга будет продана. Создайте задачу в существующем проекте, чтобы отслеживать потраченное время."
+msgid ""
+"Invoice ordered quantities as soon as this service is sold. Create a task in"
+" an existing project to track the time spent."
+msgstr ""
+"Выставляйте счета за заказанные объемы, как только услуга будет продана. "
+"Создайте задачу в существующем проекте, чтобы отслеживать потраченное время."
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
-msgid "Invoice ordered quantities as soon as this service is sold. Create an empty project for the order to track the time spent."
-msgstr "Выставляйте счета за заказанные объемы, как только услуга будет продана. Создайте пустой проект для этого заказа, чтобы отслеживать потраченное время."
+msgid ""
+"Invoice ordered quantities as soon as this service is sold. Create an empty "
+"project for the order to track the time spent."
+msgstr ""
+"Выставляйте счета за заказанные объемы, как только услуга будет продана. "
+"Создайте пустой проект для этого заказа, чтобы отслеживать потраченное "
+"время."
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
-msgid "Invoice this service when it is delivered (set the quantity by hand on your sales order lines). "
-msgstr "Выставляйте счет-фактуру при доставке услуги (количество указывайте вручную в строках заказа на продажу)."
+msgid ""
+"Invoice this service when it is delivered (set the quantity by hand on your "
+"sales order lines). "
+msgstr ""
+"Выставляйте счет-фактуру при доставке услуги (количество указывайте вручную "
+"в строках заказа на продажу)."
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
-msgid "Invoice this service when it is delivered (set the quantity by hand on your sales order lines). Create a project for the order with a task for each sales order line to track the time spent."
-msgstr "Выставляйте счет-фактуру по факту оказания услуги (количество задавайте вручную в строках заказа на продажу). Создайте проект для этого заказа с задачей для каждой строки заказа на продажу, чтобы отслеживать потраченное время."
+msgid ""
+"Invoice this service when it is delivered (set the quantity by hand on your "
+"sales order lines). Create a project for the order with a task for each "
+"sales order line to track the time spent."
+msgstr ""
+"Выставляйте счет-фактуру по факту оказания услуги (количество задавайте "
+"вручную в строках заказа на продажу). Создайте проект для этого заказа с "
+"задачей для каждой строки заказа на продажу, чтобы отслеживать потраченное "
+"время."
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
-msgid "Invoice this service when it is delivered (set the quantity by hand on your sales order lines). Create a task in an existing project to track the time spent."
-msgstr "Выставляйте счет за услугу при ее оказании (задайте количество вручную в строках заказа на продажу). Создайте задачу в существующем проекте, чтобы отслеживать потраченное время."
+msgid ""
+"Invoice this service when it is delivered (set the quantity by hand on your "
+"sales order lines). Create a task in an existing project to track the time "
+"spent."
+msgstr ""
+"Выставляйте счет за услугу при ее оказании (задайте количество вручную в "
+"строках заказа на продажу). Создайте задачу в существующем проекте, чтобы "
+"отслеживать потраченное время."
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
-msgid "Invoice this service when it is delivered (set the quantity by hand on your sales order lines). Create an empty project for the order to track the time spent."
-msgstr "Выставляйте счет-фактуру по факту оказания услуги (количество задайте вручную в строках заказа на продажу). Создайте пустой проект для этого заказа, чтобы отслеживать потраченное время."
+msgid ""
+"Invoice this service when it is delivered (set the quantity by hand on your "
+"sales order lines). Create an empty project for the order to track the time "
+"spent."
+msgstr ""
+"Выставляйте счет-фактуру по факту оказания услуги (количество задайте "
+"вручную в строках заказа на продажу). Создайте пустой проект для этого "
+"заказа, чтобы отслеживать потраченное время."
 
 #. module: sale_project
 #. odoo-python
@@ -304,22 +358,35 @@ msgstr "Выставляйте счета по достижении основн
 #. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
-msgid "Invoice your milestones when they are reached. Create a project for the order with a task for each sales order line to track the time spent."
-msgstr "Выставляйте счета по достижении основных этапов. Создайте проект для заказа с задачей для каждой строки заказа на продажу, чтобы отслеживать потраченное время."
+msgid ""
+"Invoice your milestones when they are reached. Create a project for the "
+"order with a task for each sales order line to track the time spent."
+msgstr ""
+"Выставляйте счета по достижении основных этапов. Создайте проект для заказа "
+"с задачей для каждой строки заказа на продажу, чтобы отслеживать потраченное"
+" время."
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
-msgid "Invoice your milestones when they are reached. Create a task in an existing project to track the time spent."
-msgstr "Выставляйте счета по достижении основных этапов. Создайте задачу в существующем проекте, чтобы отслеживать потраченное время."
+msgid ""
+"Invoice your milestones when they are reached. Create a task in an existing "
+"project to track the time spent."
+msgstr ""
+"Выставляйте счета по достижении основных этапов. Создайте задачу в "
+"существующем проекте, чтобы отслеживать потраченное время."
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
-msgid "Invoice your milestones when they are reached. Create an empty project for the order to track the time spent."
-msgstr "Выставляйте счета по достижении основных этапов. Создайте пустой проект для заказа, чтобы отслеживать потраченное время."
+msgid ""
+"Invoice your milestones when they are reached. Create an empty project for "
+"the order to track the time spent."
+msgstr ""
+"Выставляйте счета по достижении основных этапов. Создайте пустой проект для "
+"заказа, чтобы отслеживать потраченное время."
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_project_view_form_simplified_inherit
@@ -336,6 +403,7 @@ msgstr "Счёт-фактура выставлена"
 
 #. module: sale_project
 #. odoo-python
+#: code:addons/sale_project/models/project.py:0
 #: code:addons/sale_project/models/project.py:0
 #, python-format
 msgid "Invoices"
@@ -461,8 +529,12 @@ msgstr "Другие услуги"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_milestone__quantity_percentage
-msgid "Percentage of the ordered quantity that will automatically be delivered once the milestone is reached."
-msgstr "Процент от заказанного количества, которое будет автоматически доставлено по достижении контрольной точки."
+msgid ""
+"Percentage of the ordered quantity that will automatically be delivered once"
+" the milestone is reached."
+msgstr ""
+"Процент от заказанного количества, которое будет автоматически доставлено по"
+" достижении контрольной точки."
 
 #. module: sale_project
 #. odoo-python
@@ -607,7 +679,9 @@ msgstr "Пункт заказа клиента"
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_milestone__sale_line_id
 msgid "Sales Order Item that will be updated once the milestone is reached."
-msgstr "Элемент заказа на продажу, который будет обновлен после достижения контрольной точки."
+msgstr ""
+"Элемент заказа на продажу, который будет обновлен после достижения "
+"контрольной точки."
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_task__sale_line_id
@@ -623,6 +697,7 @@ msgstr ""
 #. module: sale_project
 #. odoo-python
 #. odoo-javascript
+#: code:addons/sale_project/models/project.py:0
 #: code:addons/sale_project/models/project.py:0
 #: code:addons/sale_project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
 #, python-format
@@ -751,29 +826,42 @@ msgstr "Задачи, связанные с этой продажей"
 #. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
-msgid "The product %s should not have a global project since it will generate a project."
-msgstr "Продукт %s не должен иметь глобального проекта, так как он будет генерировать проект."
+msgid ""
+"The product %s should not have a global project since it will generate a "
+"project."
+msgstr ""
+"Продукт %s не должен иметь глобального проекта, так как он будет "
+"генерировать проект."
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
-msgid "The product %s should not have a project nor a project template since it will not generate project."
-msgstr "Продукт %s не должен иметь ни проекта, ни шаблона проекта, так как он не будет генерировать проект."
+msgid ""
+"The product %s should not have a project nor a project template since it "
+"will not generate project."
+msgstr ""
+"Продукт %s не должен иметь ни проекта, ни шаблона проекта, так как он не "
+"будет генерировать проект."
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
-msgid "The product %s should not have a project template since it will generate a task in a global project."
-msgstr "Продукт %s не должен иметь шаблона проекта, так как он будет генерировать задачу в глобальном проекте."
+msgid ""
+"The product %s should not have a project template since it will generate a "
+"task in a global project."
+msgstr ""
+"Продукт %s не должен иметь шаблона проекта, так как он будет генерировать "
+"задачу в глобальном проекте."
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/sale_order.py:0
 #, python-format
 msgid "This Sales Order must contain at least one product of type \"Service\"."
-msgstr "Этот заказ на продажу должен содержать хотя бы один продукт типа \"Услуга\"."
+msgstr ""
+"Этот заказ на продажу должен содержать хотя бы один продукт типа \"Услуга\"."
 
 #. module: sale_project
 #. odoo-python
@@ -820,6 +908,7 @@ msgstr "Счет поставщика"
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project.py:0
+#: code:addons/sale_project/models/project.py:0
 #, python-format
 msgid "Vendor Bills"
 msgstr "Счета поставщиков"
@@ -833,5 +922,9 @@ msgstr "Просмотр заказа на продажу"
 #. odoo-python
 #: code:addons/sale_project/models/project.py:0
 #, python-format
-msgid "You cannot link the order item %(order_id)s - %(product_id)s to this task because it is a re-invoiced expense."
-msgstr "Вы не можете связать элемент заказа %(order_id)s - %(product_id)s с этой задачей, поскольку это повторно выставленный счет."
+msgid ""
+"You cannot link the order item %(order_id)s - %(product_id)s to this task "
+"because it is a re-invoiced expense."
+msgstr ""
+"Вы не можете связать элемент заказа %(order_id)s - %(product_id)s с этой "
+"задачей, поскольку это повторно выставленный счет."

@@ -4,18 +4,18 @@
 # 
 # Translators:
 # Bojan Borovnjak <bojan.borovnjak@modoolar.com>, 2023
-# Dragan Vukosavljevic <dragan.vukosavljevic@gmail.com>, 2023
 # Martin Trigaux, 2023
 # Milan Bojovic <mbojovic@outlook.com>, 2024
 # コフスタジオ, 2024
+# Dragan Vukosavljevic <dragan.vukosavljevic@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-11-14 13:53+0000\n"
+"POT-Creation-Date: 2024-01-29 10:45+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: コフスタジオ, 2024\n"
+"Last-Translator: Dragan Vukosavljevic <dragan.vukosavljevic@gmail.com>, 2024\n"
 "Language-Team: Serbian (https://app.transifex.com/odoo/teams/41243/sr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -502,7 +502,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment.form
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_onboarding_wizard_form
 msgid "Choose a payment method"
-msgstr "Choose a payment method"
+msgstr "Izaberite način plaćanja"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.form
@@ -777,7 +777,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
 msgid "Go to my Account <i class=\"oi oi-arrow-right ms-2\"/>"
-msgstr ""
+msgstr "Idi na Moj nalog <i class=\"oi oi-arrow-right ms-2\"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_search
@@ -2115,6 +2115,11 @@ msgid "Wire Transfer"
 msgstr "Wire Transfer"
 
 #. module: payment
+#: model:payment.provider,name:payment.payment_provider_xendit
+msgid "Xendit"
+msgstr ""
+
+#. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_provider.py:0
 #, python-format
@@ -2164,6 +2169,7 @@ msgstr "You should receive an email confirming your payment in a few minutes."
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_sips
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_stripe
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_transfer
+#: model_terms:payment.provider,auth_msg:payment.payment_provider_xendit
 #, python-format
 msgid "Your payment has been authorized."
 msgstr "Vaše plaćanje je autorizovano."
@@ -2186,6 +2192,7 @@ msgstr "Vaše plaćanje je autorizovano."
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_sips
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_stripe
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_transfer
+#: model_terms:payment.provider,cancel_msg:payment.payment_provider_xendit
 #, python-format
 msgid "Your payment has been cancelled."
 msgstr "Your payment has been cancelled."
@@ -2207,6 +2214,7 @@ msgstr "Your payment has been cancelled."
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_sepa_direct_debit
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_sips
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_stripe
+#: model_terms:payment.provider,pending_msg:payment.payment_provider_xendit
 #, python-format
 msgid ""
 "Your payment has been successfully processed but is waiting for approval."
@@ -2231,6 +2239,7 @@ msgstr ""
 #: model_terms:payment.provider,done_msg:payment.payment_provider_sips
 #: model_terms:payment.provider,done_msg:payment.payment_provider_stripe
 #: model_terms:payment.provider,done_msg:payment.payment_provider_transfer
+#: model_terms:payment.provider,done_msg:payment.payment_provider_xendit
 #, python-format
 msgid "Your payment has been successfully processed."
 msgstr ""

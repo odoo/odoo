@@ -12,16 +12,16 @@
 # Hugo Santos <hugo.santos@factorlibre.com>, 2023
 # Fernanda Alvarez, 2024
 # Martin Trigaux, 2024
-# Larissa Manderfeld, 2024
 # Wil Odoo, 2024
+# Larissa Manderfeld, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-01-29 10:44+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Larissa Manderfeld, 2024\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -178,7 +178,7 @@ msgstr ""
 #: code:addons/website/static/src/xml/web_editor.xml:0
 #, python-format
 msgid "' to link to an anchor."
-msgstr "' para enlazar con un ancla."
+msgstr "\" para vincular a un ancla."
 
 #. module: website
 #. odoo-javascript
@@ -188,7 +188,7 @@ msgid ""
 "' to search a page.\n"
 "                    '"
 msgstr ""
-"' para buscar una página.\n"
+"\" para buscar una página.\n"
 "                    '"
 
 #. module: website
@@ -1804,7 +1804,7 @@ msgstr "Añadir pestaña"
 #: code:addons/website/static/src/xml/web_editor.xml:0
 #, python-format
 msgid "Add Text Highlight Effects"
-msgstr "Añadir efectos de resaltado de texto"
+msgstr "Agregar efectos de resaltado de texto"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_timeline_options
@@ -1835,7 +1835,7 @@ msgstr "Agregue un título para mejorar el significado de esta imagen."
 #: code:addons/website/static/src/snippets/s_product_catalog/options.js:0
 #, python-format
 msgid "Add a description here"
-msgstr "Añadir una descripción aquí"
+msgstr "Agregar una descripción aquí"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features_grid
@@ -1845,7 +1845,7 @@ msgstr "Añade un buen título"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog
 msgid "Add a menu description."
-msgstr "Añadir una descripción del menú."
+msgstr "Agregar una descripción del menú."
 
 #. module: website
 #. odoo-javascript
@@ -1867,7 +1867,7 @@ msgstr "Añadir un nuevo campo al final"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.view_view_form_extend
 msgid "Add groups in the \"Access Rights\" tab below."
-msgstr ""
+msgstr "Agregue grupos en la pestaña \"Derechos de acceso\"."
 
 #. module: website
 #. odoo-python
@@ -5694,6 +5694,16 @@ msgid "Google Search Console"
 msgstr "Consola de búsqueda de Google"
 
 #. module: website
+#. odoo-python
+#: code:addons/website/models/res_config_settings.py:0
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+#, python-format
+msgid ""
+"Google doesn't need to be pinged anymore. It will automatically fetch your "
+"/sitemap.xml."
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__google_search_console
 #: model:ir.model.fields,help:website.field_website__google_search_console
 msgid "Google key, or Enable to access first reply"
@@ -7825,7 +7835,7 @@ msgstr "Modelos"
 #: model:ir.model.fields,field_description:website.field_website_controller_page__arch_updated
 #: model:ir.model.fields,field_description:website.field_website_page__arch_updated
 msgid "Modified Architecture"
-msgstr "Estructura Modificada"
+msgstr "Estructura modificada"
 
 #. module: website
 #: model:ir.model,name:website.model_ir_module_module
@@ -8130,7 +8140,7 @@ msgstr "Siguiente"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.step_wizard
 msgid "Next:"
-msgstr ""
+msgstr "Siguiente:"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_tabs_options
@@ -8147,12 +8157,12 @@ msgstr "Sin subrayado"
 #: code:addons/website/static/src/components/fields/widget_iframe.xml:0
 #, python-format
 msgid "No Url"
-msgstr "No Url"
+msgstr "Sin URL"
 
 #. module: website
 #: model_terms:ir.actions.act_window,help:website.website_visitors_action
 msgid "No Visitors yet!"
-msgstr "¡Aún no hay Visitantes!"
+msgstr "Todavía no hay visitantes"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -9195,7 +9205,7 @@ msgstr "Arquitectura de la vista previa"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Pricelist"
-msgstr "Tarifa"
+msgstr "Lista de precios"
 
 #. module: website
 #: model:website.configurator.feature,name:website.feature_page_pricing
@@ -9621,7 +9631,7 @@ msgstr "Eliminar todo"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.theme_view_kanban
 msgid "Remove theme"
-msgstr "Quitar tema"
+msgstr "Eliminar tema"
 
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__theme_ir_asset__directive__replace
@@ -9655,7 +9665,7 @@ msgstr "Restablecer"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.qweb_500
 msgid "Reset templates"
-msgstr "Restablecer las plantillas"
+msgstr "Restablecer plantillas"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -9965,7 +9975,7 @@ msgstr "Desplácese hasta la siguiente sección"
 #: model_terms:ir.ui.view,arch_db:website.website_search_box
 #, python-format
 msgid "Search"
-msgstr "Búsqueda"
+msgstr "Buscar"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.menu_search
@@ -10063,7 +10073,7 @@ msgstr "Segundos"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_text
 msgid "Section Subtitle"
-msgstr "Sección Subtítulo"
+msgstr "Subtítulo de la sección"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_landing_s_showcase
@@ -11308,7 +11318,7 @@ msgstr "Tema"
 #. module: website
 #: model:ir.model,name:website.model_theme_ir_asset
 msgid "Theme Asset"
-msgstr "Activo temático"
+msgstr "Activo del tema"
 
 #. module: website
 #: model:ir.model,name:website.model_theme_ir_attachment
@@ -11318,7 +11328,7 @@ msgstr "Archivos adjuntos del tema"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
 msgid "Theme Colors"
-msgstr "Colores de tema"
+msgstr "Colores del tema"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_asset__theme_template_id
@@ -11916,7 +11926,7 @@ msgstr "Tipo"
 #: code:addons/website/static/src/xml/web_editor.xml:0
 #, python-format
 msgid "Type '"
-msgstr "Tipo '"
+msgstr "Escriba \""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.qweb_500

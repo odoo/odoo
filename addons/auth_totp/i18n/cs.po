@@ -8,6 +8,7 @@
 # Jiří Podhorecký, 2023
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2023
 # Wil Odoo, 2023
+# Stanislav Kurinec, 2024
 # 
 msgid ""
 msgstr ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Stanislav Kurinec, 2024\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,7 +41,7 @@ msgstr "Průvodce nastavením dvoufaktorového ověření"
 #: code:addons/auth_totp/wizard/auth_totp_wizard.py:0
 #, python-format
 msgid "2-Factor authentication is now enabled."
-msgstr ""
+msgstr "2-faktorové ověřování je nyní povoleno."
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
@@ -48,6 +49,8 @@ msgid ""
 "<i title=\"Documentation\" class=\"fa fa-fw o_button_icon fa-info-circle\"/>\n"
 "                                    Learn More"
 msgstr ""
+"<i title=\"Documentation\" class=\"fa fa-fw o_button_icon fa-info-circle\"/>\n"
+"                                    Zjistěte více"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
@@ -55,6 +58,8 @@ msgid ""
 "<i title=\"Documentation\" class=\"fa fa-fw o_button_icon fa-info-circle\"/>\n"
 "                            Learn More"
 msgstr ""
+"<i title=\"Documentation\" class=\"fa fa-fw o_button_icon fa-info-circle\"/>\n"
+"                            Zjistěte více"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
@@ -62,6 +67,8 @@ msgid ""
 "<span class=\"d-md-none d-block\">Or install an authenticator app</span>\n"
 "                                        <span class=\"d-none d-md-block\">Install an authenticator app on your mobile device</span>"
 msgstr ""
+"<span class=\"d-md-none d-block\">Nebo si nainstalujte aplikaci pro ověřování</span>\n"
+"                                        <span class=\"d-none d-md-block\">Nainstalujte si do svého mobilního zařízení aplikaci pro ověřování</span>"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
@@ -69,6 +76,8 @@ msgid ""
 "<span class=\"d-none d-md-block\">When requested to do so, scan the barcode below</span>\n"
 "                                    <span class=\"d-block d-md-none\">When requested to do so, copy the key below</span>"
 msgstr ""
+"<span class=\"d-none d-md-block\">Až budete požádáni, naskenujte níže uvedený čárový kód</span>\n"
+"                                    <span class=\"d-block d-md-none\">Až budete požádáni, zkopírujte klíč níže</span>"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
@@ -76,6 +85,8 @@ msgid ""
 "<span class=\"text-muted\">Popular ones include Authy, Google Authenticator "
 "or the Microsoft Authenticator.</span>"
 msgstr ""
+"<span class=\"text-muted\">Mezi oblíbené patří Authy, Google Authenticator "
+"nebo Microsoft Authenticator.</span>"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
@@ -83,6 +94,8 @@ msgid ""
 "<span invisible=\"not totp_enabled\" class=\"text-muted\">This account is "
 "protected!</span>"
 msgstr ""
+"<span invisible=\"not totp_enabled\" class=\"text-muted\">Tento účet je "
+"chráněn!</span>"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
@@ -90,6 +103,8 @@ msgid ""
 "<span invisible=\"not totp_enabled\" class=\"text-muted\">Your account is "
 "protected!</span>"
 msgstr ""
+"<span invisible=\"not totp_enabled\" class=\"text-muted\">Váš účet je "
+"chráněn!</span>"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
@@ -113,6 +128,8 @@ msgid ""
 "Are you sure? The user may be asked to enter two-factor codes again on those"
 " devices"
 msgstr ""
+"Jste si jistí? Uživatel může být znovu požádán o zadání dvoufaktorových kódů"
+" na těchto zařízeních"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
@@ -120,11 +137,13 @@ msgid ""
 "Are you sure? You may be asked to enter two-factor codes again on those "
 "devices"
 msgstr ""
+"Jste si jistí? Můžete být znovu požádáni o zadání dvoufaktorových kódů na "
+"těchto zařízeních"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
 msgid "Authentication Code"
-msgstr ""
+msgstr "Autentizační kód"
 
 #. module: auth_totp
 #: model:ir.model,name:auth_totp.model_auth_totp_device
@@ -134,7 +153,7 @@ msgstr "Autentikační zařízení"
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Authenticator App Setup"
-msgstr ""
+msgstr "Nastavení ověřovací aplikace"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
@@ -145,12 +164,12 @@ msgstr "Zrušit"
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Cannot scan it?"
-msgstr ""
+msgstr "Nejde to naskenovat?"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Click on this link to open your authenticator app"
-msgstr ""
+msgstr "Kliknutím na tento odkaz otevřete aplikaci pro ověřování"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__create_uid
@@ -182,12 +201,12 @@ msgstr "Zařízení"
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 msgid "Disable 2FA"
-msgstr ""
+msgstr "Vypnout 2FA"
 
 #. module: auth_totp
 #: model:ir.actions.server,name:auth_totp.action_disable_totp
 msgid "Disable two-factor authentication"
-msgstr ""
+msgstr "Vypnout dvoufaktorové ověřování"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_device__display_name
@@ -198,18 +217,18 @@ msgstr "Zobrazovací název"
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
 msgid "Don't ask again on this device"
-msgstr ""
+msgstr "Na tomto zařízení se již neptat"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 msgid "Enable 2FA"
-msgstr ""
+msgstr "Zapnout 2FA"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Enter your six-digit code below"
-msgstr ""
+msgstr "Níže zadejte svůj šestimístný kód"
 
 #. module: auth_totp
 #: model:ir.model,name:auth_totp.model_ir_http
@@ -254,7 +273,7 @@ msgstr "Přihlásit se"
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Look for an \"Add an account\" button"
-msgstr ""
+msgstr "Hledejte tlačítko „Přidat účet“."
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
@@ -306,6 +325,8 @@ msgid ""
 "To login, enter below the six-digit authentication code provided by your Authenticator app.\n"
 "                        <br/>"
 msgstr ""
+"Chcete-li se přihlásit, zadejte níže šestimístný ověřovací kód poskytnutý vaší ověřovací aplikací.\n"
+"                        <br/>"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_res_users__totp_secret
@@ -324,7 +345,7 @@ msgstr "Důvěryhodná zařízení"
 #: code:addons/auth_totp/models/res_users.py:0
 #, python-format
 msgid "Two-Factor Authentication Activation"
-msgstr ""
+msgstr "Aktivace dvoufaktorové autentizace"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
@@ -340,6 +361,9 @@ msgid ""
 "                                The first one is done with your password and the second one with a code you get from a dedicated mobile app.\n"
 "                                Popular ones include Authy, Google Authenticator or the Microsoft Authenticator."
 msgstr ""
+"Dvoufaktorová autentizace (\"2FA\") je systém dvojí autentizace.\n"
+"                                První se provádí pomocí vašeho hesla a druhý pomocí kódu, který získáte ze speciální mobilní aplikace.\n"
+"                                Mezi oblíbené patří Authy, Google Authenticator nebo Microsoft Authenticator."
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
@@ -348,6 +372,9 @@ msgid ""
 "                        The first one is done with your password and the second one with a code you get from a dedicated mobile app.\n"
 "                        Popular ones include Authy, Google Authenticator or the Microsoft Authenticator."
 msgstr ""
+"Dvoufaktorová autentizace (\"2FA\") je systém dvojí autentizace.\n"
+"                                První se provádí pomocí vašeho hesla a druhý pomocí kódu, který získáte ze speciální mobilní aplikace.\n"
+"                                Mezi oblíbené patří Authy, Google Authenticator nebo Microsoft Authenticator."
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_res_users__totp_enabled
@@ -357,12 +384,12 @@ msgstr "Dvoufaktorové ověřování"
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.res_users_view_search
 msgid "Two-factor authentication Disabled"
-msgstr ""
+msgstr "Dvoufaktorové ověřování vypnuto"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.res_users_view_search
 msgid "Two-factor authentication Enabled"
-msgstr ""
+msgstr "Dvoufaktorové ověřování zapnuto"
 
 #. module: auth_totp
 #. odoo-python
@@ -383,7 +410,7 @@ msgstr "Dvoufaktorové ověřování lze povolit pouze pro sebe"
 #: code:addons/auth_totp/models/res_users.py:0
 #, python-format
 msgid "Two-factor authentication disabled for the following user(s): %s"
-msgstr ""
+msgstr "Dvoufaktorové ověřování vypnuto pro následující uživatele: %s"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__url

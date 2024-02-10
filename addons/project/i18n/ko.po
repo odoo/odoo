@@ -3,17 +3,17 @@
 # 	* project
 # 
 # Translators:
-# Wil Odoo, 2023
 # Daye Jeong, 2023
 # Sarah Park, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-01-29 10:44+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Sarah Park, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -200,6 +200,9 @@ msgid ""
 "tag them)</i>. Use @ <b>mentions</b> to ping a colleague or # "
 "<b>mentions</b> to reach an entire team."
 msgstr ""
+"<b>로그 메모</b>를 내부 커뮤니케이션용으로 기록합니다 <i>(특별히 태그를 지정하지 않는 한 작업 팔로워에게는 로그 메모에 대한 "
+"알림을 보내지 않습니다)</i>. @ 기호로 동료에게 <b>멘션</b>하거나 # 기호로 팀 전체에 <b>멘션</b>으로 전달할 수도 "
+"있습니다."
 
 #. module: project
 #: model:mail.template,body_html:project.rating_project_request_email_template
@@ -1239,6 +1242,7 @@ msgid ""
 "name of a customer, of a product, of a team, of a construction site, "
 "etc.</i>"
 msgstr ""
+"프로젝트의 <b>이름</b>을 선택하세요. <i>고객 이름이나, 품목명, 팀명, 건설 현장명 등 무엇이든 선택하실 수 있습니다.</i>"
 
 #. module: project
 #. odoo-javascript
@@ -3039,6 +3043,13 @@ msgid "Next Activity"
 msgstr "다음 활동"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__activity_calendar_event_id
+#: model:ir.model.fields,field_description:project.field_project_task__activity_calendar_event_id
+#: model:ir.model.fields,field_description:project.field_project_update__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "다음 활동 캘린더 행사"
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__activity_date_deadline
 #: model:ir.model.fields,field_description:project.field_project_task__activity_date_deadline
 #: model:ir.model.fields,field_description:project.field_project_update__activity_date_deadline
@@ -3254,7 +3265,7 @@ msgstr "오, 이런! 뭔가 잘못됐어요. 페이지를 다시 불러오고 �
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__open_task_count
 msgid "Open Task Count"
-msgstr ""
+msgstr "미완결 작업 수"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_digest_digest__kpi_project_task_opened
@@ -5296,18 +5307,29 @@ msgid ""
 "customers. Add new people to the followers' list to make them aware of the "
 "main changes about this task."
 msgstr ""
+"메시지창을 통해 <b>이메일을 보내거나</b> 고객들과 효율적으로 소통할 수 있습니다. 팔로워 목록에 신규 사용자를 추가하여 작업의 주요"
+" 변경 내용을 알려줍니다."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__display_name
 msgid ""
 "Use these keywords in the title to set new tasks:\n"
 "\n"
-"            #tags Set tags on the task\n"
-"            @user Assign the task to a user\n"
-"            ! Set the task a high priority\n"
+"        30h Allocate 30 hours to the task\n"
+"        #tags Set tags on the task\n"
+"        @user Assign the task to a user\n"
+"        ! Set the task a high priority\n"
 "\n"
-"            Make sure to use the right format and order e.g. Improve the configuration screen #feature #v16 @Mitchell !"
+"        Make sure to use the right format and order e.g. Improve the configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
+"새로운 작업을 설정하려면 제목에 다음 키워드를 사용하십시오:\n"
+"\n"
+"        30h 작업에 30시간 할당\n"
+"        #tag 작업에 태그 설정\n"
+"        @user 사용자에게 작업 배정\n"
+"        ! 작업에 우선 순위를 설정\n"
+"\n"
+"        올바른 형식과 순서를 사용했는지 확인하십시오. 예. 환경 설정 화면 개선 5h #feature #v16 @Mitchell !"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_stage_personal__user_id

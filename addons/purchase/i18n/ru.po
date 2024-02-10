@@ -1,20 +1,35 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* purchase
-#
+# 
 # Translators:
+# Роман Яхненко <bsap132@gmail.com>, 2023
+# sorin Rusu <to.rusu.sorin@gmail.com>, 2023
+# Константин Коровин <korovin74@gmail.com>, 2023
+# alenafairy, 2023
+# Андрей Гусев <gaussgss@gmail.com>, 2023
+# valmasone, 2023
+# Vasiliy Korobatov <korobatov@gmail.com>, 2023
+# ILMIR <karamov@it-projects.info>, 2023
+# Alena Vlasova, 2023
+# Сергей Шебанин <sergey@shebanin.ru>, 2023
+# Диляра Дельтаева <dilya.kz93@gmail.com>, 2023
+# Ivan Kropotkin <yelizariev@itpp.dev>, 2023
+# Martin Trigaux, 2023
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:31+0000\n"
-"PO-Revision-Date: 2024-01-30 15:14+0400\n"
-"Last-Translator: \n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
-"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ru\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: purchase
@@ -48,6 +63,7 @@ msgstr "%(amount)s должен %(date)s"
 
 #. module: purchase
 #. odoo-python
+#: code:addons/purchase/models/purchase_order.py:0
 #: code:addons/purchase/models/purchase_order.py:0
 #, python-format
 msgid "%(product)s from %(original_receipt_date)s to %(new_receipt_date)s"
@@ -259,8 +275,12 @@ msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
-msgid "<i class=\"fa fa-fw fa-check\" role=\"img\" aria-label=\"Done\" title=\"Done\"/><span class=\"d-none d-md-inline\"> Done</span>"
-msgstr "<i class=\"fa fa-fw fa-check\" role=\"img\" aria-label=\"Done\" title=\"Done\"/><span class=\"d-none d-md-inline\"> Готово</span>"
+msgid ""
+"<i class=\"fa fa-fw fa-check\" role=\"img\" aria-label=\"Done\" "
+"title=\"Done\"/><span class=\"d-none d-md-inline\"> Done</span>"
+msgstr ""
+"<i class=\"fa fa-fw fa-check\" role=\"img\" aria-label=\"Done\" "
+"title=\"Done\"/><span class=\"d-none d-md-inline\"> Готово</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -274,18 +294,32 @@ msgstr "<i class=\"fa fa-fw fa-clock-o\"/>Ожидание оплаты"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_partner_kanban_view
-msgid "<i class=\"fa fa-fw fa-credit-card\" role=\"img\" aria-label=\"Purchases\" title=\"Purchases\"/>"
-msgstr "<i class=\"fa fa-fw fa-credit-card\" role=\"img\" aria-label=\"Purchases\" title=\"Purchases\"/>"
+msgid ""
+"<i class=\"fa fa-fw fa-credit-card\" role=\"img\" aria-label=\"Purchases\" "
+"title=\"Purchases\"/>"
+msgstr ""
+"<i class=\"fa fa-fw fa-credit-card\" role=\"img\" aria-label=\"Purchases\" "
+"title=\"Purchases\"/>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
-msgid "<i class=\"fa fa-fw fa-file-text\" role=\"img\" aria-label=\"Waiting for Bill\" title=\"Waiting for Bill\"/><span class=\"d-none d-md-inline\"> Waiting for Bill</span>"
-msgstr "<i class=\"fa fa-fw fa-file-text\" role=\"img\" aria-label=\"Waiting for Bill\" title=\"Waiting for Bill\"/><span class=\"d-none d-md-inline\"> В ожидании Билла</span>"
+msgid ""
+"<i class=\"fa fa-fw fa-file-text\" role=\"img\" aria-label=\"Waiting for "
+"Bill\" title=\"Waiting for Bill\"/><span class=\"d-none d-md-inline\"> "
+"Waiting for Bill</span>"
+msgstr ""
+"<i class=\"fa fa-fw fa-file-text\" role=\"img\" aria-label=\"Waiting for "
+"Bill\" title=\"Waiting for Bill\"/><span class=\"d-none d-md-inline\"> В "
+"ожидании Билла</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
-msgid "<i class=\"fa fa-fw fa-remove\" role=\"img\" aria-label=\"Cancelled\" title=\"Cancelled\"/><span class=\"d-none d-md-inline\"> Cancelled</span>"
-msgstr "<i class=\"fa fa-fw fa-remove\" role=\"img\" aria-label=\"Cancelled\" title=\"Cancelled\"/><span class=\"d-none d-md-inline\"> Отменено</span>"
+msgid ""
+"<i class=\"fa fa-fw fa-remove\" role=\"img\" aria-label=\"Cancelled\" "
+"title=\"Cancelled\"/><span class=\"d-none d-md-inline\"> Cancelled</span>"
+msgstr ""
+"<i class=\"fa fa-fw fa-remove\" role=\"img\" aria-label=\"Cancelled\" "
+"title=\"Cancelled\"/><span class=\"d-none d-md-inline\"> Отменено</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
@@ -341,13 +375,21 @@ msgstr "<span class=\"o_stat_text\">Поставлено</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
-msgid "<span class=\"text-muted\" invisible=\"not mail_reception_confirmed\">(confirmed by vendor)</span>"
-msgstr "<span class=\"text-muted\" invisible=\"not mail_reception_confirmed\">(подтверждено продавцом)</span>"
+msgid ""
+"<span class=\"text-muted\" invisible=\"not "
+"mail_reception_confirmed\">(confirmed by vendor)</span>"
+msgstr ""
+"<span class=\"text-muted\" invisible=\"not "
+"mail_reception_confirmed\">(подтверждено продавцом)</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
-msgid "<span class=\"text-muted\" invisible=\"not mail_reminder_confirmed\">(confirmed by vendor)</span>"
-msgstr "<span class=\"text-muted\" invisible=\"not mail_reminder_confirmed\">(подтверждено продавцом)</span>"
+msgid ""
+"<span class=\"text-muted\" invisible=\"not "
+"mail_reminder_confirmed\">(confirmed by vendor)</span>"
+msgstr ""
+"<span class=\"text-muted\" invisible=\"not "
+"mail_reminder_confirmed\">(подтверждено продавцом)</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_partner_property_form
@@ -500,12 +542,17 @@ msgstr ""
 #. module: purchase
 #: model:res.groups,name:purchase.group_warning_purchase
 msgid "A warning can be set on a product or a customer (Purchase)"
-msgstr "Предупреждение может быть связано с продуктом или поставщиком (Закупка)"
+msgstr ""
+"Предупреждение может быть связано с продуктом или поставщиком (Закупка)"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
-msgid "Ability to select a package type in purchase orders and to force a quantity that is a multiple of the number of units per package."
-msgstr "Возможность выбора типа упаковки в заказах на поставку и принудительного указания количества, кратного количеству единиц в упаковке."
+msgid ""
+"Ability to select a package type in purchase orders and to force a quantity "
+"that is a multiple of the number of units per package."
+msgstr ""
+"Возможность выбора типа упаковки в заказах на поставку и принудительного "
+"указания количества, кратного количеству единиц в упаковке."
 
 #. module: purchase
 #. odoo-python
@@ -630,7 +677,9 @@ msgstr "Все ожидающие запросы"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_config_settings__group_send_reminder
 msgid "Allow automatically send email to remind your vendor the receipt date"
-msgstr "Позволяет автоматически отправлять электронное письмо, чтобы напомнить поставщику о дате получения"
+msgstr ""
+"Позволяет автоматически отправлять электронное письмо, чтобы напомнить "
+"поставщику о дате получения"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__res_company__po_lock__edit
@@ -644,8 +693,12 @@ msgstr "Сумма"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_report__delay_pass
-msgid "Amount of time between date planned and order by date for each purchase order line."
-msgstr "Количество времени между запланированной датой и датой заказа для каждой строки заказа на поставку."
+msgid ""
+"Amount of time between date planned and order by date for each purchase "
+"order line."
+msgstr ""
+"Количество времени между запланированной датой и датой заказа для каждой "
+"строки заказа на поставку."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_report__delay
@@ -721,7 +774,9 @@ msgstr "Автозаполнение из прошлого заказа на п�
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Automatically lock confirmed orders to prevent editing"
-msgstr "Автоматически блокируйте подтвержденные заказы, чтобы предотвратить их редактирование"
+msgstr ""
+"Автоматически блокируйте подтвержденные заказы, чтобы предотвратить их "
+"редактирование"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -732,8 +787,12 @@ msgstr "Автоматически напоминайте продавцам о 
 #: model:ir.model.fields,help:purchase.field_res_partner__receipt_reminder_email
 #: model:ir.model.fields,help:purchase.field_res_users__receipt_reminder_email
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
-msgid "Automatically send a confirmation email to the vendor X days before the expected receipt date, asking him to confirm the exact date."
-msgstr "Автоматически отправьте продавцу письмо с подтверждением за X дней до предполагаемой даты получения, попросив его подтвердить точную дату."
+msgid ""
+"Automatically send a confirmation email to the vendor X days before the "
+"expected receipt date, asking him to confirm the exact date."
+msgstr ""
+"Автоматически отправьте продавцу письмо с подтверждением за X дней до "
+"предполагаемой даты получения, попросив его подтвердить точную дату."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__price_average
@@ -817,8 +876,12 @@ msgstr "Посмотреть Календарь"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
-msgid "Calls for tenders are when you want to generate requests for quotations with several vendors for a given set of products to compare offers."
-msgstr "Тендеры - это когда вы хотите провести запрос котировок у нескольких поставщиков по определенному набору товаров, чтобы сравнить предложения."
+msgid ""
+"Calls for tenders are when you want to generate requests for quotations with"
+" several vendors for a given set of products to compare offers."
+msgstr ""
+"Тендеры - это когда вы хотите провести запрос котировок у нескольких "
+"поставщиков по определенному набору товаров, чтобы сравнить предложения."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -844,7 +907,9 @@ msgstr "Отмененный заказ на поставку №"
 #: code:addons/purchase/models/purchase_order_line.py:0
 #, python-format
 msgid "Cannot delete a purchase order line which is in state %r."
-msgstr "Невозможно удалить строку заказа на поставку, которая находится в состоянии %r."
+msgstr ""
+"Невозможно удалить строку заказа на поставку, которая находится в состоянии "
+"%r."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -887,6 +952,7 @@ msgstr "Валюта Компании"
 
 #. module: purchase
 #. odoo-python
+#: code:addons/purchase/models/purchase_order.py:0
 #: code:addons/purchase/models/purchase_order.py:0
 #, python-format
 msgid "Compose Email"
@@ -963,8 +1029,13 @@ msgstr "Политика контроля"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__product_uom_category_id
-msgid "Conversion between Units of Measure can only occur if they belong to the same category. The conversion will be made based on the ratios."
-msgstr "Пересчет между единицами измерения может произойти только в том случае, если они принадлежат к одной и той же категории. Пересчет будет осуществляться на основе коэффициентов."
+msgid ""
+"Conversion between Units of Measure can only occur if they belong to the "
+"same category. The conversion will be made based on the ratios."
+msgstr ""
+"Пересчет между единицами измерения может произойти только в том случае, если"
+" они принадлежат к одной и той же категории. Пересчет будет осуществляться "
+"на основе коэффициентов."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__country_code
@@ -1035,6 +1106,7 @@ msgstr "Дата Начало календаря"
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
+#: code:addons/purchase/models/purchase_order.py:0
 #, python-format
 msgid "Date Updated"
 msgstr "Дата обновления"
@@ -1075,19 +1147,32 @@ msgstr "Определите свои правила и условия..."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__date_planned
-msgid "Delivery date expected from vendor. This date respectively defaults to vendor pricelist lead time then today's date."
-msgstr "Дата поставки, ожидаемая от поставщика. Эта дата, соответственно, по умолчанию соответствует времени выполнения заказа по прейскуранту поставщика, а затем сегодняшней дате."
+msgid ""
+"Delivery date expected from vendor. This date respectively defaults to "
+"vendor pricelist lead time then today's date."
+msgstr ""
+"Дата поставки, ожидаемая от поставщика. Эта дата, соответственно, по "
+"умолчанию соответствует времени выполнения заказа по прейскуранту "
+"поставщика, а затем сегодняшней дате."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__date_planned
-msgid "Delivery date promised by vendor. This date is used to determine expected arrival of products."
-msgstr "Дата поставки, обещанная продавцом. Эта дата используется для определения ожидаемого прибытия товаров."
+msgid ""
+"Delivery date promised by vendor. This date is used to determine expected "
+"arrival of products."
+msgstr ""
+"Дата поставки, обещанная продавцом. Эта дата используется для определения "
+"ожидаемого прибытия товаров."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__date_order
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__date_order
-msgid "Depicts the date within which the Quotation should be confirmed and converted into a purchase order."
-msgstr "Указывает дату, в течение которой предложение должно быть подтверждено и преобразовано в заказ на поставку."
+msgid ""
+"Depicts the date within which the Quotation should be confirmed and "
+"converted into a purchase order."
+msgstr ""
+"Указывает дату, в течение которой предложение должно быть подтверждено и "
+"преобразовано в заказ на поставку."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__name
@@ -1280,7 +1365,8 @@ msgstr "Значок, обозначающий исключение Дела."
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Если флажок установлен, значит, новые сообщения требуют вашего внимания."
+msgstr ""
+"Если флажок установлен, значит, новые сообщения требуют вашего внимания."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__message_has_error
@@ -1290,13 +1376,21 @@ msgstr "Если отмечено, некоторые сообщения име�
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
-msgid "If enabled, activates 3-way matching on vendor bills : the items must be received in order to pay the invoice."
-msgstr "Если включено, активируется 3-стороннее совпадение на счетах поставщиков: элементы должны быть получены для оплаты счета."
+msgid ""
+"If enabled, activates 3-way matching on vendor bills : the items must be "
+"received in order to pay the invoice."
+msgstr ""
+"Если включено, активируется 3-стороннее совпадение на счетах поставщиков: "
+"элементы должны быть получены для оплаты счета."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
-msgid "If installed, the product variants will be added to purchase orders through a grid entry."
-msgstr "Если эта функция установлена, то варианты товаров будут добавляться в заказы на поставку через сетку."
+msgid ""
+"If installed, the product variants will be added to purchase orders through "
+"a grid entry."
+msgstr ""
+"Если эта функция установлена, то варианты товаров будут добавляться в заказы"
+" на поставку через сетку."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_product_packaging__purchase
@@ -1331,8 +1425,12 @@ msgstr "Укажите количество товара, которое вы х
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__incoterm_id
-msgid "International Commercial Terms are a series of predefined commercial terms used in international transactions."
-msgstr "International Commercial Terms are a series of predefined commercial terms used in international transactions."
+msgid ""
+"International Commercial Terms are a series of predefined commercial terms "
+"used in international transactions."
+msgstr ""
+"International Commercial Terms are a series of predefined commercial terms "
+"used in international transactions."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1406,9 +1504,14 @@ msgstr "Давайте создадим ваш первый запрос на к
 #. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
+#: code:addons/purchase/static/src/js/tours/purchase.js:0
 #, python-format
-msgid "Let's try the Purchase app to manage the flow from purchase to reception and invoice control."
-msgstr "Попробуем приложение \"Закупки\" для управления потоком от покупки до получения и контроля счетов-фактур."
+msgid ""
+"Let's try the Purchase app to manage the flow from purchase to reception and"
+" invoice control."
+msgstr ""
+"Попробуем приложение \"Закупки\" для управления потоком от покупки до "
+"получения и контроля счетов-фактур."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_company__po_double_validation
@@ -1440,13 +1543,18 @@ msgstr "Заблокировано"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
-msgid "Make sure you only pay bills for which you received the goods you ordered"
-msgstr "Удостоверьтесь, что вы оплачиваете только счета, за которые вы получили товары, заказанные вами"
+msgid ""
+"Make sure you only pay bills for which you received the goods you ordered"
+msgstr ""
+"Удостоверьтесь, что вы оплачиваете только счета, за которые вы получили "
+"товары, заказанные вами"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Manage your purchase agreements (call for tenders, blanket orders)"
-msgstr "Управляйте своими соглашениями о покупке (призыв к тендерам, офсетными заказами)"
+msgstr ""
+"Управляйте своими соглашениями о покупке (призыв к тендерам, офсетными "
+"заказами)"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order_line__qty_received_method__manual
@@ -1466,13 +1574,27 @@ msgstr "Вручную Получено количество"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_company__po_lead
 #: model:ir.model.fields,help:purchase.field_res_config_settings__po_lead
-msgid "Margin of error for vendor lead times. When the system generates Purchase Orders for procuring products, they will be scheduled that many days earlier to cope with unexpected vendor delays."
-msgstr "Поле погрешности для времени выполнения поставщиком. Когда система генерирует заказы на поставку для закупки продуктов, они будут запланированы на несколько дней раньше, чтобы справиться с непредвиденными задержками поставщиков."
+msgid ""
+"Margin of error for vendor lead times. When the system generates Purchase "
+"Orders for procuring products, they will be scheduled that many days earlier"
+" to cope with unexpected vendor delays."
+msgstr ""
+"Поле погрешности для времени выполнения поставщиком. Когда система "
+"генерирует заказы на поставку для закупки продуктов, они будут запланированы"
+" на несколько дней раньше, чтобы справиться с непредвиденными задержками "
+"поставщиков."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_config_settings__use_po_lead
-msgid "Margin of error for vendor lead times. When the system generates Purchase Orders for reordering products,they will be scheduled that many days earlier to cope with unexpected vendor delays."
-msgstr "Поле погрешности для времени выполнения поставщиком. Когда система генерирует заказы на перезаказ закупки продуктов, они будут запланированы на несколько дней раньше, чтобы справиться с непредвиденными задержками поставщиков."
+msgid ""
+"Margin of error for vendor lead times. When the system generates Purchase "
+"Orders for reordering products,they will be scheduled that many days earlier"
+" to cope with unexpected vendor delays."
+msgstr ""
+"Поле погрешности для времени выполнения поставщиком. Когда система "
+"генерирует заказы на перезаказ закупки продуктов, они будут запланированы на"
+" несколько дней раньше, чтобы справиться с непредвиденными задержками "
+"поставщиков."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_has_error
@@ -1623,7 +1745,9 @@ msgstr "Для этого продукта еще не было сделано �
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.purchase_rfq
 msgid "No request for quotation found. Let's create one!"
-msgstr "Не найдено ни одного запроса на коммерческое предложение. Давайте создадим его!"
+msgstr ""
+"Не найдено ни одного запроса на коммерческое предложение. Давайте создадим "
+"его!"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__priority__0
@@ -1660,7 +1784,9 @@ msgstr "Число действий"
 #: model:ir.model.fields,help:purchase.field_res_partner__reminder_date_before_receipt
 #: model:ir.model.fields,help:purchase.field_res_users__reminder_date_before_receipt
 msgid "Number of days to send reminder email before the promised receipt date"
-msgstr "Количество дней для отправки напоминания по электронной почте до обещанной даты получения"
+msgstr ""
+"Количество дней для отправки напоминания по электронной почте до обещанной "
+"даты получения"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_has_error_counter
@@ -1701,13 +1827,21 @@ msgstr "О полученных количествах"
 #. odoo-javascript
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 #, python-format
-msgid "Once you get the price from the vendor, you can complete the purchase order with the right price."
-msgstr "Получив цену от продавца, вы сможете заполнить заказ на поставку, указав правильную цену."
+msgid ""
+"Once you get the price from the vendor, you can complete the purchase order "
+"with the right price."
+msgstr ""
+"Получив цену от продавца, вы сможете заполнить заказ на поставку, указав "
+"правильную цену."
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.purchase_form_action
-msgid "Once you ordered your products to your supplier, confirm your request for quotation and it will turn into a purchase order."
-msgstr "После того как вы заказали продукцию поставщику, подтвердите запрос на коммерческое предложение, и он превратится в заказ на поставку."
+msgid ""
+"Once you ordered your products to your supplier, confirm your request for "
+"quotation and it will turn into a purchase order."
+msgstr ""
+"После того как вы заказали продукцию поставщику, подтвердите запрос на "
+"коммерческое предложение, и он превратится в заказ на поставку."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__order_id
@@ -1807,7 +1941,8 @@ msgstr "URL доступа к порталу"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Preview the reminder email by sending it to yourself."
-msgstr "Предварительно просмотрите письмо с напоминанием, отправив его самому себе."
+msgstr ""
+"Предварительно просмотрите письмо с напоминанием, отправив его самому себе."
 
 #. module: purchase
 #. odoo-javascript
@@ -1940,6 +2075,7 @@ msgstr "История покупок"
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/product.py:0
+#: code:addons/purchase/models/product.py:0
 #: code:addons/purchase/models/purchase_order_line.py:0
 #, python-format
 msgid "Purchase History for %s"
@@ -1954,6 +2090,7 @@ msgstr "Запас времени на покупку"
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/controllers/portal.py:0
+#: code:addons/purchase/models/purchase_order.py:0
 #: code:addons/purchase/models/purchase_order.py:0
 #: model:ir.actions.report,name:purchase.action_report_purchase_order
 #: model:ir.model,name:purchase.model_purchase_order
@@ -2033,8 +2170,12 @@ msgstr "Изменение заказа на покупку *"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_company__po_lock
 #: model:ir.model.fields,help:purchase.field_res_config_settings__po_lock
-msgid "Purchase Order Modification used when you want to purchase order editable after confirm"
-msgstr "Изменение заказа на поставку, когда вы хотите изменить заказ на покупку после подтверждения"
+msgid ""
+"Purchase Order Modification used when you want to purchase order editable "
+"after confirm"
+msgstr ""
+"Изменение заказа на поставку, когда вы хотите изменить заказ на покупку "
+"после подтверждения"
 
 #. module: purchase
 #. odoo-python
@@ -2077,7 +2218,8 @@ msgstr "Заказы на поставку, на которые выставле
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
 msgid "Purchase orders that include lines not invoiced."
-msgstr "Заказы на поставку, включающие строки, по которым не были выставлены счета."
+msgstr ""
+"Заказы на поставку, включающие строки, по которым не были выставлены счета."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -2092,7 +2234,8 @@ msgstr "Напоминание о покупке"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Purchase variants of a product using attributes (size, color, etc.)"
-msgstr "Приобретайте варианты товара, используя атрибуты (размер, цвет и т.д.)"
+msgstr ""
+"Приобретайте варианты товара, используя атрибуты (размер, цвет и т.д.)"
 
 #. module: purchase
 #: model:mail.template,name:purchase.email_template_edi_purchase_done
@@ -2141,8 +2284,12 @@ msgstr "Закупки и счета"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__dest_address_id
-msgid "Put an address if you want to deliver directly from the vendor to the customer. Otherwise, keep empty to deliver to your own company."
-msgstr "Поместите адрес, если вы хотите доставить напрямую от поставщика к клиенту. В противном случае оставьте пустым для доставки в свою компанию."
+msgid ""
+"Put an address if you want to deliver directly from the vendor to the "
+"customer. Otherwise, keep empty to deliver to your own company."
+msgstr ""
+"Поместите адрес, если вы хотите доставить напрямую от поставщика к клиенту. "
+"В противном случае оставьте пустым для доставки в свою компанию."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__qty_billed
@@ -2313,13 +2460,23 @@ msgstr "Справочная единица измерения"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__origin
-msgid "Reference of the document that generated this purchase order request (e.g. a sales order)"
-msgstr "Ссылка на документ, сгенерировавший этот запрос заказа на покупку (например, заказ на продажу)"
+msgid ""
+"Reference of the document that generated this purchase order request (e.g. a"
+" sales order)"
+msgstr ""
+"Ссылка на документ, сгенерировавший этот запрос заказа на покупку (например,"
+" заказ на продажу)"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__partner_ref
-msgid "Reference of the sales order or bid sent by the vendor. It's used to do the matching when you receive the products as this reference is usually written on the delivery order sent by your vendor."
-msgstr "Ссылка заказа на продажу или предложение, отправленное поставщиком. Она используется для выполнения сопоставления при получении продукции, так как эта ссылка обычно пишется на заказе доставки, отправленных поставщиком."
+msgid ""
+"Reference of the sales order or bid sent by the vendor. It's used to do the "
+"matching when you receive the products as this reference is usually written "
+"on the delivery order sent by your vendor."
+msgstr ""
+"Ссылка заказа на продажу или предложение, отправленное поставщиком. Она "
+"используется для выполнения сопоставления при получении продукции, так как "
+"эта ссылка обычно пишется на заказе доставки, отправленных поставщиком."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__mail_reminder_confirmed
@@ -2446,8 +2603,14 @@ msgstr "Выберите заказ на закупку или существу�
 #: model:ir.model.fields,help:purchase.field_product_template__purchase_line_warn
 #: model:ir.model.fields,help:purchase.field_res_partner__purchase_warn
 #: model:ir.model.fields,help:purchase.field_res_users__purchase_warn
-msgid "Selecting the \"Warning\" option will notify user with the message, Selecting \"Blocking Message\" will throw an exception with the message and block the flow. The Message has to be written in the next field."
-msgstr "Выбор опции \"Предупреждение\" уведомит пользователя об этом сообщением. При выборе \"Блокировать сообщение\" будет выдано исключение с сообщением и заблокирован поток. Сообщение должно быть написано в следующем поле."
+msgid ""
+"Selecting the \"Warning\" option will notify user with the message, "
+"Selecting \"Blocking Message\" will throw an exception with the message and "
+"block the flow. The Message has to be written in the next field."
+msgstr ""
+"Выбор опции \"Предупреждение\" уведомит пользователя об этом сообщением. При"
+" выборе \"Блокировать сообщение\" будет выдано исключение с сообщением и "
+"заблокирован поток. Сообщение должно быть написано в следующем поле."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -2467,7 +2630,9 @@ msgstr "Отправить Напоминание"
 #. module: purchase
 #: model:res.groups,name:purchase.group_send_reminder
 msgid "Send an automatic reminder email to confirm delivery"
-msgstr "Отправьте автоматическое напоминание по электронной почте для подтверждения доставки"
+msgstr ""
+"Отправьте автоматическое напоминание по электронной почте для подтверждения "
+"доставки"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -2481,6 +2646,7 @@ msgstr "Отправить сообщение"
 
 #. module: purchase
 #. odoo-javascript
+#: code:addons/purchase/static/src/js/tours/purchase.js:0
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 #, python-format
 msgid "Send the request for quotation to your vendor."
@@ -2498,8 +2664,11 @@ msgstr "Отправляется поставщику вместе с заказ
 
 #. module: purchase
 #: model:mail.template,description:purchase.email_template_edi_purchase_reminder
-msgid "Sent to vendors before expected arrival, based on the purchase order setting"
-msgstr "Отправка поставщикам до ожидаемого прибытия на основании настроек заказа на поставку"
+msgid ""
+"Sent to vendors before expected arrival, based on the purchase order setting"
+msgstr ""
+"Отправка поставщикам до ожидаемого прибытия на основании настроек заказа на "
+"поставку"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__sequence
@@ -2526,7 +2695,9 @@ msgstr "Поделиться"
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Show all records which has next action date is before today"
-msgstr "Показать все записи, у которых дата следующего действия наступает до сегодняшнего дня"
+msgstr ""
+"Показать все записи, у которых дата следующего действия наступает до "
+"сегодняшнего дня"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__reference
@@ -2662,8 +2833,12 @@ msgstr "Техническая область для целей UX."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__tax_country_id
-msgid "Technical field to filter the available taxes depending on the fiscal country and fiscal position."
-msgstr "Техническое поле для фильтрации доступных налогов в зависимости от фискальной страны и фискальной позиции."
+msgid ""
+"Technical field to filter the available taxes depending on the fiscal "
+"country and fiscal position."
+msgstr ""
+"Техническое поле для фильтрации доступных налогов в зависимости от "
+"фискальной страны и фискальной позиции."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -2716,8 +2891,13 @@ msgstr "В настоящее время для вашей учетной зап
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 #, python-format
-msgid "There is no invoiceable line. If a product has a control policy based on received quantity, please make sure that a quantity has been received."
-msgstr "Нет строки для выставления счетов. Если продукт имеет политику контроля на основе полученного количества, пожалуйста, убедитесь, что количество было получено."
+msgid ""
+"There is no invoiceable line. If a product has a control policy based on "
+"received quantity, please make sure that a quantity has been received."
+msgstr ""
+"Нет строки для выставления счетов. Если продукт имеет политику контроля на "
+"основе полученного количества, пожалуйста, убедитесь, что количество было "
+"получено."
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.action_purchase_order_report_all
@@ -2731,14 +2911,22 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_partner__property_purchase_currency_id
 #: model:ir.model.fields,help:purchase.field_res_users__property_purchase_currency_id
-msgid "This currency will be used, instead of the default one, for purchases from the current partner"
-msgstr "Эта валюта будет использоваться вместо валюты по умолчанию при покупках у текущего партнера"
+msgid ""
+"This currency will be used, instead of the default one, for purchases from "
+"the current partner"
+msgstr ""
+"Эта валюта будет использоваться вместо валюты по умолчанию при покупках у "
+"текущего партнера"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_config_settings__default_purchase_method
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
-msgid "This default value is applied to any new product created. This can be changed in the product detail form."
-msgstr "Это значение по умолчанию применяется к любому созданному продукту. Это можно изменить в форме продукта."
+msgid ""
+"This default value is applied to any new product created. This can be "
+"changed in the product detail form."
+msgstr ""
+"Это значение по умолчанию применяется к любому созданному продукту. Это "
+"можно изменить в форме продукта."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
@@ -2749,8 +2937,12 @@ msgstr "Это примечание добавляется в заказы на 
 #. odoo-python
 #: code:addons/purchase/models/purchase_order_line.py:0
 #, python-format
-msgid "This product is packaged by %(pack_size).2f %(pack_name)s. You should purchase %(quantity).2f %(unit)s."
-msgstr "Этот продукт упакован по %(pack_size).2f %(pack_name)s. Вам следует приобрести %(quantity).2f %(unit)s."
+msgid ""
+"This product is packaged by %(pack_size).2f %(pack_name)s. You should "
+"purchase %(quantity).2f %(unit)s."
+msgstr ""
+"Этот продукт упакован по %(pack_size).2f %(pack_name)s. Вам следует "
+"приобрести %(quantity).2f %(unit)s."
 
 #. module: purchase
 #. odoo-python
@@ -2769,7 +2961,8 @@ msgstr "Этот счет поставщика был изменен с:"
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
 msgid "This vendor has no purchase order. Create a new RfQ"
-msgstr "У этого продавца нет заказа на закупку. Создайте новый запрос предложения"
+msgstr ""
+"У этого продавца нет заказа на закупку. Создайте новый запрос предложения"
 
 #. module: purchase
 #: model:digest.tip,name:purchase.digest_tip_purchase_0
@@ -2864,8 +3057,12 @@ msgstr "Тип Дела для исключения в записи."
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 #, python-format
-msgid "Unable to cancel this purchase order. You must first cancel the related vendor bills."
-msgstr "Невозможно отменить этот заказ на покупку. Сначала вы должны отменить соответствующие счета поставщиков."
+msgid ""
+"Unable to cancel this purchase order. You must first cancel the related "
+"vendor bills."
+msgstr ""
+"Невозможно отменить этот заказ на покупку. Сначала вы должны отменить "
+"соответствующие счета поставщиков."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__price_unit
@@ -3098,26 +3295,52 @@ msgstr "История общений с сайта"
 
 #. module: purchase
 #: model_terms:digest.tip,tip_description:purchase.digest_tip_purchase_0
-msgid "When creating a purchase order, have a look at the vendor's <i>On Time Delivery</i> rate: the percentage of products shipped on time. If it is too low, activate the <i>automated reminders</i>. A few days before the due shipment, Odoo will send the vendor an email to ask confirmation of shipment dates and keep you informed in case of any delays. To get the vendor's performance statistics, click on the OTD rate."
-msgstr "При создании заказа на поставку посмотрите на коэффициент <i>своевременной доставки</i> поставщика: процент товаров, отправленных вовремя. Если он слишком низок, активируйте <i>автоматические напоминания</i>. За несколько дней до назначенной даты отгрузки Odoo отправит поставщику письмо с просьбой подтвердить дату отгрузки и проинформировать вас в случае задержек. Чтобы получить статистику работы поставщика, нажмите на показатель OTD."
+msgid ""
+"When creating a purchase order, have a look at the vendor's <i>On Time "
+"Delivery</i> rate: the percentage of products shipped on time. If it is too "
+"low, activate the <i>automated reminders</i>. A few days before the due "
+"shipment, Odoo will send the vendor an email to ask confirmation of shipment"
+" dates and keep you informed in case of any delays. To get the vendor's "
+"performance statistics, click on the OTD rate."
+msgstr ""
+"При создании заказа на поставку посмотрите на коэффициент <i>своевременной "
+"доставки</i> поставщика: процент товаров, отправленных вовремя. Если он "
+"слишком низок, активируйте <i>автоматические напоминания</i>. За несколько "
+"дней до назначенной даты отгрузки Odoo отправит поставщику письмо с просьбой"
+" подтвердить дату отгрузки и проинформировать вас в случае задержек. Чтобы "
+"получить статистику работы поставщика, нажмите на показатель OTD."
 
 #. module: purchase
 #: model_terms:digest.tip,tip_description:purchase.digest_tip_purchase_1
-msgid "When sending a purchase order by email, Odoo asks the vendor to acknowledge the reception of the order. When the vendor acknowledges the order by clicking on a button in the email, the information is added on the purchase order. Use filters to track orders that have not been acknowledged."
-msgstr "При отправке заказа на покупку по электронной почте Odoo просит продавца подтвердить получение заказа. Когда поставщик подтверждает заказ, нажав на кнопку в электронном письме, информация добавляется в заказ на поставку. Используйте фильтры для отслеживания заказов, которые не были подтверждены."
+msgid ""
+"When sending a purchase order by email, Odoo asks the vendor to acknowledge "
+"the reception of the order. When the vendor acknowledges the order by "
+"clicking on a button in the email, the information is added on the purchase "
+"order. Use filters to track orders that have not been acknowledged."
+msgstr ""
+"При отправке заказа на покупку по электронной почте Odoo просит продавца "
+"подтвердить получение заказа. Когда поставщик подтверждает заказ, нажав на "
+"кнопку в электронном письме, информация добавляется в заказ на поставку. "
+"Используйте фильтры для отслеживания заказов, которые не были подтверждены."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__partner_id
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__partner_id
 msgid "You can find a vendor by its Name, TIN, Email or Internal Reference."
-msgstr "Вы можете найти покупателя по его наименованию, налоговому номеру, адресу эл. почты или внутренней ссылке."
+msgstr ""
+"Вы можете найти покупателя по его наименованию, налоговому номеру, адресу "
+"эл. почты или внутренней ссылке."
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order_line.py:0
 #, python-format
-msgid "You cannot change the type of a purchase order line. Instead you should delete the current line and create a new line of the proper type."
-msgstr "Вы не можете изменить тип строки заказа на поставку. Вместо этого следует удалить текущую строку и создать новую строку соответствующего типа."
+msgid ""
+"You cannot change the type of a purchase order line. Instead you should "
+"delete the current line and create a new line of the proper type."
+msgstr ""
+"Вы не можете изменить тип строки заказа на поставку. Вместо этого следует "
+"удалить текущую строку и создать новую строку соответствующего типа."
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.product_product_action
@@ -3163,4 +3386,5 @@ msgstr "дней до"
 #: model:mail.template,subject:purchase.email_template_edi_purchase_done
 #: model:mail.template,subject:purchase.email_template_edi_purchase_reminder
 msgid "{{ object.company_id.name }} Order (Ref {{ object.name or 'n/a' }})"
-msgstr "{{ object.company_id.name }} Заказ (Ссылка {{ object.name or 'n/a' }})"
+msgstr ""
+"{{ object.company_id.name }} Заказ (Ссылка {{ object.name or 'n/a' }})"

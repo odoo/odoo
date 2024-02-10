@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-01-29 10:44+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Marianna Ciofani, 2024\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
@@ -2456,7 +2456,7 @@ msgid ""
 "Do you want to accept payments difference and post a profit/loss journal "
 "entry?"
 msgstr ""
-"Vuoi accettare la differenza dei pegamenti e inserire una voce "
+"Vuoi accettare la differenza dei pagamenti e inserire una voce "
 "profitti/perdite nel registro?"
 
 #. module: point_of_sale
@@ -3831,6 +3831,11 @@ msgid "Newspaper Rack"
 msgstr "Portagiornali"
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Prossimo evento del calendario delle attività"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_date_deadline
 msgid "Next Activity Deadline"
 msgstr "Scadenza prossima attività"
@@ -4060,6 +4065,13 @@ msgstr "Numero di transazioni:"
 #, python-format
 msgid "OK"
 msgstr "OK"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
+#, python-format
+msgid "Odoo Point of Sale"
+msgstr "Odoo Punto Vendita"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.office_combo_product_template
@@ -5242,7 +5254,6 @@ msgstr "Fornito da"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_preparation_display
-#: model:ir.ui.menu,name:point_of_sale.menu_pos_preparation_display
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Preparation Display"
 msgstr "Schermo di preparazione"
@@ -5617,13 +5628,6 @@ msgstr "Proxy disconnesso"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_printer__proxy_ip
 msgid "Proxy IP Address"
 msgstr "Indirizzo IP proxy"
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_printer.py:0
-#, python-format
-msgid "Proxy IP cannot be empty."
-msgstr "L'IP del proxy non può essere vuoto:"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6607,6 +6611,13 @@ msgstr "Categoria iniziale"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard__start_date
 msgid "Start Date"
 msgstr "Data inizio"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/generic_components/order_widget/order_widget.js:0
+#, python-format
+msgid "Start adding products"
+msgstr "Inizia ad aggiungere prodotti"
 
 #. module: point_of_sale
 #. odoo-python

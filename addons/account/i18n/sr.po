@@ -8,19 +8,19 @@
 # Bojan Borovnjak <bojan.borovnjak@modoolar.com>, 2023
 # Đorđe Cvijanović <cdorde@gmail.com>, 2023
 # Martin Trigaux, 2023
-# Dragan Vukosavljevic <dragan.vukosavljevic@gmail.com>, 2023
 # Uros Kalajdzic <ukalajdzic@gmail.com>, 2024
 # コフスタジオ, 2024
 # Vladislav Ristić, 2024
 # Milan Bojovic <mbojovic@outlook.com>, 2024
+# Dragan Vukosavljevic <dragan.vukosavljevic@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-01-29 10:44+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Milan Bojovic <mbojovic@outlook.com>, 2024\n"
+"Last-Translator: Dragan Vukosavljevic <dragan.vukosavljevic@gmail.com>, 2024\n"
 "Language-Team: Serbian (https://app.transifex.com/odoo/teams/41243/sr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3406,7 +3406,7 @@ msgstr "Referenca računa"
 #. module: account
 #: model:res.groups,name:account.group_account_invoice
 msgid "Billing"
-msgstr "Kreiranje računa"
+msgstr "Fakturisanje"
 
 #. module: account
 #: model:res.groups,name:account.group_account_manager
@@ -6338,6 +6338,16 @@ msgid "Epd Needed"
 msgstr "Epd Needed"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/account_type_selection/account_type_selection.js:0
+#: model:ir.model.fields.selection,name:account.selection__account_account__account_type__equity
+#: model:ir.model.fields.selection,name:account.selection__account_account__internal_group__equity
+#: model_terms:ir.ui.view,arch_db:account.view_account_search
+#, python-format
+msgid "Equity"
+msgstr "Kapital"
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #, python-format
@@ -6347,16 +6357,6 @@ msgid ""
 msgstr ""
 "Greška pri učitavanju lokalizacije. Verovatno bi prvo trebalo da ažurirate "
 "aplikaciju za lokalizaciju."
-
-#. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/components/account_type_selection/account_type_selection.js:0
-#: model:ir.model.fields.selection,name:account.selection__account_account__account_type__equity
-#: model:ir.model.fields.selection,name:account.selection__account_account__internal_group__equity
-#: model_terms:ir.ui.view,arch_db:account.view_account_search
-#, python-format
-msgid "Equity"
-msgstr "Kapital"
 
 #. module: account
 #. odoo-python
@@ -7987,6 +7987,13 @@ msgstr "Neispravno"
 #, python-format
 msgid "Invalid \"Zip Range\", please configure it properly."
 msgstr "Invalid \"Zip Range\", please configure it properly."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_report.py:0
+#, python-format
+msgid "Invalid domain for expression '%s' of line '%s': %s"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -16961,12 +16968,9 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot import the \"openning_balance\" if the opening move (%s) is "
-"already posted.                         If you are absolutely sure you want "
-"to modify the opening balance of your accounts, reset the move to draft."
+"already posted. If you are absolutely sure you want to modify the opening "
+"balance of your accounts, reset the move to draft."
 msgstr ""
-"You cannot import the \"openning_balance\" if the opening move (%s) is "
-"already posted.                         If you are absolutely sure you want "
-"to modify the opening balance of your accounts, reset the move to draft."
 
 #. module: account
 #. odoo-python

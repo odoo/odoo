@@ -3,16 +3,16 @@
 # 	* project
 # 
 # Translators:
-# Wil Odoo, 2023
 # Abe Manyo, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-01-29 10:44+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Abe Manyo, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -200,6 +200,10 @@ msgid ""
 "tag them)</i>. Use @ <b>mentions</b> to ping a colleague or # "
 "<b>mentions</b> to reach an entire team."
 msgstr ""
+"<b>Catatan log</b> untuk komunikasi internal <i>(orang yang mengikuti tugas "
+"ini tidak akan dinotifikasi mengenai catatan Anda kecuali Anda secara khusus"
+" tag mereka)</i>. Gunakan @ <b>mention</b> untuk ping rekan kerja atau # "
+"<b>mention</b> untuk seluruh tim."
 
 #. module: project
 #: model:mail.template,body_html:project.rating_project_request_email_template
@@ -1258,6 +1262,8 @@ msgid ""
 "name of a customer, of a product, of a team, of a construction site, "
 "etc.</i>"
 msgstr ""
+"Pilih <b>nama</b> untuk project Anda. <i>Dapat merupakan apapun yang Anda "
+"inginkan: nama pelanggan, produk, tim, lokasi konstruksi, dsb.</i>"
 
 #. module: project
 #. odoo-javascript
@@ -3109,6 +3115,13 @@ msgid "Next Activity"
 msgstr "Aktivitas Berikutnya"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__activity_calendar_event_id
+#: model:ir.model.fields,field_description:project.field_project_task__activity_calendar_event_id
+#: model:ir.model.fields,field_description:project.field_project_update__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Kalender Acara Aktivitas Berikutnya"
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__activity_date_deadline
 #: model:ir.model.fields,field_description:project.field_project_task__activity_date_deadline
 #: model:ir.model.fields,field_description:project.field_project_update__activity_date_deadline
@@ -3324,7 +3337,7 @@ msgstr "Oops! Terjadi kesalahan. Coba muat ulang halaman dan log in."
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__open_task_count
 msgid "Open Task Count"
-msgstr ""
+msgstr "Jumlah Task Open"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_digest_digest__kpi_project_task_opened
@@ -5416,18 +5429,30 @@ msgid ""
 "customers. Add new people to the followers' list to make them aware of the "
 "main changes about this task."
 msgstr ""
+"Gunakan chatter untuk <b>mengirim email</b> dan berkomunikasi secara efisien"
+" dengan pelanggan Anda. Tambahkan orang baru ke daftar pengikut agar mereka "
+"menyadari perubahan utama mengenai task ini."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__display_name
 msgid ""
 "Use these keywords in the title to set new tasks:\n"
 "\n"
-"            #tags Set tags on the task\n"
-"            @user Assign the task to a user\n"
-"            ! Set the task a high priority\n"
+"        30h Allocate 30 hours to the task\n"
+"        #tags Set tags on the task\n"
+"        @user Assign the task to a user\n"
+"        ! Set the task a high priority\n"
 "\n"
-"            Make sure to use the right format and order e.g. Improve the configuration screen #feature #v16 @Mitchell !"
+"        Make sure to use the right format and order e.g. Improve the configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
+"Gunakan keyword-keyword ini di judul untuk menetapkan task baru:\n"
+"\n"
+"        30h Alokasi 30 jam ke task\n"
+"        #tags Tetapkan tag pada task\n"
+"        @user Tetapkan task ke user\n"
+"        ! Tetapkan task sebagai prioritas tinggi\n"
+"\n"
+"        Pastikan Anda menggunakan format dan order yang benar contoh Perbarui layar konfigurasi 5h #feature #v16 @Mitchell !"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_stage_personal__user_id

@@ -4,16 +4,16 @@
 # 
 # Translators:
 # SBO-Sebastien <sbo@irokoo.fr>, 2023
-# Jolien De Paepe, 2024
 # Wil Odoo, 2024
+# Jolien De Paepe, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-01-29 10:44+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Jolien De Paepe, 2024\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -6387,6 +6387,16 @@ msgid "Epd Needed"
 msgstr "Epd requis"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/account_type_selection/account_type_selection.js:0
+#: model:ir.model.fields.selection,name:account.selection__account_account__account_type__equity
+#: model:ir.model.fields.selection,name:account.selection__account_account__internal_group__equity
+#: model_terms:ir.ui.view,arch_db:account.view_account_search
+#, python-format
+msgid "Equity"
+msgstr "Fonds propres"
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #, python-format
@@ -6396,16 +6406,6 @@ msgid ""
 msgstr ""
 "Erreur lors du chargement de la localisation. Vous devez probablement "
 "d'abord mettre à jour votre app de localisation."
-
-#. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/components/account_type_selection/account_type_selection.js:0
-#: model:ir.model.fields.selection,name:account.selection__account_account__account_type__equity
-#: model:ir.model.fields.selection,name:account.selection__account_account__internal_group__equity
-#: model_terms:ir.ui.view,arch_db:account.view_account_search
-#, python-format
-msgid "Equity"
-msgstr "Fonds propres"
 
 #. module: account
 #. odoo-python
@@ -7696,14 +7696,14 @@ msgstr "Importer des fichiers .qif"
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid "Import Template for Chart of Accounts"
-msgstr "Modèle d'import pour le plan comptable "
+msgstr "Modèle d'importation pour le plan comptable "
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "Import Template for Journal Items"
-msgstr "Modèle d'import pour les écritures comptables"
+msgstr "Modèle d'importation pour les écritures comptables"
 
 #. module: account
 #: model:onboarding.onboarding.step,title:account.onboarding_onboarding_step_setup_bill
@@ -8061,6 +8061,13 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_report.py:0
+#, python-format
+msgid "Invalid domain for expression '%s' of line '%s': %s"
+msgstr "Domaine invalide pour l'expression '%s' de la ligne '%s' : %s"
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Invalid fiscal year last day"
@@ -8349,7 +8356,7 @@ msgstr "Statistiques des factures"
 #: code:addons/account/wizard/account_move_send.py:0
 #, python-format
 msgid "Invoices are being sent in the background."
-msgstr ""
+msgstr "Les factures sont envoyées en arrière-plan."
 
 #. module: account
 #. odoo-python
@@ -8357,7 +8364,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Invoices in error"
-msgstr ""
+msgstr "Factures en erreur"
 
 #. module: account
 #. odoo-python
@@ -8371,14 +8378,14 @@ msgstr "Factures qui vous sont dûes"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Invoices sent"
-msgstr ""
+msgstr "Factures envoyées"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Invoices sent successfully."
-msgstr ""
+msgstr "Factures envoyées avec succès"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -10325,7 +10332,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "One or more invoices couldn't be processed."
-msgstr ""
+msgstr "Impossible de traiter une ou plusieurs factures."
 
 #. module: account
 #: model:ir.ui.menu,name:account.root_payment_menu
@@ -12858,7 +12865,7 @@ msgstr ""
 #: code:addons/account/wizard/account_move_send.py:0
 #, python-format
 msgid "Sending invoices"
-msgstr ""
+msgstr "Envoi de factures"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
@@ -12870,7 +12877,7 @@ msgstr "Envoyé"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Sent invoices"
-msgstr ""
+msgstr "Factures envoyées"
 
 #. module: account
 #: model:mail.template,description:account.mail_template_data_payment_receipt
@@ -17133,13 +17140,13 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot import the \"openning_balance\" if the opening move (%s) is "
-"already posted.                         If you are absolutely sure you want "
-"to modify the opening balance of your accounts, reset the move to draft."
+"already posted. If you are absolutely sure you want to modify the opening "
+"balance of your accounts, reset the move to draft."
 msgstr ""
 "Vous ne pouvez pas importer le \"opening_balance\" si l'écriture d'ouverture"
-" (%s) est déjà comptabilisée.                         Si vous êtes sûr que "
-"vous voulez modifier le solde d'ouverture de vos comptes, veuillez remettre "
-"l'écriture en brouillon."
+" (%s) est déjà comptabilisée. Si vous êtes sûr que vous voulez modifier le "
+"solde d'ouverture de vos comptes, veuillez réinitialiser l'écriture en "
+"brouillon."
 
 #. module: account
 #. odoo-python

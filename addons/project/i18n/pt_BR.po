@@ -3,15 +3,15 @@
 # 	* project
 # 
 # Translators:
-# Wil Odoo, 2023
 # a75f12d3d37ea5bf159c4b3e85eb30e7_0fa6927, 2023
+# Wil Odoo, 2024
 # Maitê Dietze, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-01-29 10:44+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Maitê Dietze, 2024\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
@@ -3118,6 +3118,13 @@ msgid "Next Activity"
 msgstr "Próxima atividade"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__activity_calendar_event_id
+#: model:ir.model.fields,field_description:project.field_project_task__activity_calendar_event_id
+#: model:ir.model.fields,field_description:project.field_project_update__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Evento no calendário para a próxima atividade"
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__activity_date_deadline
 #: model:ir.model.fields,field_description:project.field_project_task__activity_date_deadline
 #: model:ir.model.fields,field_description:project.field_project_update__activity_date_deadline
@@ -5450,19 +5457,21 @@ msgstr ""
 msgid ""
 "Use these keywords in the title to set new tasks:\n"
 "\n"
-"            #tags Set tags on the task\n"
-"            @user Assign the task to a user\n"
-"            ! Set the task a high priority\n"
+"        30h Allocate 30 hours to the task\n"
+"        #tags Set tags on the task\n"
+"        @user Assign the task to a user\n"
+"        ! Set the task a high priority\n"
 "\n"
-"            Make sure to use the right format and order e.g. Improve the configuration screen #feature #v16 @Mitchell !"
+"        Make sure to use the right format and order e.g. Improve the configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
-"Use essas palavras-chave no título para definir novas tarefas:\n"
+"Use estas palavras-chave no título para definir novas tarefas:\n"
 "\n"
-"#marcadores Definir marcadores na tarefa\n"
-"@usuário Atribuir a tarefa a um usuário\n"
-"! Definir alta prioridade para a tarefa\n"
+"        30h Alocar 30 horas à tarefa\n"
+"        #tags Definir marcadores na tarefa\n"
+"        @user Atribuir a tarefa a um usuário\n"
+"        ! Definir a tarefa como de alt aprioridade\n"
 "\n"
-"Certifique-se de usar o formato e a ordem corretos, por exemplo: Melhorar a tela de configuração #recurso #v16 @Mitchell !"
+"        Certifique-se de usar a ordem e o formato certo, por exemplo: Melhorar a tela de configuração 5h #feature #v16 @Mitchell !"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_stage_personal__user_id

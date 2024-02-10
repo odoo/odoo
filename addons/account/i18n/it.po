@@ -5,16 +5,16 @@
 # Translators:
 # Martin Trigaux, 2023
 # Sergio Zanchetta <primes2h@gmail.com>, 2024
-# Marianna Ciofani, 2024
 # Wil Odoo, 2024
+# Marianna Ciofani, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-01-29 10:44+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Marianna Ciofani, 2024\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -6376,6 +6376,16 @@ msgid "Epd Needed"
 msgstr "EPD necessario"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/account_type_selection/account_type_selection.js:0
+#: model:ir.model.fields.selection,name:account.selection__account_account__account_type__equity
+#: model:ir.model.fields.selection,name:account.selection__account_account__internal_group__equity
+#: model_terms:ir.ui.view,arch_db:account.view_account_search
+#, python-format
+msgid "Equity"
+msgstr "Patrimonio netto"
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #, python-format
@@ -6385,16 +6395,6 @@ msgid ""
 msgstr ""
 "Errore durante il caricamento della localizzazione. Probabilmente, è "
 "necessario aggiornare l'app relativa."
-
-#. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/components/account_type_selection/account_type_selection.js:0
-#: model:ir.model.fields.selection,name:account.selection__account_account__account_type__equity
-#: model:ir.model.fields.selection,name:account.selection__account_account__internal_group__equity
-#: model_terms:ir.ui.view,arch_db:account.view_account_search
-#, python-format
-msgid "Equity"
-msgstr "Patrimonio netto"
 
 #. module: account
 #. odoo-python
@@ -8045,6 +8045,13 @@ msgstr "Intervallo CAP non valido, configurarlo correttamente."
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_report.py:0
+#, python-format
+msgid "Invalid domain for expression '%s' of line '%s': %s"
+msgstr "Dominio non valido per l'espressione '%s' della riga '%s': %s"
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Invalid fiscal year last day"
@@ -8333,7 +8340,7 @@ msgstr "Statistiche fatture"
 #: code:addons/account/wizard/account_move_send.py:0
 #, python-format
 msgid "Invoices are being sent in the background."
-msgstr ""
+msgstr "Le fatture sono inviate in background."
 
 #. module: account
 #. odoo-python
@@ -8341,7 +8348,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Invoices in error"
-msgstr ""
+msgstr "Fatture in errore"
 
 #. module: account
 #. odoo-python
@@ -8355,14 +8362,14 @@ msgstr "Fatture dovute"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Invoices sent"
-msgstr ""
+msgstr "Fatture inviate"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Invoices sent successfully."
-msgstr ""
+msgstr "Fatture inviate con successo."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -10309,7 +10316,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "One or more invoices couldn't be processed."
-msgstr ""
+msgstr "Non è stato possibile elaborare una o più fatture."
 
 #. module: account
 #: model:ir.ui.menu,name:account.root_payment_menu
@@ -12828,7 +12835,7 @@ msgstr ""
 #: code:addons/account/wizard/account_move_send.py:0
 #, python-format
 msgid "Sending invoices"
-msgstr ""
+msgstr "Fatture in fase di invio"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
@@ -12840,7 +12847,7 @@ msgstr "Inviato"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Sent invoices"
-msgstr ""
+msgstr "Fatture inviate"
 
 #. module: account
 #: model:mail.template,description:account.mail_template_data_payment_receipt
@@ -17105,13 +17112,12 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot import the \"openning_balance\" if the opening move (%s) is "
-"already posted.                         If you are absolutely sure you want "
-"to modify the opening balance of your accounts, reset the move to draft."
+"already posted. If you are absolutely sure you want to modify the opening "
+"balance of your accounts, reset the move to draft."
 msgstr ""
 "Non è possibile importare \"openning_balance\" se il movimento di apertura "
-"(%s) è già stato registrato.                         Se sei convinto di "
-"voler modificare il saldo di apertura dei tuoi conti, riporta il movimento "
-"allo stato di bozza."
+"(%s) è già pubblicato. Sei sei super sicuro di voler modificare il saldo di "
+"apertura dei tuoi conti, reimposta il movimento come bozza."
 
 #. module: account
 #. odoo-python
