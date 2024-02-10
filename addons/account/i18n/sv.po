@@ -35,14 +35,15 @@
 # Kristoffer Grundström <lovaren@gmail.com>, 2024
 # Caroline Renson <car@odoo.com>, 2024
 # Frida E, 2024
+# sesn-odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-01-29 10:44+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Frida E, 2024\n"
+"Last-Translator: sesn-odoo, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -872,9 +873,9 @@ msgid ""
 "                            <span invisible=\"not allow_out_payment\" class=\"text-success\">Trusted</span>\n"
 "                        </span>"
 msgstr ""
-"<span class=”d-flex gap-2 w-100”>\n"
-"    <span invisible=”allow_out_payment” class=”text-muted”>Ej betrodd</span>\n"
-"    <span invisible=”not allow_out_payment” class=”text-success”>Betrodd</span>\n"
+"<span class=\"d-flex gap-2 w-100\">\n"
+"    <span invisible=\"allow_out_payment\" class=\"text-muted\">Ej betrodd</span>\n"
+"    <span invisible=\"not allow_out_payment\" class=\"text-success\">Betrodd</span>\n"
 "</span>"
 
 #. module: account
@@ -1074,8 +1075,8 @@ msgid ""
 "                                        A second payment will be created in the destination journal.\n"
 "                                    </span>"
 msgstr ""
-"<span invisible=”paired_internal_transfer_payment_id or not is_internal_transfer or state != ’draft’” class=”fst-italic”>\n"
-"                                        En andra betalning kommer att skapas i måljournalen.\n"
+"<span invisible=\"paired_internal_transfer_payment_id or not is_internal_transfer or state != ’draft’\" class=\"fst-italic\">\n"
+"En andra betalning kommer att skapas i måljournalen.\n"
 "</span>"
 
 #. module: account
@@ -1118,7 +1119,7 @@ msgstr "<span role=\"separator\">Vy</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span title=\"Latest Statement\">Last Statement</span>"
-msgstr "<span title=”Senaste kontoutdraget”>Sista kontoutdraget</span>"
+msgstr "<span title=\"Senaste kontoutdraget\">Sista kontoutdraget</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -6356,6 +6357,16 @@ msgid "Epd Needed"
 msgstr "Epd Behövs"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/account_type_selection/account_type_selection.js:0
+#: model:ir.model.fields.selection,name:account.selection__account_account__account_type__equity
+#: model:ir.model.fields.selection,name:account.selection__account_account__internal_group__equity
+#: model_terms:ir.ui.view,arch_db:account.view_account_search
+#, python-format
+msgid "Equity"
+msgstr "Eget kapital"
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #, python-format
@@ -6365,16 +6376,6 @@ msgid ""
 msgstr ""
 "Fel uppstod vid laddningen av lokaliseringen. Du borde nog uppdatera din "
 "lokaliseringsapp först."
-
-#. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/components/account_type_selection/account_type_selection.js:0
-#: model:ir.model.fields.selection,name:account.selection__account_account__account_type__equity
-#: model:ir.model.fields.selection,name:account.selection__account_account__internal_group__equity
-#: model_terms:ir.ui.view,arch_db:account.view_account_search
-#, python-format
-msgid "Equity"
-msgstr "Eget kapital"
 
 #. module: account
 #. odoo-python
@@ -8004,6 +8005,13 @@ msgstr "Ogiltig"
 #, python-format
 msgid "Invalid \"Zip Range\", please configure it properly."
 msgstr "Felaktigt \"Postnummerintervall\", vänligen konfigurera det korrekt."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_report.py:0
+#, python-format
+msgid "Invalid domain for expression '%s' of line '%s': %s"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -16894,8 +16902,8 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot import the \"openning_balance\" if the opening move (%s) is "
-"already posted.                         If you are absolutely sure you want "
-"to modify the opening balance of your accounts, reset the move to draft."
+"already posted. If you are absolutely sure you want to modify the opening "
+"balance of your accounts, reset the move to draft."
 msgstr ""
 
 #. module: account

@@ -40,19 +40,19 @@
 # Tommi Rintala <tommi.rintala@gmail.com>, 2023
 # Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2023
 # Konsta Aavaranta, 2023
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024
 # Joakim Weckman, 2024
 # Simo Suurla <simo@suurla.fi>, 2024
-# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2024
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-01-29 10:44+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Kari Lindgren <kari.lindgren@emsystems.fi>, 2024\n"
+"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -6372,6 +6372,16 @@ msgid "Epd Needed"
 msgstr "Epd Tarvitaan"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/account_type_selection/account_type_selection.js:0
+#: model:ir.model.fields.selection,name:account.selection__account_account__account_type__equity
+#: model:ir.model.fields.selection,name:account.selection__account_account__internal_group__equity
+#: model_terms:ir.ui.view,arch_db:account.view_account_search
+#, python-format
+msgid "Equity"
+msgstr "Oma pääoma"
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #, python-format
@@ -6381,16 +6391,6 @@ msgid ""
 msgstr ""
 "Virhe lokalisoinnin lataamisen aikana. Sinun pitäisi luultavasti päivittää "
 "lokalisointisovellus ensin."
-
-#. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/components/account_type_selection/account_type_selection.js:0
-#: model:ir.model.fields.selection,name:account.selection__account_account__account_type__equity
-#: model:ir.model.fields.selection,name:account.selection__account_account__internal_group__equity
-#: model_terms:ir.ui.view,arch_db:account.view_account_search
-#, python-format
-msgid "Equity"
-msgstr "Oma pääoma"
 
 #. module: account
 #. odoo-python
@@ -8030,6 +8030,13 @@ msgstr "Virheellinen"
 #, python-format
 msgid "Invalid \"Zip Range\", please configure it properly."
 msgstr "Virheellinen \"Posti alue\", määritä se oikein."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_report.py:0
+#, python-format
+msgid "Invalid domain for expression '%s' of line '%s': %s"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -15873,12 +15880,12 @@ msgstr "Veroton määrä"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
 msgid "Untrusted"
-msgstr "Epäluotettava"
+msgstr "Epäluotettu"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__untrusted_bank_ids
 msgid "Untrusted Bank"
-msgstr "Epäluotettava pankki"
+msgstr "Epäluotettu pankki"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__untrusted_payments_count
@@ -16981,12 +16988,12 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot import the \"openning_balance\" if the opening move (%s) is "
-"already posted.                         If you are absolutely sure you want "
-"to modify the opening balance of your accounts, reset the move to draft."
+"already posted. If you are absolutely sure you want to modify the opening "
+"balance of your accounts, reset the move to draft."
 msgstr ""
-"Et voi tuoda \"openning_balance\" -siirtoa, jos avaussiirto (%s) on jo "
-"lähetetty.                         Jos olet aivan varma, että haluat muuttaa"
-" tilien alkusaldoa, palauta siirto luonnokseksi."
+"Et voi tuoda \"openning_balance\" -siirtoa, jos avauskirjaus (%s) on jo "
+"lähetetty. Jos olet aivan varma, että haluat muuttaa tilien alkusaldoa, "
+"palauta siirto luonnokseksi."
 
 #. module: account
 #. odoo-python
@@ -17385,7 +17392,7 @@ msgstr ""
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "cancelling {percent}%% of {amount}"
-msgstr "{percent}%% peruuttaminen {amount}:n {percent}%% peruuttaminen"
+msgstr "perutaan {percent}%% arvosta {amount}"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions

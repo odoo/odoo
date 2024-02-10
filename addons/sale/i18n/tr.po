@@ -17,24 +17,25 @@
 # Umur Akın <umura@projetgrup.com>, 2023
 # Yedigen, 2023
 # cagri erarslan <cagri.erarslan@mechsoft.com.tr>, 2023
-# Murat Durmuş <muratd@projetgrup.com>, 2023
-# Tugay Hatıl <tugayh@projetgrup.com>, 2023
+# Martin Trigaux, 2023
 # Ugur Yilmaz <ugurlu2001@hotmail.com>, 2023
 # Murat Kaplan <muratk@projetgrup.com>, 2023
 # Buket Şeker <buket_skr@hotmail.com>, 2023
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2023
 # Ozlem Cikrikci <ozlemc@eskayazilim.com.tr>, 2024
-# Martin Trigaux, 2024
-# Ediz Duman <neps1192@gmail.com>, 2024
 # sinem cil, 2024
+# Ediz Duman <neps1192@gmail.com>, 2024
+# Tugay Hatıl <tugayh@projetgrup.com>, 2024
+# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2024
+# Murat Durmuş <muratd@projetgrup.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-15 10:38+0000\n"
+"POT-Creation-Date: 2024-01-29 10:45+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: sinem cil, 2024\n"
+"Last-Translator: Murat Durmuş <muratd@projetgrup.com>, 2024\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -897,7 +898,8 @@ msgid ""
 "Quotation: the document will be sent to and accessible by customers at any time.\n"
 "e.g. this option can be useful to share Product description files.\n"
 "Confirmed order: the document will be sent to and accessible by customers.\n"
-"e.g. this option can be useful to share User Manual or digital content bought on ecommerce. "
+"e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
+"Inside quote: The document will be included in the pdf of the quotation between the header pages and the quote table. "
 msgstr ""
 
 #. module: sale
@@ -1708,8 +1710,14 @@ msgstr "Teslim Miktarı"
 #: model:ir.model.fields,help:sale.field_sale_order__expected_date
 msgid ""
 "Delivery date you can promise to the customer, computed from the minimum "
-"lead time of the order lines."
+"lead time of the order lines in case of Service products. In case of "
+"shipping, the shipping policy of the order will be taken into account to "
+"either use the minimum or maximum lead time of the order lines."
 msgstr ""
+"Servis ürünlerinde sipariş hatlarının minimum teslim süresinden hesaplanarak"
+" müşteriye söz verebileceğiniz teslim tarihi. Sevkiyat durumunda, sipariş "
+"hatlarının minimum veya maksimum teslim süresini kullanmak için siparişin "
+"gönderim politikası dikkate alınacaktır."
 
 #. module: sale
 #: model:product.template,name:sale.advance_product_0_product_template
@@ -3040,11 +3048,6 @@ msgid "Order Date: Last 365 Days"
 msgstr "Sipariş Tarihi: Son 365 Gün"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
-msgid "Order Detail"
-msgstr "Sipariş Detayı"
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__order_line
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Order Lines"
@@ -3129,6 +3132,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Other Info"
 msgstr "Diğer Bilgiler"
+
+#. module: sale
+#: model:ir.actions.report,name:sale.action_report_saleorder
+msgid "PDF Quote"
+msgstr "PDF Teklifi"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_pdf_quote_builder
@@ -3507,11 +3515,6 @@ msgid "Quotation #"
 msgstr "Teklif #"
 
 #. module: sale
-#: model:ir.actions.report,name:sale.action_report_saleorder
-msgid "Quotation / Order"
-msgstr "Teklif / Sipariş"
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__quotation_count
 msgid "Quotation Count"
 msgstr "Teklif Sayısı"
@@ -3594,6 +3597,11 @@ msgstr "Teklifler ve Siparişler"
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 msgid "Quotations to review"
 msgstr "İncelenecek Teklifler"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order__rating_ids
+msgid "Ratings"
+msgstr "Değerlendirmeler"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__expense_policy
@@ -3955,6 +3963,17 @@ msgstr "Satış Ekipleri"
 #: model:ir.model.fields,field_description:sale.field_res_users__sale_warn
 msgid "Sales Warnings"
 msgstr "Satış Uyarıları"
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_account_analytic_line__so_line
+msgid ""
+"Sales order item to which the time spent will be added in order to be "
+"invoiced to your customer. Remove the sales order item for the timesheet "
+"entry to be non-billable."
+msgstr ""
+"Müşterinize faturalanmak üzere harcanan zamanın ekleneceği satış siparişi "
+"kalemi. Çalışma çizelgesi girişinin faturalandırılamaz olması için satış "
+"siparişi kalemini kaldırın."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__sales_price

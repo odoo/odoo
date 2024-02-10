@@ -5,14 +5,16 @@
 # Translators:
 # Wil Odoo, 2023
 # Iran Villalobos López, 2023
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
+# Fernanda Alvarez, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2024-02-06 13:57+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Iran Villalobos López, 2023\n"
+"Last-Translator: Fernanda Alvarez, 2024\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,34 +35,36 @@ msgid ""
 "Call your card issuer to activate your card or use another payment method. "
 "The phone number is on the back of your card."
 msgstr ""
+"Llame al emisor de su tarjeta para activarla o use otro método de pago. El "
+"número de teléfono está en la parte posterior de su tarjeta"
 
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/const.py:0
 #, python-format
 msgid "Check expiration date."
-msgstr ""
+msgstr "Revise la fecha de vencimiento."
 
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/const.py:0
 #, python-format
 msgid "Check the card number."
-msgstr ""
+msgstr "Revise el número de la tarjeta."
 
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/const.py:0
 #, python-format
 msgid "Check the card security code."
-msgstr ""
+msgstr "Revise el código de seguridad de la tarjeta."
 
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/const.py:0
 #, python-format
 msgid "Check the data."
-msgstr ""
+msgstr "Revise la información."
 
 #. module: payment_mercado_pago
 #: model:ir.model.fields,field_description:payment_mercado_pago.field_payment_provider__code
@@ -107,6 +111,8 @@ msgstr "Transacción de pago"
 #, python-format
 msgid "Payment was not processed, use another card or contact issuer."
 msgstr ""
+"No se procesó el pago, use otra tarjeta o póngase en contacto con la entidad"
+" emisora."
 
 #. module: payment_mercado_pago
 #. odoo-python
@@ -155,6 +161,17 @@ msgstr ""
 "(código %s)"
 
 #. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/models/payment_provider.py:0
+#, python-format
+msgid ""
+"The communication with the API failed. The response is empty. Please verify "
+"your access token."
+msgstr ""
+"Ocurrió un error al comunicarse con la API, la respuesta está vacía. "
+"Verifique su token de acceso."
+
+#. module: payment_mercado_pago
 #: model:ir.model.fields,help:payment_mercado_pago.field_payment_provider__code
 msgid "The technical code of this payment provider."
 msgstr "El código técnico de este proveedor de pagos."
@@ -164,7 +181,7 @@ msgstr "El código técnico de este proveedor de pagos."
 #: code:addons/payment_mercado_pago/const.py:0
 #, python-format
 msgid "This payment method does not process payments in installments."
-msgstr ""
+msgstr "Este método de pago no es compatible con pagos a plazos."
 
 #. module: payment_mercado_pago
 #. odoo-python
@@ -174,6 +191,8 @@ msgid ""
 "We are processing your payment. Don't worry, in less than 2 business days, "
 "we will notify you by e-mail if your payment has been credited."
 msgstr ""
+"Estamos procesando su pago. En menos de 2 días hábiles le enviaremos una "
+"notificación por correo cuando se realice el cargo."
 
 #. module: payment_mercado_pago
 #. odoo-python
@@ -184,6 +203,9 @@ msgid ""
 "will notify you by e-mail if your payment has been credited or if we need "
 "more information."
 msgstr ""
+"Estamos procesando su pago. En menos de 2 días hábiles le enviaremos una "
+"notificación por correo cuando se realice el cargo o si necesitamos más "
+"información."
 
 #. module: payment_mercado_pago
 #. odoo-python
@@ -191,7 +213,7 @@ msgstr ""
 #, python-format
 msgid ""
 "We were unable to process your payment, please check your card information."
-msgstr ""
+msgstr "No pudimos procesar el pago, revise la información de su tarjeta."
 
 #. module: payment_mercado_pago
 #. odoo-python
@@ -199,7 +221,7 @@ msgstr ""
 #: code:addons/payment_mercado_pago/const.py:0
 #, python-format
 msgid "We were unable to process your payment, please use another card."
-msgstr ""
+msgstr "No pudimos procesar el pago, utilice otra tarjeta."
 
 #. module: payment_mercado_pago
 #. odoo-python
@@ -209,6 +231,8 @@ msgid ""
 "You have already made a payment for that value. If you need to pay again, "
 "use another card or another payment method."
 msgstr ""
+"Ya pagó esta cantidad, si necesita pagar de nuevo, use otra tarjeta o un "
+"método de pago diferente."
 
 #. module: payment_mercado_pago
 #. odoo-python
@@ -218,20 +242,22 @@ msgid ""
 "You have reached the limit of allowed attempts. Choose another card or other"
 " means of payment."
 msgstr ""
+"Llegó al límite de intentos permitidos. Elija otra tarjeta u otros métodos "
+"de pago."
 
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/const.py:0
 #, python-format
 msgid "You must authorize the payment with this card."
-msgstr ""
+msgstr "Debe autorizar el pago con esta tarjeta."
 
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/const.py:0
 #, python-format
 msgid "Your card has not enough funds."
-msgstr ""
+msgstr "La tarjeta no tiene los fondos suficientes"
 
 #. module: payment_mercado_pago
 #. odoo-python
@@ -241,3 +267,5 @@ msgid ""
 "Your payment has been credited. In your summary you will see the charge as a"
 " statement descriptor."
 msgstr ""
+"Se realizó el cargo a su tarjeta. En su resumen verá el cargo como una "
+"descripción."

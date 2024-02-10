@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-01-29 10:44+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Will Sensors, 2024\n"
 "Language-Team: Latvian (https://app.transifex.com/odoo/teams/41243/lv/)\n"
@@ -1335,7 +1335,7 @@ msgstr "<strong>Piegādes adrese:</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Source:</strong><br/>"
-msgstr "<strong>Source:</strong><br/>"
+msgstr "<strong>Atsauce:</strong><br/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_statement
@@ -6341,6 +6341,16 @@ msgid "Epd Needed"
 msgstr "Nepieciešams Epd"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/account_type_selection/account_type_selection.js:0
+#: model:ir.model.fields.selection,name:account.selection__account_account__account_type__equity
+#: model:ir.model.fields.selection,name:account.selection__account_account__internal_group__equity
+#: model_terms:ir.ui.view,arch_db:account.view_account_search
+#, python-format
+msgid "Equity"
+msgstr "Pašu kapitāls"
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #, python-format
@@ -6350,16 +6360,6 @@ msgid ""
 msgstr ""
 "Kļūda lokalizācijas ielādēšanas laikā. Iespējams, vispirms vajadzētu "
 "atjaunināt lokalizācijas programmu."
-
-#. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/components/account_type_selection/account_type_selection.js:0
-#: model:ir.model.fields.selection,name:account.selection__account_account__account_type__equity
-#: model:ir.model.fields.selection,name:account.selection__account_account__internal_group__equity
-#: model_terms:ir.ui.view,arch_db:account.view_account_search
-#, python-format
-msgid "Equity"
-msgstr "Pašu kapitāls"
 
 #. module: account
 #. odoo-python
@@ -7989,6 +7989,13 @@ msgstr "Nederīgs"
 #, python-format
 msgid "Invalid \"Zip Range\", please configure it properly."
 msgstr "Nederīgs \"Zip\", lūdzu, konfigurējiet to pareizi."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_report.py:0
+#, python-format
+msgid "Invalid domain for expression '%s' of line '%s': %s"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -13109,20 +13116,20 @@ msgstr "Šķirojams"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__source_currency_id
 msgid "Source Currency"
-msgstr "Avota valūta"
+msgstr "Atsauces valūta"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Source Document"
-msgstr "Avota dokuments"
+msgstr "Atsauces dokuments"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_source_email
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_source_email
 #: model:ir.model.fields,field_description:account.field_account_payment__invoice_source_email
 msgid "Source Email"
-msgstr "Avota e-pasts"
+msgstr "Atsauces e-pasts"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_accrued_orders_wizard__amount
@@ -14968,7 +14975,7 @@ msgid ""
 "Please make sure the source file is valid."
 msgstr ""
 "Mēģinot pievienot baneri sākotnējam PDF formātam, tika pieļauta kļūda.\n"
-"Lūdzu, pārliecinieties, ka avota fails ir derīgs."
+"Lūdzu, pārliecinieties, ka sākotnējais fails ir derīgs."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -16957,12 +16964,9 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot import the \"openning_balance\" if the opening move (%s) is "
-"already posted.                         If you are absolutely sure you want "
-"to modify the opening balance of your accounts, reset the move to draft."
+"already posted. If you are absolutely sure you want to modify the opening "
+"balance of your accounts, reset the move to draft."
 msgstr ""
-"Jūs nevarat importēt \"openning_balance\", ja sākuma gājiens (%s) jau ir "
-"publicēts.                         Ja esat pilnīgi pārliecināts, ka vēlaties"
-" mainīt kontu sākuma atlikumu, atjaunojiet kustību uz projektu."
 
 #. module: account
 #. odoo-python

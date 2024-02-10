@@ -1,20 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_stock
-#
+# 
 # Translators:
+# Collex100, 2023
+# Ivan Kropotkin <yelizariev@itpp.dev>, 2023
+# Gennady Marchenko <gennadym@gmail.com>, 2023
+# Константин Коровин <korovin74@gmail.com>, 2023
+# Martin Trigaux, 2023
+# Сергей Шебанин <sergey@shebanin.ru>, 2024
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-15 10:37+0000\n"
-"PO-Revision-Date: 2024-01-30 15:14+0400\n"
-"Last-Translator: \n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
-"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ru\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: sale_stock
@@ -145,7 +153,8 @@ msgstr "В наличии на складе"
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_stock_rules_report__so_route_ids
 msgid "Choose to apply SO lines specific routes."
-msgstr "Выберите для применения позиций заказа на продажу конкретных маршрутов."
+msgstr ""
+"Выберите для применения позиций заказа на продажу конкретных маршрутов."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_company
@@ -199,8 +208,16 @@ msgstr "Статус доставки"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__expected_date
-msgid "Delivery date you can promise to the customer, computed from the minimum lead time of the order lines in case of Service products. In case of shipping, the shipping policy of the order will be taken into account to either use the minimum or maximum lead time of the order lines."
-msgstr "Дата доставки, которую вы можете обещать клиенту, рассчитывается из минимального времени выполнения заказа в случае товаров для сервиса. В случае доставки учитывается политика доставки заказа, чтобы использовать минимальное или максимальное время выполнения заказа."
+msgid ""
+"Delivery date you can promise to the customer, computed from the minimum "
+"lead time of the order lines in case of Service products. In case of "
+"shipping, the shipping policy of the order will be taken into account to "
+"either use the minimum or maximum lead time of the order lines."
+msgstr ""
+"Дата доставки, которую вы можете обещать клиенту, рассчитывается из "
+"минимального времени выполнения заказа в случае товаров для сервиса. В "
+"случае доставки учитывается политика доставки заказа, чтобы использовать "
+"минимальное или максимальное время выполнения заказа."
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__display_qty_widget
@@ -211,7 +228,8 @@ msgstr "Виджет отображения количества"
 #. odoo-python
 #: code:addons/sale_stock/models/sale_order.py:0
 #, python-format
-msgid "Do not forget to change the partner on the following delivery orders: %s"
+msgid ""
+"Do not forget to change the partner on the following delivery orders: %s"
 msgstr "Не забудьте изменить партнера в следующих заказах на доставку: %s"
 
 #. module: sale_stock
@@ -281,8 +299,14 @@ msgstr "Имеет поздний пикинг"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__picking_policy
-msgid "If you deliver all products at once, the delivery order will be scheduled based on the greatest product lead time. Otherwise, it will be based on the shortest."
-msgstr "Если вы доставляете все товары одновременно, то доставка заказа будет планироваться в соответствии с товаром с наибольшим временем доставки. В противном случае, она будет основана на товаре с кратчайшем временем."
+msgid ""
+"If you deliver all products at once, the delivery order will be scheduled "
+"based on the greatest product lead time. Otherwise, it will be based on the "
+"shortest."
+msgstr ""
+"Если вы доставляете все товары одновременно, то доставка заказа будет "
+"планироваться в соответствии с товаром с наибольшим временем доставки. В "
+"противном случае, она будет основана на товаре с кратчайшем временем."
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
@@ -311,8 +335,12 @@ msgstr "Инкотерм:"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__incoterm
-msgid "International Commercial Terms are a series of predefined commercial terms used in international transactions."
-msgstr "International Commercial Terms are a series of predefined commercial terms used in international transactions."
+msgid ""
+"International Commercial Terms are a series of predefined commercial terms "
+"used in international transactions."
+msgstr ""
+"International Commercial Terms are a series of predefined commercial terms "
+"used in international transactions."
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_users_view_form
@@ -366,15 +394,27 @@ msgstr "Могут потребоваться ручные действия."
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_res_config_settings__use_security_lead
-msgid "Margin of error for dates promised to customers. Products will be scheduled for delivery that many days earlier than the actual promised date, to cope with unexpected delays in the supply chain."
-msgstr "Предел погрешности для дат, обещанных покупателям. Поставки продукции будут запланированы на несколько дней раньше обещанной даты, чтобы справиться с непредвиденными задержками в цепочке поставок."
+msgid ""
+"Margin of error for dates promised to customers. Products will be scheduled "
+"for delivery that many days earlier than the actual promised date, to cope "
+"with unexpected delays in the supply chain."
+msgstr ""
+"Предел погрешности для дат, обещанных покупателям. Поставки продукции будут "
+"запланированы на несколько дней раньше обещанной даты, чтобы справиться с "
+"непредвиденными задержками в цепочке поставок."
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_res_company__security_lead
 #: model:ir.model.fields,help:sale_stock.field_res_config_settings__security_lead
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
-msgid "Margin of error for dates promised to customers. Products will be scheduled for procurement and delivery that many days earlier than the actual promised date, to cope with unexpected delays in the supply chain."
-msgstr "Предел погрешности для дат, обещанных покупателям. Закупка и поставка товаров будет назначена на несколько дней раньше, чем фактически обещанная дата, чтобы справиться с неожиданными задержками в системе поставок."
+msgid ""
+"Margin of error for dates promised to customers. Products will be scheduled "
+"for procurement and delivery that many days earlier than the actual promised"
+" date, to cope with unexpected delays in the supply chain."
+msgstr ""
+"Предел погрешности для дат, обещанных покупателям. Закупка и поставка "
+"товаров будет назначена на несколько дней раньше, чем фактически обещанная "
+"дата, чтобы справиться с неожиданными задержками в системе поставок."
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_delivered_method
@@ -407,8 +447,11 @@ msgstr "Недостаточная доступность в будущем"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_line__customer_lead
-msgid "Number of days between the order confirmation and the shipping of the products to the customer"
-msgstr "Количество дней с момента подтверждения заказа до отправки товара клиенту"
+msgid ""
+"Number of days between the order confirmation and the shipping of the "
+"products to the customer"
+msgstr ""
+"Количество дней с момента подтверждения заказа до отправки товара клиенту"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -642,15 +685,23 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/product_catalog/sale_order_line/sale_order_line.js:0
 #, python-format
-msgid "The ordered quantity cannot be decreased below the amount already delivered. Instead, create a return in your inventory."
-msgstr "Заказанное количество не может быть уменьшено ниже уже поставленного. Вместо этого создайте возврат в инвентаре."
+msgid ""
+"The ordered quantity cannot be decreased below the amount already delivered."
+" Instead, create a return in your inventory."
+msgstr ""
+"Заказанное количество не может быть уменьшено ниже уже поставленного. Вместо"
+" этого создайте возврат в инвентаре."
 
 #. module: sale_stock
 #. odoo-python
 #: code:addons/sale_stock/models/sale_order_line.py:0
 #, python-format
-msgid "The ordered quantity of a sale order line cannot be decreased below the amount already delivered. Instead, create a return in your inventory."
-msgstr "Заказанное количество в строке заказа на продажу не может быть уменьшено ниже уже поставленного. Вместо этого создайте возврат в инвентаре."
+msgid ""
+"The ordered quantity of a sale order line cannot be decreased below the "
+"amount already delivered. Instead, create a return in your inventory."
+msgstr ""
+"Заказанное количество в строке заказа на продажу не может быть уменьшено "
+"ниже уже поставленного. Вместо этого создайте возврат в инвентаре."
 
 #. module: sale_stock
 #. odoo-javascript

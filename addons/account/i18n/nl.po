@@ -5,17 +5,17 @@
 # Translators:
 # Martin Trigaux, 2023
 # Dylan Kiss, 2023
-# Jolien De Paepe, 2024
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
 # Wil Odoo, 2024
+# Jolien De Paepe, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-01-29 10:44+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Jolien De Paepe, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -6360,6 +6360,16 @@ msgid "Epd Needed"
 msgstr "Epd nodig"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/account_type_selection/account_type_selection.js:0
+#: model:ir.model.fields.selection,name:account.selection__account_account__account_type__equity
+#: model:ir.model.fields.selection,name:account.selection__account_account__internal_group__equity
+#: model_terms:ir.ui.view,arch_db:account.view_account_search
+#, python-format
+msgid "Equity"
+msgstr "Eigen vermogen"
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #, python-format
@@ -6369,16 +6379,6 @@ msgid ""
 msgstr ""
 "Fout tijdens het laden van de lokalisatie. Je moet waarschijnlijk eerst je "
 "lokalisatie-app updaten."
-
-#. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/components/account_type_selection/account_type_selection.js:0
-#: model:ir.model.fields.selection,name:account.selection__account_account__account_type__equity
-#: model:ir.model.fields.selection,name:account.selection__account_account__internal_group__equity
-#: model_terms:ir.ui.view,arch_db:account.view_account_search
-#, python-format
-msgid "Equity"
-msgstr "Eigen vermogen"
 
 #. module: account
 #. odoo-python
@@ -8028,6 +8028,13 @@ msgstr "Foute *Postcode reeks\", graag deze correct te configureren."
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_report.py:0
+#, python-format
+msgid "Invalid domain for expression '%s' of line '%s': %s"
+msgstr "Ongeldig domein voor de uitdrukking '%s' van regel '%s': %s"
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Invalid fiscal year last day"
@@ -8314,7 +8321,7 @@ msgstr "Factuuranalyses"
 #: code:addons/account/wizard/account_move_send.py:0
 #, python-format
 msgid "Invoices are being sent in the background."
-msgstr ""
+msgstr "Facturen worden op de achtergrond verzonden."
 
 #. module: account
 #. odoo-python
@@ -8322,7 +8329,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Invoices in error"
-msgstr ""
+msgstr "Facturen in foutmelding"
 
 #. module: account
 #. odoo-python
@@ -8336,14 +8343,14 @@ msgstr "Facturen die toebehoren aan je"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Invoices sent"
-msgstr ""
+msgstr "Verzonden facturen"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Invoices sent successfully."
-msgstr ""
+msgstr "Succesvol verzonden facturen."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -10291,7 +10298,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "One or more invoices couldn't be processed."
-msgstr ""
+msgstr "Een of meerdere facturen konden niet worden verwerkt."
 
 #. module: account
 #: model:ir.ui.menu,name:account.root_payment_menu
@@ -12813,7 +12820,7 @@ msgstr ""
 #: code:addons/account/wizard/account_move_send.py:0
 #, python-format
 msgid "Sending invoices"
-msgstr ""
+msgstr "Verzend facturen"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
@@ -12825,7 +12832,7 @@ msgstr "Verzonden"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Sent invoices"
-msgstr ""
+msgstr "Verzonden facturen"
 
 #. module: account
 #: model:mail.template,description:account.mail_template_data_payment_receipt
@@ -17073,12 +17080,12 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot import the \"openning_balance\" if the opening move (%s) is "
-"already posted.                         If you are absolutely sure you want "
-"to modify the opening balance of your accounts, reset the move to draft."
+"already posted. If you are absolutely sure you want to modify the opening "
+"balance of your accounts, reset the move to draft."
 msgstr ""
-"Je kan de \"openning_balance\" niet importeren als de openingsbeweging (%s) "
-"al is geboekt.                         Als je absoluut het openingssaldo van"
-" je rekeningen wilt wijzigen, zet dan de boeking terug naar concept."
+"Je kan de \"opening_balance\" niet importeren als de openingsbeweging (%s) "
+"al is geboekt. Als je absoluut het openingssaldo van je rekeningen wilt "
+"wijzigen, zet dan de boeking terug naar concept."
 
 #. module: account
 #. odoo-python
