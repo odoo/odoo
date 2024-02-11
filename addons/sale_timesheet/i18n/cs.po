@@ -9,8 +9,8 @@
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2023
 # Jakub Smolka, 2023
 # Marek Záda, 2023
-# Aleš Fiala <f.ales1@seznam.cz>, 2024
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2024
+# Aleš Fiala <f.ales1@seznam.cz>, 2024
 # Katerina Horylova, 2024
 # 
 msgid ""
@@ -135,6 +135,11 @@ msgid ""
 "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"Podle konfigurace výrobku lze automaticky vypočítat dodané množství:\n"
+"  - Ručně: množství se nastavuje ručně na řádku.\n"
+"  - Analytický Z výdajů: množství je součtem množství ze zaúčtovaných výdajů.\n"
+"  - Timesheet: množství je součtem hodin zaznamenaných na úkolech spojených s touto prodejní položkou.\n"
+"  - Skladové pohyby: množství pochází z potvrzených vyskladnění\n"
 
 #. module: sale_timesheet
 #: model:account.analytic.account,name:sale_timesheet.account_analytic_account_project_support
@@ -1640,4 +1645,4 @@ msgstr "prodaných hodin."
 #: code:addons/sale_timesheet/models/sale_order.py:0
 #, python-format
 msgid "remaining"
-msgstr ""
+msgstr "zbývajících"

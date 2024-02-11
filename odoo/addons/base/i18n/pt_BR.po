@@ -14680,48 +14680,48 @@ msgstr "Aplicar"
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_upgrade_install
 #, python-format
 msgid "Apply Schedule Upgrade"
-msgstr "Aplicar atualizações de agenda"
+msgstr "Aplicar agenda de upgrade"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_view_base_module_upgrade
 msgid "Apply Scheduled Upgrades"
-msgstr "Aplicar Atualizações Agendadas"
+msgstr "Aplicar upgrades agendados"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_rule__perm_create
 msgid "Apply for Create"
-msgstr "Permissão para Criar"
+msgstr "Aplicar para 'Criação'"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_rule__perm_unlink
 msgid "Apply for Delete"
-msgstr "Permissão para Excluir"
+msgstr "Aplicar para 'Excluir'"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_rule__perm_read
 msgid "Apply for Read"
-msgstr "Aplicar para Leitura"
+msgstr "Aplicar para 'Leitura'"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_rule__perm_write
 msgid "Apply for Write"
-msgstr "Aplicar para Gravação"
+msgstr "Aplicar para 'Gravação'"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_appointment_crm
 msgid "Appointment Lead Generation"
-msgstr "Reuniões Geração de Leads"
+msgstr "Compromissos - Geração de leads"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_appointment_sms
 msgid "Appointment SMS"
-msgstr "Reuniões SMS"
+msgstr "Compromissos - SMS"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_appointment_full
 #: model:ir.module.module,summary:base.module_test_appointment_full
 msgid "Appointment Testing Module"
-msgstr "Módulo Teste de Reuniões"
+msgstr "Compromissos - Módulo de teste"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_appointment
@@ -16231,14 +16231,15 @@ msgstr ""
 #: code:addons/base/models/ir_module.py:0
 #, python-format
 msgid "Can not upgrade module '%s'. It is not installed."
-msgstr "Impossível atualizar o módulo '%s'. Ele não está instalado."
+msgstr ""
+"Não é possível atualizar o módulo '%s' porque este não está instalado."
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "Can only rename one field at a time!"
-msgstr "É possível renomear apenas um campo de cada vez!"
+msgstr "Só é possível renomear um campo de cada vez."
 
 #. module: base
 #. odoo-python
@@ -16299,7 +16300,7 @@ msgstr "Cancelar desinstalação"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_form
 msgid "Cancel Upgrade"
-msgstr "Cancelar Atualização"
+msgstr "Cancelar upgrade"
 
 #. module: base
 #. odoo-python
@@ -25750,7 +25751,7 @@ msgstr "Resultado da atualização do módulo"
 #. module: base
 #: model:ir.actions.act_window,name:base.action_view_base_module_upgrade_install
 msgid "Module Upgrade Install"
-msgstr "Instalar Atualização do Módulo"
+msgstr "Instalar upgrade do módulo"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_module_module_dependency
@@ -25760,7 +25761,7 @@ msgstr "Dependência de módulos"
 #. module: base
 #: model:ir.model,name:base.model_ir_module_module_exclusion
 msgid "Module exclusion"
-msgstr "Module exclusion"
+msgstr "Exclusão de módulo"
 
 #. module: base
 #. odoo-python
@@ -25770,7 +25771,7 @@ msgid ""
 "Module loading %s failed: file %s could not be processed:\n"
 " %s"
 msgstr ""
-"Carregamento do Módulo %s falhou: arquivo %s não pode ser processado:\n"
+"O carregamento do módulo %s falhou: o arquivo %s não pode ser processado:\n"
 " %s"
 
 #. module: base
@@ -25783,7 +25784,7 @@ msgstr "Módulos"
 #: code:addons/base/models/ir_module.py:0
 #, python-format
 msgid "Modules \"%s\" and \"%s\" are incompatible."
-msgstr "Modules \"%s\" and \"%s\" are incompatible."
+msgstr "Os módulos \"%s\" e \"%s\" são incompatíveis."
 
 #. module: base
 #: model:res.country,name:base.md
@@ -35177,11 +35178,12 @@ msgid ""
 "dependencies. Neither we want to add in website module some routes, views and\n"
 "models which only purpose is to run tests."
 msgstr ""
-"Este módulo contém testes relacionados ao site. Esses são\n"
-"presente em um módulo separado, pois estamos testando a instalação / desinstalação / atualização do módulo\n"
-"e não queremos recarregar o módulo do site todas as vezes, incluindo é possível\n"
-"dependências. Também não queremos adicionar no módulo do site algumas rotas, visualizações e\n"
-"modelos cujo único propósito é executar testes."
+"Este módulo contém testes relacionados ao site. Eles estão presentes em um "
+"módulo separado, pois estamos testando a instalação/desinstalação/upgrade do"
+" módulo e não queremos recarregar o módulo do site todas as vezes, incluindo"
+" suas possíveis dependências. Também não queremos adicionar ao módulo do "
+"site algumas rotas, visualizações e modelos cuja única finalidade é executar"
+" testes."
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_subscription_taxcloud
@@ -35954,8 +35956,8 @@ msgid ""
 "Unable to upgrade module \"%s\" because an external dependency is not met: "
 "%s"
 msgstr ""
-"Não foi possível atualizar o módulo \"%s\" devido a uma dependência externa "
-"não satisfeita: %s"
+"Não foi possível fazer upgrade do módulo \"%s\" devido a uma dependência "
+"externa não satisfeita: %s"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_uncategorized
@@ -36186,12 +36188,12 @@ msgstr "Atualizar o Registro"
 #: model_terms:ir.ui.view,arch_db:base.module_form
 #: model_terms:ir.ui.view,arch_db:base.module_view_kanban
 msgid "Upgrade"
-msgstr "Atualização"
+msgstr "Upgrade"
 
 #. module: base
 #: model:ir.model,name:base.model_base_module_upgrade
 msgid "Upgrade Module"
-msgstr "Upgrade Module"
+msgstr "Fazer upgrade do módulo"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__url
@@ -37848,7 +37850,7 @@ msgid ""
 "You try to upgrade the module %s that depends on the module: %s.\n"
 "But this module is not available in your system."
 msgstr ""
-"Você tentou atualizar o módulo %s que depende do módulo: %s.\n"
+"Você tentou fazer upgrade o módulo %s que depende do módulo: %s.\n"
 "Mas esse módulo não está disponível no seu sistema."
 
 #. module: base
@@ -37858,7 +37860,7 @@ msgid ""
 "created user under the Settings / Users menu."
 msgstr ""
 "Você será capaz de definir direitos de acesso adicionais editando o usuário "
-"recém-criado no menu Configurações / Usuários."
+"recém-criado no menu Definições > Usuários."
 
 #. module: base
 #. odoo-python
@@ -37869,9 +37871,9 @@ msgid ""
 "instead. If SSL is needed, an upgrade to Python 2.6 on the server-side "
 "should do the trick."
 msgstr ""
-"Your Odoo Server does not support SMTP-over-SSL. You could use STARTTLS "
-"instead. If SSL is needed, an upgrade to Python 2.6 on the server-side "
-"should do the trick."
+"Seu servidor Odoo não é compatível com SMTP-over-SSL. Em vez disso, você "
+"pode usar o STARTTLS. Se o SSL for necessário, uma atualização para o Python"
+" 2.6 no lado do servidor deve resolver o problema."
 
 #. module: base
 #: model_terms:res.company,sign_terms:base.main_company
