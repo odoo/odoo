@@ -21,6 +21,7 @@
 # Daniel Löfgren, 2022
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2023
 # Lasse L, 2023
+# Claes-Johan Dahlin, 2024
 # 
 msgid ""
 msgstr ""
@@ -28,7 +29,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-07-26 11:51+0000\n"
 "PO-Revision-Date: 2021-09-14 12:28+0000\n"
-"Last-Translator: Lasse L, 2023\n"
+"Last-Translator: Claes-Johan Dahlin, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -184,7 +185,7 @@ msgstr "<option value=\"\">Land...</option>"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "<option value=\"\">State / Province...</option>"
-msgstr ""
+msgstr "<option value=\"\">Stat/provins...</option>"
 
 #. module: website_sale
 #: code:addons/website_sale/models/crm_team.py:0
@@ -390,6 +391,9 @@ msgid ""
 "<span>Unfortunately your order can not be confirmed as the amount of your payment does not match the amount of your cart.\n"
 "                        Please contact the responsible of the shop for more information.</span>"
 msgstr ""
+"<span>Din beställning kan tyvärr inte bekräftas eftersom beloppet på din "
+"betalning inte matchar beloppet i din varukorg. Vänligen kontakta ansvarig "
+"för butiken för mer information.</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
@@ -1097,6 +1101,8 @@ msgid ""
 "Changing your name is not allowed once documents have been issued for your "
 "account. Please contact us directly for this operation."
 msgstr ""
+"Det är inte tillåtet att ändra namn när dokument har utfärdats för ditt "
+"konto. Vänligen kontakta oss direkt för denna åtgärd."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__child_id
@@ -1329,6 +1335,11 @@ msgstr "Kunder"
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "DHL Express Connector"
 msgstr "DHL Express kontakt"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product
+msgid "DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PRODUCTS"
+msgstr "SLÄPPA BYGGBLOCK HÄR FÖR ATT GÖRA DEM TILLGÄNGLIGA I ALLA PRODUKTER"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__currency_id
@@ -1758,6 +1769,9 @@ msgid ""
 "backend. If you wish to change your name or email address, please do so in "
 "the account settings or contact your administrator."
 msgstr ""
+"Om du beställer åt en extern person, vänligen gör din beställning via "
+"backend. Om du vill ändra ditt namn eller din e-postadress kan du göra det i"
+" kontoinställningarna eller kontakta din administratör."
 
 #. module: website_sale
 #: code:addons/website_sale/controllers/main.py:0
@@ -3218,7 +3232,7 @@ msgstr "Åtkomsttoken är ogiltig."
 #: code:addons/website_sale/controllers/main.py:0
 #, python-format
 msgid "The cart has been updated. Please refresh the page."
-msgstr ""
+msgstr "Varukorgen har uppdaterats. Vänligen uppdatera sidan."
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__website_url
@@ -3252,7 +3266,7 @@ msgstr ""
 #: code:addons/website_sale/controllers/main.py:0
 #, python-format
 msgid "The order has been canceled."
-msgstr ""
+msgstr "Beställningen har annullerats."
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__public_categ_ids

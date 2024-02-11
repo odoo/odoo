@@ -649,7 +649,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_attachment_count
 msgid "Attachment Count"
-msgstr "Contagem de Anexos"
+msgstr "Total de anexos"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1202,7 +1202,7 @@ msgstr "Tela do cliente desconectada"
 #: code:addons/point_of_sale/static/src/js/ChromeWidgets/ClientScreenButton.js:0
 #, python-format
 msgid "Client Screen Unsupported. Please upgrade the IoT Box"
-msgstr "Tela do cliente não suportada. Atualize o IoT Box"
+msgstr "Tela do cliente não suportada. Faça o upgrade da IoT Box"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3616,6 +3616,12 @@ msgstr ""
 "Clique em +/- para modificar a quantidade a ser reembolsada."
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_config.py:0
+#, python-format
+msgid "Only administrators can edit receipt headers and footers"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__only_round_cash_method
 msgid "Only apply rounding on cash"
 msgstr "Apenas aplicar arredondamento para dinheiro"
@@ -3803,7 +3809,7 @@ msgstr "O Pedido %s não está completamente pago."
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__order_count
 msgid "Order Count"
-msgstr "Contagem de pedidos"
+msgstr "Total de pedidos"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__date

@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Faraz Sadri Alamdari <ifarazir@gmail.com>, 2022
-# Farid Hariri <fhari1234@gmail.com>, 2022
+# F Hariri <fhari1234@gmail.com>, 2022
 # سید محمد آذربرا <mohammadazarbara98@gmail.com>, 2022
 # Hamid Darabi, 2022
 # Mohsen Mohammadi <iammohsen.123@gmail.com>, 2022
@@ -16,6 +16,7 @@
 # Martin Trigaux, 2022
 # Hanna Kheradroosta, 2022
 # fardin mardani, 2023
+# Abbas Ebadian, 2024
 # 
 msgid ""
 msgstr ""
@@ -23,7 +24,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-03-10 09:48+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: fardin mardani, 2023\n"
+"Last-Translator: Abbas Ebadian, 2024\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -46,7 +47,7 @@ msgstr "داده واکشی شد"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__sale_order_count
 msgid "# Sale Orders"
-msgstr ""
+msgstr "تعداد سفارش های فروش"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__nbr
@@ -389,6 +390,8 @@ msgid ""
 "<span attrs=\"{'invisible': [('advance_payment_method', '!=', "
 "'percentage')]}\" class=\"oe_inline\">%</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('advance_payment_method', '!=', "
+"'percentage')]}\" class=\"oe_inline\">%</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
@@ -550,6 +553,8 @@ msgid ""
 "<strong>No suitable payment option could be found.</strong><br/>\n"
 "                                        If you believe that it is an error, please contact the website administrator."
 msgstr ""
+"<strong>روش مناسبی برای پرداخت پیدا نشد</strong><br/>\n"
+"اگر این یک خطاست،‌ لطفا با پشتیبانی تماس بگیرید"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1517,7 +1522,7 @@ msgstr "پیش پرداخت‌ها"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid "Down payment"
-msgstr ""
+msgstr "پیش‌پرداخت"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__fixed
@@ -1647,7 +1652,7 @@ msgstr "مقادیر اضافی"
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid "Extra line with %s"
-msgstr ""
+msgstr "سطر اضافی با %s "
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_fedex
@@ -1903,7 +1908,7 @@ msgstr "فاکتور ایجاد شد"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__invoice_mail_template_id
 msgid "Invoice Email Template"
-msgstr ""
+msgstr "قالب ایمیل فاکتور"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__invoice_lines
@@ -2061,12 +2066,14 @@ msgid ""
 "It is forbidden to modify the following fields in a locked order:\n"
 "%s"
 msgstr ""
+"امکان ویرایش فیلدهای زیر در یک سفارش قفل شده وجود ندارد.\n"
+"%s"
 
 #. module: sale
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "It is not allowed to confirm an order in the following states: %s"
-msgstr ""
+msgstr "امکان تایید سفارشی که در مراحل زیر باشد وجود ندارد: %s"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_move
@@ -2498,7 +2505,7 @@ msgstr "امضای آنلاین"
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Only draft orders can be marked as sent directly."
-msgstr ""
+msgstr "فقط سفارش های پیش نویس را می توان برای ارسال نشانهگذاری کرد."
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_product_attribute_custom_value_sol_custom_value_unique
@@ -3764,6 +3771,8 @@ msgid ""
 "Team %(team_name)s has %(sale_order_count)s active sale orders. Consider "
 "canceling them or archiving the team instead."
 msgstr ""
+"تیم %(team_name)s،‌ %(sale_order_count)s سفارش فعال دارد.آنها را لغو کنید یا"
+" تیم را بایگانی کنید."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__show_update_pricelist
@@ -3815,7 +3824,7 @@ msgstr "شرایط و ضوابط"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Terms &amp; Conditions:"
-msgstr ""
+msgstr "شرایط و ضوابط"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__note
@@ -3928,7 +3937,7 @@ msgstr ""
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid "The ordered quantity has been updated."
-msgstr ""
+msgstr "تعداد سفارش داده شده به روز شد."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__reference
@@ -3966,7 +3975,7 @@ msgstr ""
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "The provided parameters are invalid."
-msgstr ""
+msgstr "پارامترهای ارائه شده نامعتبر هستند."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__currency_rate
@@ -4415,6 +4424,8 @@ msgid ""
 "You can not delete a sent quotation or a confirmed sales order. You must "
 "first cancel it."
 msgstr ""
+"شما نمی‌توانید یک پیش‌فاکتور ارسال شده یا یک سفارش فروش تأیید شده را حذف "
+"کنید. باید ابتدا آن را لغو کنید."
 
 #. module: sale
 #: code:addons/sale/models/sale_order_line.py:0
@@ -4423,6 +4434,8 @@ msgid ""
 "You can not remove an order line once the sales order is confirmed.\n"
 "You should rather set the quantity to 0."
 msgstr ""
+"شما نمی‌توانید یک سطر سفارش را پس از تأیید سفارش فروش حذف کنید.\n"
+"بهتر است به جای آن تعداد را به 0 تنظیم کنید."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_to_invoice
@@ -4451,6 +4464,7 @@ msgid ""
 "You cannot change the product's type because it is already used in sales "
 "orders."
 msgstr ""
+"امکان ویرایش نوع محصول به دلیل استفاده از آن حداقل در یک سفارش،‌ وجود ندارد"
 
 #. module: sale
 #: code:addons/sale/models/sale_order_line.py:0
@@ -4511,7 +4525,7 @@ msgstr ""
 #: model:ir.cron,cron_name:sale.send_invoice_cron
 #: model:ir.cron,name:sale.send_invoice_cron
 msgid "automatic invoicing: send ready invoice"
-msgstr ""
+msgstr "صدور فاکتور خودکار: ارسال فاکتور آماده"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_bpost
