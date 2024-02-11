@@ -106,7 +106,6 @@ class ResConfigSettings(models.TransientModel):
     point_of_sale_use_ticket_qr_code = fields.Boolean(related='company_id.point_of_sale_use_ticket_qr_code', readonly=False)
     pos_auto_validate_terminal_payment = fields.Boolean(related='pos_config_id.auto_validate_terminal_payment', readonly=False, string="Automatically validates orders paid with a payment terminal.")
     pos_trusted_config_ids = fields.Many2many(related='pos_config_id.trusted_config_ids', readonly=False)
-    pos_delivery_service_ids = fields.Many2many(related='pos_config_id.delivery_service_ids', string='Delivery Services', readonly=False)
     point_of_sale_ticket_unique_code = fields.Boolean(related='company_id.point_of_sale_ticket_unique_code', readonly=False)
 
     @api.model_create_multi

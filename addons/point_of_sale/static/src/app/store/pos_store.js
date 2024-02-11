@@ -165,7 +165,6 @@ export class PosStore extends Reactive {
                 // maps the order's backendId to it's selected orderline
                 selectedOrderlineIds: {},
                 highlightHeaderNote: false,
-                acceptDeliveryOrderLoading: false,
             },
         };
 
@@ -239,7 +238,6 @@ export class PosStore extends Reactive {
         this.has_available_products = this.data.custom.has_available_products;
         this.pos_special_products_ids = this.data.custom.pos_special_products_ids;
         this.open_orders_json = this.data.custom.open_orders;
-        this.delivery_order_count = this.data.custom.delivery_order_count;
         this.models = this.data.models;
 
         // Add Payment Interface to Payment Method
@@ -1732,15 +1730,6 @@ export class PosStore extends Reactive {
             company: this.company,
             cashier: this.get_cashier()?.name,
             header: this.config.receipt_header,
-            delivery: this.getDeliveryData(order),
-        };
-    }
-
-    getDeliveryData(order) {
-        return {
-            service_name: order.delivery_service_name,
-            note: order.delivery_note,
-            date_order: new Date(order.date_order).toLocaleString(),
         };
     }
 

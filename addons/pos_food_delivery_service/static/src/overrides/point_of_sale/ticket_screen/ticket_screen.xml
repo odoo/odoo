@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="pos_food_delivery_service.TicketScreen" t-inherit="point_of_sale.TicketScreen" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('status-col')]" position="replace">
+            <div class="status-col col narrow p-2">
+                <t t-if="_state.ui.filter == 'DELIVERY'">Prep Status</t>
+                <t t-else="">Status</t>
+            </div>
+        </xpath>
+
+        <xpath expr="//div[hasclass('status-col-value')]" position="replace">
+            <div class="status-col-value col narrow p-2">
+                <div>
+                    <t t-if="_state.ui.filter == 'DELIVERY'" t-esc="getDeliveryStatus(order)"/>
+                    <t t-else="" t-esc="getStatus(order)"/>
+                </div>
+            </div>
+        </xpath>
+
+        <xpath expr="//div[hasclass('control-buttons')]" position="before">
+            <t t-if="!_selectedSyncedOrder.delivery_id">
+        </xpath>
+        <xpath expr="//div[hasclass('subpads')]" position="after">
+            </t>
+            <div t-else="" class="pads border-top">
+                <div t-if="_selectedSyncedOrder.delivery_status != 'awaiting'" class="control-buttons d-flex flex-column border-bottom overflow-hidden bg-300">
+                    <div class="control-buttons d-flex">
+                        <InvoiceButton onInvoiceOrder.bind="onInvoiceOrder" order="_selectedSyncedOrder" />
+                        <ReprintReceiptButton order="_selectedSyncedOrder" />
+                    </div>
+                    <SelectPartnerButton partner="getSelectedPartner()"/>
+                </div>
+                <div t-if="_selectedSyncedOrder.delivery_status == 'awaiting'" class="d-flex justify-content-center bg-primary">
+                    <t t-if="!_state.ui.acceptDeliveryOrderLoading">
+                        <button class="button validation load-order-button w-50 btn btn-lg btn-primary rounded-0 fw-bolder py-3" t-on-click="() => this._acceptDeliveryOrder(_selectedSyncedOrder)">
+                            <span class="fs-2 d-block">Accept Order</span>
+                            <span t-if="!_selectedSyncedOrder.delivery_asap" class="fs-6">(prepare for <t t-esc="_selectedSyncedOrder.delivery_prepare_for" />)</span>
+                        </button>
+                        <button class="button load-order-button w-50 btn btn-lg rounded-0 fw-bolder py-3 bg-secondary" t-on-click="() => this._rejectDeliveryOrder(_selectedSyncedOrder)">
+                            <span class="fs-2 d-block">Reject Order</span>
+                        </button>
+                    </t>
+                    <t t-else="">
+                        <div class="o_spinner d-flex flex-column">
+                            <img src="/web/static/img/spin.svg" alt="Loading..."/>
+                            <span class="text-white">Loading...</span>
+                        </div>
+                    </t>
+                </div>
+                <t t-elif="_selectedSyncedOrder.delivery_status in ('scheduled', 'confirmed')">
+                    <button class="button validation load-order-button w-100 btn btn-lg btn-primary rounded-0 fw-bolder py-3" t-on-click="() => this._acceptDeliveryOrder(_selectedSyncedOrder)">
+                        <span class="fs-1 d-block">Send To Preparation</span>
+                    </button>
+                </t>
+                <t t-elif="_selectedSyncedOrder.delivery_status == 'preparing'">
+                    <button class="button validation load-order-button w-100 btn btn-lg btn-primary rounded-0 fw-bolder py-3" t-on-click="() => this._markAsPreparedDeliveryOrder(_selectedSyncedOrder)">
+                        <span class="fs-1 d-block">Mark As Prepared</span>
+                    </button>
+                </t>
+                <t t-elif="_selectedSyncedOrder.delivery_status == 'ready'">
+                    <button class="button validation load-order-button w-100 btn btn-lg btn-primary rounded-0 fw-bolder py-3" t-on-click="() => this._markAsDeliveredDeliveryOrder(_selectedSyncedOrder)">
+                        <span class="fs-1 d-block">Mark As Delivered</span>
+                    </button>
+                </t>
+                <t t-elif="_selectedSyncedOrder.delivery_status == 'delivered'">
+                    <button class="button validation load-order-button w-100 btn btn-lg rounded-0 fw-bolder py-3" disabled="True">
+                        <span class="fs-1 d-block">Delivered</span>
+                    </button>
+                </t>
+            </div>
+        </xpath>
+    </t>
+</templates>

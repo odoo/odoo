@@ -187,7 +187,6 @@ class PosConfig(models.Model):
     access_token = fields.Char("Access Token", default=lambda self: uuid4().hex[:16])
     show_product_images = fields.Boolean(string="Show Product Images", help="Show product images in the Point of Sale interface.", default=True)
     show_category_images = fields.Boolean(string="Show Category Images", help="Show category images in the Point of Sale interface.", default=True)
-    delivery_service_ids = fields.Many2many('pos.delivery.service', 'pos_config_delivery_service_rel', 'config_id', 'delivery_service_id', string='Delivery Services')
 
     @api.depends('payment_method_ids')
     def _compute_cash_control(self):
@@ -922,23 +921,3 @@ class PosConfig(models.Model):
 
     def _get_special_products(self):
         return self.env.ref('point_of_sale.product_product_tip', raise_if_not_found=False) or self.env['product.product']
-    
-    def get_delivery_order_count(self):
-        # overriden by pos_delivery modules
-        # should return a dict with the count of delivery orders for each delivery service
-        # like
-        # { 
-        #   'deliveroo': {
-        #       'awaiting': 2,
-        #       'preparing': 1
-        #   },
-        #   'ubereats': {
-        #       'awaiting': 1
-        #   }
-        #}
-        return {}
-    
-    def _send_delivery_order_count(self, order_id):
-        order_count = self.get_delivery_order_count()
-        if self.current_session_id:
-            self._notify('DELIVERY_ORDER_COUNT', order_count, private=False)

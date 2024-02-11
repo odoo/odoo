@@ -18,14 +18,24 @@ class PosDeliverooController(http.Controller):
     def notification(self):
         # https://api-docs.deliveroo.com/v2.0/reference/order-events-webhook-1
         data = json.loads(request.httprequest.data)
-        pos_delivery_service_sudo = request.env['pos.delivery.service'].sudo().search([])[0]
-        # https://api-docs.deliveroo.com/v2.0/docs/securing-webhooks
-        expected_signature = hmac.new(bytes(pos_delivery_service_sudo.webhook_secret, 'utf-8'), msg=bytes(f"{request.httprequest.headers.get('X-Deliveroo-Sequence-Guid')} {request.httprequest.data.decode('utf-8')}", 'utf-8'), digestmod=hashlib.sha256).hexdigest()
-        if expected_signature != request.httprequest.headers.get('X-Deliveroo-Hmac-Sha256'):
+        signature = request.httprequest.headers.get('X-Deliveroo-Hmac-Sha256')
+        deliveroo_providers_sudo = request.env['pos.online.delivery.provider'].sudo().search([('code', '=', 'deliveroo')])
+        deliveroo_provider = False
+        for deliveroo_provider_sudo in deliveroo_providers_sudo:
+            expected_signature = hmac.new(bytes(deliveroo_provider_sudo.webhook_secret, 'utf-8'), msg=bytes(f"{request.httprequest.headers.get('X-Deliveroo-Sequence-Guid')} {request.httprequest.data.decode('utf-8')}", 'utf-8'), digestmod=hashlib.sha256).hexdigest()
+            if expected_signature == signature:
+                deliveroo_provider = deliveroo_provider_sudo
+                break
+        if not deliveroo_provider:
             return exceptions.BadRequest()
+        # pos_delivery_service_sudo = request.env['pos.delivery.service'].sudo().search([])[0]
+        # https://api-docs.deliveroo.com/v2.0/docs/securing-webhooks
+        # expected_signature = hmac.new(bytes(pos_delivery_service_sudo.webhook_secret, 'utf-8'), msg=bytes(f"{request.httprequest.headers.get('X-Deliveroo-Sequence-Guid')} {request.httprequest.data.decode('utf-8')}", 'utf-8'), digestmod=hashlib.sha256).hexdigest()
+        # if expected_signature != request.httprequest.headers.get('X-Deliveroo-Hmac-Sha256'):
+        #     return exceptions.BadRequest()
         # TODO make sure that the order is not already in the system
         # is_order_duplicate = request.env['pos.order'].sudo().search([('pos_reference', '=', data['pos_reference'])])
-        pos_config_sudo = pos_delivery_service_sudo.config_ids[0]
+        pos_config_sudo = deliveroo_provider.config_ids[0]
         order = data['body']['order']
         if order['status'] == 'canceled' or not pos_config_sudo.has_active_session:
             request.env['pos.delivery.service'].sudo().search([])[0].sudo()._reject_order(order['id'], "closing_early")
@@ -49,7 +59,7 @@ class PosDeliverooController(http.Controller):
                 'delivery_id': order['id'],
                 'delivery_status': 'awaiting',
                 'delivery_display': order['display_id'],
-                'delivery_service_id': pos_delivery_service_sudo.id,
+                'delivery_provider_id': deliveroo_provider.id,
                 'delivery_asap': order['asap'],
                 'delivery_confirm_at': order['confirm_at'].replace('T', ' ')[:-1],
                 'delivery_start_preparing_at': order['start_preparing_at'].replace('T', ' ')[:-1],
@@ -83,7 +93,7 @@ class PosDeliverooController(http.Controller):
                 'payment_ids': [(0,0,{
                     'amount': amount_paid,
                     'payment_date': date_order,
-                    'payment_method_id': pos_delivery_service_sudo.payment_method_id.id,
+                    'payment_method_id': deliveroo_provider.payment_method_id.id,
                 })],
                 'last_order_preparation_change': '{}',
             })

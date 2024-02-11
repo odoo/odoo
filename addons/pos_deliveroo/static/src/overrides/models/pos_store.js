@@ -8,7 +8,7 @@ patch(PosStore.prototype, {
     async setup() {
         await super.setup(...arguments);
         this.bus.subscribe("DELIVERY_ORDER_COUNT", (payload) => {
-            if (this.config.raw.delivery_service_ids) {
+            if (this.config.raw.delivery_provider_ids) {
                 this.ws_syncDeliveryCount(payload);
             }
         });

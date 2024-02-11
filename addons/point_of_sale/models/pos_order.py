@@ -69,8 +69,6 @@ class PosOrder(models.Model):
             'access_token': ui_order.get('access_token', ''),
             'ticket_code': ui_order.get('ticket_code', ''),
             'last_order_preparation_change': ui_order.get('last_order_preparation_change', '{}'),
-            'delivery_id': ui_order.get('delivery_id', ''),
-            'delivery_status': ui_order.get('delivery_status', None),
         }
 
     @api.model
@@ -343,10 +341,6 @@ class PosOrder(models.Model):
         comodel_name='account.fiscal.position', string='Fiscal Position',
         readonly=False,
     )
-    delivery_service_id = fields.Many2one('pos.delivery.service', string='Delivery Service')
-    delivery_id = fields.Char(string='Delivery ID')
-    delivery_status = fields.Selection([('awaiting', 'Awaiting'), ('scheduled', 'Scheduled'), ('confirmed', 'Confirmed'), ('preparing', 'Preparing'), ('ready', 'Ready'), ('delivered', 'Delivered'), ('cancelled', 'Cancelled')], string='Delivery Status')
-    delivery_note = fields.Text(string='Delivery Note')
     payment_ids = fields.One2many('pos.payment', 'pos_order_id', string='Payments', readonly=True)
     session_move_id = fields.Many2one('account.move', string='Session Journal Entry', related='session_id.move_id', readonly=True, copy=False)
     to_invoice = fields.Boolean('To invoice', copy=False)
@@ -1207,10 +1201,6 @@ class PosOrder(models.Model):
             'access_token': order.access_token,
             'ticket_code': order.ticket_code,
             'last_order_preparation_change': order.last_order_preparation_change,
-            'delivery_id': order.delivery_id,
-            'delivery_status': order.delivery_status,
-            'delivery_service_name': order.delivery_service_id.name if order.delivery_service_id else False,
-            'delivery_note': order.delivery_note or False,
         }
 
     @api.model
@@ -1234,44 +1224,6 @@ class PosOrder(models.Model):
     def _send_order(self):
         # This function is made to be overriden by pos_self_order_preparation_display
         pass
-
-    def accept_delivery_order(self):
-        self.ensure_one()
-        status_to_send = 'accepted' if self.delivery_status == 'awaiting' else 'confirmed'
-        self.env['pos.delivery.service'].search([('config_ids', 'in', self.config_id.id), ('service', 'ilike', self.delivery_service_id.name)])._accept_order(self.delivery_id, status_to_send)
-        self._post_delivery_accept_order()
-
-    def _post_delivery_accept_order(self):
-        if not self.delivery_asap:
-            if self.delivery_status == 'awaiting':
-                self.delivery_status = 'scheduled'
-            elif self.delivery_status == 'scheduled':
-                self.delivery_status = 'confirmed'
-        else:
-            self.delivery_status = 'preparing'
-        self.session_id.config_id._send_delivery_order_count(self.id)
-
-    def reject_delivery_order(self, reject_reason):
-        self.ensure_one()
-        self.env['pos.delivery.service'].search([('config_ids', 'in', self.config_id.id), ('service', 'ilike', self.delivery_service_id.name)])._reject_order(self.delivery_id, reject_reason)
-        self._post_delivery_reject_order()
-
-    def _post_delivery_reject_order(self):
-        refund_order = self._refund()
-        self.env['pos.payment'].create({
-            'pos_order_id': refund_order.id,
-            'amount': self.amount_paid,
-            'payment_date': self.date_order,
-            'payment_method_id': self.payment_ids.payment_method_id.id,
-        })
-        refund_order.state = 'paid'
-        self.delivery_status = 'cancelled'
-        self.session_id.config_id._send_delivery_order_count(self.id)
-
-    def change_order_delivery_status(self, new_status):
-        self.ensure_one()
-        self.delivery_status = new_status
-        self.session_id.config_id._send_delivery_order_count(self.id)
 
 class PosOrderLine(models.Model):
     _name = "pos.order.line"

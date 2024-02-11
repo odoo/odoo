@@ -56,10 +56,7 @@
                                 <div class="col wide p-2" t-if="showCardholderName()">Cardholder Name</div>
                                 <div class="col p-2">Cashier</div>
                                 <div class="col end p-2">Total</div>
-                                <div class="col narrow p-2">
-                                    <t t-if="_state.ui.filter == 'DELIVERY'">Prep Status</t>
-                                    <t t-else="">Status</t>
-                                </div>
+                                <div class="status-col col narrow p-2">Status</div>
                                 <div class="col very-narrow p-2" name="delete"></div>
                             </div>
                             <t t-if="!ui.isSmall" t-foreach="_filteredOrderList" t-as="order" t-key="order.cid">
@@ -87,12 +84,7 @@
                                     <div class="col end p-2">
                                         <div><t t-esc="getTotal(order)"></t></div>
                                     </div>
-                                    <div class="col narrow p-2">
-                                        <div>
-                                            <t t-if="_state.ui.filter == 'DELIVERY'" t-esc="getDeliveryStatus(order)"/>
-                                            <t t-else="" t-esc="getStatus(order)"/>
-                                        </div>
-                                    </div>
+                                    <div class="status-col-value col narrow p-2"><t t-esc="getStatus(order)"></t></div>
                                     <div t-if="!shouldHideDeleteButton(order)" class="col very-narrow delete-button p-2" name="delete" t-on-click.stop="() => this.onDeleteOrder(order)">
                                         <i class="fa fa-trash" aria-hidden="true"/>
                                     </div>

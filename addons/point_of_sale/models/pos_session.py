@@ -127,7 +127,7 @@ class PosSession(models.Model):
             },
             'pos.payment.method': {
                 'domain': ['|', ('active', '=', False), ('active', '=', True)],
-                'fields': ['id', 'name', 'is_cash_count', 'use_payment_terminal', 'split_transactions', 'type', 'image', 'sequence', 'delivery_payment_method'],
+                'fields': ['id', 'name', 'is_cash_count', 'use_payment_terminal', 'split_transactions', 'type', 'image', 'sequence'],
             },
             'pos.printer': {
                 'domain': [('id', 'in', config_id.printer_ids.ids)],
@@ -276,7 +276,6 @@ class PosSession(models.Model):
                 'has_available_products': self._pos_has_valid_product(),
                 'pos_special_products_ids': self.env['pos.config']._get_special_products().ids,
                 'open_orders': self.env['pos.order'].search([('session_id', '=', self.id), ('state', '=', 'draft')]).export_for_ui(),
-                'delivery_order_count': self.env['pos.config'].get_delivery_order_count(),
             }
 
             # Taxes.
