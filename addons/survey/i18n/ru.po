@@ -21,14 +21,15 @@
 # Alena Vlasova, 2023
 # alenafairy, 2023
 # Сергей Шебанин <sergey@shebanin.ru>, 2023
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:22+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Сергей Шебанин <sergey@shebanin.ru>, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -291,6 +292,37 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Уважаемый <t t-out=\"object.partner_id.name or 'participant'\">участник</t><br><br>\n"
+"       <t t-if=\"object.survey_id.certification\">\n"
+"            Вы получили приглашение пройти новую сертификацию.\n"
+"       </t>\n"
+"       <t t-else=\"\">\n"
+"            Мы проводим опрос и будем признательны за ваш ответ.\n"
+"       </t>\n"
+"        <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"            <a t-att-href=\"(object.get_start_url())\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                <t t-if=\"object.survey_id.certification\">\n"
+"                    Начать сертификацию\n"
+"                </t>\n"
+"                <t t-else=\"\">\n"
+"                    Начать обследование\n"
+"                </t>\n"
+"            </a>\n"
+"        </div>\n"
+"       <t t-if=\"object.deadline\">\n"
+"            Пожалуйста, ответьте на опрос за <t t-out=\"format_date(object.deadline) or ''\">05/05/2021</t>.<br><br>\n"
+"       </t>\n"
+"       <t t-if=\"object.survey_id.certification\">\n"
+"            Желаем вам удачи!\n"
+"       </t>\n"
+"       <t t-else=\"\">\n"
+"            Заранее благодарим вас за участие.\n"
+"       </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_result_matrix
@@ -888,7 +920,7 @@ msgstr ""
 #. module: survey
 #: model_terms:survey.question,description:survey.survey_demo_quiz_p3
 msgid "An apple a day keeps the doctor away."
-msgstr ""
+msgstr "Яблоко в день держит доктора подальше."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.user_input_session_leaderboard
@@ -1311,7 +1343,6 @@ msgid "Cliff Burton"
 msgstr "Клифф Бертон"
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_button_form_view
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
 msgid "Close"
@@ -1464,8 +1495,8 @@ msgid "Corner Desk Right Sit"
 msgstr "Угловой офисный стол (в правую сторону)"
 
 #. module: survey
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/survey/models/survey_user_input.py:0
 #: code:addons/survey/static/src/js/survey_result.js:0
 #: model:ir.model.fields,field_description:survey.field_survey_question_answer__is_correct
@@ -2349,8 +2380,8 @@ msgstr ""
 "указать ответ на вопрос и количество баллов за ответ."
 
 #. module: survey
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/survey/models/survey_user_input.py:0
 #: code:addons/survey/static/src/js/survey_result.js:0
 #, python-format
@@ -2506,7 +2537,7 @@ msgstr "Присоединиться к сеансу"
 #. module: survey
 #: model_terms:survey.question,description:survey.survey_demo_quiz_p1_q4
 msgid "Just to categorize your answers, don't worry."
-msgstr ""
+msgstr "Чтобы разделить ваши ответы по категориям, не волнуйтесь."
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p5_q1_sug2
@@ -3308,8 +3339,8 @@ msgid "Partial"
 msgstr "Частично"
 
 #. module: survey
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/survey/models/survey_user_input.py:0
 #: code:addons/survey/static/src/js/survey_result.js:0
 #, python-format
@@ -3983,11 +4014,13 @@ msgid ""
 "Some general information about you. It will be used internally for "
 "statistics only."
 msgstr ""
+"Некоторая общая информация о вас. Она будет использоваться только для "
+"внутренней статистики."
 
 #. module: survey
 #: model_terms:survey.question,description:survey.survey_demo_quiz_p2
 msgid "Some questions about our company. Do you really know us?"
-msgstr ""
+msgstr "Несколько вопросов о нашей компании. Вы действительно нас знаете?"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_header
@@ -4268,22 +4301,22 @@ msgstr "Тестовая запись"
 #. module: survey
 #: model_terms:survey.question,description:survey.vendor_certification_page_3
 msgid "Test your knowledge of our policies."
-msgstr ""
+msgstr "Проверьте свои знания о наших правилах."
 
 #. module: survey
 #: model_terms:survey.question,description:survey.vendor_certification_page_2
 msgid "Test your knowledge of our prices."
-msgstr ""
+msgstr "Проверьте свои знания о наших ценах."
 
 #. module: survey
 #: model_terms:survey.question,description:survey.vendor_certification_page_1
 msgid "Test your knowledge of your products!"
-msgstr ""
+msgstr "Проверьте свои знания о продуктах!"
 
 #. module: survey
 #: model_terms:survey.survey,description:survey.vendor_certification
 msgid "Test your vendor skills!"
-msgstr ""
+msgstr "Проверьте свои навыки продавца!"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_search
@@ -4562,8 +4595,8 @@ msgid "This is a Test Survey."
 msgstr "Это тестовый опрос."
 
 #. module: survey
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/survey/models/survey_question.py:0
 #: code:addons/survey/static/src/js/survey_form.js:0
 #: code:addons/survey/tests/test_survey.py:0
@@ -4622,11 +4655,14 @@ msgid ""
 "This section is about general information about you. Answering them helps "
 "qualifying your answers."
 msgstr ""
+"В этом разделе собрана общая информация о вас. Ответы на них помогут "
+"квалифицировать ваши ответы."
 
 #. module: survey
 #: model_terms:survey.question,description:survey.survey_feedback_p2
 msgid "This section is about our eCommerce experience itself."
 msgstr ""
+"Этот раздел посвящен непосредственно нашему опыту электронной коммерции."
 
 #. module: survey
 #: model_terms:survey.survey,description:survey.survey_demo_quiz
@@ -4640,6 +4676,8 @@ msgid ""
 "This survey allows you to give a feedback about your experience with our products.\n"
 "    Filling it helps us improving your experience."
 msgstr ""
+"Этот опрос позволяет вам оставить отзыв о вашем опыте использования нашей продукции.\n"
+"    Его заполнение поможет нам улучшить ваш опыт."
 
 #. module: survey
 #. odoo-python
@@ -4779,8 +4817,8 @@ msgstr ""
 "отправителя."
 
 #. module: survey
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/survey/models/survey_user_input.py:0
 #: code:addons/survey/static/src/js/survey_result.js:0
 #, python-format
@@ -4949,11 +4987,13 @@ msgid ""
 "We like to say that the apple doesn't fall far from the tree, so here are "
 "trees."
 msgstr ""
+"Мы любим говорить, что яблоко от яблони недалеко падает, так что вот вам "
+"деревья."
 
 #. module: survey
 #: model_terms:survey.question,description:survey.survey_demo_quiz_p5
 msgid "We may be interested by your input."
-msgstr ""
+msgstr "Нам может быть интересен ваш вклад."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__website_message_ids
@@ -5250,8 +5290,11 @@ msgid ""
 "You cannot delete questions from surveys \"%(survey_names)s\" while live "
 "sessions are in progress."
 msgstr ""
+"Вы не можете удалять вопросы из опросов \"%(survey_names)s\" во время "
+"проведения сеансов прямого эфира."
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_survey.py:0
 #, python-format
 msgid ""
@@ -5356,13 +5399,6 @@ msgstr "попытки"
 #, python-format
 msgid "close"
 msgstr "закрыть"
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
-msgid "dropdown-item d-flex align-items-center justify-content-between"
-msgstr ""
-"выпадающий элемент d-flex выравнивание элементов по центру выравнивание "
-"содержимого между"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form

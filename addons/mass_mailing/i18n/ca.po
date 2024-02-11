@@ -8,7 +8,6 @@
 # Susanna Pujol, 2022
 # Mohamed Sallam, 2022
 # Sandra Franch <sandra.franch@upc.edu>, 2022
-# Harcogourmet, 2022
 # M Palau <mpalau@tda.ad>, 2022
 # Denys Sarapulov, 2022
 # Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2022
@@ -18,24 +17,25 @@
 # jabiri7, 2022
 # Josep Sànchez <papapep@gmx.com>, 2023
 # Manel Fernandez Ramirez <manelfera@outlook.com>, 2023
-# Arnau Ros, 2023
 # Ivan Espinola, 2023
 # RGB Consulting <odoo@rgbconsulting.com>, 2023
 # Quim - eccit <quim@eccit.com>, 2023
 # Josep Anton Belchi, 2023
-# marcescu, 2023
 # Martin Trigaux, 2023
 # martioodo hola, 2023
 # Óscar Fonseca <tecnico@pyming.com>, 2023
 # Albert Parera, 2023
+# Harcogourmet, 2024
+# marcescu, 2024
+# Arnau Ros, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:49+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Albert Parera, 2023\n"
+"Last-Translator: Arnau Ros, 2024\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1598,6 +1598,13 @@ msgid "Continue reading <i class=\"fa fa-long-arrow-right align-middle ms-1\"/>"
 msgstr "Continua llegint <i class=\"fa fa-long-arrow-right align-middle ms-1\"/>"
 
 #. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/models/mailing.py:0
+#, python-format
+msgid "Could not retrieve URL: %s"
+msgstr ""
+
+#. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_contact__message_bounce
 #: model:ir.model.fields,help:mass_mailing.field_mailing_contact_subscription__message_bounce
 msgid "Counter of the number of bounced emails for this contact"
@@ -2123,6 +2130,14 @@ msgid "Feedback from %(email)s: %(feedback)s"
 msgstr "Feedback de %(email)s: %(feedback)s"
 
 #. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/models/mailing.py:0
+#: code:addons/mass_mailing/models/mailing.py:0
+#, python-format
+msgid "File size exceeds configured maximum (%s bytes)"
+msgstr "La grandària de l'arxiu supera el màxim configurat (%s bytes)"
+
+#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Filter"
 msgstr "Filtre"
@@ -2250,6 +2265,11 @@ msgstr "Agrupar per"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_report_view_search
 msgid "Group By..."
 msgstr "Agrupa per..."
+
+#. module: mass_mailing
+#: model:ir.model,name:mass_mailing.model_ir_http
+msgid "HTTP Routing"
+msgstr "Enrutament HTTP"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__has_message
@@ -2402,6 +2422,16 @@ msgstr "Imatge - Text"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_masonry_block_options
 msgid "Image Text Image"
 msgstr "Imatge de text"
+
+#. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/models/mailing.py:0
+#, python-format
+msgid ""
+"Image size excessive, imported images must be smaller than 42 million pixel"
+msgstr ""
+"La mida de la imatge és excessiva, les imatges penjades han de ser inferiors"
+" a 42 milions de píxels."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_masonry_block_options
@@ -4747,13 +4777,6 @@ msgstr "Donat de baixa "
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_subscription__unsubscription_date
 msgid "Unsubscription Date"
 msgstr "Data de cancel· lació de l' UNSUB"
-
-#. module: mass_mailing
-#. odoo-python
-#: code:addons/mass_mailing/models/mailing.py:0
-#, python-format
-msgid "Unsupported mass mailing model %s"
-msgstr "Model de correu massiu no acceptat %s"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe

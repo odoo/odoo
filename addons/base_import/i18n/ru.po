@@ -11,14 +11,15 @@
 # ILMIR <karamov@it-projects.info>, 2022
 # Ivan Kropotkin <yelizariev@itpp.dev>, 2022
 # Martin Trigaux, 2022
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,7 +28,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
@@ -35,7 +36,7 @@ msgid "%d records successfully imported"
 msgstr "%d записи успешно импортированы"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid ""
@@ -46,28 +47,28 @@ msgstr ""
 "неверный разделитель"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Additional Fields"
 msgstr "Дополнительные поля"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Advanced"
 msgstr "Расширенный"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Allow matching with subfields"
 msgstr "Разрешить сопоставление с подполями"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid ""
@@ -97,40 +98,42 @@ msgid "Base Import Mapping"
 msgstr "Базовое сопоставление импорта"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Batch Import"
-msgstr ""
+msgstr "Пакетный импорт"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Batch limit"
 msgstr "Разбивка"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Cancel"
 msgstr "Отмена"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Click 'Resume' to proceed with the import, resuming at line"
 msgstr ""
 
 #. module: base_import
+#. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Column %s contains incorrect values (value: %s)"
 msgstr "Колонка %s содержит неверные значения (значение: %s)"
 
 #. module: base_import
+#. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Column %s contains incorrect values. Error in line %d: %s"
@@ -142,7 +145,7 @@ msgid "Column Name"
 msgstr "Название колонки"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
@@ -150,13 +153,14 @@ msgid "Comma"
 msgstr "Запятая"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Comments"
 msgstr "Комментарии"
 
 #. module: base_import
+#. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid ""
@@ -167,11 +171,11 @@ msgstr ""
 "d]:%(error)s "
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Create new values"
-msgstr ""
+msgstr "Создание новых значений"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__create_uid
@@ -222,6 +226,7 @@ msgid "Currency"
 msgstr "Валюта"
 
 #. module: base_import
+#. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
@@ -229,21 +234,21 @@ msgid "Database ID"
 msgstr "Номер в базе данных"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Date Format:"
 msgstr "Формат даты: "
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Datetime Format:"
 msgstr "Формат даты и времени:"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Decimal Separator:"
@@ -271,14 +276,14 @@ msgid "Display Name"
 msgstr "Отображаемое имя"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Dot"
 msgstr "Точка"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
@@ -288,7 +293,7 @@ msgid "Download"
 msgstr "Скачать"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Download Template"
@@ -300,40 +305,67 @@ msgid "Dt"
 msgstr "Dt"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Encoding:"
 msgstr "Кодировка:"
 
 #. module: base_import
+#. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Error Parsing Date [%s:L%d]: %s"
 msgstr "Ошибка парсинга данных [ %s: L %d]: %s "
 
 #. module: base_import
-#. openerp-web
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+#, python-format
+msgid ""
+"Error while importing records: Text Delimiter should be a single character."
+msgstr ""
+"Ошибка при импорте записей: Разделитель текста должен состоять из одного "
+"символа."
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+#, python-format
+msgid ""
+"Error while importing records: all rows should be of the same size, but the "
+"title row has %d entries while the first row has %d. You may need to change "
+"the separator character."
+msgstr ""
+"Ошибка при импорте записей: все строки должны быть одинакового размера, но в"
+" заглавной строке содержится %d записей, а в первой - %d. Возможно, "
+"необходимо изменить символ-разделитель."
+
+#. module: base_import
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Estimated time left:"
-msgstr ""
+msgstr "Предполагаемое оставшееся время:"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Everything seems valid."
 msgstr "Вроде всё правильно"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Excel files are recommended as formatting is automatic."
 msgstr ""
+"Рекомендуется использовать файлы Excel, так как форматирование происходит "
+"автоматически."
 
 #. module: base_import
+#. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
@@ -351,7 +383,7 @@ msgid "File"
 msgstr "Файл"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
@@ -371,6 +403,7 @@ msgid "File Type"
 msgstr "Тип файла"
 
 #. module: base_import
+#. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
@@ -383,50 +416,53 @@ msgid "File to check and/or import, raw binary (not base64)"
 msgstr "Файл для проверки и/или импорта, двоичный код (не base64)"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Finalizing current batch before interrupting..."
-msgstr ""
+msgstr "Завершение работы над текущей партией перед прерыванием..."
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "For CSV files, you may need to select the correct separator."
 msgstr "Для файлов CSV вам нужно будет выбрать правильный разделитель."
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Formatting"
-msgstr ""
+msgstr "Форматирование"
 
 #. module: base_import
+#. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid ""
 "Found invalid image data, images should be imported as either URLs or "
 "base64-encoded data."
 msgstr ""
+"Найденные недействительные данные изображений, изображения должны быть "
+"импортированы либо как URL, либо как данные в базовой 64-кодировке."
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Go to Import FAQ"
 msgstr "Посмотреть справку"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Help"
 msgstr "Помощь"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Here is the start of the file we could not import:"
@@ -454,7 +490,7 @@ msgid "ID"
 msgstr "Идентификатор"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid ""
@@ -463,9 +499,13 @@ msgid ""
 "                    field corresponding to the column. This makes imports\n"
 "                    simpler especially when the file has many columns."
 msgstr ""
+"Если файл содержит\n"
+"                    имена столбцов, Odoo может попробовать автоматически определить\n"
+"                    поле, соответствующее столбцу. Это делает импорт\n"
+"                    особенно если файл содержит много столбцов."
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid ""
@@ -476,88 +516,82 @@ msgstr ""
 " уведомления, но это может сильно замедлить импорт."
 
 #. module: base_import
+#. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid ""
 "Image size excessive, imported images must be smaller than 42 million pixel"
 msgstr ""
+"Размер изображения слишком велик, импортируемые изображения должны быть "
+"меньше 42 миллионов пикселей"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Import"
 msgstr "Импорт"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Import FAQ"
 msgstr "Ответы на часто задаваемые вопросы"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Import a File"
 msgstr "Импорт из файла"
 
 #. module: base_import
+#. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Import file has no content or is corrupt"
-msgstr ""
+msgstr "Файл импорта не содержит содержимого или поврежден"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Import preview failed due to:"
 msgstr "Импорт предварительного просмотра не удался по причине:"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/import_records/import_records.xml:0
 #, python-format
 msgid "Import records"
 msgstr "Импортировать записи"
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/legacy/js/import_action.js:0
-#, python-format
-msgid ""
-"Import timed out. Please retry. If you still encounter this issue, the file "
-"may be too big for the system's configuration, try to split it (import less "
-"records per file)."
-msgstr ""
-"Импорт завершен. Повторите попытку. Если вы все еще сталкиваетесь с этой "
-"проблемой, файл может быть слишком большим для настройки системы, попробуйте"
-" разделить его (импортировать меньше записей на файл)."
-
-#. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Imported file"
 msgstr "Импортируемый файл"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Importing"
-msgstr ""
+msgstr "Импорт"
 
 #. module: base_import
+#. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Invalid cell value at row %(row)s, column %(col)s: %(cell_value)s"
 msgstr ""
+"Недействительное значение ячейки в строке %(row)s, столбец %(col)s: "
+"%(cell_value)s"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Label"
@@ -627,21 +661,21 @@ msgid "Last Updated on"
 msgstr "Последнее обновление"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Load File"
 msgstr "Выбрать файл"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Loading file..."
-msgstr ""
+msgstr "Загрузка файла..."
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__res_model
 #, python-format
@@ -649,14 +683,14 @@ msgid "Model"
 msgstr "Модель"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Multiple errors occurred"
-msgstr ""
+msgstr "Произошло несколько ошибок"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m__name
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__name
@@ -665,35 +699,35 @@ msgid "Name"
 msgstr "Имя"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Need Help?"
 msgstr "Не получается?"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "No Separator"
 msgstr "Есть разделителя"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "No matching records found for"
 msgstr ""
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "No matching records found for the following"
 msgstr ""
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Odoo Field"
@@ -710,21 +744,21 @@ msgid "Parent"
 msgstr "Родитель"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Prevent import"
-msgstr ""
+msgstr "Предотвращение импорта"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Preview"
 msgstr "Просмотр"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Relation Fields"
@@ -736,89 +770,89 @@ msgid "Res Model"
 msgstr "Res Model"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Resume"
 msgstr "Возобновить"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Search for a field..."
 msgstr "Поиск поля..."
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "See possible values"
-msgstr ""
+msgstr "См. возможные значения"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Selected Sheet:"
 msgstr "Выбранный лист:"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Semicolon"
 msgstr "Точка с запятой"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Separator:"
 msgstr "Разделитель:"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Set to:"
 msgstr ""
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Set to: False"
-msgstr ""
+msgstr "Установить на: False"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Set to: True"
-msgstr ""
+msgstr "Установить на: True"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Set value as empty"
-msgstr ""
+msgstr "Установите значение как пустое"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Sheet:"
 msgstr "Лист:"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Skip record"
-msgstr ""
+msgstr "Пропустить запись"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__somevalue
@@ -826,56 +860,56 @@ msgid "Some Value"
 msgstr "Некоторые Значения"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Space"
 msgstr "Пробел"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Standard Fields"
-msgstr ""
+msgstr "Стандартные поля"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Start at line"
 msgstr "Начать со строки"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Stop Import"
-msgstr ""
+msgstr "Остановить импорт"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Suggested Fields"
-msgstr ""
+msgstr "Предлагаемые поля"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Tab"
 msgstr "Табуляция"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Test"
 msgstr "Проверка"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Testing"
@@ -957,83 +991,84 @@ msgid "Tests: Base Import Model Float"
 msgstr "Тесты: Гибкая модель импорта базы"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Text Delimiter:"
 msgstr "Ограничитель текста:"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "The file contains blocking errors (see below)"
-msgstr ""
+msgstr "Файл содержит ошибки блокировки (см. ниже)"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "The file contains non-blocking warnings (see below)"
 msgstr ""
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "The file will be imported by batches"
-msgstr ""
+msgstr "Файл будет импортироваться партиями"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "This column will be concatenated in field"
-msgstr ""
+msgstr "Этот столбец будет конкатенирован в поле"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "This file has been successfully imported up to line %d."
 msgstr ""
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Thousands Separator:"
 msgstr "Разделитель тысяч:"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "To import multiple values, separate them by a comma"
 msgstr ""
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "To import, select a field..."
 msgstr "Чтобы загрузить, выберите поле..."
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Track history during import"
 msgstr "Уведомлять об обновлениях"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Type"
 msgstr "Раздел"
 
 #. module: base_import
+#. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Unable to load \"{extension}\" file: requires Python module \"{modname}\""
@@ -1041,6 +1076,7 @@ msgstr ""
 "Невозможно загрузить файл «{extension}»: требуется Python-модуль «{modname}»"
 
 #. module: base_import
+#. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid ""
@@ -1050,28 +1086,28 @@ msgstr ""
 "ODS, XLS и XLSX"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Untitled"
 msgstr "Без названия"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Upload File"
-msgstr ""
+msgstr "Загрузить файл"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Upload an Excel or CSV file to import"
-msgstr ""
+msgstr "Загрузите файл Excel или CSV для импорта"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Use first row as header"
@@ -1105,7 +1141,7 @@ msgid "Value2"
 msgstr "значение2"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid ""
@@ -1114,13 +1150,14 @@ msgid ""
 msgstr ""
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "When a value cannot be matched:"
-msgstr ""
+msgstr "Когда значение не может быть сопоставлено:"
 
 #. module: base_import
+#. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid ""
@@ -1131,70 +1168,74 @@ msgstr ""
 "администратору или службы поддержки по этой причине."
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "You can test or reload your file before resuming the import."
 msgstr ""
+"Вы можете протестировать или перезагрузить файл перед возобновлением "
+"импорта."
 
 #. module: base_import
+#. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "You must configure at least one field to import"
 msgstr "Вы должны настроить хотя бы одно поле для импорта"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "at multiple rows"
-msgstr ""
+msgstr "в несколько рядов"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "at row"
-msgstr ""
+msgstr "в ряд"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "batch"
 msgstr ""
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "in field"
-msgstr ""
+msgstr "в поле"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "minutes"
 msgstr "минут"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "more)"
 msgstr ""
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "out of"
-msgstr ""
+msgstr "из"
 
 #. module: base_import
+#. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "unknown error code %s"
-msgstr ""
+msgstr "неизвестный код ошибки %s"

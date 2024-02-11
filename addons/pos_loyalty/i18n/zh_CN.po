@@ -9,15 +9,16 @@
 # Jeffery CHEN <jeffery9@gmail.com>, 2022
 # Martin Trigaux, 2022
 # Emily Jia <eji@odoo.com>, 2023
-# Chloe Wang, 2023
+# Chloe Wang, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:22+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Chloe Wang, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -143,6 +144,13 @@ msgstr "优惠券积分"
 #, python-format
 msgid "Current Balance:"
 msgstr "当前余额："
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/xml/OrderReceipt.xml:0
+#, python-format
+msgid "Customer"
+msgstr "客户"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -324,6 +332,13 @@ msgstr "使用此优惠券不能申请奖励"
 #, python-format
 msgid "No rewards available."
 msgstr "没有可用的奖励"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/js/ControlButtons/eWalletButton.js:0
+#, python-format
+msgid "No valid eWallet found"
+msgstr "未找到有效电子钱包"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -732,6 +747,14 @@ msgstr "您不能销售已售出的礼品卡"
 #, python-format
 msgid "You cannot set negative quantity or price to gift card or ewallet."
 msgstr "您不能给礼品卡或电子钱包设置负的数量或价格"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/js/ControlButtons/eWalletButton.js:0
+#, python-format
+msgid ""
+"You either have not created an eWallet or all your eWallets have expired."
+msgstr "您尚未创建电子钱包，或者所有电子钱包都已过期。"
 
 #. module: pos_loyalty
 #. odoo-python

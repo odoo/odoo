@@ -10,14 +10,15 @@
 # Irina Fedulova <istartlin@gmail.com>, 2022
 # Ivan Kropotkin <yelizariev@itpp.dev>, 2022
 # Martin Trigaux, 2022
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-23 08:02+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,16 +40,21 @@ msgid ""
 "                                (eg. Visa, MasterCard, Discovery, American Express, ...). After setting up this\n"
 "                                configuration you should associate it with a Point Of Sale payment method."
 msgstr ""
+"<i>Конфигурации Vantiv</i> определяют, какая учетная запись Vantiv будет использоваться при\n"
+"                                при обработке операций с кредитными картами в точке продаж. Настройка конфигурации Vantiv\n"
+"                                позволит вам разрешить оплату различными кредитными картами\n"
+"                                (например, Visa, MasterCard, Discovery, American Express, ...). После настройки этой\n"
+"                                конфигурации вы должны связать ее с методом оплаты в точке продаж."
 
 #. module: pos_mercury
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_mercury/static/src/xml/OrderReceipt.xml:0
 #, python-format
 msgid "ABOVE AMOUNT PURSUANT"
 msgstr "ВЫШЕ СООТВЕТСТВЕННОЙ СУММЫ"
 
 #. module: pos_mercury
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_mercury/static/src/xml/OrderReceipt.xml:0
 #, python-format
 msgid "APPROVAL CODE:"
@@ -60,7 +66,7 @@ msgid "Barcode Rule"
 msgstr "Правило штрих-кода"
 
 #. module: pos_mercury
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_mercury/static/src/xml/OrderReceipt.xml:0
 #, python-format
 msgid "CARDHOLDER WILL PAY CARD ISSUER"
@@ -99,7 +105,7 @@ msgid "Configure your card reader"
 msgstr "Настройте ваш кард-ридер"
 
 #. module: pos_mercury
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
 #, python-format
 msgid "Could not read card"
@@ -123,7 +129,7 @@ msgid "Credit Card"
 msgstr "Кредитная карта"
 
 #. module: pos_mercury
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
 #, python-format
 msgid ""
@@ -153,14 +159,14 @@ msgstr ""
 "                                 карте."
 
 #. module: pos_mercury
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_mercury/static/src/js/ProductScreen.js:0
 #, python-format
 msgid "Go to payment screen to use cards"
 msgstr "Перейти к экрану оплаты для использования карт"
 
 #. module: pos_mercury
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
 #, python-format
 msgid "Handling transaction..."
@@ -183,11 +189,13 @@ msgid ""
 "If you don't already have a Vantiv account, contact Vantiv at +1 (800) 846-4472\n"
 "                                to create one."
 msgstr ""
+"Если у вас еще нет учетной записи Vantiv, свяжитесь с Vantiv по телефону +1 (800) 846-4472\n"
+"                                чтобы создать его."
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_payment__mercury_invoice_no
 msgid "Invoice number from Vantiv Pay"
-msgstr ""
+msgstr "Номер счета-фактуры от Vantiv Pay"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration____last_update
@@ -225,36 +233,38 @@ msgstr "Имя"
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_mercury_configuration__name
 msgid "Name of this Vantiv configuration"
-msgstr ""
+msgstr "Название этой конфигурации Vantiv"
 
 #. module: pos_mercury
+#. odoo-python
 #: code:addons/pos_mercury/models/pos_mercury_transaction.py:0
 #, python-format
 msgid "No Vantiv configuration associated with the payment method."
-msgstr ""
+msgstr "Нет конфигурации Vantiv, связанной с методом оплаты."
 
 #. module: pos_mercury
+#. odoo-python
 #: code:addons/pos_mercury/models/pos_mercury_transaction.py:0
 #, python-format
 msgid "No opened point of sale session for user %s found."
 msgstr "Не найдено открытой сессии точки продаж %s для пользователя."
 
 #. module: pos_mercury
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
 #, python-format
 msgid "No response from Vantiv (Vantiv down?)"
-msgstr ""
+msgstr "Нет ответа от Vantiv (Vantiv не работает?)"
 
 #. module: pos_mercury
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
 #, python-format
 msgid "No response from server (connected to network?)"
 msgstr "Нет ответа от сервера (подключен к сети?)"
 
 #. module: pos_mercury
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
 #: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
 #, python-format
@@ -262,21 +272,21 @@ msgid "Odoo error while processing transaction."
 msgstr "Odoo ошибка при обработке транзакции."
 
 #. module: pos_mercury
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_mercury/static/src/js/PaymentTransactionPopup.js:0
 #, python-format
 msgid "Ok"
 msgstr "OK"
 
 #. module: pos_mercury
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_mercury/static/src/js/PaymentTransactionPopup.js:0
 #, python-format
 msgid "Online Payment"
 msgstr "Онлайн-платеж"
 
 #. module: pos_mercury
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
 #, python-format
 msgid "Partially approved"
@@ -290,7 +300,7 @@ msgstr ""
 "Пароль продавца, прошедший аутентификацию на сервере поставщика платежей"
 
 #. module: pos_mercury
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
 #, python-format
 msgid "Pay with: "
@@ -299,19 +309,19 @@ msgstr "Оплачивайте с:"
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_payment__mercury_record_no
 msgid "Payment record number from Vantiv Pay"
-msgstr ""
+msgstr "Номер платежной записи из Vantiv Pay"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_payment__mercury_ref_no
 msgid "Payment reference number from Vantiv Pay"
-msgstr ""
+msgstr "Номер платежного поручения от Vantiv Pay"
 
 #. module: pos_mercury
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
 #, python-format
 msgid "Please setup your Vantiv merchant account."
-msgstr ""
+msgstr "Настройте свой торговый счет Vantiv."
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_order
@@ -321,12 +331,12 @@ msgstr "Заказы точки продажи"
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_payment_method
 msgid "Point of Sale Payment Methods"
-msgstr ""
+msgstr "Способы оплаты в торговых точках"
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_payment
 msgid "Point of Sale Payments"
-msgstr ""
+msgstr "Платежи в точках продаж"
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_session
@@ -336,43 +346,43 @@ msgstr "Смена"
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_mercury_configuration
 msgid "Point of Sale Vantiv Configuration"
-msgstr ""
+msgstr "Конфигурация точки продаж Vantiv"
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_mercury_mercury_transaction
 msgid "Point of Sale Vantiv Transaction"
-msgstr ""
+msgstr "Торговая точка Vantiv Transaction"
 
 #. module: pos_mercury
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
 #, python-format
 msgid "Refunds not supported"
 msgstr "Возмещения не поддерживается"
 
 #. module: pos_mercury
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
 #, python-format
 msgid "Reversal failed, sending VoidSale..."
 msgstr "Сторнирование не удалось, отправка VoidSale..."
 
 #. module: pos_mercury
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
 #, python-format
 msgid "Reversal succeeded"
 msgstr "Конверсия удалась"
 
 #. module: pos_mercury
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
 #, python-format
 msgid "Sending reversal..."
 msgstr "Отправка разворота..."
 
 #. module: pos_mercury
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_mercury/static/src/xml/OrderReceipt.xml:0
 #, python-format
 msgid "TO CARDHOLDER AGREEMENT"
@@ -391,7 +401,7 @@ msgstr "Номер карты, используемый для оплаты."
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_payment_method__pos_mercury_config_id
 msgid "The configuration of Vantiv used for this journal"
-msgstr ""
+msgstr "Конфигурация Vantiv, использованная для этого журнала"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_payment__mercury_card_number
@@ -399,7 +409,7 @@ msgid "The last 4 numbers of the card used to pay"
 msgstr "Последние 4 номера карты, использованные для оплаты"
 
 #. module: pos_mercury
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
 #, python-format
 msgid ""
@@ -410,7 +420,7 @@ msgstr ""
 "раскладки клавиатуры в США QWERTY (не США международный)."
 
 #. module: pos_mercury
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
 #, python-format
 msgid "Transaction approved"
@@ -429,6 +439,10 @@ msgid ""
 "                                just like on any other payment line. Whenever the payment line is set up, a card\n"
 "                                can be swiped through the card reader device."
 msgstr ""
+"Использовать интеграцию Vantiv в точке продаж очень просто: просто нажмите кнопку\n"
+"                                соответствующий метод оплаты. После этого сумму можно скорректировать (например, для кешбэка)\n"
+"                                как и в любой другой платежной линии. Когда платежная линия настроена, карту\n"
+"                                можно провести по карте через устройство считывания карт."
 
 #. module: pos_mercury
 #: model_terms:ir.ui.view,arch_db:pos_mercury.res_config_settings_view_form_inherit_pos_mercury
@@ -439,37 +453,37 @@ msgstr "счета Vantiv"
 #: model:ir.actions.act_window,name:pos_mercury.action_configuration_form
 #: model:ir.ui.menu,name:pos_mercury.menu_pos_pos_mercury_config
 msgid "Vantiv Configurations"
-msgstr ""
+msgstr "Конфигурации Vantiv"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_payment_method__pos_mercury_config_id
 msgid "Vantiv Credentials"
-msgstr ""
+msgstr "Учетные данные Vantiv"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_payment__mercury_invoice_no
 msgid "Vantiv invoice number"
-msgstr ""
+msgstr "Номер счета-фактуры Vantiv"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_payment__mercury_record_no
 msgid "Vantiv record number"
-msgstr ""
+msgstr "Номер записи Vantiv"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_payment__mercury_ref_no
 msgid "Vantiv reference number"
-msgstr ""
+msgstr "Справочный номер Vantiv"
 
 #. module: pos_mercury
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
 #, python-format
 msgid "VoidSale succeeded"
 msgstr "VoidSale успешно завершена"
 
 #. module: pos_mercury
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_mercury/static/src/xml/PaymentScreenPaymentLines.xml:0
 #, python-format
 msgid "WAITING FOR SWIPE"
@@ -486,7 +500,7 @@ msgstr ""
 "подключить к IoTBox."
 
 #. module: pos_mercury
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_mercury/static/src/xml/OrderReceipt.xml:0
 #, python-format
 msgid "X______________________________"

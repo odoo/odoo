@@ -26,6 +26,7 @@
 # Kim Asplund <kim.asplund@gmail.com>, 2023
 # Jakob Krabbe <jakob.krabbe@vertel.se>, 2023
 # Kristoffer Grundström <lovaren@gmail.com>, 2024
+# Claes-Johan Dahlin, 2024
 # 
 msgid ""
 msgstr ""
@@ -33,7 +34,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-25 10:43+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Kristoffer Grundström <lovaren@gmail.com>, 2024\n"
+"Last-Translator: Claes-Johan Dahlin, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -437,21 +438,21 @@ msgstr "<strong>Totalt</strong>"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<strong>Untaxed Amount</strong>"
-msgstr ""
+msgstr "<strong>Otaxerat belopp</strong>"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/domain_selector/domain_selector_operators.js:0
 #, python-format
 msgid "=ilike"
-msgstr ""
+msgstr "=icke liknande"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/domain_selector/domain_selector_operators.js:0
 #, python-format
 msgid "=like"
-msgstr ""
+msgstr "=liknande"
 
 #. module: web
 #. odoo-javascript
@@ -576,7 +577,7 @@ msgstr "Aktivera felsökning på testtillgångar"
 #: code:addons/web/static/src/core/debug/debug_providers.js:0
 #, python-format
 msgid "Activate debug mode (with assets)"
-msgstr ""
+msgstr "Aktivera felsökningsläge (med tillgångar)"
 
 #. module: web
 #. odoo-javascript
@@ -747,7 +748,7 @@ msgstr "Lägg till: %s"
 #: code:addons/web/static/src/legacy/js/components/action_menus.js:0
 #, python-format
 msgid "Additionnal actions"
-msgstr ""
+msgstr "Ytterligare åtgärder"
 
 #. module: web
 #. odoo-javascript
@@ -948,6 +949,8 @@ msgid ""
 "Are you sure you want to delete this property field? It will be removed for "
 "everyone using the \"%s\" %s."
 msgstr ""
+"Är du säker på att du vill ta bort detta egenskapsfält? Det kommer att tas "
+"bort för alla som använder \"%s\" %s."
 
 #. module: web
 #. odoo-javascript
@@ -1013,7 +1016,7 @@ msgstr "Bilaga"
 #: code:addons/web/static/src/views/fields/attachment_image/attachment_image_field.js:0
 #, python-format
 msgid "Attachment Image"
-msgstr ""
+msgstr "Bild på bifogad fil"
 
 #. module: web
 #. odoo-javascript
@@ -1143,6 +1146,10 @@ msgid ""
 " all purposes when it is used on documents, including legally binding "
 "contracts."
 msgstr ""
+"Genom att klicka på Adopt & Sign godkänner jag att den valda "
+"signaturen/initialerna kommer att vara en giltig elektronisk representation "
+"av min handskrivna signatur/initialer för alla ändamål när den används på "
+"dokument, inklusive juridiskt bindande avtal."
 
 #. module: web
 #. odoo-javascript
@@ -1494,7 +1501,7 @@ msgstr "Kopiera"
 #: code:addons/web/static/src/views/fields/copy_clipboard/copy_clipboard_field.js:0
 #, python-format
 msgid "Copy Multiline Text to Clipboard"
-msgstr ""
+msgstr "Kopiera flerradig text till Urklipp"
 
 #. module: web
 #. odoo-javascript
@@ -1834,7 +1841,7 @@ msgstr "Standard"
 #: code:addons/web/static/src/views/fields/properties/property_definition.xml:0
 #, python-format
 msgid "Default State"
-msgstr ""
+msgstr "Standardtillstånd"
 
 #. module: web
 #. odoo-javascript
@@ -1849,7 +1856,7 @@ msgstr "Standardvärde"
 #: code:addons/web/static/src/legacy/js/widgets/model_field_selector_popover.js:0
 #, python-format
 msgid "Default text is used when no values are set"
-msgstr ""
+msgstr "Standardtext används när inga värden anges"
 
 #. module: web
 #. odoo-javascript
@@ -1900,7 +1907,7 @@ msgstr "Ta bort"
 #: code:addons/web/static/src/views/fields/properties/properties_field.js:0
 #, python-format
 msgid "Delete Property Field"
-msgstr ""
+msgstr "Ta bort egenskapsfält"
 
 #. module: web
 #. odoo-javascript
@@ -1955,7 +1962,7 @@ msgstr "Utvecklarverktyg"
 #: code:addons/web/static/src/views/list/list_renderer.js:0
 #, python-format
 msgid "Different currencies cannot be aggregated"
-msgstr ""
+msgstr "Olika valutor kan inte aggregeras"
 
 #. module: web
 #. odoo-javascript
@@ -2473,7 +2480,7 @@ msgstr "Följd av"
 #: code:addons/web/static/src/core/model_field_selector/model_field_selector.xml:0
 #, python-format
 msgid "Followed-by"
-msgstr ""
+msgstr "Efterföljd av"
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__font
@@ -2485,7 +2492,7 @@ msgstr "Typsnitt"
 #: code:addons/web/static/src/views/fields/font_selection/font_selection_field.js:0
 #, python-format
 msgid "Font Selection"
-msgstr ""
+msgstr "Val av teckensnitt"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
@@ -2506,6 +2513,9 @@ msgid ""
 "\n"
 "Tip: try to flip axis, filter further or reduce the number of measures."
 msgstr ""
+"För Excel-kompatibilitet kan data inte exporteras om det finns mer än 16384 "
+"kolumner. Tips: försök att vända axeln, filtrera ytterligare eller minska "
+"antalet mått."
 
 #. module: web
 #. odoo-javascript
@@ -2533,7 +2543,7 @@ msgstr "Fre"
 #: code:addons/web/static/src/core/colorlist/colorlist.js:0
 #, python-format
 msgid "Fuchsia"
-msgstr ""
+msgstr "Fuchsia"
 
 #. module: web
 #. odoo-javascript
@@ -2557,7 +2567,7 @@ msgstr "Fushia"
 #: code:addons/web/static/src/webclient/settings_form_view/widgets/res_config_edition.xml:0
 #, python-format
 msgid "GNU LGPL Licensed"
-msgstr ""
+msgstr "GNU LGPL Licensierad"
 
 #. module: web
 #. odoo-javascript
@@ -2632,6 +2642,9 @@ msgid ""
 "click the <i class=\"fa fa-cloud-upload fa-fw\"></i> button now to ensure "
 "your work is saved before you exit this tab."
 msgstr ""
+"Var uppmärksam! Dina senaste ändringar är för stora för att sparas "
+"automatiskt. Klicka på knappen <i class=\"fa fa-cloud-upload fa-fw\"></i> nu"
+" för att se till att ditt arbete sparas innan du lämnar den här fliken."
 
 #. module: web
 #. odoo-javascript
@@ -2645,7 +2658,7 @@ msgstr "Göm i Kanban"
 #: code:addons/web/static/src/views/fields/many2many_tags/many2many_tags_field.xml:0
 #, python-format
 msgid "Hide in kanban"
-msgstr ""
+msgstr "Dölj i Kanban"
 
 #. module: web
 #. odoo-javascript
@@ -2868,7 +2881,7 @@ msgstr "Bjuder in..."
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__is_company_details_empty
 msgid "Is Company Details Empty"
-msgstr ""
+msgstr "Is Företagsuppgifter Tom"
 
 #. module: web
 #. odoo-javascript
@@ -2881,6 +2894,12 @@ msgid ""
 "            compilation...). During rendering, the global time also takes part of the time to make\n"
 "            the profile as well as some part not logged in the function generated by the qweb."
 msgstr ""
+"Det är möjligt att \"t-call\"-tiden inte motsvarar den totala tiden för "
+"mallen. Eftersom den globala tiden (i rullgardinsmenyn) inte tar hänsyn till"
+" den tid som inte ingår i renderingen (leta efter mallen, läsa, ärva, "
+"sammanställa...). Under rendering tar den globala tiden också en del av "
+"tiden för att göra profilen samt en del som inte loggas i den funktion som "
+"genereras av qweb."
 
 #. module: web
 #. odoo-javascript
@@ -3136,7 +3155,7 @@ msgstr "Hantera filter"
 #: code:addons/web/static/src/views/fields/many2one_barcode/many2one_barcode_field.js:0
 #, python-format
 msgid "Many2OneBarcode"
-msgstr ""
+msgstr "Många2EnBarcode"
 
 #. module: web
 #. odoo-javascript
@@ -3407,14 +3426,14 @@ msgstr "Ny mall"
 #: code:addons/web/static/src/views/fields/relational_utils.js:0
 #, python-format
 msgid "New:"
-msgstr ""
+msgstr "Ny:"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/many2one/many2one_field.js:0
 #, python-format
 msgid "New: %s"
-msgstr ""
+msgstr "Ny: %s"
 
 #. module: web
 #. odoo-javascript
@@ -3777,7 +3796,7 @@ msgstr "Endast de första %d posterna har raderats (av %d valda)"
 #: code:addons/web/static/src/views/list/list_controller.js:0
 #, python-format
 msgid "Only the first %s records have been deleted (out of %s selected)"
-msgstr ""
+msgstr "Endast de första %s posterna har raderats (av %s valda)"
 
 #. module: web
 #. odoo-python
@@ -3853,7 +3872,7 @@ msgstr "Öppna: %s"
 #: code:addons/web/static/src/views/fields/properties/property_definition_selection.xml:0
 #, python-format
 msgid "Option Name"
-msgstr ""
+msgstr "Alternativets namn"
 
 #. module: web
 #. odoo-javascript
@@ -3956,7 +3975,7 @@ msgstr "Väntande inbjudningar:"
 #: code:addons/web/static/src/views/fields/percent_pie/percent_pie_field.js:0
 #, python-format
 msgid "PercentPie"
-msgstr ""
+msgstr "ProcentPie"
 
 #. module: web
 #. odoo-javascript
@@ -4021,7 +4040,7 @@ msgstr "Pivot"
 #: code:addons/web/controllers/pivot.py:0
 #, python-format
 msgid "Pivot %(title)s (%(model_name)s)"
-msgstr ""
+msgstr "Pivot %(titel)s (%(modellnamn)s)"
 
 #. module: web
 #. odoo-javascript
@@ -4029,7 +4048,7 @@ msgstr ""
 #: code:addons/web/static/src/views/pivot/pivot_controller.xml:0
 #, python-format
 msgid "Pivot settings"
-msgstr ""
+msgstr "Pivot-inställningar"
 
 #. module: web
 #. odoo-javascript
@@ -4114,13 +4133,15 @@ msgid ""
 "Please use the following communication for your payment : <b><span>\n"
 "                           INV/2023/00003</span></b>"
 msgstr ""
+"Vänligen använd följande kommunikation för din betalning: <b><span> "
+"INV/2023/00003</span></b>"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/many2one/many2one_field.js:0
 #, python-format
 msgid "Please, scan again !"
-msgstr ""
+msgstr "Snälla, skanna igen!"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.brand_promotion_message
@@ -4223,7 +4244,7 @@ msgstr "Skriv ut"
 #: code:addons/web/static/src/legacy/js/components/action_menus.js:0
 #, python-format
 msgid "Printing options"
-msgstr ""
+msgstr "Alternativ för utskrift"
 
 #. module: web
 #. odoo-javascript
@@ -4432,7 +4453,7 @@ msgstr "Ladda om"
 #: code:addons/web/static/src/core/debug/debug_menu_items.js:0
 #, python-format
 msgid "Regenerate Assets Bundles"
-msgstr ""
+msgstr "Paket med tillgångar från Regenerate"
 
 #. module: web
 #. odoo-javascript
@@ -4464,7 +4485,7 @@ msgstr "Relation:"
 #: code:addons/web/static/src/views/fields/x2many/x2many_field.js:0
 #, python-format
 msgid "Relational table"
-msgstr ""
+msgstr "Relationell tabell"
 
 #. module: web
 #. odoo-javascript
@@ -4751,14 +4772,14 @@ msgstr "Sök flera..."
 #: code:addons/web/static/src/core/model_selector/model_selector.js:0
 #, python-format
 msgid "Search a Model..."
-msgstr ""
+msgstr "Sök efter en modell..."
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "Search a field..."
-msgstr ""
+msgstr "Sök i ett fält..."
 
 #. module: web
 #. odoo-javascript
@@ -4959,7 +4980,7 @@ msgstr "Sätt En Omslagsbild"
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
 #, python-format
 msgid "Set a kanban state..."
-msgstr ""
+msgstr "Ställ in en kanbanstatus..."
 
 #. module: web
 #. odoo-javascript
@@ -4982,7 +5003,7 @@ msgstr "Sätt en tidszon på din användare"
 #: code:addons/web/static/src/views/fields/state_selection/state_selection_field.js:0
 #, python-format
 msgid "Set kanban state..."
-msgstr ""
+msgstr "Ange kanbanstatus..."
 
 #. module: web
 #. odoo-javascript
@@ -5106,7 +5127,7 @@ msgstr "Börja skriva..."
 #: code:addons/web/static/src/views/fields/stat_info/stat_info_field.js:0
 #, python-format
 msgid "Stat Info"
-msgstr ""
+msgstr "Statlig information"
 
 #. module: web
 #. odoo-javascript
@@ -5186,7 +5207,7 @@ msgstr "Syntax error"
 #: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
 #, python-format
 msgid "TIP"
-msgstr ""
+msgstr "TIP"
 
 #. module: web
 #. odoo-javascript
@@ -5281,6 +5302,7 @@ msgstr ""
 #, python-format
 msgid "The selected file (%sB) is over the maximum allowed file size (%sB)."
 msgstr ""
+"Den valda filen (%sB) är större än den maximalt tillåtna filstorleken (%sB)."
 
 #. module: web
 #. odoo-javascript
@@ -5336,7 +5358,7 @@ msgstr "Det uppstod ett problem när filen skulle laddas upp."
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.neutralize_banner
 msgid "This database is neutralized."
-msgstr ""
+msgstr "Denna databas är neutraliserad."
 
 #. module: web
 #. odoo-javascript
@@ -5471,7 +5493,7 @@ msgstr "Växla"
 #: code:addons/web/static/src/webclient/burger_menu/burger_menu.xml:0
 #, python-format
 msgid "Toggle menu"
-msgstr ""
+msgstr "Växla meny"
 
 #. module: web
 #. odoo-javascript
@@ -5577,7 +5599,7 @@ msgstr ""
 #: code:addons/web/static/src/views/form/form_status_indicator/form_status_indicator.xml:0
 #, python-format
 msgid "Unable to save"
-msgstr ""
+msgstr "Går inte att spara"
 
 #. module: web
 #. odoo-javascript
@@ -5879,7 +5901,7 @@ msgstr "Visa fält"
 #: code:addons/web/static/src/views/fields/properties/property_definition.xml:0
 #, python-format
 msgid "View In Kanban"
-msgstr ""
+msgstr "Översikt i Kanban"
 
 #. module: web
 #. odoo-javascript
@@ -5930,7 +5952,7 @@ msgstr "Varning"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.benchmark_suite
 msgid "Web Benchmarks"
-msgstr ""
+msgstr "Benchmarks för webben"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.qunit_mobile_suite
@@ -5992,7 +6014,7 @@ msgstr "Vill du spara dina ändringar?"
 #: code:addons/web/static/src/views/fields/iframe_wrapper/iframe_wrapper_field.js:0
 #, python-format
 msgid "Wrap raw html within an iframe"
-msgstr ""
+msgstr "Packa in rå html i en iframe"
 
 #. module: web
 #. odoo-python
@@ -6067,7 +6089,7 @@ msgstr "Du har inte tillåtelse att ladda upp en bilaga här."
 #: code:addons/web/static/src/legacy/js/widgets/model_field_selector_popover.js:0
 #, python-format
 msgid "You cannot follow relations for this field chain construction"
-msgstr ""
+msgstr "Du kan inte följa relationer för denna fältkedjekonstruktion"
 
 #. module: web
 #. odoo-javascript
@@ -6097,6 +6119,7 @@ msgstr "Du kanske inte tror det, <br />men applikationen laddar faktiskt..."
 #, python-format
 msgid "You need to be able to edit parent first to add property tags"
 msgstr ""
+"Du måste kunna redigera föräldern först för att lägga till egenskapstaggar"
 
 #. module: web
 #. odoo-javascript
@@ -6105,6 +6128,7 @@ msgstr ""
 #, python-format
 msgid "You need to be able to edit parent first to configure property fields"
 msgstr ""
+"Du måste kunna redigera föräldern först för att konfigurera egenskapsfält"
 
 #. module: web
 #. odoo-javascript
@@ -6167,7 +6191,7 @@ msgstr ""
 #: code:addons/web/static/src/legacy/js/views/kanban/kanban_record.js:0
 #, python-format
 msgid "[No widget %s]"
-msgstr ""
+msgstr "[Ingen widget %s]"
 
 #. module: web
 #. odoo-javascript
@@ -6255,7 +6279,7 @@ msgstr "som en ny"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "at:"
-msgstr ""
+msgstr "vid:"
 
 #. module: web
 #. odoo-javascript
@@ -6399,7 +6423,7 @@ msgstr "är"
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #, python-format
 msgid "is No"
-msgstr ""
+msgstr "är Nej"
 
 #. module: web
 #. odoo-javascript
@@ -6407,7 +6431,7 @@ msgstr ""
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #, python-format
 msgid "is Yes"
-msgstr ""
+msgstr "är Ja"
 
 #. module: web
 #. odoo-javascript
@@ -6594,14 +6618,14 @@ msgstr "mindre än eller lika med"
 #: code:addons/web/static/src/core/domain_selector/domain_selector_operators.js:0
 #, python-format
 msgid "like"
-msgstr ""
+msgstr "som"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/menus/menu_providers.js:0
 #, python-format
 msgid "menus"
-msgstr ""
+msgstr "menyer"
 
 #. module: web
 #. odoo-javascript
@@ -6638,7 +6662,7 @@ msgstr "ms"
 #: code:addons/web/static/src/core/commands/command_palette.xml:0
 #, python-format
 msgid "new tab"
-msgstr ""
+msgstr "ny flik"
 
 #. module: web
 #. odoo-javascript
@@ -6653,7 +6677,7 @@ msgstr "ingen beskrivning given"
 #: code:addons/web/static/src/core/domain_selector/domain_selector_branch_operator.xml:0
 #, python-format
 msgid "none"
-msgstr ""
+msgstr "ingen"
 
 #. module: web
 #. odoo-javascript
@@ -6676,7 +6700,7 @@ msgstr "inte i"
 #: code:addons/web/static/src/core/domain_selector/domain_selector_operators.js:0
 #, python-format
 msgid "not like"
-msgstr ""
+msgstr "inte som"
 
 #. module: web
 #. odoo-javascript
@@ -6707,7 +6731,7 @@ msgstr "av:"
 #: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
 #, python-format
 msgid "on any screen to show shortcut overlays and"
-msgstr ""
+msgstr "på valfri skärm för att visa genvägsöverlägg och"
 
 #. module: web
 #. odoo-javascript
@@ -6810,18 +6834,18 @@ msgstr "satt (sant)"
 #: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
 #, python-format
 msgid "to trigger a shortcut."
-msgstr ""
+msgstr "för att aktivera en genväg."
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "type a default text or press ENTER"
-msgstr ""
+msgstr "ange en standardtext eller tryck på ENTER"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
 #, python-format
 msgid "— press"
-msgstr ""
+msgstr "- tryck"

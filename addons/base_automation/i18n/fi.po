@@ -3,7 +3,6 @@
 # 	* base_automation
 # 
 # Translators:
-# Miika Nissi <miika.nissi@tawasta.fi>, 2022
 # Teemu Ahonen <teemu.ahonen@web-veistamo.fi>, 2022
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2022
 # Tomi Tiainen, 2022
@@ -11,16 +10,16 @@
 # Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2022
 # Miku Laitinen <miku.laitinen@gmail.com>, 2022
 # Martin Trigaux, 2022
-# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2022
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2022
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
 "Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
@@ -31,7 +30,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: base_automation
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
 #, python-format
 msgid ""
@@ -40,19 +39,6 @@ msgid ""
 msgstr ""
 "\"\n"
 "                (ID:"
-
-#. module: base_automation
-#: model:ir.model.fields,help:base_automation.field_base_automation__website_published
-msgid ""
-"A code server action can be executed from the website, using a dedicated "
-"controller. The address is <base>/website/action/<website_path>. Set this "
-"field as True to allow users to run this action. If it is set to False the "
-"action cannot be run through the website."
-msgstr ""
-"Koodipalvelintoiminto voidaan suorittaa verkkosivustolta erillisen ohjaimen "
-"avulla. Osoite on <base>/website/action/<website_path>. Aseta tämän kentän "
-"arvoksi True, jotta käyttäjät voivat suorittaa tämän toiminnon. Jos sen arvo"
-" on False, toimintoa ei voida suorittaa verkkosivuston kautta."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__help
@@ -122,14 +108,8 @@ msgid "Automation"
 msgstr "Automatisointi"
 
 #. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__website_published
-msgid "Available on the Website"
-msgstr "Saatavana verkkosivustolla"
-
-#. module: base_automation
 #: model:ir.actions.server,name:base_automation.ir_cron_data_base_automation_check_ir_actions_server
 #: model:ir.cron,cron_name:base_automation.ir_cron_data_base_automation_check
-#: model:ir.cron,name:base_automation.ir_cron_data_base_automation_check
 msgid "Base Action Rule: check and execute"
 msgstr "Perustan toimintasääntö: tarkista ja suorita"
 
@@ -176,19 +156,6 @@ msgid ""
 msgstr ""
 "Palvelintoimintojen alatoiminnot jotka suoritetaan. Huomioi että viimeistä "
 "palautettua arvoa käytetään palautusarvona globaalisti."
-
-#. module: base_automation
-#: model:ir.model.fields,help:base_automation.field_base_automation__sms_method
-msgid ""
-"Choose method for SMS sending:\n"
-"SMS: mass SMS\n"
-"Post as Message: log on document\n"
-"Post as Note: mass SMS with archives"
-msgstr ""
-"Valitse tapa tekstiviestien lähettämiseen:\n"
-"SMS: joukkotekstiviesti\n"
-"Lähetä viestinä: kirjaa dokumenttiin\n"
-"Lähetä huomiona: joukkotekstiviesti liitteen kanssa"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__mail_post_method
@@ -240,14 +207,14 @@ msgid "Delay type"
 msgstr "Viivästyksen tyyppi"
 
 #. module: base_automation
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
 #, python-format
 msgid "Disable Action"
 msgstr "Kytke toiminta pois päältä"
 
 #. module: base_automation
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
 #, python-format
 msgid ""
@@ -277,7 +244,7 @@ msgid "Due type"
 msgstr "Erääntymisen tyyppi"
 
 #. module: base_automation
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
 #, python-format
 msgid "Edit action"
@@ -289,6 +256,7 @@ msgid "Email Template"
 msgstr "Sähköpostin mallipohja"
 
 #. module: base_automation
+#. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 #, python-format
 msgid ""
@@ -309,6 +277,7 @@ msgid "Fields that trigger the onchange."
 msgstr "Kentät, jotka käynnistävät onchange-laukaisimen."
 
 #. module: base_automation
+#. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 #, python-format
 msgid ""
@@ -424,6 +393,7 @@ msgid "Note"
 msgstr "Muistiinpano"
 
 #. module: base_automation
+#. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 #, python-format
 msgid ""
@@ -486,19 +456,9 @@ msgid "Responsible"
 msgstr "Vastuuhenkilö"
 
 #. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__sms_template_id
-msgid "SMS Template"
-msgstr "SMS Malli"
-
-#. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__mail_post_method
 msgid "Send as"
 msgstr "Lähetä nimellä"
-
-#. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__sms_method
-msgid "Send as (SMS)"
-msgstr "Lähetä tekstiviestinä"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__sequence
@@ -549,6 +509,7 @@ msgid "Target Model Name"
 msgstr "Kohdemallin nimi"
 
 #. module: base_automation
+#. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 #, python-format
 msgid ""
@@ -568,7 +529,7 @@ msgstr ""
 "nämä ovat tyhjiä, kaikkia kenttiä seurataan."
 
 #. module: base_automation
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
 #, python-format
 msgid ""
@@ -577,11 +538,6 @@ msgid ""
 msgstr ""
 "Automaattista toimintoa suoritettaessa tapahtui virhe\n"
 "                \""
-
-#. module: base_automation
-#: model:ir.model.fields,help:base_automation.field_base_automation__website_url
-msgid "The full URL to access the server action through the website."
-msgstr "Täydellinen URL palvelintoimintoon verkkosivun kautta."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger
@@ -671,21 +627,12 @@ msgid "Value Mapping"
 msgstr "Arvojen kohdistus"
 
 #. module: base_automation
+#. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 #: code:addons/base_automation/models/base_automation.py:0
 #, python-format
 msgid "Warning"
 msgstr "Varoitus"
-
-#. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__website_path
-msgid "Website Path"
-msgstr "Verkkosivun polku"
-
-#. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__website_url
-msgid "Website Url"
-msgstr "Verkkosivun URL"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_calendar_id
@@ -729,7 +676,7 @@ msgstr ""
 "käytettävissä; Ohjeet python-lausekkeesta löytyvät Ohje-välilehdeltä."
 
 #. module: base_automation
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
 #, python-format
 msgid ""
@@ -739,7 +686,7 @@ msgstr ""
 "automaattisen toiminnon."
 
 #. module: base_automation
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
 #, python-format
 msgid "You can disable this automated action or edit it to solve the issue."
@@ -748,6 +695,7 @@ msgstr ""
 "ratkaistaksesi ongelman."
 
 #. module: base_automation
+#. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 #, python-format
 msgid ""

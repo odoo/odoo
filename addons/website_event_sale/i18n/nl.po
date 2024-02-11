@@ -6,14 +6,15 @@
 # Martin Trigaux, 2022
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
 # Jolien De Paepe, 2023
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"POT-Creation-Date: 2024-02-06 13:32+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Jolien De Paepe, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,6 +45,7 @@ msgstr ""
 "                                        </small>"
 
 #. module: website_event_sale
+#. odoo-python
 #: code:addons/website_event_sale/models/product_pricelist.py:0
 #, python-format
 msgid ""
@@ -54,6 +56,7 @@ msgstr ""
 "toegepast op dit product evenementtickets."
 
 #. module: website_event_sale
+#. odoo-python
 #: code:addons/website_event_sale/models/product_pricelist.py:0
 #, python-format
 msgid ""
@@ -94,6 +97,11 @@ msgid "Pricelist Rule"
 msgstr "Prijslijstregel"
 
 #. module: website_event_sale
+#: model:ir.model,name:website_event_sale.model_product_template
+msgid "Product"
+msgstr "Product"
+
+#. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_product_product
 msgid "Product Variant"
 msgstr "Productvariant"
@@ -103,12 +111,6 @@ msgstr "Productvariant"
 #: model_terms:ir.ui.view,arch_db:website_event_sale.event_sale_report_view_search
 msgid "Published Events"
 msgstr "Gepubliceerde evenementen"
-
-#. module: website_event_sale
-#: code:addons/website_event_sale/controllers/main.py:0
-#, python-format
-msgid "Registration"
-msgstr "Inschrijving"
 
 #. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_sale_order
@@ -121,6 +123,7 @@ msgid "Sales Order Line"
 msgstr "Verkooporderregel"
 
 #. module: website_event_sale
+#. odoo-python
 #: code:addons/website_event_sale/models/sale_order.py:0
 #, python-format
 msgid "Sorry, The %(ticket)s tickets for the %(event)s event are sold out."
@@ -128,6 +131,7 @@ msgstr ""
 "Sorry, De %(ticket)s tickets voor het %(event)s evenement zijn uitverkocht."
 
 #. module: website_event_sale
+#. odoo-python
 #: code:addons/website_event_sale/models/sale_order.py:0
 #, python-format
 msgid ""
@@ -138,18 +142,21 @@ msgstr ""
 "%(ticket)s voor het %(event)s evenement."
 
 #. module: website_event_sale
+#. odoo-python
 #: code:addons/website_event_sale/models/sale_order.py:0
 #, python-format
 msgid "The provided ticket doesn't exist"
 msgstr "Het verstrekte ticket bestaat niet"
 
 #. module: website_event_sale
+#. odoo-python
 #: code:addons/website_event_sale/models/sale_order.py:0
 #, python-format
 msgid "The ticket doesn't match with this product."
 msgstr "Het ticket komt niet overeen met dit product."
 
 #. module: website_event_sale
+#. odoo-python
 #: code:addons/website_event_sale/models/product_pricelist.py:0
 #, python-format
 msgid "Warning"
@@ -166,6 +173,7 @@ msgid "Website"
 msgstr "Website"
 
 #. module: website_event_sale
+#. odoo-python
 #: code:addons/website_event_sale/models/sale_order.py:0
 #, python-format
 msgid "You cannot raise manually the event ticket quantity in your cart"
