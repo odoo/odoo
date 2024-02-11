@@ -11,6 +11,7 @@
 # Irina Fedulova <istartlin@gmail.com>, 2020
 # Alena Vlasova, 2023
 # alenafairy, 2023
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -18,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 11:24+0000\n"
 "PO-Revision-Date: 2020-09-07 08:18+0000\n"
-"Last-Translator: alenafairy, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -60,7 +61,7 @@ msgstr "Отображаемое имя"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__visible_project
 msgid "Display project"
-msgstr ""
+msgstr "Проект дисплея"
 
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__no
@@ -113,7 +114,7 @@ msgstr "Новый"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__invoice_count
 msgid "Number of invoices"
-msgstr ""
+msgstr "Количество счетов-фактур"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_product_product__service_tracking
@@ -122,6 +123,8 @@ msgid ""
 "On Sales order confirmation, this product can generate a project and/or task.         From those, you can track the service you are selling.\n"
 "         'In sale order's project': Will use the sale order's configured project if defined or fallback to         creating a new project based on the selected template."
 msgstr ""
+"При подтверждении заказа на продажу этот продукт может генерировать проект и/или задачу.         На их основе вы можете отслеживать продаваемую услугу.\n"
+"         'В проекте заказа на продажу': Будет использовать настроенный проект заказа на продажу, если он определен, или вернется к созданию нового проекта на основе выбранного шаблона."
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_product_product
@@ -156,7 +159,7 @@ msgstr "Проект создан при элементом заказ на пр
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__project_sale_order_id
 msgid "Project's sale order"
-msgstr ""
+msgstr "Порядок реализации проекта"
 
 #. module: sale_project
 #: code:addons/sale_project/models/sale_order.py:0
@@ -218,7 +221,7 @@ msgstr ""
 #: model:ir.model.fields,help:sale_project.field_project_project__sale_order_id
 #: model:ir.model.fields,help:sale_project.field_project_task__project_sale_order_id
 msgid "Sales order to which the project is linked."
-msgstr ""
+msgstr "Заказ на продажу, с которым связан проект."
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_task__sale_order_id
@@ -346,6 +349,8 @@ msgid ""
 "You cannot link the order item %(order_id)s - %(product_id)s to this task "
 "because it is a re-invoiced expense."
 msgstr ""
+"Вы не можете связать элемент заказа %(order_id)s - %(product_id)s с этой "
+"задачей, поскольку это повторно выставленный счет."
 
 #. module: sale_project
 #: code:addons/sale_project/models/project.py:0

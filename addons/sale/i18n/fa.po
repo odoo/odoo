@@ -14,10 +14,11 @@
 # Hamed Mohammadi <hamed@dehongi.com>, 2020
 # Zahed Alfak <tamass4116@gmail.com>, 2021
 # Mohsen Mohammadi <iammohsen.123@gmail.com>, 2021
-# Farid Hariri <fhari1234@gmail.com>, 2021
+# F Hariri <fhari1234@gmail.com>, 2021
 # M.Hossein S.Farvashani <Farvashani@gmail.com>, 2021
 # Hanna Kheradroosta, 2022
 # fardin mardani, 2023
+# Abbas Ebadian, 2024
 # 
 msgid ""
 msgstr ""
@@ -25,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-03-09 15:44+0000\n"
 "PO-Revision-Date: 2020-09-07 08:17+0000\n"
-"Last-Translator: fardin mardani, 2023\n"
+"Last-Translator: Abbas Ebadian, 2024\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2301,12 +2302,14 @@ msgid ""
 "It is forbidden to modify the following fields in a locked order:\n"
 "%s"
 msgstr ""
+"امکان ویرایش فیلدهای زیر در یک سفارش قفل شده وجود ندارد.\n"
+"%s"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
 #, python-format
 msgid "It is not allowed to confirm an order in the following states: %s"
-msgstr ""
+msgstr "امکان تایید سفارشی که در مراحل زیر باشد وجود ندارد: %s"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_move
@@ -2728,7 +2731,7 @@ msgstr "امضای آنلاین"
 #: code:addons/sale/models/sale.py:0
 #, python-format
 msgid "Only draft orders can be marked as sent directly."
-msgstr ""
+msgstr "فقط سفارش های پیش نویس را می توان برای ارسال نشانهگذاری کرد."
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_product_attribute_custom_value_sol_custom_value_unique
@@ -4052,7 +4055,7 @@ msgstr ""
 #: code:addons/sale/models/sale.py:0
 #, python-format
 msgid "The ordered quantity has been updated."
-msgstr ""
+msgstr "تعداد سفارش داده شده به روز شد."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__reference
@@ -4512,6 +4515,8 @@ msgid ""
 "You can not delete a sent quotation or a confirmed sales order. You must "
 "first cancel it."
 msgstr ""
+"شما نمی‌توانید یک پیش‌فاکتور ارسال شده یا یک سفارش فروش تأیید شده را حذف "
+"کنید. باید ابتدا آن را لغو کنید."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
@@ -4520,6 +4525,8 @@ msgid ""
 "You can not remove an order line once the sales order is confirmed.\n"
 "You should rather set the quantity to 0."
 msgstr ""
+"شما نمی‌توانید یک سطر سفارش را پس از تأیید سفارش فروش حذف کنید.\n"
+"بهتر است به جای آن تعداد را به 0 تنظیم کنید."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_to_invoice
@@ -4548,6 +4555,7 @@ msgid ""
 "You cannot change the product's type because it is already used in sales "
 "orders."
 msgstr ""
+"امکان ویرایش نوع محصول به دلیل استفاده از آن حداقل در یک سفارش،‌ وجود ندارد"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0

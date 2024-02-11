@@ -14,6 +14,7 @@
 # Ivan Kropotkin <yelizariev@itpp.dev>, 2020
 # Сергей Шебанин <sergey@shebanin.ru>, 2021
 # Alena Vlasova, 2023
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -21,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-29 13:46+0000\n"
 "PO-Revision-Date: 2020-09-07 08:16+0000\n"
-"Last-Translator: Alena Vlasova, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -304,7 +305,7 @@ msgstr "Добавьте еще содержимое для отображени
 #: code:addons/portal/controllers/mail.py:0
 #, python-format
 msgid "An access token must be provided for each attachment."
-msgstr ""
+msgstr "Для каждого вложения необходимо предоставить маркер доступа."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
@@ -356,7 +357,7 @@ msgstr ""
 #: code:addons/portal/static/src/js/portal.js:0
 #, python-format
 msgid "Check failed"
-msgstr ""
+msgstr "Проверка не удалась"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -417,7 +418,7 @@ msgstr "Контакты"
 #: code:addons/portal/static/src/js/portal_composer.js:0
 #, python-format
 msgid "Could not save file <strong>%s</strong>"
-msgstr ""
+msgstr "Не удалось сохранить файл <strong>%s</strong>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -550,7 +551,7 @@ msgstr "Предоставить доступ к порталу"
 #. module: portal
 #: model:ir.actions.act_window,name:portal.partner_wizard_action
 msgid "Grant portal access"
-msgstr ""
+msgstr "Предоставление доступа к порталу"
 
 #. module: portal
 #: model:ir.model,name:portal.model_ir_http
@@ -659,6 +660,8 @@ msgid ""
 "Model %(model_name)s does not support token signature, as it does not have "
 "%(field_name)s field."
 msgstr ""
+"Модель %(model_name)s не поддерживает подпись токена, так как в ней нет поля"
+" %(field_name)s."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.my_account_link
@@ -673,7 +676,7 @@ msgstr "Название"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "New Password:"
-msgstr ""
+msgstr "Новый пароль:"
 
 #. module: portal
 #. openerp-web
@@ -713,12 +716,12 @@ msgstr "Пароль"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Password Updated!"
-msgstr ""
+msgstr "Пароль обновлен!"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Password:"
-msgstr ""
+msgstr "Пароль:"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -890,13 +893,14 @@ msgstr "Адрес"
 #: code:addons/portal/static/src/xml/portal_signature.xml:0
 #, python-format
 msgid "Thank You!"
-msgstr ""
+msgstr "Спасибо!"
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid "The attachment %s cannot be removed because it is linked to a message."
 msgstr ""
+"Вложение %s не может быть удалено, поскольку оно связано с сообщением."
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
@@ -904,27 +908,29 @@ msgstr ""
 msgid ""
 "The attachment %s cannot be removed because it is not in a pending state."
 msgstr ""
+"Вложение %s не может быть удалено, поскольку оно не находится в состоянии "
+"ожидания."
 
 #. module: portal
 #: code:addons/portal/controllers/mail.py:0
 #, python-format
 msgid ""
 "The attachment %s does not exist or you do not have the rights to access it."
-msgstr ""
+msgstr "Вложение %s не существует или у вас нет прав доступа к нему."
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid ""
 "The attachment does not exist or you do not have the rights to access it."
-msgstr ""
+msgstr "Вложение не существует или у вас нет прав на доступ к нему."
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid ""
 "The document does not exist or you do not have the rights to access it."
-msgstr ""
+msgstr "Документ не существует или у вас нет прав на доступ к нему."
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
@@ -1011,7 +1017,7 @@ msgstr "ИНН"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Verify New Password:"
-msgstr ""
+msgstr "Проверить новый пароль:"
 
 #. module: portal
 #: model:ir.model,name:portal.model_ir_ui_view
@@ -1189,7 +1195,7 @@ msgstr "odoo"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "password"
-msgstr ""
+msgstr "пароль"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
