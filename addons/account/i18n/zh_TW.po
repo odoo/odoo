@@ -356,7 +356,7 @@ msgstr "30 天"
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_30_days_end_month_the_10
 msgid "30 days End of Month on the 10th"
-msgstr "翌月 10 日起計 30 天"
+msgstr "截數日月底起計 30 天，每月 10 號截數"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_advance
@@ -7541,6 +7541,13 @@ msgstr "無效的\"郵編範圍\"，請正確的設定."
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_report.py:0
+#, python-format
+msgid "Invalid domain for expression '%s' of line '%s': %s"
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Invalid fiscal year last day"
@@ -10502,7 +10509,7 @@ msgstr "付款條款：30 天；7 天內付清享 2% 折扣"
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_30_days_end_month_the_10
 msgid "Payment terms: 30 days End of Month on the 10th"
-msgstr "付款條款：翌月 10 日起計 30 天"
+msgstr "付款條款：截數日月底起計 30 天，每月 10 號截數"
 
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_advance
