@@ -3353,7 +3353,7 @@ msgstr "Stornierte Gutschrift"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Cancelled Invoice"
-msgstr "Stornierte Rechnung"
+msgstr "Stornorechnung"
 
 #. module: account
 #. odoo-python
@@ -6710,8 +6710,8 @@ msgid ""
 "Gaps due to canceled invoices, deleted entries or manual errors in open "
 "period."
 msgstr ""
-"Lücken aufgrund von stornierten Rechnungen, gelöschten Einträgen oder "
-"manuellen Fehlern in offenen Perioden."
+"Lücken aufgrund von Stornorechnungen, gelöschten Buchungen oder manuellen "
+"Fehlern in offenen Perioden."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -7577,6 +7577,13 @@ msgstr "Ungültig"
 #, python-format
 msgid "Invalid \"Zip Range\", please configure it properly."
 msgstr "Ungültiger „PLZ-Bereich“, bitte richtig konfigurieren."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_report.py:0
+#, python-format
+msgid "Invalid domain for expression '%s' of line '%s': %s"
+msgstr "Ungültiger Bereich für Ausdruck „%s“ der Zeile „%s“: %s"
 
 #. module: account
 #. odoo-python

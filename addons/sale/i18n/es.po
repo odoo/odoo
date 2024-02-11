@@ -15,7 +15,6 @@
 # Richard Mouthier <rmo@odoo.com>, 2023
 # Ana Sanjuán, 2023
 # Lucia Pacheco, 2023
-# Youssef Bashandy, 2023
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2024
 # Larissa Manderfeld, 2024
 # 
@@ -521,23 +520,23 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        <t t-set=\"doc_name\" t-value=\"'presupuesto' if object.state in ('draft', 'sent') else 'pedido'\"></t>\n"
+"        <t t-set=\"doc_name\" t-value=\"'quotation' if object.state in ('draft', 'sent') else 'order'\"></t>\n"
 "        Hola,\n"
 "        <br><br>\n"
 "        Su\n"
 "        <t t-if=\"ctx.get('proforma')\">\n"
-"            factura proforma para la <t t-out=\"doc_name or ''\">cotización</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</span>\n"
+"            factura proforma para el <t t-out=\"doc_name or ''\">presupuesto</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</span>\n"
 "            <t t-if=\"object.origin\">\n"
 "                (con referencia: <t t-out=\"object.origin or ''\"></t> )\n"
 "            </t>\n"
-"            por un importe de <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span> está disponible.\n"
+"            por un importe de <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">10,00 €</span> está disponible.\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
-"            <t t-out=\"doc_name or ''\">cotización</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\"></span>\n"
+"            <t t-out=\"doc_name or ''\">presupuesto</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\"></span>\n"
 "            <t t-if=\"object.origin\">\n"
 "                (con referencia: <t t-out=\"object.origin or ''\">S00052</t> )\n"
 "            </t>\n"
-"            por un importe de <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span> se encuentra disponible para su revisión.\n"
+"            por un importe de <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">10,00 €</span> está disponible para su revisión.\n"
 "        </t>\n"
 "        <br><br>\n"
 "        Si tiene alguna pregunta, no dude en ponerse en contacto con nosotros.\n"

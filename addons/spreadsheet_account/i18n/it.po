@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-23 09:15+0000\n"
+"POT-Creation-Date: 2024-02-08 07:29+0000\n"
 "PO-Revision-Date: 2023-03-23 10:40+0000\n"
 "Last-Translator: Marianna Ciofani, 2023\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
@@ -44,13 +44,6 @@ msgstr ""
 #: model:ir.model,name:spreadsheet_account.model_account_account
 msgid "Account"
 msgstr "Conto"
-
-#. module: spreadsheet_account
-#. odoo-javascript
-#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
-#, python-format
-msgid "Account type."
-msgstr "Tipo di conto."
 
 #. module: spreadsheet_account
 #: model:ir.model,name:spreadsheet_account.model_res_company
@@ -85,14 +78,6 @@ msgstr "Ottieni il totale degli addebiti per i conti e i periodi specificati."
 #, python-format
 msgid "Journal items for account prefix %s"
 msgstr "Movimenti contabili per il prefisso del conto %s"
-
-#. module: spreadsheet_account
-#. odoo-javascript
-#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
-#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
-#, python-format
-msgid "Reference date."
-msgstr "Data di riferimento."
 
 #. module: spreadsheet_account
 #. odoo-javascript
@@ -136,6 +121,13 @@ msgstr "Imposta come VERO per includere voci non registrate."
 
 #. module: spreadsheet_account
 #. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
+#, python-format
+msgid "The account type (income, expense, asset_current,...)."
+msgstr ""
+
+#. module: spreadsheet_account
+#. odoo-javascript
 #: code:addons/spreadsheet_account/static/src/accounting_datasource.js:0
 #, python-format
 msgid "The company fiscal year could not be found."
@@ -166,6 +158,20 @@ msgid ""
 msgstr ""
 "L'intervallo della data. I formati supportati sono \"21/12/2022\", "
 "\"Q1/2022\", \"12/2022\" e \"2022\"."
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
+#, python-format
+msgid "The day from which to extract the fiscal year end."
+msgstr ""
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
+#, python-format
+msgid "The day from which to extract the fiscal year start."
+msgstr ""
 
 #. module: spreadsheet_account
 #. odoo-javascript
