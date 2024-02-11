@@ -4,9 +4,9 @@
 # 
 # Translators:
 # Martin Trigaux, 2024
-# Larissa Manderfeld, 2024
 # Wil Odoo, 2024
 # Fernanda Alvarez, 2024
+# Larissa Manderfeld, 2024
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-17 10:14+0000\n"
 "PO-Revision-Date: 2024-01-17 11:21+0000\n"
-"Last-Translator: Fernanda Alvarez, 2024\n"
+"Last-Translator: Larissa Manderfeld, 2024\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -5294,6 +5294,8 @@ msgid ""
 "\n"
 "Generate tasks in Project app from a form published on your website. This module requires the use of the *Form Builder* module in order to build the form.\n"
 msgstr ""
+"\n"
+"Genere tareas en la aplicación Proyecto a partir de un formulario publicado en su sitio web. Este módulo requiere el uso del módulo *Creador de formularios* para crear el formulario.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_intrastat
@@ -7823,6 +7825,8 @@ msgid ""
 "\n"
 "Search project tasks according to the assignees' skills\n"
 msgstr ""
+"\n"
+"Busque tareas de proyectos según las habilidades de las personas asignadas.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_event_sale
@@ -8124,6 +8128,20 @@ msgid ""
 "The generation of the QR-bill is automatic if you meet the previous criteria. The QR-bill will be appended after the invoice when printing or sending by mail.\n"
 "\n"
 msgstr ""
+"\n"
+"Localización para Suiza\n"
+"==================\n"
+"Este módulo define un plan contable para Suiza (Swiss PME/KMU 2015) y los impuestos, además genera una factura QR cuando imprime una factura o la envía por correo.\n"
+"Esta factura QR facilita realizar el pago.\n"
+"\n"
+"Se generará una factura QR si:\n"
+"    - El contacto establecido en su factura tiene una dirección completa (calle, ciudad, código postal y país) en Suiza\n"
+"    - Selecciona la opción para generar el código QR en la factura (esto aplica por defecto)\n"
+"    - Establece en su diario bancario un número de cuenta correcto o el QR IBAN\n"
+"    - Si utiliza QR IBAN, la referencia de pago de la factura es una referencia QR\n"
+"\n"
+"La factura QR se genera en automático si se cumplen los criterios anteriores y se adjuntará después de la factura al imprimir o enviar por correo. \n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ch_hr_payroll
@@ -8813,6 +8831,8 @@ msgid ""
 "\n"
 "This is the base module to manage the accounting chart for Republic of Ireland in Odoo.\n"
 msgstr ""
+"\n"
+"Este es el módulo base para gestionar el plan contable de Irlanda en Odoo.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_tw
@@ -15206,6 +15226,8 @@ msgstr ""
 #: model:ir.module.module,summary:base.module_l10n_pe_website_sale
 msgid "Be able to see Identification Type in ecommerce checkout form."
 msgstr ""
+"Sea capaz de ver el tipo de identificación en el formulario de pago del "
+"comercio electrónico."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_view_form
@@ -16013,7 +16035,7 @@ msgstr "Cancelar actualización"
 #. odoo-python
 #: code:addons/base/models/res_users.py:0
 msgid "Cannot aggregate on %s parameter"
-msgstr ""
+msgstr "No se puede agregar al parámetro %s"
 
 #. module: base
 #. odoo-python
@@ -16054,7 +16076,7 @@ msgstr "¡No se puede duplicar la configuración!"
 #. odoo-python
 #: code:addons/base/models/res_users.py:0
 msgid "Cannot groupby on %s parameter"
-msgstr ""
+msgstr "No se puede agrupar el parámetro %s"
 
 #. module: base
 #. odoo-python
@@ -16457,7 +16479,7 @@ msgstr "CodaBox"
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_codabox
 msgid "CodaBox integration to retrieve your CODA and SODA files."
-msgstr ""
+msgstr "Integración con CodaBox para recuperar sus archivos CODA y SODA."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_import_language
@@ -19318,7 +19340,7 @@ msgstr "Empleados en citas"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_employment_hero
 msgid "Employment Hero Payroll"
-msgstr ""
+msgstr "Nómina con Employment Hero"
 
 #. module: base
 #. odoo-python
@@ -22946,6 +22968,8 @@ msgid ""
 "Integrate features developped in Mail in use case involving resources "
 "instead of users"
 msgstr ""
+"Se integran funciones que se desarrollaron en correo electrónico para un "
+"caso de uso en el que se usan recursos en lugar de usuarios"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_loyalty_delivery
@@ -24338,7 +24362,7 @@ msgstr "Localización"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_company_form
 msgid "Localization features are available for this country:"
-msgstr ""
+msgstr "Este país tiene funciones de localización disponibles:"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_logging_form_view
@@ -29877,7 +29901,7 @@ msgstr "Perú - Nota de entrega electrónica"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_pe_website_sale
 msgid "Peruvian eCommerce"
-msgstr ""
+msgstr "Comercio electrónico peruano"
 
 #. module: base
 #: model:res.country,name:base.ph
@@ -30426,7 +30450,7 @@ msgstr "Proyecto - Ventas - Gastos"
 #: model:ir.module.module,shortdesc:base.module_project_enterprise_hr_skills
 #: model:ir.module.module,shortdesc:base.module_project_hr_skills
 msgid "Project - Skills"
-msgstr ""
+msgstr "Proyecto - Habilidades"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_account_asset
@@ -30685,7 +30709,7 @@ msgstr "Suscripciones de las ventas del proyecto"
 #: model:ir.module.module,summary:base.module_project_enterprise_hr_skills
 #: model:ir.module.module,summary:base.module_project_hr_skills
 msgid "Project skills"
-msgstr ""
+msgstr "Habilidades del proyecto"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk_fsm_sale
@@ -31635,7 +31659,7 @@ msgstr "ID del recurso"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_resource_mail
 msgid "Resource Mail"
-msgstr ""
+msgstr "Correo de recursos"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__res_model
@@ -34315,7 +34339,7 @@ msgstr "Nombre de plantilla"
 #: code:addons/base/models/assetsbundle.py:0
 #: code:addons/base/models/assetsbundle.py:0
 msgid "Template name is missing."
-msgstr ""
+msgstr "Falta el nombre de la plantilla."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_base_automation
@@ -36688,7 +36712,7 @@ msgstr "Desinstalable"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__uninstalled_l10n_module_ids
 msgid "Uninstalled L10N Module"
-msgstr ""
+msgstr "Módulo L10N deinstalado"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_uninstall
@@ -38836,7 +38860,7 @@ msgstr "por ejemplo, mi servidor de salida"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "e.g. New Address"
-msgstr ""
+msgstr "p. ej. Nueva dirección"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form

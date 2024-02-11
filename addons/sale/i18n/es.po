@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~17.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-24 15:30+0000\n"
+"POT-Creation-Date: 2024-02-07 10:23+0000\n"
 "PO-Revision-Date: 2024-01-17 11:21+0000\n"
 "Last-Translator: Larissa Manderfeld, 2024\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
@@ -50,7 +50,7 @@ msgstr "%(attribute)s: %(values)s"
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 msgid "%(line_description)s (Cancelled)"
-msgstr ""
+msgstr "%(line_description)s (cancelado)"
 
 #. module: sale
 #. odoo-python
@@ -190,26 +190,26 @@ msgstr ""
 "        <t t-set=\"transaction_sudo\" t-value=\"object.get_portal_last_transaction()\"></t>\n"
 "        Hola,\n"
 "        <br><br>\n"
-"        Está pendiente el pago con la referencia\n"
+"        El pago con la referencia\n"
 "        <span style=\"font-weight:bold;\" t-out=\"transaction_sudo.reference or ''\">SOOO49</span>\n"
 "        por un importe de\n"
 "        <span style=\"font-weight:bold;\" t-out=\"format_amount(transaction_sudo.amount, object.currency_id) or ''\">10,00 €</span>\n"
 "        para su orden\n"
 "        <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">S00049</span>\n"
 "        <t t-if=\"transaction_sudo and transaction_sudo.state == 'pending'\">\n"
-"            .\n"
+"            está pendiente.\n"
 "            <br>\n"
 "            <t t-if=\"object.currency_id.compare_amounts(object.amount_paid + transaction_sudo.amount, object.amount_total) &gt;= 0 and object.state in ('draft', 'sent')\">\n"
 "                Confirmaremos su orden una vez que confirmemos el pago.\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
-"                Una vez que se confirme, restarán\n"
+"                 Una vez que se confirme, restarán\n"
 "                <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total - object.amount_paid - transaction_sudo.amount, object.currency_id) or ''\">10,00 €</span>\n"
 "                a pagar.\n"
 "            </t>\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
-"            se han confirmado.\n"
+"            se ha confirmado.\n"
 "            <t t-if=\"object.currency_id.compare_amounts(object.amount_paid, object.amount_total) &lt; 0\">\n"
 "                <br>\n"
 "                Restan <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total - object.amount_paid, object.currency_id) or ''\">10,00 €</span>\n"
@@ -636,23 +636,23 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        <t t-set=\"doc_name\" t-value=\"'presupuesto' if object.state in ('draft', 'sent') else 'pedido'\"></t>\n"
+"        <t t-set=\"doc_name\" t-value=\"'quotation' if object.state in ('draft', 'sent') else 'order'\"></t>\n"
 "        Hola,\n"
 "        <br><br>\n"
 "        Su\n"
 "        <t t-if=\"ctx.get('proforma')\">\n"
-"            factura proforma para la <t t-out=\"doc_name or ''\">cotización</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</span>\n"
+"            factura proforma para el <t t-out=\"doc_name or ''\">presupuesto</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</span>\n"
 "            <t t-if=\"object.origin\">\n"
 "                (con referencia: <t t-out=\"object.origin or ''\"></t> )\n"
 "            </t>\n"
-"            por un importe de <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span> está disponible.\n"
+"            por un importe de <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">10,00 €</span> está disponible.\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
-"            <t t-out=\"doc_name or ''\">cotización</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\"></span>\n"
+"            <t t-out=\"doc_name or ''\">presupuesto</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\"></span>\n"
 "            <t t-if=\"object.origin\">\n"
 "                (con referencia: <t t-out=\"object.origin or ''\">S00052</t> )\n"
 "            </t>\n"
-"            por un importe de <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span> se encuentra disponible para su revisión.\n"
+"            por un importe de <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">10,00 €</span> está disponible para su revisión.\n"
 "        </t>\n"
 "        <br><br>\n"
 "        Si tiene alguna pregunta, no dude en ponerse en contacto con nosotros.\n"
@@ -957,7 +957,7 @@ msgstr "<strong>¡Esta oferta expiró!</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<strong>This quotation has been cancelled.</strong>"
-msgstr ""
+msgstr "<strong>Este presupuesto ha sido cancelado.</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1663,7 +1663,7 @@ msgstr "Fecha de Creación"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "Create Draft"
-msgstr ""
+msgstr "Crear borrador"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__advance_payment_method
@@ -1699,7 +1699,7 @@ msgstr "Crea un nuevo presupuesto, ¡el primer paso de una nueva venta!"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_view_sale_advance_payment_inv
 msgid "Create invoice(s)"
-msgstr ""
+msgstr "Crear factura(s)"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_invoice_salesteams
@@ -1905,6 +1905,9 @@ msgid ""
 "Default period during which the quote is valid and can still be accepted by "
 "the customer. The default can be changed per order or template."
 msgstr ""
+"Período por defecto durante el cual el presupuesto es válido y todavía lo "
+"puede aceptar el cliente. El período por defecto puede cambiarse por orden o"
+" por plantilla."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_company__sale_discount_product_id
@@ -2116,12 +2119,6 @@ msgstr "Anticipo: %(date)s (borrador)"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 msgid "Down Payments"
 msgstr "Pagos anticipados"
-
-#. module: sale
-#. odoo-python
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:0
-msgid "Down payment"
-msgstr "Anticipo"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__fixed
@@ -3249,11 +3246,6 @@ msgid "Order Date: Last 365 Days"
 msgstr "Fecha de pedido: últimos 365 días"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
-msgid "Order Detail"
-msgstr "Detalles de la orden"
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__order_line
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Order Lines"
@@ -3884,6 +3876,8 @@ msgid ""
 "Request a payment to confirm orders, in full (100%) or partial. The default "
 "can be changed per order or template."
 msgstr ""
+"Solicite un pago para confirmar órdenes, ya sea total (100%) o parcial. El "
+"valor predeterminado puede cambiarse por orden o plantilla."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3891,6 +3885,8 @@ msgid ""
 "Request customers to sign quotations to validate orders. The default can be "
 "changed per order or template."
 msgstr ""
+"Solicite a los clientes que firmen presupuestos para validar órdenes. El "
+"valor predeterminado puede cambiarse por orden o plantilla."
 
 #. module: sale
 #. odoo-python
@@ -4633,6 +4629,8 @@ msgid ""
 "Team %(team_name)s has %(sale_order_count)s active sale orders. Consider "
 "cancelling them or archiving the team instead."
 msgstr ""
+"El equipo %(team_name)s tiene %(sale_order_count)s órdenes de venta activas."
+" Considere cancelarlas o archivar el equipo."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template

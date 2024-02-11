@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~17.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-17 10:11+0000\n"
+"POT-Creation-Date: 2024-02-07 10:24+0000\n"
 "PO-Revision-Date: 2024-01-17 11:21+0000\n"
 "Last-Translator: Jolien De Paepe, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
@@ -902,6 +902,13 @@ msgstr ""
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid ""
+"An unexpected error occurred. Submit a support ticket at odoo.com/help."
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Angle from the X axis to a point (x,y), in radians."
 msgstr "Hoek van de X-as naar een punt (x,y), in radialen."
 
@@ -1050,7 +1057,6 @@ msgstr "Weet je zeker dat je dit blad wilt verwijderen?"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Argument ignore must be between 0 and 3"
 msgstr "Argument negeren moet tussen 0 en 3 liggen"
@@ -1836,7 +1842,7 @@ msgstr "Cotangens van een hoek in radialen."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/pivot/pivot_model.js:0
+#: code:addons/spreadsheet/static/src/pivot/pivot_data_source.js:0
 msgid "Count"
 msgstr "Aantal"
 
@@ -2047,13 +2053,6 @@ msgstr "Gegevensopschoning"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Data has header row"
 msgstr "Gegevens hebben koprij"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/helpers/model.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/errors.js:0
-msgid "Data is loading"
-msgstr "Gegevens worden geladen"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2510,6 +2509,7 @@ msgstr "Gelijkwaardig rendement van een VS-schatkistbon."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Error"
 msgstr "Fout"
 
@@ -2592,6 +2592,7 @@ msgstr "Februari"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/pivot/pivot_data_source.js:0
 #: code:addons/spreadsheet/static/src/pivot/pivot_model.js:0
 msgid "Field %s does not exist"
 msgstr "Veld %s bestaat niet"
@@ -2949,6 +2950,14 @@ msgid "Function [[FUNCTION_NAME]] expects number values for %s, but got a %s."
 msgstr ""
 "Functie [[FUNCTION_NAME]] verwacht numerieke waarden voor %s, maar kreeg een"
 " %s."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid ""
+"Function [[FUNCTION_NAME]] invert matrix error, only square matrices are "
+"invertible"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4422,6 +4431,7 @@ msgstr "Geen unieke waarden gevonden"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #: code:addons/spreadsheet/static/src/pivot/pivot_model.js:0
+#: code:addons/spreadsheet/static/src/pivot/pivot_time_adapters.js:0
 #: code:addons/spreadsheet/static/src/pivot/pivot_time_adapters.js:0
 msgid "None"
 msgstr "Geen"
@@ -5910,17 +5920,17 @@ msgstr "Het argument ontbreekt. Geef een waarde op"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "The argument square_matrix must be a matrix of numbers."
-msgstr "Het argument square_matrix moet een getallenmatrix zijn."
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
 "The argument square_matrix must have the same number of columns and rows."
 msgstr ""
 "Het argument square_matrix moet hetzelfde aantal kolommen en rijen hebben."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid ""
+"The arguments array_x and array_y must contain at least one pair of numbers."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5933,12 +5943,6 @@ msgstr "De argumentenvoorwaarde moet een enkele kolom of rij zijn."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The arguments conditions must have the same dimensions."
 msgstr "De argumentenvoorwaarden moeten dezelfde dimensies hebben."
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "The arguments matrix1 and matrix2 must be matrices of numbers."
-msgstr "De argumenten matrix1 en matrix2 moeten getallenmatrices zijn."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6666,10 +6670,9 @@ msgstr "Het veld %s bestaat niet of je hebt geen toegang tot dat veld"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
-"The field (%s) must be one of %s or must be a number between 1 and %s "
-"inclusive."
+"The field (%(fieldValue)s) must be one of %(dimRowDB)s or must be a number "
+"between 1 and %s inclusive."
 msgstr ""
-"Het veld (%s) moet een van %s zijn of moet een getal zijn tussen 1 en %s."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7137,6 +7140,12 @@ msgstr "De huidige waarde van de investering."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The investment's desired future value."
 msgstr "De gewenste toekomstige waarde van de investering."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "The issue (%s) must be positive or null."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7864,8 +7873,8 @@ msgstr "De periode waarvoor je de rentebetalingen wilt bekijken."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "The period must be between 1 and number_of_periods"
-msgstr "De periode moet tussen 1 en number_of_periods liggen."
+msgid "The period must be between 1 and number_of_periods (%s)"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7943,6 +7952,12 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The purchase_date (%s) must be before the first_period_end (%s)."
 msgstr "De purchase_date (%s) moet voor de first_period_end (%s) liggen."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "The purchase_date (%s) must be positive or null."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9117,6 +9132,12 @@ msgstr ""
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "The value should be a scalar or a 1x1 matrix"
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The value the function returns if logical_expression is FALSE."
 msgstr ""
 "De waarde die de functie retourneert indien logical_expression ONWAAR is."
@@ -9383,14 +9404,14 @@ msgstr ""
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "The weekend (%s) must be different from '1111111'."
-msgstr "Het weekend (%s) moet anders zijn dan '1111111'."
+msgid "The weekend must be a number or a string."
+msgstr "Het weekend moet een getal of een tekenreeks zijn."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "The weekend must be a number or a string."
-msgstr "Het weekend moet een getal of een tekenreeks zijn."
+msgid "The weekend must be different from '1111111'."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9591,7 +9612,7 @@ msgstr "Boven"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/pivot/plugins/pivot_ui_plugin.js:0
+#: code:addons/spreadsheet/static/src/pivot/pivot_data_source.js:0
 msgid "Total"
 msgstr "Totaal"
 
@@ -9735,6 +9756,12 @@ msgstr "Rijen zichtbaar maken"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Unique rows in the provided source range."
 msgstr "Unieke rijen in het opgegeven bronbereik."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "Unknown function"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10277,12 +10304,6 @@ msgstr "Verkeerde functie-aanroep"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "Wrong number of Argument[]. Expected an even number of Argument[]."
-msgstr "Verkeerd nummer van Argument []. Verwacht een even aantal Argument[]."
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Wrong number of arguments. Expected an even number of arguments."
 msgstr "Verkeerd aantal argumenten. Had een even aantal argumenten verwacht."
 
@@ -10420,9 +10441,8 @@ msgstr "[[FUNCTION_NAME]] heeft geen geldige invoergegevens."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "[[FUNCTION_NAME]] needs at least two values for both parameters"
+msgid "[[FUNCTION_NAME]] needs at least two values for both parameters."
 msgstr ""
-"[[FUNCTION_NAME]] heeft minstens twee waarden nodig voor beide parameters"
 
 #. module: spreadsheet
 #. odoo-javascript

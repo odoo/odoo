@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~17.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-17 10:11+0000\n"
+"POT-Creation-Date: 2024-02-07 10:24+0000\n"
 "PO-Revision-Date: 2024-01-17 11:21+0000\n"
 "Last-Translator: Maitê Dietze, 2024\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
@@ -898,6 +898,13 @@ msgstr "Houve um erro inesperado durante a transferência da imagem"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid ""
+"An unexpected error occurred. Submit a support ticket at odoo.com/help."
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Angle from the X axis to a point (x,y), in radians."
 msgstr "Ângulo do eixo X até um ponto (x,y), em radianos."
 
@@ -1038,7 +1045,6 @@ msgstr "Tem certeza de que deseja excluir essa planilha?"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Argument ignore must be between 0 and 3"
 msgstr "A ação de ignorar argumento deve ser entre 0 e 3"
@@ -1827,7 +1833,7 @@ msgstr "Cotangente de um ângulo fornecido em radianos."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/pivot/pivot_model.js:0
+#: code:addons/spreadsheet/static/src/pivot/pivot_data_source.js:0
 msgid "Count"
 msgstr "Total"
 
@@ -2039,13 +2045,6 @@ msgstr "Limpeza de dados"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Data has header row"
 msgstr "Os dados têm uma linha de cabeçalho"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/helpers/model.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/errors.js:0
-msgid "Data is loading"
-msgstr "Os dados estão sendo carregados"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2502,6 +2501,7 @@ msgstr "Taxa de retorno equivalente para uma letra do tesouro dos EUA."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Error"
 msgstr "Erro"
 
@@ -2583,6 +2583,7 @@ msgstr "Fevereiro"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/pivot/pivot_data_source.js:0
 #: code:addons/spreadsheet/static/src/pivot/pivot_model.js:0
 msgid "Field %s does not exist"
 msgstr "O campo %s não existe"
@@ -2936,6 +2937,14 @@ msgstr ""
 msgid "Function [[FUNCTION_NAME]] expects number values for %s, but got a %s."
 msgstr ""
 "A função [[FUNCTION_NAME]] espera valores numéricos para %s, mas obteve %s."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid ""
+"Function [[FUNCTION_NAME]] invert matrix error, only square matrices are "
+"invertible"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4419,6 +4428,7 @@ msgstr "Nenhum valor exclusivo encontrado"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #: code:addons/spreadsheet/static/src/pivot/pivot_model.js:0
 #: code:addons/spreadsheet/static/src/pivot/pivot_time_adapters.js:0
+#: code:addons/spreadsheet/static/src/pivot/pivot_time_adapters.js:0
 msgid "None"
 msgstr "Nenhum"
 
@@ -5887,17 +5897,17 @@ msgstr "O argumento está faltando. Forneça um valor"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "The argument square_matrix must be a matrix of numbers."
-msgstr "O argumento square_matrix deve ser uma matriz de números."
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
 "The argument square_matrix must have the same number of columns and rows."
 msgstr ""
 "O argumento square_matrix deve ter o mesmo número de colunas e linhas."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid ""
+"The arguments array_x and array_y must contain at least one pair of numbers."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5910,12 +5920,6 @@ msgstr "A condição dos argumentos deve ser uma única coluna ou linha."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The arguments conditions must have the same dimensions."
 msgstr "As condições dos argumentos devem ter as mesmas dimensões."
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "The arguments matrix1 and matrix2 must be matrices of numbers."
-msgstr "Os argumentos matrix1 e matrix2 devem ser matrizes de números."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6636,11 +6640,9 @@ msgstr "O campo %s não existe ou você não tem acesso a esse campo"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
-"The field (%s) must be one of %s or must be a number between 1 and %s "
-"inclusive."
+"The field (%(fieldValue)s) must be one of %(dimRowDB)s or must be a number "
+"between 1 and %s inclusive."
 msgstr ""
-"O campo (%s) deve ser um de %s ou deve ser um número entre 1 e %s, "
-"inclusive."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7096,6 +7098,12 @@ msgstr "O valor atual do investimento."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The investment's desired future value."
 msgstr "O valor futuro desejado do investimento."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "The issue (%s) must be positive or null."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7812,8 +7820,8 @@ msgstr "O período para o qual você deseja visualizar o pagamento de juros."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "The period must be between 1 and number_of_periods"
-msgstr "O período deve estar entre 1 e number_of_periods"
+msgid "The period must be between 1 and number_of_periods (%s)"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7889,6 +7897,12 @@ msgstr "A âncora fornecida é inválida. A célula deve fazer parte da zona."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The purchase_date (%s) must be before the first_period_end (%s)."
 msgstr "A purchase_date (%s) deve ser anterior ao first_period_end (%s)."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "The purchase_date (%s) must be positive or null."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9056,6 +9070,12 @@ msgstr "O valor ou valores a serem adicionados usando o delimitador."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "The value should be a scalar or a 1x1 matrix"
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The value the function returns if logical_expression is FALSE."
 msgstr "O valor que a função retorna se logical_expression for FALSE."
 
@@ -9314,14 +9334,14 @@ msgstr ""
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "The weekend (%s) must be different from '1111111'."
-msgstr "O fim de semana (%s) deve ser diferente de '1111111'."
+msgid "The weekend must be a number or a string."
+msgstr "O fim de semana deve ser um número ou uma cadeia de caracteres."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "The weekend must be a number or a string."
-msgstr "O fim de semana deve ser um número ou uma cadeia de caracteres."
+msgid "The weekend must be different from '1111111'."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9517,7 +9537,7 @@ msgstr "Topo"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/pivot/plugins/pivot_ui_plugin.js:0
+#: code:addons/spreadsheet/static/src/pivot/pivot_data_source.js:0
 msgid "Total"
 msgstr "Total"
 
@@ -9661,6 +9681,12 @@ msgstr "Reexibir linhas"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Unique rows in the provided source range."
 msgstr "Linhas exclusivas no intervalo de origem fornecido."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "Unknown function"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10205,13 +10231,6 @@ msgstr "Chamada de função incorreta"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "Wrong number of Argument[]. Expected an even number of Argument[]."
-msgstr ""
-"Número incorreto de Argument[]. Esperava-se um número par de Argument[]."
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Wrong number of arguments. Expected an even number of arguments."
 msgstr ""
 "Número incorreto de argumentos. Esperava-se um número par de argumentos."
@@ -10354,10 +10373,8 @@ msgstr "[[FUNCTION_NAME]] não tem dados de entrada válidos."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "[[FUNCTION_NAME]] needs at least two values for both parameters"
+msgid "[[FUNCTION_NAME]] needs at least two values for both parameters."
 msgstr ""
-"[[FUNCTION_NAME]] precisa de pelo menos dois valores para ambos os "
-"parâmetros"
 
 #. module: spreadsheet
 #. odoo-javascript

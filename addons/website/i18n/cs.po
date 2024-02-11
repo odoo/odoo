@@ -4,14 +4,16 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Jakub Smolka, 2024
+# Aleš Fiala <f.ales1@seznam.cz>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~17.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-17 10:09+0000\n"
+"POT-Creation-Date: 2024-02-07 10:22+0000\n"
 "PO-Revision-Date: 2024-01-17 11:21+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2024\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,7 +36,7 @@ msgstr "\" výstraha s"
 #. odoo-python
 #: code:addons/website/controllers/form.py:0
 msgid "\"%s form submission\" <%s>"
-msgstr ""
+msgstr "\"%s odeslání formuláře\" <%s>"
 
 #. module: website
 #. odoo-python
@@ -1489,7 +1491,6 @@ msgstr "O nás"
 #. module: website
 #. odoo-python
 #: code:addons/website/models/website.py:0
-#, python-format
 msgid "Access Denied"
 msgstr "Přístup zamítnut"
 
@@ -5342,6 +5343,15 @@ msgid "Google Search Console"
 msgstr "vyhledávací konzole Google"
 
 #. module: website
+#. odoo-python
+#: code:addons/website/models/res_config_settings.py:0
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid ""
+"Google doesn't need to be pinged anymore. It will automatically fetch your "
+"/sitemap.xml."
+msgstr "Google už nemusí být pingován. Automaticky načte váš /sitemap.xml."
+
+#. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__google_search_console
 #: model:ir.model.fields,help:website.field_website__google_search_console
 msgid "Google key, or Enable to access first reply"
@@ -7670,6 +7680,11 @@ msgid "Next"
 msgstr "Další"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.step_wizard
+msgid "Next:"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_tabs_options
 msgid "No Slide Effect"
 msgstr "Žádný efekt snímku"
@@ -7846,7 +7861,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 msgid "OR"
-msgstr ""
+msgstr "NEBO"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -12548,12 +12563,6 @@ msgid ""
 msgstr ""
 "Tuto stránku jste skryli z výsledků vyhledávání. Nebude indexována "
 "vyhledávači."
-
-#. module: website
-#. odoo-python
-#: code:addons/website/models/res_config_settings.py:0
-msgid "You haven't defined your domain"
-msgstr "Nedefinovali jste svou doménu"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy

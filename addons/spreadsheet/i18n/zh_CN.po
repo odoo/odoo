@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~17.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-17 10:11+0000\n"
+"POT-Creation-Date: 2024-02-07 10:24+0000\n"
 "PO-Revision-Date: 2024-01-17 11:21+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
@@ -814,6 +814,13 @@ msgstr "图像传输过程中发生意外错误"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid ""
+"An unexpected error occurred. Submit a support ticket at odoo.com/help."
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Angle from the X axis to a point (x,y), in radians."
 msgstr "从X轴到点（X，y）的角度，以弧度为单位。"
 
@@ -948,7 +955,6 @@ msgstr "您确定要删除此表吗？"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Argument ignore must be between 0 and 3"
 msgstr "忽略参数，必须介于 0 和 3 之间"
@@ -1708,7 +1714,7 @@ msgstr "以弧度表示的角的余切。"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/pivot/pivot_model.js:0
+#: code:addons/spreadsheet/static/src/pivot/pivot_data_source.js:0
 msgid "Count"
 msgstr "计数"
 
@@ -1914,13 +1920,6 @@ msgstr "数据清理"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Data has header row"
 msgstr "数据有标题行"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/helpers/model.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/errors.js:0
-msgid "Data is loading"
-msgstr "数据正在加载"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2377,6 +2376,7 @@ msgstr "美国国债等价收益率。"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Error"
 msgstr "错误"
 
@@ -2455,6 +2455,7 @@ msgstr "二月"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/pivot/pivot_data_source.js:0
 #: code:addons/spreadsheet/static/src/pivot/pivot_model.js:0
 msgid "Field %s does not exist"
 msgstr "字段%s不存在"
@@ -2784,6 +2785,14 @@ msgstr "函数 [[FUNCTION_NAME]] 希望 criteria_range 具有相同的维度"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Function [[FUNCTION_NAME]] expects number values for %s, but got a %s."
 msgstr "函数 [[FUNCTION_NAME]] 期望值为 %s，但得到的是 %s。"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid ""
+"Function [[FUNCTION_NAME]] invert matrix error, only square matrices are "
+"invertible"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4222,6 +4231,7 @@ msgstr "未找到唯一值"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #: code:addons/spreadsheet/static/src/pivot/pivot_model.js:0
 #: code:addons/spreadsheet/static/src/pivot/pivot_time_adapters.js:0
+#: code:addons/spreadsheet/static/src/pivot/pivot_time_adapters.js:0
 msgid "None"
 msgstr "无"
 
@@ -5655,16 +5665,16 @@ msgstr "该参数缺失。请提供一个值"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "The argument square_matrix must be a matrix of numbers."
-msgstr "参数 square_matrix 必须是数字矩阵。"
+msgid ""
+"The argument square_matrix must have the same number of columns and rows."
+msgstr "参数 square_matrix 的列数和行数必须相同。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
-"The argument square_matrix must have the same number of columns and rows."
-msgstr "参数 square_matrix 的列数和行数必须相同。"
+"The arguments array_x and array_y must contain at least one pair of numbers."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5677,12 +5687,6 @@ msgstr "参数条件必须是单列或单行。"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The arguments conditions must have the same dimensions."
 msgstr "参数条件必须具有相同的尺寸。"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "The arguments matrix1 and matrix2 must be matrices of numbers."
-msgstr "参数 matrix1 和 matrix2 必须是数字矩阵。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6341,9 +6345,9 @@ msgstr "字段%s不存在或您没有访问该字段的权限"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
-"The field (%s) must be one of %s or must be a number between 1 and %s "
-"inclusive."
-msgstr "字段（%s）必须是%s中的一个，或者必须是包括1到%s之间的数字。"
+"The field (%(fieldValue)s) must be one of %(dimRowDB)s or must be a number "
+"between 1 and %s inclusive."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6765,6 +6769,12 @@ msgstr "投资现值。"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The investment's desired future value."
 msgstr "投资的预期未来价值。"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "The issue (%s) must be positive or null."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7445,8 +7455,8 @@ msgstr "您要查看的利息支付期。"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "The period must be between 1 and number_of_periods"
-msgstr "期限须为1~number_of_periods"
+msgid "The period must be between 1 and number_of_periods (%s)"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7522,6 +7532,12 @@ msgstr "提供的定位点无效。像元必须是区域的一部分。"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The purchase_date (%s) must be before the first_period_end (%s)."
 msgstr "purchase_date（%s）须在first_period_end（%s）之前。"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "The purchase_date (%s) must be positive or null."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8633,6 +8649,12 @@ msgstr "要使用分隔符追加的一个或多个值。"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "The value should be a scalar or a 1x1 matrix"
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The value the function returns if logical_expression is FALSE."
 msgstr "如果 logical_expression 为 FALSE，函数返回的值。"
 
@@ -8876,14 +8898,14 @@ msgstr "周末（%s）必须是一个字符串或1-7或11-17范围内的数字�
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "The weekend (%s) must be different from '1111111'."
-msgstr "周末（%s）必须与 \"111111 \"不同。"
+msgid "The weekend must be a number or a string."
+msgstr "周末必须是数字或字符串."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "The weekend must be a number or a string."
-msgstr "周末必须是数字或字符串."
+msgid "The weekend must be different from '1111111'."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9063,7 +9085,7 @@ msgstr "顶部"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/pivot/plugins/pivot_ui_plugin.js:0
+#: code:addons/spreadsheet/static/src/pivot/pivot_data_source.js:0
 msgid "Total"
 msgstr "总计"
 
@@ -9207,6 +9229,12 @@ msgstr "取消隐藏行"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Unique rows in the provided source range."
 msgstr "所提供来源范围内的唯一行。"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "Unknown function"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9728,12 +9756,6 @@ msgstr "错误的函数调用"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "Wrong number of Argument[]. Expected an even number of Argument[]."
-msgstr "Argument[]的数量不对。希望有一个偶数的Argument[]。"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Wrong number of arguments. Expected an even number of arguments."
 msgstr "参数数量错误。要求有偶数个参数。"
 
@@ -9864,8 +9886,8 @@ msgstr "[[FUNCTION_NAME]] 没有有效的输入数据。"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "[[FUNCTION_NAME]] needs at least two values for both parameters"
-msgstr "[[函数名称]] 的两个参数至少需要两个值"
+msgid "[[FUNCTION_NAME]] needs at least two values for both parameters."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript

@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Aleš Fiala <f.ales1@seznam.cz>, 2024
 # Katerina Horylova, 2024
 # 
 msgid ""
@@ -218,6 +219,11 @@ msgid ""
 "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"Podle konfigurace výrobku lze automaticky vypočítat dodané množství:\n"
+"  - Ručně: množství se nastavuje ručně na řádku.\n"
+"  - Analytický Z výdajů: množství je součtem množství ze zaúčtovaných výdajů.\n"
+"  - Timesheet: množství je součtem hodin zaznamenaných na úkolech spojených s touto prodejní položkou.\n"
+"  - Skladové pohyby: množství pochází z potvrzených vyskladnění\n"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
@@ -1972,4 +1978,4 @@ msgstr "prodaných hodin."
 #. odoo-python
 #: code:addons/sale_timesheet/models/sale_order.py:0
 msgid "remaining"
-msgstr ""
+msgstr "zbývajících"

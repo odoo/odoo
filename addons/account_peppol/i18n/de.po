@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~17.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-17 10:10+0000\n"
+"POT-Creation-Date: 2024-02-07 10:23+0000\n"
 "PO-Revision-Date: 2024-01-17 11:21+0000\n"
 "Last-Translator: Larissa Manderfeld, 2024\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
@@ -69,7 +69,6 @@ msgstr ""
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
-#, python-format
 msgid ""
 "A participant with these details has already been registered on the network."
 " If you have previously registered to an alternative Peppol service, please "
@@ -230,7 +229,6 @@ msgstr "Bestätigen"
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
-#, python-format
 msgid "Connection error, please try again later."
 msgstr "Verbindungsfehler, bitte versuchen Sie es später erneut!"
 
@@ -627,6 +625,12 @@ msgid "SMS verification code"
 msgstr "SMS-Verifizierungscode"
 
 #. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.xml:0
+msgid "Send again"
+msgstr "Erneut senden"
+
+#. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_account_move_send__checkbox_send_peppol
 msgid "Send the invoice via PEPPOL"
 msgstr "Die Rechnung via PEPPOL senden"
@@ -754,21 +758,18 @@ msgstr ""
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
-#, python-format
 msgid "The verification code is not correct"
 msgstr "Der Verifizierungscode ist nicht korrekt."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
-#, python-format
 msgid "The verification code should contain six digits."
 msgstr "Der Verifizierungscode sollte 6 Zahlen enthalten."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
-#, python-format
 msgid "This verification code has expired. Please request a new one."
 msgstr ""
 "Der Verifizierungscode ist abgelaufen. Bitte fragen Sie einen neuen an."
@@ -776,7 +777,6 @@ msgstr ""
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
-#, python-format
 msgid "Too many attempts to request an SMS code. Please try again later."
 msgstr ""
 "Zu viele Versuche, einen SMS-Code anzufragen. Bitte versuchen Sie es später "
@@ -857,7 +857,8 @@ msgid "Verify partner's PEPPOL endpoint"
 msgstr "Den PEPPOL-Endpunkt des Partners verifizieren"
 
 #. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.xml:0
 msgid "Verify phone number"
 msgstr "Telefonnummer verifizieren"
 

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~17.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-17 10:11+0000\n"
+"POT-Creation-Date: 2024-02-07 10:24+0000\n"
 "PO-Revision-Date: 2024-01-17 11:21+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
@@ -819,6 +819,13 @@ msgstr "이미지 전송 중 예기치 않은 오류가 발생했습니다."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid ""
+"An unexpected error occurred. Submit a support ticket at odoo.com/help."
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Angle from the X axis to a point (x,y), in radians."
 msgstr "X 축에서 점 (x, y)까지의 각도."
 
@@ -953,7 +960,6 @@ msgstr "이 시트를 정말로 삭제하시겠습니까?"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Argument ignore must be between 0 and 3"
 msgstr "인수 무시 값은 0에서 3 사이여야 합니다."
@@ -1713,7 +1719,7 @@ msgstr "라디안 단위 각도의 코탄젠트"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/pivot/pivot_model.js:0
+#: code:addons/spreadsheet/static/src/pivot/pivot_data_source.js:0
 msgid "Count"
 msgstr "수량"
 
@@ -1919,13 +1925,6 @@ msgstr "데이터 정리"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Data has header row"
 msgstr "데이터에 머리글 행이 있습니다."
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/helpers/model.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/errors.js:0
-msgid "Data is loading"
-msgstr "데이터 불러오는 중"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2382,6 +2381,7 @@ msgstr "미국 국채 금리에 해당하는 수익률."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Error"
 msgstr "오류"
 
@@ -2460,6 +2460,7 @@ msgstr "2월"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/pivot/pivot_data_source.js:0
 #: code:addons/spreadsheet/static/src/pivot/pivot_model.js:0
 msgid "Field %s does not exist"
 msgstr "%s 필드가 존재하지 않습니다"
@@ -2791,6 +2792,14 @@ msgstr "함수 [[FUNCTION_NAME]]의 criteria_range는 동일한 dimension을 가
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Function [[FUNCTION_NAME]] expects number values for %s, but got a %s."
 msgstr "함수 [[FUNCTION_NAME]]는 %s에 대한 숫자 값을 예측했으나 %s를 계산했습니다."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid ""
+"Function [[FUNCTION_NAME]] invert matrix error, only square matrices are "
+"invertible"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4239,6 +4248,7 @@ msgstr "고유 값을 찾을 수 없습니다."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #: code:addons/spreadsheet/static/src/pivot/pivot_model.js:0
 #: code:addons/spreadsheet/static/src/pivot/pivot_time_adapters.js:0
+#: code:addons/spreadsheet/static/src/pivot/pivot_time_adapters.js:0
 msgid "None"
 msgstr "없음"
 
@@ -5676,16 +5686,16 @@ msgstr "인수가 누락되었습니다. 값을 입력해주세요"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "The argument square_matrix must be a matrix of numbers."
-msgstr "인자 square_matrix는 숫자의 행렬이어야 합니다."
+msgid ""
+"The argument square_matrix must have the same number of columns and rows."
+msgstr "인수 square_matrix는 열과 행의 개수가 같아야 합니다."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
-"The argument square_matrix must have the same number of columns and rows."
-msgstr "인수 square_matrix는 열과 행의 개수가 같아야 합니다."
+"The arguments array_x and array_y must contain at least one pair of numbers."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5698,12 +5708,6 @@ msgstr "인수 조건은 단일 열 또는 행이어야 합니다."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The arguments conditions must have the same dimensions."
 msgstr "인수 조건은 동일한 dimension을 가져야 합니다."
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "The arguments matrix1 and matrix2 must be matrices of numbers."
-msgstr "인자 matrix1과 matrix2는 숫자의 행렬이어야 합니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6364,9 +6368,9 @@ msgstr "필드 %s 가 존재하지 않거나 해당 필드에 대한 접근 권�
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
-"The field (%s) must be one of %s or must be a number between 1 and %s "
-"inclusive."
-msgstr "field  (%s) 는 %s 중 하나이거나 또는 1 과 %s 을 포함한 두 숫자 사이의 값이여야 합니다."
+"The field (%(fieldValue)s) must be one of %(dimRowDB)s or must be a number "
+"between 1 and %s inclusive."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6789,6 +6793,12 @@ msgstr "투자의 현재 가치."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The investment's desired future value."
 msgstr "투자하고자 하는 미래 가치."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "The issue (%s) must be positive or null."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7469,8 +7479,8 @@ msgstr "이자 지급액을 확인할 기간."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "The period must be between 1 and number_of_periods"
-msgstr "기간은 1에서 number_of_periods 사이 수여야 합니다"
+msgid "The period must be between 1 and number_of_periods (%s)"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7546,6 +7556,12 @@ msgstr "유효하지 않은 앵커입니다. 셀은 영역의 일부여야 합�
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The purchase_date (%s) must be before the first_period_end (%s)."
 msgstr "purchase_date (%s) 는 first_period_end (%s) 보다 이전이여야 합니다."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "The purchase_date (%s) must be positive or null."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8658,6 +8674,12 @@ msgstr "구분 기호를 사용하여 값을 추가할 수 있습니다."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "The value should be a scalar or a 1x1 matrix"
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The value the function returns if logical_expression is FALSE."
 msgstr "logical_expression이 FALSE인 경우 반환되는 함수의 값."
 
@@ -8901,14 +8923,14 @@ msgstr "weekend (%s) 는 1-7 또는 11-17 범위의 문자열 또는 숫자여�
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "The weekend (%s) must be different from '1111111'."
-msgstr "weekend (%s) 는 '1111111' 과 다른 값이여야 합니다."
+msgid "The weekend must be a number or a string."
+msgstr "weekend 는 숫자 또는 문자열이어야 합니다."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "The weekend must be a number or a string."
-msgstr "weekend 는 숫자 또는 문자열이어야 합니다."
+msgid "The weekend must be different from '1111111'."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9089,7 +9111,7 @@ msgstr "상단"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/pivot/plugins/pivot_ui_plugin.js:0
+#: code:addons/spreadsheet/static/src/pivot/pivot_data_source.js:0
 msgid "Total"
 msgstr "총계"
 
@@ -9233,6 +9255,12 @@ msgstr "행 숨기기 해제"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Unique rows in the provided source range."
 msgstr "제공된 소스 범위 내 고유 행입니다."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "Unknown function"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9755,12 +9783,6 @@ msgstr "잘못된 함수 호출"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "Wrong number of Argument[]. Expected an even number of Argument[]."
-msgstr "인수의 수가 잘못되었습니다[]. 인수의 수는 짝수로 예측됩니다[]."
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Wrong number of arguments. Expected an even number of arguments."
 msgstr "인수의 수가 잘못되었습니다. 인수의 수는 짝수로 예측됩니다."
 
@@ -9891,8 +9913,8 @@ msgstr "[[FUNCTION_NAME]] 에 올바른 입력 데이터가 없습니다."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "[[FUNCTION_NAME]] needs at least two values for both parameters"
-msgstr "[[FUNCTION_NAME]]은 두 매개변수에 대해 최소 두 개의 값을 필요로 합니다."
+msgid "[[FUNCTION_NAME]] needs at least two values for both parameters."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript

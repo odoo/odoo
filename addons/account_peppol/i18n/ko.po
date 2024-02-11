@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~17.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-17 10:10+0000\n"
+"POT-Creation-Date: 2024-02-07 10:23+0000\n"
 "PO-Revision-Date: 2024-01-17 11:21+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
@@ -68,7 +68,6 @@ msgstr ""
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
-#, python-format
 msgid ""
 "A participant with these details has already been registered on the network."
 " If you have previously registered to an alternative Peppol service, please "
@@ -217,7 +216,6 @@ msgstr "승인"
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
-#, python-format
 msgid "Connection error, please try again later."
 msgstr ""
 
@@ -605,6 +603,12 @@ msgid "SMS verification code"
 msgstr "SMS 인증 코드"
 
 #. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.xml:0
+msgid "Send again"
+msgstr ""
+
+#. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_account_move_send__checkbox_send_peppol
 msgid "Send the invoice via PEPPOL"
 msgstr "PEPPOL을 통해 청구서 전송"
@@ -721,28 +725,24 @@ msgstr "이 사용자를 식별하는 고유 ID로, 보통 VAT"
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
-#, python-format
 msgid "The verification code is not correct"
 msgstr ""
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
-#, python-format
 msgid "The verification code should contain six digits."
 msgstr "인증 코드는 6자리 숫자로 구성되어야 합니다."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
-#, python-format
 msgid "This verification code has expired. Please request a new one."
 msgstr ""
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
-#, python-format
 msgid "Too many attempts to request an SMS code. Please try again later."
 msgstr ""
 
@@ -817,7 +817,8 @@ msgid "Verify partner's PEPPOL endpoint"
 msgstr "파트너의 PEPPOL 엔드포인트 승인"
 
 #. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.xml:0
 msgid "Verify phone number"
 msgstr "전화번호 확인"
 

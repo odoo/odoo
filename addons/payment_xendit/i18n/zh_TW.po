@@ -8,9 +8,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server saas~17.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-08 13:49+0000\n"
+"POT-Creation-Date: 2024-02-07 10:24+0000\n"
 "PO-Revision-Date: 2024-01-23 08:23+0000\n"
 "Last-Translator: Tony Ng, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -23,7 +23,6 @@ msgstr ""
 #. module: payment_xendit
 #. odoo-python
 #: code:addons/payment_xendit/models/payment_transaction.py:0
-#, python-format
 msgid ""
 "An error occurred during the processing of your payment (status %s). Please "
 "try again."
@@ -37,14 +36,12 @@ msgstr "代碼"
 #. module: payment_xendit
 #. odoo-python
 #: code:addons/payment_xendit/models/payment_provider.py:0
-#, python-format
 msgid "Could not establish the connection to the API."
 msgstr "未能建立與 API 的連線。"
 
 #. module: payment_xendit
 #. odoo-python
 #: code:addons/payment_xendit/models/payment_transaction.py:0
-#, python-format
 msgid "No transaction found matching reference %s."
 msgstr "找不到符合參考 %s 的交易。"
 
@@ -61,19 +58,17 @@ msgstr "付款交易"
 #. module: payment_xendit
 #. odoo-python
 #: code:addons/payment_xendit/models/payment_transaction.py:0
-#, python-format
 msgid "Received data with missing reference."
 msgstr "收到的數據缺漏參考編號。"
 
 #. module: payment_xendit
-#: model:ir.model.fields,field_description:payment_xendit.field_payment_provider__xendit_secret_key
+#: model_terms:ir.ui.view,arch_db:payment_xendit.payment_provider_form_xendit
 msgid "Secret Key"
 msgstr "密鑰"
 
 #. module: payment_xendit
 #. odoo-python
 #: code:addons/payment_xendit/models/payment_provider.py:0
-#, python-format
 msgid ""
 "The communication with the API failed. Xendit gave us the following "
 "information: '%s'"
@@ -85,7 +80,7 @@ msgid "The technical code of this payment provider."
 msgstr "此付款服務商的技術代碼。"
 
 #. module: payment_xendit
-#: model:ir.model.fields,field_description:payment_xendit.field_payment_provider__xendit_webhook_token
+#: model_terms:ir.ui.view,arch_db:payment_xendit.payment_provider_form_xendit
 msgid "Webhook Token"
 msgstr "網絡鈎子權杖"
 
@@ -93,3 +88,13 @@ msgstr "網絡鈎子權杖"
 #: model:ir.model.fields.selection,name:payment_xendit.selection__payment_provider__code__xendit
 msgid "Xendit"
 msgstr "Xendit"
+
+#. module: payment_xendit
+#: model:ir.model.fields,field_description:payment_xendit.field_payment_provider__xendit_secret_key
+msgid "Xendit Secret Key"
+msgstr ""
+
+#. module: payment_xendit
+#: model:ir.model.fields,field_description:payment_xendit.field_payment_provider__xendit_webhook_token
+msgid "Xendit Webhook Token"
+msgstr ""

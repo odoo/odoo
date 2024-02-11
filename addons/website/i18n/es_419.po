@@ -3,17 +3,17 @@
 # 	* website
 # 
 # Translators:
+# Wil Odoo, 2024
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
 # Fernanda Alvarez, 2024
-# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~17.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-17 10:09+0000\n"
+"POT-Creation-Date: 2024-02-07 10:22+0000\n"
 "PO-Revision-Date: 2024-01-17 11:21+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Fernanda Alvarez, 2024\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1586,7 +1586,6 @@ msgstr "Sobre nosotros"
 #. module: website
 #. odoo-python
 #: code:addons/website/models/website.py:0
-#, python-format
 msgid "Access Denied"
 msgstr "Acceso denegado"
 
@@ -1813,7 +1812,7 @@ msgstr "Agregar un nuevo campo al final"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.view_view_form_extend
 msgid "Add groups in the \"Access Rights\" tab below."
-msgstr ""
+msgstr "Agregue grupos en la pestaña \"Derechos de acceso\" en la parte inferior."
 
 #. module: website
 #. odoo-python
@@ -5522,6 +5521,15 @@ msgid "Google Search Console"
 msgstr "Search Console de Google"
 
 #. module: website
+#. odoo-python
+#: code:addons/website/models/res_config_settings.py:0
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid ""
+"Google doesn't need to be pinged anymore. It will automatically fetch your "
+"/sitemap.xml."
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__google_search_console
 #: model:ir.model.fields,help:website.field_website__google_search_console
 msgid "Google key, or Enable to access first reply"
@@ -7884,6 +7892,11 @@ msgstr "Ventana emergente de boletín de noticias"
 #: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel
 msgid "Next"
 msgstr "Siguiente"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.step_wizard
+msgid "Next:"
+msgstr "Siguiente:"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_tabs_options
@@ -12888,12 +12901,6 @@ msgid ""
 msgstr ""
 "Ocultó esta página de los resultados de búsqueda. Los motores de búsqueda no"
 " la indexarán."
-
-#. module: website
-#. odoo-python
-#: code:addons/website/models/res_config_settings.py:0
-msgid "You haven't defined your domain"
-msgstr "Aún no ha definido su dominio"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy

@@ -4,13 +4,14 @@
 # 
 # Translators:
 # Fernanda Alvarez, 2024
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
 # Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~17.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-17 10:09+0000\n"
+"POT-Creation-Date: 2024-02-07 10:22+0000\n"
 "PO-Revision-Date: 2024-01-17 11:21+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
@@ -1041,11 +1042,9 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid ""
-"<span invisible=\"state != 'draft' or name != '/' or "
+"<span invisible=\"state != 'draft' or name != '/' or posted_before or "
 "quick_edit_mode\">Draft</span>"
 msgstr ""
-"<span invisible=\"state != 'draft' or name != '/' or "
-"quick_edit_mode\">Borrador</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -3867,6 +3866,12 @@ msgid "Chart of accounts set!"
 msgstr "Se configuró el plan de cuentas."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_move_send.py:0
+msgid "Check Partner(s)"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_account__reconcile
 #: model:ir.model.fields,help:account.field_account_move_line__is_account_reconcile
 msgid ""
@@ -5246,6 +5251,11 @@ msgstr ""
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__12
 msgid "December"
 msgstr "Diciembre"
+
+#. module: account
+#: model:ir.model,name:account.model_decimal_precision
+msgid "Decimal Precision"
+msgstr "Precisión de decimales"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__decimal_separator
@@ -7920,6 +7930,13 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_report.py:0
+#, python-format
+msgid "Invalid domain for expression '%s' of line '%s': %s"
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Invalid fiscal year last day"
 msgstr "El último día del año fiscal es inválido."
@@ -7928,6 +7945,11 @@ msgstr "El último día del año fiscal es inválido."
 #: model:account.journal,name:account.1_inventory_valuation
 msgid "Inventory Valuation"
 msgstr "Valuación de inventario"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_report__inventory_value
+msgid "Inventory Value"
+msgstr "Valor del inventario"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_tag_invert
@@ -8208,17 +8230,15 @@ msgstr "Estadísticas de facturas"
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_move_send.py:0
-#, python-format
 msgid "Invoices are being sent in the background."
-msgstr ""
+msgstr "Se están enviando facturas en segundo plano"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #: code:addons/account/models/account_move.py:0
-#, python-format
 msgid "Invoices in error"
-msgstr ""
+msgstr "Facturas con error"
 
 #. module: account
 #. odoo-python
@@ -8229,16 +8249,14 @@ msgstr "Facturas que le deben"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-#, python-format
 msgid "Invoices sent"
-msgstr ""
+msgstr "Facturas enviadas"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-#, python-format
 msgid "Invoices sent successfully."
-msgstr ""
+msgstr "Facturas enviadas con éxito."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -9228,6 +9246,11 @@ msgid "March"
 msgstr "Marzo"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_report__price_margin
+msgid "Margin"
+msgstr "Margen"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Margin Analysis"
 msgstr "Análisis de margen"
@@ -10140,9 +10163,8 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-#, python-format
 msgid "One or more invoices couldn't be processed."
-msgstr ""
+msgstr "No fue posible procesar una o más facturas."
 
 #. module: account
 #: model:ir.ui.menu,name:account.root_payment_menu
@@ -10219,7 +10241,6 @@ msgstr "Uy"
 #: code:addons/account/models/account_move.py:0
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__state__posted
 #: model:ir.model.fields.selection,name:account.selection__account_journal__invoice_reference_type__none
-#, python-format
 msgid "Open"
 msgstr "Abierto"
 
@@ -10692,6 +10713,12 @@ msgstr "Mapeo de contactos para modelos de conciliación"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/wizard/account_move_send.py:0
+msgid "Partner(s) should have an email address."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/partner.py:0
 #: model:ir.model.fields,field_description:account.field_account_report__filter_partner
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
@@ -11139,11 +11166,6 @@ msgid ""
 msgstr ""
 "Establezca al menos uno de los textos de coincidencia para crear un mapeo de"
 " contactos."
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_move_send_form
-msgid "Please specify an email address on the"
-msgstr "Especifique una dirección de correo electrónico en"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -12604,9 +12626,8 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_move_send.py:0
-#, python-format
 msgid "Sending invoices"
-msgstr ""
+msgstr "Enviando facturas"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
@@ -12616,9 +12637,8 @@ msgstr "Enviado"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-#, python-format
 msgid "Sent invoices"
-msgstr ""
+msgstr "Facturas enviadas"
 
 #. module: account
 #: model:mail.template,description:account.mail_template_data_payment_receipt
@@ -16036,6 +16056,12 @@ msgid "View"
 msgstr "Ver"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_move_send.py:0
+msgid "View Partner(s)"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_partner__invoice_warn__warning
 msgid "Warning"
 msgstr "Advertencia"
@@ -16708,13 +16734,12 @@ msgstr ""
 #: code:addons/account/models/account_account.py:0
 msgid ""
 "You cannot import the \"openning_balance\" if the opening move (%s) is "
-"already posted.                         If you are absolutely sure you want "
-"to modify the opening balance of your accounts, reset the move to draft."
+"already posted. If you are absolutely sure you want to modify the opening "
+"balance of your accounts, reset the move to draft."
 msgstr ""
-"No puede importar \"openning_balance\" si ya se registró el movimiento de "
-"apertura (%s).                         Si está completamente seguro de que "
-"desea modificar el balance de apertura de sus cuentas, restablezca el "
-"movimiento a borrador."
+"No puede importar \"opening_balance\" si ya registró el movimiento de "
+"apertura (%s). Si está seguro de que desea modificar el saldo de apertura de"
+" sus cuentas entonces restablezca el movimiento a borrador."
 
 #. module: account
 #. odoo-python
@@ -17179,11 +17204,6 @@ msgid "fall outside the typical range."
 msgstr "no están dentro del rango típico."
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_move_send_form
-msgid "following partners."
-msgstr "los siguientes contactos."
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid ""
 "for this customer. You can allocate them to mark this credit note as paid."
@@ -17244,7 +17264,6 @@ msgstr "en porcentaje"
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_move_send.py:0
-#, python-format
 msgid "invoices"
 msgstr "facturas"
 

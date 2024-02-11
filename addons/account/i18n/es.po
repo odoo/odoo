@@ -4,13 +4,14 @@
 # 
 # Translators:
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2024
+# Larissa Manderfeld, 2024
 # Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~17.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-17 10:09+0000\n"
+"POT-Creation-Date: 2024-02-07 10:22+0000\n"
 "PO-Revision-Date: 2024-01-17 11:21+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
@@ -104,7 +105,7 @@ msgstr "%(partner_name)s llegó al crédito concedido de: %(credit_limit)s"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "%(ref)s (%(currency_amount)s)"
-msgstr ""
+msgstr "%(ref)s (%(currency_amount)s)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -295,7 +296,7 @@ msgstr "... (%s otro)"
 #. odoo-javascript
 #: code:addons/account/static/src/components/x2many_buttons/x2many_buttons.xml:0
 msgid "... (View all)"
-msgstr ""
+msgstr "... (Ver todo)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.tax_groups_totals
@@ -834,8 +835,8 @@ msgid ""
 "<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
 "specific.\"/>"
 msgstr ""
-"<span class=\"fa fa-lg fa-building-o\" title=\"Los valores especificados "
-"aquí son específicos de la compañía.\"/>"
+"<span class=\"fa fa-lg fa-building-o\" title=\"Los valores establecidos aquí"
+" son específicos de la compañía.\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -1039,11 +1040,9 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid ""
-"<span invisible=\"state != 'draft' or name != '/' or "
+"<span invisible=\"state != 'draft' or name != '/' or posted_before or "
 "quick_edit_mode\">Draft</span>"
 msgstr ""
-"<span invisible=\"state != 'draft' or name != '/' or "
-"quick_edit_mode\">Borrador</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -1233,7 +1232,7 @@ msgstr "<span>Ver</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "<span>Warning: this bill might be a duplicate of</span>"
-msgstr ""
+msgstr "<span>Advertencia: esta factura podría ser un duplicado de</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1519,26 +1518,26 @@ msgstr "Una advertencia puede ser configurada en una ficha de entidad(Cuenta)"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__abnormal_amount_partner_ids
 msgid "Abnormal Amount Partner"
-msgstr ""
+msgstr "Contacto de importe anormal"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__abnormal_amount_warning
 #: model:ir.model.fields,field_description:account.field_account_move__abnormal_amount_warning
 #: model:ir.model.fields,field_description:account.field_account_payment__abnormal_amount_warning
 msgid "Abnormal Amount Warning"
-msgstr ""
+msgstr "Advertencia de importe anormal"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__abnormal_date_partner_ids
 msgid "Abnormal Date Partner"
-msgstr ""
+msgstr "Contacto de fecha anormal"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__abnormal_date_warning
 #: model:ir.model.fields,field_description:account.field_account_move__abnormal_date_warning
 #: model:ir.model.fields,field_description:account.field_account_payment__abnormal_date_warning
 msgid "Abnormal Date Warning"
-msgstr ""
+msgstr "Advertencia de fecha anormal"
 
 #. module: account
 #: model:ir.model,name:account.model_res_groups
@@ -2259,7 +2258,7 @@ msgid ""
 "Add your terms & conditions at the bottom of invoices/orders/quotations"
 msgstr ""
 "Agregue sus términos y condiciones al final de sus facturas, órdenes o "
-"cotizaciones"
+"presupuestos"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -2986,13 +2985,13 @@ msgstr "FACTURA"
 #. odoo-javascript
 #: code:addons/account/static/src/components/product_catalog/kanban_controller.js:0
 msgid "Back to Bill"
-msgstr ""
+msgstr "Regresar a la factura"
 
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/components/product_catalog/kanban_controller.js:0
 msgid "Back to Invoice"
-msgstr ""
+msgstr "Regresar a la factura"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -3864,6 +3863,12 @@ msgid "Chart of accounts set!"
 msgstr "Plan contable configurado"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_move_send.py:0
+msgid "Check Partner(s)"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_account__reconcile
 #: model:ir.model.fields,help:account.field_account_move_line__is_account_reconcile
 msgid ""
@@ -4227,12 +4232,12 @@ msgstr "Confirmar"
 #: model:ir.actions.act_window,name:account.action_validate_account_move
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "Confirm Entries"
-msgstr ""
+msgstr "Confirmar asientos"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "Confirm them now"
-msgstr ""
+msgstr "Confirmar ahora"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -5245,6 +5250,11 @@ msgid "December"
 msgstr "Diciembre"
 
 #. module: account
+#: model:ir.model,name:account.model_decimal_precision
+msgid "Decimal Precision"
+msgstr "Precisión decimales"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__decimal_separator
 msgid "Decimal Separator"
 msgstr "Separador de decimales"
@@ -5660,7 +5670,7 @@ msgstr "Mostrar importe"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__display_force_post
 msgid "Display Force Post"
-msgstr ""
+msgstr "Mostrar forzar registro"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__display_inactive_currency_warning
@@ -5870,7 +5880,7 @@ msgstr "Borrador"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Draft (%(currency_amount)s)"
-msgstr ""
+msgstr "Borrador (%(currency_amount)s)"
 
 #. module: account
 #. odoo-python
@@ -5984,7 +5994,7 @@ msgstr "Número de empresas con cuenta bancaria duplicada"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Duplicated Bills"
-msgstr ""
+msgstr "Facturas duplicadas"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__duplicated_ref_ids
@@ -6940,6 +6950,8 @@ msgstr "Actividades futuras"
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "Future-dated invoices will auto-confirm on their respective dates."
 msgstr ""
+"Las facturas con fechas en el futuro se confirmarán automáticamente en sus "
+"respectivas fechas."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -7202,7 +7214,7 @@ msgstr "Nombre más alto"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__horizontal_split_side
 msgid "Horizontal Split Side"
-msgstr ""
+msgstr "División lateral horizontal"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -7520,29 +7532,29 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__ignore_abnormal_amount
 msgid "Ignore Abnormal Amount"
-msgstr ""
+msgstr "Ignorar importe anormal"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__ignore_abnormal_date
 msgid "Ignore Abnormal Date"
-msgstr ""
+msgstr "Ignorar fecha anormal"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__ignore_abnormal_invoice_amount
 #: model:ir.model.fields,field_description:account.field_res_users__ignore_abnormal_invoice_amount
 msgid "Ignore Abnormal Invoice Amount"
-msgstr ""
+msgstr "Ignorar importe de factura anormal"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__ignore_abnormal_invoice_date
 #: model:ir.model.fields,field_description:account.field_res_users__ignore_abnormal_invoice_date
 msgid "Ignore Abnormal Invoice Date"
-msgstr ""
+msgstr "Ignorar fecha de factura anormal"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "Ignore future alerts"
-msgstr ""
+msgstr "Ignorar las próximas alertas"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_immediate
@@ -7915,6 +7927,13 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_report.py:0
+#, python-format
+msgid "Invalid domain for expression '%s' of line '%s': %s"
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Invalid fiscal year last day"
 msgstr "El último día del ejercicio fiscal es inválido."
@@ -7923,6 +7942,11 @@ msgstr "El último día del ejercicio fiscal es inválido."
 #: model:account.journal,name:account.1_inventory_valuation
 msgid "Inventory Valuation"
 msgstr "Valoración del inventario"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_report__inventory_value
+msgid "Inventory Value"
+msgstr "Valor del inventario"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_tag_invert
@@ -8082,7 +8106,7 @@ msgstr "Facturar Totales"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "Invoice amounts for"
-msgstr ""
+msgstr "Importes de facturas para"
 
 #. module: account
 #. odoo-python
@@ -8126,7 +8150,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "Invoice dates for"
-msgstr ""
+msgstr "Fechas de factura para"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_line_ids
@@ -8203,17 +8227,15 @@ msgstr "Estadísticas de facturas"
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_move_send.py:0
-#, python-format
 msgid "Invoices are being sent in the background."
-msgstr ""
+msgstr "Las facturas se envían en segundo plano."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #: code:addons/account/models/account_move.py:0
-#, python-format
 msgid "Invoices in error"
-msgstr ""
+msgstr "Facturas con error"
 
 #. module: account
 #. odoo-python
@@ -8224,16 +8246,14 @@ msgstr "Facturas que te pertenecen"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-#, python-format
 msgid "Invoices sent"
-msgstr ""
+msgstr "Facturas enviadas"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-#, python-format
 msgid "Invoices sent successfully."
-msgstr ""
+msgstr "Facturas enviadas con éxito."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -9222,6 +9242,11 @@ msgid "March"
 msgstr "Marzo"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_report__price_margin
+msgid "Margin"
+msgstr "Margen"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Margin Analysis"
 msgstr "Análisis de Margen"
@@ -10133,9 +10158,8 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-#, python-format
 msgid "One or more invoices couldn't be processed."
-msgstr ""
+msgstr "No se han podido procesar una o varias facturas."
 
 #. module: account
 #: model:ir.ui.menu,name:account.root_payment_menu
@@ -10212,7 +10236,6 @@ msgstr "Oops"
 #: code:addons/account/models/account_move.py:0
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__state__posted
 #: model:ir.model.fields.selection,name:account.selection__account_journal__invoice_reference_type__none
-#, python-format
 msgid "Open"
 msgstr "Abierto"
 
@@ -10685,6 +10708,12 @@ msgstr "Mapeo de empresas para modelos de conciliación"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/wizard/account_move_send.py:0
+msgid "Partner(s) should have an email address."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/partner.py:0
 #: model:ir.model.fields,field_description:account.field_account_report__filter_partner
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
@@ -10843,7 +10872,7 @@ msgstr "Recibo de pago"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__payment_receipt_title
 msgid "Payment Receipt Title"
-msgstr ""
+msgstr "Título del recibo de pago"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
@@ -11134,11 +11163,6 @@ msgid ""
 msgstr ""
 "Por favor, establezca al menos uno de los textos de coincidencia para crear "
 "un mapeo de empresas."
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_move_send_form
-msgid "Please specify an email address on the"
-msgstr "Especifique una dirección de correo electrónico para"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -12599,9 +12623,8 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_move_send.py:0
-#, python-format
 msgid "Sending invoices"
-msgstr ""
+msgstr "Enviando facturas"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
@@ -12611,9 +12634,8 @@ msgstr "Enviado"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-#, python-format
 msgid "Sent invoices"
-msgstr ""
+msgstr "Facturas enviadas"
 
 #. module: account
 #: model:mail.template,description:account.mail_template_data_payment_receipt
@@ -12893,7 +12915,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Show draft entries"
-msgstr ""
+msgstr "Mostrar asientos en borrador"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
@@ -13865,6 +13887,8 @@ msgid ""
 "The amount for %(partner_name)s appears unusual. Based your historical data, the expected amount is %(mean)s (± %(wiggle)s).\n"
 "Please verify if this amount is accurate."
 msgstr ""
+"El importe para %(partner_name)s es atípico. Según sus datos históricos, el importe esperado es %(mean)s (±%(wiggle)s). \n"
+"Verifique si este importe es correcto."
 
 #. module: account
 #. odoo-python
@@ -13903,6 +13927,8 @@ msgid ""
 "The billing frequency for %(partner_name)s appears unusual. Based on your historical data, the expected next invoice date is not before %(expected_date)s (every %(mean)s (± %(wiggle)s) days).\n"
 "Please verify if this date is accurate."
 msgstr ""
+"La frecuencia de facturación para %(partner_name)s es atípica. Según sus datos históricos, la fecha esperada para la próxima factura es después del %(expected_date)s (cada %(mean)s (±) días).\n"
+"Verifique si esta fecha es correcta."
 
 #. module: account
 #. odoo-javascript
@@ -14736,6 +14762,8 @@ msgid ""
 "There are still draft entries in the period you want to lock. You should "
 "either post or delete them."
 msgstr ""
+"Todavía hay asientos en borrador en el período que desea bloquear. Debe "
+"registrarlos o eliminarlos."
 
 #. module: account
 #. odoo-python
@@ -15879,7 +15907,7 @@ msgstr "Validado"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "Validating invoices is a key action. Have you reviewed everything?"
-msgstr ""
+msgstr "Validar facturas es una acción clave. ¿Ha revisado todo?"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line__value
@@ -16024,6 +16052,12 @@ msgstr "Proveedores"
 #: code:addons/account/static/src/components/account_payment_field/account_payment.xml:0
 msgid "View"
 msgstr "Ver"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_move_send.py:0
+msgid "View Partner(s)"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_partner__invoice_warn__warning
@@ -16701,13 +16735,12 @@ msgstr ""
 #: code:addons/account/models/account_account.py:0
 msgid ""
 "You cannot import the \"openning_balance\" if the opening move (%s) is "
-"already posted.                         If you are absolutely sure you want "
-"to modify the opening balance of your accounts, reset the move to draft."
+"already posted. If you are absolutely sure you want to modify the opening "
+"balance of your accounts, reset the move to draft."
 msgstr ""
-"No puede importar \"openning_balance\" si ya se registró el movimiento de "
-"apertura (%s).                         Si está completamente seguro de que "
-"desea modificar el saldo de apertura de sus cuentas, restablezca el "
-"movimiento a borrador."
+"No puede importar \"opening_balance\" si ya se registró el asiento de "
+"apertura (%s). Si está seguro de que desea modificar el saldo de apertura de"
+" sus cuentas entonces restablezca el asiento a borrador."
 
 #. module: account
 #. odoo-python
@@ -17168,12 +17201,7 @@ msgstr "p. ej. dominio.com"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "fall outside the typical range."
-msgstr ""
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_move_send_form
-msgid "following partners."
-msgstr "los siguientes contactos."
+msgstr "no están dentro del rango típico."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -17236,7 +17264,6 @@ msgstr "en porcentaje"
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_move_send.py:0
-#, python-format
 msgid "invoices"
 msgstr "facturas"
 
@@ -17439,6 +17466,9 @@ msgid ""
 "{amount} ({debit_credit}) from <strong>{account_source_name}</strong> were "
 "transferred to <strong>{account_target_name}</strong> by {link}"
 msgstr ""
+"Se transfirió {amount} ({debit_credit}) de la cuenta "
+"<strong>{account_source_name}</strong> a la cuenta "
+"<strong>{account_target_name}</strong> por {link}."
 
 #. module: account
 #. odoo-python

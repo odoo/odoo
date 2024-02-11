@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~17.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-17 10:09+0000\n"
+"POT-Creation-Date: 2024-02-07 10:22+0000\n"
 "PO-Revision-Date: 2024-01-17 11:21+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
@@ -1027,11 +1027,9 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid ""
-"<span invisible=\"state != 'draft' or name != '/' or "
+"<span invisible=\"state != 'draft' or name != '/' or posted_before or "
 "quick_edit_mode\">Draft</span>"
 msgstr ""
-"<span invisible=\"state != 'draft' or name != '/' or "
-"quick_edit_mode\">ドラフト</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -3754,6 +3752,12 @@ msgid "Chart of accounts set!"
 msgstr "勘定科目表設定済！"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_move_send.py:0
+msgid "Check Partner(s)"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_account__reconcile
 #: model:ir.model.fields,help:account.field_account_move_line__is_account_reconcile
 msgid ""
@@ -5094,6 +5098,11 @@ msgstr "この仕訳項目とマッチしている借方仕訳項目。"
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__12
 msgid "December"
 msgstr "十二月"
+
+#. module: account
+#: model:ir.model,name:account.model_decimal_precision
+msgid "Decimal Precision"
+msgstr "小数精度"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__decimal_separator
@@ -7653,6 +7662,13 @@ msgstr "Zip範囲'が無効です。正しく設定してください。"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_report.py:0
+#, python-format
+msgid "Invalid domain for expression '%s' of line '%s': %s"
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Invalid fiscal year last day"
 msgstr "無効な会計年度最終日"
@@ -7661,6 +7677,11 @@ msgstr "無効な会計年度最終日"
 #: model:account.journal,name:account.1_inventory_valuation
 msgid "Inventory Valuation"
 msgstr "在庫評価"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_report__inventory_value
+msgid "Inventory Value"
+msgstr "在庫金額"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_tag_invert
@@ -7933,17 +7954,15 @@ msgstr "請求書の統計情報"
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_move_send.py:0
-#, python-format
 msgid "Invoices are being sent in the background."
-msgstr ""
+msgstr "請求書はバックグラウンドで送信されています。"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #: code:addons/account/models/account_move.py:0
-#, python-format
 msgid "Invoices in error"
-msgstr ""
+msgstr "エラーの請求書"
 
 #. module: account
 #. odoo-python
@@ -7954,16 +7973,14 @@ msgstr "あなたに支払われるべき請求書"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-#, python-format
 msgid "Invoices sent"
-msgstr ""
+msgstr "請求書が送信されました"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-#, python-format
 msgid "Invoices sent successfully."
-msgstr ""
+msgstr "請求書が送信されました"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -8926,6 +8943,11 @@ msgid "March"
 msgstr "三月"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_report__price_margin
+msgid "Margin"
+msgstr "粗利益"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Margin Analysis"
 msgstr "マージン分析"
@@ -9808,9 +9830,8 @@ msgstr "この取引先に設定した、一つ以上の銀行口座は他のも
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-#, python-format
 msgid "One or more invoices couldn't be processed."
-msgstr ""
+msgstr "1つまたは複数の請求書が処理できませんでした。"
 
 #. module: account
 #: model:ir.ui.menu,name:account.root_payment_menu
@@ -9879,7 +9900,6 @@ msgstr "Oops"
 #: code:addons/account/models/account_move.py:0
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__state__posted
 #: model:ir.model.fields.selection,name:account.selection__account_journal__invoice_reference_type__none
-#, python-format
 msgid "Open"
 msgstr "開く"
 
@@ -10349,6 +10369,12 @@ msgstr "消込モデルの取引先マッピング"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/wizard/account_move_send.py:0
+msgid "Partner(s) should have an email address."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/partner.py:0
 #: model:ir.model.fields,field_description:account.field_account_report__filter_partner
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
@@ -10785,11 +10811,6 @@ msgstr "厳密な正の丸め値を設定してください。"
 msgid ""
 "Please set at least one of the match texts to create a partner mapping."
 msgstr "取引先マッピングを作成するには、少なくとも一つのマッチテキストを設定してください。"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_move_send_form
-msgid "Please specify an email address on the"
-msgstr "以下にEメールアドレスを指定して下さい。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -12213,9 +12234,8 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_move_send.py:0
-#, python-format
 msgid "Sending invoices"
-msgstr ""
+msgstr "請求書送信中"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
@@ -12225,9 +12245,8 @@ msgstr "送信日"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-#, python-format
 msgid "Sent invoices"
-msgstr ""
+msgstr "送信済請求書"
 
 #. module: account
 #: model:mail.template,description:account.mail_template_data_payment_receipt
@@ -15391,6 +15410,12 @@ msgid "View"
 msgstr "ビュー"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_move_send.py:0
+msgid "View Partner(s)"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_partner__invoice_warn__warning
 msgid "Warning"
 msgstr "警告"
@@ -15967,11 +15992,10 @@ msgstr "タイプとして、\"当期純利\"で複数のアカウントを持�
 #: code:addons/account/models/account_account.py:0
 msgid ""
 "You cannot import the \"openning_balance\" if the opening move (%s) is "
-"already posted.                         If you are absolutely sure you want "
-"to modify the opening balance of your accounts, reset the move to draft."
+"already posted. If you are absolutely sure you want to modify the opening "
+"balance of your accounts, reset the move to draft."
 msgstr ""
-"開始仕訳（%s）がすでに記帳されている場合は「開始残高opening_balance」をインポートすることはできません。"
-"                         どうしても口座の開始残高を変更したい場合は、仕訳をドラフトに設定し直して下さい。"
+"開始仕訳(%s)がすでに記帳されている場合は、\"opening_balance\"をインポートすることはできません。どうしても勘定科目の開始残高を変更したい場合は、仕訳をドラフトにリセットして下さい。"
 
 #. module: account
 #. odoo-python
@@ -16388,11 +16412,6 @@ msgid "fall outside the typical range."
 msgstr ""
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_move_send_form
-msgid "following partners."
-msgstr "以下の取引先"
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid ""
 "for this customer. You can allocate them to mark this credit note as paid."
@@ -16445,7 +16464,6 @@ msgstr "％"
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_move_send.py:0
-#, python-format
 msgid "invoices"
 msgstr "請求書"
 

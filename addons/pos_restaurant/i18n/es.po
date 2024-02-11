@@ -3,17 +3,18 @@
 # 	* pos_restaurant
 # 
 # Translators:
-# Wil Odoo, 2024
 # Martin Trigaux, 2024
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2024
+# Larissa Manderfeld, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~17.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-17 10:09+0000\n"
+"POT-Creation-Date: 2024-02-07 10:22+0000\n"
 "PO-Revision-Date: 2024-01-17 11:21+0000\n"
-"Last-Translator: Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -210,6 +211,9 @@ msgid ""
 "Both tables have an open order. If you proceed, both orders will live on the"
 " same table. You can access them anytime from the Orders menu."
 msgstr ""
+"Ambas mesas tienen una orden abierta. Si continúa, ambas órdenes estarán en "
+"la misma mesa. Puede acceder a ellas en cualquier momento desde el menú de "
+"Órdenes."
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.burger_drink_combo_product_template
@@ -234,7 +238,6 @@ msgstr "Sándwich de pollo con curry"
 
 #. module: pos_restaurant
 #. odoo-javascript
-#: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.xml:0
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.xml:0
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.xml:0
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.xml:0
@@ -314,6 +317,12 @@ msgstr "Diseñe pisos y asigne órdenes a las mesas"
 #: code:addons/pos_restaurant/static/src/app/control_buttons/control_buttons.xml:0
 msgid "Dine-in Guests"
 msgstr "Comensales"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.xml:0
+msgid "Discard"
+msgstr "Descartar"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__display_name
@@ -533,13 +542,13 @@ msgstr "Almuerzo mezcla temaki 3 pzas."
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.xml:0
 msgid "MakeRound"
-msgstr ""
+msgstr "Redondo"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.xml:0
 msgid "MakeSquare"
-msgstr ""
+msgstr "Cuadrado"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_margherita_product_template
@@ -573,7 +582,7 @@ msgstr "Sándwich de mozzarella"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/overrides/models/pos_store.js:0
 msgid "Multiple open orders"
-msgstr ""
+msgstr "Varias órdenes abiertas"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -597,13 +606,13 @@ msgstr "¿Número de asientos?"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/overrides/components/receipt_screen/order_receipt/order_receipt.xml:0
 msgid "Odoo Point of Sale"
-msgstr ""
+msgstr "Odoo Punto de venta"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/overrides/components/receipt_screen/order_receipt/order_receipt.xml:0
 msgid "Odoo Restaurant"
-msgstr ""
+msgstr "Odoo Restaurante"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
@@ -644,7 +653,7 @@ msgstr "PRO FORMA"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__parent_id
 msgid "Parent Table"
-msgstr ""
+msgstr "Mesa principal"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_4formaggi_product_template
@@ -950,7 +959,7 @@ msgstr "El número por defecto de clientes atendidos en esta mesa."
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__parent_id
 msgid "The parent table if this table is part of a group of tables"
-msgstr ""
+msgstr "La mesa principal de esta mesa forma parte de un grupo de mesas"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__floor_ids
@@ -1058,7 +1067,7 @@ msgstr "Albarán"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/control_buttons/control_buttons.xml:0
 msgid "Transfer / Merge"
-msgstr ""
+msgstr "Transferir/Fusionar"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1112,7 +1121,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.js:0
 msgid "You cannot delete a floor with orders still in draft for this floor."
-msgstr ""
+msgstr "No puede eliminar un piso que todavía tiene órdenes en borradores."
 
 #. module: pos_restaurant
 #. odoo-python
@@ -1120,6 +1129,8 @@ msgstr ""
 msgid ""
 "You cannot delete a table when orders are still in draft for this table."
 msgstr ""
+"No puede eliminar esta mesa cuando todavía hay órdenes en borrador para esta"
+" mesa."
 
 #. module: pos_restaurant
 #. odoo-javascript

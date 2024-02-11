@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~17.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-17 10:10+0000\n"
+"POT-Creation-Date: 2024-02-07 10:23+0000\n"
 "PO-Revision-Date: 2024-01-17 11:21+0000\n"
 "Last-Translator: Chloe Wang, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
@@ -69,13 +69,12 @@ msgstr ""
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
-#, python-format
 msgid ""
 "A participant with these details has already been registered on the network."
 " If you have previously registered to an alternative Peppol service, please "
 "deregister from that service, or request a migration key before trying "
 "again."
-msgstr ""
+msgstr "拥有相同详情的参与者已通过网络注册。如果您之前已注册其他 Peppol 服务，请从该服务取消注册，或在再次尝试之前要求迁移密钥。"
 
 #. module: account_peppol
 #. odoo-python
@@ -218,9 +217,8 @@ msgstr "确认"
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
-#, python-format
 msgid "Connection error, please try again later."
-msgstr ""
+msgstr "连接错误，请稍后重试。"
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_res_partner
@@ -606,6 +604,12 @@ msgid "SMS verification code"
 msgstr "短信验证码"
 
 #. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.xml:0
+msgid "Send again"
+msgstr "再次发送"
+
+#. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_account_move_send__checkbox_send_peppol
 msgid "Send the invoice via PEPPOL"
 msgstr "通过 Peppol 发送发票"
@@ -720,30 +724,26 @@ msgstr "标识该用户的唯一 ID，通常是增值税识别号"
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
-#, python-format
 msgid "The verification code is not correct"
-msgstr ""
+msgstr "验证码不正确"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
-#, python-format
 msgid "The verification code should contain six digits."
 msgstr "验证码应包含六位数字。"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
-#, python-format
 msgid "This verification code has expired. Please request a new one."
-msgstr ""
+msgstr "此验证码已过期。请重新申请。"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
-#, python-format
 msgid "Too many attempts to request an SMS code. Please try again later."
-msgstr ""
+msgstr "请求短信代码的尝试次数过多。请稍后再试。"
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_res_company__peppol_endpoint
@@ -816,7 +816,8 @@ msgid "Verify partner's PEPPOL endpoint"
 msgstr "验证合作伙伴的 Peppol 终端点"
 
 #. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.xml:0
 msgid "Verify phone number"
 msgstr "验证电话号码"
 
@@ -864,4 +865,4 @@ msgstr "您的迁移密钥是："
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Your registration should be activated within a day."
-msgstr ""
+msgstr "您的注册应在一天内激活。"

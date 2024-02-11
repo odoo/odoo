@@ -40,7 +40,7 @@ msgstr "ID de cliente"
 #. module: pos_viva_wallet
 #: model:ir.model.fields,field_description:pos_viva_wallet.field_pos_payment_method__viva_wallet_client_secret
 msgid "Client secret"
-msgstr ""
+msgstr "Secreto de cliente"
 
 #. module: pos_viva_wallet
 #. odoo-javascript
@@ -56,13 +56,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
 msgid "Do not have access to fetch token from Viva Wallet"
-msgstr ""
+msgstr "No tiene acceso para obtener el token de Viva Wallet"
 
 #. module: pos_viva_wallet
 #. odoo-python
 #: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
 msgid "It is essential to provide API key for the use of viva wallet"
-msgstr ""
+msgstr "Es esencial proporcionar una clave API para usar Viva Wallet"
 
 #. module: pos_viva_wallet
 #: model:ir.model.fields,field_description:pos_viva_wallet.field_pos_payment_method__viva_wallet_merchant_id
@@ -73,26 +73,27 @@ msgstr "ID de comerciante"
 #. odoo-javascript
 #: code:addons/pos_viva_wallet/static/src/app/payment_viva_wallet.js:0
 msgid "Message from Viva Wallet: %s"
-msgstr ""
+msgstr "Mensaje de Viva Wallet: %s"
 
 #. module: pos_viva_wallet
 #. odoo-python
 #: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
 msgid "Not receive Bearer Token"
-msgstr ""
+msgstr "No se recibió el token del portador"
 
 #. module: pos_viva_wallet
 #. odoo-python
 #: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
 #: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
 msgid "Only 'group_pos_user' are allowed to fetch token from Viva Wallet"
-msgstr ""
+msgstr "Solo 'group_pos_user' puede conseguir un token de Viva Wallet"
 
 #. module: pos_viva_wallet
 #. odoo-python
 #: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
 msgid "Only 'group_pos_user' are allowed to get latest transaction status"
 msgstr ""
+"Solo 'group_pos_user' puede conseguir el último estado de la transacción"
 
 #. module: pos_viva_wallet
 #: model:ir.model,name:pos_viva_wallet.model_pos_payment_method
@@ -125,12 +126,14 @@ msgstr "Modo de prueba"
 #: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
 msgid "There are some issues between us and Viva Wallet, try again later. %s"
 msgstr ""
+"Tenemos algunos problemas con Viva Wallet, inténtelo de nuevo más tarde.%s"
 
 #. module: pos_viva_wallet
 #. odoo-python
 #: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
 msgid "There are some issues between us and Viva Wallet, try again later.%s)"
 msgstr ""
+"Hay algunos problemas con Viva Wallet, inténtelo de nuevo más tarde. %s"
 
 #. module: pos_viva_wallet
 #: model:ir.model.fields,help:pos_viva_wallet.field_pos_payment_method__viva_wallet_api_key
@@ -140,6 +143,9 @@ msgid ""
 "https://developer.vivawallet.com/getting-started/find-your-account-"
 "credentials/merchant-id-and-api-key/"
 msgstr ""
+"Se utiliza al conectarse a Viva Wallet: "
+"https://developer.vivawallet.com/getting-started/find-your-account-"
+"credentials/merchant-id-and-api-key/"
 
 #. module: pos_viva_wallet
 #: model:ir.model.fields,help:pos_viva_wallet.field_pos_payment_method__viva_wallet_client_id
@@ -148,11 +154,14 @@ msgid ""
 "https://developer.vivawallet.com/getting-started/find-your-account-"
 "credentials/pos-apis-credentials/#find-your-pos-apis-credentials"
 msgstr ""
+"Se utiliza al conectarse a Viva Wallet: "
+"https://developer.vivawallet.com/getting-started/find-your-account-"
+"credentials/pos-apis-credentials/#find-your-pos-apis-credentials"
 
 #. module: pos_viva_wallet
 #: model:ir.model.fields,field_description:pos_viva_wallet.field_pos_payment_method__viva_wallet_bearer_token
 msgid "Viva Wallet Bearer Token"
-msgstr ""
+msgstr "Token de portador de Viva Wallet"
 
 #. module: pos_viva_wallet
 #. odoo-javascript
@@ -163,31 +172,31 @@ msgstr "Error de Viva Wallet"
 #. module: pos_viva_wallet
 #: model:ir.model.fields,field_description:pos_viva_wallet.field_pos_payment_method__viva_wallet_latest_response
 msgid "Viva Wallet Latest Response"
-msgstr ""
+msgstr "Respuesta más reciente de Viva Wallet"
 
 #. module: pos_viva_wallet
 #: model:ir.model.fields,field_description:pos_viva_wallet.field_pos_payment_method__viva_wallet_webhook_endpoint
 msgid "Viva Wallet Webhook Endpoint"
-msgstr ""
+msgstr "Punto de conexión Webhook de Viva Wallet"
 
 #. module: pos_viva_wallet
 #: model:ir.model.fields,field_description:pos_viva_wallet.field_pos_payment_method__viva_wallet_webhook_verification_key
 msgid "Viva Wallet Webhook Verification Key"
-msgstr ""
+msgstr "Clave de verificación de Viva Wallet"
 
 #. module: pos_viva_wallet
 #: model:ir.model.fields,help:pos_viva_wallet.field_pos_payment_method__viva_wallet_terminal_id
 msgid "[Terminal ID of the Viva Wallet terminal], for example: 16002169"
-msgstr ""
+msgstr "[ID del terminal de Viva Wallet], por ejemplo: 16002169"
 
 #. module: pos_viva_wallet
 #. odoo-python
 #: code:addons/pos_viva_wallet/controllers/main.py:0
 msgid "received a message for a pos payment provider not registered."
-msgstr ""
+msgstr "recibió un mensaje para un proveedor de pago del TPV no registrado."
 
 #. module: pos_viva_wallet
 #. odoo-python
 #: code:addons/pos_viva_wallet/controllers/main.py:0
 msgid "received a message for a terminal not registered in Odoo: %s"
-msgstr ""
+msgstr "recibió un mensaje para un terminal no registrado en Odoo: %s"

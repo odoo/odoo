@@ -6,6 +6,8 @@
 # Jiří Podhorecký, 2024
 # Wil Odoo, 2024
 # Katerina Horylova, 2024
+# Vojtech Smolka, 2024
+# Aleš Fiala <f.ales1@seznam.cz>, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-17 10:09+0000\n"
 "PO-Revision-Date: 2024-01-17 11:21+0000\n"
-"Last-Translator: Katerina Horylova, 2024\n"
+"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2024\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -43,7 +45,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__collaborator_count
 msgid "# Collaborators"
-msgstr ""
+msgstr "# spolupracovníků"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_count
@@ -148,7 +150,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.milestone_deadline
 msgid "(due"
-msgstr ""
+msgstr "(splatné"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
@@ -174,7 +176,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.milestone_deadline
 msgid "- reached on"
-msgstr ""
+msgstr "- dosaženo dne"
 
 #. module: project
 #. odoo-javascript
@@ -286,6 +288,16 @@ msgid ""
 "<br><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" groups=\"project.group_project_stages\">You are receiving this email because your project has been moved to the stage <b t-out=\"object.stage_id.name or ''\">Done</b></span>\n"
 "            "
 msgstr ""
+"<div>\n"
+"    Vážený <t t-out=\"object.partner_id.name or 'customer'\">Brandone Freemane</t>,<br>\n"
+"    S potěšením Vám oznamuji, že jsme úspěšně dokončili projekt \"<strong t-out=\"object.name or ''\">Renovace</strong>\".\n"
+"    <t t-if=\"user.signature\">\n"
+"        <br>\n"
+"        <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"    </t>\n"
+"</div>\n"
+"<br><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" groups=\"project.group_project_stages\">Tento e-mail jste obdrželi, protože Váš projekt byl přesunut do fáze <b t-out=\"object.stage_id.name or ''\">Hotovo</b></span>\n"
+"            "
 
 #. module: project
 #: model:mail.template,body_html:project.mail_template_data_project_task
@@ -303,6 +315,18 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div>\n"
+"    Vážený <t t-out=\"object.partner_id.name or 'customer'\">Brandone Freemane</t>,<br>\n"
+"    Děkujeme za Váš dotaz.<br>\n"
+"    Pokud máte nějaké dotazy, dejte nám vědět.\n"
+"    <br><br>\n"
+"    Děkujeme,\n"
+"    <t t-if=\"user.signature\">\n"
+"        <br>\n"
+"        <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"    </t>\n"
+"</div>\n"
+"        "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -405,6 +429,9 @@ msgid ""
 "                                    Collaborators\n"
 "                                </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                    Spolupracovníci\n"
+"                                </span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -460,7 +487,7 @@ msgstr "<strong>Termín:</strong>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong>Milestone:</strong>"
-msgstr ""
+msgstr "<strong>Milník:</strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -470,12 +497,12 @@ msgstr "<strong>Projekt:</strong>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "<u>Milestones</u>"
-msgstr ""
+msgstr "<u>Milníky</u>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "=&gt;"
-msgstr ""
+msgstr "=&gt;"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_defaults
@@ -519,7 +546,7 @@ msgstr "Štítek se stejným názvem již existuje."
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_task_user_rel_project_personal_stage_unique
 msgid "A task can only have a single personal stage per user."
-msgstr ""
+msgstr "Úkol může mít pouze jednu osobní fázi na uživatele."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -605,7 +632,7 @@ msgstr "Typy aktivit"
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
 msgid "Add Milestone"
-msgstr ""
+msgstr "Přidat milník"
 
 #. module: project
 #. odoo-javascript
@@ -644,7 +671,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 msgid "Add contacts to share the project..."
-msgstr ""
+msgstr "Přidat kontakty pro sdílení projektu..."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -739,7 +766,7 @@ msgstr "Všichni interní uživatelé"
 #: model:ir.model.fields,field_description:project.field_project_task__allocated_hours
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__allocated_hours
 msgid "Allocated Time"
-msgstr ""
+msgstr "Přidělený čas"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task_allocated_hours_template
@@ -854,12 +881,12 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "Arrow"
-msgstr ""
+msgstr "Šipka"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "Arrow icon"
-msgstr ""
+msgstr "Ikona šipky"
 
 #. module: project
 #. odoo-javascript
@@ -926,7 +953,7 @@ msgstr "Datum přiřazení"
 #: model:ir.model.fields.selection,name:project.selection__project_update__status__at_risk
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 msgid "At Risk"
-msgstr ""
+msgstr "V ohrožení"
 
 #. module: project
 #. odoo-javascript
@@ -1266,7 +1293,7 @@ msgstr "Konfigurace"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Configure Stages"
-msgstr ""
+msgstr "Konfigurovat fáze"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_stage_unarchive_wizard
@@ -1644,7 +1671,7 @@ msgstr "Smazat"
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_right_side_panel/components/project_milestone.xml:0
 msgid "Delete Milestone"
-msgstr ""
+msgstr "Smazat milník"
 
 #. module: project
 #. odoo-python
@@ -1691,7 +1718,7 @@ msgstr "Dodáno"
 #: code:addons/project/models/project_task.py:0
 #: model:ir.model.fields,field_description:project.field_project_task__dependent_tasks_count
 msgid "Dependent Tasks"
-msgstr ""
+msgstr "Závislé úkoly"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__depend_on_count
@@ -1729,7 +1756,7 @@ msgstr "Návrh"
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Determine the order in which to perform tasks"
-msgstr ""
+msgstr "Určené pořadí, ve kterém se mají vykonávat úkoly"
 
 #. module: project
 #. odoo-javascript
@@ -1769,7 +1796,7 @@ msgstr "Zrušit"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_wizard__display_access_mode
 msgid "Display Access Mode"
-msgstr ""
+msgstr "Režim přístupu k displeji"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__display_in_project
@@ -1971,12 +1998,12 @@ msgstr "Složený v kanbanu"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_home
 msgid "Follow and comments tasks of your projects"
-msgstr ""
+msgstr "Sledujte a komentujte úkoly u svých projektů"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_home
 msgid "Follow the evolution of your projects"
-msgstr ""
+msgstr "Sledujte vývoj svých projektů"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -2164,7 +2191,7 @@ msgstr "Hodiny"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "How’s this project going?"
-msgstr ""
+msgstr "Jak jde tento projekt?"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_collaborator__id
@@ -2362,7 +2389,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 msgid "Invite People"
-msgstr ""
+msgstr "Pozvat lidi"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__followers
@@ -2388,12 +2415,12 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__is_deadline_exceeded
 msgid "Is Deadline Exceeded"
-msgstr ""
+msgstr "Je překročen termín"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__is_deadline_future
 msgid "Is Deadline Future"
-msgstr ""
+msgstr "Je budoucí termín"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_is_follower
@@ -2479,12 +2506,12 @@ msgstr "Poslední aktualizace"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__last_update_color
 msgid "Last Update Color"
-msgstr ""
+msgstr "Barva poslední aktualizace"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__last_update_status
 msgid "Last Update Status"
-msgstr ""
+msgstr "Stav poslední aktualizace"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__write_date
@@ -2560,7 +2587,7 @@ msgstr "Pojďme vytvořit svůj první<b>projekt</b>."
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid "Let's create your first <b>stage</b>."
-msgstr ""
+msgstr "Pojďme vytvořit svoji první <b>fázi</b>."
 
 #. module: project
 #. odoo-javascript
@@ -2572,7 +2599,7 @@ msgstr "Pojďme vytvořit svůj první <b>úkol</b>."
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid "Let's create your second <b>stage</b>."
-msgstr ""
+msgstr "Pojďme vytvořit svoji druhou <b>fázi</b>."
 
 #. module: project
 #. odoo-javascript
@@ -2728,7 +2755,7 @@ msgstr "Milník"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__milestone_count
 msgid "Milestone Count"
-msgstr ""
+msgstr "Počet milníků"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__milestone_count_reached
@@ -2817,7 +2844,7 @@ msgstr "Název"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_update__name_cropped
 msgid "Name Cropped"
-msgstr ""
+msgstr "Název oříznut"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -2857,7 +2884,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_right_side_panel/project_right_side_panel.js:0
 msgid "New Milestone"
-msgstr ""
+msgstr "Nový milník"
 
 #. module: project
 #. odoo-javascript
@@ -2946,7 +2973,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 msgid "No Customer"
-msgstr ""
+msgstr "Žádný zákazník"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
@@ -3087,13 +3114,13 @@ msgstr "Počet zpráv s chybou při doručení"
 #: model:ir.model.fields.selection,name:project.selection__project_update__status__off_track
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 msgid "Off Track"
-msgstr ""
+msgstr "Ve zpoždění"
 
 #. module: project
 #: model:account.analytic.account,name:project.analytic_office_design
 #: model:project.project,name:project.project_project_1
 msgid "Office Design"
-msgstr ""
+msgstr "Kancelářský design"
 
 #. module: project
 #. odoo-javascript
@@ -3113,7 +3140,7 @@ msgstr "Pozastaveno"
 #: model:ir.model.fields.selection,name:project.selection__project_update__status__on_track
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 msgid "On Track"
-msgstr ""
+msgstr "Včas"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__monthly
@@ -3147,7 +3174,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task_burndown_chart_report__is_closed__open
 msgid "Open tasks"
-msgstr ""
+msgstr "Otevřít úkoly"
 
 #. module: project
 #. odoo-python
@@ -3284,7 +3311,7 @@ msgstr "Osobní fáze"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__personal_stage_id
 msgid "Personal Stage State"
-msgstr ""
+msgstr "Stav osobní fáze"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__personal_stage_type_ids
@@ -3339,7 +3366,7 @@ msgstr "URL portálového přístupu"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__portal_user_names
 msgid "Portal User Names"
-msgstr ""
+msgstr "Jména uživatelů portálu"
 
 #. module: project
 #. odoo-python
@@ -3348,6 +3375,7 @@ msgid ""
 "Portal users will be removed from the followers of the project and its "
 "tasks."
 msgstr ""
+"Uživatelé portálu budou odebráni ze sledujících projektu a jeho úkolů."
 
 #. module: project
 #. odoo-javascript
@@ -3422,7 +3450,7 @@ msgstr "Průběh"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_update__progress_percentage
 msgid "Progress Percentage"
-msgstr ""
+msgstr "Procento postupu"
 
 #. module: project
 #. odoo-javascript
@@ -3459,7 +3487,7 @@ msgstr "Projekty"
 #: model:ir.actions.act_window,name:project.project_collaborator_action
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_access_view_tree
 msgid "Project Collaborators"
-msgstr ""
+msgstr "Spolupracovníci projektu"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_account_analytic_account__project_count
@@ -3494,7 +3522,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_collaborator__project_id
 msgid "Project Shared"
-msgstr ""
+msgstr "Sdílený projekt"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_sharing_project_task_action
@@ -3505,7 +3533,7 @@ msgstr "Projektové sdílení"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 msgid "Project Sharing: Task"
-msgstr ""
+msgstr "Sdílení projektu: Úkol"
 
 #. module: project
 #: model:ir.model,name:project.model_project_project_stage
@@ -3515,7 +3543,7 @@ msgstr "Fáze projektu"
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_stage_change
 msgid "Project Stage Changed"
-msgstr ""
+msgstr "Fáze projektu změněna"
 
 #. module: project
 #: model:ir.model,name:project.model_project_project_stage_delete_wizard
@@ -3775,7 +3803,7 @@ msgstr "Pouze ke čtení"
 #. module: project
 #: model:mail.template,subject:project.mail_template_data_project_task
 msgid "Reception of {{ object.name }}"
-msgstr ""
+msgstr "Příjem z {{ object.name }}"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_wizard__partner_ids
@@ -3818,7 +3846,7 @@ msgstr "Odmítnuto"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_wizard__resource_ref
 msgid "Related Document"
-msgstr ""
+msgstr "Související dokument"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_wizard__res_id
@@ -3840,7 +3868,7 @@ msgstr "Přejmenovat"
 #: model:account.analytic.account,name:project.analytic_renovations
 #: model:project.project,name:project.project_project_3
 msgid "Renovations"
-msgstr ""
+msgstr "Renovace"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_interval
@@ -3969,7 +3997,7 @@ msgstr "Hledat Projekt"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 msgid "Search Update"
-msgstr ""
+msgstr "Aktualizace vyhledávání"
 
 #. module: project
 #. odoo-python
@@ -3981,7 +4009,7 @@ msgstr "Hledat ve všech"
 #. odoo-python
 #: code:addons/project/controllers/portal.py:0
 msgid "Search in Assignees"
-msgstr ""
+msgstr "Hledat v nabyvatelích"
 
 #. module: project
 #. odoo-python
@@ -4005,7 +4033,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/project/controllers/portal.py:0
 msgid "Search in Priority"
-msgstr ""
+msgstr "Hledat v prioritě"
 
 #. module: project
 #. odoo-python
@@ -4017,7 +4045,7 @@ msgstr "Hledat v projektu"
 #. odoo-python
 #: code:addons/project/controllers/portal.py:0
 msgid "Search in Ref"
-msgstr ""
+msgstr "Hledat v Ref"
 
 #. module: project
 #. odoo-python
@@ -4029,7 +4057,7 @@ msgstr "Hledat v etapách"
 #. odoo-python
 #: code:addons/project/controllers/portal.py:0
 msgid "Search in Status"
-msgstr ""
+msgstr "Hledat ve stavech"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__access_token
@@ -4122,14 +4150,14 @@ msgstr "Nastavení"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Share Editable"
-msgstr ""
+msgstr "Sdílet upravitelné"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_share_wizard_action
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "Share Project"
-msgstr ""
+msgstr "Sdílet projekt"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -4157,7 +4185,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "Since"
-msgstr ""
+msgstr "Odkdy"
 
 #. module: project
 #. odoo-javascript
@@ -4217,7 +4245,7 @@ msgstr "Změna fáze"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__user_id
 msgid "Stage Owner"
-msgstr ""
+msgstr "Majitel fáze"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_stage
@@ -4593,12 +4621,12 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__personal_stage_id
 msgid "The current user's personal stage."
-msgstr ""
+msgstr "Osobní fáze aktuálního uživatele."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__personal_stage_type_id
 msgid "The current user's personal task stage."
-msgstr ""
+msgstr "Fáze osobního úkolu aktuálního uživatele."
 
 #. module: project
 #. odoo-python
@@ -4609,18 +4637,18 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "The following milestone has been added:"
-msgstr ""
+msgstr "Byl přidán následující milník:"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "The following milestones have been added:"
-msgstr ""
+msgstr "Byly přidány následující milníky:"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_task_recurrence.py:0
 msgid "The interval should be greater than 0"
-msgstr ""
+msgstr "Interval by měl být větší než 0"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_model_id
@@ -4924,6 +4952,8 @@ msgstr ""
 #: code:addons/project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
 msgid "Track major progress points that must be reached to achieve success."
 msgstr ""
+"Sledujte hlavní body průběhu, kterých je třeba dosáhnout, abyste dosáhli "
+"úspěchu."
 
 #. module: project
 #. odoo-javascript
@@ -4951,7 +4981,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Track the progress of your projects"
-msgstr ""
+msgstr "Sledujte průběh svých projektů"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -5058,12 +5088,12 @@ msgstr "Používejte opakující se úkoly"
 #. module: project
 #: model:res.groups,name:project.group_project_stages
 msgid "Use Stages on Project"
-msgstr ""
+msgstr "Použijte fáze v projektu"
 
 #. module: project
 #: model:res.groups,name:project.group_project_task_dependencies
 msgid "Use Task Dependencies"
-msgstr ""
+msgstr "Použijte závislosti úkolů"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__label_tasks
@@ -5079,7 +5109,7 @@ msgstr "Použijte to pro můj projekt"
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_tags_action
 msgid "Use tags to categorize your tasks."
-msgstr ""
+msgstr "Použijte štítky na kategorizaci svých úkolů."
 
 #. module: project
 #. odoo-javascript
@@ -5137,13 +5167,13 @@ msgstr "Zobrazení"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 msgid "View Task"
-msgstr ""
+msgstr "Zobrazit úkol"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_milestone_view_tree
 #: model_terms:ir.ui.view,arch_db:project.view_project
 msgid "View Tasks"
-msgstr ""
+msgstr "Zobrazit úkoly"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__privacy_visibility
@@ -5657,7 +5687,7 @@ msgstr ""
 #. module: project
 #: model:mail.template,subject:project.rating_project_request_email_template
 msgid "{{ object.project_id.company_id.name }}: Satisfaction Survey"
-msgstr ""
+msgstr "{{ object.project_id.company_id.name }}: Průzkum spokojenosti"
 
 #. module: project
 #. odoo-javascript
