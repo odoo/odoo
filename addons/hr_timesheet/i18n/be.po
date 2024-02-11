@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-02 10:33+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:52+0000\n"
 "Last-Translator: Ivan Shakh, 2024\n"
 "Language-Team: Belarusian (https://app.transifex.com/odoo/teams/41243/be/)\n"
@@ -18,6 +18,18 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: be\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
+msgid "#{timesheet.employee_id.name}"
+msgstr ""
+
+#. module: hr_timesheet
+#. odoo-python
+#: code:addons/hr_timesheet/models/project.py:0
+#, python-format
+msgid "%(name)s's Timesheets"
+msgstr ""
 
 #. module: hr_timesheet
 #. odoo-python
@@ -540,6 +552,14 @@ msgid "Job Title"
 msgstr ""
 
 #. module: hr_timesheet
+#: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
+#: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_all
+msgid ""
+"Keep track of your working hours by project every day and bill your "
+"customers for that time."
+msgstr ""
+
+#. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report____last_update
 msgid "Last Modified on"
 msgstr ""
@@ -667,16 +687,16 @@ msgid "Newest"
 msgstr ""
 
 #. module: hr_timesheet
-#: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
-#: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_all
-msgid "No activities found. Let's start a new one!"
-msgstr ""
-
-#. module: hr_timesheet
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_report
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_report_by_project
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_report_by_task
 msgid "No data yet!"
+msgstr ""
+
+#. module: hr_timesheet
+#: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
+#: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_all
+msgid "No timesheets found. Let's create one!"
 msgstr ""
 
 #. module: hr_timesheet
@@ -1244,9 +1264,7 @@ msgid "Track your time from anywhere, even offline, with our web/mobile apps"
 msgstr ""
 
 #. module: hr_timesheet
-#: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line_by_project
-#: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_all
 msgid ""
 "Track your working hours by projects every day and invoice this time to your"
 " customers."

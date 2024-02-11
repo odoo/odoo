@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-14 05:51+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
 "Last-Translator: Daye Jeong, 2023\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
@@ -113,11 +113,6 @@ msgstr "%s 하위 생산계획"
 #, python-format
 msgid "%s cannot be deleted. Try to cancel them before."
 msgstr "%s을 삭제할 수 없습니다.  먼저 취소부터 하십시오."
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.view_immediate_production
-msgid "&gt;"
-msgstr "&gt;"
 
 #. module: mrp
 #: model:ir.actions.report,print_report_name:mrp.action_report_bom_structure
@@ -556,6 +551,16 @@ msgid "Add tag for the workcenter"
 msgstr "작업장에 태그 추가"
 
 #. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter_capacity__time_stop
+msgid "Additional time in minutes for the cleaning."
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter_capacity__time_start
+msgid "Additional time in minutes for the setup."
+msgstr ""
+
+#. module: mrp
 #: model:res.groups,name:mrp.group_mrp_manager
 msgid "Administrator"
 msgstr "관리자"
@@ -727,8 +732,8 @@ msgid "Attachment URL"
 msgstr "첨부 파일 URL"
 
 #. module: mrp
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/mrp/models/mrp_bom.py:0
 #: code:addons/mrp/static/src/components/bom_overview_line/mrp_bom_overview_line.js:0
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
@@ -1026,13 +1031,6 @@ msgstr "BoM 현황"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 msgid "BoM Type"
 msgstr "BoM 유형"
-
-#. module: mrp
-#. odoo-python
-#: code:addons/mrp/models/mrp_bom.py:0
-#, python-format
-msgid "BoM line product %s should not be the same as BoM product."
-msgstr "%s 상품의 BoM 내역은 BoM 상품과 달라야 합니다."
 
 #. module: mrp
 #: model:product.template,name:mrp.product_product_computer_desk_bolt_product_template
@@ -2497,6 +2495,7 @@ msgstr "이미 차단이 해제되었습니다."
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
+#: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid ""
 "It is not possible to unplan one single Work Order. You should unplan the "
@@ -3070,8 +3069,8 @@ msgid "Minimum Inventory Rule"
 msgstr "최소 재고 규칙"
 
 #. module: mrp
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
 #: code:addons/mrp/static/src/components/bom_overview_special_line/mrp_bom_overview_special_line.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
@@ -3417,8 +3416,8 @@ msgstr ""
 "                각 작업은 특정 작업장에서 이루어지며, 작업 기간이 지정되어있습니다."
 
 #. module: mrp
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
 #: code:addons/mrp/static/src/components/bom_overview_display_filter/mrp_bom_overview_display_filter.js:0
 #: code:addons/mrp/static/src/components/bom_overview_special_line/mrp_bom_overview_special_line.xml:0
@@ -4905,6 +4904,7 @@ msgid ""
 msgstr "현재 설정은 품목 간에 주기를 생성하므로 올바르지 않습니다: %s."
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/stock_orderpoint.py:0
 #, python-format
 msgid "The following replenishment order has been generated"
@@ -5151,16 +5151,6 @@ msgstr "시간 추적"
 #, python-format
 msgid "Time Tracking: %(user)s"
 msgstr "시간 추적: %(user)s"
-
-#. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_workcenter_capacity__time_stop
-msgid "Additional time in minutes for the cleaning."
-msgstr ""
-
-#. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_workcenter_capacity__time_start
-msgid "Additional time in minutes for the setup."
-msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__time_cycle_manual
@@ -5550,7 +5540,6 @@ msgstr "승인"
 
 #. module: mrp
 #. odoo-python
-#: code:addons/addons/mrp/wizard/mrp_consumption_warning.py:0
 #: code:addons/mrp/wizard/mrp_consumption_warning.py:0
 #, python-format
 msgid ""

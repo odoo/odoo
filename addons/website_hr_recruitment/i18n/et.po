@@ -14,9 +14,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:24+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
 "Last-Translator: Anna, 2023\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
@@ -27,6 +27,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_hr_recruitment
+#. odoo-python
 #: code:addons/website_hr_recruitment/models/hr_recruitment.py:0
 #, python-format
 msgid "%s's Application"
@@ -39,7 +40,6 @@ msgstr "12 päeva / aastas, kaasa arvatud <br/>6 teie valikul."
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
-#: model_terms:website.page,arch_db:website_hr_recruitment.thankyou
 msgid "<br/><i class=\"fa fa-phone\" role=\"img\" aria-label=\"Phone\" title=\"Phone\"/>"
 msgstr "<br/><i class=\"fa fa-phone\" role=\"img\" aria-label=\"Phone\" title=\"Phone\"/>"
 
@@ -50,7 +50,6 @@ msgstr "<i class=\"fa fa-arrow-left\"/> Töö kirjeldus"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
-#: model_terms:website.page,arch_db:website_hr_recruitment.thankyou
 msgid "<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"Email\" title=\"Email\"/>"
 msgstr "<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"Email\" title=\"Email\"/>"
 
@@ -95,6 +94,13 @@ msgstr "<small><b>LOE</b></small>"
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.hr_job_website_inherit
 msgid "<span class=\"bg-odoo\">Published</span>"
 msgstr "<span class=\"bg-odoo\">Avaldatud</span>"
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
+msgid ""
+"<span class=\"d-none text-muted\" style=\"margin-left: 200px; font-size: "
+"0.8rem\">The resume is optional if you have a Linkedin profile</span>"
+msgstr ""
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
@@ -171,16 +177,12 @@ msgstr "<span class=\"text-muted small\">Asukoht</span>"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
 msgid ""
-"<span class=\"text-muted\" style=\"margin-left: 200px; font-size: "
-"0.8rem\">The resume is optional if you have a Linkedin profile</span>"
+"<span class=\"text-muted\" style=\"font-size: 0.8rem\">Optional if you "
+"provided a Linkedin profile</span>"
 msgstr ""
-"<span class=\"text-muted\" style=\"margin-left: 200px; font-size: "
-"0.8rem\">CV ei ole nõutud (valikuline), kui teil on Linkedin'i "
-"profiil.</span>"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
-#: model_terms:website.page,arch_db:website_hr_recruitment.thankyou
 msgid ""
 "<span>\n"
 "                                            We usually reply between one and three days.<br/>\n"
@@ -304,7 +306,6 @@ msgstr "Täiendav informatsioon, mida kuvatakse CV ja avalduse esitamise lehel"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
-#: model_terms:website.page,arch_db:website_hr_recruitment.thankyou
 msgid "Congratulations!"
 msgstr "Õnnitlused!"
 
@@ -315,7 +316,6 @@ msgstr "Võta meiega ühendust"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
-#: model_terms:website.page,arch_db:website_hr_recruitment.thankyou
 msgid "Continue To Our Website"
 msgstr "Liikuge meie veebilehele"
 
@@ -422,7 +422,6 @@ msgstr "Ma tunnen end õnnelikuna"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
-#: model_terms:website.page,arch_db:website_hr_recruitment.thankyou
 msgid "In the meantime,"
 msgstr "Samal ajal,"
 
@@ -453,12 +452,14 @@ msgid "Job Position"
 msgstr "Ametikoht"
 
 #. module: website_hr_recruitment
+#. odoo-python
 #: code:addons/website_hr_recruitment/controllers/main.py:0
 #, python-format
 msgid "Job Title"
 msgstr "Ametinimetus"
 
 #. module: website_hr_recruitment
+#. odoo-python
 #: code:addons/website_hr_recruitment/models/website.py:0
 #: model:ir.ui.menu,name:website_hr_recruitment.menu_job_pages
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
@@ -502,7 +503,6 @@ msgstr "Linkedin"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
-#: model_terms:website.page,arch_db:website_hr_recruitment.thankyou
 msgid "Look around on our website:"
 msgstr "Vaadake meie veebilehelt:"
 
@@ -684,6 +684,13 @@ msgid "The full URL to access the document through the website."
 msgstr "Dokumendile veebisaidi kaudu juurdepääsuks täielik URL."
 
 #. module: website_hr_recruitment
+#. odoo-python
+#: code:addons/website_hr_recruitment/models/hr_recruitment.py:0
+#, python-format
+msgid "The job offer has been closed."
+msgstr "Tööpakkumine ei ole enam aktiivne. "
+
+#. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "Trainings"
 msgstr "Koolitused"
@@ -773,13 +780,6 @@ msgstr ""
 "tööpakkumiste nimekirja lehel. "
 
 #. module: website_hr_recruitment
-#. odoo-python
-#: code:addons/website_hr_recruitment/models/hr_recruitment.py:0
-#, python-format
-msgid "The job offer has been closed."
-msgstr "Tööpakkumine ei ole enam aktiivne. "
-
-#. module: website_hr_recruitment
 #. odoo-javascript
 #: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.js:0
 #, python-format
@@ -795,13 +795,11 @@ msgstr "Sinu nimi"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
-#: model_terms:website.page,arch_db:website_hr_recruitment.thankyou
 msgid "Your application has been posted successfully."
 msgstr "Sinu kandideerimisavaldus on postitatud edukalt."
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
-#: model_terms:website.page,arch_db:website_hr_recruitment.thankyou
 msgid "Your application has been sent to:"
 msgstr "Sinu kandideerimisavaldus on saadetud:"
 
@@ -835,8 +833,3 @@ msgstr "jaga seda"
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
 msgid "unpublished"
 msgstr "avalikustamata"
-
-#. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
-msgid "Optional if you provided a Linkedin profile"
-msgstr ""

@@ -7,14 +7,15 @@
 # Martin Trigaux, 2022
 # Benson <Benson.Dr@Gmail.com>, 2023
 # Tony Ng, 2023
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-02 10:33+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Tony Ng, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -526,6 +527,15 @@ msgid "There was en error processing your payment: invalid credit card ID."
 msgstr "您有一個付款的錯誤：無效的信用卡號."
 
 #. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/models/payment_provider.py:0
+#, python-format
+msgid ""
+"To uninstall this module, please remove first the corresponding payment "
+"method line in the incoming payments tab defined on the bank journal."
+msgstr ""
+
+#. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_bank_statement_line__transaction_ids
 #: model:ir.model.fields,field_description:account_payment.field_account_move__transaction_ids
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__transaction_ids
@@ -550,23 +560,14 @@ msgstr "無效交易"
 
 #. module: account_payment
 #. odoo-python
-#: code:addons/account_payment/models/account_journal.py:0
+#: code:addons/account_payment/models/account_payment_method_line.py:0
 #, python-format
 msgid ""
 "You can't delete a payment method that is linked to a provider in the enabled or test state.\n"
-"Linked provider(s): %s"
+"Linked providers(s): %s"
 msgstr ""
 "若付款方式連結至已啟用或在測試狀態的服務商，便不可刪除。\n"
 "已連結服務商： %s"
-
-#. module: account_payment
-#. odoo-python
-#: code:addons/account_payment/models/payment_provider.py:0
-#, python-format
-msgid ""
-"You cannot uninstall this module as payment method transactions already "
-"exist."
-msgstr "由於付款方式交易已經存在，因此無法卸載此模塊。"
 
 #. module: account_payment
 #. odoo-python

@@ -6,14 +6,15 @@
 # Ivan Kropotkin <yelizariev@itpp.dev>, 2022
 # Сергей Шебанин <sergey@shebanin.ru>, 2022
 # Martin Trigaux, 2022
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:25+0000\n"
+"POT-Creation-Date: 2024-02-06 13:32+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,32 +28,32 @@ msgid "Attribute Values"
 msgstr "Значение атрибута"
 
 #. module: purchase_product_matrix
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase_product_matrix/static/src/js/purchase_product_field.js:0
 #, python-format
 msgid "Choose Product Variants"
-msgstr ""
+msgstr "Выберите варианты продуктов"
 
 #. module: purchase_product_matrix
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase_product_matrix/static/src/js/purchase_product_field.js:0
 #, python-format
 msgid "Close"
 msgstr "Закрыть"
 
 #. module: purchase_product_matrix
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase_product_matrix/static/src/js/purchase_product_field.js:0
 #, python-format
 msgid "Confirm"
 msgstr "Подтвердить"
 
 #. module: purchase_product_matrix
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase_product_matrix/static/src/js/purchase_product_field.js:0
 #, python-format
 msgid "Edit Configuration"
-msgstr ""
+msgstr "Изменить Конфигурацию"
 
 #. module: purchase_product_matrix
 #: model:ir.model.fields,field_description:purchase_product_matrix.field_purchase_order__grid
@@ -62,12 +63,12 @@ msgstr "Сетка"
 #. module: purchase_product_matrix
 #: model:ir.model.fields,field_description:purchase_product_matrix.field_purchase_order__grid_product_tmpl_id
 msgid "Grid Product Tmpl"
-msgstr ""
+msgstr "Матрица Шаблонов Продукта"
 
 #. module: purchase_product_matrix
 #: model:ir.model.fields,field_description:purchase_product_matrix.field_purchase_order__grid_update
 msgid "Grid Update"
-msgstr ""
+msgstr "Обновление матрицы"
 
 #. module: purchase_product_matrix
 #: model:ir.model.fields,help:purchase_product_matrix.field_purchase_order__report_grids
@@ -75,16 +76,18 @@ msgid ""
 "If set, the matrix of configurable products will be shown on the report of "
 "this order."
 msgstr ""
+"Если установлено, то матрица настраиваемых продуктов будет показана в отчете"
+" данного заказа."
 
 #. module: purchase_product_matrix
 #: model:ir.model.fields,field_description:purchase_product_matrix.field_purchase_order_line__is_configurable_product
 msgid "Is the product configurable?"
-msgstr ""
+msgstr "Можно ли настроить продукт?"
 
 #. module: purchase_product_matrix
 #: model:ir.model.fields,field_description:purchase_product_matrix.field_purchase_order__report_grids
 msgid "Print Variant Grids"
-msgstr ""
+msgstr "Печать Матрицы Вариантов"
 
 #. module: purchase_product_matrix
 #: model_terms:ir.ui.view,arch_db:purchase_product_matrix.purchase_order_form_matrix
@@ -114,7 +117,7 @@ msgstr "Позиция заказа на поставку"
 #. module: purchase_product_matrix
 #: model:ir.model.fields,help:purchase_product_matrix.field_purchase_order__grid_product_tmpl_id
 msgid "Technical field for product_matrix functionalities."
-msgstr ""
+msgstr "Техническая область для функционала матрицы продукта."
 
 #. module: purchase_product_matrix
 #: model:ir.model.fields,help:purchase_product_matrix.field_purchase_order__grid
@@ -123,16 +126,22 @@ msgid ""
 "If grid_update, will be loaded on the PO. \n"
 "If not, represents the matrix to open."
 msgstr ""
+"Техническое хранение сетки.\n"
+"Если grid_update, будет загружена на PO.\n"
+"Если нет, представляет матрицу для открытия."
 
 #. module: purchase_product_matrix
 #: model:ir.model.fields,help:purchase_product_matrix.field_purchase_order__grid_update
 msgid "Whether the grid field contains a new matrix to apply or not."
-msgstr ""
+msgstr "Содержит ли поле матрицы новую матрицу для применения или нет."
 
 #. module: purchase_product_matrix
+#. odoo-python
 #: code:addons/purchase_product_matrix/models/purchase.py:0
 #, python-format
 msgid ""
 "You cannot change the quantity of a product present in multiple purchase "
 "lines."
 msgstr ""
+"Вы не можете изменить количество товара, представленного в нескольких "
+"строках закупки."

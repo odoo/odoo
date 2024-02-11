@@ -13,16 +13,17 @@
 # ILMIR <karamov@it-projects.info>, 2022
 # Martin Trigaux, 2022
 # Irina Fedulova <istartlin@gmail.com>, 2022
-# Сергей Шебанин <sergey@shebanin.ru>, 2022
 # alenafairy, 2023
+# Сергей Шебанин <sergey@shebanin.ru>, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:23+0000\n"
+"POT-Creation-Date: 2024-02-06 13:32+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: alenafairy, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,7 +41,7 @@ msgstr ""
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
 msgid "<strong>FROM</strong>"
-msgstr ""
+msgstr "<strong>ОТ</strong>"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
@@ -65,12 +66,12 @@ msgstr "<strong>ответственный:</strong>"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
 msgid "<strong>TO</strong>"
-msgstr ""
+msgstr "<strong>НА</strong>"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
 msgid "<strong>→</strong>"
-msgstr ""
+msgstr "<strong>→</strong>"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_max_lines
@@ -78,6 +79,8 @@ msgid ""
 "A transfer will not be automatically added to batches that will exceed this number of lines if the transfer is added to it.\n"
 "Leave this value as '0' if no line limit."
 msgstr ""
+"Перевод не будет автоматически добавлен к партиям, количество строк в которых превысит это значение, если перевод будет добавлен к ним.\n"
+"Оставьте это значение равным '0', если лимит строк отсутствует."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_max_pickings
@@ -85,6 +88,8 @@ msgid ""
 "A transfer will not be automatically added to batches that will exceed this number of transfers.\n"
 "Leave this value as '0' if no transfer limit."
 msgstr ""
+"Перевод не будет автоматически добавляться к партиям, количество переводов в которых превысит это значение.\n"
+"Оставьте это значение равным \"0\", если лимит перечислений отсутствует."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_needaction
@@ -112,16 +117,17 @@ msgid "Activity Type Icon"
 msgstr "Иконка типа действия"
 
 #. module: stock_picking_batch
+#. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking.py:0
 #: code:addons/stock_picking_batch/wizard/stock_add_to_wave.py:0
 #, python-format
 msgid "Add Operations"
-msgstr ""
+msgstr "Добавить операции"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_to_batch_form
 msgid "Add pickings to"
-msgstr ""
+msgstr "Добавить подборки в"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_add_to_wave_form
@@ -130,6 +136,7 @@ msgid "Add to"
 msgstr "Добавить в"
 
 #. module: stock_picking_batch
+#. odoo-python
 #: code:addons/stock_picking_batch/models/stock_move_line.py:0
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_add_to_wave_form
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_move_line_tree_detailed_wave
@@ -155,13 +162,14 @@ msgstr "Отсутствие"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__allowed_picking_ids
 msgid "Allowed Picking"
-msgstr ""
+msgstr "Разрешенная комплектация"
 
 #. module: stock_picking_batch
+#. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking.py:0
 #, python-format
 msgid "Assigned to %s Responsible"
-msgstr ""
+msgstr "Назначено на %s Ответственный"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_attachment_count
@@ -171,38 +179,40 @@ msgstr "Количество вложений"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_auto_confirm
 msgid "Auto-confirm"
-msgstr ""
+msgstr "Автоподтверждение"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__auto_batch
 msgid "Automatic Batches"
-msgstr ""
+msgstr "Автоматические партии"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_group_by_partner
 msgid "Automatically group batches by contacts."
-msgstr ""
+msgstr "Автоматически группируйте пакеты по контактам."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_group_by_destination
 msgid "Automatically group batches by destination country."
-msgstr ""
+msgstr "Автоматически группируйте партии по странам назначения."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_group_by_dest_loc
 msgid "Automatically group batches by their destination location."
-msgstr ""
+msgstr "Автоматически группируйте партии по месту назначения."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_group_by_src_loc
 msgid "Automatically group batches by their source location."
-msgstr ""
+msgstr "Автоматически группируйте партии по месту их происхождения."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__auto_batch
 msgid ""
 "Automatically put pickings into batches as they are confirmed when possible."
 msgstr ""
+"По возможности автоматически объединяйте подборки в партии по мере их "
+"подтверждения."
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
@@ -212,9 +222,10 @@ msgstr "Штрих-код"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_form_inherit
 msgid "Batch"
-msgstr ""
+msgstr "Порция"
 
 #. module: stock_picking_batch
+#. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #: model:ir.actions.report,name:stock_picking_batch.action_report_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_picking_batch
@@ -232,7 +243,7 @@ msgstr "Групповое перемещение"
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_picking_to_batch
 msgid "Batch Transfer Lines"
-msgstr ""
+msgstr "Строки пакетной передачи"
 
 #. module: stock_picking_batch
 #: model:ir.actions.act_window,name:stock_picking_batch.stock_picking_batch_action
@@ -244,13 +255,13 @@ msgstr "Групповые перемещения"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
 msgid "Batch Transfers not finished"
-msgstr ""
+msgstr "Пакетные передачи не закончены"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_move_line__batch_id
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking__batch_id
 msgid "Batch associated to this transfer"
-msgstr ""
+msgstr "Пакет, связанный с этой передачей"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_type_kanban_batch
@@ -270,10 +281,11 @@ msgid "Cancelled"
 msgstr "Отменено"
 
 #. module: stock_picking_batch
+#. odoo-python
 #: code:addons/stock_picking_batch/wizard/stock_add_to_wave.py:0
 #, python-format
 msgid "Cannot create wave transfers"
-msgstr ""
+msgstr "Невозможно создать волновые переносы"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
@@ -281,12 +293,14 @@ msgid "Check Availability"
 msgstr "Проверить доступность"
 
 #. module: stock_picking_batch
+#. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
 msgid "Choose Labels Layout"
 msgstr "Выбрать макет этикеток"
 
 #. module: stock_picking_batch
+#. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
 msgid "Choose Type of Labels To Print"
@@ -318,17 +332,17 @@ msgstr "Контакт"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__count_picking_batch
 msgid "Count Picking Batch"
-msgstr ""
+msgstr "Счетная партия"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__count_picking_wave
 msgid "Count Picking Wave"
-msgstr ""
+msgstr "Графская волна"
 
 #. module: stock_picking_batch
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
 msgid "Create a new batch transfer"
-msgstr ""
+msgstr "Создать новую пакетную передачу"
 
 #. module: stock_picking_batch
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.action_picking_tree_wave
@@ -443,12 +457,15 @@ msgid "If checked, some messages have a delivery error."
 msgstr "Если отмечено - некоторые сообщения имеют ошибку доставки."
 
 #. module: stock_picking_batch
+#. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking.py:0
 #, python-format
 msgid ""
 "If the Automatic Batches feature is enabled, at least one 'Group by' option "
 "must be selected."
 msgstr ""
+"Если включена функция автоматических пакетов, необходимо выбрать хотя бы "
+"одну опцию \"Группировать по\"."
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
@@ -499,7 +516,7 @@ msgstr "Строка"
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__picking_ids
 msgid "List of transfers associated to this batch"
-msgstr ""
+msgstr "Список передач, связанных с данной партией"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_main_attachment_id
@@ -509,12 +526,12 @@ msgstr "Основное вложение"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_max_lines
 msgid "Maximum lines per batch"
-msgstr ""
+msgstr "Максимальное количество строк в партии"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_max_pickings
 msgid "Maximum transfers per batch"
-msgstr ""
+msgstr "Максимальное количество передач в одной партии"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_has_error
@@ -608,11 +625,14 @@ msgid "Picking Type"
 msgstr "Тип комплектования"
 
 #. module: stock_picking_batch
+#. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
 msgid ""
 "Please add 'Done' quantities to the batch picking to create a new pack."
 msgstr ""
+"Чтобы создать новую упаковку, добавьте количество \"Выполнено\" к "
+"комплектации партии."
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
@@ -676,11 +696,15 @@ msgid ""
 "              - If not manually changed and transfers are added/removed/updated then this will be their earliest scheduled date\n"
 "                but this scheduled date will not be set for all transfers in batch."
 msgstr ""
+"Запланированная дата обработки переводов.\n"
+"              - Если задано вручную, то плановая дата для всех переводов в партии будет автоматически обновляться до этой даты.\n"
+"              - Если дата не изменена вручную и переводы добавляются/удаляются/обновляются, то это будет их самая ранняя запланированная дата\n"
+"                но эта запланированная дата не будет установлена для всех переводов в партии."
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
 msgid "Search Batch Transfer"
-msgstr ""
+msgstr "Поиск пакетной передачи"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
@@ -690,7 +714,7 @@ msgstr "Указать количество"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_allocation
 msgid "Show Allocation Button"
-msgstr ""
+msgstr "Кнопка \"Показать распределение"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_check_availability
@@ -701,6 +725,11 @@ msgstr "Показать проверку наличия"
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_clear_qty_button
 msgid "Show Clear Qty Button"
 msgstr "Показать кнопку Очистить количество"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_lots_text
+msgid "Show Lots Text"
+msgstr "Показать описание партий"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_set_qty_button
@@ -758,7 +787,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_tree
 msgid "Stock Batch Transfer"
-msgstr ""
+msgstr "Пакетная передача запасов"
 
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_move
@@ -773,12 +802,12 @@ msgstr "Место назначения запаса"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__move_line_ids
 msgid "Stock move lines"
-msgstr ""
+msgstr "Линии движения акций"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__move_ids
 msgid "Stock moves"
-msgstr ""
+msgstr "Движение акций"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
@@ -786,6 +815,7 @@ msgid "Summary:"
 msgstr "Сводка:"
 
 #. module: stock_picking_batch
+#. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
 msgid ""
@@ -802,6 +832,10 @@ msgid ""
 "            It may also be useful to assign jobs (one person = one batch) or\n"
 "            help the timing management of operations (tasks to be done at 1pm)."
 msgstr ""
+"Целью пакетной передачи является группировка операций, которые могут\n"
+"            (должны) делаться вместе, чтобы повысить их эффективность.\n"
+"            Также может быть полезно назначить работу (один человек = одна партия) или\n"
+"            помощь в управлении сроками выполнения операций (задачи, которые должны быть выполнены в час дня)."
 
 #. module: stock_picking_batch
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.action_picking_tree_wave
@@ -811,30 +845,38 @@ msgid ""
 "                    It may also be useful to assign jobs (one person = one batch) or\n"
 "                    help the timing management of operations (tasks to be done at 1pm)."
 msgstr ""
+"Цель волнового переноса - сгруппировать операции из разных переносов\n"
+"                    вместе, чтобы повысить их эффективность.\n"
+"                    Это также может быть полезно для распределения заданий (один человек = одна партия) или\n"
+"                    помочь в управлении временем выполнения операций (задания должны быть выполнены в 13:00)."
 
 #. module: stock_picking_batch
+#. odoo-python
 #: code:addons/stock_picking_batch/wizard/stock_add_to_wave.py:0
 #, python-format
 msgid "The selected operations should belong to a unique company."
-msgstr ""
+msgstr "Выбранные операции должны принадлежать уникальной компании."
 
 #. module: stock_picking_batch
+#. odoo-python
 #: code:addons/stock_picking_batch/wizard/stock_picking_to_batch.py:0
 #, python-format
 msgid "The selected pickings should belong to an unique company."
-msgstr ""
+msgstr "Выбранные подборки должны принадлежать уникальной компании."
 
 #. module: stock_picking_batch
+#. odoo-python
 #: code:addons/stock_picking_batch/wizard/stock_add_to_wave.py:0
 #, python-format
 msgid "The selected transfers should belong to a unique company."
-msgstr ""
+msgstr "Выбранные переводы должны принадлежать уникальной компании."
 
 #. module: stock_picking_batch
+#. odoo-python
 #: code:addons/stock_picking_batch/wizard/stock_add_to_wave.py:0
 #, python-format
 msgid "The selected transfers should belong to the same operation type"
-msgstr ""
+msgstr "Выбранные переводы должны относиться к одному типу операций"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__is_wave
@@ -858,6 +900,7 @@ msgid "Transfer"
 msgstr "Перемещение"
 
 #. module: stock_picking_batch
+#. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
 msgid "Transferred by"
@@ -897,7 +940,7 @@ msgstr "Перемещение волнами"
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_add_to_wave
 msgid "Wave Transfer Lines"
-msgstr ""
+msgstr "Линии передачи волн"
 
 #. module: stock_picking_batch
 #: model:ir.actions.act_window,name:stock_picking_batch.action_picking_tree_wave
@@ -923,24 +966,26 @@ msgstr "История общения с сайтом"
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_to_batch__is_create_draft
 msgid "When checked, create the batch in draft status"
-msgstr ""
+msgstr "При установке флажка партия создается в статусе черновика"
 
 #. module: stock_picking_batch
+#. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
 msgid "You cannot delete Done batch transfers."
-msgstr ""
+msgstr "Вы не можете удалить Выполненные пакетные передачи."
 
 #. module: stock_picking_batch
+#. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
 msgid "You have to set some pickings to batch."
-msgstr ""
+msgstr "Вам придется собирать партии."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_to_batch__mode__new
 msgid "a new batch transfer"
-msgstr ""
+msgstr "передача новой партии"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_add_to_wave__mode__new
@@ -950,7 +995,7 @@ msgstr "новое перемещение волной"
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_to_batch__mode__existing
 msgid "an existing batch transfer"
-msgstr ""
+msgstr "существующая пакетная передача"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_add_to_wave__mode__existing

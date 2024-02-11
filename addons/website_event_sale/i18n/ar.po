@@ -5,14 +5,15 @@
 # Translators:
 # Martin Trigaux, 2022
 # Malaz Abuidris <msea@odoo.com>, 2023
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"POT-Creation-Date: 2024-02-06 13:32+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -43,6 +44,7 @@ msgstr ""
 "                                        </small>"
 
 #. module: website_event_sale
+#. odoo-python
 #: code:addons/website_event_sale/models/product_pricelist.py:0
 #, python-format
 msgid ""
@@ -53,6 +55,7 @@ msgstr ""
 "الفعالية. "
 
 #. module: website_event_sale
+#. odoo-python
 #: code:addons/website_event_sale/models/product_pricelist.py:0
 #, python-format
 msgid ""
@@ -93,6 +96,11 @@ msgid "Pricelist Rule"
 msgstr "قاعدة قائمة الأسعار "
 
 #. module: website_event_sale
+#: model:ir.model,name:website_event_sale.model_product_template
+msgid "Product"
+msgstr "المنتج"
+
+#. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_product_product
 msgid "Product Variant"
 msgstr "متغير المنتج "
@@ -102,12 +110,6 @@ msgstr "متغير المنتج "
 #: model_terms:ir.ui.view,arch_db:website_event_sale.event_sale_report_view_search
 msgid "Published Events"
 msgstr "الفعاليات المنشورة "
-
-#. module: website_event_sale
-#: code:addons/website_event_sale/controllers/main.py:0
-#, python-format
-msgid "Registration"
-msgstr "التسجيل"
 
 #. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_sale_order
@@ -120,12 +122,14 @@ msgid "Sales Order Line"
 msgstr "بند أمر المبيعات"
 
 #. module: website_event_sale
+#. odoo-python
 #: code:addons/website_event_sale/models/sale_order.py:0
 #, python-format
 msgid "Sorry, The %(ticket)s tickets for the %(event)s event are sold out."
 msgstr "عذراًن لقد بيعت كافة تذاكر %(ticket)s للفعالية %(event)s. "
 
 #. module: website_event_sale
+#. odoo-python
 #: code:addons/website_event_sale/models/sale_order.py:0
 #, python-format
 msgid ""
@@ -136,18 +140,21 @@ msgstr ""
 "%(event)s. "
 
 #. module: website_event_sale
+#. odoo-python
 #: code:addons/website_event_sale/models/sale_order.py:0
 #, python-format
 msgid "The provided ticket doesn't exist"
 msgstr "التذكرة غير موجودة "
 
 #. module: website_event_sale
+#. odoo-python
 #: code:addons/website_event_sale/models/sale_order.py:0
 #, python-format
 msgid "The ticket doesn't match with this product."
 msgstr "لا تتطابق التذكرة مع هذا المنتج. "
 
 #. module: website_event_sale
+#. odoo-python
 #: code:addons/website_event_sale/models/product_pricelist.py:0
 #, python-format
 msgid "Warning"
@@ -164,6 +171,7 @@ msgid "Website"
 msgstr "الموقع الإلكتروني"
 
 #. module: website_event_sale
+#. odoo-python
 #: code:addons/website_event_sale/models/sale_order.py:0
 #, python-format
 msgid "You cannot raise manually the event ticket quantity in your cart"

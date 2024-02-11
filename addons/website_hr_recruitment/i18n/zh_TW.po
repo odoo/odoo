@@ -6,15 +6,15 @@
 # Martin Trigaux, 2022
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2022
 # Wil Odoo, 2023
-# Tony Ng, 2023
+# Tony Ng, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:24+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Tony Ng, 2023\n"
+"Last-Translator: Tony Ng, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,6 +23,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: website_hr_recruitment
+#. odoo-python
 #: code:addons/website_hr_recruitment/models/hr_recruitment.py:0
 #, python-format
 msgid "%s's Application"
@@ -35,7 +36,6 @@ msgstr "12 天/年，包括<br>6 天依你規劃。"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
-#: model_terms:website.page,arch_db:website_hr_recruitment.thankyou
 msgid "<br/><i class=\"fa fa-phone\" role=\"img\" aria-label=\"Phone\" title=\"Phone\"/>"
 msgstr "<br/><i class=\"fa fa-phone\" role=\"img\" aria-label=\"Phone\" title=\"Phone\"/>"
 
@@ -46,7 +46,6 @@ msgstr ""
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
-#: model_terms:website.page,arch_db:website_hr_recruitment.thankyou
 msgid "<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"Email\" title=\"Email\"/>"
 msgstr "<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"Email\" title=\"Email\"/>"
 
@@ -89,6 +88,15 @@ msgstr "<small><b>READ</b></small>"
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.hr_job_website_inherit
 msgid "<span class=\"bg-odoo\">Published</span>"
 msgstr ""
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
+msgid ""
+"<span class=\"d-none text-muted\" style=\"margin-left: 200px; font-size: "
+"0.8rem\">The resume is optional if you have a Linkedin profile</span>"
+msgstr ""
+"<span class=\"d-none text-muted\" style=\"margin-left: 200px; font-size: "
+"0.8rem\">若你已有 LinkedIn 個人檔案，可選擇提供履歷或略過。</span>"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
@@ -165,13 +173,14 @@ msgstr "<span class=\"text-muted small\">地點</span>"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
 msgid ""
-"<span class=\"text-muted\" style=\"margin-left: 200px; font-size: "
-"0.8rem\">The resume is optional if you have a Linkedin profile</span>"
+"<span class=\"text-muted\" style=\"font-size: 0.8rem\">Optional if you "
+"provided a Linkedin profile</span>"
 msgstr ""
+"<span class=\"text-muted\" style=\"font-size: 0.8rem\">若你已提供 LinkedIn "
+"個人檔案資料，則可選填</span>"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
-#: model_terms:website.page,arch_db:website_hr_recruitment.thankyou
 msgid ""
 "<span>\n"
 "                                            We usually reply between one and three days.<br/>\n"
@@ -287,7 +296,6 @@ msgstr "在提交職位頁面顯示的補充資訊"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
-#: model_terms:website.page,arch_db:website_hr_recruitment.thankyou
 msgid "Congratulations!"
 msgstr "恭喜！"
 
@@ -298,7 +306,6 @@ msgstr "聯絡我們"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
-#: model_terms:website.page,arch_db:website_hr_recruitment.thankyou
 msgid "Continue To Our Website"
 msgstr "請繼續瀏覽我們的網站"
 
@@ -399,7 +406,6 @@ msgstr "我覺得很幸運"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
-#: model_terms:website.page,arch_db:website_hr_recruitment.thankyou
 msgid "In the meantime,"
 msgstr "在此期間,"
 
@@ -430,12 +436,14 @@ msgid "Job Position"
 msgstr "工作職缺"
 
 #. module: website_hr_recruitment
+#. odoo-python
 #: code:addons/website_hr_recruitment/controllers/main.py:0
 #, python-format
 msgid "Job Title"
 msgstr "職缺名稱"
 
 #. module: website_hr_recruitment
+#. odoo-python
 #: code:addons/website_hr_recruitment/models/website.py:0
 #: model:ir.ui.menu,name:website_hr_recruitment.menu_job_pages
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
@@ -476,7 +484,6 @@ msgstr "LinkedIn 個人檔案"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
-#: model_terms:website.page,arch_db:website_hr_recruitment.thankyou
 msgid "Look around on our website:"
 msgstr "瀏覽我們的網站："
 
@@ -658,6 +665,13 @@ msgid "The full URL to access the document through the website."
 msgstr "通過網站存取此文件的完整網址。"
 
 #. module: website_hr_recruitment
+#. odoo-python
+#: code:addons/website_hr_recruitment/models/hr_recruitment.py:0
+#, python-format
+msgid "The job offer has been closed."
+msgstr ""
+
+#. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "Trainings"
 msgstr "培訓計畫"
@@ -745,13 +759,6 @@ msgid ""
 msgstr "此處可撰寫職位描述的簡短描述。該簡短描述將顯示在職位空缺列表的主頁上。"
 
 #. module: website_hr_recruitment
-#. odoo-python
-#: code:addons/website_hr_recruitment/models/hr_recruitment.py:0
-#, python-format
-msgid "The job offer has been closed."
-msgstr ""
-
-#. module: website_hr_recruitment
 #. odoo-javascript
 #: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.js:0
 #, python-format
@@ -767,13 +774,11 @@ msgstr "您的姓名"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
-#: model_terms:website.page,arch_db:website_hr_recruitment.thankyou
 msgid "Your application has been posted successfully."
 msgstr "您的模組已成功發佈。"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
-#: model_terms:website.page,arch_db:website_hr_recruitment.thankyou
 msgid "Your application has been sent to:"
 msgstr "您的模組已發送至："
 
@@ -807,8 +812,3 @@ msgstr "分享"
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
 msgid "unpublished"
 msgstr "未發佈"
-
-#. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
-msgid "Optional if you provided a Linkedin profile"
-msgstr ""

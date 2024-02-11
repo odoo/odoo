@@ -9,13 +9,14 @@
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
 # Iran Villalobos López, 2023
 # Martin Trigaux, 2023
+# Wil Odoo, 2024
 # Fernanda Alvarez, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:23+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
 "Last-Translator: Fernanda Alvarez, 2024\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
@@ -130,7 +131,6 @@ msgstr "10% en su orden"
 
 #. module: loyalty
 #. odoo-python
-#: code:addons/loyalty/models/loyalty_program.py:0
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "2+1 Free"
@@ -908,6 +908,11 @@ msgid "Discount Mode"
 msgstr "Modo de descuento"
 
 #. module: loyalty
+#: model:ir.model.fields,field_description:loyalty.field_loyalty_program__payment_program_discount_product_id
+msgid "Discount Product"
+msgstr "Producto con descuento"
+
+#. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_product_domain
 msgid "Discount Product Domain"
 msgstr "Dominio del descuento del producto"
@@ -928,6 +933,11 @@ msgstr "Código de descuento"
 #, python-format
 msgid "Discount point(s)"
 msgstr "Punto(s) de descuento"
+
+#. module: loyalty
+#: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
+msgid "Discount product"
+msgstr "Producto de descuento"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_product_category_id
@@ -1103,16 +1113,16 @@ msgid "Generate Gift Cards"
 msgstr "Genere tarjetas de regalo"
 
 #. module: loyalty
-#: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
-msgid "Generate eWallet"
-msgstr "Genere billetera digital"
-
-#. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Generate and share unique coupons with your customers."
 msgstr "Genere y comparta cupones únicos con sus clientes."
+
+#. module: loyalty
+#: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
+msgid "Generate eWallet"
+msgstr "Genere billetera digital"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_gift_ewallet_view_form
@@ -1539,7 +1549,7 @@ msgid "Product Variant"
 msgstr "Variante de producto"
 
 #. module: loyalty
-#: model:ir.model.fields,help:loyalty.field_loyalty_program__discount_product_id
+#: model:ir.model.fields,help:loyalty.field_loyalty_program__payment_program_discount_product_id
 msgid "Product used in the sales order to apply the discount."
 msgstr ""
 "Producto que se utiliza en la orden de venta para aplicar el descuento."
@@ -1592,13 +1602,6 @@ msgstr "Activador del programa"
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
-msgid "Promotion Program"
-msgstr "Programa de promoción"
-
-#. module: loyalty
-#. odoo-python
-#: code:addons/loyalty/models/loyalty_program.py:0
-#, python-format
 msgid "Promo point(s)"
 msgstr "Punto(s) de promoción"
 
@@ -1609,6 +1612,13 @@ msgstr "Punto(s) de promoción"
 #, python-format
 msgid "Promos"
 msgstr "Promociones"
+
+#. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/models/loyalty_program.py:0
+#, python-format
+msgid "Promotion Program"
+msgstr "Programa de promoción"
 
 #. module: loyalty
 #. odoo-python

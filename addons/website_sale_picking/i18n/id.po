@@ -8,9 +8,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"POT-Creation-Date: 2024-02-06 13:32+0000\n"
 "PO-Revision-Date: 2022-09-22 05:57+0000\n"
 "Last-Translator: Abe Manyo, 2023\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
@@ -50,7 +50,7 @@ msgid "Customize Pickup Sites"
 msgstr "Kustomisasi Lokasi Pickup"
 
 #. module: website_sale_picking
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_picking/static/src/js/checkout_form.js:0
 #, python-format
 msgid ""
@@ -59,7 +59,7 @@ msgid ""
 msgstr "Jika Anda merasa ini error, silakan hubungi administrator website."
 
 #. module: website_sale_picking
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_picking/static/src/js/checkout_form.js:0
 #, python-format
 msgid "No suitable payment option could be found."
@@ -71,14 +71,12 @@ msgid "On Site"
 msgstr "Di Tempat"
 
 #. module: website_sale_picking
-#: model:product.product,name:website_sale_picking.onsite_delivery_product
 #: model:product.template,name:website_sale_picking.onsite_delivery_product_product_template
 msgid "On site picking"
 msgstr "Picking di tempat"
 
 #. module: website_sale_picking
 #: model:payment.provider,name:website_sale_picking.payment_provider_onsite
-#: model_terms:product.product,description:website_sale_picking.onsite_delivery_product
 #: model_terms:product.template,description:website_sale_picking.onsite_delivery_product_product_template
 msgid "Pay in store when picking the product"
 msgstr "Beli di toko saat picking produk"
@@ -111,16 +109,11 @@ msgid "Shipping Methods"
 msgstr "Metode Pengiriman"
 
 #. module: website_sale_picking
+#. odoo-python
 #: code:addons/website_sale_picking/models/delivery_carrier.py:0
 #, python-format
 msgid "The picking site and warehouse must share the same company"
 msgstr "Lokasi picking dan gudang harus memiliki perusahaan yang sama"
-
-#. module: website_sale_picking
-#: model:product.product,uom_name:website_sale_picking.onsite_delivery_product
-#: model:product.template,uom_name:website_sale_picking.onsite_delivery_product_product_template
-msgid "Units"
-msgstr "Unit"
 
 #. module: website_sale_picking
 #: model:ir.model.fields,field_description:website_sale_picking.field_delivery_carrier__warehouse_id
@@ -133,6 +126,7 @@ msgid "Website"
 msgstr "Website"
 
 #. module: website_sale_picking
+#. odoo-python
 #: code:addons/website_sale_picking/controllers/main.py:0
 #, python-format
 msgid "You cannot pay onsite if the delivery is not onsite"

@@ -17,14 +17,15 @@
 # Sahar Daraye <sahar.daraye.1369@gmail.com>, 2023
 # Hamed Mohammadi <hamed@dehongi.com>, 2023
 # M.Hossein S.Farvashani <Farvashani@gmail.com>, 2023
+# Abbas Ebadian, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:22+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:57+0000\n"
-"Last-Translator: M.Hossein S.Farvashani <Farvashani@gmail.com>, 2023\n"
+"Last-Translator: Abbas Ebadian, 2024\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1363,6 +1364,11 @@ msgid "Average Review"
 msgstr ""
 
 #. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
+msgid "BUILDING BLOCKS DROPPED HERE WILL BE SHOWN ACROSS ALL LESSONS"
+msgstr ""
+
+#. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/slides_category_add.js:0
 #: code:addons/website_slides/static/src/js/slides_course_tag_add.js:0
@@ -1412,7 +1418,7 @@ msgstr "می تواند نظر بدهد"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__can_edit_body
 msgid "Can Edit Body"
-msgstr ""
+msgstr "امکان ویرایش محتوا"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__can_self_mark_completed
@@ -2689,8 +2695,8 @@ msgid "File Name"
 msgstr "نام فایل"
 
 #. module: website_slides
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/website_slides/controllers/main.py:0
 #: code:addons/website_slides/static/src/js/slides_upload.js:0
 #, python-format
@@ -3630,7 +3636,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__template_id
 msgid "Mail Template"
-msgstr ""
+msgstr "قالب ایمیل"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_res_config_settings__module_mass_mailing_slides
@@ -4089,7 +4095,7 @@ msgstr "تعداد خطاها"
 #: model:ir.model.fields,help:website_slides.field_slide_channel__message_needaction_counter
 #: model:ir.model.fields,help:website_slides.field_slide_slide__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "تعداد پیام هایی که نیاز به اقدام دارند"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__message_has_error_counter
@@ -4318,14 +4324,6 @@ msgstr "ارائه منتشر شد"
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Preview"
 msgstr "پیش‌نمایش"
-
-#. module: website_slides
-#. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
-#, python-format
-msgid "Private"
-msgstr "خصوصی"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_join
@@ -5432,8 +5430,8 @@ msgstr ""
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid ""
-"The video link to input here can be obtained by using the 'share' button in "
-"the Vimeo interface."
+"The video link to input here can be obtained by using the 'Share link' "
+"button in the Vimeo interface."
 msgstr ""
 
 #. module: website_slides
@@ -5695,6 +5693,20 @@ msgstr "خطای ناشناخته"
 #: code:addons/website_slides/static/src/js/slides_course_enroll_email.js:0
 #, python-format
 msgid "Unknown error, try again."
+msgstr ""
+
+#. module: website_slides
+#. odoo-javascript
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#, python-format
+msgid "Unlisted"
+msgstr ""
+
+#. module: website_slides
+#. odoo-javascript
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#, python-format
+msgid "Unlisted (paid account)"
 msgstr ""
 
 #. module: website_slides
@@ -6532,7 +6544,7 @@ msgstr "ورود"
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid ""
-"mean? The Vimeo \"Private\" privacy setting means it is a video which can be viewed only by the users with the link to it.\n"
+"mean? The Vimeo \"Unlisted\" privacy setting means it is a video which can be viewed only by the users with the link to it.\n"
 "                                    Your video will never come up in the search results nor on your channel."
 msgstr ""
 

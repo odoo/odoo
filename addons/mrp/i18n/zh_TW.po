@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-14 05:51+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
 "Last-Translator: Tony Ng, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -113,11 +113,6 @@ msgstr "%s 下級工單 MO's"
 #, python-format
 msgid "%s cannot be deleted. Try to cancel them before."
 msgstr "無法刪除 %s.請嘗試先將它們取消."
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.view_immediate_production
-msgid "&gt;"
-msgstr "&gt;"
 
 #. module: mrp
 #: model:ir.actions.report,print_report_name:mrp.action_report_bom_structure
@@ -554,6 +549,16 @@ msgid "Add tag for the workcenter"
 msgstr "為工作中心增加標籤"
 
 #. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter_capacity__time_stop
+msgid "Additional time in minutes for the cleaning."
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter_capacity__time_start
+msgid "Additional time in minutes for the setup."
+msgstr ""
+
+#. module: mrp
 #: model:res.groups,name:mrp.group_mrp_manager
 msgid "Administrator"
 msgstr "管理員"
@@ -725,8 +730,8 @@ msgid "Attachment URL"
 msgstr "附件網址"
 
 #. module: mrp
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/mrp/models/mrp_bom.py:0
 #: code:addons/mrp/static/src/components/bom_overview_line/mrp_bom_overview_line.js:0
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
@@ -1022,13 +1027,6 @@ msgstr "BOM結構清單"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 msgid "BoM Type"
 msgstr "BoM類型"
-
-#. module: mrp
-#. odoo-python
-#: code:addons/mrp/models/mrp_bom.py:0
-#, python-format
-msgid "BoM line product %s should not be the same as BoM product."
-msgstr "BoM 產品線產品 %s 不應與 BoM 產品相同."
 
 #. module: mrp
 #: model:product.template,name:mrp.product_product_computer_desk_bolt_product_template
@@ -2484,6 +2482,7 @@ msgstr "已經解除阻塞."
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
+#: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid ""
 "It is not possible to unplan one single Work Order. You should unplan the "
@@ -3055,8 +3054,8 @@ msgid "Minimum Inventory Rule"
 msgstr "最小庫存規則"
 
 #. module: mrp
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
 #: code:addons/mrp/static/src/components/bom_overview_special_line/mrp_bom_overview_special_line.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
@@ -3401,8 +3400,8 @@ msgstr ""
 "                 每個製程都在特定的工作中心完成並具有特定的持續時間."
 
 #. module: mrp
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
 #: code:addons/mrp/static/src/components/bom_overview_display_filter/mrp_bom_overview_display_filter.js:0
 #: code:addons/mrp/static/src/components/bom_overview_special_line/mrp_bom_overview_special_line.xml:0
@@ -4889,6 +4888,7 @@ msgid ""
 msgstr "目前配置不正確，因為會在這些產品之間創建一個循環：%s。"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/stock_orderpoint.py:0
 #, python-format
 msgid "The following replenishment order has been generated"
@@ -5131,16 +5131,6 @@ msgstr "時間追蹤"
 #, python-format
 msgid "Time Tracking: %(user)s"
 msgstr "時間追踪: %(user)s"
-
-#. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_workcenter_capacity__time_stop
-msgid "Additional time in minutes for the cleaning."
-msgstr ""
-
-#. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_workcenter_capacity__time_start
-msgid "Additional time in minutes for the setup."
-msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__time_cycle_manual
@@ -5528,7 +5518,6 @@ msgstr "驗證"
 
 #. module: mrp
 #. odoo-python
-#: code:addons/addons/mrp/wizard/mrp_consumption_warning.py:0
 #: code:addons/mrp/wizard/mrp_consumption_warning.py:0
 #, python-format
 msgid ""

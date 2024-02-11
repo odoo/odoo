@@ -10,7 +10,6 @@
 # Nejc G <nejc@luxim.si>, 2022
 # Boris Kodelja <boris@hbs.si>, 2022
 # Vida Potočnik <vida.potocnik@mentis.si>, 2022
-# Tadej Lupšina <tadej@hbs.si>, 2022
 # Dejan Sraka <dejan.sraka@picolabs.si>, 2023
 # Jasmina Macur <jasmina@hbs.si>, 2023
 # Matjaz Mozetic <m.mozetic@matmoz.si>, 2023
@@ -18,14 +17,15 @@
 # Tomaž Jug <tomaz@editor.si>, 2023
 # Neun Pro, 2023
 # Katja Deržič, 2024
+# Tadej Lupšina <tadej@hbs.si>, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:49+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Katja Deržič, 2024\n"
+"Last-Translator: Tadej Lupšina <tadej@hbs.si>, 2024\n"
 "Language-Team: Slovenian (https://app.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1501,6 +1501,13 @@ msgstr ""
 "Nadaljuj z branjem <i class=\"fa fa-long-arrow-right align-middle ms-1\"/>"
 
 #. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/models/mailing.py:0
+#, python-format
+msgid "Could not retrieve URL: %s"
+msgstr ""
+
+#. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_contact__message_bounce
 #: model:ir.model.fields,help:mass_mailing.field_mailing_contact_subscription__message_bounce
 msgid "Counter of the number of bounced emails for this contact"
@@ -2019,6 +2026,14 @@ msgid "Feedback from %(email)s: %(feedback)s"
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/models/mailing.py:0
+#: code:addons/mass_mailing/models/mailing.py:0
+#, python-format
+msgid "File size exceeds configured maximum (%s bytes)"
+msgstr ""
+
+#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Filter"
 msgstr "Filter"
@@ -2143,6 +2158,11 @@ msgstr "Združi po"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_report_view_search
 msgid "Group By..."
 msgstr "Združi po..."
+
+#. module: mass_mailing
+#: model:ir.model,name:mass_mailing.model_ir_http
+msgid "HTTP Routing"
+msgstr "HTTP usmerjanje"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__has_message
@@ -2287,6 +2307,14 @@ msgstr "Slika - besedilo"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_masonry_block_options
 msgid "Image Text Image"
 msgstr "Slika Besedilo Slika"
+
+#. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/models/mailing.py:0
+#, python-format
+msgid ""
+"Image size excessive, imported images must be smaller than 42 million pixel"
+msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_masonry_block_options
@@ -4554,13 +4582,6 @@ msgstr "Odjavljen"
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_subscription__unsubscription_date
 msgid "Unsubscription Date"
 msgstr "Datum odjave"
-
-#. module: mass_mailing
-#. odoo-python
-#: code:addons/mass_mailing/models/mailing.py:0
-#, python-format
-msgid "Unsupported mass mailing model %s"
-msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe

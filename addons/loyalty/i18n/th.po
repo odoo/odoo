@@ -8,14 +8,15 @@
 # Martin Trigaux, 2022
 # Wichanon Jamwutthipreecha, 2023
 # Rasareeyar Lappiam, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:23+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Rasareeyar Lappiam, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -128,7 +129,6 @@ msgstr "10% สำหรับการสั่งซื้อของคุ�
 
 #. module: loyalty
 #. odoo-python
-#: code:addons/loyalty/models/loyalty_program.py:0
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "2+1 Free"
@@ -885,6 +885,11 @@ msgid "Discount Mode"
 msgstr "โหมดส่วนลด"
 
 #. module: loyalty
+#: model:ir.model.fields,field_description:loyalty.field_loyalty_program__payment_program_discount_product_id
+msgid "Discount Product"
+msgstr "สินค้าลดราคา"
+
+#. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_product_domain
 msgid "Discount Product Domain"
 msgstr "โดเมนผลิตภัณฑ์ส่วนลด"
@@ -905,6 +910,11 @@ msgstr "รหัสส่วนลด"
 #, python-format
 msgid "Discount point(s)"
 msgstr "คะแนนส่วนลด"
+
+#. module: loyalty
+#: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
+msgid "Discount product"
+msgstr "สินค้าลดราคา"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_product_category_id
@@ -1078,16 +1088,16 @@ msgid "Generate Gift Cards"
 msgstr "สร้างบัตรของขวัญ"
 
 #. module: loyalty
-#: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
-msgid "Generate eWallet"
-msgstr "สร้าง eWallet"
-
-#. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Generate and share unique coupons with your customers."
 msgstr ""
+
+#. module: loyalty
+#: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
+msgid "Generate eWallet"
+msgstr "สร้าง eWallet"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_gift_ewallet_view_form
@@ -1512,7 +1522,7 @@ msgid "Product Variant"
 msgstr "ตัวแปรสินค้า"
 
 #. module: loyalty
-#: model:ir.model.fields,help:loyalty.field_loyalty_program__discount_product_id
+#: model:ir.model.fields,help:loyalty.field_loyalty_program__payment_program_discount_product_id
 msgid "Product used in the sales order to apply the discount."
 msgstr "สินค้าที่ใช้ในคำสั่งขายเพื่อใช้ส่วนลด"
 
@@ -1564,13 +1574,6 @@ msgstr "ทริกเกอร์โปรแกรม"
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
-msgid "Promotion Program"
-msgstr "โปรแกรมส่งเสริมการขาย"
-
-#. module: loyalty
-#. odoo-python
-#: code:addons/loyalty/models/loyalty_program.py:0
-#, python-format
 msgid "Promo point(s)"
 msgstr "คะแนนส่งเสริมการขาย"
 
@@ -1581,6 +1584,13 @@ msgstr "คะแนนส่งเสริมการขาย"
 #, python-format
 msgid "Promos"
 msgstr "โปรโมชั่น"
+
+#. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/models/loyalty_program.py:0
+#, python-format
+msgid "Promotion Program"
+msgstr "โปรแกรมส่งเสริมการขาย"
 
 #. module: loyalty
 #. odoo-python

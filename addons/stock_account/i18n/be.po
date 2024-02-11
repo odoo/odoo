@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:49+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
 "Last-Translator: Ivan Shakh, 2024\n"
 "Language-Team: Belarusian (https://app.transifex.com/odoo/teams/41243/be/)\n"
@@ -366,7 +366,6 @@ msgstr ""
 
 #. module: stock_account
 #. odoo-python
-#: code:addons/stock_account/__init__.py:0
 #: code:addons/stock_account/__init__.py:0
 #: code:addons/stock_account/models/account_chart_template.py:0
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_valuation
@@ -770,6 +769,15 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
+#, python-format
+msgid ""
+"The value of a stock valuation layer cannot be negative. Landed cost could "
+"be use to correct a specific transfer."
+msgstr ""
+
+#. module: stock_account
 #: model_terms:ir.actions.act_window,help:stock_account.stock_valuation_layer_action
 #: model_terms:ir.actions.act_window,help:stock_account.stock_valuation_layer_report_action
 msgid ""
@@ -1019,11 +1027,4 @@ msgstr ""
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
 msgid "locations"
-msgstr ""
-
-#. module: stock_account
-#: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
-msgid ""
-"'The value of a stock valuation layer cannot be negative. Landed cost could "
-"be use to correct a specific transfer."
 msgstr ""

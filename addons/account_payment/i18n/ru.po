@@ -13,14 +13,15 @@
 # Martin Trigaux, 2022
 # Сергей Шебанин <sergey@shebanin.ru>, 2022
 # ILMIR <karamov@it-projects.info>, 2023
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-02 10:33+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: ILMIR <karamov@it-projects.info>, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -137,13 +138,16 @@ msgid ""
 "                        Wait a moment for it to be processed. If the refund is still pending in a\n"
 "                        few minutes, please check your payment provider configuration."
 msgstr ""
+"<strong>Внимание!</strong> По данному платежу ожидается возврат средств.\n"
+"                        Подождите немного, пока он будет обработан. Если через\n"
+"                        через несколько минут, проверьте конфигурацию вашего платежного провайдера."
 
 #. module: account_payment
 #. odoo-python
 #: code:addons/account_payment/models/account_payment.py:0
 #, python-format
 msgid "A payment transaction with reference %s already exists."
-msgstr ""
+msgstr "Платежная операция с ссылкой %s уже существует."
 
 #. module: account_payment
 #. odoo-python
@@ -155,14 +159,14 @@ msgstr "Для создания новой платежной операции �
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__amount_available_for_refund
 msgid "Amount Available For Refund"
-msgstr ""
+msgstr "Сумма, доступная для возврата"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_bank_statement_line__amount_paid
 #: model:ir.model.fields,field_description:account_payment.field_account_move__amount_paid
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__amount_paid
 msgid "Amount paid"
-msgstr ""
+msgstr "Уплаченные суммы"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
@@ -226,17 +230,17 @@ msgstr "Выполнено, ваш онлайн-платеж успешно об
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_link_wizard
 msgid "Generate Sales Payment Link"
-msgstr ""
+msgstr "Ссылка для оплаты продаж"
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_invoice_order_generate_link
 msgid "Generate a Payment Link"
-msgstr ""
+msgstr "Создайте ссылку для оплаты"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__has_pending_refund
 msgid "Has a pending refund"
-msgstr ""
+msgstr "Имеет задолженность по возврату денег"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__id
@@ -249,6 +253,8 @@ msgid ""
 "In test mode, a fake payment is processed through a test payment interface.\n"
 "This mode is advised when setting up the provider."
 msgstr ""
+"В тестовом режиме через тестовый платежный интерфейс обрабатывается фальшивый платеж.\n"
+"Этот режим рекомендуется использовать при настройке провайдера."
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_transaction_form
@@ -296,7 +302,7 @@ msgstr "Последнее обновление"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__amount_available_for_refund
 msgid "Maximum Refund Allowed"
-msgstr ""
+msgstr "Максимально допустимое возмещение"
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_account_payment__payment_token_id
@@ -304,6 +310,8 @@ msgid ""
 "Note that only tokens from providers allowing to capture the amount are "
 "available."
 msgstr ""
+"Обратите внимание, что доступны только токены от провайдеров, позволяющие "
+"перевести сумму."
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_account_payment_register__payment_token_id
@@ -311,6 +319,8 @@ msgid ""
 "Note that tokens from providers set to only authorize transactions (instead "
 "of capturing the amount) are not available."
 msgstr ""
+"Обратите внимание, что токены провайдеров, настроенные только на авторизацию"
+" транзакций (вместо фиксации суммы), недоступны."
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
@@ -368,7 +378,7 @@ msgstr "Платежные агенты"
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_refund_wizard
 msgid "Payment Refund Wizard"
-msgstr ""
+msgstr "Мастер возврата платежей"
 
 #. module: account_payment
 #: model:ir.ui.menu,name:account_payment.payment_token_menu
@@ -413,12 +423,12 @@ msgstr "Возврат"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__amount_to_refund
 msgid "Refund Amount"
-msgstr ""
+msgstr "Сумма возврата"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__refunded_amount
 msgid "Refunded Amount"
-msgstr ""
+msgstr "Сумма возмещения"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.view_account_payment_form_inherit_payment
@@ -428,7 +438,7 @@ msgstr "Возвраты"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__refunds_count
 msgid "Refunds Count"
-msgstr ""
+msgstr "Подсчет возвратов"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_payment_register
@@ -438,12 +448,12 @@ msgstr "Регистрация Платежа"
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.view_account_journal_form
 msgid "SETUP"
-msgstr ""
+msgstr "УСТАНОВКА"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__payment_token_id
 msgid "Saved Payment Token"
-msgstr ""
+msgstr "Сохраненный токен платежа"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_register__payment_token_id
@@ -453,7 +463,7 @@ msgstr "Сохраненный токен платежа"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__source_payment_id
 msgid "Source Payment"
-msgstr ""
+msgstr "Оплата за источник"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_method_line__payment_provider_state
@@ -464,14 +474,14 @@ msgstr "Статус"
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__suitable_payment_token_ids
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_register__suitable_payment_token_ids
 msgid "Suitable Payment Token"
-msgstr ""
+msgstr "Подходящий платежный токен"
 
 #. module: account_payment
 #. odoo-python
 #: code:addons/account_payment/controllers/payment.py:0
 #, python-format
 msgid "The access token is invalid."
-msgstr ""
+msgstr "Маркер доступа недействителен."
 
 #. module: account_payment
 #. odoo-python
@@ -480,11 +490,12 @@ msgstr ""
 msgid ""
 "The amount to be refunded must be positive and cannot be superior to %s."
 msgstr ""
+"Возвращаемая сумма должна быть положительной и не может быть больше %s."
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_payment_provider__journal_id
 msgid "The journal in which the successful transactions are posted."
-msgstr ""
+msgstr "Журнал, в котором публикуются успешные операции."
 
 #. module: account_payment
 #. odoo-python
@@ -494,6 +505,7 @@ msgid ""
 "The payment related to the transaction with reference %(ref)s has been "
 "posted: %(link)s"
 msgstr ""
+"Платеж, связанный с транзакцией со ссылкой %(ref)s, был проведен: %(link)s"
 
 #. module: account_payment
 #. odoo-python
@@ -501,12 +513,12 @@ msgstr ""
 #: code:addons/account_payment/controllers/payment.py:0
 #, python-format
 msgid "The provided parameters are invalid."
-msgstr ""
+msgstr "Указанные параметры недопустимы."
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_account_payment__source_payment_id
 msgid "The source payment of related refund payments"
-msgstr ""
+msgstr "Оплата источника соответствующих платежей по возврату"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
@@ -538,6 +550,15 @@ msgstr ""
 "идентификатор кредитной карты."
 
 #. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/models/payment_provider.py:0
+#, python-format
+msgid ""
+"To uninstall this module, please remove first the corresponding payment "
+"method line in the incoming payments tab defined on the bank journal."
+msgstr ""
+
+#. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_bank_statement_line__transaction_ids
 #: model:ir.model.fields,field_description:account_payment.field_account_move__transaction_ids
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__transaction_ids
@@ -547,13 +568,13 @@ msgstr "Транзакции"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__support_refund
 msgid "Type of Refund Supported"
-msgstr ""
+msgstr "Тип поддерживаемого возмещения"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__use_electronic_payment_method
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_register__use_electronic_payment_method
 msgid "Use Electronic Payment Method"
-msgstr ""
+msgstr "Используйте электронный способ оплаты"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
@@ -562,12 +583,14 @@ msgstr "Пустая транзакция"
 
 #. module: account_payment
 #. odoo-python
-#: code:addons/account_payment/models/account_journal.py:0
+#: code:addons/account_payment/models/account_payment_method_line.py:0
 #, python-format
 msgid ""
 "You can't delete a payment method that is linked to a provider in the enabled or test state.\n"
-"Linked provider(s): %s"
+"Linked providers(s): %s"
 msgstr ""
+"Вы не можете удалить метод оплаты, связанный с провайдером, находящимся во включенном или тестовом состоянии.\n"
+"Связанные провайдеры (ы): %s"
 
 #. module: account_payment
 #. odoo-python
@@ -577,3 +600,5 @@ msgid ""
 "You must first deactivate a payment provider before deleting its journal.\n"
 "Linked providers: %s"
 msgstr ""
+"Перед удалением журнала необходимо сначала деактивировать провайдера платежей.\n"
+"Связанные провайдеры: %s"

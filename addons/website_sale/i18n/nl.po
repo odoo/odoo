@@ -6,16 +6,16 @@
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2022
 # Martin Trigaux, 2022
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
-# Wil Odoo, 2023
 # Jolien De Paepe, 2023
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:22+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:57+0000\n"
-"Last-Translator: Jolien De Paepe, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -447,6 +447,11 @@ msgstr ""
 "                                                    <span class=\"fa fa-chevron-right\"/>"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
+msgid "<span>Quantity</span>"
+msgstr "<span>Aantal</span>"
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
 msgid ""
 "<span>Sign In</span>\n"
@@ -477,11 +482,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
 msgid "<span>Video Preview</span>"
 msgstr "<span>Video-voorbeeld</span>"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form_web_terms
-msgid "<strong class=\"align-top\">URL: </strong>"
-msgstr "<strong class=\"align-top\">URL: </strong>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.suggested_products_list
@@ -645,8 +645,8 @@ msgid "Abandoned Cart"
 msgstr "Achtergelaten winkelmandje"
 
 #. module: website_sale
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/website_sale/models/crm_team.py:0
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #: model:ir.actions.act_window,name:website_sale.action_view_abandoned_tree
@@ -1214,17 +1214,6 @@ msgstr ""
 #: code:addons/website_sale/controllers/main.py:0
 #, python-format
 msgid ""
-"Changing your name is not allowed once invoices have been issued for your "
-"account. Please contact us directly for this operation."
-msgstr ""
-"Het wijzigen van je naam is niet toegestaan zodra facturen zijn uitgegeven voor je account. \n"
-"Neem direct contact met ons op voor deze bewerking."
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
-#, python-format
-msgid ""
 "Changing your name is not allowed once documents have been issued for your "
 "account. Please contact us directly for this operation."
 msgstr ""
@@ -1577,6 +1566,12 @@ msgid "DHL Express Connector"
 msgstr "DHL Express Connector"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product
+msgid "DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PRODUCTS"
+msgstr ""
+"ZET HIER BOUWBLOKKEN NEER OM ZE BESCHIKBAAR TE MAKEN VOOR ALLE PRODUCTEN"
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Default"
 msgstr "Standaard"
@@ -1585,12 +1580,6 @@ msgstr "Standaard"
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Default (1/1)"
 msgstr "Standaard (1/1)"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product
-msgid "DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PRODUCTS"
-msgstr ""
-"ZET HIER BOUWBLOKKEN NEER OM ZE BESCHIKBAAR TE MAKEN VOOR ALLE PRODUCTEN"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__currency_id
@@ -1835,11 +1824,6 @@ msgid "Edit"
 msgstr "Bewerken"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form_web_terms
-msgid "Edit in Website Builder"
-msgstr "Bewerken in Website Builder"
-
-#. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 #, python-format
@@ -2069,6 +2053,19 @@ msgstr ""
 "hun winkelmandje hebben verlaten"
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid ""
+"If you are ordering for an external person, please place your order via the "
+"backend. If you wish to change your name or email address, please do so in "
+"the account settings or contact your administrator."
+msgstr ""
+"Als je bestelt voor een externe persoon, plaats je bestelling via de back-"
+"end. Indien je je naam of e-mailadres wilt wijzigen, kan je dit doen in de "
+"accountinstellingen of contact opnemen met je administrator."
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__image_1920
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__image_1920
 #: model_terms:ir.ui.view,arch_db:website_sale.product_searchbar_input_snippet_options
@@ -2131,18 +2128,6 @@ msgstr "Direct afrekenen, in plaats van toevoegen aan winkelmandje"
 
 #. module: website_sale
 #. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
-#, python-format
-msgid ""
-"If you are ordering for an external person, please place your order via the "
-"backend. If you wish to change your name or email address, please do so in "
-"the account settings or contact your administrator."
-msgstr ""
-"Als je bestelt voor een externe persoon, plaats je bestelling via de back-"
-"end. Indien je je naam of e-mailadres wilt wijzigen, kan je dit doen in de "
-"accountinstellingen of contact opnemen met je administrator."
-
-#. module: website_sale
 #: code:addons/website_sale/controllers/main.py:0
 #, python-format
 msgid "Invalid Email! Please enter a valid email address."
@@ -3207,7 +3192,6 @@ msgstr "Hvh:"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #: code:addons/website_sale/static/src/xml/website_sale_reorder_modal.xml:0
-#: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_summary
 #, python-format
 msgid "Quantity"
@@ -3819,11 +3803,6 @@ msgid "Suggested accessories in the eCommerce cart"
 msgstr "Voorgestelde accessoires in het E-commerce-winkelmandje"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "VAT"
-msgstr "BTW"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Tag"
 msgstr "Label"
@@ -4182,6 +4161,11 @@ msgstr ""
 "zijn ingevoerd"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid "VAT"
+msgstr "BTW"
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_add_to_cart_options
 msgid "Variant"
 msgstr "Variant"
@@ -4523,11 +4507,6 @@ msgstr "Je vorige winkelmandje is al voltooid."
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Zip Code"
 msgstr "Postcode"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.add_grid_or_list_option
-msgid "border-primary"
-msgstr "grens-primair"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form

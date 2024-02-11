@@ -9,14 +9,15 @@
 # Niyas Raphy, 2022
 # Alaa Jehto <alaa.jehto@outlook.com>, 2023
 # Malaz Abuidris <msea@odoo.com>, 2023
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:24+0000\n"
+"POT-Creation-Date: 2024-02-06 13:32+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -119,6 +120,22 @@ msgstr ""
 "<small class=\"form-text text-muted\">لا يسمح بتغيير اسم شركتك أو رقم ضريبة "
 "القيمة المضافة بمجرد أن يتم إصدار مستند (مستندات) لحسابك. <br/>يرجى التواصل "
 "معنا مباشرة لهذه العملية.</small> "
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.pager
+msgid ""
+"<span class=\"fa fa-chevron-left\" role=\"img\" aria-label=\"Previous\" "
+"title=\"Previous\"/>"
+msgstr ""
+"<span class=\"fa fa-chevron-left\" role=\"img\" aria-label=\"Previous\" "
+"title=\"السابق \"/>"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.pager
+msgid "<span class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\" title=\"Next\"/>"
+msgstr ""
+"<span class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\" "
+"title=\"التالي \"/>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
@@ -363,13 +380,6 @@ msgstr "تمت إضافته في "
 #: model:ir.model.fields.selection,name:portal.selection__portal_wizard_user__email_state__exist
 msgid "Already Registered"
 msgstr "مسجل بالفعل"
-
-#. module: portal
-#. odoo-python
-#: code:addons/portal/controllers/mail.py:0
-#, python-format
-msgid "An access token must be provided for each attachment."
-msgstr "يجب تقديم رمز وصول لكل مرفق. "
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -891,7 +901,6 @@ msgstr "كلمة السر الجديدة: "
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
-#: model_terms:ir.ui.view,arch_db:portal.pager
 #, python-format
 msgid "Next"
 msgstr "التالي"
@@ -994,11 +1003,6 @@ msgstr "البوابة: دعوة المستخدم "
 #: model_terms:ir.ui.view,arch_db:portal.portal_record_sidebar
 msgid "Powered by"
 msgstr "مشغل بواسطة "
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.pager
-msgid "Prev"
-msgstr "السابق"
 
 #. module: portal
 #. odoo-javascript
@@ -1173,14 +1177,6 @@ msgstr "لا يمكن إزالة المرفق %s لأنه مرتبط برسال�
 msgid ""
 "The attachment %s cannot be removed because it is not in a pending state."
 msgstr "لا يمكن إزالة المرفق %s لأن حالته معلّقة. "
-
-#. module: portal
-#. odoo-python
-#: code:addons/portal/controllers/mail.py:0
-#, python-format
-msgid ""
-"The attachment %s does not exist or you do not have the rights to access it."
-msgstr "المرفق %s غير موجود أو إنك لا تملك حق الوصول إليه. "
 
 #. module: portal
 #. odoo-python

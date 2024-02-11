@@ -8,16 +8,16 @@
 # Andy Yiu, 2023
 # Martin Trigaux, 2023
 # Ryoko Tsuda <ryoko@quartile.co>, 2023
-# Junko Augias, 2024
 # Wil Odoo, 2024
+# Junko Augias, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-26 14:21+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Junko Augias, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -346,7 +346,7 @@ msgstr "添付"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__attachment_ids
 msgid "Attachments of expenses"
-msgstr ""
+msgstr "経費の添付"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__bank_journal_id
@@ -473,7 +473,7 @@ msgstr "報告を作成"
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_account
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_all
 msgid "Create a new expense report"
-msgstr "経費報告を新規作成してください"
+msgstr "経費報告を新規作成"
 
 #. module: hr_expense
 #. odoo-javascript
@@ -689,6 +689,7 @@ msgid ""
 msgstr "名前を入力し、カテゴリを選択し、経費の金額を設定します。"
 
 #. module: hr_expense
+#: model:account.journal,name:hr_expense.hr_expense_account_journal
 #: model:ir.model,name:hr_expense.model_hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_account_move_line__expense_id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_employee__expense_manager_id
@@ -1292,6 +1293,12 @@ msgstr ""
 #, python-format
 msgid "New Expense Reports"
 msgstr "新規経費レポート"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_calendar_event_id
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "次の活動カレンダーイベント"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_date_deadline

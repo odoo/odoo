@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-15 10:57+0000\n"
+"POT-Creation-Date: 2024-02-06 13:32+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
 "Last-Translator: Rita Bastos, 2024\n"
 "Language-Team: Portuguese (https://app.transifex.com/odoo/teams/41243/pt/)\n"
@@ -144,6 +144,7 @@ msgid ""
 msgstr ""
 
 #. module: sale_timesheet
+#: model:account.analytic.account,name:sale_timesheet.account_analytic_account_project_support
 #: model:project.project,name:sale_timesheet.project_support
 msgid "After-Sales Services"
 msgstr ""
@@ -344,8 +345,8 @@ msgid "Create SO from project"
 msgstr ""
 
 #. module: sale_timesheet
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/sale_timesheet/models/project.py:0
 #: code:addons/sale_timesheet/static/src/xml/sale_project_templates.xml:0
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_create_sale_order_view_form
@@ -642,6 +643,13 @@ msgid "Junior Architect (Invoice on Timesheets)"
 msgstr ""
 
 #. module: sale_timesheet
+#: model_terms:ir.actions.act_window,help:sale_timesheet.timesheet_action_from_sales_order_item
+msgid ""
+"Keep track of your working hours by project every day and bill your "
+"customers for that time."
+msgstr ""
+
+#. module: sale_timesheet
 #: model:product.template,name:sale_timesheet.product_service_deliver_milestones_product_template
 msgid "Kitchen Assembly (Milestones)"
 msgstr ""
@@ -734,14 +742,14 @@ msgid "No activities found"
 msgstr ""
 
 #. module: sale_timesheet
-#: model_terms:ir.actions.act_window,help:sale_timesheet.timesheet_action_from_sales_order_item
-msgid "No activities found. Let's start a new one!"
-msgstr ""
-
-#. module: sale_timesheet
 #: model_terms:ir.actions.act_window,help:sale_timesheet.timesheet_action_billing_report
 msgid "No data yet!"
 msgstr "Sem dados!"
+
+#. module: sale_timesheet
+#: model_terms:ir.actions.act_window,help:sale_timesheet.timesheet_action_from_sales_order_item
+msgid "No timesheets found. Let's create one!"
+msgstr ""
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__non_billable
@@ -1232,17 +1240,6 @@ msgstr ""
 msgid ""
 "This cost overrides the employee's default employee hourly wage in "
 "employee's HR Settings"
-msgstr ""
-
-#. module: sale_timesheet
-#: model_terms:sale.order,website_description:sale_timesheet.sale_order_1
-#: model_terms:sale.order,website_description:sale_timesheet.sale_order_2
-#: model_terms:sale.order,website_description:sale_timesheet.sale_order_3
-msgid ""
-"This is a <strong>sample quotation template</strong>. You should\n"
-"                                customize it to fit your own needs from the <i>Sales</i>\n"
-"                                application, using the menu: Configuration /\n"
-"                                Quotation Templates."
 msgstr ""
 
 #. module: sale_timesheet

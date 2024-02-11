@@ -18,14 +18,15 @@
 # alenafairy, 2023
 # Диляра Дельтаева <dilya.kz93@gmail.com>, 2023
 # Martin Trigaux, 2023
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-15 09:36+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -673,6 +674,11 @@ msgid "<span class=\"o_stat_text\">Time Off</span>"
 msgstr "<span class=\"o_stat_text\">Отгул</span>"
 
 #. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
+msgid "<span class=\"text-muted\"> to </span>"
+msgstr "<span class=\"text-muted\"> на </span>"
+
+#. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
 msgid "<span class=\"text-muted\">From</span>"
 msgstr "<span class=\"text-muted\">С</span>"
@@ -686,11 +692,6 @@ msgstr "<span class=\"text-muted\">По</span>"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
 msgid "<span class=\"text-muted\">from </span>"
 msgstr "<span class=\"text-muted\">с</span>"
-
-#. module: hr_holidays
-#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
-msgid "<span class=\"text-muted\"> to </span>"
-msgstr ""
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
@@ -2271,7 +2272,7 @@ msgstr ""
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #, python-format
 msgid "Incorrect state for new allocation"
-msgstr ""
+msgstr "Неправильное состояние для нового распределения"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_is_follower
@@ -3926,6 +3927,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_calendar
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_dashboard
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
+#, python-format
 msgid "Time Off Request"
 msgstr "Запрос на отсутствие"
 
@@ -4185,6 +4187,8 @@ msgid ""
 "Try to add some records, or make sure that there is no active filter in the "
 "search bar."
 msgstr ""
+"Попробуйте добавить несколько записей или убедитесь, что в строке поиска нет"
+" активного фильтра."
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__week_day__tue
@@ -4248,6 +4252,13 @@ msgstr "Отпуск без оплаты"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 msgid "Unread Messages"
 msgstr "Есть непрочитанные сообщения"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
+#, python-format
+msgid "Usable:"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_res_users
@@ -4497,6 +4508,8 @@ msgstr "Вы не можете вручную архивировать/раза�
 msgid ""
 "You cannot archive an allocation which is in confirm or validate state."
 msgstr ""
+"Вы не можете архивировать распределение, находящееся в состоянии "
+"подтверждения или проверки."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4792,6 +4805,11 @@ msgstr "взят"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
 msgid "to"
 msgstr "до"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
+msgid "to refuse"
+msgstr "отказываться"
 
 #. module: hr_holidays
 #. odoo-javascript

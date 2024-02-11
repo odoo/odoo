@@ -24,7 +24,6 @@
 # Johan Bergquist <johan.bergquist@netip.se>, 2022
 # Simon S, 2022
 # Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023
-# Martin Trigaux, 2023
 # Daniel Osser <danielosser@gmail.com>, 2023
 # Kristoffer Grundström <lovaren@gmail.com>, 2023
 # Cécile Collart <cco@odoo.com>, 2023
@@ -32,16 +31,18 @@
 # Jakob Krabbe <jakob.krabbe@vertel.se>, 2023
 # Kim Asplund <kim.asplund@gmail.com>, 2023
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2023
-# Lasse L, 2024
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2024
+# Martin Trigaux, 2024
+# Björn Hayer, 2024
+# Lasse L, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-02 10:33+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Chrille Hedberg <hedberg.chrille@gmail.com>, 2024\n"
+"Last-Translator: Lasse L, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -691,11 +692,10 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid ""
-"<span attrs=\"{'invisible': ['|', '|', ('state', '!=', 'draft'), ('name', "
-"'!=', '/'), ('quick_edit_mode', '=', True)]}\">Draft</span>"
+"<span attrs=\"{'invisible': ['|', '|', '|', ('state', '!=', 'draft'), "
+"('name', '!=', '/'), ('posted_before', '=', True), ('quick_edit_mode', '=', "
+"True)]}\">Draft</span>"
 msgstr ""
-"<span attrs=\"{'invisible': ['|', '|', ('state', '!=', 'draft'), ('name', "
-"'!=', '/'), ('quick_edit_mode', '=', True)]}\">Utkast</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_send_wizard_form
@@ -5208,8 +5208,8 @@ msgid "Data consistency check"
 msgstr "Kontroll av datakonsistens"
 
 #. module: account
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/account/controllers/portal.py:0
 #: code:addons/account/static/src/components/account_resequence/account_resequence.xml:0
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__date
@@ -5336,6 +5336,11 @@ msgstr "Debitera journalposter som är matchade med denna journalpost."
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__12
 msgid "December"
 msgstr "december"
+
+#. module: account
+#: model:ir.model,name:account.model_decimal_precision
+msgid "Decimal Precision"
+msgstr "Decimalprecision"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__decimal_separator
@@ -5525,6 +5530,26 @@ msgstr "Leveransadress"
 #: model:ir.model.fields,help:account.field_account_payment__partner_shipping_id
 msgid "Delivery address for current invoice."
 msgstr "Leveransadress för aktuell faktura."
+
+#. module: account
+#: model:account.account.tag,name:account.demo_ceo_wages_account
+msgid "Demo CEO Wages Account"
+msgstr "Demo Lönekonto för VD"
+
+#. module: account
+#: model:account.account.tag,name:account.demo_capital_account
+msgid "Demo Capital Account"
+msgstr "Demo kapitalkonto"
+
+#. module: account
+#: model:account.account.tag,name:account.demo_sale_of_land_account
+msgid "Demo Sale of Land Account"
+msgstr "Demo Försäljning av mark Konto"
+
+#. module: account
+#: model:account.account.tag,name:account.demo_stock_account
+msgid "Demo Stock Account"
+msgstr "Demo lagerkonto"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__deprecated
@@ -6348,8 +6373,8 @@ msgid "Example Preview"
 msgstr "Exempel på förhandsgranskning"
 
 #. module: account
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #: code:addons/account/static/src/components/account_payment_field/account_payment.xml:0
 #: code:addons/account/static/src/xml/legacy_account_payment.xml:0
@@ -6379,8 +6404,8 @@ msgid "Expects a Chart of Accounts"
 msgstr "Förväntar sig ett kontoplan"
 
 #. module: account
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/account/static/src/components/account_type_selection/account_type_selection.js:0
 #: code:addons/account/static/src/js/legacy_account_selection.js:0
 #: code:addons/account/wizard/accrued_orders.py:0
@@ -6528,6 +6553,11 @@ msgstr "Finansjournal"
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line_template__tag_ids
 msgid "Financial Tags"
 msgstr "Finansiella taggar"
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_financing
+msgid "Financing Activities"
+msgstr "Finansieringsverksamhet"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_partner_mapping__payment_ref_regex
@@ -7898,6 +7928,11 @@ msgid "Invert Tags"
 msgstr "Invertera taggar"
 
 #. module: account
+#: model:account.account.tag,name:account.account_tag_investing
+msgid "Investing & Extraordinary Activities"
+msgstr "Investeringar och extraordinära aktiviteter"
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #: model:ir.model.fields,field_description:account.field_res_partner__invoice_warn
@@ -8370,8 +8405,8 @@ msgid "Journal Currency"
 msgstr "Journalvaluta"
 
 #. module: account
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 #: code:addons/account/static/src/components/journal_dashboard_activity/journal_dashboard_activity.js:0
 #: code:addons/account/static/src/js/legacy_mail_activity.js:0
@@ -8391,8 +8426,8 @@ msgid "Journal Entries by Date"
 msgstr "Bokföringsposter efter datum"
 
 #. module: account
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #: code:addons/account/models/account_payment.py:0
 #: code:addons/account/static/src/components/journal_dashboard_activity/journal_dashboard_activity.js:0
@@ -9705,6 +9740,16 @@ msgid "Newest first"
 msgstr "Nyaste först"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_journal__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_move__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_payment__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Nästa Kalenderhändelse för Aktivitet"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_date_deadline
 #: model:ir.model.fields,field_description:account.field_account_journal__activity_date_deadline
 #: model:ir.model.fields,field_description:account.field_account_move__activity_date_deadline
@@ -10111,6 +10156,11 @@ msgid "Off-Balance Sheet"
 msgstr "Utanför balansräkningen"
 
 #. module: account
+#: model:account.account.tag,name:account.demo_office_furniture_account
+msgid "Office Furniture"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__matching_order__old_first
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_template__matching_order__old_first
 msgid "Oldest first"
@@ -10300,6 +10350,11 @@ msgstr "Öppningsdrag bokfört"
 #, python-format
 msgid "Opening balance"
 msgstr "Ingående saldo"
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_operating
+msgid "Operating Activities"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form

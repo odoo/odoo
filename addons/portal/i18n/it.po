@@ -8,14 +8,15 @@
 # Alessandro Uffreduzzi, 2023
 # Marianna Ciofani, 2023
 # Sergio Zanchetta <primes2h@gmail.com>, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:24+0000\n"
+"POT-Creation-Date: 2024-02-06 13:32+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -121,6 +122,20 @@ msgstr ""
 "<small class=\"form-text text-muted\">Non è consentito cambiare il nome "
 "dell'azienda o il numero di partita IVA dopo l'emissione dei documenti per "
 "il conto. <br/>Per questa operazione contattarci direttamente.</small>"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.pager
+msgid ""
+"<span class=\"fa fa-chevron-left\" role=\"img\" aria-label=\"Previous\" "
+"title=\"Previous\"/>"
+msgstr ""
+"<span class=\"fa fa-chevron-left\" role=\"img\" aria-label=\"Previous\" "
+"title=\"Previous\"/>"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.pager
+msgid "<span class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\" title=\"Next\"/>"
+msgstr "<span class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\" title=\"Next\"/>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
@@ -365,13 +380,6 @@ msgstr "Aggiunto il"
 #: model:ir.model.fields.selection,name:portal.selection__portal_wizard_user__email_state__exist
 msgid "Already Registered"
 msgstr "Già registrato"
-
-#. module: portal
-#. odoo-python
-#: code:addons/portal/controllers/mail.py:0
-#, python-format
-msgid "An access token must be provided for each attachment."
-msgstr "Per ciascun allegato deve essere fornito un token di accesso."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -893,7 +901,6 @@ msgstr "Nuova password:"
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
-#: model_terms:ir.ui.view,arch_db:portal.pager
 #, python-format
 msgid "Next"
 msgstr "Successivo"
@@ -1000,11 +1007,6 @@ msgstr "Portale: invito utente"
 #: model_terms:ir.ui.view,arch_db:portal.portal_record_sidebar
 msgid "Powered by"
 msgstr "Fornito da"
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.pager
-msgid "Prev"
-msgstr "Prec"
 
 #. module: portal
 #. odoo-javascript
@@ -1183,14 +1185,6 @@ msgid ""
 "The attachment %s cannot be removed because it is not in a pending state."
 msgstr ""
 "Impossibile rimuovere l'allegato %s, non si trova in uno stato in sospeso."
-
-#. module: portal
-#. odoo-python
-#: code:addons/portal/controllers/mail.py:0
-#, python-format
-msgid ""
-"The attachment %s does not exist or you do not have the rights to access it."
-msgstr "L'allegato %s non esiste o mancano i diritti di accesso."
 
 #. module: portal
 #. odoo-python

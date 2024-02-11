@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:22+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:57+0000\n"
 "Last-Translator: Rasareeyar Lappiam, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
@@ -1505,6 +1505,11 @@ msgid "Average Review"
 msgstr "รีวิวเฉลี่ย"
 
 #. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
+msgid "BUILDING BLOCKS DROPPED HERE WILL BE SHOWN ACROSS ALL LESSONS"
+msgstr "บล็อกสำเร็จรูปที่วางอยู่ที่นี่จะแสดงทั่วทั้งบทเรียน"
+
+#. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/slides_category_add.js:0
 #: code:addons/website_slides/static/src/js/slides_course_tag_add.js:0
@@ -2848,8 +2853,8 @@ msgid "File Name"
 msgstr "ชื่อไฟล์"
 
 #. module: website_slides
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/website_slides/controllers/main.py:0
 #: code:addons/website_slides/static/src/js/slides_upload.js:0
 #, python-format
@@ -4511,14 +4516,6 @@ msgid "Preview"
 msgstr "ตัวอย่าง"
 
 #. module: website_slides
-#. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
-#, python-format
-msgid "Private"
-msgstr "ส่วนตัว"
-
-#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_join
 msgid "Private Course"
 msgstr "คอร์สส่วนตัว"
@@ -5644,9 +5641,11 @@ msgstr "สไลด์สามารถทำเครื่องหมาย
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid ""
-"The video link to input here can be obtained by using the 'share' button in "
-"the Vimeo interface."
+"The video link to input here can be obtained by using the 'Share link' "
+"button in the Vimeo interface."
 msgstr ""
+"สามารถรับลิงก์วิดีโอสำหรับป้อนข้อมูลที่นี่ได้โดยใช้ปุ่ม 'แชร์ลิงก์' "
+"ในอินเทอร์เฟซ Vimeo"
 
 #. module: website_slides
 #: model:ir.model.constraint,message:website_slides.constraint_slide_slide_partner_check_vote
@@ -5655,17 +5654,6 @@ msgstr "คะแนนเสียงจะต้องเป็น 1, 0 หร
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
-#, python-format
-msgid ""
-"The video link to input here can be obtained by using the 'Share link' "
-"button in the Vimeo interface."
-msgstr ""
-"สามารถรับลิงก์วิดีโอสำหรับป้อนข้อมูลที่นี่ได้โดยใช้ปุ่ม 'แชร์ลิงก์' "
-"ในอินเทอร์เฟซ Vimeo"
-
-#. module: website_slides
-#. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "Then, go into the file permissions and set it as \"Anyone with the link\"."
@@ -5924,14 +5912,14 @@ msgid "Unknown error, try again."
 msgstr "ข้อผิดพลาดที่ไม่รู้จัก โปรดลองอีกครั้ง"
 
 #. module: website_slides
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "Unlisted"
 msgstr "ไม่อยู่ในรายการ"
 
 #. module: website_slides
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "Unlisted (paid account)"
@@ -6805,15 +6793,6 @@ msgstr "ล็อกอิน"
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid ""
-"mean? The Vimeo \"Private\" privacy setting means it is a video which can be viewed only by the users with the link to it.\n"
-"                                    Your video will never come up in the search results nor on your channel."
-msgstr ""
-
-#. module: website_slides
-#. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
-#, python-format
-msgid ""
 "mean? The Vimeo \"Unlisted\" privacy setting means it is a video which can be viewed only by the users with the link to it.\n"
 "                                    Your video will never come up in the search results nor on your channel."
 msgstr ""
@@ -6821,7 +6800,7 @@ msgstr ""
 "                                    วิดีโอของคุณจะไม่แสดงในผลการค้นหาหรือในช่องของคุณ"
 
 #. module: website_slides
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid ""

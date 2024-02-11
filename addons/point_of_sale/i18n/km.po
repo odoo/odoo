@@ -7,21 +7,37 @@
 # Samkhann Seang <seangsamkhann@gmail.com>, 2023
 # Sengtha Chay <sengtha@gmail.com>, 2023
 # Chan Nath <channath@gmail.com>, 2023
-# Lux Sok <sok.lux@gmail.com>, 2023
+# Lux Sok <sok.lux@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-04 08:47+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Lux Sok <sok.lux@gmail.com>, 2023\n"
+"Last-Translator: Lux Sok <sok.lux@gmail.com>, 2024\n"
 "Language-Team: Khmer (https://app.transifex.com/odoo/teams/41243/km/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: km\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid " - closing"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid " - opening"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -979,6 +995,13 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
+#, python-format
+msgid "Cannot modify a tip"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "Cannot return change without a cash payment method"
@@ -1260,6 +1283,13 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_close_session_wizard
 msgid "Close Session Wizard"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/models.js:0
+#, python-format
+msgid "Close anyway"
 msgstr ""
 
 #. module: point_of_sale
@@ -1728,9 +1758,18 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
+#. odoo-python
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
+#: code:addons/point_of_sale/wizard/pos_payment.py:0
 #, python-format
 msgid "Customer is required for %s payment method."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
+#, python-format
+msgid "Customer tips, cannot be modified directly"
 msgstr ""
 
 #. module: point_of_sale
@@ -2029,6 +2068,13 @@ msgid "Display Name"
 msgstr "ឈ្មោះសំរាប់បង្ហាញ"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/models.js:0
+#, python-format
+msgid "Do not close"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/digest.py:0
 #, python-format
@@ -2051,6 +2097,13 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/ControlButtons/InvoiceButton.js:0
 #, python-format
 msgid "Do you want to open the customer list to select customer?"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/Misc/AbstractReceiptScreen.js:0
+#, python-format
+msgid "Do you want to print using the web printer?"
 msgstr ""
 
 #. module: point_of_sale
@@ -2289,6 +2342,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__fiscal_position_id
 msgid "Fiscal Position"
 msgstr "ស្ថានភាពសារពើពន្ធ"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
+#, python-format
+msgid "Fiscal Position not found"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__fiscal_position_ids
@@ -3121,6 +3181,13 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/xml/Screens/ReceiptScreen/OrderReceipt.xml:0
+#, python-format
+msgid "Lot Number"
+msgstr "លេខឡូតិ៍។"
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/OrderWidget.js:0
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
 #, python-format
@@ -3356,6 +3423,11 @@ msgid "Newspaper Rack"
 msgstr ""
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_date_deadline
 msgid "Next Activity Deadline"
 msgstr "កាលកំណត់សកម្មភាពបន្ទាប់"
@@ -3573,7 +3645,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/js/Chrome.js:0
+#: code:addons/point_of_sale/static/src/js/models.js:0
 #, python-format
 msgid "Offline Orders"
 msgstr ""
@@ -3621,9 +3693,23 @@ msgid ""
 msgstr ""
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_config.py:0
+#, python-format
+msgid "Only administrators can edit receipt headers and footers"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__only_round_cash_method
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_only_round_cash_method
 msgid "Only apply rounding on cash"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_payment_method.py:0
+#, python-format
+msgid ""
+"Only journals of type 'Cash' or 'Bank' could be used with payment methods."
 msgstr ""
 
 #. module: point_of_sale
@@ -3848,8 +3934,8 @@ msgid "Orderlines in this field are the lines that refunded this orderline."
 msgstr ""
 
 #. module: point_of_sale
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/DebugWidget.xml:0
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/TicketButton.xml:0
@@ -4005,8 +4091,8 @@ msgid "Pay Order"
 msgstr ""
 
 #. module: point_of_sale
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
 #: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreen.xml:0
@@ -4394,11 +4480,20 @@ msgid "PoS Product Category"
 msgstr ""
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid "PoS order %s can not be processed"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_property_form
 msgid "Point Of Sale"
 msgstr ""
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_config_kanban
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__config_id
@@ -4412,6 +4507,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_account_journal_pos_user_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
+#, python-format
 msgid "Point of Sale"
 msgstr "ចំនុច​នៃ​ការ​លក់"
 
@@ -5751,7 +5847,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/js/Chrome.js:0
+#: code:addons/point_of_sale/static/src/js/models.js:0
 #, python-format
 msgid ""
 "Some orders could not be submitted to the server due to configuration "
@@ -5761,7 +5857,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/js/Chrome.js:0
+#: code:addons/point_of_sale/static/src/js/models.js:0
 #, python-format
 msgid ""
 "Some orders could not be submitted to the server due to internet connection "
@@ -6089,6 +6185,17 @@ msgid ""
 msgstr ""
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid ""
+"The Point of Sale order with the following reference %s was received by the "
+"Odoo server, but the order processing phase failed.<br/>The datas received "
+"from the point of sale has been saved in the attachments.<br/>Please contact"
+" your support service to assist you on restoring it"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
@@ -6157,6 +6264,15 @@ msgid ""
 msgstr ""
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
+#, python-format
+msgid ""
+"The fiscal position used in the original order is not loaded. Make sure it "
+"is loaded by adding it in the pos configuration."
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
@@ -6195,7 +6311,7 @@ msgstr ""
 #, python-format
 msgid ""
 "The maximum difference allowed is %s.\n"
-"\r\n"
+"\n"
 "                        Please contact your manager to accept the closing difference."
 msgstr ""
 
@@ -7199,14 +7315,6 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "You cannot create a session before the accounting lock date."
-msgstr ""
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/account_bank_statement.py:0
-#, python-format
-msgid ""
-"You cannot delete a bank statement line linked to Point of Sale session."
 msgstr ""
 
 #. module: point_of_sale

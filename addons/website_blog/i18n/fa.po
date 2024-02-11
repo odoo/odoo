@@ -11,14 +11,15 @@
 # Martin Trigaux, 2023
 # Hamed Mohammadi <hamed@dehongi.com>, 2023
 # fardin mardani, 2023
+# Abbas Ebadian, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-11-03 16:41+0000\n"
+"POT-Creation-Date: 2024-02-06 13:32+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: fardin mardani, 2023\n"
+"Last-Translator: Abbas Ebadian, 2024\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,6 +28,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: website_blog
+#. odoo-python
 #: code:addons/website_blog/models/website_blog.py:0
 #, python-format
 msgid "%s (copy)"
@@ -79,7 +81,7 @@ msgid ""
 msgstr ""
 
 #. module: website_blog
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_blog/static/src/js/tours/website_blog.js:0
 #, python-format
 msgid "<b>Publish your blog post</b> to make it visible to your visitors."
@@ -102,7 +104,7 @@ msgid ""
 msgstr ""
 
 #. module: website_blog
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_blog/static/src/js/tours/website_blog.js:0
 #, python-format
 msgid ""
@@ -318,6 +320,7 @@ msgid "All blogs"
 msgstr ""
 
 #. module: website_blog
+#. odoo-python
 #: code:addons/website_blog/models/website_snippet_filter.py:0
 #, python-format
 msgid "Alone in the ocean"
@@ -329,7 +332,7 @@ msgid "Along those lines, how difficult is the set up and break down?"
 msgstr ""
 
 #. module: website_blog
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_blog/static/src/js/website_blog.js:0
 #, python-format
 msgid "Amazing blog article: %s! Check it live: %s"
@@ -435,6 +438,7 @@ msgid "Avatar"
 msgstr "آواتار"
 
 #. module: website_blog
+#. odoo-python
 #: code:addons/website_blog/models/website_snippet_filter.py:0
 #, python-format
 msgid "Awesome hotel rooms"
@@ -490,6 +494,7 @@ msgid "Beyond The Eye"
 msgstr ""
 
 #. module: website_blog
+#. odoo-python
 #: code:addons/website_blog/models/website.py:0
 #: model:ir.model,name:website_blog.model_blog_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__blog_id
@@ -652,14 +657,14 @@ msgid "Children’s’ Facilities"
 msgstr ""
 
 #. module: website_blog
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_blog/static/src/js/tours/website_blog.js:0
 #, python-format
 msgid "Choose an image from the library."
 msgstr "یک عکس از کتابخانه انتخاب کن."
 
 #. module: website_blog
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_blog/static/src/js/tours/website_blog.js:0
 #, python-format
 msgid "Click here to add new content to your website."
@@ -811,14 +816,14 @@ msgid "Edit the 'Filter Results' page header."
 msgstr ""
 
 #. module: website_blog
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_blog/static/src/js/tours/website_blog.js:0
 #, python-format
 msgid "Edit your title, the subtitle is optional."
 msgstr ""
 
 #. module: website_blog
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_blog/static/src/js/tours/website_blog.js:0
 #, python-format
 msgid "Enter your post's title"
@@ -1043,6 +1048,7 @@ msgid "Is Published"
 msgstr "منتشر شده است"
 
 #. module: website_blog
+#. odoo-python
 #: code:addons/website_blog/models/website_snippet_filter.py:0
 #, python-format
 msgid "Islands"
@@ -1086,6 +1092,7 @@ msgid ""
 msgstr ""
 
 #. module: website_blog
+#. odoo-python
 #: code:addons/website_blog/models/website_snippet_filter.py:0
 #, python-format
 msgid "Jungle"
@@ -1102,7 +1109,7 @@ msgid "Know when to look"
 msgstr ""
 
 #. module: website_blog
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_blog/static/src/js/options.js:0
 #, python-format
 msgid "Large"
@@ -1237,7 +1244,7 @@ msgid ""
 msgstr ""
 
 #. module: website_blog
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_blog/static/src/js/options.js:0
 #, python-format
 msgid "Medium"
@@ -1393,7 +1400,7 @@ msgstr "تعداد خطاها"
 #: model:ir.model.fields,help:website_blog.field_blog_blog__message_needaction_counter
 #: model:ir.model.fields,help:website_blog.field_blog_post__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "تعداد پیام هایی که نیاز به اقدام دارند"
 
 #. module: website_blog
 #: model:ir.model.fields,help:website_blog.field_blog_blog__message_has_error_counter
@@ -1413,7 +1420,16 @@ msgid ""
 msgstr ""
 
 #. module: website_blog
-#. openerp-web
+#. odoo-python
+#: code:addons/website_blog/models/ir_qweb_fields.py:0
+#, python-format
+msgid ""
+"On your default language, empty the blog post description and save to get an"
+" automated (translated) summary."
+msgstr ""
+
+#. module: website_blog
+#. odoo-javascript
 #: code:addons/website_blog/static/src/js/tours/website_blog.js:0
 #, python-format
 msgid ""
@@ -1534,6 +1550,11 @@ msgid "Publishing date"
 msgstr "تاریخ انتشار"
 
 #. module: website_blog
+#: model:ir.model,name:website_blog.model_ir_qweb_field
+msgid "Qweb Field"
+msgstr ""
+
+#. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_cover_post
 msgid "Read more"
 msgstr ""
@@ -1581,25 +1602,28 @@ msgid "Sample"
 msgstr "نمونه"
 
 #. module: website_blog
+#. odoo-python
 #: code:addons/website_blog/models/website_snippet_filter.py:0
 #, python-format
 msgid "Satellites"
 msgstr ""
 
 #. module: website_blog
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_blog/static/src/js/tours/website_blog.js:0
 #, python-format
 msgid "Search for an image. (eg: type \"business\")"
 msgstr ""
 
 #. module: website_blog
+#. odoo-python
 #: code:addons/website_blog/models/website_snippet_filter.py:0
 #, python-format
 msgid "Seaside vs mountain side"
 msgstr ""
 
 #. module: website_blog
+#. odoo-python
 #: code:addons/website_blog/models/website_snippet_filter.py:0
 #, python-format
 msgid "Seeing the world from above"
@@ -1611,14 +1635,14 @@ msgid "Select Blog"
 msgstr ""
 
 #. module: website_blog
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_blog/static/src/js/tours/website_blog.js:0
 #, python-format
 msgid "Select the blog you want to add the post to."
 msgstr ""
 
 #. module: website_blog
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_blog/static/src/js/tours/website_blog.js:0
 #, python-format
 msgid "Select this menu item to create a new blog post."
@@ -1647,7 +1671,7 @@ msgid "Separate every keyword with a comma"
 msgstr ""
 
 #. module: website_blog
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_blog/static/src/js/tours/website_blog.js:0
 #, python-format
 msgid "Set a blog post <b>cover</b>."
@@ -1710,6 +1734,7 @@ msgid "Silly-Chico"
 msgstr ""
 
 #. module: website_blog
+#. odoo-python
 #: code:addons/website_blog/models/website_snippet_filter.py:0
 #, python-format
 msgid "Skies"
@@ -1766,12 +1791,14 @@ msgid "Someone famous in <cite title=\"Source Title\">Source Title</cite>"
 msgstr ""
 
 #. module: website_blog
+#. odoo-python
 #: code:addons/website_blog/models/website_snippet_filter.py:0
 #, python-format
 msgid "Spotting the fauna"
 msgstr ""
 
 #. module: website_blog
+#. odoo-python
 #: code:addons/website_blog/models/website_blog.py:0
 #, python-format
 msgid "Start writing here..."
@@ -1848,6 +1875,7 @@ msgid "Tags List"
 msgstr ""
 
 #. module: website_blog
+#. odoo-python
 #: code:addons/website_blog/models/website_snippet_filter.py:0
 #, python-format
 msgid "Taking pictures in the dark"
@@ -2022,14 +2050,14 @@ msgid "This box will not be visible to your visitors"
 msgstr ""
 
 #. module: website_blog
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_blog/static/src/js/options.js:0
 #, python-format
 msgid "This tag already exists"
 msgstr ""
 
 #. module: website_blog
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_blog/static/src/js/options.js:0
 #, python-format
 msgid "Tiny"
@@ -2127,7 +2155,7 @@ msgid "Untitled Post"
 msgstr "پست بدون عنوان"
 
 #. module: website_blog
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_blog/static/src/js/tours/website_blog.js:0
 #, python-format
 msgid "Use this icon to preview your blog post on <b>mobile devices</b>."
@@ -2139,6 +2167,7 @@ msgid "Used in:"
 msgstr "استفاده شده در:"
 
 #. module: website_blog
+#. odoo-python
 #: code:addons/website_blog/models/website_snippet_filter.py:0
 #, python-format
 msgid "Viewpoints"
@@ -2158,6 +2187,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__website_published
 msgid "Visible on current website"
 msgstr "قابل دید در وبسایت حاضر"
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_content
+msgid "WRITE HERE OR DRAG BUILDING BLOCKS"
+msgstr ""
 
 #. module: website_blog
 #: model:ir.model,name:website_blog.model_website
@@ -2237,6 +2271,7 @@ msgid ""
 msgstr ""
 
 #. module: website_blog
+#. odoo-python
 #: code:addons/website_blog/models/website_snippet_filter.py:0
 #, python-format
 msgid "With a View"

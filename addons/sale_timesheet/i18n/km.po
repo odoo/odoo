@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-15 10:57+0000\n"
+"POT-Creation-Date: 2024-02-06 13:32+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
 "Last-Translator: Lux Sok <sok.lux@gmail.com>, 2023\n"
 "Language-Team: Khmer (https://app.transifex.com/odoo/teams/41243/km/)\n"
@@ -139,6 +139,7 @@ msgstr ""
 "- ការផ្លាស់ប្តូរភាគហ៊ុន: បរិមាណនេះបានមកពីការជ្រើសរើសដែលបានបញ្ជាក់\n"
 
 #. module: sale_timesheet
+#: model:account.analytic.account,name:sale_timesheet.account_analytic_account_project_support
 #: model:project.project,name:sale_timesheet.project_support
 msgid "After-Sales Services"
 msgstr ""
@@ -340,8 +341,8 @@ msgid "Create SO from project"
 msgstr ""
 
 #. module: sale_timesheet
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/sale_timesheet/models/project.py:0
 #: code:addons/sale_timesheet/static/src/xml/sale_project_templates.xml:0
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_create_sale_order_view_form
@@ -647,6 +648,13 @@ msgid "Junior Architect (Invoice on Timesheets)"
 msgstr ""
 
 #. module: sale_timesheet
+#: model_terms:ir.actions.act_window,help:sale_timesheet.timesheet_action_from_sales_order_item
+msgid ""
+"Keep track of your working hours by project every day and bill your "
+"customers for that time."
+msgstr ""
+
+#. module: sale_timesheet
 #: model:product.template,name:sale_timesheet.product_service_deliver_milestones_product_template
 msgid "Kitchen Assembly (Milestones)"
 msgstr ""
@@ -742,13 +750,13 @@ msgid "No activities found"
 msgstr ""
 
 #. module: sale_timesheet
-#: model_terms:ir.actions.act_window,help:sale_timesheet.timesheet_action_from_sales_order_item
-msgid "No activities found. Let's start a new one!"
+#: model_terms:ir.actions.act_window,help:sale_timesheet.timesheet_action_billing_report
+msgid "No data yet!"
 msgstr ""
 
 #. module: sale_timesheet
-#: model_terms:ir.actions.act_window,help:sale_timesheet.timesheet_action_billing_report
-msgid "No data yet!"
+#: model_terms:ir.actions.act_window,help:sale_timesheet.timesheet_action_from_sales_order_item
+msgid "No timesheets found. Let's create one!"
 msgstr ""
 
 #. module: sale_timesheet
@@ -1240,21 +1248,6 @@ msgid ""
 "This cost overrides the employee's default employee hourly wage in "
 "employee's HR Settings"
 msgstr ""
-
-#. module: sale_timesheet
-#: model_terms:sale.order,website_description:sale_timesheet.sale_order_1
-#: model_terms:sale.order,website_description:sale_timesheet.sale_order_2
-#: model_terms:sale.order,website_description:sale_timesheet.sale_order_3
-msgid ""
-"This is a <strong>sample quotation template</strong>. You should\n"
-"                                customize it to fit your own needs from the <i>Sales</i>\n"
-"                                application, using the menu: Configuration /\n"
-"                                Quotation Templates."
-msgstr ""
-"នេះគឺ<strong>ជាគំរូសម្រង់គំរូ</strong>។ អ្នក​គួរតែ\n"
-" ប្ដូរតាមបំណងវាឱ្យសមនឹងតម្រូវការផ្ទាល់ខ្លួនរបស់អ្នកពី<i>ការលក់</i>\n"
-" កម្មវិធីដោយប្រើម៉ឺនុយ៖ ការកំណត់រចនាសម្ព័ន្ធ /\n"
-" ពុម្ពសម្រង់។ "
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product__service_upsell_threshold

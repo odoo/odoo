@@ -9,9 +9,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"POT-Creation-Date: 2024-02-06 13:32+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
 "Last-Translator: Abe Manyo, 2023\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
@@ -50,16 +50,11 @@ msgstr "<span class=\"o_stat_text\">Sale</span>"
 #: model_terms:ir.ui.view,arch_db:sale_purchase.sale_order_cancel_view_form
 msgid ""
 "<span id=\"display_invoice_alert\" position=\"after\">\n"
-"                <span id=\"display_purchase_orders_alert\" attrs=\"{'invisible': [('display_purchase_orders_alert', '=', False)]}\">\n"
+"                <span id=\"display_purchase_orders_alert\" attrs=\"{'invisible': [('display_purchase_orders_alert', '=', False)]}\" groups=\"purchase.group_purchase_user\">\n"
 "                    There are active purchase orders linked to this sale order that are not cancelled automatically! <br/>\n"
 "                </span>\n"
 "            </span>"
 msgstr ""
-"<span id=\"display_invoice_alert\" position=\"after\">\n"
-"                <span id=\"display_purchase_orders_alert\" attrs=\"{'invisible': [('display_purchase_orders_alert', '=', False)]}\">\n"
-"                    Terdapat purchase order aktif yang di-link ke sale order ini yang tidak dibatalkan secara otomatis! <br/>\n"
-"                </span>\n"
-"            </span>"
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_sale_on_purchase_cancellation
@@ -117,6 +112,7 @@ msgid "Number of generated purchase items"
 msgstr "Jumlah item purchase yang dibuat"
 
 #. module: sale_purchase
+#. odoo-python
 #: code:addons/sale_purchase/models/sale_order_line.py:0
 #, python-format
 msgid "Ordered quantity decreased!"
@@ -128,6 +124,7 @@ msgid "Origin Sale Item"
 msgstr "Origin Sale Item"
 
 #. module: sale_purchase
+#. odoo-python
 #: code:addons/sale_purchase/models/product_template.py:0
 #, python-format
 msgid ""
@@ -143,6 +140,7 @@ msgid "Product"
 msgstr "Produk"
 
 #. module: sale_purchase
+#. odoo-python
 #: code:addons/sale_purchase/models/product_template.py:0
 #, python-format
 msgid "Product that is not a service can not create RFQ."
@@ -164,6 +162,7 @@ msgid "Purchase Order Line"
 msgstr "Baris Order Pembelian"
 
 #. module: sale_purchase
+#. odoo-python
 #: code:addons/sale_purchase/models/sale_order.py:0
 #, python-format
 msgid "Purchase Order generated from %s"
@@ -204,6 +203,7 @@ msgid "Sales Order Line"
 msgstr "Detail Order Penjualan"
 
 #. module: sale_purchase
+#. odoo-python
 #: code:addons/sale_purchase/models/purchase_order.py:0
 #, python-format
 msgid "Sources Sale Orders %s"
@@ -216,6 +216,7 @@ msgid "Subcontract Service"
 msgstr "Layanan Subkontrak"
 
 #. module: sale_purchase
+#. odoo-python
 #: code:addons/sale_purchase/models/sale_order_line.py:0
 #, python-format
 msgid ""
@@ -226,6 +227,7 @@ msgstr ""
 "untuk produk ini."
 
 #. module: sale_purchase
+#. odoo-python
 #: code:addons/sale_purchase/models/sale_order_line.py:0
 #, python-format
 msgid ""

@@ -13,13 +13,14 @@
 # Jiří Podhorecký, 2022
 # Jakub Smolka, 2023
 # Tomáš Píšek, 2023
+# Vojtech Smolka, 2024
 # Aleš Fiala <f.ales1@seznam.cz>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:24+0000\n"
+"POT-Creation-Date: 2024-02-06 13:32+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
 "Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2024\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
@@ -118,6 +119,18 @@ msgid ""
 "<small class=\"form-text text-muted\">Changing company name or VAT number is"
 " not allowed once document(s) have been issued for your account. <br/>Please"
 " contact us directly for this operation.</small>"
+msgstr ""
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.pager
+msgid ""
+"<span class=\"fa fa-chevron-left\" role=\"img\" aria-label=\"Previous\" "
+"title=\"Previous\"/>"
+msgstr ""
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.pager
+msgid "<span class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\" title=\"Next\"/>"
 msgstr ""
 
 #. module: portal
@@ -288,13 +301,6 @@ msgstr "Přidáno na"
 #: model:ir.model.fields.selection,name:portal.selection__portal_wizard_user__email_state__exist
 msgid "Already Registered"
 msgstr ""
-
-#. module: portal
-#. odoo-python
-#: code:addons/portal/controllers/mail.py:0
-#, python-format
-msgid "An access token must be provided for each attachment."
-msgstr "Pro každou přílohu musí být poskytnut přístupový token."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -807,7 +813,6 @@ msgstr "Nové heslo:"
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
-#: model_terms:ir.ui.view,arch_db:portal.pager
 #, python-format
 msgid "Next"
 msgstr "Další"
@@ -815,7 +820,7 @@ msgstr "Další"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_home
 msgid "No Documents to display"
-msgstr ""
+msgstr "Žádné dokumenty k zobrazení"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__note
@@ -912,11 +917,6 @@ msgid "Powered by"
 msgstr "Běží na"
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.pager
-msgid "Prev"
-msgstr "Předchozí"
-
-#. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
@@ -956,7 +956,7 @@ msgstr "Příjemci"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__resource_ref
 msgid "Related Document"
-msgstr ""
+msgstr "Související dokument"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__res_id
@@ -1088,14 +1088,6 @@ msgid ""
 "The attachment %s cannot be removed because it is not in a pending state."
 msgstr ""
 "The attachment %s nelze odebrat, protože není ve stavu čekající na vyřízení."
-
-#. module: portal
-#. odoo-python
-#: code:addons/portal/controllers/mail.py:0
-#, python-format
-msgid ""
-"The attachment %s does not exist or you do not have the rights to access it."
-msgstr "Příloha %s neexistuje nebo nemáte oprávnění k přístupu."
 
 #. module: portal
 #. odoo-python

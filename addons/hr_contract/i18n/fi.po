@@ -14,7 +14,6 @@
 # Jenni Heikkilä <jenni.heikkila@sv-oy.fi>, 2022
 # Mikko Salmela <salmemik@gmail.com>, 2022
 # Simo Suurla <simo@suurla.fi>, 2022
-# Pekko Tuomisto <pekko.tuomisto@web-veistamo.fi>, 2022
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2022
 # Martin Trigaux, 2022
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023
@@ -23,9 +22,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:22+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
 "Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
@@ -46,6 +45,7 @@ msgid "# Contracts using it"
 msgstr "# Käytössä sopimuksissa"
 
 #. module: hr_contract
+#. odoo-python
 #: code:addons/hr_contract/report/hr_contract_history.py:0
 #, python-format
 msgid "%s's Contracts History"
@@ -142,6 +142,7 @@ msgid "Administrator"
 msgstr "Ylläpitäjä"
 
 #. module: hr_contract
+#. odoo-python
 #: code:addons/hr_contract/models/hr_contract.py:0
 #, python-format
 msgid ""
@@ -207,6 +208,7 @@ msgid "Contract"
 msgstr "Sopimus"
 
 #. module: hr_contract
+#. odoo-python
 #: code:addons/hr_contract/models/hr_contract.py:0
 #, python-format
 msgid ""
@@ -398,6 +400,7 @@ msgid "Departure Wizard"
 msgstr "Lähdön ohjattu toiminto"
 
 #. module: hr_contract
+#. odoo-python
 #: code:addons/hr_contract/wizard/hr_departure_wizard.py:0
 #, python-format
 msgid ""
@@ -545,7 +548,6 @@ msgstr "Ryhmittely"
 #. module: hr_contract
 #: model:ir.actions.server,name:hr_contract.ir_cron_data_contract_update_state_ir_actions_server
 #: model:ir.cron,cron_name:hr_contract.ir_cron_data_contract_update_state
-#: model:ir.cron,name:hr_contract.ir_cron_data_contract_update_state
 msgid "HR Contract: update state"
 msgstr "HR-sopimus: päivitystila"
 
@@ -589,7 +591,6 @@ msgstr "Jos valittu, uudet viestit vaativat huomiotasi."
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__message_has_error
-#: model:ir.model.fields,help:hr_contract.field_hr_contract__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr "Jos valittu, joitakin viestejä ei ole toimitettu."
 
@@ -672,7 +673,7 @@ msgid "New"
 msgstr "Uusi"
 
 #. module: hr_contract
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_contract/static/src/js/hr_contract_history_list_controller.js:0
 #, python-format
 msgid "New Employee"
@@ -803,11 +804,6 @@ msgid "Running Contracts"
 msgstr "Käynnissä olevat sopimukset"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_has_sms_error
-msgid "SMS Delivery error"
-msgstr "Tekstiviestin toimitusvirhe"
-
-#. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "Salary Information"
 msgstr "Palkkatiedot"
@@ -894,6 +890,7 @@ msgstr ""
 "Voit hakea tämän kentän avulla nopeasti."
 
 #. module: hr_contract
+#. odoo-python
 #: code:addons/hr_contract/models/hr_contract.py:0
 #, python-format
 msgid "The contract of %s is about to expire."
@@ -944,16 +941,6 @@ msgstr "Viisumin numero"
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__wage
 msgid "Wage"
 msgstr "Palkka"
-
-#. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__website_message_ids
-msgid "Website Messages"
-msgstr "Verkkosivun ilmoitukset"
-
-#. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_contract__website_message_ids
-msgid "Website communication history"
-msgstr "Verkkosivun viestihistoria"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__permit_no

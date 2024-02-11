@@ -12,18 +12,19 @@
 # Martin Trigaux, 2023
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2023
 # Jiří Podhorecký, 2023
-# Wil Odoo, 2023
 # Jakub Krkoška, 2023
 # Tomáš Píšek, 2023
-# Jakub Smolka, 2023
+# Wil Odoo, 2024
 # Aleš Fiala <f.ales1@seznam.cz>, 2024
+# Jakub Smolka, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2024\n"
+"Last-Translator: Jakub Smolka, 2024\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -45,12 +46,20 @@ msgstr "\" výstraha s"
 
 #. module: website
 #. odoo-python
+#: code:addons/website/controllers/form.py:0
+#, python-format
+msgid "\"%s form submission\" <%s>"
+msgstr "\"%s odeslání formuláře\" <%s>"
+
+#. module: website
+#. odoo-python
 #: code:addons/website/models/website_rewrite.py:0
 #, python-format
 msgid "\"URL from\" can not be empty."
 msgstr "\"URL from\" nemůže být prázdná."
 
 #. module: website
+#. odoo-python
 #: code:addons/website/models/website_rewrite.py:0
 #, python-format
 msgid "\"URL to\" can not be empty."
@@ -512,6 +521,7 @@ msgstr "<b>Přidat</b> vybraný obrázek."
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/js/tours/tour_utils.js:0
 #: code:addons/website/static/src/js/tours/tour_utils.js:0
 #, python-format
 msgid "<b>Click Edit</b> to start designing your homepage."
@@ -1447,6 +1457,13 @@ msgstr "O nás"
 #: model_terms:ir.ui.view,arch_db:website.template_footer_minimalist
 msgid "About us"
 msgstr "O nás"
+
+#. module: website
+#. odoo-python
+#: code:addons/website/models/website.py:0
+#, python-format
+msgid "Access Denied"
+msgstr "Přístup zamítnut"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__access_token
@@ -3820,6 +3837,17 @@ msgid "Display this website when users visit this domain"
 msgstr "Zobrazit tuto webovou stránku, když uživatelé navštíví tuto doménu"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid ""
+"Do not copy/paste code you do not understand, this could put your data at "
+"risk."
+msgstr ""
+"Nekopírujte/nevkládejte kód, kterému nerozumíte, mohlo by to ohrozit vaše "
+"data."
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_cards
 msgid ""
 "Do you need specific information? Our specialists will help you with "
@@ -3841,6 +3869,7 @@ msgid "Do you want to install the \"%s\" App?"
 msgstr "Chcete nainstalovat aplikaci \"%s\"?"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:website.template_footer_links
 msgid "Documentation"
 msgstr "Dokumentace"
@@ -4888,6 +4917,16 @@ msgid "Google Search Console"
 msgstr "vyhledávací konzole Google"
 
 #. module: website
+#. odoo-python
+#: code:addons/website/models/res_config_settings.py:0
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+#, python-format
+msgid ""
+"Google doesn't need to be pinged anymore. It will automatically fetch your "
+"/sitemap.xml."
+msgstr "Google už nemusí být pingován. Automaticky načte váš /sitemap.xml."
+
+#. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__google_search_console
 #: model:ir.model.fields,help:website.field_website__google_search_console
 msgid "Google key, or Enable to access first reply"
@@ -5216,8 +5255,8 @@ msgid "Home page of the current website"
 msgstr ""
 
 #. module: website
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/website/models/website.py:0
 #: code:addons/website/static/src/client_actions/website_preview/website_preview.xml:0
 #: model:ir.model.fields,field_description:website.field_website_page__is_homepage
@@ -5399,6 +5438,17 @@ msgid ""
 msgstr ""
 "Pokud aktuální úpravy zahodíte, všechny neuložené změny budou ztraceny. "
 "Zrušením se vrátíte do režimu úprav."
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_embed_code/options.js:0
+#, python-format
+msgid ""
+"If you need to add analytics or marketing tags, inject code in your <head> "
+"or <body> instead. The option is in the \"Theme\" tab."
+msgstr ""
+"Pokud potřebujete přidat analytické nebo marketingové značky, vložte kód do "
+"vaší <head> nebo <body>. Možnost je v záložce \"Šablona\"."
 
 #. module: website
 #. odoo-javascript
@@ -6549,6 +6599,7 @@ msgid "Men"
 msgstr "Muži"
 
 #. module: website
+#: model:ir.model,name:website.model_ir_ui_menu
 #: model:ir.model.fields,field_description:website.field_website_menu__name
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog
 msgid "Menu"
@@ -7165,7 +7216,7 @@ msgstr "Čísla"
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 #, python-format
 msgid "OR"
-msgstr ""
+msgstr "NEBO"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -8022,6 +8073,11 @@ msgstr "Qweb"
 #: model:ir.model,name:website.model_ir_qweb_field_contact
 msgid "Qweb Field Contact"
 msgstr "Qweb Field Contact"
+
+#. module: website
+#: model:ir.model,name:website.model_ir_qweb_field_html
+msgid "Qweb Field HTML"
+msgstr "QWeb pole HTML"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
@@ -9739,6 +9795,7 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "This font is hosted and served to your visitors by Google servers"
@@ -9813,6 +9870,13 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/systray_items/website_switcher.xml:0
+#, python-format
+msgid "This website does not have a domain configured."
+msgstr "Tato webová stránka nemá nakonfigurovánu doménu."
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/systray_items/website_switcher.js:0
 #, python-format
 msgid ""
@@ -9821,13 +9885,6 @@ msgid ""
 msgstr ""
 "Tato webová stránka nemá nakonfigurovanou doménu. Abyste předešli neočekávanému chování během úprav webu, doporučujeme zavřít (nebo obnovit) ostatní karty v prohlížeči.\n"
 "Pro odstranění tohoto sdělení nastavte prosím doménu ve svých webových nastaveních"
-
-#. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/systray_items/website_switcher.xml:0
-#, python-format
-msgid "This website does not have a domain configured."
-msgstr "Tato webová stránka nemá nakonfigurovánu doménu."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
@@ -11256,13 +11313,6 @@ msgstr ""
 "vyhledávači."
 
 #. module: website
-#. odoo-python
-#: code:addons/website/models/res_config_settings.py:0
-#, python-format
-msgid "You haven't defined your domain"
-msgstr "Nedefinovali jste svou doménu"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
 msgid "You may opt-out of a third-party's use of cookies by visiting the"
 msgstr "Můžete se odhlásit z používání cookies třetí stranou návštěvou"
@@ -11320,6 +11370,17 @@ msgstr ""
 #, python-format
 msgid "Your Email"
 msgstr "Váš e-mail"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_embed_code/000.js:0
+#, python-format
+msgid ""
+"Your Embed Code snippet doesn't have anything to display. Click on Edit to "
+"modify it."
+msgstr ""
+"Váš vložený kódový úryvek nemá nic k zobrazení. Klikněte na Upravit pro jeho"
+" úpravu."
 
 #. module: website
 #. odoo-javascript

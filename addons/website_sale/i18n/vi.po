@@ -10,16 +10,16 @@
 # fanha99 <fanha99@hotmail.com>, 2022
 # Martin Trigaux, 2022
 # Nancy Momoland <thanh.np2502@gmail.com>, 2023
-# Wil Odoo, 2023
 # Thi Huong Nguyen, 2023
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:22+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:57+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -433,6 +433,11 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
+msgid "<span>Quantity</span>"
+msgstr "<span>Số lượng</span>"
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
 msgid ""
 "<span>Sign In</span>\n"
@@ -463,11 +468,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
 msgid "<span>Video Preview</span>"
 msgstr "<span>Video xem trước</span>"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form_web_terms
-msgid "<strong class=\"align-top\">URL: </strong>"
-msgstr "<strong class=\"align-top\">URL: </strong>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.suggested_products_list
@@ -631,8 +631,8 @@ msgid "Abandoned Cart"
 msgstr "Giỏ hàng dang dở"
 
 #. module: website_sale
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/website_sale/models/crm_team.py:0
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #: model:ir.actions.act_window,name:website_sale.action_view_abandoned_tree
@@ -1195,18 +1195,6 @@ msgstr ""
 #: code:addons/website_sale/controllers/main.py:0
 #, python-format
 msgid ""
-"Changing your name is not allowed once invoices have been issued for your "
-"account. Please contact us directly for this operation."
-msgstr ""
-"Không được phép thay đổi tên của bạn khi đã lập hóa đơn hành cho tài khoản "
-"của bạn. Vui lòng liên hệ trực tiếp với chúng tôi để thực hiện hoạt động "
-"này."
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
-#, python-format
-msgid ""
 "Changing your name is not allowed once documents have been issued for your "
 "account. Please contact us directly for this operation."
 msgstr ""
@@ -1559,6 +1547,11 @@ msgid "DHL Express Connector"
 msgstr "Kết nối DHL Express"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product
+msgid "DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PRODUCTS"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Default"
 msgstr "Mặc định"
@@ -1810,11 +1803,6 @@ msgid "Edit"
 msgstr "Sửa"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form_web_terms
-msgid "Edit in Website Builder"
-msgstr "Sửa trong ứng dụng Tạo website "
-
-#. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 #, python-format
@@ -2041,6 +2029,19 @@ msgstr ""
 "hoàn tất giỏ hàng của họ"
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid ""
+"If you are ordering for an external person, please place your order via the "
+"backend. If you wish to change your name or email address, please do so in "
+"the account settings or contact your administrator."
+msgstr ""
+"Nếu bạn đang đặt hàng cho người bên ngoài, vui lòng đặt hàng qua back-end. "
+"Nếu bạn muốn thay đổi tên hoặc địa chỉ email của mình, vui lòng thực hiện "
+"việc đó trong cài đặt tài khoản hoặc liên hệ với quản trị viên."
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__image_1920
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__image_1920
 #: model_terms:ir.ui.view,arch_db:website_sale.product_searchbar_input_snippet_options
@@ -2103,18 +2104,6 @@ msgstr "Thanh toán ngay, thay vì thêm vào giỏ hàng"
 
 #. module: website_sale
 #. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
-#, python-format
-msgid ""
-"If you are ordering for an external person, please place your order via the "
-"backend. If you wish to change your name or email address, please do so in "
-"the account settings or contact your administrator."
-msgstr ""
-"Nếu bạn đang đặt hàng cho người bên ngoài, vui lòng đặt hàng qua back-end. "
-"Nếu bạn muốn thay đổi tên hoặc địa chỉ email của mình, vui lòng thực hiện "
-"việc đó trong cài đặt tài khoản hoặc liên hệ với quản trị viên."
-
-#. module: website_sale
 #: code:addons/website_sale/controllers/main.py:0
 #, python-format
 msgid "Invalid Email! Please enter a valid email address."
@@ -3178,7 +3167,6 @@ msgstr "SL:"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #: code:addons/website_sale/static/src/xml/website_sale_reorder_modal.xml:0
-#: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_summary
 #, python-format
 msgid "Quantity"
@@ -3789,11 +3777,6 @@ msgid "Suggested accessories in the eCommerce cart"
 msgstr "Phụ kiện được gợi ý trong giỏ hàng eCommerce "
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "VAT"
-msgstr "Mã số thuế"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Tag"
 msgstr "Tag"
@@ -4141,6 +4124,11 @@ msgstr ""
 "Sử dụng Google Places API để xác thực các địa chỉ mà khách truy cập đã nhập"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid "VAT"
+msgstr "Mã số thuế"
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_add_to_cart_options
 msgid "Variant"
 msgstr "Biến thể"
@@ -4486,11 +4474,6 @@ msgstr "Giỏ hàng trước của bạn đã được hoàn thành."
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Zip Code"
 msgstr "Mã Zip"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.add_grid_or_list_option
-msgid "border-primary"
-msgstr "viền-chính"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form

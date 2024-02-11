@@ -20,20 +20,21 @@
 # Mónica Pinheiro, 2023
 # Nuno Silva <nuno.silva@arxi.pt>, 2023
 # Martin Trigaux, 2023
-# Wil Odoo, 2023
 # Carlos Teles, 2023
 # Manuela Silva <mmsrs@sky.com>, 2023
 # Vasco Rodrigues, 2024
 # cafonso <cafonso62@gmail.com>, 2024
 # Rita Bastos, 2024
 # NumerSpiral HBG, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: NumerSpiral HBG, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Portuguese (https://app.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -55,12 +56,20 @@ msgstr "\" alertar com um"
 
 #. module: website
 #. odoo-python
+#: code:addons/website/controllers/form.py:0
+#, python-format
+msgid "\"%s form submission\" <%s>"
+msgstr ""
+
+#. module: website
+#. odoo-python
 #: code:addons/website/models/website_rewrite.py:0
 #, python-format
 msgid "\"URL from\" can not be empty."
 msgstr ""
 
 #. module: website
+#. odoo-python
 #: code:addons/website/models/website_rewrite.py:0
 #, python-format
 msgid "\"URL to\" can not be empty."
@@ -509,6 +518,7 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/js/tours/tour_utils.js:0
 #: code:addons/website/static/src/js/tours/tour_utils.js:0
 #, python-format
 msgid "<b>Click Edit</b> to start designing your homepage."
@@ -1348,6 +1358,13 @@ msgstr "Sobre nós"
 #: model_terms:ir.ui.view,arch_db:website.template_footer_minimalist
 msgid "About us"
 msgstr "Sobre nós"
+
+#. module: website
+#. odoo-python
+#: code:addons/website/models/website.py:0
+#, python-format
+msgid "Access Denied"
+msgstr "Acesso Negado"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__access_token
@@ -3703,6 +3720,7 @@ msgid "Do you want to install the \"%s\" App?"
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:website.template_footer_links
 msgid "Documentation"
 msgstr "Documentação"
@@ -5061,8 +5079,8 @@ msgid "Home page of the current website"
 msgstr ""
 
 #. module: website
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/website/models/website.py:0
 #: code:addons/website/static/src/client_actions/website_preview/website_preview.xml:0
 #: model:ir.model.fields,field_description:website.field_website_page__is_homepage
@@ -6383,6 +6401,7 @@ msgid "Men"
 msgstr ""
 
 #. module: website
+#: model:ir.model,name:website.model_ir_ui_menu
 #: model:ir.model.fields,field_description:website.field_website_menu__name
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog
 msgid "Menu"
@@ -7828,6 +7847,11 @@ msgstr "Qweb"
 #. module: website
 #: model:ir.model,name:website.model_ir_qweb_field_contact
 msgid "Qweb Field Contact"
+msgstr ""
+
+#. module: website
+#: model:ir.model,name:website.model_ir_qweb_field_html
+msgid "Qweb Field HTML"
 msgstr ""
 
 #. module: website
@@ -9515,6 +9539,7 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "This font is hosted and served to your visitors by Google servers"
@@ -9582,18 +9607,18 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/systray_items/website_switcher.xml:0
+#, python-format
+msgid "This website does not have a domain configured."
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/systray_items/website_switcher.js:0
 #, python-format
 msgid ""
 "This website does not have a domain configured. To avoid unexpected behaviours during website edition, we recommend closing (or refreshing) other browser tabs.\n"
 "To remove this message please set a domain in your website settings"
-msgstr ""
-
-#. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/systray_items/website_switcher.xml:0
-#, python-format
-msgid "This website does not have a domain configured."
 msgstr ""
 
 #. module: website
@@ -10945,13 +10970,6 @@ msgstr ""
 msgid ""
 "You have hidden this page from search results. It won't be indexed by search"
 " engines."
-msgstr ""
-
-#. module: website
-#. odoo-python
-#: code:addons/website/models/res_config_settings.py:0
-#, python-format
-msgid "You haven't defined your domain"
 msgstr ""
 
 #. module: website

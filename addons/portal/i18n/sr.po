@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:24+0000\n"
+"POT-Creation-Date: 2024-02-06 13:32+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
 "Last-Translator: コフスタジオ, 2024\n"
 "Language-Team: Serbian (https://app.transifex.com/odoo/teams/41243/sr/)\n"
@@ -120,6 +120,18 @@ msgstr ""
 "<small class=\"form-text text-muted\">Promena naziva kompanije ili PIB broja"
 " nije dozvoljena kada su dokumenta već izdata za vaš nalog. <br/>Za ovu "
 "operaciju kontaktirajte nas direktno.</small>"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.pager
+msgid ""
+"<span class=\"fa fa-chevron-left\" role=\"img\" aria-label=\"Previous\" "
+"title=\"Previous\"/>"
+msgstr ""
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.pager
+msgid "<span class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\" title=\"Next\"/>"
+msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
@@ -289,13 +301,6 @@ msgstr "Dodato dana"
 #: model:ir.model.fields.selection,name:portal.selection__portal_wizard_user__email_state__exist
 msgid "Already Registered"
 msgstr "Već registrovan/a"
-
-#. module: portal
-#. odoo-python
-#: code:addons/portal/controllers/mail.py:0
-#, python-format
-msgid "An access token must be provided for each attachment."
-msgstr "Pristupni token mora biti dostavljen za svaki prilog."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -818,7 +823,6 @@ msgstr "Nova lozinka:"
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
-#: model_terms:ir.ui.view,arch_db:portal.pager
 #, python-format
 msgid "Next"
 msgstr "Sledeće"
@@ -924,11 +928,6 @@ msgstr "Portal: Poziv korisniku"
 #: model_terms:ir.ui.view,arch_db:portal.portal_record_sidebar
 msgid "Powered by"
 msgstr "Platformu pokreće"
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.pager
-msgid "Prev"
-msgstr "Prethodno"
 
 #. module: portal
 #. odoo-javascript
@@ -1103,14 +1102,6 @@ msgstr "Prilog %s ne može biti uklonjen jer je povezan sa porukom."
 msgid ""
 "The attachment %s cannot be removed because it is not in a pending state."
 msgstr "Prilog %s ne može biti uklonjen jer nije u statusu na čekanju."
-
-#. module: portal
-#. odoo-python
-#: code:addons/portal/controllers/mail.py:0
-#, python-format
-msgid ""
-"The attachment %s does not exist or you do not have the rights to access it."
-msgstr "Prilog %s ne postoji ili vi nemate prava da mu pristupite."
 
 #. module: portal
 #. odoo-python

@@ -14,16 +14,17 @@
 # Jiří Podhorecký, 2023
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2023
 # Tomáš Píšek, 2023
-# Aleš Fiala <f.ales1@seznam.cz>, 2023
 # Jakub Smolka, 2023
+# Wil Odoo, 2024
+# Aleš Fiala <f.ales1@seznam.cz>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-10 06:06+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Jakub Smolka, 2023\n"
+"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2024\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1343,6 +1344,13 @@ msgid "Close Session Wizard"
 msgstr "Průvodce zavřením relace"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/models.js:0
+#, python-format
+msgid "Close anyway"
+msgstr "Přesto zavřít"
+
+#. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_session__state__closed
 msgid "Closed & Posted"
 msgstr "Uzavřené a schváleno"
@@ -1807,8 +1815,8 @@ msgid "Customer Screen Warning"
 msgstr "Varování na obrazovce zákazníka"
 
 #. module: point_of_sale
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #: code:addons/point_of_sale/wizard/pos_payment.py:0
 #, python-format
@@ -2118,6 +2126,13 @@ msgstr "Zamítnout"
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__display_name
 msgid "Display Name"
 msgstr "Zobrazované jméno"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/models.js:0
+#, python-format
+msgid "Do not close"
+msgstr "Nezavírat"
 
 #. module: point_of_sale
 #. odoo-python
@@ -3247,6 +3262,13 @@ msgstr "Název šarže"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/xml/Screens/ReceiptScreen/OrderReceipt.xml:0
+#, python-format
+msgid "Lot Number"
+msgstr "Šarže"
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/OrderWidget.js:0
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
 #, python-format
@@ -3492,6 +3514,11 @@ msgid "Newspaper Rack"
 msgstr "Stojan na noviny"
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Další aktivita z kalendáře"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_date_deadline
 msgid "Next Activity Deadline"
 msgstr "Termín další aktivity"
@@ -3711,7 +3738,7 @@ msgstr "Chyba offline"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/js/Chrome.js:0
+#: code:addons/point_of_sale/static/src/js/models.js:0
 #, python-format
 msgid "Offline Orders"
 msgstr "Offline objednávky"
@@ -3759,6 +3786,12 @@ msgid ""
 msgstr ""
 "Pro tuto položku refundace je povoleno pouze záporné množství. Kliknutím na "
 "+/- upravíte množství, které má být vráceno."
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_config.py:0
+#, python-format
+msgid "Only administrators can edit receipt headers and footers"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__only_round_cash_method
@@ -4004,8 +4037,8 @@ msgstr ""
 "položku objednávky."
 
 #. module: point_of_sale
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/DebugWidget.xml:0
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/TicketButton.xml:0
@@ -4161,8 +4194,8 @@ msgid "Pay Order"
 msgstr "Zaplatit objednávku"
 
 #. module: point_of_sale
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
 #: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreen.xml:0
@@ -4561,6 +4594,13 @@ msgstr "PoS produktové kategorie"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_pos_category_tree_view
 msgid "PoS Product Category"
 msgstr "Kategorie výrobku PoS"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid "PoS order %s can not be processed"
+msgstr "Objednávku prodejního místa %s nelze zpracovat"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_property_form
@@ -5932,7 +5972,7 @@ msgstr "Některá sériová čísla/čísla šarží chybí"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/js/Chrome.js:0
+#: code:addons/point_of_sale/static/src/js/models.js:0
 #, python-format
 msgid ""
 "Some orders could not be submitted to the server due to configuration "
@@ -5945,7 +5985,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/js/Chrome.js:0
+#: code:addons/point_of_sale/static/src/js/models.js:0
 #, python-format
 msgid ""
 "Some orders could not be submitted to the server due to internet connection "
@@ -6280,6 +6320,21 @@ msgid ""
 msgstr ""
 "Místo Prodeje podporuje pouze strategii zaokrouhlování \"přidat "
 "zaokrouhlovací řádek\"."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid ""
+"The Point of Sale order with the following reference %s was received by the "
+"Odoo server, but the order processing phase failed.<br/>The datas received "
+"from the point of sale has been saved in the attachments.<br/>Please contact"
+" your support service to assist you on restoring it"
+msgstr ""
+"Objednávka z prodejního místa s následujícím odkazem %s byla přijata "
+"serverem Odoo, ale fáze zpracování objednávky selhala.<br/>Údaje přijaté z "
+"prodejního místa byly uloženy v přílohách.<br/>Obraťte se prosím na službu "
+"podpory, která vám pomůže s jejich obnovením"
 
 #. module: point_of_sale
 #. odoo-javascript

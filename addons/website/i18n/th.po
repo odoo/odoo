@@ -11,15 +11,16 @@
 # Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2023
 # Martin Trigaux, 2023
 # Wichanon Jamwutthipreecha, 2023
-# Wil Odoo, 2023
 # Rasareeyar Lappiam, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Rasareeyar Lappiam, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -41,12 +42,20 @@ msgstr "เตือนด้วย"
 
 #. module: website
 #. odoo-python
+#: code:addons/website/controllers/form.py:0
+#, python-format
+msgid "\"%s form submission\" <%s>"
+msgstr "\"%s ยื่นแบบฟอร์ม\" <%s>"
+
+#. module: website
+#. odoo-python
 #: code:addons/website/models/website_rewrite.py:0
 #, python-format
 msgid "\"URL from\" can not be empty."
 msgstr "\"URL จาก\" ต้องไม่เว้นว่าง"
 
 #. module: website
+#. odoo-python
 #: code:addons/website/models/website_rewrite.py:0
 #, python-format
 msgid "\"URL to\" can not be empty."
@@ -506,6 +515,7 @@ msgstr "<b>เพิ่ม</b> รูปภาพที่ถูกเลือ�
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/js/tours/tour_utils.js:0
 #: code:addons/website/static/src/js/tours/tour_utils.js:0
 #, python-format
 msgid "<b>Click Edit</b> to start designing your homepage."
@@ -1452,6 +1462,13 @@ msgstr "เกี่ยวกับเรา"
 #: model_terms:ir.ui.view,arch_db:website.template_footer_minimalist
 msgid "About us"
 msgstr "เกี่ยวกับเรา"
+
+#. module: website
+#. odoo-python
+#: code:addons/website/models/website.py:0
+#, python-format
+msgid "Access Denied"
+msgstr "การเข้าถึงถูกปฏิเสธ"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__access_token
@@ -3857,6 +3874,7 @@ msgid "Do you want to install the \"%s\" App?"
 msgstr "คุณต้องการติดตั้งแอป \"%s\" หรือไม่ ? "
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:website.template_footer_links
 msgid "Documentation"
 msgstr "เอกสารประกอบ"
@@ -5241,8 +5259,8 @@ msgid "Home page of the current website"
 msgstr "หน้าแรกของเว็บไซต์ปัจจุบัน"
 
 #. module: website
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/website/models/website.py:0
 #: code:addons/website/static/src/client_actions/website_preview/website_preview.xml:0
 #: model:ir.model.fields,field_description:website.field_website_page__is_homepage
@@ -6587,6 +6605,7 @@ msgid "Men"
 msgstr "ผู้ชาย"
 
 #. module: website
+#: model:ir.model,name:website.model_ir_ui_menu
 #: model:ir.model.fields,field_description:website.field_website_menu__name
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog
 msgid "Menu"
@@ -8061,6 +8080,11 @@ msgstr "QWeb"
 #: model:ir.model,name:website.model_ir_qweb_field_contact
 msgid "Qweb Field Contact"
 msgstr "ฟิลด์ติดต่อ QWeb"
+
+#. module: website
+#: model:ir.model,name:website.model_ir_qweb_field_html
+msgid "Qweb Field HTML"
+msgstr "ฟิลด์ HTML Qweb"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
@@ -9770,6 +9794,7 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "This font is hosted and served to your visitors by Google servers"
@@ -9842,6 +9867,13 @@ msgstr "มุมมองนี้ได้รับการแก้ไขแ
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/systray_items/website_switcher.xml:0
+#, python-format
+msgid "This website does not have a domain configured."
+msgstr "เว็บไซต์นี้ไม่มีการกำหนดค่าโดเมน"
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/systray_items/website_switcher.js:0
 #, python-format
 msgid ""
@@ -9850,13 +9882,6 @@ msgid ""
 msgstr ""
 "เว็บไซต์นี้ไม่มีการกำหนดค่าโดเมน เพื่อหลีกเลี่ยงพฤติกรรมที่ไม่คาดคิดในระหว่างการแก้ไขเว็บไซต์ เราขอแนะนำให้ปิด (หรือรีเฟรช) แท็บเบราว์เซอร์อื่นๆ\n"
 "หากต้องการลบข้อความนี้ โปรดตั้งค่าโดเมนในการตั้งค่าเว็บไซต์ของคุณ"
-
-#. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/systray_items/website_switcher.xml:0
-#, python-format
-msgid "This website does not have a domain configured."
-msgstr "เว็บไซต์นี้ไม่มีการกำหนดค่าโดเมน"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
@@ -11272,13 +11297,6 @@ msgid ""
 " engines."
 msgstr ""
 "คุณได้ซ่อนหน้านี้จากผลการค้นหา มันจะไม่ถูกสจัดทำดัชนีโดยเครื่องมือค้นหา"
-
-#. module: website
-#. odoo-python
-#: code:addons/website/models/res_config_settings.py:0
-#, python-format
-msgid "You haven't defined your domain"
-msgstr "คุณยังไม่ได้กำหนดโดเมนของคุณ"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy

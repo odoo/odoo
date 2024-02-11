@@ -20,9 +20,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:22+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
 "Last-Translator: Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2023\n"
 "Language-Team: Croatian (https://app.transifex.com/odoo/teams/41243/hr/)\n"
@@ -43,6 +43,7 @@ msgid "# Contracts using it"
 msgstr ""
 
 #. module: hr_contract
+#. odoo-python
 #: code:addons/hr_contract/report/hr_contract_history.py:0
 #, python-format
 msgid "%s's Contracts History"
@@ -130,6 +131,7 @@ msgid "Administrator"
 msgstr "Administrator"
 
 #. module: hr_contract
+#. odoo-python
 #: code:addons/hr_contract/models/hr_contract.py:0
 #, python-format
 msgid ""
@@ -192,6 +194,7 @@ msgid "Contract"
 msgstr "Ugovor"
 
 #. module: hr_contract
+#. odoo-python
 #: code:addons/hr_contract/models/hr_contract.py:0
 #, python-format
 msgid ""
@@ -381,6 +384,7 @@ msgid "Departure Wizard"
 msgstr "Čarobnjak odlaska"
 
 #. module: hr_contract
+#. odoo-python
 #: code:addons/hr_contract/wizard/hr_departure_wizard.py:0
 #, python-format
 msgid ""
@@ -527,7 +531,6 @@ msgstr "Grupiraj po"
 #. module: hr_contract
 #: model:ir.actions.server,name:hr_contract.ir_cron_data_contract_update_state_ir_actions_server
 #: model:ir.cron,cron_name:hr_contract.ir_cron_data_contract_update_state
-#: model:ir.cron,name:hr_contract.ir_cron_data_contract_update_state
 msgid "HR Contract: update state"
 msgstr ""
 
@@ -571,7 +574,6 @@ msgstr "Ako je označeno, nove poruke zahtijevaju Vašu pažnju."
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__message_has_error
-#: model:ir.model.fields,help:hr_contract.field_hr_contract__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr "Ako je označeno neke poruke mogu imati grešku u dostavi."
 
@@ -654,7 +656,7 @@ msgid "New"
 msgstr "Novi"
 
 #. module: hr_contract
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_contract/static/src/js/hr_contract_history_list_controller.js:0
 #, python-format
 msgid "New Employee"
@@ -785,11 +787,6 @@ msgid "Running Contracts"
 msgstr ""
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_has_sms_error
-msgid "SMS Delivery error"
-msgstr "Greška u slanju SMSa"
-
-#. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "Salary Information"
 msgstr ""
@@ -875,6 +872,7 @@ msgstr ""
 "Možete koristiti za brzo pretraživanje."
 
 #. module: hr_contract
+#. odoo-python
 #: code:addons/hr_contract/models/hr_contract.py:0
 #, python-format
 msgid "The contract of %s is about to expire."
@@ -925,16 +923,6 @@ msgstr "Broj vize"
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__wage
 msgid "Wage"
 msgstr "Plaća"
-
-#. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__website_message_ids
-msgid "Website Messages"
-msgstr "Poruke webstranica"
-
-#. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_contract__website_message_ids
-msgid "Website communication history"
-msgstr "Povijest komunikacije Web stranice"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__permit_no

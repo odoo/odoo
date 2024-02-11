@@ -15,14 +15,15 @@
 # Jakub Smolka, 2023
 # Tomáš Píšek, 2023
 # Aleš Fiala <f.ales1@seznam.cz>, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:49+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1538,6 +1539,13 @@ msgstr ""
 "pokračovat ve čtení <i class=\"fa fa-long-arrow-right align-middle ms-1\"/>"
 
 #. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/models/mailing.py:0
+#, python-format
+msgid "Could not retrieve URL: %s"
+msgstr ""
+
+#. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_contact__message_bounce
 #: model:ir.model.fields,help:mass_mailing.field_mailing_contact_subscription__message_bounce
 msgid "Counter of the number of bounced emails for this contact"
@@ -2057,6 +2065,14 @@ msgid "Feedback from %(email)s: %(feedback)s"
 msgstr "Zpětná vazba od %(email)s: %(feedback)s"
 
 #. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/models/mailing.py:0
+#: code:addons/mass_mailing/models/mailing.py:0
+#, python-format
+msgid "File size exceeds configured maximum (%s bytes)"
+msgstr "Velikost souboru překračuje nakonfigurované maximum (%s bajtů)"
+
+#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Filter"
 msgstr "Filtr"
@@ -2184,6 +2200,11 @@ msgstr "Seskupit podle"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_report_view_search
 msgid "Group By..."
 msgstr "Seskupit podle…"
+
+#. module: mass_mailing
+#: model:ir.model,name:mass_mailing.model_ir_http
+msgid "HTTP Routing"
+msgstr "HTTP Routing"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__has_message
@@ -2331,6 +2352,16 @@ msgstr "Obrázek - Text"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_masonry_block_options
 msgid "Image Text Image"
 msgstr "Obrázek Text Obrázek"
+
+#. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/models/mailing.py:0
+#, python-format
+msgid ""
+"Image size excessive, imported images must be smaller than 42 million pixel"
+msgstr ""
+"Nadměrná velikost obrázku, nahrané obrázky musí být menší než 42 milionů "
+"pixelu"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_masonry_block_options
@@ -4631,13 +4662,6 @@ msgstr "odhlášen"
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_subscription__unsubscription_date
 msgid "Unsubscription Date"
 msgstr "Datum odhlášení"
-
-#. module: mass_mailing
-#. odoo-python
-#: code:addons/mass_mailing/models/mailing.py:0
-#, python-format
-msgid "Unsupported mass mailing model %s"
-msgstr "Nepodporovaný model hromadné pošty%s"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe

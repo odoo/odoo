@@ -9,15 +9,16 @@
 # Pierre Delacroix <pde@odoo.com>, 2022
 # Fabien Bourgeois <fabien@yaltik.com>, 2022
 # Martin Trigaux, 2023
-# Wil Odoo, 2023
 # Jolien De Paepe, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Jolien De Paepe, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,12 +40,20 @@ msgstr "\" alerte avec un"
 
 #. module: website
 #. odoo-python
+#: code:addons/website/controllers/form.py:0
+#, python-format
+msgid "\"%s form submission\" <%s>"
+msgstr "\"soumission du formulaire %s\" <%s>"
+
+#. module: website
+#. odoo-python
 #: code:addons/website/models/website_rewrite.py:0
 #, python-format
 msgid "\"URL from\" can not be empty."
 msgstr "\"URL de\" ne peut pas être vide."
 
 #. module: website
+#. odoo-python
 #: code:addons/website/models/website_rewrite.py:0
 #, python-format
 msgid "\"URL to\" can not be empty."
@@ -512,6 +521,7 @@ msgstr "<b>Ajoutez</b> l'image sélectionnée."
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/js/tours/tour_utils.js:0
 #: code:addons/website/static/src/js/tours/tour_utils.js:0
 #, python-format
 msgid "<b>Click Edit</b> to start designing your homepage."
@@ -1491,6 +1501,13 @@ msgstr "À propos de nous"
 #: model_terms:ir.ui.view,arch_db:website.template_footer_minimalist
 msgid "About us"
 msgstr "À propos de nous"
+
+#. module: website
+#. odoo-python
+#: code:addons/website/models/website.py:0
+#, python-format
+msgid "Access Denied"
+msgstr "Accès refusé"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__access_token
@@ -3914,6 +3931,7 @@ msgid "Do you want to install the \"%s\" App?"
 msgstr "Voulez-vous installer l'app \"%s\" ?"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:website.template_footer_links
 msgid "Documentation"
 msgstr "Documentation"
@@ -5318,8 +5336,8 @@ msgid "Home page of the current website"
 msgstr "Page d'accueil du site actuel"
 
 #. module: website
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/website/models/website.py:0
 #: code:addons/website/static/src/client_actions/website_preview/website_preview.xml:0
 #: model:ir.model.fields,field_description:website.field_website_page__is_homepage
@@ -6671,6 +6689,7 @@ msgid "Men"
 msgstr "Hommes"
 
 #. module: website
+#: model:ir.model,name:website.model_ir_ui_menu
 #: model:ir.model.fields,field_description:website.field_website_menu__name
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog
 msgid "Menu"
@@ -8152,6 +8171,11 @@ msgstr "Qweb"
 #: model:ir.model,name:website.model_ir_qweb_field_contact
 msgid "Qweb Field Contact"
 msgstr "Champ Qweb de Contact"
+
+#. module: website
+#: model:ir.model,name:website.model_ir_qweb_field_html
+msgid "Qweb Field HTML"
+msgstr "Qweb Champ HTML"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
@@ -9877,6 +9901,7 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "This font is hosted and served to your visitors by Google servers"
@@ -9954,6 +9979,13 @@ msgstr "Cette arche de vue a été modifiée"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/systray_items/website_switcher.xml:0
+#, python-format
+msgid "This website does not have a domain configured."
+msgstr "Aucun domaine n'est configuré pour ce site web."
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/systray_items/website_switcher.js:0
 #, python-format
 msgid ""
@@ -9962,13 +9994,6 @@ msgid ""
 msgstr ""
 "Aucun domaine n'est configuré pour ce site web. Pour éviter des comportements inattendus pendant l'édition du site web, nous conseillons de fermer (ou de rafraîchir) les autres onglets du navigateur.\n"
 "Pour supprimer ce message, définissez un domaine dans les paramètres de votre site web"
-
-#. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/systray_items/website_switcher.xml:0
-#, python-format
-msgid "This website does not have a domain configured."
-msgstr "Aucun domaine n'est configuré pour ce site web."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
@@ -11420,13 +11445,6 @@ msgid ""
 msgstr ""
 "Vous avez caché cette page des résultats de recherche. Elle ne sera pas "
 "indexée par les moteurs de recherche."
-
-#. module: website
-#. odoo-python
-#: code:addons/website/models/res_config_settings.py:0
-#, python-format
-msgid "You haven't defined your domain"
-msgstr "Vous n'avez pas défini votre domaine"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy

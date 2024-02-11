@@ -9,18 +9,18 @@
 # Martin Trigaux, 2023
 # Pablo De Andrés, 2023
 # Ana Sanjuán, 2023
-# Wil Odoo, 2023
 # Daniel Duque <danieldqmrt@gmail.com>, 2023
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
-# Larissa Manderfeld, 2023
+# Larissa Manderfeld, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-10 06:06+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Larissa Manderfeld, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1351,6 +1351,13 @@ msgid "Close Session Wizard"
 msgstr "Asistente para cerrar sesión"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/models.js:0
+#, python-format
+msgid "Close anyway"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_session__state__closed
 msgid "Closed & Posted"
 msgstr "Cerrado y contabilizado"
@@ -1815,8 +1822,8 @@ msgid "Customer Screen Warning"
 msgstr "Advertencia de pantalla de cliente"
 
 #. module: point_of_sale
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #: code:addons/point_of_sale/wizard/pos_payment.py:0
 #, python-format
@@ -2127,6 +2134,13 @@ msgstr "Descartar"
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__display_name
 msgid "Display Name"
 msgstr "Nombre mostrado"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/models.js:0
+#, python-format
+msgid "Do not close"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -3268,6 +3282,13 @@ msgstr "Nombre del lote"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/xml/Screens/ReceiptScreen/OrderReceipt.xml:0
+#, python-format
+msgid "Lot Number"
+msgstr "Número de lote"
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/OrderWidget.js:0
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
 #, python-format
@@ -3515,6 +3536,11 @@ msgid "Newspaper Rack"
 msgstr "Estante de Periódico"
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Siguiente evento en el calendario de actividades."
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_date_deadline
 msgid "Next Activity Deadline"
 msgstr "Siguiente plazo de actividad"
@@ -3734,7 +3760,7 @@ msgstr "Error sin conexión"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/js/Chrome.js:0
+#: code:addons/point_of_sale/static/src/js/models.js:0
 #, python-format
 msgid "Offline Orders"
 msgstr "Pedidos fuera de línea"
@@ -3782,6 +3808,12 @@ msgid ""
 msgstr ""
 "Solo se permite una cantidad negativa para esta línea de reembolso. Haga "
 "clic en +/- para modificar la cantidad que se reembolsará."
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_config.py:0
+#, python-format
+msgid "Only administrators can edit receipt headers and footers"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__only_round_cash_method
@@ -4027,8 +4059,8 @@ msgstr ""
 "línea de pedido."
 
 #. module: point_of_sale
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/DebugWidget.xml:0
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/TicketButton.xml:0
@@ -4184,8 +4216,8 @@ msgid "Pay Order"
 msgstr "Pagar pedido"
 
 #. module: point_of_sale
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
 #: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreen.xml:0
@@ -4586,6 +4618,13 @@ msgstr "Categorías TPV de producto"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_pos_category_tree_view
 msgid "PoS Product Category"
 msgstr "Categoría TPV de producto"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid "PoS order %s can not be processed"
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_property_form
@@ -5965,7 +6004,7 @@ msgstr "Faltan algunos números de serie/lote"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/js/Chrome.js:0
+#: code:addons/point_of_sale/static/src/js/models.js:0
 #, python-format
 msgid ""
 "Some orders could not be submitted to the server due to configuration "
@@ -5978,7 +6017,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/js/Chrome.js:0
+#: code:addons/point_of_sale/static/src/js/models.js:0
 #, python-format
 msgid ""
 "Some orders could not be submitted to the server due to internet connection "
@@ -6313,6 +6352,17 @@ msgid ""
 msgstr ""
 "El punto de venta solo admite la estrategia de redondeo \"agregar una línea "
 "de redondeo\"."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid ""
+"The Point of Sale order with the following reference %s was received by the "
+"Odoo server, but the order processing phase failed.<br/>The datas received "
+"from the point of sale has been saved in the attachments.<br/>Please contact"
+" your support service to assist you on restoring it"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript

@@ -2119,7 +2119,7 @@ class MailThread(models.AbstractModel):
 
     def message_post_with_view(self, views_or_xmlid, **kwargs):
         """ Helper method to send a mail / post a message using a view_id """
-        return self._message_compose_with_view(views_or_xmlid, **kwargs)
+        return self._message_compose_with_view(views_or_xmlid, **dict(kwargs, message_log=False))
 
     def message_post_with_template(self, template_id, email_layout_xmlid=None, auto_commit=False, **kwargs):
         """ Helper method to send a mail with a template

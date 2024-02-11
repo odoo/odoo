@@ -9,14 +9,15 @@
 # Martin Trigaux, 2022
 # ILMIR <karamov@it-projects.info>, 2022
 # Сергей Шебанин <sergey@shebanin.ru>, 2022
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Сергей Шебанин <sergey@shebanin.ru>, 2022\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,17 +31,20 @@ msgid ""
 "' recycling rule.<br/>\n"
 "You can validate those changes"
 msgstr ""
+"' правило переработки.<br/>\n"
+"Вы можете проверить эти изменения"
 
 #. module: data_recycle
+#. odoo-python
 #: code:addons/data_recycle/models/data_recycle_record.py:0
 #, python-format
 msgid "**Record Deleted**"
-msgstr ""
+msgstr "**Запись удалена*"
 
 #. module: data_recycle
 #: model_terms:ir.ui.view,arch_db:data_recycle.view_data_merge_model_form
 msgid "<span class=\"me-1\">Every</span>"
-msgstr ""
+msgstr "<span class=\"me-1\">Каждый</span>"
 
 #. module: data_recycle
 #: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__active
@@ -95,9 +99,8 @@ msgstr "Очистка данных"
 #. module: data_recycle
 #: model:ir.actions.server,name:data_recycle.ir_cron_clean_records_ir_actions_server
 #: model:ir.cron,cron_name:data_recycle.ir_cron_clean_records
-#: model:ir.cron,name:data_recycle.ir_cron_clean_records
 msgid "Data Recycle: Clean Records"
-msgstr ""
+msgstr "Переработка данных: Чистые записи"
 
 #. module: data_recycle
 #: model:ir.model.fields.selection,name:data_recycle.selection__data_recycle_model__notify_frequency_period__days
@@ -185,6 +188,8 @@ msgstr "Последнее обновление"
 #: model:ir.model.fields,help:data_recycle.field_data_recycle_model__notify_user_ids
 msgid "List of users to notify when there are new records to recycle"
 msgstr ""
+"Список пользователей, которых нужно уведомлять о появлении новых записей для"
+" переработки"
 
 #. module: data_recycle
 #: model:ir.model.fields.selection,name:data_recycle.selection__data_recycle_model__recycle_mode__manual
@@ -254,7 +259,7 @@ msgstr "Записи"
 #. module: data_recycle
 #: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__records_to_recycle_count
 msgid "Records To Recycle"
-msgstr ""
+msgstr "Записи для переработки"
 
 #. module: data_recycle
 #: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__recycle_action
@@ -269,7 +274,7 @@ msgstr "Режим очистки"
 #. module: data_recycle
 #: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record__recycle_model_id
 msgid "Recycle Model"
-msgstr ""
+msgstr "Модель вторичной переработки"
 
 #. module: data_recycle
 #: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__recycle_record_ids
@@ -285,7 +290,7 @@ msgstr "Очистка записей"
 #. module: data_recycle
 #: model_terms:ir.ui.view,arch_db:data_recycle.view_data_recycle_record_list
 msgid "Recycle Rule"
-msgstr ""
+msgstr "Правило утилизации"
 
 #. module: data_recycle
 #: model_terms:ir.ui.view,arch_db:data_recycle.view_data_recycle_record_search
@@ -295,17 +300,17 @@ msgstr "Правила очистки"
 #. module: data_recycle
 #: model:ir.model,name:data_recycle.model_data_recycle_model
 msgid "Recycling Model"
-msgstr ""
+msgstr "Модель переработки"
 
 #. module: data_recycle
 #: model:ir.model,name:data_recycle.model_data_recycle_record
 msgid "Recycling Record"
-msgstr ""
+msgstr "Рекорд утилизации"
 
 #. module: data_recycle
 #: model:ir.actions.act_window,name:data_recycle.action_data_recycle_config
 msgid "Recyle Records Rules"
-msgstr ""
+msgstr "Правила записи Recyle Records"
 
 #. module: data_recycle
 #: model:ir.ui.menu,name:data_recycle.menu_data_cleaning_config_rules
@@ -320,7 +325,7 @@ msgstr "Запустить сейчас"
 #. module: data_recycle
 #: model_terms:ir.ui.view,arch_db:data_recycle.view_data_merge_model_form
 msgid "Select a model to configure recycling actions"
-msgstr ""
+msgstr "Выберите модель для настройки действий по утилизации"
 
 #. module: data_recycle
 #: model:ir.model.constraint,message:data_recycle.constraint_data_recycle_model_check_notif_freq
@@ -328,10 +333,11 @@ msgid "The notification frequency should be greater than 0"
 msgstr "Частота уведомления должна быть больше 0"
 
 #. module: data_recycle
+#. odoo-python
 #: code:addons/data_recycle/models/data_recycle_model.py:0
 #, python-format
 msgid "This model doesn't manage archived records. Only deletion is possible."
-msgstr ""
+msgstr "Эта модель не управляет архивными записями. Возможно только удаление."
 
 #. module: data_recycle
 #: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__time_field_id
@@ -339,20 +345,21 @@ msgid "Time Field"
 msgstr "Поле с датой"
 
 #. module: data_recycle
+#. odoo-python
 #: code:addons/data_recycle/models/data_recycle_record.py:0
 #, python-format
 msgid "Undefined Name"
-msgstr ""
+msgstr "Неопределенное имя"
 
 #. module: data_recycle
-#. openerp-web
+#. odoo-javascript
 #: code:addons/data_recycle/static/src/views/data_recycle_list_view.xml:0
 #, python-format
 msgid "Unselect"
 msgstr "Отменить выбор"
 
 #. module: data_recycle
-#. openerp-web
+#. odoo-javascript
 #: code:addons/data_recycle/static/src/views/data_recycle_list_view.xml:0
 #: model_terms:ir.ui.view,arch_db:data_recycle.view_data_recycle_record_list
 #, python-format
@@ -362,7 +369,7 @@ msgstr "Подтвердить"
 #. module: data_recycle
 #: model_terms:ir.ui.view,arch_db:data_recycle.notification
 msgid "We've identified"
-msgstr ""
+msgstr "Мы определили"
 
 #. module: data_recycle
 #: model:ir.model.fields.selection,name:data_recycle.selection__data_recycle_model__notify_frequency_period__weeks

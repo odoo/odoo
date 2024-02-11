@@ -9,14 +9,15 @@
 # Martin Trigaux, 2022
 # Niyas Raphy, 2023
 # Malaz Abuidris <msea@odoo.com>, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:22+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -146,6 +147,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
+msgid "%(name)s (copy)(%(id)s)"
+msgstr "%(name)s (نسخة)(%(id)s) "
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_warehouse.py:0
+#, python-format
 msgid "%(warehouse)s: Supply Product from %(supplier)s"
 msgstr "%(warehouse)s: التزويد بالمنتج من %(supplier)s"
 
@@ -153,6 +161,7 @@ msgstr "%(warehouse)s: التزويد بالمنتج من %(supplier)s"
 #. odoo-python
 #: code:addons/stock/models/stock_location.py:0
 #: code:addons/stock/models/stock_package_type.py:0
+#: code:addons/stock/models/stock_picking.py:0
 #: code:addons/stock/models/stock_storage_category.py:0
 #, python-format
 msgid "%s (copy)"
@@ -1180,8 +1189,8 @@ msgid "Automatic No Step Added"
 msgstr "تمت إضافة رقم الخطة التلقائي "
 
 #. module: stock
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #: code:addons/stock/static/src/widgets/forecast_widget.xml:0
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__state__assigned
@@ -3781,6 +3790,7 @@ msgstr "Invalid domain left operand %s"
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/product.py:0 code:addons/stock/models/product.py:0
+#: code:addons/stock/models/stock_lot.py:0
 #, python-format
 msgid "Invalid domain operator %s"
 msgstr "مشغّل النطاق غير صالح %s "
@@ -3788,6 +3798,7 @@ msgstr "مشغّل النطاق غير صالح %s "
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/product.py:0 code:addons/stock/models/product.py:0
+#: code:addons/stock/models/stock_lot.py:0
 #, python-format
 msgid "Invalid domain right operand '%s'. It must be of type Integer/Float"
 msgstr ""
@@ -5095,8 +5106,8 @@ msgid "Normal"
 msgstr "عادي"
 
 #. module: stock
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: code:addons/stock/static/src/widgets/forecast_widget.xml:0
@@ -10199,6 +10210,7 @@ msgid "e.g. CW"
 msgstr "مثال: المستودع المركزي "
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
 msgid "e.g. Central Warehouse"
 msgstr "مثال: المستودع المركزي "
