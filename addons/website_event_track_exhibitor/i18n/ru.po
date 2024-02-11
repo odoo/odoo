@@ -10,6 +10,7 @@
 # ILMIR <karamov@it-projects.info>, 2020
 # Irina Fedulova <istartlin@gmail.com>, 2020
 # Сергей Шебанин <sergey@shebanin.ru>, 2021
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -17,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-16 13:33+0000\n"
 "PO-Revision-Date: 2020-09-07 08:21+0000\n"
-"Last-Translator: Сергей Шебанин <sergey@shebanin.ru>, 2021\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -74,6 +75,8 @@ msgid ""
 "<span>Oops! This room is currently closed</span><br/>\n"
 "                    Come back between"
 msgstr ""
+"<span>Упс! Эта комната сейчас закрыта</span><br/>\n"
+"                    Возвращайтесь между"
 
 #. module: website_event_track_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_track_exhibitor.exhibitor_main
@@ -81,6 +84,8 @@ msgid ""
 "<span>Oops! This room is full</span><br/>Come back later to have a chat with"
 " us!"
 msgstr ""
+"<span>Упс! Эта комната переполнена</span><br/>Приходите позже, чтобы "
+"пообщаться с нами!"
 
 #. module: website_event_track_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_track_exhibitor.exhibitor_main
@@ -115,14 +120,14 @@ msgstr ""
 #. module: website_event_track_exhibitor
 #: model:ir.model.fields,field_description:website_event_track_exhibitor.field_event_sponsor__chat_room_id
 msgid "Chat Room"
-msgstr ""
+msgstr "Чат-комната"
 
 #. module: website_event_track_exhibitor
 #. openerp-web
 #: code:addons/website_event_track_exhibitor/static/src/xml/event_exhibitor_connect.xml:0
 #, python-format
 msgid "Come back between"
-msgstr ""
+msgstr "Возвращайтесь между"
 
 #. module: website_event_track_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_track_exhibitor.exhibitor_card
@@ -142,7 +147,7 @@ msgstr "Флаг страны"
 #. module: website_event_track_exhibitor
 #: model_terms:ir.actions.act_window,help:website_event_track_exhibitor.event_sponsor_action
 msgid "Create a Sponsor / Exhibitor"
-msgstr ""
+msgstr "Создать спонсора / участника"
 
 #. module: website_event_track_exhibitor
 #: model:ir.model.fields,field_description:website_event_track_exhibitor.field_event_sponsor__website_description
@@ -166,7 +171,7 @@ msgstr ""
 #. module: website_event_track_exhibitor
 #: model:ir.model.fields,field_description:website_event_track_exhibitor.field_event_sponsor__hour_to
 msgid "End hour"
-msgstr ""
+msgstr "Время окончания"
 
 #. module: website_event_track_exhibitor
 #. openerp-web
@@ -197,7 +202,7 @@ msgstr "Шаблон события"
 #: model_terms:ir.ui.view,arch_db:website_event_track_exhibitor.event_sponsor_view_form
 #: model_terms:ir.ui.view,arch_db:website_event_track_exhibitor.event_sponsor_view_search
 msgid "Exhibitor"
-msgstr ""
+msgstr "Экспонент"
 
 #. module: website_event_track_exhibitor
 #: model:ir.model.fields,field_description:website_event_track_exhibitor.field_event_sponsor__is_exhibitor
@@ -208,13 +213,13 @@ msgstr ""
 #: code:addons/website_event_track_exhibitor/models/event_event.py:0
 #, python-format
 msgid "Exhibitors"
-msgstr ""
+msgstr "Экспоненты"
 
 #. module: website_event_track_exhibitor
 #: model:ir.model.fields,field_description:website_event_track_exhibitor.field_event_event__exhibitor_menu_ids
 #: model:ir.model.fields.selection,name:website_event_track_exhibitor.selection__website_event_menu__menu_type__exhibitor
 msgid "Exhibitors Menus"
-msgstr ""
+msgstr "Меню участников выставки"
 
 #. module: website_event_track_exhibitor
 #: model:ir.model.fields,field_description:website_event_track_exhibitor.field_event_event__id
@@ -232,7 +237,7 @@ msgstr "Опубликовано"
 #. module: website_event_track_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_track_exhibitor.event_sponsor_view_form
 msgid "Jitsi Name"
-msgstr ""
+msgstr "Имя Джитси"
 
 #. module: website_event_track_exhibitor
 #. openerp-web
@@ -240,12 +245,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_event_track_exhibitor.exhibitor_main
 #, python-format
 msgid "Join us next time to meet"
-msgstr ""
+msgstr "Присоединяйтесь к нам в следующий раз, чтобы встретиться"
 
 #. module: website_event_track_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_track_exhibitor.exhibitor_main
 msgid "Join us there to meet"
-msgstr ""
+msgstr "Присоединяйтесь к нам, чтобы встретиться"
 
 #. module: website_event_track_exhibitor
 #: model:ir.model.fields,field_description:website_event_track_exhibitor.field_event_sponsor__room_lang_id
@@ -279,6 +284,7 @@ msgstr "Макс. вместимость"
 #: model:ir.model.fields,help:website_event_track_exhibitor.field_event_sponsor__room_max_participant_reached
 msgid "Maximum number of participant reached in the room at the same time"
 msgstr ""
+"Максимальное количество участников, находящихся в комнате одновременно"
 
 #. module: website_event_track_exhibitor
 #: model:ir.model.fields,field_description:website_event_track_exhibitor.field_website_event_menu__menu_type
@@ -288,7 +294,7 @@ msgstr "Тип меню"
 #. module: website_event_track_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_track_exhibitor.exhibitors_main
 msgid "No exhibitor found."
-msgstr ""
+msgstr "Участников выставки не найдено."
 
 #. module: website_event_track_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_track_exhibitor.event_sponsor_view_form
@@ -298,17 +304,17 @@ msgstr "Часы работы"
 #. module: website_event_track_exhibitor
 #: model:ir.model.fields,field_description:website_event_track_exhibitor.field_event_sponsor__hour_from
 msgid "Opening hour"
-msgstr ""
+msgstr "Час работы"
 
 #. module: website_event_track_exhibitor
 #: model:ir.model.fields,field_description:website_event_track_exhibitor.field_event_sponsor__room_participant_count
 msgid "Participant count"
-msgstr ""
+msgstr "Количество участников"
 
 #. module: website_event_track_exhibitor
 #: model:ir.model.fields,field_description:website_event_track_exhibitor.field_event_sponsor__room_max_participant_reached
 msgid "Peak participants"
-msgstr ""
+msgstr "Участники пика"
 
 #. module: website_event_track_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_track_exhibitor.exhibitor_card
@@ -318,23 +324,23 @@ msgstr "Регистрация"
 #. module: website_event_track_exhibitor
 #: model:ir.model.fields,field_description:website_event_track_exhibitor.field_event_sponsor__room_is_full
 msgid "Room Is Full"
-msgstr ""
+msgstr "Комната заполнена"
 
 #. module: website_event_track_exhibitor
 #: model:ir.model.fields,field_description:website_event_track_exhibitor.field_event_sponsor__room_name
 msgid "Room Name"
-msgstr ""
+msgstr "Название номера"
 
 #. module: website_event_track_exhibitor
 #: model:ir.model.fields,field_description:website_event_track_exhibitor.field_event_event__exhibitor_menu
 #: model:ir.model.fields,field_description:website_event_track_exhibitor.field_event_type__exhibitor_menu
 msgid "Showcase Exhibitors"
-msgstr ""
+msgstr "Экспоненты выставки"
 
 #. module: website_event_track_exhibitor
 #: model:ir.model.fields,field_description:website_event_track_exhibitor.field_event_sponsor__subtitle
 msgid "Slogan"
-msgstr ""
+msgstr "Слоган"
 
 #. module: website_event_track_exhibitor
 #: model_terms:ir.actions.act_window,help:website_event_track_exhibitor.event_sponsor_action
@@ -384,7 +390,7 @@ msgstr "URL Веб-сайта"
 #. module: website_event_track_exhibitor
 #: model:ir.model.fields,field_description:website_event_track_exhibitor.field_event_sponsor__is_in_opening_hours
 msgid "Within opening hours"
-msgstr ""
+msgstr "В часы работы"
 
 #. module: website_event_track_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_track_exhibitor.event_sponsor_view_form
@@ -397,14 +403,14 @@ msgstr ""
 #: code:addons/website_event_track_exhibitor/static/src/xml/event_exhibitor_connect.xml:0
 #, python-format
 msgid "is not available right now."
-msgstr ""
+msgstr "сейчас недоступна."
 
 #. module: website_event_track_exhibitor
 #. openerp-web
 #: code:addons/website_event_track_exhibitor/static/src/xml/event_exhibitor_connect.xml:0
 #, python-format
 msgid "is over."
-msgstr ""
+msgstr "закончилась."
 
 #. module: website_event_track_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_track_exhibitor.exhibitor_main
@@ -412,6 +418,8 @@ msgid ""
 "is over.\n"
 "                <br/>"
 msgstr ""
+"закончилась.\n"
+"               <br/>"
 
 #. module: website_event_track_exhibitor
 #. openerp-web
@@ -431,7 +439,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_event_track_exhibitor.exhibitor_main
 #, python-format
 msgid "starts in"
-msgstr ""
+msgstr "начинается в"
 
 #. module: website_event_track_exhibitor
 #. openerp-web
@@ -439,4 +447,4 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_event_track_exhibitor.exhibitor_main
 #, python-format
 msgid "starts on"
-msgstr ""
+msgstr "начинается"
