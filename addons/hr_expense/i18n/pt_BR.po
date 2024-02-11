@@ -3,19 +3,19 @@
 # 	* hr_expense
 # 
 # Translators:
-# Wil Odoo, 2023
 # Adriano Prado <adrianojprado@gmail.com>, 2023
 # Éder Brito <britoederr@gmail.com>, 2023
 # a75f12d3d37ea5bf159c4b3e85eb30e7_0fa6927, 2023
 # Maitê Dietze, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-25 11:22+0000\n"
+"POT-Creation-Date: 2024-02-05 16:24+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Maitê Dietze, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -347,10 +347,25 @@ msgid "Attach a receipt - usually an image or a PDF file."
 msgstr "Anexe um recibo – geralmente uma imagem ou arquivo PDF."
 
 #. module: hr_expense
+#: model:ir.model,name:hr_expense.model_ir_attachment
+msgid "Attachment"
+msgstr "Anexo"
+
+#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_attachment_count
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_attachment_count
 msgid "Attachment Count"
 msgstr "Total de anexos"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__attachment_ids
+msgid "Attachments"
+msgstr "Anexos"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__attachment_ids
+msgid "Attachments of expenses"
+msgstr "Anexos de despesas"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__reference
@@ -544,7 +559,6 @@ msgstr "Prezado"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__hr_expense_alias_prefix
-#: model:ir.model.fields,field_description:hr_expense.field_res_config_test__hr_expense_alias_prefix
 msgid "Default Alias Name for Expenses"
 msgstr "Alias padrão para Despesas"
 
@@ -556,14 +570,12 @@ msgstr "Categoria padrão"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_company__expense_product_id
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__expense_product_id
-#: model:ir.model.fields,field_description:hr_expense.field_res_config_test__expense_product_id
 msgid "Default Expense Category"
 msgstr "Categoria de despesas padrão"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_company__expense_journal_id
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__expense_journal_id
-#: model:ir.model.fields,field_description:hr_expense.field_res_config_test__expense_journal_id
 msgid "Default Expense Journal"
 msgstr "Diário de despesas padrão"
 
@@ -1220,7 +1232,6 @@ msgstr "Atividades atrasadas"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__hr_expense_use_mailgateway
-#: model:ir.model.fields,field_description:hr_expense.field_res_config_test__hr_expense_use_mailgateway
 msgid "Let your employees record expenses by email"
 msgstr "Permitir que seus funcionários relatem despesas por e-mail"
 
@@ -1337,12 +1348,6 @@ msgstr "Nome"
 #, python-format
 msgid "New Expense Reports"
 msgstr "Novo relatório de despesas"
-
-#. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_calendar_event_id
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__activity_calendar_event_id
-msgid "Next Activity Calendar Event"
-msgstr "Evento no calendário para a próxima atividade"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_date_deadline
@@ -1546,7 +1551,6 @@ msgstr "Método de pagamento permitido para despesas pagas pela a empresa."
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_company__company_expense_allowed_payment_method_line_ids
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__company_expense_allowed_payment_method_line_ids
-#: model:ir.model.fields,field_description:hr_expense.field_res_config_test__company_expense_allowed_payment_method_line_ids
 msgid "Payment methods available for expenses paid by company"
 msgstr "Métodos de pagamento disponíveis para despesas pagas pela empresa"
 
@@ -1614,6 +1618,11 @@ msgid "Product Name"
 msgstr "Nome do produto"
 
 #. module: hr_expense
+#: model:ir.model,name:hr_expense.model_product_product
+msgid "Product Variant"
+msgstr "Variante do produto"
+
+#. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_tree_view
 msgid "Product Variants"
 msgstr "Variantes de produto"
@@ -1632,12 +1641,6 @@ msgstr "Qtd"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__quantity
 msgid "Quantity"
 msgstr "Quantidade"
-
-#. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__rating_ids
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__rating_ids
-msgid "Ratings"
-msgstr "Avaliações"
 
 #. module: hr_expense
 #. odoo-javascript
@@ -1714,7 +1717,6 @@ msgstr "Registrar pagamento"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__module_hr_payroll_expense
-#: model:ir.model.fields,field_description:hr_expense.field_res_config_test__module_hr_payroll_expense
 msgid "Reimburse Expenses in Payslip"
 msgstr "Reembolsar despesas na Folha de Pagamento"
 
@@ -1829,7 +1831,6 @@ msgstr ""
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__module_hr_expense_extract
-#: model:ir.model.fields,field_description:hr_expense.field_res_config_test__module_hr_expense_extract
 msgid "Send bills to OCR to generate expenses"
 msgstr "Enviar faturas em OCR para gerar despesas"
 
@@ -1908,6 +1909,11 @@ msgstr "Dividir despesas"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split_wizard__split_possible
 msgid "Split Possible"
 msgstr "Divisão possível"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_product_product__standard_price_update_warning
+msgid "Standard Price Update Warning"
+msgstr "Aviso de atualização de preço padrão"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__state
@@ -2006,7 +2012,6 @@ msgstr "Aprovador da equipe"
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_res_company__expense_journal_id
 #: model:ir.model.fields,help:hr_expense.field_res_config_settings__expense_journal_id
-#: model:ir.model.fields,help:hr_expense.field_res_config_test__expense_journal_id
 msgid ""
 "The company's default journal used when an employee expense is created."
 msgstr ""
@@ -2071,8 +2076,12 @@ msgstr "A soma após o fechamento da divisão deve permanecer a mesma"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
-msgid "There are no expense reports to approve."
+msgid ""
+"The work email of some employees is missing. Please add it on the employee "
+"form"
 msgstr ""
+"O e-mail de trabalho de alguns funcionários está faltando. Adicione-o no "
+"formulário do funcionário"
 
 #. module: hr_expense
 #. odoo-python
@@ -2415,6 +2424,7 @@ msgstr ""
 "relatório."
 
 #. module: hr_expense
+#. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You cannot report expenses for different employees in the same report."

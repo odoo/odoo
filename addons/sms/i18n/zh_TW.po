@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Tony Ng, 2023
+# Tony Ng, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:23+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Tony Ng, 2023\n"
+"Last-Translator: Tony Ng, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -87,7 +87,7 @@ msgstr ""
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "<span> or to specify the country code.</span>"
-msgstr ""
+msgstr "<span>或指定國家代碼。</span>"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
@@ -95,6 +95,8 @@ msgid ""
 "<strong>Invalid number:</strong>\n"
 "                        <span> make sure to set a country on the </span>"
 msgstr ""
+"<strong>號碼無效：</strong>\n"
+"                        <span>請確保已設置國家，在</span>"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_needaction
@@ -120,7 +122,7 @@ msgstr "在相關的模型上添加上下文操作以使用此模板打開簡訊
 #: code:addons/sms/static/src/core/notification_group_model_patch.js:0
 #, python-format
 msgid "An error occurred when sending an SMS"
-msgstr ""
+msgstr "發送短訊時發生錯誤"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__model_id
@@ -133,7 +135,7 @@ msgstr "應用於"
 msgid ""
 "Are you sure you want to reset these sms templates to their original "
 "configuration? Changes and translations will be lost."
-msgstr ""
+msgstr "確定要將這些短訊範本重設為原始配置？所有變更及翻譯將遺失。"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_attachment_count
@@ -314,7 +316,7 @@ msgstr "文件 IDs"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__res_model_description
 msgid "Document Model Description"
-msgstr ""
+msgstr "文件模型描述"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__res_model
@@ -341,7 +343,7 @@ msgstr "電子郵件行程"
 #: code:addons/sms/static/src/components/phone_field/phone_field.js:0
 #, python-format
 msgid "Enable SMS"
-msgstr ""
+msgstr "啟用短訊"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__state__error
@@ -718,7 +720,7 @@ msgstr "電話號碼"
 msgid ""
 "Phone number of the recipient. If changed, it will be recorded on "
 "recipient's profile."
-msgstr ""
+msgstr "收件人的電話號碼。如果更改，將記錄在收件人的個人資料中。"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__phone_mobile_search
@@ -748,7 +750,7 @@ msgstr "預覽"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_reset_view_form
 msgid "Proceed"
-msgstr ""
+msgstr "繼續"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
@@ -829,7 +831,7 @@ msgstr "重新發送通知"
 #. module: sms
 #: model:ir.actions.act_window,name:sms.sms_template_reset_action
 msgid "Reset SMS Template"
-msgstr ""
+msgstr "重設短訊範本"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
@@ -862,7 +864,7 @@ msgstr "電話短訊（SMS）"
 #: code:addons/sms/static/src/components/sms_widget/fields_sms_widget.xml:0
 #, python-format
 msgid "SMS ("
-msgstr ""
+msgstr "短訊（"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_api
@@ -959,7 +961,7 @@ msgstr "簡訊範本預覽"
 #. module: sms
 #: model:ir.model,name:sms.model_sms_template_reset
 msgid "SMS Template Reset"
-msgstr ""
+msgstr "短訊範本重設"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_template
@@ -975,7 +977,7 @@ msgstr "簡訊範本"
 #: code:addons/sms/wizard/sms_template_reset.py:0
 #, python-format
 msgid "SMS Templates have been reset"
-msgstr ""
+msgstr "短訊範本已重設"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
@@ -1002,7 +1004,7 @@ msgstr "搜尋簡訊模板"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
 msgid "Send & Close"
-msgstr ""
+msgstr "發送並關閉"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
@@ -1081,7 +1083,7 @@ msgstr "發送失敗"
 #: code:addons/sms/models/ir_actions_server.py:0
 #, python-format
 msgid "Sending SMS can only be done on a mail.thread or a transient model"
-msgstr ""
+msgstr "發送短訊只可在mail.thread或瞬態模型上完成"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__state__sent
@@ -1320,7 +1322,7 @@ msgstr "您的 SMS 文本消息必須包含至少一個非空白字符"
 #: code:addons/sms/static/src/components/sms_widget/fields_sms_widget.xml:0
 #, python-format
 msgid "characters, fits in"
-msgstr ""
+msgstr "個字元，需使用"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
@@ -1352,7 +1354,7 @@ msgstr "除外"
 msgid ""
 "recipients have an invalid phone number and will not receive this text "
 "message."
-msgstr ""
+msgstr "收件人電話號碼無效，將不會收到此訊息。"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form

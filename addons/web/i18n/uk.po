@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-25 11:23+0000\n"
+"POT-Creation-Date: 2024-02-05 16:24+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
 "Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
@@ -618,6 +618,11 @@ msgid "9:30"
 msgstr "9:30"
 
 #. module: web
+#: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
+msgid "<i class=\"fa fa-repeat\"/> Reset"
+msgstr ""
+
+#. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<span class=\"text-nowrap\">$ 2,887.50</span>"
 msgstr "<span class=\"text-nowrap\">$ 2,887.50</span>"
@@ -1192,6 +1197,7 @@ msgstr "Сповіщення"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/search/search_arch_parser.js:0
+#: code:addons/web/static/src/search/search_panel/search_panel.xml:0
 #: code:addons/web/static/src/search/search_panel/search_panel.xml:0
 #: code:addons/web/static/src/views/list/list_controller.xml:0
 #, python-format
@@ -1851,6 +1857,8 @@ msgstr "Claus"
 #. odoo-javascript
 #: code:addons/web/static/src/core/domain_selector/domain_selector_fields.xml:0
 #: code:addons/web/static/src/core/domain_selector/domain_selector_fields.xml:0
+#: code:addons/web/static/src/core/model_field_selector/model_field_selector.xml:0
+#: code:addons/web/static/src/core/model_field_selector/model_field_selector.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/views/fields/binary/binary_field.xml:0
@@ -3210,7 +3218,6 @@ msgstr "Файл"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
-#: code:addons/web/static/src/views/fields/file_handler.js:0
 #, python-format
 msgid "File upload"
 msgstr "Вивантаження файлу"
@@ -3465,6 +3472,16 @@ msgstr "Обробити"
 #: model:ir.model.fields,help:web.field_base_document_layout__company_details
 msgid "Header text displayed at the top of all reports."
 msgstr "Заголовок тексту відображається зверху всіх звітів."
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/basic_relational_model.js:0
+#, python-format
+msgid ""
+"Heads up! Your recent changes are too large to save automatically. Please "
+"click the <i class=\"fa fa-cloud-upload fa-fw\"></i> button now to ensure "
+"your work is saved before you exit this tab."
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -4956,13 +4973,6 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/search/search_panel/search_panel.xml:0
-#, python-format
-msgid "No quick filter available."
-msgstr ""
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/core/model_selector/model_selector.js:0
 #: code:addons/web/static/src/legacy/js/fields/field_utils.js:0
 #: code:addons/web/static/src/legacy/js/fields/relational_fields.js:0
@@ -5442,6 +5452,11 @@ msgid "Path not supported"
 msgstr ""
 
 #. module: web
+#: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
+msgid "Payment Communication: <b><span>INV/2023/00003</span></b>"
+msgstr ""
+
+#. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/settings_form_view/widgets/res_config_invite_users.xml:0
 #, python-format
@@ -5577,15 +5592,6 @@ msgid ""
 msgstr ""
 "Скористайтеся кнопкою копіювання, щоби повідомити про помилку в службу "
 "підтримки."
-
-#. module: web
-#: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
-msgid ""
-"Please use the following communication for your payment : <b><span>\n"
-"                           INV/2023/00003</span></b>"
-msgstr ""
-"Використовуйте наступні дані для оплати: <b><span>\n"
-"                           INV/2023/00003</span></b>"
 
 #. module: web
 #. odoo-javascript
@@ -5877,14 +5883,6 @@ msgstr "Чверть"
 #, python-format
 msgid "Quick add"
 msgstr "Щвидке додавання"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/search/search_panel/search_panel.xml:0
-#, python-format
-msgid ""
-"Quick filters will become available if the records shown can be filtered."
-msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -7074,8 +7072,14 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/utils/files.js:0
+#, python-format
+msgid "The selected file (%sB) is over the maximum allowed file size (%sB)."
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
-#: code:addons/web/static/src/views/fields/file_handler.js:0
 #, python-format
 msgid "The selected file exceed the maximum file size of %s."
 msgstr "Вибраний файл перевищує максимальний розмір %s."
@@ -7549,10 +7553,14 @@ msgstr "Невідомий незнаковий тип"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/domain_selector/domain_selector_autocomplete.js:0
 #: code:addons/web/static/src/legacy/js/fields/relational_fields.js:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/search/control_panel/control_panel.xml:0
+#: code:addons/web/static/src/views/fields/formatters.js:0
+#: code:addons/web/static/src/views/fields/many2one/many2one_field.js:0
+#: code:addons/web/static/src/views/fields/relational_utils.js:0
 #, python-format
 msgid "Unnamed"
 msgstr "Неназваний"
@@ -7579,13 +7587,6 @@ msgstr "Скасувати вибір усіх"
 #, python-format
 msgid "Untitled"
 msgstr "Без назви"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/search/search_panel/search_panel.xml:0
-#, python-format
-msgid "Update the filters in the search bar to display more records."
-msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -7934,6 +7935,7 @@ msgstr "Ср"
 #: code:addons/web/static/src/search/utils/dates.js:0
 #: code:addons/web/static/src/views/calendar/calendar_common/calendar_common_renderer.js:0
 #: code:addons/web/static/src/views/calendar/calendar_controller.js:0
+#: code:addons/web/static/src/views/calendar/calendar_controller.xml:0
 #, python-format
 msgid "Week"
 msgstr "Тиждень"
@@ -19550,8 +19552,8 @@ msgstr "justice"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/utils/numbers.js:0
 #: code:addons/web/static/src/legacy/js/core/utils.js:0
-#: code:addons/web/static/src/views/fields/formatters.js:0
 #, python-format
 msgid "kMGTPE"
 msgstr "kMGTPE"

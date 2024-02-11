@@ -7,9 +7,9 @@
 # Jiří Podhorecký, 2023
 # Ivana Bartonkova, 2023
 # Wil Odoo, 2023
-# Jakub Smolka, 2023
 # Jakub Krkoška, 2023
 # Tomáš Píšek, 2023
+# Jakub Smolka, 2024
 # Aleš Fiala <f.ales1@seznam.cz>, 2024
 # 
 msgid ""
@@ -3827,6 +3827,17 @@ msgid "Display this website when users visit this domain"
 msgstr "Zobrazit tuto webovou stránku, když uživatelé navštíví tuto doménu"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid ""
+"Do not copy/paste code you do not understand, this could put your data at "
+"risk."
+msgstr ""
+"Nekopírujte/nevkládejte kód, kterému nerozumíte, mohlo by to ohrozit vaše "
+"data."
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_cards
 msgid ""
 "Do you need specific information? Our specialists will help you with "
@@ -4931,6 +4942,16 @@ msgid "Google Search Console"
 msgstr "vyhledávací konzole Google"
 
 #. module: website
+#. odoo-python
+#: code:addons/website/models/res_config_settings.py:0
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+#, python-format
+msgid ""
+"Google doesn't need to be pinged anymore. It will automatically fetch your "
+"/sitemap.xml."
+msgstr "Google už nemusí být pingován. Automaticky načte váš /sitemap.xml."
+
+#. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__google_search_console
 #: model:ir.model.fields,help:website.field_website__google_search_console
 msgid "Google key, or Enable to access first reply"
@@ -5446,6 +5467,17 @@ msgid ""
 msgstr ""
 "Pokud aktuální úpravy zahodíte, všechny neuložené změny budou ztraceny. "
 "Zrušením se vrátíte do režimu úprav."
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_embed_code/options.js:0
+#, python-format
+msgid ""
+"If you need to add analytics or marketing tags, inject code in your <head> "
+"or <body> instead. The option is in the \"Theme\" tab."
+msgstr ""
+"Pokud potřebujete přidat analytické nebo marketingové značky, vložte kód do "
+"vaší <head> nebo <body>. Možnost je v záložce \"Šablona\"."
 
 #. module: website
 #. odoo-javascript
@@ -7232,7 +7264,7 @@ msgstr "Čísla"
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 #, python-format
 msgid "OR"
-msgstr ""
+msgstr "NEBO"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -11509,6 +11541,17 @@ msgstr ""
 #, python-format
 msgid "Your Email"
 msgstr "Váš e-mail"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_embed_code/000.js:0
+#, python-format
+msgid ""
+"Your Embed Code snippet doesn't have anything to display. Click on Edit to "
+"modify it."
+msgstr ""
+"Váš vložený kódový úryvek nemá nic k zobrazení. Klikněte na Upravit pro jeho"
+" úpravu."
 
 #. module: website
 #. odoo-javascript

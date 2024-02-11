@@ -8,16 +8,16 @@
 # Martin Trigaux, 2023
 # Nancy Momoland <thanh.np2502@gmail.com>, 2023
 # Trinh Tran Thi Phuong <trinhttp@trobz.com>, 2023
-# Wil Odoo, 2023
 # Thi Huong Nguyen, 2023
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-25 11:23+0000\n"
+"POT-Creation-Date: 2024-02-05 16:24+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -622,6 +622,11 @@ msgid "9:30"
 msgstr "9:30"
 
 #. module: web
+#: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
+msgid "<i class=\"fa fa-repeat\"/> Reset"
+msgstr "<i class=\"fa fa-repeat\"/> Đặt lại"
+
+#. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<span class=\"text-nowrap\">$ 2,887.50</span>"
 msgstr "<span class=\"text-nowrap\">2.887,50$</span>"
@@ -1198,6 +1203,7 @@ msgstr "Cảnh báo"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/search/search_arch_parser.js:0
+#: code:addons/web/static/src/search/search_panel/search_panel.xml:0
 #: code:addons/web/static/src/search/search_panel/search_panel.xml:0
 #: code:addons/web/static/src/views/list/list_controller.xml:0
 #, python-format
@@ -1859,6 +1865,8 @@ msgstr "Ông già Noel"
 #. odoo-javascript
 #: code:addons/web/static/src/core/domain_selector/domain_selector_fields.xml:0
 #: code:addons/web/static/src/core/domain_selector/domain_selector_fields.xml:0
+#: code:addons/web/static/src/core/model_field_selector/model_field_selector.xml:0
+#: code:addons/web/static/src/core/model_field_selector/model_field_selector.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/views/fields/binary/binary_field.xml:0
@@ -3228,7 +3236,6 @@ msgstr "Tệp"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
-#: code:addons/web/static/src/views/fields/file_handler.js:0
 #, python-format
 msgid "File upload"
 msgstr "Tải tập tin lên"
@@ -3485,6 +3492,16 @@ msgstr "Xử lý"
 #: model:ir.model.fields,help:web.field_base_document_layout__company_details
 msgid "Header text displayed at the top of all reports."
 msgstr "Văn bản trong phần header được hiển thị ở đầu tất cả báo cáo."
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/basic_relational_model.js:0
+#, python-format
+msgid ""
+"Heads up! Your recent changes are too large to save automatically. Please "
+"click the <i class=\"fa fa-cloud-upload fa-fw\"></i> button now to ensure "
+"your work is saved before you exit this tab."
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -4976,13 +4993,6 @@ msgstr "Không tạo nhanh"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/search/search_panel/search_panel.xml:0
-#, python-format
-msgid "No quick filter available."
-msgstr "Không có sẵn bộ lọc nhanh nào."
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/core/model_selector/model_selector.js:0
 #: code:addons/web/static/src/legacy/js/fields/field_utils.js:0
 #: code:addons/web/static/src/legacy/js/fields/relational_fields.js:0
@@ -5463,6 +5473,11 @@ msgid "Path not supported"
 msgstr "Đường dẫn path không được hỗ trợ"
 
 #. module: web
+#: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
+msgid "Payment Communication: <b><span>INV/2023/00003</span></b>"
+msgstr ""
+
+#. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/settings_form_view/widgets/res_config_invite_users.xml:0
 #, python-format
@@ -5598,15 +5613,6 @@ msgid ""
 msgstr ""
 "Vui lòng sử dụng nút Sao chép để báo cáo lỗi đến nhà cung cấp dịch vụ của "
 "bạn."
-
-#. module: web
-#: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
-msgid ""
-"Please use the following communication for your payment : <b><span>\n"
-"                           INV/2023/00003</span></b>"
-msgstr ""
-"Vui lòng điền thông tin thanh toán như sau: <b><span>\n"
-"                           INV/2023/00003</span></b>"
 
 #. module: web
 #. odoo-javascript
@@ -5898,15 +5904,6 @@ msgstr "Quý"
 #, python-format
 msgid "Quick add"
 msgstr "Thêm nhanh"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/search/search_panel/search_panel.xml:0
-#, python-format
-msgid ""
-"Quick filters will become available if the records shown can be filtered."
-msgstr ""
-"Bộ lọc nhanh sẽ khả dụng nếu các tập dữ liệu được hiển thị có thể lọc."
 
 #. module: web
 #. odoo-javascript
@@ -7095,8 +7092,14 @@ msgstr "Trường đã chọn sẽ được dùng để điền trước chữ k
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/utils/files.js:0
+#, python-format
+msgid "The selected file (%sB) is over the maximum allowed file size (%sB)."
+msgstr "Tệp đã chọn (%sB) vượt quá kích thước tệp tối đa cho phép (%sB)."
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
-#: code:addons/web/static/src/views/fields/file_handler.js:0
 #, python-format
 msgid "The selected file exceed the maximum file size of %s."
 msgstr "Tập tin được chọn chạm giới hạn dung lượng tối đa %s."
@@ -7579,10 +7582,14 @@ msgstr "Không biết kiểu nonliteral "
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/domain_selector/domain_selector_autocomplete.js:0
 #: code:addons/web/static/src/legacy/js/fields/relational_fields.js:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/search/control_panel/control_panel.xml:0
+#: code:addons/web/static/src/views/fields/formatters.js:0
+#: code:addons/web/static/src/views/fields/many2one/many2one_field.js:0
+#: code:addons/web/static/src/views/fields/relational_utils.js:0
 #, python-format
 msgid "Unnamed"
 msgstr "Chưa đặt tên"
@@ -7609,14 +7616,6 @@ msgstr "Bỏ chọn tất cả"
 #, python-format
 msgid "Untitled"
 msgstr "Không có tiêu đề"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/search/search_panel/search_panel.xml:0
-#, python-format
-msgid "Update the filters in the search bar to display more records."
-msgstr ""
-"Cập nhật bộ lọc trong thanh tìm kiếm để hiển thị thêm các tập dữ liệu."
 
 #. module: web
 #. odoo-javascript
@@ -7965,6 +7964,7 @@ msgstr "Thứ 4"
 #: code:addons/web/static/src/search/utils/dates.js:0
 #: code:addons/web/static/src/views/calendar/calendar_common/calendar_common_renderer.js:0
 #: code:addons/web/static/src/views/calendar/calendar_controller.js:0
+#: code:addons/web/static/src/views/calendar/calendar_controller.xml:0
 #, python-format
 msgid "Week"
 msgstr "Tuần"
@@ -19579,8 +19579,8 @@ msgstr "justice"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/utils/numbers.js:0
 #: code:addons/web/static/src/legacy/js/core/utils.js:0
-#: code:addons/web/static/src/views/fields/formatters.js:0
 #, python-format
 msgid "kMGTPE"
 msgstr "kMGTPE"

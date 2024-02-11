@@ -3,19 +3,19 @@
 # 	* account
 # 
 # Translators:
-# Wil Odoo, 2023
 # Odoo Thaidev <odoothaidev@gmail.com>, 2023
 # Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2023
 # Martin Trigaux, 2023
 # Rasareeyar Lappiam, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-25 11:22+0000\n"
+"POT-Creation-Date: 2024-02-05 16:24+0000\n"
 "PO-Revision-Date: 2023-07-25 12:21+0000\n"
-"Last-Translator: Rasareeyar Lappiam, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -243,6 +243,12 @@ msgid "(included)."
 msgstr "(รวม)"
 
 #. module: account
+#: model:ir.actions.report,print_report_name:account.account_invoices
+#: model:ir.actions.report,print_report_name:account.account_invoices_without_payment
+msgid "(object._get_report_base_filename())"
+msgstr "(object._get_report_base_filename ())"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
 msgid ").<br/>"
 msgstr ")<br/>"
@@ -410,6 +416,11 @@ msgstr "30.00"
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "31.05"
 msgstr "31.05"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "35"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_company_currency_template
@@ -693,6 +704,14 @@ msgid "<i class=\"fa fa-print\"/> Print"
 msgstr "<i class=\"fa fa-print\"/> พิมพ์"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.account_move_send_form
+msgid ""
+"<i class=\"fa fa-question-circle ml4\" role=\"img\" aria-label=\"Warning\" "
+"title=\"The email address is unknown on the partner\" attrs=\"{'invisible': "
+"[('send_mail_readonly', '=', False)]}\"/>"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_terms_conditions_setting_banner
 msgid "<i class=\"oi oi-arrow-right me-1\"/>Back to settings"
 msgstr "<i class=\"oi oi-arrow-right me-1\"/>กลับไปที่การตั้งค่า"
@@ -717,11 +736,10 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid ""
-"<span attrs=\"{'invisible': ['|', '|', ('state', '!=', 'draft'), ('name', "
-"'!=', '/'), ('quick_edit_mode', '=', True)]}\">Draft</span>"
+"<span attrs=\"{'invisible': ['|', '|', '|', ('state', '!=', 'draft'), "
+"('name', '!=', '/'), ('posted_before', '=', True), ('quick_edit_mode', '=', "
+"True)]}\">Draft</span>"
 msgstr ""
-"<span attrs=\"{'invisible': ['|', '|', ('state', '!=', 'draft'), ('name', "
-"'!=', '/'), ('quick_edit_mode', '=', True)]}\">ร่าง</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -1181,11 +1199,6 @@ msgstr "<span>มุมมอง</span>"
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong class=\"mr16\">Subtotal</strong>"
 msgstr "<strong class=\"mr16\">ยอดรวมย่อย</strong>"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-msgid "<strong>Amount Due</strong>"
-msgstr "<strong>วันที่ครบกำหนด:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -2602,6 +2615,12 @@ msgstr "แผนการวิเคราะห์"
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__analytic_precision
 msgid "Analytic Precision"
 msgstr "ความแม่นยำในการวิเคราะห์"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.action_analytic_reporting
+#: model:ir.ui.menu,name:account.menu_action_analytic_reporting
+msgid "Analytic Reporting"
+msgstr "การรายงานเชิงวิเคราะห์"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__analytic_line_ids
@@ -4600,13 +4619,6 @@ msgstr "ใบลดหนี้"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
-msgid "You can only send sales documents"
-msgstr "คุณสามารถส่งเอกสารการขายได้เท่านั้น"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-#, python-format
 msgid "Credit Note Created"
 msgstr "ใบลดหนี้ที่ถูกสร้าง"
 
@@ -5093,6 +5105,11 @@ msgstr "รายการสมุดรายวันเดบิตที่
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__12
 msgid "December"
 msgstr "ธันวาคม"
+
+#. module: account
+#: model:ir.model,name:account.model_decimal_precision
+msgid "Decimal Precision"
+msgstr "ความถูกต้องของทศนิยม"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__decimal_separator
@@ -5591,7 +5608,6 @@ msgstr "การกระจายสำหรับการคืนเงิ
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__refund_repartition_line_ids
-#: model:ir.model.fields,help:account.field_account_tax__repartition_line_ids
 msgid "Distribution when the tax is used on a refund"
 msgstr "การกระจายเมื่อใช้ภาษีในการขอคืน"
 
@@ -6037,15 +6053,6 @@ msgid "Epd Needed"
 msgstr "Epd Needed"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/chart_template.py:0
-#, python-format
-msgid ""
-"Error while loading the localization. You should probably update your "
-"localization app first."
-msgstr "เกิดข้อผิดพลาดในการโหลดการแปลภาษา คุณควรอัปเดตแอปการแปลภาษาของคุณก่อน"
-
-#. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/components/account_type_selection/account_type_selection.js:0
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__equity
@@ -6054,6 +6061,15 @@ msgstr "เกิดข้อผิดพลาดในการโหลดก
 #, python-format
 msgid "Equity"
 msgstr "ส่วนของเจ้าของ"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid ""
+"Error while loading the localization. You should probably update your "
+"localization app first."
+msgstr "เกิดข้อผิดพลาดในการโหลดการแปลภาษา คุณควรอัปเดตแอปการแปลภาษาของคุณก่อน"
 
 #. module: account
 #. odoo-python
@@ -6100,8 +6116,8 @@ msgid "Example:"
 msgstr "ตัวอย่าง:"
 
 #. module: account
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/account/models/chart_template.py:0
 #: code:addons/account/static/src/components/account_payment_field/account_payment.xml:0
 #: code:addons/account/static/src/xml/legacy_account_payment.xml:0
@@ -6132,8 +6148,8 @@ msgid "Expects a Chart of Accounts"
 msgstr "ผังบัญชี"
 
 #. module: account
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/account/static/src/components/account_type_selection/account_type_selection.js:0
 #: code:addons/account/wizard/accrued_orders.py:0
 #: model:ir.model.fields.selection,name:account.selection__account_account__internal_group__expense
@@ -7578,6 +7594,13 @@ msgstr "\"ช่วงของรหัสไปรษณีย์\" ไม่�
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_report.py:0
+#, python-format
+msgid "Invalid domain for expression '%s' of line '%s': %s"
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Invalid fiscal year last day"
@@ -7904,6 +7927,13 @@ msgid "Invoicing Onboarding"
 msgstr "การออกใบแจ้งหนี้"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__is_being_sent
+#: model:ir.model.fields,field_description:account.field_account_move__is_being_sent
+#: model:ir.model.fields,field_description:account.field_account_payment__is_being_sent
+msgid "Is Being Sent"
+msgstr "กำลังถูกส่ง"
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_amount__between
 msgid "Is Between"
 msgstr "อยู่ระหว่าง"
@@ -8047,8 +8077,8 @@ msgid "Journal Currency"
 msgstr "สกุลเงินสมุดรายวัน"
 
 #. module: account
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/account/models/account_journal_dashboard.py:0
 #: code:addons/account/static/src/components/journal_dashboard_activity/journal_dashboard_activity.js:0
 #: model:ir.actions.act_window,name:account.action_move_journal_line
@@ -8067,8 +8097,8 @@ msgid "Journal Entries by Date"
 msgstr "รายการสมุดรายวันตามวันที่"
 
 #. module: account
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/account/models/account_move.py:0
 #: code:addons/account/models/account_payment.py:0
 #: code:addons/account/static/src/components/journal_dashboard_activity/journal_dashboard_activity.js:0
@@ -8966,6 +8996,11 @@ msgid "Memo:"
 msgstr "บันทึก"
 
 #. module: account
+#: model:ir.model,name:account.model_base_partner_merge_automatic_wizard
+msgid "Merge Partner Wizard"
+msgstr "ตัวช่วยผสานพาร์ทเนอร์"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__message_has_error
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__message_has_error
 #: model:ir.model.fields,field_description:account.field_account_journal__message_has_error
@@ -9242,16 +9277,6 @@ msgstr "ค่าใหม่"
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__matching_order__new_first
 msgid "Newest first"
 msgstr "ใหม่สุดก่อน"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_calendar_event_id
-#: model:ir.model.fields,field_description:account.field_account_journal__activity_calendar_event_id
-#: model:ir.model.fields,field_description:account.field_account_move__activity_calendar_event_id
-#: model:ir.model.fields,field_description:account.field_account_payment__activity_calendar_event_id
-#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_calendar_event_id
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_calendar_event_id
-msgid "Next Activity Calendar Event"
-msgstr "ปฏิทินอีเวนต์กิจกรรมถัดไป"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_date_deadline
@@ -10274,6 +10299,13 @@ msgid "Partners"
 msgstr "พาร์ทเนอร์"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/partner.py:0
+#, python-format
+msgid "Partners that are used in hashed entries cannot be merged."
+msgstr "พาร์ทเนอร์ที่ใช้ในรายการแฮชไม่สามารถรวมเข้าด้วยกันได้"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Pay your bills in one-click using Euro SEPA Service"
 msgstr "ชำระค่าใช้จ่ายของคุณได้ในคลิกเดียวโดยใช้บริการ Euro SEPA"
@@ -10526,7 +10558,7 @@ msgstr "ชำระทันที"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-msgid "Payment within 30 calendar days"
+msgid "Payment within 30 calendar day"
 msgstr "ชำระเงินภายใน 30 วันตามปฏิทิน"
 
 #. module: account
@@ -10630,13 +10662,6 @@ msgstr "ความเสี่ยงของการหลอกลวงท
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
 msgid "Phishing risk: Medium"
 msgstr "ความเสี่ยงของการหลอกลวงทางอินเทอร์เน็ต (Phishing) : ปานกลาง"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/wizard/account_move_send.py:0
-#, python-format
-msgid "Please add an email address for your partner"
-msgstr "โปรดเพิ่มที่อยู่อีเมลสำหรับพาร์ทเนอร์ของคุณ"
 
 #. module: account
 #. odoo-python
@@ -11053,19 +11078,6 @@ msgstr "การเข้ารหัสอย่างรวดเร็ว"
 #: model:account.account,name:account.1_expense_rd
 msgid "RD Expenses"
 msgstr "ค่าใช้จ่าย RD"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_account__rating_ids
-#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__rating_ids
-#: model:ir.model.fields,field_description:account.field_account_journal__rating_ids
-#: model:ir.model.fields,field_description:account.field_account_move__rating_ids
-#: model:ir.model.fields,field_description:account.field_account_payment__rating_ids
-#: model:ir.model.fields,field_description:account.field_account_reconcile_model__rating_ids
-#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__rating_ids
-#: model:ir.model.fields,field_description:account.field_res_company__rating_ids
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__rating_ids
-msgid "Ratings"
-msgstr "การให้คะแนน"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_resequence_view
@@ -11950,16 +11962,6 @@ msgid "Select specific invoice and delivery addresses"
 msgstr "เลือกใบแจ้งหนี้และที่อยู่ในการจัดส่งที่เฉพาะเจาะจง"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid ""
-"We can't leave this document without any company. Please select a company "
-"for this document."
-msgstr ""
-"เราไม่สามารถทิ้งเอกสารนี้ได้หากไม่มีบริษัท กรุณาเลือกบริษัทสำหรับเอกสารนี้"
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid ""
 "Select this if the taxes should use cash basis, which will create an entry "
@@ -11992,7 +11994,6 @@ msgstr "การเลือก"
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_move.py:0
 #: code:addons/account/models/account_move.py:0
 #: model:ir.actions.server,name:account.invoice_send
 #: model:ir.model.fields.selection,name:account.selection__account_payment__payment_type__outbound
@@ -13019,10 +13020,10 @@ msgstr "เลขที่บัญชี"
 #: model:ir.ui.menu,name:account.menu_action_tax_form
 #: model:onboarding.onboarding.step,title:account.onboarding_onboarding_step_default_taxes
 #: model:onboarding.onboarding.step,title:account.onboarding_onboarding_step_sales_tax
+#: model_terms:ir.ui.view,arch_db:account.document_tax_totals_company_currency_template
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
-#: model_terms:ir.ui.view,arch_db:account.document_tax_totals_company_currency_template
 #, python-format
 msgid "Taxes"
 msgstr "ภาษี"
@@ -13573,16 +13574,6 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/wizard/account_move_send.py:0
-#, python-format
-msgid ""
-"The following invoice(s) will not be sent by email, because the customers "
-"don't have email address: "
-msgstr ""
-"ใบแจ้งหนี้ต่อไปนี้จะไม่ถูกส่งทางอีเมล เนื่องจากลูกค้าไม่มีที่อยู่อีเมล:"
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/account_reconcile_model.py:0
 #, python-format
 msgid ""
@@ -13718,6 +13709,7 @@ msgstr ""
 "  เช่น: .*N°48748 abc123.*"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -13794,6 +13786,17 @@ msgstr ""
 msgid ""
 "The partners of the journal's company and the related bank account mismatch."
 msgstr "สมุดรายวันของบริษัทพาร์ทเนอร์และบัญชีธนาคารที่เกี่ยวข้องไม่ตรงกัน"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_move_send.py:0
+#, python-format
+msgid ""
+"The partners on the following invoices have no email address, so those "
+"invoices will not be sent: %s"
+msgstr ""
+"พาร์ทเนอร์ในใบแจ้งหนี้ต่อไปนี้ไม่มีที่อยู่อีเมล "
+"ดังนั้นใบแจ้งหนี้เหล่านั้นจะไม่ถูกส่ง: %s"
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_payment_check_amount_not_negative
@@ -14029,6 +14032,21 @@ msgid ""
 msgstr ""
 "ลำดับจะไม่เริ่มต้นใหม่\n"
 "จำนวนที่เพิ่มขึ้นในกรณีนี้คือ '%(formatted_seq)s'."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The sequence will restart at 1 at the start of every financial year.\n"
+"The financial start year detected here is '%(year)s'.\n"
+"The financial end year detected here is '%(year_end)s'.\n"
+"The incrementing number in this case is '%(formatted_seq)s'."
+msgstr ""
+"ลำดับจะเริ่มต้นใหม่อีกครั้งที่ 1 ในช่วงต้นปีการเงินทุกปี\n"
+"ปีเริ่มต้นทางการเงินที่ตรวจพบที่นี่คือ '%(year)s'\n"
+"ปีสิ้นสุดทางการเงินที่ตรวจพบที่นี่คือ '%(year_end)s'\n"
+"จำนวนที่เพิ่มขึ้นในกรณีนี้คือ '%(formatted_seq)s'"
 
 #. module: account
 #. odoo-python
@@ -15505,6 +15523,16 @@ msgstr "คําเตือนในใบแจ้งหนี้"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"We can't leave this document without any company. Please select a company "
+"for this document."
+msgstr ""
+"เราไม่สามารถทิ้งเอกสารนี้ได้หากไม่มีบริษัท กรุณาเลือกบริษัทสำหรับเอกสารนี้"
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid ""
@@ -15774,6 +15802,13 @@ msgid "You can only send from the same company."
 msgstr "คุณสามารถส่งจากบริษัทเดียวกันเท่านั้น"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "You can only send sales documents"
+msgstr "คุณสามารถส่งเอกสารการขายได้เท่านั้น"
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_journal__invoice_reference_type
 msgid ""
 "You can set here the default communication that will appear on customer "
@@ -15783,13 +15818,6 @@ msgstr ""
 "คุณสามารถตั้งค่าการสื่อสารเริ่มต้นที่จะแสดงในใบแจ้งหนี้ของลูกค้าได้ที่นี่ "
 "เมื่อได้รับการตรวจสอบแล้ว "
 "เพื่อช่วยให้ลูกค้าอ้างอิงถึงใบแจ้งหนี้นั้นเมื่อทำการชำระเงิน"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/wizard/account_move_send.py:0
-#, python-format
-msgid "You can't send invoice(s) in draft state."
-msgstr "คุณไม่สามารถส่งใบแจ้งหนี้ในสถานะร่างได้"
 
 #. module: account
 #. odoo-python
@@ -15925,6 +15953,13 @@ msgid ""
 "either all outbound."
 msgstr ""
 "คุณไม่สามารถลงทะเบียนการชำระเงินสำหรับรายการสมุดรายวันที่เป็นขาเข้าทั้งหมดหรือขาออกทั้งหมดก็ได้"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_move_send.py:0
+#, python-format
+msgid "You can't send invoice(s) in draft state."
+msgstr "คุณไม่สามารถส่งใบแจ้งหนี้ในสถานะร่างได้"
 
 #. module: account
 #. odoo-python
@@ -16148,6 +16183,13 @@ msgstr ""
 "คุณไม่สามารถนำเข้า \"openning_balance\" ได้ หากได้ผ่านรายการการย้ายแล้ว (%s)"
 "                         หากคุณแน่ใจว่าต้องการแก้ไขยอดดุลเปิดบัญชี "
 "ให้รีเซ็ตการย้ายเป็นการร่าง"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "You cannot merge accounts."
+msgstr "คุณไม่สามารถรวมบัญชีได้"
 
 #. module: account
 #. odoo-python

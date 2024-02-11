@@ -7,18 +7,18 @@
 # Noma Yuki, 2023
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2023
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2023
-# Wil Odoo, 2023
 # Martin Trigaux, 2023
 # Ryoko Tsuda <ryoko@quartile.co>, 2023
 # Junko Augias, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-25 11:23+0000\n"
+"POT-Creation-Date: 2024-02-05 16:24+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Junko Augias, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -623,6 +623,11 @@ msgid "9:30"
 msgstr "9:30"
 
 #. module: web
+#: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
+msgid "<i class=\"fa fa-repeat\"/> Reset"
+msgstr "<i class=\"fa fa-repeat\"/> 再設定"
+
+#. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<span class=\"text-nowrap\">$ 2,887.50</span>"
 msgstr "<span class=\"text-nowrap\">$ 2,887.50</span>"
@@ -1197,6 +1202,7 @@ msgstr "警告"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/search/search_arch_parser.js:0
+#: code:addons/web/static/src/search/search_panel/search_panel.xml:0
 #: code:addons/web/static/src/search/search_panel/search_panel.xml:0
 #: code:addons/web/static/src/views/list/list_controller.xml:0
 #, python-format
@@ -1849,6 +1855,8 @@ msgstr "クロース"
 #. odoo-javascript
 #: code:addons/web/static/src/core/domain_selector/domain_selector_fields.xml:0
 #: code:addons/web/static/src/core/domain_selector/domain_selector_fields.xml:0
+#: code:addons/web/static/src/core/model_field_selector/model_field_selector.xml:0
+#: code:addons/web/static/src/core/model_field_selector/model_field_selector.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/views/fields/binary/binary_field.xml:0
@@ -3210,7 +3218,6 @@ msgstr "ファイル"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
-#: code:addons/web/static/src/views/fields/file_handler.js:0
 #, python-format
 msgid "File upload"
 msgstr "ファイルのアップロード"
@@ -3475,6 +3482,7 @@ msgid ""
 "click the <i class=\"fa fa-cloud-upload fa-fw\"></i> button now to ensure "
 "your work is saved before you exit this tab."
 msgstr ""
+"ご注意下さい！最近の変更が大きすぎるため、自動的に保存されません。今すぐボタンをクリックして、このタブを閉じる前に作業が保存されていることを確認して下さい。"
 
 #. module: web
 #. odoo-javascript
@@ -4960,13 +4968,6 @@ msgstr "クイック作成なし"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/search/search_panel/search_panel.xml:0
-#, python-format
-msgid "No quick filter available."
-msgstr "有効なクイックフィルタなし"
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/core/model_selector/model_selector.js:0
 #: code:addons/web/static/src/legacy/js/fields/field_utils.js:0
 #: code:addons/web/static/src/legacy/js/fields/relational_fields.js:0
@@ -5440,6 +5441,11 @@ msgid "Path not supported"
 msgstr "パスがサポートされていません"
 
 #. module: web
+#: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
+msgid "Payment Communication: <b><span>INV/2023/00003</span></b>"
+msgstr "支払連絡: <b><span>INV/2023/00003</span></b>"
+
+#. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/settings_form_view/widgets/res_config_invite_users.xml:0
 #, python-format
@@ -5571,20 +5577,6 @@ msgstr "エクスポートリストに保存する項目を選んでください
 msgid ""
 "Please use the copy button to report the error to your support service."
 msgstr "コピーボタンで内容コピーの上、サポート担当者に報告してください。"
-
-#. module: web
-#: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
-msgid ""
-"Please use the following communication for your payment : <b><span>\n"
-"                           INV/2023/00003</span></b>"
-msgstr ""
-"お支払いには以下の連絡方法をご利用下さい: <b><span>\n"
-"                           INV/2023/00003</span></b>"
-
-#. module: web
-#: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
-msgid "Payment Communication: <b><span>INV/2023/00003</span></b>"
-msgstr "支払連絡: <b><span>INV/2023/00003</span></b>"
 
 #. module: web
 #. odoo-javascript
@@ -5876,14 +5868,6 @@ msgstr "四半期"
 #, python-format
 msgid "Quick add"
 msgstr "クイック追加"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/search/search_panel/search_panel.xml:0
-#, python-format
-msgid ""
-"Quick filters will become available if the records shown can be filtered."
-msgstr "表示されているレコードがフィルタリング可能な場合、クイックフィルタが利用可能になります。"
 
 #. module: web
 #. odoo-javascript
@@ -7066,8 +7050,14 @@ msgstr "選択されたフィールドは署名を事前入力するのに使用
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/utils/files.js:0
+#, python-format
+msgid "The selected file (%sB) is over the maximum allowed file size (%sB)."
+msgstr "選択されたファイル (%sB)は許可されている最大ファイルサイズ(%sB)を超えています。"
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
-#: code:addons/web/static/src/views/fields/file_handler.js:0
 #, python-format
 msgid "The selected file exceed the maximum file size of %s."
 msgstr "選択したファイルが最大ファイルサイズ%sを超えています。"
@@ -7536,10 +7526,14 @@ msgstr "不明な非リテラルタイプ"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/domain_selector/domain_selector_autocomplete.js:0
 #: code:addons/web/static/src/legacy/js/fields/relational_fields.js:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/search/control_panel/control_panel.xml:0
+#: code:addons/web/static/src/views/fields/formatters.js:0
+#: code:addons/web/static/src/views/fields/many2one/many2one_field.js:0
+#: code:addons/web/static/src/views/fields/relational_utils.js:0
 #, python-format
 msgid "Unnamed"
 msgstr "無名"
@@ -7566,13 +7560,6 @@ msgstr "すべて選択解除"
 #, python-format
 msgid "Untitled"
 msgstr "無題"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/search/search_panel/search_panel.xml:0
-#, python-format
-msgid "Update the filters in the search bar to display more records."
-msgstr "検索バーのフィルタを更新して、より多くのレコードを表示します。"
 
 #. module: web
 #. odoo-javascript
@@ -7921,6 +7908,7 @@ msgstr "水曜日"
 #: code:addons/web/static/src/search/utils/dates.js:0
 #: code:addons/web/static/src/views/calendar/calendar_common/calendar_common_renderer.js:0
 #: code:addons/web/static/src/views/calendar/calendar_controller.js:0
+#: code:addons/web/static/src/views/calendar/calendar_controller.xml:0
 #, python-format
 msgid "Week"
 msgstr "週"
@@ -19525,8 +19513,8 @@ msgstr "裁判官"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/utils/numbers.js:0
 #: code:addons/web/static/src/legacy/js/core/utils.js:0
-#: code:addons/web/static/src/views/fields/formatters.js:0
 #, python-format
 msgid "kMGTPE"
 msgstr "kMGTPE"

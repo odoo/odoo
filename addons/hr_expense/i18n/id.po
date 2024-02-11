@@ -3,16 +3,16 @@
 # 	* hr_expense
 # 
 # Translators:
-# Wil Odoo, 2023
 # Abe Manyo, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-25 11:22+0000\n"
+"POT-Creation-Date: 2024-02-05 16:24+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Abe Manyo, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -343,10 +343,25 @@ msgid "Attach a receipt - usually an image or a PDF file."
 msgstr "Lampirkan resit - biasanya gambar atau file PDF."
 
 #. module: hr_expense
+#: model:ir.model,name:hr_expense.model_ir_attachment
+msgid "Attachment"
+msgstr "Lampiran"
+
+#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_attachment_count
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_attachment_count
 msgid "Attachment Count"
 msgstr "Hitungan Lampiran"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__attachment_ids
+msgid "Attachments"
+msgstr "Lampiran"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__attachment_ids
+msgid "Attachments of expenses"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__reference
@@ -542,7 +557,6 @@ msgstr "Kepada"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__hr_expense_alias_prefix
-#: model:ir.model.fields,field_description:hr_expense.field_res_config_test__hr_expense_alias_prefix
 msgid "Default Alias Name for Expenses"
 msgstr "Nama Alias Standar Untuk Pengeluaran"
 
@@ -554,14 +568,12 @@ msgstr "Kategori Default"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_company__expense_product_id
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__expense_product_id
-#: model:ir.model.fields,field_description:hr_expense.field_res_config_test__expense_product_id
 msgid "Default Expense Category"
 msgstr "Kategori Pengeluaran Default"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_company__expense_journal_id
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__expense_journal_id
-#: model:ir.model.fields,field_description:hr_expense.field_res_config_test__expense_journal_id
 msgid "Default Expense Journal"
 msgstr "Jurnal Pengeluaran Default"
 
@@ -1222,7 +1234,6 @@ msgstr "Aktifitas terakhir"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__hr_expense_use_mailgateway
-#: model:ir.model.fields,field_description:hr_expense.field_res_config_test__hr_expense_use_mailgateway
 msgid "Let your employees record expenses by email"
 msgstr "ijinkan karyawan Anda merekam pengeluaran melalui email"
 
@@ -1337,12 +1348,6 @@ msgstr "Nama"
 #, python-format
 msgid "New Expense Reports"
 msgstr "Laporan Pengeluaran Baru"
-
-#. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_calendar_event_id
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__activity_calendar_event_id
-msgid "Next Activity Calendar Event"
-msgstr "Kalender Acara Aktivitas Berikutnya"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_date_deadline
@@ -1548,7 +1553,6 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_company__company_expense_allowed_payment_method_line_ids
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__company_expense_allowed_payment_method_line_ids
-#: model:ir.model.fields,field_description:hr_expense.field_res_config_test__company_expense_allowed_payment_method_line_ids
 msgid "Payment methods available for expenses paid by company"
 msgstr ""
 "Metode pembayaran yang tersedia untuk pengeluaran yang dibayar oleh "
@@ -1618,6 +1622,11 @@ msgid "Product Name"
 msgstr "Nama Produk"
 
 #. module: hr_expense
+#: model:ir.model,name:hr_expense.model_product_product
+msgid "Product Variant"
+msgstr "Varian Produk"
+
+#. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_tree_view
 msgid "Product Variants"
 msgstr "Varian Produk"
@@ -1636,12 +1645,6 @@ msgstr "Jml"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__quantity
 msgid "Quantity"
 msgstr "Kuantitas"
-
-#. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__rating_ids
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__rating_ids
-msgid "Ratings"
-msgstr "Rating"
 
 #. module: hr_expense
 #. odoo-javascript
@@ -1718,7 +1721,6 @@ msgstr "Daftarkan Pembayara"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__module_hr_payroll_expense
-#: model:ir.model.fields,field_description:hr_expense.field_res_config_test__module_hr_payroll_expense
 msgid "Reimburse Expenses in Payslip"
 msgstr "Pengembalian Pengeluaran di Payslip"
 
@@ -1833,7 +1835,6 @@ msgstr ""
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__module_hr_expense_extract
-#: model:ir.model.fields,field_description:hr_expense.field_res_config_test__module_hr_expense_extract
 msgid "Send bills to OCR to generate expenses"
 msgstr "Kirim tagihan ke OCR untuk membuat pengeluaran"
 
@@ -1911,6 +1912,11 @@ msgstr "Pecah Pengeluaran-Pengeluaran"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split_wizard__split_possible
 msgid "Split Possible"
 msgstr "Dapat Dipecah"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_product_product__standard_price_update_warning
+msgid "Standard Price Update Warning"
+msgstr "Peringatan Update Harga Standar"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__state
@@ -2009,7 +2015,6 @@ msgstr "Approver TIm"
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_res_company__expense_journal_id
 #: model:ir.model.fields,help:hr_expense.field_res_config_settings__expense_journal_id
-#: model:ir.model.fields,help:hr_expense.field_res_config_test__expense_journal_id
 msgid ""
 "The company's default journal used when an employee expense is created."
 msgstr ""
@@ -2074,8 +2079,11 @@ msgstr "Jumlah setelah pemecahan tetap sama"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
-msgid "There are no expense reports to approve."
+msgid ""
+"The work email of some employees is missing. Please add it on the employee "
+"form"
 msgstr ""
+"Kurang email kerja beberapa karyawan. Mohon tambahkan ke formulir karyawan"
 
 #. module: hr_expense
 #. odoo-python
@@ -2424,6 +2432,7 @@ msgstr ""
 "berbeda di laporan yang sama."
 
 #. module: hr_expense
+#. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You cannot report expenses for different employees in the same report."

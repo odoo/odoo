@@ -3,24 +3,24 @@
 # 	* account
 # 
 # Translators:
-# Wil Odoo, 2023
 # Michal Veselý <michal@veselyberanek.net>, 2023
 # Martin Trigaux, 2023
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2023
 # Jiří Podhorecký, 2023
 # Ivana Bartonkova, 2023
-# Tomáš Píšek, 2023
 # Jakub Smolka, 2023
 # Aleš Fiala <f.ales1@seznam.cz>, 2024
 # Katerina Horylova, 2024
+# Tomáš Píšek, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-25 11:22+0000\n"
+"POT-Creation-Date: 2024-02-05 16:24+0000\n"
 "PO-Revision-Date: 2023-07-25 12:21+0000\n"
-"Last-Translator: Katerina Horylova, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -247,6 +247,12 @@ msgid "(included)."
 msgstr "(zahrnuto)."
 
 #. module: account
+#: model:ir.actions.report,print_report_name:account.account_invoices
+#: model:ir.actions.report,print_report_name:account.account_invoices_without_payment
+msgid "(object._get_report_base_filename())"
+msgstr "(object._get_report_base_filename())"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
 msgid ").<br/>"
 msgstr ").<br/>"
@@ -411,6 +417,11 @@ msgstr "30.00"
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "31.05"
 msgstr "31.05"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "35"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_company_currency_template
@@ -693,6 +704,14 @@ msgid "<i class=\"fa fa-print\"/> Print"
 msgstr "<i class=\"fa fa-print\"/> Tisk"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.account_move_send_form
+msgid ""
+"<i class=\"fa fa-question-circle ml4\" role=\"img\" aria-label=\"Warning\" "
+"title=\"The email address is unknown on the partner\" attrs=\"{'invisible': "
+"[('send_mail_readonly', '=', False)]}\"/>"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_terms_conditions_setting_banner
 msgid "<i class=\"oi oi-arrow-right me-1\"/>Back to settings"
 msgstr "<i class=\"oi oi-arrow-right me-1\"/>Zpět do nastavení"
@@ -717,11 +736,10 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid ""
-"<span attrs=\"{'invisible': ['|', '|', ('state', '!=', 'draft'), ('name', "
-"'!=', '/'), ('quick_edit_mode', '=', True)]}\">Draft</span>"
+"<span attrs=\"{'invisible': ['|', '|', '|', ('state', '!=', 'draft'), "
+"('name', '!=', '/'), ('posted_before', '=', True), ('quick_edit_mode', '=', "
+"True)]}\">Draft</span>"
 msgstr ""
-"<span attrs=\"{'invisible': ['|', '|', ('state', '!=', 'draft'), ('name', "
-"'!=', '/'), ('quick_edit_mode', '=', True)]}\">Návrh</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -1179,11 +1197,6 @@ msgstr "<span>Zobrazení</span>"
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong class=\"mr16\">Subtotal</strong>"
 msgstr "<strong class=\"mr16\">Mezisoučet</strong>"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-msgid "<strong>Amount Due</strong>"
-msgstr "<strong>Splatná částka</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -2609,6 +2622,12 @@ msgstr "Analytické plány"
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__analytic_precision
 msgid "Analytic Precision"
 msgstr "Analytická přesnost"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.action_analytic_reporting
+#: model:ir.ui.menu,name:account.menu_action_analytic_reporting
+msgid "Analytic Reporting"
+msgstr "Analytické přehledy"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__analytic_line_ids
@@ -4620,13 +4639,6 @@ msgstr "Opravný daňový doklad"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
-msgid "You can only send sales documents"
-msgstr "Můžete poslat pouze prodejní dokumenty"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-#, python-format
 msgid "Credit Note Created"
 msgstr "Opravný daňový doklad vytvořen"
 
@@ -5116,6 +5128,11 @@ msgstr "Má dáti účetní položky, které jsou spárovány s touto účetní 
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__12
 msgid "December"
 msgstr "Prosinec"
+
+#. module: account
+#: model:ir.model,name:account.model_decimal_precision
+msgid "Decimal Precision"
+msgstr "Desetinná přesnost"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__decimal_separator
@@ -5614,7 +5631,6 @@ msgstr "Distribuce na opravných daňových dokladech"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__refund_repartition_line_ids
-#: model:ir.model.fields,help:account.field_account_tax__repartition_line_ids
 msgid "Distribution when the tax is used on a refund"
 msgstr "Distribuce když je daň použita na opravném daňovém dokladu"
 
@@ -6062,6 +6078,16 @@ msgid "Epd Needed"
 msgstr "Vyžadováno EPD"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/account_type_selection/account_type_selection.js:0
+#: model:ir.model.fields.selection,name:account.selection__account_account__account_type__equity
+#: model:ir.model.fields.selection,name:account.selection__account_account__internal_group__equity
+#: model_terms:ir.ui.view,arch_db:account.view_account_search
+#, python-format
+msgid "Equity"
+msgstr "Základní kapitál"
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #, python-format
@@ -6071,16 +6097,6 @@ msgid ""
 msgstr ""
 "Chyba při načítání lokalizace. Pravděpodobně byste měli nejprve aktualizovat"
 " svou lokalizační aplikaci."
-
-#. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/components/account_type_selection/account_type_selection.js:0
-#: model:ir.model.fields.selection,name:account.selection__account_account__account_type__equity
-#: model:ir.model.fields.selection,name:account.selection__account_account__internal_group__equity
-#: model_terms:ir.ui.view,arch_db:account.view_account_search
-#, python-format
-msgid "Equity"
-msgstr "Základní kapitál"
 
 #. module: account
 #. odoo-python
@@ -6129,8 +6145,8 @@ msgid "Example:"
 msgstr "Příklad:"
 
 #. module: account
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/account/models/chart_template.py:0
 #: code:addons/account/static/src/components/account_payment_field/account_payment.xml:0
 #: code:addons/account/static/src/xml/legacy_account_payment.xml:0
@@ -6161,8 +6177,8 @@ msgid "Expects a Chart of Accounts"
 msgstr "Očekává účtovou osnovu"
 
 #. module: account
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/account/static/src/components/account_type_selection/account_type_selection.js:0
 #: code:addons/account/wizard/accrued_orders.py:0
 #: model:ir.model.fields.selection,name:account.selection__account_account__internal_group__expense
@@ -7629,6 +7645,13 @@ msgstr "Neplatný rozsah \"PSČ\", nastavte jej správně."
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_report.py:0
+#, python-format
+msgid "Invalid domain for expression '%s' of line '%s': %s"
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Invalid fiscal year last day"
@@ -7959,6 +7982,13 @@ msgid "Invoicing Onboarding"
 msgstr "Průvodce fakturací"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__is_being_sent
+#: model:ir.model.fields,field_description:account.field_account_move__is_being_sent
+#: model:ir.model.fields,field_description:account.field_account_payment__is_being_sent
+msgid "Is Being Sent"
+msgstr "Odesílá se"
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_amount__between
 msgid "Is Between"
 msgstr "Je mezi"
@@ -8103,8 +8133,8 @@ msgid "Journal Currency"
 msgstr "Měna deníku"
 
 #. module: account
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/account/models/account_journal_dashboard.py:0
 #: code:addons/account/static/src/components/journal_dashboard_activity/journal_dashboard_activity.js:0
 #: model:ir.actions.act_window,name:account.action_move_journal_line
@@ -8123,8 +8153,8 @@ msgid "Journal Entries by Date"
 msgstr "Účetní záznamy podle data"
 
 #. module: account
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/account/models/account_move.py:0
 #: code:addons/account/models/account_payment.py:0
 #: code:addons/account/static/src/components/journal_dashboard_activity/journal_dashboard_activity.js:0
@@ -9026,6 +9056,11 @@ msgid "Memo:"
 msgstr "Poznámka: "
 
 #. module: account
+#: model:ir.model,name:account.model_base_partner_merge_automatic_wizard
+msgid "Merge Partner Wizard"
+msgstr "Průvodce sloučením partnerů"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__message_has_error
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__message_has_error
 #: model:ir.model.fields,field_description:account.field_account_journal__message_has_error
@@ -9305,16 +9340,6 @@ msgstr "Nové hodnoty"
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__matching_order__new_first
 msgid "Newest first"
 msgstr "Od nejnovějšího"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_calendar_event_id
-#: model:ir.model.fields,field_description:account.field_account_journal__activity_calendar_event_id
-#: model:ir.model.fields,field_description:account.field_account_move__activity_calendar_event_id
-#: model:ir.model.fields,field_description:account.field_account_payment__activity_calendar_event_id
-#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_calendar_event_id
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_calendar_event_id
-msgid "Next Activity Calendar Event"
-msgstr "Další aktivita z kalendáře"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_date_deadline
@@ -10344,6 +10369,14 @@ msgid "Partners"
 msgstr "Partneři"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/partner.py:0
+#, python-format
+msgid "Partners that are used in hashed entries cannot be merged."
+msgstr ""
+"Partnery, kteří jsou použiti v zaheslovaných záznamech, nelze sloučit."
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Pay your bills in one-click using Euro SEPA Service"
 msgstr "Plaťte své přijaté faktury jedním kliknutím pomocí služby Euro SEPA"
@@ -10596,8 +10629,8 @@ msgstr "Platební podmínky: Okamžitá platba"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-msgid "Payment within 30 calendar days"
-msgstr "Platba během 30 kalendářních dní"
+msgid "Payment within 30 calendar day"
+msgstr "Platba do 30 kalendářních dnů"
 
 #. module: account
 #: model:mail.template,name:account.mail_template_data_payment_receipt
@@ -10700,13 +10733,6 @@ msgstr "Riziko phishingu: Vysoké"
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
 msgid "Phishing risk: Medium"
 msgstr "Riziko phishingu: Střední"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/wizard/account_move_send.py:0
-#, python-format
-msgid "Please add an email address for your partner"
-msgstr "Vyplňte emailovou adresu vašeho partnera"
 
 #. module: account
 #. odoo-python
@@ -11131,19 +11157,6 @@ msgstr "Rychlé zaznamenávání"
 #: model:account.account,name:account.1_expense_rd
 msgid "RD Expenses"
 msgstr "Náklady na výzkum a vývoj"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_account__rating_ids
-#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__rating_ids
-#: model:ir.model.fields,field_description:account.field_account_journal__rating_ids
-#: model:ir.model.fields,field_description:account.field_account_move__rating_ids
-#: model:ir.model.fields,field_description:account.field_account_payment__rating_ids
-#: model:ir.model.fields,field_description:account.field_account_reconcile_model__rating_ids
-#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__rating_ids
-#: model:ir.model.fields,field_description:account.field_res_company__rating_ids
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__rating_ids
-msgid "Ratings"
-msgstr "Hodnocení"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_resequence_view
@@ -12033,17 +12046,6 @@ msgid "Select specific invoice and delivery addresses"
 msgstr "Vyberte specifickou fakturační a dodací adresu"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid ""
-"We can't leave this document without any company. Please select a company "
-"for this document."
-msgstr ""
-"Tento dokument nemůžeme nechat bez společnosti. Vyberte si prosím "
-"společnost, která se k tomuto dokumentu vztahuje."
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid ""
 "Select this if the taxes should use cash basis, which will create an entry "
@@ -12076,7 +12078,6 @@ msgstr "Výběr"
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_move.py:0
 #: code:addons/account/models/account_move.py:0
 #: model:ir.actions.server,name:account.invoice_send
 #: model:ir.model.fields.selection,name:account.selection__account_payment__payment_type__outbound
@@ -13115,10 +13116,10 @@ msgstr "TaxCloud"
 #: model:ir.ui.menu,name:account.menu_action_tax_form
 #: model:onboarding.onboarding.step,title:account.onboarding_onboarding_step_default_taxes
 #: model:onboarding.onboarding.step,title:account.onboarding_onboarding_step_sales_tax
+#: model_terms:ir.ui.view,arch_db:account.document_tax_totals_company_currency_template
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
-#: model_terms:ir.ui.view,arch_db:account.document_tax_totals_company_currency_template
 #, python-format
 msgid "Taxes"
 msgstr "Daně"
@@ -13676,17 +13677,6 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/wizard/account_move_send.py:0
-#, python-format
-msgid ""
-"The following invoice(s) will not be sent by email, because the customers "
-"don't have email address: "
-msgstr ""
-"Následující faktura(y) nebudou poslány emailem, protože zákazníci nemají "
-"nastavenu emailovou adresu:"
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/account_reconcile_model.py:0
 #, python-format
 msgid ""
@@ -13827,6 +13817,7 @@ msgstr ""
 "Např:  .*N°48748 abc123.*"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -13905,6 +13896,17 @@ msgid ""
 "The partners of the journal's company and the related bank account mismatch."
 msgstr ""
 "Partner společnosti tohto deníku a napojeného bankovního účtu se neshodují."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_move_send.py:0
+#, python-format
+msgid ""
+"The partners on the following invoices have no email address, so those "
+"invoices will not be sent: %s"
+msgstr ""
+"Partneři na následujících fakturách nemají nastavenou e-mail adresu, takže "
+"tyto faktury nebudou odeslány: %s"
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_payment_check_amount_not_negative
@@ -14146,6 +14148,21 @@ msgid ""
 msgstr ""
 "Sekvence nebude nikdy restartována.\n"
 "Zvyšující se číslo v tomto případě je '%(formatted_seq)s'."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The sequence will restart at 1 at the start of every financial year.\n"
+"The financial start year detected here is '%(year)s'.\n"
+"The financial end year detected here is '%(year_end)s'.\n"
+"The incrementing number in this case is '%(formatted_seq)s'."
+msgstr ""
+"Na začátku každého rozpočtového roku se pořadí začíná znovu číslem 1.\n"
+"Zjištěný počáteční finanční rok je '%(year)s'.\n"
+"Koncový finanční rok je zde '%(year_end)s'.\n"
+"Přírůstkové číslo je v tomto případě '%(formatted_seq)s'."
 
 #. module: account
 #. odoo-python
@@ -15636,6 +15653,17 @@ msgstr "Upozornění na fakturách"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"We can't leave this document without any company. Please select a company "
+"for this document."
+msgstr ""
+"Tento dokument nemůžeme nechat bez společnosti. Vyberte si prosím "
+"společnost, která se k tomuto dokumentu vztahuje."
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid ""
@@ -15910,6 +15938,13 @@ msgid "You can only send from the same company."
 msgstr "Můžete posílat pouze pro tu samou společnost."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "You can only send sales documents"
+msgstr "Můžete poslat pouze prodejní dokumenty"
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_journal__invoice_reference_type
 msgid ""
 "You can set here the default communication that will appear on customer "
@@ -15919,13 +15954,6 @@ msgstr ""
 "Zde můžete nastavit výchozí komunikaci, která zobrazí na zákaznických "
 "fakturách po jejich potvrzení, aby pomohla zákazníkovi při provádění platby "
 "na tuto fakturu."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/wizard/account_move_send.py:0
-#, python-format
-msgid "You can't send invoice(s) in draft state."
-msgstr "Nemůžete odeslat fakturu(y) ve stavu návrh."
 
 #. module: account
 #. odoo-python
@@ -16062,6 +16090,13 @@ msgid ""
 msgstr ""
 "Nemůžete vytvořit platby pro účetní položky, které jsou všechny buď příchozí"
 " a nebo odchozí."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_move_send.py:0
+#, python-format
+msgid "You can't send invoice(s) in draft state."
+msgstr "Nemůžete odeslat fakturu(y) ve stavu návrh."
 
 #. module: account
 #. odoo-python
@@ -16282,6 +16317,13 @@ msgstr ""
 "Nemůžete importovat \"opening_balance\", pokud je úvodní záznam (%s) již "
 "zaúčtován.                         Pokud jste si naprosto jisti, že chcete "
 "upravit počáteční zůstatek svých účtů, resetujte záznam na návrh."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "You cannot merge accounts."
+msgstr "Účty nelze sloučit."
 
 #. module: account
 #. odoo-python

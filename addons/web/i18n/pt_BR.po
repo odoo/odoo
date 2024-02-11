@@ -6,19 +6,19 @@
 # Luis Felipe Miléo <mileo@kmee.com.br>, 2023
 # Peter Leaf <pablleaf@gmail.com>, 2023
 # Martin Trigaux, 2023
-# Wil Odoo, 2023
 # Kevilyn Rosa, 2023
 # Éder Brito <britoederr@gmail.com>, 2023
 # a75f12d3d37ea5bf159c4b3e85eb30e7_0fa6927, 2023
 # Maitê Dietze, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-25 11:23+0000\n"
+"POT-Creation-Date: 2024-02-05 16:24+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Maitê Dietze, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -623,6 +623,11 @@ msgid "9:30"
 msgstr "9:30"
 
 #. module: web
+#: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
+msgid "<i class=\"fa fa-repeat\"/> Reset"
+msgstr "<i class=\"fa fa-repeat\"/> Redefinir"
+
+#. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<span class=\"text-nowrap\">$ 2,887.50</span>"
 msgstr "<span class=\"text-nowrap\">R$ 2.887,50</span>"
@@ -1084,7 +1089,7 @@ msgstr "Adicionar uma linha"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "Add branch"
-msgstr "Adicionar filial"
+msgstr "Adicionar ramificação"
 
 #. module: web
 #. odoo-javascript
@@ -1199,6 +1204,7 @@ msgstr "Alerta"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/search/search_arch_parser.js:0
+#: code:addons/web/static/src/search/search_panel/search_panel.xml:0
 #: code:addons/web/static/src/search/search_panel/search_panel.xml:0
 #: code:addons/web/static/src/views/list/list_controller.xml:0
 #, python-format
@@ -1860,6 +1866,8 @@ msgstr "Noel"
 #. odoo-javascript
 #: code:addons/web/static/src/core/domain_selector/domain_selector_fields.xml:0
 #: code:addons/web/static/src/core/domain_selector/domain_selector_fields.xml:0
+#: code:addons/web/static/src/core/model_field_selector/model_field_selector.xml:0
+#: code:addons/web/static/src/core/model_field_selector/model_field_selector.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/views/fields/binary/binary_field.xml:0
@@ -2207,7 +2215,7 @@ msgstr "Não foi possível iniciar o escaneamento."
 #: code:addons/web/static/src/views/utils.js:0
 #, python-format
 msgid "Count"
-msgstr "Contagem"
+msgstr "Total"
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__country_id
@@ -3225,7 +3233,6 @@ msgstr "Arquivo"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
-#: code:addons/web/static/src/views/fields/file_handler.js:0
 #, python-format
 msgid "File upload"
 msgstr "Upload de arquivos"
@@ -3492,6 +3499,9 @@ msgid ""
 "click the <i class=\"fa fa-cloud-upload fa-fw\"></i> button now to ensure "
 "your work is saved before you exit this tab."
 msgstr ""
+"Atenção! Suas alterações recentes são grandes demais para serem salvas "
+"automaticamente. Clique no botão <i class=\"fa fa-cloud-upload fa-fw\"></i> "
+"agora para garantir que seu trabalho seja salvo antes de sair dessa aba."
 
 #. module: web
 #. odoo-javascript
@@ -4983,13 +4993,6 @@ msgstr "Sem criação rápida"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/search/search_panel/search_panel.xml:0
-#, python-format
-msgid "No quick filter available."
-msgstr "Nenhum filtro rápido disponível."
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/core/model_selector/model_selector.js:0
 #: code:addons/web/static/src/legacy/js/fields/field_utils.js:0
 #: code:addons/web/static/src/legacy/js/fields/relational_fields.js:0
@@ -5472,6 +5475,11 @@ msgid "Path not supported"
 msgstr "Caminho não suportado"
 
 #. module: web
+#: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
+msgid "Payment Communication: <b><span>INV/2023/00003</span></b>"
+msgstr "Comunicação de pagamento: <b><span>INV/2023/00003</span></b>"
+
+#. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/settings_form_view/widgets/res_config_invite_users.xml:0
 #, python-format
@@ -5605,20 +5613,6 @@ msgstr "Selecione campos para salvar na lista de exportação…"
 msgid ""
 "Please use the copy button to report the error to your support service."
 msgstr "Use o botão \"Copiar\" para relatar o erro ao serviço de suporte."
-
-#. module: web
-#: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
-msgid ""
-"Please use the following communication for your payment : <b><span>\n"
-"                           INV/2023/00003</span></b>"
-msgstr ""
-"Use a seguinte comunicação para seu pagamento: <b><span>\n"
-"                           INV/2023/00003</span></b>"
-
-#. module: web
-#: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
-msgid "Payment Communication: <b><span>INV/2023/00003</span></b>"
-msgstr "Comunicação de pagamento: <b><span>INV/2023/00003</span></b>"
 
 #. module: web
 #. odoo-javascript
@@ -5910,16 +5904,6 @@ msgstr "Trimestre"
 #, python-format
 msgid "Quick add"
 msgstr "Adição rápida"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/search/search_panel/search_panel.xml:0
-#, python-format
-msgid ""
-"Quick filters will become available if the records shown can be filtered."
-msgstr ""
-"São disponibilizados filtros rápidos se os registros exibidos puderem ser "
-"filtrados."
 
 #. module: web
 #. odoo-javascript
@@ -7111,8 +7095,14 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/utils/files.js:0
+#, python-format
+msgid "The selected file (%sB) is over the maximum allowed file size (%sB)."
+msgstr "O arquivo selecionado (%sB) excede o tamanho máximo permitido (%sB)."
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
-#: code:addons/web/static/src/views/fields/file_handler.js:0
 #, python-format
 msgid "The selected file exceed the maximum file size of %s."
 msgstr "O arquivo selecionado excede o tamanho máximo de %s."
@@ -7590,10 +7580,14 @@ msgstr "Tipo não literal desconhecido"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/domain_selector/domain_selector_autocomplete.js:0
 #: code:addons/web/static/src/legacy/js/fields/relational_fields.js:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/search/control_panel/control_panel.xml:0
+#: code:addons/web/static/src/views/fields/formatters.js:0
+#: code:addons/web/static/src/views/fields/many2one/many2one_field.js:0
+#: code:addons/web/static/src/views/fields/relational_utils.js:0
 #, python-format
 msgid "Unnamed"
 msgstr "Sem nome"
@@ -7620,13 +7614,6 @@ msgstr "Desmarcar todos"
 #, python-format
 msgid "Untitled"
 msgstr "Sem título"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/search/search_panel/search_panel.xml:0
-#, python-format
-msgid "Update the filters in the search bar to display more records."
-msgstr "Atualize os filtros na barra de pesquisa para exibir mais registros."
 
 #. module: web
 #. odoo-javascript
@@ -7975,6 +7962,7 @@ msgstr "Qua"
 #: code:addons/web/static/src/search/utils/dates.js:0
 #: code:addons/web/static/src/views/calendar/calendar_common/calendar_common_renderer.js:0
 #: code:addons/web/static/src/views/calendar/calendar_controller.js:0
+#: code:addons/web/static/src/views/calendar/calendar_controller.xml:0
 #, python-format
 msgid "Week"
 msgstr "Semana"
@@ -19594,8 +19582,8 @@ msgstr "justice"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/utils/numbers.js:0
 #: code:addons/web/static/src/legacy/js/core/utils.js:0
-#: code:addons/web/static/src/views/fields/formatters.js:0
 #, python-format
 msgid "kMGTPE"
 msgstr "kMGTPE"

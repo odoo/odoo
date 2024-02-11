@@ -4,17 +4,16 @@
 # 
 # Translators:
 # Pak Wai Ho, 2023
-# Wil Odoo, 2023
-# Martin Trigaux, 2024
 # Tony Ng, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-25 11:22+0000\n"
+"POT-Creation-Date: 2024-02-05 16:24+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Tony Ng, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -338,10 +337,25 @@ msgid "Attach a receipt - usually an image or a PDF file."
 msgstr "附上收據（通常是圖片或 PDF 檔案）。"
 
 #. module: hr_expense
+#: model:ir.model,name:hr_expense.model_ir_attachment
+msgid "Attachment"
+msgstr "附件"
+
+#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_attachment_count
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_attachment_count
 msgid "Attachment Count"
 msgstr "附件數"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__attachment_ids
+msgid "Attachments"
+msgstr "附件"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__attachment_ids
+msgid "Attachments of expenses"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__reference
@@ -530,7 +544,6 @@ msgstr "親愛的"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__hr_expense_alias_prefix
-#: model:ir.model.fields,field_description:hr_expense.field_res_config_test__hr_expense_alias_prefix
 msgid "Default Alias Name for Expenses"
 msgstr "費用的預設別名"
 
@@ -542,14 +555,12 @@ msgstr "預設類別"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_company__expense_product_id
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__expense_product_id
-#: model:ir.model.fields,field_description:hr_expense.field_res_config_test__expense_product_id
 msgid "Default Expense Category"
 msgstr "預設開支類別"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_company__expense_journal_id
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__expense_journal_id
-#: model:ir.model.fields,field_description:hr_expense.field_res_config_test__expense_journal_id
 msgid "Default Expense Journal"
 msgstr "預設開支日記帳"
 
@@ -1194,7 +1205,6 @@ msgstr "逾期活動"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__hr_expense_use_mailgateway
-#: model:ir.model.fields,field_description:hr_expense.field_res_config_test__hr_expense_use_mailgateway
 msgid "Let your employees record expenses by email"
 msgstr "允許員工通過電子郵件記錄費用"
 
@@ -1307,12 +1317,6 @@ msgstr "名稱"
 #, python-format
 msgid "New Expense Reports"
 msgstr "新開支報表"
-
-#. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_calendar_event_id
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__activity_calendar_event_id
-msgid "Next Activity Calendar Event"
-msgstr "下一個活動日曆事件"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_date_deadline
@@ -1510,7 +1514,6 @@ msgstr "公司支付費用時允許使用的付款方式。"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_company__company_expense_allowed_payment_method_line_ids
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__company_expense_allowed_payment_method_line_ids
-#: model:ir.model.fields,field_description:hr_expense.field_res_config_test__company_expense_allowed_payment_method_line_ids
 msgid "Payment methods available for expenses paid by company"
 msgstr "公司支付費用的可用付款方式"
 
@@ -1578,6 +1581,11 @@ msgid "Product Name"
 msgstr "產品名稱"
 
 #. module: hr_expense
+#: model:ir.model,name:hr_expense.model_product_product
+msgid "Product Variant"
+msgstr "產品款式"
+
+#. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_tree_view
 msgid "Product Variants"
 msgstr "產品變體"
@@ -1596,12 +1604,6 @@ msgstr "數量"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__quantity
 msgid "Quantity"
 msgstr "數量"
-
-#. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__rating_ids
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__rating_ids
-msgid "Ratings"
-msgstr "點評"
 
 #. module: hr_expense
 #. odoo-javascript
@@ -1675,7 +1677,6 @@ msgstr "登記付款"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__module_hr_payroll_expense
-#: model:ir.model.fields,field_description:hr_expense.field_res_config_test__module_hr_payroll_expense
 msgid "Reimburse Expenses in Payslip"
 msgstr "使用工資單支付費用報銷"
 
@@ -1784,7 +1785,6 @@ msgstr ""
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__module_hr_expense_extract
-#: model:ir.model.fields,field_description:hr_expense.field_res_config_test__module_hr_expense_extract
 msgid "Send bills to OCR to generate expenses"
 msgstr "將帳單發送到 OCR 以產生費用單據"
 
@@ -1860,6 +1860,11 @@ msgstr "拆分費用"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split_wizard__split_possible
 msgid "Split Possible"
 msgstr "分拆可能"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_product_product__standard_price_update_warning
+msgid "Standard Price Update Warning"
+msgstr "標準價格更新警告"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__state
@@ -1958,7 +1963,6 @@ msgstr "團隊審批人"
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_res_company__expense_journal_id
 #: model:ir.model.fields,help:hr_expense.field_res_config_settings__expense_journal_id
-#: model:ir.model.fields,help:hr_expense.field_res_config_test__expense_journal_id
 msgid ""
 "The company's default journal used when an employee expense is created."
 msgstr "創建員工支出時使用的公司默認日記帳。"
@@ -2016,8 +2020,10 @@ msgstr "分拆關閉後的總和保持不變"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
-msgid "There are no expense reports to approve."
-msgstr "沒有要審批的費用報告。"
+msgid ""
+"The work email of some employees is missing. Please add it on the employee "
+"form"
+msgstr "缺少某些員工的工作電子郵件。請在員工表格加入"
 
 #. module: hr_expense
 #. odoo-python
@@ -2341,6 +2347,7 @@ msgid "You cannot report expenses for different companies in the same report."
 msgstr "您不能在同一份報告中報告不同公司的支出。"
 
 #. module: hr_expense
+#. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You cannot report expenses for different employees in the same report."
