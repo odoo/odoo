@@ -1026,14 +1026,7 @@ class Website(models.Model):
     def _get_alternate_languages(self):
         self.ensure_one()
 
-        if not self._is_canonical_url():
-            # no hreflang on non-canonical pages
-            return []
-
         languages = self.language_ids
-        if len(languages) <= 1:
-            # no hreflang if no alternate language
-            return []
 
         langs = []
         shorts = []
