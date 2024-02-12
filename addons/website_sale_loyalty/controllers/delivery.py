@@ -10,7 +10,6 @@ class WebsiteSaleLoyaltyDelivery(WebsiteSaleDelivery):
     def _update_website_sale_delivery_return(self, order, **post):
         if order:
             order._update_programs_and_rewards()
-            order.validate_taxes_on_sales_order()
         result = super()._update_website_sale_delivery_return(order, **post)
         if order:
             free_shipping_lines = order._get_free_shipping_lines()
