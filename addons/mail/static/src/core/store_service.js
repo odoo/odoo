@@ -9,7 +9,7 @@ import { onChange } from "@mail/utils/misc";
 export class Store {
     constructor(env, { "mail.context": context }) {
         this.setup(env);
-        this.lastChannelSubscription = "";
+        this.lastChannelSubscription = "[]";
         this.inPublicPage = Boolean(context.inPublicPage);
         this.updateBusSubscription = debounce(this.updateBusSubscription, 0); // Wait for thread fully inserted.
     }
@@ -25,6 +25,12 @@ export class Store {
         for (const id of ids) {
             const thread = this.threads[id];
             if (thread.model === "discuss.channel" && thread.hasSelfAsMember) {
+                console.warn(
+                    thread.name,
+                    thread.selfMember.memberSince > this.env.services.bus_service.startedAt.toUTC(),
+                    thread.selfMember.memberSince.c,
+                    this.env.services.bus_service.startedAt.c
+                );
                 channelIds.push(id);
             }
         }

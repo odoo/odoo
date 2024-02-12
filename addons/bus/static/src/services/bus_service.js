@@ -6,6 +6,7 @@ import { registry } from "@web/core/registry";
 import { session } from "@web/session";
 import { isIosApp } from "@web/core/browser/feature_detection";
 import { WORKER_VERSION } from "@bus/workers/websocket_worker";
+import { parseDateTime } from "@web/core/l10n/dates";
 
 const { EventBus } = owl;
 
@@ -30,7 +31,7 @@ export const busService = {
         let isActive = false;
         let isInitialized = false;
         let isUsingSharedWorker = browser.SharedWorker && !isIosApp();
-        const startTs = new Date().getTime();
+        const startedAt = luxon.DateTime.now();
         const connectionInitializedDeferred = new Deferred();
 
         /**
@@ -101,7 +102,7 @@ export const busService = {
                 debug: odoo.debug,
                 lastNotificationId: multiTab.getSharedValue("last_notification_id", 0),
                 uid,
-                startTs,
+                startTs: startedAt.valueOf(),
             });
         }
 
@@ -198,6 +199,7 @@ export const busService = {
                     callback(detail)
                 );
             },
+            startedAt,
         };
     },
 };
