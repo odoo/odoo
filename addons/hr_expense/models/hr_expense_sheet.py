@@ -635,7 +635,7 @@ class HrExpenseSheet(models.Model):
 
         missing_email_employees = self.filtered(lambda sheet: not sheet.employee_id.work_email).employee_id
         if missing_email_employees:
-            action = self.env['ir.actions.actions']._for_xml_id('hr.open_view_employee_tree')
+            action = self.env['ir.actions.actions']._for_xml_id('hr.open_view_employee_list_my')
             action['domain'] = [('id', 'in', missing_email_employees.ids)]
             raise RedirectWarning(_("The work email of some employees is missing. Please add it on the employee form"), action, _("Show missing work email employees"))
 
