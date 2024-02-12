@@ -6,7 +6,7 @@ from freezegun import freeze_time
 
 from odoo.addons.hr_expense.tests.common import TestExpenseCommon
 from odoo.tests import tagged, Form
-from odoo.tools.misc import formatLang
+from odoo.tools.misc import formatLang, format_date
 from odoo import fields, Command
 from odoo.exceptions import UserError
 
@@ -1269,3 +1269,69 @@ class TestExpenses(TestExpenseCommon):
                 lambda att: att.checksum in sheet.expense_line_ids.attachment_ids.mapped('checksum')
             ).unlink()
             assert_attachments_are_synced(sheet, sheet_attachment, sheet_has_attachment)
+
+    def test_create_report_name(self):
+        """
+            When an expense sheet is created from one or more expense, the report name is generated through the expense name or date.
+            As the expense sheet is created directly from the hr.expense._get_default_expense_sheet_values method,
+            we only need to test the method.
+        """
+        expense_with_date_1, expense_with_date_2, expense_without_date = self.env['hr.expense'].create([{
+            'company_id': self.company_data['company'].id,
+            'name': f'test expense {i}',
+            'employee_id': self.expense_employee.id,
+            'product_id': self.product_a.id,
+            'unit_amount': self.product_a.standard_price,
+            'date': '2021-01-01',
+            'quantity': i + 1,
+        } for i in range(3)])
+        expense_without_date.date = False
+
+        # CASE 1: only one expense with or without date -> expense name
+        sheet_name = expense_with_date_1._get_default_expense_sheet_values()[0]['name']
+        self.assertEqual(expense_with_date_1.name, sheet_name, "The report name should be the same as the expense name")
+        sheet_name = expense_without_date._get_default_expense_sheet_values()[0]['name']
+        self.assertEqual(expense_without_date.name, sheet_name, "The report name should be the same as the expense name")
+
+        # CASE 2: two expenses with the same date -> expense date
+        expenses = expense_with_date_1 | expense_with_date_2
+        sheet_name = expenses._get_default_expense_sheet_values()[0]['name']
+        self.assertEqual(format_date(self.env, expense_with_date_1.date), sheet_name, "The report name should be the same as the expense date")
+
+        # CASE 3: two expenses with different dates -> date range
+        expense_with_date_2.date = '2021-01-02'
+        sheet_name = expenses._get_default_expense_sheet_values()[0]['name']
+        self.assertEqual(
+            f"{format_date(self.env, expense_with_date_1.date)} - {format_date(self.env, expense_with_date_2.date)}",
+            sheet_name,
+            "The report name should be the date range of the expenses",
+        )
+
+        # CASE 4: One or more expense doesn't have a date (single sheet) -> No fallback name
+        expenses |= expense_without_date
+        sheet_name = expenses._get_default_expense_sheet_values()[0]['name']
+        self.assertFalse(
+            sheet_name,
+            "The report (with the empty expense date) name should be empty as a fallback when several reports are created",
+        )
+        expenses.date = False
+        sheet_name = expenses._get_default_expense_sheet_values()[0]['name']
+        self.assertFalse(sheet_name, "The report name should be empty as a fallback")
+
+        # CASE 5: One or more expense doesn't have a date (multiple sheets) -> Fallback name
+        expenses |= self.env['hr.expense'].create([{
+            'company_id': self.company_data['company'].id,
+            'name': f'test expense by company {i}',
+            'employee_id': self.expense_employee.id,
+            'product_id': self.product_a.id,
+            'unit_amount': self.product_a.standard_price,
+            'payment_mode': 'company_account',
+            'date': '2021-01-01',
+            'quantity': i + 1,
+        } for i in range(3)])
+        sheet_names = [sheet['name'] for sheet in expenses._get_default_expense_sheet_values()]
+        self.assertSequenceEqual(
+            ("New Expense Report, paid by employee", format_date(self.env, expenses[-1].date)),
+            sheet_names,
+            "The report name should be 'New Expense Report, paid by (employee|company)' as a fallback",
+        )
