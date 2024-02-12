@@ -88,8 +88,8 @@ class CacheMiss(KeyError):
         When you try to read a value in a flushed cache.
     """
 
-    def __init__(self, record, field):
-        super().__init__("%r.%s" % (record, field.name))
+    def __init__(self, model_name, record_ids, field_name):
+        super().__init__(f'{model_name}{record_ids!r},{field_name}')
 
 
 class MissingError(UserError):

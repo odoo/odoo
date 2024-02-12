@@ -21,11 +21,13 @@ import warnings
 
 import psycopg2
 import pytz
+from functools import lru_cache
 from markupsafe import Markup
 from psycopg2.extras import Json as PsycopgJson
 from difflib import get_close_matches, unified_diff
 from hashlib import sha256
 
+from .api import NOTHING
 from .models import check_property_field_value_name
 from .netsvc import ColoredFormatter, GREEN, RED, DEFAULT, COLOR_PATTERN
 from .tools import (
@@ -40,7 +42,6 @@ from .tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
 from .tools.translate import html_translate, _
 from .tools.mimetypes import guess_mimetype
 
-from odoo.exceptions import CacheMiss
 from odoo.osv import expression
 
 DATE_LENGTH = len(date.today().strftime(DATE_FORMAT))
@@ -1172,15 +1173,14 @@ class Field(MetaField('DummyField', (object,), {})):
         records.env.remove_to_compute(self, records)
 
         # discard the records that are not modified
-        cache = records.env.cache
         cache_value = self.convert_to_cache(value, records)
-        records = cache.get_records_different_from(records, self, cache_value)
-        if not records:
+        ids = self.get_cache_ids_different_from(records, cache_value)
+        if not ids:
             return
 
         # update the cache
-        dirty = self.store and any(records._ids)
-        cache.update(records, self, itertools.repeat(cache_value), dirty=dirty)
+        dirty = self.store and any(ids)
+        self.update_cache(records.browse(ids), itertools.repeat(cache_value), dirty=dirty)
 
     ############################################################################
     #
@@ -1207,29 +1207,37 @@ class Field(MetaField('DummyField', (object,), {})):
             self.recompute(record)
 
         try:
-            value = env.cache.get(record, self)
+            value = env.cache.get(self, record.env.cache_key(self), record._ids[0])
             return self.convert_to_record(value, record)
-        except KeyError:
+        except CacheMiss:
             pass
-        # behavior in case of cache miss:
-        #
-        #   on a real record:
-        #       stored -> fetch from database (computation done above)
-        #       not stored and computed -> compute
-        #       not stored and not computed -> default
-        #
-        #   on a new record w/ origin:
-        #       stored and not (computed and readonly) -> fetch from origin
-        #       stored and computed and readonly -> compute
-        #       not stored and computed -> compute
-        #       not stored and not computed -> default
-        #
-        #   on a new record w/o origin:
-        #       stored and computed -> compute
-        #       stored and not computed -> new delegate or default
-        #       not stored and computed -> compute
-        #       not stored and not computed -> default
-        #
+        value = self._get(record)
+        return self.convert_to_record(value, record)
+
+    def _get(self, record):
+        """
+        fill the cache for the missing value and return the cache value when cache miss
+
+        on a real record:
+            stored -> fetch from database (computation done above)
+            not stored and computed -> compute
+            not stored and not computed -> default
+
+        on a new record w/ origin:
+            stored and not (computed and readonly) -> fetch from origin
+            stored and computed and readonly -> compute
+            not stored and computed -> compute
+            not stored and not computed -> default
+
+        on a new record w/o origin:
+            stored and computed -> compute
+            stored and not computed -> new delegate or default
+            not stored and computed -> compute
+            not stored and not computed -> default
+
+        return fetched cache value
+        """
+        env = record.env
         if self.store and record.id:
             # real record: fetch from database
             recs = record._in_cache_without(self)
@@ -1239,23 +1247,27 @@ class Field(MetaField('DummyField', (object,), {})):
                 if len(recs) == 1:
                     raise
                 record._fetch_field(self)
-            if not env.cache.contains(record, self):
+
+            try:
+                value = env.cache.get(self, record.env.cache_key(self), record._ids[0])
+                self.convert_to_record(value, record)  # use convert_to_record to check the value
+            except CacheMiss:
                 raise MissingError("\n".join([
                     _("Record does not exist or has been deleted."),
                     _("(Record: %s, User: %s)", record, env.uid),
                 ])) from None
-            value = env.cache.get(record, self)
 
         elif self.store and record._origin and not (self.compute and self.readonly):
             # new record with origin: fetch from origin
             value = self.convert_to_cache(record._origin[self.name], record, validate=False)
-            value = env.cache.patch_and_set(record, self, value)
+            self.set_cache(record, value)
+            value = env.cache.get(self, record.env.cache_key(self), record._ids[0])
 
         elif self.compute: #pylint: disable=using-constant-test
             # non-stored field or new record without origin: compute
             if env.is_protected(self, record):
                 value = self.convert_to_cache(False, record, validate=False)
-                env.cache.set(record, self, value)
+                self.set_cache(record, value)
             else:
                 recs = record if self.recursive else record._in_cache_without(self)
                 try:
@@ -1264,16 +1276,16 @@ class Field(MetaField('DummyField', (object,), {})):
                     self.compute_value(record)
                     recs = record
 
-                missing_recs_ids = tuple(env.cache.get_missing_ids(recs, self))
+                missing_recs_ids = tuple(self.get_cache_ids_missing(recs))
                 if missing_recs_ids:
                     missing_recs = record.browse(missing_recs_ids)
                     if self.readonly and not self.store:
                         raise ValueError(f"Compute method failed to assign {missing_recs}.{self.name}")
                     # fallback to null value if compute gives nothing, do it for every unset record
                     false_value = self.convert_to_cache(False, record, validate=False)
-                    env.cache.update(missing_recs, self, itertools.repeat(false_value))
+                    self.update_cache(missing_recs, itertools.repeat(false_value))
 
-                value = env.cache.get(record, self)
+                value = env.cache.get(self, record.env.cache_key(self), record._ids[0])
 
         elif self.type == 'many2one' and self.delegate and not record.id:
             # parent record of a new record: new record, with the same
@@ -1290,12 +1302,13 @@ class Field(MetaField('DummyField', (object,), {})):
             # in case the delegate field has inverse one2many fields, this
             # updates the inverse fields as well
             record._update_cache({self.name: parent}, validate=False)
-            value = env.cache.get(record, self)
+            value = env.cache.get(self, record.env.cache_key(self), record._ids[0])
 
         else:
             # non-stored field or stored field on new record: default value
             value = self.convert_to_cache(False, record, validate=False)
-            value = env.cache.patch_and_set(record, self, value)
+            self.set_cache(record, value)
+            value = env.cache.get(self, record.env.cache_key(self), record._ids[0])
             defaults = record.default_get([self.name])
             if self.name in defaults:
                 # The null value above is necessary to convert x2many field
@@ -1305,9 +1318,9 @@ class Field(MetaField('DummyField', (object,), {})):
                 # to determine the field's value, and generates an infinite
                 # recursion.
                 value = self.convert_to_cache(defaults[self.name], record)
-                env.cache.set(record, self, value)
+                self.set_cache(record, value)
 
-        return self.convert_to_record(value, record)
+        return value
 
     def mapped(self, records):
         """ Return the values of ``self`` for ``records``, either as a list
@@ -1316,26 +1329,7 @@ class Field(MetaField('DummyField', (object,), {})):
         This method is meant to be used internally and has very little benefit
         over a simple call to `~odoo.models.BaseModel.mapped()` on a recordset.
         """
-        if self.name == 'id':
-            # not stored in cache
-            return list(records._ids)
-
-        if self.compute and self.store:
-            # process pending computations
-            self.recompute(records)
-
-        # retrieve values in cache, and fetch missing ones
-        vals = records.env.cache.get_until_miss(records, self)
-        while len(vals) < len(records):
-            # It is important to construct a 'remaining' recordset with the
-            # _prefetch_ids of the original recordset, in order to prefetch as
-            # many records as possible. If not done this way, scenarios such as
-            # [rec.line_ids.mapped('name') for rec in recs] would generate one
-            # query per record in `recs`!
-            remaining = records.__class__(records.env, records._ids[len(vals):], records._prefetch_ids)
-            self.__get__(first(remaining), type(remaining))
-            vals += records.env.cache.get_until_miss(remaining, self)
-
+        vals = self._get_cache_values(records)
         return self.convert_to_record_multi(vals, records)
 
     def __set__(self, records, value):
@@ -1456,6 +1450,82 @@ class Field(MetaField('DummyField', (object,), {})):
         """ Return a domain representing a condition on ``self``. """
         return determine(self.search, records, operator, value)
 
+    # cache operations
+    def get_cache_mapping(self, env):
+        return env.cache._get_field_cache(self, env.cache_key(self)).keys().mapping
+
+    def _get_cache_values(self, records, getter=None):
+        """ return cache values and fetch missing ones
+        """
+        if self.name == 'id':
+            # not stored in cache
+            yield from records._ids
+            return
+
+        if self.compute and self.store:
+            # process pending computations
+            self.recompute(records)
+
+        # retrieve values in cache, and fetch missing ones
+        def on_cache_miss(field_cache, record_id):
+            # It is important to construct a 'remaining' recordset with the
+            # _prefetch_ids of the original recordset, in order to prefetch as
+            # many records as possible. If not done this way, scenarios such as
+            # [rec.line_ids.mapped('name') for rec in recs] would generate one
+            # query per record in `recs`!
+            record = records.__class__(records.env, (record_id,), records._prefetch_ids)
+            return self._get(record)
+
+        if getter is None:
+            getter = dict.get
+        context_key = records.env.cache_key(self)
+        vals = records.env.cache.get_values(self, context_key, records._ids, getter=getter, on_cache_miss=on_cache_miss)
+        yield from vals
+
+    def set_cache(self, record, value, dirty=False, check_dirty=True):
+        # when storing the value of a content dependent(binary) field, it will be stored once under the context value
+        # `context.get('bin_size')`, and a second time under the context value `None`. The flush implementation will
+        # then retrieve the value using the context value `None`.
+        env = record.env
+        context_key = env.cache_key(self)
+        env.cache.set(self, context_key, record._ids[0], value, dirty=dirty, check_dirty=check_dirty)
+        if check_dirty and dirty and context_key is not None:
+            # put the values under conventional context key values None,
+            # in order to ease the retrieval of those values to flush them
+            env.cache.set(self, None, record._ids[0], value, dirty=False, check_dirty=False)
+
+    def update_cache(self, records, values, dirty=False, check_dirty=True):
+        env = records.env
+        context_key = env.cache_key(self)
+        env.cache.update(self, context_key, records._ids, values, dirty=dirty, check_dirty=check_dirty)
+        if check_dirty and dirty and context_key is not None:
+            # put the values under conventional context key values None,
+            # in order to ease the retrieval of those values to flush them
+            env.cache.update(self, None, records._ids, values, dirty=False, check_dirty=False)
+
+    def impute_cache(self, records, values):
+        """ insert missing cache values without marking cache dirty """
+        context_key = records.env.cache_key(self)
+        records.env.cache.update(self, context_key, records._ids, values, check_dirty=False, updater=dict.setdefault)
+
+    def get_cache_ids_missing(self, records):
+        """ Return the ids of ``records`` that have no value for ``field``. """
+        context_key = records.env.cache_key(self)
+        field_cache = records.env.cache._get_field_cache(self, context_key)
+        for id_ in records._ids:
+            if id_ not in field_cache:
+                yield id_
+
+    def get_cache_ids_different_from(self, records, value):
+        cache = records.env.cache
+        context_key = records.env.cache_key(self)
+        field_cache = cache._get_field_cache(self, context_key)
+        return [
+            id_
+            for id_ in records._ids
+            if id_ not in field_cache or field_cache[id_] != value
+        ]
+
 
 class Boolean(Field):
     """ Encapsulates a :class:`bool`. """
@@ -1506,9 +1576,8 @@ class Integer(Field):
         return value
 
     def _update(self, records, value):
-        cache = records.env.cache
-        for record in records:
-            cache.set(record, self, value.id or 0)
+        # special case, when an integer field is used as inverse for a one2many
+        self.update_cache(records, itertools.repeat(value.id or 0))
 
     def convert_to_export(self, value, record):
         if value or value == 0:
@@ -1705,6 +1774,25 @@ class Monetary(Field):
         return value
 
 
+class TranslatedCacheValue(dict):
+    def __getitem__(self, key):
+        # fallback logic for fr_FR
+        # self['_fr_FR'] -> self['fr_FR'] -> self['en_US']
+        if (res := dict.get(self, key)) is not None:
+            return res
+        if key.startswith('_'):
+            key = key[1:]
+            if (res := dict.get(self, key)) is not None:
+                return res
+        return dict.__getitem__(self, 'en_US')
+
+    def __contains__(self, item):
+        return True
+
+    def copy(self):
+        return TranslatedCacheValue(super().copy())
+
+
 class _String(Field):
     """ Abstract class for string fields. """
     translate = False                   # whether the field is translated
@@ -1746,9 +1834,9 @@ class _String(Field):
             return None
         if callable(self.translate):
             # pylint: disable=not-callable
-            cache_value = self.translate(lambda t: None, cache_value)
+            cache_value = {k: self.translate(lambda t: None, v) for k, v in cache_value.items()}
         if self.translate:
-            cache_value = {'en_US': cache_value, record.env.lang or 'en_US': cache_value}
+            cache_value.setdefault('en_US', next(iter(cache_value.values())))
         return self._convert_from_cache_to_column(cache_value)
 
     def _convert_from_cache_to_column(self, value):
@@ -1760,11 +1848,20 @@ class _String(Field):
     def convert_to_cache(self, value, record, validate=True):
         if value is None or value is False:
             return None
+        if self.translate:
+            lang = (record.env.lang or 'en_US') if self.translate is True else record.env._lang
+            return {lang: value}
         return value
 
     def convert_to_record(self, value, record):
         if value is None:
             return False
+        if self.translate:
+            lang = (record.env.lang or 'en_US') if self.translate is True else record.env._lang
+            try:
+                value = value[lang]
+            except KeyError:
+                raise CacheMiss(record._name, record._ids, self) from None
         if callable(self.translate) and record.env.context.get('edit_translations'):
             if not (terms := self.get_trans_terms(value)):
                 return value
@@ -1786,6 +1883,8 @@ class _String(Field):
         return value
 
     def convert_to_write(self, value, record):
+        if self.translate and isinstance(value, dict):
+            return next(iter(value.values()))
         return value
 
     def get_translation_dictionary(self, from_lang_value, to_lang_values):
@@ -1813,19 +1912,14 @@ class _String(Field):
 
     def _get_stored_translations(self, record):
         """
-        : return: {'en_US': 'value_en_US', 'fr_FR': 'French'}
+        : return: {'en_US': 'value_en_US', 'fr_FR': 'French'} # cache format
         """
         # assert (self.translate and self.store and record)
-        record.flush_recordset([self.name])
-        cr = record.env.cr
-        cr.execute(SQL(
-            "SELECT %s FROM %s WHERE id = %s",
-            SQL.identifier(self.name),
-            SQL.identifier(record._table),
-            record.id,
-        ))
-        res = cr.fetchone()
-        return res[0] if res else None
+        try:
+            cache_value = list(self._get_cache_values(record.with_context(prefetch_langs=True)))[0]
+        except MissingError:
+            return None
+        return dict(cache_value) if cache_value else None
 
     def get_translation_fallback_langs(self, env):
         lang = (env.lang or 'en_US') if self.translate is True else env._lang
@@ -1841,52 +1935,46 @@ class _String(Field):
         if not self.translate or value is False or value is None:
             super().write(records, value)
             return
-        cache = records.env.cache
         cache_value = self.convert_to_cache(value, records)
-        records = cache.get_records_different_from(records, self, cache_value)
+        records = records.browse(self.get_cache_ids_different_from(records, cache_value))
         if not records:
             return
 
-        # flush dirty None values
-        dirty_records = records & cache.get_dirty_records(records, self)
-        if any(v is None for v in cache.get_values(dirty_records, self)):
-            dirty_records.flush_recordset([self.name])
-
-        dirty = self.store and any(records._ids)
-        lang = (records.env.lang or 'en_US') if self.translate is True else records.env._lang
-
-        # not dirty fields
-        if not dirty:
-            cache.update_raw(records, self, [{lang: cache_value} for _id in records._ids], dirty=False)
+        if not (self.store and any(records._ids)):
+            self.update_cache(records, [dict(cache_value) for _id in records._ids], dirty=False)
             return
+
+        lang = (records.env.lang or 'en_US') if self.translate is True else records.env._lang
+        assert not lang.startswith('_')  # technical '_' languages are readonly
 
         # model translation
         if not callable(self.translate):
-            # invalidate clean fields because them may contain fallback value
-            clean_records = records - cache.get_dirty_records(records, self)
-            clean_records.invalidate_recordset([self.name])
-            cache.update(records, self, itertools.repeat(cache_value), dirty=True)
+            new_translations_list = []
             if lang != 'en_US' and not records.env['res.lang']._get_data(code='en_US'):
                 # if 'en_US' is not active, we always write en_US to make sure value_en is meaningful
-                cache.update(records.with_context(lang='en_US'), self, itertools.repeat(cache_value), dirty=True)
+                cache_value['en_US'] = next(iter(cache_value.values()))
+            for record in records:
+                stored_translations = self._get_stored_translations(record) or TranslatedCacheValue({'en_US': next(iter(cache_value.values()))})
+                stored_translations.update(cache_value)
+                new_translations_list.append(stored_translations)
+            self.update_cache(records, new_translations_list, dirty=True)
             return
 
+        value = next(iter(cache_value.values()))
         # model term translation
         new_translations_list = []
         # pylint: disable=not-callable
-        cache_value = self.translate(lambda t: None, cache_value)
-        new_terms = set(self.get_trans_terms(cache_value))
+        value = self.translate(lambda t: None, value)
+        new_terms = set(self.get_trans_terms(value))
         delay_translations = records.env.context.get('delay_translations')
         for record in records:
             # shortcut when no term needs to be translated
             if not new_terms:
-                new_translations_list.append({'en_US': cache_value, lang: cache_value})
+                new_translations_list.append({'en_US': value, lang: value})
                 continue
-            # _get_stored_translations can be refactored and prefetches translations for multi records,
-            # but it is really rare to write the same non-False/None/no-term value to multi records
             stored_translations = self._get_stored_translations(record)
             if not stored_translations:
-                new_translations_list.append({'en_US': cache_value, lang: cache_value})
+                new_translations_list.append({'en_US': value, lang: value})
                 continue
             old_translations = {
                 k: stored_translations.get(f'_{k}', v)
@@ -1919,7 +2007,7 @@ class _String(Field):
                                 translation_dictionary[closest_term] = translation_dictionary.pop(old_term)
             # pylint: disable=not-callable
             new_translations = {
-                l: self.translate(lambda term: translation_dictionary.get(term, {l: None})[l], cache_value)
+                l: self.translate(lambda term: translation_dictionary.get(term, {l: None})[l], value)
                 for l in old_translations.keys()
             }
             if delay_translations:
@@ -1928,14 +2016,82 @@ class _String(Field):
                 new_store_translations.pop(f'_{lang}', None)
             else:
                 new_store_translations = new_translations
-            new_store_translations[lang] = cache_value
+            new_store_translations[lang] = value
 
             if not records.env['res.lang']._get_data(code='en_US'):
-                new_store_translations['en_US'] = cache_value
+                new_store_translations['en_US'] = value
                 new_store_translations.pop('_en_US', None)
-            new_translations_list.append(new_store_translations)
-        # Maybe we can use Cache.update(records.with_context(cache_update_raw=True), self, new_translations_list, dirty=True)
-        cache.update_raw(records, self, new_translations_list, dirty=True)
+            new_translations_list.append(TranslatedCacheValue(new_store_translations))
+        self.update_cache(records, new_translations_list, dirty=True)
+
+    # cache operations
+    def _get_cache_values(self, records, getter=None):
+        """ return cache values and fetch missing ones"""
+        if not self.translate or getter:
+            yield from super()._get_cache_values(records, getter)
+            return
+
+        lang = '__dummy' if records.env.context.get('prefetch_langs') \
+            else (records.env.lang or 'en_US') if self.translate is True \
+            else records.env._lang
+
+        def _getter(field_cache, record_id, nothing):
+            cache_value = field_cache.get(record_id, nothing)
+            if (cache_value is not nothing and cache_value is not None and lang not in cache_value):
+                return nothing
+            return cache_value
+
+        yield from super()._get_cache_values(records, _getter)
+
+    def impute_cache(self, records, values):
+        if not self.translate:
+            return super().impute_cache(records, values)
+        context_key = records.env.cache_key(self)
+        field_cache = records.env.cache._set_field_cache(self, context_key)
+        if records.env.context.get('prefetch_langs'):
+            for id_, value in zip(records._ids, values):
+                cur_value = field_cache.get(id_, False)
+                if not (cur_value is None or isinstance(cur_value, TranslatedCacheValue)):
+                    field_cache[id_] = None if value is None else TranslatedCacheValue(value)
+        else:
+            lang = (records.env.lang or 'en_US') if self.translate is True else records.env._lang
+            for id_, value in zip(records._ids, values):
+                cur_value = field_cache.get(id_, False)
+                if cur_value is False:
+                    field_cache[id_] = None if value is None else {lang: value}
+                elif not (cur_value is None or isinstance(cur_value, TranslatedCacheValue)):
+                    field_cache[id_].setdefault(lang, value)
+
+    def get_cache_ids_missing(self, records):
+        if not self.translate:
+            yield from super().get_cache_ids_missing(records)
+            return
+        context_key = records.env.cache_key(self)
+        field_cache = records.env.cache._get_field_cache(self, context_key)
+        lang = '__dummy' if records.env.context.get('prefetch_langs') \
+            else (records.env.lang or 'en_US') if self.translate is True \
+            else records.env._lang
+        for id_ in records._ids:
+            value = field_cache.get(id_, False)
+            if value is False or not (value is None or lang in value):
+                yield id_
+
+    def get_cache_ids_different_from(self, records, value):
+        if not self.translate:
+            return super().get_cache_ids_different_from(records, value)
+        cache = records.env.cache
+        context_key = records.env.cache_key(self)
+        field_cache = cache._get_field_cache(self, context_key)
+        ids_ = []
+        for id_ in records._ids:
+            if id_ not in field_cache:
+                ids_.append(id_)
+            elif (value_ := field_cache[id_]) is None or value is None:
+                if value != value_:
+                    ids_.append(id_)
+            elif not (value.items() <= value_.items()):
+                ids_.append(id_)
+        return ids_
 
 
 class Char(_String):
@@ -1992,7 +2148,7 @@ class Char(_String):
     def convert_to_cache(self, value, record, validate=True):
         if value is None or value is False:
             return None
-        return pycompat.to_text(value)[:self.size]
+        return super().convert_to_cache(pycompat.to_text(value)[:self.size], record, validate=validate)
 
 
 class Text(_String):
@@ -2015,7 +2171,7 @@ class Text(_String):
     def convert_to_cache(self, value, record, validate=True):
         if value is None or value is False:
             return None
-        return ustr(value)
+        return super().convert_to_cache(ustr(value), record, validate=validate)
 
 
 class Html(_String):
@@ -2074,7 +2230,8 @@ class Html(_String):
         return super().convert_to_column(self._convert(value, record, validate=True), record, values, validate=False)
 
     def convert_to_cache(self, value, record, validate=True):
-        return self._convert(value, record, validate)
+        value = self._convert(value, record, validate)
+        return super().convert_to_cache(value, record, validate=validate)
 
     def _convert(self, value, record, validate):
         if value is None or value is False:
@@ -2449,9 +2606,10 @@ class Binary(Field):
             super().compute_value(records_no_bin_size)
             # manually update the bin_size cache
             cache = records.env.cache
+            no_bin_size_context_key = records_no_bin_size.env.cache_key(self)
             for record_no_bin_size, record in zip(records_no_bin_size, records):
                 try:
-                    value = cache.get(record_no_bin_size, self)
+                    value = cache.get(self, no_bin_size_context_key, record_no_bin_size._ids[0])
                     # don't decode non-attachments to be consistent with pg_size_pretty
                     if not (self.store and self.column_type):
                         with contextlib.suppress(TypeError, binascii.Error):
@@ -2463,7 +2621,7 @@ class Binary(Field):
                         pass
                     cache_value = self.convert_to_cache(value, record)
                     # the dirty flag is independent from this assignment
-                    cache.set(record, self, cache_value, check_dirty=False)
+                    self.set_cache(record, cache_value, check_dirty=False)
                 except CacheMiss:
                     pass
         else:
@@ -2482,7 +2640,9 @@ class Binary(Field):
             att.res_id: att.datas
             for att in records.env['ir.attachment'].sudo().search(domain)
         }
-        records.env.cache.insert_missing(records, self, map(data.get, records._ids))
+
+        context_key = records.env.cache_key(self)
+        records.env.cache.update(self, context_key, records._ids, map(data.get, records._ids), check_dirty=False, updater=dict.setdefault)
 
     def create(self, record_values):
         assert self.attachment
@@ -2513,22 +2673,22 @@ class Binary(Field):
         records.env.remove_to_compute(self, records)
 
         # update the cache, and discard the records that are not modified
-        cache = records.env.cache
         cache_value = self.convert_to_cache(value, records)
-        records = cache.get_records_different_from(records, self, cache_value)
-        if not records:
+        ids = self.get_cache_ids_different_from(records, cache_value)
+        if not ids:
             return
+        records = records.browse(ids)
         if self.store:
             # determine records that are known to be not null
-            not_null = cache.get_records_different_from(records, self, None)
+            not_null_ids = self.get_cache_ids_different_from(records, None)
 
-        cache.update(records, self, itertools.repeat(cache_value))
+        self.update_cache(records, itertools.repeat(cache_value))
 
         # retrieve the attachments that store the values, and adapt them
         if self.store and any(records._ids):
             real_records = records.filtered('id')
             atts = records.env['ir.attachment'].sudo()
-            if not_null:
+            if not_null_ids:
                 atts = atts.search([
                     ('res_model', '=', self.model_name),
                     ('res_field', '=', self.name),
@@ -2590,7 +2750,7 @@ class Image(Binary):
             # cache to let the inverse method use the original image; the image
             # will be resized once the inverse has been applied
             cache_value = self.convert_to_cache(value if self.related else new_value, record)
-            record.env.cache.update(record, self, itertools.repeat(cache_value))
+            self.update_cache(record, itertools.repeat(cache_value))
         super(Image, self).create(new_record_values)
 
     def write(self, records, value):
@@ -2609,7 +2769,7 @@ class Image(Binary):
         super(Image, self).write(records, new_value)
         cache_value = self.convert_to_cache(value if self.related else new_value, records)
         dirty = self.column_type and self.store and any(records._ids)
-        records.env.cache.update(records, self, itertools.repeat(cache_value), dirty=dirty)
+        self.update_cache(records, itertools.repeat(cache_value), dirty=dirty)
 
     def _inverse_related(self, records):
         super()._inverse_related(records)
@@ -3104,9 +3264,7 @@ class Many2one(_Relational):
 
     def _update(self, records, value):
         """ Update the cached value of ``self`` for ``records`` with ``value``. """
-        cache = records.env.cache
-        for record in records:
-            cache.set(record, self, self.convert_to_cache(value, record, validate=False))
+        self.update_cache(records, itertools.repeat(self.convert_to_cache(value, records, validate=False)))
 
     def convert_to_column(self, value, record, values=None, validate=True):
         return value or None
@@ -3187,18 +3345,18 @@ class Many2one(_Relational):
         records.env.remove_to_compute(self, records)
 
         # discard the records that are not modified
-        cache = records.env.cache
         cache_value = self.convert_to_cache(value, records)
-        records = cache.get_records_different_from(records, self, cache_value)
-        if not records:
+        ids = self.get_cache_ids_different_from(records, cache_value)
+        if not ids:
             return
 
+        records = records.browse(ids)
         # remove records from the cache of one2many fields of old corecords
         self._remove_inverses(records, cache_value)
 
         # update the cache of self
-        dirty = self.store and any(records._ids)
-        cache.update(records, self, itertools.repeat(cache_value), dirty=dirty)
+        dirty = self.store and any(ids)
+        self.update_cache(records, itertools.repeat(cache_value), dirty=dirty)
 
         # update the cache of one2many fields of new corecord
         self._update_inverses(records, cache_value)
@@ -3211,15 +3369,19 @@ class Many2one(_Relational):
         # align(id) returns a NewId if records are new, a real id otherwise
         align = (lambda id_: id_) if all(record_ids) else (lambda id_: id_ and NewId(id_))
 
+        context_key = records.env.cache_key(self)
+        corecords_ids = [
+            align(id_)
+            for id_ in cache.get_values(self, context_key, records._ids)
+            if id_ is not NOTHING
+        ]
         for invf in records.pool.field_inverses[self]:
-            corecords = records.env[self.comodel_name].browse(
-                align(id_) for id_ in cache.get_values(records, self)
-            )
-            for corecord in corecords:
-                ids0 = cache.get(corecord, invf, None)
+            co_context_key = records.env.cache_key(invf)
+            for corecord_id in corecords_ids:
+                ids0 = cache.get(invf, co_context_key, corecord_id, None)
                 if ids0 is not None:
                     ids1 = tuple(id_ for id_ in ids0 if id_ not in record_ids)
-                    cache.set(corecord, invf, ids1)
+                    cache.set(invf, co_context_key, corecord_id, ids1)
 
     def _update_inverses(self, records, value):
         """ Add `records` to the cached values of the inverse fields of `self`. """
@@ -3231,13 +3393,14 @@ class Many2one(_Relational):
             valid_records = records.filtered_domain(invf.get_domain_list(corecord))
             if not valid_records:
                 continue
-            ids0 = cache.get(corecord, invf, None)
+            context_key = corecord.env.cache_key(invf)
+            ids0 = cache.get(invf, context_key, corecord._ids[0], None)
             # if the value for the corecord is not in cache, but this is a new
             # record, assign it anyway, as you won't be able to fetch it from
             # database (see `test_sale_order`)
             if ids0 is not None or not corecord.id:
                 ids1 = tuple(unique((ids0 or ()) + valid_records._ids))
-                cache.set(corecord, invf, ids1)
+                cache.set(invf, context_key, corecord._ids[0], ids1)
 
 
 class Many2oneReference(Integer):
@@ -3281,13 +3444,14 @@ class Many2oneReference(Integer):
             records = records.filtered_domain(invf.get_domain_list(corecord))
             if not records:
                 continue
-            ids0 = cache.get(corecord, invf, None)
+            context_key = corecord.env.cache_key(invf)
+            ids0 = cache.get(invf, context_key, corecord._ids[0], None)
             # if the value for the corecord is not in cache, but this is a new
             # record, assign it anyway, as you won't be able to fetch it from
             # database (see `test_sale_order`)
             if ids0 is not None or not corecord.id:
                 ids1 = tuple(unique((ids0 or ()) + records._ids))
-                cache.set(corecord, invf, ids1)
+                cache.set(invf, context_key, corecord._ids[0], ids1)
 
     def _record_ids_per_res_model(self, records):
         model_ids = defaultdict(set)
@@ -4221,8 +4385,40 @@ class _RelationalMulti(_Relational):
 
     def _update(self, records, value):
         """ Update the cached value of ``self`` for ``records`` with ``value``. """
-        records.env.cache.patch(records, self, value.id)
+        """ Apply a patch to an x2many field on new records. The patch consists
+        in adding new_id to its value in cache. If the value is not in cache
+        yet, it will be applied once the value is put in cache with method
+        :meth:`set_cache`/`update_cache`.
+        """
+        new_id = value.id
+        assert not new_id, "Cache.patch can only be called with a new id"
+        cache = records.env.cache
+        context_key = records.env.cache_key(self)
+        field_cache = cache._set_field_cache(self, context_key)
+        for id_ in records._ids:
+            assert not id_, "Cache.patch can only be called with new records"
+            if id_ in field_cache:
+                field_cache[id_] = tuple(dict.fromkeys(field_cache[id_] + (new_id,)))
+            else:
+                cache._patches[self][id_].append(new_id)
         records.modified([self.name])
+
+    def set_cache(self, record, value, dirty=False, check_dirty=True):
+        if (not record._ids[0] and
+                (field_patches := record.env.cache._patches.get(self)) and
+                (ids := field_patches.pop(record._ids[0], ()))):  # pylint: disable=used-before-assignment
+            value = tuple(dict.fromkeys(value + tuple(ids)))
+        super().set_cache(record, value, dirty, check_dirty)
+
+    def update_cache(self, records, values, dirty=False, check_dirty=True):
+        if (not all(records._ids) and
+                (field_patches := records.env.cache._patches.get(self))):
+            values_ = []
+            for id_, value in zip(records._ids, values):
+                ids = field_patches.pop(id_, ())
+                values_.append(tuple(dict.fromkeys(value + tuple(ids))) if ids else value)
+            values = values_
+        super().update_cache(records, values, dirty, check_dirty)
 
     def convert_to_cache(self, value, record, validate=True):
         # cache format: tuple(ids)
@@ -4506,7 +4702,8 @@ class One2many(_RelationalMulti):
 
         # store result in cache
         values = [tuple(group[id_]) for id_ in records._ids]
-        records.env.cache.insert_missing(records, self, values)
+        context_key = records.env.cache_key(self)
+        records.env.cache.update(self, context_key, records._ids, values, check_dirty=False, updater=dict.setdefault)
 
     def write_real(self, records_commands_list, create=False):
         """ Update real records. """
@@ -4594,11 +4791,12 @@ class One2many(_RelationalMulti):
 
             def link(record, lines):
                 ids = record[self.name]._ids
-                cache.set(record, self, tuple(unique(ids + lines._ids)))
+                cache.set(self, record.env.cache_key(self), record._ids[0], tuple(unique(ids + lines._ids)))
 
             def unlink(lines):
+                context_key = records.env.cache_key(self)
                 for record in records:
-                    cache.set(record, self, (record[self.name] - lines)._ids)
+                    cache.set(self, context_key, record._ids[0], (record[self.name] - lines)._ids)
 
             for recs, commands in records_commands_list:
                 for command in (commands or ()):
@@ -4615,9 +4813,10 @@ class One2many(_RelationalMulti):
                         link(recs[-1], comodel.browse(command[1]))
                     elif command[0] in (Command.CLEAR, Command.SET):
                         # assign the given lines to the last record only
-                        cache.update(recs, self, itertools.repeat(()))
+                        context_key = records.env.cache_key(self)
+                        cache.update(self, context_key, recs._ids, itertools.repeat(()))
                         lines = comodel.browse(command[2] if command[0] == Command.SET else [])
-                        cache.set(recs[-1], self, lines._ids)
+                        cache.set(self, context_key, recs[-1]._ids[0], lines._ids)
 
     def write_new(self, records_commands_list):
         if not records_commands_list:
@@ -4643,9 +4842,10 @@ class One2many(_RelationalMulti):
             # make sure self's inverse is in cache
             inverse_field = comodel._fields[inverse]
             for record in records:
-                cache.update(record[self.name], inverse_field, itertools.repeat(record.id))
+                inverse_field.update_cache(record[self.name], itertools.repeat(record.id))
 
             for recs, commands in records_commands_list:
+                context_key = recs.env.cache_key(self)
                 for command in commands:
                     if command[0] == Command.CREATE:
                         for record in recs:
@@ -4660,24 +4860,26 @@ class One2many(_RelationalMulti):
                     elif command[0] == Command.LINK:
                         browse([command[1]])[inverse] = recs[-1]
                     elif command[0] == Command.CLEAR:
-                        cache.update(recs, self, itertools.repeat(()))
+                        cache.update(self, context_key, recs._ids, itertools.repeat(()))
                     elif command[0] == Command.SET:
                         # assign the given lines to the last record only
-                        cache.update(recs, self, itertools.repeat(()))
+                        cache.update(self, context_key, recs._ids, itertools.repeat(()))
                         last, lines = recs[-1], browse(command[2])
-                        cache.set(last, self, lines._ids)
-                        cache.update(lines, inverse_field, itertools.repeat(last.id))
+                        cache.set(self, context_key, last._ids[0], lines._ids)
+                        inverse_field.update_cache(lines, itertools.repeat(last.id))
 
         else:
             def link(record, lines):
                 ids = record[self.name]._ids
-                cache.set(record, self, tuple(unique(ids + lines._ids)))
+                cache.set(self, record.env.cache_key(self), record._ids[0], tuple(unique(ids + lines._ids)))
 
             def unlink(lines):
+                context_key = records.env.cache_key(self)
                 for record in records:
-                    cache.set(record, self, (record[self.name] - lines)._ids)
+                    cache.set(self, context_key, record._ids[0], (record[self.name] - lines)._ids)
 
             for recs, commands in records_commands_list:
+                context_key = recs.env.cache_key(self)
                 for command in commands:
                     if command[0] == Command.CREATE:
                         for record in recs:
@@ -4692,10 +4894,9 @@ class One2many(_RelationalMulti):
                         link(recs[-1], browse([command[1]]))
                     elif command[0] in (Command.CLEAR, Command.SET):
                         # assign the given lines to the last record only
-                        cache.update(recs, self, itertools.repeat(()))
+                        cache.update(self, context_key, recs._ids, itertools.repeat(()))
                         lines = browse(command[2] if command[0] == Command.SET else [])
-                        cache.set(recs[-1], self, lines._ids)
-
+                        cache.set(self, context_key, recs._ids[-1], lines._ids)
 
 class Many2many(_RelationalMulti):
     """ Many2many field; the value of such a field is the recordset.
@@ -4883,7 +5084,8 @@ class Many2many(_RelationalMulti):
 
         # store result in cache
         values = [tuple(group[id_]) for id_ in records._ids]
-        records.env.cache.insert_missing(records, self, values)
+        context_key = records.env.cache_key(self)
+        records.env.cache.update(self, context_key, records._ids, values, check_dirty=False, updater=dict.setdefault)
 
     def write_real(self, records_commands_list, create=False):
         # records_commands_list = [(records, commands), ...]
@@ -4905,7 +5107,7 @@ class Many2many(_RelationalMulti):
             # is not in cache: one that actually checks access rules for
             # records, and the other one fetching the actual data. We use
             # `self.read` instead to shortcut the first query.
-            missing_ids = list(records.env.cache.get_missing_ids(records, self))
+            missing_ids = list(self.get_cache_ids_missing(records))
             if missing_ids:
                 self.read(records.browse(missing_ids))
 
@@ -4968,8 +5170,9 @@ class Many2many(_RelationalMulti):
 
         # update the cache of self
         cache = records.env.cache
+        context_key = records.env.cache_key(self)
         for record in records:
-            cache.set(record, self, tuple(new_relation[record.id]))
+            cache.set(self, context_key, record._ids[0], tuple(new_relation[record.id]))
 
         # determine the corecords for which the relation has changed
         modified_corecord_ids = set()
@@ -4996,13 +5199,13 @@ class Many2many(_RelationalMulti):
                 valid_ids = set(records.filtered_domain(domain)._ids)
                 if not valid_ids:
                     continue
+                context_key = comodel.env.cache_key(invf)
                 for y, xs in y_to_xs.items():
-                    corecord = comodel.browse(y)
                     try:
-                        ids0 = cache.get(corecord, invf)
+                        ids0 = cache.get(invf, context_key, y)
                         ids1 = tuple(set(ids0) | (xs & valid_ids))
-                        cache.set(corecord, invf, ids1)
-                    except KeyError:
+                        cache.set(invf, context_key, y, ids1)
+                    except CacheMiss:
                         pass
 
         # process pairs to remove
@@ -5035,13 +5238,13 @@ class Many2many(_RelationalMulti):
 
             # update the cache of inverse fields
             for invf in records.pool.field_inverses[self]:
+                context_key = comodel.env.cache_key(invf)
                 for y, xs in y_to_xs.items():
-                    corecord = comodel.browse(y)
                     try:
-                        ids0 = cache.get(corecord, invf)
+                        ids0 = cache.get(invf, context_key, y)
                         ids1 = tuple(id_ for id_ in ids0 if id_ not in xs)
-                        cache.set(corecord, invf, ids1)
-                    except KeyError:
+                        cache.set(invf, context_key, y, ids1)
+                    except CacheMiss:
                         pass
 
         if modified_corecord_ids:
@@ -5106,8 +5309,9 @@ class Many2many(_RelationalMulti):
 
         # update the cache of self
         cache = records.env.cache
+        context_key = records.env.cache_key(self)
         for record in records:
-            cache.set(record, self, tuple(new_relation[record.id]))
+            cache.set(self, context_key, record._ids[0], tuple(new_relation[record.id]))
 
         # determine the corecords for which the relation has changed
         modified_corecord_ids = set()
@@ -5125,13 +5329,13 @@ class Many2many(_RelationalMulti):
                 valid_ids = set(records.filtered_domain(domain)._ids)
                 if not valid_ids:
                     continue
+                context_key = comodel.env.cache_key(invf)
                 for y, xs in y_to_xs.items():
-                    corecord = comodel.browse([y])
                     try:
-                        ids0 = cache.get(corecord, invf)
+                        ids0 = cache.get(invf, context_key, y)
                         ids1 = tuple(set(ids0) | (xs & valid_ids))
-                        cache.set(corecord, invf, ids1)
-                    except KeyError:
+                        cache.set(invf, context_key, y, ids1)
+                    except CacheMiss:
                         pass
 
         # process pairs to remove
@@ -5143,13 +5347,13 @@ class Many2many(_RelationalMulti):
                 y_to_xs[y].add(x)
                 modified_corecord_ids.add(y)
             for invf in records.pool.field_inverses[self]:
+                context_key = comodel.env.cache_key(invf)
                 for y, xs in y_to_xs.items():
-                    corecord = comodel.browse([y])
                     try:
-                        ids0 = cache.get(corecord, invf)
+                        ids0 = cache.get(invf, context_key, y)
                         ids1 = tuple(id_ for id_ in ids0 if id_ not in xs)
-                        cache.set(corecord, invf, ids1)
-                    except KeyError:
+                        cache.set(invf, context_key, y, ids1)
+                    except CacheMiss:
                         pass
 
         if modified_corecord_ids:
@@ -5202,14 +5406,16 @@ class PrefetchMany2one:
         self.field = field
 
     def __iter__(self):
-        records = self.record.browse(self.record._prefetch_ids)
-        ids = self.record.env.cache.get_values(records, self.field)
-        return unique(id_ for id_ in ids if id_ is not None)
+        env = self.record.env
+        context_key = env.cache_key(self.field)
+        ids = env.cache.get_values(self.field, context_key, self.record._prefetch_ids)
+        return unique(id_ for id_ in ids if id_ is not None and id_ is not NOTHING)
 
     def __reversed__(self):
-        records = self.record.browse(reversed(self.record._prefetch_ids))
-        ids = self.record.env.cache.get_values(records, self.field)
-        return unique(id_ for id_ in ids if id_ is not None)
+        env = self.record.env
+        context_key = env.cache_key(self.field)
+        ids = env.cache.get_values(self.field, context_key, reversed(self.record._prefetch_ids))
+        return unique(id_ for id_ in ids if id_ is not None and id_ is not NOTHING)
 
 
 class PrefetchX2many:
@@ -5221,14 +5427,16 @@ class PrefetchX2many:
         self.field = field
 
     def __iter__(self):
-        records = self.record.browse(self.record._prefetch_ids)
-        ids_list = self.record.env.cache.get_values(records, self.field)
-        return unique(id_ for ids in ids_list for id_ in ids)
+        env = self.record.env
+        context_key = env.cache_key(self.field)
+        ids_list = env.cache.get_values(self.field, context_key, self.record._prefetch_ids)
+        return unique(id_ for ids in ids_list if ids is not NOTHING for id_ in ids)
 
     def __reversed__(self):
-        records = self.record.browse(reversed(self.record._prefetch_ids))
-        ids_list = self.record.env.cache.get_values(records, self.field)
-        return unique(id_ for ids in ids_list for id_ in ids)
+        env = self.record.env
+        context_key = env.cache_key(self.field)
+        ids_list = env.cache.get_values(self.field, context_key, reversed(self.record._prefetch_ids))
+        return unique(id_ for ids in ids_list if ids is not NOTHING for id_ in ids)
 
 
 def apply_required(model, field_name):
@@ -5243,7 +5451,7 @@ def apply_required(model, field_name):
 
 # imported here to avoid dependency cycle issues
 # pylint: disable=wrong-import-position
-from .exceptions import AccessError, MissingError, UserError
+from .exceptions import AccessError, MissingError, UserError, CacheMiss
 from .models import (
     check_pg_name, expand_ids, is_definition_class,
     BaseModel, IdType, NewId, PREFETCH_MAX,

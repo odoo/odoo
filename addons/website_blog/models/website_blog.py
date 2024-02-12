@@ -211,6 +211,8 @@ class BlogPost(models.Model):
                 # translation value
                 blog_post.update_field_translations('teaser_manual', {'en_US': ''})
             blog_post.teaser_manual = blog_post.teaser
+            if not blog_post.teaser_manual:
+                blog_post.invalidate_recordset(['teaser'])
 
     @api.depends('create_date', 'published_date')
     def _compute_post_date(self):

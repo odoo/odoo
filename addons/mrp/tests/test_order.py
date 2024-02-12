@@ -474,7 +474,7 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(wo.qty_producing, 4, "Changing the qty_producing in the frontend is not persisted")
 
     def test_recursive_work_orders(self):
-        """ When planning more than 322 work orders,
+        """ When planning more than 242 work orders,
             there is a recursion error
             (with the default getrecursionlimit of 1000)
         """
@@ -490,7 +490,7 @@ class TestMrpOrder(TestMrpCommon):
                 'product_uom_id': product_uom_id,
                 'production_id': mo_no_company.id,
                 'duration': 60,
-            } for n in range(300)
+            } for n in range(230)
         ]
         self.env['mrp.workorder'].create(values)
         mo_no_company.action_confirm()

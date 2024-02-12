@@ -75,7 +75,7 @@ class TemplateResetMixin(models.AbstractModel):
         expr = "//*[local-name() = $tag and (@id = $xml_id or @id = $external_id)]"
         templates_with_missing_source = []
         lang_false = {code: False for code, _ in self.env['res.lang'].get_installed() if code != 'en_US'}
-        for template in self.filtered('template_fs'):
+        for template in self.filtered('template_fs').with_context(lang=None):
             external_id = template.get_external_id().get(template.id)
             module, xml_id = external_id.split('.')
             fullpath = file_path(template.template_fs)
