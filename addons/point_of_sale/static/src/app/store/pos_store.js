@@ -686,7 +686,11 @@ export class PosStore extends Reactive {
         for (var i = 0; i < jsons.length; i++) {
             var json = jsons[i];
             if (json.pos_session_id === this.session.id) {
-                orders.push(this.createReactiveOrder(json));
+                try {
+                    orders.push(this.createReactiveOrder(json));
+                } catch (error) {
+                    console.warn(error);
+                }
             }
         }
         for (i = 0; i < jsons.length; i++) {
@@ -695,7 +699,11 @@ export class PosStore extends Reactive {
                 json.pos_session_id !== this.session.id &&
                 (json.lines.length > 0 || json.statement_ids.length > 0)
             ) {
-                orders.push(this.createReactiveOrder(json));
+                try {
+                    orders.push(this.createReactiveOrder(json));
+                } catch (error) {
+                    console.warn(error);
+            }
             } else if (json.pos_session_id !== this.session.id) {
                 this.db.remove_unpaid_order(jsons[i]);
             }
