@@ -1511,12 +1511,12 @@ export class Model extends Array {
     /**
      * @param {string} name
      * @param {DomainListRepr} domain
-     * @param {KwArgs<{ limit: number; name: string }>} [kwargs={}]
+     * @param {KwArgs<{ args: DomainListRepr; limit: number; name: string }>} [kwargs={}]
      */
     name_search(name, domain, kwargs = {}) {
         const str = typeof name === "string" ? name : kwargs.name;
         const limit = kwargs.limit || 100;
-        const actualDomain = new Domain(domain || kwargs.domain || []);
+        const actualDomain = new Domain(domain || kwargs.args || []);
         /** @type {[number, string][]} */
         const result = [];
         for (const record of this) {
