@@ -6,7 +6,7 @@ from freezegun import freeze_time
 
 from odoo import Command
 from odoo.addons.hr_expense.tests.common import TestExpenseCommon
-from odoo.exceptions import UserError
+from odoo.exceptions import RedirectWarning, UserError
 from odoo.tests import tagged, Form
 from odoo.tools.misc import formatLang
 
@@ -881,3 +881,33 @@ class TestExpenses(TestExpenseCommon):
                 lambda att: att.checksum in sheet.expense_line_ids.attachment_ids.mapped('checksum')
             ).unlink()
             assert_attachments_are_synced(sheet, sheet_attachment, sheet_has_attachment)
+
+    def test_expense_sheet_with_employee_of_no_work_email(self):
+        """
+        Should raise a RedirectWarning when the selected employee in the sheet doesn't have a work email.
+        """
+        # Create two employees with no work email
+        employees = self.env["hr.employee"].create([
+            {
+                'name': "Test Employee1"
+            },
+            {
+                'name': "Test Employee2"
+            }])
+        # Create two sheets with the above created employees
+        sheet = self.env["hr.expense.sheet"].create([
+            {
+                'company_id': self.env.company.id,
+                'employee_id': employees[0].id,
+                'name': 'test sheet1',
+            },
+            {
+                'company_id': self.env.company.id,
+                'employee_id': employees[1].id,
+                'name': 'test sheet2',
+            }])
+
+        sheet.action_submit_sheet()
+        sheet.action_approve_expense_sheets()
+        with self.assertRaises(RedirectWarning):
+            sheet.action_sheet_move_create()
