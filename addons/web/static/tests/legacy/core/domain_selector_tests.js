@@ -23,7 +23,6 @@ import { popoverService } from "@web/core/popover/popover_service";
 import { registry } from "@web/core/registry";
 import { uiService } from "@web/core/ui/ui_service";
 import { getPickerApplyButton, getPickerCell } from "./datetime/datetime_test_helpers";
-import { openModelFieldSelectorPopover } from "./model_field_selector_tests";
 import { nameService } from "@web/core/name_service";
 import { dialogService } from "@web/core/dialog/dialog_service";
 import { browser } from "@web/core/browser/browser";
@@ -89,6 +88,10 @@ function addProductIds() {
     };
 }
 
+async function openModelFieldSelectorPopover(target, index = 0) {
+    const el = target.querySelectorAll(".o_model_field_selector")[index];
+    await click(el);
+}
 ////////////////////////////////////////////////////////////////////////////////
 
 async function mountComponent(Component, params = {}) {
