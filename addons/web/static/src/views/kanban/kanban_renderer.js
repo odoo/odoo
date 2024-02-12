@@ -51,7 +51,6 @@ export class KanbanRenderer extends Component {
         "deleteRecord",
         "openRecord",
         "readonly",
-        "evalViewModifier",
         "forceGlobalClick?",
         "noContentHelp?",
         "scrollTop?",

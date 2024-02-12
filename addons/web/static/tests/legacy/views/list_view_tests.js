@@ -16614,7 +16614,10 @@ QUnit.module("Views", (hooks) => {
 
             // Only a setItem since the list view maintains its own internal state of toggled
             // optional columns.
-            assert.verifySteps(["setItem " + localStorageKey + ' to "m2o,reference"']);
+            assert.verifySteps([
+                "setItem " + localStorageKey + ' to "m2o,reference"',
+                "getItem optional_fields,foo,list,42,foo,m2o,reference"
+            ]);
 
             // 5 th (1 for checkbox, 3 for columns, 1 for optional columns)
             assert.containsN(target, "th", 5, "should have 5 th");
@@ -16705,7 +16708,10 @@ QUnit.module("Views", (hooks) => {
                     ".o-dropdown--menu span.dropdown-item input"
                 )[1]
             );
-            assert.verifySteps(["setItem " + localStorageKey + ' to ""']);
+            assert.verifySteps([
+                "setItem " + localStorageKey + ' to ""',
+                "getItem optional_fields,foo,list,42,foo,m2o,reference"
+            ]);
             verifyHeaders(["foo"]);
             // mount again to ensure that active optional columns will not be reset while empty
             await doAction(webClient, 1);
@@ -19390,6 +19396,122 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelectorAll(".o-dropdown--menu input[type='checkbox']")[1]);
         assert.containsNone(target, ".o_list_renderer th[data-name='properties.property_char']");
         assert.containsNone(target, ".o_list_renderer th[data-name='properties.property_boolean']");
+    });
+
+    QUnit.test("properties: optional show/hide (no config in local storage)", async (assert) => {
+        const definition = {
+            type: "char",
+            name: "property_char",
+            string: "Property char",
+        };
+        serverData.models.bar.records[0].definitions = [definition];
+        for (const record of serverData.models.foo.records) {
+            if (record.m2o === 1) {
+                record.properties = [{ ...definition, value: "0" }];
+            }
+        }
+
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree editable="bottom">
+                    <field name="m2o"/>
+                    <field name="properties"/>
+                </tree>`,
+        });
+
+        assert.containsN(target, ".o_list_table thead th", 3);
+        assert.containsOnce(target, ".o_list_table thead th.o_list_record_selector");
+        assert.containsOnce(target, ".o_list_table thead th[data-name=m2o]");
+        assert.containsOnce(target, ".o_list_table thead th.o_list_actions_header");
+    });
+
+    QUnit.test("properties: optional show/hide (config from local storage)", async (assert) => {
+        const definition = {
+            type: "char",
+            name: "property_char",
+            string: "Property char",
+        };
+        serverData.models.bar.records[0].definitions = [definition];
+        for (const record of serverData.models.foo.records) {
+            if (record.m2o === 1) {
+                record.properties = [{ ...definition, value: "0" }];
+            }
+        }
+
+        patchWithCleanup(browser.localStorage, {
+            getItem(key) {
+                return "properties.property_char";
+            },
+        });
+
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree editable="bottom">
+                    <field name="m2o"/>
+                    <field name="properties"/>
+                </tree>`,
+        });
+
+        assert.containsN(target, ".o_list_table thead th", 4);
+        assert.containsOnce(target, ".o_list_table thead th.o_list_record_selector");
+        assert.containsOnce(target, ".o_list_table thead th[data-name=m2o]");
+        assert.containsOnce(target, ".o_list_table thead th[data-name='properties.property_char']");
+        assert.containsOnce(target, ".o_list_table thead th.o_list_actions_header");
+    });
+
+    QUnit.test("properties: optional show/hide (at reload, config from local storage)", async (assert) => {
+        const definition = {
+            type: "char",
+            name: "property_char",
+            string: "Property char",
+        };
+        serverData.models.bar.records[0].definitions = [definition];
+        for (const record of serverData.models.foo.records) {
+            if (record.m2o === 1) {
+                record.properties = [{ ...definition, value: "0" }];
+            }
+        }
+
+        patchWithCleanup(browser.localStorage, {
+            getItem(key) {
+                return "properties.property_char";
+            },
+        });
+
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree editable="bottom">
+                    <field name="m2o"/>
+                    <field name="properties"/>
+                </tree>`,
+            groupBy: ["m2o"],
+        });
+
+        // list is grouped, no record displayed
+        assert.containsN(target, ".o_group_header", 2);
+        assert.containsNone(target, ".o_data_row");
+
+        assert.containsN(target, ".o_list_table thead th", 2);
+        assert.containsOnce(target, ".o_list_table thead th.o_list_record_selector");
+        assert.containsOnce(target, ".o_list_table thead th[data-name=m2o]");
+
+        await click(target.querySelector(".o_group_header")); // open group Value 1
+
+        assert.containsN(target, ".o_data_row", 3);
+        assert.containsN(target, ".o_list_table thead th", 4);
+        assert.containsOnce(target, ".o_list_table thead th.o_list_record_selector");
+        assert.containsOnce(target, ".o_list_table thead th[data-name=m2o]");
+        assert.containsOnce(target, ".o_list_table thead th[data-name='properties.property_char']");
+        assert.containsOnce(target, ".o_list_table thead th.o_list_actions_header");
     });
 
     QUnit.test("reload properties definitions when domain change", async (assert) => {

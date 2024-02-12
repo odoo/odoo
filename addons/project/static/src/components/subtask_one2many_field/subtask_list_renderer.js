@@ -19,7 +19,7 @@ export class SubtaskListRenderer extends ListRenderer {
 
     focusName(editedRecord) {
         if (editedRecord?.isNew && !editedRecord.dirty) {
-            const col = this.state.columns.find((c) => c.name === "name");
+            const col = this.columns.find((c) => c.name === "name");
             this.focusCell(col);
         }
     }

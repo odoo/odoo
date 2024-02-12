@@ -1,7 +1,6 @@
 import { makeContext } from "@web/core/context";
 import { _t } from "@web/core/l10n/translation";
 import { Pager } from "@web/core/pager/pager";
-import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { getFieldDomain } from "@web/model/relational_model/utils";
@@ -191,9 +190,6 @@ export class X2ManyField extends Component {
             archInfo,
             list: this.list,
             openRecord: this.openRecord.bind(this),
-            evalViewModifier: (modifier) => {
-                return evaluateBooleanExpr(modifier, this.list.evalContext);
-            },
         };
 
         if (this.props.viewMode === "kanban") {

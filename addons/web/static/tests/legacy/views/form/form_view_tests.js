@@ -11596,6 +11596,7 @@ QUnit.module("Views", (hooks) => {
             assert.verifySteps([
                 "getItem " + localStorageKey,
                 "setItem " + localStorageKey + " to bar",
+                "getItem " + localStorageKey,
             ]);
 
             assert.containsN(
@@ -11688,6 +11689,7 @@ QUnit.module("Views", (hooks) => {
             assert.verifySteps([
                 "getItem " + localStorageKey,
                 "setItem " + localStorageKey + " to foo",
+                "getItem " + localStorageKey,
             ]);
 
             assert.containsN(

@@ -15,7 +15,7 @@ export class MovesListRenderer extends ListRenderer {
             () => {
                 this.keepColumnWidths = false;
             },
-            () => [this.state.columns]
+            () => [this.columns]
         );
     }
 
