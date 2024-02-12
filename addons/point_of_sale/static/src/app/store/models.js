@@ -1967,7 +1967,7 @@ export class Order extends PosModel {
         this.pos.numpadMode = "quantity";
     }
     /* ---- Payment Lines --- */
-    add_paymentline(payment_method) {
+    add_paymentline(payment_method, automatic_payment = null) {
         this.assert_editable();
         if (this.electronic_payment_in_progress()) {
             return false;
@@ -1984,7 +1984,10 @@ export class Order extends PosModel {
             newPaymentline.set_amount(this.get_due());
 
             if (payment_method.payment_terminal) {
-                newPaymentline.set_payment_status("pending");
+                if(automatic_payment)                
+                    newPaymentline.set_payment_status("waiting");
+                else
+                    newPaymentline.set_payment_status("pending");
             }
             return newPaymentline;
         }

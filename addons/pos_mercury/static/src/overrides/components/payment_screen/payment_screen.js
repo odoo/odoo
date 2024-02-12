@@ -189,7 +189,7 @@ patch(PaymentScreen.prototype, {
                 auto_close: false,
             });
         }
-    },
+    },  
     // Handler to manage the card reader string
     credit_code_transaction(parsed_result, old_deferred, retry_nr) {
         const order = this.pos.get_order();
@@ -519,7 +519,7 @@ patch(PaymentScreen.prototype, {
     /**
      * @override
      */
-    addNewPaymentLine(paymentMethod) {
+    addNewPaymentLine(paymentMethod, automatic_payment = null) {
         const order = this.pos.get_order();
         const res = super.addNewPaymentLine(...arguments);
         if (res && paymentMethod.pos_mercury_config_id) {

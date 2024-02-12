@@ -100,12 +100,15 @@ export class PaymentScreen extends Component {
     get selectedPaymentLine() {
         return this.currentOrder.selected_paymentline;
     }
-    addNewPaymentLine(paymentMethod) {
+    addNewPaymentLine(paymentMethod, automatic_payment = null) {
         // original function: click_paymentmethods
-        const result = this.currentOrder.add_paymentline(paymentMethod);
+        const result = this.currentOrder.add_paymentline(paymentMethod, automatic_payment);
         if (result) {
             this.numberBuffer.reset();
-            return true;
+            if (automatic_payment) {
+                const newPaymentLine = this.paymentLines[this.paymentLines.length - 1];
+                this.sendPaymentRequest(newPaymentLine);
+            }
         } else {
             this.dialog.add(AlertDialog, {
                 title: _t("Error"),
