@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from dateutil.relativedelta import relativedelta
+
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 
@@ -23,6 +25,20 @@ class MailActivityPlanTemplate(models.Model):
         domain="['|', ('res_model', '=', False), '&', ('res_model', '!=', False), ('res_model', '=', parent.res_model)]",
         ondelete='restrict', required=True
     )
+    # Activity type delay fields are ignored in favor of these
+    delay_count = fields.Integer(
+        'Interval', default=0,
+        help='Number of days/week/month before executing the action after or before the scheduled plan date.')
+    delay_unit = fields.Selection([
+        ('days', 'days'),
+        ('weeks', 'weeks'),
+        ('months', 'months')],
+        string="Delay units", help="Unit of delay", required=True, default='days')
+    delay_from = fields.Selection([
+        ('before_plan_date', 'Before Plan Date'),
+        ('after_plan_date', 'After Plan Date'),
+    ],
+        string='Trigger', default="before_plan_date", required=True)
     icon = fields.Char('Icon', related='activity_type_id.icon', readonly=True)
     summary = fields.Char('Summary', compute="_compute_summary", store=True, readonly=False)
     responsible_type = fields.Selection([
@@ -70,6 +86,15 @@ class MailActivityPlanTemplate(models.Model):
         for template in self:
             if template.responsible_type != 'other' and template.responsible_id:
                 template.responsible_id = False
+
+    def _get_date_deadline(self, base_date=False):
+        """ Return the deadline of the activity to be created given the base date. """
+        self.ensure_one()
+        base_date = base_date or fields.Date.context_today(self)
+        delta = relativedelta(**{self.delay_unit: self.delay_count})
+        if self.delay_from == 'after_plan_date':
+            return base_date + delta
+        return base_date - delta
 
     def _determine_responsible(self, on_demand_responsible, applied_on_record):
         """ Determine the responsible for the activity based on the template

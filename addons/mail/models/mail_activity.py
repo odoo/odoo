@@ -179,33 +179,10 @@ class MailActivity(models.Model):
         if self.activity_type_id:
             if self.activity_type_id.summary:
                 self.summary = self.activity_type_id.summary
-            self.date_deadline = self._calculate_date_deadline(self.activity_type_id)
+            self.date_deadline = self.activity_type_id._get_date_deadline()
             self.user_id = self.activity_type_id.default_user_id or self.env.user
             if self.activity_type_id.default_note:
                 self.note = self.activity_type_id.default_note
-
-    @api.model
-    def _calculate_date_deadline(self, activity_type, force_base_date=None):
-        """ Compute the activity deadline given its type, the force_base_date and the context.
-
-        The deadline is computed by adding the activity type delay to a base date defined as:
-        - the force_base_date
-        - or the activity_previous_deadline context value if the activity type delay_from is
-          previous_activity
-        - or the current date
-
-        :param activity_type: activity type
-        :param date force_base_date: if set, this force the base date for computation
-        """
-        if force_base_date:
-            # Date.context_today is correct because date_deadline is a Date and is meant to be
-            # expressed in user TZ
-            base = force_base_date
-        elif activity_type.delay_from == 'previous_activity' and 'activity_previous_deadline' in self.env.context:
-            base = fields.Date.from_string(self.env.context.get('activity_previous_deadline'))
-        else:
-            base = fields.Date.context_today(self)
-        return base + relativedelta(**{activity_type.delay_unit: activity_type.delay_count})
 
     @api.onchange('recommended_activity_type_id')
     def _onchange_recommended_activity_type_id(self):

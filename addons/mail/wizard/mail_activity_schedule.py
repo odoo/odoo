@@ -55,8 +55,8 @@ class MailActivitySchedule(models.TransientModel):
         'res.users', 'Assigned To',
         help='Choose assignation for activities with on demand assignation.',
         default=lambda self: self.env.user)
-    plan_date_deadline = fields.Date(
-        'Plan Date', compute='_compute_plan_date_deadline',
+    plan_date = fields.Date(
+        'Plan Date', compute='_compute_plan_date',
         store=True, readonly=False)
     # activity-based
     activity_type_id = fields.Many2one(
@@ -147,8 +147,8 @@ class MailActivitySchedule(models.TransientModel):
                 scheduler.plan_id = False
 
     @api.depends('res_model_id', 'res_ids')
-    def _compute_plan_date_deadline(self):
-        self.plan_date_deadline = False
+    def _compute_plan_date(self):
+        self.plan_date = False
 
     @api.depends('res_model')
     def _compute_activity_type_id(self):
@@ -160,7 +160,7 @@ class MailActivitySchedule(models.TransientModel):
     def _compute_date_deadline(self):
         for scheduler in self:
             if scheduler.activity_type_id:
-                scheduler.date_deadline = scheduler.env['mail.activity']._calculate_date_deadline(scheduler.activity_type_id)
+                scheduler.date_deadline = scheduler.activity_type_id._get_date_deadline()
             elif not scheduler.date_deadline:
                 scheduler.date_deadline = fields.Date.context_today(scheduler)
 
@@ -212,8 +212,7 @@ class MailActivitySchedule(models.TransientModel):
                     responsible = self.plan_on_demand_user_id
                 else:
                     responsible = template._determine_responsible(self.plan_on_demand_user_id, record)['responsible']
-                date_deadline = self.env['mail.activity']._calculate_date_deadline(
-                    template.activity_type_id, force_base_date=self.plan_date_deadline)
+                date_deadline = template._get_date_deadline(self.plan_date)
                 record.activity_schedule(
                     activity_type_id=template.activity_type_id.id,
                     automated=False,
