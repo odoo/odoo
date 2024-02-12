@@ -139,6 +139,44 @@ class SaleOrder(models.Model):
                 order.order_line.sudo().with_company(order.company_id)._timesheet_service_generation()
         return result
 
+    def _generate_analytic_account(self):
+        """ Generate Analytic Account for SO confirmed
+
+            This override generates analytic account for the SO if the AA has not been
+            generated in the parent method and the product contained in the SOLs will
+            generate a project and/or task(s)
+        """
+        super()._generate_analytic_account()
+        for order in self:
+            if (
+                not order.analytic_account_id
+                and any(
+                    sol.is_service
+                    and not sol.project_id
+                    and sol.product_id.service_tracking in ['project_only', 'task_in_project']
+                    for sol in order.order_line
+                )
+            ):
+                order_project_id = order.project_id
+                service_sols = order.order_line.filtered(
+                    lambda sol:
+                        sol.is_service
+                        and not sol.project_id
+                        and sol.product_id.service_tracking in ['project_only', 'task_in_project']
+                )
+                # if one service_product is found then we will generate a project and so we need to create an analytic account
+                service_products = service_sols.product_id.filtered(
+                    lambda p:
+                        p.project_template_id
+                        and (
+                            (p.service_tracking == 'task_in_project' and not order_project_id)
+                            or p.service_tracking != 'no'
+                        )
+                        and p.default_code
+                )
+                default_code = service_products.default_code if len(service_products) == 1 else None
+                order._create_analytic_account(default_code)
+
     def action_view_task(self):
         self.ensure_one()
         if not self.order_line:
