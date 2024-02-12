@@ -1016,6 +1016,8 @@ class SaleOrder(models.Model):
             return {'error': _('This code is invalid (%s).', code), 'not_found': True}
         elif (program.limit_usage and program.total_order_count >= program.max_usage):
             return {'error': _('This code is expired (%s).', code)}
+        elif program.program_type in ('loyalty', 'ewallet'):
+            return {'error': _("This program cannot be applied with code.")}
 
         # Rule will count the next time the points are updated
         if rule:
