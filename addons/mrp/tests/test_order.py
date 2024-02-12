@@ -6,7 +6,7 @@ from freezegun import freeze_time
 
 from odoo import Command, fields
 from odoo.exceptions import UserError
-from odoo.tests import Form
+from odoo.tests import Form, users
 from odoo.tools.misc import format_date
 
 from odoo.addons.mrp.tests.common import TestMrpCommon
@@ -4044,3 +4044,16 @@ class TestMrpOrder(TestMrpCommon):
 
         self.assertEqual(wos[0].date_finished, dt + timedelta(hours=1, minutes=1))
         self.assertEqual(wos[1].date_finished, dt + timedelta(hours=1, minutes=2))
+
+    @users('hilda')
+    def test_update_mo_with_mrp_user(self):
+        """
+        Create an MO with an MRP user, in Draft status, try to update its quantity.
+        """
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = self.product
+        mo_form.product_qty = 5
+        mo = mo_form.save()
+        mo_form.product_qty = 10
+        mo_form.save()
+        self.assertEqual(mo.product_qty, 10)
