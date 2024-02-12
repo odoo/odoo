@@ -44,6 +44,10 @@ registry.category("web_tour.tours").add("PosComboPriceTaxIncludedTour", {
             ...ProductScreen.clickOrderline("Combo Product 8"),
             ...ProductScreen.selectedOrderlineHas("Combo Product 8", "1.0", "30.00"),
 
+            // check that you can select a customer which triggers a recomputation of the price
+            ...ProductScreen.clickPartnerButton(),
+            ...ProductScreen.clickCustomer("Partner Test 1"),
+
             // check that you cannot change the quantity of a combo product
             ...ProductScreen.pressNumpad("2"),
             Dialog.confirm(),
