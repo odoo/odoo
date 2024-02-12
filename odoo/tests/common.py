@@ -1800,6 +1800,9 @@ class HttpCase(TransactionCase):
         Test will stop when a failure occurs if error_checker is not defined or returns True for this message
 
         """
+        watch = odoo.tools.config.get('test_tour_watch', watch)
+        timeout = int(odoo.tools.config.get('test_tour_timeout', timeout))
+
         if not self.env.registry.loaded:
             self._logger.warning('HttpCase test should be in post_install only')
 
@@ -1868,7 +1871,7 @@ class HttpCase(TransactionCase):
         optional delay between steps `step_delay`. Other arguments from
         `browser_js` can be passed as keyword arguments."""
         options = {
-            'stepDelay': step_delay or 0,
+            'stepDelay': int(odoo.tools.config.get('test_tour_step_delay', step_delay or 0)),
             'keepWatchBrowser': kwargs.get('watch', False),
             'startUrl': url_path,
         }
