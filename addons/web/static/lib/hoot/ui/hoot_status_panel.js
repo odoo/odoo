@@ -174,10 +174,7 @@ export class HootStatusPanel extends Component {
                     title="Sort by duration"
                     t-on-click="sortResults"
                 >
-                    <i
-                        class="fa fa-filter transition"
-                        t-att-class="{ 'rotate-180': uiState.sortResults === 'asc' }"
-                    />
+                    <i t-attf-class="fa fa-sort-numeric-{{ uiState.sortResults or 'desc' }} transition" />
                 </button>
                 <t t-if="uiState.totalResults gt uiState.resultsPerPage">
                     <t t-set="lastPage" t-value="Math.floor(uiState.totalResults / uiState.resultsPerPage)" />

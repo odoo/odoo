@@ -186,7 +186,9 @@ ul {
     animation: animation-incentive-travel calc(var(--_fly-duration, 2000) * 1ms) linear;
     font-size: calc(var(--_size, 16) * 1px);
     left: calc(var(--_x, 50) * 1vw);
+    pointer-events: none;
     top: calc(var(--_y, 100) * 1vh);
+    z-index: 9999;
 }
 .incentive::after {
     animation: animation-incentive-wiggle calc(var(--_wiggle-duration, 1000) * 1ms) ease-in-out
