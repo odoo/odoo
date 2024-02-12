@@ -1484,12 +1484,6 @@ class Website(models.Model):
             path = f'/{lang.url_code}{path if path != "/" else ""}'
         return self.get_base_url() + path
 
-    def _get_canonical_url(self):
-        """Returns the canonical URL for the current request."""
-        self.ensure_one()
-        lang = getattr(request, 'lang', self.env['ir.http']._get_default_lang())
-        return self._get_canonical_url_localized(lang=lang)
-
     def _is_canonical_url(self):
         """Returns whether the current request URL is canonical."""
         self.ensure_one()
