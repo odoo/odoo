@@ -702,13 +702,9 @@ export function makeCallbacks() {
             afterCallback = (result) => addCallback(relatedType, result, true);
         }
 
-        await Promise.all(
-            fns.map((fn) =>
-                Promise.resolve(fn(...args))
-                    .then(afterCallback)
-                    .catch(console.error)
-            )
-        );
+        for (const fn of fns) {
+            await Promise.resolve(fn(...args)).then(afterCallback, console.error);
+        }
     };
 
     const clearCallbacks = () => {

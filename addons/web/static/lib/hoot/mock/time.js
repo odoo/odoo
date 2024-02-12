@@ -220,8 +220,9 @@ export function cancelAllTimers() {
     }
 }
 
-export function cleanupTime() {
-    runAllTimers();
+export async function cleanupTime() {
+    await runAllTimers();
+
     setDateParams(DEFAULT_DATE);
     timeZone = DEFAULT_TIMEZONE;
 }
@@ -375,7 +376,7 @@ export function mockTimeZone(tz) {
  * animations, and then advances the current time by that amount.
  *
  * @see {@link advanceTime}
- * @returns {number} time consumed by timers (in ms).
+ * @returns {Promise<number>} time consumed by timers (in ms).
  */
 export async function runAllTimers() {
     if (!timers.size) {
