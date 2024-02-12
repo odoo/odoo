@@ -3,7 +3,7 @@ from collections import defaultdict
 from datetime import timedelta
 from itertools import groupby
 
-from odoo import api, fields, models, SUPERUSER_ID, _
+from odoo import SUPERUSER_ID, _, api, fields, models
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Command
 from odoo.osv import expression
@@ -921,7 +921,6 @@ class SaleOrder(models.Model):
         self.order_line._validate_analytic_distribution()
 
         for order in self:
-            order.validate_taxes_on_sales_order()
             if order.partner_id in order.message_partner_ids:
                 continue
             order.message_subscribe([order.partner_id.id])
@@ -1890,16 +1889,6 @@ class SaleOrder(models.Model):
                 'sequence': ((self.order_line and self.order_line[-1].sequence + 1) or 10),  # put it at the end of the order
             })
         return sol.price_unit
-
-    #=== HOOKS ===#
-
-    def add_option_to_order_with_taxcloud(self):
-        self.ensure_one()
-
-    def validate_taxes_on_sales_order(self):
-        # Override for correct taxcloud computation
-        # when using coupon and delivery
-        return True
 
     #=== TOOLING ===#
 
