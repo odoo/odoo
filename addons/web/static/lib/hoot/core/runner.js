@@ -2,7 +2,7 @@
 /* eslint-disable no-restricted-syntax */
 
 import { markRaw, reactive, toRaw, whenReady } from "@odoo/owl";
-import { cleanupObservers, isEmpty, watchKeys } from "@web/../lib/hoot-dom/helpers/dom";
+import { cleanupObservers, watchKeys } from "@web/../lib/hoot-dom/helpers/dom";
 import { enableEventLogs, on } from "@web/../lib/hoot-dom/helpers/events";
 import { isIterable, parseRegExp } from "@web/../lib/hoot-dom/hoot_dom_utils";
 import {
@@ -668,11 +668,11 @@ export class TestRunner {
         );
         this.beforeEach(this.fixture.setup);
         this.afterEach(
-            cleanupTime,
-            cleanupObservers,
-            this.fixture.cleanup,
+            cleanupWindow,
             cleanupNavigator,
-            cleanupWindow
+            this.fixture.cleanup,
+            cleanupObservers,
+            cleanupTime
         );
         if (this.config.watchkeys) {
             const keys = this.config.watchkeys?.split(/\s*,\s*/g) || [];
@@ -1156,7 +1156,7 @@ export class TestRunner {
     /**
      * @param {Error | ErrorEvent | PromiseRejectionEvent} ev
      */
-    #onError(ev) {
+    async #onError(ev) {
         const error = ensureError(ev);
         if (!(ev instanceof Event)) {
             ev = new ErrorEvent("error", { error });
@@ -1164,7 +1164,7 @@ export class TestRunner {
 
         if (this.state.currentTest) {
             for (const callbackRegistry of this.#getCallbackChain(this.state.currentTest)) {
-                callbackRegistry.call("error", ev);
+                await callbackRegistry.call("error", ev);
                 if (ev.defaultPrevented) {
                     return;
                 }
