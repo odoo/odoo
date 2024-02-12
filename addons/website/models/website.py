@@ -1047,12 +1047,6 @@ class Website(models.Model):
             if shorts.count(lang['short']) == 1:
                 lang['hreflang'] = lang['short']
 
-        # add the default
-        langs.append({
-            'hreflang': 'x-default',
-            'href': self._get_canonical_url_localized(lang=self.default_lang_id),
-        })
-
         return langs
 
     # ----------------------------------------------------------
