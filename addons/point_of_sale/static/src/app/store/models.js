@@ -170,9 +170,7 @@ export class Orderline extends PosModel {
         this.saved_quantity = json.qty;
         this.uuid = json.uuid;
         this.skipChange = json.skip_change;
-        this.combo_line_id = json.combo_line_id
-            ? this.pos.data["pos.combo.line"][json.combo_line_id]
-            : false;
+        this.combo_line_id = json.combo_line_id;
 
         // FIXME rename to orderline_children_ids
         this.combo_line_ids = json.combo_line_ids;
@@ -1016,6 +1014,11 @@ export class Order extends PosModel {
                 if (combo_parent_id) {
                     line.combo_parent_id = combo_parent_id;
                 }
+
+                const combo_line_id = this.pos.models["pos.combo.line"].get(line.combo_line_id);
+                if (combo_line_id) {
+                    line.combo_line_id = combo_line_id;
+                }
             }
         } else {
             this.set_pricelist(this.pos.config.pricelist_id);
@@ -1668,7 +1671,7 @@ export class Order extends PosModel {
             attributes_prices[parentLine.id] = this.compute_child_lines(
                 parentLine.product,
                 parentLine.combo_line_ids.map((childLine) => {
-                    const comboLineCopy = { ...childLine };
+                    const comboLineCopy = { combo_line_id: childLine.combo_line_id };
                     if (childLine.attribute_value_ids) {
                         comboLineCopy.configuration = {
                             attribute_value_ids: childLine.attribute_value_ids,
@@ -1785,10 +1788,6 @@ export class Order extends PosModel {
         if (options.comboConfigurator?.length) {
             const childLines = this.addComboLines(line, options);
             line.combo_line_ids = childLines;
-
-            for (const child of childLines) {
-                child.combo_parent_id = line;
-            }
 
             this.select_orderline(line);
         }
@@ -1928,6 +1927,12 @@ export class Order extends PosModel {
         }
         if (options.tax_ids) {
             orderline.compute_related_tax(options.tax_ids);
+        }
+        if (options.combo_parent_id) {
+            orderline.combo_parent_id = options.combo_parent_id;
+        }
+        if (options.combo_line_id) {
+            orderline.combo_line_id = options.combo_line_id;
         }
     }
     get_selected_orderline() {
