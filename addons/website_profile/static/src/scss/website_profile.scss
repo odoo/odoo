@@ -98,6 +98,7 @@ $owprofile-color-bg: mix($body-bg, #efeff4);
 /// Progress Circle
 .o_wprofile_progress_circle {
     position: relative;
+    max-width: 300px;
 
     svg.o_pc_circular_chart {
         // Allow hover effect on svg paths in order to display bootstrap tooltip,
@@ -135,6 +136,17 @@ $owprofile-color-bg: mix($body-bg, #efeff4);
             &:not(.o_editable) {
                 @include o-text-overflow();
             }
+            margin-bottom: 0 !important;
+        }
+
+        small.text-center {
+            display: -webkit-box;
+            line-height: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 75% !important;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
         }
     }
 
