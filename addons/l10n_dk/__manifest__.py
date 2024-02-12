@@ -92,6 +92,7 @@ Produkt setup:
         'base_iban',
         'base_vat',
         'account',
+        'account_audit_trail',
     ],
     'auto_install': ['account'],
     'data': [
