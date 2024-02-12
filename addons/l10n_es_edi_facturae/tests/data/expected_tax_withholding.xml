@@ -240,88 +240,99 @@
           </TaxesWithheld>
         </InvoiceLine>
       </Items>
+      <PaymentDetails>
+        <Installment>
+          <InstallmentDueDate>2023-01-01</InstallmentDueDate>
+          <InstallmentAmount>400.00</InstallmentAmount>
+          <PaymentMeans>04</PaymentMeans>
+          <AccountToBeCredited>
+            <IBAN>ES9121000418450200051332</IBAN>
+            <BIC>CAIXESBBXXX</BIC>
+          </AccountToBeCredited>
+        </Installment>
+      </PaymentDetails>
     </Invoice>
   </Invoices>
   <ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" Id="___ignore___">
-  <ds:SignedInfo>
-    <ds:CanonicalizationMethod Algorithm="___ignore___"/>
-    <ds:SignatureMethod Algorithm="___ignore___"/>
-    <ds:Reference Type="___ignore___" URI="___ignore___" Id="___ignore___">
-      <ds:Transforms>
-        <ds:Transform Algorithm="___ignore___"/>
-      </ds:Transforms>
-      <ds:DigestMethod Algorithm="___ignore___"/>
-      <ds:DigestValue>___ignore___</ds:DigestValue>
-    </ds:Reference>
-    <ds:Reference Type="___ignore___" URI="___ignore___">
-      <ds:DigestMethod Algorithm="___ignore___"/>
-      <ds:DigestValue>___ignore___</ds:DigestValue>
-    </ds:Reference>
-    <ds:Reference URI="___ignore___">
-      <ds:DigestMethod Algorithm="___ignore___"/>
-      <ds:DigestValue>___ignore___</ds:DigestValue>
-    </ds:Reference>
-  </ds:SignedInfo>
-  <ds:SignatureValue>___ignore___</ds:SignatureValue>
+    <ds:SignedInfo>
+      <ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+      <ds:SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/>
+      <ds:Reference Type="http://www.w3.org/2000/09/xmldsig#Object" URI="___ignore___" Id="___ignore___">
+        <ds:Transforms>
+          <ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+        </ds:Transforms>
+        <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+        <ds:DigestValue>___ignore___</ds:DigestValue>
+      </ds:Reference>
+      <ds:Reference Type="http://uri.etsi.org/01903#SignedProperties" URI="___ignore___">
+        <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+        <ds:DigestValue>___ignore___</ds:DigestValue>
+      </ds:Reference>
+      <ds:Reference URI="___ignore___">
+        <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+        <ds:DigestValue>___ignore___</ds:DigestValue>
+      </ds:Reference>
+    </ds:SignedInfo>
+    <ds:SignatureValue>___ignore___</ds:SignatureValue>
     <ds:KeyInfo Id="___ignore___">
-    <ds:X509Data>
-      <ds:X509Certificate>___ignore___</ds:X509Certificate>
-    </ds:X509Data>
-    <ds:KeyValue>
-      <ds:RSAKeyValue>
-        <ds:Modulus>___ignore___</ds:Modulus>
-        <ds:Exponent>___ignore___</ds:Exponent>
-      </ds:RSAKeyValue>
-    </ds:KeyValue>
-  </ds:KeyInfo>
-  <ds:Object>
-    <xades:QualifyingProperties xmlns:xades="http://uri.etsi.org/01903/v1.3.2#" Target="___ignore___">
-      <xades:SignedProperties Id="___ignore___">
-        <xades:SignedSignatureProperties>
-          <xades:SigningTime>___ignore___</xades:SigningTime>
-          <xades:SigningCertificate>
-            <xades:Cert>
-              <xades:CertDigest>
-                <ds:DigestMethod Algorithm="___ignore___"/>
-                <ds:DigestValue>___ignore___</ds:DigestValue>
-              </xades:CertDigest>
-              <xades:IssuerSerial>
-                <ds:X509IssuerName>___ignore___</ds:X509IssuerName>
-                <ds:X509SerialNumber>___ignore___</ds:X509SerialNumber>
-              </xades:IssuerSerial>
-            </xades:Cert>
-          </xades:SigningCertificate>
-          <xades:SignaturePolicyIdentifier>
-            <xades:SignaturePolicyId>
-              <xades:SigPolicyId>
-                <xades:Identifier>___ignore___</xades:Identifier>
-                <xades:Description>___ignore___</xades:Description>
-              </xades:SigPolicyId>
-              <xades:SigPolicyHash>
-                <ds:DigestMethod Algorithm="___ignore___"/>
-                <ds:DigestValue>___ignore___</ds:DigestValue>
-              </xades:SigPolicyHash>
-              <xades:SigPolicyQualifiers>
-                <xades:SigPolicyQualifier>
-                  <xades:SPURI>___ignore___</xades:SPURI>
-                </xades:SigPolicyQualifier>
-              </xades:SigPolicyQualifiers>
-            </xades:SignaturePolicyId>
-          </xades:SignaturePolicyIdentifier>
-        </xades:SignedSignatureProperties>
-        <xades:SignedDataObjectProperties>
-          <xades:DataObjectFormat ObjectReference="___ignore___">
-            <xades:Description/>
-            <xades:ObjectIdentifier>
-              <xades:Identifier Qualifier="OIDAsURN">___ignore___</xades:Identifier>
+      <ds:X509Data>
+        <ds:X509Certificate>___ignore___</ds:X509Certificate>
+      </ds:X509Data>
+      <ds:KeyValue>
+        <ds:RSAKeyValue>
+          <ds:Modulus>___ignore___</ds:Modulus>
+          <ds:Exponent>___ignore___</ds:Exponent>
+        </ds:RSAKeyValue>
+      </ds:KeyValue>
+    </ds:KeyInfo>
+    <ds:Object>
+      <xades:QualifyingProperties xmlns:xades="http://uri.etsi.org/01903/v1.3.2#" Target="___ignore___">
+        <xades:SignedProperties Id="___ignore___">
+          <xades:SignedSignatureProperties>
+            <xades:SigningTime>___ignore___</xades:SigningTime>
+            <xades:SigningCertificate>
+              <xades:Cert>
+                <xades:CertDigest>
+                  <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+                  <ds:DigestValue>___ignore___</ds:DigestValue>
+                </xades:CertDigest>
+                <xades:IssuerSerial>
+                  <ds:X509IssuerName>___ignore___</ds:X509IssuerName>
+                  <ds:X509SerialNumber>___ignore___</ds:X509SerialNumber>
+                </xades:IssuerSerial>
+              </xades:Cert>
+            </xades:SigningCertificate>
+            <xades:SignaturePolicyIdentifier>
+              <xades:SignaturePolicyId>
+                <xades:SigPolicyId>
+                  <xades:Identifier>http://www.facturae.es/politica_de_firma_formato_facturae/politica_de_firma_formato_facturae_v3_1.pdf</xades:Identifier>
+                  <xades:Description>Política de firma electrónica para facturación electrónica con formato Facturae</xades:Description>
+                </xades:SigPolicyId>
+                <xades:SigPolicyHash>
+                  <ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+                  <ds:DigestValue>Ohixl6upD6av8N7pEvDABhEL6hM=</ds:DigestValue>
+                </xades:SigPolicyHash>
+                <xades:SigPolicyQualifiers>
+                  <xades:SigPolicyQualifier>
+                    <xades:SPURI>http://www.facturae.es/politica_de_firma_formato_facturae/politica_de_firma_formato_facturae_v3_1.pdf</xades:SPURI>
+                  </xades:SigPolicyQualifier>
+                </xades:SigPolicyQualifiers>
+              </xades:SignaturePolicyId>
+            </xades:SignaturePolicyIdentifier>
+          </xades:SignedSignatureProperties>
+          <xades:SignedDataObjectProperties>
+            <xades:DataObjectFormat ObjectReference="___ignore___">
               <xades:Description/>
-            </xades:ObjectIdentifier>
-            <xades:MimeType>___ignore___</xades:MimeType>
-            <xades:Encoding/>
-          </xades:DataObjectFormat>
-        </xades:SignedDataObjectProperties>
-      </xades:SignedProperties>
-    </xades:QualifyingProperties>
-  </ds:Object>
-</ds:Signature>
+              <xades:ObjectIdentifier>
+                <xades:Identifier Qualifier="OIDAsURN">urn:oid:1.2.840.10003.5.109.10</xades:Identifier>
+                <xades:Description/>
+              </xades:ObjectIdentifier>
+              <xades:MimeType>text/xml</xades:MimeType>
+              <xades:Encoding/>
+            </xades:DataObjectFormat>
+          </xades:SignedDataObjectProperties>
+        </xades:SignedProperties>
+      </xades:QualifyingProperties>
+    </ds:Object>
+  </ds:Signature>
 </fac:Facturae>
