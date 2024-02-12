@@ -330,9 +330,9 @@
     </template>
 
     <template id="profile_next_rank_card" name="Profile Next Rank Card">
-        <div class="o_wprofile_progress_circle">
+        <t t-set="next_rank_id" t-value="next_rank_id or user._get_next_rank()"/>
+        <div class="o_wprofile_progress_circle d-flex justify-content-center">
             <svg viewBox="0 0 36 36" class="o_pc_circular_chart">
-                <t t-set="next_rank_id" t-value="next_rank_id or user._get_next_rank()"/>
                 <t t-if="next_rank_id and user.rank_id">
                     <t t-if="(next_rank_id.karma_min - user.rank_id.karma_min) > 0">
                         <t t-set="user_points" t-value="int(100*(user.karma - user.rank_id.karma_min)/(next_rank_id.karma_min - user.rank_id.karma_min))"/>
@@ -361,23 +361,17 @@
                 </linearGradient>
             </svg>
             <div class="o_pc_overlay d-flex flex-column align-items-center justify-content-center p-4">
-                <t t-set="rank_id" t-value="next_rank_id if next_rank_id else user.rank_id"/>
-                <div t-field="rank_id.image_1920"
-                    t-attf-style="max-width: {{img_max_width or '50%'}};"
+                <div t-field="(next_rank_id or user.rank_id).image_1920"
+                    style="width: 80%; height: auto;"
                     t-options="{'widget': 'image', 'preview_image': 'image_128'}"/>
-                <h4 class="text-center" t-field="rank_id.name"/>
-                <small class="w-50 text-center">
-                    <t t-set="karma_value" t-value="next_rank_id.karma_min - user.karma if next_rank_id else user.karma"/>
-                    <t t-if="next_rank_id">
-                        Get
-                        <span class="fw-bold text-primary" t-out="karma_value" t-options="{'widget': 'integer', 'format_decimalized_number': True, 'precision_digits': 2}"/> xp
-                        to level up!
-                    </t>
-                    <t t-else="">
-                        <span class="fw-bold text-primary" t-out="karma_value" t-options="{'widget': 'integer', 'format_decimalized_number': True, 'precision_digits': 2}"/> xp
-                    </t>
-                </small>
             </div>
+        </div>
+        <div t-if="next_rank_id" class="text-center">
+            <t t-set="karma_for_next_level" t-value="next_rank_id.karma_min - user.karma"/>
+            <span class="fw-bold text-primary" t-out="karma_for_next_level"
+                  t-options="{'widget': 'integer', 'format_decimalized_number': True, 'precision_digits': 2}"/>
+            points required to reach
+            <h4 class="text-center" t-field="next_rank_id.name"/>
         </div>
     </template>
 
