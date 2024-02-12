@@ -33,7 +33,7 @@ class TestActivitySchedule(ActivityScheduleHRCase):
     @freeze_time('2023-08-31')
     @users('admin')
     def test_default_due_date(self):
-        for employees, plan_date_deadline in (
+        for employees, plan_date in (
                 (self.employee_1, '2023-09-30'),
                 (self.employee_2, '2023-09-30'),
                 (self.employee_3, '2023-12-01'),
@@ -46,7 +46,7 @@ class TestActivitySchedule(ActivityScheduleHRCase):
         ):
             with self._instantiate_activity_schedule_wizard(employees) as form:
                 form.plan_id = self.plan_onboarding
-                self.assertEqual(form.plan_date_deadline, fields.Date.from_string(plan_date_deadline))
+                self.assertEqual(form.plan_date, fields.Date.from_string(plan_date))
 
         # not applicable on other models
         customers = self.env['res.partner'].create([
@@ -55,4 +55,4 @@ class TestActivitySchedule(ActivityScheduleHRCase):
         ])
         with self._instantiate_activity_schedule_wizard(customers) as form:
             form.plan_id = self.plan_party
-            self.assertFalse(form.plan_date_deadline)
+            self.assertFalse(form.plan_date)
