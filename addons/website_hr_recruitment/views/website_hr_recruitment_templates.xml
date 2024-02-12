@@ -120,6 +120,7 @@
             <div itemscope="itemscope" itemtype="https://schema.org/JobPosting">
                 <meta t-if="job.contract_type_id" itemprop="employmentType" t-att-content="job.contract_type_id.sudo().name"/>
                 <meta t-if="job.published_date" itemprop="datePosted" t-att-content="job.published_date"/>
+                <meta itemprop="title" t-att-content="job.name"/>
                 <meta itemprop="directApply" content="true"/>
                 <span itemprop="hiringOrganization" itemscope="itemscope" itemtype="https://schema.org/Organization">
                     <meta itemprop="name" t-att-content="job.company_id.name"/>
