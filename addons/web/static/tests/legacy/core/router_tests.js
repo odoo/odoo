@@ -92,13 +92,13 @@ QUnit.test("can parse URI encoded strings", (assert) => {
 
 QUnit.test("stateToUrl encodes URI compatible strings", (assert) => {
     let route = {};
-    assert.strictEqual(stateToUrl(route), "/apps");
+    assert.strictEqual(stateToUrl(route), "/web");
 
     route = { a: "11", g: "summer wine" };
-    assert.strictEqual(stateToUrl(route), "/apps?a=11&g=summer%20wine");
+    assert.strictEqual(stateToUrl(route), "/web?a=11&g=summer%20wine");
 
     route = { g: "2", c: "", e: "kloug,gloubi" };
-    assert.strictEqual(stateToUrl(route), "/apps?g=2&c=&e=kloug%2Cgloubi");
+    assert.strictEqual(stateToUrl(route), "/web?g=2&c=&e=kloug%2Cgloubi");
 });
 
 QUnit.module("Router: Push state");
@@ -247,31 +247,31 @@ QUnit.test("test the help utils history.back and history.forward", async (assert
 
     router.pushState({ k1: 1 });
     await nextTick();
-    assert.deepEqual(browser.location.href, "http://lordofthering/apps?k1=1");
+    assert.deepEqual(browser.location.href, "http://lordofthering/web?k1=1");
 
     router.pushState({ k2: 2 });
     await nextTick();
-    assert.deepEqual(browser.location.href, "http://lordofthering/apps?k1=1&k2=2");
+    assert.deepEqual(browser.location.href, "http://lordofthering/web?k1=1&k2=2");
 
     router.pushState({ k3: 3 }, { replace: true });
     await nextTick();
-    assert.deepEqual(browser.location.href, "http://lordofthering/apps?k3=3");
+    assert.deepEqual(browser.location.href, "http://lordofthering/web?k3=3");
 
     browser.history.back(); // Click on back button
     await nextTick();
-    assert.deepEqual(browser.location.href, "http://lordofthering/apps?k1=1&k2=2");
+    assert.deepEqual(browser.location.href, "http://lordofthering/web?k1=1&k2=2");
 
     router.pushState({ k4: 3 }, { replace: true }); // Click on a link
     await nextTick();
-    assert.deepEqual(browser.location.href, "http://lordofthering/apps?k4=3");
+    assert.deepEqual(browser.location.href, "http://lordofthering/web?k4=3");
 
     browser.history.back(); // Click on back button
     await nextTick();
-    assert.deepEqual(browser.location.href, "http://lordofthering/apps?k1=1&k2=2");
+    assert.deepEqual(browser.location.href, "http://lordofthering/web?k1=1&k2=2");
 
     browser.history.forward(); // Click on forward button
     await nextTick();
-    assert.deepEqual(browser.location.href, "http://lordofthering/apps?k4=3");
+    assert.deepEqual(browser.location.href, "http://lordofthering/web?k4=3");
 
     assert.verifySteps(["ROUTE_CHANGE", "ROUTE_CHANGE", "ROUTE_CHANGE"]);
 });
@@ -285,7 +285,7 @@ QUnit.test("parse an url with hash (key/values)", async (assert) => {
     assert.strictEqual(browser.location.search, "?a=114&k=c.e&f=1&g=91");
     assert.strictEqual(browser.location.hash, "");
     assert.deepEqual(router.current, { a: 114, k: "c.e", f: 1, g: 91 });
-    assert.strictEqual(browser.location.pathname, "/apps");
+    assert.strictEqual(browser.location.pathname, "/web");
 });
 
 QUnit.test("parse an url with hash (key/values) and query string", async (assert) => {
@@ -296,7 +296,7 @@ QUnit.test("parse an url with hash (key/values) and query string", async (assert
     assert.strictEqual(browser.location.search, "?a=114&t=c.e&f=1&g=91");
     assert.strictEqual(browser.location.hash, "");
     assert.deepEqual(router.current, { a: 114, t: "c.e", f: 1, g: 91 });
-    assert.strictEqual(browser.location.pathname, "/apps");
+    assert.strictEqual(browser.location.pathname, "/web");
 });
 
 QUnit.test("parse an url with hash (anchor link)", async (assert) => {
@@ -305,7 +305,7 @@ QUnit.test("parse an url with hash (anchor link)", async (assert) => {
     await createRouter();
     assert.strictEqual(browser.location.search, "");
     assert.strictEqual(browser.location.hash, "#anchor");
-    assert.strictEqual(browser.location.pathname, "/apps");
+    assert.strictEqual(browser.location.pathname, "/web");
     assert.deepEqual(router.current, {});
 });
 
@@ -317,5 +317,5 @@ QUnit.test("parse an url with hash (anchor link) and query string", async (asser
     assert.strictEqual(browser.location.search, "?a=114&g=c.e&f=1");
     assert.strictEqual(browser.location.hash, "#anchor");
     assert.deepEqual(router.current, { a: 114, g: "c.e", f: 1 });
-    assert.strictEqual(browser.location.pathname, "/apps");
+    assert.strictEqual(browser.location.pathname, "/web");
 });

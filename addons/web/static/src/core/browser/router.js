@@ -99,7 +99,7 @@ export function parseSearchQuery(search) {
  */
 export function stateToUrl(state) {
     const tmpState = Object.assign({}, state);
-    const pathname = ["/apps"];
+    const pathname = ["/web"];
     if (tmpState.actionStack) {
         for (const actIndex in tmpState.actionStack) {
             const action = tmpState.actionStack[actIndex];
@@ -190,17 +190,17 @@ export function urlToState(urlObj) {
     // 1. It is an anchor link, in that case, we ignore it, as it will not have a keys/values format
     //    the sanitizeHash function will remove it from the hash object.
     // 2. It has one or more keys/values, in that case, we merge it with the search.
-    if (pathname === "/web") {
-        const sanitizedHash = sanitizeHash(parseHash(hash));
+    const sanitizedHash = sanitizeHash(parseHash(hash));
+    if (Object.keys(sanitizedHash).length) {
         Object.assign(state, sanitizedHash);
-        const addHash = hash && !Object.keys(sanitizedHash).length;
-        const url = browser.location.origin + stateToUrl(state) + (addHash ? hash : "");
+        // const addHash = hash && !Object.keys(sanitizedHash).length;
+        const url = browser.location.origin + stateToUrl(state); // + (addHash ? hash : "");
         browser.history.replaceState({}, "", url);
     }
 
     const splitPath = pathname.split("/").filter(Boolean);
 
-    if (splitPath.length > 1 && splitPath[0] === "apps") {
+    if (splitPath.length > 1 && splitPath[0] === "web") {
         splitPath.splice(0, 1);
         const actions = [];
         let action = {};
