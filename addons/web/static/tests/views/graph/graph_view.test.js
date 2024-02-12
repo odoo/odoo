@@ -2275,6 +2275,7 @@ test("process default view description", async () => {
         fields: {},
         fieldAttrs: {},
         groupBy: [],
+        measures: [],
     });
 });
 
@@ -2291,6 +2292,7 @@ test("process simple arch (no field tag)", async () => {
         fields: fooFields,
         fieldAttrs: {},
         groupBy: [],
+        measures: [],
         mode: "line",
         order: "ASC",
     });
@@ -2304,6 +2306,7 @@ test("process simple arch (no field tag)", async () => {
         fields: fooFields,
         fieldAttrs: {},
         groupBy: [],
+        measures: [],
         stacked: false,
         title: "Title",
     });
@@ -2333,8 +2336,30 @@ test("process arch with field tags", async () => {
             fighters: { string: "FooFighters" },
         },
         measure: "revenue",
+        measures: ["revenue"],
         groupBy: ["date:day", "foo"],
         mode: "pie",
+    });
+});
+
+test("process arch with non stored field tags of type measure", async () => {
+    Foo._fields.revenue.store = false;
+
+    const { env } = await makeMockServer();
+    const fooFields = env["foo"]._fields;
+    const arch = `
+        <graph>
+            <field name="product_id"/>
+            <field name="revenue" type="measure"/>
+            <field name="foo" type="measure"/>
+        </graph>
+    `;
+    expect(new GraphArchParser().parse(arch, fooFields)).toEqual({
+        fields: fooFields,
+        fieldAttrs: {},
+        measure: "foo",
+        measures: ["revenue", "foo"],
+        groupBy: ["product_id"],
     });
 });
 
@@ -2865,6 +2890,24 @@ test("a many2one field can be added as measure in arch", async () => {
 
     checkLegend(view, "Product");
     expect(getYAxisLabel(view)).toBe("Product");
+});
+
+test("non store fields defined on the arch are present in the measures", async () => {
+    Foo._fields.revenue.store = false;
+    await mountView({
+        type: "graph",
+        resModel: "foo",
+        arch: /* xml */ `
+            <graph>
+                <field name="product_id"/>
+                <field name="revenue" type="measure"/>
+                <field name="foo" type="measure"/>
+            </graph>
+        `,
+    });
+
+    await toggleMenu("Measures");
+    expect(queryAllTexts(`.o_menu_item`)).toEqual(["Foo", "Revenue", "Count"]);
 });
 
 test("graph view `graph_measure` field in context", async () => {
