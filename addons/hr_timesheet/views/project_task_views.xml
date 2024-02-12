@@ -27,10 +27,11 @@
                     <field name="progress" widget="project_task_progressbar" optional="hide" options="{'overflow_class': 'bg-danger'}" column_invisible="not parent.allow_timesheets"/>
                 </xpath>
                 <xpath expr="//field[@name='date_deadline']" position="after">
+                    <field name="allow_timesheets" invisible="1"/>
                     <field name="encode_uom_in_days" invisible="1"/>
                     <field name="subtask_count" invisible="1"/>
-                    <label name="allocated_hours_label" for="allocated_hours"/>
-                    <div name="allocated_hours_div" class="text-nowrap">
+                    <label for="allocated_hours" invisible="not allow_timesheets"/>
+                    <div name="allocated_hours_div" invisible="not allow_timesheets" class="text-nowrap">
                         <field name="allocated_hours" class="oe_inline o_field_float_time o_task_planned_hours" widget="timesheet_uom_no_toggle" />
                         <span invisible="subtask_count == 0">
                             (incl. <field name="subtask_allocated_hours" nolabel="1" widget="timesheet_uom_no_toggle" class="oe_inline"/> on
@@ -40,7 +41,6 @@
                     </div>
                 </xpath>
                 <xpath expr="//notebook/page[@name='description_page']" position="after">
-                    <field name="allow_timesheets" invisible="1"/>
                     <page string="Timesheets" name="page_timesheets" id="timesheets_tab" invisible="not allow_timesheets">
                         <field name="analytic_account_active" invisible="1"/>
                         <field name="timesheet_ids" mode="tree,kanban" invisible="not analytic_account_active" context="{'default_project_id': project_id, 'default_name':''}">
@@ -104,7 +104,7 @@
                                         invisible="subtask_effective_hours == 0.0 or not encode_uom_in_days"/>
                                 </span>
                                 <field name="total_hours_spent" widget="timesheet_uom" class="oe_subtotal_footer_separator" nolabel="1"
-                                    invisible="subtask_effective_hours == 0.0" />
+                                    invisible="subtask_effective_hours == 0.0"/>
                                 <span class="o_td_label float-start my-1" invisible="allocated_hours == 0.0">
                                     <label class="fw-bold" for="remaining_hours" string="Remaining Hours"
                                         invisible="encode_uom_in_days or remaining_hours &lt; 0"/>
@@ -165,7 +165,7 @@
                 <xpath expr="//tree[@name='blocked_by_tree']/field[@name='progress']"  position="attributes">
                     <attribute name="groups">hr_timesheet.group_hr_timesheet_user</attribute>
                 </xpath>
-                <label name="allocated_hours_label" position="attributes">
+                <label for="allocated_hours" position="attributes">
                     <attribute name="groups">hr_timesheet.group_hr_timesheet_user</attribute>
                 </label>
                 <div name="allocated_hours_div" position="attributes">

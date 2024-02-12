@@ -161,9 +161,12 @@
                     </button>
                 </div>
             </div>
+            <field name="milestone_id" position="attributes">
+                <attribute name="options">{'no_open': True, 'no_create': True, 'no_edit': True}</attribute>
+            </field>
             <field name="user_ids" position="after">
                 <field name="depend_on_count" invisible="1"/>
-                <field name="portal_user_names" string="Assignees" class="o_task_user_field"/>
+                <field name="portal_user_names" string="Assignees"/>
             </field>
             <field name="description" position="attributes">
                 <attribute name="options">{'collaborative': true, 'allowCommandImage': false, 'allowCommandVideo': false, 'allowCommandFile': false}</attribute>

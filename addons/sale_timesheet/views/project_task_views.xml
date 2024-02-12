@@ -114,23 +114,14 @@
             <field name="inherit_id" ref="project.project_task_view_form_base"/>
             <field name="arch" type="xml">
                 <xpath expr="//tree[@name='timesheet_tree']/field[@name='unit_amount']" position="before">
-                    <field name="so_line" column_invisible="not parent.allow_billable" optional="hide"/>
-                </xpath>
-                <xpath expr="//tree[@name='sub_tasks_tree']/field[@name='remaining_hours']" position="after">
-                    <field name="sale_line_id" invisible="1"/>
-                    <field name="remaining_hours_available" invisible="1"/>
-                    <field name="remaining_hours_so" optional="hide" widget="timesheet_uom" attrs="{'invisible': ['|', ('sale_line_id', '=', False), ('remaining_hours_available', '=', False)]}"/>
-                </xpath>
-                <xpath expr="//tree[@name='blocked_by_tree']/field[@name='remaining_hours']" position="after">
-                    <field name="sale_line_id" invisible="1"/>
-                    <field name="remaining_hours_available" invisible="1"/>
-                    <field name="remaining_hours_so" optional="hide" widget="timesheet_uom" attrs="{'invisible': ['|', ('sale_line_id', '=', False), ('remaining_hours_available', '=', False)]}"/>
+                    <field name="so_line" column_invisible="not parent.allow_billable" optional="hide" readonly="1"/>
                 </xpath>
                 <field name="remaining_hours" position="after">
                     <t name="remaining_hours_so_data">
                         <field name="sale_order_id" invisible="1"/>
                         <field name="remaining_hours_available" invisible="1"/>
-                        <span id="remaining_hours_so_label" invisible="not allow_billable or not sale_order_id or not partner_id or not sale_line_id or not remaining_hours_available" class="o_td_label float-start">
+                        <span id="remaining_hours_so_label" class="o_td_label float-start"
+                            invisible="not allow_billable or not sale_order_id or not partner_id or not sale_line_id or not remaining_hours_available">
                             <label class="fw-bold" for="remaining_hours_so" string="Remaining Hours on SO"
                                 invisible="encode_uom_in_days or remaining_hours_so &lt; 0"/>
                             <label class="fw-bold" for="remaining_hours_so" string="Remaining Days on SO"
@@ -140,7 +131,8 @@
                             <label class="fw-bold text-danger" for="remaining_hours_so" string="Remaining Days on SO"
                                 invisible="not encode_uom_in_days or remaining_hours_so &gt;= 0"/>
                         </span>
-                        <field name="remaining_hours_so" nolabel="1" widget="timesheet_uom" invisible="not allow_billable or not sale_order_id or not partner_id or not sale_line_id or not remaining_hours_available" decoration-danger="remaining_hours_so &lt; 0"></field>
+                        <field name="remaining_hours_so" nolabel="1" widget="timesheet_uom" decoration-danger="remaining_hours_so &lt; 0"
+                            invisible="not allow_billable or not sale_order_id or not partner_id or not sale_line_id or not remaining_hours_available"/>
                     </t>
                 </field>
             </field>
@@ -161,18 +153,18 @@
                 <tree name="timesheet_tree" position="inside">
                     <field name="is_so_line_edited" invisible="1"/>
                 </tree>
-                <xpath expr="//tree[@name='timesheet_tree']/field[@name='so_line']" position="replace">
-                    <field name="so_line" widget="so_line_field" groups="!sales_team.group_sale_salesman"
-                        column_invisible="not parent.allow_billable"
-                        readonly="readonly_timesheet"
-                        context="{'with_remaining_hours': True, 'with_price_unit': True}" options="{'no_create': True, 'no_open': True}"
-                        domain="[('is_service', '=', True), ('order_partner_id', 'child_of', parent.partner_id), ('is_expense', '=', False), ('state', '=', 'sale'), ('is_downpayment', '=', False)]"
-                        optional="hide"/>
+                <xpath expr="//tree[@name='timesheet_tree']/field[@name='so_line']" position="attributes">
+                    <attribute name="groups">!sales_team.group_sale_salesman</attribute>
+                </xpath>
+                <xpath expr="//tree[@name='timesheet_tree']/field[@name='so_line']" position="after">
                     <field name="so_line" widget="so_line_field" groups="sales_team.group_sale_salesman"
                         column_invisible="not parent.allow_billable"
                         readonly="readonly_timesheet"
                         context="{'with_remaining_hours': True, 'with_price_unit': True}" options="{'no_create': True, 'no_open': True}"
-                        domain="[('is_service', '=', True), ('order_partner_id', 'child_of', parent.partner_id), ('is_expense', '=', False), ('state', '=', 'sale'), ('is_downpayment', '=', False)]"
+                        domain="[
+                            ('is_service', '=', True), ('order_partner_id', 'child_of', parent.partner_id),
+                            ('is_expense', '=', False), ('state', '=', 'sale'), ('is_downpayment', '=', False),
+                        ]"
                         optional="hide"/>
                 </xpath>
                 <t name="remaining_hours_so_data" position="attributes">
