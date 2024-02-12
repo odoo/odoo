@@ -189,3 +189,33 @@ class TestHrHomeworkingHrEmployeeLocation(TestHrHomeworkingCommon):
         location_exceptional = location_for_emp_hruser.filtered(lambda wl: not wl.weekly)
         self.assertEqual(len(location_for_emp_hruser.ids), 7)
         self.assertEqual(len(location_exceptional), 4)
+
+    @freeze_time('2024-02-12')
+    def test_register_location_for_multiple_employee_with_same_partner(self):
+        partner = self.env['res.partner'].create({'name': 'Partner'})
+        employee_1 = self.env['hr.employee'].create({
+            'name': 'Employee 1',
+            'work_contact_id': partner.id,
+            'monday_location_id': self.work_office_1.id,
+        })
+        employee_2 = self.env['hr.employee'].create({
+            'name': 'Employee 2',
+            'work_contact_id': partner.id,
+            'monday_location_id': self.work_office_2.id,
+        })
+
+        result = partner.get_worklocation(datetime(2024, 2, 12), datetime(2024, 2, 12))
+        self.assertEqual(len(result), 1)
+        self.assertTrue(result.get(employee_1.id))  # First is the list
+
+        employee_1.active = False
+
+        result = partner.get_worklocation(datetime(2024, 2, 12), datetime(2024, 2, 12))
+        self.assertEqual(len(result), 1)
+        self.assertTrue(result.get(employee_2.id))  # Employee 1 is archived so employee 2 is selected
+
+        new_company = self.env['res.company'].create({'name': "New company"})
+        employee_2.company_id = new_company.id
+
+        result = partner.get_worklocation(datetime(2024, 2, 12), datetime(2024, 2, 12))
+        self.assertEqual(len(result), 0)  # No employee in the same company and active
