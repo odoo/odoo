@@ -17,6 +17,7 @@ import { SaleOrderManagementControlPanel } from "@pos_sale/app/order_management_
 import { Component, onMounted, useRef } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { ask, makeAwaitable } from "@point_of_sale/app/store/make_awaitable_dialog";
+import { enhancedButtons } from "@point_of_sale/app/generic_components/numpad/numpad";
 
 /**
  * ID getter to take into account falsy many2one value.
@@ -291,40 +292,37 @@ export class SaleOrderManagementScreen extends Component {
                     down_payment = sale_order.amount_total;
                 }
 
-                let popupTitle = "";
                 let popupInputSuffix = "";
                 const popupTotalDue = sale_order.amount_total;
-                let getInputBufferReminder = () => false;
+                let feedback = () => false;
                 const popupSubtitle = _t("Due balance: %s");
                 if (selectedOption == "dpAmount") {
-                    popupTitle = _t("Down Payment");
                     popupInputSuffix = this.pos.currency.symbol;
                 } else {
-                    popupTitle = _t("Down Payment");
                     popupInputSuffix = "%";
-                    getInputBufferReminder = (buffer) => {
+                    feedback = (buffer) => {
                         if (buffer && buffer.length > 0) {
                             const percentage = parseFloat(buffer);
                             if (isNaN(percentage)) {
                                 return false;
                             }
-                            return this.env.utils.formatCurrency(
+                            return `(${this.env.utils.formatCurrency(
                                 (popupTotalDue * percentage) / 100
-                            );
+                            )})`;
                         } else {
                             return false;
                         }
                     };
                 }
                 const payload = await makeAwaitable(this.dialog, NumberPopup, {
-                    title: popupTitle,
+                    title: _t("Down Payment"),
                     subtitle: sprintf(
                         popupSubtitle,
                         this.env.utils.formatCurrency(sale_order.amount_total)
                     ),
-                    inputSuffix: popupInputSuffix,
-                    startingValue: 0,
-                    getInputBufferReminder,
+                    buttons: enhancedButtons(this.env),
+                    formatDisplayedValue: (x) => `${popupInputSuffix} ${x}`,
+                    feedback,
                 });
 
                 if (!payload) {

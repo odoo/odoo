@@ -3,19 +3,13 @@
     <t t-name="point_of_sale.NumberPopup">
         <Dialog title="props.title" bodyClass="'d-flex flex-column'" size="'sm'">
             <div t-if="props.subtitle" class="subtitle p-1 mx-auto" t-esc="props.subtitle"/>
-            <t t-if="!ui.isSmall">
-                <div class="input-symbol pt-3">
-                    <div class="popup-input value active form-control form-control-lg w-75 max-width-325px mx-auto">
-                        <span class="input-value" t-att-class="{ 'highlight': state.toStartOver }"><t t-esc="inputBuffer"/></span>
-                        <span t-if="props.inputSuffix"><t t-esc="props.inputSuffix" /></span>
-                    </div>
+            <div class="input-symbol pt-3">
+                <div class="popup-input value active form-control form-control-lg w-75 max-width-325px mx-auto">
+                    <span class="input-value" t-esc="props.formatDisplayedValue(this.state.buffer)"/>
                 </div>
-                <Numpad buttons="getNumpadButtons()" class="'mx-auto my-3 w-75 max-width-325px'"/>
-            </t>
-            <input t-else="" type="text" t-model="state.payload" t-ref="input" class="value payment-input-number" inputmode="decimal"/>
-            <div t-if="props.getInputBufferReminder(state.buffer)" class="input-buffer-reminder mx-auto">
-                (<t t-esc="props.getInputBufferReminder(state.buffer)" />)
             </div>
+            <div t-if="props.feedback(this.state.buffer)" class="p-2 mx-auto" t-esc="props.feedback(this.state.buffer)" />
+            <Numpad buttons="props.buttons" class="'mx-auto my-3 w-75 max-width-325px'"/>
             <t t-set-slot="footer">
                 <button class="btn btn-primary o-default-button" t-on-click="confirm">Ok</button>
             </t>

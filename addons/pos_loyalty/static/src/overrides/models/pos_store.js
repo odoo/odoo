@@ -86,7 +86,6 @@ patch(PosStore.prototype, {
         if (this.config.gift_card_settings == "scan_use") {
             const code = await makeAwaitable(this.dialog, TextInputPopup, {
                 title: _t("Generate a Gift Card"),
-                startingValue: "",
                 placeholder: _t("Enter the gift card code"),
             });
             if (!code) {

@@ -59,7 +59,7 @@ export function login(name, pin) {
         return res;
     }
     return res.concat([
-        ...NumberPopup.pressNumpad(pin.split("").join(" ")),
+        ...NumberPopup.enterValue(pin),
         ...NumberPopup.isShown("••••"),
         Dialog.confirm(),
     ]);

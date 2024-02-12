@@ -40,9 +40,7 @@ export class PaymentScreenPaymentLines extends Component {
         if (this.ui.isSmall) {
             this.dialog.add(NumberPopup, {
                 title: _t("New amount"),
-                startingValue: paymentline.get_amount(),
-                isInputSelected: true,
-                nbrDecimal: this.pos.currency.decimal_places,
+                startingValue: this.env.utils.formatCurrency(paymentline.get_amount(), false),
                 getPayload: (num) => {
                     this.props.updateSelectedPaymentline(parseFloat(num));
                 },

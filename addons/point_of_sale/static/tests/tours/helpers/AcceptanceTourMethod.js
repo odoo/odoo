@@ -2,7 +2,6 @@ import { inLeftSide } from "./utils";
 import * as Order from "./generic_components/OrderWidgetMethods";
 import * as ProductScreen from "./ProductScreenTourMethods";
 import * as Dialog from "./DialogTourMethods";
-import * as Numpad from "./NumpadTourMethods";
 
 export function waitForLoading() {
     return [
@@ -52,31 +51,6 @@ export function setFiscalPositionOnOrder(fp_name) {
             mobile: true,
         },
     ];
-}
-
-export function fillPaymentLineAmountMobile(lineName, keys) {
-    return [
-        {
-            content: "click payment line",
-            trigger: `.paymentlines .paymentline .payment-infos:contains("${lineName}")`,
-            mobile: true,
-        },
-        {
-            content: `'${keys}' inputed in the number popup`,
-            trigger: `.payment-input-number`,
-            in_modal: true,
-            run: `text ${keys}`,
-            mobile: true,
-        },
-        {
-            ...Dialog.confirm(),
-            mobile: true,
-        },
-    ];
-}
-
-export function fillPaymentValue(lineName, val) {
-    return [Numpad.click(val, { mobile: false }), ...fillPaymentLineAmountMobile(lineName, val)];
 }
 
 export function selectedPaymentHas(name, val) {

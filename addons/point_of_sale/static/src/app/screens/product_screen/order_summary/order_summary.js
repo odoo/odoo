@@ -133,7 +133,6 @@ export class OrderSummary extends Component {
     async _showDecreaseQuantityPopup() {
         this.numberBuffer.reset();
         const inputNumber = await makeAwaitable(this.dialog, NumberPopup, {
-            startingValue: 0,
             title: _t("Set the new quantity"),
         });
         const newQuantity = inputNumber && inputNumber !== "" ? parseFloat(inputNumber) : null;

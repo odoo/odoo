@@ -3,6 +3,7 @@
 import * as Numpad from "@point_of_sale/../tests/tours/helpers/NumpadTourMethods";
 import * as Dialog from "@point_of_sale/../tests/tours/helpers/DialogTourMethods";
 import * as PartnerList from "@point_of_sale/../tests/tours/helpers/PartnerListTourMethods";
+import * as NumberPopup from "@point_of_sale/../tests/tours/helpers/NumberPopupTourMethods";
 
 export function clickPaymentMethod(name) {
     return [
@@ -99,8 +100,10 @@ export function clickTipButton() {
     ];
 }
 export function enterPaymentLineAmount(lineName, keys) {
-    const numpadKeys = keys.split("").join(" ");
-    return [...pressNumpad(numpadKeys), ...fillPaymentLineAmountMobile(lineName, keys)];
+    return [
+        ...pressNumpad(keys.split("").join(" ")),
+        ...fillPaymentLineAmountMobile(lineName, keys),
+    ];
 }
 export function fillPaymentLineAmountMobile(lineName, keys) {
     return [
@@ -109,13 +112,10 @@ export function fillPaymentLineAmountMobile(lineName, keys) {
             trigger: `.paymentlines .paymentline .payment-infos:contains("${lineName}")`,
             mobile: true,
         },
-        {
-            content: `'${keys}' inputed in the number popup`,
-            trigger: ".payment-input-number",
-            in_modal: true,
-            run: `text ${keys}`,
+        ...NumberPopup.enterValue(keys).map((step) => ({
+            ...step,
             mobile: true,
-        },
+        })),
         {
             ...Dialog.confirm(),
             mobile: true,

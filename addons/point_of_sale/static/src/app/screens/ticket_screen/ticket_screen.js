@@ -16,7 +16,7 @@ import { ReprintReceiptButton } from "@point_of_sale/app/screens/ticket_screen/r
 import { SearchBar } from "@point_of_sale/app/screens/ticket_screen/search_bar/search_bar";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { Component, onMounted, useState } from "@odoo/owl";
-import { Numpad } from "@point_of_sale/app/generic_components/numpad/numpad";
+import { Numpad, getButtons } from "@point_of_sale/app/generic_components/numpad/numpad";
 import { ask } from "@point_of_sale/app/store/make_awaitable_dialog";
 
 const { DateTime } = luxon;
@@ -91,24 +91,12 @@ export class TicketScreen extends Component {
         }
     }
     getNumpadButtons() {
-        return [
-            { value: "1" },
-            { value: "2" },
-            { value: "3" },
+        return getButtons(this.env, [
             { value: "quantity", text: "Qty", class: "active border-primary" },
-            { value: "4" },
-            { value: "5" },
-            { value: "6" },
             { value: "discount", text: "% Disc", disabled: true },
-            { value: "7" },
-            { value: "8" },
-            { value: "9" },
             { value: "price", text: "Price", disabled: true },
             { value: "-", text: "+/-", disabled: true },
-            { value: "0" },
-            { value: this.env.services.localization.decimalPoint },
-            { value: "Backspace", text: "⌫" },
-        ];
+        ]);
     }
     async onSearch(search) {
         Object.assign(this._state.ui.searchDetails, search);
