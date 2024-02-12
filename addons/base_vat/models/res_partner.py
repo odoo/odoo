@@ -767,11 +767,26 @@ class ResPartner(models.Model):
         if len(vat) not in (15, 16) or not vat[0:15].isdecimal() or not vat[-1].isdecimal():
             return False
 
+<<<<<<< HEAD
         # VAT is only digits and of the right length, check the Luhn checksum.
         try:
             luhn.validate(vat[0:9] if len(vat) == 15 else vat[1:10])
         except (InvalidFormat, InvalidChecksum):
             return False
+||||||| parent of 82391b0cfe5d (temp)
+        # VAT is only digits and of the right length, check the Luhn checksum.
+        try:
+            luhn.validate(vat[0:9])
+        except (InvalidFormat, InvalidChecksum):
+            return False
+=======
+        if len(vat) == 15:
+            # VAT is only digits and of the right length, check the Luhn checksum.
+            try:
+                luhn.validate(vat[0:9])
+            except (InvalidFormat, InvalidChecksum):
+                return False
+>>>>>>> 82391b0cfe5d (temp)
 
         return True
 
