@@ -65,7 +65,7 @@ export async function freezeOdooData(model) {
                     col,
                     row,
                 });
-                cell.content = evaluatedCell.formattedValue;
+                cell.content = evaluatedCell.value.toString();
                 if (evaluatedCell.format) {
                     cell.format = getItemId(evaluatedCell.format, data.formats);
                 }
