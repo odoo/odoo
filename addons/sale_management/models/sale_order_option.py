@@ -1,7 +1,6 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -142,16 +141,12 @@ class SaleOrderOption(models.Model):
     def add_option_to_order(self):
         self.ensure_one()
 
-        sale_order = self.order_id
-
-        if not sale_order._can_be_edited_on_portal():
+        if not self.order_id._can_be_edited_on_portal():
             raise UserError(_('You cannot add options to a confirmed order.'))
 
         values = self._get_values_to_add_to_order()
         order_line = self.env['sale.order.line'].create(values)
 
         self.write({'line_id': order_line.id})
-        if sale_order:
-            sale_order.add_option_to_order_with_taxcloud()
 
         return order_line
