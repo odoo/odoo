@@ -416,7 +416,7 @@
                                         <field name="price_unit"/>
                                         <field name="tax_id" widget="many2many_tags" options="{'no_create': True}" context="{'search_view_ref': 'account.account_tax_view_search'}" domain="[('type_tax_use', '=', 'sale'), ('company_id', 'parent_of', parent.company_id), ('country_id', '=', parent.tax_country_id)]"
                                             readonly="qty_invoiced &gt; 0"/>
-                                        <t groups="product.group_discount_per_so_line">
+                                        <t groups="sale.group_discount_per_so_line">
                                             <label for="discount"/>
                                             <div name="discount">
                                                 <field name="discount" class="oe_inline"/> %
@@ -569,7 +569,7 @@
                                     context="{'active_test': True}"
                                     readonly="qty_invoiced &gt; 0 or is_downpayment"
                                     optional="show"/>
-                                <field name="discount" string="Disc.%" groups="product.group_discount_per_so_line" optional="show"/>
+                                <field name="discount" string="Disc.%" groups="sale.group_discount_per_so_line" optional="show"/>
                                 <field name="is_downpayment" column_invisible="True"/>
                                 <field name="price_subtotal" string="Tax excl." invisible="is_downpayment"/>
                                 <field name="price_total"
@@ -674,7 +674,7 @@
                                     name="action_open_discount_wizard"
                                     type="object"
                                     class="btn btn-secondary"
-                                    groups="product.group_discount_per_so_line"/>
+                                    groups="sale.group_discount_per_so_line"/>
                         </div>
                         <group name="note_group" col="6" class="mt-2 mt-md-0">
                             <group colspan="4">

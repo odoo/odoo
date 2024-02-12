@@ -85,20 +85,10 @@ class ResConfigSettings(models.TransientModel):
         required=True,
     )
 
-    # TODO move to sale (and move group_discount_per_so_line from product to sale as well)
-    group_product_pricelist = fields.Boolean(
-        compute='_compute_group_product_pricelist', store=True, readonly=False)
-
     enabled_extra_checkout_step = fields.Boolean(string="Extra Step During Checkout")
     enabled_buy_now_button = fields.Boolean(string="Buy Now")
 
     #=== COMPUTE METHODS ===#
-
-    @api.depends('group_discount_per_so_line')
-    def _compute_group_product_pricelist(self):
-        self.filtered(lambda w: w.group_discount_per_so_line).update({
-            'group_product_pricelist': True,
-        })
 
     @api.depends('website_id.account_on_checkout')
     def _compute_account_on_checkout(self):
