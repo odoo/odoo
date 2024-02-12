@@ -88,5 +88,14 @@
             <field name="code">model._unmute()</field>
             <field name="state">code</field>
         </record>
+
+        <record id="ir_cron_send_discuss_scheduled_message" model="ir.cron">
+            <field name="name">Send future message</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">minutes</field>
+            <field name="model_id" ref="model_discuss_scheduler"/>
+            <field name="code">model._send_scheduled_message_cron()</field>
+            <field name="state">code</field>
+        </record>
     </data>
 </odoo>

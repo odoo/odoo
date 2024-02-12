@@ -102,16 +102,22 @@
 </t>
 
 <t t-name="mail.Composer.sendButton">
-    <button t-if="!compact or ui.isSmall" class="o-mail-Composer-send btn o-last"
-        t-att-class="{'btn-primary': extended, 'rounded-0 rounded-end-3': !extended and !compact, 'btn-link align-self-stretch': !extended, 'border-start-0 ms-2 me-3': env.inDiscussApp}"
-        t-on-click="sendMessage"
-        t-att-disabled="isSendButtonDisabled"
-        t-att-aria-label="SEND_TEXT"
-    >
-        <t t-if="thread and thread.type === 'chatter'" t-out="SEND_TEXT"/>
-        <t t-elif="ui.isSmall"><i class="fa fa-paper-plane-o"/></t>
-        <t t-else="">Send</t>
-    </button>
+    <div class="btn-group">
+        <button t-if="!compact or ui.isSmall" class="o-mail-Composer-send btn o-last"
+                t-att-class="{'btn-primary': extended, 'rounded-0 rounded-end-3': !extended and !compact, 'btn-link align-self-stretch': !extended, 'border-start-0 ms-2 me-3': env.inDiscussApp}"
+                t-on-click="sendMessage"
+                t-att-disabled="isSendButtonDisabled"
+                t-att-aria-label="SEND_TEXT"
+        >
+            <t t-if="thread and thread.type === 'chatter'" t-out="SEND_TEXT"/>
+            <t t-elif="ui.isSmall"><i class="fa fa-paper-plane-o"/></t>
+            <t t-else="">Send</t>
+        </button>
+        <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false" t-ref="schedule"></button>
+        <ul class="dropdown-menu">
+            <li><a class="dropdown-item" t-on-click="onClickSchedule">Schedule send</a></li>
+        </ul>
+    </div>
 </t>
 
     <t t-name="mail.Composer.suggestionPartner">

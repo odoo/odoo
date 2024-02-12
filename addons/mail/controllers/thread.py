@@ -105,9 +105,15 @@ class ThreadController(http.Controller):
                 post_data["partner_emails"], post_data.get("partner_additional_values", {})
             )]
         post_data["partner_ids"] = list(set((post_data.get("partner_ids", [])) + new_partners))
-        message_data = thread.message_post(
-            **{key: value for key, value in post_data.items() if key in self._get_allowed_message_post_params()}
-        ).message_format()[0]
+        message_post_params = {key: value for key, value in post_data.items() if key in self._get_allowed_message_post_params()}
+        if "date" in post_data:
+            return request.env["discuss.scheduler"].create({
+                "thread_model": thread_model,
+                "thread_id": thread_id,
+                "message_data": message_post_params,
+                "date": post_data["date"],
+            })
+        message_data = thread.message_post(**message_post_params).message_format()[0]
         if "temporary_id" in request.context:
             message_data["temporary_id"] = request.context["temporary_id"]
         return message_data

@@ -18,6 +18,9 @@ import { DateTimePickerPopover } from "./datetime_picker_popover";
  * @property {(value: DateTimePickerProps["value"]) => any} [onApply] callback
  *  invoked once the value is committed: this is either when all inputs received
  *  a "change" event or when the datetime picker popover has been closed.
+ * @property {(value: DateTimePickerProps["value"]) => any} [forcedApply] forced
+ * onApply callback even if the value did not changed. Useful to commit default
+ * value.
  * @property {DateTimePickerProps} pickerProps
  * @property {string | ReturnType<typeof import("@odoo/owl").useRef>} [target]
  *
@@ -78,6 +81,9 @@ export const datetimePickerService = {
                  * value has changed, and set other internal variables accordingly.
                  */
                 const apply = () => {
+                    if (hookParams.forcedApply) {
+                        return hookParams.forcedApply?.(pickerProps.value);
+                    }
                     if (areDatesEqual(lastInitialProps?.value, deepCopy(pickerProps.value))) {
                         return;
                     }

@@ -10,6 +10,7 @@ import { isDragSourceExternalFile } from "@mail/utils/common/misc";
 import { RecipientList } from "@mail/core/web/recipient_list";
 import { FollowerList } from "@mail/core/web/follower_list";
 import { SearchMessagesPanel } from "@mail/core/common/search_messages_panel";
+import { Message } from "@mail/core/common/message";
 
 import {
     Component,
@@ -52,6 +53,7 @@ export class Chatter extends Component {
         FollowerList,
         SuggestedRecipientsList,
         SearchMessagesPanel,
+        Message,
     };
     static props = [
         "close?",
@@ -101,6 +103,7 @@ export class Chatter extends Component {
             jumpThreadPresent: 0,
             showActivities: true,
             showAttachmentLoading: false,
+            showScheduledMessages: false,
             /** @type {import("models").Thread} */
             thread: undefined,
             isSearchOpen: false,
@@ -145,7 +148,12 @@ export class Chatter extends Component {
                 if (this.env.chatter) {
                     this.env.chatter.fetchData = false;
                 }
-                this.load(this.state.thread, ["followers", "attachments", "suggestedRecipients"]);
+                this.load(this.state.thread, [
+                    "followers",
+                    "attachments",
+                    "suggestedRecipients",
+                    "scheduledMessages",
+                ]);
             }
         });
         onWillUpdateProps((nextProps) => {
@@ -159,7 +167,12 @@ export class Chatter extends Component {
                 if (this.env.chatter) {
                     this.env.chatter.fetchData = false;
                 }
-                this.load(this.state.thread, ["followers", "attachments", "suggestedRecipients"]);
+                this.load(this.state.thread, [
+                    "followers",
+                    "attachments",
+                    "suggestedRecipients",
+                    "scheduledMessages",
+                ]);
             }
         });
         useEffect(
@@ -201,6 +214,10 @@ export class Chatter extends Component {
      */
     get activities() {
         return this.state.thread?.activities ?? [];
+    }
+
+    get scheduledMessages() {
+        return this.state.thread?.scheduledMessages ?? [];
     }
 
     get followerButtonLabel() {
@@ -273,7 +290,16 @@ export class Chatter extends Component {
      * @param {import("models").Thread} thread
      * @param {['activities'|'followers'|'attachments'|'messages'|'suggestedRecipients']} requestList
      */
-    load(thread, requestList = ["followers", "attachments", "messages", "suggestedRecipients"]) {
+    load(
+        thread,
+        requestList = [
+            "followers",
+            "attachments",
+            "messages",
+            "suggestedRecipients",
+            "scheduledMessages",
+        ]
+    ) {
         if (!thread.id || !this.state.thread?.eq(thread)) {
             return;
         }
@@ -362,6 +388,10 @@ export class Chatter extends Component {
 
     toggleActivities() {
         this.state.showActivities = !this.state.showActivities;
+    }
+
+    toggleScheduledMessages() {
+        this.state.showScheduledMessages = !this.state.showScheduledMessages;
     }
 
     async scheduleActivity() {

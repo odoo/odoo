@@ -4520,4 +4520,9 @@ class MailThread(models.AbstractModel):
             res['recipients'] = self.message_get_followers(filter_recipients=True)
         if 'suggestedRecipients' in request_list:
             res['suggestedRecipients'] = self._message_get_suggested_recipients()
+        if 'scheduledMessages' in request_list:
+            res['scheduledMessages'] = self.env['discuss.scheduler'].search_read([
+                ("thread_model", "=", self._name),
+                ("thread_id", "=", self.id)
+            ])
         return res

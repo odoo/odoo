@@ -567,6 +567,7 @@ export class ThreadService {
             mentionedChannels = [],
             mentionedPartners = [],
             cannedResponseIds,
+            date,
         } = {}
     ) {
         let tmpMsg;
@@ -578,6 +579,7 @@ export class ThreadService {
             mentionedChannels,
             mentionedPartners,
             thread,
+            date,
         });
         const tmpId = this.messageService.getNextTemporaryId();
         params.context = { ...user.context, ...params.context, temporary_id: tmpId };
@@ -648,6 +650,7 @@ export class ThreadService {
         mentionedChannels,
         mentionedPartners,
         thread,
+        date,
     }) {
         const subtype = isNote ? "mail.mt_note" : "mail.mt_comment";
         const validMentions =
@@ -686,6 +689,7 @@ export class ThreadService {
                 subtype_xmlid: subtype,
                 partner_emails: recipientEmails,
                 partner_additional_values: recipientAdditionalValues,
+                date,
             },
             thread_id: thread.id,
             thread_model: thread.model,

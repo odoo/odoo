@@ -10,6 +10,7 @@ from . import discuss_channel
 from . import discuss_gif_favorite
 from . import discuss_voice_metadata
 from . import mail_guest
+from . import discuss_scheduler
 
 # odoo models
 from . import ir_attachment

@@ -93,6 +93,9 @@
                 />
             </div>
             <t t-else="">
+                <t t-if="scheduledMessages?.length > 0">
+                    <t t-call="mail.ScheduledMessageList"/>
+                </t>
                 <t t-if="props.hasActivities and activities.length and !state.isSearchOpen">
                     <t t-call="mail.ActivityList"/>
                 </t>
@@ -143,6 +146,25 @@
         <t t-if="state.showActivities">
             <t t-foreach="activities" t-as="activity" t-key="activity.id">
                 <Activity activity="activity" onActivityChanged.bind="onActivityChanged" reloadParentView.bind="reloadParentView"/>
+            </t>
+        </t>
+    </div>
+</t>
+
+<t t-name="mail.ScheduledMessageList">
+    <div class="o-mail-ScheduledMessageList">
+        <div class="d-flex pt-2 cursor-pointer fw-bolder" t-on-click="toggleScheduledMessages">
+            <hr class="flex-grow-1 fs-3"/>
+            <div class="d-flex align-items-center px-3">
+                <i class="fa fa-fw" t-att-class="state.showScheduledMessages ? 'fa-caret-down' : 'fa-caret-right'"/>
+                Scheduled messages
+                <span t-if="!state.showScheduledMessages" class="badge rounded-pill ms-2 text-bg-success"><t t-esc="scheduledMessages.length"/></span>
+            </div>
+            <hr class="flex-grow-1 fe-3"/>
+        </div>
+        <t t-if="state.showScheduledMessages">
+            <t t-foreach="scheduledMessages" t-as="scheduledMessage" t-key="scheduledMessage.id">
+                <t t-out="scheduledMessage.message_data.body"/>
             </t>
         </t>
     </div>

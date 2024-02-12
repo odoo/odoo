@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="mail.composer_schedule_dialog">
+        <Dialog size="'md'" title="props.title">
+            <DateTimePicker onSelect="onSelect" minDate="minDate" />
+            <t t-set-slot="footer">
+                <button class="btn btn-lg btn-primary" t-esc="'prout'" />
+            </t>
+        </Dialog>
+    </t>
+</templates>

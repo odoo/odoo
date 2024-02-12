@@ -28,6 +28,10 @@ import { useService } from "@web/core/utils/hooks";
 import { FileUploader } from "@web/views/fields/file_handler";
 import { rpc } from "@web/core/network/rpc";
 import { escape, sprintf } from "@web/core/utils/strings";
+import { useDateTimePicker } from "@web/core/datetime/datetime_hook";
+import { serializeDateTime } from "@web/core/l10n/dates";
+
+const { DateTime } = luxon;
 
 const EDIT_CLICK_TYPE = {
     CANCEL: "cancel",
@@ -101,6 +105,8 @@ export class Composer extends Component {
         this.emojiButton = useRef("emoji-button");
         this.state = useState({
             active: true,
+            /** @type {luxon.DateTime|null} */
+            scheduledDate: null,
         });
         this.selection = useSelection({
             refName: "textarea",
@@ -125,6 +131,17 @@ export class Composer extends Component {
             execBeforeUnmount: true,
         });
         useExternalListener(window, "beforeunload", this.saveContent.bind(this));
+        this.dateTimePicker = useDateTimePicker({
+            target: "schedule",
+            forcedApply: (date) => {
+                this.state.scheduledDate = date;
+            },
+            pickerProps: {
+                rounding: 1,
+                minDate: DateTime.now().plus({ hours: 1 }),
+                value: DateTime.now().plus({ hours: 1 }),
+            },
+        });
         if (this.props.dropzoneRef) {
             useDropzone(
                 this.props.dropzoneRef,
@@ -209,6 +226,10 @@ export class Composer extends Component {
         return "";
     }
 
+    onClickSchedule() {
+        this.dateTimePicker.open();
+    }
+
     onClickCancelOrSaveEditText(ev) {
         if (this.props.composer.message && ev.target.dataset?.type === EDIT_CLICK_TYPE.CANCEL) {
             this.props.onDiscardCallback(ev);
@@ -267,6 +288,10 @@ export class Composer extends Component {
     }
 
     get SEND_TEXT() {
+        if (this.state.scheduledDate) {
+            const short = this.state.scheduledDate.toLocaleString(DateTime.DATETIME_SHORT);
+            return this.props.type === "note" ? _t("Log at %s", short) : _t("Send at %s", short);
+        }
         return this.props.type === "note" ? _t("Log") : _t("Send");
     }
 
@@ -592,6 +617,9 @@ export class Composer extends Component {
                 cannedResponseIds: this.props.composer.cannedResponses.map((c) => c.id),
                 parentId: this.props.messageToReplyTo?.message?.id,
             };
+            if (this.state.scheduledDate) {
+                postData.date = serializeDateTime(this.state.scheduledDate);
+            }
             await this._sendMessage(value, postData);
         });
     }
