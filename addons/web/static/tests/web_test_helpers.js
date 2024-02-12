@@ -30,7 +30,12 @@ import { defineModels } from "./_framework/mock_server/mock_server";
 
 export { findComponent, mountWithCleanup } from "./_framework/component_test_helpers";
 export { contains } from "./_framework/dom_test_helpers";
-export { getService, makeMockEnv, mockService } from "./_framework/env_test_helpers";
+export {
+    getService,
+    makeMockEnv,
+    makeDialogMockEnv,
+    mockService,
+} from "./_framework/env_test_helpers";
 export { Command } from "./_framework/mock_server/mock_model";
 export {
     MockServer,
