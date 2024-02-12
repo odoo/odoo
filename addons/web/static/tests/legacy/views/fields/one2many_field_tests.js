@@ -13128,6 +13128,7 @@ QUnit.module("Fields", (hooks) => {
             },
             getItem(args) {
                 assert.step(`localStorage getItem ${args}`);
+                return null;
             },
         });
 
@@ -13152,6 +13153,7 @@ QUnit.module("Fields", (hooks) => {
         await click(target.querySelector(".o_data_cell"));
         assert.containsOnce(target, ".modal .o_data_row");
         assert.verifySteps([
+            "localStorage getItem optional_fields,partner,form,100000001,p,list,display_name",
             "localStorage getItem optional_fields,partner,form,100000001,turtles,list,display_name",
         ]);
     });

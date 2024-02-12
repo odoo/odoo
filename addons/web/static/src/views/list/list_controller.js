@@ -93,7 +93,7 @@ export class ListController extends Component {
         this.hasMousedownDiscard = false;
         this.nextActionAfterMouseup = null;
 
-        this.optionalActiveFields = [];
+        this.optionalActiveFields = {};
 
         onWillStart(async () => {
             this.isExportEnable = await user.hasGroup("base.group_allow_export");
@@ -441,10 +441,6 @@ export class ListController extends Component {
     get nbTotal() {
         const list = this.model.root;
         return list.isGrouped ? list.recordCount : list.count;
-    }
-
-    onOptionalFieldsChanged(optionalActiveFields) {
-        this.optionalActiveFields = optionalActiveFields;
     }
 
     get defaultExportList() {

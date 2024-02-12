@@ -24,11 +24,10 @@ import {
     onMounted,
     onPatched,
     onWillPatch,
-    onWillUpdateProps,
+    onWillRender,
     useEffect,
     useExternalListener,
     useRef,
-    useState,
 } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 
@@ -84,7 +83,6 @@ export class ListRenderer extends Component {
         "list",
         "archInfo",
         "openRecord",
-        "evalViewModifier",
         "onAdd?",
         "cycleOnTab?",
         "allowSelectors?",
@@ -92,21 +90,15 @@ export class ListRenderer extends Component {
         "onOpenFormView?",
         "noContentHelp?",
         "nestedKeyOptionalFieldsData?",
-        "onOptionalFieldsChanged?",
+        "optionalActiveFields?",
     ];
 
     setup() {
         this.uiService = useService("ui");
-        this.allColumns = this.processAllColumn(this.props.archInfo.columns, this.props.list);
         this.notificationService = useService("notification");
         this.keyOptionalFields = this.createKeyOptionalFields();
-        this.getOptionalActiveFields();
         this.cellClassByColumn = {};
         this.groupByButtons = this.props.archInfo.groupBy.buttons;
-        this.state = useState({
-            columns: this.getActiveColumns(this.props.list),
-        });
-        this.withHandleColumn = this.state.columns.some((col) => col.widget === "handle");
         useExternalListener(document, "click", this.onGlobalClick.bind(this));
         this.tableRef = useRef("table");
 
@@ -141,9 +133,14 @@ export class ListRenderer extends Component {
             const activeRow = document.activeElement.closest(".o_data_row.o_selected_row");
             this.activeRowId = activeRow ? activeRow.dataset.id : null;
         });
-        onWillUpdateProps((nextProps) => {
-            this.allColumns = this.processAllColumn(nextProps.archInfo.columns, nextProps.list);
-            this.state.columns = this.getActiveColumns(nextProps.list);
+        this.optionalActiveFields = this.props.optionalActiveFields || {};
+        this.allColumns = [];
+        this.columns = [];
+        onWillRender(() => {
+            this.allColumns = this.processAllColumn(this.props.archInfo.columns, this.props.list);
+            Object.assign(this.optionalActiveFields, this.computeOptionalActiveFields());
+            this.columns = this.getActiveColumns(this.props.list);
+            this.withHandleColumn = this.columns.some((col) => col.widget === "handle");
         });
         let dataRowId;
         this.rootRef = useRef("root");
@@ -195,7 +192,7 @@ export class ListRenderer extends Component {
             () => {
                 this.freezeColumnWidths();
             },
-            () => [this.state.columns, this.isEmpty, this.props.list.offset, this.props.list.limit]
+            () => [this.columns, this.isEmpty, this.props.list.offset, this.props.list.limit]
         );
         useExternalListener(window, "resize", () => {
             this.columnWidths = null;
@@ -229,7 +226,7 @@ export class ListRenderer extends Component {
                 } else if (this.lastEditedCell) {
                     this.focusCell(this.lastEditedCell.column, true);
                 } else {
-                    this.focusCell(this.state.columns[0]);
+                    this.focusCell(this.columns[0]);
                 }
             }
             this.cellToFocus = null;
@@ -352,7 +349,7 @@ export class ListRenderer extends Component {
     }
 
     setDefaultColumnWidths() {
-        const widths = this.state.columns.map((col) => this.calculateColumnWidth(col));
+        const widths = this.columns.map((col) => this.calculateColumnWidth(col));
         const sumOfRelativeWidths = widths
             .filter(({ type }) => type === "relative")
             .reduce((sum, { value }) => sum + value, 0);
@@ -458,7 +455,7 @@ export class ListRenderer extends Component {
     }
 
     get nbCols() {
-        let nbCols = this.state.columns.length;
+        let nbCols = this.columns.length;
         if (this.hasSelectors) {
             nbCols++;
         }
@@ -500,17 +497,15 @@ export class ListRenderer extends Component {
 
     focusCell(column, forward = true) {
         const index = column
-            ? this.state.columns.findIndex(
-                  (col) => col.id === column.id && col.name === column.name
-              )
+            ? this.columns.findIndex((col) => col.id === column.id && col.name === column.name)
             : -1;
         let columns;
         if (index === -1 && !forward) {
-            columns = this.state.columns.slice(0).reverse();
+            columns = this.columns.slice(0).reverse();
         } else {
             columns = [
-                ...this.state.columns.slice(index, this.state.columns.length),
-                ...this.state.columns.slice(0, index),
+                ...this.columns.slice(index, this.columns.length),
+                ...this.columns.slice(0, index),
             ];
         }
         const editedRecord = this.props.list.editedRecord;
@@ -800,7 +795,7 @@ export class ListRenderer extends Component {
     }
 
     getColumns(record) {
-        return this.state.columns;
+        return this.columns;
     }
 
     isNumericColumn(column) {
@@ -962,7 +957,7 @@ export class ListRenderer extends Component {
     }
 
     evalColumnInvisible(columnInvisible) {
-        return this.props.evalViewModifier(columnInvisible);
+        return evaluateBooleanExpr(columnInvisible, this.props.list.evalContext);
     }
 
     getGroupDisplayName(group) {
@@ -1007,17 +1002,17 @@ export class ListRenderer extends Component {
     // [ group name ][ aggregate cells  ][ pager]
     // TODO: move this somewhere, compute this only once (same result for each groups actually) ?
     getFirstAggregateIndex(group) {
-        return this.state.columns.findIndex((col) => col.name in group.aggregates);
+        return this.columns.findIndex((col) => col.name in group.aggregates);
     }
     getLastAggregateIndex(group) {
-        const reversedColumns = [...this.state.columns].reverse(); // reverse is destructive
+        const reversedColumns = [...this.columns].reverse(); // reverse is destructive
         const index = reversedColumns.findIndex((col) => col.name in group.aggregates);
-        return index > -1 ? this.state.columns.length - index - 1 : -1;
+        return index > -1 ? this.columns.length - index - 1 : -1;
     }
     getAggregateColumns(group) {
         const firstIndex = this.getFirstAggregateIndex(group);
         const lastIndex = this.getLastAggregateIndex(group);
-        return this.state.columns.slice(firstIndex, lastIndex + 1);
+        return this.columns.slice(firstIndex, lastIndex + 1);
     }
     getGroupNameCellColSpan(group) {
         // if there are aggregates, the first th spans until the first
@@ -1027,7 +1022,7 @@ export class ListRenderer extends Component {
         if (firstAggregateIndex > -1) {
             colspan = firstAggregateIndex;
         } else {
-            colspan = Math.max(1, this.state.columns.length - DEFAULT_GROUP_PAGER_COLSPAN);
+            colspan = Math.max(1, this.columns.length - DEFAULT_GROUP_PAGER_COLSPAN);
             if (this.displayOptionalFields) {
                 colspan++;
             }
@@ -1044,13 +1039,13 @@ export class ListRenderer extends Component {
     getGroupPagerCellColspan(group) {
         const lastAggregateIndex = this.getLastAggregateIndex(group);
         if (lastAggregateIndex > -1) {
-            let colspan = this.state.columns.length - lastAggregateIndex - 1;
+            let colspan = this.columns.length - lastAggregateIndex - 1;
             if (this.displayOptionalFields) {
                 colspan++;
             }
             return colspan;
         } else {
-            return this.state.columns.length > 1 ? DEFAULT_GROUP_PAGER_COLSPAN : 0;
+            return this.columns.length > 1 ? DEFAULT_GROUP_PAGER_COLSPAN : 0;
         }
     }
 
@@ -1068,25 +1063,25 @@ export class ListRenderer extends Component {
         };
     }
 
-    getOptionalActiveFields() {
-        this.optionalActiveFields = {};
-        let optionalActiveFields = browser.localStorage.getItem(this.keyOptionalFields);
+    computeOptionalActiveFields() {
+        const localStorageValue = browser.localStorage.getItem(this.keyOptionalFields);
         const optionalColumn = this.allColumns.filter(
             (col) => col.type === "field" && col.optional
         );
-        if (optionalActiveFields) {
-            optionalActiveFields = optionalActiveFields.split(",");
-            optionalColumn.forEach((col) => {
-                this.optionalActiveFields[col.name] = optionalActiveFields.includes(col.name);
-            });
-        } else if (optionalActiveFields !== "") {
+        const optionalActiveFields = {};
+        if (localStorageValue !== null) {
+            const localStorageOptionalActiveFields = localStorageValue.split(",");
             for (const col of optionalColumn) {
-                this.optionalActiveFields[col.name] = col.optional === "show";
+                optionalActiveFields[col.name] = localStorageOptionalActiveFields.includes(
+                    col.name
+                );
+            }
+        } else {
+            for (const col of optionalColumn) {
+                optionalActiveFields[col.name] = col.optional === "show";
             }
         }
-        if (this.props.onOptionalFieldsChanged) {
-            this.props.onOptionalFieldsChanged(this.optionalActiveFields);
-        }
+        return optionalActiveFields;
     }
 
     onClickSortColumn(column) {
@@ -1721,9 +1716,7 @@ export class ListRenderer extends Component {
                 }
 
                 if (this.isInlineEditable(record) || applyMultiEditBehavior) {
-                    const column = this.state.columns.find(
-                        (c) => c.name === cell.getAttribute("name")
-                    );
+                    const column = this.columns.find((c) => c.name === cell.getAttribute("name"));
                     this.cellToFocus = { column, record };
                     this.props.list.enterEditMode(record);
                     return true;
@@ -1829,13 +1822,10 @@ export class ListRenderer extends Component {
 
     async toggleOptionalField(fieldName) {
         this.optionalActiveFields[fieldName] = !this.optionalActiveFields[fieldName];
-        if (this.props.onOptionalFieldsChanged) {
-            this.props.onOptionalFieldsChanged(this.optionalActiveFields);
-        }
-        this.state.columns = this.getActiveColumns(this.props.list);
         this.saveOptionalActiveFields(
             this.allColumns.filter((col) => this.optionalActiveFields[col.name] && col.optional)
         );
+        this.render();
     }
 
     toggleOptionalFieldGroup(groupId) {
@@ -1847,16 +1837,14 @@ export class ListRenderer extends Component {
                     col.relatedPropertyField.id === groupId
             )
             .map((col) => col.name);
-
         const active = !fieldNames.every((fieldName) => this.optionalActiveFields[fieldName]);
         for (const fieldName of fieldNames) {
             this.optionalActiveFields[fieldName] = active;
         }
-
-        this.state.columns = this.getActiveColumns(this.props.list);
         this.saveOptionalActiveFields(
             this.allColumns.filter((col) => this.optionalActiveFields[col.name] && col.optional)
         );
+        this.render();
     }
 
     onGlobalClick(ev) {
