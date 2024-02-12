@@ -1,16 +1,16 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from decorator import decorator
 import logging
 import random
 import time
 
-from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
-from odoo.fields import Command
+from decorator import decorator
 
+from odoo.fields import Command
 from odoo.tests import tagged
 from odoo.tests.common import users, warmup
+
+from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 
 _logger = logging.getLogger(__name__)
 
@@ -139,7 +139,6 @@ class TestPERF(TransactionCaseWithUserDemo):
     def ___test_complex_sales_orders_batch_creation_perf_with_discount_computation(self):
         """Cover the "complex" logic triggered inside the `_compute_discount`"""
         self.env['product.pricelist'].search([]).discount_policy = 'without_discount'
-        self.env.user.groups_id += self.env.ref('product.group_discount_per_so_line')
 
         # Verify any modification to this count on nightly runbot builds
         self._test_complex_sales_orders_batch_creation_perf(1546)
@@ -173,7 +172,6 @@ class TestPERF(TransactionCaseWithUserDemo):
         """
         # Enable discounts
         self.env['product.pricelist'].search([]).discount_policy = 'without_discount'
-        self.env.user.groups_id += self.env.ref('product.group_discount_per_so_line')
 
         vals_list = [{
             "partner_id": self.partners[i].id,

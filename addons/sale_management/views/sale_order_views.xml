@@ -20,7 +20,7 @@
                                 <field name="product_uom_category_id" invisible="1"/>
                                 <field name="uom_id" groups="uom.group_uom"/>
                                 <field name="price_unit"/>
-                                <field name="discount" groups="product.group_discount_per_so_line"/>
+                                <field name="discount" groups="sale.group_discount_per_so_line"/>
                                 <field name="is_present" />
                             </group>
                         </form>
@@ -86,7 +86,7 @@
                             <field name="price_unit"/>
                             <field name="discount"
                                 string="Disc.%"
-                                groups="product.group_discount_per_so_line"
+                                groups="sale.group_discount_per_so_line"
                                 optional="show"/>
                             <field name="is_present" column_invisible="True" />
                             <button name="button_add_to_order"

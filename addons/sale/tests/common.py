@@ -20,7 +20,7 @@ class SaleCommon(
         cls.env.company.country_id = cls.env.ref('base.us')
 
         # Not defined in product common because only used in sale
-        cls.group_discount_per_so_line = cls.env.ref('product.group_discount_per_so_line')
+        cls.group_discount_per_so_line = cls.env.ref('sale.group_discount_per_so_line')
 
         cls.empty_order = cls.env['sale.order'].create({
             'partner_id': cls.partner.id,

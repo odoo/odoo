@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import _, api, fields, models
 
 
 class ResConfigSettings(models.TransientModel):
@@ -19,6 +19,8 @@ class ResConfigSettings(models.TransientModel):
     # Groups
     group_auto_done_setting = fields.Boolean(
         string="Lock Confirmed Sales", implied_group='sale.group_auto_done_setting')
+    group_discount_per_so_line = fields.Boolean(
+        string="Discounts", implied_group='sale.group_discount_per_so_line')
     group_proforma_sales = fields.Boolean(
         string="Pro-Forma Invoice", implied_group='sale.group_proforma_sales',
         help="Allows you to send pro-forma invoice.")
@@ -71,9 +73,22 @@ class ResConfigSettings(models.TransientModel):
     module_sale_amazon = fields.Boolean("Amazon Sync")
     module_sale_loyalty = fields.Boolean("Coupons & Loyalty")
     module_sale_margin = fields.Boolean("Margins")
+    module_sale_product_matrix = fields.Boolean("Sales Grid Entry")
     module_sale_pdf_quote_builder = fields.Boolean("PDF Quote builder")
 
     #=== ONCHANGE METHODS ===#
+
+    @api.depends('group_discount_per_so_line')
+    def _onchange_group_discount_per_so_line(self):
+        if self.group_discount_per_so_line:
+            self.group_product_pricelist = True
+
+    @api.onchange('group_product_variant')
+    def _onchange_group_product_variant(self):
+        """The product Configurator requires the product variants activated.
+        If the user disables the product variants -> disable the product configurator as well"""
+        if self.module_sale_product_matrix and not self.group_product_variant:
+            self.module_sale_product_matrix = False
 
     @api.onchange('portal_confirmation_pay')
     def _onchange_portal_confirmation_pay(self):
@@ -102,7 +117,12 @@ class ResConfigSettings(models.TransientModel):
     def set_values(self):
         super().set_values()
         if self.default_invoice_policy != 'order':
-            self.env['ir.config_parameter'].set_param('sale.automatic_invoice', False)
+            self.env['ir.config_parameter'].set_param(key='sale.automatic_invoice', value=False)
+
+        if not self.group_discount_per_so_line:
+            self.env['product.pricelist'].search([
+                ('discount_policy', '=', 'without_discount')
+            ]).write({'discount_policy': 'with_discount'})
 
         send_invoice_cron = self.env.ref('sale.send_invoice_cron', raise_if_not_found=False)
         if send_invoice_cron and send_invoice_cron.active != self.automatic_invoice:

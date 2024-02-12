@@ -48,7 +48,7 @@
                                 widget="many2one_barcode"/>
                             <field name="name"/>
                             <field name="product_uom_qty"/>
-                            <field name="qty_delivered" 
+                            <field name="qty_delivered"
                                 invisible="state not in ['sale', 'done']"
                                 readonly="qty_delivered_method != 'manual'"/>
                             <field name="qty_invoiced" invisible="state not in ['sale', 'done']"/>
@@ -67,7 +67,7 @@
                             <field name="company_id" invisible="1"/>
                             <field name="tax_country_id" invisible="1"/>
                             <field name="price_unit"/>
-                            <field name="discount" groups="product.group_discount_per_so_line"/>
+                            <field name="discount" groups="sale.group_discount_per_so_line"/>
                             <field name="price_subtotal" widget="monetary"/>
                             <field name="tax_id"
                                 widget="many2many_tags"

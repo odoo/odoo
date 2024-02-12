@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, fields, models
@@ -7,10 +6,8 @@ from odoo import _, api, fields, models
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
-    group_discount_per_so_line = fields.Boolean("Discounts", implied_group='product.group_discount_per_so_line')
     group_uom = fields.Boolean("Units of Measure", implied_group='uom.group_uom')
     group_product_variant = fields.Boolean("Variants", implied_group='product.group_product_variant')
-    module_sale_product_matrix = fields.Boolean("Sales Grid Entry")
     module_loyalty = fields.Boolean("Promotions, Coupons, Gift Card & Loyalty Program")
     group_stock_packaging = fields.Boolean('Product Packagings',
         implied_group='product.group_stock_packaging')
@@ -33,13 +30,6 @@ class ResConfigSettings(models.TransientModel):
         ('0', 'Cubic Meters'),
         ('1', 'Cubic Feet'),
     ], 'Volume unit of measure', config_parameter='product.volume_in_cubic_feet', default='0')
-
-    @api.onchange('group_product_variant')
-    def _onchange_group_product_variant(self):
-        """The product Configurator requires the product variants activated.
-        If the user disables the product variants -> disable the product configurator as well"""
-        if self.module_sale_product_matrix and not self.group_product_variant:
-            self.module_sale_product_matrix = False
 
     @api.onchange('group_product_pricelist')
     def _onchange_group_sale_pricelist(self):
@@ -64,9 +54,6 @@ class ResConfigSettings(models.TransientModel):
     def set_values(self):
         had_group_pl = self.default_get(['group_product_pricelist'])['group_product_pricelist']
         super().set_values()
-        if not self.group_discount_per_so_line:
-            pl = self.env['product.pricelist'].search([('discount_policy', '=', 'without_discount')])
-            pl.write({'discount_policy': 'with_discount'})
 
         if self.group_product_pricelist and not had_group_pl:
             self.env['res.company']._activate_or_create_pricelists()
