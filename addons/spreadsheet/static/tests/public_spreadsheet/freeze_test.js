@@ -2,8 +2,9 @@
 
 import { freezeOdooData } from "../../src/helpers/model";
 import { createSpreadsheetWithChart } from "../utils/chart";
-import { setCellContent } from "../utils/commands";
+import { setCellContent, setCellFormat } from "../utils/commands";
 import { getCell, getEvaluatedCell } from "../utils/getters";
+import { createModelWithDataSource } from "../utils/model";
 import { createSpreadsheetWithPivot } from "../utils/pivot";
 
 QUnit.module("freezing spreadsheet", {}, function () {
@@ -19,7 +20,29 @@ QUnit.module("freezing spreadsheet", {}, function () {
         const data = await freezeOdooData(model);
         const cells = data.sheets[0].cells;
         assert.strictEqual(cells.A3.content, "No", "the content is replaced with the value");
-        assert.strictEqual(cells.C3.content, "15.00", "the content is replaced with the value");
+        assert.strictEqual(cells.C3.content, "15", "the content is replaced with the value");
+        assert.strictEqual(data.formats[cells.C3.format], "#,##0.00");
+    });
+
+    QUnit.test("values are not exported formatted", async function (assert) {
+        const { model } = await createSpreadsheetWithPivot();
+        assert.strictEqual(getCell(model, "A3").content, '=ODOO.PIVOT.HEADER(1,"bar","false")');
+        assert.strictEqual(
+            getCell(model, "C3").content,
+            '=ODOO.PIVOT(1,"probability","bar","false","foo",2)'
+        );
+        setCellFormat(model, "C3", "mmmm yyyy");
+        setCellContent(model, "C4", "=C3+31");
+        assert.strictEqual(getEvaluatedCell(model, "C3").value, 15);
+        assert.strictEqual(getEvaluatedCell(model, "C3").formattedValue, "January 1900");
+        assert.strictEqual(getEvaluatedCell(model, "C4").value, 46);
+        assert.strictEqual(getEvaluatedCell(model, "C4").formattedValue, "February 1900");
+        const data = await freezeOdooData(model);
+        const sharedModel = await createModelWithDataSource({ spreadsheetData: data });
+        assert.strictEqual(getEvaluatedCell(sharedModel, "C3").value, 15);
+        assert.strictEqual(getEvaluatedCell(sharedModel, "C3").formattedValue, "January 1900");
+        assert.strictEqual(getEvaluatedCell(sharedModel, "C4").value, 46);
+        assert.strictEqual(getEvaluatedCell(sharedModel, "C4").formattedValue, "February 1900");
     });
 
     QUnit.test("odoo pivot functions detection is not case sensitive", async function (assert) {
@@ -29,8 +52,8 @@ QUnit.module("freezing spreadsheet", {}, function () {
         const data = await freezeOdooData(model);
         const A1 = data.sheets[0].cells.A1;
         const A2 = data.sheets[0].cells.A2;
-        assert.strictEqual(A1.content, "131.00", "the content is replaced with the value");
-        assert.strictEqual(A2.content, "131.00", "the content is replaced with the value");
+        assert.strictEqual(A1.content, "131", "the content is replaced with the value");
+        assert.strictEqual(A2.content, "131", "the content is replaced with the value");
     });
 
     QUnit.test("computed format is exported", async function (assert) {
