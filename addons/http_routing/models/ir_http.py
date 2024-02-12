@@ -149,7 +149,7 @@ def url_lang(path_or_uri, lang_code=None):
     # relative URL with either a path or a force_lang
     if url and not url.netloc and not url.scheme and (url.path or force_lang):
         location = werkzeug.urls.url_join(request.httprequest.path, location)
-        lang_url_codes = [url_code for _, url_code, *_ in Lang.get_available()]
+        lang_url_codes = [url_code for _, url_code, *_ in Lang.get_frontend_langs()]
         lang_code = pycompat.to_text(lang_code or request.context['lang'])
 
         # lang_code might be `[lang]`, special case for lang switcher
@@ -214,7 +214,7 @@ def is_multilang_url(local_url, lang_url_codes=None):
         2. If not matching 1., everything not under /static/ or /web/ will be translatable
     '''
     if not lang_url_codes:
-        lang_url_codes = [url_code for _, url_code, *_ in request.env['res.lang'].get_available()]
+        lang_url_codes = [url_code for _, url_code, *_ in request.env['res.lang'].get_frontend_langs()]
     spath = local_url.split('/')
     # if a language is already in the path, remove it
     if spath[1] in lang_url_codes:
@@ -341,7 +341,7 @@ class IrHttp(models.AbstractModel):
         if not lang_code:
             return None
 
-        lang_codes = [lg[0] for lg in self.env['res.lang'].get_available()]
+        lang_codes = [lg[0] for lg in self.env['res.lang'].get_frontend_langs()]
         if lang_code in lang_codes:
             return lang_code
 

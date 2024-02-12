@@ -8,9 +8,9 @@ class Lang(models.Model):
 
     @api.model
     @tools.ormcache()
-    def get_available(self):
-        """ Return the available languages as a list of (code, url_code, name,
-            active) sorted by name.
+    def get_frontend_langs(self):
+        """ Return the languages available in the frontend as a list of
+            (code, url_code, name, active) sorted by name.
         """
         langs = self.with_context(active_test=True).search([])
         return langs.get_sorted()

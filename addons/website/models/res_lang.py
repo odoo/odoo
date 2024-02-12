@@ -16,10 +16,10 @@ class Lang(models.Model):
 
     @api.model
     @tools.ormcache_context(keys=("website_id",))
-    def get_available(self):
+    def get_frontend_langs(self):
         if request and getattr(request, 'is_frontend', True):
             return self.env['website'].get_current_website().language_ids.get_sorted()
-        return super().get_available()
+        return super().get_frontend_langs()
 
     def action_activate_langs(self):
         """
