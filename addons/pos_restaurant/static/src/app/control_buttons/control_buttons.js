@@ -26,9 +26,7 @@ patch(ControlButtons.prototype, {
     clickTableGuests() {
         this.dialog.add(NumberPopup, {
             startingValue: this.currentOrder?.getCustomerCount() || 0,
-            cheap: true,
             title: _t("Guests?"),
-            isInputSelected: true,
             getPayload: (inputNumber) => {
                 const guestCount = parseInt(inputNumber, 10) || 0;
                 if (guestCount == 0 && this.currentOrder.orderlines.length === 0) {
