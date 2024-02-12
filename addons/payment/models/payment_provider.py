@@ -665,13 +665,17 @@ class PaymentProvider(models.Model):
         return
 
     @api.model
+    def _get_removal_domain(self, provider_code):
+        return [('code', '=', provider_code)]
+
+    @api.model
     def _remove_provider(self, provider_code):
         """ Remove the module-specific data of the given provider.
 
         :param str provider_code: The code of the provider whose data to remove.
         :return: None
         """
-        providers = self.search([('code', '=', provider_code)])
+        providers = self.search(self._get_removal_domain(provider_code))
         providers.write(self._get_removal_values())
 
     def _get_removal_values(self):
