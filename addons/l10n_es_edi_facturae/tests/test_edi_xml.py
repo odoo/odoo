@@ -36,6 +36,18 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
             'country_id': cls.env.ref('base.us').id,  # -> ResidenceTypeCode 'R'
         })
 
+        cls.caixabank = cls.env['res.bank'].create({
+            'name': 'CAIXABANK',
+            'bic': 'CAIXESBBXXX',
+        })
+
+        cls.env['res.partner.bank'].create({
+            'acc_number': 'ES9121000418450200051332',
+            'partner_id': cls.company_data['company'].partner_id.id,
+            'bank_id': cls.caixabank.id,
+            'acc_type': 'iban',
+        })
+
         # ==== Business ====
         cls.partner_a.write({  # -> PersonTypeCode 'F'
             'country_id': cls.env.ref('base.be').id,  # -> ResidenceTypeCode 'U'
