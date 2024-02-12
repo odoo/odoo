@@ -688,11 +688,12 @@ class ResPartner(models.Model):
         if len(vat) not in (15, 16) or not vat[0:15].isdecimal() or not vat[-1].isdecimal():
             return False
 
-        # VAT is only digits and of the right length, check the Luhn checksum.
-        try:
-            luhn.validate(vat[0:9])
-        except (InvalidFormat, InvalidChecksum):
-            return False
+        if len(vat) == 15:
+            # VAT is only digits and of the right length, check the Luhn checksum.
+            try:
+                luhn.validate(vat[0:9])
+            except (InvalidFormat, InvalidChecksum):
+                return False
 
         return True
 
