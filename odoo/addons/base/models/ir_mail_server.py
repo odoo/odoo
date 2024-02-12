@@ -4,6 +4,7 @@ import base64
 import datetime
 import email
 import email.policy
+import functools
 import idna
 import logging
 import re
@@ -15,12 +16,19 @@ from socket import gaierror, timeout
 
 from OpenSSL import crypto as SSLCrypto
 from OpenSSL.crypto import Error as SSLCryptoError, FILETYPE_PEM
-from OpenSSL.SSL import Error as SSLError
-from urllib3.contrib.pyopenssl import PyOpenSSLContext
+from OpenSSL.SSL import Error as SSLError, VERIFY_PEER, VERIFY_FAIL_IF_NO_PEER_CERT
+from urllib3.contrib.pyopenssl import PyOpenSSLContext, get_subj_alt_name
 
 from odoo import api, fields, models, tools, _, modules
 from odoo.exceptions import UserError
 from odoo.tools import formataddr, email_normalize, encapsulate_email, email_domain_extract, email_domain_normalize, human_size
+
+try:
+    # urllib3 1.26 (ubuntu jammy and up, debian bullseye and up)
+    from urllib3.util.ssl_match_hostname import CertificateError, match_hostname
+except ImportError:
+    # urllib3 1.25 and below
+    from urllib3.packages.ssl_match_hostname import CertificateError, match_hostname
 
 _logger = logging.getLogger(__name__)
 _test_logger = logging.getLogger('odoo.tests')
@@ -42,7 +50,7 @@ def make_wrap_property(name):
 class SMTPConnection:
     """Wrapper around smtplib.SMTP and smtplib.SMTP_SSL"""
     def __init__(self, server, port, encryption, context=None):
-        if encryption == 'ssl':
+        if encryption in ('ssl', 'ssl_strict'):
             self.__obj__ = smtplib.SMTP_SSL(server, port, timeout=SMTP_TIMEOUT, context=context)
         else:
             self.__obj__ = smtplib.SMTP(server, port, timeout=SMTP_TIMEOUT)
@@ -105,6 +113,24 @@ def extract_rfc2822_addresses(text):
     return valid_addresses
 
 
+def _verify_check_hostname_callback(cnx, x509, err_no, err_depth, return_code, *, hostname):
+    """Callback used for pyOpenSSL.verify_mode, by default pyOpenSSL
+       only checkes :param:`err_no`, we enrich it to also verify that
+       the SMTP server :param:`hostname` matches the :param:`x509`'s
+       Common Name (CN) or Subject Alternative Name (SAN)."""
+    if err_no:
+        return False
+
+    if err_depth == 0:  # leaf certificate
+        peercert = {
+            "subject": ((("commonName", x509.get_subject().CN),),),
+            "subjectAltName": get_subj_alt_name(x509),
+        }
+        match_hostname(peercert, hostname)  # it raises when it does not match
+
+    return True
+
+
 class IrMailServer(models.Model):
     """Represents an SMTP server, able to send outgoing emails, with SSL and TLS capabilities."""
     _name = "ir.mail_server"
@@ -137,13 +163,19 @@ class IrMailServer(models.Model):
     smtp_user = fields.Char(string='Username', help="Optional username for SMTP authentication", groups='base.group_system')
     smtp_pass = fields.Char(string='Password', help="Optional password for SMTP authentication", groups='base.group_system')
     smtp_encryption = fields.Selection([('none', 'None'),
-                                        ('starttls', 'TLS (STARTTLS)'),
-                                        ('ssl', 'SSL/TLS')],
+                                        ('starttls_strict', 'TLS (STARTTLS), encryption and validation'),
+                                        ('starttls', 'TLS (STARTTLS), encryption only'),
+                                        ('ssl_strict', 'SSL/TLS, encryption and validation'),
+                                        ('ssl', 'SSL/TLS, encryption only')],
                                        string='Connection Encryption', required=True, default='none',
                                        help="Choose the connection encryption scheme:\n"
                                             "- None: SMTP sessions are done in cleartext.\n"
                                             "- TLS (STARTTLS): TLS encryption is requested at start of SMTP session (Recommended)\n"
-                                            "- SSL/TLS: SMTP sessions are encrypted with SSL/TLS through a dedicated port (default: 465)")
+                                            "- SSL/TLS: SMTP sessions are encrypted with SSL/TLS through a dedicated port (default: 465)\n"
+                                            "\n"
+                                            "Choose an additionnal variant for SSL or TLS:\n"
+                                            "- encryption and validation: encrypt the data and authentify the server using its SSL certificate (Recommended)\n"
+                                            "- encryption only: encrypt the data but skip server authentication")
     smtp_ssl_certificate = fields.Binary(
         'SSL Certificate', groups='base.group_system', attachment=False,
         help='SSL certificate used for authentication')
@@ -311,6 +343,8 @@ class IrMailServer(models.Model):
                 raise UserError(_("An option is not supported by the server:\n %s", e)) from e
             except smtplib.SMTPException as e:
                 raise UserError(_("An SMTP exception occurred. Check port number and connection security type.\n %s", e)) from e
+            except CertificateError as e:
+                raise UserError(_("An SSL exception occurred. Check connection security type.\n CertificateError: %s", e)) from e
             except (ssl.SSLError, SSLError) as e:
                 raise UserError(_("An SSL exception occurred. Check connection security type.\n %s", e)) from e
             except UserError:
@@ -357,7 +391,8 @@ class IrMailServer(models.Model):
            :param int port: SMTP port to connect to
            :param user: optional username to authenticate with
            :param password: optional password to authenticate with
-           :param string encryption: optional, ``'ssl'`` | ``'starttls'``
+           :param str encryption: optional, ``'none'`` | ``'ssl'`` | ``'ssl_strict'`` | ``'starttls'`` | ``'starttls_strict'``.
+               The 'strict' variants verify the remote server's certificate against the operating system trust store.
            :param smtp_from: FROM SMTP envelop, used to find the best mail server
            :param ssl_certificate: filename of the SSL certificate used for authentication
                Used when no mail server is given and overwrite  the odoo-bin argument "smtp_ssl_certificate"
@@ -397,9 +432,18 @@ class IrMailServer(models.Model):
             smtp_encryption = mail_server.smtp_encryption
             smtp_debug = smtp_debug or mail_server.smtp_debug
             from_filter = mail_server.from_filter
+
             if mail_server.smtp_authentication == "certificate":
                 try:
                     ssl_context = PyOpenSSLContext(ssl.PROTOCOL_TLS)
+                    if mail_server.smtp_encryption in ('ssl_strict', 'starttls_strict'):
+                        ssl_context.set_default_verify_paths()
+                        ssl_context._ctx.set_verify(
+                            VERIFY_PEER | VERIFY_FAIL_IF_NO_PEER_CERT,
+                            functools.partial(_verify_check_hostname_callback, hostname=smtp_server)
+                        )
+                    else:  # ssl, starttls
+                        ssl_context.verify_mode = ssl.CERT_NONE
                     smtp_ssl_certificate = base64.b64decode(mail_server.smtp_ssl_certificate)
                     certificate = SSLCrypto.load_certificate(FILETYPE_PEM, smtp_ssl_certificate)
                     smtp_ssl_private_key = base64.b64decode(mail_server.smtp_ssl_private_key)
@@ -412,6 +456,15 @@ class IrMailServer(models.Model):
                     raise UserError(_('The private key or the certificate is not a valid file. \n%s', str(e)))
                 except SSLError as e:
                     raise UserError(_('Could not load your certificate / private key. \n%s', str(e)))
+            elif mail_server.smtp_encryption != 'none':
+                if mail_server.smtp_encryption in ('ssl_strict', 'starttls_strict'):
+                    ssl_context = ssl.create_default_context()
+                    ssl_context.check_hostname = True
+                    ssl_context.verify_mode = ssl.CERT_REQUIRED
+                else:  # ssl, starttls
+                    ssl_context = ssl.create_default_context()
+                    ssl_context.check_hostname = False
+                    ssl_context.verify_mode = ssl.CERT_NONE
 
         else:
             # we were passed individual smtp parameters or nothing and there is no default server
@@ -433,6 +486,7 @@ class IrMailServer(models.Model):
             if smtp_ssl_certificate_filename and smtp_ssl_private_key_filename:
                 try:
                     ssl_context = PyOpenSSLContext(ssl.PROTOCOL_TLS)
+                    ssl_context.verify_mode = ssl.CERT_NONE
                     ssl_context.load_cert_chain(smtp_ssl_certificate_filename, keyfile=smtp_ssl_private_key_filename)
                     # Check that the private key match the certificate
                     ssl_context._ctx.check_privatekey()
@@ -448,7 +502,7 @@ class IrMailServer(models.Model):
                 "or provide the SMTP parameters explicitly.",
             ))
 
-        if smtp_encryption == 'ssl':
+        if smtp_encryption in ('ssl', 'ssl_strict'):
             if 'SMTP_SSL' not in smtplib.__all__:
                 raise UserError(
                     _("Your Odoo Server does not support SMTP-over-SSL. "
@@ -457,7 +511,7 @@ class IrMailServer(models.Model):
                        "should do the trick."))
         connection = SMTPConnection(smtp_server, smtp_port, smtp_encryption, context=ssl_context)
         connection.set_debuglevel(smtp_debug)
-        if smtp_encryption == 'starttls':
+        if smtp_encryption in ('starttls', 'starttls_strict'):
             # starttls() will perform ehlo() if needed first
             # and will discard the previous list of services
             # after successfully performing STARTTLS command,
@@ -706,7 +760,8 @@ class IrMailServer(models.Model):
                              messages. The caller is in charge of disconnecting the session.
         :param mail_server_id: optional id of ir.mail_server to use for sending. overrides other smtp_* arguments.
         :param smtp_server: optional hostname of SMTP server to use
-        :param smtp_encryption: optional TLS mode, one of 'none', 'starttls' or 'ssl' (see ir.mail_server fields for explanation)
+        :param smtp_encryption: optional TLS mode, one of 'none', 'starttls', 'starttls_strict', 'ssl', or 'ssl_strict'.
+            The 'strict' variants verify the remote server's certificate against the operating system trust store.
         :param smtp_port: optional SMTP port, if mail_server_id is not passed
         :param smtp_user: optional SMTP user, if mail_server_id is not passed
         :param smtp_password: optional SMTP password to use, if mail_server_id is not passed
