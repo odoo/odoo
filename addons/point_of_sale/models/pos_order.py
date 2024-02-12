@@ -1401,6 +1401,7 @@ class PosOrderLine(models.Model):
             'refunded_orderline_id': orderline.refunded_orderline_id.id,
             'combo_parent_id': orderline.combo_parent_id.id,
             'combo_line_ids': orderline.combo_line_ids.mapped('id'),
+            'combo_line_id': orderline.combo_line_id.id,
         }
 
     def export_for_ui(self):
