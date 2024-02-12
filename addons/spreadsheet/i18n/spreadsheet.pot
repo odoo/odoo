@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.1alpha1\n"
+"Project-Id-Version: Odoo Server 17.2alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-08 06:52+0000\n"
-"PO-Revision-Date: 2024-01-08 06:52+0000\n"
+"POT-Creation-Date: 2024-02-12 10:37+0000\n"
+"PO-Revision-Date: 2024-02-12 10:37+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -101,8 +101,10 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
-"(0) Exact match. (-1) Return next smaller item if no match. (1) Return next "
-"greater item if no match."
+"(0) Exact match. \n"
+"        (-1) Return next smaller item if no match. \n"
+"        (1) Return next greater item if no match. \n"
+"        (2) Wildcard match."
 msgstr ""
 
 #. module: spreadsheet
@@ -615,9 +617,7 @@ msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Aggregate"
 msgstr ""
 
@@ -802,6 +802,13 @@ msgstr ""
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid ""
+"An unexpected error occurred. Submit a support ticket at odoo.com/help."
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Angle from the X axis to a point (x,y), in radians."
 msgstr ""
 
@@ -937,7 +944,6 @@ msgstr ""
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Argument ignore must be between 0 and 3"
 msgstr ""
 
@@ -1030,19 +1036,6 @@ msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-msgid "Background Color"
-msgstr ""
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Background color"
@@ -1277,9 +1270,7 @@ msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Categories / Labels"
 msgstr ""
 
@@ -1316,6 +1307,7 @@ msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Checkbox"
@@ -1586,6 +1578,7 @@ msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/hooks.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
@@ -1711,7 +1704,7 @@ msgstr ""
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/pivot/pivot_model.js:0
+#: code:addons/spreadsheet/static/src/pivot/pivot_runtime.js:0
 msgid "Count"
 msgstr ""
 
@@ -1785,7 +1778,7 @@ msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Cumulative data"
 msgstr ""
 
@@ -1902,14 +1895,6 @@ msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-msgid "Data Series"
-msgstr ""
-
-#. module: spreadsheet
-#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Data Validation"
 msgstr ""
@@ -1928,25 +1913,25 @@ msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/helpers/model.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/errors.js:0
-msgid "Data is loading"
-msgstr ""
-
-#. module: spreadsheet
-#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Data not available"
 msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Data range"
 msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "Data series"
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Data validation"
 msgstr ""
@@ -2320,6 +2305,12 @@ msgstr ""
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "Dropdown list"
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Duplicate"
 msgstr ""
 
@@ -2381,6 +2372,7 @@ msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Error"
 msgstr ""
@@ -2460,7 +2452,7 @@ msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/pivot/pivot_model.js:0
+#: code:addons/spreadsheet/static/src/pivot/pivot_data_source.js:0
 msgid "Field %s does not exist"
 msgstr ""
 
@@ -2788,6 +2780,14 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Function [[FUNCTION_NAME]] expects number values for %s, but got a %s."
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid ""
+"Function [[FUNCTION_NAME]] invert matrix error, only square matrices are "
+"invertible"
 msgstr ""
 
 #. module: spreadsheet
@@ -4142,10 +4142,6 @@ msgstr ""
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "New Chart"
 msgstr ""
 
@@ -4228,6 +4224,7 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #: code:addons/spreadsheet/static/src/pivot/pivot_model.js:0
+#: code:addons/spreadsheet/static/src/pivot/pivot_time_adapters.js:0
 #: code:addons/spreadsheet/static/src/pivot/pivot_time_adapters.js:0
 msgid "None"
 msgstr ""
@@ -4345,6 +4342,13 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/assets_backend/constants.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "October"
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/hooks.js:0
+#: code:addons/spreadsheet/static/src/hooks.js:0
+msgid "Odoo Spreadsheet"
 msgstr ""
 
 #. module: spreadsheet
@@ -4984,6 +4988,12 @@ msgstr ""
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "Scatter"
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Scorecard"
 msgstr ""
 
@@ -5039,10 +5049,6 @@ msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Select a color..."
 msgstr ""
@@ -5308,13 +5314,13 @@ msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Stacked barchart"
 msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Stacked linechart"
 msgstr ""
 
@@ -5663,15 +5669,15 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "The argument square_matrix must be a matrix of numbers."
+msgid ""
+"The argument square_matrix must have the same number of columns and rows."
 msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
-"The argument square_matrix must have the same number of columns and rows."
+"The arguments array_x and array_y must contain at least one pair of numbers."
 msgstr ""
 
 #. module: spreadsheet
@@ -5684,12 +5690,6 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The arguments conditions must have the same dimensions."
-msgstr ""
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "The arguments matrix1 and matrix2 must be matrices of numbers."
 msgstr ""
 
 #. module: spreadsheet
@@ -6347,8 +6347,8 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
-"The field (%s) must be one of %s or must be a number between 1 and %s "
-"inclusive."
+"The field (%(fieldValue)s) must be one of %(dimRowDB)s or must be a number "
+"between 1 and %s inclusive."
 msgstr ""
 
 #. module: spreadsheet
@@ -6769,6 +6769,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The investment's desired future value."
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "The issue (%s) must be positive or null."
 msgstr ""
 
 #. module: spreadsheet
@@ -7450,7 +7456,7 @@ msgstr ""
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "The period must be between 1 and number_of_periods"
+msgid "The period must be between 1 and number_of_periods (%s)"
 msgstr ""
 
 #. module: spreadsheet
@@ -7526,6 +7532,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The purchase_date (%s) must be before the first_period_end (%s)."
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "The purchase_date (%s) must be positive or null."
 msgstr ""
 
 #. module: spreadsheet
@@ -8634,6 +8646,12 @@ msgstr ""
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "The value should be a scalar or a 1x1 matrix"
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The value the function returns if logical_expression is FALSE."
 msgstr ""
 
@@ -8877,13 +8895,13 @@ msgstr ""
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "The weekend (%s) must be different from '1111111'."
+msgid "The weekend must be a number or a string."
 msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "The weekend must be a number or a string."
+msgid "The weekend must be different from '1111111'."
 msgstr ""
 
 #. module: spreadsheet
@@ -9050,10 +9068,6 @@ msgstr ""
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Title"
 msgstr ""
 
@@ -9068,7 +9082,7 @@ msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/pivot/plugins/pivot_ui_plugin.js:0
+#: code:addons/spreadsheet/static/src/pivot/pivot_data_source.js:0
 msgid "Total"
 msgstr ""
 
@@ -9092,7 +9106,8 @@ msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Treat labels as text"
 msgstr ""
 
@@ -9216,6 +9231,12 @@ msgstr ""
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "Unknown function"
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Unknown function: \"%s\""
 msgstr ""
 
@@ -9239,10 +9260,8 @@ msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-msgid "Use row"
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "Use row %s as headers"
 msgstr ""
 
 #. module: spreadsheet
@@ -9731,12 +9750,6 @@ msgstr ""
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "Wrong number of Argument[]. Expected an even number of Argument[]."
-msgstr ""
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Wrong number of arguments. Expected an even number of arguments."
 msgstr ""
 
@@ -9867,7 +9880,7 @@ msgstr ""
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "[[FUNCTION_NAME]] needs at least two values for both parameters"
+msgid "[[FUNCTION_NAME]] needs at least two values for both parameters."
 msgstr ""
 
 #. module: spreadsheet
@@ -9881,14 +9894,6 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "and value or formula"
-msgstr ""
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-msgid "as headers"
 msgstr ""
 
 #. module: spreadsheet
@@ -9933,7 +9938,7 @@ msgstr ""
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "matchMode should be a value in [-1, 0, 1]."
+msgid "match_mode should be a value in [-1, 0, 1, 2]."
 msgstr ""
 
 #. module: spreadsheet
@@ -9981,13 +9986,21 @@ msgstr ""
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "searchMode should be a value in [-1, 1, -2, 2]."
+msgid "search_mode should be a value in [-1, 1, -2, 2]."
 msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "start_date (%s) should be on or before end_date (%s)."
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid ""
+"the search and match mode combination is not supported for XLOOKUP "
+"evaluation."
 msgstr ""
 
 #. module: spreadsheet

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.1alpha1\n"
+"Project-Id-Version: Odoo Server 17.2alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-08 06:51+0000\n"
-"PO-Revision-Date: 2024-01-08 06:51+0000\n"
+"POT-Creation-Date: 2024-02-12 10:36+0000\n"
+"PO-Revision-Date: 2024-02-12 10:36+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -883,6 +883,11 @@ msgid "All accrued time carried over"
 msgstr ""
 
 #. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__last_several_days
+msgid "All day"
+msgstr ""
+
+#. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
 msgid "Allocated ("
@@ -948,6 +953,8 @@ msgid "Allocation Request"
 msgstr ""
 
 #. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_department_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_activity
@@ -2936,6 +2943,12 @@ msgid "Parental Leaves"
 msgstr ""
 
 #. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/dashboard/time_off_dashboard.xml:0
+msgid "Pending Requests"
+msgstr ""
+
+#. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_mandatory_day_view_search
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_search_hr_holidays_employee_type_report
 msgid "Period"
@@ -3301,6 +3314,12 @@ msgid "Sick Time Off"
 msgstr ""
 
 #. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
+msgid "Some leaves cannot be linked to any allocation. To see those leaves,"
+msgstr ""
+
+#. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_plan__time_off_type_id
 msgid ""
 "Specify if this accrual plan can only be used with this Time Off Type.\n"
@@ -3556,6 +3575,7 @@ msgstr ""
 
 #. module: hr_holidays
 #. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "There is no valid allocation to cover that request."
 msgstr ""
@@ -4161,12 +4181,6 @@ msgid "Wednesday"
 msgstr ""
 
 #. module: hr_holidays
-#. odoo-javascript
-#: code:addons/hr_holidays/static/src/views/calendar/year/calendar_year_renderer.js:0
-msgid "Week"
-msgstr ""
-
-#. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__frequency__weekly
 msgid "Weekly"
 msgstr ""
@@ -4427,6 +4441,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
 msgid "can be used before the allocation expires."
+msgstr ""
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
+msgid "click here"
 msgstr ""
 
 #. module: hr_holidays
