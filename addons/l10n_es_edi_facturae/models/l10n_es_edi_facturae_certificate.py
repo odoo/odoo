@@ -103,16 +103,6 @@ class Certificate(models.Model):
         signature = self.env['ir.qweb']._render('l10n_es_edi_facturae.template_xades_signature', signature_data)
         signature = cleanup_xml_node(signature, remove_blank_nodes=False)
         root.append(signature)
-
-        # Remove '\n' and spaces to (hopefully) please FACe
-        signature.tail = ''
-        signature.text = ''
-        for node in signature.findall(".//"):
-            if node.text and '\n' in node.text:
-                node.text = ''.join(e.strip() for e in node.text.split('\n'))
-            if node.tail and '\n' in node.tail:
-                node.tail = ''.join(e.strip() for e in node.tail.split('\n'))
-
         xml_utils._reference_digests(signature.find("ds:SignedInfo", namespaces=xml_utils.NS_MAP))
         xml_utils._fill_signature(signature, cert_private)
 
