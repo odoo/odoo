@@ -845,6 +845,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
     _initTextArea: function () {
         this.$('textarea').each(function () {
             resizeTextArea(this);
+            this.addEventListener('input', () => resizeTextArea(this));
         });
     },
 
