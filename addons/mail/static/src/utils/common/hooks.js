@@ -50,6 +50,7 @@ export function onExternalClick(refName, cb) {
     function onClick(ev) {
         if (ref.el && !ref.el.contains(ev.target)) {
             cb(ev, { downTarget, upTarget });
+            upTarget = downTarget = null;
         }
     }
     function onMousedown(ev) {
