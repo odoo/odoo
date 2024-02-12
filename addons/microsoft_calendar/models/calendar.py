@@ -30,6 +30,7 @@ ATTENDEE_CONVERTER_M2O = {
 }
 VIDEOCALL_URL_PATTERNS = (
     r'https://teams.microsoft.com',
+    r'https://join.skype.com',
 )
 MAX_RECURRENT_EVENT = 720
 
@@ -44,7 +45,7 @@ class Meeting(models.Model):
 
     @api.depends('videocall_location')
     def _compute_videocall_source(self):
-        events_with_microsoft_url = self.filtered(lambda event: (event.videocall_location or '') in VIDEOCALL_URL_PATTERNS)
+        events_with_microsoft_url = self.filtered(lambda event: any(re.match(p, event.videocall_location or '') for p in VIDEOCALL_URL_PATTERNS))
         events_with_microsoft_url.videocall_source = 'microsoft_teams'
         super(Meeting, self - events_with_microsoft_url)._compute_videocall_source()
 
@@ -53,7 +54,7 @@ class Meeting(models.Model):
 
     @api.model
     def _get_microsoft_synced_fields(self):
-        return {'name', 'description', 'allday', 'start', 'date_end', 'stop',
+        return {'name', 'description', 'videocall_location', 'allday', 'start', 'date_end', 'stop',
                 'user_id', 'privacy', 'attendee_ids', 'alarm_ids', 'location',
                 'show_as', 'active', 'description'}
 
@@ -179,6 +180,13 @@ class Meeting(models.Model):
             recurrence_update_attempt = recurrence_update_setting or 'recurrency' in values or recurrency_in_batch and len(recurrency_in_batch) > 0
             if not notify_context and recurrence_update_attempt and not 'active' in values:
                 self._forbid_recurrence_update()
+            # forbid changing videocall_location when it is already set to a microsoft one.
+            # This is done because microsoft does not allow deleting a videocall location when it's already set
+            videocall_being_set = 'videocall_location' in values
+            videocall_location_vals_is_teams = videocall_being_set and any(re.match(p, values['videocall_location'] or '') for p in VIDEOCALL_URL_PATTERNS)
+            records_have_teams_source = any(rec.videocall_source == 'microsoft_teams' and rec.microsoft_id for rec in self)
+            if videocall_being_set and not videocall_location_vals_is_teams and records_have_teams_source:
+                raise UserError(_("It is not possible to change the videocall location when it is already set to a Microsoft one."))
 
         # When changing the organizer, check its sync status and verify if the user is listed as attendee.
         # Updates from Microsoft must skip this check since changing the organizer on their side is not possible.
@@ -492,8 +500,6 @@ class Meeting(models.Model):
         if not fields_to_sync:
             return values
 
-        microsoft_guid = self.env['ir.config_parameter'].sudo().get_param('microsoft_calendar.microsoft_guid', False)
-
         if self.microsoft_recurrence_master_id and 'type' not in values:
             values['seriesMasterId'] = self.microsoft_recurrence_master_id
             values['type'] = 'exception'
@@ -501,11 +507,10 @@ class Meeting(models.Model):
         if 'name' in fields_to_sync:
             values['subject'] = self.name or ''
 
-        if 'description' in fields_to_sync:
-            values['body'] = {
-                'content': self._microsoft_description(),
-                'contentType': "html",
-            }
+        values['body'] = {
+            'content': self._microsoft_description(),
+            'contentType': "html",
+        }
 
         if any(x in fields_to_sync for x in ['allday', 'start', 'date_end', 'stop']):
             if self.allday:
@@ -611,14 +616,16 @@ class Meeting(models.Model):
         return values
 
     def _microsoft_description(self):
+        videocall_location_regex = r"\<a.+id=(?:'|\")o_videocall_location_url(?:'|\").*\>.+\<\/a\>"
         description = html_sanitize(self.description) if not is_html_empty(self.description) else ''
         if self.videocall_source and self.videocall_source != 'microsoft_teams' and self.videocall_location:
-            if self.videocall_location in description:
-                return description
-            button = Markup("<a href='%s'>%s</a>") % (self.videocall_location, _('Join meeting'))
+            description = re.sub(videocall_location_regex, "", description)
+            description = description if not is_html_empty(description) else ''
+            button = Markup("<a id='o_videocall_location_url' href='%s'>%s</a>") % (self.videocall_location, _('Join meeting'))
             new_description = button + description
             return new_description
-        return description
+        description = re.sub(videocall_location_regex, "", description)
+        return description if not is_html_empty(description) else ''
 
     def _ensure_attendees_have_email(self):
         invalid_event_ids = self.env['calendar.event'].search_read(
