@@ -48,7 +48,7 @@
                             <field name="next_inventory_date" invisible="not active"/>
                         </group>
                         <group string="Logistics" groups="stock.group_adv_location">
-                            <field name="removal_strategy_id" options="{'no_create': True}"/>
+                            <field name="removal_strategy_id" options="{'no_create': True}" invisible="usage in ('supplier', 'customer', 'inventory', 'production') or scrap_location or usage == 'transit' and not company_id"/>
                         </group>
                     </group>
                     <field name="comment" placeholder="External note..."/>
