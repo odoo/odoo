@@ -142,7 +142,7 @@ DOMAIN_OPERATORS = (NOT_OPERATOR, OR_OPERATOR, AND_OPERATOR)
 # operators are also used. In this case its right operand has the form (subselect, params).
 TERM_OPERATORS = ('=', '!=', '<=', '<', '>', '>=', '=?', '=like', '=ilike',
                   'like', 'not like', 'ilike', 'not ilike', 'in', 'not in',
-                  'child_of', 'parent_of', 'any', 'not any')
+                  'child_of', 'parent_of', 'any', 'not any', '@@')
 
 # A subset of the above operators, with a 'negative' semantic. When the
 # expressions 'in NEGATIVE_TERM_OPERATORS' or 'not in NEGATIVE_TERM_OPERATORS' are used in the code
@@ -1083,6 +1083,14 @@ class expression(object):
                             "((%s) %s (%s))",
                             unaccent(sql_left), sql_operator, unaccent(sql_right),
                         ))
+
+            elif operator == '@@':
+                [subquery, params] = right.to_sql()
+                if field.type == 'tsvector':
+                    expr = f""""{alias}"."{field.name}" @@ {subquery}"""
+                else:
+                    expr = f"""to_tsvector('{right.regconfig}', "{alias}"."{field.name}") @@ {subquery}"""
+                push_result(SQL(expr, *params))
 
             # ----------------------------------------
             # PATH SPOTTED

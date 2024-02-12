@@ -204,6 +204,9 @@ class IrFieldsConverter(models.AbstractModel):
         msg = _("Unable to import field type '%s'  ", field.type)
         raise self._format_import_error(ValueError, msg)
 
+    def _str_to_regconfig(self, model, field, value):
+        return value, []
+
     @api.model
     def _str_to_boolean(self, model, field, value):
         # all translatables used for booleans

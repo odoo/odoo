@@ -6,6 +6,7 @@ from . import cloc
 from . import constants
 from . import pdf
 from . import pycompat
+from . import tsquery
 from . import win32
 from .barcode import *
 from .config import config

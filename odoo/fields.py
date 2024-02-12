@@ -42,6 +42,7 @@ from .tools.mimetypes import guess_mimetype
 
 from odoo.exceptions import CacheMiss
 from odoo.osv import expression
+from odoo.tools.sql import create_index, make_index_name
 
 DATE_LENGTH = len(date.today().strftime(DATE_FORMAT))
 DATETIME_LENGTH = len(datetime.now().strftime(DATETIME_FORMAT))
@@ -4073,6 +4074,29 @@ class PropertiesDefinition(Field):
                     duplicated = set(filter(lambda x: all_tags.count(x) > 1, all_tags))
                     raise ValueError(f'Some tags are duplicated: {", ".join(duplicated)}.')
 
+class TSVector(Field):
+    type = 'tsvector'
+    column_type = ('tsvector', 'tsvector')
+
+    def update_db(self, model, columns):
+        must_be_recomputed = super().update_db(model, columns)
+        if self.index:
+            create_index(
+                model.env.cr,
+                make_index_name(model._table, self.name),
+                model._table,
+                [self.name],
+                method='GIN')
+        return must_be_recomputed
+
+class Regconfig(Selection):
+    column_type = ('regconfig', 'regconfig')
+
+    def setup_nonrelated(self, model):
+        if not self.selection:
+            model.env.cr.execute('SELECT cfgname FROM pg_ts_config;')
+            self.selection = [(row[0], row[0]) for row in model.env.cr.fetchall()]
+        super().setup_nonrelated(model)
 
 class Command(enum.IntEnum):
     """

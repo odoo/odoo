@@ -29,6 +29,7 @@ class Lang(models.Model):
     code = fields.Char(string='Locale Code', required=True, help='This field is used to set/get locales for user')
     iso_code = fields.Char(string='ISO code', help='This ISO code is the name of po files to use for translations')
     url_code = fields.Char('URL Code', required=True, help='The Lang Code displayed in the URL')
+    regconfig = fields.Regconfig(string='Regconfig', default='simple')
     active = fields.Boolean()
     direction = fields.Selection([('ltr', 'Left-to-Right'), ('rtl', 'Right-to-Left')], required=True, default='ltr')
     date_format = fields.Char(string='Date Format', required=True, default=DEFAULT_DATE_FORMAT)
