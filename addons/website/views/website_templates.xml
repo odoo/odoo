@@ -2069,7 +2069,7 @@
 
 <!-- Language selector templates -->
 <template id="lang_flag" name="Language Flag">
-    <img t-attf-class="o_lang_flag #{_flag_class}" t-attf-src="#{flag_image_src}?height=25"/>
+    <img t-attf-class="o_lang_flag #{_flag_class}" t-attf-src="#{flag_image_url}?height=25"/>
 </template>
 
 <template id="language_selector" inherit_id="portal.language_selector">
@@ -2087,12 +2087,12 @@
     <!-- Add the 'flags' possibility -->
     <xpath expr="//button[contains(@t-attf-class, 'dropdown-toggle')]/span" position="before">
         <t t-if="flags" t-call="website.lang_flag">
-            <t t-set="flag_image_src" t-value="active_lang['flag_image_url']"/>
+            <t t-set="flag_image_url" t-value="active_lang['flag_image_url']"/>
         </t>
     </xpath>
     <xpath expr="//*[contains(@t-attf-class, 'js_change_lang')]/span" position="before">
         <t t-if="flags" t-call="website.lang_flag">
-            <t t-set="flag_image_src" t-value="lg['flag_image_url']"/>
+            <t t-set="flag_image_url" t-value="lg['flag_image_url']"/>
         </t>
     </xpath>
 </template>
