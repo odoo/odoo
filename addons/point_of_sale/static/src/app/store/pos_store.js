@@ -736,7 +736,11 @@ export class PosStore extends Reactive {
         for (var i = 0; i < jsons.length; i++) {
             var json = jsons[i];
             if (json.pos_session_id === this.session.id) {
-                orders.push(this.createReactiveOrder(json));
+                try {
+                    orders.push(this.createReactiveOrder(json));
+                } catch (error) {
+                    console.warn(error);
+                }
             }
         }
         for (i = 0; i < jsons.length; i++) {
@@ -745,7 +749,11 @@ export class PosStore extends Reactive {
                 json.pos_session_id !== this.session.id &&
                 (json.lines.length > 0 || json.statement_ids.length > 0)
             ) {
-                orders.push(this.createReactiveOrder(json));
+                try {
+                    orders.push(this.createReactiveOrder(json));
+                } catch (error) {
+                    console.warn(error);
+            }
             } else if (json.pos_session_id !== this.session.id) {
                 this.db.remove_unpaid_order(jsons[i]);
             }
@@ -1394,38 +1402,6 @@ export class PosStore extends Reactive {
 
         return report;
     }
-
-    _load_orders() {
-        var jsons = this.db.get_unpaid_orders();
-        var orders = [];
-        var not_loaded_count = 0;
-
-        for (var i = 0; i < jsons.length; i++) {
-            var json = jsons[i];
-            if (json.pos_session_id === this.session.id) {
-                orders.push(this.createReactiveOrder(json));
-            } else {
-                not_loaded_count += 1;
-            }
-        }
-
-        if (not_loaded_count) {
-            console.info(
-                "There are " +
-                    not_loaded_count +
-                    " locally saved unpaid orders belonging to another session"
-            );
-        }
-
-        orders = orders.sort(function (a, b) {
-            return a.sequence_number - b.sequence_number;
-        });
-
-        if (orders.length) {
-            this.orders.push(orders);
-        }
-    }
-
     /**
      * Mirror JS method of:
      * _compute_amount in addons/account/models/account.py
