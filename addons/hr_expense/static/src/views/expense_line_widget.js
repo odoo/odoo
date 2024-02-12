@@ -9,13 +9,13 @@ import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field"
 export class ExpenseLinesListRenderer extends ListRenderer {
     setup() {
         super.setup();
-        this.threadService = useService("mail.thread");
+        this.store = useService("mail.store");
     }
 
     /** @override **/
     async onCellClicked(record, column, ev) {
         const sheetId = this.env.model.root.resId;
-        const sheetThread = this.threadService.getThread('hr.expense.sheet', sheetId);
+        const sheetThread = this.store.Thread.insert({ model: "hr.expense.sheet", id: sheetId });
         const attachmentId = record.data.message_main_attachment_id[0]
 
         if (attachmentId) {

@@ -96,6 +96,7 @@ export class Chatter extends Component {
         this.threadService = useService("mail.thread");
         this.store = useState(useService("mail.store"));
         this.orm = useService("orm");
+        this.messageService = useService("mail.message");
         this.state = useState({
             composerType: false,
             isAttachmentBoxOpened: this.props.isAttachmentBoxVisibleInitially,
@@ -108,7 +109,7 @@ export class Chatter extends Component {
         });
         this.unfollowHover = useHover("unfollow");
         this.attachmentUploader = useAttachmentUploader(
-            this.threadService.getThread(this.props.threadModel, this.props.threadId)
+            this.store.Thread.insert({ model: this.props.threadModel, id: this.props.threadId })
         );
         this.rootRef = useRef("root");
         this.onScrollDebounced = useThrottleForAnimation(this.onScroll);
@@ -246,10 +247,21 @@ export class Chatter extends Component {
     }
 
     changeThread(threadModel, threadId, webRecord) {
-        this.state.thread = this.threadService.getThread(threadModel, threadId);
+        this.state.thread = this.store.Thread.insert({ model: threadModel, id: threadId });
         this.state.thread.name = webRecord?.data?.display_name || undefined;
         this.attachmentUploader.thread = this.state.thread;
         if (threadId === false) {
+            if (this.state.thread.messages.length === 0) {
+                this.state.thread.messages.push({
+                    id: this.messageService.getNextTemporaryId(),
+                    author: this.store.self,
+                    body: _t("Creating a new record..."),
+                    message_type: "notification",
+                    trackingValues: [],
+                    res_id: threadId,
+                    model: threadModel,
+                });
+            }
             this.state.composerType = false;
         } else {
             this.onThreadCreated?.(this.state.thread);

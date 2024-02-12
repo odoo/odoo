@@ -117,10 +117,10 @@ export class ActivityService {
                 break;
             }
             case "RELOAD_CHATTER": {
-                const thread = this.env.services["mail.thread"].getThread(
-                    data.payload.model,
-                    data.payload.id
-                );
+                const thread = this.store.Thread.insert({
+                    model: data.payload.model,
+                    id: data.payload.id,
+                });
                 this.env.services["mail.thread"].fetchNewMessages(thread);
                 break;
             }

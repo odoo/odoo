@@ -2,7 +2,6 @@
 
 import { ThreadService, threadService } from "@mail/core/common/thread_service";
 
-import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { patch } from "@web/core/utils/patch";
 import { Record } from "@mail/core/common/record";
@@ -48,29 +47,6 @@ patch(ThreadService.prototype, {
             this.setMainAttachmentFromIndex(thread, 0);
         }
         return result;
-    },
-    getThread(model, id) {
-        let thread = this.store.Thread.get({ model, id });
-        if (thread) {
-            if (id === false) {
-                return thread;
-            }
-            // to force a reload
-            thread.status = "new";
-        }
-        thread = this.store.Thread.insert({ id, model, type: "chatter" });
-        if (id === false) {
-            thread.messages.push({
-                id: this.messageService.getNextTemporaryId(),
-                author: this.store.self,
-                body: _t("Creating a new record..."),
-                message_type: "notification",
-                trackingValues: [],
-                res_id: thread.id,
-                model: thread.model,
-            });
-        }
-        return thread;
     },
     closeChatWindow(channel) {
         const chatWindow = this.store.discuss.chatWindows.find((c) => c.thread?.eq(channel));

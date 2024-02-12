@@ -33,10 +33,10 @@ export class ActivityListPopoverItem extends Component {
         this.state = useState({ hasMarkDoneView: false });
         if (this.props.activity.activity_category === "upload_file") {
             this.attachmentUploader = useAttachmentUploader(
-                this.env.services["mail.thread"].getThread(
-                    this.props.activity.res_model,
-                    this.props.activity.res_id
-                )
+                this.env.services["mail.store"].Thread.insert({
+                    model: this.props.activity.res_model,
+                    id: this.props.activity.res_id,
+                })
             );
         }
         this.closeMarkAsDone = this.closeMarkAsDone.bind(this);
