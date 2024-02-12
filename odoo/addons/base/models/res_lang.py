@@ -233,8 +233,8 @@ class Lang(models.Model):
             return 'en_US'
         return code
 
-    @tools.ormcache('self.code', 'monetary')
-    def _data_get(self, monetary=False):
+    @tools.ormcache('self.code')
+    def _data_get(self):
         thousands_sep = self.thousands_sep or ''
         decimal_point = self.decimal_point
         grouping = self.grouping
@@ -330,7 +330,7 @@ class Lang(models.Model):
         self.env.registry.clear_cache()
         return super(Lang, self).unlink()
 
-    def format(self, percent, value, grouping=False, monetary=False):
+    def format(self, percent, value, grouping=False):
         """ Format() will return the language-specific output for float values"""
         self.ensure_one()
         if percent[0] != '%':
@@ -340,7 +340,7 @@ class Lang(models.Model):
 
         # floats and decimal ints need special action!
         if grouping:
-            lang_grouping, thousands_sep, decimal_point = self._data_get(monetary)
+            lang_grouping, thousands_sep, decimal_point = self._data_get()
             eval_lang_grouping = ast.literal_eval(lang_grouping)
 
             if percent[-1] in 'eEfFgG':
