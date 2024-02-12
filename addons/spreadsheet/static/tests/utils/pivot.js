@@ -43,8 +43,11 @@ export async function insertPivotInSpreadsheet(model, params) {
         sheetId: params.sheetId || model.getters.getActiveSheetId(),
         col,
         row,
-        table,
-        definition,
+        payload: {
+            table,
+            definition,
+            type: "ODOO",
+        },
     });
     await nextTick();
 }

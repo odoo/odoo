@@ -58,8 +58,11 @@ declare module "@spreadsheet" {
     sheetId: string;
     col: number;
     row: number;
-    table: SPTableData;
-    definition: OdooPivotDefinition;
+    payload: {
+      type: "ODOO";
+      table: SPTableData;
+      definition: OdooPivotDefinition;
+    };
   }
 
   export interface ReInsertPivotCommand {

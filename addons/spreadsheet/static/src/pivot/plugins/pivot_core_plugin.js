@@ -99,10 +99,11 @@ export class PivotCorePlugin extends OdooCorePlugin {
     handle(cmd) {
         switch (cmd.type) {
             case "INSERT_PIVOT": {
-                const { sheetId, col, row, id, definition } = cmd;
+                const { sheetId, col, row, id, payload } = cmd;
+                const { definition } = payload;
                 /** @type { { col: number, row: number } } */
                 const position = { col, row };
-                const { cols, rows, measures, rowTitle } = cmd.table;
+                const { cols, rows, measures, rowTitle } = payload.table;
                 const table = new SpreadsheetPivotTable(cols, rows, measures, rowTitle);
                 this._addPivot(id, definition);
                 this._insertPivot(sheetId, position, id, table);
