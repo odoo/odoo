@@ -14,3 +14,6 @@ class Lang(models.Model):
         """
         langs = self.with_context(active_test=True).search([])
         return langs.get_sorted()
+
+    def get_sorted(self):
+        return self.sorted('name').read(['id', 'code', 'url_code', 'name', 'active', 'flag_image_url'])

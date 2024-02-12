@@ -2079,7 +2079,7 @@
     </xpath>
 
     <xpath expr="//t[@t-set='active_lang']" position="before">
-        <t t-if="lang not in (lg[0] for lg in frontend_languages)">
+        <t t-if="lang not in (lg['code'] for lg in frontend_languages)">
             <t t-set="lang" t-value="website.default_lang_id.code"/>
         </t>
     </xpath>
@@ -2087,12 +2087,12 @@
     <!-- Add the 'flags' possibility -->
     <xpath expr="//button[contains(@t-attf-class, 'dropdown-toggle')]/span" position="before">
         <t t-if="flags" t-call="website.lang_flag">
-            <t t-set="flag_image_src" t-value="active_lang[4]"/>
+            <t t-set="flag_image_src" t-value="active_lang['flag_image_url']"/>
         </t>
     </xpath>
     <xpath expr="//*[contains(@t-attf-class, 'js_change_lang')]/span" position="before">
         <t t-if="flags" t-call="website.lang_flag">
-            <t t-set="flag_image_src" t-value="lg[4]"/>
+            <t t-set="flag_image_src" t-value="lg['flag_image_url']"/>
         </t>
     </xpath>
 </template>

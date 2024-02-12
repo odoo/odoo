@@ -241,9 +241,6 @@ class Lang(models.Model):
         grouping = self.grouping
         return grouping, thousands_sep, decimal_point
 
-    def get_sorted(self):
-        return sorted([(lang.code, lang.url_code, lang.name, lang.active, lang.flag_image_url) for lang in self], key=itemgetter(2))
-
     @tools.ormcache('self.id')
     def _get_cached_values(self):
         self.ensure_one()
