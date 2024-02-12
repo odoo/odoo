@@ -3,6 +3,7 @@ import {
     click,
     drag,
     edit,
+    fill,
     hover,
     keyDown,
     keyUp,
@@ -150,6 +151,12 @@ export function contains(target, options) {
          */
         edit: (value, options) =>
             run(pointerDown, bind(edit, value, { confirm: true, ...options })),
+        /**
+         * @param {InputValue} value
+         * @param {FillOptions} [options]
+         */
+        fill: (value, options) =>
+            run(pointerDown, bind(fill, value, { confirm: true, ...options })),
         focus: () => run(pointerDown),
         hover: () => run(hover),
         /**
