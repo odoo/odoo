@@ -174,6 +174,7 @@ const ORINAL_CONSOLE_METHODS = {
 
 export class TestRunner {
     // Properties
+    /** @type {boolean | Test | Suite} */
     debug = false;
     /** @type {Suite[]} */
     rootSuites = [];
@@ -200,12 +201,16 @@ export class TestRunner {
          * Dictionnary containing whether a job is included or excluded from the
          * current run.
          * @type {{
-         *  suites: Record<string, boolean>;
-         *  tags: Record<string, boolean>;
-         *  tests: Record<string, boolean>;
+         *  suites: Record<string, number>;
+         *  tags: Record<string, number>;
+         *  tests: Record<string, number>;
          * }}
          */
-        includeSpecs: { suites: {}, tags: {}, tests: {} },
+        includeSpecs: {
+            suites: {},
+            tags: {},
+            tests: {},
+        },
         /** @type {"ready" | "running" | "done"} */
         status: "ready",
         /**
@@ -277,17 +282,17 @@ export class TestRunner {
 
         // Suites
         if (urlParams.suite?.length) {
-            this.#include("suites", ...urlParams.suite);
+            this.#include("suites", urlParams.suite);
         }
 
         // Tags
         if (urlParams.tag?.length) {
-            this.#include("tags", ...urlParams.tag);
+            this.#include("tags", urlParams.tag);
         }
 
         // Tests
         if (urlParams.test?.length) {
-            this.#include("tests", ...urlParams.test);
+            this.#include("tests", urlParams.test);
         }
 
         // Random seed
@@ -572,8 +577,43 @@ export class TestRunner {
      * @returns {Job[]}
      */
     prepareJobs(jobs = this.rootSuites, implicitInclude = !this.#hasIncludeFilter) {
+        if (typeof this.debug !== "boolean") {
+            // Special case: test (or suite with 1 test) with "debug" tag
+            let debugTest = this.debug;
+            while (debugTest instanceof Suite) {
+                if (debugTest.jobs.length > 1) {
+                    throw new HootError(
+                        `cannot debug a suite with more than 1 job, got ${debugTest.jobs.length}`
+                    );
+                }
+                debugTest = debugTest.jobs[0];
+            }
+
+            this.state.tests.push(debugTest);
+
+            const jobs = debugTest.path;
+            for (let i = 0; i < jobs.length - 1; i++) {
+                const suite = jobs[i];
+                suite.currentJobs = [jobs[i + 1]];
+                this.state.suites.push(suite);
+            }
+            return [jobs[0]];
+        }
+
         const filteredJobs = jobs.filter((job) => {
-            let included = this.#isIncluded(job) ?? implicitInclude;
+            // Priority 1: explicit include or exclude (URL or special tag)
+            const [explicitInclude, explicitExclude] = this.#getExplicitIncludeStatus(job);
+            if (explicitExclude) {
+                return false;
+            }
+
+            // Priority 2: implicit exclude
+            if (!explicitInclude && this.#isImplicitlyExcluded(job)) {
+                return false;
+            }
+
+            // Priority 3: implicit include
+            let included = explicitInclude || implicitInclude || this.#isImplicitlyIncluded(job);
             if (job instanceof Suite) {
                 // For suites: included if at least 1 included job
                 job.currentJobs = this.prepareJobs(job.jobs, included);
@@ -652,10 +692,20 @@ export class TestRunner {
         console.groupEnd(...groupName);
         console.log(...hootLog("Starting test suites"));
 
-        // Adjust debug mode if more than 1 test will be run
-        if (this.debug && (this.state.tests.length > 1 || this.state.tests[0]?.config.multi)) {
-            setParams({ debugTest: null });
-            this.debug = false;
+        // Adjust debug mode if more or less than 1 test will be run
+        if (this.debug) {
+            const activeSingleTests = this.state.tests.filter(
+                (test) => !test.config.skip && !test.config.multi
+            );
+            if (activeSingleTests.length !== 1) {
+                console.warn(
+                    ...hootLog(
+                        `disabling debug mode: ${activeSingleTests.length} tests will be run`
+                    )
+                );
+                setParams({ debugTest: null });
+                this.debug = false;
+            }
         }
 
         // Register default hooks
@@ -800,7 +850,7 @@ export class TestRunner {
                 .catch((error) => {
                     this.#rejectCurrent = noop; // prevents loop
 
-                    this.#onError(error);
+                    return this.#onError(error);
                 })
                 .finally(() => {
                     this.#rejectCurrent = noop;
@@ -854,7 +904,7 @@ export class TestRunner {
         }
 
         if (!this.state.tests.length) {
-            console.error(...hootLog(`no test to run`));
+            console.error(...hootLog(`no tests to run`));
             await this.stop();
         } else if (!this.debug) {
             await this.stop();
@@ -1002,21 +1052,41 @@ export class TestRunner {
      * @param {Job} job
      */
     #applyTagModifiers(job) {
+        let skip = false;
+        let ignoreSkip = false;
         for (const tag of job.tags) {
             this.tags.add(tag);
             switch (tag.name) {
                 case Tag.DEBUG:
-                    this.debug = true;
-                // fall through
+                    if (typeof this.debug !== "boolean" && this.debug !== job) {
+                        throw new HootError(
+                            `cannot set multiple tests or suites as "debug" at the same time`
+                        );
+                    }
+                    this.debug = job;
+                // Falls through
                 case Tag.ONLY:
-                    this.#include(job instanceof Suite ? "suites" : "tests", job.id);
+                    this.#include(job instanceof Suite ? "suites" : "tests", [job.id], true);
+                    ignoreSkip = true;
                     break;
                 case Tag.SKIP:
-                    job.config.skip = true;
+                    skip = true;
                     break;
                 case Tag.TODO:
                     job.config.todo = true;
                     break;
+            }
+        }
+
+        if (skip) {
+            if (ignoreSkip) {
+                console.warn(
+                    ...hootLog(
+                        `test "${job.fullName}" is explicitly included but marked as skipped: "skip" modifier has been ignored`
+                    )
+                );
+            } else {
+                job.config.skip = true;
             }
         }
     }
@@ -1092,20 +1162,30 @@ export class TestRunner {
     }
 
     /**
-     *
-     * @param {"suites" | "tags" | "tests"} type
-     * @param {...string} ids
+     * @param {Job} job
      */
-    #include(type, ...ids) {
+    #getExplicitIncludeStatus(job) {
+        const includeSpec =
+            job instanceof Suite ? this.state.includeSpecs.suites : this.state.includeSpecs.tests;
+        const explicitInclude = includeSpec[job.id] || 0;
+        return [explicitInclude > 0, explicitInclude < 0];
+    }
+
+    /**
+     * @param {"suites" | "tags" | "tests"} type
+     * @param {Iterable<string>} ids
+     * @param {boolean} [readonly]
+     */
+    #include(type, ids, readonly) {
         const values = this.state.includeSpecs[type];
         for (const id of ids) {
             const nId = normalize(id);
             if (id.startsWith(EXCLUDE_PREFIX)) {
-                values[nId.slice(EXCLUDE_PREFIX.length)] = false;
+                values[nId.slice(EXCLUDE_PREFIX.length)] = readonly ? -2 : -1;
                 this.#hasExcludeFilter = true;
-            } else if (values[nId]?.[0] !== false) {
+            } else if ((values[nId]?.[0] || 0) >= 0) {
                 this.#hasIncludeFilter = true;
-                values[nId] = true;
+                values[nId] = readonly ? +2 : +1;
             }
         }
     }
@@ -1114,47 +1194,45 @@ export class TestRunner {
      * @param {Job} job
      * @returns {boolean | null}
      */
-    #isIncluded(job) {
-        const isSuite = job instanceof Suite;
-
-        // Priority 1: excluded or included according to the value registered in the include map
-        const includeValues = isSuite
-            ? this.state.includeSpecs.suites
-            : this.state.includeSpecs.tests;
-        if (job.id in includeValues) {
-            return includeValues[job.id];
-        }
-
-        // Priority 2: excluded if one of the job tags is in the tag "exlude" set
-        const tagEntries = Object.entries(this.state.includeSpecs.tags);
-        for (const [tagName, status] of tagEntries) {
-            if (status === false && job.tags.some((tag) => tag.key === tagName)) {
-                return false;
-            }
-        }
-
-        // Priority 3: included if one of the job tags is in the tag "include" set
-        for (const [tagName, status] of tagEntries) {
-            if (status === true && job.tags.some((tag) => tag.key === tagName)) {
+    #isImplicitlyExcluded(job) {
+        // By tag name
+        for (const [tagName, status] of Object.entries(this.state.includeSpecs.tags)) {
+            if (status < 0 && job.tags.some((tag) => tag.name === tagName)) {
                 return true;
             }
         }
 
-        // Priority 4: included if the job name matches the text filter
+        // By text filter
+        if (this.textFilter?.startsWith(EXCLUDE_PREFIX)) {
+            const query = this.textFilter.slice(EXCLUDE_PREFIX.length);
+            return getFuzzyScore(query, job.key) > 0;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param {Job} job
+     * @returns {boolean | null}
+     */
+    #isImplicitlyIncluded(job) {
+        // By tag name
+        for (const [tagName, status] of Object.entries(this.state.includeSpecs.tags)) {
+            if (status > 0 && job.tags.some((tag) => tag.name === tagName)) {
+                return true;
+            }
+        }
+
+        // By text filter
         if (this.textFilter) {
             if (this.textFilter instanceof RegExp) {
                 return this.textFilter.test(job.key);
+            } else {
+                return getFuzzyScore(this.textFilter, job.key) > 0;
             }
-            const isExcluding = this.textFilter.startsWith(EXCLUDE_PREFIX);
-            const query = isExcluding
-                ? this.textFilter.slice(EXCLUDE_PREFIX.length)
-                : this.textFilter;
-            const match = getFuzzyScore(query, job.key) > 0;
-            return isExcluding ? !match : match;
         }
 
-        // No explicit filter matching the current job
-        return null;
+        return false;
     }
 
     /**
