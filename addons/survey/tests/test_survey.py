@@ -843,6 +843,8 @@ class TestSurveyInternals(common.TestSurveyCommon, MailCase):
             'time_limit': 60,
             'title': 'Where is india?',
         }])
+        test_survey.session_question_id = q_01
+
         answer_correct, answer_incorrect = q_01.suggested_answer_ids
         user_input = self.env['survey.user_input'].create({'survey_id': test_survey.id, 'is_session_answer': True})
         for (seconds_since_start, answer), expected_score in zip(
