@@ -16,6 +16,7 @@ import { useNavigation } from "@web/core/navigation/navigation";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { mergeClasses } from "@web/core/utils/classname";
 import { useChildRef, useService } from "@web/core/utils/hooks";
+import { deepMerge } from "@web/core/utils/objects";
 import { effect } from "@web/core/utils/reactive";
 
 function getFirstElementOfNode(node) {
@@ -95,25 +96,19 @@ export class Dropdown extends Component {
             optional: true,
         },
         manual: { type: Boolean, optional: true },
-        virtualFocus: { type: Boolean, optional: true },
-        navigationOptions: {
-            type: Object,
-            shape: {
-                shouldFocusChildInput: Boolean,
-                hotkeys: {
-                    type: Object,
-                    optional: true,
-                },
-            },
-            optional: true,
-        },
+
+        /**
+         * Override the internal navigation hook options
+         * @type {import("@web/core/navigation/navigation").NavigationOptions}
+         */
+        navigationOptions: { type: Object, optional: true },
     };
     static defaultProps = {
         disabled: false,
         holdOnHover: false,
         menuClass: "",
         state: undefined,
-        virtualFocus: false,
+        navigationOptions: {},
     };
 
     setup() {
@@ -125,9 +120,8 @@ export class Dropdown extends Component {
         this.navigation = useNavigation(this.menuRef, {
             focusInitialElementOnDisabled: () => !this.group.isInGroup,
             itemsSelector: ":scope .o-navigable, :scope .o-dropdown",
-            virtualFocus: this.props.virtualFocus,
-            ...this.nesting.navigationOptions,
-            ...this.props.navigationOptions,
+            // Using deepMerge allows to keep entries of both option.hotkeys
+            ...deepMerge(this.nesting.navigationOptions, this.props.navigationOptions),
         });
 
         // Set up UI active element related behavior ---------------------------

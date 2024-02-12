@@ -44,6 +44,7 @@ const DROPDOWN_MENU = ".o-dropdown--menu.dropdown-menu";
 const DROPDOWN_ITEM = ".o-dropdown-item.dropdown-item:not(.o-dropdown)";
 
 async function openDropdown(target, selector = DROPDOWN_TOGGLE) {
+    target.querySelector(selector).focus();
     await click(target, selector);
 }
 
@@ -1042,6 +1043,52 @@ QUnit.module("Components", ({ beforeEach }) => {
         triggerHotkey("Escape");
         await nextTick();
         assert.strictEqual(document.activeElement, target.querySelector(".my_custom_toggler"));
+    });
+
+    QUnit.test("navigationProps changes navigation behaviour", async (assert) => {
+        class Parent extends Component {
+            static components = { Dropdown, DropdownItem };
+            static props = [];
+            static template = xml`
+                <Dropdown navigationOptions="this.navigationOptions">
+                    <button>Open</button>
+                    <t t-set-slot="content">
+                        <DropdownItem>foo</DropdownItem>
+                        <DropdownItem>bar</DropdownItem>
+                        <DropdownItem>boo</DropdownItem>
+                    </t>
+                </Dropdown>
+            `;
+
+            setup() {
+                /**@type {import("@web/core/navigation/navigation").NavigationOptions} */
+                this.navigationOptions = {
+                    virtualFocus: true,
+                    hotkeys: {
+                        arrowup: () => assert.step("arrowup"),
+                    }
+                };
+            }
+        }
+
+        await mountInFixture(Parent, target);
+        await openDropdown(target);
+
+        // Toggler is focus, no focus in dropdown
+        assert.strictEqual(document.activeElement, target.querySelector(".o-dropdown"));
+        assert.containsNone(target, ".o-dropdown-item:nth-child(1).focus");
+
+        // After arrow down, toggler is still focused, virtual focus in dropdown
+        await triggerHotkey("arrowdown");
+        assert.strictEqual(document.activeElement, target.querySelector(".o-dropdown"));
+        assert.containsOnce(target, ".o-dropdown-item:nth-child(1).focus");
+
+        assert.verifySteps([]);
+        // Arrow up is overridden, nothing should change
+        await triggerHotkey("arrowup");
+        assert.strictEqual(document.activeElement, target.querySelector(".o-dropdown"));
+        assert.containsOnce(target, ".o-dropdown-item:nth-child(1).focus");
+        assert.verifySteps(["arrowup"]);
     });
 
     QUnit.test("multi-level dropdown: keynav", async (assert) => {

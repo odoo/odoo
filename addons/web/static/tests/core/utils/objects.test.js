@@ -1,6 +1,14 @@
 import { describe, expect, test } from "@odoo/hoot";
 
-import { deepCopy, deepEqual, isObject, omit, pick, shallowEqual } from "@web/core/utils/objects";
+import {
+    deepCopy,
+    deepEqual,
+    isObject,
+    omit,
+    pick,
+    shallowEqual,
+    deepMerge,
+} from "@web/core/utils/objects";
 
 describe.current.tags("headless");
 
@@ -127,4 +135,70 @@ test("pick", () => {
     const myClass = new MyClass();
     Object.defineProperty(myClass, "b", { enumerable: false, value: 2 });
     expect(pick(myClass, "a", "b")).toEqual({ a: 1, b: 2 });
+});
+
+test("deepMerge", () => {
+    expect(
+        deepMerge(
+            {
+                a: 1,
+                b: {
+                    b_a: 1,
+                    b_b: 2,
+                },
+            },
+            {
+                a: 2,
+                b: {
+                    b_b: 3,
+                    b_c: 4,
+                },
+            }
+        )
+    ).toEqual({
+        a: 2,
+        b: {
+            b_a: 1,
+            b_b: 3,
+            b_c: 4,
+        },
+    });
+
+    expect(deepMerge({}, {})).toEqual({});
+
+    expect(deepMerge({ a: 1 }, {})).toEqual({ a: 1 });
+    expect(deepMerge({}, { a: 1 })).toEqual({ a: 1 });
+    expect(deepMerge({ a: 1 }, { b: 2 })).toEqual({ a: 1, b: 2 });
+    expect(deepMerge({ a: 1 }, { a: 2 })).toEqual({ a: 2 });
+
+    expect(deepMerge(undefined, { a: 1 })).toEqual({ a: 1 });
+    expect(deepMerge({ a: 1 }, undefined)).toEqual({ a: 1 });
+    expect(deepMerge(undefined, undefined)).toBe(undefined);
+    expect(deepMerge({ a: undefined, b: undefined }, { a: { foo: "bar" } })).toEqual({
+        a: { foo: "bar" },
+        b: undefined,
+    });
+
+    expect(deepMerge("foo", 1)).toBe(undefined);
+    expect(deepMerge(null, null)).toBe(undefined);
+
+    // There's no current use for arrays, support can be added if needed
+    expect(deepMerge({ a: [1, 2, 3] }, { a: [4] })).toEqual({ a: [4] });
+
+    const symbolA = Symbol("A");
+    const symbolB = Symbol("B");
+    expect(
+        deepMerge(
+            {
+                [symbolA]: 1,
+            },
+            {
+                [symbolA]: 3,
+                [symbolB]: 2,
+            }
+        )
+    ).toEqual({
+        [symbolA]: 3,
+        [symbolB]: 2,
+    });
 });
