@@ -29,18 +29,24 @@ class Survey(http.Controller):
         """ Check that given token matches an answer from the given survey_id.
         Returns a sudo-ed browse record of survey in order to avoid access rights
         issues now that access is granted through token. """
-        survey_sudo = request.env['survey.survey'].with_context(active_test=False).sudo().search([('access_token', '=', survey_token)])
-        if not answer_token:
-            answer_sudo = request.env['survey.user_input'].sudo()
-        else:
-            answer_sudo = request.env['survey.user_input'].sudo().search([
-                ('survey_id', '=', survey_sudo.id),
-                ('access_token', '=', answer_token)
-            ], limit=1)
-        return survey_sudo, answer_sudo
+        SurveySudo, UserInputSudo = request.env['survey.survey'].sudo(), request.env['survey.user_input'].sudo()
+        if not survey_token:
+            return SurveySudo, UserInputSudo
+        if answer_token:
+            answer_sudo = UserInputSudo.search(expression.AND([
+                [('survey_id', 'any', expression.AND([
+                    [('access_token', '=', survey_token)],
+                    [('active', 'in', (True, False))],  # keeping active test for UserInput
+                ]))],
+                [('access_token', '=', answer_token)],
+            ]), limit=1)
+            if answer_sudo:
+                return answer_sudo.survey_id, answer_sudo
 
-    def _check_validity(self, survey_token, answer_token, ensure_token=True, check_partner=True):
-        """ Check survey is open and can be taken. This does not checks for
+        return SurveySudo.with_context(active_test=False).search([('access_token', '=', survey_token)]), UserInputSudo
+
+    def _check_validity(self, survey_sudo, answer_sudo, answer_token, ensure_token=True, check_partner=True):
+        """ Check survey is open and can be taken. This does not check for
         security rules, only functional / business rules. It returns a string key
         allowing further manipulation of validity issues
 
@@ -49,8 +55,7 @@ class Survey(http.Controller):
          * survey_closed: survey is closed and does not accept input anymore;
          * survey_void: survey is void and should not be taken;
          * token_wrong: given token not recognized;
-         * token_required: no token given although it is necessary to access the
-           survey;
+         * token_required: no token given, but it is required to access the survey;
          * answer_deadline: token linked to an expired answer;
 
         :param ensure_token: whether user input existence based on given access token
@@ -60,9 +65,7 @@ class Survey(http.Controller):
         :param check_partner: Whether we must check that the partner associated to the target
           answer corresponds to the active user.
         """
-        survey_sudo, answer_sudo = self._fetch_from_access_token(survey_token, answer_token)
-
-        if not survey_sudo.exists():
+        if not survey_sudo:
             return 'survey_wrong'
 
         if answer_token and not answer_sudo:
@@ -102,12 +105,12 @@ class Survey(http.Controller):
          : param ensure_token: whether user input existence should be enforced or not(see ``_check_validity``)
          : param check_partner: whether the partner of the target answer should be checked (see ``_check_validity``)
         """
-        survey_sudo, answer_sudo = request.env['survey.survey'].sudo(), request.env['survey.user_input'].sudo()
+        survey_sudo, answer_sudo = self._fetch_from_access_token(survey_token, answer_token)
         has_survey_access, can_answer = False, False
 
-        validity_code = self._check_validity(survey_token, answer_token, ensure_token=ensure_token, check_partner=check_partner)
+        validity_code = self._check_validity(
+            survey_sudo, answer_sudo, answer_token, ensure_token=ensure_token, check_partner=check_partner)
         if validity_code != 'survey_wrong':
-            survey_sudo, answer_sudo = self._fetch_from_access_token(survey_token, answer_token)
             has_survey_access = survey_sudo.with_user(request.env.user).has_access('read')
             can_answer = bool(answer_sudo)
             if not can_answer:
