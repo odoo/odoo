@@ -52,7 +52,6 @@ class ResConfigSettings(models.TransientModel):
     pos_is_order_printer = fields.Boolean(compute='_compute_pos_printer', store=True, readonly=False)
     pos_printer_ids = fields.Many2many(related='pos_config_id.printer_ids', readonly=False)
 
-    pos_allowed_pricelist_ids = fields.Many2many('product.pricelist', compute='_compute_pos_allowed_pricelist_ids')
     pos_amount_authorized_diff = fields.Float(related='pos_config_id.amount_authorized_diff', readonly=False)
     pos_available_pricelist_ids = fields.Many2many('product.pricelist', string='Available Pricelists', compute='_compute_pos_pricelist_id', readonly=False, store=True)
     pos_cash_control = fields.Boolean(related='pos_config_id.cash_control')
@@ -278,14 +277,6 @@ class ResConfigSettings(models.TransientModel):
                     res_config.pos_available_pricelist_ids = res_config.pos_config_id.available_pricelist_ids
                     res_config.pos_pricelist_id = res_config.pos_config_id.pricelist_id
 
-    @api.depends('pos_available_pricelist_ids', 'pos_use_pricelist')
-    def _compute_pos_allowed_pricelist_ids(self):
-        for res_config in self:
-            if res_config.pos_use_pricelist:
-                res_config.pos_allowed_pricelist_ids = res_config.pos_available_pricelist_ids.ids
-            else:
-                res_config.pos_allowed_pricelist_ids = self.env['product.pricelist'].search([]).ids
-
     @api.depends('pos_is_posbox', 'pos_config_id')
     def _compute_pos_proxy_ip(self):
         for res_config in self:
@@ -335,3 +326,15 @@ class ResConfigSettings(models.TransientModel):
                     old._add_trusted_config_id(config.pos_config_id)
                 if old.id in removed_trusted_configs:
                     old._remove_trusted_config_id(config.pos_config_id)
+
+    @api.onchange('pos_available_pricelist_ids')
+    def _onchange_pos_available_pricelist_ids(self):
+        for res_config in self:
+            if res_config.pos_pricelist_id and res_config.pos_pricelist_id.id not in res_config.pos_available_pricelist_ids.ids:
+                res_config.pos_pricelist_id = [(5, 0, 0)]
+
+    @api.onchange('pos_pricelist_id')
+    def _onchange_pos_pricelist_id(self):
+        for res_config in self:
+            if res_config.pos_pricelist_id not in res_config.pos_available_pricelist_ids:
+                res_config.pos_available_pricelist_ids += res_config.pos_pricelist_id
