@@ -46,6 +46,7 @@ export class DiscussApp extends Record {
     activeTab = "main";
     chatWindows = Record.many("ChatWindow");
     isActive = false;
+    hasRestoredThread = false;
     thread = Record.one("Thread");
     channels = Record.one("DiscussAppCategory");
     chats = Record.one("DiscussAppCategory");
