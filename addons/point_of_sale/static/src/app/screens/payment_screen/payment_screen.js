@@ -87,6 +87,10 @@ export class PaymentScreen extends Component {
         const result = this.currentOrder.add_paymentline(paymentMethod);
         if (result) {
             this.numberBuffer.reset();
+            if (paymentMethod.use_payment_terminal) {
+                const newPaymentLine = this.paymentLines.at(-1);
+                this.sendPaymentRequest(newPaymentLine);
+            }
             return true;
         } else {
             this.dialog.add(AlertDialog, {
