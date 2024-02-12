@@ -2,24 +2,11 @@
 
 import json
 
-from odoo import api, fields, models, _, _lt
+from odoo import models, _, _lt
 from odoo.osv import expression
 
 class Project(models.Model):
     _inherit = 'project.project'
-
-    expenses_count = fields.Integer('# Expenses', compute='_compute_expenses_count', groups='hr_expense.group_hr_expense_team_approver')
-
-    @api.depends('analytic_account_id')
-    def _compute_expenses_count(self):
-        data = self.env['hr.expense']._read_group(
-            [('analytic_distribution', 'in', self.analytic_account_id.ids)],
-            ['analytic_distribution'],
-            ['__count'],
-        )
-        data = {int(account_id): expense_count for account_id, expense_count in data}
-        for project in self:
-            project.expenses_count = data.get(project.analytic_account_id.id, 0)
 
     # ----------------------------
     #  Actions
