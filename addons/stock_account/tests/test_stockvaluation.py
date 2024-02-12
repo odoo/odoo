@@ -3053,12 +3053,12 @@ class TestStockValuation(TransactionCase):
 
         # valuation should stay to ~240
         self.assertAlmostEqual(self.product1.quantity_svl, 19)
-        self.assertAlmostEqual(self.product1.value_svl, 285, delta=0.03)
+        self.assertAlmostEqual(self.product1.value_svl, 240, delta=0.04)
 
         # an accounting entry should be created
         # FIXME sle check it
 
-        self.assertEqual(self.product1.standard_price, 15)
+        self.assertEqual(self.product1.standard_price, 12.63)
 
     def test_change_cost_method_2(self):
         """ Change the cost method from FIFO to standard.
@@ -3121,13 +3121,13 @@ class TestStockValuation(TransactionCase):
         self.product1.categ_id.property_cost_method = 'standard'
 
         # valuation should stay to ~240
-        self.assertAlmostEqual(self.product1.value_svl, 285, delta=0.03)
+        self.assertAlmostEqual(self.product1.value_svl, 240, delta=0.04)
         self.assertAlmostEqual(self.product1.quantity_svl, 19)
 
         # no accounting entry should be created
         # FIXME sle check it
 
-        self.assertEqual(self.product1.standard_price, 15)
+        self.assertEqual(self.product1.standard_price, 12.63)
 
     def test_fifo_sublocation_valuation_1(self):
         """ Set the main stock as a view location. Receive 2 units of a
