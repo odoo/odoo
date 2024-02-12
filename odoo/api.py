@@ -464,6 +464,7 @@ class Environment(Mapping):
                 return env
 
         # otherwise create environment, and add it in the set
+        assert isinstance(cr, BaseCursor)
         self = object.__new__(cls)
         self.cr, self.uid, self.context, self.su = self.args = (cr, uid, frozendict(context), su)
         self.uid_origin = uid_origin
@@ -959,3 +960,4 @@ class Cache(object):
 from odoo import SUPERUSER_ID
 from odoo.exceptions import UserError, AccessError, MissingError
 from odoo.modules.registry import Registry
+from .sql_db import BaseCursor
