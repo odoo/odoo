@@ -96,6 +96,17 @@ export class Dropdown extends Component {
         },
         manual: { type: Boolean, optional: true },
         virtualFocus: { type: Boolean, optional: true },
+        navigationOptions: {
+            type: Object,
+            shape: {
+                shouldFocusChildInput: Boolean,
+                hotkeys: {
+                    type: Object,
+                    optional: true,
+                },
+            },
+            optional: true,
+        },
     };
     static defaultProps = {
         disabled: false,
@@ -116,6 +127,7 @@ export class Dropdown extends Component {
             itemsSelector: ":scope .o-navigable, :scope .o-dropdown",
             virtualFocus: this.props.virtualFocus,
             ...this.nesting.navigationOptions,
+            ...this.props.navigationOptions,
         });
 
         // Set up UI active element related behavior ---------------------------
