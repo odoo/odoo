@@ -31,7 +31,6 @@ class AccountAnalyticPlan(models.Model):
         ondelete='cascade',
         domain="['!', ('id', 'child_of', id)]",
     )
-    parent_path = fields.Char(index='btree')
     root_id = fields.Many2one(
         'account.analytic.plan',
         compute='_compute_root_id',

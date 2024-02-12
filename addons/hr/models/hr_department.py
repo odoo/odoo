@@ -27,7 +27,6 @@ class Department(models.Model):
     plans_count = fields.Integer(compute='_compute_plan_count')
     note = fields.Text('Note')
     color = fields.Integer('Color Index')
-    parent_path = fields.Char(index=True)
     master_department_id = fields.Many2one(
         'hr.department', 'Master Department', compute='_compute_master_department_id', store=True)
 

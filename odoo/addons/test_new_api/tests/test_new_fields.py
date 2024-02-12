@@ -3539,8 +3539,9 @@ class TestMagicFields(TransactionCase):
 
 class TestParentStore(TransactionCase):
 
-    def setUp(self):
-        super(TestParentStore, self).setUp()
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
         # make a tree of categories:
         #   0
         #  /|\
@@ -3549,7 +3550,7 @@ class TestParentStore(TransactionCase):
         #   4 5 6
         #      /|\
         #     7 8 9
-        Cat = self.env['test_new_api.category']
+        Cat = cls.env['test_new_api.category']
         cat0 = Cat.create({'name': '0'})
         cat1 = Cat.create({'name': '1', 'parent': cat0.id})
         cat2 = Cat.create({'name': '2', 'parent': cat0.id})
@@ -3560,7 +3561,7 @@ class TestParentStore(TransactionCase):
         cat7 = Cat.create({'name': '7', 'parent': cat6.id})
         cat8 = Cat.create({'name': '8', 'parent': cat6.id})
         cat9 = Cat.create({'name': '9', 'parent': cat6.id})
-        self._cats = Cat.concat(cat0, cat1, cat2, cat3, cat4,
+        cls._cats = Cat.concat(cat0, cat1, cat2, cat3, cat4,
                                 cat5, cat6, cat7, cat8, cat9)
 
     def cats(self, *indexes):
@@ -3689,13 +3690,15 @@ class TestParentStore(TransactionCase):
 
     def test_move_1_cycle(self):
         """ Move a node to create a cycle. """
-        with self.assertRaises(UserError):
+        with self.assertRaisesRegex(UserError, "Recursion Detected: 3 -> 6 -> 9 -> 3"):
             self.cats(3).write({'parent': self.cats(9).id})
+            self._cats.flush_model(['parent_path'])
 
     def test_move_N_cycle(self):
         """ Move multiple nodes to create a cycle. """
-        with self.assertRaises(UserError):
+        with self.assertRaisesRegex(UserError, "Recursion Detected: 3 -> 6 -> 9 -> 3"):
             self.cats(1, 3).write({'parent': self.cats(9).id})
+            self._cats.flush_model(['parent_path'])
 
     def test_compute_depend_parent_path(self):
         self.assertEqual(self.cats(7).depth, 3)
@@ -3719,6 +3722,27 @@ class TestParentStore(TransactionCase):
         with self.assertQueryCount(2):
             cat = self.cats().create({'name': '10', 'parent': self.cats(6).id})
             self.assertEqual(cat.depth, 2)
+
+    def test_parent_set_null_unlink(self):
+        model = self.env['test_new_api.parent_set_null']
+        # 0
+        # |
+        # 1
+        # |
+        # 2
+        record_0 = model.create({})
+        record_1 = model.create({'parent_id': record_0.id})
+        record_2 = model.create({'parent_id': record_1.id})
+
+        self.assertChildOf(record_0, record_0 + record_1 + record_2)
+
+        record_1.unlink()
+        # Because parent_id has ondelete='set null', record_2 deosn't have parent anymore and
+        # record_0 doens't have any child
+        self.assertChildOf(record_0, record_0)
+        self.assertParentOf(record_0, record_0)
+        self.assertChildOf(record_0, record_0)
+        self.assertParentOf(record_2, record_2)
 
 
 class TestRequiredMany2one(TransactionCase):

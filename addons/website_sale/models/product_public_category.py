@@ -36,7 +36,6 @@ class ProductPublicCategory(models.Model):
         comodel_name='product.public.category',
         inverse_name='parent_id',
     )
-    parent_path = fields.Char(index=True)
     parents_and_self = fields.Many2many(
         comodel_name='product.public.category',
         compute='_compute_parents_and_self',

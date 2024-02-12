@@ -256,6 +256,14 @@ class MetaModel(api.Meta):
                 add_default('write_date', fields.Datetime(
                     string='Last Updated on', automatic=True, readonly=True))
 
+            if attrs.get('_parent_store'):
+                add_default('parent_path', fields.Char(
+                    automatic=True, index='btree',
+                    # Cannot be precompute because id doesn't exists before creation :D
+                    compute='_compute_parent_path', store=True, recursive=True,
+                    # required=True,  # Is it usefull ?
+                ))
+
 
 class NewId(object):
     """ Pseudo-ids for new records, encapsulating an optional origin id (actual
@@ -3243,7 +3251,6 @@ class BaseModel(metaclass=MetaModel):
         cr = self._cr
         update_custom_fields = self._context.get('update_custom_fields', False)
         must_create_table = not tools.table_exists(cr, self._table)
-        parent_path_compute = False
 
         if self._auto:
             if must_create_table:
@@ -3255,12 +3262,6 @@ class BaseModel(metaclass=MetaModel):
                     for field in sorted(self._fields.values(), key=lambda f: f.column_order)
                     if field.name != 'id' and field.store and field.column_type
                 ])
-
-            if self._parent_store:
-                if not tools.column_exists(cr, self._table, 'parent_path'):
-                    tools.create_column(self._cr, self._table, 'parent_path', 'VARCHAR')
-                    parent_path_compute = True
-                self._check_parent_path()
 
             if not must_create_table:
                 self._check_removed_columns(log=False)
@@ -3276,7 +3277,10 @@ class BaseModel(metaclass=MetaModel):
                     continue            # don't update custom fields
                 new = field.update_db(self, columns)
                 if new and field.compute:
-                    fields_to_compute.append(field)
+                    if field.name == 'parent_path':
+                        self._parent_store_compute()
+                    else:
+                        fields_to_compute.append(field)
 
             if fields_to_compute:
                 # mark existing records for computation now, so that computed
@@ -3292,20 +3296,10 @@ class BaseModel(metaclass=MetaModel):
         if self._auto:
             self._add_sql_constraints()
 
-        if parent_path_compute:
-            self._parent_store_compute()
-
     def init(self):
         """ This method is called after :meth:`~._auto_init`, and may be
             overridden to create or modify a model's database schema.
         """
-
-    def _check_parent_path(self):
-        field = self._fields.get('parent_path')
-        if field is None:
-            _logger.error("add a field parent_path on model %r: `parent_path = fields.Char(index=True)`.", self._name)
-        elif not field.index:
-            _logger.error('parent_path field on model %r should be indexed! Add index=True to the field definition.', self._name)
 
     def _add_sql_constraints(self):
         """ Modify this model's database table constraints so they match the one
@@ -4544,9 +4538,6 @@ class BaseModel(metaclass=MetaModel):
             # (`test_01_website_reset_password_tour`)
             self.modified(vals)
 
-            if self._parent_store and self._parent_name in vals:
-                self.flush_model([self._parent_name])
-
             # validate non-inversed fields first
             inverse_fields = [f.name for fs in determine_inverses.values() for f in fs]
             real_recs._validate_fields(vals, inverse_fields)
@@ -4589,9 +4580,6 @@ class BaseModel(metaclass=MetaModel):
 
         cr = self._cr
 
-        # determine records that require updating parent_path
-        parent_records = self._parent_store_update_prepare(vals)
-
         if self._log_access:
             # set magic fields (already done by write(), but not for computed fields)
             vals = dict(vals)
@@ -4629,10 +4617,6 @@ class BaseModel(metaclass=MetaModel):
                     SQL(", ").join(assignments),
                     sub_ids,
                 ))
-
-        # update parent_path
-        if parent_records:
-            parent_records._parent_store_update()
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -4965,9 +4949,6 @@ class BaseModel(metaclass=MetaModel):
         for (field, value), record_ids in inverses_update.items():
             field._update_inverses(self.browse(record_ids), value)
 
-        # update parent_path
-        records._parent_store_create()
-
         # protect fields being written against recomputation
         protected = [(data['protected'], data['record']) for data in data_list]
         with self.env.protecting(protected):
@@ -5005,99 +4986,37 @@ class BaseModel(metaclass=MetaModel):
             fnames = [f.name for f in self.pool.field_computed[field]]
             self.filtered('id')._validate_fields(fnames)
 
-    def _parent_store_create(self):
-        """ Set the parent_path field on ``self`` after its creation. """
-        if not self._parent_store:
-            return
-
-        self._cr.execute(SQL(
-            """ UPDATE %(table)s node
-                SET parent_path=concat((
-                        SELECT parent.parent_path
-                        FROM %(table)s parent
-                        WHERE parent.id=node.%(parent)s
-                    ), node.id, '/')
-                WHERE node.id IN %(ids)s
-                RETURNING node.id, node.parent_path """,
-            table=SQL.identifier(self._table),
-            parent=SQL.identifier(self._parent_name),
-            ids=tuple(self.ids),
+    def _raise_check_recursion(self, cyclic_records):
+        """ This method is called when the model has _parent_store = True and when
+        there is a cyclic parent_path is detected. It can be overridden to get a
+        more user friendly message. """
+        self.ensure_one()
+        raise UserError(_(
+            "Recursion Detected: %s",
+            # We don't use display_name, it likely recursive too and and not cyclic safe
+            ' -> '.join(cyclic_records.mapped(self._rec_name_fallback())),
         ))
 
-        # update the cache of updated nodes, and determine what to recompute
-        updated = dict(self._cr.fetchall())
-        records = self.browse(updated)
-        self.env.cache.update(records, self._fields['parent_path'], updated.values())
+    @api.depends(lambda self: (f'{self._parent_name}.parent_path',))
+    def _compute_parent_path(self):
+        for record in self:
+            parent_parent_path = record[self._parent_name].parent_path if record[self._parent_name] else ''
+            # For new record, don't add the new id in the path to ensure containing only int.
+            origin_record_id = record._origin.id if record._origin else ''
 
-    def _parent_store_update_prepare(self, vals):
-        """ Return the records in ``self`` that must update their parent_path
-            field. This must be called before updating the parent field.
-        """
-        if not self._parent_store or self._parent_name not in vals:
-            return self.browse()
+            if origin_record_id and parent_parent_path and f"/{origin_record_id}/" in f"/{parent_parent_path}":
+                # Create path between origin_record_id -> ... -> ... -> origin_record_id
+                cycle = [origin_record_id]
+                for id_str in reversed(parent_parent_path.split('/')):
+                    if not id_str:
+                        continue
+                    id_ = int(id_str)
+                    cycle.append(id_)
+                    if id_ == origin_record_id:
+                        break
+                record._raise_check_recursion(self.browse(tuple(reversed(cycle))))
 
-        # No need to recompute the values if the parent is the same.
-        parent_val = vals[self._parent_name]
-        if parent_val:
-            condition = SQL(
-                "(%(parent)s != %(value)s OR %(parent)s IS NULL)",
-                parent=SQL.identifier(self._parent_name),
-                value=parent_val,
-            )
-        else:
-            condition = SQL(
-                "%(parent)s IS NOT NULL",
-                parent=SQL.identifier(self._parent_name),
-            )
-        self._cr.execute(SQL(
-            "SELECT id FROM %s WHERE id IN %s AND %s",
-            SQL.identifier(self._table),
-            tuple(self.ids),
-            condition,
-        ))
-        return self.browse([row[0] for row in self._cr.fetchall()])
-
-    def _parent_store_update(self):
-        """ Update the parent_path field of ``self``. """
-        cr = self.env.cr
-
-        # determine new prefix of parent_path
-        cr.execute(SQL(
-            """ SELECT parent.parent_path
-                FROM %(table)s node, %(table)s parent
-                WHERE node.id = %(id)s AND parent.id = node.%(parent)s """,
-            table=SQL.identifier(self._table),
-            parent=SQL.identifier(self._parent_name),
-            id=self.ids[0],
-        ))
-        prefix = cr.fetchone()[0] if cr.rowcount else ''
-
-        # check for recursion
-        if prefix:
-            parent_ids = {int(label) for label in prefix.split('/')[:-1]}
-            if not parent_ids.isdisjoint(self._ids):
-                raise UserError(_("Recursion Detected."))
-
-        # update parent_path of all records and their descendants
-        cr.execute(SQL(
-            """ UPDATE %(table)s child
-                SET parent_path = concat(%(prefix)s, substr(child.parent_path,
-                        length(node.parent_path) - length(node.id || '/') + 1))
-                FROM %(table)s node
-                WHERE node.id IN %(ids)s
-                AND child.parent_path LIKE concat(node.parent_path, %(wildcard)s)
-                RETURNING child.id, child.parent_path """,
-            table=SQL.identifier(self._table),
-            prefix=prefix,
-            ids=tuple(self.ids),
-            wildcard='%',
-        ))
-
-        # update the cache of updated nodes, and determine what to recompute
-        updated = dict(cr.fetchall())
-        records = self.browse(updated)
-        self.env.cache.update(records, self._fields['parent_path'], updated.values())
-        records.modified(['parent_path'])
+            record.parent_path = f"{parent_parent_path}{origin_record_id}/"
 
     def _load_records_write(self, values):
         self.write(values)
@@ -5682,6 +5601,7 @@ class BaseModel(metaclass=MetaModel):
         """
         if not parent:
             parent = self._parent_name
+            # TODO not need to do it if the parent_path is stored, already done by the compute it-self
 
         # must ignore 'active' flag, ir.rules, etc. => direct SQL query
         cr = self._cr
@@ -6826,6 +6746,8 @@ class BaseModel(metaclass=MetaModel):
         # fields have no data in cache, so they can be ignored from the start.
         # This allows us to discard subtrees from the merged tree when they
         # only contain such fields.
+        # TODO: should we discard recursive field has parent_path in case of unlink, if parent_id
+        # ondelete='cascade'
         def select(field):
             return (field.compute and field.store) or cache.contains_field(field)
 
