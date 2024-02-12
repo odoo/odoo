@@ -22,6 +22,8 @@ class AccountMoveSend(models.TransientModel):
         readonly=False,
         store=True,
     )
+    display_force_regenerate_pdf = fields.Boolean(compute='_compute_display_force_regenerate_pdf')
+    force_regenerate_pdf = fields.Boolean(string='Regenerate invoice', help='Override the existing invoice pdf.')
 
     # == PRINT ==
     enable_download = fields.Boolean(compute='_compute_enable_download')
@@ -144,6 +146,7 @@ class AccountMoveSend(models.TransientModel):
             'mail_template_id': self.mail_template_id.id,
             'download': self.checkbox_download,
             'send_mail': self.checkbox_send_mail,
+            'force_regenerate_pdf': self.force_regenerate_pdf,
         }
 
     def _get_mail_move_values(self, move, wizard=None):
@@ -227,6 +230,11 @@ class AccountMoveSend(models.TransientModel):
     def _compute_mode(self):
         for wizard in self:
             wizard.mode = 'invoice_single' if len(wizard.move_ids) == 1 else 'invoice_multi'
+
+    @api.depends('mode')
+    def _compute_display_force_regenerate_pdf(self):
+        for wizard in self:
+            wizard.display_force_regenerate_pdf = bool(wizard.move_ids.invoice_pdf_report_id)
 
     @api.depends('move_ids')
     def _compute_enable_download(self):
@@ -551,6 +559,10 @@ class AccountMoveSend(models.TransientModel):
         :param invoices_data:   The collected data for invoices so far.
         """
         for invoice, invoice_data in invoices_data.items():
+            if invoice_data.get('force_regenerate_pdf'):
+                # we don't delete the attachment so that the document is still accessible from chatter
+                invoice.invoice_pdf_report_file = False
+
             if self._need_invoice_document(invoice):
                 self._hook_invoice_document_before_pdf_report_render(invoice, invoice_data)
                 invoice_data['blocking_error'] = invoice_data.get('error') \

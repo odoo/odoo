@@ -1048,3 +1048,38 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         )
         self.assertEqual(json.loads(bus_2.message)['payload']['type'], 'warning')
         self.assertEqual(json.loads(bus_2.message)['payload']['action_button']['res_ids'], invoices_error.ids)
+
+    def test_force_regenerate_pdf(self):
+        # Generate the first PDF
+        invoice_1 = self.init_invoice("out_invoice", amounts=[1000], post=True)
+        wizard = self.create_send_and_print(invoice_1)
+        self.assertFalse(wizard.display_force_regenerate_pdf)
+        wizard.action_send_and_print()
+        self.assertTrue(bool(invoice_1.invoice_pdf_report_id))
+        previous_pdf_id = invoice_1.invoice_pdf_report_id.id
+
+        # single sync
+        wizard_single = self.create_send_and_print(invoice_1)
+        self.assertTrue(wizard_single.display_force_regenerate_pdf)
+        wizard_single.force_regenerate_pdf = True
+        wizard_single.action_send_and_print()
+        self.assertNotEqual(invoice_1.invoice_pdf_report_id.id, previous_pdf_id)
+
+        # multi sync
+        invoice_2 = self.init_invoice("out_invoice", amounts=[1000], post=True)
+        invoices = invoice_1 + invoice_2
+        previous_pdf_ids = invoices.invoice_pdf_report_id.ids
+        wizard_multi = self.create_send_and_print(invoices)
+        self.assertTrue(wizard_multi.display_force_regenerate_pdf)
+        wizard_multi.force_regenerate_pdf = True
+        wizard_multi.action_send_and_print(force_synchronous=True)
+        self.assertNotEqual(invoices.invoice_pdf_report_id.ids, previous_pdf_ids)
+
+        # multi async
+        previous_pdf_ids_async = invoices.invoice_pdf_report_id.ids
+        wizard_multi_async = self.create_send_and_print(invoices)
+        self.assertTrue(wizard_multi_async.display_force_regenerate_pdf)
+        wizard_multi_async.force_regenerate_pdf = True
+        wizard_multi.action_send_and_print(force_synchronous=True)
+        self.env.ref('account.ir_cron_account_move_send').method_direct_trigger()  # force processing
+        self.assertNotEqual(invoices.invoice_pdf_report_id.ids, previous_pdf_ids_async)
