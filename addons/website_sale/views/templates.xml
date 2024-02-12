@@ -2530,7 +2530,7 @@
     <!-- Product page images: Carousel -->
     <template id="website_sale.shop_product_carousel" name="Shop Product Carousel">
         <t t-set="product_carousel_block_name">Product Carousel</t>
-        <div id="o-carousel-product" class="carousel slide position-sticky mb-3 overflow-hidden" data-bs-ride="carousel" data-bs-interval="0" t-att-data-name="product_carousel_block_name">
+        <div id="o-carousel-product" class="carousel slide position-sticky mb-3 overflow-hidden" data-bs-ride="true" t-att-data-name="product_carousel_block_name">
             <div class="o_carousel_product_outer carousel-outer position-relative flex-grow-1 overflow-hidden">
                 <span t-if="len(product_images) > 1"
                       t-attf-class="o_ribbon #{ribbon._get_position_class()} z-index-1"

@@ -65,6 +65,7 @@ const GalleryWidget = publicWidget.Widget.extend({
             index: currentImageIndex,
             dim: dimensions,
             interval: milliseconds || 0,
+            ride: !milliseconds ? "false" : "carousel",
             id: uniqueId("slideshow_"),
         }));
         this.__onModalKeydown = this._onModalKeydown.bind(this);
