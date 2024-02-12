@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.1alpha1\n"
+"Project-Id-Version: Odoo Server 17.2alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-08 06:51+0000\n"
-"PO-Revision-Date: 2024-01-08 06:51+0000\n"
+"POT-Creation-Date: 2024-02-12 10:36+0000\n"
+"PO-Revision-Date: 2024-02-12 10:36+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -205,11 +205,6 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "<i class=\"fw-light fa fa-angle-left me-2\"/>Discard"
-msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.products_attributes
-msgid "<option value=\"\" selected=\"true\">-</option>"
 msgstr ""
 
 #. module: website_sale
@@ -494,6 +489,7 @@ msgid "Abandoned Carts to Recover"
 msgstr ""
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_res_config_settings__cart_abandoned_delay
 #: model:ir.model.fields,field_description:website_sale.field_website__cart_abandoned_delay
 msgid "Abandoned Delay"
 msgstr ""
@@ -623,6 +619,11 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_website_sale_autocomplete
 msgid "Address Autocomplete"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.products_attributes
+msgid "All"
 msgstr ""
 
 #. module: website_sale
@@ -855,7 +856,7 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__website_sale_contact_us_button_url
-msgid "Button URL"
+msgid "Button Url"
 msgstr ""
 
 #. module: website_sale
@@ -1800,11 +1801,6 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
-#: model:ir.model.fields,help:website_sale.field_product_public_category__sequence
-msgid "Gives the sequence order when displaying a list of product categories."
-msgstr ""
-
-#. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/tours/tour_utils.js:0
 #: model:ir.model.fields.selection,name:website_sale.selection__website__add_to_cart_action__go_to_cart
@@ -2042,7 +2038,6 @@ msgstr ""
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/website_sale_utils.js:0
-#, python-format
 msgid "Item(s) added to your cart"
 msgstr ""
 
@@ -3313,11 +3308,6 @@ msgid "Selectable"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_res_config_settings__cart_abandoned_delay
-msgid "Send After"
-msgstr ""
-
-#. module: website_sale
 #: model:ir.actions.server,name:website_sale.ir_actions_server_sale_cart_recovery_email
 msgid "Send a Cart Recovery Email"
 msgstr ""
@@ -4033,7 +4023,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_sale_order_line__shop_warning
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout_layout
-#, python-format
 msgid "Warning"
 msgstr ""
 
@@ -4280,11 +4269,6 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_delivery_zip_prefix
 msgid "Zip Prefix"
-msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.add_grid_or_list_option
-msgid "active"
 msgstr ""
 
 #. module: website_sale

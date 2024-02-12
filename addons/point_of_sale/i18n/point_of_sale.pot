@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.1alpha1\n"
+"Project-Id-Version: Odoo Server 17.2alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-08 06:51+0000\n"
-"PO-Revision-Date: 2024-01-08 06:51+0000\n"
+"POT-Creation-Date: 2024-02-12 10:36+0000\n"
+"PO-Revision-Date: 2024-02-12 10:36+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -470,6 +470,17 @@ msgid "Accept payments with an Adyen payment terminal"
 msgstr ""
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/store/models.js:0
+msgid "Accept the risk"
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__access_token
+msgid "Access Token"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__access_warning
 msgid "Access warning"
 msgstr ""
@@ -549,12 +560,6 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_type_icon
 msgid "Activity Type Icon"
-msgstr ""
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/store/select_lot_popup/select_lot_popup.js:0
-msgid "Add"
 msgstr ""
 
 #. module: point_of_sale
@@ -1023,6 +1028,11 @@ msgid "Buffer:"
 msgstr ""
 
 #. module: point_of_sale
+#: model:ir.model,name:point_of_sale.model_pos_bus_mixin
+msgid "Bus Mixin"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_print_via_proxy
 msgid "Bypass browser printing and prints via the hardware proxy."
 msgstr ""
@@ -1239,7 +1249,6 @@ msgstr ""
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/generic_components/category_selector/category_selector.xml:0
-#: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.xml:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_template_form_view
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_category_kanban
 msgid "Category"
@@ -1418,6 +1427,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_default_bill_ids
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_bill
 msgid "Coins/Bills"
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_category__color
+msgid "Color"
 msgstr ""
 
 #. module: point_of_sale
@@ -2137,8 +2151,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/navbar/cash_move_popup/cash_move_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/navbar/closing_popup/closing_popup.xml:0
-#: code:addons/point_of_sale/static/src/app/store/select_lot_popup/select_lot_popup.js:0
-#: code:addons/point_of_sale/static/src/app/utils/date_picker_popup/date_picker_popup.js:0
+#: code:addons/point_of_sale/static/src/app/store/models.js:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Discard"
 msgstr ""
@@ -2645,6 +2658,18 @@ msgid "Header"
 msgstr ""
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/navbar/navbar.xml:0
+msgid "Hide Category Images"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/navbar/navbar.xml:0
+msgid "Hide Product Images"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__hide_use_payment_terminal
 msgid "Hide Use Payment Terminal"
 msgstr ""
@@ -2915,11 +2940,6 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__is_kiosk_mode
 msgid "Is Kiosk Mode"
-msgstr ""
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_order__is_refunded
-msgid "Is Refunded"
 msgstr ""
 
 #. module: point_of_sale
@@ -3330,6 +3350,12 @@ msgid "Misc"
 msgstr ""
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/store/models.js:0
+msgid "Missing Serial/Lot Numbers"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__module_pos_hr
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_module_pos_hr
 msgid "Module Pos Hr"
@@ -3454,6 +3480,11 @@ msgid "Newspaper Rack"
 msgstr ""
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_date_deadline
 msgid "Next Activity Deadline"
 msgstr ""
@@ -3473,6 +3504,12 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.xml:0
 msgid "Next Order List"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/store/pos_store.js:0
+msgid "No"
 msgstr ""
 
 #. module: point_of_sale
@@ -3514,6 +3551,18 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_report_pos_order_all
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_report_pos_order_all_filtered
 msgid "No data yet!"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/store/pos_store.js:0
+msgid "No existing serial/lot number"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/store/select_lot_popup/edit_list_input/edit_list_input.xml:0
+msgid "No existing serial/lot number matching..."
 msgstr ""
 
 #. module: point_of_sale
@@ -3643,6 +3692,11 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__message_has_error_counter
 msgid "Number of messages with delivery error"
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_pos_order__refund_orders_count
+msgid "Number of orders where items from this order were refunded"
 msgstr ""
 
 #. module: point_of_sale
@@ -3912,6 +3966,11 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__sequence_number
 msgid "Order Sequence Number"
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_pos_order__refunded_order_id
+msgid "Order from which items were refunded in this order"
 msgstr ""
 
 #. module: point_of_sale
@@ -4743,7 +4802,6 @@ msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_preparation_display
-#: model:ir.ui.menu,name:point_of_sale.menu_pos_preparation_display
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Preparation Display"
 msgstr ""
@@ -5099,12 +5157,6 @@ msgid "Proxy IP Address"
 msgstr ""
 
 #. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_printer.py:0
-msgid "Proxy IP cannot be empty."
-msgstr ""
-
-#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/navbar/proxy_status/proxy_status.xml:0
 #: code:addons/point_of_sale/static/src/app/navbar/proxy_status/proxy_status.xml:0
@@ -5247,7 +5299,9 @@ msgid "Refunded"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_order__refunded_order_ids
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_order__refunded_order_id
 msgid "Refunded Order"
 msgstr ""
 
@@ -5257,15 +5311,8 @@ msgid "Refunded Order Line"
 msgstr ""
 
 #. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_order.py:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Refunded Orders"
-msgstr ""
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_order__refunded_orders_count
-msgid "Refunded Orders Count"
 msgstr ""
 
 #. module: point_of_sale
@@ -5595,6 +5642,7 @@ msgid "Search more"
 msgstr ""
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_bus_mixin__access_token
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__access_token
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__access_token
 msgid "Security Token"
@@ -5698,6 +5746,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/receipt_header/receipt_header.xml:0
 msgid "Served by"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/store/pos_store.js:0
+msgid "Server communication problem"
 msgstr ""
 
 #. module: point_of_sale
@@ -5852,6 +5906,25 @@ msgid "Shopping cart"
 msgstr ""
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/navbar/navbar.xml:0
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__show_category_images
+msgid "Show Category Images"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/navbar/navbar.xml:0
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__show_product_images
+msgid "Show Product Images"
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_pos_config__show_category_images
+msgid "Show category images in the Point of Sale interface."
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Show checkout to customers through a second display"
 msgstr ""
@@ -5881,6 +5954,11 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_preparation_display
 msgid "Show orders on the preparation display screen."
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_pos_config__show_product_images
+msgid "Show product images in the Point of Sale interface."
 msgstr ""
 
 #. module: point_of_sale
@@ -5921,12 +5999,6 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/store/models.js:0
-msgid "Some Serial/Lot Numbers are missing"
-msgstr ""
-
-#. module: point_of_sale
-#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/store/pos_store.js:0
 msgid ""
 "Some orders could not be submitted to the server due to configuration "
@@ -5941,6 +6013,15 @@ msgid ""
 "Some orders could not be submitted to the server due to internet connection "
 "issues. You can exit the Point of Sale, but do not close the session before "
 "the issue has been resolved."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/store/models.js:0
+msgid ""
+"Some products require serial/lot numbers to be set. \n"
+"Proceeding anyway will create inconsistency in your inventory, you will need to correct manually. \n"
+"Proceed anyway?"
 msgstr ""
 
 #. module: point_of_sale
@@ -6322,6 +6403,14 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/store/pos_store.js:0
+msgid ""
+"The existing serial/lot numbers could not be retrieved. \n"
+"Continue without checking the validity of serial/lot numbers ?"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
 msgid ""
 "The fiscal position used in the original order is not loaded. Make sure it "
@@ -6626,6 +6715,14 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "There is no cash register in this session."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/store/pos_store.js:0
+msgid ""
+"There is no serial/lot number for the selected product, and their creation "
+"is not allowed from the Point of Sale app."
 msgstr ""
 
 #. module: point_of_sale
@@ -7283,6 +7380,12 @@ msgid "With a"
 msgstr ""
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/store/pos_store.js:0
+msgid "Yes"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid ""
@@ -7298,16 +7401,14 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/store/models.js:0
-msgid ""
-"You are trying to sell products with serial/lot numbers, but some of them are not set.\n"
-"Would you like to proceed anyway?"
+#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
+msgid "You can go to"
 msgstr ""
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
-msgid "You can go to"
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+msgid "You can only refund products from the same order."
 msgstr ""
 
 #. module: point_of_sale
