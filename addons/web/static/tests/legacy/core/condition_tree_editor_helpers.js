@@ -1,7 +1,6 @@
 /** @odoo-module alias=@web/../tests/core/condition_tree_editor_helpers default=false */
 
 import { getNodesTextContent, editInput, click, editSelect } from "../helpers/utils";
-import { getModelFieldSelectorValues } from "./model_field_selector_tests";
 import { fieldService } from "@web/core/field_service";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { makeFakeLocalizationService } from "../helpers/mock_services";
@@ -291,3 +290,7 @@ export async function toggleArchive(target) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+
+function getModelFieldSelectorValues(target) {
+    return getNodesTextContent(target.querySelectorAll("span.o_model_field_selector_chain_part"));
+}

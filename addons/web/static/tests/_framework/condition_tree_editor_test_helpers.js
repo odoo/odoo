@@ -102,10 +102,6 @@ function getValue(target) {
     }
 }
 
-export function getModelFieldSelectorValues(target = document) {
-    return queryAllTexts("span.o_model_field_selector_chain_part", { root: target });
-}
-
 export function getCurrentPath(index = 0, target = document) {
     const pathEditor = get(SELECTORS.pathEditor, index, target);
     if (pathEditor) {
@@ -249,8 +245,35 @@ export async function toggleArchive() {
     await contains(SELECTORS.toggleArchive).click();
 }
 
+////////////////////////////////////////////////////////////////////////////////
+
 export async function openModelFieldSelectorPopover(index = 0) {
     await contains(queryAll(".o_model_field_selector")[index]).click();
 }
 
-////////////////////////////////////////////////////////////////////////////////
+export function getModelFieldSelectorValues(target = document) {
+    return queryAll("span.o_model_field_selector_chain_part", { root: target }).map(
+        (n) => n.textContent
+    );
+}
+
+export function getDisplayedFieldNames() {
+    return queryAllTexts(".o_model_field_selector_popover_item_name");
+}
+
+export function getTitle() {
+    return queryOne(".o_model_field_selector_popover .o_model_field_selector_popover_title")
+        .innerText;
+}
+
+export async function clickPrev() {
+    await contains(".o_model_field_selector_popover_prev_page").click();
+}
+
+export async function followRelation(index = 0) {
+    await contains(queryAll(".o_model_field_selector_popover_item_relation")[index]).click();
+}
+
+export function getFocusedFieldName() {
+    return queryOne(".o_model_field_selector_popover_item.active").innerText;
+}
