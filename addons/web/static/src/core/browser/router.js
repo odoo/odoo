@@ -182,7 +182,7 @@ export function stateToUrl(state) {
     return pathname.join("/") + (search ? "?" + search : "");
 }
 
-function urlToState(urlObj) {
+export function urlToState(urlObj) {
     const { pathname, hash, search } = urlObj;
     const state = parseSearchQuery(search);
 
