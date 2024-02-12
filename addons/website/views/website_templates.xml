@@ -124,13 +124,14 @@
                 </t>
             </t>
         </t>
+        <t t-set="alternate_languages" t-value="website and website._get_alternate_languages()"/>
         <!-- `alternate`/`canonical` mainly useful to crawlers/bots/SEO tools, which test the website as public user -->
         <!-- no hreflang on non-canonical pages or if no alternate language -->
-        <t t-if="request and request.is_frontend_multilang and website and website.is_public_user() and website._is_canonical_url()">
-            <t t-set="alternate_languages" t-value="website._get_alternate_languages()"/>
-            <t t-if="len(alternate_languages) &gt; 1" t-foreach="alternate_languages" t-as="lg">
+        <t t-if="request and request.is_frontend_multilang and website and website.is_public_user() and website._is_canonical_url() and len(alternate_languages) &gt; 1">
+            <t t-foreach="alternate_languages" t-as="lg">
         <link rel="alternate" t-att-hreflang="lg['hreflang']" t-att-href="lg['href']"/>
             </t>
+        <link rel="alternate" hreflang="x-default" t-att-href="website._get_canonical_url_localized(lang=website.default_lang_id)"/>
         </t>
         <link t-if="request and website and website.is_public_user()" rel="canonical" t-att-href="website._get_canonical_url()"/>
         <!-- TODO: Once we have style in DB, add this preconnect only if a
