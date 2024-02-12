@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.1alpha1\n"
+"Project-Id-Version: Odoo Server 17.2alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-08 06:51+0000\n"
-"PO-Revision-Date: 2024-01-08 06:51+0000\n"
+"POT-Creation-Date: 2024-02-12 10:36+0000\n"
+"PO-Revision-Date: 2024-02-12 10:36+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -121,6 +121,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 #: code:addons/project/models/project_project_stage.py:0
+#: code:addons/project/models/project_task.py:0
 #: code:addons/project/models/project_task.py:0
 #: code:addons/project/models/project_task_type.py:0
 msgid "%s (copy)"
@@ -282,11 +283,12 @@ msgstr ""
 #: model:mail.template,body_html:project.mail_template_data_project_task
 msgid ""
 "<div>\n"
-"    Dear <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br>\n"
-"    Thank you for your enquiry.<br>\n"
-"    If you have any questions, please let us know.\n"
-"    <br><br>\n"
-"    Thank you,\n"
+"    Dear <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br><br>\n"
+"    Thank you for contacting us. We appreciate your interest in our products/services.<br>\n"
+"    Our team is currently reviewing your inquiry and will respond to your email as soon as possible.<br>\n"
+"    If you have any further questions or concerns in the meantime, please do not hesitate to let us know. We are here to help.<br><br>\n"
+"    Thank you for your patience.<br>\n"
+"    Best regards,\n"
 "    <t t-if=\"user.signature\">\n"
 "        <br>\n"
 "        <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
@@ -607,11 +609,6 @@ msgid "Add a new plan"
 msgstr ""
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
-msgid "Add a note"
-msgstr ""
-
-#. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid "Add a sub-task"
@@ -627,11 +624,6 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
-msgid "Add contacts to share the project..."
-msgstr ""
-
-#. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Add details about this task..."
 msgstr ""
@@ -639,6 +631,11 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,help:project.field_project_share_wizard__note
 msgid "Add extra content to display in the email"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
+msgid "Add the contacts you would like to share the project with..."
 msgstr ""
 
 #. module: project
@@ -958,6 +955,13 @@ msgid ""
 msgstr ""
 
 #. module: project
+#: model:mail.template,description:project.mail_template_data_project_task
+msgid ""
+"Automatically send an email to customers when a task reaches a specific "
+"stage in a project by setting this template on that stage"
+msgstr ""
+
+#. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/components/chatter/chatter_composer.xml:0
 msgid "Avatar"
@@ -968,13 +972,17 @@ msgstr ""
 #: code:addons/project/models/project_project.py:0
 #: model:ir.model.fields,field_description:project.field_project_project__rating_avg
 #: model:ir.model.fields,field_description:project.field_project_task__rating_avg
-#: model:ir.model.fields,field_description:project.field_report_project_task_user__rating_avg
 msgid "Average Rating"
 msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_avg_percentage
 msgid "Average Rating (%)"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_report_project_task_user__rating_avg
+msgid "Average Rating (1-5)"
 msgstr ""
 
 #. module: project
@@ -1144,7 +1152,6 @@ msgid "Closed Sub-tasks Count"
 msgstr ""
 
 #. module: project
-#: model:ir.model.fields,field_description:project.field_project_project__closed_task_count
 #: model:ir.model.fields,field_description:project.field_project_update__closed_task_count
 msgid "Closed Task Count"
 msgstr ""
@@ -1168,14 +1175,6 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__is_closed
 msgid "Closing Stage"
-msgstr ""
-
-#. module: project
-#: model_terms:ir.actions.act_window,help:project.project_collaborator_action
-msgid ""
-"Collaborate efficiently with key stakeholders by sharing with them the "
-"Kanban view of your tasks. Collaborators will be able to edit parts of tasks"
-" and send messages."
 msgstr ""
 
 #. module: project
@@ -1922,6 +1921,14 @@ msgid "Extra Info"
 msgstr ""
 
 #. module: project
+#: model_terms:ir.actions.act_window,help:project.project_collaborator_action
+msgid ""
+"Facilitate efficient collaboration with key stakeholders by sharing the "
+"project with them. Collaborators will have the ability to edit tasks, send "
+"messages, and access the Kanban view of tasks."
+msgstr ""
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project
 #: model_terms:ir.ui.view,arch_db:project.view_project_calendar
 msgid "Favorite"
@@ -1936,6 +1943,11 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 msgid "Final Document"
+msgstr ""
+
+#. module: project
+#: model:project.tags,name:project.project_tags_11
+msgid "Finance"
 msgstr ""
 
 #. module: project
@@ -2047,9 +2059,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 msgid ""
-"Grant portal users access to your project or tasks by adding them as "
-"followers. Customers automatically get access to their tasks in their "
-"portal."
+"Grant portal users access to your project by adding them as followers (the "
+"tasks of the project are not included). To grant access to tasks to a portal"
+" user, add them as followers for these tasks."
 msgstr ""
 
 #. module: project
@@ -2117,6 +2129,11 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__html_field_history_metadata
 msgid "History metadata"
+msgstr ""
+
+#. module: project
+#: model:project.tags,name:project.project_tags_13
+msgid "Home"
 msgstr ""
 
 #. module: project
@@ -2407,6 +2424,7 @@ msgstr ""
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_sharing_project_task_action
+#: model_terms:ir.actions.act_window,help:project.project_sharing_project_task_recurring_tasks_action
 msgid ""
 "Keep track of the progress of your tasks from creation to completion.<br>\n"
 "                Collaborate efficiently by chatting in real-time or via email."
@@ -2420,6 +2438,11 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
 msgid "Last Month"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_report_project_task_user__rating_last_value
+msgid "Last Rating (1-5)"
 msgstr ""
 
 #. module: project
@@ -2556,7 +2579,6 @@ msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_wizard__share_link
-#: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 msgid "Link"
 msgstr ""
 
@@ -2638,6 +2660,11 @@ msgstr ""
 msgid ""
 "Measure your customer satisfaction by sending rating requests when your "
 "tasks reach a certain stage."
+msgstr ""
+
+#. module: project
+#: model:project.tags,name:project.project_tags_15
+msgid "Meeting"
 msgstr ""
 
 #. module: project
@@ -2872,6 +2899,13 @@ msgid "Next Activity"
 msgstr ""
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__activity_calendar_event_id
+#: model:ir.model.fields,field_description:project.field_project_task__activity_calendar_event_id
+#: model:ir.model.fields,field_description:project.field_project_update__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr ""
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__activity_date_deadline
 #: model:ir.model.fields,field_description:project.field_project_task__activity_date_deadline
 #: model:ir.model.fields,field_description:project.field_project_update__activity_date_deadline
@@ -2925,7 +2959,7 @@ msgstr ""
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_collaborator_action
-msgid "No collaborators found"
+msgid "No collaborators found. Let's invite them!"
 msgstr ""
 
 #. module: project
@@ -2968,6 +3002,7 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:project.project_sharing_project_task_action
 #: model_terms:ir.actions.act_window,help:project.project_sharing_project_task_action_blocking_tasks
 #: model_terms:ir.actions.act_window,help:project.project_sharing_project_task_action_sub_task
+#: model_terms:ir.actions.act_window,help:project.project_sharing_project_task_recurring_tasks_action
 #: model_terms:ir.actions.act_window,help:project.project_task_action_sub_task
 msgid "No tasks found. Let's create one!"
 msgstr ""
@@ -3041,6 +3076,11 @@ msgstr ""
 #: model:ir.model.fields.selection,name:project.selection__project_update__status__off_track
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 msgid "Off Track"
+msgstr ""
+
+#. module: project
+#: model:project.tags,name:project.project_tags_10
+msgid "Office"
 msgstr ""
 
 #. module: project
@@ -3205,9 +3245,9 @@ msgid ""
 "- All internal users: all internal users can access the project and all of its tasks without distinction.\n"
 "\n"
 "- Invited portal users and all internal users: all internal users can access the project and all of its tasks without distinction.\n"
-"When following a project, portal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following.\n"
+"When following a project, portal users will only get access to the specific tasks they are following.\n"
 "\n"
-"When a project is shared in read-only, the portal user is redirected to their portal. They can view the tasks, but not edit them.\n"
+"When a project is shared in read-only, the portal user is redirected to their portal. They can view the tasks they are following, but not edit them.\n"
 "When a project is shared in edit, the portal user is redirected to the kanban and list views of the tasks. They can modify a selected number of fields on the tasks.\n"
 "\n"
 "In any case, an internal user with no project access rights can still access a task, provided that they are given the corresponding URL (and that they are part of the followers if the project is private)."
@@ -3309,6 +3349,7 @@ msgstr ""
 #: code:addons/project/controllers/portal.py:0
 #: model:ir.model.fields,field_description:project.field_project_task__priority
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__priority
+#: model:project.tags,name:project.project_tags_16
 msgid "Priority"
 msgstr ""
 
@@ -3441,6 +3482,11 @@ msgstr ""
 #: model:ir.actions.act_window,name:project.project_sharing_project_task_action
 #: model:ir.model,name:project.model_project_share_wizard
 msgid "Project Sharing"
+msgstr ""
+
+#. module: project
+#: model:ir.actions.act_window,name:project.project_sharing_project_task_recurring_tasks_action
+msgid "Project Sharing Recurrence"
 msgstr ""
 
 #. module: project
@@ -3632,7 +3678,6 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_rating_graph/project_rating_graph_view.js:0
 #: code:addons/project/static/src/views/project_rating_pivot/project_rating_pivot_view.js:0
-#: model:ir.model.fields,field_description:project.field_report_project_task_user__rating_last_value
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_graph
 msgid "Rating (/5)"
 msgstr ""
@@ -3710,7 +3755,7 @@ msgstr ""
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_share_wizard__access_mode__read
-msgid "Readonly"
+msgid "Read-only"
 msgstr ""
 
 #. module: project
@@ -3745,7 +3790,13 @@ msgid "Recurrent"
 msgstr ""
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.portal_layout
+msgid "Recurrent tasks"
+msgstr ""
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings__group_project_recurring_tasks
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Recurring Tasks"
 msgstr ""
@@ -3981,7 +4032,6 @@ msgstr ""
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/components/chatter/chatter_composer.xml:0
-#: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 msgid "Send"
 msgstr ""
 
@@ -3989,6 +4039,16 @@ msgstr ""
 #: model:ir.actions.act_window,name:project.action_send_mail_project_project
 #: model:ir.actions.act_window,name:project.action_send_mail_project_task
 msgid "Send Email"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_share_wizard__send_email
+msgid "Send by Email"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
+msgid "Send invitation"
 msgstr ""
 
 #. module: project
@@ -4044,13 +4104,6 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: model:mail.template,description:project.mail_template_data_project_task
-msgid ""
-"Set this template on a project's stage to automate email when tasks reach "
-"stages"
-msgstr ""
-
-#. module: project
 #: model:ir.actions.act_window,name:project.project_config_settings_action
 #: model:ir.ui.menu,name:project.project_config_settings_menu_action
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -4064,7 +4117,8 @@ msgid "Share Editable"
 msgstr ""
 
 #. module: project
-#: model:ir.actions.act_window,name:project.project_share_wizard_action
+#. odoo-python
+#: code:addons/project/models/project_project.py:0
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "Share Project"
@@ -4079,6 +4133,11 @@ msgstr ""
 #: model:ir.actions.act_window,name:project.portal_share_action
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Share Task"
+msgstr ""
+
+#. module: project
+#: model:ir.actions.act_window,name:project.project_share_wizard_action
+msgid "Share a Project"
 msgstr ""
 
 #. module: project
@@ -4098,9 +4157,24 @@ msgid "Since"
 msgstr ""
 
 #. module: project
+#: model:project.tags,name:project.project_tags_12
+msgid "Social"
+msgstr ""
+
+#. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 msgid "Software Development"
+msgstr ""
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
+msgid ""
+"Sort your tasks by sprint using milestones, tags, or a dedicated property. "
+"At the end of each sprint, just pick the remaining tasks in your list and "
+"move them all at once to the next sprint by editing the milestone, tag, or "
+"property."
 msgstr ""
 
 #. module: project
@@ -4325,6 +4399,12 @@ msgid "Task Canceled"
 msgstr ""
 
 #. module: project
+#. odoo-python
+#: code:addons/project/models/project_task.py:0
+msgid "Task Converted from To-Do"
+msgstr ""
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__task_count
 #: model:ir.model.fields,field_description:project.field_project_update__task_count
 msgid "Task Count"
@@ -4412,6 +4492,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Task Title..."
+msgstr ""
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/project_task.py:0
+msgid "Task Transferred from Project %s"
 msgstr ""
 
 #. module: project
@@ -5039,11 +5125,12 @@ msgstr ""
 msgid ""
 "Use these keywords in the title to set new tasks:\n"
 "\n"
-"            #tags Set tags on the task\n"
-"            @user Assign the task to a user\n"
-"            ! Set the task a high priority\n"
+"        30h Allocate 30 hours to the task\n"
+"        #tags Set tags on the task\n"
+"        @user Assign the task to a user\n"
+"        ! Set the task a high priority\n"
 "\n"
-"            Make sure to use the right format and order e.g. Improve the configuration screen #feature #v16 @Mitchell !"
+"        Make sure to use the right format and order e.g. Improve the configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
 
 #. module: project
@@ -5142,6 +5229,11 @@ msgstr ""
 msgid ""
 "When sharing a project in read-only mode, you are giving people access to the tasks in their portal.\n"
 "                    These people will be able to view the tasks, but not edit them."
+msgstr ""
+
+#. module: project
+#: model:project.tags,name:project.project_tags_14
+msgid "Work"
 msgstr ""
 
 #. module: project
@@ -5576,7 +5668,9 @@ msgstr ""
 
 #. module: project
 #: model:mail.template,subject:project.rating_project_request_email_template
-msgid "{{ object.project_id.company_id.name }}: Satisfaction Survey"
+msgid ""
+"{{ object.project_id.company_id.name or user.env.company.name }}: "
+"Satisfaction Survey"
 msgstr ""
 
 #. module: project

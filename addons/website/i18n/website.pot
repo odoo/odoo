@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.1alpha1\n"
+"Project-Id-Version: Odoo Server 17.2alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-08 06:51+0000\n"
-"PO-Revision-Date: 2024-01-08 06:51+0000\n"
+"POT-Creation-Date: 2024-02-12 10:36+0000\n"
+"PO-Revision-Date: 2024-02-12 10:36+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -1394,6 +1394,12 @@ msgid "About us"
 msgstr ""
 
 #. module: website
+#. odoo-python
+#: code:addons/website/models/website.py:0
+msgid "Access Denied"
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__access_token
 msgid "Access Token"
 msgstr ""
@@ -1622,6 +1628,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/snippets/s_website_form/options.js:0
 msgid "Add new %s"
+msgstr ""
+
+#. module: website
+#: model:ir.model.fields,help:website.field_website_page__is_new_page_template
+msgid ""
+"Add this page to the \"+New\" page templates. It will be added to the "
+"\"Custom\" category."
 msgstr ""
 
 #. module: website
@@ -3211,6 +3224,12 @@ msgid ""
 msgstr ""
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/components/dialog/add_page_dialog.js:0
+msgid "Copy of %s"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Copyright"
 msgstr ""
@@ -3387,6 +3406,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/seo.xml:0
 #: model_terms:ir.ui.view,arch_db:website.column_count_option
+#: model_terms:ir.ui.view,arch_db:website.new_page_template_groups
 #: model_terms:ir.ui.view,arch_db:website.s_rating_options
 msgid "Custom"
 msgstr ""
@@ -7408,6 +7428,11 @@ msgid "New Page"
 msgstr ""
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_website_page__is_new_page_template
+msgid "New Page Template"
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_theme_website_menu__new_window
 #: model:ir.model.fields,field_description:website.field_website_menu__new_window
 msgid "New Window"
@@ -7507,6 +7532,12 @@ msgstr ""
 #. module: website
 #: model_terms:ir.actions.act_window,help:website.visitor_partner_action
 msgid "No partner linked for this visitor"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/components/dialog/add_page_dialog.js:0
+msgid "No preview for the %s block because it is dynamically rendered."
 msgstr ""
 
 #. module: website
@@ -9768,6 +9799,12 @@ msgid "Solid"
 msgstr ""
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/components/dialog/page_properties.xml:0
+msgid "Some of these pages are used as new page templates."
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid ""
 "Some quick example text to build on the card title and make up the bulk of "
@@ -10472,6 +10509,12 @@ msgid "Theme Utils"
 msgstr ""
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/components/dialog/add_page_dialog.xml:0
+msgid "Then, in the Publish tab, enable \"New Page Template\"."
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.list_website_public_pages
 msgid "There are currently no pages for this website."
 msgstr ""
@@ -10660,6 +10703,12 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/components/dialog/page_properties.xml:0
+msgid "This page is used as a new page template."
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/components/translator/translator.js:0
 msgid "This translation is not editable."
 msgstr ""
@@ -10776,6 +10825,14 @@ msgid ""
 "To add a fourth column, reduce the size of these three columns using the "
 "right icon of each block. Then, duplicate one of the columns to create a new"
 " one as a copy."
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/components/dialog/add_page_dialog.xml:0
+msgid ""
+"To add your page to this category, open the page properties: \"Site -> "
+"Properties\"."
 msgstr ""
 
 #. module: website
@@ -12160,7 +12217,6 @@ msgstr ""
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/seo.xml:0
-#, python-format
 msgid "You don't have permissions to edit this record."
 msgstr ""
 
@@ -12170,12 +12226,6 @@ msgstr ""
 msgid ""
 "You have hidden this page from search results. It won't be indexed by search"
 " engines."
-msgstr ""
-
-#. module: website
-#. odoo-python
-#: code:addons/website/models/res_config_settings.py:0
-msgid "You haven't defined your domain"
 msgstr ""
 
 #. module: website

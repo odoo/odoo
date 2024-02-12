@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.1alpha1\n"
+"Project-Id-Version: Odoo Server 17.2alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-08 06:52+0000\n"
-"PO-Revision-Date: 2024-01-08 06:52+0000\n"
+"POT-Creation-Date: 2024-02-12 10:37+0000\n"
+"PO-Revision-Date: 2024-02-12 10:37+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -79,8 +79,7 @@ msgstr ""
 
 #. module: pos_online_payment
 #. odoo-javascript
-#: code:addons/pos_online_payment/static/src/app/customer_display/customer_display_template.xml:0
-#: code:addons/pos_online_payment/static/src/app/utils/online_payment_popup/online_payment_popup.xml:0
+#: code:addons/pos_online_payment/static/src/app/online_payment_popup/online_payment_popup.xml:0
 msgid "Amount:"
 msgstr ""
 
@@ -124,25 +123,19 @@ msgstr ""
 
 #. module: pos_online_payment
 #. odoo-javascript
-#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#: code:addons/pos_online_payment/static/src/overrides/components/payment_screen/payment_screen.js:0
 msgid "Invalid online payment"
 msgstr ""
 
 #. module: pos_online_payment
 #. odoo-javascript
-#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#: code:addons/pos_online_payment/static/src/overrides/components/payment_screen/payment_screen.js:0
 msgid "Invalid online payments"
 msgstr ""
 
 #. module: pos_online_payment
 #. odoo-javascript
-#: code:addons/pos_online_payment/static/src/app/utils/online_payment_popup/online_payment_popup.xml:0
-msgid "Invite your customer to scan the QR code to pay:"
-msgstr ""
-
-#. module: pos_online_payment
-#. odoo-javascript
-#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#: code:addons/pos_online_payment/static/src/overrides/components/payment_screen/payment_screen.js:0
 msgid "Invoice could not be generated"
 msgstr ""
 
@@ -175,16 +168,16 @@ msgstr ""
 
 #. module: pos_online_payment
 #. odoo-javascript
-#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
-#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
-#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
-#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#: code:addons/pos_online_payment/static/src/overrides/components/payment_screen/payment_screen.js:0
+#: code:addons/pos_online_payment/static/src/overrides/components/payment_screen/payment_screen.js:0
+#: code:addons/pos_online_payment/static/src/overrides/components/payment_screen/payment_screen.js:0
+#: code:addons/pos_online_payment/static/src/overrides/components/payment_screen/payment_screen.js:0
 msgid "Online payment unavailable"
 msgstr ""
 
 #. module: pos_online_payment
 #. odoo-javascript
-#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#: code:addons/pos_online_payment/static/src/overrides/components/payment_screen/payment_screen.js:0
 msgid "Online payments cannot have a negative amount (%s: %s)."
 msgstr ""
 
@@ -205,21 +198,19 @@ msgstr ""
 
 #. module: pos_online_payment
 #. odoo-javascript
-#: code:addons/pos_online_payment/static/src/app/customer_display/customer_display_template.xml:0
-#: code:addons/pos_online_payment/static/src/app/utils/online_payment_popup/online_payment_popup.xml:0
+#: code:addons/pos_online_payment/static/src/app/online_payment_popup/online_payment_popup.xml:0
 msgid "Order id:"
 msgstr ""
 
 #. module: pos_online_payment
 #. odoo-javascript
-#: code:addons/pos_online_payment/static/src/app/customer_display/customer_display_template.xml:0
-#: code:addons/pos_online_payment/static/src/app/utils/online_payment_popup/online_payment_popup.xml:0
+#: code:addons/pos_online_payment/static/src/app/online_payment_popup/online_payment_popup.xml:0
 msgid "Order reference:"
 msgstr ""
 
 #. module: pos_online_payment
 #. odoo-javascript
-#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#: code:addons/pos_online_payment/static/src/overrides/components/payment_screen/payment_screen.js:0
 msgid "Order saving issue"
 msgstr ""
 
@@ -247,12 +238,6 @@ msgstr ""
 #. module: pos_online_payment
 #: model:ir.model,name:pos_online_payment.model_account_payment
 msgid "Payments"
-msgstr ""
-
-#. module: pos_online_payment
-#. odoo-javascript
-#: code:addons/pos_online_payment/static/src/app/customer_display/customer_display_template.xml:0
-msgid "Please scan the QR code to open the payment page"
 msgstr ""
 
 #. module: pos_online_payment
@@ -287,14 +272,19 @@ msgstr ""
 
 #. module: pos_online_payment
 #. odoo-javascript
-#: code:addons/pos_online_payment/static/src/app/customer_display/customer_display_template.xml:0
-#: code:addons/pos_online_payment/static/src/app/utils/online_payment_popup/online_payment_popup.xml:0
+#: code:addons/pos_online_payment/static/src/app/online_payment_popup/online_payment_popup.xml:0
 msgid "QR Code to pay"
 msgstr ""
 
 #. module: pos_online_payment
 #. odoo-javascript
-#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#: code:addons/pos_online_payment/static/src/app/online_payment_popup/online_payment_popup.xml:0
+msgid "Scan the QR code to pay"
+msgstr ""
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/overrides/components/payment_screen/payment_screen.js:0
 msgid "Server error"
 msgstr ""
 
@@ -330,7 +320,7 @@ msgstr ""
 
 #. module: pos_online_payment
 #. odoo-javascript
-#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#: code:addons/pos_online_payment/static/src/overrides/components/payment_screen/payment_screen.js:0
 msgid "The QR Code for paying could not be generated."
 msgstr ""
 
@@ -348,7 +338,7 @@ msgstr ""
 
 #. module: pos_online_payment
 #. odoo-javascript
-#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#: code:addons/pos_online_payment/static/src/overrides/components/payment_screen/payment_screen.js:0
 msgid "The invoice could not be generated."
 msgstr ""
 
@@ -360,7 +350,7 @@ msgstr ""
 
 #. module: pos_online_payment
 #. odoo-javascript
-#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#: code:addons/pos_online_payment/static/src/overrides/components/payment_screen/payment_screen.js:0
 msgid "The order has not been saved correctly on the server."
 msgstr ""
 
@@ -409,13 +399,13 @@ msgstr ""
 
 #. module: pos_online_payment
 #. odoo-javascript
-#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#: code:addons/pos_online_payment/static/src/overrides/components/payment_screen/payment_screen.js:0
 msgid "The saved order could not be retrieved."
 msgstr ""
 
 #. module: pos_online_payment
 #. odoo-javascript
-#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#: code:addons/pos_online_payment/static/src/overrides/components/payment_screen/payment_screen.js:0
 msgid ""
 "The total amount of remaining online payments to execute (%s) doesn't "
 "correspond to the remaining unpaid amount of the order (%s)."
@@ -423,14 +413,14 @@ msgstr ""
 
 #. module: pos_online_payment
 #. odoo-javascript
-#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
-#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#: code:addons/pos_online_payment/static/src/overrides/components/payment_screen/payment_screen.js:0
+#: code:addons/pos_online_payment/static/src/overrides/components/payment_screen/payment_screen.js:0
 msgid "There are online payments that were missing in your view."
 msgstr ""
 
 #. module: pos_online_payment
 #. odoo-javascript
-#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#: code:addons/pos_online_payment/static/src/overrides/components/payment_screen/payment_screen.js:0
 msgid ""
 "There is a problem with the server. The order cannot be saved and therefore "
 "the online payment is not possible."
@@ -438,7 +428,7 @@ msgstr ""
 
 #. module: pos_online_payment
 #. odoo-javascript
-#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#: code:addons/pos_online_payment/static/src/overrides/components/payment_screen/payment_screen.js:0
 msgid ""
 "There is a problem with the server. The order online payment status cannot "
 "be retrieved."
@@ -446,7 +436,7 @@ msgstr ""
 
 #. module: pos_online_payment
 #. odoo-javascript
-#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#: code:addons/pos_online_payment/static/src/overrides/components/payment_screen/payment_screen.js:0
 msgid ""
 "There is a problem with the server. The order online payment status cannot "
 "be retrieved. Are you sure there is no online payment for this order ?"
@@ -506,8 +496,8 @@ msgstr ""
 
 #. module: pos_online_payment
 #. odoo-javascript
-#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
-#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#: code:addons/pos_online_payment/static/src/overrides/components/payment_screen/payment_screen.js:0
+#: code:addons/pos_online_payment/static/src/overrides/components/payment_screen/payment_screen.js:0
 msgid "Updated online payments"
 msgstr ""
 
@@ -520,7 +510,7 @@ msgstr ""
 
 #. module: pos_online_payment
 #. odoo-javascript
-#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#: code:addons/pos_online_payment/static/src/overrides/components/payment_screen/payment_screen.js:0
 msgid "Yes"
 msgstr ""
 
