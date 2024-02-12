@@ -378,4 +378,26 @@ QUnit.module('partner_autocomplete', {
             "There should be no option when partner field has no_create attribute"
         );
     });
+
+    QUnit.test("Display auto complete suggestion for canCreate", async function (assert) {
+        assert.expect(1);
+        const partnerMakeViewParams = {
+            ...makeViewParams,
+            arch:
+                `<form>
+                    <field name="company_type"/>
+                    <field name="parent_id" widget="res_partner_many2one" options="{'no_create': False}"/>
+                </form>`
+        }
+        await makeView(partnerMakeViewParams);
+        const input = target.querySelector("[name='parent_id'] input");
+        await editInputNoChangeEvent(input, "blabla");
+        const autocompleteContainer = input.parentElement;
+        assert.containsN(
+            autocompleteContainer,
+            ".o-autocomplete--dropdown-item",
+            8,
+            "Clearbit and Odoo autocomplete options should be shown"
+        );
+    });
 });
