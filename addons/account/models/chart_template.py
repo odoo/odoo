@@ -302,8 +302,7 @@ class AccountChartTemplate(models.AbstractModel):
                             for _c, _id, repartition_line in values.get('repartition_line_ids', []):
                                 tags = repartition_line.get('tag_ids')
                                 repartition_line.clear()
-                                if tags:
-                                    repartition_line['tag_ids'] = tags
+                                repartition_line['tag_ids'] = tags or [Command.clear()]
                 elif model_name == 'account.account':
                     # Point or create xmlid to existing record to avoid duplicate code
                     account = self.ref(xmlid, raise_if_not_found=False)
