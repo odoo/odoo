@@ -105,7 +105,7 @@ export class QuestionPageListRenderer extends ListRenderer {
      */
     focusCell(column, forward = true) {
         const actualColumn = column.name
-            ? this.state.columns.find((col) => col.name === column.name)
+            ? this.columns.find((col) => col.name === column.name)
             : column;
         super.focusCell(actualColumn, forward);
     }

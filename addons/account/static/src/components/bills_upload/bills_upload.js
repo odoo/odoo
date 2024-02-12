@@ -134,7 +134,7 @@ export class AccountMoveUploadListRenderer extends ListRenderer {
 
     setup() {
         super.setup();
-        this.state.dropzoneVisible = false;
+        this.state = useState({ dropzoneVisible: false });
     }
 }
 

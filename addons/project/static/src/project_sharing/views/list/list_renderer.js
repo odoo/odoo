@@ -2,14 +2,13 @@
 
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { ListRenderer } from "@web/views/list/list_renderer";
-import { onWillUpdateProps } from "@odoo/owl";
+import { onWillRender } from "@odoo/owl";
 
 export class ProjectSharingListRenderer extends ListRenderer {
     setup() {
         super.setup(...arguments);
-        this.setColumns(this.allColumns);
-        onWillUpdateProps((nextProps) => {
-            this.setColumns(nextProps.archInfo.columns);
+        onWillRender(() => {
+            this.setColumns(this.allColumns);
         });
     }
 
@@ -27,7 +26,7 @@ export class ProjectSharingListRenderer extends ListRenderer {
         } else {
             this.allColumns = columns;
         }
-        this.state.columns = this.allColumns.filter(
+        this.columns = this.allColumns.filter(
             (col) => !col.optional || this.optionalActiveFields[col.name]
         );
     }
