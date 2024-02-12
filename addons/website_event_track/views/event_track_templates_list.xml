@@ -253,7 +253,7 @@
                         <span class="h4 m-0"
                             t-out="tracks_header_name"/>
                     </div>
-                    <a t-attf-class="my-auto align-self-start stretched-link text-black {{ 'collapsed' if tracks_info['default_collapsed'] else '' }}"
+                    <a t-attf-class="my-auto align-self-start stretched-link text-reset {{ 'collapsed' if tracks_info['default_collapsed'] else '' }}"
                         t-attf-href="#collapse_session_list_{{ tracks_info_index }}"
                         t-attf-aria-controls="collapse_session_list_{{ tracks_info_index }}"
                         t-att-aria-expanded="'false' if tracks_info['default_collapsed'] else 'true'"
@@ -295,14 +295,14 @@
                             </div>
                             <!-- Main column: name, speaker -->
                             <div class="col-12">
-                                <span class="h5 mb0">
+                                <span class="fw-bold mb0">
                                     <a t-if="track.website_published or is_event_user"
-                                        class="me-2"
+                                        class="text-reset me-2"
                                         t-att-href="track.website_url">
                                         <span t-field="track.name"/>
                                     </a>
                                     <t t-else="">
-                                        <span class="me-2" t-field="track.name"/>
+                                        <span class="text-reset me-2" t-field="track.name"/>
                                     </t>
                                     <span t-if="not track.website_published and is_event_user"
                                         class="badge text-bg-danger o_wevent_online_badge_unpublished">
@@ -346,7 +346,7 @@
 <template id="track_cards_section" name="Track Cards">
     <div t-foreach="tracks" t-as="track" class="col-md-6 col-lg-4 col-xl-3 mb-4">
         <t t-if="track.website_published or is_event_user">
-            <a t-att-href="'/event/%s/track/%s' % (slug(track.event_id), slug(track))" class="text-decoration-none">
+            <a t-att-href="'/event/%s/track/%s' % (slug(track.event_id), slug(track))" class="text-decoration-none text-reset">
                 <t t-call="website_event_track.track_card"/>
             </a>
         </t>
@@ -401,15 +401,15 @@
             <footer class="small align-self-end w-100 p-3">
                 <div class="d-flex justify-content-between align-items-center">
                     <!-- Speaker -->
-                    <span class="text-muted text-truncate" t-field="track.partner_name" itemprop="performer"/>
+                    <span class="opacity-75 text-truncate" t-field="track.partner_name" itemprop="performer"/>
                     <!-- Starts -->
-                    <span class="text-muted ms-auto">
+                    <span class="opacity-75 ms-auto">
                         <t t-if="track.track_start_remaining &gt;= 60">In
-                            <span class="text-muted ms-auto" t-field="track.track_start_remaining" itemprop="duration"
+                            <span class="opacity-75 ms-auto" t-field="track.track_start_remaining" itemprop="duration"
                                 t-options="{'widget': 'duration', 'digital': False, 'format': 'short', 'unit': 'second', 'round': 'minute'}"/>
                         </t>
                         <t t-elif="track.track_start_relative &gt;= 60">
-                            <span class="text-muted ms-auto" t-field="track.track_start_relative" itemprop="duration"
+                            <span class="opacity-75 ms-auto" t-field="track.track_start_relative" itemprop="duration"
                                 t-options="{'widget': 'duration', 'digital': False, 'format': 'short', 'unit': 'second', 'round': 'minute'}"/>
                             ago
                         </t>

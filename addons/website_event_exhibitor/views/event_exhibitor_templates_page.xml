@@ -168,16 +168,16 @@
 <template id="exhibitor_aside" name="Exhibitor: Aside">
     <div t-att-class="'o_wevent_online_page_aside o_wesponsor_exhibitor_aside col-12 mt-3 ps-0 pe-0 border %s' % ('col-lg-2' if option_widescreen else 'col-lg-3')">
         <div class="o_wevent_online_page_aside_content">
-            <div class="d-flex align-items-center justify-content-between">
+            <div class="text-bg-light d-flex align-items-center justify-content-between pe-3">
                 <span class="h5 m-3">Other exhibitors</span>
                 <a href="#collapse_exhibitor_aside" data-bs-toggle="collapse"
-                   class="o_wevent_online_page_aside_collapse d-lg-none p-2 text-decoration-none collapsed">
+                   class="o_wevent_online_page_aside_collapse d-lg-none p-2 text-decoration-none text-reset collapsed">
                     <i class="oi oi-chevron-down d-lg-none"/>
                 </a>
             </div>
             <ul id="collapse_exhibitor_aside" class="list-group list-group-flush collapse d-lg-block">
                 <li class="list-group-item list-group-item-action" t-foreach="sponsors_other" t-as="sponsor_other">
-                    <a class="d-flex flex-wrap flex-md-nowrap text-decoration-none text-dark"
+                    <a class="d-flex flex-wrap flex-md-nowrap text-decoration-none text-reset"
                         t-att-href="sponsor_other.website_url"
                         t-att-data-publish="sponsor_other.website_published and 'on' or 'off'">
                         <div class="d-flex flex-column align-items-center">
@@ -195,7 +195,7 @@
                             <span class="d-flex align-items-baseline o_wesponsor_sponsor_name">
                                 <span class="d-inline-block text-truncate" t-out="sponsor_other.name"/>
                             </span>
-                            <small class="text-muted" t-out="sponsor_other.subtitle"/>
+                            <small class="opacity-75" t-out="sponsor_other.subtitle"/>
                             <div class="d-inline-block float-end" t-if="not sponsor_other.website_published">
                                 <small class="badge text-bg-danger">Unpublished</small>
                             </div>

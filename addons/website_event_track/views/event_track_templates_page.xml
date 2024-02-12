@@ -206,7 +206,7 @@
                         <li t-foreach="tracks_other" t-as="track_other" class="list-group-item list-group-item-action">
                             <a t-if="is_event_user or track_other.is_published"
                                 t-att-data-publish="track_other.website_published and 'on' or 'off'"
-                                class="d-flex flex-column flex-wrap flex-md-nowrap text-decoration-none text-dark"
+                                class="d-flex flex-column flex-wrap flex-md-nowrap text-decoration-none text-reset"
                                 t-att-href="track_other.website_url">
                                 <t t-call="website_event_track.event_track_aside_other_track"/>
                             </a>
@@ -226,7 +226,7 @@
 <template id="event_track_aside_other_track">
     <span t-out="track_other.name" class="fw-bold"/>
     <div class="d-flex flex-column flex-lg-row flex-wrap justify-content-between align-items-start mt-1">
-        <small class="text-muted" t-out="track_other.partner_name"/>
+        <small class="opacity-75" t-out="track_other.partner_name"/>
         <div class="d-inline-block o_wesession_track_aside_info text-truncate">
             <small t-if="not track_other.website_published and user_event_manager"
                 class="badge text-bg-danger py-2 px-3">Unpublished</small>

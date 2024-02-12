@@ -103,7 +103,7 @@
 <template id="meeting_room_aside" name="Meeting Room: Aside">
     <div t-att-class="'o_wevent_online_page_aside col-12 mt-3 ps-0 pe-0 border %s' % ('col-lg-3 col-xl-2' if option_widescreen else 'col-lg-4 col-xl-3')">
         <div class="o_wevent_online_page_aside_content">
-            <div class="d-flex align-items-center justify-content-between pe-3 text-bg-light me-2">
+            <div class="d-flex align-items-center justify-content-between pe-3 text-bg-light">
                 <h5 class="m-3 fs-6">Other Rooms</h5>
                 <a href="#collapse_meet_room_aside" data-bs-toggle="collapse" class="d-lg-none p-2 text-decoration-none o_wevent_online_page_aside_collapse collapsed text-reset">
                     <i class="oi oi-chevron-down d-lg-none"/>
@@ -111,13 +111,13 @@
             </div>
             <ul id="collapse_meet_room_aside" class="list-group list-group-flush collapse d-lg-block border-top">
                 <li class="list-group-item list-group-item-action" t-foreach="meeting_rooms_other" t-as="meeting_room_other">
-                    <a class="text-decoration-none text-dark"
+                    <a class="text-decoration-none text-reset"
                         t-att-href="'/event/%s/meeting_room/%s' % (slug(event), slug(meeting_room_other))">
                         <div class="flex-grow-1 mw-100">
                             <div class="text-truncate fw-bold" t-out="meeting_room_other.name"/>
-                            <span class="text-muted" t-out="meeting_room_other.summary"></span>
+                            <span class="opacity-75" t-out="meeting_room_other.summary"></span>
                             <div class="d-flex flex-column flex-xl-row flex-wrap justify-content-between align-items-center mt-1">
-                                <p class="d-flex justify-content-between align-items-center gap-2 m-0 text-muted small">
+                                <p class="d-flex justify-content-between align-items-center gap-2 m-0 opacity-75 small">
                                     <i class="fa fa-user"></i>
                                     <t t-out="meeting_room_other.room_participant_count"/>
                                     <t t-out="meeting_room_other.target_audience"/>

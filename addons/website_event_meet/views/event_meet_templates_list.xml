@@ -118,7 +118,7 @@
     </t>
 
     <a t-if="is_event_user or not meeting_room.room_is_full"
-        class="card o_wevent_meeting_room_card w-100 my-2 d-block text-decoration-none rounded-0 text-dark"
+        class="card o_wevent_meeting_room_card w-100 my-2 d-block text-decoration-none rounded-0 bg-transparent text-reset"
         t-att-data-meeting-room-id="meeting_room.id"
         t-att-data-open-room="opened"
         t-att-data-is-event-manager="int(is_event_user)"
