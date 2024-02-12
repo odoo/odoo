@@ -15,8 +15,6 @@ class RepairOrder(models.Model):
                 data.append((_("Product to Repair"), record.product_id.name))
             if record.lot_id:
                 data.append((_("Lot/Serial Number"), record.lot_id.name))
-            if record.guarantee_limit:
-                data.append((_("Warranty"), format_date(self.env, record.guarantee_limit)))
             data.append((_("Printing Date"), format_date(self.env, fields.Date.today())))
 
     def _compute_l10n_din5008_document_title(self):
