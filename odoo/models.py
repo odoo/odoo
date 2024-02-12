@@ -5631,14 +5631,14 @@ class BaseModel(metaclass=MetaModel):
 
         """
         self.ensure_one()
-        vals = self.with_context(active_test=False).copy_data(default)[0]
-        record_copy = self.create(vals)
-        self.with_context(from_copy_translation=True).copy_translations(record_copy, excluded=default or ())
-
-        return record_copy
+        _logger.warning(
+            "Copy should be called using copy_multi. Use the batched definition instead.",
+            stack_info=True,
+        )
+        return self.copy_multi(default_list=[default])
 
     @api.returns('self')
-    def copy_multi(self, default=None):
+    def copy_multi(self, default_list=None):
         """ copy_multi(default=None)
 
         Duplicate records in ``self`` updating it with default values
@@ -5648,7 +5648,17 @@ class BaseModel(metaclass=MetaModel):
         :returns: new records
 
         """
-        return self.browse([record.copy(default).id for record in self])
+        assert default_list is None or isinstance(default_list, list), _('Copy default values should be a list.')
+        assert default_list is None or len(self) == len(default_list), _('There should be as many default values as records to copy.')
+        if default_list is None:
+            default_list = [None] * len(self)
+        vals_list = []
+        for record, default in zip(self.with_context(active_test=False), default_list):
+            vals_list.append(record.copy_data(default)[0])
+        records_copy = self.create(vals_list)
+        for record_copy, default in zip(records_copy.with_context(from_copy_translation=True), default_list):
+            record_copy.copy_translations(record_copy, excluded=default or ())
+        return records_copy
 
     @api.returns('self')
     def exists(self):

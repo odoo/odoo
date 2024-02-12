@@ -232,9 +232,11 @@ class Event(models.Model):
             event.question_ids = command
 
             # copy questions so changes in the event don't affect the event type
-            event.question_ids += event.event_type_id.question_ids.copy_multi({
+            questions_to_copy = event.event_type_id.question_ids
+            default_list = [{
                 'event_type_id': False,
-            })
+            } for question in questions_to_copy]
+            event.question_ids += event.event_type_id.question_ids.copy_multi(default_list=default_list)
 
     # -------------------------------------------------------------------------
     # CONSTRAINT METHODS
