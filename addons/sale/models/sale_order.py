@@ -962,11 +962,16 @@ class SaleOrder(models.Model):
             This method should be extended when the confirmation should generated
             other documents. In this method, the SO are in 'sale' state (not yet 'done').
         """
-        # create an analytic account if at least an expense product
+        self._generate_analytic_account()
+
+    def _generate_analytic_account(self):
+        """ Generate an analytic account for the SO confirmed if at least an expense product """
         for order in self:
-            if any(expense_policy not in [False, 'no'] for expense_policy in order.order_line.product_id.mapped('expense_policy')):
-                if not order.analytic_account_id:
-                    order._create_analytic_account()
+            if (
+                not order.analytic_account_id
+                and any(expense_policy not in [False, 'no'] for expense_policy in order.order_line.product_id.mapped('expense_policy'))
+            ):
+                order._create_analytic_account()
 
     def _send_order_confirmation_mail(self):
         """ Send a mail to the SO customer to inform them that their order has been confirmed.
