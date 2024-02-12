@@ -509,7 +509,7 @@
 
 <!-- Utility template: Post a Comment -->
 <template id="post_comment">
-    <div class="o_wforum_post_comments_container rounded">
+    <div class="o_wforum_post_comments_container d-flex flex-column gap-2 rounded">
         <div class="css_editable_mode_hidden o_wforum_readable">
             <form t-att-id="_collapse_uid" class="oe_comment_grey js_website_submit_form js_wforum_submit_form collapse rounded o_cc2 p-2"
                 t-attf-action="/forum/#{slug(forum)}/post/#{slug(object)}/comment" method="POST">
@@ -528,7 +528,7 @@
             </form>
         </div>
 
-        <div t-if="object.website_message_ids" t-foreach="reversed(object.website_message_ids)" t-as="message" class="o_wforum_post_comments d-flex flex-column gap-2">
+        <div t-if="object.website_message_ids" t-foreach="reversed(object.website_message_ids)" t-as="message">
             <t t-set="_comment_author" t-value="message.create_uid.id"/>
             <div t-attf-class="o_wforum_post_comment d-flex rounded o_cc2 ps-3" t-att-data-last-activity="message.create_date">
                 <t t-set="allow_post_comment" t-value="(object.parent_id and object.parent_id.state != 'close' and object.parent_id.active != False)
