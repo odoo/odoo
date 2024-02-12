@@ -506,7 +506,7 @@
 
 <!-- Utility template: Post a Comment -->
 <template id="post_comment">
-    <div class="o_wforum_post_comments_container rounded">
+    <div class="o_wforum_post_comments_container d-flex flex-column gap-2 rounded">
         <div class="css_editable_mode_hidden o_wforum_readable">
             <form t-att-id="_collapse_uid" class="oe_comment_grey js_website_submit_form js_wforum_submit_form collapse rounded o_cc2 p-2"
                 t-attf-action="/forum/#{slug(forum)}/post/#{slug(object)}/comment" method="POST">
