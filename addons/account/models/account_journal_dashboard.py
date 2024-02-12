@@ -131,12 +131,14 @@ class account_journal(models.Model):
               FROM account_move move
               JOIN res_company company ON company.id = move.company_id
              WHERE move.journal_id = ANY(%(journal_ids)s)
+               AND move.company_id = ANY(%(company_ids)s)
                AND (move.state = 'posted' OR (move.state = 'draft' AND move.name != '/'))
                AND (company.fiscalyear_lock_date IS NULL OR move.date > company.fiscalyear_lock_date)
           GROUP BY move.journal_id, move.sequence_prefix
             HAVING COUNT(*) != MAX(move.sequence_number) - MIN(move.sequence_number) + 1
         """, {
             'journal_ids': self.ids,
+            'company_ids': self.env.companies.ids,
         })
         return self.env.cr.fetchall()
 
@@ -149,7 +151,10 @@ class account_journal(models.Model):
         res = {
             journal.id: count
             for journal, count in self.env['account.move']._read_group(
-                domain=[('journal_id', 'in', self.ids)],
+                domain=[
+                    *self.env['account.move']._check_company_domain(self.env.companies),
+                    ('journal_id', 'in', self.ids),
+                ],
                 groupby=['journal_id'],
                 aggregates=['__count'],
             )
@@ -186,10 +191,11 @@ class account_journal(models.Model):
              WHERE move.journal_id = ANY(%s)
                AND move.date > %s
                AND move.date <= %s
+               AND move.company_id = ANY(%s)
           GROUP BY move.date, move.journal_id
           ORDER BY move.date DESC
         """
-        self.env.cr.execute(query, (self.ids, last_month, today))
+        self.env.cr.execute(query, (self.ids, last_month, today, self.env.companies.ids))
         query_result = group_by_journal(self.env.cr.dictfetchall())
 
         result = {}
@@ -200,8 +206,7 @@ class account_journal(models.Model):
             journal_result = query_result[journal.id]
 
             color = '#875A7B' if 'e' in version else '#7c7bad'
-            accessible = journal.company_id.id in self.env.company._accessible_branches().ids
-            is_sample_data = not accessible or not journal.has_statement_lines
+            is_sample_data = not journal_result and not journal.has_statement_lines
 
             data = []
             if is_sample_data:
@@ -248,10 +253,12 @@ class account_journal(models.Model):
                AND move.state = 'posted'
                AND move.payment_state in ('not_paid', 'partial')
                AND move.move_type IN %(invoice_types)s
+               AND move.company_id = ANY(%(company_ids)s)
           GROUP BY move.journal_id
         """, {
             'invoice_types': tuple(self.env['account.move'].get_invoice_types(True)),
             'journal_ids': self.ids,
+            'company_ids': self.env.companies.ids,
             'start_week1': first_day_of_week + timedelta(days=-7),
             'start_week2': first_day_of_week + timedelta(days=0),
             'start_week3': first_day_of_week + timedelta(days=7),
@@ -329,7 +336,10 @@ class account_journal(models.Model):
         res = {
             journal.id: count
             for journal, count in self.env[model]._read_group(
-                domain=[('journal_id', 'in', self.ids)] + domain,
+                domain=[
+                   *self.env[model]._check_company_domain(self.env.companies),
+                   ('journal_id', 'in', self.ids),
+               ] + domain,
                 groupby=['journal_id'],
                 aggregates=['__count'],
             )
@@ -376,9 +386,10 @@ class account_journal(models.Model):
                 [('account_id', '=', journal.default_account_id.id)]
             )
         misc_domain = [
+            *self.env['account.move.line']._check_company_domain(self.env.companies),
             ('statement_line_id', '=', False),
             ('parent_state', '=', 'posted'),
-        ] + expression.OR(misc_domain)
+      ] + expression.OR(misc_domain)
 
         misc_totals = {
             account: (balance, count)
@@ -394,6 +405,7 @@ class account_journal(models.Model):
             for journal, amount, count in self.env['account.bank.statement.line']._read_group(
                 domain=[
                     ('journal_id', 'in', bank_cash_journals.ids),
+                    ('move_id.company_id', 'in', self.env.companies.ids),
                     ('move_id.to_check', '=', True),
                     ('move_id.state', '=', 'posted'),
                 ],
@@ -408,7 +420,7 @@ class account_journal(models.Model):
             has_outstanding, outstanding_pay_account_balance = outstanding_pay_account_balances[journal.id]
             to_check_balance, number_to_check = to_check.get(journal, (0, 0))
             misc_balance, number_misc = misc_totals.get(journal.default_account_id, (0, 0))
-            accessible = journal.company_id.id in self.env.company._accessible_branches().ids
+            accessible = journal.company_id.id in journal.company_id._accessible_branches().ids
 
             dashboard_data[journal.id].update({
                 'number_to_check': number_to_check,
@@ -486,7 +498,11 @@ class account_journal(models.Model):
         to_check_vals = {
             journal.id: (amount_total_signed_sum, count)
             for journal, amount_total_signed_sum, count in self.env['account.move']._read_group(
-                domain=[('journal_id', 'in', sale_purchase_journals.ids), ('to_check', '=', True)],
+                domain=[
+                    *self.env['account.move']._check_company_domain(self.env.companies),
+                    ('journal_id', 'in', sale_purchase_journals.ids),
+                    ('to_check', '=', True),
+                ],
                 groupby=['journal_id'],
                 aggregates=['amount_total_signed:sum', '__count'],
             )
@@ -522,7 +538,11 @@ class account_journal(models.Model):
         to_check_vals = {
             journal.id: (amount_total_signed_sum, count)
             for journal, amount_total_signed_sum, count in self.env['account.move']._read_group(
-                domain=[('journal_id', 'in', general_journals.ids), ('to_check', '=', True)],
+                domain=[
+                    *self.env['account.move']._check_company_domain(self.env.companies),
+                    ('journal_id', 'in', general_journals.ids),
+                    ('to_check', '=', True),
+                ],
                 groupby=['journal_id'],
                 aggregates=['amount_total_signed:sum', '__count'],
             )
@@ -621,6 +641,7 @@ class account_journal(models.Model):
                                   balance_end_real
                              FROM account_bank_statement
                             WHERE journal_id = journal.id
+                              AND company_id = ANY(%s)
                          ORDER BY date DESC, id DESC
                             LIMIT 1
                    ) statement ON TRUE
@@ -632,11 +653,12 @@ class account_journal(models.Model):
                             WHERE stl.statement_id IS NULL
                               AND move.state != 'cancel'
                               AND move.journal_id = journal.id
+                              AND move.company_id = ANY(%s)
                               AND stl.internal_index >= COALESCE(statement.first_line_index, '')
                             LIMIT 1
                    ) without_statement ON TRUE
              WHERE journal.id = ANY(%s)
-        """, [(self.ids)])
+        """, [self.env.companies.ids, self.env.companies.ids, self.ids])
         query_res = {res['journal_id']: res for res in self.env.cr.dictfetchall()}
         result = {}
         for journal in self:
@@ -662,8 +684,9 @@ class account_journal(models.Model):
              WHERE payment.is_matched IS NOT TRUE
                AND move.state = 'posted'
                AND move.journal_id = ANY(%s)
+               AND move.company_id = ANY(%s)
           GROUP BY move.company_id, move.journal_id, move.currency_id
-        """, [self.ids])
+        """, [self.ids, self.env.companies.ids])
         query_result = group_by_journal(self.env.cr.dictfetchall())
         result = {}
         for journal in self:
@@ -717,6 +740,7 @@ class account_journal(models.Model):
         self.ensure_one()
         return self.env['account.bank.statement.line'].search([
             ('journal_id', '=', self.id),
+            ('move_id.company_id', 'in', self.env.companies.ids),
             ('move_id.to_check', '=', True),
             ('move_id.state', '=', 'posted'),
         ])
@@ -837,7 +861,11 @@ class account_journal(models.Model):
             'res_model': 'account.move',
             'view_mode': 'list,form',
             'domain': expression.OR(
-                [('journal_id', '=', journal_id), ('sequence_prefix', '=', prefix)]
+                [
+                    *self.env['account.move']._check_company_domain(self.env.companies),
+                    ('journal_id', '=', journal_id),
+                    ('sequence_prefix', '=', prefix),
+                ]
                 for journal_id, prefix in has_sequence_holes
             ),
             'context': {
