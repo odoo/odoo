@@ -34,8 +34,8 @@ class ReportMoOverview(models.AbstractModel):
             doc['show_mo_costs'] = data.get('moCosts') == '1'
             doc['show_product_costs'] = data.get('productCosts') == '1'
             doc['show_uom'] = self.env.user.user_has_groups('uom.group_uom')
-            doc['data_mo_unit_cost'] = doc['summary'].get('mo_cost', 0) / doc['summary'].get('quantity', 1)
-            doc['data_product_unit_cost'] = doc['summary'].get('product_cost', 0) / doc['summary'].get('quantity', 1)
+            doc['data_mo_unit_cost'] = doc['summary'].get('mo_cost', 0) / (doc['summary'].get('quantity') or 1)
+            doc['data_product_unit_cost'] = doc['summary'].get('product_cost', 0) / (doc['summary'].get('quantity') or 1)
             doc['unfolded_ids'] = set(json.loads(data.get('unfoldedIds', '[]')))
 
             docs.append(doc)
@@ -65,8 +65,8 @@ class ReportMoOverview(models.AbstractModel):
 
     def _get_report_extra_lines(self, summary):
         currency = summary.get('currency', self.env.company)
-        unit_mo_cost = currency.round(summary.get('mo_cost', 0) / summary.get('quantity', 1))
-        unit_product_cost = currency.round(summary.get('product_cost', 0) / summary.get('quantity', 1))
+        unit_mo_cost = currency.round(summary.get('mo_cost', 0) / (summary.get('quantity') or 1))
+        unit_product_cost = currency.round(summary.get('product_cost', 0) / (summary.get('quantity') or 1))
         return {
             'unit_mo_cost': unit_mo_cost,
             'unit_mo_cost_decorator': self._get_comparison_decorator(unit_product_cost, unit_mo_cost, currency.rounding),
@@ -88,7 +88,7 @@ class ReportMoOverview(models.AbstractModel):
             'formatted_state': self._format_state(production),
             'quantity': production.product_qty,
             'uom_name': production.product_uom_id.display_name,
-            'uom_precision': self._get_uom_precision(production.product_uom_id.rounding),
+            'uom_precision': self._get_uom_precision(production.product_uom_id.rounding or 0.01),
             'quantity_free': product.uom_id._compute_quantity(product.free_qty, production.product_uom_id) if product.type == 'product' else False,
             'quantity_on_hand': product.uom_id._compute_quantity(product.qty_available, production.product_uom_id) if product.type == 'product' else False,
             'quantity_reserved': 0.0,
