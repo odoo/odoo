@@ -9,7 +9,7 @@ import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { Component, onMounted, useExternalListener, useState, reactive } from "@odoo/owl";
 import { CategorySelector } from "@point_of_sale/app/generic_components/category_selector/category_selector";
 import { Input } from "@point_of_sale/app/generic_components/inputs/input/input";
-import { Numpad } from "@point_of_sale/app/generic_components/numpad/numpad";
+import { Numpad, getButtons } from "@point_of_sale/app/generic_components/numpad/numpad";
 import { ActionpadWidget } from "@point_of_sale/app/screens/product_screen/action_pad/action_pad";
 import { Orderline } from "@point_of_sale/app/generic_components/orderline/orderline";
 import { OrderWidget } from "@point_of_sale/app/generic_components/order_widget/order_widget";
@@ -114,29 +114,12 @@ export class ProductScreen extends Component {
     }
 
     getNumpadButtons() {
-        return [
-            { value: "1" },
-            { value: "2" },
-            { value: "3" },
+        return getButtons(this.env, [
             { value: "quantity", text: "Qty" },
-            { value: "4" },
-            { value: "5" },
-            { value: "6" },
-            {
-                value: "discount",
-                text: "% Disc",
-                disabled: !this.pos.config.manual_discount,
-            },
-            { value: "7" },
-            { value: "8" },
-            { value: "9" },
+            { value: "discount", text: "% Disc", disabled: !this.pos.config.manual_discount },
             { value: "price", text: "Price", disabled: !this.pos.cashierHasPriceControlRights() },
             { value: "-", text: "+/-" },
-            { value: "0" },
-            { value: this.env.services.localization.decimalPoint },
-            // Unicode: https://www.compart.com/en/unicode/U+232B
-            { value: "Backspace", text: "⌫" },
-        ].map((button) => ({
+        ]).map((button) => ({
             ...button,
             class: this.pos.numpadMode === button.value ? "active border-primary" : "",
         }));

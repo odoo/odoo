@@ -92,7 +92,6 @@ patch(ControlButtons.prototype, {
     async clickPromoCode() {
         this.dialog.add(TextInputPopup, {
             title: _t("Enter Code"),
-            startingValue: "",
             placeholder: _t("Gift card or Discount code"),
             getPayload: (code) => {
                 code = code.trim();

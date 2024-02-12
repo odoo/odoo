@@ -6,6 +6,7 @@ import * as Order from "@point_of_sale/../tests/tours/helpers/generic_components
 import { inLeftSide } from "@point_of_sale/../tests/tours/helpers/utils";
 import * as Acceptance from "@point_of_sale/../tests/tours/helpers/AcceptanceTourMethod";
 import * as ProductScreen from "./helpers/ProductScreenTourMethods";
+import * as PaymentScreen from "@point_of_sale/../tests/tours/helpers/PaymentScreenTourMethods";
 
 registry.category("web_tour.tours").add("pos_basic_order_01", {
     test: true,
@@ -18,13 +19,13 @@ registry.category("web_tour.tours").add("pos_basic_order_01", {
             Acceptance.addProductToOrder("Desk Organizer"),
             inLeftSide(Order.hasTotal("10.20")),
             Acceptance.gotoPaymentScreenAndSelectPaymentMethod(),
-            Acceptance.fillPaymentValue("Cash", "5"),
+            PaymentScreen.enterPaymentLineAmount("Cash", "5"),
             Acceptance.selectedPaymentHas("Cash", "5.0"),
             Acceptance.verifyPaymentRemaining("5.20"),
             Acceptance.verifyPaymentChange("0.00"),
             Acceptance.payWithBank(),
             Acceptance.selectedPaymentHas("Bank", "5.2"),
-            Acceptance.fillPaymentValue("Bank", "6"),
+            PaymentScreen.enterPaymentLineAmount("Bank", "6"),
             Acceptance.selectedPaymentHas("Bank", "6.0"),
             Acceptance.verifyPaymentRemaining("0.00"),
             Acceptance.verifyPaymentChange("0.80"),

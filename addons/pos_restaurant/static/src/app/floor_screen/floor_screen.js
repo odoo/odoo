@@ -479,10 +479,7 @@ export class FloorScreen extends Component {
             return;
         }
         this.dialog.add(NumberPopup, {
-            startingValue: 0,
-            cheap: true,
             title: _t("Number of Seats?"),
-            isInputSelected: true,
             getPayload: (num) => {
                 const newSeatsNum = parseInt(num, 10);
                 selectedTables.forEach((selectedTable) => {
