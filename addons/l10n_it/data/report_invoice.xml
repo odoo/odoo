@@ -1,15 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!-- TODO: remove view in master -->
     <template id="report_invoice_document" inherit_id="account.report_invoice_document">
-        <xpath expr="//p[@name='note']" position="replace">
-            <p name="note">
-                <t t-if="o.company_id.country_id.code == 'IT' and o.fiscal_position_id.note">
-                    <span t-field="o.fiscal_position_id.note"/>
-                </t>
-                <t t-else="">
-                    <span/>
-                </t>
-            </p>
-        </xpath>
     </template>
 </odoo>
