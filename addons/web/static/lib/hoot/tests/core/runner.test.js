@@ -63,15 +63,15 @@ describe(parseUrl(import.meta.url), () => {
     test("can register test tags", async () => {
         const runner = new TestRunner();
         runner.describe("suite", () => {
-            let testFn = runner.test.debug.only.skip;
-            for (let i = 1; i <= 10; i++) {
+            let testFn = runner.test.debug.only.skip; // 3
+            for (let i = 1; i <= 10; i++) { // 10
                 testFn = testFn.tags`Tag-${i}`;
             }
 
             testFn("tagged test", () => {});
         });
 
-        expect(runner.tags.size).toBe(10);
-        expect(runner.tests.values().next().value.tags.length).toBe(10 + 3);
+        expect(runner.tags.size).toBe(13);
+        expect(runner.tests.values().next().value.tags.length).toBe(13);
     });
 });

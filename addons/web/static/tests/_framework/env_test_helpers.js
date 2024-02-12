@@ -1,4 +1,5 @@
 import { after, registerDebugInfo } from "@odoo/hoot";
+import { startRouter } from "@web/core/browser/router";
 import { createDebugContext } from "@web/core/debug/debug_context";
 import { registry } from "@web/core/registry";
 import { makeEnv, startServices } from "@web/env";
@@ -75,6 +76,7 @@ export async function makeMockEnv(partialEnv) {
     registerDebugInfo(currentEnv);
     restoreRegistryAfterTest(registry);
 
+    startRouter();
     await startServices(currentEnv);
 
     after(() => (currentEnv = null));

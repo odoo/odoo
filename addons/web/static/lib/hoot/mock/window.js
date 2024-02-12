@@ -207,6 +207,12 @@ export function cleanupWindow() {
     // Cookies
     mockCookie.clear();
 
+    // History
+    mockHistory.__clear();
+
+    // Location
+    mockLocation.__clear();
+
     // Title
     mockTitle = "";
 
