@@ -30,7 +30,7 @@ class Project(models.Model):
 
         amount_billed = amount_to_bill = 0.0
         for currency, untaxed_amount_currency_sum in dict_amount_per_currency.items():
-            amount_to_bill += currency._convert(untaxed_amount_currency_sum, self.currency_id, self.company_id)
+            amount_to_bill += currency._convert(untaxed_amount_currency_sum, self.currency_id, self.company_id, round=False)
 
         sol_read_group = self.env['sale.order.line'].sudo()._read_group(
             [
