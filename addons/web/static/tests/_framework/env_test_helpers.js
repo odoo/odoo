@@ -85,6 +85,23 @@ export async function makeMockEnv(partialEnv) {
 }
 
 /**
+ * Makes a mock environment for dialog tests
+ *
+ * @param {Partial<OdooEnv>} [partialEnv]
+ * @returns {Promise<OdooEnv>}
+ */
+export async function makeDialogMockEnv(partialEnv) {
+    return makeMockEnv({
+        dialogData: {
+            close: () => {},
+            isActive: true,
+            scrollToOrigin: () => {},
+        },
+        ...partialEnv,
+    });
+}
+
+/**
  * @template {keyof Services} T
  * @param {T} name
  * @param {(env: OdooEnv, dependencies: Record<keyof Services, any>) => Services[T]} serviceFactory
