@@ -164,6 +164,7 @@ options.registry.GalleryLayout = options.registry.CarouselHandler.extend({
             images: imageEls,
             index: 0,
             interval: currentInterval || 0,
+            ride: !currentInterval ? "false" : "carousel",
             id: 'slideshow_' + new Date().getTime(),
             hideImage: true,
         },
