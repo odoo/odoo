@@ -16,7 +16,8 @@ class SaleReport(models.Model):
     state = fields.Selection(
         selection_add=[
             ('paid', 'Paid'),
-            ('invoiced', 'Invoiced')
+            ('invoiced', 'Invoiced'),
+            ('done', 'Posted')
         ],
     )
 
