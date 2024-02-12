@@ -6,7 +6,6 @@ import { timings } from "@bus/misc";
 import { loadEmoji } from "@web/core/emoji_picker/emoji_picker";
 import { loadLamejs } from "@mail/discuss/voice_message/common/voice_message_service";
 import { patchBrowserNotification } from "@mail/../tests/helpers/patch_notifications";
-import { DISCUSS_ACTION_ID } from "@mail/../tests/helpers/test_constants";
 import { getAdvanceTime } from "@mail/../tests/helpers/time_control";
 import { getWebClientReady } from "@mail/../tests/helpers/webclient_setup";
 
@@ -37,7 +36,7 @@ function getOpenDiscuss(webClient, { context = {}, params = {}, ...props } = {})
     return async function openDiscuss(pActiveId) {
         const actionOpenDiscuss = {
             context: { ...context, active_id: pActiveId },
-            id: DISCUSS_ACTION_ID,
+            id: "mail.action_discuss",
             params,
             tag: "mail.action_discuss",
             type: "ir.actions.client",

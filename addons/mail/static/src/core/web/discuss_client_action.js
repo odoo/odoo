@@ -58,8 +58,9 @@ export class DiscussClientAction extends Component {
             activeThread = await this.threadService.fetchChannel(parseInt(id));
         }
         if (activeThread && activeThread.notEq(this.store.discuss.thread)) {
-            this.threadService.setDiscussThread(activeThread);
+            this.threadService.setDiscussThread(activeThread, false);
         }
+        this.store.discuss.hasRestoredThread = true;
     }
 }
 
