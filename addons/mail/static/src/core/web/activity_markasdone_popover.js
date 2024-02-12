@@ -38,7 +38,10 @@ export class ActivityMarkAsDone extends Component {
 
     async onClickDone() {
         const { res_id, res_model } = this.props.activity;
-        const thread = this.threadService.getThread(res_model, res_id);
+        const thread = this.env.services["mail.store"].Thread.insert({
+            model: res_model,
+            id: res_id,
+        });
         await this.env.services["mail.activity"].markAsDone(this.props.activity);
         this.props.onActivityChanged(thread);
         await this.threadService.fetchNewMessages(thread);
@@ -46,7 +49,10 @@ export class ActivityMarkAsDone extends Component {
 
     async onClickDoneAndScheduleNext() {
         const { res_id, res_model } = this.props.activity;
-        const thread = this.threadService.getThread(res_model, res_id);
+        const thread = this.env.services["mail.store"].Thread.insert({
+            model: res_model,
+            id: res_id,
+        });
         if (this.props.onClickDoneAndScheduleNext) {
             this.props.onClickDoneAndScheduleNext();
         }

@@ -113,9 +113,9 @@ export class Activity extends Component {
     }
 
     get thread() {
-        return this.threadService.getThread(
-            this.props.activity.res_model,
-            this.props.activity.res_id
-        );
+        return this.env.services["mail.store"].Thread.insert({
+            model: this.props.activity.res_model,
+            id: this.props.activity.res_id,
+        });
     }
 }
