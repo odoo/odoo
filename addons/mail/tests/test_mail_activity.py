@@ -1,10 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from contextlib import contextmanager
-from dateutil.relativedelta import relativedelta
 from unittest.mock import patch
 
-from odoo import fields
 from odoo.addons.mail.models.mail_activity import MailActivity
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.tests import Form, tagged, HttpCase
@@ -67,14 +65,19 @@ class ActivityScheduleCase(MailCommon):
         self.assertIn(activity_type.name, last_message.body)
         self.assertIn('done', last_message.body)
 
-    def assertActivitiesFromPlan(self, plan, record, force_base_date_deadline=None, force_responsible_id=None):
+    def assertActivitiesFromPlan(self, plan, record, expected_deadlines, expected_responsible=None):
         """ Check that the last activities on the record correspond to the one
         that the plan must create (number of activities and activities content).
 
+        We check the created activities values against the template values because
+        most of them are just copied when creating activities from templates except
+        for deadlines and responsible for which we pass the expected values as parameters.
+
         :param <mail.activity.plan> plan: activity plan that has been applied on the record
         :param recordset record: record on which the plan has been applied
-        :param date force_base_date_deadline: base plan date provided when scheduling the plan
-        :param <res.user> force_responsible_id: responsible provided when scheduling the plan
+        :param list<date> expected_deadlines: expected deadlines of the record created activities
+        :param <res.user> expected_responsible: expected responsible for the created activities
+            if set, otherwise checked against the responsible set on the related templates.
         """
         expected_number_of_activity = len(plan.template_ids)
         activities = self._new_activities.filtered(
@@ -82,60 +85,48 @@ class ActivityScheduleCase(MailCommon):
         )
         self.assertEqual(len(activities), expected_number_of_activity)
 
-        for activity, template in zip(activities, plan.template_ids):
+        for activity, template, expected_deadline in zip(activities, plan.template_ids, expected_deadlines):
             self.assertEqual(activity.activity_type_id, template.activity_type_id)
-            self.assertEqual(
-                activity.date_deadline,
-                (force_base_date_deadline or fields.Date.today()) + relativedelta(
-                    **{template.activity_type_id.delay_unit: template.activity_type_id.delay_count}))
+            self.assertEqual(activity.date_deadline, expected_deadline)
             self.assertEqual(activity.note, template.note)
             self.assertEqual(activity.summary, template.summary)
             self.assertFalse(activity.automated)
-            if force_responsible_id:
-                self.assertEqual(activity.user_id, force_responsible_id)
+            if expected_responsible:
+                self.assertEqual(activity.user_id, expected_responsible)
             else:
                 self.assertEqual(activity.user_id, template.responsible_id or self.env.user)
 
-    def assertMessagesFromPlan(self, plan, record, force_base_date_deadline=None, force_responsible_id=None):
+    def assertMessagesFromPlan(self, plan, record, expected_deadlines, expected_responsible=None):
         """ Check that the last posted message on the record correspond to the one
         that the plan must generate (number of activities and activities content).
 
         :param <mail.activity.plan> plan: activity plan that has been applied on the record
         :param recordset record: record on which the plan has been applied
-        :param date force_base_date_deadline: deadline provided when scheduling the plan
-        :param <res.user> force_responsible_id: responsible provided when scheduling the plan
+        :param list<date> expected_deadlines: expected deadlines of the record created activities
+        :param <res.user> expected_responsible: expected responsible for the created activities
+            if set, otherwise checked against the responsible set on the related templates.
         """
         message = record.message_ids[0]
         self.assertIn(f'The plan "{plan.name}" has been started', message.body)
 
-        for template in plan.template_ids:
-            date_deadline = (force_base_date_deadline or fields.Date.today()) + relativedelta(
-                **{template.activity_type_id.delay_unit: template.activity_type_id.delay_count})
-            if force_responsible_id:
-                responsible_id = force_responsible_id
+        for template, expected_deadline in zip(plan.template_ids, expected_deadlines):
+            if expected_responsible:
+                responsible_id = expected_responsible
             else:
                 responsible_id = template.responsible_id or self.env.user
 
             self.assertIn(template.summary, message.body)
             self.assertIn(f'{template.summary or template.activity_type_id.name}, '
                           f'assigned to {responsible_id.name}, due on the '
-                          f'{format_date(self.env, date_deadline)}', message.body)
+                          f'{format_date(self.env, expected_deadline)}', message.body)
 
-    def assertPlanExecution(self, plan, records, force_base_date_deadline=None, force_responsible_id=None):
+    def assertPlanExecution(self, plan, records, expected_deadlines, expected_responsible=None):
         """ Check that the plan has created the right activities and send the
         right message on the records (see assertActivitiesFromPlan and
         assertMessagesFromPlan). """
         for record in records:
-            self.assertActivitiesFromPlan(
-                plan, record,
-                force_base_date_deadline=force_base_date_deadline,
-                force_responsible_id=force_responsible_id,
-            )
-            self.assertMessagesFromPlan(
-                plan, record,
-                force_base_date_deadline=force_base_date_deadline,
-                force_responsible_id=force_responsible_id,
-            )
+            self.assertActivitiesFromPlan(plan, record, expected_deadlines, expected_responsible)
+            self.assertMessagesFromPlan(plan, record, expected_deadlines, expected_responsible)
 
     def _instantiate_activity_schedule_wizard(self, records, additional_context_value=None):
         """ Get a new Form with context default values referring to the records. """
