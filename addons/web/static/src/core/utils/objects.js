@@ -42,7 +42,7 @@ export function deepCopy(object) {
  * @param {unknown} object
  */
 export function isObject(object) {
-    return object && (typeof object === "object" || typeof object === "function");
+    return !!object && (typeof object === "object" || typeof object === "function");
 }
 
 /**
