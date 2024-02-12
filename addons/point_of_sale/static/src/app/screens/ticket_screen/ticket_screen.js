@@ -271,6 +271,21 @@ export class TicketScreen extends Component {
             this._state.ui.highlightHeaderNote = !this._state.ui.highlightHeaderNote;
             return;
         }
+
+        const invoicedOrderIds = new Set(
+            allToRefundDetails
+                .filter(detail => this._state.syncedOrders.cache[detail.orderline.orderBackendId].state === "invoiced")
+                .map(detail => detail.orderline.orderBackendId)
+        );
+
+        if (invoicedOrderIds.size > 1) {
+            this.popup.add(ErrorPopup, {
+                title: _t('Multiple Invoiced Orders Selected'),
+                body: _t('You have selected orderlines from multiple invoiced orders. To proceed refund, please select orderlines from the same invoiced order.')
+            });
+            return;
+        }
+
         // The order that will contain the refund orderlines.
         // Use the destinationOrder from props if the order to refund has the same
         // partner as the destinationOrder.
@@ -395,7 +410,7 @@ export class TicketScreen extends Component {
     }
     getStatus(order) {
         if (order.locked) {
-            return _t("Paid");
+            return order.state === 'invoiced' ? _t('Invoiced') : _t("Paid");
         } else {
             const screen = order.get_screen_data();
             return this._getOrderStates().get(this._getScreenToStatusMap()[screen.name]).text;
