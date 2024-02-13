@@ -136,7 +136,7 @@ export class PivotUIPlugin extends OdooUIPlugin {
             case "CLEAR_GLOBAL_FILTER_VALUE":
                 this._addDomains();
                 break;
-            case "INSERT_PIVOT": {
+            case "ADD_PIVOT": {
                 const { id } = cmd;
                 this._setupPivotDataSource(id);
                 break;
@@ -173,7 +173,7 @@ export class PivotUIPlugin extends OdooUIPlugin {
                 }
 
                 const domainEditionCommands = cmd.commands.filter(
-                    (cmd) => cmd.type === "UPDATE_ODOO_PIVOT_DOMAIN" || cmd.type === "INSERT_PIVOT"
+                    (cmd) => cmd.type === "UPDATE_ODOO_PIVOT_DOMAIN" || cmd.type === "ADD_PIVOT"
                 );
                 for (const cmd of domainEditionCommands) {
                     if (!this.getters.isExistingPivot(cmd.pivotId)) {

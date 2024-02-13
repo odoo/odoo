@@ -5,7 +5,7 @@ import { OdooCorePlugin } from "@spreadsheet/plugins";
 const { load, tokenize, parse, convertAstNodes, astToFormula } = spreadsheet;
 const { corePluginRegistry } = spreadsheet.registries;
 
-export const ODOO_VERSION = 7;
+export const ODOO_VERSION = 8;
 
 const MAP = {
     PIVOT: "ODOO.PIVOT",
@@ -41,6 +41,9 @@ export function migrate(data) {
     }
     if (version < 7) {
         _data = migrate6to7(_data);
+    }
+    if (version < 8) {
+        _data = migrate7to8(_data);
     }
     return _data;
 }
@@ -255,6 +258,19 @@ function migrate6to7(data) {
                 type: "ODOO",
                 definition,
                 fieldMatching,
+            };
+        }
+    }
+    return data;
+}
+
+function migrate7to8(data) {
+    if (data.pivots) {
+        for (const [id, pivot] of Object.entries(data.pivots)) {
+            data.pivots[id] = {
+                type: pivot.type,
+                fieldMatching: pivot.fieldMatching,
+                ...pivot.definition,
             };
         }
     }

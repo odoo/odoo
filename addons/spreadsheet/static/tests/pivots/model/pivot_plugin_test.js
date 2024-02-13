@@ -250,20 +250,18 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
                 pivots: {
                     1: {
                         type: "ODOO",
-                        definition: {
-                            colGroupBys: ["foo"],
-                            domain: [],
-                            measures: ["probability"],
-                            model: "partner",
-                            rowGroupBys: ["bar"],
-                            context: {
-                                allowed_company_ids: [16],
-                                default_stage_id: 9,
-                                search_default_stage_id: 90,
-                                tz: "nz",
-                                lang: "EN",
-                                uid: 40,
-                            },
+                        colGroupBys: ["foo"],
+                        domain: [],
+                        measures: ["probability"],
+                        model: "partner",
+                        rowGroupBys: ["bar"],
+                        context: {
+                            allowed_company_ids: [16],
+                            default_stage_id: 9,
+                            search_default_stage_id: 90,
+                            tz: "nz",
+                            lang: "EN",
+                            uid: 40,
                         },
                     },
                 },
@@ -309,25 +307,21 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
             pivots: {
                 1: {
                     type: "ODOO",
-                    definition: {
-                        colGroupBys: ["foo"],
-                        domain: [],
-                        measures: ["probability"],
-                        model: "partner",
-                        rowGroupBys: ["bar"],
-                        context: {},
-                    },
+                    colGroupBys: ["foo"],
+                    domain: [],
+                    measures: ["probability"],
+                    model: "partner",
+                    rowGroupBys: ["bar"],
+                    context: {},
                 },
                 2: {
                     type: "ODOO",
-                    definition: {
-                        colGroupBys: ["bar"],
-                        domain: [],
-                        measures: [{ field: "probability", operator: "max" }],
-                        model: "partner",
-                        rowGroupBys: ["foo"],
-                        context: {},
-                    },
+                    colGroupBys: ["bar"],
+                    domain: [],
+                    measures: [{ field: "probability", operator: "max" }],
+                    model: "partner",
+                    rowGroupBys: ["foo"],
+                    context: {},
                 },
             },
         };
@@ -350,13 +344,11 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
             pivots: {
                 1: {
                     type: "ODOO",
-                    definition: {
-                        colGroupBys: ["foo"],
-                        domain: [],
-                        measures: ["probability"],
-                        model: "partner",
-                        rowGroupBys: ["bar"],
-                    },
+                    colGroupBys: ["foo"],
+                    domain: [],
+                    measures: ["probability"],
+                    model: "partner",
+                    rowGroupBys: ["bar"],
                 },
             },
         };
@@ -389,23 +381,19 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
             pivots: {
                 1: {
                     type: "ODOO",
-                    definition: {
-                        colGroupBys: ["foo"],
-                        domain: [],
-                        measures: ["probability"],
-                        model: "partner",
-                        rowGroupBys: ["bar"],
-                    },
+                    colGroupBys: ["foo"],
+                    domain: [],
+                    measures: ["probability"],
+                    model: "partner",
+                    rowGroupBys: ["bar"],
                 },
                 2: {
                     type: "ODOO",
-                    definition: {
-                        colGroupBys: ["foo"],
-                        domain: [],
-                        measures: ["probability"],
-                        model: "partner",
-                        rowGroupBys: ["bar"],
-                    },
+                    colGroupBys: ["foo"],
+                    domain: [],
+                    measures: ["probability"],
+                    model: "partner",
+                    rowGroupBys: ["bar"],
                 },
             },
         };
@@ -431,13 +419,11 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
             pivots: {
                 1: {
                     type: "ODOO",
-                    definition: {
-                        colGroupBys: ["foo"],
-                        domain: [],
-                        measures: ["probability"],
-                        model: "partner",
-                        rowGroupBys: ["bar"],
-                    },
+                    colGroupBys: ["foo"],
+                    domain: [],
+                    measures: ["probability"],
+                    model: "partner",
+                    rowGroupBys: ["bar"],
                 },
             },
         };
@@ -470,13 +456,11 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
             pivots: {
                 1: {
                     type: "ODOO",
-                    definition: {
-                        colGroupBys: ["product_id"],
-                        domain: [],
-                        measures: ["probability"],
-                        model: "partner",
-                        rowGroupBys: [],
-                    },
+                    colGroupBys: ["product_id"],
+                    domain: [],
+                    measures: ["probability"],
+                    model: "partner",
+                    rowGroupBys: [],
                 },
             },
         };
@@ -628,20 +612,18 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
             pivots: {
                 1: {
                     type: "ODOO",
-                    definition: {
-                        colGroupBys: ["foo"],
-                        domain: [],
-                        measures: ["probability"],
-                        model: "partner",
-                        rowGroupBys: ["bar"],
-                        sortedColumn: {
-                            measure: "probability",
-                            order: "asc",
-                            groupId: [[], [1]],
-                        },
-                        name: "A pivot",
-                        context: {},
+                    colGroupBys: ["foo"],
+                    domain: [],
+                    measures: ["probability"],
+                    model: "partner",
+                    rowGroupBys: ["bar"],
+                    sortedColumn: {
+                        measure: "probability",
+                        order: "asc",
+                        groupId: [[], [1]],
                     },
+                    name: "A pivot",
+                    context: {},
                     fieldMatching: {},
                 },
             },
@@ -661,14 +643,12 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
             pivots: {
                 1: {
                     type: "ODOO",
-                    definition: {
-                        colGroupBys: [],
-                        domain: '[("foo", "=", uid)]',
-                        measures: ["probability"],
-                        model: "partner",
-                        rowGroupBys: [],
-                        name: "A pivot",
-                    },
+                    colGroupBys: [],
+                    domain: '[("foo", "=", uid)]',
+                    measures: ["probability"],
+                    model: "partner",
+                    rowGroupBys: [],
+                    name: "A pivot",
                 },
             },
         };
@@ -684,7 +664,7 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
         setCellContent(model, "A1", '=ODOO.PIVOT(1, "probability")'); // load the data (and check the rpc domain)
         await nextTick();
         assert.strictEqual(
-            model.exportData().pivots[1].definition.domain,
+            model.exportData().pivots[1].domain,
             '[("foo", "=", uid)]',
             "the domain is exported with the dynamic parts"
         );
@@ -947,7 +927,7 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
             pivotId,
             domain: [["foo", "in", [55]]],
         });
-        assert.deepEqual(model.exportData().pivots["1"].definition.domain, [["foo", "in", [55]]]);
+        assert.deepEqual(model.exportData().pivots["1"].domain, [["foo", "in", [55]]]);
     });
 
     QUnit.test("field matching is removed when filter is deleted", async function (assert) {
