@@ -46,6 +46,6 @@ class TestImLivechatCommon(HttpCase):
 
         def _compute_available_operator_ids(channel_self):
             for record in channel_self:
-                record.available_operator_ids = type(self).operators
+                record.available_operator_ids = record.user_ids
 
         self.patch(type(self.env['im_livechat.channel']), '_compute_available_operator_ids', _compute_available_operator_ids)

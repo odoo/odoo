@@ -50,6 +50,7 @@ export class DiscussApp extends Record {
         inverse: "app",
         sort: (c1, c2) => c1.sequence - c2.sequence,
     });
+    hasRestoredThread = false;
     thread = Record.one("Thread");
     channels = Record.one("DiscussAppCategory");
     chats = Record.one("DiscussAppCategory");
