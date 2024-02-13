@@ -8,7 +8,7 @@ from os.path import join as opj
 from PIL import Image
 from typing import Optional, List, Dict
 from werkzeug.urls import url_quote
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tools import image_to_base64
 
 from odoo import api, fields, models, _, service, Command
@@ -168,6 +168,11 @@ class PosConfig(models.Model):
         for record in self:
             if record.self_ordering_mode == 'mobile' and not record.self_ordering_default_user_id.has_group("point_of_sale.group_pos_user") and not record.self_ordering_default_user_id.has_group("point_of_sale.group_pos_manager"):
                 raise UserError(_("The Self-Order default user must be a POS user"))
+
+    @api.constrains("payment_method_ids", "self_ordering_mode")
+    def _onchange_payment_method_ids(self):
+        if any(record.self_ordering_mode == 'kiosk' and any(pm.is_cash_count for pm in record.payment_method_ids) for record in self):
+            raise ValidationError(_("You cannot add cash payment methods in kiosk mode."))
 
     def _get_qr_code_data(self):
         self.ensure_one()
