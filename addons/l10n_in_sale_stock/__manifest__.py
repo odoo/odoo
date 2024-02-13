@@ -3,7 +3,6 @@
 
 {
     'name': "India Sales and Warehouse Management",
-    'countries': ['in'],
 
     'summary': "Get warehouse address if the invoice is created from Sale Order",
 

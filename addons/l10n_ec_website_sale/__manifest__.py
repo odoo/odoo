@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Ecuadorian Website',
-    'countries': ['ec'],
     'version': '1.0',
     'category': 'Accounting/Localizations/Website',
     'description': """Make ecommerce work for Ecuador.""",
