@@ -366,7 +366,7 @@ class Meeting(models.Model):
         return self.env.user
 
     def _google_description(self):
-        videocall_location_regex = r"\<a id=(?:'|\")o_videocall_location_url(?:'|\").+\<\/a\>"
+        videocall_location_regex = r"\<a.+?id=(?:'|\")o_videocall_location_url(?:'|\").*?\>.+?\<\/a\>"
         description = tools.html_sanitize(self.description) if not tools.is_html_empty(self.description) else ''
         if self.videocall_source and self.videocall_source != 'google_meet' and self.videocall_location:
             description = re.sub(videocall_location_regex, "", description)
