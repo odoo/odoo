@@ -304,11 +304,11 @@ class Digest(models.Model):
         self.ensure_one()
         if self.periodicity == 'daily':
             delta = relativedelta(days=1)
-        if self.periodicity == 'weekly':
+        elif self.periodicity == 'weekly':
             delta = relativedelta(weeks=1)
         elif self.periodicity == 'monthly':
             delta = relativedelta(months=1)
-        elif self.periodicity == 'quarterly':
+        else:
             delta = relativedelta(months=3)
         return date.today() + delta
 
@@ -368,11 +368,11 @@ class Digest(models.Model):
         return to_slowdown
 
     def _get_next_periodicity(self):
+        if self.periodicity == 'daily':
+            return 'weekly', _('weekly')
         if self.periodicity == 'weekly':
             return 'monthly', _('monthly')
-        if self.periodicity == 'monthly':
-            return 'quarterly', _('quarterly')
-        return 'weekly', _('weekly')
+        return 'quarterly', _('quarterly')
 
     def _format_currency_amount(self, amount, currency_id):
         pre = currency_id.position == 'before'
