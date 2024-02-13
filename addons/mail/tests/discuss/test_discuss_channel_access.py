@@ -1,7 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from psycopg2.errors import UniqueViolation
+
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.mail.tests.common import MailCommon
+from odoo.exceptions import AccessError, UserError
 from odoo.tests.common import tagged
 from odoo.tools import mute_logger
 
@@ -145,17 +148,29 @@ class TestDiscussChannelAccess(MailCommon):
         for user_key, channel_key, membership, operation, result in tests:
             if result:
                 try:
-                    self._execute_action_channel(user_key, channel_key, membership, operation, result)
-                except Exception as e:  # noqa: BLE001 - re-raising, just with a more contextual message
-                    raise AssertionError(f"{user_key, channel_key, membership, operation} should not raise") from e
+                    self._execute_action_channel(
+                        user_key, channel_key, membership, operation, result
+                    )
+                except (
+                    Exception
+                ) as e:  # noqa: BLE001 - re-raising, just with a more contextual message
+                    raise AssertionError(
+                        f"{user_key, channel_key, membership, operation} should not raise"
+                    ) from e
             else:
                 try:
-                    with self.assertRaises(Exception), mute_logger("odoo.sql_db"), mute_logger(
-                        "odoo.addons.base.models.ir_rule"
+                    with self.assertRaises(AccessError), mute_logger("odoo.sql_db"), mute_logger(
+                        "odoo.addons.base.models.ir_model"
+                    ), mute_logger("odoo.addons.base.models.ir_rule"), mute_logger(
+                        "odoo.models.unlink"
                     ):
-                        self._execute_action_channel(user_key, channel_key, membership, operation, result)
+                        self._execute_action_channel(
+                            user_key, channel_key, membership, operation, result
+                        )
                 except AssertionError as e:
-                    raise AssertionError(f"{user_key, channel_key, membership, operation} should raise") from e
+                    raise AssertionError(
+                        f"{user_key, channel_key, membership, operation} should raise"
+                    ) from e
 
     def test_10_discuss_channel_member_access(self):
         """Exhaustive list of operations on channel.member that would make sense in various setup
@@ -384,18 +399,29 @@ class TestDiscussChannelAccess(MailCommon):
             if result:
                 try:
                     self._execute_action_member(channel_id, user_key, target, operation, result)
-                except Exception as e:  # noqa: BLE001 - re-raising, just with a more contextual message
+                except (
+                    Exception
+                ) as e:  # noqa: BLE001 - re-raising, just with a more contextual message
                     raise AssertionError(
                         f"{user_key, channel_key, membership, target, operation} should not raise"
                     ) from e
             else:
                 try:
-                    with self.assertRaises(Exception), mute_logger("odoo.sql_db"), mute_logger(
-                        "odoo.addons.base.models.ir_rule"
+                    with self.assertRaises(AccessError), mute_logger("odoo.sql_db"), mute_logger(
+                        "odoo.addons.base.models.ir_model"
+                    ), mute_logger("odoo.addons.base.models.ir_rule"), mute_logger(
+                        "odoo.models.unlink"
                     ):
-                        self._execute_action_member(channel_id, user_key, target, operation, result)
+                        try:
+                            self._execute_action_member(
+                                channel_id, user_key, target, operation, result
+                            )
+                        except (UniqueViolation, UserError) as e:
+                            raise AccessError("expected errors as access error") from e
                 except AssertionError as e:
-                    raise AssertionError(f"{user_key, channel_key, membership, target, operation} should raise") from e
+                    raise AssertionError(
+                        f"{user_key, channel_key, membership, target, operation} should raise access error"
+                    ) from e
 
     def _get_channel_id(self, user_key, channel_key, membership):
         partner = self.env["res.partner"] if user_key == "public" else self.users[user_key].partner_id
