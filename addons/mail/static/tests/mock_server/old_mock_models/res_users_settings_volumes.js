@@ -1,10 +1,11 @@
-/** @odoo-module alias=@mail/../tests/helpers/mock_server/models/res_users_settings_volumes default=false */
+/** @odoo-module */
 
 // ensure bus mock server is loaded first.
-import "@bus/../tests/helpers/mock_server";
+// import "@bus/../tests/helpers/mock_server";
 
 import { patch } from "@web/core/utils/patch";
-import { MockServer } from "@web/../tests/helpers/mock_server";
+// import { MockServer } from "@web/../tests/helpers/mock_server";
+var MockServer = { prototype: {} };
 
 patch(MockServer.prototype, {
     /**

@@ -1,9 +1,11 @@
-/** @odoo-module alias=@mail/../tests/helpers/mock_server/models/res_users default=false */
+/** @odoo-module */
 
 import { patch } from "@web/core/utils/patch";
 import { today, serializeDate } from "@web/core/l10n/dates";
-import { MockServer } from "@web/../tests/helpers/mock_server";
-import { DISCUSS_ACTION_ID } from "../../test_constants";
+// import { MockServer } from "@web/../tests/helpers/mock_server";
+var MockServer = { prototype: {} };
+// import { DISCUSS_ACTION_ID } from "../../test_constants";
+var DISCUSS_ACTION_ID;
 
 patch(MockServer.prototype, {
     /** Simulates `_init_store_data` on `res.users`. */

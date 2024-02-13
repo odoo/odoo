@@ -1,9 +1,10 @@
-/** @odoo-module alias=@mail/../tests/helpers/mock_server/models/mail_activity default=false */
+/** @odoo-module */
 
 import { Domain } from "@web/core/domain";
 import { groupBy, sortBy, unique } from "@web/core/utils/arrays";
 import { patch } from "@web/core/utils/patch";
-import { MockServer } from "@web/../tests/helpers/mock_server";
+// import { MockServer } from "@web/../tests/helpers/mock_server";
+var MockServer = { prototype: {} };
 import { deserializeDate, serializeDate, today } from "@web/core/l10n/dates";
 
 const { DateTime } = luxon;

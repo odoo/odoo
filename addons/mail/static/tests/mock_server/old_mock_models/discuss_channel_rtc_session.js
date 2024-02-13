@@ -1,7 +1,9 @@
 /** @odoo-module alias=@mail/../tests/helpers/mock_server/models/discuss_channel_rtc_session default=false */
 
-import { patch } from "@web/core/utils/patch";
-import { MockServer } from "@web/../tests/helpers/mock_server";
+// import { patch } from "@web/core/utils/patch";
+// import { MockServer } from "@web/../tests/helpers/mock_server";
+var patch = () => {};
+var MockServer = { prototype: {} };
 
 patch(MockServer.prototype, {
     mockCreate(model) {

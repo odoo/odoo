@@ -12,7 +12,7 @@ import {
 } from "../../mail_test_helpers";
 import { onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { Deferred } from "@odoo/hoot-mock";
-import { MailThread } from "../../mock_server/TO_REMOVE/mail_thread";
+import { MailThread } from "../../mock_server/mock_models/mail_thread";
 
 test.skip("base rendering not editable", async () => {
     const pyEnv = await startServer();

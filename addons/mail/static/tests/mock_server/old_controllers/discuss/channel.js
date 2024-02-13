@@ -1,9 +1,10 @@
-/** @odoo-module alias=@mail/../tests/helpers/mock_server/controllers/discuss/channel default=false */
+/** @odoo-module */
 
-import "@mail/../tests/helpers/mock_server/controllers/webclient"; // ensure super is loaded first
+// import "@mail/../tests/helpers/mock_server/controllers/webclient"; // ensure super is loaded first
 
 import { patch } from "@web/core/utils/patch";
-import { MockServer } from "@web/../tests/helpers/mock_server";
+// import { MockServer } from "@web/../tests/helpers/mock_server";
+var MockServer = { prototype: {} };
 
 patch(MockServer.prototype, {
     /** @override */

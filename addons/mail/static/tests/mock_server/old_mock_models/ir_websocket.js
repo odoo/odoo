@@ -1,10 +1,11 @@
-/** @odoo-module alias=@mail/../tests/helpers/mock_server/models/ir_websocket default=false */
+/** @odoo-module */
 
 // ensure bus override is applied first.
-import "@bus/../tests/helpers/mock_server";
+// import "@bus/../tests/helpers/mock_server";
 
 import { patch } from "@web/core/utils/patch";
-import { MockServer } from "@web/../tests/helpers/mock_server";
+// import { MockServer } from "@web/../tests/helpers/mock_server";
+var MockServer = { prototype: {} };
 
 patch(MockServer.prototype, {
     /**

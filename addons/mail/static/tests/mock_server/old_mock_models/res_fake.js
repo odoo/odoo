@@ -1,7 +1,8 @@
-/** @odoo-module alias=@mail/../tests/helpers/mock_server/models/res_fake default=false */
+/** @odoo-module */
 
 import { patch } from "@web/core/utils/patch";
-import { MockServer } from "@web/../tests/helpers/mock_server";
+// import { MockServer } from "@web/../tests/helpers/mock_server";
+var MockServer = { prototype: {} };
 import { parseEmail } from "@mail/utils/common/format";
 
 patch(MockServer.prototype, {

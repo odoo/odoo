@@ -1,7 +1,8 @@
-/** @odoo-module alias=@mail/../tests/helpers/mock_server/models/ir_attachment default=false */
+/** @odoo-module */
 
 import { patch } from "@web/core/utils/patch";
-import { MockServer } from "@web/../tests/helpers/mock_server";
+// import { MockServer } from "@web/../tests/helpers/mock_server";
+var MockServer = { prototype: {} };
 
 patch(MockServer.prototype, {
     async _performRPC(route, args) {

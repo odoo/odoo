@@ -1,11 +1,15 @@
-/** @odoo-module alias=@mail/../tests/helpers/mock_server/models/discuss_channel default=false */
+/** @odoo-module */
 
 import { patch } from "@web/core/utils/patch";
-import { MockServer } from "@web/../tests/helpers/mock_server";
+// import { MockServer } from "@web/../tests/helpers/mock_server";
+var MockServer = { prototype: {} };
 
-import { assignDefined } from "@mail/utils/common/misc";
-import { formatDate, serializeDateTime, today } from "@web/core/l10n/dates";
-import { Command } from "@mail/../tests/helpers/command";
+// import { assignDefined } from "@mail/utils/common/misc";
+var assignDefined;
+// import { formatDate, serializeDateTime, today } from "@web/core/l10n/dates";
+var formatDate, serializeDateTime, today;
+// import { Command } from "@mail/../tests/helpers/command";
+var Command;
 const { DateTime } = luxon;
 
 patch(MockServer.prototype, {

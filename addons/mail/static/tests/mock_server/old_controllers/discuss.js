@@ -1,8 +1,9 @@
-/** @odoo-module alias=@mail/../tests/helpers/mock_server/controllers/discuss default=false */
+/** @odoo-module */
 
 import { serializeDateTime } from "@web/core/l10n/dates";
 import { patch } from "@web/core/utils/patch";
-import { MockServer } from "@web/../tests/helpers/mock_server";
+// import { MockServer } from "@web/../tests/helpers/mock_server";
+var MockServer = { prototype: {} };
 
 const { DateTime } = luxon;
 
