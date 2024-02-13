@@ -30,6 +30,7 @@ declare module "@spreadsheet" {
     }
 
     export interface OdooPivotDefinition extends CommonPivotDefinition {
+        type: "ODOO";
         model: string;
         domain: Array;
         context: Object;
@@ -39,19 +40,8 @@ declare module "@spreadsheet" {
       getTable(payload: ExtendedInsertPivotPayload): SpreadsheetPivotTable;
     }
 
-    export interface OdooLocalPivot {
-      type: "ODOO";
-      definition: OdooPivotDefinition;
-    }
-
-    export interface SpreadsheetLocalPivot {
-      type: "SPREADSHEET";
-      definition: SpreadsheetPivotDefinition;
-    }
-
-    export type LocalPivot = OdooLocalPivot | SpreadsheetLocalPivot;
-
     export interface SpreadsheetPivotDefinition extends CommonPivotDefinition {
+        type: "SPREADSHEET";
         range: string;
     }
 

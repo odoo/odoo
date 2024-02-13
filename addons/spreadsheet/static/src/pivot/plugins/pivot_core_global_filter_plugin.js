@@ -30,14 +30,15 @@ export class PivotCoreGlobalFilterPlugin extends OdooCorePlugin {
                 this.getters
                     .getPivotIds()
                     .filter(
-                        (id) => this.getters.getCorePivot(id).type === "ODOO" && id in this.pivots
+                        (id) =>
+                            this.getters.getPivotDefinition(id).type === "ODOO" && id in this.pivots
                     ),
             getDisplayName: (pivotId) => this.getters.getPivotName(pivotId),
             getTag: (pivotId) => sprintf(_t("Pivot #%s"), pivotId),
             getFieldMatching: (pivotId, filterId) => this.getPivotFieldMatching(pivotId, filterId),
             getModel: (pivotId) => {
-                const pivot = this.getters.getCorePivot(pivotId);
-                return pivot.type === "ODOO" && pivot.definition.model;
+                const pivot = this.getters.getPivotDefinition(pivotId);
+                return pivot.type === "ODOO" && pivot.model;
             },
         };
     }
@@ -64,8 +65,8 @@ export class PivotCoreGlobalFilterPlugin extends OdooCorePlugin {
      */
     handle(cmd) {
         switch (cmd.type) {
-            case "INSERT_PIVOT": {
-                if (cmd.payload.type === "ODOO") {
+            case "ADD_PIVOT": {
+                if (cmd.pivot.type === "ODOO") {
                     this._addPivot(cmd.id, undefined);
                 }
                 break;
@@ -101,7 +102,7 @@ export class PivotCoreGlobalFilterPlugin extends OdooCorePlugin {
      * @returns {Record<string, FieldMatching>}
      */
     getPivotFieldMatch(id) {
-        const pivot = this.getters.getCorePivot(id);
+        const pivot = this.getters.getPivotDefinition(id);
         if (pivot.type !== "ODOO") {
             return {};
         }
@@ -131,7 +132,7 @@ export class PivotCoreGlobalFilterPlugin extends OdooCorePlugin {
     _setPivotFieldMatching(filterId, pivotFieldMatches) {
         const pivots = { ...this.pivots };
         for (const [pivotId, fieldMatch] of Object.entries(pivotFieldMatches)) {
-            const pivot = this.getters.getCorePivot(pivotId);
+            const pivot = this.getters.getPivotDefinition(pivotId);
             if (pivot.type !== "ODOO") {
                 continue;
             }
@@ -152,10 +153,10 @@ export class PivotCoreGlobalFilterPlugin extends OdooCorePlugin {
      * @param {Record<string, FieldMatching>} [fieldMatching]
      */
     _addPivot(id, fieldMatching = undefined) {
-        const pivot = this.getters.getCorePivot(id);
+        const pivot = this.getters.getPivotDefinition(id);
         if (pivot.type === "ODOO") {
             const pivots = { ...this.pivots };
-            const model = pivot.definition.model;
+            const model = pivot.model;
             pivots[id] = {
                 id,
                 fieldMatching: fieldMatching || this.getters.getFieldMatchingForModel(model),
@@ -187,7 +188,7 @@ export class PivotCoreGlobalFilterPlugin extends OdooCorePlugin {
      */
     export(data) {
         for (const id in this.pivots) {
-            const pivot = this.getters.getCorePivot(id);
+            const pivot = this.getters.getPivotDefinition(id);
             data.pivots[id].fieldMatching =
                 pivot.type === "ODOO" ? this.pivots[id].fieldMatching : {};
         }
