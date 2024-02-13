@@ -1,10 +1,11 @@
 /** @odoo-module */
 
-import { Component, xml } from "@odoo/owl";
+import { Component, useState, xml } from "@odoo/owl";
 import { createURL, setParams, urlParams } from "../core/url";
 import { useWindowListener } from "../hoot_utils";
 import { HootButtons } from "./hoot_buttons";
 import { HootConfigDropdown } from "./hoot_config_dropdown";
+import { HootDebugToolBar } from "./hoot_debug_toolbar";
 import { HootReporting } from "./hoot_reporting";
 import { HootSearch } from "./hoot_search";
 import { HootSideBar } from "./hoot_side_bar";
@@ -28,6 +29,7 @@ export class HootMain extends Component {
     static components = {
         HootButtons,
         HootConfigDropdown,
+        HootDebugToolBar,
         HootReporting,
         HootSearch,
         HootSideBar,
@@ -64,13 +66,35 @@ export class HootMain extends Component {
                     <HootReporting />
                 </div>
             </main>
+            <t t-if="state.debugTest">
+                <HootDebugToolBar test="state.debugTest" />
+            </t>
         </t>
     `;
 
     createURL = createURL;
 
     setup() {
-        if (!this.env.runner.config.headless) {
+        const { runner } = this.env;
+        this.state = useState({
+            debugTest: null,
+        });
+
+        if (!runner.config.headless) {
+            runner.beforeAll(() => {
+                if (!runner.debug) {
+                    return;
+                }
+                if (runner.debug === true) {
+                    this.state.debugTest = runner.state.tests[0];
+                } else {
+                    this.state.debugTest = runner.debug;
+                }
+            });
+            runner.afterAll(() => {
+                this.state.debugTest = null;
+            });
+
             useWindowListener("keydown", this.onWindowKeyDown, { capture: true });
         }
     }

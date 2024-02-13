@@ -9,6 +9,7 @@ import { HootTagButton } from "./hoot_tag_button";
 /**
  * @typedef {{
  *  canCopy?: boolean;
+ *  full?: boolean;
  *  test: Test;
  * }} HootTestPathProps
  */
@@ -19,15 +20,16 @@ export class HootTestPath extends Component {
 
     static props = {
         canCopy: { type: Boolean, optional: true },
+        full: { type: Boolean, optional: true },
         test: Test,
     };
 
     static template = xml`
         <t t-set="statusInfo" t-value="getStatusInfo()" />
-        <div class="hoot-path flex items-center gap-1 whitespace-nowrap overflow-hidden">
+        <div class="flex items-center gap-1 whitespace-nowrap overflow-hidden">
             <span t-attf-class="inline-flex min-w-3 min-h-3 rounded-full bg-{{ statusInfo.className }}" t-att-title="statusInfo.text" />
             <span class="flex items-center overflow-hidden">
-                <t t-if="uiState.selectedSuiteId">
+                <t t-if="uiState.selectedSuiteId and !props.full">
                     <span class="text-muted font-bold p-1 select-none hidden md:inline">...</span>
                     <span class="select-none hidden md:inline">/</span>
                 </t>
@@ -136,7 +138,7 @@ export class HootTestPath extends Component {
         const { selectedSuiteId } = this.uiState;
         const { test } = this.props;
         const path = test.path.slice(0, -1);
-        if (!selectedSuiteId) {
+        if (this.props.full || !selectedSuiteId) {
             return path;
         }
         const index = path.findIndex((suite) => suite.id === selectedSuiteId) + 1;

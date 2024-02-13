@@ -123,7 +123,7 @@ export class HootSearch extends Component {
                     </label>
                 </div>
                 <t t-if="state.showDropdown">
-                    <div class="hoot-search-dropdown animate-slide-down bg-base text-base absolute mt-1 px-2 py-3 shadow rounded shadow z-10">
+                    <div class="hoot-search-dropdown animate-slide-down bg-base text-base absolute mt-1 px-2 py-3 shadow rounded shadow z-2">
                         <div class="flex mb-2">
                             <t t-if="state.query.trim()">
                                 <button
@@ -207,7 +207,7 @@ export class HootSearch extends Component {
                                                     <HootTagButton tag="job" disabled="true" />
                                                 </t>
                                                 <t t-else="">
-                                                    <span class="hoot-path flex items-center font-bold whitespace-nowrap overflow-hidden" t-att-title="job.fullName">
+                                                    <span class="flex items-center font-bold whitespace-nowrap overflow-hidden" t-att-title="job.fullName">
                                                         <t t-foreach="getShortPath(job.path)" t-as="suite" t-key="suite.id">
                                                             <span class="text-muted px-1" t-esc="suite.name" />
                                                             <span class="font-normal">/</span>

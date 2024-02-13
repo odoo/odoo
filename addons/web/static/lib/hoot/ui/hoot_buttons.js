@@ -22,7 +22,7 @@ export class HootButtons extends Component {
             <button
                 class="flex items-center bg-btn gap-2 px-2 py-1 transition-colors"
                 t-on-click="onRunClick"
-                t-att-title="isRunning ? 'Stop' : 'Run'"
+                t-att-title="isRunning ? 'Stop (Esc)' : 'Run'"
             >
                 <i t-attf-class="fa fa-{{ isRunning ? 'stop' : 'play' }}" />
                 <span class="hidden sm:inline" t-esc="isRunning ? 'Stop' : 'Run'" />
