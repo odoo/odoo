@@ -55,11 +55,11 @@
                 <field name="account_move_id" optional="hide" groups="account.group_account_user"/>
                 <button name="action_open_journal_entry" groups="account.group_account_user" type="object" title="Journal Entry" icon="fa-book" invisible="not account_move_id"/>
                 <field name="product_id" />
-                <field name="company_id" groups="base.group_multi_company"/>
-                <field name="quantity" string="Moved Quantity" optional="show" sum="Total Moved Quantity"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+                <field name="quantity" string="Quantity" optional="show" sum="Total Moved Quantity"/>
                 <field name="remaining_qty" type="measure" optional="hide" sum="Total Remaining Quantity"/>
                 <field name="unit_cost" optional="hide"/>
-                <field name="uom_id" groups="uom.group_uom" />
+                <field name="uom_id" string="Unit" groups="uom.group_uom" optional="hide"/>
                 <field name="currency_id" column_invisible="True" />
                 <field name="value" sum="Total Value" optional="show"/>
                 <field name="description" optional="hide"/>
@@ -100,8 +100,9 @@
         <field name="name">inventory.aging.graph</field>
         <field name="model">stock.valuation.layer</field>
         <field name="arch" type="xml">
-            <graph>
-                <field name="remaining_qty" type="measure"/>
+            <graph string="valuation graph" type="line" cumulated="1" >
+                <field name="create_date" type="row"/>
+                <field name="value" type="measure"/>
             </graph>
         </field>
     </record>
@@ -110,10 +111,15 @@
         <field name="name">Stock Valuation</field>
         <field name="res_model">stock.valuation.layer</field>
         <field name="path">stock-valuation</field>
-        <field name="view_mode">tree,form,pivot</field>
+        <field name="view_mode">tree,form,pivot,graph</field>
         <field name="view_id" ref="stock_valuation_layer_tree"/>
         <field name="domain">[('product_id.type', '=', 'product')]</field>
-        <field name="context">{'search_default_group_by_product_id': True}</field>
+        <field name="context">{
+            'pivot_column_groupby': ['create_date:month'],
+            'pivot_row_groupby': ['categ_id'],
+            'pivot_measures': ['remaining_qty', 'remaining_value'],
+            'graph_groupbys': ['create_date:day'],
+            }</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face"/>
             <p>
@@ -182,34 +188,7 @@
         </field>
     </record>
 
-    <record id="inventory_aging_action" model="ir.actions.act_window">
-        <field name="name">Inventory Aging</field>
-        <field name="res_model">stock.valuation.layer</field>
-        <field name="view_mode">pivot,tree,graph</field>
-        <field name="view_ids"
-                   eval="[(5, 0, 0),
-                          (0, 0, {'view_mode': 'pivot', 'view_id': ref('stock_valuation_layer_pivot')}),
-                          (0, 0, {'view_mode': 'tree', 'view_id': ref('stock_valuation_layer_tree')})]"/>
-        <field name="context">{
-            'search_default_has_remaining_qty': True,
-            'search_default_incoming': True,
-            'pivot_column_groupby': ['create_date:month'],
-            'pivot_row_groupby': ['categ_id'],
-            'pivot_measures': ['remaining_qty', 'remaining_value'],
-            'graph_mode': 'bar',
-            'graph_groupbys': ['create_date:month'],
-            }</field>
-        <field name="domain">[('product_id.type', '=', 'product')]</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face"/>
-            <p>
-                There are no valuation layers. Valuation layers are created when there are product moves that impact the valuation of the stock.
-            </p>
-        </field>
-    </record>
-
     <menuitem id="menu_valuation" name="Valuation" parent="stock.menu_warehouse_report" sequence="250" action="stock_valuation_layer_action"/>
-    <menuitem id="menu_inventory_aging" name="Inventory Aging" parent="stock.menu_warehouse_report" sequence="260" action="inventory_aging_action"/>
 
     <record id="stock_valuation_layer_picking" model="ir.ui.view">
         <field name="name">stock.valuation.layer.picking</field>
