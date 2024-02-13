@@ -616,7 +616,7 @@ class Meeting(models.Model):
         return values
 
     def _microsoft_description(self):
-        videocall_location_regex = r"\<a.+id=(?:'|\")o_videocall_location_url(?:'|\").*\>.+\<\/a\>"
+        videocall_location_regex = r"\<a.+?id=(?:'|\")o_videocall_location_url(?:'|\").*?\>.+?\<\/a\>"
         description = html_sanitize(self.description) if not is_html_empty(self.description) else ''
         if self.videocall_source and self.videocall_source != 'microsoft_teams' and self.videocall_location:
             description = re.sub(videocall_location_regex, "", description)
