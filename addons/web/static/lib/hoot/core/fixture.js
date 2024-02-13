@@ -50,6 +50,7 @@ customElements.define("hoot-fixture", class HootFixture extends HTMLElement {});
  */
 export function makeFixtureManager(runner) {
     const cleanupFixture = () => {
+        allowFixture = false;
         if (!fixture) {
             return;
         }
@@ -59,6 +60,9 @@ export function makeFixtureManager(runner) {
     };
 
     const getFixture = () => {
+        if (!allowFixture) {
+            throw new HootError(`Cannot access fixture outside of a test.`);
+        }
         if (!fixture) {
             fixture = document.createElement("hoot-fixture");
             if (runner.debug) {
@@ -97,6 +101,7 @@ export function makeFixtureManager(runner) {
     };
 
     const setupFixture = () => {
+        allowFixture = true;
         if (!shouldPrepareNextFixture) {
             return;
         }
@@ -107,6 +112,7 @@ export function makeFixtureManager(runner) {
         getSelection().removeAllRanges();
     };
 
+    let allowFixture = false;
     /** @type {HTMLElement | null} */
     let fixture = null;
     let shouldPrepareNextFixture = true; // Prepare setup for first test
