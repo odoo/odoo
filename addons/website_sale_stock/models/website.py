@@ -29,5 +29,5 @@ class Website(models.Model):
         so = super().sale_get_order(*args, **kwargs)
         return so.with_context(warehouse_id=so.warehouse_id.id) if so else so
 
-    def _get_product_available_qty(self, product):
+    def _get_product_available_qty(self, product, **kwargs):
         return product.with_context(warehouse_id=self._get_warehouse_available()).free_qty

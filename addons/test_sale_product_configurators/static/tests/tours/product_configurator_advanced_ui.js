@@ -2,8 +2,7 @@
 
 import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
-import configuratorTourUtils from "@test_sale_product_configurators/js/tour_utils";
-import { queryFirst } from "@odoo/hoot-dom";
+import configuratorTourUtils from "@sale/js/tours/product_configurator_tour_utils";
 
 let optionVariantImage;
 
@@ -13,7 +12,7 @@ registry.category("web_tour.tours").add('sale_product_configurator_advanced_tour
     steps: () => [stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="sale.sale_menu_root"]',
     run: "click",
-},  
+},
 {
     trigger: ".o_sale_order",
 },
@@ -27,7 +26,7 @@ registry.category("web_tour.tours").add('sale_product_configurator_advanced_tour
     isActive: ["auto"],
     trigger: '.ui-menu-item > a:contains("Tajine Saucisse")',
     run: "click",
-}, 
+},
 {
     trigger: ".o_field_widget[name=partner_shipping_id] .o_external_button", // Wait for onchange_partner_id
 },
@@ -47,24 +46,20 @@ registry.category("web_tour.tours").add('sale_product_configurator_advanced_tour
     ...configuratorTourUtils.selectAndSetCustomAttribute("Customizable Desk", "PA4", "PAV9", "Custom 3", "select"),
     configuratorTourUtils.assertProductNameContains("Custom, White, PAV9, PAV5, PAV1"),
 {
-    trigger: 'table.o_sale_product_configurator_table_optional tr:has(td>div[name="o_sale_product_configurator_name"] h5:contains("Conference Chair (TEST) (Steel)"))',
+    trigger: configuratorTourUtils.optionalProductSelector("Conference Chair (TEST) (Steel)"),
     run: function () {
-        const el = queryFirst(
-            'table.o_sale_product_configurator_table_optional tr:has(td>div[name="o_sale_product_configurator_name"] h5:contains("Conference Chair (TEST) (Aluminium)")) td[name="o_sale_product_configurator_img"]>img'
-        );
-        optionVariantImage = el?.getAttribute("src");
+        optionVariantImage =
+            configuratorTourUtils.optionalProductImageSrc("Conference Chair (TEST) (Steel)")
     }
 },
     configuratorTourUtils.selectAttribute("Conference Chair", "Legs", "Aluminium"),
 {
-    trigger: 'table.o_sale_product_configurator_table_optional tr:has(td>div[name="o_sale_product_configurator_name"] h5:contains("Conference Chair (TEST) (Aluminium)"))',
+    trigger: configuratorTourUtils.optionalProductSelector("Conference Chair (TEST) (Aluminium)"),
     run: function () {
-        const el = queryFirst(
-            'table.o_sale_product_configurator_table_optional tr:has(td>div[name="o_sale_product_configurator_name"] h5:contains("Conference Chair (TEST) (Aluminium)")) td[name="o_sale_product_configurator_img"]>img'
-        );
-        let newVariantImage = el?.getAttribute("src");
-        if (newVariantImage !== optionVariantImage) {
-            console.error('image variant option src changed');
+        const newOptionVariantImage =
+            configuratorTourUtils.optionalProductImageSrc("Conference Chair (TEST) (Aluminium)")
+        if (newOptionVariantImage === optionVariantImage) {
+            console.error("The variant image wasn't updated");
         }
     }
 }, {

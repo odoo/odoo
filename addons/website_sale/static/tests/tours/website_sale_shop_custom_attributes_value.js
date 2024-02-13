@@ -1,8 +1,10 @@
 /** @odoo-module **/
 
-import { queryOne } from "@odoo/hoot-dom";
 import { registry } from "@web/core/registry";
-var optionVariantImage;
+import configuratorTourUtils from "@sale/js/tours/product_configurator_tour_utils";
+import tourUtils from '@website_sale/js/tours/tour_utils';
+
+let optionVariantImage;
 
 registry.category("web_tour.tours").add("a_shop_custom_attribute_value", {
     url: "/shop?search=Customizable Desk",
@@ -16,61 +18,39 @@ registry.category("web_tour.tours").add("a_shop_custom_attribute_value", {
     run: 'click',
 }, {
     trigger: 'span.oe_currency_value:contains(750)',
-    run: function (){}, // check
 }, {
     id: 'add_cart_step',
     trigger: 'a:contains(Add to cart)',
     run: 'click',
 }, {
-    trigger: '.oe_advanced_configurator_modal .js_product:eq(1) div:contains("Conference Chair (TEST) (Steel)")',
+    trigger: configuratorTourUtils.optionalProductSelector("Conference Chair (TEST) (Steel)"),
     run: function () {
-        optionVariantImage = queryOne(
-            ".oe_advanced_configurator_modal .js_product:eq(1) img.variant_image"
-        ).getAttribute("src");
+        optionVariantImage =
+            configuratorTourUtils.optionalProductImageSrc("Conference Chair (TEST) (Steel)")
     }
-}, {
-    trigger: '.oe_advanced_configurator_modal .js_product:eq(1) input[data-value_name="Aluminium"]',
-    run: "click",
-}, {
-    trigger: '.oe_advanced_configurator_modal .js_product:eq(1) div:contains("Conference Chair (TEST) (Aluminium)")',
+},
+configuratorTourUtils.selectAttribute("Conference Chair", "Legs", "Aluminium"),
+{
+    trigger: configuratorTourUtils.optionalProductSelector("Conference Chair (TEST) (Aluminium)"),
     run: function () {
-        var newVariantImage = queryOne(
-            ".oe_advanced_configurator_modal .js_product:eq(1) img.variant_image"
-        ).getAttribute("src");
-        if (newVariantImage !== optionVariantImage) {
-            $('<p>').text('image variant option src changed').insertAfter('.oe_advanced_configurator_modal .js_product:eq(1) .product-name');
+        const newOptionVariantImage =
+            configuratorTourUtils.optionalProductImageSrc("Conference Chair (TEST) (Aluminium)")
+        if (newOptionVariantImage === optionVariantImage) {
+            console.error("The variant image wasn't updated");
         }
     }
-}, 
-{
-    trigger: '.oe_advanced_configurator_modal .js_product:eq(1) div:contains("image variant option src changed")',
 },
+configuratorTourUtils.assertOptionalProductPrice("Conference Chair", "22.90"),
+configuratorTourUtils.selectAttribute("Conference Chair", "Legs", "Steel"),
+configuratorTourUtils.addOptionalProduct("Conference Chair"),
+configuratorTourUtils.addOptionalProduct("Chair floor protection"),
+configuratorTourUtils.assertPriceTotal("1,528.50"),
 {
-    trigger: '.oe_advanced_configurator_modal .js_product:eq(1) input[data-value_name="Steel"]',
-    run: "click",
-}, {
-    trigger: '.oe_price span:contains(22.90)',
-    run: function (){}, // check
-}, 
-{
-    trigger:
-        ".oe_advanced_configurator_modal .js_product:has(strong:contains(Conference Chair))",
-},
-{
-    trigger: '.oe_advanced_configurator_modal .js_product:has(strong:contains(Conference Chair)) .js_add',
-    run: 'click'
-},
-{
-    trigger:
-        ".oe_advanced_configurator_modal .js_product:has(strong:contains(Chair floor protection))",
-},
-{
-    trigger: '.oe_advanced_configurator_modal .js_product:has(strong:contains(Chair floor protection)) .js_add',
-    run: 'click'
-}, {
-    trigger: 'span:contains(1,557.00)',
-    run: function (){}, // check
-}, {
-    trigger: 'button:has(span:contains(Proceed to Checkout))',
+    trigger: 'button:contains(Proceed to Checkout)',
     run: 'click',
-}]});
+},
+tourUtils.assertCartContains({
+    productName: "Customizable Desk (TEST)",
+    backend: false,
+}),
+]});

@@ -145,7 +145,7 @@ const DynamicSnippetProductsCard = WebsiteSale.extend({
 
             const inputPT = document.createElement('input');
             inputPT.setAttribute('name', 'product_template_id');
-            inputPT.classList.add('product_template_id');  // how can this logic be so ugly??? T_T
+            inputPT.setAttribute('type', 'hidden');
             inputPT.setAttribute('value', button.dataset.productTemplateId);
             dummy_form.appendChild(inputPT);
 

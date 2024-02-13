@@ -154,6 +154,7 @@
             <div class="add_to_cart_button">
                 <form action="/shop/cart/update" method="POST">
                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                    <input type="hidden" name="product_template_id" t-att-value="channel.product_id.product_tmpl_id.id"/>
                     <input type="hidden" class="product_id" name="product_id" t-att-value="channel.product_id.id"/>
                     <a id="add_to_cart" role="button" href="#"
                        class="btn btn-primary d-block js_check_product o_js_add_to_cart a-submit"

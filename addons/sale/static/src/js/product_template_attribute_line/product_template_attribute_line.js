@@ -6,7 +6,7 @@ import { BadgeExtraPrice } from "../badge_extra_price/badge_extra_price";
 
 export class ProductTemplateAttributeLine extends Component {
     static components = { BadgeExtraPrice };
-    static template = "saleProductConfigurator.ptal";
+    static template = "sale.ProductTemplateAttributeLine";
     static props = {
         productTmplId: Number,
         id: Number,
@@ -88,16 +88,16 @@ export class ProductTemplateAttributeLine extends Component {
      */
     getPTAVTemplate() {
         switch(this.props.attribute.display_type) {
-            case 'color':
-                return 'saleProductConfigurator.ptav-color';
-            case 'multi':
-                return 'saleProductConfigurator.ptav-multi';
-            case 'pills':
-                return 'saleProductConfigurator.ptav-pills';
-            case 'radio':
-                return 'saleProductConfigurator.ptav-radio';
             case 'select':
-                return 'saleProductConfigurator.ptav-select';
+                return 'sale.ptav_select';
+            case 'radio':
+                return 'sale.ptav_radio';
+            case 'pills':
+                return 'sale.ptav_pills';
+            case 'color':
+                return 'sale.ptav_color';
+            case 'multi':
+                return 'sale.ptav_multi';
         }
     }
 
@@ -106,7 +106,7 @@ export class ProductTemplateAttributeLine extends Component {
      *
      * In the selection HTML tag, it is impossible to show the component `BadgeExtraPrice`. Append
      * the extra price to the name to ensure that the extra price will be shown.
-     * Note: used in `saleProductConfigurator.ptav-select`.
+     * Note: used in `sale.ptav_select`.
      *
      * @param {Object} ptav - The attribute, as a `product.template.attribute.value` summary dict.
      * @return {String} - The name of the PTAV.
@@ -114,9 +114,7 @@ export class ProductTemplateAttributeLine extends Component {
     getPTAVSelectName(ptav) {
         if (ptav.price_extra) {
             const sign = ptav.price_extra > 0 ? '+' : '-';
-            const price = formatCurrency(
-                Math.abs(ptav.price_extra), this.env.currencyId
-            );
+            const price = formatCurrency(Math.abs(ptav.price_extra), this.env.currency.id);
             return ptav.name +" ("+ sign + " " + price + ")";
         } else {
             return ptav.name;

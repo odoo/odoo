@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
-    <t t-name="saleProductConfigurator.productList">
-        <h4 class="mt-4 mb-3" t-if="this.props.areProductsOptional">Add optional products</h4>
+    <t t-name="sale.ProductList">
+        <h4 class="mt-4 mb-3" t-if="this.props.areProductsOptional" t-out="optionalProductsTitle"/>
         <table class="o_sale_product_configurator_table table table-sm position-relative mb-0" t-att-class="{'o_sale_product_configurator_table_optional': this.props.areProductsOptional}">
             <thead t-if="!this.props.areProductsOptional">
                 <tr>

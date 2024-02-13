@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
-    <t t-name="sale_product_configurator.product">
+    <t t-name="sale.Product">
         <td class="o_sale_product_configurator_img py-3 px-0">
             <img
                 t-if="this.props.id"
@@ -29,50 +29,59 @@
             </t>
         </td>
         <td class="o_sale_product_configurator_qty py-3 px-0 text-end">
-            <div t-if="!this.props.optional" class="input-group justify-content-end">
-                <button
-                    class="btn btn-secondary d-none d-md-inline-block"
-                    aria-label="Remove one"
-                    t-on-click="decreaseQuantity">
-                    <i class="fa fa-minus"/>
-                </button>
-                <input
-                    class="form-control quantity border-bottom border-top text-center"
-                    name="product_quantity"
-                    type="number"
-                    t-att-value="this.props.quantity"
-                    t-on-change="setQuantity"/>
-                <button
-                    class="btn btn-secondary d-none d-md-inline-block"
-                    aria-label="Add one"
-                    t-on-click="increaseQuantity">
-                    <i class="fa fa-plus"/>
-                </button>
-            </div>
-            <div t-else="">
-                <h5 class="text-nowrap" t-out="getFormattedPrice()"/>
-            </div>
+            <t t-if="!this.props.optional">
+                <div
+                    name="sale_product_configurator_quantity_buttons"
+                    class="input-group justify-content-end">
+                    <button
+                        class="btn btn-secondary d-none d-md-inline-block"
+                        aria-label="Remove one"
+                        t-on-click="decreaseQuantity">
+                        <i class="fa fa-minus"/>
+                    </button>
+                    <input
+                        class="form-control quantity border-bottom border-top text-center"
+                        name="product_quantity"
+                        type="number"
+                        t-att-value="this.props.quantity"
+                        t-on-change="setQuantity"/>
+                    <button
+                        class="btn btn-secondary d-none d-md-inline-block"
+                        aria-label="Add one"
+                        t-on-click="increaseQuantity">
+                        <i class="fa fa-plus"/>
+                    </button>
+                </div>
+            </t>
+            <t t-else="">
+                <t t-call="sale.product_price" name="sale_product_configurator_optional_price"/>
+            </t>
             <a
                 class="d-block mt-2"
                 role="button"
                 t-if="!this.props.optional &amp;&amp; this.env.mainProductTmplId !== this.props.product_tmpl_id"
                 t-on-click="() => this.env.removeProduct(this.props.product_tmpl_id)">
-                Remove product
+                Remove
             </a>
         </td>
         <td class="o_sale_product_configurator_price py-3 px-0 text-end" name="price">
-            <div t-if="!this.props.optional" class="input-group justify-content-end">
-                <h5 class="text-nowrap" t-out="getFormattedPrice()"/>
-            </div>
-            <div t-else="">
+            <t t-if="!this.props.optional">
+                <t t-call="sale.product_price" name="sale_product_configurator_price"/>
+            </t>
+            <t t-else="">
                 <button
-                    t-if="this.props.optional"
+                    name="sale_product_configurator_add_button"
                     class="btn btn-secondary"
                     t-att-class="{'disabled': !this.env.isPossibleCombination(this.props)}"
                     t-on-click="() => this.env.addProduct(this.props.product_tmpl_id)">
                     <i class="fa fa-plus"/> Add
                 </button>
-            </div>
+            </t>
         </td>
+    </t>
+
+    <t t-name="sale.product_price">
+        <h5 class="text-nowrap" t-out="getFormattedPrice()"/>
+        <span t-if="this.props.price_info" t-out="this.props.price_info" class="text-muted"/>
     </t>
 </templates>

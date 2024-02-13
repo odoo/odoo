@@ -20,16 +20,19 @@ publicWidget.registry.AddToCartSnippet = WebsiteSale.extend(cartHandlerMixin, {
     _onClickAddToCartButton: async function (ev) {
         const dataset = ev.currentTarget.dataset;
 
-        const visitorChoice = dataset.visitorChoice === 'true';
         const action = dataset.action;
         const productId = parseInt(dataset.productVariantId);
+        const productTemplateId = parseInt(dataset.productTemplateId);
 
         if (!productId) {
-            return;
-        }
-
-        if (visitorChoice) {
-            this._handleAdd($(ev.currentTarget.closest('div')));
+            this.rootProduct = {
+                product_template_id: productTemplateId,
+                quantity: 1,
+                product_custom_attribute_values: [],
+                variant_values: [],
+                no_variant_attribute_values: [],
+            };
+            this._onProductReady();
         } else {
             const isAddToCartAllowed = await rpc(`/shop/product/is_add_to_cart_allowed`, {
                 product_id: productId,
