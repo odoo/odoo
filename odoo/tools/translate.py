@@ -1298,7 +1298,7 @@ class TranslationModuleReader(TranslationReader):
 
         This will include:
         - the python strings marked with _() or _lt()
-        - the javascript strings marked with _t() or _lt() inside static/src/js/
+        - the javascript strings marked with _t() inside static/src/js/
         - the strings inside Qweb files inside static/src/xml/
         - the spreadsheet data files
         """
@@ -1323,7 +1323,7 @@ class TranslationModuleReader(TranslationReader):
                     for fname in fnmatch.filter(files, '*.js'):
                         self._babel_extract_terms(fname, path, root, 'javascript',
                                                   extra_comments=[JAVASCRIPT_TRANSLATION_COMMENT],
-                                                  extract_keywords={'_t': None, '_lt': None})
+                                                  extract_keywords={'_t': None})
                     # QWeb template files
                     for fname in fnmatch.filter(files, '*.xml'):
                         self._babel_extract_terms(fname, path, root, 'odoo.tools.translate:babel_extract_qweb',
