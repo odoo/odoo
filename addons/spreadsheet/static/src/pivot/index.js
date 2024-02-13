@@ -22,7 +22,6 @@ coreTypes.add("ADD_PIVOT");
 coreTypes.add("INSERT_PIVOT");
 coreTypes.add("RENAME_ODOO_PIVOT");
 coreTypes.add("REMOVE_PIVOT");
-coreTypes.add("RE_INSERT_PIVOT");
 coreTypes.add("UPDATE_ODOO_PIVOT_DOMAIN");
 coreTypes.add("DUPLICATE_PIVOT");
 
@@ -51,7 +50,6 @@ inverseCommandRegistry
     .add("INSERT_PIVOT", identity)
     .add("RENAME_ODOO_PIVOT", identity)
     .add("REMOVE_PIVOT", identity)
-    .add("UPDATE_ODOO_PIVOT_DOMAIN", identity)
-    .add("RE_INSERT_PIVOT", identity);
+    .add("UPDATE_ODOO_PIVOT_DOMAIN", identity);
 
 export { PivotCorePlugin, PivotUIPlugin };
