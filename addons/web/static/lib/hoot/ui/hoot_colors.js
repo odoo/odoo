@@ -41,8 +41,8 @@ const GRAYS = {
 const COLOR_VALUES = {
     default: {
         // Generic colors
-        "black": "#000000",
-        "white": "#ffffff",
+        black: "#000000",
+        white: "#ffffff",
 
         // Grays
         "gray-100": GRAYS[100],
