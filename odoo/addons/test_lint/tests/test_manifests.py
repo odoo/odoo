@@ -15,6 +15,7 @@ MANIFEST_KEYS = {
     'name', 'icon', 'addons_path', 'license',  # mandatory keys
     *_DEFAULT_MANIFEST,                        # optional keys
     'contributors', 'maintainer', 'url',       # unused "informative" keys
+    # 'maintenance_loc',                         # unused in standard, only industry
 }
 
 
