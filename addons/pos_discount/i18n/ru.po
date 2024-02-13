@@ -3,60 +3,51 @@
 # 	* pos_discount
 #
 # Translators:
-# Irina Fedulova <istartlin@gmail.com>, 2022
-# ILMIR <karamov@it-projects.info>, 2022
-# Martin Trigaux, 2022
-# Ivan Kropotkin <yelizariev@itpp.dev>, 2022
-# Vasiliy Korobatov <korobatov@gmail.com>, 2022
-#
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Vasiliy Korobatov <korobatov@gmail.com>, 2022\n"
+"POT-Creation-Date: 2024-02-12 10:36+0000\n"
+"PO-Revision-Date: 2024-01-30 15:14+0400\n"
+"Last-Translator: \n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
-"(n%100>=11 && n%100<=14)? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: pos_discount
 #. odoo-python
 #: code:addons/pos_discount/models/pos_config.py:0
-msgid ""
-"A discount product is needed to use the Global Discount feature. Go to Point "
-"of Sale > Configuration > Settings to set it."
-msgstr ""
+msgid "A discount product is needed to use the Global Discount feature. Go to Point of Sale > Configuration > Settings to set it."
+msgstr "Для использования функции глобальной скидки необходим продукт со скидкой. Перейдите в пункт продажи > Конфигурация > Настройки, чтобы настроить его."
 
 #. module: pos_discount
 #: model:ir.model.fields,help:pos_discount.field_pos_config__iface_discount
 msgid "Allow the cashier to give discounts on the whole order."
-msgstr "Разрешить кассиру сделать скидку на весь заказ."
+msgstr "Разрешить кассиру, дать скидки на весь заказ."
 
 #. module: pos_discount
 #: model:ir.model,name:pos_discount.model_res_config_settings
 msgid "Config Settings"
-msgstr "Конфигурационные настройки"
+msgstr "Параметры конфигурации"
 
 #. module: pos_discount
 #. odoo-javascript
-#: code:addons/pos_discount/static/src/overrides/components/discount_button/discount_button.xml:0
+#: code:addons/pos_discount/static/src/overrides/components/control_buttons/control_buttons.xml:0
+#: model:product.template,name:pos_discount.product_product_consumable_product_template
 msgid "Discount"
 msgstr "Скидка"
 
 #. module: pos_discount
 #: model_terms:ir.ui.view,arch_db:pos_discount.res_config_settings_view_form
 msgid "Discount %"
-msgstr "% cкидки"
+msgstr "Скидка %"
 
 #. module: pos_discount
 #. odoo-javascript
-#: code:addons/pos_discount/static/src/overrides/components/discount_button/discount_button.js:0
+#: code:addons/pos_discount/static/src/overrides/components/control_buttons/control_buttons.js:0
 #: model:ir.model.fields,field_description:pos_discount.field_pos_config__discount_pc
 #: model:ir.model.fields,field_description:pos_discount.field_res_config_settings__pos_discount_pc
 msgid "Discount Percentage"
@@ -66,24 +57,24 @@ msgstr "Скидка в процентах"
 #: model:ir.model.fields,field_description:pos_discount.field_pos_config__discount_product_id
 #: model_terms:ir.ui.view,arch_db:pos_discount.res_config_settings_view_form
 msgid "Discount Product"
-msgstr "Скидка продукта"
+msgstr "Товар по скидке"
 
 #. module: pos_discount
 #. odoo-javascript
-#: code:addons/pos_discount/static/src/overrides/components/discount_button/discount_button.js:0
+#: code:addons/pos_discount/static/src/overrides/components/control_buttons/control_buttons.js:0
 msgid "No discount product found"
-msgstr "Продукт со скидкой не найден"
+msgstr "Скидочный продукт не найден"
 
 #. module: pos_discount
 #. odoo-javascript
-#: code:addons/pos_discount/static/src/overrides/components/discount_button/discount_button.js:0
+#: code:addons/pos_discount/static/src/overrides/components/control_buttons/control_buttons.js:0
 msgid "No tax"
-msgstr ""
+msgstr "Никаких налогов"
 
 #. module: pos_discount
 #: model:ir.model.fields,field_description:pos_discount.field_pos_config__iface_discount
 msgid "Order Discounts"
-msgstr "Скидки заказа"
+msgstr "Скидки на заказы"
 
 #. module: pos_discount
 #: model:ir.model,name:pos_discount.model_pos_config
@@ -91,38 +82,29 @@ msgid "Point of Sale Configuration"
 msgstr "Конфигурация точки продаж"
 
 #. module: pos_discount
-#: model:ir.model,name:pos_discount.model_pos_session
-msgid "Point of Sale Session"
-msgstr "Смена"
-
-#. module: pos_discount
 #: model:ir.model.fields,field_description:pos_discount.field_res_config_settings__pos_discount_product_id
 msgid "Pos Discount Product"
-msgstr ""
+msgstr "Продукт со скидкой Pos"
 
 #. module: pos_discount
 #. odoo-javascript
-#: code:addons/pos_discount/static/src/overrides/components/discount_button/discount_button.js:0
+#: code:addons/pos_discount/static/src/overrides/components/control_buttons/control_buttons.js:0
 msgid "Tax: %s"
-msgstr ""
+msgstr "Налог: %s"
 
 #. module: pos_discount
 #: model:ir.model.fields,help:pos_discount.field_pos_config__discount_pc
 #: model:ir.model.fields,help:pos_discount.field_res_config_settings__pos_discount_pc
 msgid "The default discount percentage when clicking on the Discount button"
-msgstr ""
+msgstr "Процент скидки по умолчанию при нажатии на кнопку скидки"
 
 #. module: pos_discount
 #. odoo-javascript
-#: code:addons/pos_discount/static/src/overrides/components/discount_button/discount_button.js:0
-msgid ""
-"The discount product seems misconfigured. Make sure it is flagged as 'Can be "
-"Sold' and 'Available in Point of Sale'."
-msgstr ""
-"Кажется продукт со скидкой неправильно настроен. Убедитесь, что он помечен "
-"как \"Может быть продан\" и \"Доступен в торговой точке\"."
+#: code:addons/pos_discount/static/src/overrides/components/control_buttons/control_buttons.js:0
+msgid "The discount product seems misconfigured. Make sure it is flagged as 'Can be Sold' and 'Available in Point of Sale'."
+msgstr "Похоже, что скидочный продукт настроен неправильно. Убедитесь, что он отмечен как \"Может быть продан\" и \"Доступен в местах продажи\"."
 
 #. module: pos_discount
 #: model:ir.model.fields,help:pos_discount.field_pos_config__discount_product_id
 msgid "The product used to apply the discount on the ticket."
-msgstr ""
+msgstr "Продукт, используемый для применения скидки к билету."
