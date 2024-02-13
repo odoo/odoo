@@ -1212,6 +1212,10 @@ class AccountMove(models.Model):
                 move.tax_totals = self.env['account.tax']._prepare_tax_totals(**kwargs)
                 if move.invoice_cash_rounding_id:
                     rounding_amount = move.invoice_cash_rounding_id.compute_difference(move.currency_id, move.tax_totals['amount_total'])
+                    if not rounding_amount:
+                        rounding_line = move.line_ids.filtered(lambda line: line.account_id == move.invoice_cash_rounding_id.loss_account_id or line.account_id == move.invoice_cash_rounding_id.profit_account_id)
+                        rounding_amount = rounding_line.credit - rounding_line.debit
+
                     totals = move.tax_totals
                     totals['display_rounding'] = True
                     if rounding_amount:
