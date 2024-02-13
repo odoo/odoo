@@ -2130,6 +2130,11 @@ export class OdooEditor extends EventTarget {
                     this.toolbar.style.visibility = show ? 'visible' : 'hidden';
                 }
                 if (show === false) {
+                    // close all dropdowns
+                    for (const dropdown of this.toolbar.querySelectorAll("ul.dropdown-menu.show")) {
+                        dropdown.classList.remove('show');
+                        dropdown.classList.add('hide');
+                    }
                     return;
                 }
             }
