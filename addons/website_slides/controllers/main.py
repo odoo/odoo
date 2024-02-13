@@ -683,12 +683,12 @@ class WebsiteSlides(WebsiteProfile):
         if request.env.user.has_group('base.group_system'):
             module = request.env.ref('base.module_survey')
             if module.state != 'installed':
-                render_values['modules_to_install'] = [{
+                render_values['modules_to_install'] = json.dumps([{
                     'id': module.id,
                     'name': module.shortdesc,
                     'motivational': _('Want to test and certify your students?'),
                     'default_slide_category': 'certification',
-                }]
+                }])
 
         render_values = self._prepare_additional_channel_values(render_values, **kw)
         return request.render('website_slides.course_main', render_values)

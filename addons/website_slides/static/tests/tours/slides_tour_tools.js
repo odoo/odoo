@@ -81,10 +81,10 @@ var addArticleToSection = function (sectionName, pageName, backend) {
 	run: 'text ' + pageName,
 }, {
     content: 'eLearning: click on tags',
-    trigger: (backend ? 'iframe ' : '' ) + 'ul.select2-choices:first',
+    trigger: (backend ? 'iframe ' : '' ) + 'button.o_select_menu_toggler:last',
 }, {
     content: 'eLearning: select Theory tag',
-    trigger: (backend ? 'iframe ' : '' ) + 'div.select2-result-label:contains("Theory")',
+    trigger: (backend ? 'iframe ' : '' ) + 'div.o_select_menu_item_label:contains("Theory")',
     in_modal: false,
 }, {
 	content: 'eLearning: fill article completion time',
