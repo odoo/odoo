@@ -54,6 +54,8 @@ export class Tag {
     static SKIP = SPECIAL_TAGS.skip;
     static TODO = SPECIAL_TAGS.todo;
 
+    weight = 0;
+
     /**
      * @param {string} name
      */

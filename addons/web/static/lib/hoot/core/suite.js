@@ -28,11 +28,19 @@ export class Suite extends Job {
     /** @type {(Suite | Test)[]} */
     jobs = [];
     reporting = createReporting();
+    weight = 0;
 
     /**
      * @returns {boolean}
      */
     canRun() {
         return super.canRun() && this.currentJobs.some((job) => job.canRun());
+    }
+
+    increaseWeight() {
+        this.weight++;
+        if (this.parent) {
+            this.parent.increaseWeight();
+        }
     }
 }

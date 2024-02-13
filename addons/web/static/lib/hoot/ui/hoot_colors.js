@@ -69,7 +69,7 @@ const COLOR_VALUES = {
         "skip-900": "#e0f2fe",
         todo: "#581c87",
         "todo-900": "#f3e8ff",
-        muted: GRAYS[500],
+        muted: GRAYS[400],
 
         // App colors
         bg: GRAYS[100],
@@ -81,6 +81,7 @@ const COLOR_VALUES = {
         "bg-result": "rgba(255, 255, 255, 0.6)",
         "border-result": GRAYS[300],
         "border-search": "#d8dadd",
+        "shadow-opacity": 0.1,
 
         // HootReporting colors
         "bg-report": "#ffffff",
@@ -109,7 +110,7 @@ const COLOR_VALUES = {
         "skip-900": "#083344",
         todo: "#a855f7",
         "todo-900": "#3b0764",
-        muted: GRAYS[400],
+        muted: GRAYS[500],
 
         // App colors
         bg: GRAYS[900],
@@ -121,6 +122,7 @@ const COLOR_VALUES = {
         "bg-result": "rgba(0, 0, 0, 0.5)",
         "border-result": GRAYS[600],
         "border-search": "#3c3f4c",
+        "shadow-opacity": 0.4,
 
         // HootReporting colors
         "bg-report": "#202124",
