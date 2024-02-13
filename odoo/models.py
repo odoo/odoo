@@ -2813,7 +2813,7 @@ class BaseModel(metaclass=MetaModel):
 
             comodel = model.env[path_field.comodel_name]
             coalias = query.make_alias(alias, path_fname)
-            query.add_join('LEFT JOIN', coalias, comodel._table, SQL(
+            query.add_join('JOIN' if path_field.required else 'LEFT JOIN', coalias, comodel._table, SQL(
                 "%s = %s",
                 model._field_to_sql(alias, path_fname, query),
                 SQL.identifier(coalias, 'id'),
@@ -5335,9 +5335,9 @@ class BaseModel(metaclass=MetaModel):
             elif nulls.code == 'NULLS LAST':
                 terms.append(SQL("%s IS NULL", self._field_to_sql(alias, field_name, query)))
 
-            # LEFT JOIN the comodel table, in order to include NULL values, too
+            # [LEFT] JOIN the comodel table, in order to include NULL values, too
             coalias = query.make_alias(alias, field_name)
-            query.add_join('LEFT JOIN', coalias, comodel._table, SQL(
+            query.add_join('JOIN' if field.required else 'LEFT JOIN', coalias, comodel._table, SQL(
                 "%s = %s",
                 sql_field,
                 SQL.identifier(coalias, 'id'),

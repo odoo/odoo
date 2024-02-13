@@ -1003,9 +1003,9 @@ class expression(object):
             if field.inherited:
                 parent_model = model.env[field.related_field.model_name]
                 parent_fname = model._inherits[parent_model._name]
-                # LEFT JOIN parent_model._table AS parent_alias ON alias.parent_fname = parent_alias.id
+                # JOIN parent_model._table AS parent_alias ON alias.parent_fname = parent_alias.id
                 parent_alias = self.query.make_alias(alias, parent_fname)
-                self.query.add_join('LEFT JOIN', parent_alias, parent_model._table, SQL(
+                self.query.add_join('JOIN', parent_alias, parent_model._table, SQL(
                     "%s = %s",
                     model._field_to_sql(alias, parent_fname, self.query),
                     SQL.identifier(parent_alias, 'id'),
@@ -1100,14 +1100,17 @@ class expression(object):
             elif operator in ('any', 'not any') and field.store and field.type == 'many2one' and field.auto_join:
                 # res_partner.state_id = res_partner__state_id.id
                 coalias = self.query.make_alias(alias, field.name)
-                self.query.add_join('LEFT JOIN', coalias, comodel._table, SQL(
+                self.query.add_join('JOIN' if field.required else 'LEFT JOIN', coalias, comodel._table, SQL(
                     "%s = %s",
                     model._field_to_sql(alias, field.name, self.query),
                     SQL.identifier(coalias, 'id'),
                 ))
 
                 if operator == 'not any':
-                    right = ['|', ('id', '=', False), '!', *right]
+                    if field.required:
+                        right = ['!', *right]
+                    else:
+                        right = ['|', ('id', '=', False), '!', *right]
 
                 for leaf in right:
                     push(leaf, comodel, coalias)
@@ -1129,7 +1132,12 @@ class expression(object):
                 if operator == 'any':
                     push((left, 'in', right_ids), model, alias)
                 else:
-                    for dom_leaf in ('|', (left, 'not in', right_ids), (left, '=', False)):
+                    if field.required:
+                        right = ((left, 'not in', right_ids),)
+                    else:
+                        right = ('|', (left, 'not in', right_ids), (left, '=', False))
+
+                    for dom_leaf in right:
                         push(dom_leaf, model, alias)
 
             # Making search easier when there is a left operand as one2many or many2many
