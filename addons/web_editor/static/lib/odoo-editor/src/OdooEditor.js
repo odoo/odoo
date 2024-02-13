@@ -353,6 +353,11 @@ export class OdooEditor extends EventTarget {
         this.addDomListener(this.document, 'mousedown', this._onDoumentMousedown);
         this.addDomListener(this.document, 'mouseup', this._onDoumentMouseup);
 
+        // when you click outisde the parent iframe
+        if (window.top !== this.document.defaultView) {
+            this.addDomListener(window.top, "click", this._onTopWindowClick);
+        }
+
         this.multiselectionRefresh = this.multiselectionRefresh.bind(this);
         this._resizeObserver = new ResizeObserver(this.multiselectionRefresh);
         this._resizeObserver.observe(this.document.body);
@@ -3243,6 +3248,10 @@ export class OdooEditor extends EventTarget {
         if (this.toolbar) {
             this.toolbar.style.pointerEvents = 'auto';
         }
+    }
+
+    _onTopWindowClick(){
+        this._updateToolbar(false);
     }
 
     /**
