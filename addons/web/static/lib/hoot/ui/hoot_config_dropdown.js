@@ -35,7 +35,7 @@ export class HootConfigDropdown extends Component {
             </button>
             <t t-if="state.open">
                 <form
-                    class="hoot-config-dropdown animate-slide-down bg-base text-base mt-1 absolute flex flex-col end-0 px-2 py-3 shadow rounded shadow z-10"
+                    class="hoot-config-dropdown animate-slide-down bg-base text-base mt-1 absolute flex flex-col end-0 px-2 py-3 shadow rounded shadow z-2"
                     t-on-submit.prevent="refresh"
                 >
                     <label
