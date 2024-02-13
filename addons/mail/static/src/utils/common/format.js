@@ -269,3 +269,5 @@ export function parseEmail(text) {
     }
     return [text, false];
 }
+
+export const EMOJI_REGEX = /\p{Emoji_Presentation}|\p{Emoji}\uFE0F|\u200d/gu;

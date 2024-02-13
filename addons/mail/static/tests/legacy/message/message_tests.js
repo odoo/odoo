@@ -1689,3 +1689,43 @@ QUnit.test("Click on view reactions shows the reactions on the message", async (
     await click(".o-mail-Message-moreMenu [title='View Reactions']");
     await contains(".o-mail-MessageReactionMenu", { text: "😅1" });
 });
+
+QUnit.test("discuss - bigger font size when there is only emoji", async (assert) => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_type: "channel",
+        name: "channel1",
+    });
+    const { openDiscuss } = await start();
+    await openDiscuss(channelId);
+    await insertText(".o-mail-Composer-input", "🥳");
+    await click(".o-mail-Composer-send:enabled");
+    await contains(".o-mail-Message-body", { text: "🥳" });
+    await insertText(".o-mail-Composer-input", "not only emoji!! 😅");
+    await click(".o-mail-Composer-send:enabled");
+    await contains(".o-mail-Message-body", { text: "not only emoji!! 😅" });
+    const [emojiMessage, textMessage] = document.querySelectorAll(".o-mail-Message-body");
+    assert.ok(
+        parseFloat(getComputedStyle(emojiMessage).getPropertyValue("font-size")) >
+            parseFloat(getComputedStyle(textMessage).getPropertyValue("font-size"))
+    );
+});
+
+QUnit.test("chatter - font size unchanged when there is only emoji", async (assert) => {
+    const pyEnv = await startServer();
+    const { openFormView } = await start();
+    await openFormView("res.partner", pyEnv.currentPartnerId);
+    await click(".o-mail-Chatter-sendMessage");
+    await insertText(".o-mail-Composer-input", "🥳");
+    await click(".o-mail-Composer-send:enabled");
+    await contains(".o-mail-Message-body", { text: "🥳" });
+    await click(".o-mail-Chatter-sendMessage");
+    await insertText(".o-mail-Composer-input", "not only emoji!! 😅");
+    await click(".o-mail-Composer-send:enabled");
+    await contains(".o-mail-Message-body", { text: "not only emoji!! 😅" });
+    const [emojiMessage, textMessage] = document.querySelectorAll(".o-mail-Message-body");
+    assert.ok(
+        parseFloat(getComputedStyle(emojiMessage).getPropertyValue("font-size")) ===
+            parseFloat(getComputedStyle(textMessage).getPropertyValue("font-size"))
+    );
+});

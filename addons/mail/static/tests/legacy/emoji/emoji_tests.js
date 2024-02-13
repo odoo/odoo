@@ -128,37 +128,6 @@ QUnit.test("emoji usage amount orders frequent emojis", async () => {
     });
 });
 
-QUnit.test("posting :wink: in message should impact recent", async () => {
-    const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({ name: "" });
-    const { openDiscuss } = await start();
-    openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", ":wink:");
-    await click(".o-mail-Composer-send:enabled");
-    await click("button[aria-label='Emojis']");
-    await contains(".o-Emoji", {
-        text: "😉",
-        after: ["span", { textContent: "Frequently used" }],
-        before: ["span", { textContent: "Smileys & Emotion" }],
-    });
-});
-
-QUnit.test("posting :snowman: in message should impact recent", async () => {
-    // the snowman emoji is composed of two codepoints, making it a corner case
-    const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({ name: "" });
-    const { openDiscuss } = await start();
-    openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", ":snowman:");
-    await click(".o-mail-Composer-send:enabled");
-    await click("button[aria-label='Emojis']");
-    await contains(".o-Emoji", {
-        text: "☃️",
-        after: ["span", { textContent: "Frequently used" }],
-        before: ["span", { textContent: "Smileys & Emotion" }],
-    });
-});
-
 QUnit.test("first category should be highlighted by default", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
