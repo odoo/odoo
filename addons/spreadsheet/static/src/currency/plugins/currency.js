@@ -15,7 +15,7 @@ const DATA_SOURCE_ID = "CURRENCIES";
 export class CurrencyPlugin extends OdooUIPlugin {
     static getters = /** @type {const} */ ([
         "getCurrencyRate",
-        "getCurrencyFormat",
+        "computeFormatFromCurrency",
         "getCompanyCurrencyFormat",
     ]);
 
@@ -45,10 +45,7 @@ export class CurrencyPlugin extends OdooUIPlugin {
     }
 
     /**
-     *
-     * @param {Currency | undefined} currency
-     * @private
-     *
+     * @param {Currency | undefined} currency     *
      * @returns {string | undefined}
      */
     computeFormatFromCurrency(currency) {
@@ -60,19 +57,6 @@ export class CurrencyPlugin extends OdooUIPlugin {
             position: currency.position,
             decimalPlaces: currency.decimalPlaces,
         });
-    }
-
-    /**
-     * Returns the default display format of a given currency
-     * @param {string} currencyName
-     * @returns {string | undefined}
-     */
-    getCurrencyFormat(currencyName) {
-        const currency =
-            currencyName &&
-            this.dataSources &&
-            this.dataSources.get(DATA_SOURCE_ID).getCurrency(currencyName);
-        return this.computeFormatFromCurrency(currency);
     }
 
     /**

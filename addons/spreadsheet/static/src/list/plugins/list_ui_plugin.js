@@ -19,6 +19,7 @@ export class ListUIPlugin extends OdooUIPlugin {
         "getListHeaderValue",
         "getListIdFromPosition",
         "getListCellValue",
+        "getListCurrency",
         "getListDataSource",
         "getAsyncListDataSource",
         "isListUnused",
@@ -315,6 +316,10 @@ export class ListUIPlugin extends OdooUIPlugin {
      */
     getListCellValue(listId, position, fieldName) {
         return this.getters.getListDataSource(listId).getListCellValue(position, fieldName);
+    }
+
+    getListCurrency(listId, position, fieldName) {
+        return this.getters.getListDataSource(listId).getListCurrency(position, fieldName);
     }
 
     /**
