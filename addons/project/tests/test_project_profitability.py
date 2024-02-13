@@ -58,7 +58,7 @@ class TestProfitability(TestProjectProfitabilityCommon):
             So the no revenue and cost should be found.
         """
         self.assertDictEqual(
-            self.project._get_profitability_items(False),
+            self.project._get_profitability_items(None, None, with_action=False),
             self.project_profitability_items_empty,
             'The profitability data of the project should be return no data and so 0 for each total amount.'
         )

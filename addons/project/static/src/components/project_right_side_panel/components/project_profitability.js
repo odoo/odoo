@@ -8,6 +8,8 @@ export class ProjectProfitability extends Component {
         formatMonetary: Function,
         onProjectActionClick: Function,
         onClick: Function,
+        startDate: Date | Boolean,
+        endDate: Date | Boolean,
     };
     static template = "project.ProjectProfitability";
 

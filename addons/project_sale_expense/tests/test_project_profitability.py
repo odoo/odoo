@@ -83,7 +83,7 @@ class TestProjectSaleExpenseProfitability(TestProjectProfitabilityCommon, TestPr
         expense_sheet_foreign.action_approve_expense_sheets()
         self.assertEqual(expense_sheet_foreign.state, 'approve')
 
-        expense_profitability = project._get_expenses_profitability_items(False)
+        expense_profitability = project._get_expenses_profitability_items(None, None, with_action=False)
         sequence_per_invoice_type = project._get_profitability_sequence_per_invoice_type()
         self.assertIn('expenses', sequence_per_invoice_type)
         expense_sequence = sequence_per_invoice_type['expenses']
@@ -118,7 +118,7 @@ class TestProjectSaleExpenseProfitability(TestProjectProfitabilityCommon, TestPr
         ])
         expense_sol = self.sale_order.order_line.filtered(lambda sol: sol.product_id == self.company_data['product_order_sales_price'])
 
-        expense_profitability = project._get_expenses_profitability_items(False)
+        expense_profitability = project._get_expenses_profitability_items(None, None, with_action=False)
         self.assertDictEqual(
             expense_profitability.get('revenues', {}),
             {'id': 'expenses', 'sequence': expense_sequence, 'invoiced': 0.0, 'to_invoice': expense_sol.untaxed_amount_to_invoice},
@@ -129,7 +129,7 @@ class TestProjectSaleExpenseProfitability(TestProjectProfitabilityCommon, TestPr
         )
 
         self.assertDictEqual(
-            project._get_profitability_items(False),
+            project._get_profitability_items(None, None, with_action=False),
             {
                 'revenues': {
                     'data': [expense_profitability['revenues']],
@@ -145,7 +145,7 @@ class TestProjectSaleExpenseProfitability(TestProjectProfitabilityCommon, TestPr
         expense_sheet_foreign.action_sheet_move_post()
         self.assertEqual(expense_sheet_foreign.state, 'post')
         expense_sol_foreign = so_foreign.order_line[0]
-        expense_profitability = project._get_expenses_profitability_items(False)
+        expense_profitability = project._get_expenses_profitability_items(None, None, with_action=False)
         self.assertDictEqual(
             expense_profitability.get('revenues', {}),
             {'id': 'expenses', 'sequence': expense_sequence, 'invoiced': 0.0, 'to_invoice': expense_sol.untaxed_amount_to_invoice + expense_sol_foreign.untaxed_amount_to_invoice * 0.2},
@@ -156,7 +156,7 @@ class TestProjectSaleExpenseProfitability(TestProjectProfitabilityCommon, TestPr
         )
 
         self.assertDictEqual(
-            project._get_profitability_items(False),
+            project._get_profitability_items(None, None, with_action=False),
             {
                 'revenues': {
                     'data': [expense_profitability['revenues']],
@@ -177,7 +177,7 @@ class TestProjectSaleExpenseProfitability(TestProjectProfitabilityCommon, TestPr
             })._create_invoices(self.sale_order)
         invoice.action_post()
 
-        expense_profitability = project._get_expenses_profitability_items(False)
+        expense_profitability = project._get_expenses_profitability_items(None, None, with_action=False)
         self.assertDictEqual(
             expense_profitability.get('revenues', {}),
             {'id': 'expenses', 'sequence': expense_sequence, 'invoiced': expense_sol.untaxed_amount_invoiced, 'to_invoice': expense_sol_foreign.untaxed_amount_to_invoice * 0.2},
@@ -186,14 +186,14 @@ class TestProjectSaleExpenseProfitability(TestProjectProfitabilityCommon, TestPr
         credit_note = invoice._reverse_moves()
         credit_note.action_post()
 
-        expense_profitability = project._get_expenses_profitability_items(False)
+        expense_profitability = project._get_expenses_profitability_items(None, None, with_action=False)
         self.assertDictEqual(
             expense_profitability.get('revenues', {}),
             {'id': 'expenses', 'sequence': expense_sequence, 'invoiced': 0.0, 'to_invoice': expense_sol.untaxed_amount_to_invoice + expense_sol_foreign.untaxed_amount_to_invoice * 0.2},
         )
 
         self.sale_order._action_cancel()
-        expense_profitability = project._get_expenses_profitability_items(False)
+        expense_profitability = project._get_expenses_profitability_items(None, None, with_action=False)
         self.assertDictEqual(
             expense_profitability.get('revenues', {}),
             {'id': 'expenses', 'sequence': expense_sequence, 'invoiced': 0.0, 'to_invoice': expense_sol_foreign.untaxed_amount_to_invoice * 0.2},
@@ -221,7 +221,7 @@ class TestProjectSaleExpenseProfitability(TestProjectProfitabilityCommon, TestPr
                 'advance_payment_method': 'delivered',
             })._create_invoices(so_foreign)
         invoice.action_post()
-        expense_profitability = project._get_expenses_profitability_items(False)
+        expense_profitability = project._get_expenses_profitability_items(None, None, with_action=False)
         self.assertDictEqual(
             expense_profitability.get('revenues', {}),
             {'id': 'expenses', 'sequence': expense_sequence, 'invoiced': expense_sol_foreign.untaxed_amount_invoiced * 0.2, 'to_invoice': 0.0},
@@ -230,14 +230,14 @@ class TestProjectSaleExpenseProfitability(TestProjectProfitabilityCommon, TestPr
         credit_note = invoice._reverse_moves()
         credit_note.action_post()
 
-        expense_profitability = project._get_expenses_profitability_items(False)
+        expense_profitability = project._get_expenses_profitability_items(None, None, with_action=False)
         self.assertDictEqual(
             expense_profitability.get('revenues', {}),
             {'id': 'expenses', 'sequence': expense_sequence, 'invoiced': 0.0, 'to_invoice': expense_sol_foreign.untaxed_amount_to_invoice * 0.2},
         )
 
         so_foreign._action_cancel()
-        expense_profitability = project._get_expenses_profitability_items(False)
+        expense_profitability = project._get_expenses_profitability_items(None, None, with_action=False)
         self.assertDictEqual(
             expense_profitability.get('revenues', {}),
             {},

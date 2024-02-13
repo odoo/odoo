@@ -5,6 +5,7 @@ from ast import literal_eval
 from collections import defaultdict
 
 from odoo import models
+from odoo.osv import expression
 
 
 class ProjectProject(models.Model):
@@ -129,8 +130,13 @@ class ProjectProject(models.Model):
         in the hr_timesheet module, we can't add the condition ('project_id', '=', False) here. """
         return [('account_id', '=', self.account_id.id), ('move_line_id', '=', False), ('category', '!=', 'manufacturing_order')]
 
-    def _get_items_from_aal(self, with_action=True):
+    def _get_items_from_aal(self, start_date, end_date, with_action=True):
         domain = self._get_domain_aal_with_no_move_line()
+        if start_date:
+            domain = expression.AND([domain, [('date', '>=', start_date)]])
+        if end_date:
+            domain = expression.AND([domain, [('date', '<=', end_date)]])
+
         aal_other_search = self.env['account.analytic.line'].sudo().search_read(domain, ['id', 'amount', 'currency_id'])
         if not aal_other_search:
             return {

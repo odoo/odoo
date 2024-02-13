@@ -137,14 +137,23 @@ class ProjectProject(models.Model):
         sequence_per_invoice_type['purchase_order'] = 10
         return sequence_per_invoice_type
 
-    def _get_profitability_items(self, with_action=True):
-        profitability_items = super()._get_profitability_items(with_action)
+    def _get_profitability_items(self, start_date, end_date, with_action=True):
+        profitability_items = super()._get_profitability_items(start_date, end_date, with_action)
+        # TODO VILA
         if self.account_id:
-            invoice_lines = self.env['account.move.line'].sudo().search_fetch([
+            domain = [
                 ('parent_state', 'in', ['draft', 'posted']),
                 ('analytic_distribution', 'in', self.account_id.ids),
                 ('purchase_line_id', '!=', False),
-            ], ['parent_state', 'currency_id', 'price_subtotal', 'analytic_distribution'])
+            ]
+            if start_date:
+                domain = expression.AND([domain, [('date', '>=', start_date)]])
+            if end_date:
+                domain = expression.AND([domain, [('date', '<=', end_date)]])
+            invoice_lines = self.env['account.move.line'].sudo().search_fetch(
+                domain,
+                ['parent_state', 'currency_id', 'price_subtotal', 'analytic_distribution'],
+            )
             purchase_order_line_invoice_line_ids = self._get_already_included_profitability_invoice_line_ids()
             with_action = with_action and (
                 self.env.user.has_group('purchase.group_purchase_user')

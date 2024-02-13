@@ -285,8 +285,8 @@ class ProjectProject(models.Model):
     #  Project Updates
     # ----------------------------
 
-    def get_panel_data(self):
-        panel_data = super().get_panel_data()
+    def get_panel_data(self, start_date, end_date):
+        panel_data = super().get_panel_data(start_date, end_date)
         return {
             **panel_data,
             'account_id': self.account_id.id,
@@ -405,7 +405,7 @@ class ProjectProject(models.Model):
             domain,
         ])
 
-    def _get_profitability_items_from_aal(self, profitability_items, with_action=True):
+    def _get_profitability_items_from_aal(self, profitability_items, start_date, end_date, with_action=True):
         if not self.allow_timesheets:
             total_invoiced = total_to_invoice = 0.0
             revenue_data = []
@@ -420,8 +420,14 @@ class ProjectProject(models.Model):
                 'total': {'to_invoice': total_to_invoice, 'invoiced': total_invoiced},
             }
             return profitability_items
+
+        domain = self.sudo()._get_profitability_aal_domain()
+        if start_date:
+            domain = expression.AND([domain, [('date', '>=', start_date)]])
+        if end_date:
+            domain = expression.AND([domain, [('date', '<=', end_date)]])
         aa_line_read_group = self.env['account.analytic.line'].sudo()._read_group(
-            self.sudo()._get_profitability_aal_domain(),
+            domain,
             ['timesheet_invoice_type', 'timesheet_invoice_id', 'currency_id', 'category'],
             ['amount:sum', 'id:array_agg'],
         )
@@ -525,8 +531,8 @@ class ProjectProject(models.Model):
             'delivered_manual': 'billable_manual',
         }
 
-    def _get_profitability_items(self, with_action=True):
+    def _get_profitability_items(self, start_date, end_date, with_action=True):
         return self._get_profitability_items_from_aal(
-            super()._get_profitability_items(with_action),
-            with_action
+            super()._get_profitability_items(start_date, end_date, with_action),
+            start_date, end_date, with_action,
         )

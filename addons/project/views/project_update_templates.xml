@@ -14,6 +14,10 @@
 
     <template id="project_update_default_description" name="Project Update Description">
 <!--As this template is rendered in an html field, the spaces may be interpreted as nbsp while editing. -->
+<div name="time_frame" t-if="start_date or end_date">
+<p>Time Frame: <t t-out="start_date"/> to <t t-out="end_date"/></p>
+</div>
+
 <div name="summary">
 <br/><h1 style="font-weight: bolder;">Summary</h1>
 <br/><p>How’s this project going?</p><br/><br/>

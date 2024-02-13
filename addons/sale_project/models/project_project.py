@@ -423,8 +423,8 @@ class ProjectProject(models.Model):
             project_sql, task_sql, milestone_sql, sale_order_line_sql,
         ])))
 
-    def get_panel_data(self):
-        panel_data = super().get_panel_data()
+    def get_panel_data(self, start_date, end_date):
+        panel_data = super().get_panel_data(start_date, end_date)
         foldable_sections = self._get_foldable_section()
         if self._show_profitability() and 'revenues' in panel_data['profitability_items']:
             for section in panel_data['profitability_items']['revenues']['data']:
@@ -438,12 +438,18 @@ class ProjectProject(models.Model):
     def _get_foldable_section(self):
         return ['materials', 'service_revenues']
 
-    def get_sale_items_data(self, offset=0, limit=None, with_action=True, section_id=None):
+    def get_sale_items_data(self, start_date, end_date, offset=0, limit=None, with_action=True, section_id=None):
         if not self.env.user.has_group('project.group_project_user'):
             return {}
 
+        sol_domain = self._get_domain_from_section_id(section_id)
+        if start_date:
+            sol_domain = expression.AND([sol_domain, [('order_id.date_order', '>=', start_date)]])
+        if end_date:
+            sol_domain = expression.AND([sol_domain, [('order_id.date_order', '<=', end_date)]])
+
         all_sols = self.env['sale.order.line'].sudo().search(
-            self._get_domain_from_section_id(section_id),
+            sol_domain,
             offset=offset,
             limit=limit + 1,
         )
@@ -727,8 +733,8 @@ class ProjectProject(models.Model):
         profitability_items['revenues']['total']['to_invoice'] += revenue_items_from_invoices['total']['to_invoice']
         profitability_items['revenues']['total']['invoiced'] += revenue_items_from_invoices['total']['invoiced']
 
-    def _get_profitability_items(self, with_action=True):
-        profitability_items = super()._get_profitability_items(with_action)
+    def _get_profitability_items(self, start_date, end_date, with_action=True):
+        profitability_items = super()._get_profitability_items(start_date, end_date, with_action)
         sale_items = self.sudo()._get_sale_order_items()
         domain = [
             ('order_id', 'in', sale_items.order_id.ids),
