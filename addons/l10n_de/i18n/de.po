@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-04 12:09+0000\n"
+"POT-Creation-Date: 2024-02-22 14:29+0000\n"
 "PO-Revision-Date: 2021-07-29 13:09+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -115,7 +115,7 @@ msgstr "61. Vorsteuerbeträge aus dem innergemeinschaftlichen Erwerb von Gegenst
 #. module: l10n_de
 #: model:account.report.line,name:l10n_de.tax_report_de_tag_62
 msgid "62. import turnover tax incurred (line 39)"
-msgstr ""
+msgstr "62. Entstandene Einfuhrumsatzsteuer (zeile 39)"
 
 #. module: l10n_de
 #: model:account.report.line,name:l10n_de.tax_report_de_tag_63
@@ -251,13 +251,6 @@ msgid "98. at other tax rates (line 27)"
 msgstr "98. zu anderen Steuersatzen (zeile 27)"
 
 #. module: l10n_de
-#. odoo-python
-#: code:addons/l10n_de/models/datev.py:0
-#, python-format
-msgid "Account %s does not authorize to have tax %s specified on the line.                                 Change the tax used in this invoice or remove all taxes from the account"
-msgstr "Das Konto %s ist nicht berechtigt, die Steuer %s in der Zeile anzugeben. Ändern Sie die in dieser Rechnung verwendete Steuer oder entfernen Sie alle Steuern aus dem Konto"
-
-#. module: l10n_de
 #: model:ir.model,name:l10n_de.model_account_chart_template
 msgid "Account Chart Template"
 msgstr "Kontenplan Vorlage"
@@ -270,7 +263,7 @@ msgstr "Bemessungsgrundlage"
 #. module: l10n_de
 #: model:account.report.column,name:l10n_de.tax_report_balance
 msgid "Balance"
-msgstr "Bilanz"
+msgstr "Saldo"
 
 #. module: l10n_de
 #: model:account.account.tag,name:l10n_de.tag_de_asset_bs_A_I_1
@@ -453,11 +446,6 @@ msgid "Balance sheet passive: A V net profit/loss for the year"
 msgstr "Bilanz-Passiva: A V-Jahresüberschuß/Jahresfehlbetrag"
 
 #. module: l10n_de
-#: model:account.account.tag,name:l10n_de.tag_de_liabilities_bs_B
-msgid "Balance sheet passive: B Special items with an equity portion"
-msgstr "Bilanz-Passiva: B Sonderposten mit Rücklageanteil"
-
-#. module: l10n_de
 #: model:account.account.tag,name:l10n_de.tag_de_liabilities_bs_B_1
 msgid "Balance sheet passive: B 1-Provisions for pensions and similar obligations"
 msgstr "Bilanz-Passiva: B 1-Rückstellungen für Pensionen und ähnliche Verpflichtungen"
@@ -513,14 +501,14 @@ msgid "Balance sheet passive: C 8-Other passive, of which from taxes, of which i
 msgstr "Bilanz-Passiva: C 8-Sonstige Verbindlichkeiten, davon aus Steuern, davon im Rahmen der sozialen Sicherheit"
 
 #. module: l10n_de
-#: model:account.account.tag,name:l10n_de.tag_de_liabilities_bs_E
-msgid "Balance sheet passive: E-Deferred tax passive"
-msgstr "Bilanz-Passiva: E-Passive latente Steuern"
-
-#. module: l10n_de
 #: model:account.account.tag,name:l10n_de.tag_de_liabilities_bs_D
 msgid "Balance sheet passive: D-accruals and deferrals"
 msgstr "Bilanz-Passiva: D-Rechnungsabgrenzungsposten"
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_liabilities_bs_E
+msgid "Balance sheet passive: E-Deferred tax passive"
+msgstr "Bilanz-Passiva: F-Passive latente Steuern"
 
 #. module: l10n_de
 #: model:ir.model.fields,help:l10n_de.field_res_company__l10n_de_widnr
@@ -666,13 +654,17 @@ msgid "Intra-Community supply"
 msgstr "Innergemeinschaftliche Lieferung"
 
 #. module: l10n_de
+#: model:ir.model,name:l10n_de.model_account_journal
+msgid "Journal"
+msgstr "Journal"
+
+#. module: l10n_de
 #: model:ir.model,name:l10n_de.model_account_move
 msgid "Journal Entry"
-msgstr "Buchungssatz"
+msgstr "Journalbuchung"
 
 #. module: l10n_de
 #: model:ir.model.fields,field_description:l10n_de.field_account_tax__l10n_de_datev_code
-#: model:ir.model.fields,field_description:l10n_de.field_account_tax_template__l10n_de_datev_code
 msgid "L10N De Datev Code"
 msgstr "L10N De Datev Code"
 
@@ -742,11 +734,6 @@ msgstr "Steuerfreie Umsätze mit Vorsteuerabzug"
 #: model:account.report.line,name:l10n_de.tax_report_de_tax_tag_19
 msgid "Taxable turnover"
 msgstr "Steuerpflichtige Umsätze"
-
-#. module: l10n_de
-#: model:ir.model,name:l10n_de.model_account_tax_template
-msgid "Templates for Taxes"
-msgstr "Steuervorlage"
 
 #. module: l10n_de
 #: model:account.report.line,name:l10n_de.tax_report_de_tag_46
