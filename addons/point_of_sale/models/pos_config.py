@@ -153,6 +153,7 @@ class PosConfig(models.Model):
     start_category = fields.Boolean("Start Category", default=False)
     limit_categories = fields.Boolean("Restrict Categories")
     module_pos_restaurant = fields.Boolean("Is a Bar/Restaurant")
+    module_pos_preparation_display = fields.Boolean("Preparation Display")
     module_pos_discount = fields.Boolean("Global Discounts")
     module_pos_mercury = fields.Boolean(string="Integrated Card Payments")
     is_posbox = fields.Boolean("PosBox")

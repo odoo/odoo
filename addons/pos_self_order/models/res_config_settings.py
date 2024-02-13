@@ -72,8 +72,8 @@ class ResConfigSettings(models.TransientModel):
         if self.pos_self_ordering_service_mode == 'counter' and self.pos_self_ordering_mode == 'mobile':
             self.pos_self_ordering_pay_after = "each"
 
-        if self.pos_self_ordering_pay_after == "each" and not self.module_pos_preparation_display:
-            self.module_pos_preparation_display = True
+        if self.pos_self_ordering_pay_after == "each" and not self.pos_module_pos_preparation_display:
+            self.pos_module_pos_preparation_display = True
 
     def custom_link_action(self):
         self.ensure_one()
