@@ -137,7 +137,11 @@ class ChannelMember(models.Model):
                 raise UserError(
                     _("Adding more members to this chat isn't possible; it's designed for just two people.")
                 )
-        return super().create(vals_list)
+        res = super().create(vals_list)
+        # help the ORM to detect changes
+        res.partner_id.invalidate_recordset(["channel_ids"])
+        res.guest_id.invalidate_recordset(["channel_ids"])
+        return res
 
     def write(self, vals):
         for channel_member in self:
