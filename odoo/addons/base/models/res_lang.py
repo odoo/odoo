@@ -332,6 +332,26 @@ class Lang(models.Model):
             self.env['ir.default'].discard_values('res.partner', 'lang', lang_codes)
 
         res = super(Lang, self).write(vals)
+
+        if vals.get('active'):
+            # If we activate a lang, set it's url_code to the shortest version
+            # if possible
+            for long_lang in self.filtered(lambda lang: '_' in lang.url_code):
+                short_code = long_lang.code.split('_')[0]
+                short_lang = self.with_context(active_test=False).search([
+                    ('url_code', '=', short_code),
+                ], limit=1)  # url_code is unique
+                if (
+                    short_lang
+                    and not short_lang.active
+                    # `code` should always be the long format containing `_` but
+                    # there is a plan to change this in the future for `es_419`.
+                    # This `and` is about not failing if it's the case one day.
+                    and short_lang.code != short_code
+                ):
+                    short_lang.url_code = short_lang.code
+                    long_lang.url_code = short_code
+
         self.env.flush_all()
         self.env.registry.clear_cache()
         return res
