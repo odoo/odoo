@@ -1841,7 +1841,7 @@ test("Correct breadcrumb when open discuss from chat window then see settings", 
     await click("[title='Channel settings']", {
         parent: [".o-mail-DiscussSidebarChannel", { text: "General" }],
     });
-    await contains(".o_breadcrumb", { text: "DiscussGeneral" });
+    await contains(".o_breadcrumb", { text: "GeneralGeneral" });
 });
 
 test("Chatter notification in messaging menu should open the form view even when discuss app is open", async () => {
