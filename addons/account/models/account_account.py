@@ -677,16 +677,20 @@ class AccountAccount(models.Model):
         for account in self:
             account.display_name = f"{account.code} {account.name}"
 
-    @api.returns('self', lambda value: value.id)
-    def copy(self, default=None):
+    def copy_data(self, default=None):
         default = dict(default or {})
-        if 'code' not in default:
-            company = default.get('company_id', self.company_id)
-            company = company if isinstance(company, models.BaseModel) else self.env['res.company'].browse(company)
-            default['code'] = self._search_new_account_code(self.code, company)
-        if 'name' not in default:
-            default['name'] = _("%s (copy)", self.name or '')
-        return super(AccountAccount, self).copy(default)
+        vals_list = super().copy_data(default)
+        cache_map = defaultdict(set)
+        for account, vals in zip(self, vals_list):
+            if 'code' not in default:
+                company = default.get('company_id', account.company_id)
+                company = company if isinstance(company, models.BaseModel) else account.env['res.company'].browse(company)
+                cache = cache_map[company.id]
+                vals['code'] = account._search_new_account_code(account.code, company, cache)
+                cache.add(vals['code'])
+            if 'name' not in default:
+                vals['name'] = _("%s (copy)", account.name or '')
+        return vals_list
 
     def copy_translations(self, new, excluded=()):
         super().copy_translations(new, excluded=tuple(excluded)+('name',))

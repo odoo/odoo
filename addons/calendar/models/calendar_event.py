@@ -776,15 +776,14 @@ class Meeting(models.Model):
         """When an event is copied, the attendees should be recreated to avoid sharing the same attendee records
          between copies
          """
-        self.ensure_one()
-        if not default:
-            default = {}
+        default = dict(default or {})
         # We need to make sure that the attendee_ids are recreated with new ids to avoid sharing attendees between events
         # The copy should not have the same attendee status than the original event
         default.update(partner_ids=[Command.set([])], attendee_ids=[Command.set([])])
-        copied_event = super().copy(default)
-        copied_event.write({'partner_ids': [(Command.set(self.partner_ids.ids))]})
-        return copied_event
+        new_events = super().copy(default)
+        for old_event, new_event in zip(self, new_events):
+            new_event.write({'partner_ids': [(Command.set(old_event.partner_ids.ids))]})
+        return new_events
 
     @api.model
     def _get_mail_message_access(self, res_ids, operation, model_name=None):

@@ -116,14 +116,14 @@ class StockMove(models.Model):
             production._set_qty_producing()
             production.with_context(cancel_backorder=False).subcontracting_record_component()
 
-    def copy(self, default=None):
-        self.ensure_one()
-        if not self.is_subcontract or 'location_id' in default:
-            return super(StockMove, self).copy(default=default)
-        if not default:
-            default = {}
-        default['location_id'] = self.picking_id.location_id.id
-        return super(StockMove, self).copy(default=default)
+    def copy_data(self, default=None):
+        default = dict(default or {})
+        vals_list = super().copy_data(default=default)
+        for move, vals in zip(self, vals_list):
+            if 'location_id' in default or not move.is_subcontract:
+                continue
+            vals['location_id'] = move.picking_id.location_id.id
+        return vals_list
 
     def write(self, values):
         """ If the initial demand is updated then also update the linked

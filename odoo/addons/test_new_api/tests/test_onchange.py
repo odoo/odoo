@@ -962,6 +962,20 @@ class TestComputeOnchange2(TransactionCase):
         self.assertEqual(record.line_ids.mapped('foo'), ['foo1', 'bar'])  # copied
         self.assertEqual(record.tag_ids, tag_foo + tag_bar)  # copied
 
+    def test_copy_batch(self):
+        partners = self.env['test_new_api.partner'].create([
+            {'name': f'Partner {index}'} for index in range(5)
+        ])
+
+        # warmup
+        partners.copy()
+
+        with self.assertQueryCount(1):
+            new_partners = partners.copy()
+
+        for old_partner, new_partner in zip(partners, new_partners):
+            self.assertEqual(new_partner.name, old_partner.name)
+
     def test_write(self):
         model = self.env['test_new_api.compute.onchange']
         record = model.create({'active': True, 'foo': "foo"})

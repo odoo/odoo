@@ -1022,10 +1022,11 @@ Attempting to double-book your time off won't magically make your vacation 2x be
         return super(HolidaysRequest, self.with_context(leave_skip_date_check=True)).unlink()
 
     def copy_data(self, default=None):
+        vals_list = super().copy_data(default=default)
         if default and 'request_date_from' in default and 'request_date_to' in default:
-            return super().copy_data(default)
-        elif self.state in {"cancel", "refuse"}:  # No overlap constraint in these cases
-            return super().copy_data(default)
+            return vals_list
+        if all(leave.state in ['cancel', 'refuse'] for leave in self):  # No overlap constraint in these cases
+            return vals_list
         raise UserError(_('A time off cannot be duplicated.'))
 
     def _get_mail_redirect_suggested_company(self):

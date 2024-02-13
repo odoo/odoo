@@ -1690,22 +1690,22 @@ class AccountMoveLine(models.Model):
             )
 
     def copy_data(self, default=None):
-        data_list = super().copy_data(default=default)
+        vals_list = super().copy_data(default=default)
 
-        for line, values in zip(self, data_list):
+        for line, vals in zip(self, vals_list):
             # Don't copy the name of a payment term line.
             if line.display_type == 'payment_term' and line.move_id.is_invoice(True):
-                del values['name']
+                del vals['name']
             # Don't copy restricted fields of notes
             if line.display_type in ('line_section', 'line_note'):
-                del values['balance']
-                del values['account_id']
+                del vals['balance']
+                del vals['account_id']
             # Will be recomputed from the price_unit
             if line.display_type == 'product' and line.move_id.is_invoice(True):
-                del values['balance']
+                del vals['balance']
             if self._context.get('include_business_fields'):
-                line._copy_data_extend_business_fields(values)
-        return data_list
+                line._copy_data_extend_business_fields(vals)
+        return vals_list
 
     def _field_to_sql(self, alias: str, fname: str, query: (Query | None) = None, flush: bool = True) -> SQL:
         if fname != 'payment_date':

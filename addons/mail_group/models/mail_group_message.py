@@ -100,10 +100,11 @@ class MailGroupMessage(models.Model):
                 }).id
         return super(MailGroupMessage, self).create(values_list)
 
-    def copy(self, default=None):
-        default = dict(default or {})
-        default['mail_message_id'] = self.mail_message_id.copy().id
-        return super(MailGroupMessage, self).copy(default)
+    def copy_data(self, default=None):
+        vals_list = super().copy_data(default)
+        for message, vals in zip(self, vals_list):
+            vals['mail_message_id'] = message.mail_message_id.copy().id
+        return vals_list
 
     # --------------------------------------------------
     # MODERATION API

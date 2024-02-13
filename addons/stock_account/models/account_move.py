@@ -25,17 +25,15 @@ class AccountMove(models.Model):
         return self.line_ids.filtered(lambda l: l.display_type != 'cogs')
 
     def copy_data(self, default=None):
-        # OVERRIDE
         # Don't keep anglo-saxon lines when copying a journal entry.
-        res = super().copy_data(default=default)
+        vals_list = super().copy_data(default=default)
 
         if not self._context.get('move_reverse_cancel'):
-            for copy_vals in res:
-                if 'line_ids' in copy_vals:
-                    copy_vals['line_ids'] = [line_vals for line_vals in copy_vals['line_ids']
+            for vals in vals_list:
+                if 'line_ids' in vals:
+                    vals['line_ids'] = [line_vals for line_vals in vals['line_ids']
                                              if line_vals[0] != 0 or line_vals[2].get('display_type') != 'cogs']
-
-        return res
+        return vals_list
 
     def _post(self, soft=True):
         # OVERRIDE

@@ -190,7 +190,7 @@ export class Record extends DataPoint {
         return this.model.mutex.exec(async () => {
             const kwargs = { context: this.context };
             const index = this.resIds.indexOf(this.resId);
-            const resId = await this.model.orm.call(this.resModel, "copy", [this.resId], kwargs);
+            const [resId] = await this.model.orm.call(this.resModel, "copy", [[this.resId]], kwargs);
             const resIds = this.resIds.slice();
             resIds.splice(index + 1, 0, resId);
             await this.model.load({ resId, resIds, mode: "edit" });

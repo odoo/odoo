@@ -612,11 +612,9 @@ class EventEvent(models.Model):
                 name = event.name
             event.display_name = name
 
-    @api.returns('self', lambda value: value.id)
-    def copy(self, default=None):
-        self.ensure_one()
-        default = dict(default or {}, name=_("%s (copy)", self.name))
-        return super(EventEvent, self).copy(default)
+    def copy_data(self, default=None):
+        vals_list = super().copy_data(default=default)
+        return [dict(vals, name=_("%s (copy)", event.name)) for event, vals in zip(self, vals_list)]
 
     @api.model
     def _get_mail_message_access(self, res_ids, operation, model_name=None):

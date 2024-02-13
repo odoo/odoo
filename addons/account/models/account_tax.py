@@ -511,12 +511,13 @@ class AccountTax(models.Model):
     def write(self, vals):
         return super().write(self._sanitize_vals(vals))
 
-    @api.returns('self', lambda value: value.id)
-    def copy(self, default=None):
+    def copy_data(self, default=None):
         default = dict(default or {})
+        vals_list = super().copy_data(default=default)
         if 'name' not in default:
-            default['name'] = _("%s (Copy)", self.name)
-        return super(AccountTax, self).copy(default=default)
+            for tax, vals in zip(self, vals_list):
+                vals['name'] = _("%s (Copy)", tax.name)
+        return vals_list
 
     @api.depends('type_tax_use', 'tax_scope')
     @api.depends_context('append_type_to_tax_name')

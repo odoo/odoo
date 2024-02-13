@@ -591,8 +591,6 @@ export class MockServer {
                 return this.mockWrite(args.model, [args.args[0], { active: true }]);
             case "copy":
                 return this.mockCopy(args.model, args.args);
-            case "copy_multi":
-                return this.mockCopyMulti(args.model, args.args);
             case "create":
                 return this.mockCreate(args.model, args.args[0], args.kwargs);
             case "fields_get":
@@ -651,28 +649,17 @@ export class MockServer {
      * @param {[number, Record<string, any>]} params the ID of a valid record
      * @returns {number} the ID of the duplicated record
      */
-    mockCopy(modelName, [id, recordData]) {
+    mockCopy(modelName, [ids, defaultData]) {
         const model = this.models[modelName];
-        const newID = this.getUnusedID(modelName);
-        const originalRecord = model.records.find((record) => record.id === id);
-        const duplicatedRecord = { ...originalRecord, ...recordData, id: newID };
-        duplicatedRecord.display_name = `${originalRecord.display_name} (copy)`;
-        model.records.push(duplicatedRecord);
-        return newID;
-    }
-
-    /**
-     * Simulate a 'copy_multi' operation, so we simply try to duplicate records in
-     * memory
-     *
-     * @private
-     * @param {string} modelName
-     * @param {[number[], Record<string, any>]} params the ID of a valid record
-     * @returns {number} the ID of the duplicated record
-     */
-    mockCopyMulti(modelName, [ids, defaultData]) {
         const newIDs = [];
-        ids.forEach((id) => newIDs.push(this.mockCopy(modelName, [id, defaultData])));
+        ids.forEach((id) => {
+            const newID = this.getUnusedID(modelName);
+            const originalRecord = model.records.find((record) => record.id === id);
+            const duplicatedRecord = { ...originalRecord, ...defaultData, id: newID };
+            duplicatedRecord.display_name = `${originalRecord.display_name} (copy)`;
+            model.records.push(duplicatedRecord);
+            newIDs.push(newID);
+        })
         return newIDs;
     }
 

@@ -52,14 +52,16 @@ class ChatRoomMixin(models.AbstractModel):
         return super(ChatRoomMixin, self).write(values)
 
     def copy_data(self, default=None):
-        if default is None:
-            default = {}
-        if self.chat_room_id:
+        default = dict(default or {})
+        vals_list = super().copy_data(default=default)
+        for room, vals in zip(self, vals_list):
+            if not room.chat_room_id:
+                continue
             chat_room_default = {}
             if 'room_name' not in default:
-                chat_room_default['name'] = self._jitsi_sanitize_name(self.chat_room_id.name)
-            default['chat_room_id'] = self.chat_room_id.copy(default=chat_room_default).id
-        return super(ChatRoomMixin, self).copy_data(default=default)
+                chat_room_default['name'] = self._jitsi_sanitize_name(room.chat_room_id.name)
+            vals['chat_room_id'] = room.chat_room_id.copy(default=chat_room_default).id
+        return vals_list
 
     def unlink(self):
         rooms = self.chat_room_id

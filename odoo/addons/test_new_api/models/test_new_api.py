@@ -833,9 +833,9 @@ class ComputeOnchange(models.Model):
             if record.foo:
                 record.tag_ids = Tag.search([('name', '=', record.foo)])
 
-    def copy(self, default=None):
-        default = dict(default or {}, foo="%s (copy)" % (self.foo or ""))
-        return super().copy(default)
+    def copy_data(self, default=None):
+        vals_list = super().copy_data(default=default)
+        return [dict(vals, foo=_("%s (copy)", record.foo)) for record, vals in zip(self, vals_list)]
 
 
 class ComputeOnchangeLine(models.Model):

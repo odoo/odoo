@@ -27,10 +27,10 @@ class SpreadsheetDashboard(models.Model):
             'default_currency': default_currency,
         }
 
-    def copy(self, default=None):
-        self.ensure_one()
-        if default is None:
-            default = {}
+    def copy_data(self, default=None):
+        default = dict(default or {})
+        vals_list = super().copy_data(default=default)
         if 'name' not in default:
-            default['name'] = _("%s (copy)") % self.name
-        return super().copy(default=default)
+            for dashboard, vals in zip(self, vals_list):
+                vals['name'] = _("%s (copy)", dashboard.name)
+        return vals_list
