@@ -5,7 +5,7 @@ import { OdooCorePlugin } from "@spreadsheet/plugins";
 const { load, tokenize, parse, convertAstNodes, astToFormula } = spreadsheet;
 const { corePluginRegistry } = spreadsheet.registries;
 
-export const ODOO_VERSION = 6;
+export const ODOO_VERSION = 7;
 
 const MAP = {
     PIVOT: "ODOO.PIVOT",
@@ -38,6 +38,9 @@ export function migrate(data) {
     }
     if (version < 6) {
         _data = migrate5to6(_data);
+    }
+    if (version < 7) {
+        _data = migrate6to7(_data);
     }
     return _data;
 }
@@ -234,6 +237,26 @@ function migrate5to6(data) {
             filter.rangeType = "fixedPeriod";
         }
         delete filter.defaultsToCurrentPeriod;
+    }
+    return data;
+}
+
+/**
+ * Migrate the pivot data to add the type, by default "ODOO". And replace the
+ * pivot with a new object that contains type and definition (the old pivot).
+ */
+function migrate6to7(data) {
+    if (data.pivots) {
+        for (const [id, definition] of Object.entries(data.pivots)) {
+            definition.measures = definition.measures.map((measure) => measure.field);
+            const fieldMatching = definition.fieldMatching;
+            delete definition.fieldMatching;
+            data.pivots[id] = {
+                type: "ODOO",
+                definition,
+                fieldMatching,
+            };
+        }
     }
     return data;
 }
