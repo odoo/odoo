@@ -1000,3 +1000,26 @@ class TestAccountPayment(AccountTestInvoicingCommon):
             {'account_id': bank_2.inbound_payment_method_line_ids.payment_account_id.id},
             {'account_id': transfer_account.id},
         ])
+
+    def test_outstanding_account_onchange(self):
+        '''
+            Test that the outstanding account is correctly updated if you change back the
+            journal_id to its original value.
+        '''
+        company = self.env.company
+        bank_journal = self.bank_journal_1
+        cash_journal = self.company_data['default_journal_cash']
+        account = self.env['account.account'].create({
+            'name': "Super outstanding account",
+            'code': "101077",
+            'account_type': "asset_current",
+            'company_id': company.id,
+        })
+        cash_journal.inbound_payment_method_line_ids.payment_account_id = account
+        context = {'payment_type': 'inbound', 'partner_type': 'customer'}
+        with Form(self.env['account.payment'].with_context(context)) as payment_form:
+            payment_form.journal_id = bank_journal
+            payment_form.journal_id = cash_journal
+            payment_form.journal_id = bank_journal
+        payment = payment_form.save()
+        self.assertFalse(payment.outstanding_account_id == account)
