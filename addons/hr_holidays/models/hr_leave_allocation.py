@@ -355,12 +355,6 @@ class HolidaysAllocation(models.Model):
                     allocation.nextcall = first_day_this_year
                 # date_to should be first day of this year so the prorata amount is computed correctly
                 allocation._process_accrual_plans(first_day_this_year, True)
-                allocation.lastcall = first_day_this_year
-                # `lastcall` and `nextcall` must be the first day of this year in order
-                # to receive the part (according to the prorata) of period allocation
-                # during the next call of the current year.
-                number_of_days = allocation.number_of_days - allocation.leaves_taken + allocation.leaves_taken
-                allocation.write({'number_of_days': number_of_days})
 
     def _get_current_accrual_plan_level_id(self, date, level_ids=False):
         """
