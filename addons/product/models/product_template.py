@@ -506,12 +506,15 @@ class ProductTemplate(models.Model):
             ])
         return res
 
-    @api.returns('self')
-    def copy_multi(self, default_list=None):
-        if default_list is None:
-            default_list = [None] * len(self)
-        default_list = [dict(default or {}, name=_("%s (copy)", product.name)) for product, default in zip(self, default_list)]
-        return super().copy_multi(default=default_list)
+    @api.returns('self', lambda value: value.id)
+    def copy(self, default=None):
+        # TDE FIXME: should probably be copy_data
+        self.ensure_one()
+        if default is None:
+            default = {}
+        if 'name' not in default:
+            default['name'] = _("%s (copy)", self.name)
+        return super(ProductTemplate, self).copy(default=default)
 
     @api.depends('name', 'default_code')
     def _compute_display_name(self):
