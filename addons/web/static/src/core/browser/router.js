@@ -191,10 +191,9 @@ export function urlToState(urlObj) {
     //    the sanitizeHash function will remove it from the hash object.
     // 2. It has one or more keys/values, in that case, we merge it with the search.
     const sanitizedHash = sanitizeHash(parseHash(hash));
-    if (Object.keys(sanitizedHash).length) {
+    if (pathname === "/web" && Object.keys(sanitizedHash).length) {
         Object.assign(state, sanitizedHash);
-        // const addHash = hash && !Object.keys(sanitizedHash).length;
-        const url = browser.location.origin + stateToUrl(state); // + (addHash ? hash : "");
+        const url = browser.location.origin + stateToUrl(state);
         browser.history.replaceState({}, "", url);
     }
 
