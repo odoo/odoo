@@ -1586,7 +1586,7 @@ QUnit.test("Mark as unread", async () => {
     await contains(".o-mail-DiscussSidebarChannel .badge", { text: "1" });
 });
 
-QUnit.test("Avatar of unknown author", async () => {
+QUnit.test("Avatar of unknown author for email message", async () => {
     const pyEnv = await startServer();
     pyEnv["mail.message"].create({
         body: "<p>Want to know features and benefits of using the new software.</p>",
@@ -1602,13 +1602,45 @@ QUnit.test("Avatar of unknown author", async () => {
     await contains(".o-mail-Message-avatar[data-src*='mail/static/src/img/email_icon.png']");
 });
 
-QUnit.test("Show email_from of message without author", async () => {
+QUnit.test("Show email_from of message without author for email message", async () => {
     const pyEnv = await startServer();
     pyEnv["mail.message"].create({
         author_id: null,
         body: "<p>Want to know features and benefits of using the new software.</p>",
         email_from: "md@oilcompany.fr",
         message_type: "email",
+        subject: "Need Details",
+        model: "res.partner",
+        res_id: pyEnv.currentPartnerId,
+    });
+    const { openFormView } = await start();
+    openFormView("res.partner", pyEnv.currentPartnerId);
+    await contains(".o-mail-Message-author", { text: "md@oilcompany.fr" });
+});
+
+QUnit.test("Avatar of unknown author for not email message", async () => {
+    const pyEnv = await startServer();
+    pyEnv["mail.message"].create({
+        body: "<p>Want to know features and benefits of using the new software.</p>",
+        email_from: "md@oilcompany.fr",
+        message_type: "comment",
+        subject: "Need Details",
+        model: "res.partner",
+        res_id: pyEnv.currentPartnerId,
+        author_id: null,
+    });
+    const { openFormView } = await start();
+    openFormView("res.partner", pyEnv.currentPartnerId);
+    await contains(".o-mail-Message-avatar[data-src*='/mail/static/src/img/smiley/avatar.jpg']");
+});
+
+QUnit.test("Show email_from of message without author for not email message", async () => {
+    const pyEnv = await startServer();
+    pyEnv["mail.message"].create({
+        author_id: null,
+        body: "<p>Want to know features and benefits of using the new software.</p>",
+        email_from: "md@oilcompany.fr",
+        message_type: "comment",
         subject: "Need Details",
         model: "res.partner",
         res_id: pyEnv.currentPartnerId,

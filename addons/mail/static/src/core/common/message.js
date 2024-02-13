@@ -1,5 +1,6 @@
 /* @odoo-module */
 
+import { DEFAULT_AVATAR } from "@mail/core/common/persona_service";
 import { AttachmentList } from "@mail/core/common/attachment_list";
 import { Composer } from "@mail/core/common/composer";
 import { ImStatus } from "@mail/core/common/im_status";
@@ -232,7 +233,12 @@ export class Message extends Component {
         ) {
             return url("/mail/static/src/img/email_icon.png");
         }
-        return this.message.author.avatarUrl;
+
+        if (this.message.author) {
+            return this.message.author.avatarUrl;
+        }
+
+        return DEFAULT_AVATAR
     }
 
     get expandText() {
