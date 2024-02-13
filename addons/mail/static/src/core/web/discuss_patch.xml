@@ -7,5 +7,14 @@
         <xpath expr="//*[@t-ref='root']" position="inside">
             <MessagingMenu t-if="ui.isSmall"/>
         </xpath>
+        <xpath expr="//*[@t-ref='root']" position="replace">
+            <div class="h-100 d-flex flex-column">
+                <ControlPanel t-if="!ui.isSmall"/>
+                <t>$0</t>
+            </div>
+        </xpath>
+        <xpath expr="//*[@t-ref='root']" position="attributes">
+            <attribute name="class" add="h-0" remove="h-100" separator=" "/>
+        </xpath>
     </t>
 </templates>
