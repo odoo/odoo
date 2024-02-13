@@ -3,7 +3,6 @@
 
 {
     'name': "India Purchase and Warehouse Management",
-    'countries': ['in'],
 
     'summary': "Get warehouse address if the bill is created from Purchase Order",
 

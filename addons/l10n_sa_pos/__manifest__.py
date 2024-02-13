@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Saudi Arabia - Point of Sale',
-    'countries': ['sa'],
     'category': 'Accounting/Localizations/Point of Sale',
     'description': """
 K.S.A. POS Localization
