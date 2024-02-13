@@ -7,7 +7,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import tests
 from odoo.addons.base.tests.common import HttpCaseWithUserPortal
 from odoo.addons.gamification.tests.common import HttpCaseGamification
-from odoo.fields import Datetime
+from odoo.fields import Command, Datetime
 from odoo.tools import mute_logger
 from odoo.tools.misc import file_open
 
@@ -202,6 +202,11 @@ class TestUiPublisher(HttpCaseGamification):
                 (4, self.env.ref('website_slides.group_website_slides_manager').id)
             ],
         })
+        self.env['slide.channel.tag.group'].create([{
+            'name': 'Your Favorite Role',
+            'tag_ids': [Command.create({'name': 'Gardening'})]}
+        ])
+        self.env['slide.tag'].create({'name': 'Practice'})
 
         self.start_tour(self.env['website'].get_client_action_url('/slides'), 'course_publisher_standard', login=user_demo.login)
 
