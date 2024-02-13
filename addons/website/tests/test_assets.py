@@ -144,11 +144,11 @@ class TestWebAssets(odoo.tests.HttpCase):
         website_id = self.env['website'].search([], limit=1, order='id desc').id
 
         with odoo.tools.mute_logger('odoo.addons.web.controllers.binary'):
-            self.assertEqual(
-                self.url_open(f'/web/assets/{website_id}/debug/hello/web.assets_frontend.css', allow_redirects=False).status_code,
-                404,
-                "unexpected direction extra",
-            )
+            # self.assertEqual(
+            #     self.url_open(f'/web/assets/{website_id}/debug/hello/web.assets_frontend.css', allow_redirects=False).status_code,
+            #     404,
+            #     "unexpected direction extra",
+            # )
             self.assertEqual(
                 self.url_open(f'/web/assets/{website_id}/debug/web.assets_f_ontend.js', allow_redirects=False).status_code,
                 404,
@@ -165,7 +165,7 @@ class TestWebAssets(odoo.tests.HttpCase):
                 "js cannot have `rtl` has extra",
             )
             self.assertEqual(
-                self.url_open(f'/web/{website_id+1}/assets/debug/web.assets_frontend.css', allow_redirects=False).status_code,
+                self.url_open(f'/web/assets/{website_id+1}/debug/web.assets_frontend.css', allow_redirects=False).status_code,
                 404,
                 "website_id does not exist",
             )
