@@ -112,17 +112,11 @@ export class PartnerEditor extends Component {
         if (processedChanges.image_1920) {
             processedChanges.image_1920 = processedChanges.image_1920.split(",")[1];
         }
-        try {
-            if (processedChanges.id) {
-                await this.pos.data.ormWrite("res.partner", [processedChanges.id], processedChanges);
-            } else {
-                await this.pos.data.create("res.partner", [processedChanges]);
-            }
-        } catch(error) {
-            return this.dialog.add(AlertDialog, {
-                title: error.message,
-                body: error.data.message,
-            });
+
+        if (processedChanges.id) {
+            this.pos.data.write("res.partner", [processedChanges.id], processedChanges);
+        } else {
+            await this.pos.data.create("res.partner", [processedChanges]);
         }
         this.props.close();
     }
