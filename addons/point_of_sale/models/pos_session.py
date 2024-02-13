@@ -1907,13 +1907,6 @@ class PosSession(models.Model):
 
         return res
 
-    def _pos_data_process(self, loaded_data):
-        """
-        This is where we need to process the data if we can't do it in the loader/getter
-        """
-        loaded_data['pos_special_products_ids'] = self.env['pos.config']._get_special_products().ids
-        loaded_data['open_orders'] = self.env['pos.order'].search([('session_id', '=', self.id), ('state', '=', 'draft')]).export_for_ui()
-
     def _get_pos_fallback_nomenclature_id(self):
         """
         Retrieve the fallback barcode nomenclature.

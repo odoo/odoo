@@ -377,7 +377,9 @@ export class ProductScreen extends Component {
     }
 
     getProductListToNotDisplay() {
-        return [this.pos.config.tip_product_id, ...this.pos.pos_special_products_ids];
+        return [this.pos.config.tip_product_id?.id, ...this.pos.pos_special_products_ids].filter(
+            (id) => !this.pos.models["product.product"].get(id)?.available_in_pos
+        );
     }
 
     async loadDemoDataProducts() {
