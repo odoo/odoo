@@ -3,7 +3,6 @@
 
 {
     'name': 'Indian - Sale Report(GST)',
-    'countries': ['in'],
     'version': '1.0',
     'description': """GST Sale Report""",
     'category': 'Accounting/Localizations/Sale',
