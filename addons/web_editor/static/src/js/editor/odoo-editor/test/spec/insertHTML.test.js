@@ -79,6 +79,33 @@ describe('insert HTML', () => {
                 contentAfter: '<p>contentunwrapped</p><div><i class="fa fa-circle-o-notch"></i></div><p>culprit</p><p>after[]</p>',
             });
         });
+        it('should paste empty last line when pasting at end of a text', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>abcd[]</p>',
+                stepFunction: async editor => {
+                    await editor.execCommand('insert', parseHTML('<p>efgh</p><p><br></p>'));
+                },
+                contentAfter: '<p>abcdefgh</p><p>[]<br></p>',
+            });
+        });
+        it('should not paste br of empty last line when pasting at start of a text', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>[]abcd</p>',
+                stepFunction: async editor => {
+                    await editor.execCommand('insert', parseHTML('<p>efgh</p><p><br></p>'));
+                },
+                contentAfter: '<p>efgh</p><p>[]abcd</p>',
+            });
+        });
+        it('should not paste br of empty last line when pasting in between a text', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>ab[]cd</p>',
+                stepFunction: async editor => {
+                    await editor.execCommand('insert', parseHTML('<p>efgh</p><p><br></p>'));
+                },
+                contentAfter: '<p>abefgh</p><p>[]cd</p>',
+            });
+        });
     });
     describe('not collapsed selection', () => {
         it('should delete selection and insert html in its place', async () => {
