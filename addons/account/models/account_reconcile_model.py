@@ -314,13 +314,14 @@ class AccountReconcileModel(models.Model):
                 elif record.payment_tolerance_type == 'fixed_amount' and record.payment_tolerance_param < 0:
                     raise ValidationError(_("A payment tolerance defined as an amount should always be higher than 0"))
 
-    @api.returns('self', lambda value: value.id)
-    def copy(self, default=None):
-        default = default or {}
+    def copy_data(self, default=None):
+        default = dict(default or {})
+        vals_list = super().copy_data(default)
         if default.get('name'):
-            return super(AccountReconcileModel, self).copy(default)
-        name = _("%s (copy)", self.name)
-        while self.env['account.reconcile.model'].search([('name', '=', name)], limit=1):
-            name = _("%s (copy)", name)
-        default['name'] = name
-        return super(AccountReconcileModel, self).copy(default)
+            return vals_list
+        for model, vals in zip(self, vals_list):
+            name = _("%s (copy)", model.name)
+            while self.env['account.reconcile.model'].search_count([('name', '=', name)], limit=1):
+                name = _("%s (copy)", name)
+            vals['name'] = name
+        return vals_list

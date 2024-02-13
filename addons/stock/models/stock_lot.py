@@ -167,12 +167,13 @@ class StockLot(models.Model):
                 ))
         return super().write(vals)
 
-    def copy(self, default=None):
-        if default is None:
-            default = {}
+    def copy_data(self, default=None):
+        default = dict(default or {})
+        vals_list = super().copy_data(default=default)
         if 'name' not in default:
-            default['name'] = _("(copy of) %s", self.name)
-        return super().copy(default)
+            for lot, vals in zip(self, vals_list):
+                vals['name'] = _("(copy of) %s", lot.name)
+        return vals_list
 
     @api.depends('quant_ids', 'quant_ids.quantity')
     def _product_qty(self):

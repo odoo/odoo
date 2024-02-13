@@ -160,14 +160,15 @@ class PickingType(models.Model):
                     }).id
         return super().create(vals_list)
 
-    def copy(self, default=None):
-        self.ensure_one()
+    def copy_data(self, default=None):
         default = dict(default or {})
-        if 'name' not in default:
-            default['name'] = _("%s (copy)", self.name)
-        if 'sequence_code' not in default and 'sequence_id' not in default:
-            default.update(sequence_code=_("%s (copy)") % self.sequence_code)
-        return super().copy(default=default)
+        vals_list = super().copy_data(default=default)
+        for picking, vals in zip(self, vals_list):
+            if 'name' not in default:
+                vals['name'] = _("%s (copy)", picking.name)
+            if 'sequence_code' not in default and 'sequence_id' not in default:
+                vals['sequence_code'] = _("%s (copy)", picking.sequence_code)
+        return vals_list
 
     def write(self, vals):
         if 'company_id' in vals:

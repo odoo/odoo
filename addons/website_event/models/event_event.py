@@ -232,7 +232,7 @@ class Event(models.Model):
             event.question_ids = command
 
             # copy questions so changes in the event don't affect the event type
-            event.question_ids += event.event_type_id.question_ids.copy_multi({
+            event.question_ids += event.event_type_id.question_ids.copy({
                 'event_type_id': False,
             })
 

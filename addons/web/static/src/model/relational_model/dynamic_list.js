@@ -214,7 +214,7 @@ export class DynamicList extends DataPoint {
             resIds = await this.getResIds(true);
         }
 
-        const duplicated = await this.model.orm.call(this.resModel, "copy_multi", [resIds]);
+        const duplicated = await this.model.orm.call(this.resModel, "copy", [resIds]);
         if (resIds.length > duplicated.length) {
             this.model.notification.add(_t("Some records could not be duplicated"), {
                 title: _t("Warning"),

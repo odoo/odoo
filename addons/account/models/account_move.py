@@ -2625,33 +2625,37 @@ class AccountMove(models.Model):
         return result
 
     def copy_data(self, default=None):
-        data_list = super().copy_data(default)
-        for move, data in zip(self, data_list):
+        default = dict(default or {})
+        vals_list = super().copy_data(default)
+        default_date = fields.Date.to_date(default.get('date'))
+        for move, vals in zip(self, vals_list):
             if move.move_type in ('out_invoice', 'in_invoice'):
-                data['line_ids'] = [
+                vals['line_ids'] = [
                     (command, _id, line_vals)
-                    for command, _id, line_vals in data['line_ids']
+                    for command, _id, line_vals in vals['line_ids']
                     if command == Command.CREATE
                 ]
             elif move.move_type == 'entry':
-                if 'partner_id' not in data:
-                    data['partner_id'] = False
-        if not self.journal_id.active and 'journal_id' in data_list:
-            del default['journal_id']
-        return data_list
+                if 'partner_id' not in vals:
+                    vals['partner_id'] = False
+            user_fiscal_lock_date = move.company_id._get_user_fiscal_lock_date()
+            if (default_date or move.date) <= user_fiscal_lock_date:
+                vals['date'] = user_fiscal_lock_date + timedelta(days=1)
+        if not self.journal_id.active and 'journal_id' in vals_list:
+            del vals['journal_id']
+        return vals_list
 
-    @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         default = dict(default or {})
-        if (fields.Date.to_date(default.get('date')) or self.date) <= self.company_id._get_user_fiscal_lock_date():
-            default['date'] = self.company_id._get_user_fiscal_lock_date() + timedelta(days=1)
-        copied_am = super().copy(default)
-        message_origin = '' if not copied_am.auto_post_origin_id else \
-            (Markup('<br/>') + _('This recurring entry originated from %s', copied_am.auto_post_origin_id._get_html_link()))
-        message_content = _('This entry has been reversed from %s', self._get_html_link()) if default.get('reversed_entry_id') else _('This entry has been duplicated from %s', self._get_html_link())
-        copied_am._message_log(body=message_content + message_origin)
-
-        return copied_am
+        new_moves = super().copy(default)
+        bodies = {}
+        for old_move, new_move in zip(self, new_moves):
+            message_origin = '' if not new_move.auto_post_origin_id else \
+                (Markup('<br/>') + _('This recurring entry originated from %s', new_move.auto_post_origin_id._get_html_link()))
+            message_content = _('This entry has been reversed from %s', old_move._get_html_link()) if default.get('reversed_entry_id') else _('This entry has been duplicated from %s', old_move._get_html_link())
+            bodies[new_move.id] = message_content + message_origin
+        new_moves._message_log_batch(bodies=bodies)
+        return new_moves
 
     def _sanitize_vals(self, vals):
         if vals.get('invoice_line_ids') and vals.get('line_ids'):

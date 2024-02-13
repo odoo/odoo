@@ -108,7 +108,6 @@ class MassMailingContact(models.Model):
 
         return super(MassMailingContact, self.with_context(default_list_ids=False)).create(vals_list)
 
-    @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         """ Cleans the default_list_ids while duplicating mailing contact in context of
         a mailing list because we already have subscription lists copied over for newly

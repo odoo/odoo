@@ -406,7 +406,6 @@ class Survey(models.Model):
             return self.sudo()._handle_certification_badges(vals)
         return result
 
-    @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         """Correctly copy the 'triggering_answer_ids' field from the original to the clone.
 
@@ -418,29 +417,28 @@ class Survey(models.Model):
         Note that when `question_ids` is provided in the default parameter, it falls back to the
         standard copy, meaning that triggering logic will not be maintained.
         """
-        self.ensure_one()
-        clone = super(Survey, self).copy(default)
+        new_surveys = super().copy(default)
         if default and 'question_ids' in default:
-            return clone
+            return new_surveys
 
-        cloned_question_ids = clone.question_ids.sorted()
+        for old_survey, new_survey in zip(self, new_surveys):
+            cloned_question_ids = new_survey.question_ids.sorted()
 
-        answers_map = {
-            src_answer.id: dst_answer.id
-            for src, dst
-            in zip(self.question_ids, cloned_question_ids)
-            for src_answer, dst_answer
-            in zip(src.suggested_answer_ids, dst.suggested_answer_ids.sorted())
-        }
-        for src, dst in zip(self.question_ids, cloned_question_ids):
-            if src.triggering_answer_ids:
-                dst.triggering_answer_ids = [answers_map[src_answer_id.id] for src_answer_id in src.triggering_answer_ids]
-        return clone
+            answers_map = {
+                src_answer.id: dst_answer.id
+                for src, dst
+                in zip(old_survey.question_ids, cloned_question_ids)
+                for src_answer, dst_answer
+                in zip(src.suggested_answer_ids, dst.suggested_answer_ids.sorted())
+            }
+            for src, dst in zip(old_survey.question_ids, cloned_question_ids):
+                if src.triggering_answer_ids:
+                    dst.triggering_answer_ids = [answers_map[src_answer_id.id] for src_answer_id in src.triggering_answer_ids]
+        return new_surveys
 
     def copy_data(self, default=None):
-        new_defaults = {'title': _("%s (copy)", self.title)}
-        default = dict(new_defaults, **(default or {}))
-        return super(Survey, self).copy_data(default)
+        vals_list = super().copy_data(default=default)
+        return [dict(vals, title=_("%s (copy)", survey.title)) for survey, vals in zip(self, vals_list)]
 
     def toggle_active(self):
         super(Survey, self).toggle_active()

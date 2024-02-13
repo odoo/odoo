@@ -177,10 +177,9 @@ class DeliveryCarrier(models.Model):
         if not self.country_ids:
             self.zip_prefix_ids = [Command.clear()]
 
-    def copy(self, default=None):
-        default = dict(default or {})
-        default.setdefault('name', _("%(old_name)s (copy)", old_name=self.name))
-        return super().copy(default=default)
+    def copy_data(self, default=None):
+        vals_list = super().copy_data(default=default)
+        return [dict(vals, name=_("%s (copy)", carrier.name)) for carrier, vals in zip(self, vals_list)]
 
     def _get_delivery_type(self):
         """Return the delivery type.

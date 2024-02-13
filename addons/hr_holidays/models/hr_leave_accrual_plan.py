@@ -136,8 +136,6 @@ class AccrualPlan(models.Model):
             'domain': [('id', 'in', self.allocation_ids.employee_id.ids)],
         }
 
-    @api.returns('self', lambda value: value.id)
-    def copy(self, default=None):
-        default = dict(default or {},
-                       name=_("%s (copy)", self.name))
-        return super().copy(default=default)
+    def copy_data(self, default=None):
+        vals_list = super().copy_data(default=default)
+        return [dict(vals, name=_("%s (copy)", plan.name)) for plan, vals in zip(self, vals_list)]

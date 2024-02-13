@@ -1021,10 +1021,7 @@ class MailComposer(models.TransientModel):
 
             # attachments. Copy attachment_ids (each has its own copies), and decode
             # attachments as required by _process_attachments_for_post
-            attachment_ids = [
-                attachment.copy({'res_model': self._name, 'res_id': self.id}).id
-                for attachment in self.attachment_ids
-            ]
+            attachment_ids = self.attachment_ids.copy({'res_model': self._name, 'res_id': self.id}).ids
             attachment_ids.reverse()
             decoded_attachments = [
                 (name, base64.b64decode(enc_cont))

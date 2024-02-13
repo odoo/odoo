@@ -344,11 +344,9 @@ class ResUsers(models.Model):
                     users_with_email.partner_id.with_context(create_user=True).signup_cancel()
         return users
 
-    @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         self.ensure_one()
-        sup = super(ResUsers, self)
         if not default or not default.get('email'):
             # avoid sending email to the user we are duplicating
-            sup = super(ResUsers, self.with_context(no_reset_password=True))
-        return sup.copy(default=default)
+            self = self.with_context(no_reset_password=True)
+        return super().copy(default=default)

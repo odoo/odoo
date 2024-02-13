@@ -933,31 +933,34 @@ class MrpProduction(models.Model):
 
     def copy_data(self, default=None):
         default = dict(default or {})
-        # covers at least 2 cases: backorders generation (follow default logic for moves copying)
-        # and copying a done MO via the form (i.e. copy only the non-cancelled moves since no backorder = cancelled finished moves)
-        if not default or 'move_finished_ids' not in default:
-            move_finished_ids = self.move_finished_ids
-            if self.state != 'cancel':
-                move_finished_ids = self.move_finished_ids.filtered(lambda m: m.state != 'cancel' and m.product_qty != 0.0)
-            default['move_finished_ids'] = [(0, 0, move.copy_data()[0]) for move in move_finished_ids]
-        if not default or 'move_raw_ids' not in default:
-            default['move_raw_ids'] = [(0, 0, move.copy_data()[0]) for move in self.move_raw_ids.filtered(lambda m: m.product_qty != 0.0)]
-        return super(MrpProduction, self).copy_data(default=default)
+        vals_list = super().copy_data(default=default)
+        for production, vals in zip(self, vals_list):
+            # covers at least 2 cases: backorders generation (follow default logic for moves copying)
+            # and copying a done MO via the form (i.e. copy only the non-cancelled moves since no backorder = cancelled finished moves)
+            if not default or 'move_finished_ids' not in default:
+                move_finished_ids = production.move_finished_ids
+                if production.state != 'cancel':
+                    move_finished_ids = production.move_finished_ids.filtered(lambda m: m.state != 'cancel' and m.product_qty != 0.0)
+                vals['move_finished_ids'] = [(0, 0, move_vals) for move_vals in move_finished_ids.copy_data()]
+            if not default or 'move_raw_ids' not in default:
+                vals['move_raw_ids'] = [(0, 0, move_vals) for move_vals in production.move_raw_ids.filtered(lambda m: m.product_qty != 0.0).copy_data()]
+        return vals_list
 
     def copy(self, default=None):
-        res = super().copy(default)
-        if self.workorder_ids.blocked_by_workorder_ids:
-            workorders_mapping = {}
-            for original, copied in zip(self.workorder_ids, res.workorder_ids.sorted()):
-                workorders_mapping[original] = copied
-            for workorder in self.workorder_ids:
-                if workorder.blocked_by_workorder_ids:
-                    copied_workorder = workorders_mapping[workorder]
-                    dependencies = []
-                    for dependency in workorder.blocked_by_workorder_ids:
-                        dependencies.append(Command.link(workorders_mapping[dependency].id))
-                    copied_workorder.blocked_by_workorder_ids = dependencies
-        return res
+        new_productions = super().copy(default)
+        for old_production, new_production in zip(self, new_productions):
+            if old_production.workorder_ids.blocked_by_workorder_ids:
+                workorders_mapping = {}
+                for original, copied in zip(old_production.workorder_ids, new_production.workorder_ids.sorted()):
+                    workorders_mapping[original] = copied
+                for workorder in old_production.workorder_ids:
+                    if workorder.blocked_by_workorder_ids:
+                        copied_workorder = workorders_mapping[workorder]
+                        dependencies = []
+                        for dependency in workorder.blocked_by_workorder_ids:
+                            dependencies.append(Command.link(workorders_mapping[dependency].id))
+                        copied_workorder.blocked_by_workorder_ids = dependencies
+        return new_productions
 
     def action_generate_bom(self):
         """ Generates a new Bill of Material based on the Manufacturing Order's product, components,

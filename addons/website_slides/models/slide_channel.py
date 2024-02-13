@@ -737,12 +737,12 @@ class Channel(models.Model):
         return channels
 
     def copy_data(self, default=None):
-        self.ensure_one()
-        default = default or {}
+        default = dict(default or {})
+        vals_list = super().copy_data(default=default)
         if 'name' not in default:
-            default['name'] = f"{self.name} ({_('copy')})"
-
-        return super().copy_data(default)
+            for channel, vals in zip(self, vals_list):
+                vals['name'] = f"{channel.name} ({_('copy')})"
+        return vals_list
 
     def write(self, vals):
         # If description_short wasn't manually modified, there is an implicit link between this field and description.

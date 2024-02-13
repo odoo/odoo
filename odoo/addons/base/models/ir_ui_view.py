@@ -539,13 +539,14 @@ actual arch.
     def _update_field_translations(self, fname, translations, digest=None):
         return super(View, self.with_context(no_save_prev=True))._update_field_translations(fname, translations, digest)
 
-    @api.returns('self', lambda value: value.id)
-    def copy(self, default=None):
-        self.ensure_one()
-        if self.key and default and 'key' not in default:
-            new_key = self.key + '_%s' % str(uuid.uuid4())[:6]
-            default = dict(default or {}, key=new_key)
-        return super(View, self).copy(default)
+    def copy_data(self, default=None):
+        has_default_without_key = default and 'key' not in default
+        default = dict(default or {})
+        vals_list = super().copy_data(default=default)
+        for view, vals in zip(self, vals_list):
+            if view.key and has_default_without_key:
+                vals['key'] = default.get('key', view.key + '_%s' % str(uuid.uuid4())[:6])
+        return vals_list
 
     # default view selection
     @api.model

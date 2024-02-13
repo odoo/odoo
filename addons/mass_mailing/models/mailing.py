@@ -562,15 +562,15 @@ class MassMailing(models.Model):
             record.attachment_ids.write({'res_model': record._name, 'res_id': record.id})
         return self
 
-    @api.returns('self', lambda value: value.id)
-    def copy(self, default=None):
-        self.ensure_one()
-        default = dict(default or {}, contact_list_ids=self.contact_list_ids.ids)
-        if self.mail_server_id and not self.mail_server_id.active:
-            default['mail_server_id'] = self._get_default_mail_server_id()
-        if self.ab_testing_enabled:
-            default['ab_testing_schedule_datetime'] = self.ab_testing_schedule_datetime
-        return super(MassMailing, self).copy(default=default)
+    def copy_data(self, default=None):
+        vals_list = super().copy_data(default)
+        for mailing, vals in zip(self, vals_list):
+            vals['contact_list_ids'] = mailing.contact_list_ids.ids
+            if mailing.mail_server_id and not mailing.mail_server_id.active:
+                vals['mail_server_id'] = self._get_default_mail_server_id()
+            if mailing.ab_testing_enabled:
+                vals['ab_testing_schedule_datetime'] = mailing.ab_testing_schedule_datetime
+        return vals_list
 
     def _group_expand_states(self, states, domain, order):
         return [key for key, val in self._fields['state'].selection]

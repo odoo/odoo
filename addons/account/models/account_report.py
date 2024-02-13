@@ -222,33 +222,32 @@ class AccountReport(models.Model):
 
         return super().write(vals)
 
+    def copy_data(self, default=None):
+        vals_list = super().copy_data(default=default)
+        return [dict(vals, name=report._get_copied_name()) for report, vals in zip(self, vals_list)]
+
     def copy(self, default=None):
         '''Copy the whole financial report hierarchy by duplicating each line recursively.
 
         :param default: Default values.
         :return: The copied account.report record.
         '''
-        self.ensure_one()
-        if default is None:
-            default = {}
-        default['name'] = self._get_copied_name()
-        copied_report = super().copy(default=default)
-        code_mapping = {}
-        for line in self.line_ids.filtered(lambda x: not x.parent_id):
-            line._copy_hierarchy(copied_report, code_mapping=code_mapping)
+        new_reports = super().copy(default=default)
+        for old_report, new_report in zip(self, new_reports):
+            code_mapping = {}
+            for line in old_report.line_ids.filtered(lambda x: not x.parent_id):
+                line._copy_hierarchy(new_report, code_mapping=code_mapping)
 
-        # Replace line codes by their copy in aggregation formulas
-        for expression in copied_report.line_ids.expression_ids:
-            if expression.engine == 'aggregation':
-                copied_formula = f" {expression.formula} " # Add spaces so that the lookahead/lookbehind of the regex can work (we can't do a | in those)
-                for old_code, new_code in code_mapping.items():
-                    copied_formula = re.sub(f"(?<=\\W){old_code}(?=\\W)", new_code, copied_formula)
-                expression.formula = copied_formula.strip() # Remove the spaces introduced for lookahead/lookbehind
+            # Replace line codes by their copy in aggregation formulas
+            for expression in new_report.line_ids.expression_ids:
+                if expression.engine == 'aggregation':
+                    copied_formula = f" {expression.formula} "  # Add spaces so that the lookahead/lookbehind of the regex can work (we can't do a | in those)
+                    for old_code, new_code in code_mapping.items():
+                        copied_formula = re.sub(f"(?<=\\W){old_code}(?=\\W)", new_code, copied_formula)
+                    expression.formula = copied_formula.strip()  # Remove the spaces introduced for lookahead/lookbehind
 
-        for column in self.column_ids:
-            column.copy({'report_id': copied_report.id})
-
-        return copied_report
+            old_report.column_ids.copy({'report_id': new_report.id})
+        return new_reports
 
     @api.ondelete(at_uninstall=False)
     def _unlink_if_no_variant(self):

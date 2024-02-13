@@ -439,7 +439,6 @@ class ProductProduct(models.Model):
                     # This is the case from existing stock reordering rules.
                     self.write({'active': False})
 
-    @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         """Variants are generated depending on the configuration of attributes
         and values on the template, so copying them does not make sense.
@@ -451,8 +450,15 @@ class ProductProduct(models.Model):
         # this returns the first possible combination of variant to make it
         # works for now, need to be fixed to return product_variant_id if it's
         # possible in the future
-        template = self.product_tmpl_id.copy(default=default)
-        return template.product_variant_id or template._create_first_product_variant()
+
+        # Use tmp recordset in case we copy several variants from the same template
+        templates = [product.product_tmpl_id for product in self]
+        templates_to_copy = self.env['product.template'].concat(*templates)
+        new_templates = templates_to_copy.copy(default=default)
+        new_products = self.env['product.product']
+        for new_template in new_templates:
+            new_products += new_template.product_variant_id or new_template._create_first_product_variant()
+        return new_products
 
     @api.model
     def _search(self, domain, offset=0, limit=None, order=None, access_rights_uid=None):

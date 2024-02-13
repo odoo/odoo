@@ -35,10 +35,9 @@ class IrFilters(models.Model):
         )
         return self._cr.fetchall()
 
-    def copy(self, default=None):
-        self.ensure_one()
-        default = dict(default or {}, name=_('%s (copy)', self.name))
-        return super(IrFilters, self).copy(default)
+    def copy_data(self, default=None):
+        vals_list = super().copy_data(default=default)
+        return [dict(vals, name=_("%s (copy)", ir_filter.name)) for ir_filter, vals in zip(self, vals_list)]
 
     def _get_eval_domain(self):
         self.ensure_one()

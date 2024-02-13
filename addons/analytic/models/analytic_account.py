@@ -113,8 +113,11 @@ class AccountAnalyticAccount(models.Model):
 
     def copy_data(self, default=None):
         default = dict(default or {})
-        default.setdefault('name', _("%s (copy)", self.name))
-        return super().copy_data(default)
+        vals_list = super().copy_data(default=default)
+        if 'name' not in default:
+            for account, vals in zip(self, vals_list):
+                vals['name'] = _("%s (copy)", account.name)
+        return vals_list
 
     @api.model
     def _read_group(self, domain, groupby=(), aggregates=(), having=(), offset=0, limit=None, order=None):

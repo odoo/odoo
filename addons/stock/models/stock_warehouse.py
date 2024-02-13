@@ -151,14 +151,15 @@ class Warehouse(models.Model):
 
         return warehouses
 
-    def copy(self, default=None):
-        self.ensure_one()
+    def copy_data(self, default=None):
         default = dict(default or {})
-        if 'name' not in default:
-            default['name'] = _("%s (copy)", self.name)
-        if 'code' not in default:
-            default['code'] = _("COPY")
-        return super().copy(default=default)
+        vals_list = super().copy_data(default=default)
+        for warehouse, vals in zip(self, vals_list):
+            if 'name' not in default:
+                vals['name'] = _("%s (copy)", warehouse.name)
+            if 'code' not in default:
+                vals['code'] = _("COPY")
+        return vals_list
 
     def write(self, vals):
         if 'company_id' in vals:

@@ -701,13 +701,12 @@ class Slide(models.Model):
 
         return res
 
-    @api.returns('self', lambda value: value.id)
-    def copy(self, default=None):
+    def copy_data(self, default=None):
         """Sets the sequence to zero so that it always lands at the beginning
         of the newly selected course as an uncategorized slide"""
-        rec = super(Slide, self).copy(default)
-        rec.sequence = 0
-        return rec
+        default = dict(default or {})
+        default['sequence'] = 0
+        return super().copy_data(default=default)
 
     def unlink(self):
         for category in self.filtered(lambda slide: slide.is_category):

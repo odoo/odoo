@@ -363,13 +363,12 @@ class SurveyQuestion(models.Model):
     # CRUD
     # ------------------------------------------------------------
 
-    @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
-        self.ensure_one()
-        clone = super().copy(default)
-        if self.triggering_answer_ids:
-            clone.triggering_answer_ids = self.triggering_answer_ids
-        return clone
+        new_questions = super().copy(default)
+        for old_question, new_question in zip(self, new_questions):
+            if old_question.triggering_answer_ids:
+                new_question.triggering_answer_ids = old_question.triggering_answer_ids
+        return new_questions
 
     # ------------------------------------------------------------
     # CRUD

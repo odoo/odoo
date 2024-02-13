@@ -481,36 +481,37 @@ class AccountJournal(models.Model):
         bank_accounts.unlink()
         return ret
 
-    @api.returns('self', lambda value: value.id)
-    def copy(self, default=None):
+    def copy_data(self, default=None):
         default = dict(default or {})
+        vals_list = super().copy_data(default)
+        codes_by_company = {
+            company: set(self.env['account.journal'].with_context(active_test=False)._read_group(
+                domain=self.env['account.journal']._check_company_domain(company),
+                aggregates=['code:array_agg'],
+            )[0][0])
+            for company in self.company_id
+        }
+        for journal, vals in zip(self, vals_list):
+            # Find a unique code for the copied journal
+            all_journal_codes = codes_by_company[journal.company_id]
 
-        # Find a unique code for the copied journal
-        read_codes = self.env['account.journal'].with_context(active_test=False).search_read(
-            self.env['account.journal']._check_company_domain(self.company_id),
-            ['code'],
-        )
-        all_journal_codes = {code_data['code'] for code_data in read_codes}
+            copy_code = journal.code
+            code_prefix = re.sub(r'\d+', '', journal.code).strip()
+            counter = 1
+            while counter <= len(all_journal_codes) and copy_code in all_journal_codes:
+                counter_str = str(counter)
+                copy_prefix = code_prefix[:journal._fields['code'].size - len(counter_str)]
+                copy_code = "%s%s" % (copy_prefix, counter_str)
+                counter += 1
 
-        copy_code = self.code
-        code_prefix = re.sub(r'\d+', '', self.code).strip()
-        counter = 1
-        while counter <= len(all_journal_codes) and  copy_code in all_journal_codes:
-            counter_str = str(counter)
-            copy_prefix = code_prefix[:self._fields['code'].size - len(counter_str)]
-            copy_code = ("%s%s" % (copy_prefix, counter_str))
+            if counter > len(all_journal_codes):
+                # Should never happen, but put there just in case.
+                raise UserError(_("Could not compute any code for the copy automatically. Please create it manually."))
 
-            counter += 1
-
-        if counter > len(all_journal_codes):
-            # Should never happen, but put there just in case.
-            raise UserError(_("Could not compute any code for the copy automatically. Please create it manually."))
-
-        default.update(
-            code=copy_code,
-            name=_("%s (copy)", self.name or ''))
-
-        return super(AccountJournal, self).copy(default)
+            vals.update(
+                code=copy_code,
+                name=_("%s (copy)", journal.name or ''))
+        return vals_list
 
     def write(self, vals):
         # for journals, force a readable name instead of a sanitized name e.g. non ascii in journal names

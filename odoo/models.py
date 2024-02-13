@@ -5496,27 +5496,18 @@ class BaseModel(metaclass=MetaModel):
         query.set_result_ids(self._ids, ordered)
         return query
 
-    @api.returns(None, lambda value: value[0])
     def copy_data(self, default=None):
         """
         Copy given record's data with all its fields values
 
         :param default: field values to override in the original values of the copied record
-        :return: list with a dictionary containing all the field values
+        :return: list of dictionaries containing all the field values
         """
-        # In the old API, this method took a single id and return a dict. When
-        # invoked with the new API, it returned a list of dicts.
-        self.ensure_one()
-
+        vals_list = []
+        default = dict(default or {})
         # avoid recursion through already copied records in case of circular relationship
         if '__copy_data_seen' not in self._context:
             self = self.with_context(__copy_data_seen=defaultdict(set))
-        seen_map = self._context['__copy_data_seen']
-        if self.id in seen_map[self._name]:
-            return
-        seen_map[self._name].add(self.id)
-
-        default = dict(default or [])
 
         # build a black list of fields that should not be copied
         blacklist = set(MAGIC_COLUMNS + ['parent_path'])
@@ -5539,20 +5530,29 @@ class BaseModel(metaclass=MetaModel):
                           for name, field in self._fields.items()
                           if field.copy and name not in default and name not in blacklist}
 
-        for name, field in fields_to_copy.items():
-            if field.type == 'one2many':
-                # duplicate following the order of the ids because we'll rely on
-                # it later for copying translations in copy_translation()!
-                lines = [rec.copy_data()[0] for rec in self[name].sorted(key='id')]
-                # the lines are duplicated using the wrong (old) parent, but then are
-                # reassigned to the correct one thanks to the (Command.CREATE, 0, ...)
-                default[name] = [Command.create(line) for line in lines if line]
-            elif field.type == 'many2many':
-                default[name] = [Command.set(self[name].ids)]
-            else:
-                default[name] = field.convert_to_write(self[name], self)
+        for record in self:
+            seen_map = self._context['__copy_data_seen']
+            if record.id in seen_map[record._name]:
+                vals_list.append(None)
+                continue
+            seen_map[record._name].add(record.id)
 
-        return [default]
+            vals = default.copy()
+
+            for name, field in fields_to_copy.items():
+                if field.type == 'one2many':
+                    # duplicate following the order of the ids because we'll rely on
+                    # it later for copying translations in copy_translation()!
+                    lines = record[name].sorted(key='id').copy_data()
+                    # the lines are duplicated using the wrong (old) parent, but then are
+                    # reassigned to the correct one thanks to the (Command.CREATE, 0, ...)
+                    vals[name] = [Command.create(line) for line in lines if line]
+                elif field.type == 'many2many':
+                    vals[name] = [Command.set(record[name].ids)]
+                else:
+                    vals[name] = field.convert_to_write(record[name], record)
+            vals_list.append(vals)
+        return vals_list
 
     def copy_translations(self, new, excluded=()):
         """ Recursively copy the translations from original to new record
@@ -5619,7 +5619,7 @@ class BaseModel(metaclass=MetaModel):
                             translations[lang][from_lang_term] = to_lang_term
                     new.update_field_translations(name, translations)
 
-    @api.returns('self', lambda value: value.id)
+    @api.returns('self')
     def copy(self, default=None):
         """ copy(default=None)
 
@@ -5627,28 +5627,14 @@ class BaseModel(metaclass=MetaModel):
 
         :param dict default: dictionary of field values to override in the
                original values of the copied record, e.g: ``{'field_name': overridden_value, ...}``
-        :returns: new record
-
-        """
-        self.ensure_one()
-        vals = self.with_context(active_test=False).copy_data(default)[0]
-        record_copy = self.create(vals)
-        self.with_context(from_copy_translation=True).copy_translations(record_copy, excluded=default or ())
-
-        return record_copy
-
-    @api.returns('self')
-    def copy_multi(self, default=None):
-        """ copy_multi(default=None)
-
-        Duplicate records in ``self`` updating it with default values
-
-        :param dict default: dictionary of field values to override in the
-               original values of the copied records, e.g: ``{'field_name': overridden_value, ...}``
         :returns: new records
 
         """
-        return self.browse([record.copy(default).id for record in self])
+        vals_list = self.with_context(active_test=False).copy_data(default)
+        new_records = self.create(vals_list)
+        for old_record, new_record in zip(self, new_records):
+            old_record.copy_translations(new_record, excluded=default or ())
+        return new_records
 
     @api.returns('self')
     def exists(self):

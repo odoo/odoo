@@ -199,14 +199,15 @@ class IrUiMenu(models.Model):
         return super(IrUiMenu, self).unlink()
 
     def copy(self, default=None):
-        record = super(IrUiMenu, self).copy(default=default)
-        match = NUMBER_PARENS.search(record.name)
-        if match:
-            next_num = int(match.group(1)) + 1
-            record.name = NUMBER_PARENS.sub('(%d)' % next_num, record.name)
-        else:
-            record.name = record.name + '(1)'
-        return record
+        new_menus = super().copy(default=default)
+        for new_menu in new_menus:
+            match = NUMBER_PARENS.search(new_menu.name)
+            if match:
+                next_num = int(match.group(1)) + 1
+                new_menu.name = NUMBER_PARENS.sub('(%d)' % next_num, new_menu.name)
+            else:
+                new_menu.name = new_menu.name + '(1)'
+        return new_menus
 
     @api.model
     @api.returns('self')

@@ -142,13 +142,14 @@ class AliasMixinOptional(models.AbstractModel):
         aliases.sudo().unlink()
         return res
 
-    @api.returns(None, lambda value: value[0])
     def copy_data(self, default=None):
-        data = super().copy_data(default)[0]
-        for fields_not_writable in set(self.env['mail.alias']._fields.keys()) - set(self.ALIAS_WRITEABLE_FIELDS):
-            if fields_not_writable in data:
-                del data[fields_not_writable]
-        return [data]
+        vals_list = super().copy_data(default=default)
+        not_writable_fields = set(self.env['mail.alias']._fields.keys()) - set(self.ALIAS_WRITEABLE_FIELDS)
+        for vals in vals_list:
+            for not_writable_field in not_writable_fields:
+                if not_writable_field in vals:
+                    del vals[not_writable_field]
+        return vals_list
 
     @api.model
     def _require_new_alias(self, record_vals):

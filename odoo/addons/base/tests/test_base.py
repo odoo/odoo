@@ -158,7 +158,7 @@ class TestGroups(TransactionCase):
     def test_res_group_copy(self):
         a = self.env['res.groups'].with_context(lang='en_US').create({'name': 'A'})
         b = a.copy()
-        self.assertFalse(a.name == b.name)
+        self.assertNotEqual(a.name, b.name)
 
     def test_apply_groups(self):
         a = self.env['res.groups'].create({'name': 'A'})

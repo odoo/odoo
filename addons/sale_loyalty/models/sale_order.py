@@ -50,13 +50,12 @@ class SaleOrder(models.Model):
         self.ensure_one()
         return self.env['sale.order.line']
 
-    @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
-        order = super(SaleOrder, self).copy(default)
-        reward_lines = order.order_line.filtered('is_reward_line')
+        new_orders = super().copy(default)
+        reward_lines = new_orders.order_line.filtered('is_reward_line')
         if reward_lines:
             reward_lines.unlink()
-        return order
+        return new_orders
 
     def action_confirm(self):
         for order in self:

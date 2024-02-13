@@ -111,15 +111,14 @@ class ProjectMilestone(models.Model):
     def _get_data_list(self):
         return [ms._get_data() for ms in self]
 
-    @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
-        if default is None:
-            default = {}
-        milestone_copy = super(ProjectMilestone, self).copy(default)
-        if self.project_id.allow_milestones:
-            milestone_mapping = self.env.context.get('milestone_mapping', {})
-            milestone_mapping[self.id] = milestone_copy.id
-        return milestone_copy
+        default = dict(default or {})
+        new_milestones = super().copy(default)
+        milestone_mapping = self.env.context.get('milestone_mapping', {})
+        for old_milestone, new_milestone in zip(self, new_milestones):
+            if old_milestone.project_id.allow_milestones:
+                milestone_mapping[old_milestone.id] = new_milestone.id
+        return new_milestones
 
     def _compute_display_name(self):
         super()._compute_display_name()

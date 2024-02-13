@@ -207,12 +207,12 @@ class Groups(models.Model):
             return groups._as_query(order)
         return super()._search(domain, offset, limit, order, access_rights_uid)
 
-    def copy(self, default=None):
-        self.ensure_one()
-        chosen_name = default.get('name') if default else ''
-        default_name = chosen_name or _('%s (copy)', self.name)
-        default = dict(default or {}, name=default_name)
-        return super(Groups, self).copy(default)
+    def copy_data(self, default=None):
+        default = dict(default or {})
+        vals_list = super().copy_data(default=default)
+        for group, vals in zip(self, vals_list):
+            vals['name'] = default.get('name') or _('%s (copy)', group.name)
+        return vals_list
 
     def write(self, vals):
         if 'name' in vals:
@@ -723,14 +723,15 @@ class Users(models.Model):
             user_ids = self._search(expression.AND([[('name', operator, name)], domain]), limit=limit, order=order)
         return user_ids
 
-    def copy(self, default=None):
-        self.ensure_one()
+    def copy_data(self, default=None):
         default = dict(default or {})
-        if ('name' not in default) and ('partner_id' not in default):
-            default['name'] = _("%s (copy)", self.name)
-        if 'login' not in default:
-            default['login'] = _("%s (copy)", self.login)
-        return super(Users, self).copy(default)
+        vals_list = super().copy_data(default=default)
+        for user, vals in zip(self, vals_list):
+            if ('name' not in default) and ('partner_id' not in default):
+                vals['name'] = _("%s (copy)", user.name)
+            if 'login' not in default:
+                vals['login'] = _("%s (copy)", user.login)
+        return vals_list
 
     @api.model
     @tools.ormcache('self._uid')

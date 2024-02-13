@@ -247,12 +247,13 @@ class Location(models.Model):
         self.invalidate_model(['warehouse_id'])
         return res
 
-    @api.returns('self', lambda value: value.id)
-    def copy(self, default=None):
+    def copy_data(self, default=None):
         default = dict(default or {})
+        vals_list = super().copy_data(default=default)
         if 'name' not in default:
-            default['name'] = _("%s (copy)", self.name)
-        return super().copy(default=default)
+            for location, vals in zip(self, vals_list):
+                vals['name'] = _("%s (copy)", location.name)
+        return vals_list
 
     def _get_putaway_strategy(self, product, quantity=0, package=None, packaging=None, additional_qty=None):
         """Returns the location where the product has to be put, if any compliant
@@ -445,12 +446,13 @@ class StockRoute(models.Model):
         'stock.warehouse', 'stock_route_warehouse', 'route_id', 'warehouse_id',
         'Warehouses', copy=False, domain="[('id', 'in', warehouse_domain_ids)]")
 
-    def copy(self, default=None):
-        self.ensure_one()
+    def copy_data(self, default=None):
         default = dict(default or {})
+        vals_list = super().copy_data(default=default)
         if 'name' not in default:
-            default['name'] = _("%s (copy)", self.name)
-        return super().copy(default=default)
+            for route, vals in zip(self, vals_list):
+                vals['name'] = _("%s (copy)", route.name)
+        return vals_list
 
     @api.depends('company_id')
     def _compute_warehouses(self):

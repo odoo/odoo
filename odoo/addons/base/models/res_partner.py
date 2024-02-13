@@ -438,12 +438,12 @@ class Partner(models.Model):
         if not self._check_recursion():
             raise ValidationError(_('You cannot create recursive Partner hierarchies.'))
 
-    def copy(self, default=None):
-        self.ensure_one()
-        chosen_name = default.get('name') if default else ''
-        new_name = chosen_name or _('%s (copy)', self.name)
-        default = dict(default or {}, name=new_name)
-        return super(Partner, self).copy(default)
+    def copy_data(self, default=None):
+        default = dict(default or {})
+        vals_list = super().copy_data(default=default)
+        if default.get('name'):
+            return vals_list
+        return [dict(vals, name=_("%s (copy)", partner.name)) for partner, vals in zip(self, vals_list)]
 
     @api.onchange('parent_id')
     def onchange_parent_id(self):
