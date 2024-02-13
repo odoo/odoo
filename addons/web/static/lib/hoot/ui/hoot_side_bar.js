@@ -105,7 +105,10 @@ export class HootSideBar extends Component {
     static props = {};
 
     static template = xml`
-        <div class="${HootSideBar.name} flex-col w-64 h-full overflow-x-hidden overflow-y-auto resize-x shadow bg-gray-200 dark:bg-gray-800 z-1 hidden md:flex">
+        <div
+            class="${HootSideBar.name} flex-col w-64 h-full overflow-x-hidden overflow-y-auto resize-x shadow bg-gray-200 dark:bg-gray-800 z-1 hidden md:flex"
+            t-on-click="onClick"
+        >
             <ul>
                 <t t-foreach="state.items" t-as="item" t-key="item.id">
                     <li class="flex items-center h-7 animate-slide-down">
@@ -160,6 +163,17 @@ export class HootSideBar extends Component {
 
             this.computeItems();
         });
+    }
+
+    /**
+     * @param {PointerEvent} ev
+     */
+    onClick(ev) {
+        if (!ev.target.closest("button")) {
+            // Unselect suite when clicking outside of a suite & in the side bar
+            this.uiState.selectedSuiteId = null;
+            this.uiState.resultsPage = 0;
+        }
     }
 
     computeItems() {
