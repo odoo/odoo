@@ -667,6 +667,8 @@ class AccountPayment(models.Model):
         for pay in self:
             if not pay.payment_method_line_id:
                 raise ValidationError(_("Please define a payment method line on your payment."))
+            elif pay.payment_method_line_id.journal_id and pay.payment_method_line_id.journal_id != pay.journal_id:
+                raise ValidationError(_("The selected payment method is not available for this payment, please select the payment method again."))
 
     # -------------------------------------------------------------------------
     # LOW-LEVEL METHODS
