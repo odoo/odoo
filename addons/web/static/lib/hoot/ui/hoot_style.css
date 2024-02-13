@@ -579,48 +579,6 @@ input[type="checkbox"]:checked {
     display: inline-flex;
 }
 
-@media (min-width: 640px) {
-    .sm\:block {
-        display: block;
-    }
-    .sm\:flex {
-        display: flex;
-    }
-    .sm\:grid {
-        display: grid;
-    }
-    .sm\:hidden {
-        display: none;
-    }
-    .sm\:inline {
-        display: inline;
-    }
-    .sm\:inline-flex {
-        display: inline-flex;
-    }
-}
-
-@media (min-width: 768px) {
-    .md\:block {
-        display: block;
-    }
-    .md\:flex {
-        display: flex;
-    }
-    .md\:grid {
-        display: grid;
-    }
-    .md\:hidden {
-        display: none;
-    }
-    .md\:inline {
-        display: inline;
-    }
-    .md\:inline-flex {
-        display: inline-flex;
-    }
-}
-
 /* Flex */
 
 .flex-0 {
@@ -664,6 +622,9 @@ input[type="checkbox"]:checked {
 
 .col-span-2 {
     grid-column: span 2 / span 2;
+}
+.grid-rows-3 {
+    grid-template-rows: repeat(3, minmax(0, 1fr));
 }
 
 /* Opacity */
@@ -771,7 +732,8 @@ input[type="checkbox"]:checked {
 /* Shadow */
 
 .shadow {
-    box-shadow: 2px 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+    box-shadow: 2px 1px 5px 0 rgba(0, 0, 0, var(--shadow-opacity)),
+        0 1px 2px -1px rgba(0, 0, 0, var(--shadow-opacity));
 }
 
 /* Sizing */
@@ -1229,6 +1191,12 @@ input[type="checkbox"]:checked {
     padding-bottom: 1rem;
 }
 
+/* Text: alignment */
+
+.text-center {
+    text-align: center;
+}
+
 /* Text: color */
 
 .text-base {
@@ -1392,6 +1360,64 @@ input[type="checkbox"]:checked {
 }
 .z-4 {
     z-index: 4;
+}
+
+/* Media query modifiers */
+
+@media (min-width: 640px) {
+    .sm\:block {
+        display: block;
+    }
+    .sm\:flex {
+        display: flex;
+    }
+    .sm\:grid {
+        display: grid;
+    }
+    .sm\:hidden {
+        display: none;
+    }
+    .sm\:inline {
+        display: inline;
+    }
+    .sm\:inline-flex {
+        display: inline-flex;
+    }
+    .sm\:border-x {
+        border-left-width: 1px;
+        border-right-width: 1px;
+    }
+    .sm\:gap-0 {
+        gap: 0;
+    }
+    .sm\:grid-cols-3 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .sm\:px-4 {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+}
+
+@media (min-width: 768px) {
+    .md\:block {
+        display: block;
+    }
+    .md\:flex {
+        display: flex;
+    }
+    .md\:grid {
+        display: grid;
+    }
+    .md\:hidden {
+        display: none;
+    }
+    .md\:inline {
+        display: inline;
+    }
+    .md\:inline-flex {
+        display: inline-flex;
+    }
 }
 
 /*---------------------------------------------------------------------------*/

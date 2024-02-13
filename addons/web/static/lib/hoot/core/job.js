@@ -103,6 +103,7 @@ export class Job {
         for (const tag of Tag.getAll(tags)) {
             if (!this.tags.includes(tag)) {
                 this.tags.push(tag);
+                tag.weight++;
             }
         }
     }
