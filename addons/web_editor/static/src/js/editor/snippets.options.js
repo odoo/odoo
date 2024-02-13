@@ -3836,7 +3836,11 @@ const SnippetOptionWidget = Widget.extend({
                 i++;
             }
             const proms = allSubWidgets.map(async widget => {
-                const show = await this._computeWidgetVisibility.call(obj, widget.getName(), params);
+                let show = await this._computeWidgetVisibility.call(obj, widget.getName(), params);
+                if (show && this.options.enableTranslation) {
+                    show = this._computeWidgetTranslateVisibility
+                        .call(obj, widget.getName(), params);
+                }
                 if (!show) {
                     widget.toggleVisibility(false);
                     return;
@@ -4093,6 +4097,17 @@ const SnippetOptionWidget = Widget.extend({
      */
     _computeWidgetVisibility: async function (widgetName, params) {
         return true;
+    },
+    /**
+     * Returns true if the widget should be visible in translate mode.
+     *
+     * @private
+     * @param {string} widgetName
+     * @param {Object} params
+     * @returns {boolean}
+     */
+    _computeWidgetTranslateVisibility(widgetName, params) {
+        return false;
     },
     /**
      * @private
@@ -4532,208 +4547,212 @@ registry.sizing = SnippetOptionWidget.extend({
         const def = this._super.apply(this, arguments);
         let isMobile = weUtils.isMobileView(this.$target[0]);
 
+        this.canUseHandle = !this.options.enableTranslation;
+
         this.$handles = this.$overlay.find('.o_handle');
 
         let resizeValues = this._getSize();
-        this.$handles.on('mousedown', function (ev) {
-            ev.preventDefault();
-            isMobile = weUtils.isMobileView(self.$target[0]);
-
-            // First update size values as some element sizes may not have been
-            // initialized on option start (hidden slides, etc)
-            resizeValues = self._getSize();
-            const $handle = $(ev.currentTarget);
-
-            let compass = false;
-            let XY = false;
-            if ($handle.hasClass('n')) {
-                compass = 'n';
-                XY = 'Y';
-            } else if ($handle.hasClass('s')) {
-                compass = 's';
-                XY = 'Y';
-            } else if ($handle.hasClass('e')) {
-                compass = 'e';
-                XY = 'X';
-            } else if ($handle.hasClass('w')) {
-                compass = 'w';
-                XY = 'X';
-            } else if ($handle.hasClass('nw')) {
-                compass = 'nw';
-                XY = 'YX';
-            } else if ($handle.hasClass('ne')) {
-                compass = 'ne';
-                XY = 'YX';
-            } else if ($handle.hasClass('sw')) {
-                compass = 'sw';
-                XY = 'YX';
-            } else if ($handle.hasClass('se')) {
-                compass = 'se';
-                XY = 'YX';
-            }
-
-            // Don't call the normal resize methods if we are in a grid and
-            // vice-versa.
-            const isGrid = Object.keys(resizeValues).length === 4;
-            const isGridHandle = $handle[0].classList.contains('o_grid_handle');
-            if (isGrid && !isGridHandle || !isGrid && isGridHandle) {
-                return;
-            }
-
-            let resizeVal;
-            if (compass.length > 1) {
-                resizeVal = [resizeValues[compass[0]], resizeValues[compass[1]]];
-            } else {
-                resizeVal = [resizeValues[compass]];
-            }
-
-            if (resizeVal.some(rV => !rV)) {
-                return;
-            }
-
-            // Locking the mutex during the resize. Started here to avoid
-            // empty returns.
-            let resizeResolve;
-            const prom = new Promise(resolve => resizeResolve = () => resolve());
-            self.trigger_up("snippet_edition_request", { exec: () => {
-                self.trigger_up("disable_loading_effect");
-                return prom;
-            }});
-
-            // If we are in grid mode, add a background grid and place it in
-            // front of the other elements.
-            const rowEl = self.$target[0].parentNode;
-            let backgroundGridEl;
-            if (rowEl.classList.contains("o_grid_mode") && !isMobile) {
-                self.options.wysiwyg.odooEditor.observerUnactive('displayBackgroundGrid');
-                backgroundGridEl = gridUtils._addBackgroundGrid(rowEl, 0);
-                gridUtils._setElementToMaxZindex(backgroundGridEl, rowEl);
-                self.options.wysiwyg.odooEditor.observerActive('displayBackgroundGrid');
-            }
-
-            // For loop to handle the cases where it is ne, nw, se or sw. Since
-            // there are two directions, we compute for both directions and we
-            // store the values in an array.
-            const directions = [];
-            for (const [i, resize] of resizeVal.entries()) {
-                const props = {};
-                let current = 0;
-                const cssProperty = resize[2];
-                const cssPropertyValue = parseInt(self.$target.css(cssProperty));
-                resize[0].forEach((val, key) => {
-                    if (self.$target.hasClass(val)) {
-                        current = key;
-                    } else if (resize[1][key] === cssPropertyValue) {
-                        current = key;
-                    }
-                });
-
-                props.resize = resize;
-                props.current = current;
-                props.begin = current;
-                props.beginClass = self.$target.attr('class');
-                props.regClass = new RegExp('\\s*' + resize[0][current].replace(/[-]*[0-9]+/, '[-]*[0-9]+'), 'g');
-                props.xy = ev['page' + XY[i]];
-                props.XY = XY[i];
-                props.compass = compass[i];
-
-                directions.push(props);
-            }
-
-            self.options.wysiwyg.odooEditor.automaticStepUnactive('resizing');
-
-            const cursor = $handle.css('cursor') + '-important';
-            const $body = $(this.ownerDocument.body);
-            $body.addClass(cursor);
-            self.$overlay.removeClass('o_handlers_idle');
-
-            const bodyMouseMove = function (ev) {
+        if (this.canUseHandle) {
+            this.$handles.on('mousedown', function (ev) {
                 ev.preventDefault();
+                isMobile = weUtils.isMobileView(self.$target[0]);
 
-                let changeTotal = false;
-                for (const dir of directions) {
-                    // dd is the number of pixels by which the mouse moved,
-                    // compared to the initial position of the handle.
-                    const dd = ev['page' + dir.XY] - dir.xy + dir.resize[1][dir.begin];
-                    const next = dir.current + (dir.current + 1 === dir.resize[1].length ? 0 : 1);
-                    const prev = dir.current ? (dir.current - 1) : 0;
+                // First update size values as some element sizes may not have been
+                // initialized on option start (hidden slides, etc)
+                resizeValues = self._getSize();
+                const $handle = $(ev.currentTarget);
 
-                    let change = false;
-                    // If the mouse moved to the right/down by at least 2/3 of
-                    // the space between the previous and the next steps, the
-                    // handle is snapped to the next step and the class is
-                    // replaced by the one matching this step.
-                    if (dd > (2 * dir.resize[1][next] + dir.resize[1][dir.current]) / 3) {
-                        self.$target.attr('class', (self.$target.attr('class') || '').replace(dir.regClass, ''));
-                        self.$target.addClass(dir.resize[0][next]);
-                        dir.current = next;
-                        change = true;
-                    }
-                    // Same as above but to the left/up.
-                    if (prev !== dir.current && dd < (2 * dir.resize[1][prev] + dir.resize[1][dir.current]) / 3) {
-                        self.$target.attr('class', (self.$target.attr('class') || '').replace(dir.regClass, ''));
-                        self.$target.addClass(dir.resize[0][prev]);
-                        dir.current = prev;
-                        change = true;
-                    }
-
-                    if (change) {
-                        self._onResize(dir.compass, dir.beginClass, dir.current);
-                    }
-
-                    changeTotal = changeTotal || change;
+                let compass = false;
+                let XY = false;
+                if ($handle.hasClass('n')) {
+                    compass = 'n';
+                    XY = 'Y';
+                } else if ($handle.hasClass('s')) {
+                    compass = 's';
+                    XY = 'Y';
+                } else if ($handle.hasClass('e')) {
+                    compass = 'e';
+                    XY = 'X';
+                } else if ($handle.hasClass('w')) {
+                    compass = 'w';
+                    XY = 'X';
+                } else if ($handle.hasClass('nw')) {
+                    compass = 'nw';
+                    XY = 'YX';
+                } else if ($handle.hasClass('ne')) {
+                    compass = 'ne';
+                    XY = 'YX';
+                } else if ($handle.hasClass('sw')) {
+                    compass = 'sw';
+                    XY = 'YX';
+                } else if ($handle.hasClass('se')) {
+                    compass = 'se';
+                    XY = 'YX';
                 }
 
-                if (changeTotal) {
-                    self.trigger_up('cover_update');
-                    $handle.addClass('o_active');
-                }
-            };
-            const bodyMouseUp = function () {
-                $body.off('mousemove', bodyMouseMove);
-                $body.off('mouseup', bodyMouseUp);
-                $body.removeClass(cursor);
-                self.$overlay.addClass('o_handlers_idle');
-                $handle.removeClass('o_active');
-
-                // If we are in grid mode, removes the background grid.
-                // Also sync the col-* class with the g-col-* class so the
-                // toggle to normal mode and the mobile view are well done.
-                if (rowEl.classList.contains("o_grid_mode") && !isMobile) {
-                    self.options.wysiwyg.odooEditor.observerUnactive('displayBackgroundGrid');
-                    backgroundGridEl.remove();
-                    self.options.wysiwyg.odooEditor.observerActive('displayBackgroundGrid');
-                    gridUtils._resizeGrid(rowEl);
-
-                    const colClass = [...self.$target[0].classList].find(c => /^col-/.test(c));
-                    const gColClass = [...self.$target[0].classList].find(c => /^g-col-/.test(c));
-                    self.$target[0].classList.remove(colClass);
-                    self.$target[0].classList.add(gColClass.substring(2));
-                }
-
-                self.options.wysiwyg.odooEditor.automaticStepActive('resizing');
-
-                // Freeing the mutex once the resizing is done.
-                resizeResolve();
-                self.trigger_up("enable_loading_effect");
-
-                if (directions.every(dir => dir.begin === dir.current)) {
+                // Don't call the normal resize methods if we are in a grid and
+                // vice-versa.
+                const isGrid = Object.keys(resizeValues).length === 4;
+                const isGridHandle = $handle[0].classList.contains('o_grid_handle');
+                if (isGrid && !isGridHandle || !isGrid && isGridHandle) {
                     return;
                 }
 
-                setTimeout(function () {
-                    self.options.wysiwyg.odooEditor.historyStep();
+                let resizeVal;
+                if (compass.length > 1) {
+                    resizeVal = [resizeValues[compass[0]], resizeValues[compass[1]]];
+                } else {
+                    resizeVal = [resizeValues[compass]];
+                }
 
-                    self.trigger_up("snippet_edition_request", { exec: async () => {
-                        await new Promise(resolve => {
-                            self.trigger_up("snippet_option_update", { onSuccess: () => resolve() });
-                        });
-                    }});
-                }, 0);
-            };
-            $body.on('mousemove', bodyMouseMove);
-            $body.on('mouseup', bodyMouseUp);
-        });
+                if (resizeVal.some(rV => !rV)) {
+                    return;
+                }
+
+                // Locking the mutex during the resize. Started here to avoid
+                // empty returns.
+                let resizeResolve;
+                const prom = new Promise(resolve => resizeResolve = () => resolve());
+                self.trigger_up("snippet_edition_request", { exec: () => {
+                    self.trigger_up("disable_loading_effect");
+                    return prom;
+                }});
+
+                // If we are in grid mode, add a background grid and place it in
+                // front of the other elements.
+                const rowEl = self.$target[0].parentNode;
+                let backgroundGridEl;
+                if (rowEl.classList.contains("o_grid_mode") && !isMobile) {
+                    self.options.wysiwyg.odooEditor.observerUnactive('displayBackgroundGrid');
+                    backgroundGridEl = gridUtils._addBackgroundGrid(rowEl, 0);
+                    gridUtils._setElementToMaxZindex(backgroundGridEl, rowEl);
+                    self.options.wysiwyg.odooEditor.observerActive('displayBackgroundGrid');
+                }
+
+                // For loop to handle the cases where it is ne, nw, se or sw. Since
+                // there are two directions, we compute for both directions and we
+                // store the values in an array.
+                const directions = [];
+                for (const [i, resize] of resizeVal.entries()) {
+                    const props = {};
+                    let current = 0;
+                    const cssProperty = resize[2];
+                    const cssPropertyValue = parseInt(self.$target.css(cssProperty));
+                    resize[0].forEach((val, key) => {
+                        if (self.$target.hasClass(val)) {
+                            current = key;
+                        } else if (resize[1][key] === cssPropertyValue) {
+                            current = key;
+                        }
+                    });
+
+                    props.resize = resize;
+                    props.current = current;
+                    props.begin = current;
+                    props.beginClass = self.$target.attr('class');
+                    props.regClass = new RegExp('\\s*' + resize[0][current].replace(/[-]*[0-9]+/, '[-]*[0-9]+'), 'g');
+                    props.xy = ev['page' + XY[i]];
+                    props.XY = XY[i];
+                    props.compass = compass[i];
+
+                    directions.push(props);
+                }
+
+                self.options.wysiwyg.odooEditor.automaticStepUnactive('resizing');
+
+                const cursor = $handle.css('cursor') + '-important';
+                const $body = $(this.ownerDocument.body);
+                $body.addClass(cursor);
+                self.$overlay.removeClass('o_handlers_idle');
+
+                const bodyMouseMove = function (ev) {
+                    ev.preventDefault();
+
+                    let changeTotal = false;
+                    for (const dir of directions) {
+                        // dd is the number of pixels by which the mouse moved,
+                        // compared to the initial position of the handle.
+                        const dd = ev['page' + dir.XY] - dir.xy + dir.resize[1][dir.begin];
+                        const next = dir.current + (dir.current + 1 === dir.resize[1].length ? 0 : 1);
+                        const prev = dir.current ? (dir.current - 1) : 0;
+
+                        let change = false;
+                        // If the mouse moved to the right/down by at least 2/3 of
+                        // the space between the previous and the next steps, the
+                        // handle is snapped to the next step and the class is
+                        // replaced by the one matching this step.
+                        if (dd > (2 * dir.resize[1][next] + dir.resize[1][dir.current]) / 3) {
+                            self.$target.attr('class', (self.$target.attr('class') || '').replace(dir.regClass, ''));
+                            self.$target.addClass(dir.resize[0][next]);
+                            dir.current = next;
+                            change = true;
+                        }
+                        // Same as above but to the left/up.
+                        if (prev !== dir.current && dd < (2 * dir.resize[1][prev] + dir.resize[1][dir.current]) / 3) {
+                            self.$target.attr('class', (self.$target.attr('class') || '').replace(dir.regClass, ''));
+                            self.$target.addClass(dir.resize[0][prev]);
+                            dir.current = prev;
+                            change = true;
+                        }
+
+                        if (change) {
+                            self._onResize(dir.compass, dir.beginClass, dir.current);
+                        }
+
+                        changeTotal = changeTotal || change;
+                    }
+
+                    if (changeTotal) {
+                        self.trigger_up('cover_update');
+                        $handle.addClass('o_active');
+                    }
+                };
+                const bodyMouseUp = function () {
+                    $body.off('mousemove', bodyMouseMove);
+                    $body.off('mouseup', bodyMouseUp);
+                    $body.removeClass(cursor);
+                    self.$overlay.addClass('o_handlers_idle');
+                    $handle.removeClass('o_active');
+
+                    // If we are in grid mode, removes the background grid.
+                    // Also sync the col-* class with the g-col-* class so the
+                    // toggle to normal mode and the mobile view are well done.
+                    if (rowEl.classList.contains("o_grid_mode") && !isMobile) {
+                        self.options.wysiwyg.odooEditor.observerUnactive('displayBackgroundGrid');
+                        backgroundGridEl.remove();
+                        self.options.wysiwyg.odooEditor.observerActive('displayBackgroundGrid');
+                        gridUtils._resizeGrid(rowEl);
+
+                        const colClass = [...self.$target[0].classList].find(c => /^col-/.test(c));
+                        const gColClass = [...self.$target[0].classList].find(c => /^g-col-/.test(c));
+                        self.$target[0].classList.remove(colClass);
+                        self.$target[0].classList.add(gColClass.substring(2));
+                    }
+
+                    self.options.wysiwyg.odooEditor.automaticStepActive('resizing');
+
+                    // Freeing the mutex once the resizing is done.
+                    resizeResolve();
+                    self.trigger_up("enable_loading_effect");
+
+                    if (directions.every(dir => dir.begin === dir.current)) {
+                        return;
+                    }
+
+                    setTimeout(function () {
+                        self.options.wysiwyg.odooEditor.historyStep();
+
+                        self.trigger_up("snippet_edition_request", { exec: async () => {
+                            await new Promise(resolve => {
+                                self.trigger_up("snippet_option_update", { onSuccess: () => resolve() });
+                            });
+                        }});
+                    }, 0);
+                };
+                $body.on('mousemove', bodyMouseMove);
+                $body.on('mouseup', bodyMouseUp);
+            });
+        }
 
         for (const [key, value] of Object.entries(resizeValues)) {
             this.$handles.filter('.' + key).toggleClass('readonly', !value);
@@ -6325,13 +6344,18 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         await this._loadImageInfo();
         await this._rerenderXML();
         const img = this._getImg();
+        let resizeWidth = this.optimizedWidth;
+        if (this.options.enableTranslation && img.dataset.resizeWidth) {
+            // In translate mode, we keep width of the default lang img.
+            resizeWidth = img.dataset.resizeWidth;
+        }
         if (!['image/gif', 'image/svg+xml'].includes(img.dataset.mimetype)) {
             // Convert to recommended format and width.
             img.dataset.mimetype = 'image/webp';
-            img.dataset.resizeWidth = this.optimizedWidth;
+            img.dataset.resizeWidth = resizeWidth;
         } else if (img.dataset.shape && img.dataset.originalMimetype !== "image/gif") {
             img.dataset.originalMimetype = "image/webp";
-            img.dataset.resizeWidth = this.optimizedWidth;
+            img.dataset.resizeWidth = resizeWidth;
         }
         await this._applyOptions();
         await this.updateUI();
@@ -7040,6 +7064,21 @@ registry.ImageTools = ImageHandlerOption.extend({
             // effect and it is always hidden in the shape select.
             const shapeImgShareWidget = this._requestUserValueWidgets("shape_img_square_opt")[0];
             return !shapeImgShareWidget.isActive();
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    _computeWidgetTranslateVisibility(widgetName, params) {
+        if (!this.$target[0].classList.contains("o_translatable_attribute")) {
+            return false;
+        }
+        switch (widgetName) {
+            case "image_alt_opt":
+                return !!this.$target[0].getAttribute("alt");
+            case "image_title_opt":
+                return !!this.$target[0].getAttribute("title");
         }
         return this._super(...arguments);
     },

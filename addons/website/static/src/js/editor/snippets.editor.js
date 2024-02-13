@@ -744,7 +744,7 @@ weSnippetEditor.SnippetEditor.include({
         // text highlights...) are moved to the toolbar, which leads to an empty
         // "options section". The goal of this override is to hide options
         // sections with no option elements.
-        if (!this.$optionsSection[0].querySelector(":scope > we-customizeblock-option")) {
+        if (!this.$optionsSection[0].querySelector(":scope > we-customizeblock-option > *:not(.d-none)")) {
             this.$optionsSection[0].classList.add("d-none");
         }
     },

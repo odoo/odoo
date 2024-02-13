@@ -87,6 +87,16 @@ options.registry.mailing_list_subscribe = options.Class.extend({
     /**
      * @override
      */
+    _computeWidgetTranslateVisibility(methodName, params) {
+        console.log("compute visibility", methodName);
+        if (methodName === "thanks_view_opt") {
+            return true;
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
     async _renderCustomXML(uiFragment) {
         this.mailingLists = await this.orm.call(
             "mailing.list",
@@ -107,6 +117,7 @@ options.registry.mailing_list_subscribe = options.Class.extend({
         checkboxEl.setAttribute('string', _t("Display Thanks Message"));
         checkboxEl.dataset.toggleThanksMessage = 'true';
         checkboxEl.dataset.noPreview = 'true';
+        checkboxEl.dataset.name = "thanks_view_opt";
         uiFragment.appendChild(checkboxEl);
     },
 });
