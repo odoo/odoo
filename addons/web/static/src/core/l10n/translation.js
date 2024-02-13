@@ -9,13 +9,8 @@ export const translationIsReady = new Deferred();
 /**
  * Translate a term, or return the term if no translation can be found.
  *
- * Note that it translates eagerly, which means that if the translations have
- * not been loaded yet, it will return the untranslated term. If it cannot be
- * guaranteed that translations are ready, one should use the _lt function
- * instead (see below)
- *
  * @param {string} term
- * @returns {string}
+ * @returns {string|LazyTranslatedString}
  */
 export function _t(term, ...values) {
     if (translatedTerms[translationLoaded]) {
