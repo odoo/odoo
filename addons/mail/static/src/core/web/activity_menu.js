@@ -73,6 +73,11 @@ export class ActivityMenu extends Component {
             }
         );
     }
+
+    openMyActivities() {
+        this.dropdown.close();
+        this.action.doAction("mail.mail_activity_action_my", { clearBreadcrumbs: true });
+    }
 }
 
 registry
