@@ -10,6 +10,7 @@ from odoo.osv import expression
 
 from odoo.addons.account.controllers.portal import PortalAccount
 from odoo.addons.hr_timesheet.controllers.portal import TimesheetCustomerPortal
+from odoo.addons.hr_timesheet.controllers.portal import TimesheetProjectCustomerPortal
 from odoo.addons.portal.controllers.portal import pager as portal_pager
 from odoo.addons.project.controllers.portal import ProjectCustomerPortal
 
@@ -53,7 +54,6 @@ class PortalProjectAccount(PortalAccount, ProjectCustomerPortal):
             'invoices': invoices,
             'pager': pager,
         })
-
         return request.render("account.portal_my_invoices", values)
 
 
@@ -103,6 +103,7 @@ class SaleTimesheetCustomerPortal(TimesheetCustomerPortal):
 
     def _task_get_page_view_values(self, task, access_token, **kwargs):
         values = super()._task_get_page_view_values(task, access_token, **kwargs)
+        values['domain'] = ('so_line', '!=', False)
         values['so_accessible'] = False
         try:
             if task.sale_order_id and self._document_check_access('sale.order', task.sale_order_id.id):
@@ -135,4 +136,11 @@ class SaleTimesheetCustomerPortal(TimesheetCustomerPortal):
 
     @http.route()
     def portal_my_timesheets(self, *args, groupby='sol', **kw):
+        kw['domain'] = ('so_line', '!=', False)
         return super().portal_my_timesheets(*args, groupby=groupby, **kw)
+
+class SaleTimesheetProjectCustomerPortal(TimesheetProjectCustomerPortal):
+
+    def _show_task_report(self, task_sudo, report_type, download, **kw):
+        kw['domain'] = ('so_line', '!=', False)
+        return super()._show_task_report(task_sudo, report_type, download, **kw)

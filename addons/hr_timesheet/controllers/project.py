@@ -44,6 +44,11 @@ class ProjectCustomerPortal(CustomerPortal):
     def _task_get_page_view_values(self, task, access_token, **kwargs):
         values = super(ProjectCustomerPortal, self)._task_get_page_view_values(task, access_token, **kwargs)
         domain = request.env['account.analytic.line']._timesheet_get_portal_domain()
+        portal_user = request.env.user._is_portal()
+        if portal_user:
+            so_domain = values.get('domain')
+            if so_domain and task.allow_billable:
+                domain.append(so_domain)
         task_domain = expression.AND([domain, [('task_id', '=', task.id)]])
         timesheets = request.env['account.analytic.line'].sudo().search(task_domain)
 
