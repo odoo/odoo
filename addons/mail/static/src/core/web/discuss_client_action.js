@@ -61,7 +61,7 @@ export class DiscussClientAction extends Component {
         const [model, id] = this.parseActiveId(rawActiveId);
         const activeThread = await this.store.Thread.getOrFetch({ model, id });
         if (activeThread && activeThread.notEq(this.store.discuss.thread)) {
-            this.threadService.setDiscussThread(activeThread);
+            this.threadService.setDiscussThread(activeThread, false);
         }
         this.store.discuss.hasRestoredThread = true;
     }
