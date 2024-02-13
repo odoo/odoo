@@ -797,4 +797,61 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
         assert.strictEqual(p.innerText.replaceAll('\u200B', ''), 'New label',
             "The link's label should be updated");
     });
+
+    QUnit.module("Dropdown");
+
+    QUnit.test('Close dropdown on colorpicker hide', async function (assert) {
+        assert.expect(4);
+        serverData.models.partner.records = [{ id: 1, txt: "<p>first</p>" }];
+        const mockRPC = async function (route, args) {};
+        // Add the ajax service (legacy), because wysiwyg RPCs use it.
+        patchWithCleanup(legacyEnv, {
+            services: {
+                ...legacyEnv.services,
+                ajax: {
+                    rpc: mockRPC,
+                },
+            }
+        });
+        let wysiwyg;
+        const wysiwygPromise = makeDeferred();
+        patchWithCleanup(HtmlField.prototype, {
+            async startWysiwyg() {
+                await this._super(...arguments);
+                wysiwyg = this.wysiwyg;
+                wysiwygPromise.resolve();
+            },
+        });
+
+        await makeView({
+            type: 'form',
+            resId: 1,
+            resModel: 'partner',
+            serverData,
+            arch: '<form>' +
+                    '<field name="txt" widget="html" />' +
+                '</form>',
+        });
+        await wysiwygPromise;
+        const editor = wysiwyg.odooEditor;
+        const editable = editor.editable;
+        const paragrah = editable.querySelector("p");
+        const pText = paragrah.childNodes[0];
+        const toolbar = document.querySelector("#toolbar");
+        Wysiwyg.setRange(pText, 1, pText, 3);
+
+        await new Promise(resolve => setTimeout(resolve, 50));
+        assert.ok(toolbar.style.visibility === "visible");
+
+        const colorpicker = toolbar.querySelector('#toolbar .note-back-color-preview');
+        await click(colorpicker, '.dropdown-toggle', true);
+        await new Promise(resolve => setTimeout(resolve, 50));
+        assert.ok(toolbar.querySelector('.note-back-color-preview .dropdown-menu').classList.contains('show'),
+            "should display the color picker");
+
+        Wysiwyg.setRange(pText, 1, pText, 1);
+        await new Promise(resolve => setTimeout(resolve, 50));
+        assert.ok(toolbar.style.visibility === 'hidden', "toolbar should be hidden");
+        assert.notOk(toolbar.querySelector(".dropdown-menu.show"), "all dropdowns should be closed");
+    });
 });
