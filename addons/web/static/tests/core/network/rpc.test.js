@@ -128,6 +128,7 @@ test("check trigger RPC:REQUEST and RPC:RESPONSE for a rpc with an error", async
 });
 
 test("check connection aborted", async () => {
+    after(mockFetch(() => new Promise(() => {})));
     onRpcRequest(() => expect.step("RPC:REQUEST"));
     onRpcResponse(() => expect.step("RPC:RESPONSE"));
 

@@ -20,8 +20,6 @@ const {
     Worker,
     console,
     document,
-    fetch,
-    location,
 } = globalThis;
 
 //-----------------------------------------------------------------------------
@@ -135,6 +133,9 @@ export function enableNetworkLogs(toggle) {
 
 /** @type {typeof fetch} */
 export async function mockedFetch(input, init) {
+    if (!mockFetchFn) {
+        throw new Error("Can't make a request when fetch is not mocked");
+    }
     init ||= {};
     const method = init.method?.toUpperCase() || (init.body ? "POST" : "GET");
     const { logRequest, logResponse } = makeNetworkLogger(method, input);
@@ -145,7 +146,7 @@ export async function mockedFetch(input, init) {
     logRequest(() => (typeof init.body === "string" ? JSON.parse(init.body) : init));
 
     openRequestControllers.add(controller);
-    const result = await (mockFetchFn || fetch)(input, init);
+    const result = await mockFetchFn(input, init);
     openRequestControllers.delete(controller);
 
     /** @type {Headers} */
