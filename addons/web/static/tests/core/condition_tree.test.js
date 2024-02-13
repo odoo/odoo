@@ -1,5 +1,6 @@
 /** @odoo-module alias=@web/../tests/core/condition_tree_tests default=false */
 
+import { expect, test, describe } from "@odoo/hoot";
 import { Domain } from "@web/core/domain";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import {
@@ -16,9 +17,9 @@ import {
     treeFromExpression,
 } from "@web/core/tree_editor/condition_tree";
 
-QUnit.module("condition tree", {});
+describe.current.tags("headless");
 
-QUnit.test("domainFromTree", function (assert) {
+test("domainFromTree", () => {
     const toTest = [
         {
             tree: condition("foo", "=", false),
@@ -46,11 +47,11 @@ QUnit.test("domainFromTree", function (assert) {
         },
     ];
     for (const { tree, result } of toTest) {
-        assert.strictEqual(domainFromTree(tree), result);
+        expect(domainFromTree(tree)).toBe(result);
     }
 });
 
-QUnit.test("domainFromTree . treeFromDomain", function (assert) {
+test("domainFromTree . treeFromDomain", () => {
     const toTest = [
         {
             domain: `[("foo", "=", False)]`,
@@ -82,11 +83,11 @@ QUnit.test("domainFromTree . treeFromDomain", function (assert) {
         },
     ];
     for (const { domain, result } of toTest) {
-        assert.deepEqual(domainFromTree(treeFromDomain(domain)), result);
+        expect(domainFromTree(treeFromDomain(domain))).toBe(result);
     }
 });
 
-QUnit.test("domainFromExpression", function (assert) {
+test("domainFromExpression", () => {
     const options = {
         getFieldDef: (name) => {
             if (["foo", "bar"].includes(name)) {
@@ -239,11 +240,11 @@ QUnit.test("domainFromExpression", function (assert) {
     ];
     for (const { expression, result, extraOptions } of toTest) {
         const o = { ...options, ...extraOptions };
-        assert.deepEqual(domainFromExpression(expression, o), result);
+        expect(domainFromExpression(expression, o)).toBe(result);
     }
 });
 
-QUnit.test("expressionFromTree", function (assert) {
+test("expressionFromTree", () => {
     const options = {
         getFieldDef: (name) => {
             if (["foo", "bar"].includes(name)) {
@@ -375,11 +376,11 @@ QUnit.test("expressionFromTree", function (assert) {
     ];
     for (const { expressionTree, result, extraOptions } of toTest) {
         const o = { ...options, ...extraOptions };
-        assert.strictEqual(expressionFromTree(expressionTree, o), result);
+        expect(expressionFromTree(expressionTree, o)).toBe(result);
     }
 });
 
-QUnit.test("treeFromExpression", function (assert) {
+test("treeFromExpression", () => {
     const options = {
         getFieldDef: (name) => {
             if (["foo", "bar"].includes(name)) {
@@ -578,11 +579,11 @@ QUnit.test("treeFromExpression", function (assert) {
     ];
     for (const { expression, result, extraOptions } of toTest) {
         const o = { ...options, ...extraOptions };
-        assert.deepEqual(treeFromExpression(expression, o), result);
+        expect(treeFromExpression(expression, o)).toEqual(result);
     }
 });
 
-QUnit.test("expressionFromTree . treeFromExpression", function (assert) {
+test("expressionFromTree . treeFromExpression", () => {
     const options = {
         getFieldDef: (name) => {
             if (["foo", "bar"].includes(name)) {
@@ -794,11 +795,11 @@ QUnit.test("expressionFromTree . treeFromExpression", function (assert) {
     ];
     for (const { expression, result, extraOptions } of toTest) {
         const o = { ...options, ...extraOptions };
-        assert.deepEqual(expressionFromTree(treeFromExpression(expression, o), o), result);
+        expect(expressionFromTree(treeFromExpression(expression, o), o)).toBe(result);
     }
 });
 
-QUnit.test("expressionFromDomain", function (assert) {
+test("expressionFromDomain", () => {
     const options = {
         getFieldDef: (name) => (name === "x" ? {} : null),
     };
@@ -827,11 +828,11 @@ QUnit.test("expressionFromDomain", function (assert) {
 
     for (const { domain, result, extraOptions } of toTest) {
         const o = { ...options, ...extraOptions };
-        assert.deepEqual(expressionFromDomain(domain, o), result);
+        expect(expressionFromDomain(domain, o)).toBe(result);
     }
 });
 
-QUnit.test("evaluation . expressionFromTree = contains . domainFromTree", function (assert) {
+test("evaluation . expressionFromTree = contains . domainFromTree", () => {
     const options = {
         getFieldDef: (name) => {
             if (name === "foo") {
@@ -877,8 +878,7 @@ QUnit.test("evaluation . expressionFromTree = contains . domainFromTree", functi
         condition("foo_ids", "in", expression("expr2")),
     ];
     for (const tree of toTest) {
-        assert.strictEqual(
-            evaluateBooleanExpr(expressionFromTree(tree, options), record),
+        expect(evaluateBooleanExpr(expressionFromTree(tree, options), record)).toBe(
             new Domain(domainFromTree(tree)).contains(record)
         );
     }
