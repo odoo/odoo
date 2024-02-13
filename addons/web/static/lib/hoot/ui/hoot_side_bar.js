@@ -14,6 +14,7 @@ import { HootJobButtons } from "./hoot_job_buttons";
  *
  * @typedef {{
  *  reporting: import("../hoot_utils").Reporting;
+ *  statusFilter: import("./setup_hoot_ui").StatusFilter | null;
  * }} HootSideBarCounterProps
  *
  * @typedef {{
@@ -66,13 +67,33 @@ export class HootSideBarSuite extends Component {
     }
 }
 
-/**
- * @extends {Component<HootSideBarCounterProps, import("../hoot").Environment>}
- */
+/** @extends {Component<HootSideBarCounterProps, import("../hoot").Environment>} */
 export class HootSideBarCounter extends Component {
-    static props = { reporting: Object };
+    static props = {
+        reporting: Object,
+        statusFilter: [String, { value: null }],
+    };
 
-    static template = xml`<span class="text-primary" t-esc="props.reporting.tests" />`;
+    static template = xml`
+        <t t-set="info" t-value="getCounterInfo()" />
+        <span t-att-class="info[1] ? info[0] : 'text-muted'" t-esc="info[1]" />
+    `;
+
+    getCounterInfo() {
+        const { reporting, statusFilter } = this.props;
+        switch (statusFilter) {
+            case "failed":
+                return ["text-fail", reporting.failed];
+            case "passed":
+                return ["text-pass", reporting.passed];
+            case "skipped":
+                return ["text-skip", reporting.skipped];
+            case "todo":
+                return ["text-todo", reporting.todo];
+            default:
+                return ["text-primary", reporting.tests];
+        }
+    }
 }
 
 /**
@@ -109,7 +130,7 @@ export class HootSideBar extends Component {
                                 <HootJobButtons job="item" />
                             </t>
                             <t t-else="">
-                                <HootSideBarCounter reporting="item.reporting" />
+                                <HootSideBarCounter reporting="item.reporting" statusFilter="uiState.statusFilter" />
                             </t>
                         </button>
                     </li>
