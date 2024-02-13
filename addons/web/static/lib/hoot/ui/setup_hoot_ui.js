@@ -6,6 +6,8 @@ import { generateStyleSheets, setColorRoot } from "./hoot_colors";
 import { HootMain } from "./hoot_main";
 
 /**
+ * @typedef {"failed" | "passed" | "skipped" | "todo"} StatusFilter
+ *
  * @typedef {ReturnType<typeof makeUiState>} UiState
  */
 
@@ -27,7 +29,7 @@ const makeUiState = () =>
         selectedSuiteId: null,
         /** @type {"asc" | "desc" | false} */
         sortResults: false,
-        /** @type {"failed" | "passed" | "skipped" | "todo" | null} */
+        /** @type {StatusFilter | null} */
         statusFilter: null,
         totalResults: 0,
     });
