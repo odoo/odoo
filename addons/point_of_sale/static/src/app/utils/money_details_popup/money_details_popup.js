@@ -38,10 +38,10 @@ export class MoneyDetailsPopup extends Component {
         };
     }
     computeTotal(moneyDetails = this.state.moneyDetails) {
-        return Object.entries(moneyDetails).reduce(
-            (total, money) => total + money[0] * money[1],
-            0
-        );
+        return Object.entries(moneyDetails).reduce((total, [value, inputQty]) => {
+            const quantity = isNaN(inputQty) ? 0 : inputQty;
+            return total + parseFloat(value) * quantity;
+        }, 0);
     }
     confirm() {
         let moneyDetailsNotes = !floatIsZero(this.computeTotal(), this.currency.decimal_places)
