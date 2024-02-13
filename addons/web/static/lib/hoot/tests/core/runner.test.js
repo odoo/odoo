@@ -64,7 +64,8 @@ describe(parseUrl(import.meta.url), () => {
         const runner = new TestRunner();
         runner.describe("suite", () => {
             let testFn = runner.test.debug.only.skip; // 3
-            for (let i = 1; i <= 10; i++) { // 10
+            for (let i = 1; i <= 10; i++) {
+                // 10
                 testFn = testFn.tags`Tag-${i}`;
             }
 
