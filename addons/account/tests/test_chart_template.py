@@ -208,6 +208,38 @@ class TestChartTemplate(TransactionCase):
             })
         )
 
+    def test_inactive_tag_tax(self):
+        inactive_tag = self.env['account.account.tag'].create({
+            'name': 'Inactive Tax Tag',
+            'applicability': 'taxes',
+            'active': False,
+        })
+        tax_to_load = {
+            'name': 'Inactive Tags Tax',
+            'amount': 30,
+            'amount_type': 'percent',
+            'tax_group_id': 'tax_group_taxes',
+            'active': True,
+            'repartition_line_ids': [
+                Command.create({
+                    'document_type': 'invoice',
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'tag_ids': inactive_tag.name,
+                }),
+            ]
+        }
+        self.env['account.chart.template']._deref_account_tags('test', {'tax1': tax_to_load})
+        self.assertEqual(
+            tax_to_load['repartition_line_ids'][0],
+            Command.create({
+                'document_type': 'invoice',
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [(Command.set([inactive_tag.id]))],
+            }),
+        )
+
     def test_update_taxes_creation(self):
         """ Tests that adding a new tax and a fiscal position tax creates new records when updating. """
         def local_get_data(self, template_code):
