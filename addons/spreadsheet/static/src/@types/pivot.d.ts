@@ -29,11 +29,38 @@ declare module "@spreadsheet" {
       sortedColumn: SortedColumn | null;
     }
 
-    export interface OdooPivotDefinition extends CommonPivotDefinition{
+    export interface OdooPivotDefinition extends CommonPivotDefinition {
         model: string;
         domain: Array;
         context: Object;
     }
+
+    export interface PivotHandler {
+      getTable(payload: ExtendedInsertPivotPayload): SpreadsheetPivotTable;
+    }
+
+    export interface OdooLocalPivot {
+      type: "ODOO";
+      definition: OdooPivotDefinition;
+    }
+
+    export interface SpreadsheetLocalPivot {
+      type: "SPREADSHEET";
+      definition: SpreadsheetPivotDefinition;
+    }
+
+    export type LocalPivot = OdooLocalPivot | SpreadsheetLocalPivot;
+
+    export interface SpreadsheetPivotDefinition extends CommonPivotDefinition {
+        range: string;
+    }
+
+    export interface GFLocalPivot {
+      id: string;
+      fieldMatching: Record<string, any>;
+    }
+
+    export type PivotDefinition = OdooPivotDefinition | SpreadsheetPivotDefinition;
 
     export interface Field {
         name: string;
