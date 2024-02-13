@@ -132,7 +132,9 @@ test.tags("headless")("check connection aborted", async () => {
     onRpcRequest(() => expect.step("RPC:REQUEST"));
     onRpcResponse(() => expect.step("RPC:RESPONSE"));
 
-    const connection = rpc();
+    // There is an issue here, we souldn't have a real fetch call !!!!
+    // This is a patch to avoid the error on runbot, we need to fix this on master.
+    const connection = rpc("/break");
     connection.abort();
     const error = new ConnectionAbortedError();
     await expect(connection).rejects.toThrow(error.message);
