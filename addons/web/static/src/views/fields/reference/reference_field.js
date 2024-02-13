@@ -38,8 +38,8 @@ export class ReferenceField extends Component {
                 nextRelation !== this.state.resModel
             ) {
                 nextProps.record.update({ [this.props.name]: false });
-                this.state.resModel = nextRelation;
             }
+            this.state.resModel = nextRelation;
             this.currentValue = this.getValue(this.props);
         });
     }
