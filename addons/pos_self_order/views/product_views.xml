@@ -6,10 +6,12 @@
         <field name="inherit_id" ref="point_of_sale.product_template_search_view_pos"/>
         <field name="arch" type="xml">
             <filter name="filter_to_availabe_pos" position="after">
-                <filter name="filter_to_self_order" string="Available in Self" domain="[('self_order_available', '=', True)]"/>
+                <filter name="filter_to_self_order" string="Available in Self" domain="[('self_order_available', '=', True)]"
+                    invisible="not context.get('_pos_self_order')"/>
             </filter>
             <filter name="filter_to_self_order" position="after">
-                <filter name="filter_to_not_available_pos" string="Not available in Self" domain="[('self_order_available', '=', False)]"/>
+                <filter name="filter_to_not_available_pos" string="Not available in Self" domain="[('self_order_available', '=', False)]"
+                    invisible="not context.get('_pos_self_order')"/>
              </filter>
         </field>
     </record>

@@ -6,7 +6,6 @@
             <field name="model">stock.move</field>
             <field name="arch" type="xml">
                 <pivot string="Stock Moves Analysis" sample="1">
-                    <field name="location_dest_id" groups="stock.group_stock_multi_locations" type="row"/>
                     <field name="picking_type_id" type="col"/>
                     <field name="date" interval="month" type="row"/>
                 </pivot>
@@ -384,12 +383,12 @@
         </record>
 
         <record id="stock_move_action" model="ir.actions.act_window">
-            <field name="name">Move Analysis</field>
+            <field name="name">Moves Analysis</field>
             <field name="res_model">stock.move</field>
             <field name="view_id" ref="view_move_tree"/>
             <field name="search_view_id" ref="view_move_search"/>
             <field name="context">{'search_default_done': 1,
-                'pivot_measures': ['product_uom_qty', '__count__'],
+                'pivot_measures': ['quantity', '__count__'],
                 }</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
@@ -464,6 +463,6 @@
             </field>
         </record>
 
-    <menuitem action="stock_move_action" id="stock_move_menu" name="Move Analysis" parent="stock.menu_warehouse_report" sequence="230"/>
+    <menuitem action="stock_move_action" id="stock_move_menu" name="Moves Analysis" parent="stock.menu_warehouse_report" sequence="230"/>
 
 </odoo>
