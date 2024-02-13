@@ -1104,13 +1104,15 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
                 ],
                 pivots: {
                     1: {
-                        id: 1,
-                        colGroupBys: ["foo"],
-                        domain: [],
-                        measures: [{ field: "probability", operator: "avg" }],
-                        model: "partner",
-                        rowGroupBys: ["bar"],
-                        context: {},
+                        type: "ODOO",
+                        definition: {
+                            colGroupBys: ["foo"],
+                            domain: [],
+                            measures: ["probability"],
+                            model: "partner",
+                            rowGroupBys: ["bar"],
+                            context: {},
+                        },
                     },
                 },
                 globalFilters: [
@@ -1156,13 +1158,15 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
                 ],
                 pivots: {
                     1: {
-                        id: 1,
-                        colGroupBys: ["foo"],
-                        domain: [],
-                        measures: [{ field: "probability", operator: "avg" }],
-                        model: "partner",
-                        rowGroupBys: ["bar"],
-                        context: {},
+                        type: "ODOO",
+                        definition: {
+                            colGroupBys: ["foo"],
+                            domain: [],
+                            measures: ["probability"],
+                            model: "partner",
+                            rowGroupBys: ["bar"],
+                            context: {},
+                        },
                         fieldMatching: { filterId: { chain: "date", type: "date" } },
                     },
                 },
@@ -1202,13 +1206,15 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
             ],
             pivots: {
                 1: {
-                    id: 1,
-                    colGroupBys: ["foo"],
-                    domain: [],
-                    measures: [{ field: "probability", operator: "avg" }],
-                    model: "partner",
-                    rowGroupBys: ["bar"],
-                    context: {},
+                    type: "ODOO",
+                    definition: {
+                        colGroupBys: ["foo"],
+                        domain: [],
+                        measures: ["probability"],
+                        model: "partner",
+                        rowGroupBys: ["bar"],
+                        context: {},
+                    },
                 },
             },
         };
@@ -1245,13 +1251,15 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
             const spreadsheetData = {
                 pivots: {
                     1: {
-                        id: 1,
-                        colGroupBys: ["foo"],
-                        domain: [],
-                        measures: [{ field: "probability", operator: "avg" }],
-                        model: "partner",
-                        rowGroupBys: ["bar"],
-                        context: {},
+                        type: "ODOO",
+                        definition: {
+                            colGroupBys: ["foo"],
+                            domain: [],
+                            measures: ["probability"],
+                            model: "partner",
+                            rowGroupBys: ["bar"],
+                            context: {},
+                        },
                         fieldMatching: {},
                     },
                 },
@@ -1292,13 +1300,15 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
             const spreadsheetData = {
                 pivots: {
                     1: {
-                        id: 1,
-                        colGroupBys: ["foo"],
-                        domain: [],
-                        measures: [{ field: "probability", operator: "avg" }],
-                        model: "partner",
-                        rowGroupBys: ["bar"],
-                        context: {},
+                        type: "ODOO",
+                        definition: {
+                            colGroupBys: ["foo"],
+                            domain: [],
+                            measures: ["probability"],
+                            model: "partner",
+                            rowGroupBys: ["bar"],
+                            context: {},
+                        },
                         fieldMatching: { filterId: { chain: "date", type: "date" } },
                     },
                 },

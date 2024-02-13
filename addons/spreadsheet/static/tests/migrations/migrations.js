@@ -80,6 +80,7 @@ QUnit.test("Global filters: pivot fields is correctly added", (assert) => {
         pivots: {
             1: {
                 name: "test",
+                measures: [],
             },
         },
     };
@@ -149,16 +150,18 @@ QUnit.test("Pivot name default is model name", (assert) => {
             1: {
                 name: "Name",
                 model: "Model",
+                measures: [],
             },
             2: {
                 model: "Model",
+                measures: [],
             },
         },
     };
     const migratedData = migrate(data);
     assert.strictEqual(Object.values(migratedData.pivots).length, 2);
-    assert.strictEqual(migratedData.pivots["1"].name, "Name");
-    assert.strictEqual(migratedData.pivots["2"].name, "Model");
+    assert.strictEqual(migratedData.pivots["1"].definition.name, "Name");
+    assert.strictEqual(migratedData.pivots["2"].definition.name, "Model");
 });
 
 QUnit.test("fieldMatchings are moved from filters to their respective datasources", (assert) => {
@@ -191,6 +194,7 @@ QUnit.test("fieldMatchings are moved from filters to their respective datasource
         pivots: {
             1: {
                 name: "Name",
+                measures: [],
             },
         },
         lists: {
@@ -257,6 +261,7 @@ QUnit.test("fieldMatchings offsets are correctly preserved after migration", (as
         pivots: {
             1: {
                 name: "Name",
+                measures: [],
             },
         },
         lists: {
@@ -374,6 +379,30 @@ QUnit.test("group year/quarter/month filters to a single filter type", (assert) 
             defaultValue: "last_week",
         },
     ]);
+});
+
+QUnit.test("Pivot are migrated from 6 to 7", (assert) => {
+    const data = {
+        pivots: {
+            1: {
+                name: "Name",
+                model: "Model",
+                measures: [],
+                fieldMatching: { 1: { chain: "foo", type: "char" } },
+            },
+        },
+    };
+    const migratedData = migrate(data);
+    assert.strictEqual(Object.values(migratedData.pivots).length, 1);
+    assert.strictEqual(migratedData.pivots["1"].type, "ODOO");
+    assert.deepEqual(migratedData.pivots["1"].definition, {
+        name: "Name",
+        model: "Model",
+        measures: [],
+    });
+    assert.deepEqual(migratedData.pivots["1"].fieldMatching, {
+        1: { chain: "foo", type: "char" },
+    });
 });
 
 QUnit.test("Odoo version is exported", (assert) => {
