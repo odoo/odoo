@@ -881,11 +881,15 @@ export class TestRunner {
         const { passed, failed, assertions } = this.reporting;
         if (failed > 0) {
             // Use console.dir for this log to appear on runbot sub-builds page
-            console.dir(`HOOT: failed ${failed} tests (${passed} passed, total time: ${this.totalTime})`);
+            console.dir(
+                `HOOT: failed ${failed} tests (${passed} passed, total time: ${this.totalTime})`
+            );
             console.error(...hootLog("test failed (see above for details)"));
         } else {
             // Use console.dir for this log to appear on runbot sub-builds page
-            console.dir(`HOOT: passed ${passed} tests (${assertions} assertions, total time: ${this.totalTime})`);
+            console.dir(
+                `HOOT: passed ${passed} tests (${assertions} assertions, total time: ${this.totalTime})`
+            );
             // This statement acts as a success code for the server to know when
             // all suites have passed.
             console.log(...hootLog("test suite succeeded"));
