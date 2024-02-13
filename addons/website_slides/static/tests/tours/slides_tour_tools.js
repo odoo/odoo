@@ -80,8 +80,8 @@ var addArticleToSection = function (sectionName, pageName, backend) {
     content: 'eLearning: click on tags',
     trigger: (backend ? 'iframe ' : '' ) + 'button.o_select_menu_toggler:last',
 }, {
-    content: 'eLearning: select Theory tag',
-    trigger: (backend ? 'iframe ' : '' ) + 'div.o_select_menu_item_label:contains("Theory")',
+    content: 'eLearning: select Practice tag',
+    trigger: (backend ? 'iframe ' : '' ) + 'div.o_select_menu_item_label:contains("Practice")',
     in_modal: false,
 }, {
 	content: 'eLearning: fill article completion time',
