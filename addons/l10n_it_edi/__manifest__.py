@@ -3,7 +3,6 @@
 
 {
     'name': 'Italy - E-invoicing',
-    'countries': ['it'],
     'version': '0.4',
     'depends': [
         'l10n_it',
