@@ -1,7 +1,7 @@
 /* @odoo-module */
 
 import { Record } from "@mail/core/common/record";
-import { htmlToTextContentInline } from "@mail/utils/common/format";
+import { EMOJI_REGEX, htmlToTextContentInline } from "@mail/utils/common/format";
 
 import { toRaw } from "@odoo/owl";
 
@@ -69,6 +69,15 @@ export class Message extends Record {
     /** @type {string} */
     scheduledDatetime;
     starredPersonas = Record.many("Persona");
+    onlyEmojis = Record.attr(false, {
+        compute() {
+            const div = document.createElement("div");
+            div.innerHTML = this.body;
+            const bodyWithoutTags = div.textContent;
+            const withoutEmojis = bodyWithoutTags.replace(EMOJI_REGEX, "");
+            return bodyWithoutTags.length > 0 && withoutEmojis.trim().length === 0;
+        },
+    });
     /** @type {string} */
     subject;
     /** @type {string} */
