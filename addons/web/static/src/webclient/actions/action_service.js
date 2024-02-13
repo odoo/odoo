@@ -316,9 +316,19 @@ export function makeActionManager(env, router = _router) {
         const options = { clearBreadcrumbs: true };
         let actionRequest = null;
         if (state.action) {
+            const context = {};
+            if (state.active_id) {
+                context.active_id = state.active_id;
+            }
+            if (state.active_ids) {
+                context.active_ids = parseActiveIds(state.active_ids);
+            } else if (state.active_id) {
+                context.active_ids = [state.active_id];
+            }
             // ClientAction
             if (actionRegistry.contains(state.action)) {
                 actionRequest = {
+                    context,
                     params: state,
                     tag: state.action,
                     type: "ir.actions.client",
@@ -326,15 +336,7 @@ export function makeActionManager(env, router = _router) {
             } else {
                 // The action to load isn't the current one => executes it
                 actionRequest = state.action;
-                const context = { params: state };
-                if (state.active_id) {
-                    context.active_id = state.active_id;
-                }
-                if (state.active_ids) {
-                    context.active_ids = parseActiveIds(state.active_ids);
-                } else if (state.active_id) {
-                    context.active_ids = [state.active_id];
-                }
+                context.params = state;
                 Object.assign(options, {
                     additionalContext: context,
                     viewType: state.view_type,
