@@ -437,10 +437,10 @@ class Survey(models.Model):
                 dst.triggering_answer_ids = [answers_map[src_answer_id.id] for src_answer_id in src.triggering_answer_ids]
         return clone
 
+    @api.returns('self')
     def copy_data(self, default=None):
-        new_defaults = {'title': _("%s (copy)", self.title)}
-        default = dict(new_defaults, **(default or {}))
-        return super(Survey, self).copy_data(default)
+        vals_list = super().copy_data(default=default)
+        return [dict(vals, title=_("%s (copy)", survey.name)) for survey, vals in zip(self, vals_list)]
 
     def toggle_active(self):
         super(Survey, self).toggle_active()

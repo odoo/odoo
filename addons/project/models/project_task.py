@@ -689,34 +689,40 @@ class Task(models.Model):
                         extract_data(task)
                 task.name = task.display_name.strip()
 
-    @api.returns('self', lambda value: value.id)
-    def copy(self, default=None):
+    @api.returns('self')
+    def copy_data(self, default=None):
         if default is None:
             default = {}
-        if self.allow_task_dependencies and 'task_mapping' not in self.env.context:
-            self = self.with_context(task_mapping=dict())
-        has_default_name = bool(default.get('name', ''))
-        if not has_default_name:
-            default['name'] = _("%s (copy)", self.name)
-            default['child_ids'] = [child.copy({'name': _("%s (copy)", child.name)}).id for child in self.child_ids]
-        else:
-            default['child_ids'] = [child.copy({'name': child.name}).id for child in self.child_ids]
-        if self.recurrence_id:
-            default['recurrence_id'] = self.recurrence_id.copy().id
-        self_with_mail_context = self.with_context(mail_auto_subscribe_no_notify=True, mail_create_nosubscribe=True)
-        task_copy = super(Task, self_with_mail_context).copy(default)
-        if self.allow_task_dependencies:
-            task_mapping = self.env.context.get('task_mapping')
-            task_mapping[self.id] = task_copy.id
-            new_tasks = task_mapping.values()
-            self.write({'depend_on_ids': [Command.unlink(t.id) for t in self.depend_on_ids if t.id in new_tasks]})
-            self.write({'dependent_ids': [Command.unlink(t.id) for t in self.dependent_ids if t.id in new_tasks]})
-            task_copy.write({'depend_on_ids': [Command.link(task_mapping.get(t.id, t.id)) for t in self.depend_on_ids]})
-            task_copy.write({'dependent_ids': [Command.link(task_mapping.get(t.id, t.id)) for t in self.dependent_ids]})
-        if self.allow_milestones:
-            milestone_mapping = self.env.context.get('milestone_mapping', {})
-            task_copy.milestone_id = milestone_mapping.get(task_copy.milestone_id.id, task_copy.milestone_id.id)
-        return task_copy
+        result = super().copy_data(default=default)
+        for task, task_result in zip(self, result):
+            has_default_name = bool(default.get('name', ''))
+            if not has_default_name:
+                task_result['name'] = _("%s (copy)", task.name)
+                task_result['child_ids'] = [child.copy({'name': _("%s (copy)", child.name)}).id for child in task.child_ids]
+            else:
+                task_result['child_ids'] = [child.copy({'name': child.name}).id for child in task.child_ids]
+            if task.recurrence_id:
+                task_result['recurrence_id'] = task.recurrence_id.copy().id
+        return result
+
+    @api.returns('self')
+    def copy(self, default=None):
+        copied_tasks = super(Task, self.with_context(mail_auto_subscribe_no_notify=True, mail_create_nosubscribe=True)).copy()
+        for old_task, new_task in zip(self, copied_tasks):
+            if old_task.allow_task_dependencies and 'task_mapping' not in old_task.env.context:
+                old_task = old_task.with_context(task_mapping={})
+            if old_task.allow_task_dependencies:
+                task_mapping = old_task.env.context.get('task_mapping')
+                task_mapping[old_task.id] = new_task.id
+                new_tasks = task_mapping.values()
+                old_task.write({'depend_on_ids': [Command.unlink(t.id) for t in old_task.depend_on_ids if t.id in new_tasks]})
+                old_task.write({'dependent_ids': [Command.unlink(t.id) for t in old_task.dependent_ids if t.id in new_tasks]})
+                new_task.write({'depend_on_ids': [Command.link(task_mapping.get(t.id, t.id)) for t in old_task.depend_on_ids]})
+                new_task.write({'dependent_ids': [Command.link(task_mapping.get(t.id, t.id)) for t in old_task.dependent_ids]})
+            if old_task.allow_milestones:
+                milestone_mapping = old_task.env.context.get('milestone_mapping', {})
+                new_task.milestone_id = milestone_mapping.get(new_task.milestone_id.id, new_task.milestone_id.id)
+        return copied_tasks
 
     @api.model
     def get_empty_list_help(self, help):

@@ -1,6 +1,6 @@
 import json
 
-from odoo import _, fields, models
+from odoo import _, api, fields, models
 
 
 class SpreadsheetDashboard(models.Model):
@@ -25,10 +25,7 @@ class SpreadsheetDashboard(models.Model):
             'revisions': [],
         }
 
-    def copy(self, default=None):
-        self.ensure_one()
-        if default is None:
-            default = {}
-        if 'name' not in default:
-            default['name'] = _("%s (copy)") % self.name
-        return super().copy(default=default)
+    @api.returns('self')
+    def copy_data(self, default=None):
+        vals_list = super().copy_data(default=default)
+        return [dict(vals, name=_("%s (copy)", dashboard.name)) for dashboard, vals in zip(self, vals_list)]
