@@ -8,7 +8,7 @@ import { ProductList } from "../product_list/product_list";
 
 export class ProductConfiguratorDialog extends Component {
     static components = { Dialog, ProductList};
-    static template = 'sale_product_configurator.dialog';
+    static template = 'sale.ProductConfiguratorDialog';
     static props = {
         productTemplateId: Number,
         ptavIds: { type: Array, element: Number },
@@ -24,7 +24,7 @@ export class ProductConfiguratorDialog extends Component {
         productUOMId: { type: Number, optional: true },
         companyId: { type: Number, optional: true },
         pricelistId: { type: Number, optional: true },
-        currencyId: Number,
+        currencyId: { type: Number, optional: true },
         soDate: String,
         edit: { type: Boolean, optional: true },
         save: Function,
@@ -41,10 +41,17 @@ export class ProductConfiguratorDialog extends Component {
             products: [],
             optionalProducts: [],
         });
+        // Nest the currency id in an object so that it stays up to date in the `env`, even if we
+        // modify it in `onWillStart` afterwards.
+        this.currency = { id: this.props.currencyId };
+        this.getValuesUrl = '/sale/product_configurator/get_values';
+        this.createProductUrl = '/sale/product_configurator/create_product';
+        this.updateCombinationUrl = '/sale/product_configurator/update_combination';
+        this.getOptionalProductsUrl = '/sale/product_configurator/get_optional_products';
 
         useSubEnv({
             mainProductTmplId: this.props.productTemplateId,
-            currencyId: this.props.currencyId,
+            currency: this.currency,
             addProduct: this._addProduct.bind(this),
             removeProduct: this._removeProduct.bind(this),
             setQuantity: this._setQuantity.bind(this),
@@ -54,7 +61,11 @@ export class ProductConfiguratorDialog extends Component {
         });
 
         onWillStart(async () => {
-            const { products, optional_products } = await this._loadData(this.props.edit);
+            const {
+                products,
+                optional_products,
+                currency_id,
+            } = await this._loadData(this.props.edit);
             this.state.products = products;
             this.state.optionalProducts = optional_products;
             for (const customValue of this.props.customAttributeValues) {
@@ -65,6 +76,8 @@ export class ProductConfiguratorDialog extends Component {
                 );
             }
             this._checkExclusions(this.state.products[0]);
+            // Use the currency id retrieved from the server if none was provided in the props.
+            this.currency.id ??= currency_id;
         });
     }
 
@@ -73,49 +86,61 @@ export class ProductConfiguratorDialog extends Component {
     //--------------------------------------------------------------------------
 
     async _loadData(onlyMainProduct) {
-        return rpc('/sale_product_configurator/get_values', {
+        return rpc(this.getValuesUrl, {
             product_template_id: this.props.productTemplateId,
             quantity: this.props.quantity,
-            currency_id: this.props.currencyId,
+            currency_id: this.currency.id,
             so_date: this.props.soDate,
             product_uom_id: this.props.productUOMId,
             company_id: this.props.companyId,
             pricelist_id: this.props.pricelistId,
             ptav_ids: this.props.ptavIds,
             only_main_product: onlyMainProduct,
+            ...this._getAdditionalRpcParams(),
         });
     }
 
     async _createProduct(product) {
-        return rpc('/sale_product_configurator/create_product', {
+        return rpc(this.createProductUrl, {
             product_template_id: product.product_tmpl_id,
-            combination: this._getCombination(product),
+            ptav_ids: this._getCombination(product),
         });
     }
 
     async _updateCombination(product, quantity) {
-        return rpc('/sale_product_configurator/update_combination', {
+        return rpc(this.updateCombinationUrl, {
             product_template_id: product.product_tmpl_id,
-            combination: this._getCombination(product),
-            currency_id: this.props.currencyId,
+            ptav_ids: this._getCombination(product),
+            currency_id: this.currency.id,
             so_date: this.props.soDate,
             quantity: quantity,
             product_uom_id: this.props.productUOMId,
             company_id: this.props.companyId,
             pricelist_id: this.props.pricelistId,
+            ...this._getAdditionalRpcParams(),
         });
     }
 
     async _getOptionalProducts(product) {
-        return rpc('/sale_product_configurator/get_optional_products', {
+        return rpc(this.getOptionalProductsUrl, {
             product_template_id: product.product_tmpl_id,
-            combination: this._getCombination(product),
-            parent_combination: this._getParentsCombination(product),
-            currency_id: this.props.currencyId,
+            ptav_ids: this._getCombination(product),
+            parent_ptav_ids: this._getParentsCombination(product),
+            currency_id: this.currency.id,
             so_date: this.props.soDate,
             company_id: this.props.companyId,
             pricelist_id: this.props.pricelistId,
+            ...this._getAdditionalRpcParams(),
         });
+    }
+
+    /**
+     * Hook to append additional RPC params in overriding modules.
+     *
+     * @return {Object} - The additional RPC params.
+     */
+    _getAdditionalRpcParams() {
+        return {};
     }
 
     //--------------------------------------------------------------------------
@@ -135,20 +160,11 @@ export class ProductConfiguratorDialog extends Component {
             this.state.products.push(...this.state.optionalProducts.splice(index, 1));
             // Fetch optional product from the server with the parent combination.
             const product = this._findProduct(productTmplId);
-            let newOptionalProducts = await this._getOptionalProducts(product);
-            for(const newOptionalProductDict of newOptionalProducts) {
-                // If the optional product is already in the list, add the id of the parent product
-                // template in his list of `parent_product_tmpl_ids` instead of adding a second time
-                // the product.
-                const newProduct = this._findProduct(newOptionalProductDict.product_tmpl_id);
-                if (newProduct) {
-                    newOptionalProducts = newOptionalProducts.filter(
-                        (p) => p.product_tmpl_id != newOptionalProductDict.product_tmpl_id
-                    );
-                    newProduct.parent_product_tmpl_ids.push(productTmplId);
-                }
-            }
-            if (newOptionalProducts) this.state.optionalProducts.push(...newOptionalProducts);
+            // Filter out optional products that are already loaded in the configurator.
+            const newOptionalProducts = (await this._getOptionalProducts(product)).filter(
+                p => !this._findProduct(p.product_tmpl_id)
+            );
+            this.state.optionalProducts.push(...newOptionalProducts);
         }
     }
 
@@ -162,19 +178,12 @@ export class ProductConfiguratorDialog extends Component {
         if (index >= 0) {
             this.state.optionalProducts.push(...this.state.products.splice(index, 1));
             for (const childProduct of this._getChildProducts(productTmplId)) {
-                // Optional products might have multiple parents so we don't want to remove them if
-                // any of their parents are still on the list of products.
-                childProduct.parent_product_tmpl_ids = childProduct.parent_product_tmpl_ids.filter(
-                    id => id !== productTmplId
+                this._removeProduct(childProduct.product_tmpl_id);
+                this.state.optionalProducts.splice(
+                    this.state.optionalProducts.findIndex(
+                        p => p.product_tmpl_id === childProduct.product_tmpl_id
+                    ), 1
                 );
-                if (!childProduct.parent_product_tmpl_ids.length) {
-                    this._removeProduct(childProduct.product_tmpl_id);
-                    this.state.optionalProducts.splice(
-                        this.state.optionalProducts.findIndex(
-                            p => p.product_tmpl_id === childProduct.product_tmpl_id
-                        ), 1
-                    );
-                }
             }
         }
     }
@@ -183,27 +192,29 @@ export class ProductConfiguratorDialog extends Component {
      * Set the quantity of the product to a given value.
      *
      * If the value is less than or equal to zero, the product is removed from the product list
-     * instead, unless it is the main product, in which case the changes are ignored.
+     * instead, unless it is the main product, in which case the quantity is set to 1.
      *
      * @param {Number} productTmplId - The product template id, as a `product.template` id.
      * @param {Number} quantity - The new quantity of the product.
+     * @return {Boolean} - Whether the quantity was updated.
      */
     async _setQuantity(productTmplId, quantity) {
         if (quantity <= 0) {
             if (productTmplId === this.env.mainProductTmplId) {
-                const product = this._findProduct(productTmplId);
-                const { price } = await this._updateCombination(product, 1);
-                product.quantity = 1;
-                product.price = parseFloat(price);
-                return;
-            };
-            this._removeProduct(productTmplId);
-        } else {
-            const product = this._findProduct(productTmplId);
-            const { price } = await this._updateCombination(product, quantity);
-            product.quantity = quantity;
-            product.price = parseFloat(price);
+                quantity = 1;
+            } else {
+                this._removeProduct(productTmplId);
+                return true;
+            }
         }
+        const product = this._findProduct(productTmplId);
+        if (product.quantity === quantity) {
+            return false;
+        }
+        const { price } = await this._updateCombination(product, quantity);
+        product.quantity = quantity;
+        product.price = parseFloat(price);
+        return true;
     }
 
     /**
@@ -261,10 +272,8 @@ export class ProductConfiguratorDialog extends Component {
      * Check the exclusions of a given product and his child.
      *
      * @param {Object} product - The product for which to check the exclusions.
-     * @param {undefined|Array} checked - The array of products checked for exclusions, used to
-     * avoid infinite check exclusions for recursive optional products.
      */
-    _checkExclusions(product, checked=undefined) {
+    _checkExclusions(product) {
         const combination = this._getCombination(product);
         const exclusions = product.exclusions;
         const parentExclusions = product.parent_exclusions;
@@ -307,13 +316,8 @@ export class ProductConfiguratorDialog extends Component {
                 }
             }
         }
-        const checkedProducts = checked || [];
         for(const optionalProductTmpl of childProducts) {
-             // if the product is not checked for exclusions
-            if (!checkedProducts.includes(optionalProductTmpl)) {
-                checkedProducts.push(optionalProductTmpl); // remember that this product is checked
-                this._checkExclusions(optionalProductTmpl, checkedProducts);
-            }
+            this._checkExclusions(optionalProductTmpl);
         }
     }
 
@@ -342,8 +346,8 @@ export class ProductConfiguratorDialog extends Component {
      */
     _getChildProducts(productTmplId) {
         return [
-            ...this.state.products.filter(p => p.parent_product_tmpl_ids?.includes(productTmplId)),
-            ...this.state.optionalProducts.filter(p => p.parent_product_tmpl_ids?.includes(productTmplId))
+            ...this.state.products.filter(p => p.parent_product_tmpl_id === productTmplId),
+            ...this.state.optionalProducts.filter(p => p.parent_product_tmpl_id === productTmplId)
         ]
     }
 
@@ -358,18 +362,16 @@ export class ProductConfiguratorDialog extends Component {
     }
 
     /**
-     * Return the selected PTAV of all the product parents, as a list of
-     * `product.template.attribute.value` id.
+     * Return the selected PTAVs of the parent product, as a list of
+     * `product.template.attribute.value` ids.
      *
-     * @param {Object} product - The product for which to find the combination.
-     * @return {Array} - The combination of the product.
+     * @param {Object} product - The product for which to find the parent combination.
+     * @return {Array} - The combination of the parent product.
      */
     _getParentsCombination(product) {
-        let parentsCombination = [];
-        for(const parentProductTmplId of product.parent_product_tmpl_ids || []) {
-            parentsCombination.push(this._getCombination(this._findProduct(parentProductTmplId)));
-        }
-        return parentsCombination.flat();
+        return product.parent_product_tmpl_id
+            ? this._getCombination(this._findProduct(product.parent_product_tmpl_id))
+            : [];
     }
 
     /**
@@ -400,7 +402,7 @@ export class ProductConfiguratorDialog extends Component {
      *
      * @return {undefined}
      */
-    async onConfirm() {
+    async onConfirm(options) {
         if (!this.isPossibleConfiguration()) return;
         // Create the products with dynamic attributes
         for (const product of this.state.products) {
@@ -419,6 +421,7 @@ export class ProductConfiguratorDialog extends Component {
             this.state.products.filter(
                 p => p.product_tmpl_id !== this.env.mainProductTmplId
             ),
+            options,
         );
         this.props.close();
     }

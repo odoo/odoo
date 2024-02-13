@@ -42,12 +42,12 @@
             run: "click",
         },
         {
-            trigger: ".oe_advanced_configurator_modal",
+            trigger: 'table.o_sale_product_configurator_table',
         },
         {
             content: "Go through the modal window of the product configurator",
-            trigger: 'button span:contains(Proceed to Checkout)',
-            run: 'click'
+            trigger: 'button:contains(Proceed to Checkout)',
+            run: 'click',
         },
         {
             content: "Check the product is in the cart",

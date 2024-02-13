@@ -1,8 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.fields import Command
 from odoo.tests import tagged
+
+from odoo.addons.base.tests.common import HttpCaseWithUserDemo, HttpCaseWithUserPortal
 from odoo.addons.sale.tests.product_configurator_common import TestProductConfiguratorCommon
-from odoo.addons.base.tests.common import HttpCaseWithUserPortal, HttpCaseWithUserDemo
 
 
 @tagged('post_install', '-at_install')
@@ -145,3 +147,156 @@ class TestWebsiteSaleProductConfigurator(TestProductConfiguratorCommon, HttpCase
         new_sale_order = self.env['sale.order'].search([]) - old_sale_order
         new_order_line = new_sale_order.order_line
         self.assertEqual(new_order_line.name, 'Short (TEST) (M always, M dynamic)\n\nNever attribute size: M never\nNever attribute size custom: Yes never custom: TEST')
+
+    def test_product_configurator_force_dialog(self):
+        """ Test that the product configurator is shown if forced. """
+        self.env['website'].get_current_website().add_to_cart_action = 'force_dialog'
+        self.env['product.template'].create({
+            'name': "Main product",
+            'website_published': True,
+        })
+        self.start_tour('/shop', 'website_sale_product_configurator_show_dialog')
+
+    def test_product_configurator_optional_products(self):
+        """ Test that the product configurator is shown if there are optional products. """
+        optional_product = self.env['product.template'].create({
+            'name': "Optional product",
+            'website_published': True,
+        })
+        self.env['product.template'].create({
+            'name': "Main product",
+            'website_published': True,
+            'optional_product_ids': [Command.set(optional_product.ids)],
+        })
+        self.start_tour('/shop', 'website_sale_product_configurator_show_dialog')
+
+    def test_product_configurator_single_variant(self):
+        """ Test that the product configurator isn't shown if there's a single variant. """
+        self.env.ref('website_sale.products_add_to_cart').active = True
+        attribute = self.env['product.attribute'].create({
+            'name': "Attribute",
+            'value_ids': [Command.create({'name': "A"})],
+        })
+        self.env['product.template'].create({
+            'name': "Main product",
+            'website_published': True,
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': attribute.id,
+                    'value_ids': [Command.set(attribute.value_ids.ids)],
+                })
+            ],
+        })
+        self.start_tour('/shop', 'website_sale_product_configurator_single_variant')
+
+    def test_product_configurator_on_product_page_empty_multi_checkbox(self):
+        """ Test that the product configurator isn't shown on the product page if a product with a
+            multi-checkbox attribute is added, even if no option was selected.
+        """
+        multi_attribute = self.env['product.attribute'].create({
+            'name': "Multi-checkbox attribute",
+            'display_type': 'multi',
+            'create_variant': 'no_variant',
+            'value_ids': [
+                Command.create({'name': "A"}),
+                Command.create({'name': "B"}),
+            ],
+        })
+        self.env['product.template'].create({
+            'name': "Main product",
+            'website_published': True,
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': multi_attribute.id,
+                    'value_ids': [Command.set(multi_attribute.value_ids.ids)],
+                }),
+            ],
+        })
+        self.start_tour('/shop', 'website_sale_product_configurator_hide_dialog')
+
+    def test_product_configurator_zero_priced(self):
+        """ Test that zero-priced options can't be sold. """
+        self.env['website'].get_current_website().prevent_zero_price_sale = True
+        price_attribute = self.env['product.attribute'].create({
+            'name': "Price",
+            'value_ids': [
+                Command.create({'name': "Zero-priced"}),
+                Command.create({'name': "One-priced"}),
+            ]
+        })
+        optional_product = self.env['product.template'].create({
+            'name': "Optional product",
+            'website_published': True,
+            'list_price': 0,
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': price_attribute.id,
+                    'value_ids': [Command.set(price_attribute.value_ids.ids)],
+                })
+            ],
+        })
+        self.env['product.template'].create({
+            'name': "Main product",
+            'website_published': True,
+            'optional_product_ids': [Command.set(optional_product.ids)],
+        })
+        optional_product.product_variant_ids[1].product_template_attribute_value_ids.price_extra = 1
+        self.start_tour('/shop', 'website_sale_product_configurator_zero_priced')
+
+    def test_product_configurator_with_taxes(self):
+        """ Test that taxes are applied correctly. """
+        self.env['website'].get_current_website().show_line_subtotals_tax_selection = 'tax_included'
+        tax = self.env['account.tax'].create({'name': "Tax", 'amount': 10})
+        optional_product = self.env['product.template'].create({
+            'name': "Optional product",
+            'website_published': True,
+        })
+        self.env['product.template'].create({
+            'name': "Main product",
+            'website_published': True,
+            'list_price': 100,
+            'taxes_id': tax,
+            'optional_product_ids': [Command.set(optional_product.ids)],
+        })
+        self.start_tour('/shop', 'website_sale_product_configurator_taxes')
+
+    def test_product_configurator_strikethrough_price(self):
+        """ Test that the strikethrough price is applied correctly. """
+        self.env['res.config.settings'].create({'group_product_price_comparison': True}).execute()
+        optional_product = self.env['product.template'].create({
+            'name': "Optional product",
+            'website_published': True,
+            'list_price': 5,
+            'compare_list_price': 10,
+        })
+        main_product = self.env['product.template'].create({
+            'name': "Main product",
+            'website_published': True,
+            'list_price': 100,
+            'optional_product_ids': [Command.set(optional_product.ids)],
+        })
+        self.env['website'].get_current_website().pricelist_id.write({
+            'discount_policy': 'without_discount',
+            'item_ids': [
+                Command.create({
+                    'applied_on': "1_product",
+                    'fixed_price': 50,
+                    'product_tmpl_id': main_product.id,
+                }),
+            ],
+        })
+        self.start_tour('/shop', 'website_sale_product_configurator_strikethrough_price')
+
+    def test_product_configurator_sale_not_ok(self):
+        """ Test that products which aren't `sale_ok` aren't displayed. """
+        optional_product = self.env['product.template'].create({
+            'name': "Optional product",
+            'website_published': True,
+            'sale_ok': False,
+        })
+        self.env['product.template'].create({
+            'name': "Main product",
+            'website_published': True,
+            'optional_product_ids': [Command.set(optional_product.ids)],
+        })
+        self.start_tour('/shop', 'website_sale_product_configurator_hide_dialog')
