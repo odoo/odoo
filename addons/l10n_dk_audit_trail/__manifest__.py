@@ -5,7 +5,6 @@
 This module is a bridge to be able to have audit trail module with Denmark
     """,
     'summary': "Audit trail",
-    'countries': ['dk'],
     'depends': [
         'l10n_dk',
         'account_audit_trail'
