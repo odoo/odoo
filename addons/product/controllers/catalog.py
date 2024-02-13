@@ -25,7 +25,9 @@ class ProductCatalogController(Controller):
             }
         """
         order = request.env[res_model].browse(order_id)
-        return order._get_product_catalog_order_line_info(product_ids, **kwargs)
+        return order.with_company(order.company_id)._get_product_catalog_order_line_info(
+            product_ids, **kwargs,
+        )
 
     @route('/product/catalog/update_order_line_info', auth='user', type='json')
     def product_catalog_update_order_line_info(self, res_model, order_id, product_id, quantity=0, **kwargs):
@@ -39,4 +41,6 @@ class ProductCatalogController(Controller):
         :rtype: float
         """
         order = request.env[res_model].browse(order_id)
-        return order._update_order_line_info(product_id, quantity, **kwargs)
+        return order.with_company(order.company_id)._update_order_line_info(
+            product_id, quantity, **kwargs,
+        )
