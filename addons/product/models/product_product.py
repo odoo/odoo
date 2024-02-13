@@ -17,7 +17,7 @@ class ProductProduct(models.Model):
     _description = "Product Variant"
     _inherits = {'product.template': 'product_tmpl_id'}
     _inherit = ['mail.thread', 'mail.activity.mixin']
-    _order = 'priority desc, default_code, name, id'
+    _order = 'is_favorite desc, default_code, name, id'
 
     # price_extra: catalog extra value only, sum of variant extra attributes
     price_extra = fields.Float(
