@@ -82,6 +82,28 @@ class AccountMove(models.Model):
         ], string='Spanish Facturae EDI Reason Code', default='10')
     l10n_es_invoicing_period_start_date = fields.Date(string="Invoice Period Start Date")
     l10n_es_invoicing_period_end_date = fields.Date(string="Invoice Period End Date")
+    l10n_es_payment_means = fields.Selection(
+        selection=[
+            ('01', "In cash"),
+            ('02', "Direct debit"),
+            ('03', "Receipt"),
+            ('04', "Credit transfer"),
+            ('05', "Accepted bill of exchange"),
+            ('06', "Documentary credit"),
+            ('07', "Contract award"),
+            ('08', "Bill of exchange"),
+            ('09', "Transferable promissory note"),
+            ('10', "Non transferable promissory note"),
+            ('11', "Cheque"),
+            ('12', "Open account reimbursement"),
+            ('13', "Special payment"),
+            ('14', "Set-off by reciprocal credits"),
+            ('15', "Payment by postgiro"),
+            ('16', "Certified cheque"),
+            ('17', "Banker’s draft"),
+            ('18', "Cash on delivery"),
+            ('19', "Payment by card"),
+        ], string="Payment Means", default='04')
 
     def _l10n_es_edi_facturae_get_default_enable(self):
         self.ensure_one()
@@ -198,8 +220,6 @@ class AccountMove(models.Model):
         """
         Convert the payments terms to a list of <Installment> elements to be used in the
         <PaymentDetails> node of the Facturae XML generation.
-
-        For now we only use the hardcoded '04' value (Credit Transfer).
         """
         self.ensure_one()
         installments = []
@@ -208,7 +228,7 @@ class AccountMove(models.Model):
                 installments.append({
                     'InstallmentDueDate': payment_term.date_maturity,
                     'InstallmentAmount': payment_term.amount_residual_currency,
-                    'PaymentMeans': '04',  # Credit Transfer
+                    'PaymentMeans': self.l10n_es_payment_means,
                     'AccountToBeCredited': {
                         'IBAN': self.partner_bank_id.sanitized_acc_number,
                         'BIC': self.partner_bank_id.bank_bic,
