@@ -74,18 +74,38 @@ export class HootReporting extends Component {
                 </HootTestResult>
             </t>
             <t t-if="!filteredResults.length">
-                <em class="flex justify-center text-muted w-full gap-1 p-4">
-                    <t t-foreach="getEmptyMessage()" t-as="messagePart" t-key="messagePart_index">
-                        <t t-if="typeof messagePart === 'string'">
-                            <t t-esc="messagePart" />
-                        </t>
-                        <t t-else="">
-                            <t
-                                t-tag="messagePart.tagName or 'span'"
-                                t-att-class="messagePart.className"
-                                t-esc="messagePart.content or ''"
+                <em class="text-center text-muted w-full p-4 whitespace-nowrap">
+                    <t t-set="message" t-value="getEmptyMessage()" />
+                    <t t-if="message">
+                        <div>
+                            No
+                            <span
+                                t-if="message.statusFilter"
+                                t-att-class="message.statusFilterClassName"
+                                t-esc="message.statusFilter"
                             />
-                        </t>
+                            tests found
+                            <t t-if="message.filter">
+                                matching
+                                <strong class="text-primary" t-esc="message.filter" />
+                            </t>
+                            <t t-if="message.selectedSuiteName">
+                                in suite
+                                <strong class="text-primary" t-esc="message.selectedSuiteName" />
+                            </t>.
+                        </div>
+                    </t>
+                    <t t-else="">
+                        <div class="mb-2">
+                            No tests to show.
+                        </div>
+                        <div>
+                            Click on a
+                            <span class="text-primary">suite</span>
+                            or toggle
+                            <span class="text-primary">filters</span>
+                            to see tests.
+                        </div>
                     </t>
                 </em>
             </t>
@@ -190,73 +210,16 @@ export class HootReporting extends Component {
     }
 
     getEmptyMessage() {
-        const { suites } = this.env.runner;
         const { selectedSuiteId, statusFilter } = this.uiState;
-        const { filter } = this.urlParams;
-
         if (!statusFilter && !selectedSuiteId) {
-            return [
-                "No tests to show. Click on a",
-                {
-                    tagName: "strong",
-                    className: "text-primary",
-                    content: "suite",
-                },
-                "or toggle",
-                {
-                    tagName: "strong",
-                    className: "text-primary",
-                    content: "filters",
-                },
-                "to see tests.",
-            ];
+            return null;
         }
-
-        /**
-         * @param {string} text
-         */
-        const addText = (text) => {
-            const lastIndex = message.length - 1;
-            if (typeof message[lastIndex] === "string") {
-                message[lastIndex] += text;
-            } else {
-                message.push(text.trim());
-            }
+        return {
+            statusFilter,
+            statusFilterClassName: COLORS[statusFilter],
+            filter: this.urlParams.filter,
+            selectedSuiteName: selectedSuiteId && this.env.runner.suites.get(selectedSuiteId).name,
         };
-
-        const message = [];
-        if (statusFilter) {
-            message.push(
-                "No",
-                {
-                    className: COLORS[statusFilter],
-                    content: statusFilter,
-                },
-                "tests found"
-            );
-        } else {
-            message.push("No tests found");
-        }
-        if (filter) {
-            addText(" matching");
-            message.push({
-                tagName: "strong",
-                className: "text-primary",
-                content: `"${filter}"`,
-            });
-        }
-        if (selectedSuiteId) {
-            addText(" in suite");
-            message.push({
-                tagName: "strong",
-                className: "text-primary",
-                content: suites.get(selectedSuiteId).name,
-            });
-        }
-
-        addText(".");
-
-        return message;
     }
 
     getQueryFilter() {

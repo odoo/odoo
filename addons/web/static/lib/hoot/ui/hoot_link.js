@@ -8,7 +8,6 @@ import { ensureArray } from "../hoot_utils";
 /**
  * @typedef {{
  *  class?: string;
- *  disabled?: boolean;
  *  id?: string;
  *  options?: {
  *      debug?: boolean;
@@ -35,7 +34,6 @@ export class HootLink extends Component {
             t-att-target="props.target"
             t-att-title="props.title"
             t-att-style="props.style"
-            t-att-disabled="props.disabled"
             t-on-focus="computeHref"
             t-on-pointerenter="computeHref"
         >
@@ -44,7 +42,6 @@ export class HootLink extends Component {
     `;
     static props = {
         class: { type: String, optional: true },
-        disabled: { type: Boolean, optional: true },
         id: { type: [String, { type: Array, element: String }], optional: true },
         options: {
             type: Object,

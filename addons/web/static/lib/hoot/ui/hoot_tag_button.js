@@ -6,7 +6,7 @@ import { HootLink } from "./hoot_link";
 
 /**
  * @typedef {{
- *  disabled?: boolean;
+ *  inert?: boolean;
  *  tag: Tag;
  * }} HootTagButtonProps
  */
@@ -16,21 +16,39 @@ export class HootTagButton extends Component {
     static components = { HootLink };
 
     static props = {
-        disabled: { type: Boolean, optional: true },
+        inert: { type: Boolean, optional: true },
         tag: Tag,
     };
 
     static template = xml`
-        <HootLink
-            type="'tag'"
-            id="props.tag.name"
-            disabled="props.disabled"
-            class="'rounded-full px-2'"
-            style="'background-color: ' + props.tag.color[0] + '; color: ' + props.tag.color[1] + ';'"
-            title="'Tag ' +  props.tag.name"
-        >
-            <small class="text-xs font-bold hidden md:inline" t-esc="props.tag.name" />
-            <span class="md:hidden">&#8205;</span>
-        </HootLink>
+        <t t-if="props.inert">
+            <span
+                class="rounded-full px-2"
+                t-att-style="style"
+                t-att-title="title"
+            >
+                <small class="text-xs font-bold" t-esc="props.tag.name" />
+            </span>
+        </t>
+        <t t-else="">
+            <HootLink
+                type="'tag'"
+                id="props.tag.name"
+                class="'rounded-full px-2'"
+                style="style"
+                title="title"
+            >
+                <small class="text-xs font-bold hidden md:inline" t-esc="props.tag.name" />
+                <span class="md:hidden">&#8205;</span>
+            </HootLink>
+        </t>
     `;
+
+    get style() {
+        return `background-color: ${this.props.tag.color[0]}; color: ${this.props.tag.color[1]};`;
+    }
+
+    get title() {
+        return `Tag ${this.props.tag.name}`;
+    }
 }

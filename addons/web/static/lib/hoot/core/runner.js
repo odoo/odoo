@@ -401,6 +401,7 @@ export class TestRunner {
             }
         } else {
             parentSuite.jobs.push(test);
+            parentSuite.increaseWeight();
             this.tests.set(test.id, test);
         }
 
@@ -1203,7 +1204,7 @@ export class TestRunner {
         }
 
         // By text filter
-        if (this.textFilter?.startsWith(EXCLUDE_PREFIX)) {
+        if (typeof this.textFilter === "string" && this.textFilter?.startsWith(EXCLUDE_PREFIX)) {
             const query = this.textFilter.slice(EXCLUDE_PREFIX.length);
             return getFuzzyScore(query, job.key) > 0;
         }
