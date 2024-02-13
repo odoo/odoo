@@ -371,7 +371,7 @@ class Meeting(models.Model):
         if self.videocall_source and self.videocall_source != 'google_meet' and self.videocall_location:
             description = re.sub(videocall_location_regex, "", description)
             description = description if not tools.is_html_empty(description) else ''
-            button = Markup("<a id='o_videocall_location_url' href='%s'>%s</a>") % (self.videocall_location, _('Join meeting'))
+            button = Markup('<a id="o_videocall_location_url" href="%s">%s</a>') % (self.videocall_location, _('Join meeting'))
             new_description = button + description
             return new_description
         description = re.sub(videocall_location_regex, "", description)

@@ -808,6 +808,6 @@ class TestSyncOdoo2Google(TestSyncGoogle):
             'videocall_location': 'https://www.odoo.com',
         })
         button = Markup('<a id="o_videocall_location_url" href="%s">Join meeting</a>') % (event.videocall_location)
-        event.description = "test\n" + button
+        event.description = button + Markup("<p>test</p>")
         event._sync_odoo2google(self.google_service)
         self.assertGoogleEventHasVideocallLocationInDescription(event.description)
