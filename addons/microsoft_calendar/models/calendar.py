@@ -507,10 +507,12 @@ class Meeting(models.Model):
         if 'name' in fields_to_sync:
             values['subject'] = self.name or ''
 
-        values['body'] = {
-            'content': self._microsoft_description(),
-            'contentType': "html",
-        }
+        description_fields = ['description', 'videocall_location']
+        if any(field in fields_to_sync for field in description_fields):
+            values['body'] = {
+                'content': self._microsoft_description(),
+                'contentType': "html",
+            }
 
         if any(x in fields_to_sync for x in ['allday', 'start', 'date_end', 'stop']):
             if self.allday:
@@ -621,7 +623,7 @@ class Meeting(models.Model):
         if self.videocall_source and self.videocall_source != 'microsoft_teams' and self.videocall_location:
             description = re.sub(videocall_location_regex, "", description)
             description = description if not is_html_empty(description) else ''
-            button = Markup("<a id='o_videocall_location_url' href='%s'>%s</a>") % (self.videocall_location, _('Join meeting'))
+            button = Markup('<a id="o_videocall_location_url" href="%s">%s</a>') % (self.videocall_location, _('Join meeting'))
             new_description = button + description
             return new_description
         description = re.sub(videocall_location_regex, "", description)

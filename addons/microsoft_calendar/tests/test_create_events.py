@@ -499,6 +499,7 @@ class TestCreateEvents(TestCommon):
         self.assertEqual(len(new_records), 1)
         self.assert_odoo_event(new_records, expected_event)
 
+    @patch.object(MicrosoftCalendarService, 'get_events')
     @patch.object(MicrosoftCalendarService, 'insert')
     def test_discuss_videocall_location_set_on_description(self, mock_insert, mock_get_events):
         mock_insert.return_value = ["123", "abd"]
@@ -518,7 +519,7 @@ class TestCreateEvents(TestCommon):
         button = Markup('<a id="o_videocall_location_url" href="%s">Join meeting</a>') % (event.videocall_location)
         mock_insert.assert_called_once()
         args, _ = mock_insert.call_args
-        self.assertEqual(args[0].get('body')['content'], button + event.description)
+        self.assertEqual(args[0].get('body')['content'].unescape(), (button + event.description).unescape())
 
     @patch.object(MicrosoftCalendarService, 'get_events')
     @patch.object(MicrosoftCalendarService, 'insert')
@@ -526,18 +527,19 @@ class TestCreateEvents(TestCommon):
         mock_insert.return_value = ["123", "abd"]
         mock_get_events.return_value = ([], None)
         partner = self.env['res.partner'].create({'name': 'Jean-Luc', 'email': 'jean-luc@opoo.com'})
+        videocall_location = "https://www.odoo.com"
+        button = Markup('<a id="o_videocall_location_url" href="%s">Join meeting</a>') % (videocall_location)
         event = self.env['calendar.event'].with_user(self.organizer_user).create({
             'name': 'Event',
             'start': datetime(2020, 1, 15, 8, 0),
             'stop': datetime(2020, 1, 15, 18, 0),
             'partner_ids': [(4, partner.id)],
-            'videocall_location': 'https://www.odoo.com',
+            'videocall_location': videocall_location,
+            'description': button + Markup("<p>test</p>"),
         })
-        button = Markup('<a id="o_videocall_location_url" href="%s">Join meeting</a>') % (event.videocall_location)
-        event.description = "test\n" + button
         self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar()
         self.call_post_commit_hooks()
         event.invalidate_recordset()
         mock_insert.assert_called_once()
         args, _ = mock_insert.call_args
-        self.assertEqual(args[0].get('body')['content'], event.description)
+        self.assertEqual(args[0].get('body')['content'].unescape(), event.description.unescape())
