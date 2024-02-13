@@ -793,7 +793,7 @@ class TestSyncOdoo2Google(TestSyncGoogle):
             'description': 'test'
         })
         event._sync_odoo2google(self.google_service)
-        button = Markup("<a id='o_videocall_location_url' href='%s'>Join meeting</a>") % (event.videocall_location)
+        button = Markup('<a id="o_videocall_location_url" href="%s">Join meeting</a>') % (event.videocall_location)
         self.assertGoogleEventHasVideocallLocationInDescription(button + event.description)
 
     @patch_api
@@ -807,7 +807,7 @@ class TestSyncOdoo2Google(TestSyncGoogle):
             'need_sync': False,
             'videocall_location': 'https://www.odoo.com',
         })
-        button = Markup("<a id='o_videocall_location_url' href='%s'>Join meeting</a>") % (event.videocall_location)
+        button = Markup('<a id="o_videocall_location_url" href="%s">Join meeting</a>') % (event.videocall_location)
         event.description = "test\n" + button
         event._sync_odoo2google(self.google_service)
         self.assertGoogleEventHasVideocallLocationInDescription(event.description)
