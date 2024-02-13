@@ -80,15 +80,6 @@ declare module "@spreadsheet" {
     pivot: ExtendedAddPivotDefinition;
   }
 
-  export interface ReInsertPivotCommand {
-    type: "RE_INSERT_PIVOT";
-    id: string;
-    sheetId: string;
-    col: number;
-    row: number;
-    table: SPTableData;
-  }
-
   export interface RenamePivotCommand {
     type: "RENAME_ODOO_PIVOT";
     pivotId: string;
@@ -120,7 +111,6 @@ declare module "@spreadsheet" {
 
   type OdooCoreCommand =
     | InsertPivotCommand
-    | ReInsertPivotCommand
     | RenamePivotCommand
     | RemovePivotCommand
     | DuplicatePivotCommand

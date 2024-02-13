@@ -97,15 +97,6 @@ export class PivotCorePlugin extends OdooCorePlugin {
                 this._insertPivot(sheetId, position, id, spTable);
                 break;
             }
-            case "RE_INSERT_PIVOT": {
-                const { sheetId, col, row, id } = cmd;
-                /** @type { { col: number, row: number } } */
-                const position = { col, row };
-                const { cols, rows, measures, rowTitle } = cmd.table;
-                const table = new SpreadsheetPivotTable(cols, rows, measures, rowTitle);
-                this._insertPivot(sheetId, position, id, table);
-                break;
-            }
             case "RENAME_ODOO_PIVOT": {
                 this.history.update("pivots", cmd.pivotId, "name", cmd.name);
                 break;
