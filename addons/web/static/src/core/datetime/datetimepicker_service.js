@@ -18,7 +18,7 @@ import { DateTimePickerPopover } from "./datetime_picker_popover";
  * @property {(value: DateTimePickerProps["value"]) => any} [onApply] callback
  *  invoked once the value is committed: this is either when all inputs received
  *  a "change" event or when the datetime picker popover has been closed.
- * @property {DateTimePickerProps} [pickerProps]
+ * @property {DateTimePickerProps} pickerProps
  * @property {string | ReturnType<typeof import("@odoo/owl").useRef>} [target]
  *
  * @typedef {import("./datetime_picker").DateTimePickerProps} DateTimePickerProps
