@@ -1,15 +1,55 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 from odoo.addons.mail.tests.common import MockEmail
 from odoo.addons.sms.tests.common import MockSMS
+from odoo.addons.test_event_full.tests.common import TestEventFullCommon
 from odoo.addons.test_event_full.tests.common import TestWEventCommon
 from odoo.exceptions import ValidationError
 from odoo.tools import mute_logger
 
 class TestTemplateRefModel(TestWEventCommon):
+
+    def test_template_ref_delete_lines(self):
+        """ When deleting a template, related lines should be deleted too """
+        event_type = self.env['event.type'].create({
+            'name': 'Event Type',
+            'default_timezone': 'Europe/Brussels',
+            'event_type_mail_ids': [
+                (0, 0, {
+                    'interval_unit': 'now',
+                    'interval_type': 'after_sub',
+                    'template_ref': 'mail.template,%i' % self.env['ir.model.data']._xmlid_to_res_id('event.event_subscription')}),
+                (0, 0, {
+                    'interval_unit': 'now',
+                    'interval_type': 'after_sub',
+                    'notification_type': 'sms',
+                    'template_ref': 'sms.template,%i' % self.env['ir.model.data']._xmlid_to_res_id('event_sms.sms_template_data_event_registration')}),
+            ],
+        })
+
+        template_mail = event_type.event_type_mail_ids[0].template_ref
+        template_sms = event_type.event_type_mail_ids[1].template_ref
+
+        event = self.env['event.event'].create({
+            'name': 'event mail template removed',
+            'event_type_id': event_type.id,
+            'date_begin': datetime(2020, 2, 1, 8, 30, 0),
+            'date_end': datetime(2020, 2, 4, 18, 45, 0),
+            'date_tz': 'Europe/Brussels',
+        })
+        self.assertEqual(len(event_type.event_type_mail_ids), 2)
+        self.assertEqual(len(event.event_mail_ids), 2)
+
+        template_mail.unlink()
+        self.assertEqual(len(event_type.event_type_mail_ids.exists()), 1)
+        self.assertEqual(len(event.event_mail_ids.exists()), 1)
+
+        template_sms.unlink()
+        self.assertEqual(len(event_type.event_type_mail_ids.exists()), 0)
+        self.assertEqual(len(event.event_mail_ids.exists()), 0)
 
     def test_template_ref_model_constraint(self):
 
