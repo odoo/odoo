@@ -90,7 +90,7 @@ class WebsiteSale(main.WebsiteSale):
             if reward_id in rewards:
                 coupon_id = coupon
         redirect = post.get('r', '/shop/cart')
-        if not coupon_id or not reward_id.exists() or reward_id.multi_product:
+        if not coupon_id or not reward_id.exists():
             return request.redirect(redirect)
         self._apply_reward(order, reward_id, coupon_id)
         return request.redirect(redirect)
