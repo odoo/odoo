@@ -6,7 +6,6 @@
     'depends': ['pos_food_delivery_service'],
     'license': 'LGPL-3',
     'data': [
-        # 'views/pos_delivery_service.xml',
         'views/pos_online_delivery_provider.xml',
         'data/pos_online_delivery_provider_data.xml',
     ],

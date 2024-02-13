@@ -118,8 +118,11 @@ patch(TicketScreen.prototype, {
         this._state.ui.acceptDeliveryOrderLoading = true;
         await this.pos.data.call("pos.order", "accept_delivery_order", [order.server_id]);
         this._state.ui.acceptDeliveryOrderLoading = false;
-        order.delivery_status =
-            !order.delivery_asap && order.delivery_status == "awaiting" ? "scheduled" : "confirmed";
+        order.delivery_status = order.delivery_asap
+            ? "preparing"
+            : order.delivery_status == "awaiting"
+            ? "scheduled"
+            : "confirmed";
     },
     async _rejectDeliveryOrder(order) {
         const confirmed = await ask(this.dialog, {

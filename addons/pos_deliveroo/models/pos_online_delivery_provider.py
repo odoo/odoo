@@ -2,14 +2,17 @@
 
 import requests
 import time
+import json
+import base64
 from odoo import fields, models, api, _
 from odoo.exceptions import ValidationError
-import datetime
+from datetime import datetime
 
 class PosOnlineDeliveryProvider(models.Model):
     _inherit = 'pos.online.delivery.provider'
 
     webhook_secret = fields.Char('Webhook Secret', copy=False)
+    site_id = fields.Integer('Site Location ID', copy=False)
     code = fields.Selection(selection_add=[('deliveroo', "Deliveroo")], ondelete={'deliveroo': 'set default'})
 
     @api.onchange('state')
@@ -18,6 +21,26 @@ class PosOnlineDeliveryProvider(models.Model):
         if self.code == 'deliveroo' and self.state in ('enabled', 'test'):
             if not self.webhook_secret:
                 raise ValidationError(_('Please fill in the webhook secret provided by Deliveroo.'))
+            if not self.site_id:
+                raise ValidationError(_('Please fill in the site location ID provided by Deliveroo.'))
+            
+    def _get_delivery_acceptation_time(self):
+        res = super()._get_delivery_acceptation_time()
+        if self.code == "deliveroo":
+            if self.env.company.country_code in ['KW', 'AE']:
+                return 7
+            return 10
+        return res
+    
+    def _get_api_url(self, suffix: str):
+        if self.code == "deliveroo":
+            if self.state == "enabled":
+                return "https://api.developers.deliveroo.com" + suffix
+            if self.state == "test":
+                return "https://api-sandbox.developers.deliveroo.com" + suffix
+        return super()._get_api_url()
+            
+    #ORDERS API
 
     def _accept_order(self, id: int, status: str = ""):
         """
@@ -26,7 +49,7 @@ class PosOnlineDeliveryProvider(models.Model):
         if not status:
             status = "accepted"
         response = requests.patch(
-            f"https://api-sandbox.developers.deliveroo.com/order/v1/orders/{id}",
+            self._get_api_url(f"/order/v1/orders/{id}"),
             headers={
                 "accept": "application/json",
                 "content-type": "application/json",
@@ -42,7 +65,7 @@ class PosOnlineDeliveryProvider(models.Model):
         the rejected reason can be ["busy", "closing_early", "ingredient_unavailable", "other"]
         """
         response = requests.patch(
-            f"https://api-sandbox.developers.deliveroo.com/order/v1/orders/{id}",
+            self._get_api_url(f"/order/v1/orders/{id}"),
             headers={
                 "accept": "application/json",
                 "content-type": "application/json",
@@ -60,7 +83,7 @@ class PosOnlineDeliveryProvider(models.Model):
         used for tablet-less flow
         """
         response = requests.patch(
-            f"https://api-sandbox.developers.deliveroo.com/order/v1/orders/{id}",
+            self._get_api_url(f"/order/v1/orders/{id}"),
             headers={
                 "accept": "application/json",
                 "content-type": "application/json",
@@ -72,31 +95,34 @@ class PosOnlineDeliveryProvider(models.Model):
         )
         return response.status_code == 204
 
-    def _send_sync_status(self, id: int, positive=True):
-        """
-        used for tablet flow
-        """
-        response = requests.post(
-            f"https://api{'-sandbox' if self.is_test else ''}.developers.deliveroo.com/order/v1/orders/{id}/sync_status",
-            headers={
-                "Content-Type": "application/json",
-                "Authorization": f"Bearer {self._get_access_token()}",
-                "Accept": "application/json",
-            },
-            json={
-                "status": "succeeded",
-                "occurred_at": datetime.datetime.now().isoformat(),
-            },
-        )
-        return response.json()
+    def _send_preparation_status(self, id: int, stage: str, delay: int = 0):
+        if stage in ['in_kitchen', 'ready_for_collection_soon', 'ready_for_collection', 'collected']:
+            json = {
+                'stage': stage,
+                'occurred_at': str(datetime.utcnow().replace(microsecond=0).isoformat()) + 'Z'
+            }
+            if stage == 'in_kitchen'and delay in [0, 2, 4, 6, 10]:
+                json['delay'] = delay
+            response = requests.post(
+                self._get_api_url(f"/order/v1/orders/{id}/prep_stage"),
+                headers={
+                    "accept": "application/json",
+                    "content-type": "application/json",
+                    "Authorization": f"Bearer {self._get_access_token()}",
+                },
+                json=json,
+            )
+            return response.status_code == 200
+        return False
+    
+    #AUTHENTIFICATION API
 
     def _refresh_access_token(self) -> str:
-        import base64
         self.ensure_one()
         if self.code != "deliveroo":
             return super()._refresh_access_token()
-
         AUTH_HOST = 'https://auth-sandbox.developers.deliveroo.com/oauth2/token'
+        # AUTH_HOST = 'https://auth.developers.deliveroo.com/oauth2/token'
 
         # Encode client_id:client_secret in base64
         auth_string = base64.b64encode(f"{self.client_id}:{self.client_secret}".encode()).decode()
@@ -121,6 +147,8 @@ class PosOnlineDeliveryProvider(models.Model):
             )
             return token_data.get("access_token")
         return False
+    
+    #MENU API
 
     def _upload_menu(self):
         self.ensure_one()
@@ -138,10 +166,17 @@ class PosOnlineDeliveryProvider(models.Model):
         }
         # TODO: implement sending menu to deliveroo
 
-    def _get_delivery_acceptation_time(self):
-        res = super()._get_delivery_acceptation_time()
-        if self.code == "deliveroo":
-            if self.env.company.country_code in ['KW', 'AE']:
-                return 7
-            return 10
-        return res
+    #SITE API
+    def _change_site_status_mode(self, status):
+        pass
+
+    def _get_site_brand_id(self):
+        response = requests.get(
+            self._get_api_url(f"/site/v1/restaurant_locations/{self.site_id}"),
+            headers={
+                "accept": "application/json",
+                "content-type": "application/json",
+                "Authorization": f"Bearer {self._get_access_token()}",
+            },
+        )
+        return json.loads(response.content) if response.status_code == 200 else False

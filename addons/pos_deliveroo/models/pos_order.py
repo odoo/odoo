@@ -19,3 +19,16 @@ class PosOrder(models.Model):
         res['delivery_confirm_at'] = str(order.delivery_confirm_at.astimezone(timezone)) if order.delivery_confirm_at else False
         res['delivery_start_preparing_at'] = str(order.delivery_start_preparing_at.astimezone(timezone)) if order.delivery_start_preparing_at else False
         return res
+
+    def change_order_delivery_status(self, new_status, send_order_count = True):
+        super().change_order_delivery_status(new_status, send_order_count)
+        if self.delivery_provider_id.code == 'deliveroo':
+            match new_status:
+                case 'preparing':
+                    self.delivery_provider_id._send_preparation_status(self.delivery_id, 'in_kitchen', 0)
+                case 'ready':
+                    self.delivery_provider_id._send_preparation_status(self.delivery_id, 'ready_for_collection_soon')
+                case 'delivered':
+                    self.delivery_provider_id._send_preparation_status(self.delivery_id, 'collected')
+                case _:
+                    pass

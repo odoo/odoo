@@ -18,11 +18,10 @@
             </div>
         </xpath>
 
-        <xpath expr="//div[hasclass('control-buttons')]" position="before">
-            <t t-if="!_selectedSyncedOrder.delivery_id">
+        <xpath expr="//div[hasclass('ticket-screen-buttons')]" position="attributes">
+            <attribute name="t-if">!_selectedSyncedOrder.delivery_id</attribute>
         </xpath>
-        <xpath expr="//div[hasclass('subpads')]" position="after">
-            </t>
+        <xpath expr="//div[hasclass('ticket-screen-buttons')]" position="after">
             <div t-else="" class="pads border-top">
                 <div t-if="_selectedSyncedOrder.delivery_status != 'awaiting'" class="control-buttons d-flex flex-column border-bottom overflow-hidden bg-300">
                     <div class="control-buttons d-flex">
@@ -48,7 +47,7 @@
                         </div>
                     </t>
                 </div>
-                <t t-elif="_selectedSyncedOrder.delivery_status in ('scheduled', 'confirmed')">
+                <t t-elif="_selectedSyncedOrder.delivery_status === 'scheduled' or _selectedSyncedOrder.delivery_status === 'confirmed'">
                     <button class="button validation load-order-button w-100 btn btn-lg btn-primary rounded-0 fw-bolder py-3" t-on-click="() => this._acceptDeliveryOrder(_selectedSyncedOrder)">
                         <span class="fs-1 d-block">Send To Preparation</span>
                     </button>

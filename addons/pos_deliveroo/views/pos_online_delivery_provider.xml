@@ -7,6 +7,7 @@
         <field name="arch" type="xml">
             <field name="client_secret" position="after">
                 <field name="webhook_secret" invisible="code != 'deliveroo'" required="code == 'deliveroo'"/>
+                <field name="site_id" invisible="code != 'deliveroo'" required="code == 'deliveroo'"/>
             </field>
         </field>
     </record>

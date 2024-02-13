@@ -69,24 +69,6 @@ class PosDeliveryService(models.Model):
         )
         return response.status_code == 204
 
-    def _send_sync_status(self, id: int, positive=True):
-        """
-        used for tablet flow
-        """
-        response = requests.post(
-            f"https://api{'-sandbox' if self.is_test else ''}.developers.deliveroo.com/order/v1/orders/{id}/sync_status",
-            headers={
-                "Content-Type": "application/json",
-                "Authorization": f"Bearer {self._get_access_token()}",
-                "Accept": "application/json",
-            },
-            json={
-                "status": "succeeded",
-                "occurred_at": datetime.datetime.now().isoformat(),
-            },
-        )
-        return response.json()
-
     def _refresh_access_token(self) -> str:
         import base64
         self.ensure_one()

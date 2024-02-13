@@ -18,23 +18,20 @@ class PosOrder(models.Model):
         self.ensure_one()
         status_to_send = 'accepted' if self.delivery_status == 'awaiting' else 'confirmed'
         self.delivery_provider_id._accept_order(self.delivery_id, status_to_send)
-        # self.env['pos.delivery.service'].search([('config_ids', 'in', self.config_id.id), ('service', 'ilike', self.delivery_service_id.name)])._accept_order(self.delivery_id, status_to_send)
         self._post_delivery_accept_order()
 
     def _post_delivery_accept_order(self):
         if not self.delivery_asap:
             if self.delivery_status == 'awaiting':
-                self.delivery_status = 'scheduled'
+                self.change_order_delivery_status('scheduled')
             elif self.delivery_status == 'scheduled':
-                self.delivery_status = 'confirmed'
+                self.change_order_delivery_status('confirmed')
         else:
-            self.delivery_status = 'preparing'
-        self.session_id.config_id._send_delivery_order_count(self.id)
+            self.change_order_delivery_status('preparing')
 
     def reject_delivery_order(self, reject_reason):
         self.ensure_one()
         self.delivery_provider_id._reject_order(self.delivery_id, reject_reason)
-        # self.env['pos.delivery.service'].search([('config_ids', 'in', self.config_id.id), ('service', 'ilike', self.delivery_service_id.name)])._reject_order(self.delivery_id, reject_reason)
         self._post_delivery_reject_order()
 
     def _post_delivery_reject_order(self):
@@ -46,13 +43,14 @@ class PosOrder(models.Model):
             'payment_method_id': self.payment_ids.payment_method_id.id,
         })
         refund_order.state = 'paid'
-        self.delivery_status = 'cancelled'
+        self.change_order_delivery_status('cancelled')
         self.session_id.config_id._send_delivery_order_count(self.id)
 
-    def change_order_delivery_status(self, new_status):
+    def change_order_delivery_status(self, new_status, send_order_count = True):
         self.ensure_one()
         self.delivery_status = new_status
-        self.session_id.config_id._send_delivery_order_count(self.id)
+        if send_order_count:
+            self.session_id.config_id._send_delivery_order_count(self.id)
 
     @api.model
     def _order_fields(self, ui_order):

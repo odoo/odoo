@@ -22,23 +22,18 @@ class PosDeliverooController(http.Controller):
         deliveroo_providers_sudo = request.env['pos.online.delivery.provider'].sudo().search([('code', '=', 'deliveroo')])
         deliveroo_provider = False
         for deliveroo_provider_sudo in deliveroo_providers_sudo:
+            if deliveroo_provider_sudo.site_id != int(data['body']['order']['location_id']):
+                continue
             expected_signature = hmac.new(bytes(deliveroo_provider_sudo.webhook_secret, 'utf-8'), msg=bytes(f"{request.httprequest.headers.get('X-Deliveroo-Sequence-Guid')} {request.httprequest.data.decode('utf-8')}", 'utf-8'), digestmod=hashlib.sha256).hexdigest()
             if expected_signature == signature:
                 deliveroo_provider = deliveroo_provider_sudo
                 break
         if not deliveroo_provider:
             return exceptions.BadRequest()
-        # pos_delivery_service_sudo = request.env['pos.delivery.service'].sudo().search([])[0]
-        # https://api-docs.deliveroo.com/v2.0/docs/securing-webhooks
-        # expected_signature = hmac.new(bytes(pos_delivery_service_sudo.webhook_secret, 'utf-8'), msg=bytes(f"{request.httprequest.headers.get('X-Deliveroo-Sequence-Guid')} {request.httprequest.data.decode('utf-8')}", 'utf-8'), digestmod=hashlib.sha256).hexdigest()
-        # if expected_signature != request.httprequest.headers.get('X-Deliveroo-Hmac-Sha256'):
-        #     return exceptions.BadRequest()
-        # TODO make sure that the order is not already in the system
-        # is_order_duplicate = request.env['pos.order'].sudo().search([('pos_reference', '=', data['pos_reference'])])
-        pos_config_sudo = deliveroo_provider.config_ids[0]
+        pos_config_sudo = deliveroo_provider.config_ids[0] if deliveroo_provider.config_ids else request.env['pos.config'].search([('company_id', '=', deliveroo_provider.company_id)])[0]
         order = data['body']['order']
-        if order['status'] == 'canceled' or not pos_config_sudo.has_active_session:
-            request.env['pos.delivery.service'].sudo().search([])[0].sudo()._reject_order(order['id'], "closing_early")
+        if not pos_config_sudo.has_active_session:
+            deliveroo_provider._reject_order(order['id'], "closing_early")
         if order['status'] == 'canceled':
             pos_order = request.env['pos.order'].sudo().search([('delivery_id', '=', order['id'])])
             if pos_order:
