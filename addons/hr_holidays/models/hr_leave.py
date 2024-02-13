@@ -92,10 +92,52 @@ class HolidaysRequest(models.Model):
         if 'state' in fields_list and not defaults.get('state'):
             defaults['state'] = 'confirm' if lt.leave_validation_type != 'no_validation' else 'draft'
 
+<<<<<<< HEAD
         if 'request_date_from' in fields_list and 'request_date_from' not in defaults:
             defaults['request_date_from'] = fields.Date.today()
         if 'request_date_to' in fields_list and 'request_date_to' not in defaults:
             defaults['request_date_to'] = fields.Date.today()
+||||||| parent of b7f820b64f42 (temp)
+        if 'date_from' and 'date_to' in fields_list:
+            now = fields.Datetime.now()
+            if 'date_from' not in defaults:
+                defaults['date_from'] = now.replace(hour=0, minute=0, second=0)
+            if 'date_to' not in defaults:
+                defaults['date_to'] = now.replace(hour=23, minute=59, second=59)
+            if (not self._context.get('leave_compute_date_from_to') and defaults['date_from'].time() == time(0, 0, 0) and
+                    defaults['date_to'].time() == time(23, 59, 59)):
+                employee = self.env['hr.employee'].browse(defaults['employee_id']) if defaults.get('employee_id') else self.env.user.employee_id
+
+                date_from = defaults['date_from'].date()
+                date_to = defaults['date_to'].date()
+
+                attendance_from, attendance_to = self._get_attendances(employee, date_from, date_to)
+
+                defaults['date_from'] = self._get_start_or_end_from_attendance(attendance_from.hour_from, date_from, employee)
+                defaults['date_to'] = self._get_start_or_end_from_attendance(attendance_to.hour_to, date_to, employee)
+
+        defaults = self._default_get_request_parameters(defaults)
+=======
+        if 'date_from' and 'date_to' in fields_list and not ('request_date_from' and 'request_date_to' in defaults):
+            now = fields.Datetime.now()
+            if 'date_from' not in defaults:
+                defaults['date_from'] = now.replace(hour=0, minute=0, second=0)
+            if 'date_to' not in defaults:
+                defaults['date_to'] = now.replace(hour=23, minute=59, second=59)
+            if (not self._context.get('leave_compute_date_from_to') and defaults['date_from'].time() == time(0, 0, 0) and
+                    defaults['date_to'].time() == time(23, 59, 59)):
+                employee = self.env['hr.employee'].browse(defaults['employee_id']) if defaults.get('employee_id') else self.env.user.employee_id
+
+                date_from = defaults['date_from'].date()
+                date_to = defaults['date_to'].date()
+
+                attendance_from, attendance_to = self._get_attendances(employee, date_from, date_to)
+
+                defaults['date_from'] = self._get_start_or_end_from_attendance(attendance_from.hour_from, date_from, employee)
+                defaults['date_to'] = self._get_start_or_end_from_attendance(attendance_to.hour_to, date_to, employee)
+
+        defaults = self._default_get_request_parameters(defaults)
+>>>>>>> b7f820b64f42 (temp)
 
         return defaults
 
