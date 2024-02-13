@@ -52,20 +52,20 @@ declare module "@spreadsheet" {
 
   // CORE
 
-  export interface SpreadsheetInsertPivotPayload {
-    type: "SPREADSHEET";
-    definition: SpreadsheetPivotDefinition;
-  }
+  type AddPivotDefinition = SpreadsheetPivotDefinition;
 
-  type InsertPivotPayload = SpreadsheetInsertPivotPayload;
-
-  export interface OdooInsertPivotPayload {
+  export interface OdooAddPivotPayload {
     type: "ODOO";
-    table: SPTableData;
     definition: OdooPivotDefinition;
   }
 
-  export type ExtendedInsertPivotPayload = InsertPivotPayload | OdooInsertPivotPayload;
+  export type ExtendedAddPivotDefinition = AddPivotDefinition | OdooPivotDefinition;
+
+  export interface AddPivotCommand {
+    type: "ADD_PIVOT";
+    id: string;
+    pivot: AddPivotDefinition;
+  }
 
   export interface InsertPivotCommand {
     type: "INSERT_PIVOT";
@@ -73,11 +73,11 @@ declare module "@spreadsheet" {
     sheetId: string;
     col: number;
     row: number;
-    payload: InsertPivotPayload;
+    table: SPTableData;
   }
 
-  export interface ExtendedInsertPivotCommand extends InsertPivotCommand {
-    payload: ExtendedInsertPivotPayload;
+  export interface ExtendedAddPivotCommand extends AddPivotCommand {
+    pivot: ExtendedAddPivotDefinition;
   }
 
   export interface ReInsertPivotCommand {
@@ -125,7 +125,7 @@ declare module "@spreadsheet" {
     | RemovePivotCommand
     | DuplicatePivotCommand
     | UpdatePivotDomainCommand
-    | ExtendedInsertPivotCommand;
+    | ExtendedAddPivotCommand;
   export type AllCoreCommand = OdooCoreCommand | CoreCommand;
 
   type OdooLocalCommand = RefreshAllDataSourcesCommand;

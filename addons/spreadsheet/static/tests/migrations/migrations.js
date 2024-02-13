@@ -160,8 +160,8 @@ QUnit.test("Pivot name default is model name", (assert) => {
     };
     const migratedData = migrate(data);
     assert.strictEqual(Object.values(migratedData.pivots).length, 2);
-    assert.strictEqual(migratedData.pivots["1"].definition.name, "Name");
-    assert.strictEqual(migratedData.pivots["2"].definition.name, "Model");
+    assert.strictEqual(migratedData.pivots["1"].name, "Name");
+    assert.strictEqual(migratedData.pivots["2"].name, "Model");
 });
 
 QUnit.test("fieldMatchings are moved from filters to their respective datasources", (assert) => {
@@ -381,7 +381,7 @@ QUnit.test("group year/quarter/month filters to a single filter type", (assert) 
     ]);
 });
 
-QUnit.test("Pivot are migrated from 6 to 7", (assert) => {
+QUnit.test("Pivot are migrated from 6 to 8", (assert) => {
     const data = {
         pivots: {
             1: {
@@ -394,14 +394,12 @@ QUnit.test("Pivot are migrated from 6 to 7", (assert) => {
     };
     const migratedData = migrate(data);
     assert.strictEqual(Object.values(migratedData.pivots).length, 1);
-    assert.strictEqual(migratedData.pivots["1"].type, "ODOO");
-    assert.deepEqual(migratedData.pivots["1"].definition, {
+    assert.deepEqual(migratedData.pivots["1"], {
+        type: "ODOO",
+        fieldMatching: { 1: { chain: "foo", type: "char" } },
         name: "Name",
         model: "Model",
         measures: [],
-    });
-    assert.deepEqual(migratedData.pivots["1"].fieldMatching, {
-        1: { chain: "foo", type: "char" },
     });
 });
 

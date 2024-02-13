@@ -5,7 +5,6 @@
  * @typedef {import("@spreadsheet").OdooPivotDefinition} OdooPivotDefinition
  * @typedef {import("@spreadsheet").PivotDefinition} PivotDefinition
  * @typedef {import("@spreadsheet").AllCoreCommand} AllCoreCommand
- * @typedef {import("@spreadsheet").LocalPivot} LocalPivot
  *
  * @typedef {import("@spreadsheet").SPTableCell} SPTableCell
  */
@@ -19,7 +18,6 @@ import { _t } from "@web/core/l10n/translation";
 import { Domain } from "@web/core/domain";
 import { deepCopy } from "@web/core/utils/objects";
 import { OdooCorePlugin } from "@spreadsheet/plugins";
-import { pivotRegistry } from "./pivot_handler";
 
 const { isDefined } = helpers;
 
@@ -27,7 +25,6 @@ export class PivotCorePlugin extends OdooCorePlugin {
     static getters = /** @type {const} */ ([
         "getNextPivotId",
         "getPivotDefinition",
-        "getCorePivot",
         "getPivotDisplayName",
         "getPivotIds",
         "getPivotName",
@@ -37,7 +34,7 @@ export class PivotCorePlugin extends OdooCorePlugin {
         super(config);
 
         this.nextId = 1;
-        /** @type {Object.<string, LocalPivot>} */
+        /** @type {Object.<string, PivotDefinition>} */
         this.pivots = {};
     }
 
@@ -56,11 +53,17 @@ export class PivotCorePlugin extends OdooCorePlugin {
                     return CommandResult.EmptyName;
                 }
                 break;
-            case "INSERT_PIVOT":
+            case "ADD_PIVOT":
                 if (cmd.id !== this.nextId.toString()) {
                     return CommandResult.InvalidNextId;
                 }
                 break;
+            case "INSERT_PIVOT": {
+                if (!(cmd.id in this.pivots)) {
+                    return CommandResult.PivotIdNotFound;
+                }
+                break;
+            }
             case "DUPLICATE_PIVOT":
                 if (!(cmd.pivotId in this.pivots)) {
                     return CommandResult.PivotIdNotFound;
@@ -79,14 +82,19 @@ export class PivotCorePlugin extends OdooCorePlugin {
      */
     handle(cmd) {
         switch (cmd.type) {
+            case "ADD_PIVOT": {
+                const { id, pivot } = cmd;
+                this._addPivot(id, pivot);
+                this.history.update("nextId", parseInt(id, 10) + 1);
+                break;
+            }
             case "INSERT_PIVOT": {
-                const { sheetId, col, row, id, payload } = cmd;
+                const { sheetId, col, row, id, table } = cmd;
                 /** @type { { col: number, row: number } } */
                 const position = { col, row };
-                const table = pivotRegistry.get(payload.type).getTable(payload);
-                this._addPivot(id, payload);
-                this._insertPivot(sheetId, position, id, table);
-                this.history.update("nextId", parseInt(id, 10) + 1);
+                const { cols, rows, measures, rowTitle } = table;
+                const spTable = new SpreadsheetPivotTable(cols, rows, measures, rowTitle);
+                this._insertPivot(sheetId, position, id, spTable);
                 break;
             }
             case "RE_INSERT_PIVOT": {
@@ -99,7 +107,7 @@ export class PivotCorePlugin extends OdooCorePlugin {
                 break;
             }
             case "RENAME_ODOO_PIVOT": {
-                this.history.update("pivots", cmd.pivotId, "definition", "name", cmd.name);
+                this.history.update("pivots", cmd.pivotId, "name", cmd.name);
                 break;
             }
             case "REMOVE_PIVOT": {
@@ -116,7 +124,7 @@ export class PivotCorePlugin extends OdooCorePlugin {
                 break;
             }
             case "UPDATE_ODOO_PIVOT_DOMAIN": {
-                this.history.update("pivots", cmd.pivotId, "definition", "domain", cmd.domain);
+                this.history.update("pivots", cmd.pivotId, "domain", cmd.domain);
                 break;
             }
         }
@@ -139,7 +147,7 @@ export class PivotCorePlugin extends OdooCorePlugin {
      * @returns {string}
      */
     getPivotName(id) {
-        return _t(this.pivots[id].definition.name);
+        return _t(this.pivots[id].name);
     }
 
     /**
@@ -152,20 +160,12 @@ export class PivotCorePlugin extends OdooCorePlugin {
     }
 
     /**
-     * @param {string} id
-     * @returns {LocalPivot}
-     */
-    getCorePivot(id) {
-        return this.pivots[id];
-    }
-
-    /**
      * @param {string} id Id of the pivot
      *
      * @returns {PivotDefinition}
      */
     getPivotDefinition(id) {
-        return this.pivots[id].definition;
+        return this.pivots[id];
     }
 
     /**
@@ -194,7 +194,7 @@ export class PivotCorePlugin extends OdooCorePlugin {
 
     /**
      * @param {string} id
-     * @param {LocalPivot} pivot
+     * @param {PivotDefinition} pivot
      */
     _addPivot(id, pivot) {
         const pivots = { ...this.pivots };
@@ -346,9 +346,7 @@ export class PivotCorePlugin extends OdooCorePlugin {
         data.pivots = {};
         for (const id in this.pivots) {
             data.pivots[id] = deepCopy(this.pivots[id]);
-            data.pivots[id].definition.domain = new Domain(
-                data.pivots[id].definition.domain
-            ).toJson();
+            data.pivots[id].domain = new Domain(data.pivots[id].domain).toJson();
         }
         data.pivotNextId = this.nextId;
     }

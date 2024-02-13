@@ -17,7 +17,9 @@ import { createModelWithDataSource, waitForDataSourcesLoaded } from "./model";
  */
 export async function insertPivotInSpreadsheet(model, params) {
     const archInfo = new PivotArchParser().parse(params.arch || getBasicPivotArch());
-    const definition = {
+    const pivot = {
+        type: "ODOO",
+        sortedColumn: null,
         domain: [],
         context: {},
         measures: archInfo.activeMeasures,
@@ -28,7 +30,7 @@ export async function insertPivotInSpreadsheet(model, params) {
     };
     const pivotId = model.getters.getNextPivotId();
     const dataSourceId = model.getters.getPivotDataSourceId(pivotId);
-    const dataSource = model.config.custom.dataSources.add(dataSourceId, OdooPivot, definition);
+    const dataSource = model.config.custom.dataSources.add(dataSourceId, OdooPivot, pivot);
     await dataSource.load();
     const { cols, rows, measures, rowTitle } = dataSource.getTableStructure().export();
     const table = {
@@ -38,16 +40,17 @@ export async function insertPivotInSpreadsheet(model, params) {
         rowTitle,
     };
     const [col, row] = params.anchor || [0, 0];
+    const id = model.getters.getNextPivotId();
+    model.dispatch("ADD_PIVOT", {
+        id,
+        pivot,
+    });
     model.dispatch("INSERT_PIVOT", {
-        id: model.getters.getNextPivotId(),
+        id,
         sheetId: params.sheetId || model.getters.getActiveSheetId(),
         col,
         row,
-        payload: {
-            table,
-            definition,
-            type: "ODOO",
-        },
+        table,
     });
     await nextTick();
 }
