@@ -275,7 +275,7 @@ class HrExpense(models.Model):
         for expense in self:
             expense.is_multiple_currency = expense.currency_id != expense.company_currency_id
 
-    @api.depends('product_id.standard_price')
+    @api.depends('product_id')
     def _compute_from_product(self):
         for expense in self:
             expense.product_has_cost = expense.product_id and not expense.company_currency_id.is_zero(expense.product_id.standard_price)
