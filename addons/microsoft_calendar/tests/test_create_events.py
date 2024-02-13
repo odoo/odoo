@@ -515,7 +515,7 @@ class TestCreateEvents(TestCommon):
         self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar()
         self.call_post_commit_hooks()
         event.invalidate_recordset()
-        button = Markup("<a href='%s'>Join meeting</a>") % (event.videocall_location)
+        button = Markup('<a id="o_videocall_location_url" href="%s">Join meeting</a>') % (event.videocall_location)
         mock_insert.assert_called_once()
         args, _ = mock_insert.call_args
         self.assertEqual(args[0].get('body')['content'], button + event.description)
@@ -532,8 +532,9 @@ class TestCreateEvents(TestCommon):
             'stop': datetime(2020, 1, 15, 18, 0),
             'partner_ids': [(4, partner.id)],
             'videocall_location': 'https://www.odoo.com',
-            'description': "test\nhttps://www.odoo.com",
         })
+        button = Markup('<a id="o_videocall_location_url" href="%s">Join meeting</a>') % (event.videocall_location)
+        event.description = "test\n" + button
         self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar()
         self.call_post_commit_hooks()
         event.invalidate_recordset()
