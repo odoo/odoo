@@ -13,6 +13,8 @@ const modifierFields = [
     'originalSrc',
     'resizeWidth',
     'aspectRatio',
+    "mimetypeBeforeConversion",
+    "bgSrc",
 ];
 
 // webgl color filters
