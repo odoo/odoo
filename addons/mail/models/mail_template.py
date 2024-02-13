@@ -198,11 +198,12 @@ class MailTemplate(models.Model):
             'context': {'dialog_size': 'large'},
         }
 
-    @api.returns('self', lambda value: value.id)
-    def copy(self, default=None):
-        default = dict(default or {},
-                       name=_("%s (copy)", self.name))
-        return super(MailTemplate, self).copy(default=default)
+    @api.returns('self')
+    def copy_multi(self, default_list=None):
+        if default_list is None:
+            default_list = [None] * len(self)
+        default_list = [dict(default or {}, name=_("%s (copy)", template.name)) for template, default in zip(self, default_list)]
+        return super().copy_multi(default=default_list)
 
     def unlink_action(self):
         for template in self:
