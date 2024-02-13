@@ -121,7 +121,7 @@ class Digest(models.Model):
                     lang=user.lang
                 )._action_send_to_user(user, tips_count=1)
             if digest in to_slowdown:
-                digest.write({'periodicity': self._get_next_periodicity()[0]})
+                digest.write({'periodicity': digest._get_next_periodicity()[0]})
             digest.next_run_date = digest._get_next_run_date()
 
     def _action_send_to_user(self, user, tips_count=1, consum_tips=True):
