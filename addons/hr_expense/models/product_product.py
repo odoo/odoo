@@ -24,3 +24,18 @@ class ProductProduct(models.Model):
                             "There are unposted expenses linked to this category. Updating the category cost will change expense amounts. "
                             "Make sure it is what you want to do."
                         )
+
+    def write(self, vals):
+        result = super().write(vals)
+        if 'standard_price' in vals:
+            expenses_sudo = self.env['hr.expense'].sudo().search([
+                ('company_id', '=', self.env.company.id),
+                ('product_id', 'in', self.ids),
+                ('state', 'in', ['reported', 'draft']),
+            ])
+            for expense_sudo in expenses_sudo:
+                expense_sudo.write({
+                    'product_has_cost': expense_sudo.product_id and not expense_sudo.company_currency_id.is_zero(expense_sudo.product_id.standard_price),
+                    'product_has_tax': bool(expense_sudo.product_id.supplier_taxes_id.filtered_domain(self.env['account.tax']._check_company_domain(expense_sudo.company_id))),
+                })
+        return result

@@ -1064,3 +1064,32 @@ class TestExpenses(TestExpenseCommon):
         }])
         expense_state = Expense.get_expense_dashboard()
         self.assertEqual(expense_state['to_submit']['amount'], 3000.00)
+
+    def test_update_expense_price_on_product_standard_price(self):
+        """
+        Tests that updating the standard price of a product will update all the un-submitted
+        expenses using that product as a category.
+        """
+        product = self.env['product.product'].create({
+            'name': 'Product',
+            'standard_price': 100.0,
+        })
+        expense = self.env['hr.expense'].create({
+            'employee_id': self.expense_employee.id,
+            'name': 'Expense 1',
+            'product_id': product.id,
+            'total_amount': 1,
+        })
+        expense_sheet = self.env['hr.expense.sheet'].create({
+            'name': 'Expenses paid by employee',
+            'employee_id': self.expense_employee.id,
+            'expense_line_ids': expense,
+        })
+        product.standard_price = 120.0
+        self.assertEqual(expense.total_amount, 120.0,
+                         "Expense price should be updated when the expense category's product price is updated.")
+
+        expense_sheet.action_submit_sheet()
+        product.standard_price = 100.0
+        self.assertEqual(expense.total_amount, 120.0,
+                         "Expense price should not be updated since it has been submitted.")
