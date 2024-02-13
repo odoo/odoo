@@ -959,7 +959,7 @@ class AccountChartTemplate(models.AbstractModel):
         return parents
 
     def _get_tag_mapper(self, country_id):
-        tags = {x.name: x.id for x in self.env['account.account.tag'].search([
+        tags = {x.name: x.id for x in self.env['account.account.tag'].with_context(active_test=False).search([
             ('applicability', '=', 'taxes'),
             ('country_id', '=', country_id),
         ])}
