@@ -4,8 +4,12 @@
 import itertools
 import random
 
+from contextlib import contextmanager
+from freezegun import freeze_time
+from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from lxml import html
+from unittest.mock import patch
 from werkzeug.urls import url_encode
 
 from odoo import fields, SUPERUSER_ID
@@ -17,10 +21,20 @@ from odoo.tests.common import users
 
 class TestDigest(mail_test.MailCommon):
 
+    @contextmanager
+    def mock_datetime_and_now(self, mock_dt):
+        """ Used when synchronization date (using env.cr.now()) is important
+        in addition to standard datetime mocks. Used mainly to detect sync
+        issues. """
+        with freeze_time(mock_dt), \
+             patch.object(self.env.cr, 'now', lambda: mock_dt):
+            yield
+
     @classmethod
     def setUpClass(cls):
         super(TestDigest, cls).setUpClass()
         cls._activate_multi_company()
+        cls.reference_datetime = datetime(2024, 2, 13, 13, 30, 0)
 
         # clean messages
         cls.env['mail.message'].search([
@@ -31,15 +45,26 @@ class TestDigest(mail_test.MailCommon):
 
         # clean demo users so that we keep only the test users
         cls.env['res.users'].search([('login', 'in', ['demo', 'portal'])]).action_archive()
-        # clean logs so that town down is activated
+        # clean logs so that town down can be tested
         cls.env['res.users.log'].search([('create_uid', 'in', (cls.user_admin + cls.user_employee).ids)]).unlink()
+        # create logs for user_admin
+        cls._setup_logs_for_users(cls.user_admin, cls.reference_datetime - relativedelta(days=5))
 
-        cls.test_digest = cls.env['digest.digest'].create({
-            'kpi_mail_message_total': True,
-            'kpi_res_users_connected': True,
-            'name': "My Digest",
-            'periodicity': 'daily',
-        })
+        with cls.mock_datetime_and_now(cls, cls.reference_datetime):
+            cls.test_digest, cls.test_digest_2 = cls.env['digest.digest'].create([
+                {
+                    "kpi_mail_message_total": True,
+                    "kpi_res_users_connected": True,
+                    "name": "My Digest",
+                    "periodicity": "daily",
+                }, {
+                    "kpi_mail_message_total": True,
+                    "kpi_res_users_connected": True,
+                    "name": "My Digest",
+                    "periodicity": "weekly",
+                    "user_ids": [(4, cls.user_admin.id), (4, cls.user_employee.id)],
+                }
+            ])
 
     @classmethod
     def _setup_messages(cls):
@@ -75,6 +100,27 @@ class TestDigest(mail_test.MailCommon):
                     create_date=create_date,
                 )
         messages.flush()
+
+    @classmethod
+    def _setup_logs_for_users(cls, res_users, log_dt):
+        with cls.mock_datetime_and_now(cls, log_dt):
+            for user in res_users:
+                cls.env['res.users.log'].with_user(user).create({})
+
+    @users('admin')
+    def test_assert_initial_values(self):
+        """ Ensure base values for tests """
+        test_digest = self.test_digest.with_user(self.env.user)
+        test_digest_2 = self.test_digest_2.with_user(self.env.user)
+        self.assertEqual(test_digest.create_date, self.reference_datetime)
+        self.assertEqual(test_digest.next_run_date, self.reference_datetime.date() + relativedelta(days=1))
+        self.assertEqual(test_digest.periodicity, 'daily')
+        self.assertFalse(test_digest.user_ids)
+
+        self.assertEqual(test_digest_2.create_date, self.reference_datetime)
+        self.assertEqual(test_digest_2.next_run_date, self.reference_datetime.date() + relativedelta(weeks=1))
+        self.assertEqual(test_digest_2.periodicity, 'weekly')
+        self.assertEqual(test_digest_2.user_ids, self.user_admin + self.user_employee)
 
     @users('admin')
     def test_digest_numbers(self):
@@ -113,34 +159,9 @@ class TestDigest(mail_test.MailCommon):
             "ignore subs of non-employees"
         )
 
-    @users('admin')
-    def test_digest_tone_down(self):
-        digest = self.env['digest.digest'].browse(self.test_digest.ids)
-        digest._action_subscribe_users(self.user_employee)
-
-        # initial data
-        self.assertEqual(digest.periodicity, 'daily')
-
-        # no logs for employee -> should tone down periodicity
-        digest.flush()
-        with self.mock_mail_gateway():
-            digest.action_send()
-
-        self.assertEqual(digest.periodicity, 'weekly')
-
-        # no logs for employee -> should tone down periodicity
-        digest.flush()
-        with self.mock_mail_gateway():
-            digest.action_send()
-
-        self.assertEqual(digest.periodicity, 'monthly')
-
-        # no logs for employee -> should tone down periodicity
-        digest.flush()
-        with self.mock_mail_gateway():
-            digest.action_send()
-
-        self.assertEqual(digest.periodicity, 'quarterly')
+        # unsubscribe
+        digest_user.action_unsubcribe()
+        self.assertFalse(digest_user.is_subscribed)
 
     @users('admin')
     def test_digest_tip_description(self):
@@ -172,42 +193,122 @@ class TestDigest(mail_test.MailCommon):
         )
 
     @users('admin')
+    def test_digest_tone_down(self):
+        test_digest = self.env['digest.digest'].browse(self.test_digest.ids)
+        test_digest_2 = self.env['digest.digest'].browse(self.test_digest_2.ids)
+        test_digest._action_subscribe_users(self.user_employee)
+        digests = test_digest + test_digest_2  # batch recordset
+
+        # no logs for employee but for admin -> should tone down periodicity of
+        # first digest, not the second one (admin being subscribed)
+        digests.flush()
+        current_dt = self.reference_datetime + relativedelta(days=1)
+        with self.mock_datetime_and_now(current_dt), \
+             self.mock_mail_gateway():
+            digests.action_send()
+
+        self.assertEqual(test_digest.next_run_date, current_dt.date() + relativedelta(weeks=1))
+        self.assertEqual(test_digest.periodicity, 'weekly')
+        self.assertEqual(test_digest_2.next_run_date, current_dt.date() + relativedelta(weeks=1))
+        self.assertEqual(test_digest_2.periodicity, 'weekly',
+                         'Should not have tone down because admin has logs')
+
+        # no logs for employee -> should tone down periodicity
+        with self.mock_datetime_and_now(current_dt), \
+             self.mock_mail_gateway():
+            digests.action_send()
+
+        self.assertEqual(test_digest.next_run_date, current_dt.date() + relativedelta(months=1))
+        self.assertEqual(test_digest.periodicity, 'monthly')
+        self.assertEqual(test_digest_2.next_run_date, current_dt.date() + relativedelta(weeks=1))
+        self.assertEqual(test_digest_2.periodicity, 'weekly')
+
+        # no logs for employee -> should tone down periodicity
+        with self.mock_datetime_and_now(current_dt), \
+             self.mock_mail_gateway():
+            digests.action_send()
+
+        self.assertEqual(test_digest.next_run_date, current_dt.date() + relativedelta(months=3))
+        self.assertEqual(test_digest.periodicity, 'quarterly')
+        self.assertEqual(test_digest_2.next_run_date, current_dt.date() + relativedelta(weeks=1))
+        self.assertEqual(test_digest_2.periodicity, 'weekly')
+
+    @users('admin')
     def test_digest_tone_down_wlogs(self):
         digest = self.env['digest.digest'].browse(self.test_digest.ids)
         digest._action_subscribe_users(self.user_employee)
 
-        # initial data
-        self.assertEqual(digest.periodicity, 'daily')
+        for logs, (periodicity, run_date), (exp_periodicity, exp_run_date) in zip(
+            [
+                # daily
+                [(self.user_employee, self.reference_datetime)],
+                [(self.user_employee, self.reference_datetime - relativedelta(days=4))],  # old logs -> tone down
+                [],  # no logs -> tone down
+                # weekly
+                [(self.user_employee, self.reference_datetime - relativedelta(days=8))],
+                [(self.user_employee, self.reference_datetime - relativedelta(days=15))],  # old logs -> tone down
+                [],  # no logs -> tone down
+                # monthly
+                [(self.user_employee, self.reference_datetime - relativedelta(days=25))],
+                [(self.user_employee, self.reference_datetime - relativedelta(days=32))],  # old logs -> tone down
+                [],  # no logs -> tone down
+                # quarterly
+                [(self.user_employee, self.reference_datetime - relativedelta(months=2))],
+                [(self.user_employee, self.reference_datetime - relativedelta(months=4))],  # old logs but end of tone down
+                [],  # no logs but end of town down
+            ],
+            [
+                # daily
+                ('daily', self.reference_datetime.date()),
+                ('daily', self.reference_datetime.date()),
+                ('daily', self.reference_datetime.date()),
+                # weekly
+                ('weekly', self.reference_datetime.date()),
+                ('weekly', self.reference_datetime.date()),
+                ('weekly', self.reference_datetime.date()),
+                # monthly
+                ('monthly', self.reference_datetime.date()),
+                ('monthly', self.reference_datetime.date()),
+                ('monthly', self.reference_datetime.date()),
+                # quarterly
+                ('quarterly', self.reference_datetime.date()),
+                ('quarterly', self.reference_datetime.date()),
+                # ('quarterly', self.reference_datetime.date()),
+            ],
+            [
+                ('daily', self.reference_datetime.date() + relativedelta(days=1)),  # just push date
+                ('weekly', self.reference_datetime.date() + relativedelta(weeks=1)),  # tone down on daily
+                ('weekly', self.reference_datetime.date() + relativedelta(weeks=1)),  # tone down on daily
+                # weekly
+                ('weekly', self.reference_datetime.date() + relativedelta(weeks=1)),  # just push date
+                ('monthly', self.reference_datetime.date() + relativedelta(months=1)),  # tone down on weekly
+                ('monthly', self.reference_datetime.date() + relativedelta(months=1)),  # tone down on weekly
+                # monthly
+                ('monthly', self.reference_datetime.date() + relativedelta(months=1)),  # just push date
+                ('quarterly', self.reference_datetime.date() + relativedelta(months=3)),  # tone down on monthly
+                ('quarterly', self.reference_datetime.date() + relativedelta(months=3)),  # tone down on monthly
+                # quarterly
+                ('quarterly', self.reference_datetime.date() + relativedelta(months=3)),  # just push date
+                ('quarterly', self.reference_datetime.date() + relativedelta(months=3)),  # just push date
+                ('quarterly', self.reference_datetime.date() + relativedelta(months=3)),  # just push date
+            ],
+        ):
+            with self.subTest(logs=logs, periodicity=periodicity, run_date=run_date):
+                digest.write({
+                    'next_run_date': run_date,
+                    'periodicity': periodicity,
+                })
+                for log_user, log_dt in logs:
+                    with self.mock_datetime_and_now(log_dt):
+                        self.env['res.users.log'].with_user(log_user).create({})
 
-        # logs for employee -> should not tone down
-        logs = self.env['res.users.log'].with_user(SUPERUSER_ID).create({'create_uid': self.user_employee.id})
-        digest.flush()
-        with self.mock_mail_gateway():
-            digest.action_send()
+                with self.mock_datetime_and_now(run_date), \
+                     self.mock_mail_gateway():
+                    digest.action_send()
 
-        logs.unlink()
-        logs = self.env['res.users.log'].with_user(SUPERUSER_ID).create({
-            'create_uid': self.user_employee.id,
-            'create_date': fields.Datetime.now() - relativedelta(days=20),
-        })
-
-        # logs for employee are more than 3 days old -> should tone down
-        digest.flush()
-        with self.mock_mail_gateway():
-            digest.action_send()
-        self.assertEqual(digest.periodicity, 'weekly')
-
-        # logs for employee are more than 2 weeks old -> should tone down
-        digest.flush()
-        with self.mock_mail_gateway():
-            digest.action_send()
-        self.assertEqual(digest.periodicity, 'monthly')
-
-        # logs for employee are less than 1 month old -> should not tone down
-        digest.flush()
-        with self.mock_mail_gateway():
-            digest.action_send()
-        self.assertEqual(digest.periodicity, 'monthly')
+                self.assertEqual(digest.next_run_date, exp_run_date)
+                self.assertEqual(digest.periodicity, exp_periodicity)
+                self.env['res.users.log'].sudo().search([]).unlink()
 
 
 @tagged('-at_install', 'post_install')
@@ -227,42 +328,32 @@ class TestUnsubscribe(HttpCaseWithUserDemo):
         self.base_url = self.test_digest.get_base_url()
         self.user_demo_unsubscribe_token = self.test_digest._get_unsubscribe_token(self.user_demo.id)
 
-    @users('demo')
-    def test_unsubscribe_classic(self):
-        self.assertIn(self.user_demo, self.test_digest.user_ids)
-        self.authenticate(self.env.user.login, self.env.user.login)
+    def test_unsubscribe(self):
+        """ Test various combination of unsubscribe: logged, using token, ... """
+        digest = self.test_digest
+        demo_token = digest._get_unsubscribe_token(self.user_demo.id)
+        for test_user, is_member, is_logged, token, exp_code in [
+            (self.user_demo, True, True, False, 200),  # unsubscribe logged, easy
+            (self.user_demo, False, True, False, 200),  # unsubscribe not a member should not crash
+            (self.user_demo, False, False, demo_token, 200),  # unsubscribe using a token
+            (self.user_demo, False, False, 'probably-not-a-token', 404),  # wrong token -> crash
+            (self.user_demo, False, False, False, 404),  # cannot be done unlogged / no token
+        ]:
+            with self.subTest(user_name=test_user.name, is_member=is_member, is_logged=is_logged, token=token):
+                if is_member:
+                    digest._action_subscribe_users(test_user)
+                    self.assertIn(test_user, digest.user_ids)
+                else:
+                    digest._action_unsubscribe_users(test_user)
+                    self.assertNotIn(test_user, digest.user_ids)
 
-        response = self._url_unsubscribe()
-        self.assertEqual(response.status_code, 200)
-        self.assertNotIn(self.user_demo, self.test_digest.user_ids)
-
-    @users('demo')
-    def test_unsubscribe_issues(self):
-        """ Test when not being member """
-        self.test_digest.write({'user_ids': [(3, self.user_demo.id)]})
-        self.assertNotIn(self.user_demo, self.test_digest.user_ids)
-
-        # unsubscribe
-        self.authenticate(self.env.user.login, self.env.user.login)
-        response = self._url_unsubscribe()
-        self.assertEqual(response.status_code, 200)
-        self.assertNotIn(self.user_demo, self.test_digest.user_ids)
-
-    def test_unsubscribe_token(self):
-        self.assertIn(self.user_demo, self.test_digest.user_ids)
-        self.authenticate(None, None)
-        response = self._url_unsubscribe(token=self.user_demo_unsubscribe_token, user_id=self.user_demo.id)
-        self.assertEqual(response.status_code, 200)
-        self.test_digest.invalidate_cache()
-        self.assertNotIn(self.user_demo, self.test_digest.user_ids)
-
-    def test_unsubscribe_public(self):
-        """ Check public users are redirected when trying to catch unsubscribe
-        route. """
-        self.authenticate(None, None)
-
-        response = self._url_unsubscribe()
-        self.assertEqual(response.status_code, 404)
+                self.authenticate(test_user.login if is_logged else None, test_user.login if is_logged else None)
+                if token:
+                    response = self._url_unsubscribe(token=token, user_id=test_user.id)
+                else:
+                    response = self._url_unsubscribe()
+                self.assertEqual(response.status_code, exp_code)
+                self.assertNotIn(test_user, digest.user_ids)
 
     def _url_unsubscribe(self, token=None, user_id=None):
         url_params = {}
