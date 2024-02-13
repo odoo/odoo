@@ -2,10 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
 
+from odoo import http
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.website_slides.tests import common
 from odoo.exceptions import AccessError
-from odoo.tests import tagged
+from odoo.tests import tagged, HttpCase
 from odoo.tools import mute_logger
 
 
@@ -351,3 +352,41 @@ class TestAccessFeatures(common.SlidesCase):
         resource2.with_user(self.user_manager).write({'name': 'Another name'})
         resource2.with_user(self.user_manager).unlink()
         self.env['slide.slide.resource'].with_user(self.user_manager).create(resource_values)
+
+
+@tagged('functional')
+class TestReview(common.SlidesCase, HttpCase):
+    @mute_logger('odoo.addons.http_routing.models.ir_http', 'odoo.http')
+    def test_channel_multiple_reviews(self):
+        self.authenticate("admin", "admin")
+
+        res1 = self.opener.post(
+            url='%s/mail/chatter_post' % self.base_url(),
+            json={
+                'params': {
+                    'res_id': self.channel.id,
+                    'res_model': 'slide.channel',
+                    'message': 'My first review :)',
+                    'rating_value': '2',
+                    'pid': self.env.user.partner_id.id,
+                    'csrf_token': http.WebRequest.csrf_token(self),
+                },
+            },
+        )
+        self.assertIn("My first review :)", res1.text)
+
+
+        res2 = self.opener.post(
+            url='%s/mail/chatter_post' % self.base_url(),
+            json={
+                'params': {
+                    'res_id': self.channel.id,
+                    'res_model': 'slide.channel',
+                    'message': 'My second review :)',
+                    'rating_value': '2',
+                    'pid': self.env.user.partner_id.id,
+                    'csrf_token': http.WebRequest.csrf_token(self),
+                },
+            },
+        )
+        self.assertIn("odoo.exceptions.ValidationError", res2.text)
