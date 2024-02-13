@@ -153,7 +153,7 @@ class Project(models.Model):
             "type": "ir.actions.act_window",
             "res_model": "sale.order",
             'name': _("%(name)s's Sales Orders", name=self.name),
-            "context": {"create": self.env.context.get('create_for_project_id'), "show_sale": True},
+            "context": {"create": self.env.context.get('create_for_project_id', False), "show_sale": True},
         }
         if len(all_sale_orders) <= 1:
             action_window.update({
