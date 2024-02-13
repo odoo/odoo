@@ -14,6 +14,7 @@ export class SelectCreateDialog extends Component {
         this.viewService = useService("view");
         this.dialogService = useService("dialog");
         this.state = useState({ resIds: [] });
+        this.busy = false; // flag used to ensure we only call once the onSelected/onUnselect props
         this.baseViewProps = {
             display: { searchPanel: false },
             editable: false, // readonly
@@ -50,17 +51,28 @@ export class SelectCreateDialog extends Component {
         return props;
     }
 
+    async executeOnceAndClose(callback) {
+        if (!this.busy) {
+            this.busy = true;
+            try {
+                await callback();
+            } catch (e) {
+                this.busy = false;
+                throw e;
+            }
+            this.props.close();
+        }
+    }
+
     async select(resIds) {
         if (this.props.onSelected) {
-            await this.props.onSelected(resIds);
-            this.props.close();
+            this.executeOnceAndClose(() => this.props.onSelected(resIds));
         }
     }
 
     async unselect() {
         if (this.props.onUnselect) {
-            await this.props.onUnselect();
-            this.props.close();
+            this.executeOnceAndClose(() => this.props.onUnselect());
         }
     }
 
