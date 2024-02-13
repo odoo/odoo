@@ -84,6 +84,7 @@
                                                     }" t-attf-class="{{ isAlignedRight ? 'rounded-start-3' : 'rounded-end-3' }}"/>
                                                 <div class="position-relative text-break o-mail-Message-body" t-att-class="{
                                                             'p-1': message.is_note,
+                                                            'fs-1': !state.isEditing and !env.inChatter and message.onlyEmojis,
                                                             'mb-0 py-2 px-3': !message.is_note,
                                                             'align-self-start rounded-end-3 rounded-bottom-3': !state.isEditing and !message.is_note,
                                                             'o-mail-Message-editable flex-grow-1': state.isEditing,
