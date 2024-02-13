@@ -1718,13 +1718,13 @@ test.skip("Click on view reactions shows the reactions on the message", async ()
     await contains(".o-mail-MessageReactionMenu", { text: "😅1" });
 });
 
-QUnit.test("discuss - bigger font size when there is only emoji", async (assert) => {
+test.skip("discuss - bigger font size when there is only emoji", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         channel_type: "channel",
         name: "channel1",
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "🥳");
     await click(".o-mail-Composer-send:enabled");
@@ -1733,16 +1733,15 @@ QUnit.test("discuss - bigger font size when there is only emoji", async (assert)
     await click(".o-mail-Composer-send:enabled");
     await contains(".o-mail-Message-body", { text: "not only emoji!! 😅" });
     const [emojiMessage, textMessage] = document.querySelectorAll(".o-mail-Message-body");
-    assert.ok(
-        parseFloat(getComputedStyle(emojiMessage).getPropertyValue("font-size")) >
-            parseFloat(getComputedStyle(textMessage).getPropertyValue("font-size"))
-    );
+    expect(
+        parseFloat(getComputedStyle(emojiMessage).getPropertyValue("font-size"))
+    ).toBeGreaterThan(parseFloat(getComputedStyle(textMessage).getPropertyValue("font-size")));
 });
 
-QUnit.test("chatter - font size unchanged when there is only emoji", async (assert) => {
-    const pyEnv = await startServer();
-    const { openFormView } = await start();
-    await openFormView("res.partner", pyEnv.currentPartnerId);
+test.skip("chatter - font size unchanged when there is only emoji", async () => {
+    await startServer();
+    await start();
+    await openFormView("res.partner", constants.PARTNER_ID);
     await click(".o-mail-Chatter-sendMessage");
     await insertText(".o-mail-Composer-input", "🥳");
     await click(".o-mail-Composer-send:enabled");
@@ -1752,8 +1751,7 @@ QUnit.test("chatter - font size unchanged when there is only emoji", async (asse
     await click(".o-mail-Composer-send:enabled");
     await contains(".o-mail-Message-body", { text: "not only emoji!! 😅" });
     const [emojiMessage, textMessage] = document.querySelectorAll(".o-mail-Message-body");
-    assert.ok(
-        parseFloat(getComputedStyle(emojiMessage).getPropertyValue("font-size")) ===
-            parseFloat(getComputedStyle(textMessage).getPropertyValue("font-size"))
+    expect(parseFloat(getComputedStyle(emojiMessage).getPropertyValue("font-size"))).toBe(
+        parseFloat(getComputedStyle(textMessage).getPropertyValue("font-size"))
     );
 });

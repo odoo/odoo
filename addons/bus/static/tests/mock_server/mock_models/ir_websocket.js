@@ -6,25 +6,19 @@ export class IrWebSocket extends models.ServerModel {
     _name = "ir.websocket";
 
     /**
-     * Simulates `_update_presence` on `ir.websocket`.
-     *
      * @param {number} inactivityPeriod
      * @param {number[]} imStatusIdsByModel
      */
-    _updatePresence(inactivityPeriod, imStatusIdsByModel) {
-        const imStatusNotifications = this._getImStatus(imStatusIdsByModel);
+    _update_presence(inactivityPeriod, imStatusIdsByModel) {
+        const imStatusNotifications = this._get_im_status(imStatusIdsByModel);
         if (Object.keys(imStatusNotifications).length > 0) {
             const [partner] = this.env["res.partner"].read(constants.PARTNER_ID);
             this.env["bus.bus"]._sendone(partner, "mail.record/insert", imStatusNotifications);
         }
     }
 
-    /**
-     * Simulates `_get_im_status` on `ir.websocket`.
-     *
-     * @param {Record<string, number[]>} imStatusIdsByModel
-     */
-    _getImStatus({ "res.partner": partnerIds }) {
+    /** @param {Record<string, number[]>} imStatusIdsByModel */
+    _get_im_status({ "res.partner": partnerIds }) {
         const imStatus = {};
         if (partnerIds) {
             imStatus["Persona"] = this.env["res.partner"]
@@ -37,11 +31,9 @@ export class IrWebSocket extends models.ServerModel {
     }
 
     /**
-     * Simulates `_build_bus_channel_list` on `ir.websocket`.
-     *
      * @returns {string[]}
      */
-    _buildBusChannelList() {
+    _build_bus_channel_list() {
         const channels = ["broadcast"];
         const authenticatedUserId = this.env.cookie.get("authenticated_user_sid");
         const authenticatedPartner = authenticatedUserId

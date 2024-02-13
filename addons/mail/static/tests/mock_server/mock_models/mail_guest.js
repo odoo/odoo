@@ -5,20 +5,21 @@ import { constants, models } from "@web/../tests/web_test_helpers";
 export class MailGuest extends models.ServerModel {
     _name = "mail.guest";
 
-    /**
-     * Simulates `_get_guest_from_context` on `mail.guest`.
-     */
-    _getGuestFromContext() {
+    _get_guest_from_context() {
         const guestId = this.env.cookie.get("dgid");
         return guestId ? this.search_read([["id", "=", guestId]])[0] : null;
     }
 
-    /**
-     * Simulates `_init_messaging` on `mail.guest`.
-     */
-    _initMessaging() {
-        const guest = this._getGuestFromContext();
-        const members = this.env["discuss.channel.member"]._filter([
+    _init_messaging() {
+        /** @type {import("mock_models").DiscussChannel} */
+        const DiscussChannel = this.env["discuss.channel"];
+        /** @type {import("mock_models").DiscussChannelMember} */
+        const DiscussChannelMember = this.env["discuss.channel.member"];
+        /** @type {import("mock_models").ResPartner} */
+        const ResPartner = this.env["res.partner"];
+
+        const guest = this._get_guest_from_context();
+        const members = DiscussChannelMember._filter([
             ["guest_id", "=", guest.id],
             "|",
             ["fold_state", "in", ["open", "folded"]],
@@ -31,15 +32,11 @@ export class MailGuest extends models.ServerModel {
                 hasLinkPreviewFeature: true,
                 initBusId: this.lastBusNotificationId,
                 menu_id: false,
-                odoobot: this.env["res.partner"].mail_partner_format(constants.ODOOBOT_ID)[
-                    constants.ODOOBOT_ID
-                ],
+                odoobot: ResPartner.mail_partner_format(constants.ODOOBOT_ID)[constants.ODOOBOT_ID],
                 self: { id: guest.id, name: guest.name, type: "guest" },
                 settings: {},
             },
-            Thread: this.env["discuss.channel"].channel_info(
-                members.map((member) => member.channel_id)
-            ),
+            Thread: DiscussChannel.channel_info(members.map((member) => member.channel_id)),
         };
     }
 }

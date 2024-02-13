@@ -213,7 +213,7 @@ export class MockServer {
     };
 
     // Server env
-    /** @type {import("mock_server").Models & MockServerEnvironment} */
+    /** @type {MockServerEnvironment} */
     env = this.makeServerEnv();
 
     // Data

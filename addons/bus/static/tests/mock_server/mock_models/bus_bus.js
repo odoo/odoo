@@ -38,7 +38,7 @@ export class BusBus extends models.Model {
               })[0]
             : null;
         const channels = [
-            ...this.env["ir.websocket"]._buildBusChannelList(),
+            ...this.env["ir.websocket"]._build_bus_channel_list(),
             ...(this.channelsByUser[authenticatedUser] || []),
         ];
         notifications = notifications.filter(([target]) =>

@@ -14,14 +14,15 @@ import { constants, webModels } from "@web/../tests/web_test_helpers";
 export class ResPartner extends webModels.ResPartner {
     _inherit = ["mail.thread"];
     /**
-     * Simulates `get_mention_suggestions` on `res.partner`.
-     *
      * @param {string} [search]
      * @param {number} [limit]
      * @param {KwArgs<{ limit: number; search: string }>} [kwargs]
      * @returns {ModelRecord[]}
      */
     get_mention_suggestions(search, limit, kwargs = {}) {
+        /** @type {import("mock_models").ResUsers} */
+        const ResUsers = this.env["res.users"];
+
         search = (kwargs.search || search || "").toLowerCase();
         limit = kwargs.limit || limit || 8;
         /**
@@ -61,8 +62,7 @@ export class ResPartner extends webModels.ResPartner {
         };
 
         // add main suggestions based on users
-        const partnersFromUsers = this.env["res.users"]
-            ._filter([])
+        const partnersFromUsers = ResUsers._filter([])
             .map((user) => this._filter([["id", "=", user.partner_id]])[0])
             .filter((partner) => partner);
         const mainMatchingPartners = mentionSuggestionsFilter(partnersFromUsers, search, limit);
@@ -80,8 +80,6 @@ export class ResPartner extends webModels.ResPartner {
     }
 
     /**
-     * Simulates `get_channel_mention_suggestions` on `res.partner`.
-     *
      * @param {string} [search]
      * @param {number} [limit]
      * @param {number} [channelId]
@@ -89,6 +87,11 @@ export class ResPartner extends webModels.ResPartner {
      * @returns {ModelRecord[]}
      */
     get_channel_mention_suggestions(search, limit, channelId, kwargs = {}) {
+        /** @type {import("mock_models").DiscussChannelMember} */
+        const DiscussChannelMember = this.env["discuss.channel.member"];
+        /** @type {import("mock_models").ResUsers} */
+        const ResUsers = this.env["res.users"];
+
         search = (kwargs.search || search || "").toLowerCase();
         limit = kwargs.limit || limit || 8;
         channelId = kwargs.channel_id || channelId;
@@ -109,7 +112,7 @@ export class ResPartner extends webModels.ResPartner {
                 this.mail_partner_format(
                     partners
                         .filter((partner) => {
-                            const [member] = this.env["discuss.channel.member"]._filter([
+                            const [member] = DiscussChannelMember._filter([
                                 ["channel_id", "=", channelId],
                                 ["partner_id", "=", partner.id],
                             ]);
@@ -132,17 +135,12 @@ export class ResPartner extends webModels.ResPartner {
                         .map((partner) => partner.id)
                 )
             ).map((partnerFormat) => {
-                const [member] = this.env["discuss.channel.member"]._filter([
+                const [member] = DiscussChannelMember._filter([
                     ["channel_id", "=", channelId],
                     ["partner_id", "=", partnerFormat.id],
                 ]);
                 partnerFormat["channelMembers"] = [
-                    [
-                        "ADD",
-                        this.env["discuss.channel.member"]._discussChannelMemberFormat([
-                            member.id,
-                        ])[0],
-                    ],
+                    ["ADD", DiscussChannelMember._discuss_channel_member_format([member.id])[0]],
                 ];
                 return partnerFormat;
             });
@@ -152,12 +150,10 @@ export class ResPartner extends webModels.ResPartner {
         };
 
         // add main suggestions based on users
-        const partnersFromUsers = this.env["res.users"]
-            ._filter([])
+        const partnersFromUsers = ResUsers._filter([])
             .map((user) => this._filter([["id", "=", user.partner_id]])[0])
             .filter((partner) => partner);
         const mainMatchingPartners = mentionSuggestionsFilter(partnersFromUsers, search, limit);
-
         let extraMatchingPartners = [];
         // if not enough results add extra suggestions based on partners
         const remainingLimit = limit - mainMatchingPartners.length;
@@ -171,21 +167,20 @@ export class ResPartner extends webModels.ResPartner {
     }
 
     /**
-     * Simulates `im_search` on `res.partner`.
-     *
      * @param {string} [name]
      * @param {number} [limit]
      * @param {number[]} [excludedIds]
      * @param {KwArgs<{ excluded_ids: number[]; limit: number; name: string }>} [kwargs]
      */
     im_search(name, limit, excludedIds, kwargs = {}) {
+        /** @type {import("mock_models").ResUsers} */
+        const ResUsers = this.env["res.users"];
+
         name = (kwargs.name || name || "").toLowerCase(); // simulates ILIKE
         limit = kwargs.limit || limit || 20;
         excludedIds = kwargs.excluded_ids || excludedIds || [];
-
         // simulates domain with relational parts (not supported by mock server)
-        const matchingPartners = this.env["res.users"]
-            ._filter([])
+        const matchingPartners = ResUsers._filter([])
             .filter((user) => {
                 const partner = this._filter([["id", "=", user.partner_id]])[0];
                 // user must have a partner
@@ -221,12 +216,13 @@ export class ResPartner extends webModels.ResPartner {
     }
 
     /**
-     * Simulates `mail_partner_format` on `res.partner`.
-     *
      * @param {number[]} ids
      * @returns {Record<string, ModelRecord>}
      */
     mail_partner_format(ids) {
+        /** @type {import("mock_models").ResUsers} */
+        const ResUsers = this.env["res.users"];
+
         const partners = this._filter([["id", "in", ids]], {
             active_test: false,
         });
@@ -234,7 +230,7 @@ export class ResPartner extends webModels.ResPartner {
         // done here for simplification.
         return Object.fromEntries(
             partners.map((partner) => {
-                const users = this.env["res.users"]._filter([["id", "in", partner.user_ids]]);
+                const users = ResUsers._filter([["id", "in", partner.user_ids]]);
                 const internalUsers = users.filter((user) => !user.share);
                 let mainUser;
                 if (internalUsers.length > 0) {
@@ -266,14 +262,15 @@ export class ResPartner extends webModels.ResPartner {
     }
 
     /**
-     * Simulates `search_for_channel_invite` on `res.partner`.
-     *
      * @param {string} [searchTerm]
      * @param {number} [channelId]
      * @param {number} [limit]
      * @param {KwArgs<{ channelId: number; limit: number; search_term: string }>} [kwargs]
      */
     search_for_channel_invite(searchTerm, channelId, limit, kwargs = {}) {
+        /** @type {import("mock_models").ResUsers} */
+        const ResUsers = this.env["res.users"];
+
         searchTerm = (kwargs.search_term || searchTerm || "").toLowerCase(); // simulates ILIKE
         channelId = kwargs.channel_id || channelId;
         limit = kwargs.limit || limit || 30;
@@ -281,8 +278,7 @@ export class ResPartner extends webModels.ResPartner {
         // simulates domain with relational parts (not supported by mock server)
         const matchingPartners = Object.values(
             this.mail_partner_format(
-                this.env["res.users"]
-                    ._filter([])
+                ResUsers._filter([])
                     .filter((user) => {
                         const partner = this._filter([["id", "=", user.partner_id]])[0];
                         // user must have a partner
@@ -314,48 +310,60 @@ export class ResPartner extends webModels.ResPartner {
     }
 
     /**
-     * Simulates `_get_needaction_count` on `res.partner`.
-     *
      * @param {number} id
      * @returns {number}
      */
-    _getNeedactionCount(id) {
+    _get_needaction_count(id) {
+        /** @type {import("mock_models").MailNotification} */
+        const MailNotification = this.env["mail.notification"];
+
         const partner = this._filter([["id", "=", id]])[0];
-        return this.env["mail.notification"]._filter([
+        return MailNotification._filter([
             ["res_partner_id", "=", partner.id],
             ["is_read", "=", false],
         ]).length;
     }
 
     /**
-     * Simulates `_message_fetch_failed` on `res.partner`.
-     *
      * @param {number} id
      * @returns {Object[]}
      */
-    _messageFetchFailed(id) {
+    _message_fetch_failed(id) {
+        /** @type {import("mock_models").MailMessage} */
+        const MailMessage = this.env["mail.message"];
+        /** @type {import("mock_models").MailNotification} */
+        const MailNotification = this.env["mail.notification"];
+
         const partner = this._filter([["id", "=", id]], {
             active_test: false,
         })[0];
-        const messages = this.env["mail.message"]
-            ._filter([
-                ["author_id", "=", partner.id],
-                ["res_id", "!=", 0],
-                ["model", "!=", false],
-                ["message_type", "!=", "user_notification"],
-            ])
-            .filter((message) => {
-                // Purpose is to simulate the following domain on mail.message:
-                // ['notification_ids.notification_status', 'in', ['bounce', 'exception']],
-                // But it's not supported by _filter domain to follow a relation.
-                const notifications = this.env["mail.notification"]._filter([
-                    ["mail_message_id", "=", message.id],
-                    ["notification_status", "in", ["bounce", "exception"]],
-                ]);
-                return notifications.length > 0;
-            });
-        return this.env["mail.message"]._messageNotificationFormat(
-            messages.map((message) => message.id)
-        );
+        const messages = MailMessage._filter([
+            ["author_id", "=", partner.id],
+            ["res_id", "!=", 0],
+            ["model", "!=", false],
+            ["message_type", "!=", "user_notification"],
+        ]).filter((message) => {
+            // Purpose is to simulate the following domain on mail.message:
+            // ['notification_ids.notification_status', 'in', ['bounce', 'exception']],
+            // But it's not supported by _filter domain to follow a relation.
+            const notifications = MailNotification._filter([
+                ["mail_message_id", "=", message.id],
+                ["notification_status", "in", ["bounce", "exception"]],
+            ]);
+            return notifications.length > 0;
+        });
+        return MailMessage._message_notification_format(messages.map((message) => message.id));
+    }
+
+    _get_current_persona() {
+        /** @type {import("mock_models").MailGuest} */
+        const MailGuest = this.env["mail.guest"];
+        /** @type {import("mock_models").ResUsers} */
+        const ResUsers = this.env["res.users"];
+
+        if (ResUsers._is_public(this.env.uid)) {
+            return [null, MailGuest._get_guest_from_context()];
+        }
+        return [this._filter([["id", "=", this.env.user.partner_id]]), null];
     }
 }

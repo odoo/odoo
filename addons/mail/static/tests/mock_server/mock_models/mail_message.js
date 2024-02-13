@@ -29,12 +29,17 @@ export class MailMessage extends models.ServerModel {
     res_model_name = fields.Char({ string: "Res Model Name" });
 
     /**
-     * Simulates `mark_all_as_read` on `mail.message`.
-     *
      * @param {DomainListRepr} [domain]
      * @param {KwArgs<{ domain: DomainListRepr }>} [kwargs]
      */
     mark_all_as_read(domain, kwargs = {}) {
+        /** @type {import("mock_models").BusBus} */
+        const BusBus = this.env["bus.bus"];
+        /** @type {import("mock_models").MailNotification} */
+        const MailNotification = this.env["mail.notification"];
+        /** @type {import("mock_models").ResPartner} */
+        const ResPartner = this.env["res.partner"];
+
         domain = kwargs.domain || domain || [];
         const notifDomain = [
             ["res_partner_id", "=", constants.PARTNER_ID],
@@ -46,8 +51,8 @@ export class MailMessage extends models.ServerModel {
             this.set_message_done(ids);
             return ids;
         }
-        const notifications = this.env["mail.notification"]._filter(notifDomain);
-        this.env["mail.notification"].write(
+        const notifications = MailNotification._filter(notifDomain);
+        MailNotification.write(
             notifications.map((notification) => notification.id),
             { is_read: true }
         );
@@ -67,82 +72,92 @@ export class MailMessage extends models.ServerModel {
                 ),
             });
         }
-        const [partner] = this.env["res.partner"].read(constants.PARTNER_ID);
-        this.env["bus.bus"]._sendone(partner, "mail.message/mark_as_read", {
+        const [partner] = ResPartner.read(constants.PARTNER_ID);
+        BusBus._sendone(partner, "mail.message/mark_as_read", {
             message_ids: messageIds,
-            needaction_inbox_counter: this.env["res.partner"]._getNeedactionCount(
-                constants.PARTNER_ID
-            ),
+            needaction_inbox_counter: ResPartner._get_needaction_count(constants.PARTNER_ID),
         });
         return messageIds;
     }
 
     /**
-     * Simulates `message_format` on `mail.message`.
-     *
      * @param {number[]} ids
      * @param {KwArgs} [kwargs]
      */
     message_format(ids, kwargs = {}) {
+        /** @type {import("mock_models").IrAttachment} */
+        const IrAttachment = this.env["ir.attachment"];
+        /** @type {import("mock_models").MailGuest} */
+        const MailGuest = this.env["mail.guest"];
+        /** @type {import("mock_models").MailLinkPreview} */
+        const MailLinkPreview = this.env["mail.link.preview"];
+        /** @type {import("mock_models").MailMessageReaction} */
+        const MailMessageReaction = this.env["mail.message.reaction"];
+        /** @type {import("mock_models").MailMessageSubtype} */
+        const MailMessageSubtype = this.env["mail.message.subtype"];
+        /** @type {import("mock_models").MailNotification} */
+        const MailNotification = this.env["mail.notification"];
+        /** @type {import("mock_models").MailThread} */
+        const MailThread = this.env["mail.thread"];
+        /** @type {import("mock_models").MailTrackingValue} */
+        const MailTrackingValue = this.env["mail.tracking.value"];
+        /** @type {import("mock_models").ResPartner} */
+        const ResPartner = this.env["res.partner"];
+        /** @type {import("mock_models").ResUsers} */
+        const ResUsers = this.env["res.users"];
+
         const messages = this._filter([["id", "in", ids]]);
         // sorted from highest ID to lowest ID (i.e. from most to least recent)
         messages.sort((m1, m2) => (m1.id < m2.id ? 1 : -1));
-        const Attachment = this.env["ir.attachment"];
-        const Notification = this.env["mail.notification"];
         return messages.map((message) => {
             const thread =
                 message.model && this.env[message.model]._filter([["id", "=", message.res_id]])[0];
             let author;
             if (message.author_id) {
-                const [partner] = this.env["res.partner"]._filter(
-                    [["id", "=", message.author_id]],
-                    { active_test: false }
-                );
-                const [user] = this.env["res.users"]._filter([
-                    ["partner_id", "=", message.author_id],
-                ]);
-                author = this.env["res.partner"].mail_partner_format([partner.id])[partner.id];
+                const [partner] = ResPartner._filter([["id", "=", message.author_id]], {
+                    active_test: false,
+                });
+                const [user] = ResUsers._filter([["partner_id", "=", message.author_id]]);
+                author = ResPartner.mail_partner_format([partner.id])[partner.id];
                 if (user) {
                     author["user"] = { id: user.id, isInternalUser: !user.share };
                 }
             } else {
                 author = false;
             }
-            const attachments = Attachment._filter([["id", "in", message.attachment_ids]]);
-            const formattedAttachments = Attachment._attachment_format(
+            const attachments = IrAttachment._filter([["id", "in", message.attachment_ids]]);
+            const formattedAttachments = IrAttachment._attachment_format(
                 attachments.map((attachment) => attachment.id)
             ).sort((a1, a2) => (a1.id < a2.id ? -1 : 1)); // sort attachments from oldest to most recent
-            const allNotifications = Notification._filter([["mail_message_id", "=", message.id]]);
+            const allNotifications = MailNotification._filter([
+                ["mail_message_id", "=", message.id],
+            ]);
             const historyPartnerIds = allNotifications
                 .filter((notification) => notification.is_read)
                 .map((notification) => notification.res_partner_id);
             const needactionPartnerIds = allNotifications
                 .filter((notification) => !notification.is_read)
                 .map((notification) => notification.res_partner_id);
-            let notifications = Notification._filteredForWebClient(
+            let notifications = MailNotification._filtered_for_web_client(
                 allNotifications.map((notification) => notification.id)
             );
-            notifications = Notification._notificationFormat(
+            notifications = MailNotification._notification_format(
                 notifications.map((notification) => notification.id)
             );
-            const trackingValues = this.env["mail.tracking.value"]._filter([
+            const trackingValues = MailTrackingValue._filter([
                 ["id", "in", message.tracking_value_ids],
             ]);
             const formattedTrackingValues =
-                this.env["mail.tracking.value"]._trackingValueFormat(trackingValues);
-            const partners = this.env["res.partner"]._filter([["id", "in", message.partner_ids]]);
-            const linkPreviews = this.env["mail.link.preview"]._filter([
-                ["id", "in", message.link_preview_ids],
-            ]);
+                MailTrackingValue._tracking_value_format(trackingValues);
+            const partners = ResPartner._filter([["id", "in", message.partner_ids]]);
+            const linkPreviews = MailLinkPreview._filter([["id", "in", message.link_preview_ids]]);
             const linkPreviewsFormatted = linkPreviews.map((linkPreview) =>
-                this.env["mail.link"]._linkPreviewFormat(linkPreview)
+                MailLinkPreview._link_preview_format(linkPreview)
             );
 
             const reactionsPerContent = {};
             for (const reactionId of message.reaction_ids ?? []) {
-                const [reaction] = this.env["mail.message.reaction"]._filter([
-                    ["id", "=", reactionId],
-                ]);
+                const [reaction] = MailMessageReaction._filter([["id", "=", reactionId]]);
                 if (reactionsPerContent[reaction.content]) {
                     reactionsPerContent[reaction.content].push(reaction);
                 } else {
@@ -153,16 +168,10 @@ export class MailMessage extends models.ServerModel {
             for (const content in reactionsPerContent) {
                 const reactions = reactionsPerContent[content];
                 const guests = reactions
-                    .map(
-                        (reaction) =>
-                            this.env["mail.guest"]._filter([["id", "=", reaction.guest_id]])[0]
-                    )
+                    .map((reaction) => MailGuest._filter([["id", "=", reaction.guest_id]])[0])
                     .filter((guest) => !!guest);
                 const partners = reactions
-                    .map(
-                        (reaction) =>
-                            this.env["res.partner"]._filter([["id", "=", reaction.partner_id]])[0]
-                    )
+                    .map((reaction) => ResPartner._filter([["id", "=", reaction.partner_id]])[0])
                     .filter((partner) => !!partner);
                 reactionGroups.push({
                     content: content,
@@ -187,9 +196,9 @@ export class MailMessage extends models.ServerModel {
                 default_subject:
                     message.model &&
                     message.res_id &&
-                    this.env["mail.thread"]
-                        ._messageComputeSubject(message.model, [message.res_id])
-                        .get(message.res_id),
+                    MailThread._message_compute_subject(message.model, [message.res_id]).get(
+                        message.res_id
+                    ),
                 linkPreviews: linkPreviewsFormatted,
                 reactions: reactionGroups,
                 needaction_partner_ids: needactionPartnerIds,
@@ -206,16 +215,12 @@ export class MailMessage extends models.ServerModel {
             };
             delete response.author_id;
             if (message.subtype_id) {
-                const subtype = this.env["mail.message.subtype"]._filter([
-                    ["id", "=", message.subtype_id],
-                ])[0];
+                const subtype = MailMessageSubtype._filter([["id", "=", message.subtype_id]])[0];
                 response.subtype_description = subtype.description;
             }
             let guestAuthor;
             if (message.author_guest_id) {
-                const [guest] = this.env["mail.guest"].search_read([
-                    ["id", "=", message.author_guest_id],
-                ]);
+                const [guest] = MailGuest.search_read([["id", "=", message.author_guest_id]]);
                 guestAuthor = { id: guest.id, name: guest.name, type: "guest" };
             }
             response.author = author || guestAuthor;
@@ -244,9 +249,15 @@ export class MailMessage extends models.ServerModel {
      * @param {KwArgs} [kwargs]
      */
     set_message_done(ids, kwargs = {}) {
-        const messages = this._filter([["id", "in", ids]]);
+        /** @type {import("mock_models").BusBus} */
+        const BusBus = this.env["bus.bus"];
+        /** @type {import("mock_models").MailNotification} */
+        const MailNotification = this.env["mail.notification"];
+        /** @type {import("mock_models").ResPartner} */
+        const ResPartner = this.env["res.partner"];
 
-        const notifications = this.env["mail.notification"]._filter([
+        const messages = this._filter([["id", "in", ids]]);
+        const notifications = MailNotification._filter([
             ["res_partner_id", "=", constants.PARTNER_ID],
             ["is_read", "=", false],
             ["mail_message_id", "in", messages.map((messages) => messages.id)],
@@ -254,7 +265,7 @@ export class MailMessage extends models.ServerModel {
         if (notifications.length === 0) {
             return;
         }
-        this.env["mail.notification"].write(
+        MailNotification.write(
             notifications.map((notification) => notification.id),
             { is_read: true }
         );
@@ -266,100 +277,112 @@ export class MailMessage extends models.ServerModel {
                     (partnerId) => partnerId !== constants.PARTNER_ID
                 ),
             });
-            const [partner] = this.env["res.partner"].read(constants.PARTNER_ID);
-            this.env["bus.bus"]._sendone(partner, "mail.message/mark_as_read", {
+            const [partner] = ResPartner.read(constants.PARTNER_ID);
+            BusBus._sendone(partner, "mail.message/mark_as_read", {
                 message_ids: [message.id],
-                needaction_inbox_counter: this.env["res.partner"]._getNeedactionCount(
-                    constants.PARTNER_ID
-                ),
+                needaction_inbox_counter: ResPartner._get_needaction_count(constants.PARTNER_ID),
             });
         }
     }
 
     /**
-     * Simulates `toggle_message_starred` on `mail.message`.
-     *
      * @param {number[]} ids
      * @param {KwArgs} [kwargs]
      */
     toggle_message_starred(ids, kwargs = {}) {
+        /** @type {import("mock_models").BusBus} */
+        const BusBus = this.env["bus.bus"];
+        /** @type {import("mock_models").ResPartner} */
+        const ResPartner = this.env["res.partner"];
+
         const messages = this._filter([["id", "in", ids]]);
         for (const message of messages) {
             const wasStared = message.starred_partner_ids.includes(constants.PARTNER_ID);
             this.write([message.id], {
                 starred_partner_ids: [[wasStared ? 3 : 4, constants.PARTNER_ID]],
             });
-            const [partner] = this.env["res.partner"].read(constants.PARTNER_ID);
-            this.env["bus.bus"]._sendone(partner, "mail.message/toggle_star", {
+            const [partner] = ResPartner.read(constants.PARTNER_ID);
+            BusBus._sendone(partner, "mail.message/toggle_star", {
                 message_ids: [message.id],
                 starred: !wasStared,
             });
         }
     }
 
-    /**
-     * Simulates `unstar_all` on `mail.message`.
-     *
-     * @param {KwArgs} [kwargs]
-     */
+    /** @param {KwArgs} [kwargs] */
     unstar_all(kwargs = {}) {
+        /** @type {import("mock_models").BusBus} */
+        const BusBus = this.env["bus.bus"];
+        /** @type {import("mock_models").ResPartner} */
+        const ResPartner = this.env["res.partner"];
+
         const messages = this._filter([["starred_partner_ids", "in", constants.PARTNER_ID]]);
         this.write(
             messages.map((message) => message.id),
             { starred_partner_ids: [Command.unlink(constants.PARTNER_ID)] }
         );
-        const [partner] = this.env["res.partner"].read(constants.PARTNER_ID);
-        this.env["bus.bus"]._sendone(partner, "mail.message/toggle_star", {
+        const [partner] = ResPartner.read(constants.PARTNER_ID);
+        BusBus._sendone(partner, "mail.message/toggle_star", {
             message_ids: messages.map((message) => message.id),
             starred: false,
         });
     }
 
-    /**
-     * Simulates `_bus_notification_target` on `mail.message`.
-     *
-     * @param {number} messageId
-     */
+    /** @param {number} messageId */
     _busNotificationTarget(messageId) {
+        /** @type {import("mock_models").DiscussChannel} */
+        const DiscussChannel = this.env["discuss.channel"];
+        /** @type {import("mock_models").MailGuest} */
+        const MailGuest = this.env["mail.guest"];
+        /** @type {import("mock_models").ResPartner} */
+        const ResPartner = this.env["res.partner"];
+
         const [message] = this.search_read([["id", "=", messageId]]);
         if (message.model === "discuss.channel") {
-            return this.env["discuss.channel"].search_read([["id", "=", message.res_id]])[0];
+            return DiscussChannel.search_read([["id", "=", message.res_id]])[0];
         }
         if (this.env.user?.is_public) {
-            this.env["mail.guest"]._getGuestFromContext();
+            MailGuest._get_guest_from_context();
         }
-        return this.env["res.partner"].read(constants.PARTNER_ID)[0];
+        return ResPartner.read(constants.PARTNER_ID)[0];
     }
 
     /**
-     * Simulates `_message_reaction` on `mail.message`.
-     *
      * @param {number} messageId
      * @param {string} content
      * @param {string} action
      */
-    _messageReaction(messageId, content, action) {
-        const [reaction] = this.env["mail.message.reaction"].search_read([
+    _message_reaction(messageId, content, action) {
+        /** @type {import("mock_models").BusBus} */
+        const BusBus = this.env["bus.bus"];
+        /** @type {import("mock_models").MailGuest} */
+        const MailGuest = this.env["mail.guest"];
+        /** @type {import("mock_models").MailMessageReaction} */
+        const MailMessageReaction = this.env["mail.message.reaction"];
+        /** @type {import("mock_models").ResPartner} */
+        const ResPartner = this.env["res.partner"];
+
+        const [reaction] = MailMessageReaction.search_read([
             ["content", "=", content],
             ["message_id", "=", messageId],
             ["partner_id", "=", constants.PARTNER_ID],
         ]);
         if (action === "add" && !reaction) {
-            this.env["mail.message.reaction"].create({
+            MailMessageReaction.create({
                 content,
                 message_id: messageId,
                 partner_id: constants.PARTNER_ID,
             });
         }
         if (action === "remove" && reaction) {
-            this.env["mail.message.reaction"].unlink(reaction.id);
+            MailMessageReaction.unlink(reaction.id);
         }
-        const reactions = this.env["mail.message.reaction"].search([
+        const reactions = MailMessageReaction.search([
             ["message_id", "=", messageId],
             ["content", "=", content],
         ]);
-        const guest = this.env["mail.guest"]._getGuestFromContext();
-        const [partner] = this.env["res.partner"].read(constants.PARTNER_ID);
+        const guest = MailGuest._get_guest_from_context();
+        const [partner] = ResPartner.read(constants.PARTNER_ID);
         const result = {
             id: messageId,
             reactions: [
@@ -383,21 +406,19 @@ export class MailMessage extends models.ServerModel {
                 ],
             ],
         };
-        this.env["bus.bus"]._sendone(this._busNotificationTarget(messageId), "mail.record/insert", {
+        BusBus._sendone(this._busNotificationTarget(messageId), "mail.record/insert", {
             Message: result,
         });
     }
 
     /**
-     * Simulates `_message_fetch` on `mail.message`.
-     *
      * @param {DomainListRepr} domain
      * @param {number} [before]
      * @param {number} [after]
      * @param {number} [limit=30]
      * @returns {Object[]}
      */
-    _messageFetch(domain, search_term, before, after, around, limit = 30) {
+    _message_fetch(domain, search_term, before, after, around, limit = 30) {
         const res = {};
         if (search_term) {
             search_term = search_term.replace(" ", "%");
@@ -432,16 +453,15 @@ export class MailMessage extends models.ServerModel {
         return res;
     }
 
-    /**
-     * Simulate `_message_format_personalize` on `mail.message` for the current partner.
-     *
-     * @param {number[]} ids
-     */
-    _messageFormatPersonalize(ids) {
+    /** @param {number[]} ids */
+    _message_format_personalize(ids) {
+        /** @type {import("mock_models").MailFollowers} */
+        const MailFollowers = this.env["mail.followers"];
+
         const messages = this.message_format(ids);
         messages.forEach((message) => {
             if (message.model && message.res_id) {
-                const follower = this.env["mail.followers"]._filter([
+                const follower = MailFollowers._filter([
                     ["res_model", "=", message.model],
                     ["res_id", "=", message.res_id],
                     ["partner_id", "=", constants.PARTNER_ID],
@@ -459,20 +479,20 @@ export class MailMessage extends models.ServerModel {
     }
 
     /**
-     * Simulates `_message_notification_format` on `mail.message`.
-     *
      * @returns {number[]} ids
      * @returns {Object[]}
      */
-    _messageNotificationFormat(ids) {
+    _message_notification_format(ids) {
+        /** @type {import("mock_models").MailNotification} */
+        const MailNotification = this.env["mail.notification"];
+
         const messages = this._filter([["id", "in", ids]]);
         return messages.map((message) => {
-            const Notification = this.env["mail.notification"];
-            let notifications = Notification._filter([["mail_message_id", "=", message.id]]);
-            notifications = Notification._filteredForWebClient(
+            let notifications = MailNotification._filter([["mail_message_id", "=", message.id]]);
+            notifications = MailNotification._filtered_for_web_client(
                 notifications.map((notification) => notification.id)
             );
-            notifications = Notification._notificationFormat(
+            notifications = MailNotification._notification_format(
                 notifications.map((notification) => notification.id)
             );
             return {

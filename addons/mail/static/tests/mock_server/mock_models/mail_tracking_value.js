@@ -15,28 +15,30 @@ export class MailTrackingValue extends models.ServerModel {
      * @type {typeof models.Model["prototype"]["write"]}
      */
     write(idOrIds, values, kwargs) {
-        const initialTrackedFieldValuesByRecordId = this.env["mail.thread"]._trackPrepare(
-            this._name
-        );
+        /** @type {import("mock_models").MailThread} */
+        const MailThread = this.env["mail.thread"];
+
+        const initialTrackedFieldValuesByRecordId = MailThread._track_prepare(this._name);
         const result = super.write(idOrIds, values, kwargs);
         if (initialTrackedFieldValuesByRecordId) {
-            this.env["mail.thread"]._trackFinalize(this._name, initialTrackedFieldValuesByRecordId);
+            MailThread._track_finalize(this._name, initialTrackedFieldValuesByRecordId);
         }
         return result;
     }
 
     /**
-     * Simulates `_create_tracking_values` on `mail.tracking.value`.
-     *
      * @param {ModelRecord} initialValue
      * @param {ModelRecord} newValue
      * @param {string} fieldName
      * @param {Object} field
      * @param {string} modelName
      */
-    _createTrackingValues(initialValue, newValue, fieldName, field, modelName) {
+    _create_tracking_values(initialValue, newValue, fieldName, field, modelName) {
+        /** @type {import("mock_models").IrModelFields} */
+        const IrModelFields = this.env["ir.model.fields"];
+
         let isTracked = true;
-        const irField = this.env["ir.model.fields"].find(
+        const irField = IrModelFields.find(
             (field) => field.model === modelName && field.name === fieldName
         );
         if (!irField) {
@@ -90,35 +92,33 @@ export class MailTrackingValue extends models.ServerModel {
         return false;
     }
 
-    /**
-     * Simulates `_tracking_value_format` on `mail.tracking.value`.
-     *
-     * @param {ModelRecord[]} trackingValues
-     */
-    _trackingValueFormat(trackingValues) {
+    /** @param {ModelRecord[]} trackingValues */
+    _tracking_value_format(trackingValues) {
+        /** @type {import("mock_models").IrModelFields} */
+        const IrModelFields = this.env["ir.model.fields"];
+
         return trackingValues.map((tracking) => {
-            const irField = this.env["ir.model.fields"].find(
-                (field) => field.id === tracking.field_id
-            );
+            const irField = IrModelFields.find((field) => field.id === tracking.field_id);
             return {
                 changedField: capitalize(irField.ttype),
                 id: tracking.id,
                 fieldName: irField.name,
                 fieldType: irField.ttype,
-                newValue: { value: this._formatDisplayValue(tracking, "new") },
-                oldValue: { value: this._formatDisplayValue(tracking, "old") },
+                newValue: { value: this._format_display_value(tracking, "new") },
+                oldValue: { value: this._format_display_value(tracking, "old") },
             };
         });
     }
 
     /**
-     * Simulates `_format_display_value` on `mail.tracking.value`.
-     *
      * @param {ModelRecord} record
      * @param {"new" | "old"} type
      */
-    _formatDisplayValue(record, type) {
-        const irField = this.env["ir.model.fields"].find((field) => field.id === record.field_id);
+    _format_display_value(record, type) {
+        /** @type {import("mock_models").IrModelFields} */
+        const IrModelFields = this.env["ir.model.fields"];
+
+        const irField = IrModelFields.find((field) => field.id === record.field_id);
         switch (irField.ttype) {
             case "float":
             case "integer":

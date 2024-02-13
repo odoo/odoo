@@ -6,37 +6,42 @@ import { isIterable } from "@web/core/utils/arrays";
 export class IrWebSocket extends busModels.IrWebSocket {
     /**
      * @override
-     * @type {typeof busModels.WebSocket["prototype"]["_getImStatus"]}
+     * @type {typeof busModels.WebSocket["prototype"]["_get_im_status"]}
      */
-    _getImStatus(imStatusIdsByModel) {
-        const imStatus = super._getImStatus(imStatusIdsByModel);
+    _get_im_status(imStatusIdsByModel) {
+        /** @type {import("mock_models").MailGuest} */
+        const MailGuest = this.env["mail.guest"];
 
+        const imStatus = super._get_im_status(imStatusIdsByModel);
         const { "mail.guest": guestIds } = imStatusIdsByModel;
         if (guestIds) {
             imStatus["Persona"] = imStatus["Persona"].concat(
-                this.env["mail.guest"]
-                    .search_read([["id", "in", guestIds]], {
-                        context: { active_test: false },
-                        fields: ["im_status"],
-                    })
-                    .map((g) => ({ ...g, type: "guest" }))
+                MailGuest.search_read([["id", "in", guestIds]], {
+                    context: { active_test: false },
+                    fields: ["im_status"],
+                }).map((g) => ({ ...g, type: "guest" }))
             );
         }
-
         return imStatus;
     }
 
     /**
      * @override
-     * @type {typeof busModels.WebSocket["prototype"]["_buildBusChannelList"]}
+     * @type {typeof busModels.WebSocket["prototype"]["_build_bus_channel_list"]}
      */
-    _buildBusChannelList() {
-        const channels = super._buildBusChannelList();
+    _build_bus_channel_list() {
+        /** @type {import("mock_models").DiscussChannelMember} */
+        const DiscussChannelMember = this.env["discuss.channel.member"];
+        /** @type {import("mock_models").MailGuest} */
+        const MailGuest = this.env["mail.guest"];
+        /** @type {import("mock_models").ResPartner} */
+        const ResPartner = this.env["res.partner"];
 
-        const guest = this.env["mail.guest"]._getGuestFromContext();
+        const channels = super._build_bus_channel_list();
+        const guest = MailGuest._get_guest_from_context();
         const authenticatedUserId = this.env.cookie.get("authenticated_user_sid");
         const authenticatedPartner = authenticatedUserId
-            ? this.env["res.partner"].search_read([["user_ids", "in", [authenticatedUserId]]], {
+            ? ResPartner.search_read([["user_ids", "in", [authenticatedUserId]]], {
                   context: { active_test: false },
               })[0]
             : null;
@@ -46,13 +51,11 @@ export class IrWebSocket extends busModels.IrWebSocket {
         if (guest) {
             channels.push({ model: "mail.guest", id: guest.id });
         }
-        const userChannelIds = this.env["discuss.channel.member"]
-            .search_read([
-                guest ? ["guest_id", "=", guest.id] : ["partner_id", "=", authenticatedPartner.id],
-            ])
-            .map((member) =>
-                isIterable(member.channel_id) ? member.channel_id[0] : member.channel_id
-            );
+        const userChannelIds = DiscussChannelMember.search_read([
+            guest ? ["guest_id", "=", guest.id] : ["partner_id", "=", authenticatedPartner.id],
+        ]).map((member) =>
+            isIterable(member.channel_id) ? member.channel_id[0] : member.channel_id
+        );
         for (const channelId of userChannelIds) {
             channels.push({ model: "discuss.channel", id: channelId });
         }

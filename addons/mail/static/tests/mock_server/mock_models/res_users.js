@@ -19,13 +19,12 @@ export class ResUsers extends webModels.ResUsers {
         //     password: "odoobot",
         // });
     }
-    /**
-     * Simulates `systray_get_activities` on `res.users`.
-     *
-     * @param {KwArgs} [kwargs]
-     */
+    /** @param {KwArgs} [kwargs] */
     systray_get_activities(kwargs = {}) {
-        const activities = this.env["mail.activity"].search_read([]);
+        /** @type {import("mock_models").MailActivity} */
+        const MailActivity = this.env["mail.activity"];
+
+        const activities = MailActivity.search_read([]);
         const userActivitiesByModelName = {};
         for (const activity of activities) {
             const day = serializeDate(today());
@@ -63,31 +62,40 @@ export class ResUsers extends webModels.ResUsers {
         return Object.values(userActivitiesByModelName);
     }
 
-    /**
-     * Simulates `_init_messaging` on `res.users`.
-     *
-     * @param {number[]} ids
-     */
-    _initMessaging(ids) {
-        const user = this.env["res.users"]._filter([["id", "in", ids]])[0];
-        const channels = this.env["discuss.channel"]._get_channels_as_member();
-        const members = this.env["discuss.channel.member"]._filter([
+    /** @param {number[]} ids */
+    _init_messaging(ids) {
+        /** @type {import("mock_models").DiscussChannel} */
+        const DiscussChannel = this.env["discuss.channel"];
+        /** @type {import("mock_models").DiscussChannelMember} */
+        const DiscussChannelMember = this.env["discuss.channel.member"];
+        /** @type {import("mock_models").MailMessage} */
+        const MailMessage = this.env["mail.message"];
+        /** @type {import("mock_models").MailShortcode} */
+        const MailShortcode = this.env["mail.shortcode"];
+        /** @type {import("mock_models").ResPartner} */
+        const ResPartner = this.env["res.partner"];
+        /** @type {import("mock_models").ResUsers} */
+        const ResUsers = this.env["res.users"];
+
+        const user = ResUsers._filter([["id", "in", ids]])[0];
+        const channels = DiscussChannel._get_channels_as_member();
+        const members = DiscussChannelMember._filter([
             ["channel_id", "in", channels.map((channel) => channel.id)],
             ["partner_id", "=", user.partner_id],
         ]);
         return {
-            CannedResponse: this.env["mail.shortcode"].search_read([], {
+            CannedResponse: MailShortcode.search_read([], {
                 fields: ["source", "substitution"],
             }),
             Store: {
                 discuss: {
                     inbox: {
-                        counter: this.env["res.partner"]._getNeedactionCount(user.partner_id),
+                        counter: ResPartner._get_needaction_count(user.partner_id),
                         id: "inbox",
                         model: "mail.box",
                     },
                     starred: {
-                        counter: this.env["mail.message"]._filter([
+                        counter: MailMessage._filter([
                             ["starred_partner_ids", "in", user.partner_id],
                         ]).length,
                         id: "starred",
@@ -120,7 +128,7 @@ export class ResUsers extends webModels.ResUsers {
         //         current_user_id: this.env.uid,
         //         discuss: {
         //             inbox: {
-        //                 counter: Partner._getNeedactionCount(user.partner_id),
+        //                 counter: Partner._get_needaction_count(user.partner_id),
         //                 id: "inbox",
         //                 model: "mail.box",
         //             },
@@ -150,7 +158,10 @@ export class ResUsers extends webModels.ResUsers {
     }
 
     _get_activity_groups() {
-        const activities = this.env["mail.activity"].search_read([]);
+        /** @type {import("mock_models").MailActivity} */
+        const MailActivity = this.env["mail.activity"];
+
+        const activities = MailActivity.search_read([]);
         const userActivitiesByModelName = {};
         for (const activity of activities) {
             const day = serializeDate(today());

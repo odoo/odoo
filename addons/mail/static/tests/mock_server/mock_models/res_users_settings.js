@@ -24,7 +24,6 @@ export class ResUsersSettings extends models.ServerModel {
     is_discuss_sidebar_category_chat_open = fields.Generic({ default: true });
 
     /**
-     * Simulates `_find_or_create_for_user` on `res.users.settings`.
      * Note that this mocked method is public so that it can be accessed by RPCs.
      *
      * @param {number} userId
@@ -40,13 +39,14 @@ export class ResUsersSettings extends models.ServerModel {
     }
 
     /**
-     * Simulates `res_users_settings_format` on `res.users.settings`.
-     *
      * @param {number} id
      * @param {string[]} [fieldsToFormat]
      * @param {KwArgs<{ fields_to_format }>} [kwargs]
      */
     res_users_settings_format(id, fieldsToFormat, kwargs = {}) {
+        /** @type {import("mock_models").ResUsersSettingsVolumes} */
+        const ResUsersSettingsVolumes = this.env["res.users.settings.volumes"];
+
         fieldsToFormat = kwargs.fields_to_format || fieldsToFormat;
         const [settings] = this._filter([["id", "=", id]]);
         const filterPredicate = fieldsToFormat
@@ -57,22 +57,27 @@ export class ResUsersSettings extends models.ServerModel {
             res.user_id = { id: settings.user_id };
         }
         if (Reflect.ownKeys(res).includes("volume_settings_ids")) {
-            const volumeSettings = this.env[
-                "res.users.settings.volumes"
-            ].discuss_users_settings_volume_format(settings.volume_settings_ids);
+            const volumeSettings = ResUsersSettingsVolumes.discuss_users_settings_volume_format(
+                settings.volume_settings_ids
+            );
             res.volumes = [["ADD", volumeSettings]];
         }
         return res;
     }
 
     /**
-     * Simulates `set_res_users_settings` on `res.users.settings`.
-     *
      * @param {number | Iterable<number>} idOrIds
      * @param {Object} newSettings
      * @param {KwArgs<{ new_settings }>} [kwargs]
      */
     set_res_users_settings(idOrIds, newSettings, kwargs = {}) {
+        /** @type {import("mock_models").BusBus} */
+        const BusBus = this.env["bus.bus"];
+        /** @type {import("mock_models").ResPartner} */
+        const ResPartner = this.env["res.partner"];
+        /** @type {import("mock_models").ResUsers} */
+        const ResUsers = this.env["res.users"];
+
         newSettings = kwargs.new_settings || newSettings || {};
         const [id] = ensureArray(idOrIds);
         const oldSettings = this._filter([["id", "=", id]])[0];
@@ -83,11 +88,9 @@ export class ResUsersSettings extends models.ServerModel {
             }
         }
         this.write(id, changedSettings);
-        const [relatedUser] = this.env["res.users"].search_read([["id", "=", oldSettings.user_id]]);
-        const [relatedPartner] = this.env["res.partner"].search_read([
-            ["id", "=", relatedUser.partner_id[0]],
-        ]);
-        this.env["bus.bus"]._sendone(relatedPartner, "res.users.settings", {
+        const [relatedUser] = ResUsers.search_read([["id", "=", oldSettings.user_id]]);
+        const [relatedPartner] = ResPartner.search_read([["id", "=", relatedUser.partner_id[0]]]);
+        BusBus._sendone(relatedPartner, "res.users.settings", {
             ...changedSettings,
             id,
         });

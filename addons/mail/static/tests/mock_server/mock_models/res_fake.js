@@ -12,21 +12,21 @@ export class ResFake extends models.Model {
     partner_ids = fields.One2many({ relation: "res.partner", string: "Related partners" });
 
     /**
-     * Simulates `_message_get_suggested_recipients` on `res.fake`.
-     *
      * @param {string} model
      * @param {number[]} ids
      */
-    _messageGetSuggestedRecipients(model, ids) {
+    _message_get_suggested_recipients(model, ids) {
+        /** @type {import("mock_models").ResPartner} */
+        const ResPartner = this.env["res.partner"];
+
         const result = {};
         const records = this.env[model]._filter([["id", "in", ids]]);
-
         for (const record of records) {
             result[record.id] = [];
             if (record.email_cc) {
                 result[record.id].push([false, record.email_cc, undefined, "CC email"]);
             }
-            const partners = this.env["res.partner"]._filter([["id", "in", record.partner_ids]]);
+            const partners = ResPartner._filter([["id", "in", record.partner_ids]]);
             if (partners.length) {
                 for (const partner of partners) {
                     result[record.id].push([
@@ -42,15 +42,16 @@ export class ResFake extends models.Model {
     }
 
     /**
-     * Simulates `_message_compute_subject` on `res.fake`.
-     *
      * @param {string} model
      * @param {number[]} ids
      */
-    _messageComputeSubject(model, ids) {
+    _message_compute_subject(model, ids) {
+        /** @type {import("mock_models").MailThread} */
+        const MailThread = this.env["mail.thread"];
+
         if (model === "res.fake") {
             return new Map(ids.map((id) => [id, "Custom Default Subject"]));
         }
-        return super.env["mail.thread"]._messageComputeSubject(model, ids);
+        return MailThread._message_compute_subject(model, ids);
     }
 }

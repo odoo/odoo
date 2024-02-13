@@ -6,16 +6,17 @@ export class DiscussChannelRtcSession extends models.ServerModel {
     _name = "discuss.channel.rtc.session";
 
     /**
-     * Simulates `_mail_rtc_session_format` on `discuss.channel.rtc.session`.
-     *
      * @param {number} id
      * @param {{ extra?; boolean }} options
      */
-    _mailRtcSessionFormat(id, { extra } = {}) {
+    _mail_rtc_session_format(id, { extra } = {}) {
+        /** @type {import("mock_models").DiscussChannelMember} */
+        const DiscussChannelMember = this.env["discuss.channel.member"];
+
         const [rtcSession] = this._filter([["id", "=", id]]);
         const vals = {
             id: rtcSession.id,
-            channelMember: this.env["discuss.channel.member"]._discussChannelMemberFormat([
+            channelMember: DiscussChannelMember._discuss_channel_member_format([
                 rtcSession.channel_member_id,
             ])[0],
         };
@@ -31,12 +32,10 @@ export class DiscussChannelRtcSession extends models.ServerModel {
     }
 
     /**
-     * Simulates `_mail_rtc_session_format_by_channel` on `discuss.channel.rtc.session`.
-     *
      * @param {number[]} ids
      * @param {{ extra?; boolean }} options
      */
-    _mailRtcSessionFormatByChannel(ids, options) {
+    _mail_rtc_session_format_by_channel(ids, options) {
         const rtcSessions = this._filter([["id", "in", ids]]);
         /** @type {Record<string, any>} */
         const data = {};
@@ -44,7 +43,7 @@ export class DiscussChannelRtcSession extends models.ServerModel {
             if (!data[rtcSession.channel_id]) {
                 data[rtcSession.channel_id] = [];
             }
-            data[rtcSession.channel_id].push(this._mailRtcSessionFormat(rtcSession.id, options));
+            data[rtcSession.channel_id].push(this._mail_rtc_session_format(rtcSession.id, options));
         }
         return data;
     }

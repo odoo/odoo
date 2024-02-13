@@ -17,14 +17,13 @@ export class MailActivity extends models.ServerModel {
 
     chaining_type = fields.Generic({ default: "suggest" });
 
-    /**
-     * Simulates `action_feedback` on `mail.activity`.
-     *
-     * @param {number[]} ids
-     */
+    /** @param {number[]} ids */
     action_feedback(ids) {
+        /** @type {import("mock_models").MailActivityType} */
+        const MailActivityType = this.env["mail.activity.type"];
+
         const activities = this._filter([["id", "in", ids]]);
-        const activityTypes = this.env["mail.activity.type"]._filter([
+        const activityTypes = MailActivityType._filter([
             ["id", "in", unique(activities.map((a) => a.activity_type_id))],
         ]);
         const activityTypeById = Object.fromEntries(
@@ -43,13 +42,9 @@ export class MailActivity extends models.ServerModel {
         );
     }
 
-    /**
-     * Simulates `action_feedback_schedule_next` on `mail.activity`.
-     *
-     * @param {number[]} ids
-     */
+    /** @param {number[]} ids */
     action_feedback_schedule_next(ids) {
-        this._actionDone(ids);
+        this._action_done(ids);
         return {
             name: "Schedule an Activity",
             view_mode: "form",
@@ -59,18 +54,21 @@ export class MailActivity extends models.ServerModel {
         };
     }
 
-    /**
-     * Simulates `activity_format` on `mail.activity`.
-     *
-     * @param {number[]} ids
-     */
+    /** @param {number[]} ids */
     activity_format(ids) {
+        /** @type {import("mock_models").MailActivityType} */
+        const MailActivityType = this.env["mail.activity.type"];
+        /** @type {import("mock_models").MailTemplate} */
+        const MailTemplate = this.env["mail.template"];
+        /** @type {import("mock_models").ResPartner} */
+        const ResPartner = this.env["res.partner"];
+        /** @type {import("mock_models").ResUsers} */
+        const ResUsers = this.env["res.users"];
+
         return this.read(ids).map((record) => {
             if (record.mail_template_ids) {
                 record.mail_template_ids = record.mail_template_ids.map((template_id) => {
-                    const template = this.env["mail.template"]._filter([
-                        ["id", "=", template_id],
-                    ])[0];
+                    const template = MailTemplate._filter([["id", "=", template_id]])[0];
                     return {
                         id: template.id,
                         name: template.name,
@@ -78,9 +76,7 @@ export class MailActivity extends models.ServerModel {
                 });
             }
             const [activityType] = record.activity_type_id
-                ? this.env["mail.activity.type"].search_read([
-                      ["id", "=", record.activity_type_id[0]],
-                  ])
+                ? MailActivityType.search_read([["id", "=", record.activity_type_id[0]]])
                 : [false];
             if (activityType) {
                 record.display_name = activityType.name;
@@ -89,8 +85,8 @@ export class MailActivity extends models.ServerModel {
             if (record.summary) {
                 record.display_name = record.summary;
             }
-            const user = this.pyEnv["res.users"].searchRead([["id", "=", record.user_id[0]]])[0];
-            record.persona = this._mockResPartnerMailPartnerFormat([user.partner_id[0]]).get(
+            const user = ResUsers.search_read([["id", "=", record.user_id[0]]])[0];
+            record.persona = ResPartner.mail_partner_format([user.partner_id[0]]).get(
                 user.partner_id[0]
             );
             return record;
@@ -98,8 +94,6 @@ export class MailActivity extends models.ServerModel {
     }
 
     /**
-     * Simulates `get_activity_data` on `mail.activity`.
-     *
      * @param {string} resModel
      * @param {string} domain
      * @param {number} limit
@@ -108,6 +102,13 @@ export class MailActivity extends models.ServerModel {
      * @param {KwArgs<>} [kwargs]
      */
     get_activity_data(resModel, domain, limit, offset, fetchDone, kwargs = {}) {
+        /** @type {import("mock_models").IrAttachment} */
+        const IrAttachment = this.env["ir.attachment"];
+        /** @type {import("mock_models").MailActivityType} */
+        const MailActivityType = this.env["mail.activity.type"];
+        /** @type {import("mock_models").MailTemplate} */
+        const MailTemplate = this.env["mail.template"];
+
         resModel = kwargs.res_model || resModel;
         domain = kwargs.domain || domain;
         limit = kwargs.limit || limit || 0;
@@ -115,7 +116,7 @@ export class MailActivity extends models.ServerModel {
         fetchDone = kwargs.fetch_done ?? fetchDone ?? false;
 
         // 1. Retrieve all ongoing and completed activities according to the parameters
-        const activityTypes = this.env["mail.activity.type"]._filter([
+        const activityTypes = MailActivityType._filter([
             "|",
             ["res_model", "=", resModel],
             ["res_model", "=", false],
@@ -142,9 +143,7 @@ export class MailActivity extends models.ServerModel {
             const attachmentIds = allCompleted.map((a) => a.attachment_ids).flat();
             attachmentsById = attachmentIds.length
                 ? Object.fromEntries(
-                      this.env["ir.attachment"]
-                          ._filter([["id", "in", attachmentIds]])
-                          .map((a) => [a.id, a])
+                      IrAttachment._filter([["id", "in", attachmentIds]]).map((a) => [a.id, a])
                   )
                 : {};
         } else {
@@ -239,9 +238,7 @@ export class MailActivity extends models.ServerModel {
         return {
             activity_types: activityTypes.map((type) => {
                 const templates = (type.mail_template_ids || []).map((template_id) => {
-                    const { id, name } = this.env["mail.template"]._filter([
-                        ["id", "=", template_id],
-                    ])[0];
+                    const { id, name } = MailTemplate._filter([["id", "=", template_id]])[0];
                     return { id, name };
                 });
                 return {
@@ -256,12 +253,8 @@ export class MailActivity extends models.ServerModel {
         };
     }
 
-    /**
-     * Simulates `_action_done` on `mail.activity`.
-     *
-     * @param {number[]} ids
-     */
-    _actionDone(ids) {
+    /** @param {number[]} ids */
+    _action_done(ids) {
         this.action_feedback(ids);
     }
 
