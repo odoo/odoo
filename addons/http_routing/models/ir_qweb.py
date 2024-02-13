@@ -3,7 +3,7 @@
 import logging
 from odoo import models
 from odoo.http import request
-from odoo.addons.http_routing.models.ir_http import slug, unslug_url, url_for
+from odoo.addons.http_routing.models.ir_http import slug, unslug_url, url_for, url_localized
 
 _logger = logging.getLogger(__name__)
 BAD_REQUEST = """Missing request.is_frontend attribute.
@@ -49,4 +49,5 @@ class IrQweb(models.AbstractModel):
 
     def _prepare_frontend_environment(self, values):
         values['url_for'] = url_for
+        values['url_localized'] = url_localized
         return self

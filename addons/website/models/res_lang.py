@@ -18,7 +18,15 @@ class Lang(models.Model):
     @tools.ormcache_context(keys=("website_id",))
     def get_frontend_langs(self):
         if request and getattr(request, 'is_frontend', True):
-            return self.env['website'].get_current_website().language_ids.get_sorted()
+            langs = self.env['website'].get_current_website().language_ids.get_sorted()
+            # if only one region for a language, use only the language code
+            shorts = [lang['code'].split('_')[0] for lang in langs]
+            for lang, short in zip(langs, shorts):
+                if shorts.count(short) == 1:
+                    lang['hreflang'] = short
+                else:
+                    lang['hreflang'] = lang['code'].lower().replace('_', '-')
+            return langs
         return super().get_frontend_langs()
 
     def action_activate_langs(self):
