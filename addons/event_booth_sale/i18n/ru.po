@@ -1,0 +1,372 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* event_booth_sale
+#
+# Translators:
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2024-01-30 15:14+0400\n"
+"Last-Translator: \n"
+"Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#. module: event_booth_sale
+#: model_terms:ir.ui.view,arch_db:event_booth_sale.event_booth_view_form_from_event
+msgid "<span class=\"o_stat_text\">Sale Order</span>"
+msgstr "<span class=\"o_stat_text\">Заказ на продажу</span>"
+
+#. module: event_booth_sale
+#: model:ir.model.fields,help:event_booth_sale.field_product_product__detailed_type
+#: model:ir.model.fields,help:event_booth_sale.field_product_template__detailed_type
+msgid ""
+"A storable product is a product for which you manage stock. The Inventory app has to be installed.\n"
+"A consumable product is a product for which stock is not managed.\n"
+"A service is a non-material product you provide."
+msgstr ""
+"Складируемый продукт — это ТМЦ, запасами которых вы управляете. Должно быть установлено приложение «Склад».\n"
+"Расходный продукт — это ТМЦ, запасы которых не контролируются.\n"
+"Услуга — это нематериальный продукт."
+
+#. module: event_booth_sale
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_configurator__event_booth_ids
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_registration__event_booth_id
+msgid "Booth"
+msgstr "Стенд"
+
+#. module: event_booth_sale
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_configurator__event_booth_category_id
+msgid "Booth Category"
+msgstr "Категория стенда"
+
+#. module: event_booth_sale
+#: model:ir.model.fields,help:event_booth_sale.field_event_booth_configurator__event_booth_category_available_ids
+msgid "Booth Category for which booths are still available. Used in frontend"
+msgstr "Категория стендов, для которых еще есть свободные места. Используется во фронтенде"
+
+#. module: event_booth_sale
+#: model:ir.model.fields,field_description:event_booth_sale.field_sale_order__event_booth_count
+msgid "Booth Count"
+msgstr "Счетчик будок"
+
+#. module: event_booth_sale
+#: model_terms:ir.ui.view,arch_db:event_booth_sale.event_booth_category_view_form
+msgid "Booth Details"
+msgstr "Детали стенда"
+
+#. module: event_booth_sale
+#: model_terms:ir.ui.view,arch_db:event_booth_sale.event_booth_registration_view_form
+#: model_terms:ir.ui.view,arch_db:event_booth_sale.event_booth_registration_view_tree
+msgid "Booth Registration"
+msgstr "Регистрация стенда"
+
+#. module: event_booth_sale
+#: model:ir.model.fields,field_description:event_booth_sale.field_sale_order__event_booth_ids
+#: model_terms:ir.ui.view,arch_db:event_booth_sale.sale_order_view_form
+msgid "Booths"
+msgstr "Стенды"
+
+#. module: event_booth_sale
+#: model:ir.model.fields,field_description:event_booth_sale.field_sale_order_line__event_booth_category_id
+msgid "Booths Category"
+msgstr "Категория стендов"
+
+#. module: event_booth_sale
+#: model_terms:ir.ui.view,arch_db:event_booth_sale.event_booth_configurator_view_form
+msgid "Cancel"
+msgstr "Отменить"
+
+#. module: event_booth_sale
+#: model:ir.model.fields,field_description:event_booth_sale.field_sale_order_line__event_booth_ids
+msgid "Confirmed Booths"
+msgstr "Подтвержденные стенды"
+
+#. module: event_booth_sale
+#: model:ir.model.fields,field_description:event_booth_sale.field_sale_order_line__event_booth_registration_ids
+msgid "Confirmed Registration"
+msgstr "Подтвержденная регистрация"
+
+#. module: event_booth_sale
+#: model_terms:ir.ui.view,arch_db:event_booth_sale.event_booth_registration_view_form
+msgid "Contact"
+msgstr "Контакты"
+
+#. module: event_booth_sale
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_registration__contact_email
+msgid "Contact Email"
+msgstr "Почта для связи"
+
+#. module: event_booth_sale
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_registration__contact_name
+msgid "Contact Name"
+msgstr "Контактное лицо"
+
+#. module: event_booth_sale
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_registration__contact_phone
+msgid "Contact Phone"
+msgstr "Контактный телефон"
+
+#. module: event_booth_sale
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_configurator__create_uid
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_registration__create_uid
+msgid "Created by"
+msgstr "Создано"
+
+#. module: event_booth_sale
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_configurator__create_date
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_registration__create_date
+msgid "Created on"
+msgstr "Создано"
+
+#. module: event_booth_sale
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth__currency_id
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_category__currency_id
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_type_booth__currency_id
+msgid "Currency"
+msgstr "Валюта"
+
+#. module: event_booth_sale
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_registration__partner_id
+msgid "Customer"
+msgstr "Клиент"
+
+#. module: event_booth_sale
+#: model_terms:ir.ui.view,arch_db:event_booth_sale.event_booth_registration_view_form
+msgid "Details"
+msgstr "Детали"
+
+#. module: event_booth_sale
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_configurator__display_name
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_registration__display_name
+msgid "Display Name"
+msgstr "Отображаемое имя"
+
+#. module: event_booth_sale
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_configurator__event_id
+msgid "Event"
+msgstr "Событие"
+
+#. module: event_booth_sale
+#: model:ir.model,name:event_booth_sale.model_event_booth
+#: model:ir.model.fields.selection,name:event_booth_sale.selection__product_template__detailed_type__event_booth
+msgid "Event Booth"
+msgstr "Стенд для мероприятий"
+
+#. module: event_booth_sale
+#: model:ir.model,name:event_booth_sale.model_event_booth_category
+msgid "Event Booth Category"
+msgstr "Категория стенда для мероприятий"
+
+#. module: event_booth_sale
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_configurator__event_booth_category_available_ids
+msgid "Event Booth Category Available"
+msgstr "Категория стенда для мероприятий Доступно"
+
+#. module: event_booth_sale
+#: model:ir.model,name:event_booth_sale.model_event_booth_configurator
+msgid "Event Booth Configurator"
+msgstr "Конфигуратор стендов для мероприятий"
+
+#. module: event_booth_sale
+#: model:ir.model,name:event_booth_sale.model_event_booth_registration
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth__event_booth_registration_ids
+msgid "Event Booth Registration"
+msgstr "Регистрация стенда на мероприятии"
+
+#. module: event_booth_sale
+#: model:ir.model,name:event_booth_sale.model_event_type_booth
+msgid "Event Booth Template"
+msgstr "Шаблон стенда для мероприятий"
+
+#. module: event_booth_sale
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth__sale_order_line_id
+msgid "Final Sale Order Line"
+msgstr "Окончательная линия заказов на продажу"
+
+#. module: event_booth_sale
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_configurator__id
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_registration__id
+msgid "ID"
+msgstr "ID"
+
+#. module: event_booth_sale
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_category__image_1920
+msgid "Image"
+msgstr "Изображение"
+
+#. module: event_booth_sale
+#: model:ir.model.fields,field_description:event_booth_sale.field_sale_order_line__is_event_booth
+msgid "Is Event Booth"
+msgstr "Стенд для мероприятий"
+
+#. module: event_booth_sale
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth__is_paid
+msgid "Is Paid"
+msgstr "Оплачено"
+
+#. module: event_booth_sale
+#: model:ir.model,name:event_booth_sale.model_account_move
+msgid "Journal Entry"
+msgstr "Запись в журнале"
+
+#. module: event_booth_sale
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_configurator__write_uid
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_registration__write_uid
+msgid "Last Updated by"
+msgstr "Последнее обновление"
+
+#. module: event_booth_sale
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_configurator__write_date
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_registration__write_date
+msgid "Last Updated on"
+msgstr "Последнее обновление"
+
+#. module: event_booth_sale
+#: model_terms:ir.ui.view,arch_db:event_booth_sale.event_booth_configurator_view_form
+msgid "Ok"
+msgstr "Ок"
+
+#. module: event_booth_sale
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth__sale_order_id
+msgid "Order Reference"
+msgstr "Ссылка на заказ"
+
+#. module: event_booth_sale
+#: model_terms:ir.ui.view,arch_db:event_booth_sale.event_booth_view_form_from_event
+msgid "Paid"
+msgstr "Оплачено"
+
+#. module: event_booth_sale
+#: model:ir.model.fields,field_description:event_booth_sale.field_sale_order_line__event_booth_pending_ids
+msgid "Pending Booths"
+msgstr "Стенды в ожидании"
+
+#. module: event_booth_sale
+#. odoo-python
+#: code:addons/event_booth_sale/models/sale_order.py:0
+msgid "Please make sure all your event-booth related lines are configured before confirming this order:%s"
+msgstr "Пожалуйста, убедитесь, что все линии, связанные с event-стендом, настроены, прежде чем подтверждать этот заказ:%s"
+
+#. module: event_booth_sale
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth__price
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_category__price
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_type_booth__price
+msgid "Price"
+msgstr "Цена"
+
+#. module: event_booth_sale
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_category__price_reduce
+msgid "Price Reduce"
+msgstr "Снижение цены"
+
+#. module: event_booth_sale
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_category__price_reduce_taxinc
+msgid "Price Reduce Tax inc"
+msgstr "Цена, уменьшенная на налог включенный"
+
+#. module: event_booth_sale
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_category__price_incl
+msgid "Price incl"
+msgstr "Цена вкл"
+
+#. module: event_booth_sale
+#: model:ir.model,name:event_booth_sale.model_product_template
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth__product_id
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_category__product_id
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_configurator__product_id
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_type_booth__product_id
+msgid "Product"
+msgstr "Товар"
+
+#. module: event_booth_sale
+#: model:ir.model.fields,field_description:event_booth_sale.field_product_product__detailed_type
+#: model:ir.model.fields,field_description:event_booth_sale.field_product_template__detailed_type
+msgid "Product Type"
+msgstr "Тип товара"
+
+#. module: event_booth_sale
+#: model:ir.model,name:event_booth_sale.model_product_product
+msgid "Product Variant"
+msgstr "Вариант продукта"
+
+#. module: event_booth_sale
+#: model_terms:ir.ui.view,arch_db:event_booth_sale.event_booth_view_form_from_event
+msgid "Registrations"
+msgstr "Регистрации"
+
+#. module: event_booth_sale
+#. odoo-python
+#: code:addons/event_booth_sale/models/sale_order_line.py:0
+msgid "Registrations from the same Order Line must belong to a single event."
+msgstr "Регистрации из одной строки заказа должны относиться к одному событию."
+
+#. module: event_booth_sale
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth__sale_order_line_registration_ids
+msgid "SO Lines with reservations"
+msgstr "SO Lines с оговорками"
+
+#. module: event_booth_sale
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_configurator__sale_order_line_id
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_registration__sale_order_line_id
+msgid "Sale Order Line"
+msgstr "Линия заказов на продажу"
+
+#. module: event_booth_sale
+#: model:ir.model,name:event_booth_sale.model_sale_order
+msgid "Sales Order"
+msgstr "Заказ на продажу"
+
+#. module: event_booth_sale
+#: model:ir.model,name:event_booth_sale.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Позиция заказа на продажу"
+
+#. module: event_booth_sale
+#: model:ir.actions.act_window,name:event_booth_sale.event_booth_configurator_action
+msgid "Select an event booth"
+msgstr "Выберите стенд для проведения мероприятия"
+
+#. module: event_booth_sale
+#. odoo-python
+#: code:addons/event_booth_sale/models/sale_order_line.py:0
+msgid "The following booths are unavailable, please remove them to continue : %(booth_names)s"
+msgstr "Следующие стенды недоступны, пожалуйста, удалите их, чтобы продолжить : %(booth_names)s"
+
+#. module: event_booth_sale
+#: model:ir.model.constraint,message:event_booth_sale.constraint_event_booth_registration_unique_registration
+msgid "There can be only one registration for a booth by sale order line"
+msgstr "На стенд может быть зарегистрирована только одна очередь на продажу"
+
+#. module: event_booth_sale
+#: model_terms:ir.ui.view,arch_db:event_booth_sale.event_booth_view_tree_from_event
+msgid "Total"
+msgstr "Всего"
+
+#. module: event_booth_sale
+#: model:ir.model.fields,help:event_booth_sale.field_sale_order_line__event_booth_pending_ids
+msgid "Used to create registration when providing the desired event booth."
+msgstr "Используется для создания регистрации при предоставлении желаемого стенда для проведения мероприятия."
+
+#. module: event_booth_sale
+#. odoo-python
+#: code:addons/event_booth_sale/models/event_booth.py:0
+msgid "You can't delete the following booths as they are linked to sales orders: %(booths)s"
+msgstr "Вы не можете удалить следующие стенды, поскольку они связаны с заказами на продажу: %(booths)s"
+
+#. module: event_booth_sale
+#. odoo-python
+#: code:addons/event_booth_sale/wizard/event_booth_configurator.py:0
+msgid "You have to select at least one booth."
+msgstr "Вы должны выбрать хотя бы один стенд."
+
+#. module: event_booth_sale
+#. odoo-python
+#: code:addons/event_booth_sale/models/event_booth_registration.py:0
+msgid "Your order has been cancelled because the following booths have been reserved"
+msgstr "Ваш заказ был отменен, так как были зарезервированы следующие кабинки"

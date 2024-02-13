@@ -3,19 +3,13 @@
 # 	* product_matrix
 #
 # Translators:
-# Сергей Шебанин <sergey@shebanin.ru>, 2022
-# Martin Trigaux, 2022
-# Sergey Vilizhanin, 2022
-# Irina Fedulova <istartlin@gmail.com>, 2022
-# Collex100, 2022
-#
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Collex100, 2022\n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2024-01-30 15:14+0400\n"
+"Last-Translator: \n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
@@ -24,15 +18,35 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: product_matrix
+#: model_terms:ir.ui.view,arch_db:product_matrix.matrix
+msgid "<small>Switch to the \"else\" condition of this block to view or edit the table.</small>"
+msgstr "<small>Переключитесь на условие \"else\" этого блока, чтобы просмотреть или отредактировать таблицу.</small>"
+
+#. module: product_matrix
+#: model_terms:ir.ui.view,arch_db:product_matrix.matrix
+msgid "<strong>Product matrix block</strong>"
+msgstr "<strong>Блок матрицы продукта</strong>"
+
+#. module: product_matrix
 #: model:product.attribute.value,name:product_matrix.product_attribute_value_color_1
 msgid "Blue"
 msgstr "Синий"
 
 #. module: product_matrix
+#: model_terms:ir.ui.view,arch_db:product_matrix.matrix
+msgid "Cell name"
+msgstr "Название ячейки"
+
+#. module: product_matrix
 #. odoo-javascript
 #: code:addons/product_matrix/static/src/js/product_matrix_dialog.js:0
 msgid "Choose Product Variants"
-msgstr ""
+msgstr "Выберите варианты продуктов"
+
+#. module: product_matrix
+#: model_terms:ir.ui.view,arch_db:product_matrix.matrix
+msgid "Column name"
+msgstr "Название колонки"
 
 #. module: product_matrix
 #. odoo-javascript
@@ -44,7 +58,7 @@ msgstr "Подтвердить"
 #. odoo-javascript
 #: code:addons/product_matrix/static/src/xml/product_matrix_dialog.xml:0
 msgid "Discard"
-msgstr ""
+msgstr "Отменить"
 
 #. module: product_matrix
 #: model:product.attribute,name:product_matrix.product_attribute_gender
@@ -54,43 +68,43 @@ msgstr "Пол"
 #. module: product_matrix
 #: model:product.attribute.value,name:product_matrix.product_attribute_value_m
 msgid "Men"
-msgstr ""
+msgstr "Мужчина"
 
 #. module: product_matrix
 #: model:product.template,name:product_matrix.matrix_product_template_shirt
 msgid "My Company Tshirt (GRID)"
-msgstr ""
+msgstr "Футболка \"Моя компания\" (ГРИД)"
 
 #. module: product_matrix
 #. odoo-javascript
 #: code:addons/product_matrix/static/src/xml/product_matrix.xml:0
 msgid "Not available"
-msgstr "Недоступен"
+msgstr "Недоступно"
 
 #. module: product_matrix
 #: model:product.attribute.value,name:product_matrix.product_attribute_value_color_2
 msgid "Pink"
-msgstr ""
+msgstr "Розовый"
 
 #. module: product_matrix
 #: model:ir.model,name:product_matrix.model_product_template
 msgid "Product"
-msgstr "Продукт"
+msgstr "Товар"
 
 #. module: product_matrix
 #: model:ir.model,name:product_matrix.model_product_template_attribute_value
 msgid "Product Template Attribute Value"
-msgstr ""
+msgstr "Значение атрибута шаблона продукта"
 
 #. module: product_matrix
 #: model:product.attribute.value,name:product_matrix.product_attribute_value_color_4
 msgid "Rainbow"
-msgstr ""
+msgstr "Радуга"
 
 #. module: product_matrix
 #: model:product.template,description_sale:product_matrix.matrix_product_template_shirt
 msgid "Show your company love around you =)."
-msgstr ""
+msgstr "Покажите своей компании любовь вокруг вас =)."
 
 #. module: product_matrix
 #: model:product.attribute,name:product_matrix.product_attribute_size
@@ -98,19 +112,29 @@ msgid "Size"
 msgstr "Размер"
 
 #. module: product_matrix
+#: model_terms:ir.ui.view,arch_db:product_matrix.matrix
+msgid "The matrix of product variants of this order will be displayed here, if there are any."
+msgstr "Здесь будет отображена матрица вариантов продуктов для данного заказа, если таковые имеются."
+
+#. module: product_matrix
+#: model_terms:ir.ui.view,arch_db:product_matrix.extra_price
+msgid "Variant price"
+msgstr "Цена варианта"
+
+#. module: product_matrix
 #: model:product.attribute.value,name:product_matrix.product_attribute_value_w
 msgid "Women"
-msgstr ""
+msgstr "Женщины"
 
 #. module: product_matrix
 #: model:product.attribute.value,name:product_matrix.product_attribute_value_size_xl
 msgid "XL"
-msgstr ""
+msgstr "XL"
 
 #. module: product_matrix
 #: model:product.attribute.value,name:product_matrix.product_attribute_value_size_xs
 msgid "XS"
-msgstr ""
+msgstr "XS"
 
 #. module: product_matrix
 #: model:product.attribute.value,name:product_matrix.product_attribute_value_color_3

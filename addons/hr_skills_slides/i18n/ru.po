@@ -3,17 +3,13 @@
 # 	* hr_skills_slides
 #
 # Translators:
-# Сергей Шебанин <sergey@shebanin.ru>, 2022
-# Ivan Kropotkin <yelizariev@itpp.dev>, 2022
-# Martin Trigaux, 2022
-#
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:52+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"POT-Creation-Date: 2024-01-08 06:51+0000\n"
+"PO-Revision-Date: 2024-01-30 15:14+0400\n"
+"Last-Translator: \n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
@@ -25,11 +21,16 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_skills_slides/models/hr_employee.py:0
 msgid "%(completed)s / %(total)s"
-msgstr ""
+msgstr "%(completed)s / %(total)s"
 
 #. module: hr_skills_slides
 #: model:ir.model,name:hr_skills_slides.model_slide_channel_partner
 msgid "Channel / Partners (Members)"
+msgstr "Каналы / Партнеры (участники)"
+
+#. module: hr_skills_slides
+#: model:hr.resume.line.type,name:hr_skills_slides.resume_type_training
+msgid "Completed Internal Training"
 msgstr ""
 
 #. module: hr_skills_slides
@@ -37,27 +38,27 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_skills_slides.field_hr_resume_line__channel_id
 #: model:ir.model.fields.selection,name:hr_skills_slides.selection__hr_resume_line__display_type__course
 msgid "Course"
-msgstr "Обучающий курс"
+msgstr "Курс"
 
 #. module: hr_skills_slides
 #: model:ir.model.fields,field_description:hr_skills_slides.field_hr_resume_line__course_url
 msgid "Course Url"
-msgstr ""
+msgstr "Ссылка"
 
 #. module: hr_skills_slides
 #: model_terms:ir.ui.view,arch_db:hr_skills_slides.hr_employee_view_form
 msgid "Courses"
-msgstr ""
+msgstr "Курсы"
 
 #. module: hr_skills_slides
 #: model:ir.model.fields,field_description:hr_skills_slides.field_hr_employee__courses_completion_text
 msgid "Courses Completion Text"
-msgstr ""
+msgstr "Завершение курсов Текст"
 
 #. module: hr_skills_slides
 #: model:ir.model.fields,field_description:hr_skills_slides.field_hr_resume_line__display_type
 msgid "Display Type"
-msgstr "Способ отображения"
+msgstr "Тип отображения"
 
 #. module: hr_skills_slides
 #: model:ir.model,name:hr_skills_slides.model_hr_employee
@@ -67,32 +68,32 @@ msgstr "Сотрудник"
 #. module: hr_skills_slides
 #: model:ir.model.fields,field_description:hr_skills_slides.field_hr_employee__has_subscribed_courses
 msgid "Has Subscribed Courses"
-msgstr ""
+msgstr "Оформил подписку на курсы"
 
 #. module: hr_skills_slides
 #: model:ir.model,name:hr_skills_slides.model_hr_resume_line
 msgid "Resume line of an employee"
-msgstr ""
+msgstr "Строка резюме сотрудника"
 
 #. module: hr_skills_slides
 #. odoo-python
 #: code:addons/hr_skills_slides/models/slide_channel.py:0
 msgid "The employee has completed the course %s"
-msgstr ""
+msgstr "Сотрудник завершил курс %s"
 
 #. module: hr_skills_slides
 #. odoo-python
 #: code:addons/hr_skills_slides/models/slide_channel.py:0
-msgid "The employee left the course <a href=\"%(link)s\">%(course)s</a>"
-msgstr ""
+msgid "The employee left the course %s"
+msgstr "Сотрудник покинул курс %s"
 
 #. module: hr_skills_slides
 #. odoo-python
 #: code:addons/hr_skills_slides/models/slide_channel.py:0
 msgid "The employee subscribed to the course %s"
-msgstr ""
+msgstr "Сотрудник подписался на курс %s"
 
 #. module: hr_skills_slides
 #: model:ir.model.fields,field_description:hr_skills_slides.field_hr_employee__subscribed_courses
 msgid "eLearning Courses"
-msgstr ""
+msgstr "Онлайн Курсы"
