@@ -1374,6 +1374,7 @@ class WebsiteSale(http.Controller):
             return redirection
 
         order.order_line._compute_tax_id()
+        self._update_so_external_taxes(order)
         request.session['sale_last_order_id'] = order.id
         request.website.sale_get_order(update_pricelist=True)
         extra_step = request.website.viewref('website_sale.extra_info_option')
@@ -1381,6 +1382,13 @@ class WebsiteSale(http.Controller):
             return request.redirect("/shop/extra_info")
 
         return request.redirect("/shop/payment")
+
+    def _update_so_external_taxes(self, order):
+        try:
+            order.validate_taxes_on_sales_order()
+        # Ignore any error here. It will be handled in next step of the checkout process (/shop/payment).
+        except ValidationError:
+            pass
 
     # ------------------------------------------------------
     # Extra step
