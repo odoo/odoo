@@ -2,11 +2,12 @@
 
 import { Component } from "@odoo/owl";
 import { formatCurrency } from "@web/core/currency";
+import { _t } from "@web/core/l10n/translation";
 import { Product } from "../product/product";
 
 export class ProductList extends Component {
     static components = { Product };
-    static template = "saleProductConfigurator.productList";
+    static template = "sale.ProductList";
     static props = {
         products: Array,
         areProductsOptional: { type: Boolean, optional: true },
@@ -14,6 +15,10 @@ export class ProductList extends Component {
     static defaultProps = {
         areProductsOptional: false,
     };
+
+    setup() {
+        this.optionalProductsTitle = _t("Add optional products");
+    }
 
     /**
      * Return the total of the product in the list, in the currency of the `sale.order`.
@@ -26,7 +31,7 @@ export class ProductList extends Component {
                 (totalPrice, product) => totalPrice + product.price * product.quantity,
                 0
             ),
-            this.env.currencyId
+            this.env.currency.id,
         );
     }
 }

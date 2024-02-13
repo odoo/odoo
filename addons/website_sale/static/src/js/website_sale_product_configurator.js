@@ -1,125 +1,143 @@
 /** @odoo-module **/
 
-import publicWidget from "@web/legacy/js/public/public_widget";
-import wSaleUtils from "@website_sale/js/website_sale_utils";
-import { OptionalProductsModal } from "@website_sale/js/sale_product_configurator_modal";
-import "@website_sale/js/website_sale";
-import { _t } from "@web/core/l10n/translation";
-import { rpc } from "@web/core/network/rpc";
+import { rpc } from '@web/core/network/rpc';
+import { serializeDateTime } from '@web/core/l10n/dates';
+import {
+    ProductConfiguratorDialog
+} from '@sale/js/product_configurator_dialog/product_configurator_dialog';
+import { WebsiteSale } from '@website_sale/js/website_sale';
+import wSaleUtils from '@website_sale/js/website_sale_utils';
 
-publicWidget.registry.WebsiteSale.include({
+const { DateTime } = luxon;
 
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
+WebsiteSale.include({
 
-    _onProductReady: function () {
+    _onProductReady(isOnProductPage = false) {
+        return this._openDialog(isOnProductPage);
+    },
+
+    async _openDialog(isOnProductPage) {
         if (this.isBuyNow) {
             return this._submitForm();
         }
-        this.optionalProductsModal = new OptionalProductsModal(this.$form, {
-            rootProduct: this.rootProduct,
-            isWebsite: true,
-            okButtonText: _t('Proceed to Checkout'),
-            cancelButtonText: _t('Continue Shopping'),
-            title: _t('Add to cart'),
-            context: this._getContext(),
-            forceDialog: this.forceDialog,
-        }).open();
-
-        this.optionalProductsModal.on('options_empty', null, this._submitForm.bind(this));
-        this.optionalProductsModal.on('update_quantity', null, this._onOptionsUpdateQuantity.bind(this));
-        this.optionalProductsModal.on('confirm', null, this._onModalSubmit.bind(this, true));
-        this.optionalProductsModal.on('back', null, this._onModalSubmit.bind(this, false));
-
-        return this.optionalProductsModal.opened();
-    },
-    /**
-     * Overridden to resolve _opened promise on modal
-     * when stayOnPageOption is activated.
-     *
-     * @override
-     */
-    _submitForm() {
-        const ret = Promise.resolve(this._super(...arguments));
-        if (this.optionalProductsModal && this.stayOnPageOption) {
-            ret.then(()=>{
-                this.optionalProductsModal._openedResolver()
-            });
+        const showDialog = await rpc('/website_sale/should_show_product_configurator', {
+            product_template_id: this.rootProduct.product_template_id,
+            ptav_ids: this.rootProduct.variant_values,
+            is_product_configured: isOnProductPage,
+        });
+        if (!showDialog) {
+            return this._submitForm();
         }
-        return ret;
-    },
-    /**
-     * Update web shop base form quantity
-     * when quantity is updated in the optional products window
-     *
-     * @private
-     * @param {integer} quantity
-     */
-    _onOptionsUpdateQuantity: function (quantity) {
-        var $qtyInput = this.$form
-            .find('.js_main_product input[name="add_qty"]')
-            .first();
+        this.call('dialog', 'add', ProductConfiguratorDialog, {
+            productTemplateId: this.rootProduct.product_template_id,
+            ptavIds: this.rootProduct.variant_values,
+            customAttributeValues: this.rootProduct.product_custom_attribute_values.map(
+                customPtav => ({
+                    ptavId: customPtav.custom_product_template_attribute_value_id,
+                    value: customPtav.custom_value,
+                })
+            ),
+            quantity: this.rootProduct.quantity,
+            soDate: serializeDateTime(DateTime.now()),
+            edit: false,
+            isFrontend: true,
+            options: { isMainProductConfigurable: !isOnProductPage },
+            save: async (mainProduct, optionalProducts, options) => {
+                this._trackProducts([mainProduct, ...optionalProducts]);
 
-        if ($qtyInput.length) {
-            $qtyInput.val(quantity).trigger('change');
-        } else {
-            // This handles the case when the "Select Quantity" customize show
-            // is disabled, and therefore the above selector does not find an
-            // element.
-            // To avoid duplicating all RPC, only trigger the variant change if
-            // it is not already done from the above trigger.
-            this.optionalProductsModal.triggerVariantChange(this.optionalProductsModal.$el);
-        }
-    },
-
-    /**
-     * Submits the form with additional parameters
-     * - lang
-     * - product_custom_attribute_values: The products custom variant values
-     *
-     * @private
-     * @param {Boolean} goToShop Triggers a page refresh to the url "shop/cart"
-     */
-    _onModalSubmit: function (goToShop) {
-        const mainProduct = this.$('.js_product.in_cart.main_product').children('.product_id');
-        const productTrackingInfo = mainProduct.data('product-tracking-info');
-        if (productTrackingInfo) {
-            const currency = productTrackingInfo['currency'];
-            const productsTrackingInfo = [];
-            this.$('.js_product.in_cart').each((i, el) => {
-                productsTrackingInfo.push({
-                    'item_id': parseInt(el.getElementsByClassName('product_id')[0].value),
-                    'item_name': el.getElementsByClassName('product_display_name')[0].textContent,
-                    'quantity': parseFloat(el.getElementsByClassName('js_quantity')[0].value),
-                    'currency': currency,
-                    'price': parseFloat(el.getElementsByClassName('oe_price')[0].getElementsByClassName('oe_currency_value')[0].textContent),
+                const values = await rpc('/website_sale/product_configurator/update_cart', {
+                    main_product: JSON.stringify(this._serializeProduct(mainProduct)),
+                    optional_products: JSON.stringify(optionalProducts.map(this._serializeProduct)),
+                    ...this._getAdditionalRpcParams(),
                 });
-            });
-            if (productsTrackingInfo.length) {
-                this.$el.trigger('add_to_cart_event', productsTrackingInfo);
+                if (options.goToCart) {
+                    window.location.pathname = '/shop/cart';
+                } else {
+                    wSaleUtils.updateCartNavBar(values);
+                    wSaleUtils.showCartNotification(this.call.bind(this), values.notification_info);
+                }
+                // Reload the product page after adding items to the cart. This is needed, for
+                // example, to update the available stock.
+                this._getCombinationInfo($.Event('click', { target: $('#add_to_cart') }));
+            },
+            discard: () => {},
+            ...this._getAdditionalDialogProps(),
+        });
+    },
+
+    /**
+     * Hook to append additional props in overriding modules.
+     *
+     * @return {Object} - The additional props.
+     */
+    _getAdditionalDialogProps() {
+        return {};
+    },
+
+    /**
+     * Hook to append additional RPC params in overriding modules.
+     *
+     * @return {Object} - The additional RPC params.
+     */
+    _getAdditionalRpcParams() {
+        return {};
+    },
+
+    /**
+     * Serialize a product into a format understandable by the server.
+     *
+     * @param {Object} product - The product to serialize.
+     * @return {Object} - The serialized product.
+     */
+    _serializeProduct(product) {
+        let serializedProduct = {
+            product_id: product.id,
+            product_template_id: product.product_tmpl_id,
+            parent_product_template_id: product.parent_product_tmpl_id,
+            quantity: product.quantity,
+        }
+
+        if (!product.attribute_lines) {
+            return serializedProduct;
+        }
+
+        // Custom attributes.
+        serializedProduct.product_custom_attribute_values = [];
+        for (const ptal of product.attribute_lines) {
+            const selectedPtavIds = new Set(ptal.selected_attribute_value_ids);
+            const selectedCustomPtav = ptal.attribute_values.find(
+                ptav => ptav.is_custom && selectedPtavIds.has(ptav.id)
+            );
+            if (selectedCustomPtav) {
+                serializedProduct.product_custom_attribute_values.push({
+                    custom_product_template_attribute_value_id: selectedCustomPtav.id,
+                    custom_value: ptal.customValue,
+                });
             }
         }
 
-        const callService = this.call.bind(this)
-        this.optionalProductsModal.getAndCreateSelectedProducts()
-            .then((products) => {
-                const productAndOptions = JSON.stringify(products);
-                rpc('/shop/cart/update_option', {
-                    product_and_options: productAndOptions,
-                    ...this._getOptionalCombinationInfoParam(),
-                }).then(function (values) {
-                    if (goToShop) {
-                        window.location.pathname = "/shop/cart";
-                    } else {
-                        wSaleUtils.updateCartNavBar(values);
-                        wSaleUtils.showCartNotification(callService, values.notification_info);
-                    }
-                }).then(() => {
-                    this._getCombinationInfo($.Event('click', {target: $("#add_to_cart")}));
-                });
+        // No variant attributes.
+        serializedProduct.no_variant_attribute_value_ids = product.attribute_lines
+            .filter(ptal => ptal.create_variant === 'no_variant')
+            .flatMap(ptal => ptal.selected_attribute_value_ids);
+
+        return serializedProduct;
+    },
+
+    _trackProducts: function (products) {
+        const productsTrackingInfo = []
+        for (const product of products) {
+            productsTrackingInfo.push({
+                'item_id': product.id,
+                'item_name': product.display_name,
+                'item_category': product.category_name,
+                'currency': product.currency_name,
+                'price': product.price,
+                'quantity': product.quantity,
             });
+        }
+        if (productsTrackingInfo.length) {
+            this.$el.trigger('add_to_cart_event', productsTrackingInfo);
+        }
     },
 });
-
-export default publicWidget.registry.WebsiteSaleOptions;

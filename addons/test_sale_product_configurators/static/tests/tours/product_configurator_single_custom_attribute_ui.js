@@ -1,9 +1,9 @@
 /** @odoo-module **/
 
+import { queryOne } from "@odoo/hoot-dom";
 import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
-import configuratorTourUtils from "@test_sale_product_configurators/js/tour_utils";
-import { queryOne } from "@odoo/hoot-dom";
+import configuratorTourUtils from "@sale/js/tours/product_configurator_tour_utils";
 
 registry.category("web_tour.tours").add('sale_product_configurator_single_custom_attribute_tour', {
     url: '/web',
@@ -11,7 +11,7 @@ registry.category("web_tour.tours").add('sale_product_configurator_single_custom
     steps: () => [stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="sale.sale_menu_root"]',
     run: "click",
-}, 
+},
 {
     trigger: ".o_sale_order",
 },
@@ -32,7 +32,7 @@ registry.category("web_tour.tours").add('sale_product_configurator_single_custom
 {
     trigger: 'button:contains(Confirm)',
     run: "click",
-}, 
+},
 {
     trigger: 'div[name="order_line"]',
 },

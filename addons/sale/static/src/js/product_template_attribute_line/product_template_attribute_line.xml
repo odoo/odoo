@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
     <!-- Attributes line template -->
-    <t t-name="saleProductConfigurator.ptal">
+    <t t-name="sale.ProductTemplateAttributeLine">
         <div name="ptal" t-attf-class="#{this.props.attribute_values.length === 1 &amp;&amp; hasPTAVCustom() ? 'd-flex' : ''}">
         <!-- If the attribute line contains only one attribute value, we don't show the attribute
              value template or the attribute line title unless the single attribute value is custom,
@@ -26,7 +26,7 @@
         </div>
     </t>
     <!-- Attributes value templates -->
-    <t t-name="saleProductConfigurator.ptav-select">
+    <t t-name="sale.ptav_select">
         <select class="o_input w-50 flex-grow-1"
             t-on-change="updateSelectedPTAV"
             t-att-name="'ptal-' + this.props.id">
@@ -40,7 +40,7 @@
                 t-att-class="{ 'css_not_available': ptav.excluded }"/>
         </select>
     </t>
-    <t t-name="saleProductConfigurator.ptav-radio">
+    <t t-name="sale.ptav_radio">
         <ul class="list-unstyled flex-grow-1 m-0">
             <li t-foreach="this.props.attribute_values" t-as="ptav" t-key="ptav.id"
                 class="mb-2">
@@ -48,17 +48,17 @@
                     <label
                         class="form-check-label d-inline-flex align-items-center"
                         t-att-class="{ 'css_not_available': ptav.excluded }"
-                        t-att-for="ptav.id">
+                        t-attf-for="ptav-{{ptav.id}}-input">
                         <span t-out="ptav.name"/>
                         <BadgeExtraPrice
                             t-if="ptav.price_extra"
                             price="ptav.price_extra"
-                            currencyId="this.env.currencyId"/>
+                            currencyId="this.env.currency.id"/>
                     </label>
                     <input
                         type="radio"
                         class="form-check-input"
-                        t-att-id="ptav.id"
+                        t-attf-id="ptav-{{ptav.id}}-input"
                         t-att-value="ptav.id"
                         t-att-checked="this.props.selected_attribute_value_ids.includes(ptav.id)"
                         t-att-name="'ptal-' + this.props.id"
@@ -67,7 +67,7 @@
             </li>
         </ul>
     </t>
-    <t t-name="saleProductConfigurator.ptav-pills">
+    <t t-name="sale.ptav_pills">
          <ul class="list-inline list-unstyled flex-grow-1 mb-0">
             <li t-foreach="this.props.attribute_values" t-as="ptav" t-key="ptav.id"
                 t-att-class="{'active': this.props.selected_attribute_value_ids.includes(ptav.id)}"
@@ -75,17 +75,17 @@
                 <label
                     class="btn btn-outline-secondary"
                     t-att-class="{ 'css_not_available': ptav.excluded }"
-                    t-att-for="ptav.id">
+                    t-attf-for="ptav-{{ptav.id}}-input">
                     <span t-out="ptav.name"/>
                     <BadgeExtraPrice
                         t-if="ptav.price_extra"
                         price="ptav.price_extra"
-                        currencyId="this.env.currencyId"/>
+                        currencyId="this.env.currency.id"/>
                 </label>
                 <input
                     class="btn-check"
                     type="radio"
-                    t-att-id="ptav.id"
+                    t-attf-id="ptav-{{ptav.id}}-input"
                     t-att-value="ptav.id"
                     t-att-name="'ptal-' + this.props.id"
                     t-att-checked="this.props.selected_attribute_value_ids.includes(ptav.id)"
@@ -93,7 +93,7 @@
             </li>
         </ul>
     </t>
-    <t t-name="saleProductConfigurator.ptav-color">
+    <t t-name="sale.ptav_color">
         <ul class="list-inline flex-grow-1 mb-0">
             <li t-foreach="this.props.attribute_values" t-as="ptav" t-key="ptav.id"
                 class="list-inline-item me-2">
@@ -110,7 +110,7 @@
                                   'css_not_available': ptav.excluded }">
                     <input
                         type="radio"
-                        t-att-id="ptav.id"
+                        t-attf-id="ptav-{{ptav.id}}-input"
                         t-att-value="ptav.id"
                         t-att-name="'ptal-' + this.props.id"
                         t-att-checked="this.props.selected_attribute_value_ids.includes(ptav.id)"
@@ -119,7 +119,7 @@
             </li>
         </ul>
     </t>
-    <t t-name="saleProductConfigurator.ptav-multi">
+    <t t-name="sale.ptav_multi">
          <ul class="list-unstyled flex-grow-1 m-0">
             <li t-foreach="this.props.attribute_values" t-as="ptav" t-key="ptav.id"
                 class="mb-2">
@@ -127,19 +127,19 @@
                     <input
                         type="checkbox"
                         class="form-check-input"
-                        t-att-id="ptav.id"
+                        t-attf-id="ptav-{{ptav.id}}-input"
                         t-att-value="ptav.id"
                         t-att-name="'ptal-' + this.props.id"
                         t-att-checked="this.props.selected_attribute_value_ids.includes(ptav.id)"
                         t-on-change="updateSelectedPTAV"/>
                     <label
                         class="form-check-label"
-                        t-att-for="ptav.id">
+                        t-attf-for="ptav-{{ptav.id}}-input">
                         <span t-out="ptav.name"/>
                         <BadgeExtraPrice
                             t-if="ptav.price_extra"
                             price="ptav.price_extra"
-                            currencyId="this.env.currencyId"/>
+                            currencyId="this.env.currency.id"/>
                     </label>
                 </div>
             </li>

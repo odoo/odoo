@@ -4,7 +4,7 @@ import { Component } from "@odoo/owl";
 import { formatCurrency } from "@web/core/currency";
 
 export class BadgeExtraPrice extends Component {
-    static template = "product.badge_extra_price";
+    static template = "sale.BadgeExtraPrice";
     static props = {
         price: Number,
         currencyId: Number,

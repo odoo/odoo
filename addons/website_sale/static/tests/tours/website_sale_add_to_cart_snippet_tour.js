@@ -32,12 +32,11 @@ wTourUtils.registerWebsitePreviewTour('add_to_cart_snippet_tour', {
         wTourUtils.clickOnElement('continue shopping', ':iframe span:contains(Continue Shopping)'),
 
         // Product with 2 variants with a variant selected
-        // ...editAddToCartSnippet(),
-        // ...wTourUtils.selectElementInWeSelectWidget('product_template_picker_opt', 'Conference Chair', true),
-        // ...wTourUtils.selectElementInWeSelectWidget('product_variant_picker_opt', 'Conference Chair (Aluminium)'),
-        // ...wTourUtils.clickOnSave(),
-        // wTourUtils.clickOnElement('add to cart button', 'iframe .s_add_to_cart_btn'),
-        // TODO edm: re-enable this part when this isn't an indeterminist error anymore
+        ...editAddToCartSnippet(),
+        ...wTourUtils.selectElementInWeSelectWidget('product_template_picker_opt', 'Conference Chair', true),
+        ...wTourUtils.selectElementInWeSelectWidget('product_variant_picker_opt', 'Conference Chair (Aluminium)'),
+        ...wTourUtils.clickOnSave(),
+        wTourUtils.clickOnElement('add to cart button', ':iframe .s_add_to_cart_btn'),
 
         // Basic product with no variants and action=buy now
         ...editAddToCartSnippet(),
@@ -52,9 +51,9 @@ wTourUtils.registerWebsitePreviewTour('add_to_cart_snippet_tour', {
         },
         wTourUtils.assertPathName('/shop/payment', ':iframe a[href="/shop/cart"]'),
 
-        wsTourUtils.goToCart({quantity: 3, backend: true}),
+        wsTourUtils.goToCart({quantity: 4, backend: true}),
         wsTourUtils.assertCartContains({productName: 'Pedal Bin', backend: true}),
         wsTourUtils.assertCartContains({productName: 'Conference Chair (Steel)', backend: true}),
-        // wsTourUtils.assertCartContains({productName: 'Conference Chair (Aluminium)', backend: true}),
+        wsTourUtils.assertCartContains({productName: 'Conference Chair (Aluminium)', backend: true}),
     ],
 );

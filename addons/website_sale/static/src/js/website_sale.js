@@ -396,20 +396,22 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
             'input[type="radio"][name="product_id"]:checked'
         ];
 
+        const productTemplateId =
+            parseInt($form.find('input[type="hidden"][name="product_template_id"]').first().val());
         var productReady = this.selectOrCreateProduct(
             $form,
             parseInt($form.find(productSelector.join(', ')).first().val(), 10),
-            $form.find('.product_template_id').val(),
+            productTemplateId,
         );
 
         return productReady.then(function (productId) {
             $form.find(productSelector.join(', ')).val(productId);
-            self._updateRootProduct($form, productId);
-            return self._onProductReady();
+            self._updateRootProduct($form, productId, productTemplateId);
+            return self._onProductReady($form.closest('.o_wsale_product_page').length > 0);
         });
     },
 
-    _onProductReady: function () {
+    _onProductReady(isOnProductPage = false) {
         return this._submitForm();
     },
 
@@ -625,10 +627,12 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
      * @private
      * @param {Object} $form
      * @param {Number} productId
+     * @param {Number} productTemplateId
      */
-    _updateRootProduct($form, productId) {
+    _updateRootProduct($form, productId, productTemplateId) {
         this.rootProduct = {
             product_id: productId,
+            product_template_id: productTemplateId,
             quantity: parseFloat($form.find('input[name="add_qty"]').val() || 1),
             product_custom_attribute_values: this.getCustomVariantValues($form.find('.js_product')),
             variant_values: this.getSelectedVariantValues($form.find('.js_product')),
