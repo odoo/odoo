@@ -411,3 +411,20 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
         with file_open('l10n_es_edi_facturae/tests/data/expected_invoice_period_document.xml', 'rt') as f:
             expected_xml = lxml.etree.fromstring(f.read().encode())
         self.assertXmlTreeEqual(lxml.etree.fromstring(generated_file), expected_xml)
+
+    @freeze_time('2023-01-01')
+    def test_generate_with_payment_means(self):
+        invoice = self.create_invoice(
+            partner_id=self.partner_a.id,
+            move_type='out_invoice',
+            invoice_line_ids=[{'price_unit': 100.0, 'tax_ids': [self.tax.id]}],
+            l10n_es_payment_means='14',
+        )
+        invoice.action_post()
+        generated_file, errors = invoice._l10n_es_edi_facturae_render_facturae()
+        self.assertFalse(errors)
+        self.assertTrue(generated_file)
+
+        with file_open('l10n_es_edi_facturae/tests/data/expected_invoice_payment_means.xml', 'rt') as f:
+            expected_xml = lxml.etree.fromstring(f.read().encode())
+        self.assertXmlTreeEqual(lxml.etree.fromstring(generated_file), expected_xml)
