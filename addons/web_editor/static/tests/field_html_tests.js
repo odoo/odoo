@@ -351,6 +351,54 @@ QUnit.module('web_editor', {}, function () {
             form.destroy();
         });
 
+        QUnit.test('Close dropdown on colorpicker hide', async function (assert) {
+            assert.expect(4);
+
+            var form = await testUtils.createView({
+                View: FormView,
+                model: 'note.note',
+                data: this.data,
+                arch: '<form>' +
+                    '<field name="body" widget="html" style="height: 100px"/>' +
+                    '</form>',
+                res_id: 1,
+            });
+
+            await testUtils.form.clickEdit(form);
+            await new Promise(resolve => setTimeout(resolve, 50));
+            var $field = form.$('.oe_form_field[name="body"]');
+
+            // select the text
+            var pText = $field.find('.note-editable p').first().contents()[0];
+            Wysiwyg.setRange(pText, 1, pText, 10);
+            // text is selected
+
+            var range = Wysiwyg.getRange();
+
+            assert.strictEqual(range.sc, pText,
+                "should select the text");
+
+            async function openColorpicker(selector) {
+                const $colorpicker = $(selector);
+                const openingProm = new Promise(resolve => {
+                    $colorpicker.one('shown.bs.dropdown', () => resolve());
+                });
+                await testUtils.dom.click($colorpicker.find('.dropdown-toggle:first'));
+                return openingProm;
+            }
+
+            await new Promise(resolve => setTimeout(resolve, 50));
+
+            await openColorpicker('#toolbar .note-back-color-preview');
+            assert.ok($('.note-back-color-preview .dropdown-menu').hasClass('show'),
+                "should display the color picker");
+
+            Wysiwyg.setRange(pText, 1, pText, 1);
+            await new Promise(resolve => setTimeout(resolve, 50));
+            assert.ok(document.querySelector('#toolbar').style.visibility === 'hidden', "toolbar should be hidden");
+            assert.containsNone($, ".dropdown-menu.show", "all dropdowns should be closed");
+            form.destroy();
+        });
 
         QUnit.test('media dialog: image', async function (assert) {
             assert.expect(1);
