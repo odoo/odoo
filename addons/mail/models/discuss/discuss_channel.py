@@ -179,7 +179,21 @@ class Channel(models.Model):
 
     def _search_is_member(self, operator, operand):
         is_in = (operator == '=' and operand) or (operator == '!=' and not operand)
-        return [('channel_member_ids', "any" if is_in else "not any", [('is_self', '=', True)])]
+        # Separate query to fetch candidate channels because the sub-select that _search would
+        # generate leads psql query plan to take bad decisions. When candidate ids are explicitly
+        # given it doesn't need to make (incorrect) guess, at the cost of one extra but fast query.
+        # It is expected to return hundreds of channels, a thousand at most, which is acceptable.
+        # A "join" would be ideal, but the ORM is currently not able to generate it from the domain.
+        current_partner, current_guest = self.env["res.partner"]._get_current_persona()
+        if current_guest:
+            # sudo: discuss.channel - sudo for performance, just checking existence
+            channels = current_guest.sudo().channel_ids
+        elif current_partner:
+            # sudo: discuss.channel - sudo for performance, just checking existence
+            channels = current_partner.sudo().channel_ids
+        else:
+            channels = self.env["discuss.channel"]
+        return [('id', "in" if is_in else "not in", channels.ids)]
 
     @api.depends('channel_member_ids')
     def _compute_member_count(self):
