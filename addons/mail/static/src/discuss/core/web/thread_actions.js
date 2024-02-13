@@ -13,15 +13,17 @@ threadActionsRegistry.add("expand-discuss", {
     },
     icon: "fa fa-fw fa-expand",
     name: _t("Open in Discuss"),
+    shouldClearBreadcrumbs(component) {
+        return false;
+    },
     open(component) {
         component.thread.setAsDiscussThread();
         component.actionService.doAction(
             {
                 type: "ir.actions.client",
                 tag: "mail.action_discuss",
-                name: _t("Discuss"),
             },
-            { clearBreadcrumbs: true }
+            { clearBreadcrumbs: this.shouldClearBreadcrumbs(component) }
         );
     },
     sequence: 15,
