@@ -39,10 +39,9 @@ class StorageCategory(models.Model):
         for storage_category in self:
             storage_category.capacity_ids = storage_category.product_capacity_ids | storage_category.package_capacity_ids
 
-    def copy(self, default=None):
-        default = dict(default or {})
-        default['name'] = _("%s (copy)", self.name)
-        return super().copy(default)
+    def copy_data(self, default=None):
+        vals_list = super().copy_data(default=default)
+        return [dict(vals, name=_("%s (copy)", category.name)) for category, vals in zip(self, vals_list)]
 
 
 class StorageCategoryProductCapacity(models.Model):

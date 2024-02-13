@@ -260,12 +260,9 @@ class BlogPost(models.Model):
         self._check_for_publication(vals)
         return result
 
-    @api.returns('self', lambda value: value.id)
     def copy_data(self, default=None):
-        self.ensure_one()
-        name = _("%s (copy)", self.name)
-        default = dict(default or {}, name=name)
-        return super(BlogPost, self).copy_data(default)
+        vals_list = super().copy_data(default=default)
+        return [dict(vals, name=_("%s (copy)", blog.name)) for blog, vals in zip(self, vals_list)]
 
     def _get_access_action(self, access_uid=None, force_website=False):
         """ Instead of the classic form view, redirect to the post on website

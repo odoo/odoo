@@ -689,34 +689,48 @@ class Task(models.Model):
                         extract_data(task)
                 task.name = task.display_name.strip()
 
-    @api.returns('self', lambda value: value.id)
+    def copy_data(self, default=None):
+        default = dict(default or {})
+        vals_list = super().copy_data(default=default)
+        not_project_user = not self.env.user.has_group('project.group_project_user')
+        if not_project_user:
+            vals_list = [{k: v for k, v in vals.items() if k in self.SELF_READABLE_FIELDS} for vals in vals_list]
+        for task, vals in zip(self, vals_list):
+            has_default_name = bool(default.get('name', ''))
+            if not has_default_name:
+                vals['name'] = _("%s (copy)", task.name)
+                vals['child_ids'] = [child.copy({'name': _("%s (copy)", child.name)}).id for child in task.child_ids]
+            else:
+                vals['child_ids'] = [child.copy({'name': child.name}).id for child in task.child_ids]
+            if task.recurrence_id:
+                vals['recurrence_id'] = task.recurrence_id.copy().id
+        return vals_list
+
     def copy(self, default=None):
-        if default is None:
-            default = {}
-        if self.allow_task_dependencies and 'task_mapping' not in self.env.context:
-            self = self.with_context(task_mapping=dict())
-        has_default_name = bool(default.get('name', ''))
-        if not has_default_name:
-            default['name'] = _("%s (copy)", self.name)
-            default['child_ids'] = [child.copy({'name': _("%s (copy)", child.name)}).id for child in self.child_ids]
-        else:
-            default['child_ids'] = [child.copy({'name': child.name}).id for child in self.child_ids]
-        if self.recurrence_id:
-            default['recurrence_id'] = self.recurrence_id.copy().id
-        self_with_mail_context = self.with_context(mail_auto_subscribe_no_notify=True, mail_create_nosubscribe=True)
-        task_copy = super(Task, self_with_mail_context).copy(default)
-        if self.allow_task_dependencies:
-            task_mapping = self.env.context.get('task_mapping')
-            task_mapping[self.id] = task_copy.id
-            new_tasks = task_mapping.values()
-            self.write({'depend_on_ids': [Command.unlink(t.id) for t in self.depend_on_ids if t.id in new_tasks]})
-            self.write({'dependent_ids': [Command.unlink(t.id) for t in self.dependent_ids if t.id in new_tasks]})
-            task_copy.write({'depend_on_ids': [Command.link(task_mapping.get(t.id, t.id)) for t in self.depend_on_ids]})
-            task_copy.write({'dependent_ids': [Command.link(task_mapping.get(t.id, t.id)) for t in self.dependent_ids]})
-        if self.allow_milestones:
-            milestone_mapping = self.env.context.get('milestone_mapping', {})
-            task_copy.milestone_id = milestone_mapping.get(task_copy.milestone_id.id, task_copy.milestone_id.id)
-        return task_copy
+        if 'task_mapping' not in self.env.context:
+            self = self.with_context(task_mapping={})
+        copied_tasks = super(Task, self.with_context(
+            mail_auto_subscribe_no_notify=True,
+            mail_create_nosubscribe=True,
+            mail_create_nolog=True,
+        )).copy(default=default)
+        for old_task, new_task in zip(self, copied_tasks):
+            if old_task.allow_task_dependencies:
+                task_mapping = self.env.context.get('task_mapping')
+                task_mapping[old_task.id] = new_task.id
+                new_tasks = task_mapping.values()
+                old_task.write({
+                    'depend_on_ids': [Command.unlink(t.id) for t in old_task.depend_on_ids if t.id in new_tasks],
+                    'dependent_ids': [Command.unlink(t.id) for t in old_task.dependent_ids if t.id in new_tasks],
+                })
+                new_task.write({
+                    'depend_on_ids': [Command.link(task_mapping.get(t.id, t.id)) for t in old_task.depend_on_ids],
+                    'dependent_ids': [Command.link(task_mapping.get(t.id, t.id)) for t in old_task.dependent_ids],
+                })
+            if old_task.allow_milestones:
+                milestone_mapping = self.env.context.get('milestone_mapping', {})
+                new_task.milestone_id = milestone_mapping.get(new_task.milestone_id.id, new_task.milestone_id.id)
+        return copied_tasks
 
     @api.model
     def get_empty_list_help(self, help):
@@ -881,12 +895,6 @@ class Task(models.Model):
                 if fname in valid_names
             ]
         return super().check_field_access_rights(operation, field_names)
-
-    def copy_data(self, default=None):
-        defaults = super().copy_data(default=default)
-        if self.env.user.has_group('project.group_project_user'):
-            return defaults
-        return [{k: v for k, v in default.items() if k in self.SELF_READABLE_FIELDS} for default in defaults]
 
     def _set_stage_on_project_from_task(self):
         stage_ids_per_project = defaultdict(list)

@@ -1378,15 +1378,6 @@ export class Model extends Array {
     }
 
     /**
-     * @param {Iterable<number>} ids
-     * @param {ModelRecord} values
-     * @param {KwArgs} [kwargs={}]
-     */
-    copy_multi(ids, values, kwargs = {}) {
-        return ensureArray(ids).map((id) => this.copy(id, values, kwargs));
-    }
-
-    /**
      * @param {Iterable<ModelRecord>} valuesList
      * @param {KwArgs} [kwargs={}]
      */

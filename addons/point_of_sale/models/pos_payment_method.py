@@ -94,6 +94,6 @@ class PosPaymentMethod(models.Model):
                             'Open sessions: %s', (' '.join(self.open_session_ids.mapped('name')),)))
         return super(PosPaymentMethod, self).write(vals)
 
-    def copy(self, default=None):
+    def copy_data(self, default=None):
         default = dict(default or {}, config_ids=[(5, 0, 0)])
-        return super().copy(default)
+        return super().copy_data(default=default)

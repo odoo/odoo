@@ -913,23 +913,22 @@ class Lead(models.Model):
         leads_reach_lost._pls_increment_frequencies(to_state='lost')
         leads_leave_lost._pls_increment_frequencies(from_state='lost')
 
-    @api.returns('self', lambda value: value.id)
-    def copy(self, default=None):
-        self.ensure_one()
+    def copy_data(self, default=None):
         # set default value in context, if not already set (Put stage to 'new' stage)
-        context = dict(self._context)
-        context.setdefault('default_type', self.type)
-        context.setdefault('default_team_id', self.team_id.id)
         # Set date_open to today if it is an opp
-        default = default or {}
-        default['date_open'] = self.env.cr.now() if self.type == 'opportunity' else False
-        # Do not assign to an archived user
-        if not self.user_id.active:
-            default['user_id'] = False
+        default = dict(default or {})
         if not self.env.user.has_group('crm.group_use_recurring_revenues'):
             default['recurring_revenue'] = 0
             default['recurring_plan'] = False
-        return super(Lead, self.with_context(context)).copy(default=default)
+        vals_list = super().copy_data(default=default)
+        now = self.env.cr.now()
+        for lead, vals in zip(self, vals_list):
+            vals.setdefault('type', lead.type)
+            vals.setdefault('team_id', lead.team_id.id)
+            vals['date_open'] = now if lead.type == 'opportunity' else False
+            if not lead.user_id.active:
+                vals['user_id'] = False
+        return vals_list
 
     def unlink(self):
         """ Update meetings when removing opportunities, otherwise you have

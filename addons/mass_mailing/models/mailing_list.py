@@ -127,12 +127,9 @@ class MassMailingList(models.Model):
         for mailing_list in self:
             mailing_list.display_name = f"{mailing_list.name} ({mailing_list.contact_count})"
 
-    def copy(self, default=None):
-        self.ensure_one()
-
-        default = dict(default or {},
-                       name=_('%s (copy)', self.name),)
-        return super(MassMailingList, self).copy(default)
+    def copy_data(self, default=None):
+        vals_list = super().copy_data(default=default)
+        return [dict(vals, name=_("%s (copy)", mailing_list.name)) for mailing_list, vals in zip(self, vals_list)]
 
     # ------------------------------------------------------
     # ACTIONS

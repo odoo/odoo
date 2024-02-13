@@ -49,13 +49,9 @@ class Job(models.Model):
         """ We don't want the current user to be follower of all created job """
         return super(Job, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
 
-    @api.returns('self', lambda value: value.id)
-    def copy(self, default=None):
-        self.ensure_one()
-        default = dict(default or {})
-        if 'name' not in default:
-            default['name'] = _("%s (copy)", self.name)
-        return super(Job, self).copy(default=default)
+    def copy_data(self, default=None):
+        vals_list = super().copy_data(default=default)
+        return [dict(vals, name=_("%s (copy)", job.name)) for job, vals in zip(self, vals_list)]
 
     def write(self, vals):
         if len(self) == 1:

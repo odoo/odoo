@@ -61,20 +61,22 @@ class ResourceMixin(models.AbstractModel):
         return resource_vals
 
     def copy_data(self, default=None):
-        if default is None:
-            default = {}
+        default = dict(default or {})
+        vals_list = super().copy_data(default=default)
 
         resource_default = {}
         if 'company_id' in default:
             resource_default['company_id'] = default['company_id']
         if 'resource_calendar_id' in default:
             resource_default['calendar_id'] = default['resource_calendar_id']
-        resource = self.resource_id.copy(resource_default)
-
-        default['resource_id'] = resource.id
-        default['company_id'] = resource.company_id.id
-        default['resource_calendar_id'] = resource.calendar_id.id
-        return super().copy_data(default)
+        resources = [record.resource_id for record in self]
+        resources_to_copy = self.env['resource.resource'].concat(*resources)
+        new_resources = resources_to_copy.copy(resource_default)
+        for resource, vals in zip(new_resources, vals_list):
+            vals['resource_id'] = resource.id
+            vals['company_id'] = resource.company_id.id
+            vals['resource_calendar_id'] = resource.calendar_id.id
+        return vals_list
 
     def _get_work_days_data_batch(self, from_datetime, to_datetime, compute_leaves=True, calendar=None, domain=None):
         """

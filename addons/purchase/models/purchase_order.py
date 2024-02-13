@@ -266,14 +266,14 @@ class PurchaseOrder(models.Model):
         ctx = dict(self.env.context)
         ctx.pop('default_product_id', None)
         self = self.with_context(ctx)
-        new_po = super(PurchaseOrder, self).copy(default=default)
-        for line in new_po.order_line:
+        new_pos = super().copy(default=default)
+        for line in new_pos.order_line:
             if line.product_id:
                 seller = line.product_id._select_seller(
                     partner_id=line.partner_id, quantity=line.product_qty,
                     date=line.order_id.date_order and line.order_id.date_order.date(), uom_id=line.product_uom)
                 line.date_planned = line._get_date_planned(seller)
-        return new_po
+        return new_pos
 
     def _must_delete_date_planned(self, field_name):
         # To be overridden

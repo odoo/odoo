@@ -592,11 +592,14 @@ class IrAttachment(models.Model):
             vals = self._check_contents(vals)
         return super(IrAttachment, self).write(vals)
 
-    def copy(self, default=None):
-        if not (default or {}).keys() & {'datas', 'db_datas', 'raw'}:
-            # ensure the content is kept and recomputes checksum/store_fname
-            default = dict(default or {}, raw=self.raw)
-        return super(IrAttachment, self).copy(default)
+    def copy_data(self, default=None):
+        default = dict(default or {})
+        vals_list = super().copy_data(default=default)
+        for attachment, vals in zip(self, vals_list):
+            if not default.keys() & {'datas', 'db_datas', 'raw'}:
+                # ensure the content is kept and recomputes checksum/store_fname
+                vals['raw'] = attachment.raw
+        return vals_list
 
     def unlink(self):
         if not self:

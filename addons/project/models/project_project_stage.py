@@ -18,11 +18,9 @@ class ProjectProjectStage(models.Model):
         help="If enabled, this stage will be displayed as folded in the Kanban view of your projects. Projects in a folded stage are considered as closed.")
     company_id = fields.Many2one('res.company', string="Company")
 
-    def copy(self, default=None):
-        default = dict(default or {})
-        if not default.get('name'):
-            default['name'] = _("%s (copy)", self.name)
-        return super().copy(default)
+    def copy_data(self, default=None):
+        vals_list = super().copy_data(default=default)
+        return [dict(vals, name=_("%s (copy)", stage.name)) for stage, vals in zip(self, vals_list)]
 
     def unlink_wizard(self, stage_view=False):
         wizard = self.with_context(active_test=False).env['project.project.stage.delete.wizard'].create({

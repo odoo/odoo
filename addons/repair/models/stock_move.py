@@ -39,9 +39,11 @@ class StockMove(models.Model):
 
     def copy_data(self, default=None):
         default = dict(default or {})
-        if 'repair_id' in default or self.repair_id:
-            default['sale_line_id'] = False
-        return super().copy_data(default)
+        vals_list = super().copy_data(default=default)
+        for move, vals in zip(self, vals_list):
+            if 'repair_id' in default or move.repair_id:
+                vals['sale_line_id'] = False
+        return vals_list
 
     @api.ondelete(at_uninstall=False)
     def _unlink_if_draft_or_cancel(self):

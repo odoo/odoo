@@ -1804,10 +1804,9 @@ class IrModelConstraint(models.Model):
 
         self.unlink()
 
-    def copy(self, default=None):
-        default = dict(default or {})
-        default['name'] = self.name + '_copy'
-        return super(IrModelConstraint, self).copy(default)
+    def copy_data(self, default=None):
+        vals_list = super().copy_data(default=default)
+        return [dict(vals, name=constraint.name + '_copy') for constraint, vals in zip(self, vals_list)]
 
     def _reflect_constraint(self, model, conname, type, definition, module, message=None):
         """ Reflect the given constraint, and return its corresponding record
@@ -2208,12 +2207,12 @@ class IrModelData(models.Model):
             raise AccessError(_('Not enough access rights on the external ID %r', '%s.%s', (module, xml_id)))
         return model, False
 
-    @api.returns('self', lambda value: value.id)
-    def copy(self, default=None):
-        self.ensure_one()
-        rand = "%04x" % random.getrandbits(16)
-        default = dict(default or {}, name="%s_%s" % (self.name, rand))
-        return super().copy(default)
+    def copy_data(self, default=None):
+        vals_list = super().copy_data(default=default)
+        for model, vals in zip(self, vals_list):
+            rand = "%04x" % random.getrandbits(16)
+            vals['name'] = "%s_%s" % (model.name, rand)
+        return vals_list
 
     def write(self, values):
         self.env.registry.clear_cache()  # _xmlid_lookup

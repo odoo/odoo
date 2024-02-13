@@ -397,24 +397,23 @@ class Project(models.Model):
         })
         return True
 
-    @api.returns('self', lambda value: value.id)
-    def copy(self, default=None):
-        if default is None:
-            default = {}
-        if not default.get('name'):
-            default['name'] = _("%s (copy)", self.name)
-        self_with_mail_context = self.with_context(mail_auto_subscribe_no_notify=True, mail_create_nosubscribe=True)
-        project = super(Project, self_with_mail_context).copy(default)
-        for follower in self.message_follower_ids:
-            project.message_subscribe(partner_ids=follower.partner_id.ids, subtype_ids=follower.subtype_ids.ids)
-        if self.allow_milestones:
-            if 'milestone_mapping' not in self.env.context:
-                self = self.with_context(milestone_mapping=dict())
-            project.milestone_ids = [milestone.copy().id for milestone in self.milestone_ids]
-        if 'tasks' not in default:
-            self.map_tasks(project.id)
+    def copy_data(self, default=None):
+        vals_list = super().copy_data(default=default)
+        return [dict(vals, name=_("%s (copy)", project.name)) for project, vals in zip(self, vals_list)]
 
-        return project
+    def copy(self, default=None):
+        default = dict(default or {})
+        new_projects = super(Project, self.with_context(mail_auto_subscribe_no_notify=True, mail_create_nosubscribe=True)).copy(default=default)
+        if 'milestone_mapping' not in self.env.context:
+            self = self.with_context(milestone_mapping={})
+        for old_project, new_project in zip(self, new_projects):
+            for follower in old_project.message_follower_ids:
+                new_project.message_subscribe(partner_ids=follower.partner_id.ids, subtype_ids=follower.subtype_ids.ids)
+            if old_project.allow_milestones:
+                new_project.milestone_ids = self.milestone_ids.copy().ids
+            if 'tasks' not in default:
+                old_project.map_tasks(new_project.id)
+        return new_projects
 
     @api.model
     def name_create(self, name):

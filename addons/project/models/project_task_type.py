@@ -77,11 +77,9 @@ class ProjectTaskType(models.Model):
             self.env['project.task'].search([('stage_id', 'in', self.ids)]).write({'active': False})
         return super(ProjectTaskType, self).write(vals)
 
-    def copy(self, default=None):
-        default = dict(default or {})
-        if not default.get('name'):
-            default['name'] = _("%s (copy)", self.name)
-        return super().copy(default)
+    def copy_data(self, default=None):
+        vals_list = super().copy_data(default=default)
+        return [dict(vals, name=_("%s (copy)", task_type.name)) for task_type, vals in zip(self, vals_list)]
 
     @api.ondelete(at_uninstall=False)
     def _unlink_if_remaining_personal_stages(self):

@@ -132,14 +132,9 @@ class ResourceCalendar(models.Model):
         for calendar in self:
             calendar.tz_offset = datetime.now(timezone(calendar.tz or 'GMT')).strftime('%z')
 
-    @api.returns('self', lambda value: value.id)
-    def copy(self, default=None):
-        self.ensure_one()
-        if default is None:
-            default = {}
-        if not default.get('name'):
-            default['name'] = _('%s (copy)', self.name)
-        return super().copy(default)
+    def copy_data(self, default=None):
+        vals_list = super().copy_data(default=default)
+        return [dict(vals, name=_("%s (copy)", calendar.name)) for calendar, vals in zip(self, vals_list)]
 
     @api.constrains('attendance_ids')
     def _check_attendance_ids(self):
