@@ -5,7 +5,6 @@
 This module contains all that is needed for the Bookkeeping Act
     """,
     'summary': "Bookkeeping Act",
-    'countries': ['dk'],
     'depends': [
         'l10n_dk',
     ],
