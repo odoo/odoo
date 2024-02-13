@@ -56,6 +56,8 @@
             'data-translatable': '1' if translatable else None,
             'data-view-xmlid': xmlid,
             'data-viewid': viewid,
+            'data-default-lang-name': website.default_lang_id.name.split('/').pop() if translatable else None,
+            'data-lang-name': website.env['res.lang']._get_data(code=lang).name.split('/').pop() if translatable else None,
         })"/>
     </xpath>
 
