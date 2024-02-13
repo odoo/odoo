@@ -67,10 +67,8 @@ class Department(models.Model):
         for department in self:
             department.plans_count = plans_count.get(department.id, 0)
 
-    @api.constrains('parent_id')
-    def _check_parent_id(self):
-        if not self._check_recursion():
-            raise ValidationError(_('You cannot create recursive departments.'))
+    def _raise_check_recursion(self, cyclic_records):
+        raise ValidationError(_('You cannot create recursive departments.'))
 
     @api.model_create_multi
     def create(self, vals_list):

@@ -119,10 +119,8 @@ class PartnerCategory(models.Model):
     active = fields.Boolean(default=True, help="The active field allows you to hide the category without removing it.")
     partner_ids = fields.Many2many('res.partner', column1='category_id', column2='partner_id', string='Partners', copy=False)
 
-    @api.constrains('parent_id')
-    def _check_parent_id(self):
-        if not self._check_recursion():
-            raise ValidationError(_('You can not create recursive tags.'))
+    def _raise_check_recursion(self, cyclic_records):
+        raise ValidationError(_('You can not create recursive tags.'))
 
     @api.depends('parent_id')
     def _compute_display_name(self):
