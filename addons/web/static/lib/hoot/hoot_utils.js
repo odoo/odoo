@@ -466,6 +466,7 @@ export function formatTechnical(
  * @param {"ms" | "s"} [unit]
  */
 export function formatTime(value, unit) {
+    value ||= 0;
     if (unit) {
         if (unit === "s") {
             value /= 1_000;

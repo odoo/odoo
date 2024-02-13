@@ -188,7 +188,7 @@ ul {
     left: calc(var(--_x, 50) * 1vw);
     pointer-events: none;
     top: calc(var(--_y, 100) * 1vh);
-    z-index: 9999;
+    z-index: 4;
 }
 .incentive::after {
     animation: animation-incentive-wiggle calc(var(--_wiggle-duration, 1000) * 1ms) ease-in-out
@@ -741,7 +741,7 @@ input[type="checkbox"]:checked {
     top: 0;
 }
 .bottom-0 {
-    top: 0;
+    bottom: 0;
 }
 
 /* Position: mode */
@@ -794,6 +794,9 @@ input[type="checkbox"]:checked {
 .w-5 {
     width: 1.25rem;
 }
+.w-fit {
+    width: fit-content;
+}
 .w-full {
     width: 100%;
 }
@@ -819,6 +822,9 @@ input[type="checkbox"]:checked {
 }
 .min-w-5 {
     min-width: 1.25rem;
+}
+.min-w-fit {
+    min-width: fit-content;
 }
 .min-w-full {
     min-width: 100%;
@@ -864,11 +870,11 @@ input[type="checkbox"]:checked {
 .h-5 {
     height: 1.25rem;
 }
-.h-full {
-    height: 100%;
-}
 .h-fit {
     height: fit-content;
+}
+.h-full {
+    height: 100%;
 }
 
 .h-7 {
@@ -1378,8 +1384,14 @@ input[type="checkbox"]:checked {
 .z-1 {
     z-index: 1;
 }
-.z-10 {
-    z-index: 10;
+.z-2 {
+    z-index: 2;
+}
+.z-3 {
+    z-index: 3;
+}
+.z-4 {
+    z-index: 4;
 }
 
 /*---------------------------------------------------------------------------*/
