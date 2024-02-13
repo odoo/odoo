@@ -19,7 +19,6 @@
         'views/stock_quant_views.xml',
         'views/stock_picking_views.xml',
         'views/supplier_info_views.xml',
-        'views/product_views.xml',
         'views/mrp_production_views.xml',
         'views/subcontracting_portal_views.xml',
         'views/subcontracting_portal_templates.xml',

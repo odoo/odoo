@@ -14,8 +14,10 @@
                 </li>
                 <li class="o_search_panel_filter_value list-group-item p-0 mb-1 border-0 o_cursor_pointer"
                     t-foreach="warehouses" t-as="warehouse" t-key="warehouse.id">
-                    <span t-out="warehouse.name" t-on-click="ev => this.applyWarehouseContext(warehouse.id, ev)"
-                          t-att-class="{'fw-bolder': selectedWarehouse === warehouse.id, 'o_search_panel_label_title':true}"/>
+                    <div t-out="warehouse.name"
+                        t-on-click="ev => this.applyWarehouseContext(warehouse.id, ev)"
+                        t-att-class="{'fw-bolder': selectedWarehouse === warehouse.id, 'o_search_panel_label_title':true,
+                        'bg-info-subtle': selectedWarehouse === warehouse.id}"/>
                 </li>
             </ul>
         </section>
