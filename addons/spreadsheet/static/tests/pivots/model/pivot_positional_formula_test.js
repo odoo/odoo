@@ -111,16 +111,18 @@ QUnit.module("spreadsheet > positional pivot formula", {}, () => {
         const spreadsheetData = {
             pivots: {
                 1: {
-                    colGroupBys: ["foo"],
-                    rowGroupBys: ["bar"],
-                    domain: [],
-                    id: "1",
-                    measures: [{ field: "probability" }],
-                    model: "partner",
-                    sortedColumn: {
-                        groupId: [[], [1]],
-                        measure: "probability",
-                        order: "asc",
+                    type: "ODOO",
+                    definition: {
+                        colGroupBys: ["foo"],
+                        rowGroupBys: ["bar"],
+                        domain: [],
+                        measures: ["probability"],
+                        model: "partner",
+                        sortedColumn: {
+                            groupId: [[], [1]],
+                            measure: "probability",
+                            order: "asc",
+                        },
                     },
                 },
             },
@@ -149,16 +151,18 @@ QUnit.module("spreadsheet > positional pivot formula", {}, () => {
         const spreadsheetData = {
             pivots: {
                 1: {
-                    colGroupBys: ["foo"],
-                    rowGroupBys: ["bar"],
-                    domain: [],
-                    id: "1",
-                    measures: [{ field: "probability" }],
-                    model: "partner",
-                    sortedColumn: {
-                        groupId: [[], [1]],
-                        measure: "probability",
-                        order: "desc",
+                    type: "ODOO",
+                    definition: {
+                        colGroupBys: ["foo"],
+                        rowGroupBys: ["bar"],
+                        domain: [],
+                        measures: ["probability"],
+                        model: "partner",
+                        sortedColumn: {
+                            groupId: [[], [1]],
+                            measure: "probability",
+                            order: "desc",
+                        },
                     },
                 },
             },
@@ -187,17 +191,19 @@ QUnit.module("spreadsheet > positional pivot formula", {}, () => {
         const spreadsheetData = {
             pivots: {
                 1: {
-                    colGroupBys: ["foo"],
-                    domain: [],
-                    id: "1",
-                    measures: [{ field: "probability" }],
-                    model: "partner",
-                    rowGroupBys: ["bar"],
-                    name: "Partners by Foo",
-                    sortedColumn: {
-                        groupId: [[], [2]],
-                        measure: "probability",
-                        order: "asc",
+                    type: "ODOO",
+                    definition: {
+                        colGroupBys: ["foo"],
+                        domain: [],
+                        measures: ["probability"],
+                        model: "partner",
+                        rowGroupBys: ["bar"],
+                        name: "Partners by Foo",
+                        sortedColumn: {
+                            groupId: [[], [2]],
+                            measure: "probability",
+                            order: "asc",
+                        },
                     },
                 },
             },
@@ -226,17 +232,19 @@ QUnit.module("spreadsheet > positional pivot formula", {}, () => {
         const spreadsheetData = {
             pivots: {
                 1: {
-                    colGroupBys: ["foo"],
-                    domain: [],
-                    id: "1",
-                    measures: [{ field: "probability" }],
-                    model: "partner",
-                    rowGroupBys: ["bar"],
-                    name: "Partners by Foo",
-                    sortedColumn: {
-                        groupId: [[], [2]],
-                        measure: "probability",
-                        order: "desc",
+                    type: "ODOO",
+                    definition: {
+                        colGroupBys: ["foo"],
+                        domain: [],
+                        measures: ["probability"],
+                        model: "partner",
+                        rowGroupBys: ["bar"],
+                        name: "Partners by Foo",
+                        sortedColumn: {
+                            groupId: [[], [2]],
+                            measure: "probability",
+                            order: "desc",
+                        },
                     },
                 },
             },
@@ -265,16 +273,18 @@ QUnit.module("spreadsheet > positional pivot formula", {}, () => {
         const spreadsheetData = {
             pivots: {
                 1: {
-                    rowGroupBys: ["product_id"],
-                    colGroupBys: [],
-                    domain: [],
-                    id: "1",
-                    measures: [{ field: "probability" }, { field: "foo" }],
-                    model: "partner",
-                    sortedColumn: {
-                        groupId: [[], []],
-                        measure: "foo",
-                        order: "asc",
+                    type: "ODOO",
+                    definition: {
+                        rowGroupBys: ["product_id"],
+                        colGroupBys: [],
+                        domain: [],
+                        measures: ["probability", "foo"],
+                        model: "partner",
+                        sortedColumn: {
+                            groupId: [[], []],
+                            measure: "foo",
+                            order: "asc",
+                        },
                     },
                 },
             },
@@ -299,16 +309,18 @@ QUnit.module("spreadsheet > positional pivot formula", {}, () => {
         const spreadsheetData = {
             pivots: {
                 1: {
-                    colGroupBys: [],
-                    domain: [],
-                    id: "1",
-                    measures: [{ field: "probability" }, { field: "foo" }],
-                    model: "partner",
-                    rowGroupBys: ["product_id"],
-                    sortedColumn: {
-                        groupId: [[], []],
-                        measure: "foo",
-                        order: "desc",
+                    type: "ODOO",
+                    definition: {
+                        colGroupBys: [],
+                        domain: [],
+                        measures: ["probability", "foo"],
+                        model: "partner",
+                        rowGroupBys: ["product_id"],
+                        sortedColumn: {
+                            groupId: [[], []],
+                            measure: "foo",
+                            order: "desc",
+                        },
                     },
                 },
             },

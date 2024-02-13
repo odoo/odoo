@@ -332,15 +332,7 @@ export class PivotCorePlugin extends OdooCorePlugin {
     import(data) {
         if (data.pivots) {
             for (const [id, pivot] of Object.entries(data.pivots)) {
-                const definition = deepCopy(pivot);
-                definition.measures = pivot.measures.map((elt) => elt.field);
-                const type = definition.type ? definition.type : "ODOO";
-                /** @type {LocalPivot} */
-                const p = {
-                    type,
-                    definition,
-                };
-                this._addPivot(id, p);
+                this._addPivot(id, deepCopy(pivot));
             }
         }
         this.nextId = data.pivotNextId || getMaxObjectId(this.pivots) + 1;
@@ -353,11 +345,10 @@ export class PivotCorePlugin extends OdooCorePlugin {
     export(data) {
         data.pivots = {};
         for (const id in this.pivots) {
-            const pivot = this.pivots[id];
-            data.pivots[id] = deepCopy(pivot.definition);
-            data.pivots[id].measures = data.pivots[id].measures.map((elt) => ({ field: elt }));
-            data.pivots[id].domain = new Domain(data.pivots[id].domain).toJson();
-            data.pivots[id].type = pivot.type;
+            data.pivots[id] = deepCopy(this.pivots[id]);
+            data.pivots[id].definition.domain = new Domain(
+                data.pivots[id].definition.domain
+            ).toJson();
         }
         data.pivotNextId = this.nextId;
     }
