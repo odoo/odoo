@@ -3,7 +3,7 @@
 import { expect, test } from "@odoo/hoot";
 import { click, contains, openFormView, start, startServer } from "../../mail_test_helpers";
 import { constants, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
-import { MailThread } from "../../mock_server/mock_models/mail_thread";
+import { MailThread } from "../../mock_server/TO_REMOVE/mail_thread";
 
 test.skip("base rendering not editable", async () => {
     await start();
