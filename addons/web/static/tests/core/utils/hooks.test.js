@@ -1,21 +1,21 @@
-import { expect, describe, test, getFixture } from "@odoo/hoot";
-import { animationFrame, Deferred } from "@odoo/hoot-mock";
-import { queryOne, dispatch } from "@odoo/hoot-dom";
-import { contains, mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { describe, expect, getFixture, test } from "@odoo/hoot";
+import { click, queryOne } from "@odoo/hoot-dom";
+import { Deferred, animationFrame } from "@odoo/hoot-mock";
 import { getMockEnv } from "@web/../tests/_framework/env_test_helpers";
+import { contains, mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
 
-import { Component, xml, useState, onMounted } from "@odoo/owl";
+import { Component, onMounted, useState, xml } from "@odoo/owl";
+import { browser } from "@web/core/browser/browser";
+import { CommandPalette } from "@web/core/commands/command_palette";
+import { registry } from "@web/core/registry";
 import {
     useAutofocus,
     useBus,
-    useService,
-    useSpellCheck,
     useChildRef,
     useForwardRefToParent,
+    useService,
+    useSpellCheck,
 } from "@web/core/utils/hooks";
-import { registry } from "@web/core/registry";
-import { browser } from "@web/core/browser/browser";
-import { CommandPalette } from "@web/core/commands/command_palette";
 
 describe("useAutofocus", () => {
     test.tags("desktop")("simple usecase", async () => {
@@ -376,7 +376,13 @@ describe("useSpellCheck", () => {
         expect(textArea.spellcheck).toBe(true);
         expect(textArea).not.toHaveAttribute("spellcheck");
 
-        await dispatch(textArea, "blur");
+        // Focus textarea
+        click(textArea);
+        expect(textArea).toBeFocused();
+
+        // Click out to trigger blur
+        click(fixture);
+
         expect(textArea.spellcheck).toBe(false);
         expect(textArea).toHaveAttribute("spellcheck", "false");
 
@@ -401,7 +407,13 @@ describe("useSpellCheck", () => {
 
         expect(textArea.spellcheck).toBe(true);
         expect(textArea).not.toHaveAttribute("spellcheck");
-        await dispatch(textArea, "blur");
+
+        click(textArea);
+
+        expect(textArea).toBeFocused();
+
+        // Click out to trigger blur
+        click(fixture);
 
         // Once these assertions pass, it means that the hook is working.
         expect(textArea.spellcheck).toBe(false);
@@ -432,8 +444,17 @@ describe("useSpellCheck", () => {
         expect(textArea).not.toHaveAttribute("spellcheck");
         expect(editableDiv).not.toHaveAttribute("spellcheck");
 
-        await dispatch(textArea, "blur");
-        await dispatch(editableDiv, "blur");
+        // Focus textarea
+        click(textArea);
+        expect(textArea).toBeFocused();
+
+        // Focus editable div
+        click(editableDiv);
+        expect(editableDiv).toBeFocused();
+
+        // Click out to trigger blur
+        click(fixture);
+
         expect(textArea.spellcheck).toBe(false);
         expect(editableDiv.spellcheck).toBe(false);
         expect(textArea).toHaveAttribute("spellcheck", "false");
@@ -476,8 +497,17 @@ describe("useSpellCheck", () => {
         expect(textArea).not.toHaveAttribute("spellcheck");
         expect(editableDiv).toHaveAttribute("spellcheck", "false");
 
-        await dispatch(textArea, "blur");
-        await dispatch(editableDiv, "blur");
+        // Focus textarea
+        click(textArea);
+        expect(textArea).toBeFocused();
+
+        // Focus editable div
+        click(editableDiv);
+        expect(editableDiv).toBeFocused();
+
+        // Click out to trigger blur
+        click(fixture);
+
         expect(textArea.spellcheck).toBe(false);
         expect(textArea).toHaveAttribute("spellcheck", "false");
         expect(editableDiv.spellcheck).toBe(false);
