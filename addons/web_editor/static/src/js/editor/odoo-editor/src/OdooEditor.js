@@ -3069,9 +3069,18 @@ export class OdooEditor extends EventTarget {
                     this.toolbar.style.visibility = show ? 'visible' : 'hidden';
                 }
                 if (show === false) {
+<<<<<<< HEAD
                     for (const menu of this.toolbar.querySelectorAll('.dropdown-menu.show')) {
                         menu.parentElement?.querySelector('[data-bs-toggle="dropdown"]')?.click();
                     };
+||||||| parent of 2e7580cb15c8 (temp)
+=======
+                    // close all dropdowns
+                    for (const dropdown of this.toolbar.querySelectorAll("ul.dropdown-menu.show")) {
+                        dropdown.classList.remove('show');
+                        dropdown.classList.add('hide');
+                    }
+>>>>>>> 2e7580cb15c8 (temp)
                     return;
                 }
             }
