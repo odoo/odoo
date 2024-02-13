@@ -59,13 +59,16 @@ class AccountFiscalPosition(models.Model):
             for g in self.env["account.fiscal.position.tax"].read_group(
                 [
                     ("id", "in", self.tax_ids.ids),
-                    ("tax_src_id", "in", [t._origin.id for t in taxes if t._origin]),
+                    ("tax_src_id", "in", [t._origin.id for t in taxes if t._origin and t._origin.id]),
                 ],
                 ["dest_ids:array_agg(tax_dest_id)"],
                 groupby="tax_src_id",
             )
         }
-        result_ids = {id_ for tax in taxes for id_ in tmap.get(tax._origin.id if tax._origin else None, [tax.id])}
+        # get mapped taxes, remove None which means the mapping is to no-tax
+        result_ids = set().union(*tmap.values()) - {None}
+        # for taxes without mapping at all, even to no-tax, we then keep the tax
+        result_ids.update(tax.id for tax in taxes if tax._origin and tax._origin.id not in tmap)
         return self.env["account.tax"].browse(result_ids)
 
     def map_account(self, account):
