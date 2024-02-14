@@ -28,6 +28,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 
 import { Component, xml } from "@odoo/owl";
+import { pick } from "@web/core/utils/objects";
 
 export const SELECTORS = {
     ...treeEditorSELECTORS,
@@ -50,6 +51,8 @@ async function selectConnector(value, index = 0) {
 }
 
 async function makeExpressionEditor(params = {}) {
+    const fieldFilters = params.fieldFilters;
+    delete params.fieldFilters;
     const props = { ...params };
     class Parent extends Component {
         static components = { ExpressionEditor };
@@ -68,11 +71,9 @@ async function makeExpressionEditor(params = {}) {
                     this.render();
                 },
             };
-            this.expressionEditorProps.fields =
-                this.expressionEditorProps.fields || Partner._fields;
-            Object.entries(this.expressionEditorProps.fields).forEach(([fieldName, field]) => {
-                field.name = fieldName;
-            });
+            this.expressionEditorProps.fields = fieldFilters
+                ? pick(Partner._fields, ...fieldFilters)
+                : Partner._fields;
         }
         async set(expression) {
             this.expressionEditorProps.expression = expression;
@@ -204,8 +205,8 @@ test("create a new branch from a complex condition control panel", async () => {
 });
 
 test("rendering of a valid fieldName in fields", async () => {
-    const fields = { foo: { string: "Foo", type: "char", searchable: true } };
-    const parent = await makeExpressionEditor({ fields });
+    Partner._fields.foo = fields.Char({ string: "Foo", searchable: true });
+    const parent = await makeExpressionEditor({ fieldFilters: ["foo"] });
 
     const toTests = [
         { expr: `foo`, condition: ["Foo", "is set"] },
@@ -235,11 +236,10 @@ test("rendering of a valid fieldName in fields", async () => {
 });
 
 test("rendering of simple conditions", async () => {
-    const fields = {
-        foo: { string: "Foo", type: "char", searchable: true },
-        bar: { string: "Bar", type: "char", searchable: true },
-    };
-    const parent = await makeExpressionEditor({ fields });
+    Partner._fields.foo = fields.Char({ string: "Foo", searchable: true });
+    Partner._fields.bar = fields.Char({ string: "Bar", searchable: true });
+    Partner._records = [];
+    const parent = await makeExpressionEditor({ fieldFilters: ["foo", "bar"] });
 
     const toTests = [
         { expr: `bar == "a"`, condition: ["Bar", "=", "a"] },
@@ -382,11 +382,7 @@ test("no field of type properties in model field selector", async () => {
     Product._fields.definitions = fields.PropertiesDefinition({ string: "Definitions" });
     await makeExpressionEditor({
         expression: `properties`,
-        fields: Object.fromEntries(
-            Object.entries(Partner._fields)
-                .filter(([name]) => ["bar", "foo", "properties"].includes(name))
-                .map(([name, fn]) => [name, fn()])
-        ),
+        fieldFilters: ["foo", "bar", "properties"],
         update(expression) {
             expect.step(expression);
         },
