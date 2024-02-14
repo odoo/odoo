@@ -5,7 +5,7 @@ import time
 import json
 import base64
 from odoo import fields, models, api, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 from datetime import datetime
 
 class PosOnlineDeliveryProvider(models.Model):
@@ -14,6 +14,16 @@ class PosOnlineDeliveryProvider(models.Model):
     webhook_secret = fields.Char('Webhook Secret', copy=False)
     site_id = fields.Integer('Site Location ID', copy=False)
     code = fields.Selection(selection_add=[('deliveroo', "Deliveroo")], ondelete={'deliveroo': 'set default'})
+    busy_time = fields.Integer('Busy Time')
+    quiet_time = fields.Integer('Quiet Time')
+
+    def write(self, vals):
+        if vals.get('busy_time') or vals.get('quiet_time'):
+            response = self._set_site_workload_time(vals.get('quiet_time', self.quiet_time), vals.get('busy_time', self.busy_time))
+            if response:
+                self.quiet_time = response.get('quiet')
+                self.busy_time = response.get('busy')
+        return super().write(vals)
 
     @api.onchange('state')
     def _onchange_state(self):
@@ -150,25 +160,114 @@ class PosOnlineDeliveryProvider(models.Model):
     
     #MENU API
 
-    def _upload_menu(self):
-        self.ensure_one()
-        # example
-        # TODO: implement
-        menu = {
-            "name": "My Menu",
-            "description": "My Menu Description",
-            "items": [
-                {
-                    **product_id.read([]),
-                }
-                for product_id in self.env["product.product"].search([])
-            ],
-        }
+    def action_upload_menu(self):
+        if self.code == "deliveroo" and self.state == "disabled":
+            self._upload_menu('test menu', json.dumps({'test': 'test'}))
+        else:
+            raise UserError(_("You cannot update the menu of a disabled provider."))
+
+    def _upload_menu(self, name, menu):
         # TODO: implement sending menu to deliveroo
+        if self.code == 'deliveroo':
+            response = requests.put(
+                self._get_api_url(f"/menu/v1/brands/{self._get_brand_id()}/menus/{self.menu_id}"),
+                headers={
+                    "accept": "application/json",
+                    'content-type': 'application/json',
+                    "Authorization": f"Bearer {self._get_access_token()}",
+                },
+                json={
+                    'name': name,
+                    'menu': menu,
+                    'site_ids': [self.site_id],
+                }
+            )
+        else:
+            return super()._upload_menu()
 
     #SITE API
+    def _get_brand_id(self):
+        if self.brand_id:
+            return self.brand_id
+        response = requests.get(
+            self._get_api_url(f"/site/v1/restaurant_locations/{self.site_id}"),
+            headers={
+                "accept": "application/json",
+                "Authorization": f"Bearer {self._get_access_token()}",
+            },
+        )
+        if response.status_code == 200:
+            self.brand_id = response.json().get("brand_id")
+            return self.brand_id
+        return False
+    
+    def _get_site_status(self):
+        response = requests.get(
+            self._get_api_url(f"/site/v1/brands/{self._get_brand_id()}/sites/{self.site_id}/status"),
+            headers={
+                "accept": "application/json",
+                "Authorization": f"Bearer {self._get_access_token()}",
+            },
+        )
+        return response.json().get('status') if response.status_code == 200 else False
+
     def _change_site_status_mode(self, status):
-        pass
+        #send to deliveroo the information about the restaurant status [open, closed, ready_to_open]
+        if status not in ['OPEN', 'CLOSED', 'READY_TO_OPEN']:
+            return False
+        if self._get_site_status(self) == status:
+            return True
+        response = requests.put(
+            self._get_api_url(f"/site/v1/brands/{self._get_brand_id()}/sites/{self.site_id}/status"),
+            headers={
+                "accept": "application/json",
+                'content-type': 'application/json',
+                "Authorization": f"Bearer {self._get_access_token()}",
+            },
+            json = {
+                'status': status,
+            },
+        )
+        return response.status_code == 200
+    
+    def _get_site_workload_mode(self):
+        response = requests.get(
+            self._get_api_url(f"/site/v1/brands/{self._get_brand_id()}/sites/{self.site_id}/workload/mode"),
+            headers={
+                "accept": "application/json",
+                "Authorization": f"Bearer {self._get_access_token()}",
+            },
+        )
+        return response.json().get('mode') if response.status_code == 200 else False
+    
+    def _set_site_workload_mode(self, mode):
+        if mode not in ['BUSY', 'QUIET']:
+            return False
+        if self._get_site_workload_mode() == mode:
+            return True
+        response = requests.put(
+            self._get_api_url(f"/site/v1/brands/{self._get_brand_id()}/sites/{self.site_id}/workload/mode"),
+            headers={
+                "accept": "application/json",
+                "Authorization": f"Bearer {self._get_access_token()}",
+            },
+        )
+        return response.json().get('mode') if response.status_code == 200 else False
+    
+    def _set_site_workload_time(self, quiet_time, busy_time):
+        response = requests.put(
+            self._get_api_url(f"/site/v1/brands/{self._get_brand_id()}/sites/{self.site_id}/workload/times"),
+            headers={
+                "accept": "application/json",
+                "content-type": "application/json",
+                "Authorization": f"Bearer {self._get_access_token()}",
+            },
+            json = {
+                'quite': quiet_time,
+                'busy': busy_time,
+            },
+        )
+        return response.json() if response.status_code == 200 else False
 
     def _get_site_brand_id(self):
         response = requests.get(
@@ -180,3 +279,27 @@ class PosOnlineDeliveryProvider(models.Model):
             },
         )
         return json.loads(response.content) if response.status_code == 200 else False
+    
+    def _get_site_opening_hours(self):
+        response = requests.get(
+            self._get_api_url(f"/site/v1/brands/{self._get_brand_id()}/sites/{self.site_id}/opening_hours"),
+            headers={
+                "accept": "application/json",
+                "Authorization": f"Bearer {self._get_access_token()}",
+            },
+        )
+        return response.json() if response.status_code == 200 else False
+    
+    def _update_site_opening_hours(self, opening_hours):
+        response = requests.post(
+            self._get_api_url(f"/site/v1/brands/{self._get_brand_id()}/sites/{self.site_id}/opening_hours"),
+            headers={
+                "accept": "application/json",
+                "content-type": "application/json",
+                "Authorization": f"Bearer {self._get_access_token()}",
+            },
+            json={
+                'opening_hours': opening_hours,
+            }
+        )
+        return response.json() if response.status_code == 200 else False
