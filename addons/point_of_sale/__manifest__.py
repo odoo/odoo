@@ -78,6 +78,7 @@
             'point_of_sale/static/src/app/utils/hooks.js',
         ],
         'web.assets_tests': [
+            'barcodes/static/tests/helpers.js',
             'point_of_sale/static/tests/tours/**/*',
         ],
 
@@ -261,6 +262,8 @@
         ],
         'point_of_sale.customer_display_assets_test': [
             ('include', 'point_of_sale.base_tests'),
+            'barcodes/static/tests/helpers.js',
+            "web/static/tests/helpers/utils.js",
             "point_of_sale/static/tests/tours/**/*",
         ],
     },
