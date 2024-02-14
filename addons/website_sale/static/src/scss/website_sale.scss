@@ -742,18 +742,19 @@ a.no-decoration {
     }
 
     .o_wsale_accordion {
-        .collapse:not(.show) {
-            display: block;
-
-            @include media-breakpoint-down(lg) {
-                display: none;
-            }
+        .accordion-button{
+            background-color: unset;
         }
 
         .o_wsale_scrollable_table {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+            &::-webkit-scrollbar {
+              display: none;
+            }
             @include media-breakpoint-up(lg) {
                 overflow-y: scroll;
-                height: 21rem;
+                height: 15rem;
             }
         }
     }
