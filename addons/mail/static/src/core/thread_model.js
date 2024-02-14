@@ -319,8 +319,12 @@ export class Thread extends Record {
     }
 
     get hasSelfAsMember() {
-        return this.channelMembers.some(
-            (channelMember) => channelMember.persona === this._store.self
+        return Boolean(this.selfMember);
+    }
+
+    get selfMember() {
+        return this.channelMembers.find(
+            (member) => member.persona.localId === this._store.self?.localId
         );
     }
 

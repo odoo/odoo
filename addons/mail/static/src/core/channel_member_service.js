@@ -3,6 +3,7 @@
 import { registry } from "@web/core/registry";
 import { removeFromArray } from "../utils/arrays";
 import { ChannelMember } from "./channel_member_model";
+import { assignDefined } from "@mail/utils/misc";
 
 export class ChannelMemberService {
     constructor(env, { "mail.store": store, "mail.persona": personaService }) {
@@ -30,6 +31,7 @@ export class ChannelMemberService {
     update(member, data) {
         const [command, memberData] = Array.isArray(data) ? data : ["insert", data];
         member.id = memberData.id;
+        assignDefined(member, memberData, ["create_date"]);
         if ("persona" in memberData) {
             member.persona = this.personaService.insert({
                 ...(memberData.persona.partner ?? memberData.persona.guest),

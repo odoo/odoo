@@ -2,6 +2,7 @@
 
 from werkzeug.exceptions import NotFound
 
+import odoo
 from odoo import api, fields, models, _
 from odoo.exceptions import AccessError
 from odoo.osv import expression
@@ -138,7 +139,7 @@ class ChannelMember(models.Model):
 
     def _discuss_channel_member_format(self, fields=None):
         if not fields:
-            fields = {'id': True, 'channel': {}, 'persona': {}}
+            fields = {'id': True, 'channel': {}, 'persona': {}, 'create_date': True}
         members_formatted_data = {}
         for member in self:
             data = {}
@@ -152,6 +153,8 @@ class ChannelMember(models.Model):
                 if member.guest_id:
                     persona = {'guest': member.guest_id.sudo()._guest_format(fields=fields.get('persona', {}).get('guest')).get(member.guest_id)}
                 data['persona'] = persona
+            if 'create_date' in fields:
+                data['create_date'] = odoo.fields.Datetime.to_string(member.create_date)
             members_formatted_data[member] = data
         return members_formatted_data
 
