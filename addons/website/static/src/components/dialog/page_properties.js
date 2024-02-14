@@ -6,8 +6,11 @@ import {useService, useAutofocus} from "@web/core/utils/hooks";
 import {sprintf} from "@web/core/utils/strings";
 import {WebsiteDialog} from './dialog';
 import {FormViewDialog} from "@web/views/view_dialogs/form_view_dialog";
+import { formView } from '@web/views/form/form_view';
 import { renderToFragment } from "@web/core/utils/render";
 import { Component, useEffect, useState, xml, useRef } from "@odoo/owl";
+import { FormController } from '@web/views/form/form_controller';
+import { registry } from "@web/core/registry";
 
 export class PageDependencies extends Component {
     static template = "website.PageDependencies";
@@ -151,6 +154,19 @@ export class DuplicatePageDialog extends Component {
     }
 }
 
+export class PagePropertiesFormController extends FormController {
+    static props = {
+        ...FormController.props,
+        clonePage: Function,
+        deletePage: Function,
+    };
+}
+
+registry.category("views").add("page_properties_dialog_form", {
+    ...formView,
+    Controller: PagePropertiesFormController,
+});
+
 export class PagePropertiesDialog extends FormViewDialog {
     static props = {
         ...FormViewDialog.props,
@@ -177,6 +193,7 @@ export class PagePropertiesDialog extends FormViewDialog {
 
         this.viewProps = {
             ...this.viewProps,
+            type: "page_properties_dialog_form",
             resId: this.resId,
             buttonTemplate: "website.PagePropertiesDialogButtons",
             clonePage: this.clonePage.bind(this),
