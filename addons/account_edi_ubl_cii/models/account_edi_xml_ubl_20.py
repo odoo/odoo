@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 
-from odoo import models, _
-from odoo.tools import html2plaintext, cleanup_xml_node
 from lxml import etree
 from collections import defaultdict
+
+from odoo import models, _
+from odoo.tools import html2plaintext, cleanup_xml_node
+from odoo.tools.float_utils import float_round
 
 
 class AccountEdiXmlUBL20(models.AbstractModel):
@@ -342,7 +344,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             'currency_dp': line.currency_id.decimal_places,
 
             # The price of an item, exclusive of VAT, after subtracting item price discount.
-            'price_amount': gross_price_unit,
+            'price_amount': float_round(gross_price_unit, 10),
             'product_price_dp': self.env['decimal.precision'].precision_get('Product Price'),
 
             # The number of item units to which the price applies.
