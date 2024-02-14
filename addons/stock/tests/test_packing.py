@@ -1050,7 +1050,6 @@ class TestPacking(TestPackingCommon):
         warehouse = self.stock_location.warehouse_id
         warehouse.reception_steps = "two_steps"
         self.productA.weight = 1.0
-        self.env.user.write({'groups_id': [(4, self.env.ref('stock.group_stock_storage_categories').id)]})
         self.env.user.write({'groups_id': [(4, self.env.ref('stock.group_stock_multi_locations').id)]})
         # Required for `result_package_id` to be visible in the view
         self.env.user.write({'groups_id': [(4, self.env.ref('stock.group_tracking_lot').id)]})
@@ -1153,7 +1152,6 @@ class TestPacking(TestPackingCommon):
         warehouse.reception_steps = "two_steps"
         self.productA.weight = 1.0
         self.productB.weight = 1.0
-        self.env.user.write({'groups_id': [(4, self.env.ref('stock.group_stock_storage_categories').id)]})
         self.env.user.write({'groups_id': [(4, self.env.ref('stock.group_stock_multi_locations').id)]})
         # Required for `result_package_id` to be visible in the view
         self.env.user.write({'groups_id': [(4, self.env.ref('stock.group_tracking_lot').id)]})
