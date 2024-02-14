@@ -6,7 +6,7 @@ import * as Chrome from "@point_of_sale/../tests/tours/helpers/ChromeTourMethods
 import * as ReceiptScreen from "@point_of_sale/../tests/tours/helpers/ReceiptScreenTourMethods";
 import { registry } from "@web/core/registry";
 import * as Order from "@point_of_sale/../tests/tours/helpers/generic_components/OrderWidgetMethods";
-import { inLeftSide } from "./helpers/utils";
+import { inLeftSide, scan_barcode } from "@point_of_sale/../tests/tours/helpers/utils";
 
 registry.category("web_tour.tours").add("ProductScreenTour", {
     test: true,
@@ -191,13 +191,13 @@ registry.category("web_tour.tours").add("limitedProductPricelistLoading", {
         [
             ProductScreen.confirmOpeningPopup(),
 
-            ProductScreen.scan_barcode("0100100"),
+            scan_barcode("0100100"),
             ProductScreen.selectedOrderlineHas('Test Product 1', '1.0', '80.0'),
 
-            ProductScreen.scan_barcode("0100200"),
+            scan_barcode("0100200"),
             ProductScreen.selectedOrderlineHas('Test Product 2', '1.0', '100.0'),
 
-            ProductScreen.scan_barcode("0100300"),
+            scan_barcode("0100300"),
             ProductScreen.selectedOrderlineHas('Test Product 3', '1.0', '50.0'),
             Chrome.endTour(),
         ].flat(),
