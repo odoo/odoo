@@ -263,8 +263,12 @@ class MrpProduction(models.Model):
 
     @api.depends('procurement_group_id.mrp_production_ids')
     def _compute_mrp_production_backorder(self):
+        procurement_group_backorder_count = defaultdict(int)
+        res = self.env['mrp.production']._read_group([('procurement_group_id', 'in', self.procurement_group_id.ids)], ['id'], ['procurement_group_id'])
+        for group in res:
+            procurement_group_backorder_count[group['procurement_group_id'][0]] = group['procurement_group_id_count']
         for production in self:
-            production.mrp_production_backorder_count = len(production.procurement_group_id.mrp_production_ids)
+            production.mrp_production_backorder_count = procurement_group_backorder_count[production.procurement_group_id.id]
 
     @api.depends('company_id', 'bom_id')
     def _compute_picking_type_id(self):

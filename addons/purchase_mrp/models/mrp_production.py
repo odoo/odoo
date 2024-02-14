@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-
+from collections import defaultdict
 
 class MrpProduction(models.Model):
     _inherit = 'mrp.production'
@@ -14,9 +14,16 @@ class MrpProduction(models.Model):
 
     @api.depends('procurement_group_id.stock_move_ids.created_purchase_line_id.order_id', 'procurement_group_id.stock_move_ids.move_orig_ids.purchase_line_id.order_id')
     def _compute_purchase_order_count(self):
+        procurement_group_orders_count = defaultdict(int)
+        domain = [
+            '|',
+            ('order_line.move_dest_ids.group_id', 'in', self.procurement_group_id.ids),
+            ('order_line.move_ids.move_dest_ids.group_id', 'in', self.procurement_group_id.ids),
+        ]
+        for group in self.env['purchase.order']._read_group(domain, ['id'], ['group_id']):
+            procurement_group_orders_count[group['group_id'][0]] = group['group_id_count']
         for production in self:
-            production.purchase_order_count = len(production.procurement_group_id.stock_move_ids.created_purchase_line_id.order_id |
-                                                  production.procurement_group_id.stock_move_ids.move_orig_ids.purchase_line_id.order_id)
+            production.purchase_order_count = procurement_group_orders_count[production.procurement_group_id.id]
 
     def action_view_purchase_orders(self):
         self.ensure_one()
