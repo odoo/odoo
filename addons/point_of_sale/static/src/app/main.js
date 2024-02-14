@@ -42,5 +42,7 @@ whenReady(() => {
     }
     if (hasTouch()) {
         classList.add("o_touch_device");
+        classList.add("o_mobile_overscroll");
+        document.documentElement.classList.add("o_mobile_overscroll");
     }
 })();
