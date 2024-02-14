@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from . import confirm_stock_text
 from . import product_label_layout
 from . import stock_picking_return
 from . import stock_change_product_qty
