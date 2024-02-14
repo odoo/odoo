@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
+import base64
+from lxml import etree
+
 from odoo.addons.l10n_account_edi_ubl_cii_tests.tests.common import TestUBLCommon
 from odoo.tests import tagged
 from odoo import Command
-import base64
+
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestUBLBE(TestUBLCommon):
@@ -480,6 +483,17 @@ class TestUBLBE(TestUBLCommon):
         }])
 
         self._assert_invoice_attachment(invoice, None, 'from_odoo/bis3_export_with_changed_taxes.xml')
+
+    def test_export_rounding_price_amount(self):
+        invoice = self._generate_move(
+            self.partner_1,
+            self.partner_2,
+            move_type='out_invoice',
+            invoice_line_ids=[{'quantity': 3, 'price_unit': 102.15}],
+        )
+        attachment = invoice._get_edi_attachment(self.edi_format)
+        price_amount = etree.fromstring(attachment.raw).find('.//{*}InvoiceLine/{*}Price/{*}PriceAmount')
+        self.assertEqual(price_amount.text, '102.15')
 
     ####################################################
     # Test import
