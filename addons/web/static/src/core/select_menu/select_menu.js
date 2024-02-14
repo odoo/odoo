@@ -4,7 +4,7 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
 import { TagsList } from "@web/core/tags_list/tags_list";
 import { mergeClasses } from "@web/core/utils/classname";
-import { useChildRef } from "@web/core/utils/hooks";
+import { useAutofocus, useChildRef } from "@web/core/utils/hooks";
 import { scrollTo } from "@web/core/utils/scrolling";
 import { fuzzyLookup } from "@web/core/utils/search";
 import { useDebounced } from "@web/core/utils/timing";
@@ -110,6 +110,7 @@ export class SelectMenu extends Component {
             },
             () => [this.props.choices, this.props.groups]
         );
+        useAutofocus({ refName: "inputRef" });
     }
 
     get displayValue() {
@@ -164,7 +165,6 @@ export class SelectMenu extends Component {
     onStateChanged(open) {
         this.isOpen = open;
         if (open) {
-            this.inputRef.el?.focus();
             this.menuRef.el?.addEventListener("scroll", (ev) => this.onScroll(ev));
             const selectedElement = this.menuRef.el?.querySelectorAll(".o_select_active")[0];
             if (selectedElement) {
