@@ -2341,6 +2341,9 @@ const Wysiwyg = Widget.extend({
                             placement: 'auto',
                         })
                         .popover('show');
+                    // Error has been handled by showing it near the element.
+                    // Do not display a traceback dialog about it.
+                    response.event.preventDefault();
                 });
             });
         });
