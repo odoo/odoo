@@ -115,6 +115,10 @@ class StockMove(models.Model):
         moves_to_create_so_line._create_repair_sale_order_line()
         return res
 
+    def action_add_from_catalog_repair(self):
+        repair_order = self.env['repair.order'].browse(self.env.context.get('order_id'))
+        return repair_order.action_add_from_catalog()
+
     # Needed to also cancel the lastly added part
     def _action_cancel(self):
         self._clean_repair_sale_order_line()
