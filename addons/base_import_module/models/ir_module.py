@@ -402,7 +402,7 @@ class IrModule(models.Model):
                 'modules_dependencies': missing_dependencies_description,
             })
             return {
-                'name': 'Install an App',
+                'name': _("Install an Industry"),
                 'view_mode': 'form',
                 'target': 'new',
                 'res_id': import_module.id,
