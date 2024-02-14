@@ -1,0 +1,16 @@
+<odoo>
+  <data>
+    <record id="pos_session_unsynced_orders_stat_button" model="ir.ui.view">
+      <field name="name">pos.session.form.unsynced.orders.stat.buttons</field>
+      <field name="model">pos.session</field>
+      <field name="inherit_id" ref="point_of_sale.view_pos_session_form" />
+      <field name="arch" type="xml">
+          <div name="button_box" position="inside">
+              <button class="oe_stat_button" type="object" name="action_view_unsynced_orders" icon="fa-medkit" attrs="{'invisible':[('unsynced_orders_count', '=', 0)]}">
+                  <field string="Unsync Orders" name="unsynced_orders_count" widget="statinfo"/>
+              </button>
+          </div>
+      </field>
+    </record>
+  </data>
+</odoo>

@@ -1,0 +1,92 @@
+<odoo>
+  <data>
+    <record model="ir.ui.view" id="pos_order_recovery.list">
+      <field name="name">pos_order_recovery list</field>
+      <field name="model">pos.order.capture</field>
+      <field name="arch" type="xml">
+        <tree create="false" delete="false" edit="false">
+          <field name="session_id"/>
+          <field name="order_name"/>
+          <field name="order_hash"/>
+        </tree>
+      </field>
+    </record>
+
+    <record model="ir.ui.view" id="pos_order_recovery.form">
+      <field name="name">pos_order_recovery form</field>
+      <field name="model">pos.order.capture</field>
+      <field name="arch" type="xml">
+        <form create="false" delete="false" edit="false">
+        <sheet>
+          <div class="oe_button_box" name="button_box">
+          <button class="oe_stat_button" type="object" name="action_compare_conflicting_capture" icon="fa-exclamation-circle" attrs="{'invisible':[('conflicting_capture_count', '=', 0)]}">
+            <field name="conflicting_capture_count" widget="statinfo"/>
+          </button>
+          </div>
+          <h1 class="oe_title">
+            <field name="display_name"/>
+          </h1>
+          <group>
+            <field name="order_name"/>
+            <field name="session_id"/>
+            <field name="json_content_id"/>
+            <field name="order_hash"/>
+          </group>
+
+          <notebook>
+            <page string="Traceback">
+              <field name="traceback_text" widget="ace" options="{'mode': 'python'}"/>
+            </page>
+            <page string="JSON Content">
+              <field name="json_content_text" widget="ace" options="{'mode': 'python'}"/>
+            </page>
+          </notebook>
+
+          </sheet>
+        </form>
+      </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="pos_order_recovery.action_window">
+      <field name="name">Unsynced Orders</field>
+      <field name="res_model">pos.order.capture</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+    <record model="ir.actions.server" id="pos_order_recovery.sync_unsynced_order_action" >
+      <field name="name">Synchronise</field>
+      <field name="model_id" ref="model_pos_order_capture"/>
+      <field name="binding_model_id" ref="model_pos_order_capture"/>
+      <field name="state">code</field>
+      <field name="code">
+records._sync()
+      </field>
+    </record>
+
+    <!-- Wizard related views -->
+    <record id="compare_conflicting_capture_wizard_view" model="ir.ui.view">
+      <field name="name">compare_conflicting_capture_wizard_view</field>
+      <field name="model">pos.order.capture.comparer.wizard</field>
+      <field name="arch" type="xml">
+        <form string="Reset View Architecture">
+          <group>
+            <group>
+              <field name="capture_id" invisible="1"/>
+              <field name="allowed_capture_ids" invisible="1"/>
+              <field name="capture_compare_id"/>
+            </group>
+          </group>
+          <field name="capture_diff"/>
+          <footer>
+            <button string="Keep current (remove other)" name="action_keep_current" type="object" class="btn-primary"/>
+            <button string="Keep other (remove current)" name="action_keep_other" type="object" class="btn-secondary"/>
+            <button string="Cancel" class="btn-secondary" special="cancel"/>
+          </footer>
+        </form>
+    </field>
+    </record> 
+
+    <menuitem name="Unsynced Orders" id="pos_order_recovery.menu_unsynced_orders" parent="point_of_sale.menu_point_of_sale"
+              action="pos_order_recovery.action_window" sequence="200"/>
+  </data>
+</odoo>

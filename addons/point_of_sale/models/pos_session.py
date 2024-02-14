@@ -22,6 +22,9 @@ from odoo.tools.misc import str2bool
 
 _logger = logging.getLogger(__name__)
 
+POS_CAPTURE_PREFIX = 'pos_order_save_'
+POS_CAPTURE_SUFFIX = '.json'
+POS_CAPTURE_SEPARATOR = '_'
 
 class PosSession(models.Model):
     _name = 'pos.session'
@@ -2139,10 +2142,10 @@ class PosSession(models.Model):
         )
         self._capture_order_data(order, exception, current_pos_order_data_hash)
 
-    def _shorten_pos_order_data_hash(self, pos_order_data_hash: int):
+    def _shorten_pos_order_data_hash(self, pos_order_data_hash: int, precision: int = 6):
         # The bigger the value, the less likely a hash collision will occur
         # but a bigger value also means a longer name in the attachment
-        return str(pos_order_data_hash)[:6]
+        return str(pos_order_data_hash)[:precision]
 
     def _get_unprocessed_pos_order_scheduled_activity(self, order_ref: str, pos_order_data_hash: int, assigned_user_id: Optional[int] = None, create: bool = True):
         if create:
@@ -2172,7 +2175,7 @@ class PosSession(models.Model):
         return scheduled_activity
 
     def _capture_order_data_attachment_name(self, order_ref: str, pos_order_data_hash: int):
-        return f"pos_order_save_{order_ref}_{self._shorten_pos_order_data_hash(pos_order_data_hash)}.json"
+        return POS_CAPTURE_PREFIX + order_ref + POS_CAPTURE_SEPARATOR + self._shorten_pos_order_data_hash(pos_order_data_hash) + POS_CAPTURE_SUFFIX
 
     def _get_captured_order_attachment(self, pos_order_ref: str, pos_order_data_hash: int):
         return self.env['ir.attachment'].search([

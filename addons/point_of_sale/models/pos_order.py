@@ -924,6 +924,7 @@ class PosOrder(models.Model):
                 existing_draft_order = self.env['pos.order'].search(['&', ('pos_reference', '=', order_name), ('state', '=', 'draft')], limit=1)
 
             try:
+                # 0/0
                 if existing_draft_order:
                     order_ids.append(self._process_order(order, draft, existing_draft_order))
                 else:
