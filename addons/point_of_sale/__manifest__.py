@@ -71,6 +71,7 @@
             'point_of_sale/static/src/backend/debug_manager.js',
         ],
         'web.assets_tests': [
+            'barcodes/static/tests/helpers.js',
             'point_of_sale/static/tests/tours/**/*',
         ],
 
