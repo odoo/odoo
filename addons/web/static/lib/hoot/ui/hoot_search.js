@@ -66,7 +66,7 @@ const templateIncludeWidget = (tagName) => /* xml */ `
                 'opacity-50': readonly,
             }"
             t-att-title="readonly and 'Cannot change because it depends on a tag modifier in the code'"
-            t-on-click.stop=""
+            t-on-click.stop="focusSearchInput"
             t-on-change="(ev) => this.onIncludeChange(category, job.id, ev.target.value)"
         >
             <input
@@ -340,9 +340,7 @@ export class HootSearch extends Component {
             this.state.categories = this.findSuggestions();
             this.state.empty &&= !this.hasFilters();
         });
-        runner.afterAll(() => {
-            this.searchInputRef.el?.focus();
-        });
+        runner.afterAll(() => this.focusSearchInput());
 
         this.rootRef = useRef("root");
         this.searchInputRef = useRef("search-input");
@@ -400,6 +398,10 @@ export class HootSearch extends Component {
             tags: this.filterItems(pattern, tags, "tags"),
             tests: this.filterItems(pattern, tests.values(), "tests"),
         };
+    }
+
+    focusSearchInput() {
+        this.searchInputRef.el?.focus();
     }
 
     getCategoryCounts() {
@@ -623,6 +625,7 @@ export class HootSearch extends Component {
 
         this.updateParams(true);
         this.updateSuggestions();
+        this.focusSearchInput();
     }
 
     toggleDebug() {
