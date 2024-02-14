@@ -959,21 +959,25 @@ Please change the quantity done or the rounding precision of your unit of measur
         return vals_list
 
     def _push_apply(self):
+
+        all_rules_domain = [('location_src_id', 'in', self.location_dest_id.ids), ('action', 'in', ('push', 'pull_push'))]
+        all_rules = self.env['stock.rule']
+        moves = self
+        if not self.location_dest_id.company_id.ids or any(company_id != self.env.company.id for company_id in self.location_dest_id.company_id.ids):
+            all_rules = all_rules.sudo()
+            moves = moves.with_context(allowed_companies=self.env.user.company_ids.ids)
+        all_rules = all_rules._search_rules(moves.route_ids, moves.product_packaging_id, moves.product_id, moves.warehouse_id | moves.picking_id.picking_type_id.warehouse_id, all_rules_domain)
+
         new_moves = []
         for move in self:
             new_move = self.env['stock.move']
 
             # if the move is a returned move, we don't want to check push rules, as returning a returned move is the only decent way
             # to receive goods without triggering the push rules again (which would duplicate chained operations)
-            domain = [('location_src_id', '=', move.location_dest_id.id), ('action', 'in', ('push', 'pull_push'))]
             # first priority goes to the preferred routes defined on the move itself (e.g. coming from a SO line)
-            warehouse_id = move.warehouse_id or move.picking_id.picking_type_id.warehouse_id
-            if move.location_dest_id.company_id == self.env.company:
-                rule = self.env['procurement.group']._search_rule(move.route_ids, move.product_packaging_id, move.product_id, warehouse_id, domain)
-            else:
-                procurement_group = self.env['procurement.group'].sudo()
-                move = move.with_context(allowed_companies=self.env.user.company_ids.ids)
-                rule = procurement_group._search_rule(move.route_ids, move.product_packaging_id, move.product_id, False, domain)
+            rule = self.env['stock.rule']
+            if all_rules:
+                rule = all_rules._search_rule(move.route_ids, move.product_packaging_id, move.product_id, move.warehouse_id or move.picking_id.picking_type_id.warehouse_id, [('location_src_id', '=', move.location_dest_id.id)])
             # Make sure it is not returning the return
             if rule and (not move.origin_returned_move_id or move.origin_returned_move_id.location_dest_id.id != rule.location_dest_id.id):
                 new_move = rule._run_push(move)
@@ -2086,27 +2090,26 @@ Please change the quantity done or the rounding precision of your unit of measur
         mtso_free_qties_by_loc = {}
         mtso_moves = self.env['stock.move']
 
-        for move in self:
-            product_id = move.product_id
-            domain = [
-                ('location_src_id', '=', move.location_id.id),
-                ('location_dest_id', '=', move.location_dest_id.id),
-                ('action', '!=', 'push')
-            ]
-            rules = self.env['procurement.group']._search_rule(False, move.product_packaging_id, product_id, move.warehouse_id, domain)
-            if rules:
-                if rules.procure_method in ['make_to_order', 'make_to_stock']:
-                    move.procure_method = rules.procure_method
+        all_rules_domain = [('location_src_id', 'in', self.location_id.ids), ('location_dest_id', 'in', self.location_dest_id.ids), ('action', '!=', 'push')]
+        all_rules = self.env['stock.rule']._search_rules(self.env['stock.route'], self.product_packaging_id, self.product_id, self.warehouse_id, all_rules_domain)
+        if all_rules:
+            for move in self:
+                rule = all_rules._search_rule(self.env['stock.route'], move.product_packaging_id, move.product_id, move.warehouse_id or move.picking_id.picking_type_id.warehouse_id, [('location_src_id', '=', move.location_id.id), ('location_dest_id', '=', move.location_dest_id.id)])
+                if rule:
+                    if rule.procure_method in ['make_to_order', 'make_to_stock']:
+                        move.procure_method = rule.procure_method
+                    else:
+                        product_id = move.product_id.id
+                        # Get the needed quantity for the `mts_else_mto` moves.
+                        mtso_needed_qties_by_loc[rule.location_src_id].setdefault(product_id, 0)
+                        mtso_needed_qties_by_loc[rule.location_src_id][product_id] += move.product_qty
+                        # This allow us to get the forecasted quantity in batch later on
+                        mtso_products_by_locations[rule.location_src_id].append(product_id)
+                        mtso_moves |= move
                 else:
-                    # Get the needed quantity for the `mts_else_mto` moves.
-                    mtso_needed_qties_by_loc[rules.location_src_id].setdefault(product_id.id, 0)
-                    mtso_needed_qties_by_loc[rules.location_src_id][product_id.id] += move.product_qty
-
-                    # This allow us to get the forecasted quantity in batch later on
-                    mtso_products_by_locations[rules.location_src_id].append(product_id.id)
-                    mtso_moves |= move
-            else:
-                move.procure_method = 'make_to_stock'
+                    move.procure_method = 'make_to_stock'
+        else:
+            self.procure_method = 'make_to_stock'
 
         # Get the forecasted quantity for the `mts_else_mto` moves.
         for location, product_ids in mtso_products_by_locations.items():
