@@ -2119,15 +2119,12 @@
             </div>
             <div class="oe_structure clearfix mt-3" id="oe_structure_website_sale_payment_1"/>
 
-            <t t-if="not errors and website_sale_order.amount_total" name="website_sale_non_free_cart">
-                <div class="mt-4">
-                    <h3>Pay with</h3>
-                </div>
+            <div t-if="not errors and website_sale_order.amount_total" name="website_sale_non_free_cart">
                 <div id="payment_method" class="o_not_editable mt-4">
                     <t t-call="payment.form"/>
                 </div>
                 <t t-if="not (payment_methods_sudo or tokens_sudo)" t-set="hide_payment_button" t-value="True"/>
-            </t>
+            </div>
         </t>
     </template>
 
@@ -2187,14 +2184,14 @@
                         <div t-else=""
                              class="o_wsale_accordion accordion sticky-lg-top offset-xl-1 col-12 col-lg-5 col-xl-4 order-lg-2 rounded"
                              id="o_wsale_total_accordion">
-                            <div class="o_total_card">
-                                <div class="accordion-item p-lg-4 border-0">
-                                    <div class="accordion-header d-block d-lg-none align-items-center mb-4">
+                            <div class="o_total_card sticky-lg-top">
+                                <div id="o_wsale_total_accordion_item" class="accordion-item p-lg-4 border-0">
+                                    <div class="accordion-header d-block align-items-center mb-4">
                                         <button class="accordion-button px-0 collapsed"
                                                 data-bs-toggle="collapse"
-                                                data-bs-target="#o_wsale_total_accordion_item"
+                                                data-bs-target="#o_wsale_accordion_item"
                                                 aria-expanded="false"
-                                                aria-controls="o_wsale_total_accordion_item">
+                                                aria-controls="o_wsale_accordion_item">
                                             <div class="d-flex flex-wrap">
                                                 <b class="w-100">Order summary</b>
                                                 <span t-out="str(website_sale_order.cart_quantity)"/>
@@ -2209,11 +2206,10 @@
                                     <div name="cart_summary_info" t-if="not website_sale_order or not website_sale_order.website_order_line" class="alert alert-info">
                                         Your cart is empty!
                                     </div>
-                                    <!-- Cart lines are showed in desktop but are in an hidden accordion in mobile -->
-                                    <div id="o_wsale_total_accordion_item"
+                                    <div id="o_wsale_accordion_item"
                                         class="accordion-collapse collapse mb-4 mb-lg-0"
                                         data-bs-parent="#o_wsale_total_accordion">
-                                        <div t-att-class="len(website_sale_order.website_order_line) &gt; 4 and 'o_wsale_scrollable_table mt-n4 me-n4 pt-4 pe-4'">
+                                        <div t-att-class="len(website_sale_order.website_order_line) &gt; 3 and 'o_wsale_scrollable_table mt-n4 me-n4 pt-4 pe-4'">
                                             <table t-if="website_sale_order and website_sale_order.website_order_line"
                                                 class="table accordion-body mb-0"
                                                 id="cart_products">
@@ -2266,10 +2262,10 @@
                                                 <strong>Warning!</strong> <t t-esc='website_sale_order._get_shop_warning()'/>
                                             </div>
                                         </t>
-                                        <t t-call="website_sale.total">
-                                            <t t-set="_cart_total_classes" t-valuef="border-top pt-3"/>
-                                        </t>
                                     </div>
+                                    <t t-call="website_sale.total">
+                                        <t t-set="_cart_total_classes" t-valuef="border-top pt-3"/>
+                                    </t>
                                     <div t-if="show_navigation_button" class="o_cta_navigation_container position-absolute position-lg-static start-0 bottom-0 col-12">
                                         <t t-call="website_sale.navigation_buttons"/>
                                     </div>

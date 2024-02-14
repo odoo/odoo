@@ -4,7 +4,9 @@
     <!-- Insert the donation form inside the payment form's <form/> element. -->
     <template id="website_payment.payment_form" inherit_id="payment.form">
         <xpath expr="//div[@id='o_payment_form_options']" position="before">
-            <t t-if="is_donation" t-call="website_payment.donation_information"/>
+            <div class="mb-3" t-if="is_donation">
+                <t t-call="website_payment.donation_information"/>
+            </div>
         </xpath>
     </template>
 
