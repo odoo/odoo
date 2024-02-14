@@ -1506,10 +1506,14 @@ export class Matchers {
                           ...Object.keys(styleDef).map(formatHumanReadable)
                       )}`
                     : `expected %elements% [to have all!not to have any] of the given style properties`),
-            details: (actual) => [
-                [Markup.green("Expected:"), styleDef],
-                [Markup.red("Received:"), getStyleValues(actual, Object.keys(styleDef))],
-            ],
+            details: (actual) => {
+                const styleValues = getStyleValues(actual[0], Object.keys(styleDef));
+                return [
+                    [Markup.green("Expected:"), styleDef],
+                    [Markup.red("Received:"), styleValues],
+                    [Markup.text("Diff:"), Markup.diff(styleDef, styleValues)],
+                ];
+            },
         });
     }
 
