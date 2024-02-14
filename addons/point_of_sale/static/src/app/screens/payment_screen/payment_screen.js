@@ -355,11 +355,15 @@ export class PaymentScreen extends Component {
                 ? this.currentOrder.finalized
                 : true;
 
-            if (this.hardwareProxy.printer && invoiced_finalized) {
-                const printResult = await this.printer.print(OrderReceipt, {
-                    data: this.pos.get_order().export_for_printing(),
-                    formatCurrency: this.env.utils.formatCurrency,
-                });
+            if (invoiced_finalized) {
+                const printResult = await this.printer.print(
+                    OrderReceipt, 
+                    {
+                        data: this.pos.get_order().export_for_printing(),
+                        formatCurrency: this.env.utils.formatCurrency,
+                    },
+                    { webPrintFallback: true }
+                );
 
                 if (printResult && this.pos.config.iface_print_skip_screen) {
                     this.pos.removeOrder(this.currentOrder);
