@@ -197,7 +197,7 @@ export class PosData extends Reactive {
 
             const dataToUpdate = {};
             const keysToUpdate = Object.keys(vals);
-            const serializedRecords = record.serialize();
+            const serializedRecords = record.serialize(true);
 
             for (const key of keysToUpdate) {
                 dataToUpdate[key] = serializedRecords[key];

@@ -51,7 +51,9 @@ export class Table extends Component {
                 if (this.isKanban()) {
                     return;
                 }
-                const { minX, minY, maxX, maxY } = getLimits(this.root.el, this.props.limit.el);
+                const { minX, minY } = getLimits(this.root.el, this.props.limit.el);
+                const maxX = this.props.limit.el.clientWidth - this.props.table.width;
+                const maxY = this.props.limit.el.clientHeight - this.props.table.height;
                 for (const [index, table] of Object.entries(this.selectedTablesCopy)) {
                     this.props.selectedTables[index].position_h = constrain(
                         table.position_h + dx,

@@ -12,9 +12,12 @@ import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Table } from "@pos_restaurant/app/floor_screen/table";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { useService } from "@web/core/utils/hooks";
-import { Component, onMounted, useRef, useState, onWillStart } from "@odoo/owl";
+import { Component, onMounted, useRef, useState, onWillStart, useEffect } from "@odoo/owl";
 import { ask } from "@point_of_sale/app/store/make_awaitable_dialog";
 import { unique } from "@web/core/utils/arrays";
+import { loadImage } from "@point_of_sale/utils";
+import { getDataURLFromFile } from "@web/core/utils/urls";
+import { hasTouch } from "@web/core/browser/feature_detection";
 
 export class FloorScreen extends Component {
     static components = { Table };
@@ -28,16 +31,73 @@ export class FloorScreen extends Component {
         const floor = this.pos.currentFloor;
         this.state = useState({
             selectedFloorId: floor ? floor.id : null,
+            floorHeight: "100%",
+            floorWidth: "100%",
             selectedTableIds: this.getTablesSelectedByDefault(),
             isColorPicker: false,
         });
         this.floorMapRef = useRef("floor-map-ref");
+        this.floorScrollBox = useRef("floor-map-scroll");
         const ui = useState(useService("ui"));
         const mode = localStorage.getItem("floorPlanStyle");
         this.pos.floorPlanStyle = ui.isSmall || mode == "kanban" ? "kanban" : "default";
         this.map = useRef("map");
-        onMounted(() => this.pos.openCashControl());
+        onMounted(() => {
+            this.pos.openCashControl();
+        });
         onWillStart(this.onWillStart);
+        useEffect(
+            () => {
+                this.computeFloorSize();
+            },
+            () => [this.activeFloor, this.pos.floorPlanStyle]
+        );
+        useEffect(
+            (tableL) => {
+                if (hasTouch()) {
+                    if (tableL) {
+                        this.floorScrollBox.el.classList.remove("overflow-scroll");
+                        this.floorScrollBox.el.classList.add("overflow-hidden");
+                    } else {
+                        this.floorScrollBox.el.classList.remove("overflow-hidden");
+                        this.floorScrollBox.el.classList.add("overflow-scroll");
+                    }
+                }
+            },
+            () => [this.state.selectedTableIds.length]
+        );
+    }
+    computeFloorSize() {
+        if (this.pos.floorPlanStyle === "kanban") {
+            this.state.floorHeight = "100%";
+            this.state.floorWidth = window.innerWidth + "px";
+            return;
+        }
+        const tables = this.activeFloor.table_ids;
+        const floorV = this.floorMapRef.el.clientHeight;
+        const floorH = this.floorMapRef.el.offsetWidth;
+        const positionH = Math.max(
+            ...tables.map((table) => table.position_h + table.width),
+            floorH
+        );
+        const positionV = Math.max(
+            ...tables.map((table) => table.position_v + table.height),
+            floorV
+        );
+
+        if (this.activeFloor.floor_background_image) {
+            const img = new Image();
+            img.onload = () => {
+                const height = Math.max(img.height, positionV);
+                const width = Math.max(img.width, positionH);
+                this.state.floorHeight = `${height}px`;
+                this.state.floorWidth = `${width}px`;
+            };
+            img.src = "data:image/png;base64," + this.activeFloor.floor_background_image;
+        } else {
+            this.state.floorHeight = `${positionV}px`;
+            this.state.floorWidth = `${positionH}px`;
+        }
     }
     getTablesSelectedByDefault() {
         return this.pos.orderToTransfer ? [this.pos.orderToTransfer.tableId] : [];
@@ -66,6 +126,11 @@ export class FloorScreen extends Component {
             };
         }
         await this.pos.unsetTable();
+    }
+    get floorBackround() {
+        return this.activeFloor.floor_background_image
+            ? "data:image/png;base64," + this.activeFloor.floor_background_image
+            : "none";
     }
     onClickFloorMap() {
         this.state.selectedTableIds = this.getTablesSelectedByDefault();
@@ -303,7 +368,9 @@ export class FloorScreen extends Component {
     }
     unselectTables() {
         if (this.selectedTables.length) {
-            this.pos.updateTables(...this.selectedTables);
+            for (const table of this.selectedTables) {
+                this.pos.data.write("restaurant.table", [table.id], table.serialize(true));
+            }
         }
         this.state.selectedTableIds = [];
     }
@@ -386,8 +453,9 @@ export class FloorScreen extends Component {
                       title: _t("Table Name ?"),
                       getPayload: (newName) => {
                           if (newName !== this.selectedTables[0].name) {
-                              this.selectedTables[0].name = newName;
-                              this.pos.updateTables(this.selectedTables[0]);
+                              this.pos.data.write("restaurant.table", [this.selectedTables[0].id], {
+                                  name: newName,
+                              });
                           }
                       },
                   }
@@ -419,8 +487,9 @@ export class FloorScreen extends Component {
                 const newSeatsNum = parseInt(num, 10);
                 selectedTables.forEach((selectedTable) => {
                     if (newSeatsNum !== selectedTable.seats) {
-                        selectedTable.seats = newSeatsNum;
-                        this.pos.updateTables(selectedTable);
+                        this.pos.data.write("restaurant.table", [selectedTable.id], {
+                            seats: newSeatsNum,
+                        });
                     }
                 });
             },
@@ -434,15 +503,13 @@ export class FloorScreen extends Component {
     }
     changeShape(form) {
         for (const table of this.selectedTables) {
-            table.shape = form;
+            this.pos.data.write("restaurant.table", [table.id], { shape: form });
         }
-        this.pos.updateTables(...this.selectedTables);
     }
     unlinkTables() {
         for (const table of this.selectedTables) {
-            table.update({ parent_id: null });
+            this.pos.data.write("restaurant.table", [table.id], { parent_id: false });
         }
-        this.pos.updateTables(...this.selectedTables);
     }
     linkTables() {
         const parentTable =
@@ -465,14 +532,14 @@ export class FloorScreen extends Component {
     }
     setColor(color) {
         if (this.selectedTables.length > 0) {
-            this.selectedTables.forEach((selectedTable) => {
-                selectedTable.color = color;
-            });
-            this.pos.updateTables(...this.selectedTables);
+            for (const table of this.selectedTables) {
+                this.pos.data.write("restaurant.table", [table.id], { color: color });
+            }
         } else {
             this.activeFloor.background_color = color;
             this.pos.data.write("restaurant.floor", [this.activeFloor.id], {
                 background_color: color,
+                floor_background_image: false,
             });
         }
         this.state.isColorPicker = false;
@@ -621,6 +688,33 @@ export class FloorScreen extends Component {
     }
     getChildren(table) {
         return this.pos.models["restaurant.table"].filter((t) => t.parent_id?.id === table.id);
+    }
+    async uploadImage(event) {
+        const file = event.target.files[0];
+        if (!file.type.match(/image.*/)) {
+            this.dialog.add(AlertDialog, {
+                title: _t("Unsupported File Format"),
+                body: _t("Only web-compatible Image formats such as .png or .jpeg are supported."),
+            });
+        } else {
+            const imageUrl = await getDataURLFromFile(file);
+            const loadedImage = await loadImage(imageUrl);
+            if (loadedImage) {
+                this.env.services.ui.block();
+                await this.pos.data.ormWrite("restaurant.floor", [this.activeFloor.id], {
+                    floor_background_image: imageUrl.split(",")[1],
+                });
+                // A read is added to be sure that we have the same image as the one in backend
+                await this.pos.data.read("restaurant.floor", [this.activeFloor.id]);
+                this.env.services.ui.unblock();
+            } else {
+                this.dialog.add(AlertDialog, {
+                    title: _t("Loading Image Error"),
+                    body: _t("Encountered error when loading image. Please try again."),
+                });
+            }
+            this.state.isColorPicker = false;
+        }
     }
 }
 
