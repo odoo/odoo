@@ -45,8 +45,6 @@ class ResConfigSettings(models.TransientModel):
     module_quality_control_worksheet = fields.Boolean("Quality Worksheet")
     group_stock_multi_locations = fields.Boolean('Storage Locations', implied_group='stock.group_stock_multi_locations',
         help="Store products in specific locations of your warehouse (e.g. bins, racks) and to track inventory accordingly.")
-    group_stock_storage_categories = fields.Boolean(
-        'Storage Categories', implied_group='stock.group_stock_storage_categories')
     annual_inventory_month = fields.Selection(related='company_id.annual_inventory_month', readonly=False)
     annual_inventory_day = fields.Integer(related='company_id.annual_inventory_day', readonly=False)
     group_stock_reception_report = fields.Boolean("Reception Report", implied_group='stock.group_reception_report')
@@ -56,7 +54,6 @@ class ResConfigSettings(models.TransientModel):
     def _onchange_group_stock_multi_locations(self):
         if not self.group_stock_multi_locations:
             self.group_stock_adv_location = False
-            self.group_stock_storage_categories = False
 
     @api.onchange('group_stock_production_lot')
     def _onchange_group_stock_production_lot(self):
@@ -76,22 +73,6 @@ class ResConfigSettings(models.TransientModel):
         base_user_implied_ids = base_user.implied_ids
         if not self.group_stock_multi_locations and location_grp in base_user_implied_ids and warehouse_grp in base_user_implied_ids:
             raise UserError(_("You can't deactivate the multi-location if you have more than once warehouse by company"))
-
-        # Deactivate putaway rules with storage category when not in storage category
-        # group. Otherwise, active them.
-        storage_cate_grp = self.env.ref('stock.group_stock_storage_categories')
-        PutawayRule = self.env['stock.putaway.rule']
-        if self.group_stock_storage_categories and storage_cate_grp not in base_user_implied_ids:
-            putaway_rules = PutawayRule.search([
-                ('active', '=', False),
-                ('storage_category_id', '!=', False)
-            ])
-            if putaway_rules:
-                putaway_rules.active = True
-        elif not self.group_stock_storage_categories and storage_cate_grp in base_user_implied_ids:
-            putaway_rules = PutawayRule.search([('storage_category_id', '!=', False)])
-            if putaway_rules:
-                putaway_rules.active = False
 
         previous_group = self.default_get(['group_stock_multi_locations', 'group_stock_production_lot', 'group_stock_tracking_lot'])
         super().set_values()

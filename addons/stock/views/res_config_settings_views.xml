@@ -165,17 +165,6 @@
                                     </div>
                                 </div>
                             </setting>
-                            <setting id="categorize_locations" help="Categorize your locations for smarter putaway rules" invisible="not group_stock_multi_locations">
-                                <field name="group_stock_storage_categories"/>
-                                <div class="content-group" invisible="not group_stock_storage_categories">
-                                    <div class="mt8">
-                                        <button name="%(stock.action_storage_category)d" icon="oi-arrow-right" type="action" string="Storage Categories" class="btn-link"/>
-                                    </div>
-                                    <div class="mt4" groups="base.group_no_one">
-                                        <button name="%(stock.action_storage_category_capacity)d" icon="oi-arrow-right" type="action" string="Storage Category Capacity" class="btn-link"/>
-                                    </div>
-                                </div>
-                            </setting>
                         </block>
                         <block title="Advanced Scheduling" id="schedule_info" invisible="1">
                             <div id="sale_security_lead"/>

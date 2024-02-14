@@ -6150,7 +6150,7 @@ class StockMove(TransactionCase):
         `quantity`, the onchange should n't change the destination location L
         """
 
-        self.env.user.write({'groups_id': [(3, self.env.ref('stock.group_stock_storage_categories').id)]})
+        self.env.user.write({'groups_id': [(3, self.env.ref('stock.group_stock_multi_locations').id)]})
         internal_transfer = self.env.ref('stock.picking_type_internal')
 
         picking = self.env['stock.picking'].create({
@@ -6316,7 +6316,7 @@ class StockMove(TransactionCase):
         the user has defined himself the destination location, we should not try
         to apply any putaway rule that would override his choice.
         """
-        self.env.user.write({'groups_id': [(4, self.env.ref('stock.group_stock_storage_categories').id)]})
+        self.env.user.write({'groups_id': [(4, self.env.ref('stock.group_stock_multi_locations').id)]})
 
         child_location = self.stock_location.child_ids[0]
         in_type = self.env.ref('stock.picking_type_in')
