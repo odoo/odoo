@@ -69,7 +69,7 @@ export class BomOverviewControlPanel extends Component {
         return this.props.precision;
     }
 
-    get wharehousesItems() {
+    get warehousesItems() {
         return this.props.warehouses.map(wh => ({
             id: wh.id,
             label: wh.name,
