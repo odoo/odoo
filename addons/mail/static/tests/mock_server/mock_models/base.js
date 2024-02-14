@@ -1,17 +1,31 @@
-/** @odoo-module */
-
 import { models } from "@web/../tests/web_test_helpers";
+import { patch } from "@web/core/utils/patch";
+
+patch(models.ServerModel.prototype, {
+    /**
+     * @override
+     * @type {typeof import("@web/../tests/_framework/mock_server/mock_model").Model["prototype"]["get_views"]}
+     */
+    get_views() {
+        const result = super.get_views(...arguments);
+        for (const modelName of Object.keys(result.models)) {
+            if (this.has_activities) {
+                result.models[modelName].has_activities = true;
+            }
+        }
+        return result;
+    },
+});
 
 export class Base extends models.ServerModel {
     _name = "base";
 
     /**
-     * @param {string} model
      * @param {Object} trackedFieldNamesToField
      * @param {Object} initialTrackedFieldValues
      * @param {Object} record
      */
-    _mail_track(model, trackedFieldNamesToField, initialTrackedFieldValues, record) {
+    _mail_track(trackedFieldNamesToField, initialTrackedFieldValues, record) {
         /** @type {import("mock_models").MailTrackingValue} */
         const MailTrackingValue = this.env["mail.tracking.value"];
 
@@ -26,7 +40,7 @@ export class Base extends models.ServerModel {
                     newValue,
                     fname,
                     trackedFieldNamesToField[fname],
-                    model
+                    this
                 );
                 if (tracking) {
                     trackingValueIds.push(tracking);

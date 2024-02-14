@@ -1,27 +1,31 @@
-/** @odoo-module */
-
 import { expect, test } from "@odoo/hoot";
 
-import { rpc } from "@web/core/network/rpc";
+/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
+let rpc;
 import {
     click,
     contains,
+    defineMailModels,
     insertText,
     openDiscuss,
     patchBrowserNotification,
     patchUiSize,
-    start,
+    startClient,
     startServer,
     triggerHotkey,
 } from "../../../mail_test_helpers";
-import { Command, constants, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { Command, patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
+import { withUser } from "@web/../tests/_framework/mock_server/mock_server";
+import { rpcWithEnv } from "@mail/utils/common/misc";
 
-test.skip('"Start a conversation" item selection opens chat', async () => {
+defineMailModels();
+
+test('"Start a conversation" item selection opens chat', async () => {
     patchUiSize({ height: 360, width: 640 });
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Gandalf" });
     pyEnv["res.users"].create({ partner_id: partnerId });
-    await start();
+    await startClient();
     await openDiscuss();
     await contains("button.active", { text: "Inbox" });
     await click("button", { text: "Chat" });
@@ -33,11 +37,11 @@ test.skip('"Start a conversation" item selection opens chat', async () => {
     await contains(".o-mail-ChatWindow", { text: "Gandalf" });
 });
 
-test.skip('"New channel" item selection opens channel (existing)', async () => {
+test('"New channel" item selection opens channel (existing)', async () => {
     patchUiSize({ height: 360, width: 640 });
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({ name: "Gryffindors" });
-    await start();
+    await startClient();
     await openDiscuss();
     await contains("button.active", { text: "Inbox" });
     await click("button", { text: "Channel" });
@@ -48,9 +52,9 @@ test.skip('"New channel" item selection opens channel (existing)', async () => {
     await contains(".o-mail-ChatWindow", { text: "Gryffindors" });
 });
 
-test.skip('"New channel" item selection opens channel (new)', async () => {
+test('"New channel" item selection opens channel (new)', async () => {
     patchUiSize({ height: 360, width: 640 });
-    await start();
+    await startClient();
     await openDiscuss();
     await contains("button.active", { text: "Inbox" });
     await click("button", { text: "Channel" });
@@ -61,14 +65,14 @@ test.skip('"New channel" item selection opens channel (new)', async () => {
     await contains(".o-mail-ChatWindow", { text: "slytherins" });
 });
 
-test.skip("new message [REQUIRE FOCUS]", async () => {
-    await start();
+test("new message [REQUIRE FOCUS]", async () => {
+    await startClient();
     await click(".o_menu_systray .dropdown-toggle i[aria-label='Messages']");
     await click(".o-mail-MessagingMenu button", { text: "New Message" });
     await contains(".o-mail-ChatWindow .o-discuss-ChannelSelector input:focus");
 });
 
-test.skip("channel preview ignores empty message", async () => {
+test("channel preview ignores empty message", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     const channelId = pyEnv["discuss.channel"].create({
@@ -86,14 +90,14 @@ test.skip("channel preview ignores empty message", async () => {
         model: "discuss.channel",
         res_id: channelId,
     });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await contains(".o-mail-Message", { text: "before last" });
     await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
     await contains(".o-mail-NotificationItem-text", { text: "Demo: before last" });
 });
 
-test.skip("channel preview ignores transient message", async () => {
+test("channel preview ignores transient message", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     const channelId = pyEnv["discuss.channel"].create({
@@ -105,7 +109,7 @@ test.skip("channel preview ignores transient message", async () => {
         model: "discuss.channel",
         res_id: channelId,
     });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "/who");
     await click(".o-mail-Composer-send:enabled");
@@ -114,7 +118,8 @@ test.skip("channel preview ignores transient message", async () => {
     await contains(".o-mail-NotificationItem-text", { text: "Demo: test" });
 });
 
-test.skip("channel preview ignores messages from the past", async () => {
+// AKU !! test takes 2.5sec, close to timeouts 3 (contains) and 5 (HOOT) !!
+test("channel preview ignores messages from the past", async () => {
     // make scroll behavior instantaneous.
     patchWithCleanup(Element.prototype, {
         scrollIntoView() {
@@ -144,7 +149,8 @@ test.skip("channel preview ignores messages from the past", async () => {
         parent_id: messageId,
         res_id: channelId,
     });
-    await start();
+    const env = await startClient();
+    rpc = rpcWithEnv(env);
     await openDiscuss(channelId);
     await contains(".o-mail-Message", { count: 30 });
     await contains(".o-mail-Message-content", { text: "last message" });
@@ -155,7 +161,7 @@ test.skip("channel preview ignores messages from the past", async () => {
     await contains(".o-mail-Message-content", { text: "last message", count: 0 });
     await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
     await contains(".o-mail-NotificationItem-text", { text: "You: last message" });
-    pyEnv.withUser(constants.USER_ID, () =>
+    withUser(serverState.userId, () =>
         rpc("/mail/message/post", {
             post_data: { body: "new message", message_type: "comment" },
             thread_id: channelId,
@@ -165,7 +171,7 @@ test.skip("channel preview ignores messages from the past", async () => {
     await contains(".o-mail-NotificationItem-text", { text: "You: new message" });
 });
 
-test.skip("counter is taking into account non-fetched channels", async () => {
+test("counter is taking into account non-fetched channels", async () => {
     patchBrowserNotification("denied");
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Jane" });
@@ -175,7 +181,7 @@ test.skip("counter is taking into account non-fetched channels", async () => {
             Command.create({
                 fold_state: "closed", // minimized channels are fetched at init
                 message_unread_counter: 1,
-                partner_id: constants.PARTNER_ID,
+                partner_id: serverState.partnerId,
             }),
             Command.create({ partner_id: partnerId }),
         ],
@@ -187,14 +193,14 @@ test.skip("counter is taking into account non-fetched channels", async () => {
         model: "discuss.channel",
         res_id: channelId,
     });
-    const { env } = await start();
+    const env = await startClient();
     await contains(".o-mail-MessagingMenu-counter", { text: "1" });
     expect(
         env.services["mail.store"].Thread.get({ model: "discuss.channel", id: channelId })
     ).not.toBeTruthy();
 });
 
-test.skip("counter is updated on receiving message on non-fetched channels", async () => {
+test("counter is updated on receiving message on non-fetched channels", async () => {
     patchBrowserNotification("denied");
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Jane" });
@@ -204,7 +210,7 @@ test.skip("counter is updated on receiving message on non-fetched channels", asy
         channel_member_ids: [
             Command.create({
                 fold_state: "closed", // minimized channels are fetched at init
-                partner_id: constants.PARTNER_ID,
+                partner_id: serverState.partnerId,
             }),
             Command.create({ partner_id: partnerId }),
         ],
@@ -216,13 +222,14 @@ test.skip("counter is updated on receiving message on non-fetched channels", asy
         model: "discuss.channel",
         res_id: channelId,
     });
-    const { env } = await start();
+    const env = await startClient();
+    rpc = rpcWithEnv(env);
     await contains(".o_menu_systray .dropdown-toggle i[aria-label='Messages']");
     await contains(".o-mail-MessagingMenu-counter", { count: 0 });
     expect(
         env.services["mail.store"].Thread.get({ model: "discuss.channel", id: channelId })
     ).not.toBeTruthy();
-    pyEnv.withUser(userId, () =>
+    withUser(userId, () =>
         rpc("/mail/message/post", {
             post_data: { body: "new message", message_type: "comment" },
             thread_id: channelId,

@@ -1,11 +1,10 @@
-/** @odoo-module */
-
 import { expect, test } from "@odoo/hoot";
-import { start } from "../mail_test_helpers";
+import { defineMailModels, startClient } from "../mail_test_helpers";
 
-test.skip("Attachment model properties", async () => {
-    const { env } = await start();
+defineMailModels();
 
+test("Attachment model properties", async () => {
+    const env = await startClient();
     const attachment = env.services["mail.store"].Attachment.insert({
         filename: "test.txt",
         id: 750,

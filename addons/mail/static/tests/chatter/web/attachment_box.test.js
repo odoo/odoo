@@ -1,18 +1,19 @@
-/** @odoo-module */
-
 import { test } from "@odoo/hoot";
 import {
     SIZES,
     click,
     contains,
+    defineMailModels,
     openFormView,
     patchUiSize,
-    registerArchs,
-    start,
+    scroll,
+    startClient,
     startServer,
 } from "../../mail_test_helpers";
 
-test.skip("base non-empty rendering", async () => {
+defineMailModels();
+
+test("base non-empty rendering", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     pyEnv["ir.attachment"].create([
@@ -29,25 +30,23 @@ test.skip("base non-empty rendering", async () => {
             res_model: "res.partner",
         },
     ]);
-    registerArchs({
-        "res.partner,false,form": `
+    await startClient();
+    await openFormView("res.partner", partnerId, {
+        arch: `
             <form>
                 <sheet></sheet>
                 <div class="oe_chatter">
                     <field name="message_ids"  options="{'open_attachments': True}"/>
                 </div>
-            </form>
-        `,
+            </form>`,
     });
-    await start();
-    await openFormView("res.partner", partnerId);
     await contains(".o-mail-AttachmentBox");
     await contains("button", { text: "Attach files" });
     await contains(".o-mail-Chatter input[type='file']");
     await contains(".o-mail-AttachmentList");
 });
 
-test.skip("remove attachment should ask for confirmation", async () => {
+test("remove attachment should ask for confirmation", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     pyEnv["ir.attachment"].create({
@@ -56,18 +55,16 @@ test.skip("remove attachment should ask for confirmation", async () => {
         res_id: partnerId,
         res_model: "res.partner",
     });
-    registerArchs({
-        "res.partner,false,form": `
+    await startClient();
+    await openFormView("res.partner", partnerId, {
+        arch: `
             <form>
                 <sheet></sheet>
                 <div class="oe_chatter">
                     <field name="message_ids"  options="{'open_attachments': True}"/>
                 </div>
-            </form>
-        `,
+            </form>`,
     });
-    await start();
-    await openFormView("res.partner", partnerId);
     await contains(".o-mail-AttachmentCard");
     await contains("button[title='Remove']");
     await click("button[title='Remove']");
@@ -77,7 +74,7 @@ test.skip("remove attachment should ask for confirmation", async () => {
     await contains(".o-mail-AttachmentImage", { count: 0 });
 });
 
-test.skip("view attachments", async () => {
+test("view attachments", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     pyEnv["ir.attachment"].create([
@@ -94,16 +91,16 @@ test.skip("view attachments", async () => {
             res_model: "res.partner",
         },
     ]);
-    registerArchs({
-        "res.partner,false,form": `<form>
-            <sheet></sheet>
-            <div class="oe_chatter">
-                <field name="message_ids"  options="{'open_attachments': True}"/>
-            </div>
-        </form>`,
+    await startClient();
+    await openFormView("res.partner", partnerId, {
+        arch: `
+            <form>
+                <sheet></sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids"  options="{'open_attachments': True}"/>
+                </div>
+            </form>`,
     });
-    await start();
-    await openFormView("res.partner", partnerId);
     await click('.o-mail-AttachmentCard[aria-label="Blah.txt"] .o-mail-AttachmentCard-image');
     await contains(".o-FileViewer");
     await contains(".o-FileViewer-header", { text: "Blah.txt" });
@@ -115,7 +112,7 @@ test.skip("view attachments", async () => {
     await contains(".o-FileViewer-header", { text: "Blah.txt" });
 });
 
-test.skip("scroll to attachment box when toggling on", async () => {
+test("scroll to attachment box when toggling on", async () => {
     patchUiSize({ size: SIZES.XXL });
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
@@ -132,7 +129,7 @@ test.skip("scroll to attachment box when toggling on", async () => {
         res_id: partnerId,
         res_model: "res.partner",
     });
-    await start();
+    await startClient();
     await openFormView("res.partner", partnerId);
     await contains(".o-mail-Message", { count: 30 });
     await scroll(".o-mail-Chatter", "bottom");
@@ -142,7 +139,7 @@ test.skip("scroll to attachment box when toggling on", async () => {
     await contains(".o-mail-AttachmentBox", { visible: true });
 });
 
-test.skip("do not auto-scroll to attachment box when initially open", async () => {
+test("do not auto-scroll to attachment box when initially open", async () => {
     patchUiSize({ size: SIZES.LG });
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
@@ -157,24 +154,22 @@ test.skip("do not auto-scroll to attachment box when initially open", async () =
         res_id: partnerId,
         res_model: "res.partner",
     });
-    registerArchs({
-        "res.partner,false,form": `
+    await startClient();
+    await openFormView("res.partner", partnerId, {
+        arch: `
             <form>
                 ${`<sheet><field name="name"/></sheet>`.repeat(100)}
                 <div class="oe_chatter">
                     <field name="message_ids"  options="{'open_attachments': True}"/>
                 </div>
-            </form>
-        `,
+            </form>`,
     });
-    await start();
-    await openFormView("res.partner", partnerId);
     await contains(".o-mail-Message");
     // weak test, no guarantee that we waited long enough for the potential scroll to happen
     await contains(".o_content", { scroll: 0 });
 });
 
-test.skip("attachment box should order attachments from newest to oldest", async () => {
+test("attachment box should order attachments from newest to oldest", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const resData = { res_id: partnerId, res_model: "res.partner" };
@@ -183,7 +178,7 @@ test.skip("attachment box should order attachments from newest to oldest", async
         { name: "B.txt", mimetype: "text/plain", ...resData },
         { name: "C.txt", mimetype: "text/plain", ...resData },
     ]);
-    await start();
+    await startClient();
     await openFormView("res.partner", partnerId);
     await contains(".o-mail-Chatter [aria-label='Attach files']", { text: "3" });
     await click(".o-mail-Chatter [aria-label='Attach files']"); // open attachment box
@@ -192,7 +187,7 @@ test.skip("attachment box should order attachments from newest to oldest", async
     await contains(":nth-child(3 of .o-mail-AttachmentCard)", { text: "A.txt" });
 });
 
-test.skip("attachment box auto-closed on switch to record wih no attachments", async () => {
+test("attachment box auto-closed on switch to record wih no attachments", async () => {
     const pyEnv = await startServer();
     const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
         { display_name: "first partner" },
@@ -206,19 +201,16 @@ test.skip("attachment box auto-closed on switch to record wih no attachments", a
             res_model: "res.partner",
         },
     ]);
-    registerArchs({
-        "res.partner,false,form": `
+    await startClient();
+    await openFormView("res.partner", partnerId_1, {
+        arch: `
             <form>
                 <sheet></sheet>
                 <div class="oe_chatter">
                     <field name="message_ids"  options="{'open_attachments': True}"/>
                 </div>
-            </form>
-        `,
-    });
-    await start();
-    await openFormView("res.partner", partnerId_1, {
-        props: { resIds: [partnerId_1, partnerId_2] },
+            </form>`,
+        resIds: [partnerId_1, partnerId_2],
     });
     await contains(".o-mail-AttachmentBox");
     await click(".o_pager_next");

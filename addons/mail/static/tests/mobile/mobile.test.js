@@ -1,20 +1,21 @@
-/** @odoo-module */
-
 import { test } from "@odoo/hoot";
 import {
     click,
     contains,
+    defineMailModels,
     openDiscuss,
     patchUiSize,
-    start,
+    startClient,
     startServer,
 } from "../mail_test_helpers";
 
-test.skip("auto-select 'Inbox' when discuss had channel as active thread", async () => {
+defineMailModels();
+
+test("auto-select 'Inbox' when discuss had channel as active thread", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });
     patchUiSize({ height: 360, width: 640 });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await contains(".o-mail-MessagingMenu-tab.text-primary.fw-bolder", { text: "Channel" });
     await click("button", { text: "Mailboxes" });

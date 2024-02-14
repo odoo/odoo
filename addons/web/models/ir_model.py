@@ -54,7 +54,7 @@ class IrModel(models.Model):
         return self._display_name_for(accessible_models)
 
     def _get_definitions(self, model_names):
-        fields_by_model_names = {}
+        model_definitions = {}
         for model_name in model_names:
             model = self.env[model_name]
             # get fields, relational fields are kept only if the related model is in model_names
@@ -86,7 +86,7 @@ class IrModel(models.Model):
                         field_data['inverse_fname_by_model_name'] = {field.model_name: field.name for field in inverse_fields}
                     if field_data['type'] == 'many2one_reference':
                         field_data['model_name_ref_fname'] = model._fields[fname].model_field
-            fields_by_model_names[model_name] = {
+            model_definitions[model_name] = {
                 'description': model._description,
                 'fields': fields_data_by_fname,
                 'inherit': [model_name for model_name in model._inherit_module if model_name in model_names],
@@ -94,4 +94,4 @@ class IrModel(models.Model):
                 'parent_name': model._parent_name,
                 'rec_name': model._rec_name,
             }
-        return fields_by_model_names
+        return model_definitions

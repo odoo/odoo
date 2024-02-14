@@ -1,49 +1,55 @@
-/** @odoo-module */
-
 import { test } from "@odoo/hoot";
 
-import { rpc } from "@web/core/network/rpc";
+/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
+let rpc;
 import {
     assertSteps,
     click,
     contains,
+    defineMailModels,
     insertText,
+    onRpcBefore,
     openDiscuss,
     openFormView,
-    start,
+    startClient,
     startServer,
     step,
 } from "../mail_test_helpers";
-import { Command, constants, onRpc } from "@web/../tests/web_test_helpers";
+import { Command, serverState } from "@web/../tests/web_test_helpers";
+import { withUser } from "@web/../tests/_framework/mock_server/mock_server";
+import { rpcWithEnv } from "@mail/utils/common/misc";
 
-test.skip("Receiving a new message out of discuss app should open a chat window", async () => {
+defineMailModels();
+
+test("Receiving a new message out of discuss app should open a chat window", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Dumbledore" });
     const userId = pyEnv["res.users"].create({ partner_id: partnerId });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            Command.create({ partner_id: constants.PARTNER_ID }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
         channel_type: "chat",
     });
-    onRpc((route, args) => {
-        if (route === "/mail/action" && args.init_messaging) {
+    onRpcBefore("/mail/action", (args) => {
+        if (args.init_messaging) {
             step(`/mail/action - ${JSON.stringify(args)}`);
         }
     });
-    await start();
+    const env = await startClient();
+    rpc = rpcWithEnv(env);
     await assertSteps([
         `/mail/action - ${JSON.stringify({
             init_messaging: {},
             failures: true,
             systray_get_activities: true,
-            context: { lang: "en", tz: "taht", uid: constants.USER_ID },
+            context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
         })}`,
     ]);
     // send after init_messaging because bus subscription is done after init_messaging
     // simulate receving new message
-    pyEnv.withUser(userId, () =>
+    withUser(userId, () =>
         rpc("/mail/message/post", {
             post_data: { body: "new message", message_type: "comment" },
             thread_id: channelId,
@@ -53,35 +59,36 @@ test.skip("Receiving a new message out of discuss app should open a chat window"
     await contains(".o-mail-ChatWindow", { text: "Dumbledore" });
 });
 
-test.skip("Receiving a new message in discuss app should open a chat window after leaving discuss app", async () => {
+test("Receiving a new message in discuss app should open a chat window after leaving discuss app", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Dumbledore" });
     const userId = pyEnv["res.users"].create({ partner_id: partnerId });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            Command.create({ partner_id: constants.PARTNER_ID }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
         channel_type: "chat",
     });
-    onRpc((route, args) => {
-        if (route === "/mail/action" && args.init_messaging) {
+    onRpcBefore("/mail/action", (args) => {
+        if (args.init_messaging) {
             step(`/mail/action - ${JSON.stringify(args)}`);
         }
     });
-    await start();
+    const env = await startClient();
+    rpc = rpcWithEnv(env);
     await assertSteps([
         `/mail/action - ${JSON.stringify({
             init_messaging: {},
             failures: true,
             systray_get_activities: true,
-            context: { lang: "en", tz: "taht", uid: constants.USER_ID },
+            context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
         })}`,
     ]);
     // send after init_messaging because bus subscription is done after init_messaging
     await openDiscuss();
     // simulate receiving new message
-    pyEnv.withUser(userId, () =>
+    await withUser(userId, () =>
         rpc("/mail/message/post", {
             post_data: { body: "new message", message_type: "comment" },
             thread_id: channelId,
@@ -93,17 +100,17 @@ test.skip("Receiving a new message in discuss app should open a chat window afte
     await contains(".o-mail-ChatWindow", { text: "Dumbledore" });
 });
 
-test.skip("Posting a message in discuss app should not open a chat window after leaving discuss app", async () => {
+test("Posting a message in discuss app should not open a chat window after leaving discuss app", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Dumbledore" });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            Command.create({ partner_id: constants.PARTNER_ID }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
         channel_type: "chat",
     });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "test https://www.odoo.com/");
     await click(".o-mail-Composer-send:enabled");

@@ -87,7 +87,7 @@ export class WebsocketWorker {
      */
     broadcast(type, data) {
         for (const client of this.channelsByClient.keys()) {
-            client.postMessage({ type, data });
+            client.postMessage({ type, data: data ? JSON.parse(JSON.stringify(data)) : undefined });
         }
     }
 
@@ -111,7 +111,7 @@ export class WebsocketWorker {
      * @param {Object} data
      */
     sendToClient(client, type, data) {
-        client.postMessage({ type, data });
+        client.postMessage({ type, data: data ? JSON.parse(JSON.stringify(data)) : undefined });
     }
 
     //--------------------------------------------------------------------------

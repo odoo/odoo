@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { fields, models } from "@web/../tests/web_test_helpers";
 import { ensureArray } from "@web/core/utils/arrays";
 
@@ -24,12 +22,10 @@ export class ResUsersSettings extends models.ServerModel {
     is_discuss_sidebar_category_chat_open = fields.Generic({ default: true });
 
     /**
-     * Note that this mocked method is public so that it can be accessed by RPCs.
-     *
      * @param {number} userId
      * @param {KwArgs} [kwargs]
      */
-    find_or_create_for_user(userId, kwargs = {}) {
+    _find_or_create_for_user(userId, kwargs = {}) {
         const settings = this._filter([["user_id", "=", userId]])[0];
         if (settings) {
             return settings;

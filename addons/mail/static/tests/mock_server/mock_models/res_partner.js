@@ -1,6 +1,5 @@
-/** @odoo-module */
-
-import { constants, webModels } from "@web/../tests/web_test_helpers";
+import { fields, webModels } from "@web/../tests/web_test_helpers";
+import { DEFAULT_MAIL_SEARCH_ID, DEFAULT_MAIL_VIEW_ID } from "./constants";
 
 /**
  * @typedef {import("@web/../tests/web_test_helpers").ModelRecord} ModelRecord
@@ -13,6 +12,23 @@ import { constants, webModels } from "@web/../tests/web_test_helpers";
 
 export class ResPartner extends webModels.ResPartner {
     _inherit = ["mail.thread"];
+
+    description = fields.Char({ string: "Description" });
+
+    _views = {
+        [`search, ${DEFAULT_MAIL_SEARCH_ID}`]: /* xml */ `<search/>`,
+        [`form,${DEFAULT_MAIL_VIEW_ID}`]: /* xml */ `
+            <form>
+                <sheet>
+                    <field name="name"/>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>`,
+    };
+
     /**
      * @param {string} [search]
      * @param {number} [limit]
@@ -86,7 +102,7 @@ export class ResPartner extends webModels.ResPartner {
      * @param {KwArgs<{ channel_id: number; limit: number; search: string }>} [kwargs]
      * @returns {ModelRecord[]}
      */
-    get_channel_mention_suggestions(search, limit, channelId, kwargs = {}) {
+    get_mention_suggestions_from_channel(search, limit, channelId, kwargs = {}) {
         /** @type {import("mock_models").DiscussChannelMember} */
         const DiscussChannelMember = this.env["discuss.channel.member"];
         /** @type {import("mock_models").ResUsers} */
@@ -188,7 +204,7 @@ export class ResPartner extends webModels.ResPartner {
                     return false;
                 }
                 // not current partner
-                if (partner.id === constants.PARTNER_ID) {
+                if (partner.id === this.env.user.partner_id) {
                     return false;
                 }
                 // no name is considered as return all
@@ -226,8 +242,6 @@ export class ResPartner extends webModels.ResPartner {
         const partners = this._filter([["id", "in", ids]], {
             active_test: false,
         });
-        // Servers is also returning `is_internal_user` but not
-        // done here for simplification.
         return Object.fromEntries(
             partners.map((partner) => {
                 const users = ResUsers._filter([["id", "in", partner.user_ids]]);
@@ -248,12 +262,8 @@ export class ResPartner extends webModels.ResPartner {
                         is_company: partner.is_company,
                         name: partner.name,
                         type: "partner",
-                        user: mainUser
-                            ? {
-                                  id: mainUser.id,
-                                  isInternalUser: !mainUser.share,
-                              }
-                            : false,
+                        userId: mainUser ? mainUser.id : false,
+                        isInternalUser: mainUser ? !mainUser.share : false,
                         write_date: partner.write_date,
                     },
                 ];
@@ -268,6 +278,8 @@ export class ResPartner extends webModels.ResPartner {
      * @param {KwArgs<{ channelId: number; limit: number; search_term: string }>} [kwargs]
      */
     search_for_channel_invite(searchTerm, channelId, limit, kwargs = {}) {
+        /** @type {import("mock_models").DiscussChannelMember} */
+        const DiscussChannelMember = this.env["discuss.channel.member"];
         /** @type {import("mock_models").ResUsers} */
         const ResUsers = this.env["res.users"];
 
@@ -275,6 +287,11 @@ export class ResPartner extends webModels.ResPartner {
         channelId = kwargs.channel_id || channelId;
         limit = kwargs.limit || limit || 30;
 
+        const memberPartnerIds = new Set(
+            DiscussChannelMember._filter([["channel_id", "=", channelId]]).map(
+                (member) => member.partner_id
+            )
+        );
         // simulates domain with relational parts (not supported by mock server)
         const matchingPartners = Object.values(
             this.mail_partner_format(
@@ -285,8 +302,8 @@ export class ResPartner extends webModels.ResPartner {
                         if (!partner) {
                             return false;
                         }
-                        // not current partner
-                        if (partner.id === constants.PARTNER_ID) {
+                        // user should not already be a member of the channel
+                        if (memberPartnerIds.has(partner.id)) {
                             return false;
                         }
                         // no name is considered as return all
@@ -361,9 +378,9 @@ export class ResPartner extends webModels.ResPartner {
         /** @type {import("mock_models").ResUsers} */
         const ResUsers = this.env["res.users"];
 
-        if (ResUsers._is_public(this.env.uid)) {
+        if (ResUsers._is_public(this.env.user?.is_public)) {
             return [null, MailGuest._get_guest_from_context()];
         }
-        return [this._filter([["id", "=", this.env.user.partner_id]]), null];
+        return [this._filter([["id", "=", this.env.user.partner_id]])[0], null];
     }
 }

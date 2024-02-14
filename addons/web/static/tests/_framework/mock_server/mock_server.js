@@ -163,8 +163,12 @@ class MockServerBaseEnvironment {
         return serverState.userId;
     }
 
+    set uid(newUid) {
+        serverState.userId = newUid;
+    }
+
     get user() {
-        return this.server.env["res.users"].read(serverState.userId)[0];
+        return this.server.env["res.users"]._filter([["id", "=", serverState.userId]])[0];
     }
 
     /**
@@ -240,16 +244,16 @@ export class MockServer {
     websockets = [];
 
     /**
-     * Current request
-     * @type {Request | null}
+     * Current requests
+     * @type {Request[]}
      */
-    currentRequest = null;
+    currentRequest = [];
 
     get currentRoute() {
-        if (!this.currentRequest) {
+        if (!this.currentRequest.length) {
             throw new MockServerError(`no current request`);
         }
-        return new URL(this.currentRequest.url).pathname;
+        return new URL(this.currentRequest[0].url).pathname;
     }
 
     /**
@@ -549,7 +553,7 @@ export class MockServer {
         }
 
         const method = init?.method?.toUpperCase() || (init?.body ? "POST" : "GET");
-        this.currentRequest = new Request(url, { method, ...(init || {}) });
+        this.currentRequest.unshift(new Request(url, { method, ...(init || {}) }));
 
         const [routeFn, routeParams, routeOptions] = this.findRoute(this.currentRoute);
         const pure = options.pure || routeOptions.pure;
@@ -568,9 +572,9 @@ export class MockServer {
             return new Response(body, { status: 404 });
         }
 
-        const result = await routeFn.call(this, this.currentRequest, routeParams);
+        const result = await routeFn.call(this, this.currentRequest[0], routeParams);
 
-        this.currentRequest = null;
+        this.currentRequest.shift();
 
         if (pure) {
             return result;
@@ -599,14 +603,17 @@ export class MockServer {
 
             for (const [
                 name,
-                { description, fields, inherit, order, parent_name, rec_name },
+                { description, fields, inherit, order, parent_name, rec_name, ...others },
             ] of modelEntries) {
                 const localModelDef = [...models].find((model) => model._name === name);
                 localModelDef._description = description;
-                localModelDef._inherit = inherit;
+                localModelDef._inherit = [...new Set([...(localModelDef._inherit || []), inherit])];
                 localModelDef._order = order;
                 localModelDef._parent_name = parent_name;
                 localModelDef._rec_name = rec_name;
+                for (const name in others) {
+                    localModelDef[name] = others[name];
+                }
                 for (const [fieldName, serverFieldDef] of Object.entries(fields)) {
                     localModelDef._fields[fieldName] = {
                         ...serverFieldDef,

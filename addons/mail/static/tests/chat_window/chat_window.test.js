@@ -1,8 +1,7 @@
-/** @odoo-module */
-
 import { expect, test } from "@odoo/hoot";
 
-import { rpc } from "@web/core/network/rpc";
+/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
+let rpc;
 
 import {
     CHAT_WINDOW_END_GAP_WIDTH,
@@ -15,36 +14,45 @@ import {
     click,
     contains,
     createFile,
+    defineMailModels,
+    focus,
     inputFiles,
     insertText,
+    onRpcBefore,
     openDiscuss,
     openFormView,
     openListView,
     patchUiSize,
-    start,
+    scroll,
+    startClient,
     startServer,
     step,
     triggerHotkey,
 } from "../mail_test_helpers";
-import { Command, constants, onRpc } from "@web/../tests/web_test_helpers";
+import { Command, serverState } from "@web/../tests/web_test_helpers";
+import { withUser } from "@web/../tests/_framework/mock_server/mock_server";
+import { rpcWithEnv } from "@mail/utils/common/misc";
 
-test.skip("Mobile: chat window shouldn't open automatically after receiving a new message", async () => {
+defineMailModels();
+
+test("Mobile: chat window shouldn't open automatically after receiving a new message", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     const userId = pyEnv["res.users"].create({ partner_id: partnerId });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            Command.create({ partner_id: constants.PARTNER_ID }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
         channel_type: "chat",
     });
     patchUiSize({ size: SIZES.SM });
-    await start();
+    const env = await startClient();
+    rpc = rpcWithEnv(env);
     await contains(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-MessagingMenu-counter", { count: 0 });
     // simulate receiving a message
-    pyEnv.withUser(userId, () =>
+    withUser(userId, () =>
         rpc("/mail/message/post", {
             post_data: { body: "hu", message_type: "comment" },
             thread_id: channelId,
@@ -55,15 +63,15 @@ test.skip("Mobile: chat window shouldn't open automatically after receiving a ne
     await contains(".o-mail-ChatWindow", { count: 0 });
 });
 
-test.skip('chat window: post message on channel with "CTRL-Enter" keyboard shortcut for small screen size', async () => {
+test('chat window: post message on channel with "CTRL-Enter" keyboard shortcut for small screen size', async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            Command.create({ fold_state: "open", partner_id: constants.PARTNER_ID }),
+            Command.create({ fold_state: "open", partner_id: serverState.partnerId }),
         ],
     });
     patchUiSize({ size: SIZES.SM });
-    await start();
+    await startClient();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
     await insertText(".o-mail-ChatWindow .o-mail-Composer-input", "Test");
@@ -71,24 +79,24 @@ test.skip('chat window: post message on channel with "CTRL-Enter" keyboard short
     await contains(".o-mail-Message");
 });
 
-test.skip("Message post in chat window of chatter should log a note", async () => {
+test("Message post in chat window of chatter should log a note", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "TestPartner" });
     const messageId = pyEnv["mail.message"].create({
         model: "res.partner",
         body: "A needaction message to have it in messaging menu",
-        author_id: constants.ODOOBOT_ID,
+        author_id: serverState.odoobotId,
         needaction: true,
-        needaction_partner_ids: [constants.PARTNER_ID],
+        needaction_partner_ids: [serverState.partnerId],
         res_id: partnerId,
     });
     pyEnv["mail.notification"].create({
         mail_message_id: messageId,
         notification_status: "sent",
         notification_type: "inbox",
-        res_partner_id: constants.PARTNER_ID,
+        res_partner_id: serverState.partnerId,
     });
-    await start();
+    await startClient();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
     await contains(".o-mail-ChatWindow");
@@ -105,7 +113,7 @@ test.skip("Message post in chat window of chatter should log a note", async () =
     });
 });
 
-test.skip("load messages from opening chat window from messaging menu", async () => {
+test("load messages from opening chat window from messaging menu", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         channel_type: "channel",
@@ -119,16 +127,16 @@ test.skip("load messages from opening chat window from messaging menu", async ()
             res_id: channelId,
         });
     }
-    await start();
+    await startClient();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
     await contains(".o-mail-Message", { count: 21 });
 });
 
-test.skip("chat window: basic rendering", async () => {
+test("chat window: basic rendering", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({ name: "General" });
-    await start();
+    await startClient();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
     await contains(".o-mail-ChatWindow");
@@ -153,53 +161,49 @@ test.skip("chat window: basic rendering", async () => {
     await contains("[title='Open in Discuss']");
 });
 
-test.skip("Fold state of chat window is sync among browser tabs", async () => {
+test("Fold state of chat window is sync among browser tabs", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({ name: "General" });
-    const tab1 = await start({ asTab: true });
-    const tab2 = await start({ asTab: true });
-    await click(".o_menu_systray i[aria-label='Messages']", { target: tab1.target });
-    await click(".o-mail-NotificationItem", { target: tab1.target });
-    await contains(".o-mail-ChatWindow-header", { target: tab2.target });
-    await click(".o-mail-ChatWindow-header", { target: tab1.target }); // Fold
-    await contains(".o-mail-Thread", { count: 0, target: tab1.target });
-    await contains(".o-mail-Thread", { count: 0, target: tab2.target });
-    await click(".o-mail-ChatWindow-header", { target: tab2.target }); // Unfold
-    await contains(".o-mail-ChatWindow .o-mail-Thread", { target: tab1.target });
-    await contains(".o-mail-ChatWindow .o-mail-Thread", { target: tab2.target });
-    await click("[title='Close Chat Window']", { target: tab1.target });
-    await contains(".o-mail-ChatWindow", { count: 0, target: tab1.target });
-    await contains(".o-mail-ChatWindow", { count: 0, target: tab2.target });
+    const env1 = await startClient({ asTab: true });
+    const env2 = await startClient({ asTab: true });
+    await click(".o_menu_systray i[aria-label='Messages']", { target: env1 });
+    await click(".o-mail-NotificationItem", { target: env1 });
+    await contains(".o-mail-ChatWindow-header", { target: env2 });
+    await click(".o-mail-ChatWindow-header", { target: env1 }); // Fold
+    await contains(".o-mail-Thread", { count: 0, target: env1 });
+    await contains(".o-mail-Thread", { count: 0, target: env2 });
+    await click(".o-mail-ChatWindow-header", { target: env2 }); // Unfold
+    await contains(".o-mail-ChatWindow .o-mail-Thread", { target: env1 });
+    await contains(".o-mail-ChatWindow .o-mail-Thread", { target: env2 });
+    await click("[title='Close Chat Window']", { target: env1 });
+    await contains(".o-mail-ChatWindow", { count: 0, target: env1 });
+    await contains(".o-mail-ChatWindow", { count: 0, target: env2 });
 });
 
-test.skip("Mobile: opening a chat window should not update channel state on the server", async () => {
+test("Mobile: opening a chat window should not update channel state on the server", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            Command.create({ fold_state: "closed", partner_id: constants.PARTNER_ID }),
+            Command.create({ fold_state: "closed", partner_id: serverState.partnerId }),
         ],
     });
     patchUiSize({ size: SIZES.SM });
-    await start();
+    await startClient();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
     await click(".o-mail-ChatWindow");
     const [member] = pyEnv["discuss.channel.member"].search_read([
         ["channel_id", "=", channelId],
-        ["partner_id", "=", constants.PARTNER_ID],
+        ["partner_id", "=", serverState.partnerId],
     ]);
     expect(member.fold_state).toBe("closed");
 });
 
-test.skip("chat window: fold", async () => {
+test("chat window: fold", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({});
-    onRpc((route, args) => {
-        if (route === "/discuss/channel/fold") {
-            expect.step(`channel_fold/${args.state}`);
-        }
-    });
-    await start();
+    onRpcBefore("/discuss/channel/fold", (args) => expect.step(`channel_fold/${args.state}`));
+    await startClient();
     // Open Thread
     await click("button i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
@@ -215,15 +219,11 @@ test.skip("chat window: fold", async () => {
     expect(["channel_fold/open"]).toVerifySteps();
 });
 
-test.skip("chat window: open / close", async () => {
+test("chat window: open / close", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({});
-    onRpc((route, args) => {
-        if (route === "/discuss/channel/fold") {
-            expect.step(`channel_fold/${args.state}`);
-        }
-    });
-    await start();
+    onRpcBefore("/discuss/channel/fold", (args) => expect.step(`channel_fold/${args.state}`));
+    await startClient();
     await click("button i[aria-label='Messages']");
     await contains(".o-mail-ChatWindow", { count: 0 });
     await click(".o-mail-NotificationItem");
@@ -239,11 +239,11 @@ test.skip("chat window: open / close", async () => {
     expect(["channel_fold/open"]).toVerifySteps();
 });
 
-test.skip("open chat on very narrow device should work", async () => {
+test("open chat on very narrow device should work", async () => {
     const pyEnv = await startServer();
     patchUiSize({ width: 200 });
     pyEnv["discuss.channel"].create({});
-    await start();
+    await startClient();
     expect(CHAT_WINDOW_WIDTH).toBeGreaterThan(200, {
         message: "Device is narrower than usual chat window width",
     }); // scenario where this might fail
@@ -252,15 +252,15 @@ test.skip("open chat on very narrow device should work", async () => {
     await contains(".o-mail-ChatWindow");
 });
 
-test.skip("Mobile: closing a chat window should not update channel state on the server", async () => {
+test("Mobile: closing a chat window should not update channel state on the server", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            Command.create({ fold_state: "open", partner_id: constants.PARTNER_ID }),
+            Command.create({ fold_state: "open", partner_id: serverState.partnerId }),
         ],
     });
     patchUiSize({ size: SIZES.SM });
-    await start();
+    await startClient();
     await click("button i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
     await contains(".o-mail-ChatWindow");
@@ -268,24 +268,20 @@ test.skip("Mobile: closing a chat window should not update channel state on the 
     await contains(".o-mail-ChatWindow", { count: 0 });
     const [member] = pyEnv["discuss.channel.member"].search_read([
         ["channel_id", "=", channelId],
-        ["partner_id", "=", constants.PARTNER_ID],
+        ["partner_id", "=", serverState.partnerId],
     ]);
     expect(member.fold_state).toBe("open");
 });
 
-test.skip("chat window: close on ESCAPE", async () => {
+test("chat window: close on ESCAPE", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            Command.create({ fold_state: "open", partner_id: constants.PARTNER_ID }),
+            Command.create({ fold_state: "open", partner_id: serverState.partnerId }),
         ],
     });
-    onRpc((route, args) => {
-        if (route === "/discuss/channel/fold") {
-            expect.step(`channel_fold/${args.state}`);
-        }
-    });
-    await start();
+    onRpcBefore("/discuss/channel/fold", (args) => expect.step(`channel_fold/${args.state}`));
+    await startClient();
     await contains(".o-mail-ChatWindow");
     await focus(".o-mail-Composer-input");
     triggerHotkey("Escape");
@@ -293,7 +289,7 @@ test.skip("chat window: close on ESCAPE", async () => {
     expect(["channel_fold/closed"]).toVerifySteps();
 });
 
-test.skip("Close composer suggestions in chat window with ESCAPE does not also close the chat window", async () => {
+test("Close composer suggestions in chat window with ESCAPE does not also close the chat window", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({
         email: "testpartner@odoo.com",
@@ -303,33 +299,32 @@ test.skip("Close composer suggestions in chat window with ESCAPE does not also c
     pyEnv["discuss.channel"].create({
         name: "general",
         channel_member_ids: [
-            Command.create({ partner_id: constants.PARTNER_ID, fold_state: "open" }),
+            Command.create({ partner_id: serverState.partnerId, fold_state: "open" }),
             Command.create({ partner_id: partnerId }),
         ],
     });
-    await start();
+    await startClient();
     await insertText(".o-mail-Composer-input", "@");
-
     triggerHotkey("Escape");
     await contains(".o-mail-ChatWindow");
 });
 
-test.skip("Close emoji picker in chat window with ESCAPE does not also close the chat window", async () => {
+test("Close emoji picker in chat window with ESCAPE does not also close the chat window", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({
         name: "general",
         channel_member_ids: [
-            Command.create({ partner_id: constants.PARTNER_ID, fold_state: "open" }),
+            Command.create({ partner_id: serverState.partnerId, fold_state: "open" }),
         ],
     });
-    await start();
+    await startClient();
     await click("button[aria-label='Emojis']");
     triggerHotkey("Escape");
     await contains(".o-EmojiPicker", { count: 0 });
     await contains(".o-mail-ChatWindow");
 });
 
-test.skip("open 2 different chat windows: enough screen width [REQUIRE FOCUS]", async () => {
+test("open 2 different chat windows: enough screen width [REQUIRE FOCUS]", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create([{ name: "Channel_1" }, { name: "Channel_2" }]);
     patchUiSize({ width: 1920 });
@@ -338,7 +333,7 @@ test.skip("open 2 different chat windows: enough screen width [REQUIRE FOCUS]", 
     ).toBeLessThan(1920, {
         message: "should have enough space to open 2 chat windows simultaneously",
     });
-    await start();
+    await startClient();
     await click("button i[aria-label='Messages']");
     await click(".o-mail-NotificationItem", { text: "Channel_1" });
     await contains(".o-mail-ChatWindow", {
@@ -355,7 +350,7 @@ test.skip("open 2 different chat windows: enough screen width [REQUIRE FOCUS]", 
     });
 });
 
-test.skip("open 3 different chat windows: not enough screen width", async () => {
+test("open 3 different chat windows: not enough screen width", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create([
         { name: "Channel_1" },
@@ -373,7 +368,7 @@ test.skip("open 3 different chat windows: not enough screen width", async () => 
     ).toBeGreaterThan(900, {
         message: "should not have enough space to open 3 chat windows simultaneously",
     });
-    await start();
+    await startClient();
     // open, from systray menu, chat windows of channels with Id 1, 2, then 3
     await click("button i[aria-label='Messages']");
     await click(".o-mail-NotificationItem", { text: "Channel_1" });
@@ -394,7 +389,7 @@ test.skip("open 3 different chat windows: not enough screen width", async () => 
     });
 });
 
-test.skip("closing hidden chat window", async () => {
+test("closing hidden chat window", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create([
         { name: "Ch_1" },
@@ -413,7 +408,7 @@ test.skip("closing hidden chat window", async () => {
     ).toBeGreaterThan(900, {
         message: "should not have enough space to open 3 chat windows simultaneously",
     });
-    await start();
+    await startClient();
     await click("i[aria-label='Messages']");
     await click(".o-mail-NotificationItem", { text: "Ch_1" });
     await contains(".o-mail-ChatWindow");
@@ -440,7 +435,7 @@ test.skip("closing hidden chat window", async () => {
     await contains(":not(.o-mail-ChatWindowHiddenMenu) .o-mail-ChatWindow", { text: "Ch_4" });
 });
 
-test.skip("Opening hidden chat window from messaging menu", async () => {
+test("Opening hidden chat window from messaging menu", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create([{ name: "Ch_1" }, { name: "Ch_2" }, { name: "Ch_3" }]);
     patchUiSize({ width: 900 });
@@ -454,7 +449,7 @@ test.skip("Opening hidden chat window from messaging menu", async () => {
     ).toBeGreaterThan(900, {
         message: "should not have enough space to open 3 chat windows simultaneously",
     });
-    await start();
+    await startClient();
     await click("i[aria-label='Messages']");
     await click(".o-mail-NotificationItem", { text: "Ch_1" });
     await click("i[aria-label='Messages']");
@@ -473,7 +468,7 @@ test.skip("Opening hidden chat window from messaging menu", async () => {
     await contains(".o-mail-ChatWindowHiddenMenu .o-mail-ChatWindow", { text: "Ch_3" });
 });
 
-test.skip("focus next visible chat window when closing current chat window with ESCAPE [REQUIRE FOCUS]", async () => {
+test("focus next visible chat window when closing current chat window with ESCAPE [REQUIRE FOCUS]", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create([
         {
@@ -481,7 +476,7 @@ test.skip("focus next visible chat window when closing current chat window with 
             channel_member_ids: [
                 Command.create({
                     fold_state: "open",
-                    partner_id: constants.PARTNER_ID,
+                    partner_id: serverState.partnerId,
                 }),
             ],
         },
@@ -490,7 +485,7 @@ test.skip("focus next visible chat window when closing current chat window with 
             channel_member_ids: [
                 Command.create({
                     fold_state: "open",
-                    partner_id: constants.PARTNER_ID,
+                    partner_id: serverState.partnerId,
                 }),
             ],
         },
@@ -501,7 +496,7 @@ test.skip("focus next visible chat window when closing current chat window with 
     ).toBeLessThan(1920, {
         message: "should have enough space to open 2 chat windows simultaneously",
     });
-    await start();
+    await startClient();
     await contains(".o-mail-ChatWindow .o-mail-Composer-input", { count: 2 });
     await focus(".o-mail-Composer-input", {
         parent: [".o-mail-ChatWindow", { text: "MyTeam" }],
@@ -514,7 +509,7 @@ test.skip("focus next visible chat window when closing current chat window with 
     });
 });
 
-test.skip("chat window: switch on TAB [REQUIRE FOCUS]", async () => {
+test("chat window: switch on TAB [REQUIRE FOCUS]", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create([{ name: "channel1" }, { name: "channel2" }]);
     patchUiSize({ width: 1920 });
@@ -523,7 +518,7 @@ test.skip("chat window: switch on TAB [REQUIRE FOCUS]", async () => {
     ).toBeLessThan(1920, {
         message: "should have enough space to open 2 chat windows simultaneously",
     });
-    await start();
+    await startClient();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem", { text: "channel1" });
     await contains(".o-mail-ChatWindow", { count: 1 });
@@ -550,7 +545,7 @@ test.skip("chat window: switch on TAB [REQUIRE FOCUS]", async () => {
     });
 });
 
-test.skip("chat window: TAB cycle with 3 open chat windows [REQUIRE FOCUS]", async () => {
+test("chat window: TAB cycle with 3 open chat windows [REQUIRE FOCUS]", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create([
         {
@@ -558,7 +553,7 @@ test.skip("chat window: TAB cycle with 3 open chat windows [REQUIRE FOCUS]", asy
             channel_member_ids: [
                 Command.create({
                     fold_state: "open",
-                    partner_id: constants.PARTNER_ID,
+                    partner_id: serverState.partnerId,
                 }),
             ],
         },
@@ -567,7 +562,7 @@ test.skip("chat window: TAB cycle with 3 open chat windows [REQUIRE FOCUS]", asy
             channel_member_ids: [
                 Command.create({
                     fold_state: "open",
-                    partner_id: constants.PARTNER_ID,
+                    partner_id: serverState.partnerId,
                 }),
             ],
         },
@@ -576,7 +571,7 @@ test.skip("chat window: TAB cycle with 3 open chat windows [REQUIRE FOCUS]", asy
             channel_member_ids: [
                 Command.create({
                     fold_state: "open",
-                    partner_id: constants.PARTNER_ID,
+                    partner_id: serverState.partnerId,
                 }),
             ],
         },
@@ -587,7 +582,7 @@ test.skip("chat window: TAB cycle with 3 open chat windows [REQUIRE FOCUS]", asy
     ).toBeLessThan(1920, {
         message: "should have enough space to open 3 chat windows simultaneously",
     });
-    await start();
+    await startClient();
     // FIXME: assumes ordering: General, MyTeam, MyProject
     await contains(".o-mail-ChatWindow .o-mail-Composer-input", { count: 3 });
     await focus(".o-mail-Composer-input", {
@@ -610,7 +605,7 @@ test.skip("chat window: TAB cycle with 3 open chat windows [REQUIRE FOCUS]", asy
     });
 });
 
-test.skip("new message separator is shown in a chat window of a chat on receiving new message if there is a history of conversation", async () => {
+test("new message separator is shown in a chat window of a chat on receiving new message if there is a history of conversation", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     const userId = pyEnv["res.users"].create({ name: "Foreigner user", partner_id: partnerId });
@@ -619,7 +614,7 @@ test.skip("new message separator is shown in a chat window of a chat on receivin
             Command.create({
                 fold_state: "open",
                 is_pinned: false,
-                partner_id: constants.PARTNER_ID,
+                partner_id: serverState.partnerId,
             }),
             Command.create({ partner_id: partnerId }),
         ],
@@ -632,12 +627,13 @@ test.skip("new message separator is shown in a chat window of a chat on receivin
     });
     const [memberId] = pyEnv["discuss.channel.member"].search([
         ["channel_id", "=", channelId],
-        ["partner_id", "=", constants.PARTNER_ID],
+        ["partner_id", "=", serverState.partnerId],
     ]);
     pyEnv["discuss.channel.member"].write([memberId], { seen_message_id: messageId });
-    await start();
+    const env = await startClient();
+    rpc = rpcWithEnv(env);
     // simulate receiving a message
-    pyEnv.withUser(userId, () =>
+    withUser(userId, () =>
         rpc("/mail/message/post", {
             post_data: { body: "hu", message_type: "comment" },
             thread_id: channelId,
@@ -649,7 +645,7 @@ test.skip("new message separator is shown in a chat window of a chat on receivin
     await contains(".o-mail-Thread-newMessage hr + span", { text: "New messages" });
 });
 
-test.skip("new message separator is shown in chat window of chat on receiving new message when there was no history", async () => {
+test("new message separator is shown in chat window of chat on receiving new message when there was no history", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     const userId = pyEnv["res.users"].create({
@@ -658,28 +654,29 @@ test.skip("new message separator is shown in chat window of chat on receiving ne
     });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            Command.create({ partner_id: constants.PARTNER_ID }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
         channel_type: "chat",
     });
-    onRpc((route, args) => {
-        if (route === "/mail/action" && args.init_messaging) {
+    onRpcBefore("/mail/action", (args) => {
+        if (args.init_messaging) {
             step(`/mail/action - ${JSON.stringify(args)}`);
         }
     });
-    await start();
+    const env = await startClient();
+    rpc = rpcWithEnv(env);
     await assertSteps([
         `/mail/action - ${JSON.stringify({
             init_messaging: {},
             failures: true,
             systray_get_activities: true,
-            context: { lang: "en", tz: "taht", uid: constants.USER_ID },
+            context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
         })}`,
     ]);
     // send after init_messaging because bus subscription is done after init_messaging
     // simulate receiving a message
-    pyEnv.withUser(userId, () =>
+    withUser(userId, () =>
         rpc("/mail/message/post", {
             post_data: { body: "hu", message_type: "comment" },
             thread_id: channelId,
@@ -689,20 +686,21 @@ test.skip("new message separator is shown in chat window of chat on receiving ne
     await contains(".o-mail-Thread-newMessage hr + span", { text: "New messages" });
 });
 
-test.skip("chat window should open when receiving a new DM", async () => {
+test("chat window should open when receiving a new DM", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const userId = pyEnv["res.users"].create({ partner_id: partnerId });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            Command.create({ is_pinned: false, partner_id: constants.PARTNER_ID }),
+            Command.create({ is_pinned: false, partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
         channel_type: "chat",
     });
-    await start();
+    const env = await startClient();
+    rpc = rpcWithEnv(env);
     await contains(".o-mail-ChatWindowContainer");
-    pyEnv.withUser(userId, () =>
+    withUser(userId, () =>
         rpc("/mail/message/post", {
             post_data: { body: "new message", message_type: "comment" },
             thread_id: channelId,
@@ -712,19 +710,20 @@ test.skip("chat window should open when receiving a new DM", async () => {
     await contains(".o-mail-ChatWindow");
 });
 
-test.skip("chat window should not open when receiving a new DM from odoobot", async () => {
+test("chat window should not open when receiving a new DM from odoobot", async () => {
     const pyEnv = await startServer();
-    const userId = pyEnv["res.users"].create({ partner_id: constants.ODOOBOT_ID });
+    const userId = pyEnv["res.users"].create({ partner_id: serverState.odoobotId });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            Command.create({ is_pinned: false, partner_id: constants.PARTNER_ID }),
-            Command.create({ partner_id: constants.ODOOBOT_ID }),
+            Command.create({ is_pinned: false, partner_id: serverState.partnerId }),
+            Command.create({ partner_id: serverState.odoobotId }),
         ],
         channel_type: "chat",
     });
-    await start();
+    const env = await startClient();
+    rpc = rpcWithEnv(env);
     await contains(".o-mail-ChatWindowContainer");
-    pyEnv.withUser(userId, () =>
+    withUser(userId, () =>
         rpc("/mail/message/post", {
             post_data: { body: "new message", message_type: "comment" },
             thread_id: channelId,
@@ -734,13 +733,13 @@ test.skip("chat window should not open when receiving a new DM from odoobot", as
     await contains(".o-mail-ChatWindow", { count: 0 });
 });
 
-test.skip("chat window should scroll to the newly posted message just after posting it", async () => {
+test("chat window should scroll to the newly posted message just after posting it", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
             Command.create({
                 fold_state: "open",
-                partner_id: constants.PARTNER_ID,
+                partner_id: serverState.partnerId,
             }),
         ],
     });
@@ -751,7 +750,7 @@ test.skip("chat window should scroll to the newly posted message just after post
             res_id: channelId,
         });
     }
-    await start();
+    await startClient();
     await contains(".o-mail-Message", { count: 10 });
     await insertText(".o-mail-Composer-input", "WOLOLO");
     triggerHotkey("Enter");
@@ -759,7 +758,7 @@ test.skip("chat window should scroll to the newly posted message just after post
     await contains(".o-mail-Thread", { scroll: "bottom" });
 });
 
-test.skip("chat window should remain folded when new message is received", async () => {
+test("chat window should remain folded when new message is received", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     const userId = pyEnv["res.users"].create({
@@ -770,16 +769,17 @@ test.skip("chat window should remain folded when new message is received", async
         channel_member_ids: [
             Command.create({
                 fold_state: "folded",
-                partner_id: constants.PARTNER_ID,
+                partner_id: serverState.partnerId,
             }),
             Command.create({ partner_id: partnerId }),
         ],
         channel_type: "chat",
     });
-    await start();
+    const env = await startClient();
+    rpc = rpcWithEnv(env);
     await contains(".o-mail-ChatWindow.o-folded");
     await contains(".o-mail-ChatWindow-counter", { count: 0 });
-    pyEnv.withUser(userId, () =>
+    withUser(userId, () =>
         rpc("/mail/message/post", {
             post_data: { body: "New Message", message_type: "comment" },
             thread_id: channelId,
@@ -790,7 +790,7 @@ test.skip("chat window should remain folded when new message is received", async
     await contains(".o-mail-ChatWindow.o-folded");
 });
 
-test.skip("should not have chat window hidden menu in mobile (transition from 3 chat windows in desktop to mobile)", async () => {
+test("should not have chat window hidden menu in mobile (transition from 3 chat windows in desktop to mobile)", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create([
         { name: "Channel-1" },
@@ -808,7 +808,7 @@ test.skip("should not have chat window hidden menu in mobile (transition from 3 
     ).toBeGreaterThan(900, {
         message: "should not have enough space to open 3 chat windows simultaneously",
     });
-    await start();
+    await startClient();
     await openDiscuss();
     // open, from systray menu, chat windows of channels with id 1, 2, 3
     await click(".o_menu_systray i[aria-label='Messages']");
@@ -823,10 +823,10 @@ test.skip("should not have chat window hidden menu in mobile (transition from 3 
     await contains(".o-mail-ChatWindowHiddenToggler", { count: 0 });
 });
 
-test.skip("chat window: composer state conservation on toggle discuss", async () => {
+test("chat window: composer state conservation on toggle discuss", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({});
-    await start();
+    await startClient();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
     // Set content of the composer of the chat window
@@ -857,7 +857,7 @@ test.skip("chat window: composer state conservation on toggle discuss", async ()
     await contains(".o-mail-Composer-input", { value: "XDU for the win !" });
 });
 
-test.skip("focusing a chat window of a chat should make new message separator disappear [REQUIRE FOCUS]", async () => {
+test("focusing a chat window of a chat should make new message separator disappear [REQUIRE FOCUS]", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     const userId = pyEnv["res.users"].create({
@@ -869,28 +869,27 @@ test.skip("focusing a chat window of a chat should make new message separator di
         channel_member_ids: [
             Command.create({
                 fold_state: "open",
-                partner_id: constants.PARTNER_ID,
+                partner_id: serverState.partnerId,
             }),
             Command.create({ partner_id: partnerId }),
         ],
         channel_type: "chat",
     });
-    const messageId = pyEnv["mail.message"].create([
-        {
-            body: "not empty",
-            model: "discuss.channel",
-            res_id: channelId,
-        },
-    ]);
+    const messageId = pyEnv["mail.message"].create({
+        body: "not empty",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
     const [memberId] = pyEnv["discuss.channel.member"].search([
         ["channel_id", "=", channelId],
-        ["partner_id", "=", constants.PARTNER_ID],
+        ["partner_id", "=", serverState.partnerId],
     ]);
     pyEnv["discuss.channel.member"].write([memberId], { seen_message_id: messageId });
-    await start();
+    const env = await startClient();
+    rpc = rpcWithEnv(env);
     await contains(".o-mail-Composer-input:not(:focus)");
     // simulate receiving a message
-    pyEnv.withUser(userId, () =>
+    withUser(userId, () =>
         rpc("/mail/message/post", {
             post_data: { body: "hu", message_type: "comment" },
             thread_id: channelId,
@@ -902,7 +901,7 @@ test.skip("focusing a chat window of a chat should make new message separator di
     await contains(".o-mail-Thread-newMessage hr + span", { count: 0, text: "New messages" });
 });
 
-test.skip("chat window: scroll conservation on toggle discuss", async () => {
+test("chat window: scroll conservation on toggle discuss", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({});
     for (let i = 0; i < 100; i++) {
@@ -912,7 +911,7 @@ test.skip("chat window: scroll conservation on toggle discuss", async () => {
             res_id: channelId,
         });
     }
-    await start();
+    await startClient();
     await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
     await click(".o-mail-NotificationItem");
     await contains(".o-mail-Message", { count: 30 });
@@ -925,7 +924,7 @@ test.skip("chat window: scroll conservation on toggle discuss", async () => {
     await contains(".o-mail-ChatWindow .o-mail-Thread", { scroll: 142 });
 });
 
-test.skip("chat window with a thread: keep scroll position in message list on folded", async () => {
+test("chat window with a thread: keep scroll position in message list on folded", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({});
     for (let i = 0; i < 100; i++) {
@@ -935,7 +934,7 @@ test.skip("chat window with a thread: keep scroll position in message list on fo
             res_id: channelId,
         });
     }
-    await start();
+    await startClient();
     await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
     await click(".o-mail-NotificationItem");
     await contains(".o-mail-Message", { count: 30 });
@@ -951,7 +950,7 @@ test.skip("chat window with a thread: keep scroll position in message list on fo
     await contains(".o-mail-ChatWindow .o-mail-Thread", { scroll: 142 });
 });
 
-test.skip("chat window with a thread: keep scroll position in message list on toggle discuss when folded", async () => {
+test("chat window with a thread: keep scroll position in message list on toggle discuss when folded", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({});
     for (let i = 0; i < 100; i++) {
@@ -961,7 +960,7 @@ test.skip("chat window with a thread: keep scroll position in message list on to
             res_id: channelId,
         });
     }
-    await start();
+    await startClient();
     await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
     await click(".o-mail-NotificationItem");
     await contains(".o-mail-Message", { count: 30 });
@@ -978,26 +977,23 @@ test.skip("chat window with a thread: keep scroll position in message list on to
     await contains(".o-mail-ChatWindow .o-mail-Thread", { scroll: 142 });
 });
 
-test.skip("folded chat window should hide member-list and settings buttons", async () => {
+test("folded chat window should hide member-list and settings buttons", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({});
-    await start();
+    await startClient();
     // Open Thread
     await click("button i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
     await click("[title='Open Actions Menu']");
     await contains("[title='Show Member List']");
     await contains("[title='Show Call Settings']");
-
     await click(".o-mail-ChatWindow-header"); // click away to close the more menu
     await contains("[title='Show Member List']", { count: 0 });
-
     // Fold chat window
     await click(".o-mail-ChatWindow-command[title='Fold']");
     await contains("[title='Open Actions Menu']", { count: 0 });
     await contains("[title='Show Member List']", { count: 0 });
     await contains("[title='Show Call Settings']", { count: 0 });
-
     // Unfold chat window
     await click(".o-mail-ChatWindow-command[title='Open']");
     await click("[title='Open Actions Menu']");
@@ -1005,15 +1001,15 @@ test.skip("folded chat window should hide member-list and settings buttons", asy
     await contains("[title='Show Call Settings']");
 });
 
-test.skip("Chat window in mobile are not foldable", async () => {
+test("Chat window in mobile are not foldable", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            Command.create({ fold_state: "open", partner_id: constants.PARTNER_ID }),
+            Command.create({ fold_state: "open", partner_id: serverState.partnerId }),
         ],
     });
     patchUiSize({ size: SIZES.SM });
-    await start();
+    await startClient();
     await click("button i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
     await contains(".o-mail-ChatWindow-header.cursor-pointer", { count: 0 });
@@ -1021,27 +1017,27 @@ test.skip("Chat window in mobile are not foldable", async () => {
     await contains(".o-mail-Thread"); // content => non-folded
 });
 
-test.skip("Server-synced chat windows should not open at page load on mobile", async () => {
+test("Server-synced chat windows should not open at page load on mobile", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({
         channel_member_ids: [
             Command.create({
                 fold_state: "open",
-                partner_id: constants.PARTNER_ID,
+                partner_id: serverState.partnerId,
             }),
         ],
     });
     patchUiSize({ size: SIZES.SM });
-    await start();
+    await startClient();
     await contains(".o-mail-ChatWindowContainer");
     await contains(".o-mail-ChatWindow", { count: 0 });
 });
 
-test.skip("chat window of channels should not have 'Open in Discuss' (mobile)", async () => {
+test("chat window of channels should not have 'Open in Discuss' (mobile)", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({ name: "General" });
     patchUiSize({ size: SIZES.SM });
-    await start();
+    await startClient();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
     await contains(".o-mail-ChatWindow");
@@ -1050,13 +1046,14 @@ test.skip("chat window of channels should not have 'Open in Discuss' (mobile)", 
     await contains("[title='Open in Discuss']", { count: 0 });
 });
 
-test.skip("Open chat window of new inviter", async () => {
+test("Open chat window of new inviter", async () => {
     const pyEnv = await startServer();
-    await start();
+    await startClient();
     const partnerId = pyEnv["res.partner"].create({ name: "Newbie" });
     pyEnv["res.users"].create({ partner_id: partnerId });
     // simulate receiving notification of new connection of inviting user
-    pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "res.users/connection", {
+    const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
+    pyEnv["bus.bus"]._sendone(partner, "res.users/connection", {
         username: "Newbie",
         partnerId,
     });
@@ -1066,16 +1063,16 @@ test.skip("Open chat window of new inviter", async () => {
     });
 });
 
-test.skip("keyboard navigation ArrowUp/ArrowDown on message action dropdown in chat window", async () => {
+test("keyboard navigation ArrowUp/ArrowDown on message action dropdown in chat window", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     pyEnv["mail.message"].create({
-        author_id: constants.PARTNER_ID,
+        author_id: serverState.partnerId,
         body: "not empty",
         model: "discuss.channel",
         res_id: channelId,
     });
-    await start();
+    await startClient();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
     await contains(".o-mail-ChatWindow .o-mail-Composer-input:focus");
@@ -1088,16 +1085,16 @@ test.skip("keyboard navigation ArrowUp/ArrowDown on message action dropdown in c
     await contains(".o-mail-Message-moreMenu :nth-child(2 of .dropdown-item).focus");
 });
 
-test.skip("Close dropdown in chat window with ESCAPE does not also close the chat window", async () => {
+test("Close dropdown in chat window with ESCAPE does not also close the chat window", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     pyEnv["mail.message"].create({
-        author_id: constants.PARTNER_ID,
+        author_id: serverState.partnerId,
         body: "not empty",
         model: "discuss.channel",
         res_id: channelId,
     });
-    await start();
+    await startClient();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
     await click(".o-mail-Message [title='Expand']");
@@ -1108,17 +1105,15 @@ test.skip("Close dropdown in chat window with ESCAPE does not also close the cha
     await contains(".o-mail-ChatWindow");
 });
 
-test.skip("hiding/swapping hidden chat windows does not update server state", async () => {
+test("hiding/swapping hidden chat windows does not update server state", async () => {
     patchUiSize({ size: SIZES.MD }); // only 2 chat window can be opened at a time
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create([{ name: "General" }, { name: "Sales" }, { name: "D&D" }]);
-    onRpc((route, args) => {
-        if (route === "/discuss/channel/fold") {
-            const [channel] = pyEnv["discuss.channel"].search_read([["id", "=", args.channel_id]]);
-            expect.step(`${channel.name} - ${args.state}`);
-        }
+    onRpcBefore("/discuss/channel/fold", (args) => {
+        const [channel] = pyEnv["discuss.channel"].search_read([["id", "=", args.channel_id]]);
+        expect.step(`${channel.name} - ${args.state}`);
     });
-    await start();
+    await startClient();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem", { text: "General" });
     await contains(".o-mail-ChatWindow", { text: "General" });

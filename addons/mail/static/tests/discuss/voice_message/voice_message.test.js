@@ -1,26 +1,28 @@
-/** @odoo-module */
-
-import { test } from "@odoo/hoot";
+import { globals, test } from "@odoo/hoot";
 
 import { VoicePlayer } from "@mail/discuss/voice_message/common/voice_player";
 import { VoiceRecorder } from "@mail/discuss/voice_message/common/voice_recorder";
 
 import { browser } from "@web/core/browser/browser";
 import { Deferred } from "@web/core/utils/concurrency";
-import { url } from "@web/core/utils/urls";
 import {
     click,
     contains,
     createFile,
+    defineMailModels,
     mockGetMedia,
     openDiscuss,
-    start,
+    startClient,
     startServer,
 } from "../../mail_test_helpers";
-import { Command, constants, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { Command, patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
 import { mockDate } from "@odoo/hoot-mock";
+import { loadLamejs } from "@mail/discuss/voice_message/common/voice_message_service";
 
+/** @type {AudioWorkletNode} */
 let audioProcessor;
+
+defineMailModels();
 
 function patchAudio() {
     const {
@@ -120,7 +122,7 @@ function patchAudio() {
     };
 }
 
-test.skip("make voice message in chat", async () => {
+test("make voice message in chat", async () => {
     const file = await createFile({
         content: Array(500).map(() => new Int8Array()), // some non-empty content
         contentType: "audio/mp3",
@@ -143,7 +145,14 @@ test.skip("make voice message in chat", async () => {
             return super.drawWave(...args);
         },
         async fetchFile() {
-            return super.fetchFile(url("/mail/static/src/audio/call_02_in_.mp3"));
+            return super.fetchFile("/mail/static/src/audio/call_02_in_.mp3");
+        },
+        _fetch(url) {
+            if (url.includes("call_02_in_.mp3")) {
+                const realFetch = globals.fetch;
+                return realFetch(...arguments);
+            }
+            return super._fetch(...arguments);
         },
     });
     mockGetMedia();
@@ -152,13 +161,14 @@ test.skip("make voice message in chat", async () => {
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            Command.create({ partner_id: constants.PARTNER_ID }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
         channel_type: "chat",
     });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
+    await loadLamejs(); // simulated AudioProcess.process() requires lamejs fully loaded
     await contains("button[title='Voice Message']");
     mockDate("2023-07-31 13:00:00");
     await click("button[title='Voice Message']");

@@ -1,24 +1,27 @@
-/** @odoo-module */
-
 import { test } from "@odoo/hoot";
 import {
     assertSteps,
     click,
+    contains,
+    defineMailModels,
     insertText,
-    start,
+    openDiscuss,
+    startClient,
     startServer,
     step,
 } from "../../../mail_test_helpers";
-import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 
-test.skip("Channel subscription is renewed when channel is manually added", async () => {
+defineMailModels();
+
+test("Channel subscription is renewed when channel is manually added", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create([
         { name: "my channel" },
         { name: "General", channel_member_ids: [] },
     ]);
-    const { env, openDiscuss } = await start();
-    patchWithCleanup(env.services["bus_service"], {
+    const env = await startClient();
+    patchWithCleanup(env.services.bus_service, {
         forceUpdateChannels() {
             step("update-channels");
         },

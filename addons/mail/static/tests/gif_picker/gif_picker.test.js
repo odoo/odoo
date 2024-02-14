@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { test } from "@odoo/hoot";
 
 import { GifPicker } from "@mail/discuss/gif_picker/common/gif_picker";
@@ -7,21 +5,25 @@ import {
     SIZES,
     click,
     contains,
+    defineMailModels,
     insertText,
     openDiscuss,
     openFormView,
     patchUiSize,
-    start,
+    scroll,
+    startClient,
     startServer,
 } from "../mail_test_helpers";
 import { onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
+
+defineMailModels();
 
 let gifId = 0;
 const gifFactory = (count = 1, options = {}) => {
     const gifs = [];
     for (let i = 0; i < count; i++) {
         gifs.push({
-            id: gifId,
+            id: `${gifId}`,
             title: "",
             media_formats: {
                 tinygif: {
@@ -81,28 +83,28 @@ const rpc = {
     },
 };
 
-test.skip("composer should display a GIF button", async () => {
+test("composer should display a GIF button", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await contains("button[aria-label='GIFs']");
 });
 
-test.skip("Composer GIF button should open the GIF picker", async () => {
+test("Composer GIF button should open the GIF picker", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await click("button[aria-label='GIFs']");
     await contains(".o-discuss-GifPicker");
 });
 
-test.skip("Searching for a GIF", async () => {
+test("Searching for a GIF", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
     onRpc("/discuss/gif/search", (route, args) => rpc.search);
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await click("button[aria-label='GIFs']");
     await insertText("input[placeholder='Search for a GIF']", "search");
@@ -110,12 +112,12 @@ test.skip("Searching for a GIF", async () => {
     await contains(".o-discuss-Gif", { count: 2 });
 });
 
-test.skip("Open a GIF category trigger the search for the category", async () => {
+test("Open a GIF category trigger the search for the category", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
     onRpc("/discuss/gif/categories", (route, args) => rpc.categories);
     onRpc("/discuss/gif/search", (route, args) => rpc.search);
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await click("button[aria-label='GIFs']");
     await click("img[data-src='https://media.tenor.com/6uIlQAHIkNoAAAAM/cry.gif']");
@@ -123,12 +125,12 @@ test.skip("Open a GIF category trigger the search for the category", async () =>
     await contains("input[placeholder='Search for a GIF']", { value: "cry" });
 });
 
-test.skip("Reopen GIF category list when going back", async () => {
+test("Reopen GIF category list when going back", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
     onRpc("/discuss/gif/categories", (route, args) => rpc.categories);
     onRpc("/discuss/gif/search", (route, args) => rpc.search);
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await click("button[aria-label='GIFs']");
     await click("img[data-src='https://media.tenor.com/6uIlQAHIkNoAAAAM/cry.gif']");
@@ -136,12 +138,12 @@ test.skip("Reopen GIF category list when going back", async () => {
     await contains(".o-discuss-GifPicker div[aria-label='list']");
 });
 
-test.skip("Add GIF to favorite", async () => {
+test("Add GIF to favorite", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
     onRpc("/discuss/gif/categories", (route, args) => rpc.categories);
     onRpc("/discuss/gif/search", (route, args) => rpc.search);
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await click("button[aria-label='GIFs']");
     await click("img[data-src='https://media.tenor.com/6uIlQAHIkNoAAAAM/cry.gif']");
@@ -152,19 +154,20 @@ test.skip("Add GIF to favorite", async () => {
     await contains(".o-discuss-Gif");
 });
 
-test.skip("Chatter should not have the GIF button", async () => {
-    const { pyEnv } = await start();
+test("Chatter should not have the GIF button", async () => {
+    const pyEnv = await startServer();
+    await startClient();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
     await openFormView("res.partner", partnerId);
     await click("button", { text: "Log note" });
     await contains("button[aria-label='GIFs']", { count: 0 });
 });
 
-test.skip("Composer GIF button should open the GIF picker keyboard for mobile device", async () => {
+test("Composer GIF button should open the GIF picker keyboard for mobile device", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     patchUiSize({ size: SIZES.SM });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await click("span", { text: "General" });
     await click("button[aria-label='Emojis']");
@@ -174,21 +177,21 @@ test.skip("Composer GIF button should open the GIF picker keyboard for mobile de
     await contains(".o-mail-Composer-footer .o-discuss-GifPicker");
 });
 
-test.skip("Searching for a GIF with a failling RPC should display an error", async () => {
+test("Searching for a GIF with a failling RPC should display an error", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
     onRpc("/discuss/gif/categories", (route, args) => rpc.categories);
     onRpc("/discuss/gif/search", (route, args) => {
         throw new Error("Rpc failed");
     });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await click("button[aria-label='GIFs']");
     await insertText("input[placeholder='Search for a GIF']", "search");
     await contains(".o-discuss-GifPicker-error");
 });
 
-test.skip("Scrolling at the bottom should trigger the search to load more gif, even after visiting the favorite.", async () => {
+test("Scrolling at the bottom should trigger the search to load more gif, even after visiting the favorite.", async () => {
     patchWithCleanup(GifPicker.prototype, {
         get style() {
             return "width: 200px;height: 200px;background: #000";
@@ -202,7 +205,7 @@ test.skip("Scrolling at the bottom should trigger the search to load more gif, e
         _rpc.results = gifFactory(4);
         return _rpc;
     });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await click("button[aria-label='GIFs']");
     await click(".o-discuss-GifPicker div[aria-label='list-item']", { text: "Favorites" });

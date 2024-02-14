@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { expect, test } from "@odoo/hoot";
 
 import {
@@ -7,25 +5,35 @@ import {
     CHAT_WINDOW_INBETWEEN_WIDTH,
     CHAT_WINDOW_WIDTH,
 } from "@mail/core/common/chat_window_service";
-import { click, contains, patchUiSize, start, startServer } from "../mail_test_helpers";
-import { Command, constants, onRpc } from "@web/../tests/web_test_helpers";
+import {
+    click,
+    contains,
+    defineMailModels,
+    onRpcBefore,
+    patchUiSize,
+    startClient,
+    startServer,
+} from "../mail_test_helpers";
+import { Command, serverState } from "@web/../tests/web_test_helpers";
 
-test.skip("chat window does not fetch messages if hidden", async () => {
+defineMailModels();
+
+test("chat window does not fetch messages if hidden", async () => {
     const pyEnv = await startServer();
     const [channeId1, channelId2, channelId3] = pyEnv["discuss.channel"].create([
         {
             channel_member_ids: [
-                Command.create({ fold_state: "open", partner_id: constants.PARTNER_ID }),
+                Command.create({ fold_state: "open", partner_id: serverState.partnerId }),
             ],
         },
         {
             channel_member_ids: [
-                Command.create({ fold_state: "open", partner_id: constants.PARTNER_ID }),
+                Command.create({ fold_state: "open", partner_id: serverState.partnerId }),
             ],
         },
         {
             channel_member_ids: [
-                Command.create({ fold_state: "open", partner_id: constants.PARTNER_ID }),
+                Command.create({ fold_state: "open", partner_id: serverState.partnerId }),
             ],
         },
     ]);
@@ -56,12 +64,8 @@ test.skip("chat window does not fetch messages if hidden", async () => {
     expect(
         CHAT_WINDOW_END_GAP_WIDTH * 2 + CHAT_WINDOW_WIDTH * 3 + CHAT_WINDOW_INBETWEEN_WIDTH * 2
     ).toBeGreaterThan(900);
-    onRpc((route) => {
-        if (route === "/discuss/channel/messages") {
-            expect.step("fetch_messages");
-        }
-    });
-    await start();
+    onRpcBefore("/discuss/channel/messages", () => expect.step("fetch_messages"));
+    await startClient();
     await contains(".o-mail-ChatWindow", { count: 2 });
     await contains(".o-mail-ChatWindowHiddenToggler");
     await contains(".o-mail-Message-content", { text: "Orange" });
@@ -70,22 +74,22 @@ test.skip("chat window does not fetch messages if hidden", async () => {
     expect(["fetch_messages", "fetch_messages"]).toVerifySteps();
 });
 
-test.skip("click on hidden chat window should fetch its messages", async () => {
+test("click on hidden chat window should fetch its messages", async () => {
     const pyEnv = await startServer();
     const [channeId1, channelId2, channelId3] = pyEnv["discuss.channel"].create([
         {
             channel_member_ids: [
-                Command.create({ fold_state: "open", partner_id: constants.PARTNER_ID }),
+                Command.create({ fold_state: "open", partner_id: serverState.partnerId }),
             ],
         },
         {
             channel_member_ids: [
-                Command.create({ fold_state: "open", partner_id: constants.PARTNER_ID }),
+                Command.create({ fold_state: "open", partner_id: serverState.partnerId }),
             ],
         },
         {
             channel_member_ids: [
-                Command.create({ fold_state: "open", partner_id: constants.PARTNER_ID }),
+                Command.create({ fold_state: "open", partner_id: serverState.partnerId }),
             ],
         },
     ]);
@@ -116,12 +120,8 @@ test.skip("click on hidden chat window should fetch its messages", async () => {
     expect(
         CHAT_WINDOW_END_GAP_WIDTH * 2 + CHAT_WINDOW_WIDTH * 3 + CHAT_WINDOW_INBETWEEN_WIDTH * 2
     ).toBeGreaterThan(900);
-    onRpc((route) => {
-        if (route === "/discuss/channel/messages") {
-            expect.step("fetch_messages");
-        }
-    });
-    await start();
+    onRpcBefore("/discuss/channel/messages", () => expect.step("fetch_messages"));
+    await startClient();
     await contains(".o-mail-ChatWindow", { count: 2 });
     await contains(".o-mail-ChatWindowHiddenToggler");
     await contains(".o-mail-Message-content", { text: "Banana" });
@@ -136,7 +136,7 @@ test.skip("click on hidden chat window should fetch its messages", async () => {
     expect(["fetch_messages"]).toVerifySteps();
 });
 
-test.skip("closing the last visible chat window should unhide the first hidden one", async () => {
+test("closing the last visible chat window should unhide the first hidden one", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create([
         { name: "channel-A" },
@@ -151,7 +151,7 @@ test.skip("closing the last visible chat window should unhide the first hidden o
     expect(
         CHAT_WINDOW_END_GAP_WIDTH * 2 + CHAT_WINDOW_WIDTH * 3 + CHAT_WINDOW_INBETWEEN_WIDTH * 2
     ).toBeGreaterThan(900);
-    await start();
+    await startClient();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem", { text: "channel-A" });
     await contains(".o-mail-ChatWindow");

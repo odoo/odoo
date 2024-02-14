@@ -1,17 +1,16 @@
-/** @odoo-module */
+import { afterEach, beforeAll, beforeEach, expect, test } from "@odoo/hoot";
 
-import { beforeAll, beforeEach, expect, test } from "@odoo/hoot";
-
-import { BaseStore, Record, makeStore, modelRegistry } from "@mail/core/common/record";
+import { BaseStore, Record, makeStore } from "@mail/core/common/record";
 
 import { registry } from "@web/core/registry";
 import { markup, reactive, toRaw } from "@odoo/owl";
-import { makeMockEnv } from "@web/../tests/web_test_helpers";
+import { mockService } from "@web/../tests/web_test_helpers";
 import { Markup } from "@web/../lib/hoot/hoot_utils";
 import { Matchers } from "@web/../lib/hoot/core/expect";
-import { assertSteps, clearRegistryWithCleanup, step } from "../mail_test_helpers";
+import { assertSteps, defineMailModels, startClient, step } from "../mail_test_helpers";
+import { getMockEnv } from "@web/../tests/_framework/env_test_helpers";
 
-const serviceRegistry = registry.category("services");
+defineMailModels();
 
 beforeAll(() => {
     if (!Matchers.registry["toRecEq"]) {
@@ -40,17 +39,19 @@ beforeAll(() => {
         });
     }
     if (!Matchers.registry["toRecIn"]) {
-        expect.extend(function toRecIn(record, options) {
+        expect.extend(function toRecIn(reclist, options) {
             return {
                 name: "toRecIn",
                 acceptedType: "any",
-                predicate: (reclist) => record?.in(reclist),
+                predicate: (record) => {
+                    return record?.in(reclist);
+                },
                 message: (pass) =>
                     options?.message ||
                     (pass
                         ? `received record is[! not] in record list`
                         : `expected record to be in record list`),
-                details: (reclist) => {
+                details: (record) => {
                     const details = [
                         [Markup.green("Expected in reclist:"), record?.localId],
                         [Markup.red("Record list contains:"), reclist.map((rec) => rec.localId)],
@@ -62,38 +63,44 @@ beforeAll(() => {
     }
 });
 
-let start;
+const localRegistry = registry.category("discuss.model.test");
+
 beforeEach(() => {
-    serviceRegistry.add("store", { start: (env) => makeStore(env) });
-    clearRegistryWithCleanup(modelRegistry);
-    Record.register();
-    ({ Store: class extends BaseStore {} }).Store.register();
-    start = async () => {
-        const env = await makeMockEnv();
-        return env.services.store;
-    };
+    Record.register(localRegistry);
+    ({ Store: class extends BaseStore {} }).Store.register(localRegistry);
+    mockService("store", () => makeStore(getMockEnv(), { localRegistry }));
+});
+afterEach(() => {
+    for (const [modelName] of localRegistry.getEntries()) {
+        localRegistry.remove(modelName);
+    }
 });
 
-test.skip("Insert by passing only single-id value (non-relational)", async () => {
+async function start() {
+    const env = await startClient();
+    return env.services.store;
+}
+
+test("Insert by passing only single-id value (non-relational)", async () => {
     (class Persona extends Record {
         static id = "name";
         name;
-    }).register();
+    }).register(localRegistry);
     const store = await start();
     const john = store.Persona.insert("John");
     expect(john.name).toBe("John");
 });
 
-test.skip("Can pass object as data for relational field with inverse as id", async () => {
+test("Can pass object as data for relational field with inverse as id", async () => {
     (class Thread extends Record {
         static id = "name";
         name;
         composer = Record.one("Composer", { inverse: "thread" });
-    }).register();
+    }).register(localRegistry);
     (class Composer extends Record {
         static id = "thread";
         thread = Record.one("Thread");
-    }).register();
+    }).register(localRegistry);
     const store = await start();
     const thread = store.Thread.insert("General");
     Object.assign(thread, { composer: {} });
@@ -101,28 +108,28 @@ test.skip("Can pass object as data for relational field with inverse as id", asy
     expect(thread.composer.thread).toRecEq(thread);
 });
 
-test.skip("Assign & Delete on fields with inverses", async () => {
+test("Assign & Delete on fields with inverses", async () => {
     (class Thread extends Record {
         static id = "name";
         name;
         composer = Record.one("Composer", { inverse: "thread" });
         members = Record.many("Member", { inverse: "thread" });
         messages = Record.many("Message", { inverse: "threads" });
-    }).register();
+    }).register(localRegistry);
     (class Composer extends Record {
         static id = "thread";
         thread = Record.one("Thread");
-    }).register();
+    }).register(localRegistry);
     (class Member extends Record {
         static id = "name";
         name;
         thread = Record.one("Thread");
-    }).register();
+    }).register(localRegistry);
     (class Message extends Record {
         static id = "content";
         content;
         threads = Record.many("Thread");
-    }).register();
+    }).register(localRegistry);
     const store = await start();
     const thread = store.Thread.insert("General");
     const [john, marc] = store.Member.insert(["John", "Marc"]);
@@ -135,7 +142,7 @@ test.skip("Assign & Delete on fields with inverses", async () => {
     expect(john).toRecIn(thread.members);
     expect(hello).toRecIn(thread.messages);
     expect(world).toRecIn(thread.messages);
-    expect(thread).toReIn(hello.threads);
+    expect(thread).toRecIn(hello.threads);
     expect(thread).toRecIn(world.threads);
     // add() should adapt inverses
     thread.members.add(marc);
@@ -143,13 +150,13 @@ test.skip("Assign & Delete on fields with inverses", async () => {
     expect(marc.thread).toRecEq(thread);
     // delete should adapt inverses
     thread.members.delete(john);
-    expect(john).toRecIn(thread.members);
+    expect(john).not.toRecIn(thread.members);
     expect(john.thread).not.toBeTruthy();
     // can delete with command
     thread.messages = [["DELETE", world]];
     expect(world).not.toRecIn(thread.messages);
     expect(thread).not.toRecIn(world.threads);
-    expect(thread.messages).toHaveCount(1);
+    expect(thread.messages.length).toBe(1);
     expect(hello).toRecIn(thread.messages);
     expect(thread).toRecIn(hello.threads);
     // Deletion removes all relations
@@ -164,7 +171,7 @@ test.skip("Assign & Delete on fields with inverses", async () => {
     expect(thread.messages).toBeEmpty();
 });
 
-test.skip("onAdd/onDelete hooks on relational with inverse", async () => {
+test("onAdd/onDelete hooks on relational with inverse", async () => {
     let logs = [];
     (class Thread extends Record {
         static id = "name";
@@ -174,12 +181,12 @@ test.skip("onAdd/onDelete hooks on relational with inverse", async () => {
             onAdd: (member) => logs.push(`Thread.onAdd(${member.name})`),
             onDelete: (member) => logs.push(`Thread.onDelete(${member.name})`),
         });
-    }).register();
+    }).register(localRegistry);
     (class Member extends Record {
         static id = "name";
         name;
         thread = Record.one("Thread");
-    }).register();
+    }).register(localRegistry);
     const store = await start();
     const thread = store.Thread.insert("General");
     const [john, marc] = store.Member.insert(["John", "Marc"]);
@@ -200,7 +207,7 @@ test.skip("onAdd/onDelete hooks on relational with inverse", async () => {
     expect(logs).toEqual(["Thread.onDelete(John)"]);
 });
 
-test.skip("Computed fields", async () => {
+test("Computed fields", async () => {
     (class Thread extends Record {
         static id = "name";
         name;
@@ -223,11 +230,11 @@ test.skip("Computed fields", async () => {
             },
         });
         members = Record.many("Persona");
-    }).register();
+    }).register(localRegistry);
     (class Persona extends Record {
         static id = "name";
         name;
-    }).register();
+    }).register(localRegistry);
     const store = await start();
     const thread = store.Thread.insert("General");
     const [john, marc, antony] = store.Persona.insert(["John", "Marc", "Antony"]);
@@ -242,7 +249,7 @@ test.skip("Computed fields", async () => {
     expect(thread.type).toBe("group chat");
 });
 
-test.skip("Computed fields: lazy (default) vs. eager", async () => {
+test("Computed fields: lazy (default) vs. eager", async () => {
     (class Thread extends Record {
         static id = "name";
         name;
@@ -271,11 +278,11 @@ test.skip("Computed fields: lazy (default) vs. eager", async () => {
             eager: true,
         });
         members = Record.many("Persona");
-    }).register();
+    }).register(localRegistry);
     (class Persona extends Record {
         static id = "name";
         name;
-    }).register();
+    }).register(localRegistry);
     const store = await start();
     const thread = store.Thread.insert("General");
     const members = thread.members;
@@ -299,11 +306,11 @@ test.skip("Computed fields: lazy (default) vs. eager", async () => {
     expect(["LAZY"]).toVerifySteps();
 });
 
-test.skip("Trusted insert on html field with { html: true }", async () => {
+test("Trusted insert on html field with { html: true }", async () => {
     (class Message extends Record {
         static id = "body";
         body = Record.attr("", { html: true });
-    }).register();
+    }).register(localRegistry);
     const store = await start();
     const hello = store.Message.insert("<p>hello</p>", { html: true });
     const world = store.Message.insert("<p>world</p>");
@@ -312,12 +319,12 @@ test.skip("Trusted insert on html field with { html: true }", async () => {
     expect(world.body).toBe("<p>world</p>");
 });
 
-test.skip("(Un)trusted insertion is applied even with same field value", async () => {
+test("(Un)trusted insertion is applied even with same field value", async () => {
     (class Message extends Record {
         static id = "id";
         id;
         body = Record.attr("", { html: true });
-    }).register();
+    }).register(localRegistry);
     const store = await start();
     const rawMessage = { id: 1, body: "<p>hello</p>" };
     let message = store.Message.insert(rawMessage);
@@ -328,16 +335,16 @@ test.skip("(Un)trusted insertion is applied even with same field value", async (
     expect(message.body instanceof markup("").constructor).not.toBeTruthy();
 });
 
-test.skip("Unshift preserves order", async () => {
+test("Unshift preserves order", async () => {
     (class Message extends Record {
         static id = "id";
         id;
-    }).register();
+    }).register(localRegistry);
     (class Thread extends Record {
         static id = "name";
         name;
         messages = Record.many("Message");
-    }).register();
+    }).register(localRegistry);
     const store = await start();
     const thread = store.Thread.insert({ name: "General" });
     thread.messages.unshift({ id: 3 }, { id: 2 }, { id: 1 });
@@ -348,7 +355,7 @@ test.skip("Unshift preserves order", async () => {
     expect(thread.messages.map((msg) => msg.id)).toEqual([7, 6, 5, 4, 3, 2, 1]);
 });
 
-test.skip("onAdd hook should see fully inserted data", async () => {
+test("onAdd hook should see fully inserted data", async () => {
     (class Thread extends Record {
         static id = "name";
         name;
@@ -357,7 +364,7 @@ test.skip("onAdd hook should see fully inserted data", async () => {
             onAdd: (member) =>
                 expect.step(`Thread.onAdd::${member.name}.${member.type}.${member.isAdmin}`),
         });
-    }).register();
+    }).register(localRegistry);
     (class Member extends Record {
         static id = "name";
         name;
@@ -368,24 +375,24 @@ test.skip("onAdd hook should see fully inserted data", async () => {
             },
         });
         thread = Record.one("Thread");
-    }).register();
+    }).register(localRegistry);
     const store = await start();
     const thread = store.Thread.insert("General");
     thread.members.add({ name: "John", type: "admin" });
     expect(["Thread.onAdd::John.admin.true"]).toVerifySteps();
 });
 
-test.skip("Can insert with relation as id, using relation as data object", async () => {
+test("Can insert with relation as id, using relation as data object", async () => {
     (class User extends Record {
         static id = "name";
         name;
         settings = Record.one("Settings");
-    }).register();
+    }).register(localRegistry);
     (class Settings extends Record {
         static id = "user";
         pushNotif;
         user = Record.one("User", { inverse: "settings" });
-    }).register();
+    }).register(localRegistry);
     const store = await start();
     store.Settings.insert([
         { pushNotif: true, user: { name: "John" } },
@@ -397,12 +404,12 @@ test.skip("Can insert with relation as id, using relation as data object", async
     expect(store.User.get("Paul").settings.pushNotif).not.toBeTruthy();
 });
 
-test.skip("Set on attr should invoke onChange", async () => {
+test("Set on attr should invoke onChange", async () => {
     (class Message extends Record {
         static id = "id";
         id;
         body;
-    }).register();
+    }).register(localRegistry);
     const store = await start();
     const message = store.Message.insert(1);
     Record.onChange(message, "body", () => expect.step("BODY_CHANGED"));
@@ -412,19 +419,19 @@ test.skip("Set on attr should invoke onChange", async () => {
     expect(["BODY_CHANGED", "BODY_CHANGED"]).toVerifySteps();
 });
 
-test.skip("record list sort should be manually observable", async () => {
+test("record list sort should be manually observable", async () => {
     (class Thread extends Record {
         static id = "id";
         id;
         messages = Record.many("Message", { inverse: "thread" });
-    }).register();
+    }).register(localRegistry);
     (class Message extends Record {
         static id = "id";
         id;
         body;
         author;
         thread = Record.one("Thread", { inverse: "messages" });
-    }).register();
+    }).register(localRegistry);
     const store = await start();
     const thread = store.Thread.insert(1);
     const messages = store.Message.insert([
@@ -458,7 +465,7 @@ test.skip("record list sort should be manually observable", async () => {
     expect(["sortMessages"]).toVerifySteps();
 });
 
-test.skip("relation field sort should be automatically observed", async () => {
+test("relation field sort should be automatically observed", async () => {
     (class Thread extends Record {
         static id = "id";
         id;
@@ -466,14 +473,14 @@ test.skip("relation field sort should be automatically observed", async () => {
             inverse: "thread",
             sort: (m1, m2) => (m1.body < m2.body ? -1 : 1),
         });
-    }).register();
+    }).register(localRegistry);
     (class Message extends Record {
         static id = "id";
         id;
         body;
         author;
         thread = Record.one("Thread", { inverse: "messages" });
-    }).register();
+    }).register(localRegistry);
     const store = await start();
     const thread = store.Thread.insert(1);
     const messages = store.Message.insert([
@@ -493,7 +500,7 @@ test.skip("relation field sort should be automatically observed", async () => {
     expect(`${thread.messages.map((m) => m.id)}`).toBe("2,3");
 });
 
-test.skip("reading of lazy compute relation field should recompute", async () => {
+test("reading of lazy compute relation field should recompute", async () => {
     (class Thread extends Record {
         static id = "id";
         id;
@@ -506,12 +513,12 @@ test.skip("reading of lazy compute relation field should recompute", async () =>
                 return this.messages.map((m) => m.id);
             },
         });
-    }).register();
+    }).register(localRegistry);
     (class Message extends Record {
         static id = "id";
         id;
         thread = Record.one("Thread", { inverse: "messages" });
-    }).register();
+    }).register(localRegistry);
     const store = await start();
     const thread = store.Thread.insert(1);
     store.Message.insert([
@@ -526,7 +533,7 @@ test.skip("reading of lazy compute relation field should recompute", async () =>
     expect(`${messages2.map((m) => m.id)}`).toBe("1,2,3,4");
 });
 
-test.skip("lazy compute should re-compute while they are observed", async () => {
+test("lazy compute should re-compute while they are observed", async () => {
     (class Channel extends Record {
         static id = "id";
         id;
@@ -540,7 +547,7 @@ test.skip("lazy compute should re-compute while they are observed", async () => 
                 return "few";
             },
         });
-    }).register();
+    }).register(localRegistry);
     const store = await start();
     const channel = store.Channel.insert(1);
     let observe = true;
@@ -586,19 +593,19 @@ test.skip("lazy compute should re-compute while they are observed", async () => 
     expect(["computing", "render many"]).toVerifySteps();
 });
 
-test.skip("lazy sort should re-sort while they are observed", async () => {
+test("lazy sort should re-sort while they are observed", async () => {
     (class Thread extends Record {
         static id = "id";
         id;
         messages = Record.many("Message", {
             sort: (m1, m2) => m1.sequence - m2.sequence,
         });
-    }).register();
+    }).register(localRegistry);
     (class Message extends Record {
         static id = "id";
         id;
         sequence;
-    }).register();
+    }).register(localRegistry);
     const store = await start();
     const thread = store.Thread.insert(1);
     thread.messages.push({ id: 1, sequence: 1 }, { id: 2, sequence: 2 });
@@ -643,7 +650,7 @@ test.skip("lazy sort should re-sort while they are observed", async () => {
     expect(["render 2,1"]).toVerifySteps();
 });
 
-test.skip("store updates can be observed", async () => {
+test("store updates can be observed", async () => {
     const store = await start();
     function onUpdate() {
         expect.step(`abc:${reactiveStore.abc}`);
@@ -660,10 +667,10 @@ test.skip("store updates can be observed", async () => {
     expect(["abc:3"]).toVerifySteps({ message: "observable from Model.store" });
 });
 
-test.skip("onAdd/onDelete hooks on one without inverse", async () => {
+test("onAdd/onDelete hooks on one without inverse", async () => {
     (class Thread extends Record {
         static id = "name";
-    }).register();
+    }).register(localRegistry);
     (class Member extends Record {
         static id = "name";
         name;
@@ -671,7 +678,7 @@ test.skip("onAdd/onDelete hooks on one without inverse", async () => {
             onAdd: (thread) => step(`thread.onAdd(${thread.name})`),
             onDelete: (thread) => step(`thread.onDelete(${thread.name})`),
         });
-    }).register();
+    }).register(localRegistry);
     const store = await start();
     const general = store.Thread.insert("General");
     const john = store.Member.insert("John");
@@ -684,7 +691,7 @@ test.skip("onAdd/onDelete hooks on one without inverse", async () => {
     await assertSteps(["thread.onDelete(General)"]);
 });
 
-test.skip("onAdd/onDelete hooks on many without inverse", async () => {
+test("onAdd/onDelete hooks on many without inverse", async () => {
     (class Thread extends Record {
         static id = "name";
         name;
@@ -692,10 +699,10 @@ test.skip("onAdd/onDelete hooks on many without inverse", async () => {
             onAdd: (member) => step(`members.onAdd(${member.name})`),
             onDelete: (member) => step(`members.onDelete(${member.name})`),
         });
-    }).register();
+    }).register(localRegistry);
     (class Member extends Record {
         static id = "name";
-    }).register();
+    }).register(localRegistry);
     const store = await start();
     const general = store.Thread.insert("General");
     const jane = store.Member.insert("Jane");
@@ -711,16 +718,16 @@ test.skip("onAdd/onDelete hooks on many without inverse", async () => {
     await assertSteps(["members.onDelete(John)", "members.onDelete(Jane)"]);
 });
 
-test.skip("record list assign should update inverse fields", async () => {
+test("record list assign should update inverse fields", async () => {
     (class Thread extends Record {
         static id = "name";
         name;
         members = Record.many("Member", { inverse: "thread" });
-    }).register();
+    }).register(localRegistry);
     (class Member extends Record {
         static id = "name";
         thread = Record.one("Thread", { inverse: "members" });
-    }).register();
+    }).register(localRegistry);
     const store = await start();
     const general = store.Thread.insert("General");
     const jane = store.Member.insert("Jane");
@@ -734,7 +741,7 @@ test.skip("record list assign should update inverse fields", async () => {
     expect(jane).not.toRecIn(general.members);
 });
 
-QUnit.test("datetime type record", async (assert) => {
+test("datetime type record", async () => {
     (class Thread extends Record {
         static id = "name";
         name;
@@ -742,30 +749,30 @@ QUnit.test("datetime type record", async (assert) => {
             type: "datetime",
             onUpdate: () => step("DATE_UPDATED"),
         });
-    }).register();
+    }).register(localRegistry);
     const store = await start();
     await assertSteps([]);
     const general = store.Thread.insert({ name: "General", date: "2024-02-20 14:42:00" });
     await assertSteps(["DATE_UPDATED"]);
-    assert.ok(general.date instanceof luxon.DateTime);
-    assert.ok(general.date.day === 20);
+    expect(general.date instanceof luxon.DateTime).toBeTruthy();
+    expect(general.date.day).toBe(20);
     store.Thread.insert({ name: "General", date: "2024-02-21 14:42:00" });
     await assertSteps(["DATE_UPDATED"]);
-    assert.ok(general.date.day === 21);
+    expect(general.date.day).toBe(21);
     store.Thread.insert({ name: "General", date: "2024-02-21 14:42:00" });
     await assertSteps([]);
     store.Thread.insert({ name: "General", date: undefined });
     await assertSteps(["DATE_UPDATED"]);
-    assert.ok(general.date === undefined);
+    expect(general.date).toBe(undefined);
     const now = luxon.DateTime.now();
     const thread = store.Thread.insert({ name: "General", date: now });
     await assertSteps(["DATE_UPDATED"]);
-    assert.ok(thread.date instanceof luxon.DateTime);
-    assert.ok(thread.date.equals(now));
+    expect(thread.date instanceof luxon.DateTime).toBeTruthy();
+    expect(thread.date.equals(now)).toBeTruthy();
     store.Thread.insert({ name: "General", date: false });
     await assertSteps(["DATE_UPDATED"]);
-    assert.ok(general.date === false);
+    expect(general.date).toBe(false);
     store.Thread.insert({ name: "General", date: "2024-02-22 14:42:00" });
     await assertSteps(["DATE_UPDATED"]);
-    assert.ok(general.date.day === 22);
+    expect(general.date.day).toBe(22);
 });

@@ -1,102 +1,103 @@
-/** @odoo-module */
-
 import { test } from "@odoo/hoot";
 
-import { rpc } from "@web/core/network/rpc";
+/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
+let rpc;
 import {
     assertSteps,
     click,
     contains,
+    defineMailModels,
     insertText,
     openDiscuss,
-    start,
+    startClient,
     startServer,
     step,
     triggerHotkey,
 } from "../mail_test_helpers";
-import { constants, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
+import { rpcWithEnv } from "@mail/utils/common/misc";
 import { mockDate } from "@odoo/hoot-mock";
 
-test.skip("Messages are received cross-tab", async () => {
+defineMailModels();
+
+test("Messages are received cross-tab", async () => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({
-        name: "General",
-    });
-    const tab1 = await start({ asTab: true });
-    const tab2 = await start({ asTab: true });
-    tab1.openDiscuss(channelId);
-    tab2.openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "Hello World!", { target: tab1.target });
-    await click("button:enabled", { target: tab1.target, text: "Send" });
-    await contains(".o-mail-Message-content", { target: tab1.target, text: "Hello World!" });
-    await contains(".o-mail-Message-content", { target: tab2.target, text: "Hello World!" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const env1 = await startClient({ asTab: true });
+    const env2 = await startClient({ asTab: true });
+    await openDiscuss(channelId, { target: env1 });
+    await openDiscuss(channelId, { target: env2 });
+    await insertText(".o-mail-Composer-input", "Hello World!", { target: env1 });
+    await click("button:enabled", { target: env1, text: "Send" });
+    await contains(".o-mail-Message-content", { target: env1, text: "Hello World!" });
+    await contains(".o-mail-Message-content", { target: env2, text: "Hello World!" });
 });
 
-test.skip("Delete starred message updates counter", async () => {
+test("Delete starred message updates counter", async () => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({
-        name: "General",
-    });
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const messageId = pyEnv["mail.message"].create({
         body: "Hello World!",
         model: "discuss.channel",
         res_id: channelId,
-        starred_partner_ids: [constants.PARTNER_ID],
+        starred_partner_ids: [serverState.partnerId],
     });
-    const tab1 = await start({ asTab: true });
-    const tab2 = await start({ asTab: true });
-    tab1.openDiscuss(channelId);
-    tab2.openDiscuss(channelId);
-    await contains("button", { target: tab2.target, text: "Starred1" });
-
+    const env1 = await startClient({ asTab: true });
+    const env2 = await startClient({ asTab: true });
+    await openDiscuss(channelId, { target: env1 });
+    await openDiscuss(channelId, { target: env2 });
+    await contains("button", { target: env2, text: "Starred1" });
+    rpc = rpcWithEnv(env1);
     rpc("/mail/message/update_content", {
         message_id: messageId,
         body: "",
         attachment_ids: [],
     });
-    await contains("button", { count: 0, target: tab2.target, text: "Starred1" });
+    await contains("button", { count: 0, target: env2, text: "Starred1" });
 });
 
-test.skip("Thread rename", async () => {
+test("Thread rename", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
-        create_uid: constants.USER_ID,
+        create_uid: serverState.userId,
         name: "General",
     });
-    const tab1 = await start({ asTab: true });
-    const tab2 = await start({ asTab: true });
-    tab1.openDiscuss(channelId);
-    tab2.openDiscuss(channelId);
+    const env1 = await startClient({ asTab: true });
+    const env2 = await startClient({ asTab: true });
+    await openDiscuss(channelId, { target: env1 });
+    await openDiscuss(channelId, { target: env2 });
     await insertText(".o-mail-Discuss-threadName:enabled", "Sales", {
         replace: true,
-        target: tab1.target,
+        target: env1,
     });
     triggerHotkey("Enter");
-    await contains(".o-mail-Discuss-threadName[title='Sales']", { target: tab2.target });
-    await contains(".o-mail-DiscussSidebarChannel", { target: tab2.target, text: "Sales" });
+    await contains(".o-mail-Discuss-threadName[title='Sales']", { target: env2 });
+    await contains(".o-mail-DiscussSidebarChannel", { target: env2, text: "Sales" });
 });
 
-test.skip("Thread description update", async () => {
+test("Thread description update", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
-        create_uid: constants.USER_ID,
+        create_uid: serverState.userId,
         name: "General",
     });
-    const tab1 = await start({ asTab: true });
-    const tab2 = await start({ asTab: true });
-    tab1.openDiscuss(channelId);
-    tab2.openDiscuss(channelId);
+    const env1 = await startClient({ asTab: true });
+    const env2 = await startClient({ asTab: true });
+    await openDiscuss(channelId, { target: env1 });
+    await openDiscuss(channelId, { target: env2 });
     await insertText(".o-mail-Discuss-threadDescription", "The very best channel", {
         replace: true,
-        target: tab1.target,
+        target: env1,
     });
     triggerHotkey("Enter");
     await contains(".o-mail-Discuss-threadDescription[title='The very best channel']", {
-        target: tab2.target,
+        target: env2,
     });
 });
 
 test.skip("Channel subscription is renewed when channel is added from invite", async () => {
+    const now = luxon.DateTime.now();
+    mockDate(`${now.year}-${now.month}-${now.day} ${now.hour}:${now.minute}:${now.second}`);
     const pyEnv = await startServer();
     const [, channelId] = pyEnv["discuss.channel"].create([
         { name: "R&D" },
@@ -104,12 +105,12 @@ test.skip("Channel subscription is renewed when channel is added from invite", a
     ]);
     // Patch the date to consider those channels as already known by the server
     // when the client starts.
-    const later = luxon.DateTime.now().plus({ seconds: 2 });
+    const later = now.plus({ seconds: 10 });
     mockDate(
         `${later.year}-${later.month}-${later.day} ${later.hour}:${later.minute}:${later.second}`
     );
-    const { env } = await start();
-    patchWithCleanup(env.services["bus_service"], {
+    const env = await startClient();
+    patchWithCleanup(env.services.bus_service, {
         forceUpdateChannels() {
             step("update-channels");
         },
@@ -117,13 +118,13 @@ test.skip("Channel subscription is renewed when channel is added from invite", a
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarChannel");
     env.services.orm.call("discuss.channel", "add_members", [[channelId]], {
-        partner_ids: [constants.PARTNER_ID],
+        partner_ids: [serverState.partnerId],
     });
     await contains(".o-mail-DiscussSidebarChannel", { count: 2 });
-    await assertSteps(["update-channels"]);
+    await assertSteps(["update-channels"]); // FIXME: sometimes 1 or 2 update-channels
 });
 
-test.skip("Adding attachments", async () => {
+test("Adding attachments", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "Hogwarts Legacy" });
     const messageId = pyEnv["mail.message"].create({
@@ -132,23 +133,24 @@ test.skip("Adding attachments", async () => {
         res_id: channelId,
         message_type: "comment",
     });
-    const tab1 = await start({ asTab: true });
-    const tab2 = await start({ asTab: true });
-    tab1.openDiscuss(channelId);
-    tab2.openDiscuss(channelId);
+    const env1 = await startClient({ asTab: true });
+    const env2 = await startClient({ asTab: true });
+    await openDiscuss(channelId, { target: env1 });
+    await openDiscuss(channelId, { target: env2 });
     const attachmentId = pyEnv["ir.attachment"].create({
         name: "test.txt",
         mimetype: "text/plain",
     });
+    rpc = rpcWithEnv(env1);
     rpc("/mail/message/update_content", {
         body: "Hello world!",
         attachment_ids: [attachmentId],
         message_id: messageId,
     });
-    await contains(".o-mail-AttachmentCard", { target: tab2.target, text: "test.txt" });
+    await contains(".o-mail-AttachmentCard", { target: env2, text: "test.txt" });
 });
 
-test.skip("Remove attachment from message", async () => {
+test("Remove attachment from message", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const attachmentId = pyEnv["ir.attachment"].create({
@@ -162,38 +164,39 @@ test.skip("Remove attachment from message", async () => {
         model: "discuss.channel",
         res_id: channelId,
     });
-    const tab1 = await start({ asTab: true });
-    const tab2 = await start({ asTab: true });
-    tab1.openDiscuss(channelId);
-    tab2.openDiscuss(channelId);
-    await contains(".o-mail-AttachmentCard", { target: tab1.target, text: "test.txt" });
-    await click(".o-mail-AttachmentCard-unlink", { target: tab2.target });
-    await click(".modal-footer .btn", { text: "Ok", target: tab2.target });
-    await contains(".o-mail-AttachmentCard", { count: 0, target: tab1.target, text: "test.txt" });
+    const env1 = await startClient({ asTab: true });
+    const env2 = await startClient({ asTab: true });
+    await openDiscuss(channelId, { target: env1 });
+    await openDiscuss(channelId, { target: env2 });
+    await contains(".o-mail-AttachmentCard", { target: env1, text: "test.txt" });
+    await click(".o-mail-AttachmentCard-unlink", { target: env2 });
+    await click(".modal-footer .btn", { text: "Ok", target: env2 });
+    await contains(".o-mail-AttachmentCard", { count: 0, target: env1, text: "test.txt" });
 });
 
-test.skip("Message delete notification", async () => {
+test("Message delete notification", async () => {
     const pyEnv = await startServer();
     const messageId = pyEnv["mail.message"].create({
         body: "Needaction message",
-        model: "discuss.channel",
-        res_id: constants.PARTNER_ID,
+        model: "res.partner",
+        res_id: serverState.partnerId,
         needaction: true,
-        needaction_partner_ids: [constants.PARTNER_ID], // not needed, for consistency
+        needaction_partner_ids: [serverState.partnerId], // not needed, for consistency
     });
     pyEnv["mail.notification"].create({
         mail_message_id: messageId,
         notification_type: "inbox",
         notification_status: "sent",
-        res_partner_id: constants.PARTNER_ID,
+        res_partner_id: serverState.partnerId,
     });
-    await start();
+    await startClient();
     await openDiscuss();
     await click("[title='Expand']");
     await click("[title='Mark as Todo']");
     await contains("button", { text: "Inbox", contains: [".badge", { text: "1" }] });
     await contains("button", { text: "Starred", contains: [".badge", { text: "1" }] });
-    pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "mail.message/delete", {
+    const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
+    pyEnv["bus.bus"]._sendone(partner, "mail.message/delete", {
         message_ids: [messageId],
     });
     await contains(".o-mail-Message", { count: 0 });

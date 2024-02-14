@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { expect, test } from "@odoo/hoot";
 
 import { HIGHLIGHT_CLASS, searchHighlight } from "@mail/core/common/message_search_hook";
@@ -7,17 +5,20 @@ import {
     SIZES,
     click,
     contains,
+    defineMailModels,
     insertText,
     openDiscuss,
     openFormView,
     patchUiSize,
-    start,
+    startClient,
     startServer,
     triggerHotkey,
 } from "../mail_test_helpers";
-import { constants } from "@web/../tests/web_test_helpers";
+import { serverState } from "@web/../tests/web_test_helpers";
 
-test.skip("Search highlight", async () => {
+defineMailModels();
+
+test("Search highlight", async () => {
     const testCases = [
         {
             input: "test odoo",
@@ -102,11 +103,11 @@ test.skip("Search highlight", async () => {
         },
     ];
     for (const { input, output, searchTerm } of testCases) {
-        expect(searchHighlight(searchTerm, input)).toBe(output);
+        expect(searchHighlight(searchTerm, input).toString()).toBe(output);
     }
 });
 
-test.skip("Display highligthed search in chatter", async () => {
+test("Display highligthed search in chatter", async () => {
     patchUiSize({ size: SIZES.XXL });
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
@@ -115,7 +116,7 @@ test.skip("Display highligthed search in chatter", async () => {
         model: "res.partner",
         res_id: partnerId,
     });
-    await start();
+    await startClient();
     await openFormView("res.partner", partnerId);
     await click("[title='Search Messages']");
     await insertText(".o_searchview_input", "empty");
@@ -123,7 +124,7 @@ test.skip("Display highligthed search in chatter", async () => {
     await contains(`.o-mail-Chatter-search .o-mail-Message span.${HIGHLIGHT_CLASS}`);
 });
 
-test.skip("Display multiple highligthed search in chatter", async () => {
+test("Display multiple highligthed search in chatter", async () => {
     patchUiSize({ size: SIZES.XXL });
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
@@ -132,7 +133,7 @@ test.skip("Display multiple highligthed search in chatter", async () => {
         model: "res.partner",
         res_id: partnerId,
     });
-    await start();
+    await startClient();
     await openFormView("res.partner", partnerId);
     await click("[title='Search Messages']");
     await insertText(".o_searchview_input", "not empty");
@@ -140,18 +141,18 @@ test.skip("Display multiple highligthed search in chatter", async () => {
     await contains(`.o-mail-Chatter-search .o-mail-Message span.${HIGHLIGHT_CLASS}`, { count: 2 });
 });
 
-test.skip("Display highligthed search in Discuss", async () => {
+test("Display highligthed search in Discuss", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     pyEnv["mail.message"].create({
-        author_id: constants.PARTNER_ID,
+        author_id: serverState.partnerId,
         body: "not empty",
         attachment_ids: [],
         message_type: "comment",
         model: "discuss.channel",
         res_id: channelId,
     });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await click("button[title='Search Messages']");
     await insertText(".o_searchview_input", "empty");
@@ -159,18 +160,18 @@ test.skip("Display highligthed search in Discuss", async () => {
     await contains(`.o-mail-SearchMessagesPanel .o-mail-Message span.${HIGHLIGHT_CLASS}`);
 });
 
-test.skip("Display multiple highligthed search in Discuss", async () => {
+test("Display multiple highligthed search in Discuss", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     pyEnv["mail.message"].create({
-        author_id: constants.PARTNER_ID,
+        author_id: serverState.partnerId,
         body: "not prout empty",
         attachment_ids: [],
         message_type: "comment",
         model: "discuss.channel",
         res_id: channelId,
     });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await click("button[title='Search Messages']");
     await insertText(".o_searchview_input", "not empty");
@@ -180,7 +181,7 @@ test.skip("Display multiple highligthed search in Discuss", async () => {
     });
 });
 
-test.skip("Display highligthed with escaped character must ignore them", async () => {
+test("Display highligthed with escaped character must ignore them", async () => {
     patchUiSize({ size: SIZES.XXL });
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
@@ -189,7 +190,7 @@ test.skip("Display highligthed with escaped character must ignore them", async (
         model: "res.partner",
         res_id: partnerId,
     });
-    await start();
+    await startClient();
     await openFormView("res.partner", partnerId);
     await click("[title='Search Messages']");
     await insertText(".o_searchview_input", "test hello");

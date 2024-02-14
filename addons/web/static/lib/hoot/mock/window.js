@@ -222,6 +222,9 @@ export function cleanupWindow() {
     // Title
     mockTitle = "";
 
+    // Local Storage
+    mockLocalStorage.clear();
+
     // Listeners
     for (const [target, listeners] of listenerMap) {
         if (!isInDOM(target)) {

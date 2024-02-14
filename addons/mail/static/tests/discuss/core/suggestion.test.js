@@ -1,17 +1,19 @@
-/** @odoo-module */
-
 import { beforeEach, test } from "@odoo/hoot";
 
 import { Composer } from "@mail/core/common/composer";
 import {
     click,
     contains,
+    defineMailModels,
     insertText,
     openDiscuss,
-    start,
+    startClient,
     startServer,
 } from "../../mail_test_helpers";
-import { Command, constants, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { Command, patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
+import { mockDate } from "@odoo/hoot-mock";
+
+defineMailModels();
 
 beforeEach(() => {
     // Simulate real user interactions
@@ -22,13 +24,13 @@ beforeEach(() => {
     });
 });
 
-test.skip('display command suggestions on typing "/"', async () => {
+test('display command suggestions on typing "/"', async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         name: "General",
         channel_type: "channel",
     });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await contains(".o-mail-Composer-suggestionList");
     await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
@@ -36,10 +38,10 @@ test.skip('display command suggestions on typing "/"', async () => {
     await contains(".o-mail-Composer-suggestionList .o-open");
 });
 
-test.skip("use a command for a specific channel type", async () => {
+test("use a command for a specific channel type", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ channel_type: "chat" });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await contains(".o-mail-Composer-suggestionList");
     await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
@@ -49,13 +51,13 @@ test.skip("use a command for a specific channel type", async () => {
     await contains(".o-mail-Composer-input", { value: "/who " });
 });
 
-test.skip("command suggestion should only open if command is the first character", async () => {
+test("command suggestion should only open if command is the first character", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         name: "General",
         channel_type: "channel",
     });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await contains(".o-mail-Composer-suggestionList");
     await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
@@ -67,7 +69,8 @@ test.skip("command suggestion should only open if command is the first character
     await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
 });
 
-test.skip("Sort partner suggestions by recent chats", async () => {
+test("Sort partner suggestions by recent chats", async () => {
+    mockDate("2023-01-03 12:00:00"); // so that it's after last interest (mock server is in 2019 by default!)
     const pyEnv = await startServer();
     const [partner_1, partner_2, partner_3] = pyEnv["res.partner"].create([
         { name: "User 1" },
@@ -84,7 +87,7 @@ test.skip("Sort partner suggestions by recent chats", async () => {
             name: "General",
             channel_type: "channel",
             channel_member_ids: [
-                Command.create({ partner_id: constants.PARTNER_ID }),
+                Command.create({ partner_id: serverState.partnerId }),
                 Command.create({ partner_id: partner_1 }),
                 Command.create({ partner_id: partner_2 }),
                 Command.create({ partner_id: partner_3 }),
@@ -94,7 +97,7 @@ test.skip("Sort partner suggestions by recent chats", async () => {
             channel_member_ids: [
                 Command.create({
                     last_interest_dt: "2023-01-01 00:00:00",
-                    partner_id: constants.PARTNER_ID,
+                    partner_id: serverState.partnerId,
                 }),
                 Command.create({ partner_id: partner_1 }),
             ],
@@ -103,8 +106,8 @@ test.skip("Sort partner suggestions by recent chats", async () => {
         {
             channel_member_ids: [
                 Command.create({
-                    last_interest_dt: "2023-01-01 00:00:00",
-                    partner_id: constants.PARTNER_ID,
+                    last_interest_dt: "2023-01-01 00:00:10",
+                    partner_id: serverState.partnerId,
                 }),
                 Command.create({ partner_id: partner_2 }),
             ],
@@ -113,15 +116,15 @@ test.skip("Sort partner suggestions by recent chats", async () => {
         {
             channel_member_ids: [
                 Command.create({
-                    last_interest_dt: "2023-01-01 00:00:00",
-                    partner_id: constants.PARTNER_ID,
+                    last_interest_dt: "2023-01-01 00:00:20",
+                    partner_id: serverState.partnerId,
                 }),
                 Command.create({ partner_id: partner_3 }),
             ],
             channel_type: "chat",
         },
     ]);
-    await start();
+    await startClient();
     await openDiscuss();
     await click(".o-mail-DiscussSidebarChannel", { text: "User 2" });
     await insertText(".o-mail-Composer-input", "This is a test");
@@ -136,18 +139,18 @@ test.skip("Sort partner suggestions by recent chats", async () => {
     await contains(":nth-child(3 of .o-mail-Composer-suggestion) strong", { text: "User 1" });
 });
 
-test.skip("mention suggestion are shown after deleting a character", async () => {
+test("mention suggestion are shown after deleting a character", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
     const channelId = pyEnv["discuss.channel"].create({
         name: "General",
         channel_type: "channel",
         channel_member_ids: [
-            Command.create({ partner_id: constants.PARTNER_ID }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
     });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "@John D");
     await contains(".o-mail-Composer-suggestion strong", { text: "John Doe" });
@@ -159,18 +162,18 @@ test.skip("mention suggestion are shown after deleting a character", async () =>
     await contains(".o-mail-Composer-suggestion strong", { text: "John Doe" });
 });
 
-test.skip("command suggestion are shown after deleting a character", async () => {
+test("command suggestion are shown after deleting a character", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
     const channelId = pyEnv["discuss.channel"].create({
         name: "General",
         channel_type: "channel",
         channel_member_ids: [
-            Command.create({ partner_id: constants.PARTNER_ID }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
     });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "/he");
     await contains(".o-mail-Composer-suggestion strong", { text: "help" });
@@ -182,19 +185,19 @@ test.skip("command suggestion are shown after deleting a character", async () =>
     await contains(".o-mail-Composer-suggestion strong", { text: "help" });
 });
 
-QUnit.test("mention suggestion displays OdooBot before archived partners", async () => {
+test("mention suggestion displays OdooBot before archived partners", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Jane", active: false });
     const channelId = pyEnv["discuss.channel"].create({
         name: "Our channel",
         channel_type: "group",
         channel_member_ids: [
-            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
-            Command.create({ partner_id: pyEnv.odoobotId }),
+            Command.create({ partner_id: serverState.odoobotId }),
         ],
     });
-    const { openDiscuss } = await start();
+    await startClient();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "@");
     await contains(".o-mail-Composer-suggestion", { count: 3 });

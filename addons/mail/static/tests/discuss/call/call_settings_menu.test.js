@@ -1,35 +1,39 @@
-/** @odoo-module */
-
 import { test } from "@odoo/hoot";
 
 import { browser } from "@web/core/browser/browser";
-import { click, contains, openDiscuss, start, startServer } from "../../mail_test_helpers";
+import {
+    click,
+    contains,
+    defineMailModels,
+    openDiscuss,
+    startClient,
+    startServer,
+} from "../../mail_test_helpers";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 
-test.skip("Renders the call settings", async () => {
-    patchWithCleanup(browser, {
-        navigator: {
-            ...browser.navigator,
-            mediaDevices: {
-                enumerateDevices: () =>
-                    Promise.resolve([
-                        {
-                            deviceId: "mockAudioDeviceId",
-                            kind: "audioinput",
-                            label: "mockAudioDeviceLabel",
-                        },
-                        {
-                            deviceId: "mockVideoDeviceId",
-                            kind: "videoinput",
-                            label: "mockVideoDeviceLabel",
-                        },
-                    ]),
-            },
+defineMailModels();
+
+test("Renders the call settings", async () => {
+    patchWithCleanup(browser.navigator, {
+        mediaDevices: {
+            enumerateDevices: () =>
+                Promise.resolve([
+                    {
+                        deviceId: "mockAudioDeviceId",
+                        kind: "audioinput",
+                        label: "mockAudioDeviceLabel",
+                    },
+                    {
+                        deviceId: "mockVideoDeviceId",
+                        kind: "videoinput",
+                        label: "mockVideoDeviceLabel",
+                    },
+                ]),
         },
     });
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await click(".o-mail-Discuss-header .fa-gear");
     await contains(".o-discuss-CallSettings");
@@ -42,18 +46,10 @@ test.skip("Renders the call settings", async () => {
     await contains("input[title='Blur video background']");
 });
 
-test.skip("activate push to talk", async () => {
-    patchWithCleanup(browser, {
-        navigator: {
-            ...browser.navigator,
-            mediaDevices: {
-                enumerateDevices: () => Promise.resolve([]),
-            },
-        },
-    });
+test("activate push to talk", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await click(".o-mail-Discuss-header .fa-gear");
     await click("input[title='toggle push-to-talk']");
@@ -62,18 +58,10 @@ test.skip("activate push to talk", async () => {
     await contains("label[aria-label='Voice detection threshold']", { count: 0 });
 });
 
-test.skip("activate blur", async () => {
-    patchWithCleanup(browser, {
-        navigator: {
-            ...browser.navigator,
-            mediaDevices: {
-                enumerateDevices: () => Promise.resolve([]),
-            },
-        },
-    });
+test("activate blur", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await click(".o-mail-Discuss-header .fa-gear");
     await click("input[title='Blur video background']");
@@ -81,26 +69,18 @@ test.skip("activate blur", async () => {
     await contains("label[aria-label='Edge blur intensity']");
 });
 
-test.skip("Inbox should not have any call settings menu", async () => {
+test("Inbox should not have any call settings menu", async () => {
     await startServer();
-    await start();
+    await startClient();
     await openDiscuss("mail.box_inbox");
     await contains(".o-mail-Thread");
     await contains("button[title='Show Call Settings']", { count: 0 });
 });
 
-test.skip("Call settings menu should not be visible on selecting a mailbox (from being open)", async () => {
-    patchWithCleanup(browser, {
-        navigator: {
-            ...browser.navigator,
-            mediaDevices: {
-                enumerateDevices: () => Promise.resolve([]),
-            },
-        },
-    });
+test("Call settings menu should not be visible on selecting a mailbox (from being open)", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await click("button[title='Show Call Settings']");
     await click("button", { text: "Inbox" });

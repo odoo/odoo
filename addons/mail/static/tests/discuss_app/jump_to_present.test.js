@@ -1,22 +1,24 @@
-/** @odoo-module */
-
 import { expect, test } from "@odoo/hoot";
 import {
     SIZES,
     click,
     contains,
+    defineMailModels,
     insertText,
+    onRpcBefore,
     openDiscuss,
     openFormView,
     patchUiSize,
-    start,
+    scroll,
+    startClient,
     startServer,
 } from "../mail_test_helpers";
 
 import { PRESENT_THRESHOLD } from "@mail/core/common/thread";
-import { onRpc } from "@web/../tests/web_test_helpers";
 
-test.skip("Basic jump to present when scrolling to outdated messages", async () => {
+defineMailModels();
+
+test("Basic jump to present when scrolling to outdated messages", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     for (let i = 0; i < 20; i++) {
@@ -27,7 +29,7 @@ test.skip("Basic jump to present when scrolling to outdated messages", async () 
             res_id: channelId,
         });
     }
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await contains(".o-mail-Message", { count: 20 });
     await contains(".o-mail-Thread");
@@ -46,7 +48,7 @@ test.skip("Basic jump to present when scrolling to outdated messages", async () 
     await contains(".o-mail-Thread", { scroll: "bottom" });
 });
 
-test.skip("Basic jump to present when scrolling to outdated messages (chatter, DESC)", async () => {
+test("Basic jump to present when scrolling to outdated messages (chatter, DESC)", async () => {
     patchUiSize({ size: SIZES.XXL });
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo User" });
@@ -58,7 +60,7 @@ test.skip("Basic jump to present when scrolling to outdated messages (chatter, D
             res_id: partnerId,
         });
     }
-    await start();
+    await startClient();
     await openFormView("res.partner", partnerId);
     await contains(".o-mail-Message", { count: 20 });
     await contains(".o-mail-Thread");
@@ -77,7 +79,7 @@ test.skip("Basic jump to present when scrolling to outdated messages (chatter, D
     await contains(".o-mail-Chatter", { scroll: 0 });
 });
 
-test.skip("Jump to old reply should prompt jump to present", async () => {
+test("Jump to old reply should prompt jump to present", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const oldestMessageId = pyEnv["mail.message"].create({
@@ -106,7 +108,7 @@ test.skip("Jump to old reply should prompt jump to present", async () => {
         res_id: channelId,
         parent_id: oldestMessageId,
     });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await contains(".o-mail-Message", { count: 30 });
     await click(".o-mail-MessageInReply .cursor-pointer");
@@ -119,7 +121,7 @@ test.skip("Jump to old reply should prompt jump to present", async () => {
     await contains(".o-mail-Thread", { scroll: "bottom" });
 });
 
-test.skip("Jump to old reply should prompt jump to present (RPC small delay)", async () => {
+test("Jump to old reply should prompt jump to present (RPC small delay)", async () => {
     // same test as before but with a small RPC delay
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
@@ -149,12 +151,8 @@ test.skip("Jump to old reply should prompt jump to present (RPC small delay)", a
         res_id: channelId,
         parent_id: oldestMessageId,
     });
-    onRpc(async (route) => {
-        if (route === "/discuss/channel/messages") {
-            await new Promise(setTimeout); // small delay
-        }
-    });
-    await start();
+    onRpcBefore("/discuss/channel/messages", async () => await new Promise(setTimeout)); // small delay
+    await startClient();
     await openDiscuss(channelId);
     await contains(".o-mail-Message", { count: 30 });
     await click(".o-mail-MessageInReply .cursor-pointer");
@@ -164,7 +162,7 @@ test.skip("Jump to old reply should prompt jump to present (RPC small delay)", a
     await contains(".o-mail-Thread", { scroll: "bottom" });
 });
 
-test.skip("Post message when seeing old message should jump to present", async () => {
+test("Post message when seeing old message should jump to present", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const oldestMessageId = pyEnv["mail.message"].create({
@@ -193,7 +191,7 @@ test.skip("Post message when seeing old message should jump to present", async (
         res_id: channelId,
         parent_id: oldestMessageId,
     });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await contains(".o-mail-Message", { count: 30 });
     await click(".o-mail-MessageInReply .cursor-pointer");

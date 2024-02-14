@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { MEDIAS_BREAKPOINTS, utils as uiUtils } from "@web/core/ui/ui_service";
 export { SIZES } from "@web/core/ui/ui_service";
 export * from "./mail_test_helpers_contains";
@@ -8,9 +6,9 @@ import {
     MockServer,
     defineModels,
     makeMockServer,
-    mountView,
     mountWithCleanup,
     patchWithCleanup,
+    serverState,
     webModels,
 } from "@web/../tests/web_test_helpers";
 import { Base } from "./mock_server/mock_models/base";
@@ -23,7 +21,9 @@ import { IrAttachment } from "./mock_server/mock_models/ir_attachment";
 import { IrWebSocket } from "./mock_server/mock_models/ir_websocket";
 import { M2xAvatarUser } from "./mock_server/mock_models/m2x_avatar_user";
 import { MailActivity } from "./mock_server/mock_models/mail_activity";
+import { MailActivitySchedule } from "./mock_server/mock_models/mail_activity_schedule";
 import { MailActivityType } from "./mock_server/mock_models/mail_activity_type";
+import { MailComposeMessage } from "./mock_server/mock_models/mail_composer_message";
 import { MailFollowers } from "./mock_server/mock_models/mail_followers";
 import { MailGuest } from "./mock_server/mock_models/mail_guest";
 import { MailLinkPreview } from "./mock_server/mock_models/mail_link_preview";
@@ -31,6 +31,7 @@ import { MailMessage } from "./mock_server/mock_models/mail_message";
 import { MailMessageReaction } from "./mock_server/mock_models/mail_message_reaction";
 import { MailMessageSubtype } from "./mock_server/mock_models/mail_message_subtype";
 import { MailNotification } from "./mock_server/mock_models/mail_notification";
+import { MailPushDevice } from "./mock_server/mock_models/mail_push_device";
 import { MailShortcode } from "./mock_server/mock_models/mail_shortcode";
 import { MailTemplate } from "./mock_server/mock_models/mail_template";
 import { MailThread } from "./mock_server/mock_models/mail_thread";
@@ -42,20 +43,25 @@ import { ResUsersSettings } from "./mock_server/mock_models/res_users_settings";
 import { ResUsersSettingsVolumes } from "./mock_server/mock_models/res_users_settings_volumes";
 import { WebClient } from "@web/webclient/webclient";
 import { browser } from "@web/core/browser/browser";
-import { getMockEnv } from "@web/../tests/_framework/env_test_helpers";
-import { tick } from "@odoo/hoot-mock";
-import { after, before, beforeAll } from "@odoo/hoot";
-import { isMacOS } from "@web/core/browser/feature_detection";
-import { triggerEvents } from "./mail_test_helpers_contains";
-import { loadEmoji } from "@web/core/emoji_picker/emoji_picker";
-import { loadLamejs } from "@mail/discuss/voice_message/common/voice_message_service";
+import {
+    getMockEnv,
+    makeMockEnv,
+    restoreRegistryFromBeforeTest,
+} from "@web/../tests/_framework/env_test_helpers";
+import { cancelAllTimers } from "@odoo/hoot-mock";
+import { after, before, getFixture } from "@odoo/hoot";
 import { registry } from "@web/core/registry";
+import { authenticate } from "@web/../tests/_framework/mock_server/mock_server";
+import { session } from "@web/session";
+import { DEFAULT_MAIL_VIEW_ID } from "./mock_server/mock_models/constants";
+import { parseViewProps } from "@web/../tests/_framework/view_test_helpers";
+import { mailGlobal } from "@mail/utils/common/misc";
 
-// load emoji data and lamejs once, when the test suite starts.
-beforeAll(loadEmoji, loadLamejs);
 before(prepareRegistriesWithCleanup);
 export const registryNamesToCloneWithCleanup = [];
 registryNamesToCloneWithCleanup.push("mock_server_callbacks", "discuss.model");
+
+mailGlobal.isInTest = true;
 
 //-----------------------------------------------------------------------------
 // Exports
@@ -76,7 +82,9 @@ export const mailModels = {
     IrWebSocket,
     M2xAvatarUser,
     MailActivity,
+    MailActivitySchedule,
     MailActivityType,
+    MailComposeMessage,
     MailFollowers,
     MailGuest,
     MailLinkPreview,
@@ -84,6 +92,7 @@ export const mailModels = {
     MailMessageReaction,
     MailMessageSubtype,
     MailNotification,
+    MailPushDevice,
     MailShortcode,
     MailTemplate,
     MailThread,
@@ -95,41 +104,14 @@ export const mailModels = {
     ResUsersSettingsVolumes,
 };
 
-function mockTimeout() {
-    const timeouts = new Map();
-    let currentTime = 0;
-    let id = 1;
-    patchWithCleanup(browser, {
-        setTimeout(fn, delay = 0) {
-            timeouts.set(id, { fn, scheduledFor: delay + currentTime, id });
-            return id++;
-        },
-        clearTimeout(id) {
-            timeouts.delete(id);
-        },
-    });
-    return {
-        execRegisteredTimeouts() {
-            for (const { fn } of timeouts.values()) {
-                fn();
-            }
-            timeouts.clear();
-        },
-        async advanceTime(duration) {
-            // wait here so all microtasktick scheduled in this frame can be
-            // executed and possibly register their own timeout
-            await tick();
-            currentTime += duration;
-            for (const { fn, scheduledFor, id } of timeouts.values()) {
-                if (scheduledFor <= currentTime) {
-                    fn();
-                    timeouts.delete(id);
-                }
-            }
-            // wait here to make sure owl can update the UI
-            await tick();
-        },
-    };
+export function onRpcBefore(route, callback) {
+    if (typeof route === "string") {
+        const handler = registry.category("mock_rpc").get(route);
+        patchWithCleanup(handler, { before: callback });
+    } else {
+        const onRpcBeforeGlobal = registry.category("mail.on_rpc_before_global").get(true);
+        patchWithCleanup(onRpcBeforeGlobal, { cb: route });
+    }
 }
 
 let archs = {};
@@ -138,8 +120,8 @@ export function registerArchs(newArchs) {
     after(() => (archs = {}));
 }
 
-export async function openDiscuss(activeId, { context = {}, params = {}, ...props } = {}) {
-    const env = getMockEnv();
+export async function openDiscuss(activeId, { target, context = {}, params = {}, ...props } = {}) {
+    const env = target ?? getMockEnv();
     await env.services.action.doAction(
         {
             context: { ...context, active_id: activeId },
@@ -150,15 +132,13 @@ export async function openDiscuss(activeId, { context = {}, params = {}, ...prop
         },
         { props }
     );
-    // await mountWithCleanup(DiscussClientAction, { props: { action: {  } context.active_id } });
 }
 
 export async function openFormView(resModel, resId, params) {
     return openView({
         res_model: resModel,
         res_id: resId,
-        views: [[false, "form"]],
-        view_mode: "form",
+        views: [[getMailViewId(resModel, "form") || false, "form"]],
         ...params,
     });
 }
@@ -166,8 +146,7 @@ export async function openFormView(resModel, resId, params) {
 export async function openKanbanView(resModel, params) {
     return openView({
         res_model: resModel,
-        views: [[false, "kanban"]],
-        view_mode: "kanban",
+        views: [[getMailViewId(resModel, "kanban"), "kanban"]],
         ...params,
     });
 }
@@ -175,44 +154,164 @@ export async function openKanbanView(resModel, params) {
 export async function openListView(resModel, params) {
     return openView({
         res_model: resModel,
-        views: [[false, "list"]],
-        view_mode: "list",
+        views: [[getMailViewId(resModel, "list"), "list"]],
         ...params,
     });
 }
 
 export async function openView({ res_model, res_id, views, ...params }) {
-    const [[, type]] = views;
-    await mountView({
+    const env = getMockEnv();
+    // action["type"] = action["type"] || "ir.actions.act_window";
+    const [[viewId, type]] = views;
+    // const openView = async (action, options) => {
+    //     action["type"] = action["type"] || "ir.actions.act_window";
+    //     await doAction(webClient, action, { props: options });
+    // };
+    const action = {
+        res_model,
+        res_id,
+        views: [[viewId, type]],
+        type: "ir.actions.act_window",
+    };
+    const options = parseViewProps({
         type,
         resModel: res_model,
         resId: res_id,
-        arch: params?.arch || archs[res_model + ",false," + type] || undefined,
+        arch:
+            params?.arch ||
+            archs[viewId || res_model + `,${getMailViewId(res_model, type) || false},` + type] ||
+            undefined,
+        viewId: params?.arch || viewId,
         ...params,
     });
+    await env.services.action.doAction(action, { props: options });
+    // await mountView(options);
+}
+/** @type {import("@web/../tests/_framework/mock_server/mock_server").MockServerEnvironment} */
+let pyEnv;
+function getMailViewId(res_model, type) {
+    const prefix = `${type},${DEFAULT_MAIL_VIEW_ID}`;
+    if (pyEnv[res_model]._views[prefix]) {
+        return DEFAULT_MAIL_VIEW_ID;
+    }
 }
 
-export async function start({
-    hasTimeControl = false,
-    serverData,
-    asTab = false,
-    services,
-    session,
-} = {}) {
+let tabs = [];
+after(() => (tabs = []));
+/**
+ * Add an item to the "Switch Tab" dropdown. If it doesn't exist, create the
+ * dropdown and add the item afterwards.
+ *
+ * @param {HTMLElement} rootTarget Where to mount the dropdown menu.
+ * @param {HTMLElement} tabTarget Tab to switch to when clicking on the dropdown
+ * item.
+ */
+async function addSwitchTabDropdownItem(rootTarget, tabTarget) {
+    tabs.push(tabTarget);
+    const zIndexMainTab = 100000;
+    let dropdownDiv = rootTarget.querySelector(".o-mail-multi-tab-dropdown");
+    const onClickDropdownItem = (e) => {
+        const dropdownToggle = dropdownDiv.querySelector(".dropdown-toggle");
+        dropdownToggle.innerText = `Switch Tab (${e.target.innerText})`;
+        tabs.forEach((tab) => (tab.style.zIndex = -zIndexMainTab));
+        if (e.target.innerText !== "Hoot") {
+            tabTarget.style.zIndex = zIndexMainTab;
+        }
+    };
+    if (!dropdownDiv) {
+        tabTarget.style.zIndex = zIndexMainTab;
+        dropdownDiv = document.createElement("div");
+        dropdownDiv.style.zIndex = zIndexMainTab + 1;
+        dropdownDiv.style.top = "10%";
+        dropdownDiv.style.right = "5%";
+        dropdownDiv.style.position = "absolute";
+        dropdownDiv.classList.add("dropdown");
+        dropdownDiv.classList.add("o-mail-multi-tab-dropdown");
+        dropdownDiv.innerHTML = `
+            <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Switch Tab (${tabs.length})
+            </button>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item">Hoot</a></li>
+            </ul>
+        `;
+        dropdownDiv.querySelector("a").onclick = onClickDropdownItem;
+        rootTarget.appendChild(dropdownDiv);
+    }
+    const tabIndex = tabs.length;
+    const li = document.createElement("li");
+    const a = document.createElement("a");
+    li.appendChild(a);
+    a.classList.add("dropdown-item");
+    a.innerText = `Tab ${tabIndex}`;
+    a.onclick = onClickDropdownItem;
+    dropdownDiv.querySelector(".dropdown-menu").appendChild(li);
+}
+
+let NEXT_ENV_ID = 1;
+
+export async function startClient({ asTab = false } = {}) {
     if (!MockServer.current) {
         await startServer();
     }
-    await mountWithCleanup(WebClient);
-    const env = getMockEnv();
-    return {
-        advanceTime: hasTimeControl ? mockTimeout().advanceTime : undefined,
-        env,
-        pyEnv: MockServer.current.env,
-    };
+    let target = getFixture();
+    const pyEnv = MockServer.current.env;
+    if ("res.users" in pyEnv) {
+        const adminUser = pyEnv["res.users"].search_read([["id", "=", serverState.userId]])[0];
+        authenticate(adminUser.login, adminUser.password);
+        /** @type {import("mock_models").ResUsers} */
+        const ResUsers = pyEnv["res.users"];
+        patchWithCleanup(session, {
+            storeData: ResUsers._init_store_data(),
+        });
+    }
+    let env;
+    if (asTab) {
+        restoreRegistryFromBeforeTest(registry, { withSubRegistries: true });
+        const rootTarget = target;
+        target = document.createElement("div");
+        target.style.width = "100%";
+        rootTarget.appendChild(target);
+        addSwitchTabDropdownItem(rootTarget, target);
+        const envId = NEXT_ENV_ID++;
+        mailGlobal.elligibleEnvs.add(envId);
+        env = await makeMockEnv({ envId }, { makeNew: true });
+    } else {
+        const envId = NEXT_ENV_ID++;
+        mailGlobal.elligibleEnvs.add(envId);
+        try {
+            env = await makeMockEnv({ envId });
+        } catch {
+            env = Object.assign(getMockEnv(), { envId });
+        }
+    }
+    const wc = await mountWithCleanup(WebClient, { target, env });
+    // Let fixture behave like web client, so it has expected display flex for scrollable
+    target.classList.add("o_web_client");
+    target.style.display = "flex";
+    target.style.position = "fixed";
+    target.style.overflow = "auto";
+    target.style.top = "30px"; // just a bit so HOOT toolbar can be interacted while tests are running
+    target.style.height = "calc(100% - 30px)";
+    target.style.bottom = "0";
+    target.style.left = "0";
+    after(() => {
+        target.classList.remove("o_web_client");
+        target.style.display = "";
+        target.style.position = "";
+        target.style.overflow = "";
+        target.style.top = "";
+        target.style.left = "";
+        cancelAllTimers(); // prevent any RPCs at end of test
+        mailGlobal.elligibleEnvs.clear();
+    });
+    odoo.__WOWL_DEBUG__ = { root: wc };
+    return Object.assign(getMockEnv(), { target });
 }
 
 export async function startServer() {
     const { env } = await makeMockServer();
+    pyEnv = env;
     return env;
 }
 
@@ -290,6 +389,9 @@ export function mockGetMedia() {
         }
         stop() {
             this.readyState = "ended";
+        }
+        clone() {
+            return Object.assign(new MockMediaStreamTrack(this.kind), { ...this });
         }
     }
     /**
@@ -387,62 +489,11 @@ export function patchBrowserNotification(permission = "default", requestPermissi
     });
 }
 
-/**
- * Triggers an hotkey properly disregarding the operating system.
- *
- * @param {string} hotkey
- * @param {boolean} addOverlayModParts
- * @param {KeyboardEventInit} eventAttrs
- */
-export async function triggerHotkey(hotkey, addOverlayModParts = false, eventAttrs = {}) {
-    eventAttrs.key = hotkey.split("+").pop();
-
-    if (/shift/i.test(hotkey)) {
-        eventAttrs.shiftKey = true;
-    }
-
-    if (/control/i.test(hotkey)) {
-        if (isMacOS()) {
-            eventAttrs.metaKey = true;
-        } else {
-            eventAttrs.ctrlKey = true;
-        }
-    }
-
-    if (/alt/i.test(hotkey) || addOverlayModParts) {
-        if (isMacOS()) {
-            eventAttrs.ctrlKey = true;
-        } else {
-            eventAttrs.altKey = true;
-        }
-    }
-
-    if (!("bubbles" in eventAttrs)) {
-        eventAttrs.bubbles = true;
-    }
-
-    const [keydownEvent, keyupEvent] = await triggerEvents(
-        document.activeElement,
-        null,
-        [
-            ["keydown", eventAttrs],
-            ["keyup", eventAttrs],
-        ],
-        { skipVisibilityCheck: true }
-    );
-
-    return { keydownEvent, keyupEvent };
-}
-
-export function clearRegistryWithCleanup(registry) {
-    prepareRegistry(registry);
-}
-
 function cloneRegistryWithCleanup(registry) {
-    prepareRegistry(registry, true);
+    prepareRegistry(registry, { keepContent: true });
 }
 
-function prepareRegistry(registry, keepContent = false) {
+function prepareRegistry(registry, { keepContent = false } = {}) {
     const _addEventListener = registry.addEventListener.bind(registry);
     const _removeEventListener = registry.removeEventListener.bind(registry);
     const patch = {

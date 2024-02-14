@@ -1,20 +1,25 @@
-/** @odoo-module */
-
 import { expect, test } from "@odoo/hoot";
 import {
+    assertSteps,
     click,
     contains,
+    defineMailModels,
     editInput,
+    onRpcBefore,
     openFormView,
-    registerArchs,
-    start,
+    startClient,
     startServer,
+    step,
 } from "../../mail_test_helpers";
-import { onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { mockService, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { Deferred } from "@odoo/hoot-mock";
 import { MailThread } from "../../mock_server/mock_models/mail_thread";
+import { getMockEnv } from "@web/../tests/_framework/env_test_helpers";
+import { actionService } from "@web/webclient/actions/action_service";
 
-test.skip("base rendering not editable", async () => {
+defineMailModels();
+
+test("base rendering not editable", async () => {
     const pyEnv = await startServer();
     const [threadId, partnerId] = pyEnv["res.partner"].create([{}, {}]);
     pyEnv["mail.followers"].create({
@@ -25,13 +30,13 @@ test.skip("base rendering not editable", async () => {
     });
     patchWithCleanup(MailThread.prototype, {
         _get_mail_thread_data() {
-            // mimic user with write access
+            // mimic user without write access
             const res = super._get_mail_thread_data(...arguments);
-            res["hasWriteAccess"] = true;
+            res["hasWriteAccess"] = false;
             return res;
         },
     });
-    await start();
+    await startClient();
     await openFormView("res.partner", threadId);
     await click(".o-mail-Followers-button");
     await contains(".o-mail-Follower");
@@ -40,7 +45,7 @@ test.skip("base rendering not editable", async () => {
     await contains(".o-mail-Follower-action", { count: 0 });
 });
 
-test.skip("base rendering editable", async () => {
+test("base rendering editable", async () => {
     const pyEnv = await startServer();
     const [threadId, partnerId] = pyEnv["res.partner"].create([{}, {}]);
     pyEnv["mail.followers"].create({
@@ -49,7 +54,7 @@ test.skip("base rendering editable", async () => {
         res_id: threadId,
         res_model: "res.partner",
     });
-    await start();
+    await startClient();
     await openFormView("res.partner", threadId);
     await click(".o-mail-Followers-button");
     await contains(".o-mail-Follower");
@@ -60,7 +65,7 @@ test.skip("base rendering editable", async () => {
     await contains("button[title='Remove this follower']");
 });
 
-test.skip("click on partner follower details", async () => {
+test("click on partner follower details", async () => {
     const pyEnv = await startServer();
     const [threadId, partnerId] = pyEnv["res.partner"].create([{}, {}]);
     pyEnv["mail.followers"].create({
@@ -70,17 +75,25 @@ test.skip("click on partner follower details", async () => {
         res_model: "res.partner",
     });
     const openFormDef = new Deferred();
-    const { env } = await start();
-    await openFormView("res.partner", threadId);
-    patchWithCleanup(env.services.action, {
-        doAction(action) {
-            expect.step("do_action");
-            expect(action.res_id).toBe(partnerId);
-            expect(action.res_model).toBe("res.partner");
-            expect(action.type).toBe("ir.actions.act_window");
-            openFormDef.resolve();
-        },
+    mockService("action", () => {
+        const ogService = actionService.start(getMockEnv());
+        return {
+            ...ogService,
+            doAction(action) {
+                if (action?.res_id === partnerId) {
+                    expect.step("do_action");
+                    expect(action.res_id).toBe(partnerId);
+                    expect(action.res_model).toBe("res.partner");
+                    expect(action.type).toBe("ir.actions.act_window");
+                    openFormDef.resolve();
+                    return;
+                }
+                return ogService.doAction.call(this, ...arguments);
+            },
+        };
     });
+    await startClient();
+    await openFormView("res.partner", threadId);
     await click(".o-mail-Followers-button");
     await contains(".o-mail-Follower");
     await contains(".o-mail-Follower-details");
@@ -89,7 +102,7 @@ test.skip("click on partner follower details", async () => {
     expect(["do_action"]).toVerifySteps({ message: "redirect to partner profile" });
 });
 
-test.skip("click on edit follower", async () => {
+test("click on edit follower", async () => {
     const pyEnv = await startServer();
     const [threadId, partnerId] = pyEnv["res.partner"].create([{}, {}]);
     pyEnv["mail.followers"].create({
@@ -98,23 +111,19 @@ test.skip("click on edit follower", async () => {
         res_id: threadId,
         res_model: "res.partner",
     });
-    onRpc((route) => {
-        if (route === "/mail/read_subscription_data") {
-            expect.step("fetch_subtypes");
-        }
-    });
-    await start();
+    onRpcBefore("/mail/read_subscription_data", () => expect.step("fetch_subtypes"));
+    await startClient();
     await openFormView("res.partner", threadId);
     await click(".o-mail-Followers-button");
     await contains(".o-mail-Follower");
     await contains("button[title='Edit subscription']");
     await click("button[title='Edit subscription']");
     await contains(".o-mail-Follower", { count: 0 });
-    expect(["fetch_subtypes"]).verifySteps();
+    expect(["fetch_subtypes"]).toVerifySteps();
     await contains(".o-mail-FollowerSubtypeDialog");
 });
 
-test.skip("edit follower and close subtype dialog", async () => {
+test("edit follower and close subtype dialog", async () => {
     const pyEnv = await startServer();
     const [threadId, partnerId] = pyEnv["res.partner"].create([{}, {}]);
     pyEnv["mail.followers"].create({
@@ -123,24 +132,20 @@ test.skip("edit follower and close subtype dialog", async () => {
         res_id: threadId,
         res_model: "res.partner",
     });
-    onRpc((route) => {
-        if (route === "/mail/read_subscription_data") {
-            expect.step("fetch_subtypes");
-        }
-    });
-    await start();
+    onRpcBefore("/mail/read_subscription_data", () => expect.step("fetch_subtypes"));
+    await startClient();
     await openFormView("res.partner", threadId);
     await click(".o-mail-Followers-button");
     await contains(".o-mail-Follower");
     await contains("button[title='Edit subscription']");
     await click("button[title='Edit subscription']");
     await contains(".o-mail-FollowerSubtypeDialog");
-    expect(["fetch_subtypes"]).verifySteps();
+    expect(["fetch_subtypes"]).toVerifySteps();
     await click(".o-mail-FollowerSubtypeDialog button", { text: "Cancel" });
     await contains(".o-mail-FollowerSubtypeDialog", { count: 0 });
 });
 
-test.skip("remove a follower in a dirty form view", async () => {
+test("remove a follower in a dirty form view", async () => {
     const pyEnv = await startServer();
     const [threadId, partnerId] = pyEnv["res.partner"].create([{}, {}]);
     pyEnv["discuss.channel"].create({ name: "General", display_name: "General" });
@@ -150,8 +155,9 @@ test.skip("remove a follower in a dirty form view", async () => {
         res_id: threadId,
         res_model: "res.partner",
     });
-    registerArchs({
-        "res.partner,false,form": `
+    await startClient();
+    await openFormView("res.partner", threadId, {
+        arch: `
             <form>
                 <field name="name"/>
                 <field name="channel_ids" widget="many2many_tags"/>
@@ -161,8 +167,6 @@ test.skip("remove a follower in a dirty form view", async () => {
                 </div>
             </form>`,
     });
-    await start();
-    await openFormView("res.partner", threadId);
     await click(".o_field_many2many_tags[name='channel_ids'] input");
     await click(".dropdown-item", { text: "General" });
     await contains(".o_tag", { text: "General" });
@@ -175,7 +179,7 @@ test.skip("remove a follower in a dirty form view", async () => {
     await contains(".o_tag", { text: "General" });
 });
 
-test.skip("removing a follower should reload form view", async function () {
+test("removing a follower should reload form view", async function () {
     const pyEnv = await startServer();
     const [threadId, partnerId] = pyEnv["res.partner"].create([{}, {}]);
     pyEnv["mail.followers"].create({
@@ -186,15 +190,15 @@ test.skip("removing a follower should reload form view", async function () {
     });
     onRpc((route, args) => {
         if (route === "/web/dataset/call_kw/res.partner/web_read") {
-            expect.step(`read ${args.args[0][0]}`);
+            step(`read ${args.args[0][0]}`);
         }
     });
-    await start();
+    await startClient();
     await openFormView("res.partner", threadId);
     await contains(".o-mail-Followers-button");
-    expect([`read ${threadId}`]).toVerifySteps();
+    await assertSteps([`read ${threadId}`]);
     await click(".o-mail-Followers-button");
     await click("button[title='Remove this follower']");
     await contains(".o-mail-Followers-counter", { text: "0" });
-    expect([`read ${threadId}`]).toVerifySteps();
+    await assertSteps([`read ${threadId}`]);
 });

@@ -1,17 +1,25 @@
-/** @odoo-module */
-
 import { expect, test } from "@odoo/hoot";
-import { click, contains, start, startServer, triggerEvents } from "../mail_test_helpers";
-import { Command, constants, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import {
+    click,
+    contains,
+    defineMailModels,
+    startClient,
+    startServer,
+    triggerEvents,
+} from "../mail_test_helpers";
+import { Command, mockService, serverState } from "@web/../tests/web_test_helpers";
+import { getMockEnv } from "@web/../tests/_framework/env_test_helpers";
+import { actionService } from "@web/webclient/actions/action_service";
 
-test.skip("basic layout", async () => {
+defineMailModels();
+
+test("basic layout", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({});
     const messageId = pyEnv["mail.message"].create({
         message_type: "email",
         model: "discuss.channel",
         res_id: channelId,
-        res_model_name: "Channel",
     });
     pyEnv["mail.notification"].create([
         {
@@ -25,11 +33,11 @@ test.skip("basic layout", async () => {
             notification_type: "email",
         },
     ]);
-    await start();
+    await startClient();
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-NotificationItem", {
         contains: [
-            [".o-mail-NotificationItem-name", { text: "Channel" }],
+            [".o-mail-NotificationItem-name", { text: "Discussion Channel" }],
             [".o-mail-NotificationItem-counter", { text: "2" }],
             [".o-mail-NotificationItem-date", { text: "now" }],
             [
@@ -42,43 +50,41 @@ test.skip("basic layout", async () => {
     });
 });
 
-test.skip("mark as read", async () => {
+test("mark as read", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({});
     const messageId = pyEnv["mail.message"].create({
         message_type: "email",
         model: "discuss.channel",
         res_id: channelId,
-        res_model_name: "Channel",
     });
     pyEnv["mail.notification"].create({
         mail_message_id: messageId,
         notification_status: "exception",
         notification_type: "email",
     });
-    await start();
+    await startClient();
     await click(".o_menu_systray i[aria-label='Messages']");
-    await triggerEvents(".o-mail-NotificationItem", ["mouseenter"], { text: "Channel" });
+    await triggerEvents(".o-mail-NotificationItem", ["mouseenter"], { text: "Discussion Channel" });
     await click(".o-mail-NotificationItem-markAsRead", {
-        parent: [".o-mail-NotificationItem", { text: "Channel" }],
+        parent: [".o-mail-NotificationItem", { text: "Discussion Channel" }],
     });
-    await contains(".o-mail-NotificationItem", { count: 0, text: "Channel" });
+    await contains(".o-mail-NotificationItem", { count: 0, text: "Discussion Channel" });
 });
 
-test.skip("open non-channel failure", async () => {
+test("open non-channel failure", async () => {
     const pyEnv = await startServer();
+    const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([{}, {}]);
     const [messageId_1, messageId_2] = pyEnv["mail.message"].create([
         {
             message_type: "email",
             model: "res.partner",
-            res_id: 31,
-            res_model_name: "Partner",
+            res_id: partnerId_1,
         },
         {
             message_type: "email",
             model: "res.partner",
-            res_id: 32,
-            res_model_name: "Partner",
+            res_id: partnerId_2,
         },
     ]);
     pyEnv["mail.notification"].create([
@@ -93,9 +99,8 @@ test.skip("open non-channel failure", async () => {
             notification_type: "email",
         },
     ]);
-
-    const { env } = await start();
-    patchWithCleanup(env.services.action, {
+    mockService("action", () => ({
+        ...actionService.start(getMockEnv()),
         doAction(action) {
             expect.step("do_action");
             expect(action.name).toBe("Mail Failures");
@@ -114,13 +119,14 @@ test.skip("open non-channel failure", async () => {
                 JSON.stringify([["message_has_error", "=", true]])
             );
         },
-    });
+    }));
+    await startClient();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
     expect(["do_action"]).toVerifySteps();
 });
 
-test.skip("different discuss.channel are not grouped", async () => {
+test("different discuss.channel are not grouped", async () => {
     const pyEnv = await startServer();
     const [channelId_1, channelId_2] = pyEnv["discuss.channel"].create([
         { name: "Channel_1" },
@@ -131,13 +137,11 @@ test.skip("different discuss.channel are not grouped", async () => {
             message_type: "email",
             model: "discuss.channel",
             res_id: channelId_1,
-            res_model_name: "Channel",
         },
         {
             message_type: "email",
             model: "discuss.channel",
             res_id: channelId_2,
-            res_model_name: "Channel",
         },
     ]);
     pyEnv["mail.notification"].create([
@@ -162,7 +166,7 @@ test.skip("different discuss.channel are not grouped", async () => {
             notification_type: "email",
         },
     ]);
-    await start();
+    await startClient();
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-NotificationItem-text", {
         count: 2,
@@ -170,20 +174,20 @@ test.skip("different discuss.channel are not grouped", async () => {
     });
 });
 
-test.skip("multiple grouped notifications by model", async () => {
+test("multiple grouped notifications by model", async () => {
     const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({});
+    const companyId = pyEnv["res.company"].create({});
     const [messageId_1, messageId_2] = pyEnv["mail.message"].create([
         {
             message_type: "email",
             model: "res.partner",
-            res_id: 31,
-            res_model_name: "Partner",
+            res_id: partnerId,
         },
         {
             message_type: "email",
             model: "res.company",
-            res_id: 32,
-            res_model_name: "Company",
+            res_id: companyId,
         },
     ]);
     pyEnv["mail.notification"].create([
@@ -208,13 +212,13 @@ test.skip("multiple grouped notifications by model", async () => {
             notification_type: "email",
         },
     ]);
-    await start();
+    await startClient();
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-NotificationItem", { count: 2 });
     await contains(".o-mail-NotificationItem-counter", { count: 2, text: "2" });
 });
 
-test.skip("non-failure notifications are ignored", async () => {
+test("non-failure notifications are ignored", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const messageId = pyEnv["mail.message"].create({
@@ -227,12 +231,12 @@ test.skip("non-failure notifications are ignored", async () => {
         notification_status: "ready",
         notification_type: "email",
     });
-    await start();
+    await startClient();
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-NotificationItem", { count: 0 });
 });
 
-test.skip("marked as read thread notifications are ordered by last message date", async () => {
+test("marked as read thread notifications are ordered by last message date", async () => {
     const pyEnv = await startServer();
     const [channelId_1, channelId_2] = pyEnv["discuss.channel"].create([
         { name: "Channel 2019" },
@@ -252,14 +256,14 @@ test.skip("marked as read thread notifications are ordered by last message date"
             res_id: channelId_2,
         },
     ]);
-    await start();
+    await startClient();
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-NotificationItem", { count: 2 });
     await contains(":nth-child(1 of .o-mail-NotificationItem)", { text: "Channel 2020" });
     await contains(":nth-child(2 of .o-mail-NotificationItem)", { text: "Channel 2019" });
 });
 
-test.skip("thread notifications are re-ordered on receiving a new message", async () => {
+test("thread notifications are re-ordered on receiving a new message", async () => {
     const pyEnv = await startServer();
     const [channelId_1, channelId_2] = pyEnv["discuss.channel"].create([
         { name: "Channel 2019" },
@@ -277,7 +281,7 @@ test.skip("thread notifications are re-ordered on receiving a new message", asyn
             res_id: channelId_2,
         },
     ]);
-    await start();
+    await startClient();
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-NotificationItem", { count: 2 });
     const channel_1 = pyEnv["discuss.channel"].search_read([["id", "=", channelId_1]])[0];
@@ -299,7 +303,7 @@ test.skip("thread notifications are re-ordered on receiving a new message", asyn
     await contains(".o-mail-NotificationItem", { count: 2 });
 });
 
-test.skip("messaging menu counter should ignore unread messages in channels that are unpinned", async () => {
+test("messaging menu counter should ignore unread messages in channels that are unpinned", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     pyEnv["discuss.channel"].create({ name: "General" });
@@ -308,7 +312,7 @@ test.skip("messaging menu counter should ignore unread messages in channels that
             Command.create({
                 is_pinned: false,
                 message_unread_counter: 1,
-                partner_id: constants.PARTNER_ID,
+                partner_id: serverState.partnerId,
             }),
             Command.create({ partner_id: partnerId }),
         ],
@@ -322,7 +326,7 @@ test.skip("messaging menu counter should ignore unread messages in channels that
             message_type: "email",
         },
     ]);
-    await start();
+    await startClient();
     await contains(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-MessagingMenu-counter", { count: 0 });
     await click(".o_menu_systray i[aria-label='Messages']"); // fetch channels

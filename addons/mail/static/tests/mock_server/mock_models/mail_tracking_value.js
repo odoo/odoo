@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { models } from "@web/../tests/web_test_helpers";
 import { capitalize } from "@web/core/utils/strings";
 
@@ -18,10 +16,10 @@ export class MailTrackingValue extends models.ServerModel {
         /** @type {import("mock_models").MailThread} */
         const MailThread = this.env["mail.thread"];
 
-        const initialTrackedFieldValuesByRecordId = MailThread._track_prepare(this._name);
+        const initialTrackedFieldValuesByRecordId = MailThread._track_prepare.call(this);
         const result = super.write(idOrIds, values, kwargs);
         if (initialTrackedFieldValuesByRecordId) {
-            MailThread._track_finalize(this._name, initialTrackedFieldValuesByRecordId);
+            MailThread._track_finalize.call(this, initialTrackedFieldValuesByRecordId);
         }
         return result;
     }
@@ -31,20 +29,19 @@ export class MailTrackingValue extends models.ServerModel {
      * @param {ModelRecord} newValue
      * @param {string} fieldName
      * @param {Object} field
-     * @param {string} modelName
+     * @param {models.ServerModel} model
      */
-    _create_tracking_values(initialValue, newValue, fieldName, field, modelName) {
+    _create_tracking_values(initialValue, newValue, fieldName, field, model) {
         /** @type {import("mock_models").IrModelFields} */
         const IrModelFields = this.env["ir.model.fields"];
 
         let isTracked = true;
         const irField = IrModelFields.find(
-            (field) => field.model === modelName && field.name === fieldName
+            (field) => field.model === model._name && field.name === fieldName
         );
         if (!irField) {
             return;
         }
-
         const values = { field_id: irField.id };
         switch (irField.ttype) {
             case "char":
@@ -64,8 +61,8 @@ export class MailTrackingValue extends models.ServerModel {
                 values["new_value_integer"] = newValue ? 1 : 0;
                 break;
             case "monetary":
-                values[`old_value_float`] = initialValue;
-                values[`new_value_float`] = newValue;
+                values["old_value_float"] = initialValue;
+                values["new_value_float"] = newValue;
                 break;
             case "selection":
                 values["old_value_char"] = initialValue;

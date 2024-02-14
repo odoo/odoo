@@ -1,50 +1,51 @@
-/** @odoo-module */
-
 import { test } from "@odoo/hoot";
 import {
     click,
     contains,
+    defineMailModels,
     openFormView,
-    registerArchs,
-    start,
+    startClient,
     startServer,
     triggerEvents,
 } from "../../mail_test_helpers";
-import { constants } from "@web/../tests/web_test_helpers";
+import { serverState } from "@web/../tests/web_test_helpers";
 
-test.skip("base rendering not editable", async () => {
-    await start();
-    await openFormView("res.partner", constants.PARTNER_ID);
+defineMailModels();
+
+test("base rendering not editable", async () => {
+    await startClient();
+    await openFormView("res.partner", serverState.partnerId);
     await contains(".o-mail-Chatter-follow", { text: "Follow" });
 });
 
-test.skip("hover following button", async () => {
+test("hover following button", async () => {
     const pyEnv = await startServer();
     const threadId = pyEnv["res.partner"].create({});
     pyEnv["mail.followers"].create({
         is_active: true,
-        partner_id: constants.PARTNER_ID,
+        partner_id: serverState.partnerId,
         res_id: threadId,
         res_model: "res.partner",
     });
-    await start();
+    await startClient();
     await openFormView("res.partner", threadId);
     await contains(".o-mail-Chatter-follow", { text: "Following" });
     await triggerEvents(".o-mail-Chatter-follow", ["mouseenter"], { text: "Following" });
     await contains(".o-mail-Chatter-follow", { text: "Unfollow" });
 });
 
-test.skip('click on "follow" button', async () => {
-    await start();
-    await openFormView("res.partner", constants.PARTNER_ID);
+test('click on "follow" button', async () => {
+    await startClient();
+    await openFormView("res.partner", serverState.partnerId);
     await contains("button", { text: "Follow" });
     await click("button", { text: "Follow" });
     await contains("button", { text: "Following" });
 });
 
-test.skip('Click on "follow" button should save draft record', async () => {
-    registerArchs({
-        "res.partner,false,form": `
+test('Click on "follow" button should save draft record', async () => {
+    await startClient();
+    await openFormView("res.partner", undefined, {
+        arch: `
             <form string="Partners">
                 <sheet>
                     <field name="name" required="1"/>
@@ -54,24 +55,22 @@ test.skip('Click on "follow" button should save draft record', async () => {
                 </div>
             </form>`,
     });
-    await start();
-    await openFormView("res.partner");
     await contains("button", { text: "Follow" });
     await contains("div.o_field_char");
     await click("button", { text: "Follow" });
     await contains("div.o_field_invalid");
 });
 
-test.skip('click on "unfollow" button', async () => {
+test('click on "unfollow" button', async () => {
     const pyEnv = await startServer();
     const threadId = pyEnv["res.partner"].create({});
     pyEnv["mail.followers"].create({
         is_active: true,
-        partner_id: constants.PARTNER_ID,
+        partner_id: serverState.partnerId,
         res_id: threadId,
         res_model: "res.partner",
     });
-    await start();
+    await startClient();
     await openFormView("res.partner", threadId);
     await click(".o-mail-Chatter-follow", { text: "Following" });
     await contains("button", { text: "Follow" });

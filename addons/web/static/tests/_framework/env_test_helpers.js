@@ -15,6 +15,23 @@ import { MockServer, makeMockServer } from "./mock_server/mock_server";
 // Internals
 //-----------------------------------------------------------------------------
 
+const toRestoreRegistry = new WeakMap();
+
+export function restoreRegistryFromBeforeTest(registry, { withSubRegistries = false } = {}) {
+    const content = toRestoreRegistry.get(registry);
+    toRestoreRegistry.delete(registry);
+    if (content) {
+        registry.content = Object.fromEntries(content);
+        registry.elements = null;
+        registry.entries = null;
+    }
+    if (withSubRegistries) {
+        for (const subRegistry of Object.values(registry.subRegistries)) {
+            restoreRegistryFromBeforeTest(subRegistry);
+        }
+    }
+}
+
 /**
  * TODO: remove when services do not have side effects anymore
  * This forsaken block of code ensures that all are properly cleaned up after each
@@ -24,10 +41,9 @@ import { MockServer, makeMockServer } from "./mock_server/mock_server";
  */
 const restoreRegistryAfterTest = (registry) => {
     const content = Object.entries(registry.content).map(([key, value]) => [key, value.slice()]);
+    toRestoreRegistry.set(registry, content);
     after(() => {
-        registry.content = Object.fromEntries(content);
-        registry.elements = null;
-        registry.entries = null;
+        restoreRegistryFromBeforeTest(registry);
     });
     for (const subRegistry of Object.values(registry.subRegistries)) {
         restoreRegistryAfterTest(subRegistry);
@@ -70,8 +86,8 @@ export function getService(name) {
  *
  * @param {Partial<OdooEnv>} [partialEnv]
  */
-export async function makeMockEnv(partialEnv) {
-    if (currentEnv) {
+export async function makeMockEnv(partialEnv, { makeNew = false } = {}) {
+    if (currentEnv && !makeNew) {
         throw new Error(
             `cannot create mock environment: a mock environment has already been declared`
         );

@@ -1,9 +1,9 @@
-/** @odoo-module */
-
 import { Domain } from "@web/core/domain";
 import { groupBy, sortBy, unique } from "@web/core/utils/arrays";
 import { deserializeDate, serializeDate, today } from "@web/core/l10n/dates";
-import { fields, models } from "@web/../tests/web_test_helpers";
+import { fields, models, serverState } from "@web/../tests/web_test_helpers";
+import { DEFAULT_MAIL_SEARCH_ID, DEFAULT_MAIL_VIEW_ID } from "./constants";
+import { MailActivityType } from "./mail_activity_type";
 
 /**
  * @template T
@@ -14,8 +14,21 @@ const { DateTime } = luxon;
 
 export class MailActivity extends models.ServerModel {
     _name = "mail.activity";
+    _views = {
+        [`search,${DEFAULT_MAIL_SEARCH_ID}`]: /* xml */ `<search/>`,
+        [`form,${DEFAULT_MAIL_VIEW_ID}`]: /* xml */ `<form/>`,
+    };
 
+    activity_type_id = fields.Many2one({
+        relation: "mail.activity.type",
+        default() {
+            return MailActivityType._records[0].id;
+        },
+    });
+    user_id = fields.Many2one({ relation: "res.users", default: () => serverState.userId });
     chaining_type = fields.Generic({ default: "suggest" });
+    activity_category = fields.Generic({ related: false }); // removes related from server to ease creating activities
+    res_model = fields.Char({ string: "Related Document Model", related: false }); // removes related from server to ease creating activities
 
     /** @param {number[]} ids */
     action_feedback(ids) {
@@ -27,7 +40,7 @@ export class MailActivity extends models.ServerModel {
             ["id", "in", unique(activities.map((a) => a.activity_type_id))],
         ]);
         const activityTypeById = Object.fromEntries(
-            activityTypes.map((actType) => [actType.id, actType])
+            activityTypes._records.map((actType) => [actType.id, actType])
         );
         this.write(
             activities
@@ -66,8 +79,13 @@ export class MailActivity extends models.ServerModel {
         const ResUsers = this.env["res.users"];
 
         return this.read(ids).map((record) => {
-            if (record.mail_template_ids) {
-                record.mail_template_ids = record.mail_template_ids.map((template_id) => {
+            const activityType = record.activity_type_id
+                ? MailActivityType._records.find((r) => r.id === record.activity_type_id[0])
+                : false;
+            if (activityType) {
+                record.display_name = activityType.name;
+                record.icon = activityType.icon;
+                record.mail_template_ids = activityType.mail_template_ids.map((template_id) => {
                     const template = MailTemplate._filter([["id", "=", template_id]])[0];
                     return {
                         id: template.id,
@@ -75,20 +93,13 @@ export class MailActivity extends models.ServerModel {
                     };
                 });
             }
-            const [activityType] = record.activity_type_id
-                ? MailActivityType.search_read([["id", "=", record.activity_type_id[0]]])
-                : [false];
-            if (activityType) {
-                record.display_name = activityType.name;
-                record.icon = activityType.icon;
-            }
             if (record.summary) {
                 record.display_name = record.summary;
             }
             const user = ResUsers.search_read([["id", "=", record.user_id[0]]])[0];
-            record.persona = ResPartner.mail_partner_format([user.partner_id[0]]).get(
+            record.persona = ResPartner.mail_partner_format([user.partner_id[0]])[
                 user.partner_id[0]
-            );
+            ];
             return record;
         });
     }
@@ -98,10 +109,10 @@ export class MailActivity extends models.ServerModel {
      * @param {string} domain
      * @param {number} limit
      * @param {number} offset
-     * @param {boolean} fetchDone
+     * @param {boolean} fetch_done
      * @param {KwArgs<>} [kwargs]
      */
-    get_activity_data(resModel, domain, limit, offset, fetchDone, kwargs = {}) {
+    get_activity_data(resModel, domain, limit = 0, offset = 0, fetch_done, kwargs = {}) {
         /** @type {import("mock_models").IrAttachment} */
         const IrAttachment = this.env["ir.attachment"];
         /** @type {import("mock_models").MailActivityType} */
@@ -113,7 +124,7 @@ export class MailActivity extends models.ServerModel {
         domain = kwargs.domain || domain;
         limit = kwargs.limit || limit || 0;
         offset = kwargs.offset || offset || 0;
-        fetchDone = kwargs.fetch_done ?? fetchDone ?? false;
+        fetch_done = kwargs.fetch_done ?? fetch_done ?? false;
 
         // 1. Retrieve all ongoing and completed activities according to the parameters
         const activityTypes = MailActivityType._filter([
@@ -216,7 +227,7 @@ export class MailActivity extends models.ServerModel {
                     ...Object.fromEntries(
                         Object.entries(
                             groupBy(ongoing, (a) =>
-                                this._computeStateFromDate(deserializeDate(a.date_deadline))
+                                this._compute_state_from_date(deserializeDate(a.date_deadline))
                             )
                         ).map(([state, activities]) => [state, activities.length])
                     ),
@@ -224,7 +235,7 @@ export class MailActivity extends models.ServerModel {
                 },
                 ids: ongoing.map((a) => a.id).concat(completed.map((a) => a.id)),
                 reporting_date: reportingDate ? reportingDate.toFormat("yyyy-LL-dd") : false,
-                state: ongoing.length ? this._computeStateFromDate(dateDeadline) : "done",
+                state: ongoing.length ? this._compute_state_from_date(dateDeadline) : "done",
                 user_assigned_ids: userAssignedIds,
                 ...attachmentsInfo,
             };
@@ -259,12 +270,10 @@ export class MailActivity extends models.ServerModel {
     }
 
     /**
-     * Simulate partially (time zone not supported) `_compute_state_from_date` on `mail.activity`.
-     *
      * @param {DateTime} date_deadline to convert into state
      * @returns {"today" | "planned" | "overdue"}
      */
-    _computeStateFromDate(date_deadline) {
+    _compute_state_from_date(date_deadline) {
         const now = DateTime.now();
         if (date_deadline.hasSame(now, "day")) {
             return "today";

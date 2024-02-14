@@ -1,6 +1,4 @@
-/** @odoo-module */
-
-import { Command, constants, fields, models } from "@web/../tests/web_test_helpers";
+import { Command, fields, models, serverState } from "@web/../tests/web_test_helpers";
 
 /**
  * @typedef {import("@web/core/domain").DomainListRepr} DomainListRepr
@@ -14,7 +12,7 @@ import { Command, constants, fields, models } from "@web/../tests/web_test_helpe
 export class MailMessage extends models.ServerModel {
     _name = "mail.message";
 
-    author_id = fields.Generic({ default: () => constants.PARTNER_ID });
+    author_id = fields.Generic({ default: () => serverState.partnerId });
     history_partner_ids = fields.Many2many({
         relation: "res.partner",
         string: "Partners with History",
@@ -26,7 +24,6 @@ export class MailMessage extends models.ServerModel {
         string: "Partners with Need Action",
     });
     pinned_at = fields.Generic({ default: false });
-    res_model_name = fields.Char({ string: "Res Model Name" });
 
     /**
      * @param {DomainListRepr} [domain]
@@ -42,7 +39,7 @@ export class MailMessage extends models.ServerModel {
 
         domain = kwargs.domain || domain || [];
         const notifDomain = [
-            ["res_partner_id", "=", constants.PARTNER_ID],
+            ["res_partner_id", "=", this.env.user.partner_id],
             ["is_read", "=", false],
         ];
         if (domain) {
@@ -68,14 +65,14 @@ export class MailMessage extends models.ServerModel {
             this.write([message.id], {
                 needaction: false,
                 needaction_partner_ids: message.needaction_partner_ids.filter(
-                    (partnerId) => partnerId !== constants.PARTNER_ID
+                    (partnerId) => partnerId !== this.env.user.partner_id
                 ),
             });
         }
-        const [partner] = ResPartner.read(constants.PARTNER_ID);
+        const [partner] = ResPartner.read(this.env.user.partner_id);
         BusBus._sendone(partner, "mail.message/mark_as_read", {
             message_ids: messageIds,
-            needaction_inbox_counter: ResPartner._get_needaction_count(constants.PARTNER_ID),
+            needaction_inbox_counter: ResPartner._get_needaction_count(this.env.user.partner_id),
         });
         return messageIds;
     }
@@ -101,10 +98,10 @@ export class MailMessage extends models.ServerModel {
         const MailThread = this.env["mail.thread"];
         /** @type {import("mock_models").MailTrackingValue} */
         const MailTrackingValue = this.env["mail.tracking.value"];
+        /** @type {import("mock_models").ResFake} */
+        const ResFake = this.env["res.fake"];
         /** @type {import("mock_models").ResPartner} */
         const ResPartner = this.env["res.partner"];
-        /** @type {import("mock_models").ResUsers} */
-        const ResUsers = this.env["res.users"];
 
         const messages = this._filter([["id", "in", ids]]);
         // sorted from highest ID to lowest ID (i.e. from most to least recent)
@@ -117,11 +114,7 @@ export class MailMessage extends models.ServerModel {
                 const [partner] = ResPartner._filter([["id", "=", message.author_id]], {
                     active_test: false,
                 });
-                const [user] = ResUsers._filter([["partner_id", "=", message.author_id]]);
                 author = ResPartner.mail_partner_format([partner.id])[partner.id];
-                if (user) {
-                    author["user"] = { id: user.id, isInternalUser: !user.share };
-                }
             } else {
                 author = false;
             }
@@ -154,7 +147,6 @@ export class MailMessage extends models.ServerModel {
             const linkPreviewsFormatted = linkPreviews.map((linkPreview) =>
                 MailLinkPreview._link_preview_format(linkPreview)
             );
-
             const reactionsPerContent = {};
             for (const reactionId of message.reaction_ids ?? []) {
                 const [reaction] = MailMessageReaction._filter([["id", "=", reactionId]]);
@@ -196,9 +188,10 @@ export class MailMessage extends models.ServerModel {
                 default_subject:
                     message.model &&
                     message.res_id &&
-                    MailThread._message_compute_subject(message.model, [message.res_id]).get(
-                        message.res_id
-                    ),
+                    (message.model === "res.fake"
+                        ? ResFake._message_compute_subject([message.res_id])
+                        : MailThread._message_compute_subject([message.res_id])
+                    ).get(message.res_id),
                 linkPreviews: linkPreviewsFormatted,
                 reactions: reactionGroups,
                 needaction_partner_ids: needactionPartnerIds,
@@ -258,7 +251,7 @@ export class MailMessage extends models.ServerModel {
 
         const messages = this._filter([["id", "in", ids]]);
         const notifications = MailNotification._filter([
-            ["res_partner_id", "=", constants.PARTNER_ID],
+            ["res_partner_id", "=", this.env.user.partner_id],
             ["is_read", "=", false],
             ["mail_message_id", "in", messages.map((messages) => messages.id)],
         ]);
@@ -274,13 +267,15 @@ export class MailMessage extends models.ServerModel {
             this.write([message.id], {
                 needaction: false,
                 needaction_partner_ids: message.needaction_partner_ids.filter(
-                    (partnerId) => partnerId !== constants.PARTNER_ID
+                    (partnerId) => partnerId !== this.env.user.partner_id
                 ),
             });
-            const [partner] = ResPartner.read(constants.PARTNER_ID);
+            const [partner] = ResPartner.read(this.env.user.partner_id);
             BusBus._sendone(partner, "mail.message/mark_as_read", {
                 message_ids: [message.id],
-                needaction_inbox_counter: ResPartner._get_needaction_count(constants.PARTNER_ID),
+                needaction_inbox_counter: ResPartner._get_needaction_count(
+                    this.env.user.partner_id
+                ),
             });
         }
     }
@@ -297,14 +292,18 @@ export class MailMessage extends models.ServerModel {
 
         const messages = this._filter([["id", "in", ids]]);
         for (const message of messages) {
-            const wasStared = message.starred_partner_ids.includes(constants.PARTNER_ID);
+            const wasStarred = message.starred_partner_ids.includes(this.env.user.partner_id);
             this.write([message.id], {
-                starred_partner_ids: [[wasStared ? 3 : 4, constants.PARTNER_ID]],
+                starred_partner_ids: [
+                    wasStarred
+                        ? Command.unlink(this.env.user.partner_id)
+                        : Command.link(this.env.user.partner_id),
+                ],
             });
-            const [partner] = ResPartner.read(constants.PARTNER_ID);
+            const [partner] = ResPartner.read(this.env.user.partner_id);
             BusBus._sendone(partner, "mail.message/toggle_star", {
                 message_ids: [message.id],
-                starred: !wasStared,
+                starred: !wasStarred,
             });
         }
     }
@@ -316,12 +315,12 @@ export class MailMessage extends models.ServerModel {
         /** @type {import("mock_models").ResPartner} */
         const ResPartner = this.env["res.partner"];
 
-        const messages = this._filter([["starred_partner_ids", "in", constants.PARTNER_ID]]);
+        const messages = this._filter([["starred_partner_ids", "in", this.env.user.partner_id]]);
         this.write(
             messages.map((message) => message.id),
-            { starred_partner_ids: [Command.unlink(constants.PARTNER_ID)] }
+            { starred_partner_ids: [Command.unlink(this.env.user.partner_id)] }
         );
-        const [partner] = ResPartner.read(constants.PARTNER_ID);
+        const [partner] = ResPartner.read(this.env.user.partner_id);
         BusBus._sendone(partner, "mail.message/toggle_star", {
             message_ids: messages.map((message) => message.id),
             starred: false,
@@ -329,22 +328,24 @@ export class MailMessage extends models.ServerModel {
     }
 
     /** @param {number} messageId */
-    _busNotificationTarget(messageId) {
+    _bus_notification_target(messageId) {
         /** @type {import("mock_models").DiscussChannel} */
         const DiscussChannel = this.env["discuss.channel"];
         /** @type {import("mock_models").MailGuest} */
         const MailGuest = this.env["mail.guest"];
         /** @type {import("mock_models").ResPartner} */
         const ResPartner = this.env["res.partner"];
+        /** @type {import("mock_models").ResUsers} */
+        const ResUsers = this.env["res.users"];
 
         const [message] = this.search_read([["id", "=", messageId]]);
         if (message.model === "discuss.channel") {
             return DiscussChannel.search_read([["id", "=", message.res_id]])[0];
         }
-        if (this.env.user?.is_public) {
+        if (ResUsers._is_public(this.env.uid)) {
             MailGuest._get_guest_from_context();
         }
-        return ResPartner.read(constants.PARTNER_ID)[0];
+        return ResPartner.read(this.env.user.partner_id)[0];
     }
 
     /**
@@ -365,13 +366,13 @@ export class MailMessage extends models.ServerModel {
         const [reaction] = MailMessageReaction.search_read([
             ["content", "=", content],
             ["message_id", "=", messageId],
-            ["partner_id", "=", constants.PARTNER_ID],
+            ["partner_id", "=", this.env.user.partner_id],
         ]);
         if (action === "add" && !reaction) {
             MailMessageReaction.create({
                 content,
                 message_id: messageId,
-                partner_id: constants.PARTNER_ID,
+                partner_id: this.env.user.partner_id,
             });
         }
         if (action === "remove" && reaction) {
@@ -382,7 +383,7 @@ export class MailMessage extends models.ServerModel {
             ["content", "=", content],
         ]);
         const guest = MailGuest._get_guest_from_context();
-        const [partner] = ResPartner.read(constants.PARTNER_ID);
+        const [partner] = ResPartner.read(this.env.user.partner_id);
         const result = {
             id: messageId,
             reactions: [
@@ -396,7 +397,7 @@ export class MailMessage extends models.ServerModel {
                             [
                                 action === "add" ? "ADD" : "DELETE",
                                 {
-                                    id: guest ? guest.id : constants.PARTNER_ID,
+                                    id: guest ? guest.id : partner.id,
                                     name: guest ? guest.name : partner.name,
                                     type: guest ? "guest" : "partner",
                                 },
@@ -406,7 +407,7 @@ export class MailMessage extends models.ServerModel {
                 ],
             ],
         };
-        BusBus._sendone(this._busNotificationTarget(messageId), "mail.record/insert", {
+        BusBus._sendone(this._bus_notification_target(messageId), "mail.record/insert", {
             Message: result,
         });
     }
@@ -464,13 +465,13 @@ export class MailMessage extends models.ServerModel {
                 const follower = MailFollowers._filter([
                     ["res_model", "=", message.model],
                     ["res_id", "=", message.res_id],
-                    ["partner_id", "=", constants.PARTNER_ID],
+                    ["partner_id", "=", this.env.user.partner_id],
                 ]);
                 if (follower.length !== 0) {
                     message.thread.selfFollower = {
                         id: follower[0].id,
                         is_active: true,
-                        partner: { id: constants.PARTNER_ID, type: "partner" },
+                        partner: { id: this.env.user.partner_id, type: "partner" },
                     };
                 }
             }
@@ -506,7 +507,7 @@ export class MailMessage extends models.ServerModel {
                     ? {
                           id: message.res_id,
                           model: message.model,
-                          modelName: message.res_model_name,
+                          modelName: this.env[message.model]._description,
                       }
                     : false,
             };

@@ -1,25 +1,20 @@
-/** @odoo-module */
+import { test } from "@odoo/hoot";
 
-import { beforeEach, test } from "@odoo/hoot";
+import {
+    click,
+    contains,
+    defineMailModels,
+    insertText,
+    startClient,
+    startServer,
+    triggerHotkey,
+} from "../../../mail_test_helpers";
+import { Command, serverState } from "@web/../tests/web_test_helpers";
 
-import { commandService } from "@web/core/commands/command_service";
-import { registry } from "@web/core/registry";
-import { click, insertText, start, startServer, triggerHotkey } from "../../../mail_test_helpers";
-import { Command, constants, contains } from "@web/../tests/web_test_helpers";
+defineMailModels();
 
-const serviceRegistry = registry.category("services");
-
-beforeEach(() => {
-    serviceRegistry.add("command", commandService);
-    registry
-        .category("command_categories")
-        .add("default", { label: "default" })
-        .add("discuss_mentioned", { namespace: "@", name: "Mentions" }, { sequence: 10 })
-        .add("discuss_recent", { namespace: "#", name: "Recent" }, { sequence: 10 });
-});
-
-test.skip("open the chatWindow of a user from the command palette", async () => {
-    await start();
+test("open the chatWindow of a user from the command palette", async () => {
+    await startClient();
     triggerHotkey("control+k");
     await insertText(".o_command_palette_search input", "@");
     await contains(".o_command", { count: 2 });
@@ -27,13 +22,13 @@ test.skip("open the chatWindow of a user from the command palette", async () => 
     await contains(".o-mail-ChatWindow", { text: "OdooBot" });
 });
 
-test.skip("open the chatWindow of a channel from the command palette", async () => {
+test("open the chatWindow of a channel from the command palette", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({
         name: "general",
         channel_member_ids: [
             Command.create({
-                partner_id: constants.PARTNER_ID,
+                partner_id: serverState.partnerId,
                 last_interest_dt: "2021-01-02 10:00:00", // same last interest to sort by id
             }),
         ],
@@ -42,12 +37,12 @@ test.skip("open the chatWindow of a channel from the command palette", async () 
         name: "project",
         channel_member_ids: [
             Command.create({
-                partner_id: constants.PARTNER_ID,
+                partner_id: serverState.partnerId,
                 last_interest_dt: "2021-01-02 10:00:00", // same last interest to sort by id
             }),
         ],
     });
-    await start();
+    await startClient();
     triggerHotkey("control+k");
     await insertText(".o_command_palette_search input", "#");
     await contains(".o_command", { count: 2 });
@@ -57,12 +52,12 @@ test.skip("open the chatWindow of a channel from the command palette", async () 
     await contains(".o-mail-ChatWindow", { text: "project" });
 });
 
-test.skip("Channel mentions in the command palette of Discuss app with @", async () => {
+test("Channel mentions in the command palette of Discuss app with @", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Mario" });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            Command.create({ partner_id: constants.PARTNER_ID }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
         channel_type: "group",
@@ -77,9 +72,9 @@ test.skip("Channel mentions in the command palette of Discuss app with @", async
     pyEnv["mail.notification"].create({
         mail_message_id: messageId,
         notification_type: "inbox",
-        res_partner_id: constants.PARTNER_ID,
+        res_partner_id: serverState.partnerId,
     });
-    await start();
+    await startClient();
     triggerHotkey("control+k");
     await insertText(".o_command_palette_search input", "@", { replace: true });
     await contains(".o_command_palette .o_command_category", {
@@ -98,13 +93,13 @@ test.skip("Channel mentions in the command palette of Discuss app with @", async
     await contains(".o-mail-ChatWindow", { text: "Mitchell Admin and Mario" });
 });
 
-test.skip("Max 3 most recent channels in command palette of Discuss app with #", async () => {
+test("Max 3 most recent channels in command palette of Discuss app with #", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({ name: "channel_1" });
     pyEnv["discuss.channel"].create({ name: "channel_2" });
     pyEnv["discuss.channel"].create({ name: "channel_3" });
     pyEnv["discuss.channel"].create({ name: "channel_4" });
-    await start();
+    await startClient();
     triggerHotkey("control+k");
     await insertText(".o_command_palette_search input", "#", { replace: true });
     await contains(".o_command_palette .o_command_category", {

@@ -59,9 +59,10 @@ patch(WebClient.prototype, {
         // This may occur if the subscription was refreshed by the browser,
         // but it may also happen if the subscription has been revoked or lost.
         if (!subscription) {
+            const applicationServerKey = await this._getApplicationServerKey();
             subscription = await pushManager.subscribe({
                 userVisibleOnly: true,
-                applicationServerKey: await this._getApplicationServerKey(),
+                applicationServerKey,
             });
             browser.localStorage.setItem(`${USER_DEVICES_MODEL}_endpoint`, subscription.endpoint);
         }

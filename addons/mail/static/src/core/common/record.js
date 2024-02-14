@@ -172,7 +172,7 @@ function sortRecordList(recordListFullProxy, func) {
 }
 
 /** @returns {import("models").Store} */
-export function makeStore(env) {
+export function makeStore(env, { localRegistry } = {}) {
     Record.UPDATE = 0;
     const recordByLocalId = reactive(new Map());
     const res = {
@@ -185,7 +185,8 @@ export function makeStore(env) {
         },
     };
     const Models = {};
-    for (const [name, _OgClass] of modelRegistry.getEntries()) {
+    const chosenModelRegistry = localRegistry ?? modelRegistry;
+    for (const [name, _OgClass] of chosenModelRegistry.getEntries()) {
         /** @type {typeof Record} */
         const OgClass = _OgClass;
         if (res.store[name]) {
@@ -1044,6 +1045,10 @@ export class Record {
      */
     static trusted = false;
     static id;
+    /** @type {import("@web/env").OdooEnv} */
+    static env;
+    /** @type {import("@web/env").OdooEnv} */
+    env;
     /** @type {Object<string, Record>} */
     static records;
     /** @type {import("models").Store} */
@@ -1320,8 +1325,12 @@ export class Record {
         const Model = toRaw(this);
         return this.records[Model.localId(data)];
     }
-    static register() {
-        modelRegistry.add(this.name, this);
+    static register(localRegistry) {
+        if (localRegistry) {
+            localRegistry.add(this.name, this);
+        } else {
+            modelRegistry.add(this.name, this);
+        }
     }
     static localId(data) {
         const Model = toRaw(this);

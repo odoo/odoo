@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { expect, test } from "@odoo/hoot";
 
 import {
@@ -10,15 +8,18 @@ import {
 import {
     click,
     contains,
+    defineMailModels,
     insertText,
     patchUiSize,
-    start,
+    startClient,
     startServer,
 } from "../../../mail_test_helpers";
-import { Command, constants } from "@web/../tests/web_test_helpers";
+import { Command, serverState } from "@web/../tests/web_test_helpers";
 
-test.skip("basic rendering", async () => {
-    await start();
+defineMailModels();
+
+test("basic rendering", async () => {
+    await startClient();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click("button", { text: "New Message" });
     await contains(".o-mail-ChatWindow");
@@ -33,23 +34,23 @@ test.skip("basic rendering", async () => {
     await contains(".o-discuss-ChannelSelector");
 });
 
-test.skip("focused on open [REQUIRE FOCUS]", async () => {
-    await start();
+test("focused on open [REQUIRE FOCUS]", async () => {
+    await startClient();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click("button", { text: "New Message" });
     await contains(".o-mail-ChatWindow .o-discuss-ChannelSelector input:focus");
 });
 
-test.skip("close", async () => {
-    await start();
+test("close", async () => {
+    await startClient();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click("button", { text: "New Message" });
     await click(".o-mail-ChatWindow-command[title='Close Chat Window']");
     await contains(".o-mail-ChatWindow", { count: 0 });
 });
 
-test.skip("fold", async () => {
-    await start();
+test("fold", async () => {
+    await startClient();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click("button", { text: "New Message" });
     await contains(".o-discuss-ChannelSelector");
@@ -59,7 +60,7 @@ test.skip("fold", async () => {
     await contains(".o-discuss-ChannelSelector");
 });
 
-test.skip('open chat from "new message" chat window should open chat in place of this "new message" chat window', async () => {
+test('open chat from "new message" chat window should open chat in place of this "new message" chat window', async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Partner 131" });
     pyEnv["res.users"].create({ partner_id: partnerId });
@@ -67,13 +68,13 @@ test.skip('open chat from "new message" chat window should open chat in place of
         {
             name: "channel-1",
             channel_member_ids: [
-                Command.create({ fold_state: "open", partner_id: constants.PARTNER_ID }),
+                Command.create({ fold_state: "open", partner_id: serverState.partnerId }),
             ],
         },
         {
             name: "channel-2",
             channel_member_ids: [
-                Command.create({ fold_state: "closed", partner_id: constants.PARTNER_ID }),
+                Command.create({ fold_state: "closed", partner_id: serverState.partnerId }),
             ],
         },
     ]);
@@ -83,7 +84,7 @@ test.skip('open chat from "new message" chat window should open chat in place of
     ).toBeLessThan(1920, {
         message: "should have enough space to open 3 chat windows simultaneously",
     });
-    await start();
+    await startClient();
     // open "new message" chat window
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-ChatWindow", { text: "channel-1" });
@@ -103,7 +104,7 @@ test.skip('open chat from "new message" chat window should open chat in place of
     await contains(":nth-child(2 of .o-mail-ChatWindow)", { text: "Partner 131" });
 });
 
-test.skip("new message chat window should close on selecting the user if chat with the user is already open", async () => {
+test("new message chat window should close on selecting the user if chat with the user is already open", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Partner 131" });
     pyEnv["res.users"].create({ partner_id: partnerId });
@@ -111,14 +112,14 @@ test.skip("new message chat window should close on selecting the user if chat wi
         channel_member_ids: [
             Command.create({
                 fold_state: "open",
-                partner_id: constants.PARTNER_ID,
+                partner_id: serverState.partnerId,
             }),
             Command.create({ partner_id: partnerId }),
         ],
         channel_type: "chat",
         name: "Partner 131",
     });
-    await start();
+    await startClient();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click("button", { text: "New Message" });
     await insertText(".o-discuss-ChannelSelector input", "131");
@@ -127,11 +128,11 @@ test.skip("new message chat window should close on selecting the user if chat wi
     await contains(".o-mail-ChatWindow");
 });
 
-test.skip("new message autocomplete should automatically select first result", async () => {
+test("new message autocomplete should automatically select first result", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Partner 131" });
     pyEnv["res.users"].create({ partner_id: partnerId });
-    await start();
+    await startClient();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click("button", { text: "New Message" });
     await insertText(".o-discuss-ChannelSelector input", "131");

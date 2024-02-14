@@ -1,23 +1,31 @@
-/** @odoo-module */
-
 import { expect, test } from "@odoo/hoot";
-import { click, contains, openFormView, start, startServer } from "../mail_test_helpers";
-import { constants, onRpc } from "@web/../tests/web_test_helpers";
+import {
+    click,
+    contains,
+    defineMailModels,
+    onRpcBefore,
+    openFormView,
+    startClient,
+    startServer,
+} from "../mail_test_helpers";
+import { serverState } from "@web/../tests/web_test_helpers";
 
-test.skip("Toggle display of original/translated version of chatter message", async () => {
+defineMailModels();
+
+test("Toggle display of original/translated version of chatter message", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     pyEnv["mail.message"].create({
         model: "res.partner",
         body: "Al mal tiempo, buena cara.",
-        author_id: constants.ODOOBOT_ID,
+        author_id: serverState.odoobotId,
         res_id: partnerId,
     });
-    onRpc("/mail/message/translate", (route, args) => {
+    onRpcBefore("/mail/message/translate", () => {
         expect.step("Request");
         return { body: "To bad weather, good face.", lang_name: "Spanish", error: null };
     });
-    await start();
+    await startClient();
     await openFormView("res.partner", partnerId);
     await click("button[title='Expand']");
     await contains("span[title='Translate']");
@@ -40,7 +48,7 @@ test.skip("Toggle display of original/translated version of chatter message", as
     expect(["Request"]).toVerifySteps();
 });
 
-test.skip("translation of email message", async () => {
+test("translation of email message", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     pyEnv["mail.message"].create({
@@ -50,10 +58,10 @@ test.skip("translation of email message", async () => {
         author_id: partnerId,
         res_id: partnerId,
     });
-    onRpc("/mail/message/translate", (route, args) => {
+    onRpcBefore("/mail/message/translate", (args) => {
         return { body: "To bad weather, good face.", lang_name: "Spanish", error: null };
     });
-    await start();
+    await startClient();
     await openFormView("res.partner", partnerId);
     await contains("span", {
         text: "Al mal tiempo, buena cara.",

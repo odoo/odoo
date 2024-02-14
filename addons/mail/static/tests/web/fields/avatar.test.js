@@ -1,13 +1,13 @@
-/** @odoo-module */
-
 import { test } from "@odoo/hoot";
 
 import { Avatar } from "@mail/views/web/fields/avatar/avatar";
-import { click, contains, start } from "../../mail_test_helpers";
+import { click, contains, defineMailModels, startClient } from "../../mail_test_helpers";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 
-test.skip("basic rendering", async () => {
-    const { env } = await start();
+defineMailModels();
+
+test("basic rendering", async () => {
+    const env = await startClient();
     await mountWithCleanup(Avatar, {
         env,
         props: {

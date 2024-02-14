@@ -3,6 +3,7 @@
 import { isVisible } from "@web/core/utils/ui";
 import { Deferred, tick } from "@odoo/hoot-mock";
 import { __debug__, after, afterAll, beforeAll, expect, getFixture } from "@odoo/hoot";
+import { isMacOS } from "@web/core/browser/feature_detection";
 
 /** @param {EventInit} [args] */
 const mapBubblingEvent = (args) => ({ ...args, bubbles: true });
@@ -456,6 +457,47 @@ export async function triggerEvents(selector, events, options) {
     await contains(selector, { triggerEvents: events, ...options });
 }
 
+/**
+ * Triggers an hotkey properly disregarding the operating system.
+ *
+ * @param {string} hotkey
+ * @param {boolean} addOverlayModParts
+ * @param {KeyboardEventInit} eventAttrs
+ */
+export async function triggerHotkey(hotkey, addOverlayModParts = false, eventAttrs = {}) {
+    eventAttrs.key = hotkey.split("+").pop();
+    if (/shift/i.test(hotkey)) {
+        eventAttrs.shiftKey = true;
+    }
+    if (/control/i.test(hotkey)) {
+        if (isMacOS()) {
+            eventAttrs.metaKey = true;
+        } else {
+            eventAttrs.ctrlKey = true;
+        }
+    }
+    if (/alt/i.test(hotkey) || addOverlayModParts) {
+        if (isMacOS()) {
+            eventAttrs.ctrlKey = true;
+        } else {
+            eventAttrs.altKey = true;
+        }
+    }
+    if (!("bubbles" in eventAttrs)) {
+        eventAttrs.bubbles = true;
+    }
+    const [keydownEvent, keyupEvent] = await _triggerEvents(
+        document.activeElement,
+        null,
+        [
+            ["keydown", eventAttrs],
+            ["keyup", eventAttrs],
+        ],
+        { skipVisibilityCheck: true }
+    );
+    return { keydownEvent, keyupEvent };
+}
+
 function log(ok, message) {
     __debug__.expect(ok).toBeTruthy({ message });
 }
@@ -492,7 +534,7 @@ beforeAll(() => (hasUsedContainsPositively = false));
  * @property {boolean} [shadowRoot] if provided, targets the shadowRoot of the found elements.
  * @property {number|"bottom"} [setScroll] if provided, sets the scrollTop on the first found
  *  element.
- * @property {HTMLElement} [target=getFixture()]
+ * @property {HTMLElement|OdooEnv} [target=getFixture()]
  * @property {string[]} [triggerEvents] if provided, triggers the given events on the found element
  * @property {string} [text] if provided, the textContent of the found element(s) or one of their
  *  descendants must match. Use `textContent` option for a match on the found element(s) only.
@@ -512,8 +554,8 @@ class Contains {
         this.selector = selector;
         this.options = options;
         this.options.count ??= 1;
-        this.options.targetParam = this.options.target;
-        this.options.target ??= getFixture();
+        this.options.targetParam = this.options.target?.target ?? this.options.target; // when OdooEnv, special key `target`. See @startClient
+        this.options.target = this.options.targetParam ?? getFixture();
         let selectorMessage = `${this.options.count} of "${this.selector}"`;
         if (this.options.visible !== undefined) {
             selectorMessage = `${selectorMessage} ${
@@ -580,8 +622,8 @@ class Contains {
         this.onScroll = () => this.runOnce("after scroll");
         if (!this.runOnce("immediately")) {
             this.timer = setTimeout(
-                () => this.runOnce("Timeout of 5 seconds", { crashOnFail: true }),
-                5000
+                () => this.runOnce("Timeout of 3 seconds", { crashOnFail: true }),
+                3000
             );
             this.observer = new MutationObserver((mutations) => {
                 try {
@@ -785,7 +827,13 @@ class Contains {
         if (!target) {
             return;
         }
-        const baseRes = [...target.querySelectorAll(this.selector)]
+        let elems;
+        if (target === getFixture() && document.querySelector(this.selector) === target) {
+            elems = [target];
+        } else {
+            elems = [...target.querySelectorAll(this.selector)];
+        }
+        const baseRes = elems
             .map((el) => (this.options.shadowRoot ? el.shadowRoot : el))
             .filter((el) => el);
         /** @type {Contains[]} */

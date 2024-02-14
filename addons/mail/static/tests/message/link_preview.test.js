@@ -1,21 +1,24 @@
-/** @odoo-module */
-
 import { expect, test } from "@odoo/hoot";
 
-import { rpc } from "@web/core/network/rpc";
+/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
+let rpc;
 import {
     assertSteps,
     click,
     contains,
+    defineMailModels,
     insertText,
+    onRpcBefore,
     openDiscuss,
-    start,
+    startClient,
     startServer,
     step,
 } from "../mail_test_helpers";
-import { onRpc } from "@web/../tests/web_test_helpers";
+import { rpcWithEnv } from "@mail/utils/common/misc";
 
-test.skip("auto layout with link preview list", async () => {
+defineMailModels();
+
+test("auto layout with link preview list", async () => {
     const pyEnv = await startServer();
     const linkPreviewId = pyEnv["mail.link.preview"].create({
         og_description: "test description",
@@ -33,12 +36,12 @@ test.skip("auto layout with link preview list", async () => {
         model: "discuss.channel",
         res_id: channelId,
     });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await contains(".o-mail-Message .o-mail-LinkPreviewList");
 });
 
-test.skip("auto layout with link preview as gif", async () => {
+test("auto layout with link preview as gif", async () => {
     const pyEnv = await startServer();
     const linkPreviewId = pyEnv["mail.link.preview"].create({
         og_description: "test description",
@@ -56,12 +59,12 @@ test.skip("auto layout with link preview as gif", async () => {
         model: "discuss.channel",
         res_id: channelId,
     });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await contains(".o-mail-LinkPreviewImage");
 });
 
-test.skip("simplest card layout", async () => {
+test("simplest card layout", async () => {
     const pyEnv = await startServer();
     const linkPreviewId = pyEnv["mail.link.preview"].create({
         og_description: "Description",
@@ -77,14 +80,14 @@ test.skip("simplest card layout", async () => {
         model: "discuss.channel",
         res_id: channelId,
     });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await contains(".o-mail-LinkPreviewCard");
     await contains(".o-mail-LinkPreviewCard h6", { text: "Article title" });
     await contains(".o-mail-LinkPreviewCard p", { text: "Description" });
 });
 
-test.skip("simplest card layout with image", async () => {
+test("simplest card layout with image", async () => {
     const pyEnv = await startServer();
     const linkPreviewId = pyEnv["mail.link.preview"].create({
         og_description: "Description",
@@ -101,7 +104,7 @@ test.skip("simplest card layout with image", async () => {
         model: "discuss.channel",
         res_id: channelId,
     });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await contains(".o-mail-LinkPreviewCard");
     await contains(".o-mail-LinkPreviewCard h6", { text: "Article title" });
@@ -109,7 +112,7 @@ test.skip("simplest card layout with image", async () => {
     await contains(".o-mail-LinkPreviewCard img");
 });
 
-test.skip("Link preview video layout", async () => {
+test("Link preview video layout", async () => {
     const pyEnv = await startServer();
     const linkPreviewId = pyEnv["mail.link.preview"].create({
         og_description: "Description",
@@ -126,7 +129,7 @@ test.skip("Link preview video layout", async () => {
         model: "discuss.channel",
         res_id: channelId,
     });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await contains(".o-mail-LinkPreviewVideo");
     await contains(".o-mail-LinkPreviewVideo h6", { text: "video title" });
@@ -134,7 +137,7 @@ test.skip("Link preview video layout", async () => {
     await contains(".o-mail-LinkPreviewVideo-overlay");
 });
 
-test.skip("Link preview image layout", async () => {
+test("Link preview image layout", async () => {
     const pyEnv = await startServer();
     const linkPreviewId = pyEnv["mail.link.preview"].create({
         image_mimetype: "image/jpg",
@@ -149,12 +152,12 @@ test.skip("Link preview image layout", async () => {
         model: "discuss.channel",
         res_id: channelId,
     });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await contains(".o-mail-LinkPreviewImage");
 });
 
-test.skip("Remove link preview Gif", async () => {
+test("Remove link preview Gif", async () => {
     const pyEnv = await startServer();
     const linkPreviewId = pyEnv["mail.link.preview"].create({
         og_description: "test description",
@@ -172,7 +175,7 @@ test.skip("Remove link preview Gif", async () => {
         model: "discuss.channel",
         res_id: channelId,
     });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await click(".o-mail-LinkPreviewImage button[aria-label='Remove']");
     await contains("p", { text: "Do you really want to delete this preview?" });
@@ -180,7 +183,7 @@ test.skip("Remove link preview Gif", async () => {
     await contains(".o-mail-LinkPreviewImage", { count: 0 });
 });
 
-test.skip("Remove link preview card", async () => {
+test("Remove link preview card", async () => {
     const pyEnv = await startServer();
     const linkPreviewId = pyEnv["mail.link.preview"].create({
         og_description: "Description",
@@ -196,7 +199,7 @@ test.skip("Remove link preview card", async () => {
         model: "discuss.channel",
         res_id: channelId,
     });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await click(".o-mail-LinkPreviewCard button[aria-label='Remove']");
     await contains("p", { text: "Do you really want to delete this preview?" });
@@ -204,7 +207,7 @@ test.skip("Remove link preview card", async () => {
     await contains(".o-mail-LinkPreviewCard", { count: 0 });
 });
 
-test.skip("Remove link preview video", async () => {
+test("Remove link preview video", async () => {
     const pyEnv = await startServer();
     const linkPreviewId = pyEnv["mail.link.preview"].create({
         og_description: "Description",
@@ -221,7 +224,7 @@ test.skip("Remove link preview video", async () => {
         model: "discuss.channel",
         res_id: channelId,
     });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await click(".o-mail-LinkPreviewVideo button[aria-label='Remove']");
     await contains("p", { text: "Do you really want to delete this preview?" });
@@ -229,7 +232,7 @@ test.skip("Remove link preview video", async () => {
     await contains(".o-mail-LinkPreviewVideo", { count: 0 });
 });
 
-test.skip("Remove link preview image", async () => {
+test("Remove link preview image", async () => {
     const pyEnv = await startServer();
     const linkPreviewId = pyEnv["mail.link.preview"].create({
         image_mimetype: "image/jpg",
@@ -244,7 +247,7 @@ test.skip("Remove link preview image", async () => {
         model: "discuss.channel",
         res_id: channelId,
     });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await click(".o-mail-LinkPreviewImage button[aria-label='Remove']");
     await contains("p", { text: "Do you really want to delete this preview?" });
@@ -252,7 +255,7 @@ test.skip("Remove link preview image", async () => {
     await contains(".o-mail-LinkPreviewImage", { count: 0 });
 });
 
-test.skip("No crash on receiving link preview of non-known message", async () => {
+test("No crash on receiving link preview of non-known message", async () => {
     const pyEnv = await startServer();
     const linkPreviewId = pyEnv["mail.link.preview"].create({
         image_mimetype: "image/jpg",
@@ -267,7 +270,8 @@ test.skip("No crash on receiving link preview of non-known message", async () =>
         model: "discuss.channel",
         res_id: channelId,
     });
-    await start();
+    const env = await startClient();
+    rpc = rpcWithEnv(env);
     await openDiscuss();
     rpc("/mail/link_preview", { message_id: messageId });
     expect(true).toBeTruthy();
@@ -275,7 +279,7 @@ test.skip("No crash on receiving link preview of non-known message", async () =>
     expect(true).toBeTruthy();
 });
 
-test.skip("Squash the message and the link preview when the link preview is an image and the link is the only text in the message", async () => {
+test("Squash the message and the link preview when the link preview is an image and the link is the only text in the message", async () => {
     const pyEnv = await startServer();
     const linkPreviewId = pyEnv["mail.link.preview"].create({
         image_mimetype: "image/jpg",
@@ -290,13 +294,13 @@ test.skip("Squash the message and the link preview when the link preview is an i
         model: "discuss.channel",
         res_id: channelId,
     });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await contains(".o-mail-LinkPreviewImage");
     await contains(".o-mail-Message-bubble", { count: 0 });
 });
 
-test.skip("Link preview and message should not be squashed when the link preview is not an image", async () => {
+test("Link preview and message should not be squashed when the link preview is not an image", async () => {
     const pyEnv = await startServer();
     const linkPreviewId = pyEnv["mail.link.preview"].create({
         og_description: "Description",
@@ -312,12 +316,12 @@ test.skip("Link preview and message should not be squashed when the link preview
         model: "discuss.channel",
         res_id: channelId,
     });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await contains(".o-mail-Message-bubble");
 });
 
-test.skip("Link preview and message should not be squashed when there is more than the link in the message", async () => {
+test("Link preview and message should not be squashed when there is more than the link in the message", async () => {
     const pyEnv = await startServer();
     const linkPreviewId = pyEnv["mail.link.preview"].create({
         image_mimetype: "image/jpg",
@@ -332,22 +336,22 @@ test.skip("Link preview and message should not be squashed when there is more th
         model: "discuss.channel",
         res_id: channelId,
     });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await contains(".o-mail-Message-bubble");
 });
 
-test.skip("Sending message with link preview URL should show a link preview card", async () => {
+test("Sending message with link preview URL should show a link preview card", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "wololo" });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "https://make-link-preview.com");
     await click("button:not([disabled])", { text: "Send" });
     await contains(".o-mail-LinkPreviewCard");
 });
 
-test.skip("Delete all link previews at once", async () => {
+test("Delete all link previews at once", async () => {
     const pyEnv = await startServer();
     const linkPreviewIds = pyEnv["mail.link.preview"].create([
         {
@@ -370,7 +374,7 @@ test.skip("Delete all link previews at once", async () => {
         model: "discuss.channel",
         res_id: channelId,
     });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await click(".o-mail-LinkPreviewCard button[aria-label='Remove']");
     await click(".modal-footer button", { text: "Delete all previews" });
@@ -378,11 +382,11 @@ test.skip("Delete all link previews at once", async () => {
     await contains(".o-mail-LinkPreviewImage", { count: 0 });
 });
 
-test.skip("link preview request is only made when message contains URL", async () => {
+test("link preview request is only made when message contains URL", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "Sales" });
-    onRpc("/mail/link_preview", () => step("/mail/link_preview"));
-    await start();
+    onRpcBefore("/mail/link_preview", () => step("/mail/link_preview"));
+    await startClient();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "Hello, this message does not contain any link");
     await click("button:enabled", { text: "Send" });

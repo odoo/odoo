@@ -1,31 +1,35 @@
-/** @odoo-module */
-
 import { test } from "@odoo/hoot";
 import { HIGHLIGHT_CLASS } from "@mail/core/common/message_search_hook";
 import {
     SIZES,
     click,
     contains,
+    defineMailModels,
     insertText,
     openFormView,
     patchUiSize,
-    start,
+    scroll,
+    startClient,
     startServer,
     triggerHotkey,
 } from "../../mail_test_helpers";
-import { constants } from "@web/../tests/web_test_helpers";
+import { serverState } from "@web/../tests/web_test_helpers";
 
-test.skip("Chatter should display search icon", async () => {
+defineMailModels();
+
+test("Chatter should display search icon", async () => {
+    const pyEnv = await startServer();
     patchUiSize({ size: SIZES.XXL });
-    const { pyEnv } = await start();
+    await startClient();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
     await openFormView("res.partner", partnerId);
     await contains("[title='Search Messages']");
 });
 
-test.skip("Click on the search icon should open the search form", async () => {
+test("Click on the search icon should open the search form", async () => {
+    const pyEnv = await startServer();
     patchUiSize({ size: SIZES.XXL });
-    const { pyEnv } = await start();
+    await startClient();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
     await openFormView("res.partner", partnerId);
     await click("[title='Search Messages']");
@@ -33,7 +37,7 @@ test.skip("Click on the search icon should open the search form", async () => {
     await contains(".o_searchview_input");
 });
 
-test.skip("Click again on the search icon should close the search form", async () => {
+test("Click again on the search icon should close the search form", async () => {
     patchUiSize({ size: SIZES.XXL });
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
@@ -42,7 +46,7 @@ test.skip("Click again on the search icon should close the search form", async (
         model: "res.partner",
         res_id: partnerId,
     });
-    await start();
+    await startClient();
     await openFormView("res.partner", partnerId);
     await click(".o-mail-Chatter-topbar [title='Search Messages']");
     await contains(".o_searchview");
@@ -51,7 +55,7 @@ test.skip("Click again on the search icon should close the search form", async (
     await contains(".o_searchview_input", { count: 0 });
 });
 
-test.skip("Search in chatter", async () => {
+test("Search in chatter", async () => {
     patchUiSize({ size: SIZES.XXL });
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
@@ -60,7 +64,7 @@ test.skip("Search in chatter", async () => {
         model: "res.partner",
         res_id: partnerId,
     });
-    await start();
+    await startClient();
     await openFormView("res.partner", partnerId);
     await click("[title='Search Messages']");
     await insertText(".o_searchview_input", "empty");
@@ -68,7 +72,7 @@ test.skip("Search in chatter", async () => {
     await contains(".o-mail-Chatter-search .o-mail-Message");
 });
 
-test.skip("Close button should close the search panel", async () => {
+test("Close button should close the search panel", async () => {
     patchUiSize({ size: SIZES.XXL });
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
@@ -77,7 +81,7 @@ test.skip("Close button should close the search panel", async () => {
         model: "res.partner",
         res_id: partnerId,
     });
-    await start();
+    await startClient();
     await openFormView("res.partner", partnerId);
     await click(".o-mail-Chatter-topbar [title='Search Messages']");
     await insertText(".o_searchview_input", "empty");
@@ -87,7 +91,7 @@ test.skip("Close button should close the search panel", async () => {
     await contains(".o-mail-Chatter-search", { count: 0 });
 });
 
-test.skip("Search in chatter should be hightligted", async () => {
+test("Search in chatter should be hightligted", async () => {
     patchUiSize({ size: SIZES.XXL });
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
@@ -96,7 +100,7 @@ test.skip("Search in chatter should be hightligted", async () => {
         model: "res.partner",
         res_id: partnerId,
     });
-    await start();
+    await startClient();
     await openFormView("res.partner", partnerId);
     await click("[title='Search Messages']");
     await insertText(".o_searchview_input", "empty");
@@ -104,13 +108,13 @@ test.skip("Search in chatter should be hightligted", async () => {
     await contains(`.o-mail-Chatter-search .o-mail-Message .${HIGHLIGHT_CLASS}`);
 });
 
-test.skip("Scrolling bottom in non-aside chatter should load more searched message", async () => {
+test("Scrolling bottom in non-aside chatter should load more searched message", async () => {
     patchUiSize({ size: SIZES.LG }); // non-aside
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
     for (let i = 0; i < 60; i++) {
         pyEnv["mail.message"].create({
-            author_id: constants.PARTNER_ID,
+            author_id: serverState.partnerId,
             body: "This is a message",
             attachment_ids: [],
             message_type: "comment",
@@ -118,7 +122,7 @@ test.skip("Scrolling bottom in non-aside chatter should load more searched messa
             res_id: partnerId,
         });
     }
-    await start();
+    await startClient();
     await openFormView("res.partner", partnerId);
     await click("[title='Search Messages']");
     await insertText(".o_searchview_input", "message");

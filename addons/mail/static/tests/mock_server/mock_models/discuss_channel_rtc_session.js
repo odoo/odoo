@@ -1,9 +1,28 @@
-/** @odoo-module */
-
 import { models } from "@web/../tests/web_test_helpers";
 
 export class DiscussChannelRtcSession extends models.ServerModel {
     _name = "discuss.channel.rtc.session";
+
+    create() {
+        /** @type {import("mock_models").BusBus} */
+        const BusBus = this.env["bus.bus"];
+        /** @type {import("mock_models").DiscussChannel} */
+        const DiscussChannel = this.env["discuss.channel"];
+
+        const sessionIds = super.create(...arguments);
+        const channelInfo = this._mail_rtc_session_format_by_channel(sessionIds);
+        const notifications = [];
+        for (const [channelId, sessionData] of Object.entries(channelInfo)) {
+            const [channel] = DiscussChannel.search_read([["id", "=", Number(channelId)]]);
+            notifications.push([
+                channel,
+                "discuss.channel/rtc_sessions_update",
+                { id: channel.id, rtcSessions: [["ADD", sessionData]] },
+            ]);
+        }
+        BusBus._sendmany(notifications);
+        return sessionIds;
+    }
 
     /**
      * @param {number} id
@@ -36,15 +55,40 @@ export class DiscussChannelRtcSession extends models.ServerModel {
      * @param {{ extra?; boolean }} options
      */
     _mail_rtc_session_format_by_channel(ids, options) {
+        /** @type {import("mock_models").DiscussChanneleMember} */
+        const DiscussChannelMember = this.env["discuss.channel.member"];
+
         const rtcSessions = this._filter([["id", "in", ids]]);
         /** @type {Record<string, any>} */
         const data = {};
         for (const rtcSession of rtcSessions) {
-            if (!data[rtcSession.channel_id]) {
-                data[rtcSession.channel_id] = [];
+            const [member] = DiscussChannelMember.read(rtcSession.channel_member_id);
+            if (!data[member.channel_id[0]]) {
+                data[member.channel_id[0]] = [];
             }
-            data[rtcSession.channel_id].push(this._mail_rtc_session_format(rtcSession.id, options));
+            data[member.channel_id[0]].push(this._mail_rtc_session_format(rtcSession.id, options));
         }
         return data;
+    }
+
+    /**
+     * @param {number} id
+     * @param {object} values
+     */
+    _update_and_broadcast(id, values) {
+        /** @type {import("mock_models").BusBus} */
+        const BusBus = this.env["bus.bus"];
+        /** @type {import("mock_models").DiscussChannel} */
+        const DiscussChannel = this.env["discuss.channel"];
+
+        this.write([id], values);
+        const sessionData = this._mail_rtc_session_format(id);
+        const [channel] = DiscussChannel.search_read([
+            ["id", "=", sessionData.channelMember.thread.id],
+        ]);
+        BusBus._sendone(channel, "discuss.channel.rtc.session/update_and_broadcast", {
+            data: sessionData,
+            channelId: channel.id,
+        });
     }
 }

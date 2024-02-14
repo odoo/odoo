@@ -1,17 +1,18 @@
-/** @odoo-module */
-
 import { test } from "@odoo/hoot";
 import {
     click,
     contains,
+    defineMailModels,
     insertText,
     openDiscuss,
-    start,
+    startClient,
     startServer,
 } from "../../../mail_test_helpers";
-import { Command, constants } from "@web/../tests/web_test_helpers";
+import { Command, serverState } from "@web/../tests/web_test_helpers";
 
-test.skip("sidebar find shows channels matching search term", async () => {
+defineMailModels();
+
+test("sidebar find shows channels matching search term", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({
         channel_member_ids: [],
@@ -19,7 +20,7 @@ test.skip("sidebar find shows channels matching search term", async () => {
         group_public_id: false,
         name: "test",
     });
-    await start();
+    await startClient();
     await openDiscuss();
     await click(
         ":nth-child(1 of .o-mail-DiscussSidebarCategory) .o-mail-DiscussSidebarCategory-add"
@@ -33,15 +34,15 @@ test.skip("sidebar find shows channels matching search term", async () => {
     await contains(".o-mail-NavigableList-item", { text: "Create: # test" });
 });
 
-test.skip("sidebar find shows channels matching search term even when user is member", async () => {
+test("sidebar find shows channels matching search term even when user is member", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({
-        channel_member_ids: [Command.create({ partner_id: constants.PARTNER_ID })],
+        channel_member_ids: [Command.create({ partner_id: serverState.partnerId })],
         channel_type: "channel",
         group_public_id: false,
         name: "test",
     });
-    await start();
+    await startClient();
     await openDiscuss();
     await click(
         ":nth-child(1 of .o-mail-DiscussSidebarCategory) .o-mail-DiscussSidebarCategory-add"
@@ -55,7 +56,7 @@ test.skip("sidebar find shows channels matching search term even when user is me
     await contains(".o-mail-NavigableList-item", { text: "Create: # test" });
 });
 
-test.skip("unknown channel can be displayed and interacted with", async () => {
+test("unknown channel can be displayed and interacted with", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Jane" });
     const channelId = pyEnv["discuss.channel"].create({
@@ -63,7 +64,7 @@ test.skip("unknown channel can be displayed and interacted with", async () => {
         channel_type: "channel",
         name: "Not So Secret",
     });
-    await start();
+    await startClient();
     await openDiscuss();
     await contains("button.o-active", { text: "Inbox" });
     await contains(".o-mail-DiscussSidebarChannel", { count: 0 });

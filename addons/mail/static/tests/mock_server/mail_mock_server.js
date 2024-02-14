@@ -1,6 +1,4 @@
-/** @odoo-module */
-
-import { constants } from "@web/../tests/web_test_helpers";
+import { serverState } from "@web/../tests/web_test_helpers";
 import { serializeDateTime } from "@web/core/l10n/dates";
 import { registry } from "@web/core/registry";
 
@@ -17,17 +15,42 @@ const { DateTime } = luxon;
 // Internal
 //-----------------------------------------------------------------------------
 
-/**
- * @param {Request} request
- */
+/** @param {Request} request */
 const parseRequestParams = async (request) => {
     const response = await request.json();
     return response.params;
 };
 
+const onRpcBeforeGlobal = {
+    cb: (route, args) => {},
+};
+// using a registry category to not expose for manual import
+// We should use `onRpcBefore` with 1st parameter being (route, args) callback function
+registry.category("mail.on_rpc_before_global").add(true, onRpcBeforeGlobal);
+function registerRoute(route, handler) {
+    const beforeCallableHandler = async function (request) {
+        let args;
+        try {
+            args = await parseRequestParams(request);
+        } catch {
+            args = await request.text();
+        }
+        let res = await onRpcBeforeGlobal.cb?.(route, args);
+        if (res !== undefined) {
+            return res;
+        }
+        res = await beforeCallableHandler.before?.(args);
+        if (res !== undefined) {
+            return res;
+        }
+        return handler.call(this, request);
+    };
+    registry.category("mock_rpc").add(route, beforeCallableHandler);
+}
+
 // RPC handlers
 
-registry.category("mock_rpc").add("/mail/attachment/upload", mail_attachment_upload);
+registerRoute("/mail/attachment/upload", mail_attachment_upload);
 /** @type {RouteCallback}} */
 async function mail_attachment_upload(request) {
     /** @type {import("mock_models").DiscussVoiceMetadata} */
@@ -35,7 +58,7 @@ async function mail_attachment_upload(request) {
     /** @type {import("mock_models").IrAttachment} */
     const IrAttachment = this.env["ir.attachment"];
 
-    const { body } = await parseRequestParams(request);
+    const body = await request.text();
     const ufile = body.get("ufile");
     const is_pending = body.get("is_pending") === "true";
     const model = is_pending ? "mail.compose.message" : body.get("thread_model");
@@ -53,7 +76,7 @@ async function mail_attachment_upload(request) {
     return IrAttachment._attachment_format([attachmentId])[0];
 }
 
-registry.category("mock_rpc").add("/mail/attachment/delete", mail_attachment_delete);
+registerRoute("/mail/attachment/delete", mail_attachment_delete);
 /** @type {RouteCallback} */
 async function mail_attachment_delete(request) {
     /** @type {import("mock_models").BusBus} */
@@ -64,14 +87,14 @@ async function mail_attachment_delete(request) {
     const ResPartner = this.env["res.partner"];
 
     const { attachment_id } = await parseRequestParams(request);
-    const [partner] = ResPartner.read(constants.PARTNER_ID);
+    const [partner] = ResPartner.read(this.env.user.partner_id);
     BusBus._sendone(partner, "ir.attachment/delete", {
         id: attachment_id,
     });
     return IrAttachment.unlink([attachment_id]);
 }
 
-registry.category("mock_rpc").add("/discuss/channel/attachments", load_attachments);
+registerRoute("/discuss/channel/attachments", load_attachments);
 /** @type {RouteCallback} */
 async function load_attachments(request) {
     /** @type {import("mock_models").IrAttachment} */
@@ -94,7 +117,7 @@ async function load_attachments(request) {
     return IrAttachment._attachment_format(attachmentIds);
 }
 
-registry.category("mock_rpc").add("/mail/rtc/channel/join_call", channel_call_join);
+registerRoute("/mail/rtc/channel/join_call", channel_call_join);
 /** @type {RouteCallback} */
 async function channel_call_join(request) {
     /** @type {import("mock_models").DiscussChannel} */
@@ -130,7 +153,7 @@ async function channel_call_join(request) {
     };
 }
 
-registry.category("mock_rpc").add("/mail/rtc/channel/leave_call", channel_call_leave);
+registerRoute("/mail/rtc/channel/leave_call", channel_call_leave);
 /** @type {RouteCallback} */
 async function channel_call_leave(request) {
     /** @type {import("mock_models").BusBus} */
@@ -182,7 +205,7 @@ async function channel_call_leave(request) {
     BusBus._sendmany(notifications);
 }
 
-registry.category("mock_rpc").add("/discuss/channel/fold", discuss_channel_fold);
+registerRoute("/discuss/channel/fold", discuss_channel_fold);
 /** @type {RouteCallback} */
 async function discuss_channel_fold(request) {
     /** @type {import("mock_models").DiscussChannel} */
@@ -195,25 +218,40 @@ async function discuss_channel_fold(request) {
     return DiscussChannelMember._channel_fold(memberOfCurrentUser.id, state, state_count);
 }
 
-registry.category("mock_rpc").add("/discuss/channel/members", discuss_channel_members);
+registerRoute("/discuss/channel/info", discuss_channel_info);
+/** @type {RouteCallback} */
+async function discuss_channel_info(request) {
+    /** @type {import("mock_models").DiscussChannel} */
+    const DiscussChannel = this.env["discuss.channel"];
+
+    const { channel_id } = await parseRequestParams(request);
+    return DiscussChannel.channel_info([channel_id])[0];
+}
+
+registerRoute("/discuss/channel/members", discuss_channel_members);
 /** @type {RouteCallback} */
 async function discuss_channel_members(request) {
     /** @type {import("mock_models").DiscussChannel} */
     const DiscussChannel = this.env["discuss.channel"];
 
     const { channel_id, known_member_ids } = await parseRequestParams(request);
-    return DiscussChannel._loadOlderMembers([channel_id], known_member_ids); // AKU TODO: missing implementation!
+    return DiscussChannel.load_more_members([channel_id], known_member_ids);
 }
 
-registry.category("mock_rpc").add("/discuss/channel/messages", discuss_channel_messages);
+registerRoute("/discuss/channel/messages", discuss_channel_messages);
 /** @type {RouteCallback} */
 async function discuss_channel_messages(request) {
     /** @type {import("mock_models").MailMessage} */
     const MailMessage = this.env["mail.message"];
 
-    const { after, around, before, channel_id, limit, search_term } = await parseRequestParams(
-        request
-    );
+    const {
+        after,
+        around,
+        before,
+        channel_id,
+        limit = 30,
+        search_term,
+    } = await parseRequestParams(request);
     const domain = [
         ["res_id", "=", channel_id],
         ["model", "=", "discuss.channel"],
@@ -229,7 +267,7 @@ async function discuss_channel_messages(request) {
     };
 }
 
-registry.category("mock_rpc").add("/discuss/channel/mute", discuss_channel_mute);
+registerRoute("/discuss/channel/mute", discuss_channel_mute);
 /** @type {RouteCallback} */
 async function discuss_channel_mute(request) {
     /** @type {import("mock_models").BusBus} */
@@ -257,12 +295,12 @@ async function discuss_channel_mute(request) {
         model: "discuss.channel",
         mute_until_dt,
     };
-    const [partner] = ResPartner.read(constants.PARTNER_ID);
+    const [partner] = ResPartner.read(this.env.user.partner_id);
     BusBus._sendone(partner, "mail.record/insert", { Thread: channel_data });
     return "dummy";
 }
 
-registry.category("mock_rpc").add("/discuss/channel/notify_typing", discuss_channel_notify_typing);
+registerRoute("/discuss/channel/notify_typing", discuss_channel_notify_typing);
 /** @type {RouteCallback} */
 async function discuss_channel_notify_typing(request) {
     /** @type {import("mock_models").DiscussChannel} */
@@ -278,11 +316,11 @@ async function discuss_channel_notify_typing(request) {
     DiscussChannelMember.notify_typing([memberOfCurrentUser.id], is_typing);
 }
 
-registry.category("mock_rpc").add("/discuss/channel/ping", channel_ping);
+registerRoute("/discuss/channel/ping", channel_ping);
 /** @type {RouteCallback} */
 async function channel_ping(request) {}
 
-registry.category("mock_rpc").add("/discuss/channel/pinned_messages", discuss_channel_pins);
+registerRoute("/discuss/channel/pinned_messages", discuss_channel_pins);
 /** @type {RouteCallback} */
 async function discuss_channel_pins(request) {
     /** @type {import("mock_models").MailMessage} */
@@ -297,9 +335,7 @@ async function discuss_channel_pins(request) {
     return MailMessage.message_format(messageIds);
 }
 
-registry
-    .category("mock_rpc")
-    .add("/discuss/channel/set_last_seen_message", discuss_channel_mark_as_seen);
+registerRoute("/discuss/channel/set_last_seen_message", discuss_channel_mark_as_seen);
 /** @type {RouteCallback} */
 async function discuss_channel_mark_as_seen(request) {
     /** @type {import("mock_models").DiscussChannel} */
@@ -309,13 +345,13 @@ async function discuss_channel_mark_as_seen(request) {
     return DiscussChannel._channel_seen([channel_id], last_message_id);
 }
 
-registry.category("mock_rpc").add("/discuss/gif/favorites", get_favorites);
+registerRoute("/discuss/gif/favorites", get_favorites);
 /** @type {RouteCallback} */
 async function get_favorites(request) {
     return [[]];
 }
 
-registry.category("mock_rpc").add("/mail/history/messages", discuss_history_messages);
+registerRoute("/mail/history/messages", discuss_history_messages);
 /** @type {RouteCallback} */
 async function discuss_history_messages(request) {
     /** @type {import("mock_models").MailMessage} */
@@ -323,14 +359,14 @@ async function discuss_history_messages(request) {
     /** @type {import("mock_models").MailNotification} */
     const MailNotification = this.env["mail.notification"];
 
-    const { after, before, limit, search_term } = await parseRequestParams(request);
+    const { after, before, limit = 30, search_term } = await parseRequestParams(request);
     const domain = [["needaction", "=", false]];
     const res = MailMessage._message_fetch(domain, search_term, before, after, false, limit);
     const messagesWithNotification = res.messages.filter((message) => {
         const notifs = MailNotification.search_read([
             ["mail_message_id", "=", message.id],
             ["is_read", "=", true],
-            ["res_partner_id", "=", constants.PARTNER_ID],
+            ["res_partner_id", "=", this.env.user.partner_id],
         ]);
         return notifs.length > 0;
     });
@@ -341,13 +377,13 @@ async function discuss_history_messages(request) {
     };
 }
 
-registry.category("mock_rpc").add("/mail/inbox/messages", discuss_inbox_messages);
+registerRoute("/mail/inbox/messages", discuss_inbox_messages);
 /** @type {RouteCallback} */
 async function discuss_inbox_messages(request) {
     /** @type {import("mock_models").MailMessage} */
     const MailMessage = this.env["mail.message"];
 
-    const { after, around, before, limit, search_term } = await parseRequestParams(request);
+    const { after, around, before, limit = 30, search_term } = await parseRequestParams(request);
     const domain = [["needaction", "=", true]];
     const res = MailMessage._message_fetch(domain, search_term, before, after, around, limit);
     return {
@@ -358,7 +394,7 @@ async function discuss_inbox_messages(request) {
     };
 }
 
-registry.category("mock_rpc").add("/mail/link_preview", mail_link_preview);
+registerRoute("/mail/link_preview", mail_link_preview);
 /** @type {RouteCallback} */
 async function mail_link_preview(request) {
     /** @type {import("mock_models").BusBus} */
@@ -368,19 +404,10 @@ async function mail_link_preview(request) {
     /** @type {import("mock_models").MailMessage} */
     const MailMessage = this.env["mail.message"];
 
-    const { clear, message_id } = await parseRequestParams(request);
+    const { message_id } = await parseRequestParams(request);
     const linkPreviews = [];
     const [message] = MailMessage.search_read([["id", "=", message_id]]);
     if (message.body.includes("https://make-link-preview.com")) {
-        if (clear) {
-            const [linkPreview] = MailLinkPreview.search_read([["message_id", "=", message_id]]);
-            BusBus._sendone(
-                MailMessage._busNotificationTarget(linkPreview.message_id),
-                "mail.link.preview/delete",
-                { id: linkPreview.id, message_id: linkPreview.message_id }
-            );
-        }
-
         const linkPreviewId = MailLinkPreview.create({
             message_id: message.id,
             og_description: "test description",
@@ -390,13 +417,13 @@ async function mail_link_preview(request) {
         });
         const [linkPreview] = MailLinkPreview.search_read([["id", "=", linkPreviewId]]);
         linkPreviews.push(MailLinkPreview._link_preview_format(linkPreview));
-        BusBus._sendone(MailMessage._busNotificationTarget(message_id), "mail.record/insert", {
+        BusBus._sendone(MailMessage._bus_notification_target(message_id), "mail.record/insert", {
             LinkPreview: linkPreviews,
         });
     }
 }
 
-registry.category("mock_rpc").add("/mail/link_preview/delete", mail_link_preview_hide);
+registerRoute("/mail/link_preview/hide", mail_link_preview_hide);
 /** @type {RouteCallback} */
 async function mail_link_preview_hide(request) {
     /** @type {import("mock_models").BusBus} */
@@ -410,19 +437,24 @@ async function mail_link_preview_hide(request) {
     const linkPreviews = MailLinkPreview.search_read([["id", "in", link_preview_ids]]);
     for (const linkPreview of linkPreviews) {
         BusBus._sendone(
-            MailMessage._busNotificationTarget(linkPreview.message_id[0]),
-            "mail.link.preview/delete",
-            { id: linkPreview.id, message_id: linkPreview.message_id[0] }
+            MailMessage._bus_notification_target(linkPreview.message_id[0]),
+            "mail.record/insert",
+            {
+                Message: {
+                    id: linkPreview.message_id[0],
+                    linkPreviews: [["DELETE", [{ id: linkPreview.id }]]],
+                },
+            }
         );
     }
-    return link_preview_ids;
+    return { link_preview_ids };
 }
 
-registry.category("mock_rpc").add("/mail/message/post", mail_message_post);
+registerRoute("/mail/message/post", mail_message_post);
 /** @type {RouteCallback} */
-async function mail_message_post(request) {
+export async function mail_message_post(request) {
     /** @type {import("mock_models").DiscussChannel} */
-    const DiscussChannel = this.env["discusss.channel"];
+    const DiscussChannel = this.env["discuss.channel"];
     /** @type {import("mock_models").MailThread} */
     const MailThread = this.env["mail.thread"];
 
@@ -435,6 +467,8 @@ async function mail_message_post(request) {
         "partner_ids",
         "subtype_xmlid",
         "parent_id",
+        "partner_emails",
+        "partner_additional_values",
     ]) {
         if (post_data[allowedField] !== undefined) {
             finalData[allowedField] = post_data[allowedField];
@@ -442,19 +476,27 @@ async function mail_message_post(request) {
     }
     const kwargs = { ...finalData, context };
     if (thread_model === "discuss.channel") {
-        return DiscussChannel.message_post(thread_id, null, kwargs);
+        return DiscussChannel.message_post(thread_id, kwargs);
     }
-    return MailThread.message_post([thread_id], { ...kwargs, model: thread_model });
+    const model = this.env[thread_model];
+    return MailThread.message_post.call(model, [thread_id], { ...kwargs, model: thread_model });
 }
 
-registry.category("mock_rpc").add("/mail/message/reaction", mail_message_add_reaction);
+registerRoute("/mail/message/reaction", mail_message_add_reaction);
 /** @type {RouteCallback} */
 async function mail_message_add_reaction(request) {
+    /** @type {import("mock_models").MailMessage} */
+    const MailMessage = this.env["mail.message"];
+
     const { action, content, message_id } = await parseRequestParams(request);
-    return this.env["mail.message"]._message_reaction(message_id, content, action);
+    return MailMessage._message_reaction(message_id, content, action);
 }
 
-registry.category("mock_rpc").add("/mail/message/update_content", mail_message_update_content);
+registerRoute("/mail/message/translate", translate);
+/** @type {RouteCallback} */
+async function translate(request) {}
+
+registerRoute("/mail/message/update_content", mail_message_update_content);
 /** @type {RouteCallback} */
 async function mail_message_update_content(request) {
     /** @type {import("mock_models").BusBus} */
@@ -466,7 +508,7 @@ async function mail_message_update_content(request) {
 
     const { attachment_ids, body, message_id } = await parseRequestParams(request);
     MailMessage.write([message_id], { body, attachment_ids });
-    BusBus._sendone(MailMessage._busNotificationTarget(message_id), "mail.record/insert", {
+    BusBus._sendone(MailMessage._bus_notification_target(message_id), "mail.record/insert", {
         Message: {
             id: message_id,
             body,
@@ -476,27 +518,27 @@ async function mail_message_update_content(request) {
     return MailMessage.message_format([message_id])[0];
 }
 
-registry
-    .category("mock_rpc")
-    .add("/discuss/channel/:cid/partner/:pid/avatar_128", partnerAvatar128);
+registerRoute("/discuss/channel/:cid/partner/:pid/avatar_128", partnerAvatar128);
 /** @type {RouteCallback} */
 async function partnerAvatar128(request, { cid, pid }) {
     return [cid, pid];
 }
 
-registry.category("mock_rpc").add("/mail/partner/from_email", mail_thread_partner_from_email);
+registerRoute("/mail/partner/from_email", mail_thread_partner_from_email);
 /** @type {RouteCallback} */
 async function mail_thread_partner_from_email(request) {
     /** @type {import("mock_models").ResPartner} */
     const ResPartner = this.env["res.partner"];
 
-    const { emails } = await parseRequestParams(request);
+    const { emails, additional_values = {} } = await parseRequestParams(request);
     const partners = emails.map((email) => ResPartner.search([["email", "=", email]])[0]);
     for (const index in partners) {
         if (!partners[index]) {
+            const email = emails[index];
             partners[index] = ResPartner.create({
-                email: emails[index],
-                name: emails[index],
+                email,
+                name: email,
+                ...(additional_values[email] || {}),
             });
         }
     }
@@ -506,7 +548,7 @@ async function mail_thread_partner_from_email(request) {
     });
 }
 
-registry.category("mock_rpc").add("/mail/read_subscription_data", read_subscription_data);
+registerRoute("/mail/read_subscription_data", read_subscription_data);
 /** @type {RouteCallback} */
 async function read_subscription_data(request) {
     /** @type {import("mock_models").MailFollowers} */
@@ -540,20 +582,32 @@ async function read_subscription_data(request) {
     return subtypes_list;
 }
 
-registry
-    .category("mock_rpc")
-    .add("/mail/rtc/session/update_and_broadcast", session_update_and_broadcast);
+registerRoute("/mail/rtc/session/update_and_broadcast", session_update_and_broadcast);
 /** @type {RouteCallback} */
-async function session_update_and_broadcast(request) {}
+async function session_update_and_broadcast(request) {
+    /** @type {import("mock_models").DiscussChannelMember} */
+    const DiscussChannelMember = this.env["discuss.channel.member"];
+    /** @type {import("mock_models").DiscussChannelRtcSession} */
+    const DiscussChannelRtcSession = this.env["discuss.channel.rtc.session"];
 
-registry.category("mock_rpc").add("/mail/starred/messages", discuss_starred_messages);
+    const { session_id, values } = await parseRequestParams(request);
+    const [session] = DiscussChannelRtcSession.search_read([["id", "=", session_id]]);
+    const [currentChannelMember] = DiscussChannelMember.search_read([
+        ["id", "=", session.channel_member_id[0]],
+    ]);
+    if (session && currentChannelMember.partner_id[0] === serverState.partnerId) {
+        DiscussChannelRtcSession._update_and_broadcast(session.id, values);
+    }
+}
+
+registerRoute("/mail/starred/messages", discuss_starred_messages);
 /** @type {RouteCallback} */
 async function discuss_starred_messages(request) {
     /** @type {import("mock_models").MailMessage} */
     const MailMessage = this.env["mail.message"];
 
-    const { after, before, limit, search_term } = await parseRequestParams(request);
-    const domain = [["starred_partner_ids", "in", [constants.PARTNER_ID]]];
+    const { after, before, limit = 30, search_term } = await parseRequestParams(request);
+    const domain = [["starred_partner_ids", "in", [this.env.user.partner_id]]];
     const res = MailMessage._message_fetch(domain, search_term, before, after, false, limit);
     return {
         ...res,
@@ -561,17 +615,17 @@ async function discuss_starred_messages(request) {
     };
 }
 
-registry.category("mock_rpc").add("/mail/thread/data", mail_thread_data);
+registerRoute("/mail/thread/data", mail_thread_data);
 /** @type {RouteCallback} */
 async function mail_thread_data(request) {
     /** @type {import("mock_models").MailThread} */
     const MailThread = this.env["mail.thread"];
 
     const { request_list, thread_model, thread_id } = await parseRequestParams(request);
-    return MailThread._get_mail_thread_data(thread_model, thread_id, request_list);
+    return MailThread._get_mail_thread_data.call(this.env[thread_model], thread_id, request_list);
 }
 
-registry.category("mock_rpc").add("/mail/thread/messages", mail_thread_messages);
+registerRoute("/mail/thread/messages", mail_thread_messages);
 /** @type {RouteCallback} */
 async function mail_thread_messages(request) {
     /** @type {import("mock_models").MailMessage} */
@@ -592,20 +646,20 @@ async function mail_thread_messages(request) {
     };
 }
 
-registry.category("mock_rpc").add("/mail/action", mail_action);
+registerRoute("/mail/action", mail_action);
 /** @type {RouteCallback} */
 async function mail_action(request) {
     return processRequest.call(this, request);
 }
 
-registry.category("mock_rpc").add("/mail/data", mail_data);
+registerRoute("/mail/data", mail_data);
 /** @type {RouteCallback} */
 async function mail_data(request) {
     return processRequest.call(this, request);
 }
 
 /** @type {RouteCallback} */
-async function processRequest(args) {
+async function processRequest(request) {
     /** @type {import("mock_models").DiscussChannel} */
     const DiscussChannel = this.env["discuss.channel"];
     /** @type {import("mock_models").DiscussChannelMember} */
@@ -622,6 +676,7 @@ async function processRequest(args) {
     const ResUsers = this.env["res.users"];
 
     const res = {};
+    const args = await parseRequestParams(request);
     if ("init_messaging" in args) {
         const initMessaging =
             MailGuest._get_guest_from_context() && ResUsers._is_public(this.env.uid)
@@ -630,7 +685,7 @@ async function processRequest(args) {
         addToRes(res, initMessaging);
         const guest = ResUsers._is_public(this.env.uid) && MailGuest._get_guest_from_context();
         const members = DiscussChannelMember._filter([
-            guest ? ["guest_id", "=", guest.id] : ["partner_id", "=", this.env.user.partner_id[0]],
+            guest ? ["guest_id", "=", guest.id] : ["partner_id", "=", this.env.user.partner_id],
             "|",
             ["fold_state", "in", ["open", "folded"]],
             ["rtc_inviting_session_id", "!=", false],

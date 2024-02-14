@@ -1,10 +1,17 @@
-/** @odoo-module */
-
 import { test } from "@odoo/hoot";
-import { click, contains, openDiscuss, start, startServer } from "../../mail_test_helpers";
+import {
+    click,
+    contains,
+    defineMailModels,
+    openDiscuss,
+    startClient,
+    startServer,
+} from "../../mail_test_helpers";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 
-test.skip("Pin message", async () => {
+defineMailModels();
+
+test("Pin message", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     pyEnv["mail.message"].create({
@@ -12,7 +19,7 @@ test.skip("Pin message", async () => {
         model: "discuss.channel",
         res_id: channelId,
     });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await click(".o-mail-Discuss-header button[title='Pinned Messages']");
     await contains(".o-discuss-PinnedMessagesPanel p", {
@@ -24,7 +31,7 @@ test.skip("Pin message", async () => {
     await contains(".o-discuss-PinnedMessagesPanel .o-mail-Message", { text: "Hello world!" });
 });
 
-test.skip("Unpin message", async () => {
+test("Unpin message", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     pyEnv["mail.message"].create({
@@ -33,7 +40,7 @@ test.skip("Unpin message", async () => {
         res_id: channelId,
         pinned_at: "2023-03-30 11:27:11",
     });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await click(".o-mail-Discuss-header button[title='Pinned Messages']");
     await contains(".o-discuss-PinnedMessagesPanel .o-mail-Message");
@@ -43,7 +50,7 @@ test.skip("Unpin message", async () => {
     await contains(".o-discuss-PinnedMessagesPanel .o-mail-Message", { count: 0 });
 });
 
-test.skip("Deleted messages are not pinned", async () => {
+test("Deleted messages are not pinned", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     pyEnv["mail.message"].create({
@@ -53,7 +60,7 @@ test.skip("Deleted messages are not pinned", async () => {
         res_id: channelId,
         pinned_at: "2023-03-30 11:27:11",
     });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await click(".o-mail-Discuss-header button[title='Pinned Messages']");
     await contains(".o-discuss-PinnedMessagesPanel .o-mail-Message");
@@ -63,7 +70,7 @@ test.skip("Deleted messages are not pinned", async () => {
     await contains(".o-discuss-PinnedMessagesPanel .o-mail-Message", { count: 0 });
 });
 
-test.skip("Open pinned panel from notification", async () => {
+test("Open pinned panel from notification", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     pyEnv["mail.message"].create({
@@ -71,7 +78,7 @@ test.skip("Open pinned panel from notification", async () => {
         model: "discuss.channel",
         res_id: channelId,
     });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await click(":nth-child(1 of .o-mail-Message) [title='Expand']");
     await click(".dropdown-item", { text: "Pin" });
@@ -81,7 +88,7 @@ test.skip("Open pinned panel from notification", async () => {
     await contains(".o-discuss-PinnedMessagesPanel");
 });
 
-test.skip("Jump to message", async () => {
+test("Jump to message", async () => {
     // make scroll behavior instantaneous.
     patchWithCleanup(Element.prototype, {
         scrollIntoView() {
@@ -104,14 +111,14 @@ test.skip("Jump to message", async () => {
             res_id: channelId,
         });
     }
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await click(".o-mail-Discuss-header button[title='Pinned Messages']");
     await click(".o-discuss-PinnedMessagesPanel button", { text: "Jump" });
     await contains(".o-mail-Thread .o-mail-Message-body", { text: "Hello world!", visible: true });
 });
 
-test.skip("Jump to message from notification", async () => {
+test("Jump to message from notification", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     pyEnv["mail.message"].create({
@@ -127,7 +134,7 @@ test.skip("Jump to message from notification", async () => {
             res_id: channelId,
         });
     }
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await contains(".o-mail-Message", { count: 21 });
     await click(":nth-child(1 of .o-mail-Message) [title='Expand']");

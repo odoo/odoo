@@ -1,16 +1,24 @@
-/** @odoo-module */
-
 import { test } from "@odoo/hoot";
 
 import { DELAY_FOR_SPINNER } from "@mail/chatter/web_portal/chatter";
-import { click, contains, openFormView, start, startServer } from "../../mail_test_helpers";
+import {
+    click,
+    contains,
+    defineMailModels,
+    onRpcBefore,
+    openFormView,
+    startClient,
+    startServer,
+} from "../../mail_test_helpers";
 import { onRpc } from "@web/../tests/web_test_helpers";
-import { Deferred } from "@odoo/hoot-mock";
+import { Deferred, advanceTime } from "@odoo/hoot-mock";
 
-test.skip("base rendering", async () => {
+defineMailModels();
+
+test("base rendering", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
-    await start();
+    await startClient();
     await openFormView("res.partner", partnerId);
     await contains(".o-mail-Chatter-topbar");
     await contains("button", { text: "Send message" });
@@ -20,12 +28,12 @@ test.skip("base rendering", async () => {
     await contains(".o-mail-Followers");
 });
 
-test.skip("rendering with multiple partner followers", async () => {
+test("rendering with multiple partner followers", async () => {
     const pyEnv = await startServer();
     const [partnerId_1, partnerId_2, partnerId_3] = pyEnv["res.partner"].create([
         { name: "Eden Hazard" },
         { name: "Jean Michang" },
-        { message_follower_ids: [1, 2] },
+        {},
     ]);
     pyEnv["mail.followers"].create([
         {
@@ -39,7 +47,7 @@ test.skip("rendering with multiple partner followers", async () => {
             res_model: "res.partner",
         },
     ]);
-    await start();
+    await startClient();
     await openFormView("res.partner", partnerId_3);
     await contains(".o-mail-Followers");
     await contains(".o-mail-Followers-button");
@@ -50,10 +58,10 @@ test.skip("rendering with multiple partner followers", async () => {
     await contains(":nth-child(2 of .o-mail-Follower)", { text: "Eden Hazard" });
 });
 
-test.skip("log note toggling", async () => {
+test("log note toggling", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
-    await start();
+    await startClient();
     await openFormView("res.partner", partnerId);
     await contains("button:not(.active)", { text: "Log note" });
     await contains(".o-mail-Composer", { count: 0 });
@@ -65,10 +73,10 @@ test.skip("log note toggling", async () => {
     await contains(".o-mail-Composer", { count: 0 });
 });
 
-test.skip("send message toggling", async () => {
+test("send message toggling", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
-    await start();
+    await startClient();
     await openFormView("res.partner", partnerId);
     await contains("button:not(.active)", { text: "Send message" });
     await contains(".o-mail-Composer", { count: 0 });
@@ -80,10 +88,10 @@ test.skip("send message toggling", async () => {
     await contains(".o-mail-Composer", { count: 0 });
 });
 
-test.skip("log note/send message switching", async () => {
+test("log note/send message switching", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
-    await start();
+    await startClient();
     await openFormView("res.partner", partnerId);
     await contains("button:not(.active)", { text: "Send message" });
     await contains("button:not(.active)", { text: "Log note" });
@@ -98,16 +106,16 @@ test.skip("log note/send message switching", async () => {
     await contains(".o-mail-Composer-input[placeholder='Log an internal note…']");
 });
 
-test.skip("attachment counter without attachments", async () => {
+test("attachment counter without attachments", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
-    await start();
+    await startClient();
     await openFormView("res.partner", partnerId);
     await contains("button[aria-label='Attach files']");
     await contains("button[aria-label='Attach files']", { count: 0, text: "0" });
 });
 
-test.skip("attachment counter with attachments", async () => {
+test("attachment counter with attachments", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     pyEnv["ir.attachment"].create([
@@ -124,16 +132,16 @@ test.skip("attachment counter with attachments", async () => {
             res_model: "res.partner",
         },
     ]);
-    await start();
+    await startClient();
     await openFormView("res.partner", partnerId);
     await contains("button[aria-label='Attach files']", { text: "2" });
 });
 
-test.skip("attachment counter while loading attachments", async () => {
+test("attachment counter while loading attachments", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     onRpc("/mail/thread/data", async () => await new Deferred()); // simulate long loading
-    const { advanceTime } = await start({ hasTimeControl: true });
+    await startClient();
     await openFormView("res.partner", partnerId);
     await contains("button[aria-label='Attach files']");
     await advanceTime(DELAY_FOR_SPINNER);
@@ -141,16 +149,12 @@ test.skip("attachment counter while loading attachments", async () => {
     await contains("button[aria-label='Attach files']", { count: 0, text: "0" });
 });
 
-test.skip("attachment counter transition when attachments become loaded", async () => {
+test("attachment counter transition when attachments become loaded", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const deferred = new Deferred();
-    onRpc(async (route) => {
-        if (route === "/mail/thread/data") {
-            await deferred;
-        }
-    });
-    const { advanceTime } = await start({ hasTimeControl: true });
+    onRpcBefore("/mail/thread/data", async () => await deferred);
+    await startClient();
     await openFormView("res.partner", partnerId);
     await contains("button[aria-label='Attach files']");
     await advanceTime(DELAY_FOR_SPINNER);
@@ -159,16 +163,16 @@ test.skip("attachment counter transition when attachments become loaded", async 
     await contains("button[aria-label='Attach files'] .fa-spin", { count: 0 });
 });
 
-test.skip("attachment icon open directly the file uploader if there is no attachment yet", async () => {
+test("attachment icon open directly the file uploader if there is no attachment yet", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
-    await start();
+    await startClient();
     await openFormView("res.partner", partnerId);
     await contains(".o-mail-Chatter-fileUploader");
     await contains(".o-mail-AttachmentBox", { count: 0 });
 });
 
-test.skip("attachment icon open the attachment box when there is at least 1 attachment", async () => {
+test("attachment icon open the attachment box when there is at least 1 attachment", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     pyEnv["ir.attachment"].create([
@@ -179,7 +183,7 @@ test.skip("attachment icon open the attachment box when there is at least 1 atta
             res_model: "res.partner",
         },
     ]);
-    await start();
+    await startClient();
     await openFormView("res.partner", partnerId);
     await contains("button[aria-label='Attach files']");
     await contains(".o-mail-AttachmentBox", { count: 0 });
@@ -189,10 +193,10 @@ test.skip("attachment icon open the attachment box when there is at least 1 atta
     await contains(".o-mail-Chatter-fileUploader");
 });
 
-test.skip("composer state conserved when clicking on another topbar button", async () => {
+test("composer state conserved when clicking on another topbar button", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
-    await start();
+    await startClient();
     await openFormView("res.partner", partnerId);
     await contains(".o-mail-Chatter-topbar");
     await contains("button", { text: "Send message" });

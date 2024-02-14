@@ -1,15 +1,23 @@
-/** @odoo-module */
-
 import { test } from "@odoo/hoot";
-import { click, contains, openDiscuss, start, startServer } from "../../mail_test_helpers";
-import { Command, constants } from "@web/../tests/web_test_helpers";
+import {
+    click,
+    contains,
+    defineMailModels,
+    openDiscuss,
+    startClient,
+    startServer,
+} from "../../mail_test_helpers";
+import { Command, serverState } from "@web/../tests/web_test_helpers";
+import { withUser } from "@web/../tests/_framework/mock_server/mock_server";
 
-test.skip("Add member to channel", async () => {
+defineMailModels();
+
+test("Add member to channel", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const userId = pyEnv["res.users"].create({ name: "Harry" });
     pyEnv["res.partner"].create({ name: "Harry", user_ids: [userId] });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await click("[title='Show Member List']");
     await contains(".o-discuss-ChannelMember", { text: "Mitchell Admin" });
@@ -21,7 +29,7 @@ test.skip("Add member to channel", async () => {
     await contains(".o-discuss-ChannelMember", { text: "Harry" });
 });
 
-test.skip("Remove member from channel", async () => {
+test("Remove member from channel", async () => {
     const pyEnv = await startServer();
     const userId = pyEnv["res.users"].create({ name: "Harry" });
     const partnerId = pyEnv["res.partner"].create({
@@ -31,15 +39,15 @@ test.skip("Remove member from channel", async () => {
     const channelId = pyEnv["discuss.channel"].create({
         name: "General",
         channel_member_ids: [
-            Command.create({ partner_id: constants.PARTNER_ID }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
     });
-    const { env } = await start();
+    const env = await startClient();
     await openDiscuss(channelId);
     await click("[title='Show Member List']");
     await contains(".o-discuss-ChannelMember", { text: "Harry" });
-    pyEnv.withUser(userId, () =>
+    withUser(userId, () =>
         env.services.orm.call("discuss.channel", "action_unfollow", [channelId])
     );
     await contains(".o-discuss-ChannelMember", { count: 0, text: "Harry" });

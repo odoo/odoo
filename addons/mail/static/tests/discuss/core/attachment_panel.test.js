@@ -1,12 +1,19 @@
-/** @odoo-module */
-
 import { test } from "@odoo/hoot";
-import { click, contains, openDiscuss, start, startServer } from "../../mail_test_helpers";
+import {
+    click,
+    contains,
+    defineMailModels,
+    openDiscuss,
+    startClient,
+    startServer,
+} from "../../mail_test_helpers";
 
-test.skip("Empty attachment panel", async () => {
+defineMailModels();
+
+test("Empty attachment panel", async () => {
     const pyEnv = await startServer();
     const channelId = await pyEnv["discuss.channel"].create({ name: "General" });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await click(".o-mail-Discuss-header button[title='Show Attachments']");
     await contains(".o-mail-Discuss-inspector", {
@@ -14,7 +21,7 @@ test.skip("Empty attachment panel", async () => {
     });
 });
 
-test.skip("Attachment panel sort by date", async () => {
+test("Attachment panel sort by date", async () => {
     const pyEnv = await startServer();
     const channelId = await pyEnv["discuss.channel"].create({ name: "General" });
     pyEnv["ir.attachment"].create([
@@ -22,16 +29,16 @@ test.skip("Attachment panel sort by date", async () => {
             res_id: channelId,
             res_model: "discuss.channel",
             name: "file1.pdf",
-            create_date: "2023-08-20",
+            create_date: "2023-08-20 10:00:00",
         },
         {
             res_id: channelId,
             res_model: "discuss.channel",
             name: "file2.pdf",
-            create_date: "2023-09-21",
+            create_date: "2023-09-21 10:00:00",
         },
     ]);
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await click(".o-mail-Discuss-header button[title='Show Attachments']");
     await contains(".o-mail-AttachmentList", {
@@ -45,26 +52,26 @@ test.skip("Attachment panel sort by date", async () => {
     });
 });
 
-test.skip("Can toggle allow public upload", async () => {
+test("Can toggle allow public upload", async () => {
     const pyEnv = await startServer();
-    const channelId = await pyEnv["discuss.channel"].create({ name: "General" });
-    const tab1 = await start({ asTab: true });
-    const tab2 = await start({ asTab: true });
-    await tab1.openDiscuss(channelId);
-    await click(".o-mail-Discuss-header button[title='Show Attachments']", { target: tab1.target });
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const env1 = await startClient({ asTab: true });
+    const env2 = await startClient({ asTab: true });
+    await openDiscuss(channelId, { target: env1 });
+    await click(".o-mail-Discuss-header button[title='Show Attachments']", { target: env1 });
     await contains(".o-mail-ActionPanel", {
         contains: ["label", { text: "File upload is disabled for external users" }],
-        target: tab1.target,
+        target: env1,
     });
-    await tab2.openDiscuss(channelId);
-    await click(".o-mail-Discuss-header button[title='Show Attachments']", { target: tab2.target });
+    await openDiscuss(channelId, { target: env2 });
+    await click(".o-mail-Discuss-header button[title='Show Attachments']", { target: env2 });
     await contains(".o-mail-ActionPanel", {
         contains: ["label", { text: "File upload is disabled for external users" }],
-        target: tab2.target,
+        target: env2,
     });
-    await click(".o-mail-ActionPanel input[type='checkbox']", { target: tab1.target });
+    await click(".o-mail-ActionPanel input[type='checkbox']", { target: env1 });
     await contains(".o-mail-ActionPanel", {
         contains: ["label", { text: "File upload is enabled for external users" }],
-        target: tab2.target,
+        target: env2,
     });
 });

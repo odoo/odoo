@@ -1,19 +1,18 @@
-/** @odoo-module */
-
 import { expect, test } from "@odoo/hoot";
-import { start, startServer } from "../mail_test_helpers";
+import { defineMailModels, startClient } from "../mail_test_helpers";
 
 import { serializeDateTime, deserializeDateTime } from "@web/core/l10n/dates";
-import { constants } from "@web/../tests/web_test_helpers";
+import { serverState } from "@web/../tests/web_test_helpers";
 
-test.skip("Message model properties", async () => {
-    await startServer();
-    const { env } = await start();
+defineMailModels();
+
+test("Message model properties", async () => {
+    const env = await startClient();
     env.services["mail.store"].Store.insert({
-        self: { id: constants.PARTNER_ID, type: "partner" },
+        self: { id: serverState.partnerId, type: "partner" },
     });
     env.services["mail.store"].Thread.insert({
-        id: constants.PARTNER_ID,
+        id: serverState.partnerId,
         model: "res.partner",
         name: "general",
     });
@@ -31,11 +30,11 @@ test.skip("Message model properties", async () => {
         body: "<p>Test</p>",
         date: deserializeDateTime("2019-05-05 10:00:00"),
         id: 4000,
-        needaction_partner_ids: [constants.PARTNER_ID],
-        starredPersonas: { id: constants.PARTNER_ID, type: "partner" },
+        needaction_partner_ids: [serverState.partnerId],
+        starredPersonas: { id: serverState.partnerId, type: "partner" },
         model: "res.partner",
-        thread: { id: constants.PARTNER_ID, model: "res.partner" },
-        res_id: constants.PARTNER_ID,
+        thread: { id: serverState.partnerId, model: "res.partner" },
+        res_id: serverState.partnerId,
     });
     expect(message).toBeTruthy();
     expect(message.isNeedaction).toBeTruthy();
@@ -45,7 +44,7 @@ test.skip("Message model properties", async () => {
     expect(message.attachments).toBeTruthy();
     expect(message.attachments[0].name).toBe("test.txt");
     expect(message.thread).toBeTruthy();
-    expect(message.thread.id).toBe(constants.PARTNER_ID);
+    expect(message.thread.id).toBe(serverState.partnerId);
     expect(message.thread.name).toBe("general");
     expect(message.author).toBeTruthy();
     expect(message.author.id).toBe(5);

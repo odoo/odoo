@@ -1,12 +1,24 @@
-/** @odoo-module */
-
 import { expect, test } from "@odoo/hoot";
-import { click, contains, openFormView, start, startServer } from "../../mail_test_helpers";
-import { constants, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import {
+    assertSteps,
+    click,
+    contains,
+    defineMailModels,
+    openFormView,
+    scroll,
+    startClient,
+    startServer,
+    step,
+} from "../../mail_test_helpers";
+import { mockService, onRpc, patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
 import { MailThread } from "../../mock_server/mock_models/mail_thread";
+import { getMockEnv } from "@web/../tests/_framework/env_test_helpers";
+import { actionService } from "@web/webclient/actions/action_service";
 
-test.skip("base rendering not editable", async () => {
-    await start();
+defineMailModels();
+
+test("base rendering not editable", async () => {
+    await startClient();
     await openFormView("res.partner", undefined, { mode: "edit" });
     await contains(".o-mail-Followers");
     await contains(".o-mail-Followers-button:disabled");
@@ -15,7 +27,7 @@ test.skip("base rendering not editable", async () => {
     await contains(".o-mail-Followers-dropdown", { count: 0 });
 });
 
-test.skip("base rendering editable", async () => {
+test("base rendering editable", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     patchWithCleanup(MailThread.prototype, {
@@ -26,7 +38,7 @@ test.skip("base rendering editable", async () => {
             return res;
         },
     });
-    await start();
+    await startClient();
     await openFormView("res.partner", partnerId);
     await contains(".o-mail-Followers");
     await contains(".o-mail-Followers-button");
@@ -36,7 +48,7 @@ test.skip("base rendering editable", async () => {
     await contains(".o-mail-Followers-dropdown");
 });
 
-test.skip('click on "add followers" button', async () => {
+test('click on "add followers" button', async () => {
     const pyEnv = await startServer();
     const [partnerId_1, partnerId_2, partnerId_3] = pyEnv["res.partner"].create([
         { name: "Partner1" },
@@ -58,33 +70,41 @@ test.skip('click on "add followers" button', async () => {
             return res;
         },
     });
-    const { env } = await start();
-    await openFormView("res.partner", partnerId_1);
-    patchWithCleanup(env.services.action, {
-        doAction(action, options) {
-            expect.step("action:open_view");
-            expect(action.context.default_res_model).toBe("res.partner");
-            expect(action.context.default_res_id).toBe(partnerId_1);
-            expect(action.res_model).toBe("mail.wizard.invite");
-            expect(action.type).toBe("ir.actions.act_window");
-            pyEnv["mail.followers"].create({
-                partner_id: partnerId_3,
-                email: "bla@bla.bla",
-                is_active: true,
-                name: "Wololo",
-                res_id: partnerId_1,
-                res_model: "res.partner",
-            });
-            options.onClose();
-        },
+    mockService("action", () => {
+        const ogService = actionService.start(getMockEnv());
+        return {
+            ...ogService,
+            doAction(action, options) {
+                if (action?.res_model === "mail.wizard.invite") {
+                    step("action:open_view");
+                    expect(action.context.default_res_model).toBe("res.partner");
+                    expect(action.context.default_res_id).toBe(partnerId_1);
+                    expect(action.res_model).toBe("mail.wizard.invite");
+                    expect(action.type).toBe("ir.actions.act_window");
+                    pyEnv["mail.followers"].create({
+                        partner_id: partnerId_3,
+                        email: "bla@bla.bla",
+                        is_active: true,
+                        name: "Wololo",
+                        res_id: partnerId_1,
+                        res_model: "res.partner",
+                    });
+                    options.onClose();
+                    return;
+                }
+                return ogService.doAction.call(this, ...arguments);
+            },
+        };
     });
+    await startClient();
+    await openFormView("res.partner", partnerId_1);
     await contains(".o-mail-Followers");
     await contains(".o-mail-Followers-counter", { text: "1" });
     await click(".o-mail-Followers-button");
     await contains(".o-mail-Followers-dropdown");
     await click("a", { text: "Add Followers" });
     await contains(".o-mail-Followers-dropdown", { count: 0 });
-    expect(["action:open_view"]).toVerifySteps();
+    await assertSteps(["action:open_view"]);
     await contains(".o-mail-Followers-counter", { text: "2" });
     await click(".o-mail-Followers-button");
     await contains(".o-mail-Follower", { count: 2 });
@@ -92,7 +112,7 @@ test.skip('click on "add followers" button', async () => {
     await contains(":nth-child(2 of .o-mail-Follower)", { text: "Partner3" });
 });
 
-test.skip("click on remove follower", async () => {
+test("click on remove follower", async () => {
     const pyEnv = await startServer();
     const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
         { name: "Partner1" },
@@ -115,12 +135,12 @@ test.skip("click on remove follower", async () => {
         },
     });
     onRpc((route, args) => {
-        if (route === "/web/dataset/call_kw/mail.thread/messsage_unsubscribe") {
+        if (route === "/web/dataset/call_kw/res.partner/message_unsubscribe") {
             expect.step("message_unsubscribe");
             expect(args.args).toEqual([[partnerId_1], [partnerId_2]]);
         }
     });
-    await start();
+    await startClient();
     await openFormView("res.partner", partnerId_1);
     await click(".o-mail-Followers-button");
     await contains(".o-mail-Follower");
@@ -130,7 +150,7 @@ test.skip("click on remove follower", async () => {
     await contains(".o-mail-Follower", { count: 0 });
 });
 
-test.skip('Hide "Add follower" and subtypes edition/removal buttons except own user on read only record', async () => {
+test('Hide "Add follower" and subtypes edition/removal buttons except own user on read only record', async () => {
     const pyEnv = await startServer();
     const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
         { name: "Partner1" },
@@ -139,7 +159,7 @@ test.skip('Hide "Add follower" and subtypes edition/removal buttons except own u
     pyEnv["mail.followers"].create([
         {
             is_active: true,
-            partner_id: constants.PARTNER_ID,
+            partner_id: serverState.partnerId,
             res_id: partnerId_1,
             res_model: "res.partner",
         },
@@ -152,13 +172,13 @@ test.skip('Hide "Add follower" and subtypes edition/removal buttons except own u
     ]);
     patchWithCleanup(MailThread.prototype, {
         _get_mail_thread_data() {
-            // mimic user with write access
+            // mimic user with no write access
             const res = super._get_mail_thread_data(...arguments);
-            res["hasWriteAccess"] = true;
+            res["hasWriteAccess"] = false;
             return res;
         },
     });
-    await start();
+    await startClient();
     await openFormView("res.partner", partnerId_1);
     await click(".o-mail-Followers-button");
     await contains("a", { count: 0, text: "Add Followers" });
@@ -173,7 +193,7 @@ test.skip('Hide "Add follower" and subtypes edition/removal buttons except own u
     });
 });
 
-test.skip("Load 100 followers at once", async () => {
+test("Load 100 followers at once", async () => {
     const pyEnv = await startServer();
     const partnerIds = pyEnv["res.partner"].create(
         [...Array(210).keys()].map((i) => ({ display_name: `Partner${i}`, name: `Partner${i}` }))
@@ -182,13 +202,13 @@ test.skip("Load 100 followers at once", async () => {
         [...Array(210).keys()].map((i) => {
             return {
                 is_active: true,
-                partner_id: i === 0 ? constants.PARTNER_ID : partnerIds[i],
+                partner_id: i === 0 ? serverState.partnerId : partnerIds[i],
                 res_id: partnerIds[0],
                 res_model: "res.partner",
             };
         })
     );
-    await start();
+    await startClient();
     await openFormView("res.partner", partnerIds[0]);
     await contains("button[title='Show Followers']", { text: "210" });
     await click("button[title='Show Followers']");
@@ -203,7 +223,7 @@ test.skip("Load 100 followers at once", async () => {
     await contains(".o-mail-Followers-dropdown span", { count: 0, text: "Load more" });
 });
 
-test.skip("Load 100 recipients at once", async () => {
+test("Load 100 recipients at once", async () => {
     const pyEnv = await startServer();
     const partnerIds = pyEnv["res.partner"].create(
         [...Array(210).keys()].map((i) => ({
@@ -216,13 +236,13 @@ test.skip("Load 100 recipients at once", async () => {
         [...Array(210).keys()].map((i) => {
             return {
                 is_active: true,
-                partner_id: i === 0 ? constants.PARTNER_ID : partnerIds[i],
+                partner_id: i === 0 ? serverState.partnerId : partnerIds[i],
                 res_id: partnerIds[0],
                 res_model: "res.partner",
             };
         })
     );
-    await start();
+    await startClient();
     await openFormView("res.partner", partnerIds[0]);
     await contains("button[title='Show Followers']", { text: "210" });
     await click("button", { text: "Send message" });
@@ -241,7 +261,7 @@ test.skip("Load 100 recipients at once", async () => {
     await contains(".o-mail-RecipientList span", { count: 0, text: "Load more" });
 });
 
-test.skip('Show "Add follower" and subtypes edition/removal buttons on all followers if user has write access', async () => {
+test('Show "Add follower" and subtypes edition/removal buttons on all followers if user has write access', async () => {
     const pyEnv = await startServer();
     const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
         { name: "Partner1" },
@@ -250,7 +270,7 @@ test.skip('Show "Add follower" and subtypes edition/removal buttons on all follo
     pyEnv["mail.followers"].create([
         {
             is_active: true,
-            partner_id: constants.PARTNER_ID,
+            partner_id: serverState.partnerId,
             res_id: partnerId_1,
             res_model: "res.partner",
         },
@@ -269,7 +289,7 @@ test.skip('Show "Add follower" and subtypes edition/removal buttons on all follo
             return res;
         },
     });
-    await start();
+    await startClient();
     await openFormView("res.partner", partnerId_1);
     await click(".o-mail-Followers-button");
     await contains("a", { text: "Add Followers" });
@@ -281,18 +301,18 @@ test.skip('Show "Add follower" and subtypes edition/removal buttons on all follo
     });
 });
 
-test.skip('Show "No Followers" dropdown-item if there are no followers and user does not have write access', async () => {
+test('Show "No Followers" dropdown-item if there are no followers and user does not have write access', async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     patchWithCleanup(MailThread.prototype, {
         _get_mail_thread_data() {
-            // mimic user with write access
+            // mimic user without write access
             const res = super._get_mail_thread_data(...arguments);
-            res["hasWriteAccess"] = true;
+            res["hasWriteAccess"] = false;
             return res;
         },
     });
-    await start();
+    await startClient();
     await openFormView("res.partner", partnerId);
     await click(".o-mail-Followers-button");
     await contains("div.disabled", { text: "No Followers" });

@@ -1,12 +1,19 @@
-/** @odoo-module */
-
 import { expect, test } from "@odoo/hoot";
 
 import { getOrigin } from "@web/core/utils/urls";
-import { click, contains, openDiscuss, start, startServer } from "../mail_test_helpers";
-import { onRpc } from "@web/../tests/web_test_helpers";
+import {
+    click,
+    contains,
+    defineMailModels,
+    onRpcBefore,
+    openDiscuss,
+    startClient,
+    startServer,
+} from "../mail_test_helpers";
 
-test.skip("simplest layout", async () => {
+defineMailModels();
+
+test("simplest layout", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         channel_type: "channel",
@@ -23,7 +30,7 @@ test.skip("simplest layout", async () => {
         res_id: channelId,
         message_type: "comment",
     });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await contains(".o-mail-Message .o-mail-AttachmentList");
     expect($(".o-mail-AttachmentCard")[0]).toHaveAttribute("title", "test.txt");
@@ -35,7 +42,7 @@ test.skip("simplest layout", async () => {
     await contains(".o-mail-AttachmentCard-aside button[title='Download']");
 });
 
-test.skip("layout with card details and filename and extension", async () => {
+test("layout with card details and filename and extension", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         channel_type: "channel",
@@ -52,13 +59,13 @@ test.skip("layout with card details and filename and extension", async () => {
         res_id: channelId,
         message_type: "comment",
     });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await contains(".o-mail-AttachmentCard", { text: "test.txt" });
     await contains(".o-mail-AttachmentCard small", { text: "txt" });
 });
 
-test.skip("clicking on the delete attachment button multiple times should do the rpc only once", async () => {
+test("clicking on the delete attachment button multiple times should do the rpc only once", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         channel_type: "channel",
@@ -75,10 +82,8 @@ test.skip("clicking on the delete attachment button multiple times should do the
         res_id: channelId,
         message_type: "comment",
     });
-    onRpc((route, args) => {
-        expect.step("attachment_unlink");
-    });
-    await start();
+    onRpcBefore("/mail/attachment/delete", () => expect.step("attachment_unlink"));
+    await startClient();
     await openDiscuss(channelId);
     await click(".o-mail-AttachmentCard-unlink");
     await click(".modal-footer .btn-primary");
@@ -90,7 +95,7 @@ test.skip("clicking on the delete attachment button multiple times should do the
     });
 });
 
-test.skip("view attachment", async () => {
+test("view attachment", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         channel_type: "channel",
@@ -107,14 +112,14 @@ test.skip("view attachment", async () => {
         res_id: channelId,
         message_type: "comment",
     });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await contains(".o-mail-AttachmentImage img");
     await click(".o-mail-AttachmentImage");
     await contains(".o-FileViewer");
 });
 
-test.skip("close attachment viewer", async () => {
+test("close attachment viewer", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         channel_type: "channel",
@@ -131,7 +136,7 @@ test.skip("close attachment viewer", async () => {
         res_id: channelId,
         message_type: "comment",
     });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await contains(".o-mail-AttachmentImage img");
     await click(".o-mail-AttachmentImage");
@@ -140,7 +145,7 @@ test.skip("close attachment viewer", async () => {
     await contains(".o-FileViewer", { count: 0 });
 });
 
-test.skip("[technical] does not crash when the viewer is closed before image load", async () => {
+test("[technical] does not crash when the viewer is closed before image load", async () => {
     /**
      * When images are displayed using "src" attribute for the 1st time, it fetches the resource.
      * In this case, images are actually displayed (fully fetched and rendered on screen) when
@@ -166,7 +171,7 @@ test.skip("[technical] does not crash when the viewer is closed before image loa
         res_id: channelId,
         message_type: "comment",
     });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await click(".o-mail-AttachmentImage");
     await contains(".o-FileViewer-viewImage");
@@ -179,7 +184,7 @@ test.skip("[technical] does not crash when the viewer is closed before image loa
     }).not.toThrow();
 });
 
-test.skip("plain text file is viewable", async () => {
+test("plain text file is viewable", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         channel_type: "channel",
@@ -196,12 +201,12 @@ test.skip("plain text file is viewable", async () => {
         res_id: channelId,
         message_type: "comment",
     });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await contains(".o-mail-AttachmentCard.o-viewable");
 });
 
-test.skip("HTML file is viewable", async () => {
+test("HTML file is viewable", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         channel_type: "channel",
@@ -218,12 +223,12 @@ test.skip("HTML file is viewable", async () => {
         res_id: channelId,
         message_type: "comment",
     });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await contains(".o-mail-AttachmentCard.o-viewable");
 });
 
-test.skip("ODT file is not viewable", async () => {
+test("ODT file is not viewable", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         channel_type: "channel",
@@ -240,12 +245,12 @@ test.skip("ODT file is not viewable", async () => {
         res_id: channelId,
         message_type: "comment",
     });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await contains(".o-mail-AttachmentCard:not(.o-viewable)");
 });
 
-test.skip("DOCX file is not viewable", async () => {
+test("DOCX file is not viewable", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         channel_type: "channel",
@@ -262,12 +267,12 @@ test.skip("DOCX file is not viewable", async () => {
         res_id: channelId,
         message_type: "comment",
     });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await contains(".o-mail-AttachmentCard:not(.o-viewable)");
 });
 
-test.skip("should not view attachment from click on non-viewable attachment in list containing a viewable attachment", async () => {
+test("should not view attachment from click on non-viewable attachment in list containing a viewable attachment", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         channel_type: "channel",
@@ -290,7 +295,7 @@ test.skip("should not view attachment from click on non-viewable attachment in l
         res_id: channelId,
         message_type: "comment",
     });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await contains(".o-mail-AttachmentImage[title='test.png'] img.o-viewable");
     await contains(".o-mail-AttachmentCard:not(.o-viewable)", { text: "test.odt" });
@@ -301,7 +306,7 @@ test.skip("should not view attachment from click on non-viewable attachment in l
     await contains(".o-FileViewer");
 });
 
-test.skip("img file has proper src in discuss.channel", async () => {
+test("img file has proper src in discuss.channel", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         channel_type: "channel",
@@ -320,7 +325,7 @@ test.skip("img file has proper src in discuss.channel", async () => {
         res_id: channelId,
         message_type: "comment",
     });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await contains(
         `.o-mail-AttachmentImage[title='test.png'] img[data-src='${getOrigin()}/discuss/channel/${channelId}/image/${attachmentId}?filename=test.png&width=1920&height=300']`

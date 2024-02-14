@@ -1,26 +1,30 @@
-/** @odoo-module */
-
 import { test } from "@odoo/hoot";
 import {
     click,
     contains,
+    defineMailModels,
     mockGetMedia,
     openDiscuss,
-    start,
+    startClient,
     startServer,
 } from "../../mail_test_helpers";
-import { patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { pttExtensionHookService } from "@mail/discuss/call/common/ptt_extension_service";
+import { mockService } from "@web/../tests/web_test_helpers";
+import { getMockEnv } from "@web/../tests/_framework/env_test_helpers";
 
-test.skip("display banner when ptt extension is not enabled", async () => {
+defineMailModels();
+
+test("display banner when ptt extension is not enabled", async () => {
     mockGetMedia();
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    const { env } = await start();
-    patchWithCleanup(env.services["discuss.ptt_extension"], {
+    mockService("discuss.ptt_extension", () => ({
+        ...pttExtensionHookService.start(getMockEnv(), {}),
         get isEnabled() {
             return false;
         },
-    });
+    }));
+    await startClient();
     await openDiscuss(channelId);
     await click("[title='Show Call Settings']");
     await click("[title='toggle push-to-talk']");

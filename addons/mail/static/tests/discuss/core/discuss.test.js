@@ -1,23 +1,24 @@
-/** @odoo-module */
-
 import { test } from "@odoo/hoot";
 import {
     assertSteps,
     click,
     contains,
+    defineMailModels,
     insertText,
     openDiscuss,
-    start,
+    startClient,
     startServer,
     step,
 } from "../../mail_test_helpers";
 import { mockDate } from "@odoo/hoot-mock";
-var patchWebsocketWorkerWithCleanup;
+import { patchWebsocketWorkerWithCleanup } from "@bus/../tests/mock_websocket";
 
-test.skip("Member list and settings menu are exclusive", async () => {
+defineMailModels();
+
+test("Member list and settings menu are exclusive", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await click("[title='Show Member List']");
     await contains(".o-discuss-ChannelMemberList");
@@ -26,7 +27,7 @@ test.skip("Member list and settings menu are exclusive", async () => {
     await contains(".o-discuss-ChannelMemberList", { count: 0 });
 });
 
-test.skip("bus subscription is refreshed when channel is joined", async () => {
+test("bus subscription is refreshed when channel is joined", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create([{ name: "General" }, { name: "Sales" }]);
     patchWebsocketWorkerWithCleanup({
@@ -40,7 +41,7 @@ test.skip("bus subscription is refreshed when channel is joined", async () => {
     mockDate(
         `${later.year}-${later.month}-${later.day} ${later.hour}:${later.minute}:${later.second}`
     );
-    await start();
+    await startClient();
     await assertSteps(["subscribe - []"]);
     await openDiscuss();
     await assertSteps([]);
@@ -50,7 +51,7 @@ test.skip("bus subscription is refreshed when channel is joined", async () => {
     await assertSteps(["subscribe - []"]);
 });
 
-test.skip("bus subscription is refreshed when channel is left", async () => {
+test("bus subscription is refreshed when channel is left", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({ name: "General" });
     patchWebsocketWorkerWithCleanup({
@@ -64,7 +65,7 @@ test.skip("bus subscription is refreshed when channel is left", async () => {
     mockDate(
         `${later.year}-${later.month}-${later.day} ${later.hour}:${later.minute}:${later.second}`
     );
-    await start();
+    await startClient();
     await assertSteps(["subscribe - []"]);
     await openDiscuss();
     await assertSteps([]);

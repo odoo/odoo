@@ -1,9 +1,17 @@
-/** @odoo-module */
-
 import { expect, test } from "@odoo/hoot";
 
 import { addLink, parseAndTransform } from "@mail/utils/common/format";
-import { click, contains, insertText, openDiscuss, start, startServer } from "./mail_test_helpers";
+import {
+    click,
+    contains,
+    defineMailModels,
+    insertText,
+    openDiscuss,
+    startClient,
+    startServer,
+} from "./mail_test_helpers";
+
+defineMailModels();
 
 test("add_link utility function", () => {
     const testInputs = {
@@ -103,10 +111,10 @@ test("addLink: linkify inside text node (2 occurrences)", () => {
     expect(div.querySelectorAll(":scope a")[1].textContent).toBe("https://somelink2.com");
 });
 
-test.skip("url", async () => {
+test("url", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     // see: https://www.ietf.org/rfc/rfc1738.txt
     const messageBody = "https://odoo.com?test=~^|`{}[]#";
@@ -115,10 +123,10 @@ test.skip("url", async () => {
     await contains(".o-mail-Message a", { text: messageBody });
 });
 
-test.skip("url with comma at the end", async () => {
+test("url with comma at the end", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     const messageBody = "Go to https://odoo.com, it's great!";
     await insertText(".o-mail-Composer-input", messageBody);
@@ -127,10 +135,10 @@ test.skip("url with comma at the end", async () => {
     await contains(".o-mail-Message-content", { text: messageBody });
 });
 
-test.skip("url with dot at the end", async () => {
+test("url with dot at the end", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     const messageBody = "Go to https://odoo.com. It's great!";
     await insertText(".o-mail-Composer-input", messageBody);
@@ -139,10 +147,10 @@ test.skip("url with dot at the end", async () => {
     await contains(".o-mail-Message-content", { text: messageBody });
 });
 
-test.skip("url with semicolon at the end", async () => {
+test("url with semicolon at the end", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     const messageBody = "Go to https://odoo.com; it's great!";
     await insertText(".o-mail-Composer-input", messageBody);
@@ -151,10 +159,10 @@ test.skip("url with semicolon at the end", async () => {
     await contains(".o-mail-Message-content", { text: messageBody });
 });
 
-test.skip("url with ellipsis at the end", async () => {
+test("url with ellipsis at the end", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     const messageBody = "Go to https://odoo.com... it's great!";
     await insertText(".o-mail-Composer-input", messageBody);
@@ -163,10 +171,10 @@ test.skip("url with ellipsis at the end", async () => {
     await contains(".o-mail-Message-content", { text: messageBody });
 });
 
-test.skip("url with number in subdomain", async () => {
+test("url with number in subdomain", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     const messageBody = "https://www.45017478-master-all.runbot134.odoo.com/web";
     await insertText(".o-mail-Composer-input", messageBody);

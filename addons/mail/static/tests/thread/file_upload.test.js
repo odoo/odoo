@@ -1,20 +1,21 @@
-/** @odoo-module */
-
 import { test } from "@odoo/hoot";
 import {
     click,
     contains,
     createFile,
+    defineMailModels,
     inputFiles,
     openDiscuss,
     openFormView,
-    start,
+    startClient,
     startServer,
 } from "../mail_test_helpers";
 import { onRpc } from "@web/../tests/web_test_helpers";
 import { Deferred } from "@odoo/hoot-mock";
 
-test.skip("no conflicts between file uploads", async () => {
+defineMailModels();
+
+test("no conflicts between file uploads", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const channelId = pyEnv["discuss.channel"].create({});
@@ -23,7 +24,7 @@ test.skip("no conflicts between file uploads", async () => {
         model: "discuss.channel",
         res_id: channelId,
     });
-    await start();
+    await startClient();
     // Uploading file in the first thread: res.partner chatter.
     await openFormView("res.partner", partnerId);
     await click("button", { text: "Send message" });
@@ -48,14 +49,14 @@ test.skip("no conflicts between file uploads", async () => {
     await contains(".o-mail-ChatWindow .o-mail-AttachmentCard");
 });
 
-test.skip("Attachment shows spinner during upload", async () => {
+test("Attachment shows spinner during upload", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "channel_1" });
     onRpc("/mail/attachment/upload", async (route, args) => {
         // never fulfill the attachment upload promise.
         await new Deferred();
     });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await inputFiles(".o-mail-Composer input[type=file]", [
         await createFile({

@@ -1,17 +1,19 @@
-/** @odoo-module */
-
 import { test } from "@odoo/hoot";
 import {
     click,
     contains,
+    defineMailModels,
     insertText,
     openDiscuss,
-    start,
+    startClient,
     startServer,
 } from "../../mail_test_helpers";
-import { Command, constants } from "@web/../tests/web_test_helpers";
+import { Command, serverState } from "@web/../tests/web_test_helpers";
+import { withUser } from "@web/../tests/_framework/mock_server/mock_server";
 
-test.skip("should display the channel invitation form after clicking on the invite button of a chat", async () => {
+defineMailModels();
+
+test("should display the channel invitation form after clicking on the invite button of a chat", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({
         email: "testpartner@odoo.com",
@@ -21,18 +23,18 @@ test.skip("should display the channel invitation form after clicking on the invi
     const channelId = pyEnv["discuss.channel"].create({
         name: "TestChanel",
         channel_member_ids: [
-            Command.create({ partner_id: constants.PARTNER_ID }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
         channel_type: "channel",
     });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await click(".o-mail-Discuss-header button[title='Add Users']");
     await contains(".o-discuss-ChannelInvitation");
 });
 
-test.skip("can invite users in channel from chat window", async () => {
+test("can invite users in channel from chat window", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({
         email: "testpartner@odoo.com",
@@ -42,11 +44,11 @@ test.skip("can invite users in channel from chat window", async () => {
     pyEnv["discuss.channel"].create({
         name: "TestChannel",
         channel_member_ids: [
-            Command.create({ fold_state: "open", partner_id: constants.PARTNER_ID }),
+            Command.create({ fold_state: "open", partner_id: serverState.partnerId }),
         ],
         channel_type: "channel",
     });
-    await start();
+    await startClient();
     await click("[title='Open Actions Menu']");
     await click("[title='Add Users']");
     await contains(".o-discuss-ChannelInvitation");
@@ -58,7 +60,7 @@ test.skip("can invite users in channel from chat window", async () => {
     });
 });
 
-test.skip("should be able to search for a new user to invite from an existing chat", async () => {
+test("should be able to search for a new user to invite from an existing chat", async () => {
     const pyEnv = await startServer();
     const partnerId_1 = pyEnv["res.partner"].create({
         email: "testpartner@odoo.com",
@@ -73,19 +75,19 @@ test.skip("should be able to search for a new user to invite from an existing ch
     const channelId = pyEnv["discuss.channel"].create({
         name: "TestChannel",
         channel_member_ids: [
-            Command.create({ partner_id: constants.PARTNER_ID }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId_1 }),
         ],
         channel_type: "channel",
     });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await click(".o-mail-Discuss-header button[title='Add Users']");
     await insertText(".o-discuss-ChannelInvitation-search", "TestPartner2");
     await contains(".o-discuss-ChannelInvitation-selectable", { text: "TestPartner2" });
 });
 
-test.skip("Invitation form should display channel group restriction", async () => {
+test("Invitation form should display channel group restriction", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({
         email: "testpartner@odoo.com",
@@ -97,11 +99,11 @@ test.skip("Invitation form should display channel group restriction", async () =
     });
     const channelId = pyEnv["discuss.channel"].create({
         name: "TestChannel",
-        channel_member_ids: [Command.create({ partner_id: constants.PARTNER_ID })],
+        channel_member_ids: [Command.create({ partner_id: serverState.partnerId })],
         channel_type: "channel",
         group_public_id: groupId,
     });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await click(".o-mail-Discuss-header button[title='Add Users']");
     await contains(".o-discuss-ChannelInvitation div", {
@@ -110,7 +112,7 @@ test.skip("Invitation form should display channel group restriction", async () =
     });
 });
 
-test.skip("should be able to create a new group chat from an existing chat", async () => {
+test("should be able to create a new group chat from an existing chat", async () => {
     const pyEnv = await startServer();
     const partnerId_1 = pyEnv["res.partner"].create({
         email: "testpartner@odoo.com",
@@ -125,12 +127,12 @@ test.skip("should be able to create a new group chat from an existing chat", asy
     const channelId = pyEnv["discuss.channel"].create({
         name: "TestChannel",
         channel_member_ids: [
-            Command.create({ partner_id: constants.PARTNER_ID }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId_1 }),
         ],
         channel_type: "chat",
     });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await click(".o-mail-Discuss-header button[title='Add Users']");
     await insertText(".o-discuss-ChannelInvitation-search", "TestPartner2");
@@ -141,7 +143,7 @@ test.skip("should be able to create a new group chat from an existing chat", asy
     });
 });
 
-QUnit.test("unnamed group chat should display correct name just after being invited", async () => {
+test("unnamed group chat should display correct name just after being invited", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({
         email: "jane@example.com",
@@ -155,14 +157,13 @@ QUnit.test("unnamed group chat should display correct name just after being invi
             channel_type: "group",
         },
     ]);
-    const { env, openDiscuss } = await start();
+    const env = await startClient();
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarChannel", { text: "General" });
     await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "Jane and Mitchell Admin" });
-    const currentPartnerId = pyEnv.currentPartnerId;
-    await pyEnv.withUser(userId, async () => {
+    await withUser(userId, async () => {
         await env.services.orm.call("discuss.channel", "add_members", [[channelId]], {
-            partner_ids: [currentPartnerId],
+            partner_ids: [serverState.partnerId],
         });
     });
     await contains(".o-mail-DiscussSidebarChannel", { text: "Jane and Mitchell Admin" });

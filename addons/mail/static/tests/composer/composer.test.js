@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { beforeEach, expect, test } from "@odoo/hoot";
 
 import { Composer } from "@mail/core/common/composer";
@@ -8,20 +6,26 @@ import {
     click,
     contains,
     createFile,
+    defineMailModels,
     dragenterFiles,
     dropFiles,
     inputFiles,
     insertText,
+    onRpcBefore,
     openDiscuss,
     openFormView,
     pasteFiles,
     patchUiSize,
-    start,
+    scroll,
+    startClient,
     startServer,
     triggerHotkey,
 } from "../mail_test_helpers";
-import { Command, constants, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { Command, onRpc, patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
 import { Deferred, tick } from "@odoo/hoot-mock";
+import { withUser } from "@web/../tests/_framework/mock_server/mock_server";
+
+defineMailModels();
 
 beforeEach(() => {
     // Simulate real user interactions
@@ -32,56 +36,56 @@ beforeEach(() => {
     });
 });
 
-test.skip("composer text input: basic rendering when posting a message", async () => {
+test("composer text input: basic rendering when posting a message", async () => {
     await startServer();
-    await start();
-    await openFormView("res.partner", constants.PARTNER_ID);
+    await startClient();
+    await openFormView("res.partner", serverState.partnerId);
     await click("button", { text: "Send message" });
     await contains("textarea.o-mail-Composer-input[placeholder='Send a message to followers…']");
 });
 
-test.skip("composer text input: basic rendering when logging note", async () => {
+test("composer text input: basic rendering when logging note", async () => {
     await startServer();
-    await start();
-    await openFormView("res.partner", constants.PARTNER_ID);
+    await startClient();
+    await openFormView("res.partner", serverState.partnerId);
     await click("button", { text: "Log note" });
     await contains("textarea.o-mail-Composer-input[placeholder='Log an internal note…']");
 });
 
-test.skip("composer text input: basic rendering when linked thread is a discuss.channel", async () => {
+test("composer text input: basic rendering when linked thread is a discuss.channel", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "dofus-disco" });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await contains(".o-mail-Composer");
     await contains("textarea.o-mail-Composer-input");
 });
 
-test.skip("composer text input placeholder should contain channel name when thread does not have specific correspondent", async () => {
+test("composer text input placeholder should contain channel name when thread does not have specific correspondent", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         channel_type: "channel",
         name: "General",
     });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await contains("textarea.o-mail-Composer-input[placeholder='Message #General…']");
 });
 
-test.skip("add an emoji", async () => {
+test("add an emoji", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "swamp-safari" });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await click("button[aria-label='Emojis']");
     await click(".o-Emoji", { text: "😤" });
     await contains(".o-mail-Composer-input", { value: "😤" });
 });
 
-test.skip("Exiting emoji picker brings the focus back to the Composer textarea [REQUIRE FOCUS]", async () => {
+test("Exiting emoji picker brings the focus back to the Composer textarea [REQUIRE FOCUS]", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await click("button[aria-label='Emojis']");
     await contains(".o-mail-Composer-input:not(:focus)");
@@ -89,10 +93,10 @@ test.skip("Exiting emoji picker brings the focus back to the Composer textarea [
     await contains(".o-mail-Composer-input:focus");
 });
 
-test.skip("add an emoji after some text", async () => {
+test("add an emoji after some text", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "beyblade-room" });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "Blabla");
     await contains(".o-mail-Composer-input", { value: "Blabla" });
@@ -101,10 +105,10 @@ test.skip("add an emoji after some text", async () => {
     await contains(".o-mail-Composer-input", { value: "Blabla🤑" });
 });
 
-test.skip("add emoji replaces (keyboard) text selection [REQUIRE FOCUS]", async () => {
+test("add emoji replaces (keyboard) text selection [REQUIRE FOCUS]", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "pétanque-tournament-14" });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "Blabla");
     await contains(".o-mail-Composer-input", { value: "Blabla" });
@@ -117,10 +121,10 @@ test.skip("add emoji replaces (keyboard) text selection [REQUIRE FOCUS]", async 
     await contains(".o-mail-Composer-input", { value: "🤠" });
 });
 
-test.skip("Cursor is positioned after emoji after adding it", async () => {
+test("Cursor is positioned after emoji after adding it", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "pétanque-tournament-14" });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "Blabla");
     const textarea = document.querySelector(".o-mail-Composer-input");
@@ -132,10 +136,10 @@ test.skip("Cursor is positioned after emoji after adding it", async () => {
     expect(textarea.selectionEnd).toBe(expectedPos);
 });
 
-test.skip("selected text is not replaced after cancelling the selection", async () => {
+test("selected text is not replaced after cancelling the selection", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "pétanque-tournament-14" });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "Blabla");
     await contains(".o-mail-Composer-input", { value: "Blabla" });
@@ -149,13 +153,13 @@ test.skip("selected text is not replaced after cancelling the selection", async 
     await contains(".o-mail-Composer-input", { value: "Blabla🤠" });
 });
 
-test.skip("Selection is kept when changing channel and going back to original channel", async () => {
+test("Selection is kept when changing channel and going back to original channel", async () => {
     const pyEnv = await startServer();
     const [channelId] = pyEnv["discuss.channel"].create([
         { name: "channel1" },
         { name: "channel2" },
     ]);
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "Foo");
     // simulate selection of all the content by keyboard
@@ -168,10 +172,10 @@ test.skip("Selection is kept when changing channel and going back to original ch
     expect(textarea.selectionEnd).toBe(textarea.value.length);
 });
 
-test.skip("click on emoji button, select emoji, then re-click on button should show emoji picker", async () => {
+test("click on emoji button, select emoji, then re-click on button should show emoji picker", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "roblox-skateboarding" });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await click("button[aria-label='Emojis']");
     await click(".o-Emoji", { text: "👺" });
@@ -179,10 +183,10 @@ test.skip("click on emoji button, select emoji, then re-click on button should s
     await contains(".o-EmojiPicker");
 });
 
-test.skip("keep emoji picker scroll value when re-opening it", async () => {
+test("keep emoji picker scroll value when re-opening it", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "roblox-carsurfing" });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await click("button[aria-label='Emojis']");
     await scroll(".o-EmojiPicker-content", 150);
@@ -191,10 +195,10 @@ test.skip("keep emoji picker scroll value when re-opening it", async () => {
     await contains(".o-EmojiPicker-content", { scroll: 150 });
 });
 
-test.skip("reset emoji picker scroll value after an emoji is picked", async () => {
+test("reset emoji picker scroll value after an emoji is picked", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "roblox-fingerskating" });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await click("button[aria-label='Emojis']");
     await scroll(".o-EmojiPicker-content", 150);
@@ -203,12 +207,12 @@ test.skip("reset emoji picker scroll value after an emoji is picked", async () =
     await contains(".o-EmojiPicker-content", { scroll: 0 });
 });
 
-test.skip("keep emoji picker scroll value independent if two or more different emoji pickers are used", async () => {
+test("keep emoji picker scroll value independent if two or more different emoji pickers are used", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "roblox-jaywalking" });
-    await start();
+    await startClient();
     pyEnv["mail.message"].create({
-        author_id: constants.PARTNER_ID,
+        author_id: serverState.partnerId,
         body: "This is a message",
         attachment_ids: [],
         message_type: "comment",
@@ -228,10 +232,10 @@ test.skip("keep emoji picker scroll value independent if two or more different e
     await contains(".o-EmojiPicker-content", { scroll: 200 });
 });
 
-test.skip("composer text input cleared on message post", async () => {
+test("composer text input cleared on message post", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "au-secours-aidez-moi" });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "test message");
     await contains(".o-mail-Composer-input", { value: "test message" });
@@ -240,10 +244,10 @@ test.skip("composer text input cleared on message post", async () => {
     await contains(".o-mail-Composer-input", { value: "" });
 });
 
-test.skip("send message only once when button send is clicked twice quickly", async () => {
+test("send message only once when button send is clicked twice quickly", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "nether-picnic" });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "test message");
     await click(".o-mail-Composer-send:enabled");
@@ -251,19 +255,19 @@ test.skip("send message only once when button send is clicked twice quickly", as
     await contains(".o-mail-Message");
 });
 
-test.skip('send button on discuss.channel should have "Send" as label', async () => {
+test('send button on discuss.channel should have "Send" as label', async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "minecraft-wii-u" });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await contains(".o-mail-Composer-send:disabled", { text: "Send" });
 });
 
-test.skip("Show send button in mobile", async () => {
+test("Show send button in mobile", async () => {
     const pyEnv = await startServer();
     patchUiSize({ size: SIZES.SM });
     pyEnv["discuss.channel"].create({ name: "minecraft-wii-u" });
-    await start();
+    await startClient();
     await openDiscuss();
     await contains("button.active", { text: "Inbox" });
     await click("button", { text: "Channel" });
@@ -272,13 +276,13 @@ test.skip("Show send button in mobile", async () => {
     await contains(".o-mail-Composer button[aria-label='Send'] i.fa-paper-plane-o");
 });
 
-test.skip("composer textarea content is retained when changing channel then going back", async () => {
+test("composer textarea content is retained when changing channel then going back", async () => {
     const pyEnv = await startServer();
     const [channelId] = pyEnv["discuss.channel"].create([
         { name: "minigolf-galaxy-iv" },
         { name: "epic-shrek-lovers" },
     ]);
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "According to all known laws of aviation,");
     await click("span", { text: "epic-shrek-lovers" });
@@ -290,7 +294,7 @@ test.skip("composer textarea content is retained when changing channel then goin
     });
 });
 
-test.skip("add an emoji after a partner mention", async () => {
+test("add an emoji after a partner mention", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({
         email: "testpartner@odoo.com",
@@ -299,11 +303,11 @@ test.skip("add an emoji after a partner mention", async () => {
     const channelId = pyEnv["discuss.channel"].create({
         name: "Mario Party",
         channel_member_ids: [
-            Command.create({ partner_id: constants.PARTNER_ID }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
     });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await contains(".o-mail-Composer-input", { value: "" });
     await insertText(".o-mail-Composer-input", "@Te");
@@ -314,13 +318,13 @@ test.skip("add an emoji after a partner mention", async () => {
     await contains(".o-mail-Composer-input", { value: "@TestPartner 😊" });
 });
 
-test.skip("mention a channel after some text", async () => {
+test("mention a channel after some text", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         name: "General",
         channel_type: "channel",
     });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await contains(".o-mail-Composer-input", { value: "" });
     await insertText(".o-mail-Composer-input", "bluhbluh ");
@@ -330,13 +334,13 @@ test.skip("mention a channel after some text", async () => {
     await contains(".o-mail-Composer-input", { value: "bluhbluh #General " });
 });
 
-test.skip("add an emoji after a channel mention", async () => {
+test("add an emoji after a channel mention", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         name: "General",
         channel_type: "channel",
     });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await contains(".o-mail-Composer-input", { value: "" });
     await insertText(".o-mail-Composer-input", "#");
@@ -347,10 +351,10 @@ test.skip("add an emoji after a channel mention", async () => {
     await contains(".o-mail-Composer-input", { value: "#General 😊" });
 });
 
-test.skip("pending mentions are kept when toggling composer", async () => {
+test("pending mentions are kept when toggling composer", async () => {
     await startServer();
-    await start();
-    await openFormView("res.partner", constants.PARTNER_ID);
+    await startClient();
+    await openFormView("res.partner", serverState.partnerId);
     await click("button", { text: "Send message" });
     await insertText(".o-mail-Composer-input", "@");
     await click(".o-mail-Composer-suggestion strong", { text: "Mitchell Admin" });
@@ -362,7 +366,7 @@ test.skip("pending mentions are kept when toggling composer", async () => {
     await contains(".o-mail-Message-body a.o_mail_redirect", { text: "@Mitchell Admin" });
 });
 
-test.skip("composer suggestion should match with input selection", async () => {
+test("composer suggestion should match with input selection", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({
         email: "testpartner@odoo.com",
@@ -371,11 +375,11 @@ test.skip("composer suggestion should match with input selection", async () => {
     const channelId = pyEnv["discuss.channel"].create({
         name: "Mario Party",
         channel_member_ids: [
-            Command.create({ partner_id: constants.PARTNER_ID }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
     });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await contains(".o-mail-Composer-input", { value: "" });
     await insertText(".o-mail-Composer-input", "#");
@@ -391,10 +395,10 @@ test.skip("composer suggestion should match with input selection", async () => {
     await contains(".o-mail-Composer-suggestion", { text: "Luigi" });
 });
 
-test.skip('do not post message on channel with "SHIFT-Enter" keyboard shortcut', async () => {
+test('do not post message on channel with "SHIFT-Enter" keyboard shortcut', async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "Test");
     await contains(".o-mail-Message", { count: 0 });
@@ -403,10 +407,10 @@ test.skip('do not post message on channel with "SHIFT-Enter" keyboard shortcut',
     await contains(".o-mail-Message", { count: 0 });
 });
 
-test.skip('post message on channel with "Enter" keyboard shortcut', async () => {
+test('post message on channel with "Enter" keyboard shortcut', async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "Test");
     await contains(".o-mail-Message", { count: 0 });
@@ -415,9 +419,10 @@ test.skip('post message on channel with "Enter" keyboard shortcut', async () => 
 });
 
 test.skip("leave command on channel", async () => {
+    // AKU FIXME: requires TSM fix
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await contains(".o-mail-DiscussSidebarChannel.o-active", { text: "general" });
     await insertText(".o-mail-Composer-input", "/leave");
@@ -430,20 +435,20 @@ test.skip("leave command on channel", async () => {
     await contains(".o_notification", { text: "You unsubscribed from general." });
 });
 
-test.skip("Can handle leave notification from unknown member", async () => {
+test("Can handle leave notification from unknown member", async () => {
     const pyEnv = await startServer();
     const userId = pyEnv["res.users"].create({ name: "Dobby" });
     const partnerId = pyEnv["res.partner"].create({ name: "Dobby", user_ids: [userId] });
     const channelId = pyEnv["discuss.channel"].create({
         name: "general",
         channel_member_ids: [
-            Command.create({ partner_id: constants.PARTNER_ID }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
     });
-    const { env } = await start();
+    const env = await startClient();
     await openDiscuss(channelId);
-    await pyEnv.withUser(userId, () =>
+    await withUser(userId, () =>
         env.services.orm.call("discuss.channel", "action_unfollow", [channelId])
     );
     await click("button[title='Show Member List']");
@@ -451,17 +456,17 @@ test.skip("Can handle leave notification from unknown member", async () => {
     await contains(".o-discuss-ChannelMember", { count: 0, text: "Dobby" });
 });
 
-test.skip("leave command on chat", async () => {
+test("leave command on chat", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Chuck Norris" });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            Command.create({ partner_id: constants.PARTNER_ID }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
         channel_type: "chat",
     });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await contains(".o-mail-DiscussSidebarChannel.o-active", { text: "Chuck Norris" });
     await insertText(".o-mail-Composer-input", "/leave");
@@ -474,10 +479,10 @@ test.skip("leave command on chat", async () => {
     await contains(".o_notification", { text: "You unpinned your conversation with Chuck Norris" });
 });
 
-test.skip("Can post suggestions", async () => {
+test("Can post suggestions", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "#general");
     await contains(".o-mail-Composer-suggestion strong", { count: 1 });
@@ -487,33 +492,33 @@ test.skip("Can post suggestions", async () => {
     await contains(".o-mail-Message .o_channel_redirect");
 });
 
-test.skip("composer text input placeholder should contain correspondent name when thread has exactly one correspondent", async () => {
+test("composer text input placeholder should contain correspondent name when thread has exactly one correspondent", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Marc Demo" });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            Command.create({ partner_id: constants.PARTNER_ID }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
         channel_type: "chat",
     });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await contains("textarea.o-mail-Composer-input[placeholder='Message Marc Demo…']");
 });
 
-test.skip("quick edit last self-message from UP arrow", async () => {
+test("quick edit last self-message from UP arrow", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     pyEnv["mail.message"].create({
-        author_id: constants.PARTNER_ID,
+        author_id: serverState.partnerId,
         body: "Test",
         attachment_ids: [],
         message_type: "comment",
         model: "discuss.channel",
         res_id: channelId,
     });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await contains(".o-mail-Message-content", { text: "Test" });
     await contains(".o-mail-Message .o-mail-Composer", { count: 0 });
@@ -532,7 +537,7 @@ test.skip("quick edit last self-message from UP arrow", async () => {
     await contains(".o-mail-Message .o-mail-Composer", { count: 0 });
 });
 
-test.skip("Select composer suggestion via Enter does not send the message", async () => {
+test("Select composer suggestion via Enter does not send the message", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({
         email: "shrek@odoo.com",
@@ -542,11 +547,11 @@ test.skip("Select composer suggestion via Enter does not send the message", asyn
     const channelId = pyEnv["discuss.channel"].create({
         name: "general",
         channel_member_ids: [
-            Command.create({ partner_id: constants.PARTNER_ID }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
     });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "@Shrek");
     await contains(".o-mail-Composer-suggestion");
@@ -556,10 +561,10 @@ test.skip("Select composer suggestion via Enter does not send the message", asyn
     await contains(".o-mail-Message", { count: 0 });
 });
 
-test.skip("composer: drop attachments", async () => {
+test("composer: drop attachments", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await contains(".o-mail-Composer-input");
     await contains(".o-mail-Dropzone", { count: 0 });
@@ -594,10 +599,10 @@ test.skip("composer: drop attachments", async () => {
     await contains(".o-mail-AttachmentCard", { count: 3 });
 });
 
-test.skip("composer: add an attachment", async () => {
+test("composer: add an attachment", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await inputFiles(".o-mail-Composer-coreMain .o_input_file", [
         await createFile({
@@ -611,22 +616,22 @@ test.skip("composer: add an attachment", async () => {
     await contains(".o-mail-Composer-footer .o-mail-AttachmentList .o-mail-AttachmentCard");
 });
 
-test.skip("composer: add an attachment in reply to message in history", async () => {
+test("composer: add an attachment in reply to message in history", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const messageId = pyEnv["mail.message"].create({
         body: "not empty",
         model: "discuss.channel",
-        history_partner_ids: [constants.PARTNER_ID],
+        history_partner_ids: [serverState.partnerId],
         res_id: channelId,
     });
     pyEnv["mail.notification"].create({
         mail_message_id: messageId,
         notification_type: "inbox",
-        res_partner_id: constants.PARTNER_ID,
+        res_partner_id: serverState.partnerId,
         is_read: true,
     });
-    await start();
+    await startClient();
     await openDiscuss("mail.box_history");
     await click("[title='Reply']");
     await inputFiles(".o-mail-Composer-coreMain .o_input_file", [
@@ -641,16 +646,12 @@ test.skip("composer: add an attachment in reply to message in history", async ()
     await contains(".o-mail-Composer-footer .o-mail-AttachmentList .o-mail-AttachmentCard");
 });
 
-test.skip("composer: send button is disabled if attachment upload is not finished", async () => {
+test("composer: send button is disabled if attachment upload is not finished", async () => {
     const pyEnv = await startServer();
     const attachmentUploadedDef = new Deferred();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    onRpc(async (route) => {
-        if (route === "/mail/attachment/upload") {
-            await attachmentUploadedDef;
-        }
-    });
-    await start();
+    onRpcBefore("/mail/attachment/upload", async () => await attachmentUploadedDef);
+    await startClient();
     await openDiscuss(channelId);
     await inputFiles(".o-mail-Composer-coreMain .o_input_file", [
         await createFile({
@@ -668,10 +669,10 @@ test.skip("composer: send button is disabled if attachment upload is not finishe
     await contains(".o-mail-Composer-send:enabled");
 });
 
-test.skip("remove an attachment from composer does not need any confirmation", async () => {
+test("remove an attachment from composer does not need any confirmation", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await inputFiles(".o-mail-Composer-coreMain .o_input_file", [
         await createFile({
@@ -687,10 +688,10 @@ test.skip("remove an attachment from composer does not need any confirmation", a
     await contains(".o-mail-AttachmentList .o-mail-AttachmentCard", { count: 0 });
 });
 
-test.skip("composer: paste attachments", async () => {
+test("composer: paste attachments", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     const files = [
         await createFile({
@@ -705,7 +706,7 @@ test.skip("composer: paste attachments", async () => {
     await contains(".o-mail-AttachmentList .o-mail-AttachmentCard");
 });
 
-test.skip("Replying on a channel should focus composer initially", async () => {
+test("Replying on a channel should focus composer initially", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         channel_type: "channel",
@@ -717,20 +718,20 @@ test.skip("Replying on a channel should focus composer initially", async () => {
         message_type: "comment",
         model: "discuss.channel",
     });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await click("[title='Reply']");
     await contains(".o-mail-Composer-input:focus");
 });
 
-test.skip("remove an uploading attachment", async () => {
+test("remove an uploading attachment", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });
     onRpc("/mail/attachment/upload", async (route, args) => {
         // simulates uploading indefinitely
         await new Deferred();
     });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await inputFiles(".o-mail-Composer-coreMain .o_input_file", [
         await createFile({
@@ -744,7 +745,7 @@ test.skip("remove an uploading attachment", async () => {
     await contains(".o-mail-Composer .o-mail-AttachmentCard", { count: 0 });
 });
 
-test.skip("Show recipient list when there is more than 5 followers.", async () => {
+test("Show recipient list when there is more than 5 followers.", async () => {
     const pyEnv = await startServer();
     const partnerIds = pyEnv["res.partner"].create([
         { name: "test name 1", email: "test1@odoo.com" },
@@ -762,7 +763,7 @@ test.skip("Show recipient list when there is more than 5 followers.", async () =
             res_model: "res.partner",
         });
     }
-    await start();
+    await startClient();
     await openFormView("res.partner", partnerIds[0]);
     await click("button", { text: "Send message" });
     await click("button[title='Show all recipients']");
@@ -775,22 +776,22 @@ test.skip("Show recipient list when there is more than 5 followers.", async () =
     await contains(".o-mail-Chatter", { text: "To: test1, test2, test3, test4, test5, …" });
 });
 
-test.skip("Show 'No recipient found.' with 0 followers.", async () => {
+test("Show 'No recipient found.' with 0 followers.", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "test name 1", email: "test1@odoo.com" });
-    await start();
+    await startClient();
     await openFormView("res.partner", partnerId);
     await click("button", { text: "Send message" });
     await contains(".o-mail-Chatter-top", { text: "To: No recipient" });
 });
 
-test.skip("Uploading multiple files in the composer create multiple temporary attachments", async () => {
+test("Uploading multiple files in the composer create multiple temporary attachments", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });
     onRpc("/mail/attachment/upload", async (route, args) => {
         await new Deferred();
     });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await inputFiles(".o-mail-Composer-coreMain .o_input_file", [
         await createFile({
@@ -809,7 +810,7 @@ test.skip("Uploading multiple files in the composer create multiple temporary at
     await contains(".o-mail-AttachmentCard-aside div[title='Uploading']", { count: 2 });
 });
 
-test.skip("[technical] does not crash when an attachment is removed before its upload starts", async () => {
+test("[technical] does not crash when an attachment is removed before its upload starts", async () => {
     // Uploading multiple files uploads attachments one at a time, this test
     // ensures that there is no crash when an attachment is destroyed before its
     // upload started.
@@ -817,12 +818,8 @@ test.skip("[technical] does not crash when an attachment is removed before its u
     // Promise to block attachment uploading
     const uploadDef = new Deferred();
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });
-    onRpc(async (route) => {
-        if (route === "/mail/attachment/upload") {
-            await uploadDef;
-        }
-    });
-    await start();
+    onRpcBefore("/mail/attachment/upload", async () => await uploadDef);
+    await startClient();
     await openDiscuss(channelId);
     await inputFiles(".o-mail-Composer-coreMain .o_input_file", [
         await createFile({
@@ -846,10 +843,10 @@ test.skip("[technical] does not crash when an attachment is removed before its u
     await contains(".o-mail-AttachmentCard:not(.o-isUploading)", { text: "text1.txt" });
 });
 
-test.skip("Message is sent only once when pressing enter twice in a row", async () => {
+test("Message is sent only once when pressing enter twice in a row", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "Hello World!");
     triggerHotkey("Enter");

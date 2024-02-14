@@ -4,6 +4,9 @@ const { DateTime } = luxon;
  * @param {luxon.DateTime} datetime
  */
 export function computeDelay(datetime) {
+    if (!datetime) {
+        return 0;
+    }
     const today = DateTime.now().startOf("day");
     return datetime.diff(today, "days").days;
 }

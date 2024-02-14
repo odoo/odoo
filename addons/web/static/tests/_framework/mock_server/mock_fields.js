@@ -55,8 +55,8 @@ import { MockServerError } from "./mock_server_utils";
  *  relation: string;
  *  relation_field?: string;
  *  type: keyof typeof DEFAULT_RELATIONAL_FIELD_VALUES;
- *  _inverse_fname_by_model_name?: Record<string, string>;
- *  _model_name_ref_fname: string;
+ *  inverse_fname_by_model_name?: Record<string, string>;
+ *  model_name_ref_fname: string;
  * }} RelationalFieldDefinition
  *
  * @typedef {CommonFieldDefinition & {

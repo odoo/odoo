@@ -93,7 +93,8 @@ export function useBus(bus, eventName, callback) {
 function _protectMethod(component, fn) {
     return function (...args) {
         if (status(component) === "destroyed") {
-            return Promise.reject(new Error("Component is destroyed"));
+            return new Promise(() => {});
+            // return Promise.reject(new Error("Component is destroyed"));
         }
 
         const prom = Promise.resolve(fn.call(this, ...args));

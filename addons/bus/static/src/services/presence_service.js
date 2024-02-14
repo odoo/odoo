@@ -10,10 +10,10 @@ export const presenceService = {
         let isOdooFocused = true;
         let lastPresenceTime =
             browser.localStorage.getItem(`${LOCAL_STORAGE_PREFIX}.lastPresence`) ||
-            new Date().getTime();
+            luxon.DateTime.now().ts;
 
         function onPresence() {
-            lastPresenceTime = new Date().getTime();
+            lastPresenceTime = luxon.DateTime.now().ts;
             browser.localStorage.setItem(`${LOCAL_STORAGE_PREFIX}.lastPresence`, lastPresenceTime);
         }
 
@@ -26,7 +26,7 @@ export const presenceService = {
             isOdooFocused = isFocused;
             browser.localStorage.setItem(`${LOCAL_STORAGE_PREFIX}.focus`, isOdooFocused);
             if (isOdooFocused) {
-                lastPresenceTime = new Date().getTime();
+                lastPresenceTime = luxon.DateTime.now().ts;
                 env.bus.trigger("window_focus", isOdooFocused);
             }
         }

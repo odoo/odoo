@@ -88,13 +88,13 @@ insertModelFields("res.users", {
         },
     },
 });
-insertModelFields("mail.activity", {
-    user_id: {
-        default() {
-            return this.pyEnv.currentUserId;
-        },
-    },
-});
+// insertModelFields("mail.activity", {
+//     user_id: {
+//         default() {
+//             return this.pyEnv.currentUserId;
+//         },
+//     },
+// });
 insertModelFields("discuss.channel.member", {
     fold_state: { default: "closed" },
     is_pinned: { default: true },

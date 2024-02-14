@@ -1,8 +1,9 @@
-import { rpc } from "@web/core/network/rpc";
+/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
+let rpc;
 import { registry } from "@web/core/registry";
 import { useSequential } from "@mail/utils/common/hooks";
 import { markRaw } from "@odoo/owl";
-import { compareDatetime } from "@mail/utils/common/misc";
+import { rpcWithEnv, compareDatetime } from "@mail/utils/common/misc";
 
 export const DEFAULT_AVATAR = "/mail/static/src/img/smiley/avatar.jpg";
 
@@ -16,6 +17,7 @@ export class PersonaService {
      * @param {Partial<import("services").Services>} services
      */
     setup(env, services) {
+        rpc = rpcWithEnv(env);
         this.env = env;
         this.orm = services.orm;
         /** @type {import("@mail/core/common/store_service").Store} */

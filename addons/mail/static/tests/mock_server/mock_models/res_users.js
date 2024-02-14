@@ -1,7 +1,6 @@
-/** @odoo-module */
-
-import { webModels } from "@web/../tests/web_test_helpers";
+import { serverState, webModels } from "@web/../tests/web_test_helpers";
 import { serializeDate, today } from "@web/core/l10n/dates";
+import { DISCUSS_ACTION_ID } from "../mail_mock_server";
 
 /**
  * @template T
@@ -12,12 +11,58 @@ export class ResUsers extends webModels.ResUsers {
     constructor() {
         super(...arguments);
         // this._records.push({
-        //     id: constants.ODOOBOT_ID,
+        //     id: serverState.odoobotId,
         //     active: false,
         //     login: "odoobot",
-        //     partner_id: constants.ODOOBOT_ID,
+        //     partner_id: serverState.odoobotId,
         //     password: "odoobot",
         // });
+    }
+    /** Simulates `_init_store_data` on `res.users`. */
+    _init_store_data() {
+        /** @type {import("mock_models").ResPartner} */
+        const ResPartner = this.env["res.partner"];
+        /** @type {import("mock_models").ResUsersSettings} */
+        const ResUsersSettings = this.env["res.users.settings"];
+
+        const res = {
+            Store: {
+                action_discuss_id: DISCUSS_ACTION_ID,
+                hasGifPickerFeature: true,
+                hasLinkPreviewFeature: true,
+                hasMessageTranslationFeature: true,
+                odoobot: ResPartner.mail_partner_format([serverState.odoobotId])[
+                    serverState.odoobotId
+                ],
+            },
+        };
+        if (!this._is_public(this.env.uid)) {
+            const userSettings = ResUsersSettings._find_or_create_for_user(this.env.uid);
+            Object.assign(res.Store, {
+                self: {
+                    id: this.env.user?.partner_id,
+                    isAdmin: true, // mock server simplification
+                    isInternalUser: !this.env.user?.share,
+                    name: this.env.user?.name,
+                    notification_preference: this.env.user?.notification_type,
+                    type: "partner",
+                    userId: this.env.user?.id,
+                    write_date: this.env.user?.write_date,
+                },
+                settings: ResUsersSettings.res_users_settings_format(userSettings.id),
+            });
+        } else if (this.env.currentGuest) {
+            // AKU FIXME: no such things as env.currentGuest
+            Object.assign(res.Store, {
+                self: {
+                    id: this.env.currentGuest.id,
+                    name: this.env.currentGuest.name,
+                    type: "guest",
+                    write_date: this.env.currentGuest.write_date,
+                },
+            });
+        }
+        return res;
     }
     /** @param {KwArgs} [kwargs] */
     systray_get_activities(kwargs = {}) {
@@ -112,7 +157,7 @@ export class ResUsers extends webModels.ResUsers {
         // const Settings = this.env["res.users.settings"];
 
         // const [user] = this._filter([["id", "in", ids]]);
-        // const userSettings = Settings.find_or_create_for_user(user.id);
+        // const userSettings = Settings._find_or_create_for_user(user.id);
         // const channels = Channel.get_channels_as_member();
         // const members = this.env["discuss.channel.member"]._filter([
         //     ["channel_id", "in", channels.map((channel) => channel.id)],
@@ -147,7 +192,7 @@ export class ResUsers extends webModels.ResUsers {
         //         initChannelsUnreadCounter: members.filter((member) => member.message_unread_counter)
         //             .length,
         //         menu_id: false, // not useful in QUnit tests
-        //         odoobot: Partner.mail_partner_format(constants.ODOOBOT_ID)[constants.ODOOBOT_ID],
+        //         odoobot: Partner.mail_partner_format(serverState.odoobotId)[serverState.odoobotId],
         //         self: Partner.mail_partner_format(user.partner_id)[user.partner_id],
         //         settings: Settings.res_users_settings_format(userSettings.id),
         //     },

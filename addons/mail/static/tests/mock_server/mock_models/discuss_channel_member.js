@@ -1,13 +1,13 @@
-/** @odoo-module */
-
-import { constants, fields, models } from "@web/../tests/web_test_helpers";
+import { fields, models } from "@web/../tests/web_test_helpers";
+import { serializeDateTime, today } from "@web/core/l10n/dates";
 
 export class DiscussChannelMember extends models.ServerModel {
     _name = "discuss.channel.member";
 
-    fold_state = fields.Generic({ default: "open" });
+    fold_state = fields.Generic({ default: "closed" });
     is_pinned = fields.Generic({ default: true });
     message_unread_counter = fields.Generic({ default: 0 });
+    last_interest_dt = fields.Datetime({ default: () => serializeDateTime(today()) });
 
     /**
      * @param {number[]} ids
@@ -32,42 +32,36 @@ export class DiscussChannelMember extends models.ServerModel {
     }
 
     /**
-     * @param {number} ids
+     * @param {number} id
      * @param {string} [state]
      * @param {number} [state_count]
      * @param {KwArgs} [kwargs]
      */
-    _channel_fold(ids, state, state_count, kwargs = {}) {
+    _channel_fold(id, state, state_count, kwargs = {}) {
         /** @type {import("mock_models").BusBus} */
         const BusBus = this.env["bus.bus"];
-        /** @type {import("mock_models").DiscussChannel} */
-        const DiscussChannel = this.env["discuss.channel"];
+        /** @type {import("mock_models").MailGuest} */
+        const MailGuest = this.env["mail.guest"];
         /** @type {import("mock_models").ResPartner} */
         const ResPartner = this.env["res.partner"];
 
-        state = kwargs.state || state;
-        state_count = kwargs.state_count || state_count;
-        const channels = DiscussChannel._filter([["id", "in", ids]]);
-        for (const channel of channels) {
-            const memberOfCurrentUser = DiscussChannel._find_or_create_member_for_self(channel.id);
-            const foldState = state
-                ? state
-                : memberOfCurrentUser.fold_state === "open"
-                ? "folded"
-                : "open";
-            const vals = {
-                fold_state: foldState,
-                is_minimized: foldState !== "closed",
-            };
-            this.write([memberOfCurrentUser.id], vals);
-            const [partner] = ResPartner.read(constants.PARTNER_ID);
-            BusBus._sendone(partner, "discuss.Thread/fold_state", {
-                foldStateCount: state_count,
-                id: channel.id,
-                model: "discuss.channel",
-                fold_state: foldState,
-            });
+        const [member] = this.search_read([["id", "=", id]]);
+        if (member.fold_state === state) {
+            return;
         }
+        this.write([id], { fold_state: state });
+        let target;
+        if (member.partner_id) {
+            [target] = ResPartner.search_read([["id", "=", member.partner_id[0]]]);
+        } else {
+            [target] = MailGuest.search_read([["id", "=", member.guest_id[0]]]);
+        }
+        BusBus._sendone(target, "discuss.Thread/fold_state", {
+            foldStateCount: state_count,
+            id: member.channel_id[0],
+            model: "discuss.channel",
+            fold_state: state,
+        });
     }
 
     /** @param {number[]} ids */
@@ -82,22 +76,22 @@ export class DiscussChannelMember extends models.ServerModel {
             let persona;
             if (member.partner_id) {
                 persona = this._get_partner_data([member.id]);
-                persona.type = "partner";
             }
             if (member.guest_id) {
                 const [guest] = MailGuest._filter([["id", "=", member.guest_id]]);
-                persona = {
-                    id: guest.id,
-                    im_status: guest.im_status,
-                    name: guest.name,
-                    type: "guest",
-                };
+                persona = MailGuest._guest_format([guest.id]).get(guest.id);
             }
-            dataList.push({
+            const data = {
+                create_date: member.create_date,
                 thread: { id: member.channel_id, model: "discuss.channel" },
                 id: member.id,
                 persona,
-            });
+                seen_message_id: member.seen_message_id ? { id: member.seen_message_id } : false,
+                fetched_message_id: member.fetched_message_id
+                    ? { id: member.fetched_message_id }
+                    : false,
+            };
+            dataList.push(data);
         }
         return dataList;
     }

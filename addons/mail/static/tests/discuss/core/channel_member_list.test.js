@@ -1,98 +1,106 @@
-/** @odoo-module */
-
 import { test } from "@odoo/hoot";
-import { click, contains, openDiscuss, start, startServer } from "../../mail_test_helpers";
-import { Command, constants } from "@web/../tests/web_test_helpers";
+import {
+    click,
+    contains,
+    defineMailModels,
+    openDiscuss,
+    startClient,
+    startServer,
+} from "../../mail_test_helpers";
+import { Command, serverState } from "@web/../tests/web_test_helpers";
+import { withUser } from "@web/../tests/_framework/mock_server/mock_server";
 
-test.skip("there should be a button to show member list in the thread view topbar initially", async () => {
+defineMailModels();
+
+test("there should be a button to show member list in the thread view topbar initially", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     const channelId = pyEnv["discuss.channel"].create({
         name: "TestChanel",
         channel_member_ids: [
-            Command.create({ partner_id: constants.PARTNER_ID }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
         channel_type: "channel",
     });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await contains("[title='Show Member List']");
 });
 
-test.skip("should show member list when clicking on show member list button in thread view topbar", async () => {
+test("should show member list when clicking on show member list button in thread view topbar", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     const channelId = pyEnv["discuss.channel"].create({
         name: "TestChanel",
         channel_member_ids: [
-            Command.create({ partner_id: constants.PARTNER_ID }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
         channel_type: "channel",
     });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await click("[title='Show Member List']");
     await contains(".o-discuss-ChannelMemberList");
 });
 
-test.skip("should have correct members in member list", async () => {
+test("should have correct members in member list", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     const channelId = pyEnv["discuss.channel"].create({
         name: "TestChanel",
         channel_member_ids: [
-            Command.create({ partner_id: constants.PARTNER_ID }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
         channel_type: "channel",
     });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await click("[title='Show Member List']");
     await contains(".o-discuss-ChannelMember", { count: 2 });
-    await contains(".o-discuss-ChannelMember", { text: constants.PARTNER_NAME });
+    await contains(".o-discuss-ChannelMember", { text: serverState.partnerName });
     await contains(".o-discuss-ChannelMember", { text: "Demo" });
 });
 
-test.skip("there should be a button to hide member list in the thread view topbar when the member list is visible", async () => {
+test("there should be a button to hide member list in the thread view topbar when the member list is visible", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     const channelId = pyEnv["discuss.channel"].create({
         name: "TestChanel",
         channel_member_ids: [
-            Command.create({ partner_id: constants.PARTNER_ID }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
         channel_type: "channel",
     });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await click("[title='Show Member List']");
     await contains("[title='Hide Member List']");
 });
 
-test.skip("chat with member should be opened after clicking on channel member", async () => {
+test("chat with member should be opened after clicking on channel member", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     pyEnv["res.users"].create({ partner_id: partnerId });
     const channelId = pyEnv["discuss.channel"].create({
         name: "TestChanel",
         channel_member_ids: [
-            Command.create({ partner_id: constants.PARTNER_ID }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
         channel_type: "channel",
     });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await click("[title='Show Member List']");
     await click(".o-discuss-ChannelMember.cursor-pointer");
     await contains(".o-mail-AutoresizeInput[title='Demo']");
 });
 
-test.skip("should show a button to load more members if they are not all loaded", async () => {
+test("should show a button to load more members if they are not all loaded", async () => {
     // Test assumes at most 100 members are loaded at once.
     const pyEnv = await startServer();
     const channel_member_ids = [];
@@ -104,14 +112,14 @@ test.skip("should show a button to load more members if they are not all loaded"
         name: "TestChanel",
         channel_type: "channel",
     });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     pyEnv["discuss.channel"].write([channelId], { channel_member_ids });
     await click("[title='Show Member List']");
     await contains("button", { text: "Load more" });
 });
 
-test.skip("Load more button should load more members", async () => {
+test("Load more button should load more members", async () => {
     // Test assumes at most 100 members are loaded at once.
     const pyEnv = await startServer();
     const channel_member_ids = [];
@@ -123,7 +131,7 @@ test.skip("Load more button should load more members", async () => {
         name: "TestChanel",
         channel_type: "channel",
     });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     pyEnv["discuss.channel"].write([channelId], { channel_member_ids });
     await click("[title='Show Member List']");
@@ -131,12 +139,12 @@ test.skip("Load more button should load more members", async () => {
     await contains(".o-discuss-ChannelMember", { count: 102 });
 });
 
-test.skip("Channel member count update after user joined", async () => {
+test("Channel member count update after user joined", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const userId = pyEnv["res.users"].create({ name: "Harry" });
     pyEnv["res.partner"].create({ name: "Harry", user_ids: [userId] });
-    await start();
+    await startClient();
     await openDiscuss(channelId);
     await click("[title='Show Member List']");
     await contains(".o-discuss-ChannelMemberList h6", { text: "Offline - 1" });
@@ -148,22 +156,22 @@ test.skip("Channel member count update after user joined", async () => {
     await contains(".o-discuss-ChannelMemberList h6", { text: "Offline - 2" });
 });
 
-test.skip("Channel member count update after user left", async () => {
+test("Channel member count update after user left", async () => {
     const pyEnv = await startServer();
     const userId = pyEnv["res.users"].create({ name: "Dobby" });
     const partnerId = pyEnv["res.partner"].create({ name: "Dobby", user_ids: [userId] });
     const channelId = pyEnv["discuss.channel"].create({
         name: "General",
         channel_member_ids: [
-            Command.create({ partner_id: constants.PARTNER_ID }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
     });
-    const { env } = await start();
+    const env = await startClient();
     await openDiscuss(channelId);
     await click("[title='Show Member List']");
     await contains(".o-discuss-ChannelMember", { count: 2 });
-    await pyEnv.withUser(userId, () =>
+    await withUser(userId, () =>
         env.services.orm.call("discuss.channel", "action_unfollow", [channelId])
     );
     await contains(".o-discuss-ChannelMember", { count: 1 });

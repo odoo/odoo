@@ -23,7 +23,7 @@ export const imStatusService = {
             if (!multi_tab.isOnMainTab()) {
                 return;
             }
-            const now = new Date().getTime();
+            const now = luxon.DateTime.now().ts;
             bus_service.send("update_presence", {
                 inactivity_period: now - presence.getLastPresence(),
                 im_status_ids_by_model: { ...imStatusModelToIds },
