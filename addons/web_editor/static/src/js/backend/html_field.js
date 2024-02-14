@@ -437,7 +437,7 @@ export class HtmlField extends Component {
             div.style.display = 'none';
             div.append(editable);
             document.body.append(div);
-            const editableValue = this.wysiwyg.getValue({ $layout: $(editable) });
+            const editableValue = stripHistoryIds(this.wysiwyg.getValue({ $layout: $(editable) }));
             div.remove();
             parsedPreviousValue = domParser.parseFromString(editableValue, 'text/html').body;
         } else {
