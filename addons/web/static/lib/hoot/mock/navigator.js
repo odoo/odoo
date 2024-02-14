@@ -13,10 +13,12 @@ const { EventTarget, navigator, Set, TypeError } = globalThis;
 // Internal
 //-----------------------------------------------------------------------------
 
-const defaultUserAgent = navigator.userAgent;
+const DEFAULT_USER_AGENT =
+    "Mozilla/1000.0 (X11; Linux x86_64) AppleWebKit/1000.00 (KHTML, like Gecko) Chrome/1000.0.0.0 Safari/1000.00";
+
 /** @type {Set<MockPermissionStatus>} */
 const permissionStatuses = new Set();
-let currentUserAgent = defaultUserAgent;
+let currentUserAgent = DEFAULT_USER_AGENT;
 
 //-----------------------------------------------------------------------------
 // Exports
@@ -203,7 +205,7 @@ export const PERMISSIONS = {
 
 export function cleanupNavigator() {
     permissionStatuses.clear();
-    currentUserAgent = defaultUserAgent;
+    currentUserAgent = DEFAULT_USER_AGENT;
 }
 
 /**
