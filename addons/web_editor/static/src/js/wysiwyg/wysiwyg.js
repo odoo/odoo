@@ -2544,33 +2544,35 @@ export class Wysiwyg extends Component {
             });
 
             // TODO: Add a queue with concurrency limit in webclient
-            return this.saving_mutex.exec(() => {
-                return this[saveElementFuncName]($els, context || this.options.context)
-                .then(function () {
-                    $els.removeClass('o_dirty');
-                }).guardedCatch(function (response) {
-                    // because ckeditor regenerates all the dom, we can't just
-                    // setup the popover here as everything will be destroyed by
-                    // the DOM regeneration. Add markings instead, and returns a
-                    // new rejection with all relevant info
-                    var id = uniqueId("carlos_danger_");
-                    $els.addClass('o_dirty o_editable oe_carlos_danger ' + id);
-                    $('.o_editable.' + id)
-                        .removeClass(id)
-                        .popover({
-                            trigger: 'hover',
-                            content: response.message.data.message || '',
-                            placement: 'auto',
-                        })
-                        .popover('show');
+            return new Promise((resolve, reject) => {
+                return this.saving_mutex.exec(() => {
+                    return this[saveElementFuncName]($els, context || this.options.context)
+                    .then(function () {
+                        $els.removeClass('o_dirty');
+                        resolve();
+                    })
+                    .catch(error => {
+                        // because ckeditor regenerates all the dom, we can't just
+                        // setup the popover here as everything will be destroyed by
+                        // the DOM regeneration. Add markings instead, and returns a
+                        // new rejection with all relevant info
+                        var id = uniqueId("carlos_danger_");
+                        $els.addClass('o_dirty o_editable oe_carlos_danger ' + id);
+                        $('.o_editable.' + id)
+                            .removeClass(id)
+                            .popover({
+                                trigger: 'hover',
+                                content: error.data.message || '',
+                                placement: 'auto',
+                            })
+                            .popover('show');
+                        reject();
+                    });
                 });
             });
         });
         return Promise.all(proms).then(function () {
             window.onbeforeunload = null;
-        }).guardedCatch((failed) => {
-            // If there were errors, re-enable edition
-            this.cancel(false);
         });
     }
     // TODO unused => remove or reuse as it should be
