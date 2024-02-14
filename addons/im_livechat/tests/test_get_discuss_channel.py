@@ -49,10 +49,13 @@ class TestGetDiscussChannel(TestImLivechatCommon):
         channel_info = self.livechat_channel.with_user(test_user)._open_livechat_discuss_channel(anonymous_name='whatever', previous_operator_id=operator.partner_id.id, user_id=test_user.id)
         self.assertFalse(channel_info['channel']['anonymous_name'])
         self.assertEqual(channel_info['channel']['anonymous_country'], [('clear',)])
+        operator_member = self.env['discuss.channel.member'].search([('channel_id', '=', channel_info['id']), ('partner_id', '=', operator.partner_id.id)])
+        visitor_member = self.env['discuss.channel.member'].search([('channel_id', '=', channel_info['id']), ('partner_id', '=', test_user.partner_id.id)])
         self.assertEqual(channel_info['channel']['channelMembers'], [('insert', [
             {
                 'channel': {'id': channel_info['id']},
-                'id': self.env['discuss.channel.member'].search([('channel_id', '=', channel_info['id']), ('partner_id', '=', operator.partner_id.id)]).id,
+                'create_date': fields.Datetime.to_string(operator_member.create_date),
+                'id': operator_member.id,
                 'persona': {
                     'partner': {
                         'active': True,
@@ -65,7 +68,8 @@ class TestGetDiscussChannel(TestImLivechatCommon):
             },
             {
                 'channel': {'id': channel_info['id']},
-                'id': self.env['discuss.channel.member'].search([('channel_id', '=', channel_info['id']), ('partner_id', '=', test_user.partner_id.id)]).id,
+                'create_date': fields.Datetime.to_string(visitor_member.create_date),
+                'id': visitor_member.id,
                 'persona': {
                     'partner': {
                         'active': True,
@@ -85,13 +89,15 @@ class TestGetDiscussChannel(TestImLivechatCommon):
         # ensure visitor info are correct when operator is testing themselves
         operator = self.operators[0]
         channel_info = self.livechat_channel.with_user(operator)._open_livechat_discuss_channel(anonymous_name='whatever', previous_operator_id=operator.partner_id.id, user_id=operator.id)
+        operator_member = self.env['discuss.channel.member'].search([('channel_id', '=', channel_info['id']), ('partner_id', '=', operator.partner_id.id)])
         self.assertEqual(channel_info['operator_pid'], (operator.partner_id.id, "Michel Operator"))
         self.assertFalse(channel_info['channel']['anonymous_name'])
         self.assertEqual(channel_info['channel']['anonymous_country'], [('clear',)])
         self.assertEqual(channel_info['channel']['channelMembers'], [('insert', [
             {
                 'channel': {'id': channel_info['id']},
-                'id': self.env['discuss.channel.member'].search([('channel_id', '=', channel_info['id']), ('partner_id', '=', operator.partner_id.id)]).id,
+                'create_date': fields.Datetime.to_string(operator_member.create_date),
+                'id': operator_member.id,
                 'persona': {
                     'partner': {
                         'active': True,
