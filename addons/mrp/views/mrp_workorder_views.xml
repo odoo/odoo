@@ -163,14 +163,13 @@
                     </group>
                     <group>
                         <field name="product_id" readonly="1"/>
-                        <field name="qty_production" readonly="1"/>
+                        <field name="qty_remaining" string="Quantity" readonly="1"/>
                         <field name="finished_lot_id" readonly="1"/>
                     </group>
                 </group>
                 <group>
-                    <group invisible="not date_start">
-                        <label for="date_start" string="Scheduled Date" invisible="state in ['progress', 'done', 'cancel']"/>
-                        <label for="date_start" string="Start Date" invisible="state not in ['progress', 'done', 'cancel']"/>
+                    <group>
+                        <label for="date_start" string="Start Date"/>
                         <div class="oe_inline">
                             <field name="is_planned" invisible="1"/>
                             <field name="date_start" class="mr8 oe_inline" readonly="state in ['cancel', 'done']"/>
