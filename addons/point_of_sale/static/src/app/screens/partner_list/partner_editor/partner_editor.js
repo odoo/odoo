@@ -130,17 +130,15 @@ export class PartnerEditor extends Component {
             });
         } else {
             const imageUrl = await getDataURLFromFile(file);
-            const loadedImage = await loadImage(imageUrl, {
-                onError: () => {
-                    this.dialog.add(AlertDialog, {
-                        title: _t("Loading Image Error"),
-                        body: _t("Encountered error when loading image. Please try again."),
-                    });
-                },
-            });
+            const loadedImage = await loadImage(imageUrl);
             if (loadedImage) {
                 const resizedImage = await this._resizeImage(loadedImage, 800, 600);
                 this.changes.image_1920 = resizedImage.toDataURL();
+            } else {
+                this.dialog.add(AlertDialog, {
+                    title: _t("Loading Image Error"),
+                    body: _t("Encountered error when loading image. Please try again."),
+                });
             }
         }
     }

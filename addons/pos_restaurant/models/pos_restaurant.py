@@ -18,6 +18,7 @@ class RestaurantFloor(models.Model):
     table_ids = fields.One2many('restaurant.table', 'floor_id', string='Tables')
     sequence = fields.Integer('Sequence', default=1)
     active = fields.Boolean(default=True)
+    floor_background_image = fields.Image(string='Floor Background Image')
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_active_pos_session(self):
