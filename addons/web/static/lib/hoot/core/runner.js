@@ -862,9 +862,6 @@ export class TestRunner {
                     }
                 });
 
-            this.expect.__after(this, test);
-            test.visited++;
-
             // After test
             const { lastResults } = test;
             await this.#execAfterCallback(async () => {
@@ -887,6 +884,8 @@ export class TestRunner {
             }
 
             // Log test errors and increment counters
+            this.expect.__after(this, test);
+            test.visited++;
             if (!lastResults.pass) {
                 let failReason;
                 if (lastResults.errors.length) {
@@ -1032,11 +1031,11 @@ export class TestRunner {
         Object.defineProperties(taggedFn, {
             config: { get: configure },
             debug: { get: () => addTags("debug") },
-            multi: { get: (count) => configure({ multi: count }) },
+            multi: { get: () => (count) => configure({ multi: count }) },
             only: { get: () => addTags("only") },
             skip: { get: () => addTags("skip") },
             tags: { get: () => addTags },
-            timeout: { get: (ms) => configure({ timeout: ms }) },
+            timeout: { get: () => (ms) => configure({ timeout: ms }) },
             todo: { get: () => addTags("todo") },
         });
 
