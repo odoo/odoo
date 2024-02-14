@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_confirm_stock_text" model="ir.ui.view">
+        <field name="name">confirm.stock.text</field>
+        <field name="model">confirm.stock.text</field>
+        <field name="arch" type="xml">
+            <form string="Text Confirmation">
+                <div>
+                    If you confirm this Delivery Order, a text message will be sent via <strong><field name="confirmation_type" readonly="True"/></strong>.
+                </div>
+                <footer>
+                    <button name="send_text" type="object" data-hotkey="q"
+                            string="Confirm" class="oe_highlight"/>
+                    <button name="dont_send_text" type="object" data-hotkey="w"
+                            string="Disable Text" class="btn btn-primary"/>
+                    <button special="cancel" data-hotkey="x" string="Cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

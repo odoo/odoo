@@ -11,11 +11,11 @@
     'data': [
         'data/sms_data.xml',
         'views/res_config_settings_views.xml',
-        'wizard/confirm_stock_sms_views.xml',
         'security/ir.model.access.csv',
         'security/sms_security.xml',
     ],
     'auto_install': True,
     'post_init_hook': '_assign_default_sms_template_picking_id',
+    'uninstall_hook': '_reset_text_confirmation',
     'license': 'LGPL-3',
 }

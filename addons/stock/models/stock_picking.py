@@ -3,6 +3,7 @@
 import json
 import math
 import pytz
+import threading
 from ast import literal_eval
 from datetime import date, timedelta
 from collections import defaultdict
@@ -1474,7 +1475,38 @@ class StockPicking(models.Model):
             pickings_to_backorder = self._check_backorder()
             if pickings_to_backorder:
                 return pickings_to_backorder._action_generate_backorder_wizard(show_transfers=self._should_show_transfers())
+        if not self.env.context.get('skip_text'):
+            pickings_to_warn_text = self._check_warn_text()
+            if pickings_to_warn_text:
+                return pickings_to_warn_text._action_generate_warn_text_wizard()
         return True
+
+    def _check_warn_text(self):
+        warn_text_pickings = self.browse()
+        for picking in self:
+            is_delivery = picking.company_id.text_confirmation \
+                    and picking.picking_type_id.code == 'outgoing' \
+                    and (picking.partner_id.mobile or picking.partner_id.phone)
+            if is_delivery and not getattr(threading.current_thread(), 'testing', False) \
+                    and not self.env.registry.in_test_mode() \
+                    and not picking.company_id.has_received_text_warning:
+                warn_text_pickings |= picking
+        return warn_text_pickings
+
+    def _action_generate_warn_text_wizard(self):
+        view = self.env.ref('stock.view_confirm_stock_text')
+        wiz = self.env['confirm.stock.text'].create({'pick_ids': [(4, p.id) for p in self]})
+        return {
+            'name': _('Text Confirmation'),
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'confirm.stock.text',
+            'views': [(view.id, 'form')],
+            'view_id': view.id,
+            'target': 'new',
+            'res_id': wiz.id,
+            'context': self.env.context,
+        }
 
     def _should_show_transfers(self):
         """Whether the different transfers should be displayed on the pre action done wizards."""
