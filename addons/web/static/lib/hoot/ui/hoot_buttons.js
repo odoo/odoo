@@ -1,7 +1,6 @@
 /** @odoo-module */
 
 import { Component, useState, xml } from "@odoo/owl";
-import { Test } from "../core/test";
 import { refresh, subscribeToURLParams } from "../core/url";
 import { HootLink } from "./hoot_link";
 
@@ -31,14 +30,14 @@ export class HootButtons extends Component {
                 <HootLink
                     type="'test'"
                     id="state.failed"
-                    class="'bg-btn px-2 py-1 transition-colors'"
+                    class="'bg-btn px-2 py-1 transition-colors animate-slide-left'"
                     title="'Run failed tests'"
                 >
                     Run failed
                 </HootLink>
             </t>
             <t t-if="env.runner.hasFilter">
-                <HootLink class="'bg-btn px-2 py-1 transition-colors'">
+                <HootLink class="'bg-btn px-2 py-1 transition-colors animate-slide-left'">
                     Run all
                 </HootLink>
             </t>
@@ -52,8 +51,8 @@ export class HootButtons extends Component {
         });
         this.runnerState = useState(runner.state);
 
-        runner.afterEach(({ id, status }) => {
-            if (status !== Test.PASSED) {
+        runner.afterEach(({ id, lastResults }) => {
+            if (!lastResults.pass) {
                 this.state.failed.push(id);
             }
         });
