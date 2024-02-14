@@ -35,6 +35,15 @@ class Repair(models.Model):
         if line_vals_list:
             self.env['stock.move'].create(line_vals_list)
 
+    def _get_action_add_from_catalog_extra_context(self):
+        bom = self.env['mrp.bom']._bom_find(self.product_id, company_id=self.company_id.id)[self.product_id]
+        product_ids = [line.product_id.id for line in bom.bom_line_ids] if bom else []
+        return {
+            **super()._get_action_add_from_catalog_extra_context(),
+            'catalog_bom_product_ids': product_ids,
+            'search_default_bom_parts': bool(product_ids)
+        }
+
 
 class StockMove(models.Model):
     _inherit = 'stock.move'

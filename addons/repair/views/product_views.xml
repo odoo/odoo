@@ -11,4 +11,18 @@
             </xpath>
         </field>
     </record>
+
+    <record id="product_view_search_catalog" model="ir.ui.view">
+        <field name="name">product.view.search.catalog.inherit.repair</field>
+        <field name="model">product.product</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="product.product_view_search_catalog"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='products']" position="after">
+                <separator />
+                <filter name="bom_parts" string="BoM Components" domain="[('id', 'in', context.get('catalog_bom_product_ids'))]"/>
+            </xpath>
+        </field>
+    </record>
+
 </odoo>

@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
 from random import randint
 
 from odoo import api, Command, fields, models, _
@@ -19,7 +20,7 @@ class Repair(models.Model):
     """ Repair Orders """
     _name = 'repair.order'
     _description = 'Repair Order'
-    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'product.catalog.mixin']
     _order = 'priority desc, create_date desc'
     _check_company_auto = True
 
@@ -583,6 +584,57 @@ class Repair(models.Model):
                 add_moves.sale_line_id.write({'price_unit': 0.0})
             else:
                 add_moves.sale_line_id._compute_price_unit()
+
+    # -------------------------------------------------------------------------
+    # CATALOG
+    # -------------------------------------------------------------------------
+
+    def action_add_from_catalog(self):
+        res = super().action_add_from_catalog()
+        if res['context'].get('product_catalog_order_model') == 'repair.order':
+            res['search_view_id'] = [self.env.ref('repair.product_view_search_catalog').id, 'search']
+        return res
+
+    def _default_order_line_values(self, child_field=False):
+        default_data = super()._default_order_line_values(child_field)
+        new_default_data = self.env['stock.move']._get_product_catalog_lines_data(parent_record=self)
+
+        return {**default_data, **new_default_data}
+
+    def _get_product_catalog_order_data(self, products, **kwargs):
+        return {product.id: self._get_product_price_and_data(product) for product in products}
+
+    def _get_product_price_and_data(self, product):
+        self.ensure_one()
+        return {'price': product.list_price}
+
+    def _get_product_catalog_record_lines(self, product_ids, **kwargs):
+        grouped_lines = defaultdict(lambda: self.env['stock.move'])
+
+        for line in self.move_ids:
+            if line.product_id.id in product_ids:
+                grouped_lines[line.product_id] |= line
+
+        return grouped_lines
+
+    def _update_order_line_info(self, product_id, quantity, **kwargs):
+        move = self.move_ids.filtered(lambda e: e.product_id.id == product_id)
+        if move:
+            if quantity != 0:
+                move.product_uom_qty = quantity
+            else:
+                move.unlink()
+        elif quantity > 0:
+            move = self.env['stock.move'].create({
+                'repair_id': self.id,
+                'product_uom_qty': quantity,
+                'product_id': product_id,
+                'location_id': self.location_id.id,
+                'location_dest_id': self.location_dest_id.id,
+                'repair_line_type': 'add'
+            })
+
+        return self.env['product.product'].browse(product_id).list_price
 
 class RepairTags(models.Model):
     """ Tags of Repair's tasks """

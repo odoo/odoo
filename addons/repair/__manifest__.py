@@ -41,5 +41,10 @@ The following topics are covered by this module:
     'post_init_hook': '_create_warehouse_data',
     'installable': True,
     'application': True,
+    'assets': {
+        'web.assets_backend': [
+            'repair/static/src/**/*',
+        ],
+    },
     'license': 'LGPL-3',
 }
