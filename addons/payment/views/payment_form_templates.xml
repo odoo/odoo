@@ -67,12 +67,8 @@
                 <!-- === Payment tokens === -->
                 <div t-if="tokens_sudo">
                     <!-- === Header === -->
-                    <h4 id="o_payment_tokens_heading"
-                        class="d-flex gap-3 align-items-center mt-4 mb-3 fs-6 small text-uppercase
-                               fw-bolder"
-                    >
-                        <span>Your payment methods</span>
-                        <hr class="flex-grow-1 m-0"/>
+                    <h4 id="o_payment_tokens_heading" class="fs-6 small text-uppercase fw-bolder">
+                        Your payment methods
                     </h4>
                     <!-- === Body === -->
                     <ul class="list-group">
@@ -96,14 +92,11 @@
                      t-att-class="'collapse' if collapse_payment_methods else ''"
                 >
                     <!-- === Header === -->
-                    <h4 class="d-flex gap-3 align-items-center mt-4 mb-3 fs-6 small text-uppercase
-                               fw-bolder"
-                    >
+                    <h4 class="fs-6 small text-uppercase fw-bolder">
                         <t t-if="not collapse_payment_methods">Choose a payment method</t>
                         <t t-else="">Other payment methods</t>
                         <!-- === Availability report button (for debug) === -->
                         <t t-call="payment.availability_report_button"/>
-                        <hr class="flex-grow-1 m-0"/>
                     </h4>
                     <!-- === Body === -->
                     <ul class="list-group">
