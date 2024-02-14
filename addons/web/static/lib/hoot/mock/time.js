@@ -190,6 +190,7 @@ export async function advanceTime(ms) {
 
     // Waits for callbacks to execute
     await Promise.all(results);
+    await delay(1);
 
     return baseMs;
 }
