@@ -10,6 +10,8 @@ import { HootTagButton } from "./hoot_tag_button";
  * @typedef {{
  *  canCopy?: boolean;
  *  full?: boolean;
+ *  inert?: boolean;
+ *  showStatus?: boolean;
  *  test: Test;
  * }} HootTestPathProps
  */
@@ -21,26 +23,41 @@ export class HootTestPath extends Component {
     static props = {
         canCopy: { type: Boolean, optional: true },
         full: { type: Boolean, optional: true },
+        inert: { type: Boolean, optional: true },
+        showStatus: { type: Boolean, optional: true },
         test: Test,
     };
 
     static template = xml`
         <t t-set="statusInfo" t-value="getStatusInfo()" />
         <div class="flex items-center gap-1 whitespace-nowrap overflow-hidden">
-            <span t-attf-class="inline-flex min-w-3 min-h-3 rounded-full bg-{{ statusInfo.className }}" t-att-title="statusInfo.text" />
+            <t t-if="props.showStatus">
+                <span
+                    t-attf-class="inline-flex min-w-3 min-h-3 rounded-full bg-{{ statusInfo.className }}"
+                    t-att-title="statusInfo.text"
+                />
+            </t>
             <span class="flex items-center overflow-hidden">
                 <t t-if="uiState.selectedSuiteId and !props.full">
                     <span class="text-muted font-bold p-1 select-none hidden md:inline">...</span>
                     <span class="select-none hidden md:inline">/</span>
                 </t>
                 <t t-foreach="getTestPath()" t-as="suite" t-key="suite.id">
-                    <HootLink
-                        type="'suite'"
-                        id="suite.id"
-                        class="'hoot-link text-muted whitespace-nowrap font-bold p-1 select-text hidden md:inline transition-colors'"
-                        title="'Run ' + suite.fullName"
-                        t-esc="suite.name"
-                    />
+                    <t t-if="props.inert">
+                        <span
+                            class="text-muted whitespace-nowrap font-bold p-1 select-text hidden md:inline transition-colors"
+                            t-esc="suite.name"
+                        />
+                    </t>
+                    <t t-else="">
+                        <HootLink
+                            type="'suite'"
+                            id="suite.id"
+                            class="'hoot-link text-muted whitespace-nowrap font-bold p-1 select-text hidden md:inline transition-colors'"
+                            title="'Run ' + suite.fullName"
+                            t-esc="suite.name"
+                        />
+                    </t>
                     <span class="select-none hidden md:inline" t-att-class="{ 'text-skip': suite.config.skip }">/</span>
                 </t>
                 <span
@@ -49,7 +66,7 @@ export class HootTestPath extends Component {
                     t-att-title="props.test.name"
                 >
                     <t t-esc="props.test.name" />
-                    <t t-if="!props.test.config.skip">
+                    <t t-if="props.showStatus and !props.test.config.skip">
                         <t t-set="expectLength" t-value="props.test.lastResults?.assertions?.length or 0" />
                         <span class="select-none" t-attf-title="{{ expectLength }} assertions passed">
                             (<t t-esc="expectLength" />)

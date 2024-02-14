@@ -52,7 +52,7 @@ export class HootReporting extends Component {
                     test="result.test"
                 >
                     <div class="flex gap-2 overflow-hidden">
-                        <HootTestPath canCopy="true" test="result.test" />
+                        <HootTestPath canCopy="true" showStatus="true" test="result.test" />
                     </div>
                     <div class="flex items-center ms-1 gap-2">
                         <small

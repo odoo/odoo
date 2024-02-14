@@ -4,6 +4,7 @@ import { Component, onWillRender, useState, xml } from "@odoo/owl";
 import { Test } from "../core/test";
 import { refresh } from "../core/url";
 import { formatTime } from "../hoot_utils";
+import { HootTestPath } from "./hoot_test_path";
 
 /**
  * @typedef {import("../core/expect").Assertion} Assertion
@@ -17,6 +18,8 @@ import { formatTime } from "../hoot_utils";
 
 /** @extends {Component<HootDebugToolBarProps, import("../hoot").Environment>} */
 export class HootDebugToolBar extends Component {
+    static components = { HootTestPath };
+
     static props = {
         test: Test,
     };
@@ -26,19 +29,7 @@ export class HootDebugToolBar extends Component {
             <details class="flex flex-col overflow-hidden rounded shadow bg-gray-200 dark:bg-gray-800" open="">
                 <summary class="flex items-center gap-1 px-2 bg-gray-300 dark:bg-gray-700">
                     <i class="fa fa-bug text-skip" />
-                    <span class="flex items-center whitespace-nowrap overflow-hidden" t-att-title="props.test.fullName">
-                        <t t-foreach="props.test.path.slice(0, -1)" t-as="suite" t-key="suite.id">
-                            <span
-                                class="text-muted whitespace-nowrap font-bold p-1 select-text hidden md:inline"
-                                t-esc="suite.name"
-                            />
-                            <span class="select-none hidden md:inline">/</span>
-                        </t>
-                        <span
-                            t-attf-class="text-{{ info.className }} truncate font-bold p-1"
-                            t-esc="props.test.name"
-                        />
-                    </span>
+                    <HootTestPath full="true" inert="true" test="props.test" />
                 </summary>
                 <div class="flex gap-2 px-2">
                     <div class="flex gap-px rounded my-1 overflow-hidden min-w-fit">
