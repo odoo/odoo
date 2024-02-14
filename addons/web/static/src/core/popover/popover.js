@@ -12,6 +12,30 @@ import { useActiveElement } from "@web/core/ui/ui_service";
 import { addClassesToElement, mergeClasses } from "@web/core/utils/classname";
 import { useForwardRefToParent } from "@web/core/utils/hooks";
 
+/**
+ * Will trigger the callback when the window is clicked, giving
+ * the clicked element as parameter.
+ *
+ * This also handles the case where an iframe is clicked.
+ *
+ * @param {Function} callback
+ */
+function useClickAway(callback) {
+    const pointerDownHandler = (event) => {
+        callback(event.composedPath()[0]);
+    };
+
+    const blurHandler = (ev) => {
+        const target = ev.relatedTarget || document.activeElement;
+        if (target?.tagName === "IFRAME") {
+            callback(target);
+        }
+    };
+
+    useExternalListener(window, "pointerdown", pointerDownHandler, { capture: true });
+    useExternalListener(window, "blur", blurHandler, { capture: true });
+}
+
 const POPOVERS = new WeakMap();
 /**
  * Can be used to retrieve the popover element for a given target.
@@ -132,7 +156,8 @@ export class Popover extends Component {
         useSubEnv({ [POPOVER_SYMBOL]: this.subPopovers });
 
         if (this.props.target.isConnected) {
-            useExternalListener(window, "pointerdown", this.onClickAway, { capture: true });
+            useClickAway((target) => this.onClickAway(target));
+
             if (this.props.closeOnEscape) {
                 useHotkey("escape", () => this.props.close());
             }
@@ -164,8 +189,7 @@ export class Popover extends Component {
         return [...this.subPopovers].some((p) => p.isInside(target));
     }
 
-    onClickAway(ev) {
-        const target = ev.composedPath()[0];
+    onClickAway(target) {
         if (this.props.closeOnClickAway(target) && !this.isInside(target)) {
             this.props.close();
         }
