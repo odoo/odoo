@@ -750,6 +750,9 @@ export function match(value, ...matchers) {
     }
     return matchers.some((matcher) => {
         if (typeof matcher === "function") {
+            if (value instanceof matcher) {
+                return true;
+            }
             matcher = new RegExp(matcher.name);
         }
         let strValue = String(value);
