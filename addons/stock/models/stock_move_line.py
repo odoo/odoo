@@ -270,7 +270,7 @@ class StockMoveLine(models.Model):
                     excluded_smls -= sml
 
     def _get_default_dest_location(self):
-        if not self.env.user.has_group('stock.group_stock_storage_categories'):
+        if not self.env.user.has_group('stock.group_stock_multi_locations'):
             return self.location_dest_id[:1]
         if self.env.context.get('default_location_dest_id'):
             return self.env['stock.location'].browse([self.env.context.get('default_location_dest_id')])

@@ -37,7 +37,7 @@
                         <group string="Additional Information" name="additional_info">
                             <field name="active" invisible="1"/>
                             <field name="usage"/>
-                            <field name="storage_category_id" invisible="usage != 'internal'" groups="stock.group_stock_storage_categories"/>
+                            <field name="storage_category_id" invisible="usage != 'internal'" groups="stock.group_stock_multi_locations"/>
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                             <field name="scrap_location" invisible="usage not in ('inventory', 'internal')"/>
                             <field name="return_location"/>
@@ -105,7 +105,7 @@
                 <field name="complete_name" string="Location"/>
                 <field name="usage"/>
                 <field name="is_empty" invisible="usage not in ['internal', 'transit']"/>
-                <field name="storage_category_id" readonly="usage != 'internal'" groups="stock.group_stock_storage_categories"/>
+                <field name="storage_category_id" readonly="usage != 'internal'" groups="stock.group_stock_multi_locations"/>
                 <field name="company_id" groups="base.group_multi_company"/>
             </tree>
         </field>

@@ -21,7 +21,7 @@
                 <field name="product_id"/>
                 <field name="location_id"/>
                 <field name="warehouse_id"/>
-                <field name="storage_category_id" groups="stock.group_stock_storage_categories" />
+                <field name="storage_category_id" groups="stock.group_stock_multi_locations" />
                 <field name="user_id"/>
                 <field name="inventory_date"/>
                 <field name="product_categ_id"/>
@@ -470,7 +470,7 @@ in this location. That leads to a negative stock.
                 <field name="inventory_quantity_set" column_invisible="True"/>
                 <field name="company_id" column_invisible="True"/>
                 <field name="location_id" domain="[('usage', 'in', ['internal', 'transit'])]" column_invisible="context.get('hide_location', False)" readonly="id" options="{'no_create': True}"/>
-                <field name="storage_category_id" groups="stock.group_stock_storage_categories" column_invisible="context.get('hide_location', False)" options="{'no_create': True}" optional="hidden"/>
+                <field name="storage_category_id" groups="stock.group_stock_multi_locations" column_invisible="context.get('hide_location', False)" options="{'no_create': True}" optional="hidden"/>
                 <field name="cyclic_inventory_frequency" column_invisible="context.get('hide_location', False)" options="{'no_create': True}" optional="hidden"/>
                 <field name="is_favorite" widget="boolean_favorite" nolabel="1" optional="hidden"/>
                 <field name="product_id" readonly="context.get('single_product', False) or id" force_save="1" options="{'no_create': True}"/>

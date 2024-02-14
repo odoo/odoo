@@ -248,7 +248,6 @@ class StockGenerateCommon(TransactionCase):
         -> The test ensures that the destination locations are correct
         """
         stock_location = self.warehouse.lot_stock_id
-        self.env.user.write({'groups_id': [(4, self.env.ref('stock.group_stock_storage_categories').id)]})
         self.env.user.write({'groups_id': [(4, self.env.ref('stock.group_stock_multi_locations').id)]})
 
         # max 1 x product_serial

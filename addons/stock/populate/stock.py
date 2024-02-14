@@ -55,15 +55,6 @@ class StorageCategory(models.Model):
 
     _populate_sizes = {'small': 10, 'medium': 20, 'large': 50}
 
-    def _populate(self, size):
-        # Activate options used in the stock populate to have a ready Database
-
-        self.env['res.config.settings'].create({
-            'group_stock_storage_categories': True,  # Activate storage categories
-        }).execute()
-
-        return super()._populate(size)
-
     def _populate_factories(self):
 
         return [
