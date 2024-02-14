@@ -454,5 +454,6 @@ class PaymentPortal(payment_portal.PaymentPortal):
                 'transaction_route': order_sudo.get_portal_url(suffix='/transaction'),
                 'landing_route': order_sudo.get_portal_url(),
                 'access_token': order_sudo.access_token,
+                'sale_order_id': sale_order_id,
             })
         return form_values
