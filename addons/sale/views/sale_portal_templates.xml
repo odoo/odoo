@@ -295,7 +295,7 @@
                                         If you believe that it is an error, please contact the website administrator.
                                     </div>
                                     <div t-else="" id="payment_method" class="text-start">
-                                        <h3>Pay with</h3>
+                                        <h3 class="mb-3">Pay with</h3>
                                         <t t-call="payment.form">
                                             <!-- Inject the order ID to allow Stripe to check if tokenization is required. -->
                                             <t t-set="sale_order_id" t-value="sale_order.id"/>
