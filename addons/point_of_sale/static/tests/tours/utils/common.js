@@ -1,3 +1,5 @@
+import { simulateBarCode } from "@barcodes/../tests/helpers";
+
 export function back() {
     return {
         content: "go back to the products",
@@ -5,6 +7,7 @@ export function back() {
         run: "click",
     };
 }
+
 export function inLeftSide(steps) {
     return [
         {
@@ -56,4 +59,15 @@ export function selectButton(name) {
         trigger: `button:contains("${name}")`,
         run: "click",
     };
+}
+export function scan_barcode(barcode) {
+    return [
+        {
+            content: `PoS model scan barcode '${barcode}'`,
+            trigger: "body", // The element here does not really matter as long as it is present
+            run: () => {
+                simulateBarCode([...barcode, "Enter"]);
+            },
+        },
+    ];
 }
