@@ -157,6 +157,21 @@ class TestFiscalPosition(common.SavepointCase):
 
         self.assertEqual(mapped_taxes, self.dst1_tax | self.dst2_tax)
 
+    def test_20_fp_one_tax_2none(self):
+        src_tax = self.env['account.tax'].create({'name': "SRC", 'amount': 0.0})
+
+        fp2m = self.fp.create({
+            'name': "FP-TAX2NONE",
+            'tax_ids': [
+                (0, 0, {
+                    'tax_src_id': src_tax.id,
+                }),
+            ]
+        })
+        mapped_taxes = fp2m.map_tax(src_tax)
+
+        self.assertEqual(mapped_taxes, self.env['account.tax'])
+
     def test_30_fp_delivery_address(self):
         # Make sure the billing company is from Belgium (within the EU)
         self.env.company.vat = 'BE0477472701'
