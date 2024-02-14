@@ -57,6 +57,26 @@ class Job(models.Model):
     activities_today = fields.Integer(compute='_compute_activities')
 
     applicant_properties_definition = fields.PropertiesDefinition('Applicant Properties')
+    no_of_hired_employee = fields.Integer(
+        compute='_compute_no_of_hired_employee',
+        string='Hired', copy=False,
+        help='Number of hired employees for this job position during recruitment phase.',
+        store=True)
+
+    @api.depends('application_ids.date_closed')
+    def _compute_no_of_hired_employee(self):
+        counts = dict(self.env['hr.applicant']._read_group(
+            domain=[
+                ('job_id', 'in', self.ids),
+                ('date_closed', '!=', False),
+                '|',
+                    ('active', '=', False),
+                    ('active', '=', True),
+            ],
+            groupby=['job_id'],
+            aggregates=['__count']))
+        for job in self:
+            job.no_of_hired_employee = counts.get(job, 0)
 
     @api.depends_context('uid')
     def _compute_activities(self):

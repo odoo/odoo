@@ -21,8 +21,6 @@ class Job(models.Model):
         help='Number of employees currently occupying this job position.')
     no_of_recruitment = fields.Integer(string='Target', copy=False,
         help='Number of new employees you expect to recruit.', default=1)
-    no_of_hired_employee = fields.Integer(string='Hired Employees', copy=False,
-        help='Number of hired employees for this job position during recruitment phase.')
     employee_ids = fields.One2many('hr.employee', 'job_id', string='Employees', groups='base.group_user')
     description = fields.Html(string='Job Description', sanitize_attributes=False,
                               default="Perform assigned responsibilities, collaborate with team members, and adhere to company policies. Strong communication, problem-solving, and work ethic required. Adaptability, initiative, and willingness to learn are valued.")
