@@ -1,42 +1,30 @@
-.o_cw_popover_link {
+.o_cw_popover .o_cw_popover_link.o_event.fc-bgevent {
+    &:hover {
+        --o-bg-opacity: .75;
+    }
+
     margin-top: 2px;
+    outline-color: var(--o-event-bg--subtle);
+    padding: 0 map-get($spacers, 1);
 
-    &[class*="o_calendar_color_"] {
-        --o-bg-opacity: 1;
-
-        border-radius: $border-radius;
-        border-color: var(--o-cw-popover-color, #{$info});
-        padding: 0 map-get($spacers, 1);
-        background: RGBA(var(--o-cw-popover-color--subtle, #{to-rgb($info)}), var(--o-bg-opacity));
-        font-weight: $font-weight-normal;
+    &.o_event_hatched, &.o_attendee_status_tentative {
+        --o-event-bg-rgb: var(--o-event-bg--subtle-rgb);
 
         &:hover {
-            --o-bg-opacity: .5 !important;
-        }
-
-        &.o_event_dot {
-            --o-bg-opacity: 0;
-
-            &:before {
-                margin-right: map-get($spacers, 1);
-                font-family: FontAwesome;
-                font-size: $o-font-size-base-smaller;
-                color: var(--o-cw-popover-color, #{$info});
-                content: '\f111';
-            }
-
+            opacity: .75;
         }
     }
 
-    @for $i from 1 through length($o-colors-complete) {
-        $color: nth($o-colors-complete, $i);
-        $color-subtle: mix($o-white, $color, 55%);
+    &:not(.o_event_dot) {
+        border: 1px solid var(--o-event-bg--subtle);
+    }
 
-        &.o_calendar_color_#{$i - 1} {
-            --o-cw-popover-color: #{$color};
-            --o-cw-popover-color--subtle: #{$color-subtle};
+    &.o_event_dot {
+        --o-bg-opacity: 0;
+        outline-color: transparent;
 
-            color: color-contrast($color-subtle);
+        &:hover {
+            --o-bg-opacity: .5;
         }
     }
 }
