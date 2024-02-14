@@ -182,7 +182,7 @@
     <record id="action_orderpoint_replenish" model="ir.actions.act_window">
         <field name="name">Replenishment</field>
         <field name="res_model">stock.warehouse.orderpoint</field>
-        <field name="view_mode">tree</field>
+        <field name="view_mode">tree,kanban,form</field>
         <field name="view_id" ref="view_warehouse_orderpoint_tree_editable"/>
         <field name="search_view_id" ref="stock_reorder_report_search"/>
         <field name="help" type="html">
@@ -232,8 +232,4 @@
         action="action_replenishment"
         name="Replenishment" parent="menu_stock_procurement" sequence="5"
         groups="stock.group_stock_manager"/>
-    <menuitem
-        id="menu_reordering_rules_config"
-        action="action_orderpoint"
-        name="Reordering Rules" parent="menu_product_in_config_stock" sequence="10"/>
 </odoo>
