@@ -34,13 +34,22 @@ class StockPicking(models.Model):
 
     @api.depends('move_line_ids', 'move_line_ids.result_package_id')
     def _compute_packages(self):
-        for package in self:
+        counts = dict(self.env['stock.move.line']._read_group(
+           domain=[
+              ('picking_id', 'in', self.ids),
+              ('result_package_id', '!=', False)],
+              groupby=['picking_id'],
+              aggregates=['__count'],
+        ))
+        self.fetch(['move_line_ids'])
+        self.move_line_ids.fetch(['result_package_id'])
+        for picking in self:
             packs = set()
-            if self.env['stock.move.line'].search_count([('picking_id', '=', package.id), ('result_package_id', '!=', False)]):
-                for move_line in package.move_line_ids:
+            if counts.get(picking, 0):
+                for move_line in picking.move_line_ids:
                     if move_line.result_package_id:
                         packs.add(move_line.result_package_id.id)
-            package.package_ids = list(packs)
+            picking.package_ids = list(packs)
 
     @api.depends('move_line_ids', 'move_line_ids.result_package_id', 'move_line_ids.product_uom_id', 'move_line_ids.quantity')
     def _compute_bulk_weight(self):
