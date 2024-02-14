@@ -646,41 +646,28 @@ stepUtils.autoExpandMoreButtons('.o_form_saved'),
 stepUtils.openBurgerMenu(".o_breadcrumb .active:contains('Inventory Overview')"),
 {
     mobile: false,
-    trigger: ".o_menu_sections button[data-menu-xmlid='stock.menu_stock_config_settings']",
+    trigger: ".o_menu_sections button[data-menu-xmlid='stock.menu_stock_warehouse_mgmt']",
     extra_trigger: '.o_main_navbar',
-    content: _t("Go to Configuration"),
+    content: _t("Go to Operations"),
     position: "bottom"
 }, {
-    trigger: ".dropdown-item[data-menu-xmlid='stock.menu_reordering_rules_config'], nav.o_burger_menu_content li[data-menu-xmlid='stock.menu_reordering_rules_config']",
-    content: _t("Reordering Rules"),
+    trigger: ".dropdown-item[data-menu-xmlid='stock.menu_reordering_rules_replenish'], nav.o_burger_menu_content li[data-menu-xmlid='stock.menu_reordering_rules_replenish']",
+    content: _t("Replenishment"),
     position: "bottom"
-}, {
-    mobile: false,
-    trigger: ".o_list_button_add",
-    content: _t("Let's create a new reordering rule"),
-    position: "right",
-}, {
-    mobile: true,
-    trigger: ".o-kanban-button-new",
-    content: _t("Let's create a new reordering rule"),
-    position: "right",
-}, {
-    mobile: false,
-    trigger: ".o_field_widget[name=product_id] input",
-    content: _t("Write the name of your product."),
-    position: "top",
-    run: "edit the_flow.component2",
-}, {
-    mobile: false,
-    trigger: ".ui-menu-item > a:contains('the_flow.component2')",
-    auto: true,
-}, {
-    mobile: true,
-    trigger: ".o_field_widget[name=product_id] input",
-    content: _t("Write the name of your product."),
-    position: "top",
 },
-...stepUtils.mobileKanbanSearchMany2X('Product', 'the_flow.component2'),
+{
+    mobile: true,
+    trigger: ".o_control_panel_navigation .btn .fa-search",
+    extra_trigger: "span:contains('Replenishment')"
+}, {
+    trigger: ".o_searchview_facet:contains('To Reorder') .o_facet_remove"
+}, {
+    mobile: false,
+    trigger: "td:contains('the_flow.component2')"
+}, {
+    mobile: true,
+    trigger: "span:contains('the_flow.component2')"
+},
 {
     // FIXME WOWL: remove first part of selector when legacy view is dropped
     trigger: "input.o_field_widget[name=product_min_qty], .o_field_widget[name=product_min_qty] input",
@@ -703,9 +690,7 @@ stepUtils.openBurgerMenu(".o_breadcrumb .active:contains('Inventory Overview')")
     trigger: ".o_form_button_save",
     content: markup(_t("<p>Save this reordering rule</p>")),
     position: "bottom"
-},
-stepUtils.openBurgerMenu(".o_breadcrumb .active:contains('OP/')"),
-{
+}, {
 //Go to purchase:
     edition: "enterprise",
     trigger: '.o_menu_toggle',
