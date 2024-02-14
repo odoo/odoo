@@ -673,6 +673,18 @@
             <field name="fold" eval="True"/>
             <field name="user_id" ref="base.user_demo"/>
         </record>
+        <record id="project_personal_stage_demo_7" model="project.task.type">
+            <field name="sequence">8</field>
+            <field name="name">Deployed</field>
+            <field name="fold" eval="True"/>
+            <field name="user_id" ref="base.user_demo"/>
+        </record>
+        <record id="project_personal_stage_demo_8" model="project.task.type">
+            <field name="sequence">9</field>
+            <field name="name">Hard Backlog</field>
+            <field name="fold" eval="True"/>
+            <field name="user_id" ref="base.user_demo"/>
+        </record>
 
         <!-- Project 1 Milestones -->
         <record id="project_1_milestone_1" model="project.milestone">
@@ -1651,6 +1663,7 @@ Send it ASAP, its urgent.</field>
         <!-- Private tasks -->
         <record id="project_private_task_1" model="project.task">
             <field name="user_ids" eval="[Command.link(ref('base.user_admin'))]"/>
+            <field name="priority">2</field>
             <field name="project_id"/>
             <field name="name">Buy a gift for Marc Demo's birthday</field>
             <field name="description">Select a thoughtful gift for Marc Demo's birthday .</field>
@@ -1658,13 +1671,16 @@ Send it ASAP, its urgent.</field>
         </record>
         <record id="project_private_task_2" model="project.task">
             <field name="user_ids" eval="[Command.link(ref('base.user_admin'))]"/>
+            <field name="priority">2</field>
             <field name="project_id"/>
             <field name="name">Change left screen cable</field>
             <field name="description">Perform a replacement of the left screen cable to address any issues with connectivity or display quality.</field>
             <field name="tag_ids" eval="[Command.set([ref('project_tags_14')])]"/>
+            <field name="color">2</field>
         </record>
         <record id="project_private_task_3" model="project.task">
             <field name="user_ids" eval="[Command.link(ref('base.user_demo'))]"/>
+            <field name="priority">1</field>
             <field name="project_id"/>
             <field name="name">Clean kitchen fridge</field>
             <field name="tag_ids" eval="[Command.set([ref('project_tags_13')])]"/>
@@ -1674,6 +1690,7 @@ Send it ASAP, its urgent.</field>
             <field name="project_id"/>
             <field name="name">Check employees lunch accounts</field>
             <field name="tag_ids" eval="[Command.set([ref('project_tags_10')])]"/>
+            <field name="color">1</field>
         </record>
 
         <!-- demo data for Today-->
@@ -1687,30 +1704,43 @@ Send it ASAP, its urgent.</field>
         </record>
         <record id="project_private_task_6" model="project.task">
             <field name="user_ids" eval="[Command.link(ref('base.user_admin'))]"/>
+            <field name="priority">3</field>
             <field name="project_id"/>
             <field name="name">Review and reply to emails</field>
             <field name="date_deadline" eval="(DateTime.today() + relativedelta(hours=2)).strftime('%Y-%m-%d %H:%M')"/>
             <field name="description">Spend time going through inbox, reviewing and replying to important emails to stay organized and maintain communication.</field>
             <field name="tag_ids" eval="[Command.set([ref('project_tags_10')])]"/>
+            <field name="color">2</field>
         </record>
 
         <!-- demo data  for This week-->
         <record id="project_private_task_7" model="project.task">
             <field name="user_ids" eval="[Command.link(ref('base.user_admin')), Command.link(ref('base.user_demo'))]"/>
+            <field name="priority">1</field>
             <field name="project_id"/>
             <field name="name">Empty Trash Bins</field>
             <field name="date_deadline" eval="(DateTime.today() + relativedelta(days=5)).strftime('%Y-%m-%d %H:%M')"/>
             <field name="description">Take a few minutes to empty and replace the trash bins in the office. Keeping living space clean and odor-free.</field>
             <field name="tag_ids" eval="[Command.set([ref('project_tags_14')])]"/>
+            <field name="color">5</field>
+        </record>
+        <record id="project_private_task_21" model="project.task">
+            <field name="user_ids" eval="[Command.link(ref('base.user_admin'))]"/>
+            <field name="project_id" ref="project.project_project_3"/>
+            <field name="name">Finalize Completed Changes</field>
+            <field name="description">Review and confirm that all requested changes have been completed satisfactorily</field>
+            <field name="tag_ids" eval="[Command.set([ref('project_tags_11')])]"/>
         </record>
 
         <!-- demo data  for This month-->
         <record id="project_private_task_8" model="project.task">
             <field name="user_ids" eval="[Command.link(ref('base.user_admin')), Command.link(ref('base.user_demo'))]"/>
+            <field name="priority">2</field>
             <field name="project_id"/>
             <field name="name">Conduct a training session</field>
             <field name="description">Conduct a training session to enhance team members proficiency and productivity.</field>
             <field name="tag_ids" eval="[Command.set([ref('project_tags_10')])]"/>
+            <field name="color">6</field>
         </record>
         <record id="project_private_task_9" model="project.task">
             <field name="user_ids" eval="[Command.link(ref('base.user_admin'))]"/>
@@ -1723,18 +1753,22 @@ Send it ASAP, its urgent.</field>
         <!-- demo data  for Later-->
         <record id="project_private_task_10" model="project.task">
             <field name="user_ids" eval="[Command.link(ref('base.user_admin'))]"/>
+            <field name="priority">1</field>
             <field name="project_id"/>
             <field name="name">Research Investment Options</field>
             <field name="date_deadline" eval="(DateTime.today() + relativedelta(days=60)).strftime('%Y-%m-%d %H:%M')"/>
             <field name="description">Conduct thorough research on various investment options to make informed decisions about growing your financial portfolio.</field>
             <field name="tag_ids" eval="[Command.set([ref('project_tags_11')])]"/>
+            <field name="color">3</field>
         </record>
         <record id="project_private_task_11" model="project.task">
             <field name="user_ids" eval="[Command.link(ref('base.user_admin')), Command.link(ref('base.user_demo'))]"/>
+            <field name="priority">1</field>
             <field name="project_id"/>
             <field name="name">Explore Charitable Opportunities</field>
             <field name="description">Explore various charitable organizations and opportunities to contribute to meaningful causes and make a positive impact on the community.</field>
             <field name="tag_ids" eval="[Command.set([ref('project_tags_12')])]"/>
+            <field name="color">4</field>
         </record>
 
         <!-- demo data  for Cancel-->
@@ -1796,6 +1830,24 @@ Send it ASAP, its urgent.</field>
             <field name="description">Present findings from research you conducted to inform a project or decision.</field>
             <field name="tag_ids" eval="[Command.set([ref('project_tags_14')])]"/>
             <field name="state">1_done</field>
+        </record>
+
+        <!-- Demo data for Deployed tasks -->
+        <record id="project_private_task_19" model="project.task">
+            <field name="user_ids" eval="[Command.link(ref('base.user_demo'))]"/>
+            <field name="project_id"/>
+            <field name="name">User Training</field>
+            <field name="description">Provide training sessions to familiarize users with the newly deployed system.</field>
+            <field name="tag_ids" eval="[Command.set([ref('project_tags_10')])]"/>
+        </record>
+
+        <!-- Demo data for Hard Backlog tasks -->
+        <record id="project_private_task_20" model="project.task">
+            <field name="user_ids" eval="[Command.link(ref('base.user_demo'))]"/>
+            <field name="project_id"/>
+            <field name="name">Optimize Database Performance</field>
+            <field name="description">Enhance database efficiency and speed to improve overall system performance and responsiveness.</field>
+            <field name="tag_ids" eval="[Command.set([ref('project_tags_14')])]"/>
         </record>
 
         <!-- Tasks personal stages -->
@@ -1948,6 +2000,10 @@ Send it ASAP, its urgent.</field>
             <value model="project.task.stage.personal" search="[('task_id', '=', ref('project_private_task_7')), ('user_id', '=', ref('base.user_admin'))]"/>
             <value eval="{'stage_id': ref('project_personal_stage_admin_2')}"/>
         </function>
+        <function model="project.task.stage.personal" name="write">
+            <value model="project.task.stage.personal" search="[('task_id', '=', ref('project_private_task_21')), ('user_id', '=', ref('base.user_admin'))]"/>
+            <value eval="{'stage_id': ref('project_personal_stage_admin_2')}"/>
+        </function>
 
         <!-- demo data functions for this month -->
         <function model="project.task.stage.personal" name="write">
@@ -2001,6 +2057,18 @@ Send it ASAP, its urgent.</field>
         <function model="project.task.stage.personal" name="write">
             <value model="project.task.stage.personal" search="[('task_id', '=', ref('project_private_task_18')), ('user_id', '=', ref('base.user_admin'))]"/>
             <value eval="{'stage_id': ref('project_personal_stage_admin_5')}"/>
+        </function>
+
+        <!-- Demo data function for Deployed tasks -->
+        <function model="project.task.stage.personal" name="write">
+            <value model="project.task.stage.personal" search="[('task_id', '=', ref('project_private_task_19')), ('user_id', '=', ref('base.user_demo'))]"/>
+            <value eval="{'stage_id': ref('project_personal_stage_demo_7')}"/>
+        </function>
+
+        <!-- Demo data function for Hard Backlog tasks -->
+        <function model="project.task.stage.personal" name="write">
+            <value model="project.task.stage.personal" search="[('task_id', '=', ref('project_private_task_20')), ('user_id', '=', ref('base.user_demo'))]"/>
+            <value eval="{'stage_id': ref('project_personal_stage_demo_8')}"/>
         </function>
 
         <!-- Change task creation notifications date -->
@@ -2120,6 +2188,15 @@ Send it ASAP, its urgent.</field>
             <field name="activity_type_id" ref="mail.mail_activity_data_email"/>
             <field name="date_deadline" eval="(DateTime.today() + relativedelta(days=20)).strftime('%Y-%m-%d %H:%M')"/>
             <field name="summary">Collect data regarding finances</field>
+            <field name="create_uid" ref="base.user_admin"/>
+            <field name="user_id" ref="base.user_admin"/>
+        </record>
+        <record id="project_private_task_8_mail" model="mail.activity">
+            <field name="res_id" ref="project_private_task_8"/>
+            <field name="res_model_id" ref="project.model_project_task"/>
+            <field name="activity_type_id" ref="mail.mail_activity_data_email"/>
+            <field name="date_deadline" eval="(DateTime.today() + relativedelta(hours=5)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="summary">Follow-up on Training Session Arrangements</field>
             <field name="create_uid" ref="base.user_admin"/>
             <field name="user_id" ref="base.user_admin"/>
         </record>
