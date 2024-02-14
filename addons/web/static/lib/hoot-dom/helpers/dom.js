@@ -1503,6 +1503,17 @@ export function queryAllValues(target, options) {
 }
 
 /**
+ * Returns the first node returned by {@link queryAll} with the given arguments.
+ *
+ * @param {Target} target
+ * @param {QueryOptions} options
+ * @returns {Node}
+ */
+export function queryFirst(target, options) {
+    return queryAll(target, options)[0];
+}
+
+/**
  * Performs a {@link queryAll} with the given arguments, along with a forced `exact: 1`
  * option to ensure only one node matches the given {@link Target}.
  *
