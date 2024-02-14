@@ -1,9 +1,18 @@
+<<<<<<< HEAD:addons/point_of_sale/static/tests/tours/utils/common.js
 export function back() {
     return {
         content: "go back to the products",
         trigger: ".pos-topheader .back-button",
     };
 }
+||||||| parent of 123913766d7a (temp):addons/point_of_sale/static/tests/tours/helpers/utils.js
+/** @odoo-module */
+=======
+/** @odoo-module */
+
+import { simulateBarCode } from "@barcodes/../tests/helpers";
+
+>>>>>>> 123913766d7a (temp):addons/point_of_sale/static/tests/tours/helpers/utils.js
 export function inLeftSide(steps) {
     return [
         {
@@ -54,4 +63,13 @@ export function selectButton(name) {
         content: `Select button ${name}`,
         trigger: `button:contains("${name}")`,
     };
+}
+export function scan_barcode(barcode) {
+    return [
+        {
+            content: `PoS model scan barcode '${barcode}'`,
+            trigger: "body", // The element here does not really matter as long as it is present
+            run: () => simulateBarCode([...barcode, "Enter"]),
+        },
+    ];
 }
