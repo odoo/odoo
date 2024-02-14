@@ -28,13 +28,13 @@
                         <tr>
                             <th name="th_mrp_bom_h">Product</th>
                             <th t-attf-class="{{ showUom ? 'text-center' : 'text-end' }}" t-attf-colspan="{{ showUom ? 2 : 1 }}">Quantity</th>
-                            <th t-if="showAvailabilities" class="text-end">Ready to Produce</th>
+                            <th t-if="showAvailabilities" t-attf-title="What can be produced now based on component free quantity.&#10;Note that in the case of subcontracting, it is computed based on the subcontractor stock." class="text-end">Ready to Produce <i class="fa fa-info-circle"/></th>
                             <th t-if="showAvailabilities" class="text-end" title="Availabilities on products.">Free to Use / On Hand</th>
-                            <th t-if="showAvailabilities" class="text-center" title="Reception time estimation.">Availability</th>
+                            <th t-if="showAvailabilities" t-attf-title="Next Availability computation based on what you actually have in stock,&#10;what is expected to arrive, and lead times if not available." class="text-center">Availability <i class="fa fa-info-circle"/></th>
                             <th t-if="showLeadTimes" t-attf-title="Click to see lead time details." class="text-end" title="Resupply lead time.">Lead Time <i class="fa fa-info-circle" t-on-click.prevent="goToLeadTime"/></th>
                             <th t-if="showLeadTimes">Route</th>
-                            <th t-if="showCosts" class="text-end" title="This is the cost based on the BoM of the product. It is computed by summing the costs of the components and operations needed to build the product.">BoM Cost</th>
-                            <th t-if="showCosts" class="text-end" title="This is the cost defined on the product.">Product Cost</th>
+                            <th t-if="showCosts" class="text-end" t-attf-title="If there is a BoM for this product, this value is the sum of the BoM components.">BoM Cost <i class="fa fa-info-circle"/></th>
+                            <th t-if="showCosts" class="text-end" t-attf-title="Cost that is set on the product form.">Product Cost <i class="fa fa-info-circle"/></th>
                             <th t-if="showAttachments" class="text-center" title="Files attached to the product.">Attachments</th>
                         </tr>
                     </thead>
