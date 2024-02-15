@@ -1082,7 +1082,7 @@ class SaleOrderLine(models.Model):
 
     def action_add_from_catalog(self):
         order = self.env['sale.order'].browse(self.env.context.get('order_id'))
-        return order.action_add_from_catalog()
+        return order.with_context(child_field='order_line').action_add_from_catalog()
 
     #=== BUSINESS METHODS ===#
 

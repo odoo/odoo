@@ -31,6 +31,7 @@ export class ProductCatalogKanbanRecord extends KanbanRecord {
             increaseQuantity: this.increaseQuantity.bind(this),
             setQuantity: this.setQuantity.bind(this),
             decreaseQuantity: this.decreaseQuantity.bind(this),
+            childField: this.props.record.context?.child_field
         });
     }
 
@@ -64,12 +65,17 @@ export class ProductCatalogKanbanRecord extends KanbanRecord {
     }
 
     _updateQuantityAndGetPrice() {
-        return rpc("/product/catalog/update_order_line_info", {
+        return rpc("/product/catalog/update_order_line_info", this._getUpdateQuantityAndGetPriceParams());
+    }
+
+    _getUpdateQuantityAndGetPriceParams() {
+        return {
             order_id: this.env.orderId,
             product_id: this.env.productId,
             quantity: this.productCatalogData.quantity,
             res_model: this.env.orderResModel,
-        });
+            child_field: this.env.childField,
+        }
     }
 
     //--------------------------------------------------------------------------
