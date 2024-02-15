@@ -648,11 +648,11 @@ AAAAACwAAAAAAgACAAAEA3DJFQA7
 --001a11416b9e9b229a05272b7052--
 """
 
-MAIL_EML_ATTACHMENT = """Subject: Re: test attac
+MAIL_EML_ATTACHMENT = """Subject: {subject}
 From: {email_from}
 To: {to}
-References: <f3b9f8f8-28fa-2543-cab2-7aa68f679ebb@odoo.com>
-Message-ID: <cb7eaf62-58dc-2017-148c-305d0c78892f@odoo.com>
+References: {references}
+Message-ID: {msg_id}
 Date: Wed, 14 Mar 2018 14:26:58 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
  Thunderbird/52.6.0
