@@ -65,7 +65,7 @@ class ServerActions(models.Model):
         [('days', 'Days'),
          ('weeks', 'Weeks'),
          ('months', 'Months')],
-        string='Due type', default='days',
+        string='Due type',
         compute='_compute_activity_info', readonly=False, store=True)
     activity_user_type = fields.Selection(
         [('specific', 'Specific User'),

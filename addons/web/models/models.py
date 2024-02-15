@@ -1039,7 +1039,11 @@ class Base(models.AbstractModel):
         done = set()
 
         # mark fields to do as modified to trigger recomputations
-        protected = [self._fields[fname] for fname in field_names]
+        protected = [
+            field
+            for mod_field in [self._fields[fname] for fname in field_names]
+            for field in self.pool.field_computed.get(mod_field) or [mod_field]
+        ]
         with self.env.protecting(protected, record):
             record.modified(todo)
             for field_name in todo:

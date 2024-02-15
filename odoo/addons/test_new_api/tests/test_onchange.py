@@ -1309,3 +1309,19 @@ class TestComputeOnchange2(TransactionCase):
                 self.assertEqual(message_form.has_important_sibling, True)
                 message_form.body = 'Required Body'
             self.assertEqual(len(discussion_form.messages), 1)
+
+    def test_protection_shared_compute(self):
+        model = self.env['test_new_api.shared.compute']
+        START = 5
+
+        with Form(model) as form:
+            self.assertEqual(form.start, 0)
+            self.assertEqual(form.end, 10)
+
+            form.start = START
+            self.assertEqual(form.start, START, "updating 'start' should not recompute it")
+            self.assertEqual(form.end, 10, "updating 'start' should not recompute 'end'")
+
+            form.name = f"{START}->{START + 20}"
+            self.assertEqual(form.start, START, "updating 'name' should recompute 'start'")
+            self.assertEqual(form.end, START + 20, "updating 'name' should recompute 'end'")
