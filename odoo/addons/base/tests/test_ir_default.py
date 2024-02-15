@@ -89,7 +89,7 @@ class TestIrDefault(TransactionCase):
         with self.assertRaises(ValidationError):
             IrDefault.set('res.partner', 'unknown_field', 42)
         with self.assertRaises(ValidationError):
-            IrDefault.set('res.partner', 'lang', 'some_LANG')
+            IrDefault.set('res.partner', 'type', 'invalid_type')
         with self.assertRaises(ValidationError):
             IrDefault.set('res.partner', 'partner_latitude', 'foo')
         with self.assertRaises(ValidationError):
