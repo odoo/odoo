@@ -1066,6 +1066,9 @@ header {
                     // make sense to show it if the dropdown is always open.
                     display: none;
                 }
+                @if o-website-value('header-template') == 'slogan' {
+                    justify-content: unset !important;
+                }
             }
             @if o-website-value('header-template') == 'vertical' {
                 .oe_structure_solo {
