@@ -2018,3 +2018,27 @@ class ModelAutovacuumed(models.Model):
     @api.autovacuum
     def _gc(self):
         self.search([('expire_at', '<', datetime.datetime.now() - datetime.timedelta(days=1))]).unlink()
+
+
+class SharedComputeMethod(models.Model):
+    _name = _description = 'test_new_api.shared.compute'
+
+    name = fields.Char(compute='_compute_name', store=True, readonly=False)
+    start = fields.Integer(compute='_compute_start_end', store=True, readonly=False)
+    end = fields.Integer(compute='_compute_start_end', store=True, readonly=False)
+
+    @api.depends('start', 'end')
+    def _compute_name(self):
+        for record in self:
+            if record.start and record.end:
+                record.name = f"{record.start}->{record.end}"
+
+    @api.depends('name')
+    def _compute_start_end(self):
+        for record in self:
+            if record.name and '->' in record.name:
+                record.start, record.end = map(int, record.name.split('->'))
+            if not record.start:
+                record.start = 0
+            if not record.end:
+                record.end = 10
