@@ -53,8 +53,7 @@ class TestCarrierPropagation(TransactionCase):
             'invoice_policy': 'delivery',
             'route_ids': [(6, 0, mto_route.ids)],
         })
-        cls.rule_pack = cls.env["procurement.group"]._get_rule(
-            cls.super_product, cls.output_location, {"warehouse_id": cls.warehouse})
+        cls.rule_pack = cls.warehouse.delivery_route_id.rule_ids.filtered(lambda r: r.picking_type_id == cls.warehouse.pack_type_id)
 
     def test_carrier_no_propagation(self):
         """
@@ -81,14 +80,13 @@ class TestCarrierPropagation(TransactionCase):
         choose_delivery_carrier.button_confirm()
         # Confirm the SO
         so.action_confirm()
-        move_out = self.StockMove.search([("location_dest_id.usage", "=", "customer"), ("product_id", "=", self.super_product.id)])
-        self.assertEqual(
-            self.normal_delivery,
-            move_out.picking_id.carrier_id,
-        )
-        move_pack = self.StockMove.search([("move_dest_ids", "in", move_out.ids)])
 
-        self.assertFalse(move_pack.picking_id.carrier_id)
+        pick = so.picking_ids
+        self.assertEqual(self.normal_delivery, pick.carrier_id)
+        pick.button_validate()
+
+        pack = pick.move_ids.move_dest_ids.picking_id
+        self.assertFalse(pack.carrier_id)
 
     def test_carrier_propagation(self):
         """
@@ -116,16 +114,17 @@ class TestCarrierPropagation(TransactionCase):
             choose_delivery_carrier.button_confirm()
             # Confirm the SO
             so.action_confirm()
-            move_out = self.StockMove.search([("location_dest_id.usage", "=", "customer"), ("product_id", "=", product.id)])
-            self.assertEqual(
-                self.normal_delivery,
-                move_out.picking_id.carrier_id,
-            )
-            move_pack = self.StockMove.search([("move_dest_ids", "in", move_out.ids)])
-            self.assertEqual(
-                self.normal_delivery,
-                move_pack.picking_id.carrier_id,
-        )
+
+            pick = so.picking_ids
+            self.assertEqual(self.normal_delivery, pick.carrier_id)
+            pick.button_validate()
+
+            pack = pick.move_ids.move_dest_ids.picking_id
+            self.assertEqual(self.normal_delivery, pack.carrier_id)
+            pack.button_validate()
+
+            ship = pack.move_ids.move_dest_ids.picking_id
+            self.assertEqual(self.normal_delivery, ship.carrier_id)
 
     def test_route_based_on_carrier_delivery(self):
         """

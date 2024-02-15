@@ -296,7 +296,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.start_pos_tour('PosSettleOrder3', login="accountman")
 
         self.assertEqual(sale_order.order_line[0].qty_delivered, 1)
-        self.assertEqual(sale_order.picking_ids.mapped('state'), ['cancel', 'cancel', 'cancel'])
+        self.assertEqual(sale_order.picking_ids.mapped('state'), ['cancel'])
 
     def test_pos_not_groupable_product(self):
         #Create a UoM Category that is not pos_groupable

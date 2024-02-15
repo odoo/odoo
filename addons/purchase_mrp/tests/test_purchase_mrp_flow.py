@@ -625,19 +625,10 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         })
         rr.action_replenish()
 
-        move_stock, move_check = self.env['stock.move'].search([('product_id', '=', product.id)])
-
-        self.assertRecordValues(move_check | move_stock, [
-            {'location_id': self.warehouse.wh_input_stock_loc_id.id, 'location_dest_id': self.warehouse.wh_qc_stock_loc_id.id, 'state': 'waiting', 'move_dest_ids': move_stock.ids},
-            {'location_id': self.warehouse.wh_qc_stock_loc_id.id, 'location_dest_id': self.warehouse.lot_stock_id.id, 'state': 'waiting', 'move_dest_ids': []},
-        ])
-
         po = self.env['purchase.order'].search([('partner_id', '=', vendor.id)])
         self.assertTrue(po)
 
         po.button_confirm()
-        move_in = po.picking_ids.move_ids
-        self.assertEqual(move_in.move_dest_ids.ids, move_check.ids)
 
     def test_procurement_with_preferred_route_2(self):
         """

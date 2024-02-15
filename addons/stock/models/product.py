@@ -308,8 +308,11 @@ class Product(models.Model):
         for location in locations:
             loc_domain = loc_domain and ['|'] + loc_domain or loc_domain
             loc_domain.append(('location_id.parent_path', '=like', location.parent_path + '%'))
-            dest_loc_domain = dest_loc_domain and ['|'] + dest_loc_domain or dest_loc_domain
-            dest_loc_domain.append(('location_dest_id.parent_path', '=like', location.parent_path + '%'))
+            dest_loc_domain = expression.OR([dest_loc_domain, [
+                '|',
+                    '&', ('location_final_id', '!=', False), ('location_final_id.parent_path', '=like', location.parent_path + '%'),
+                    '&', ('location_final_id', '=', False), ('location_dest_id.parent_path', '=like', location.parent_path + '%'),
+            ]])
 
         return (
             loc_domain,

@@ -75,6 +75,7 @@
                                 <field name="picking_type_id"/>
                                 <field name="location_src_id" options="{'no_create': True}" required="action in ['pull', 'push', 'pull_push']"/>
                                 <field name="location_dest_id" options="{'no_create': True}"/>
+                                <field name="location_dest_from_rule" invisible="action not in ['pull', 'pull_push']" groups="base.group_no_one"/>
                                 <field name="auto" invisible="action not in ['push', 'pull_push']"/>
                                 <field name="procure_method" invisible="action not in ['pull', 'pull_push']"/>
                             </group>
@@ -95,11 +96,11 @@
                                 <field name="company_id" options="{'no_create': True}" required="action == 'push'" groups="base.group_multi_company"/>
                                 <field name="sequence" string="Sequence" groups="base.group_no_one"/>
                             </group>
-                            <group name="propagation_group" string="Propagation" invisible="action == 'push'" groups="base.group_no_one">
+                            <group name="propagation_group" string="Propagation">
                                 <field name="group_propagation_option"/>
                                 <field name="group_id" invisible="group_propagation_option != 'fixed'" required="group_propagation_option == 'fixed'"/>
-                                <field name="propagate_cancel"/>
-                                <field name="propagate_warehouse_id"/>
+                                <field name="propagate_cancel" invisible="action == 'push'"/>
+                                <field name="propagate_warehouse_id" invisible="action == 'push'"/>
                             </group>
                             <group string="Options" invisible="action not in ['pull', 'push', 'pull_push']">
                                 <field name="partner_address_id" invisible="action == 'push'"/>

@@ -98,7 +98,7 @@ class TestSaleDropshippingFlows(TestMrpSubcontractingCommon):
             ],
         })
         sale_order.action_confirm()
-        self.env['purchase.order'].search([], order='id desc', limit=1).button_confirm()
+        sale_order._get_purchase_orders().button_confirm()
         self.assertEqual(sale_order.order_line.qty_delivered, 0.0)
 
         picking = sale_order.picking_ids
@@ -154,7 +154,7 @@ class TestSaleDropshippingFlows(TestMrpSubcontractingCommon):
             ],
         })
         sale_order.action_confirm()
-        self.env['purchase.order'].search([], order='id desc', limit=1).button_confirm()
+        sale_order._get_purchase_orders().button_confirm()
         self.assertEqual(sale_order.order_line.qty_delivered, 0.0, "Delivered components: 0/4")
 
         picking01 = sale_order.picking_ids

@@ -300,10 +300,12 @@ class TestSaleMrpKitBom(TransactionCase):
         so.action_confirm()
 
         pick = so.picking_ids[0]
-        ship = so.picking_ids[1]
-
         self.assertTrue(pick.move_ids_without_package[0].bom_line_id, "All component from kits should have a bom line")
         self.assertTrue(pick.move_ids_without_package[1].bom_line_id, "All component from kits should have a bom line")
+        pick.move_ids.write({'quantity': 1, 'picked': True})
+        pick.button_validate()
+
+        ship = so.picking_ids[1]
         self.assertTrue(ship.move_ids_without_package[0].bom_line_id, "All component from kits should have a bom line")
         self.assertTrue(ship.move_ids_without_package[1].bom_line_id, "All component from kits should have a bom line")
 
@@ -381,14 +383,13 @@ class TestSaleMrpKitBom(TransactionCase):
         so.action_confirm()
 
         pick = so.picking_ids[0]
-        ship = so.picking_ids[1]
-
         for move in pick.move_ids:
             move.write({'quantity': 1, 'picked': True})
 
         pick.action_put_in_pack()
         pick.button_validate()
 
+        ship = so.picking_ids[1]
         ship.package_level_ids.write({'is_done': True})
         ship.package_level_ids._set_is_done()
 

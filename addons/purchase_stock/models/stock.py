@@ -24,7 +24,7 @@ class StockWarehouse(models.Model):
 
     def _generate_global_route_rules_values(self):
         rules = super()._generate_global_route_rules_values()
-        location_id = self.in_type_id.default_location_dest_id
+        location_id = self.lot_stock_id
         rules.update({
             'buy_pull_id': {
                 'depends': ['reception_steps', 'buy_to_resupply'],
