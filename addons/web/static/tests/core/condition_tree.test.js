@@ -1,6 +1,5 @@
-/** @odoo-module alias=@web/../tests/core/condition_tree_tests default=false */
-
 import { expect, test, describe } from "@odoo/hoot";
+
 import { Domain } from "@web/core/domain";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import {
