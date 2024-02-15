@@ -42,4 +42,8 @@ import { session } from "@web/session";
         },
         { force: true }
     );
+    // Remove the error service: it fails to identify issues within the shadow
+    // DOM of the live chat and causes disruption for pages that embed it by
+    // displaying pop-ups for errors outside of its scope.
+    registry.category("services").remove("error");
 })();
