@@ -240,10 +240,12 @@ export const hotkeyService = {
             );
 
             // First candidate
+            const candidatesWithArea = candidates.filter((c) => Boolean(c.area));
             let winner = candidates.shift();
-            if (winner && winner.area) {
+            if (candidatesWithArea.length) {
+                winner = candidatesWithArea.shift();
                 // If there is an area, find the closest one
-                for (const candidate of candidates.filter((c) => Boolean(c.area))) {
+                for (const candidate of candidatesWithArea) {
                     if (candidate.area() && winner.area().contains(candidate.area())) {
                         winner = candidate;
                     }
@@ -281,16 +283,24 @@ export const hotkeyService = {
                 .filter((key) => !overlayModParts.includes(key))
                 .join("+");
             const elems = getVisibleElements(activeElement, `[data-hotkey='${cleanHotkey}' i]`);
-            return elems.map((el) => ({
-                hotkey,
-                activeElement,
-                bypassEditableProtection: true,
-                callback: () => {
-                    // AAB: not sure it is enough, we might need to trigger all events that occur when you actually click
-                    el.focus();
-                    el.click();
-                },
-            }));
+            return elems.map((el) => {
+                const reg = {
+                    hotkey,
+                    activeElement,
+                    bypassEditableProtection: true,
+                    callback: () => {
+                        // AAB: not sure it is enough, we might need to trigger all events that occur when you actually click
+                        el.focus();
+                        el.click();
+                    },
+                };
+                const area = el.closest("[data-hotkey-area]");
+
+                if (area) {
+                    reg.area = () => area;
+                }
+                return reg;
+            });
         }
 
         /**
