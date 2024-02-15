@@ -1,16 +1,18 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from hashlib import sha1
+import logging
 
 from odoo import fields
 from odoo.http import request
 from odoo.tools import consteq, float_round, ustr
 from odoo.tools.misc import hmac as hmac_tool
 
+_logger = logging.getLogger(__name__)
 
 # Access token management
 
-def generate_access_token(*values):
+def generate_access_token(*values, env=None):
     """ Generate an access token based on the provided values.
 
     The token allows to later verify the validity of a request, based on a given set of values.
@@ -22,9 +24,15 @@ def generate_access_token(*values):
     :return: The generated access token
     :rtype: str
     """
-    token_str = '|'.join(str(val) for val in values)
-    access_token = hmac_tool(request.env(su=True), 'generate_access_token', token_str)
-    return access_token
+    try:
+        environment = env(su=True) if env else request.env(su=True)
+    except RuntimeError:
+        _logger.exception('No suitable environment available to generate payment access token')
+        raise
+    else:
+        token_str = '|'.join(str(val) for val in values)
+        access_token = hmac_tool(environment, 'generate_access_token', token_str)
+        return access_token
 
 
 def check_access_token(access_token, *values):
