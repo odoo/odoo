@@ -219,3 +219,10 @@ $-color-for-gray-200-bg: adjust-color-to-background($body-color, $gray-200);
         }
     }
 }
+
+// Button within input-group (e.g., "search bar")
+.input-group {
+    .btn:first-child, .btn:last-child {
+        @include border-radius($input-border-radius, 0);
+    }
+}
