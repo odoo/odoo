@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { browser } from "@web/core/browser/browser";
 import { cookie as cookieManager } from "@web/core/browser/cookie";
 import { rpc } from "@web/core/network/rpc";

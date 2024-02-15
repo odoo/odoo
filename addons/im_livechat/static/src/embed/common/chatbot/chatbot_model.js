@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { AND, Record } from "@mail/core/common/record";
 import { markup } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";

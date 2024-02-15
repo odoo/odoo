@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { Thread } from "@mail/core/common/thread_model";
 
 import { rpc } from "@web/core/network/rpc";

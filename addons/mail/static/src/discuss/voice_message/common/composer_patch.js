@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { Composer } from "@mail/core/common/composer";
 import { VoiceRecorder } from "@mail/discuss/voice_message/common/voice_recorder";
 import { patch } from "@web/core/utils/patch";

@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { Thread } from "@mail/core/common/thread";
 
 import { useState } from "@odoo/owl";

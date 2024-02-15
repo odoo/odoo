@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { cleanTerm } from "@mail/utils/common/format";
 
 import { Component } from "@odoo/owl";

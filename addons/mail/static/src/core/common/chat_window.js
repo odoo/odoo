@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { Composer } from "@mail/core/common/composer";
 import { ImStatus } from "@mail/core/common/im_status";
 import { Thread } from "@mail/core/common/thread";

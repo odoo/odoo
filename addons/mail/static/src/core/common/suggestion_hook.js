@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { useSequential } from "@mail/utils/common/hooks";
 import { status, useComponent, useEffect, useState } from "@odoo/owl";
 

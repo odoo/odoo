@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { Component, onWillUpdateProps, useExternalListener, useState } from "@odoo/owl";
 import { useAutofocus } from "@web/core/utils/hooks";
 import { useMessageSearch } from "@mail/core/common/message_search_hook";

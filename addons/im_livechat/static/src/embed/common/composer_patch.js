@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { options } from "@im_livechat/embed/common/livechat_data";
 
 import { Composer } from "@mail/core/common/composer";

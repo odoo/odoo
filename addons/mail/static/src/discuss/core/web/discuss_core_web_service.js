@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { reactive } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";

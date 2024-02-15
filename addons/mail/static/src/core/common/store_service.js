@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { BaseStore, makeStore, Record } from "@mail/core/common/record";
 import { reactive } from "@odoo/owl";
 

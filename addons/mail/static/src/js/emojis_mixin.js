@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { escape } from "@web/core/utils/strings";
 
 /**

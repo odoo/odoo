@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { loadEmoji } from "@web/core/emoji_picker/emoji_picker";
 
 import { escape, unaccent } from "@web/core/utils/strings";

@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { url } from "@web/core/utils/urls";
 
 async function loadFont(name, url) {

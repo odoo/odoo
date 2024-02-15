@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { messageActionsRegistry } from "@mail/core/common/message_actions";
 import { threadActionsRegistry } from "@mail/core/common/thread_actions";
 import { Thread } from "@mail/core/common/thread_model";

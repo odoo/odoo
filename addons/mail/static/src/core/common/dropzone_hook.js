@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { Dropzone } from "@mail/core/common/dropzone";
 
 import { useEffect, useExternalListener } from "@odoo/owl";

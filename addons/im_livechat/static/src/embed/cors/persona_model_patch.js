@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { Persona } from "@mail/core/common/persona_model";
 import { assignDefined } from "@mail/utils/common/misc";
 

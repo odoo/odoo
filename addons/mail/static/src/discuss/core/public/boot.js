@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { DiscussPublic } from "@mail/discuss/core/public/discuss_public";
 
 import { mount, whenReady } from "@odoo/owl";

@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 const MAX_SAMPLES = 1152;
 
 export class Mp3Encoder {

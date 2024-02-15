@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { AttachmentView } from "@mail/core/common/attachment_view";
 import { Chatter } from "@mail/chatter/web_portal/chatter";
 

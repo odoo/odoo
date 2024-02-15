@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { Discuss } from "@mail/core/common/discuss";
 
 import { Component, onWillStart, onWillUpdateProps, useState } from "@odoo/owl";

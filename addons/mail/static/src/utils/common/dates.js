@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 const { DateTime } = luxon;
 
 export function computeDelay(dateStr) {

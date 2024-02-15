@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { ChatWindow } from "@mail/core/common/chat_window";
 import {
     CHAT_WINDOW_END_GAP_WIDTH,

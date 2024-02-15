@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { Component, onMounted, onWillUnmount, useState } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";

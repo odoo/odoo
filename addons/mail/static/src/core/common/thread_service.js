@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { prettifyMessageContent } from "@mail/utils/common/format";
 
 import { browser } from "@web/core/browser/browser";

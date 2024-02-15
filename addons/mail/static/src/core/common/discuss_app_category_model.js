@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { compareDatetime } from "@mail/utils/common/misc";
 import { Record } from "./record";
 

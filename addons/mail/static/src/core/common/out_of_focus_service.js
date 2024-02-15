@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { htmlToTextContentInline } from "@mail/utils/common/format";
 
 import { browser } from "@web/core/browser/browser";

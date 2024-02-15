@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { Discuss } from "@mail/core/common/discuss";
 import { WelcomePage } from "@mail/discuss/core/public/welcome_page";
 

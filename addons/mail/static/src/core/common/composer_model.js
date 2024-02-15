@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { OR, Record } from "@mail/core/common/record";
 
 export class Composer extends Record {
