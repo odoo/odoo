@@ -67,7 +67,7 @@ patch(AttendeeCalendarController.prototype, {
 
     onMicrosoftSyncUnpause() {
         if (this.isSystemUser) {
-            this.env.services.action.doAction("base_setup.action_general_configuration");
+            this.env.services.action.doAction("calendar.calendar_settings_action");
         } else {
             this.dialog.add(AlertDialog, {
                 title: _t("Configuration"),
