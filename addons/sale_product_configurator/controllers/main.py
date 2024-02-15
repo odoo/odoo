@@ -6,6 +6,11 @@ from odoo.http import Controller, request, route
 
 
 class ProductConfiguratorController(Controller):
+    @route(['/sale_product_configurator/configure'], type='json', auth="user", methods=['POST'])
+    def configure(self, product_template_id, pricelist_id, **kw):
+        add_qty = float(kw.get('quantity', 1))
+        product_template = request.env['product.template'].browse(int(product_template_id))
+        pricelist = self._get_pricelist(pricelist_id)
 
     @route('/sale_product_configurator/get_values', type='json', auth='user')
     def get_product_configurator_values(
