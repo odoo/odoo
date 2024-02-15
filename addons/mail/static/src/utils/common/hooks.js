@@ -201,7 +201,8 @@ export function useSelection({ refName, model, preserveOnClickAwayPredicate = ()
     const ui = useState(useService("ui"));
     const ref = useRef(refName);
     function onSelectionChange() {
-        if (document.activeElement && document.activeElement === ref.el) {
+        const activeElement = ref.el?.getRootNode().activeElement;
+        if (activeElement && activeElement === ref.el) {
             Object.assign(model, {
                 start: ref.el.selectionStart,
                 end: ref.el.selectionEnd,
