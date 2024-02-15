@@ -4,7 +4,7 @@
     <t t-name="point_of_sale.ClosePosPopup">
         <Dialog contentClass="'close-pos-popup'">
             <t t-set-slot="header">
-                <h4 class="modal-title">Closing Session</h4>
+                <h4 class="modal-title">Closing Register</h4>
                 <div class="total-orders fw-bolder">
                     Total <t t-esc="props.orders_details.quantity"/> orders:
                     <span class="amount" t-esc="env.utils.formatCurrency(props.orders_details.amount)"/>
@@ -91,7 +91,7 @@
                 </div>
             <t t-set-slot="footer">
                 <div class="modal-footer-left d-flex gap-2">
-                    <button class="button highlight btn btn-lg btn-primary" t-att-disabled="!canConfirm()" t-on-click="confirm">Close Session</button>
+                    <button class="button highlight btn btn-lg btn-primary" t-att-disabled="!canConfirm()" t-on-click="confirm">Close Register</button>
                     <button class="button btn btn-lg btn-secondary" t-att-disabled="!canCancel()" t-on-click="cancel">Discard</button>
                 </div>
                 <!-- Download Sale Details -->

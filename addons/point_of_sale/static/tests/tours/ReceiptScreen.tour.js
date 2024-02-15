@@ -107,10 +107,10 @@ registry.category("web_tour.tours").add("OrderPaidInCash", {
             ReceiptScreen.clickNextOrder(),
             ProductScreen.isShown(),
             // Close the session
-            Chrome.clickMenuOption("Close Session"),
+            Chrome.clickMenuOption("Close Register"),
             ProductScreen.closeWithCashAmount("25"),
             ProductScreen.cashDifferenceIs("0.00"),
-            Dialog.confirm("Close Session"),
+            Dialog.confirm("Close Register"),
             ProductScreen.lastClosingCashIs("25.00"),
         ].flat(),
 });

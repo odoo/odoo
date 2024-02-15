@@ -364,14 +364,6 @@ class PosConfig(models.Model):
                 if trusted_config.currency_id != config.currency_id:
                     raise ValidationError(_("You cannot share open orders with configuration that does not use the same currency."))
 
-    def _compute_display_name(self):
-        for config in self:
-            last_session = self.env['pos.session'].search([('config_id', '=', config.id)], limit=1)
-            if (not last_session) or (last_session.state == 'closed'):
-                config.display_name = _("%(pos_name)s (not used)", pos_name=config.name)
-            else:
-                config.display_name = f"{config.name} ({last_session.user_id.name})"
-
     def _check_header_footer(self, values):
         if not self.env.is_admin() and {'is_header_or_footer', 'receipt_header', 'receipt_footer'} & values.keys():
             raise AccessError(_('Only administrators can edit receipt headers and footers'))
