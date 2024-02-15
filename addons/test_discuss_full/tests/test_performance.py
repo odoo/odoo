@@ -328,6 +328,7 @@ class TestDiscussFullPerformance(HttpCase):
                     ]
                 ],
                 "custom_channel_name": False,
+                "fetchChannelInfoState": "fetched",
                 "id": channel.id,
                 "memberCount": len(self.group_user.users),
                 "message_unread_counter": 0,
@@ -393,6 +394,7 @@ class TestDiscussFullPerformance(HttpCase):
                     ]
                 ],
                 "custom_channel_name": False,
+                "fetchChannelInfoState": "fetched",
                 "id": channel.id,
                 "memberCount": 5,
                 "message_unread_counter": 0,
@@ -458,6 +460,7 @@ class TestDiscussFullPerformance(HttpCase):
                     ]
                 ],
                 "custom_channel_name": False,
+                "fetchChannelInfoState": "fetched",
                 "id": channel.id,
                 "memberCount": 5,
                 "message_unread_counter": 0,
@@ -523,6 +526,7 @@ class TestDiscussFullPerformance(HttpCase):
                     ]
                 ],
                 "custom_channel_name": False,
+                "fetchChannelInfoState": "fetched",
                 "id": channel.id,
                 "memberCount": 5,
                 "message_unread_counter": 0,
@@ -649,6 +653,7 @@ class TestDiscussFullPerformance(HttpCase):
                     ]
                 ],
                 "custom_channel_name": False,
+                "fetchChannelInfoState": "fetched",
                 "id": channel.id,
                 "memberCount": 5,
                 "message_unread_counter": 0,
@@ -739,6 +744,7 @@ class TestDiscussFullPerformance(HttpCase):
                     ]
                 ],
                 "custom_channel_name": False,
+                "fetchChannelInfoState": "fetched",
                 "id": channel.id,
                 "memberCount": 2,
                 "message_unread_counter": 0,
@@ -829,6 +835,7 @@ class TestDiscussFullPerformance(HttpCase):
                     ]
                 ],
                 "custom_channel_name": False,
+                "fetchChannelInfoState": "fetched",
                 "id": channel.id,
                 "memberCount": 2,
                 "message_unread_counter": 0,
@@ -919,6 +926,7 @@ class TestDiscussFullPerformance(HttpCase):
                     ]
                 ],
                 "custom_channel_name": False,
+                "fetchChannelInfoState": "fetched",
                 "id": channel.id,
                 "memberCount": 2,
                 "message_unread_counter": 0,
@@ -1009,6 +1017,7 @@ class TestDiscussFullPerformance(HttpCase):
                     ]
                 ],
                 "custom_channel_name": False,
+                "fetchChannelInfoState": "fetched",
                 "id": channel.id,
                 "memberCount": 2,
                 "message_unread_counter": 0,
@@ -1101,6 +1110,7 @@ class TestDiscussFullPerformance(HttpCase):
                     ]
                 ],
                 "custom_channel_name": False,
+                "fetchChannelInfoState": "fetched",
                 "id": channel.id,
                 "memberCount": 2,
                 "message_unread_counter": 0,
@@ -1185,6 +1195,7 @@ class TestDiscussFullPerformance(HttpCase):
                     ]
                 ],
                 "custom_channel_name": False,
+                "fetchChannelInfoState": "fetched",
                 "id": channel.id,
                 "memberCount": 2,
                 "message_unread_counter": 0,
@@ -1266,6 +1277,7 @@ class TestDiscussFullPerformance(HttpCase):
                     ]
                 ],
                 "custom_channel_name": False,
+                "fetchChannelInfoState": "fetched",
                 "id": channel.id,
                 "memberCount": 2,
                 "message_unread_counter": 1,
