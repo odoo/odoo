@@ -206,19 +206,6 @@ export class PosStore extends Reactive {
         return await this.afterProcessServerData();
     }
 
-    toggleImages(imageType = "product") {
-        if (imageType === "product") {
-            this.config.show_product_images = !this.config.show_product_images;
-        }
-        if (imageType === "category") {
-            this.config.show_category_images = !this.config.show_category_images;
-        }
-        this.data.write("pos.config", [this.config.id], {
-            show_product_images: this.config.show_product_images,
-            show_category_images: this.config.show_category_images,
-        });
-    }
-
     async processServerData() {
         // These fields should be unique for the pos_config
         // and should not change during the session, so we can
