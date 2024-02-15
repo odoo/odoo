@@ -740,7 +740,7 @@ options.Class.include({
                 return this._getEnabledCustomizeValues(params.possibleValues, true);
             }
             case 'customizeWebsiteVariable': {
-                if (params.variable === "logo_height" || params.variable === "font_size_base") {
+                if (params.variable === "logo__height" || params.variable === "font__size__base") {
                     const data = await this.options.wysiwyg.getWebsiteDesignData();
                     return data[params.variable];
                 }
@@ -934,7 +934,7 @@ options.Class.include({
         Object.keys(values).forEach((key) => {
             values[key] = values[key] || defaultValue;
         });
-        if (values.logo_height || values.font_size_base) {
+        if (values.logo__height || values.font__size__base) {
             await this.options.wysiwyg.customizeWebsiteDesignData(values);
             return;
         }

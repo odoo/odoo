@@ -14,7 +14,7 @@ classNameInfo.set("h3-fs", {scssVariableName: "h3-font-size", start: 32, end: 38
 classNameInfo.set("h4-fs", {scssVariableName: "h4-font-size", start: 24, end: 34});
 classNameInfo.set("h5-fs", {scssVariableName: "h5-font-size", start: 20, end: 30});
 classNameInfo.set("h6-fs", {scssVariableName: "h6-font-size", start: 16, end: 26});
-classNameInfo.set("base-fs", {scssVariableName: "font_size_base", start: 16, end: 26});
+classNameInfo.set("base-fs", {scssVariableName: "font__size__base", start: 16, end: 26});
 classNameInfo.set("o_small-fs", {scssVariableName: "small-font-size", start: 14, end: 24});
 
 function checkComputedFontSize(fontSizeClass, stage) {

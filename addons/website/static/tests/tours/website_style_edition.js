@@ -50,7 +50,7 @@ wTourUtils.registerWebsitePreviewTour("website_style_edition", {
 wTourUtils.goToTheme(),
 {
     content: "Change font size",
-    trigger: '[data-variable="font_size_base"] input',
+    trigger: '[data-variable="font__size__base"] input',
     run: `edit ${TARGET_FONT_SIZE} && click body`,
 }, {
     content: "Check the font size was properly adapted",

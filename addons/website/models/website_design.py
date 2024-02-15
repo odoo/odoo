@@ -12,14 +12,14 @@ class WebsiteDesign(models.Model):
 
     # Logo height requires two fields because it can be computed based on the
     # base font size or forced to a specific value.
-    logo_height = fields.Char(
+    logo__height = fields.Char(
         string='Logo Height',
         compute='_compute_logo_height',
         inverse='_inverse_logo_height',
         default='null',
     )
     forced_logo_height = fields.Char(string='Forced Logo Height', default='null')
-    font_size_base = fields.Char(string='Font Size Base', default='1rem')
+    font__size__base = fields.Char(string='Font Size Base', default='1rem')
 
     def write(self, vals):
         res = super().write(vals)
@@ -51,29 +51,37 @@ class WebsiteDesign(models.Model):
 
     def _filter_design_variables(self, vals):
         """
-        Removes the keys in vals that are not design variables.
+        Removes the keys in vals that are not design variables and replaces __
+        by - in the keys to match the SCSS variable names.
 
         :param vals: dict of design variables to filter.
         :return: dict with only the keys that are design ones.
         """
-        return {key: vals[key] for key in vals if key not in NOT_DESIGN_FIELDS}
+        res = {}
+        for key in vals:
+            if key in NOT_DESIGN_FIELDS:
+                continue
+            # As python variable names cannot contains dashes, we replace them
+            # by double underscores.
+            res[key.replace('__', '-')] = vals[key]
+        return res
 
     # Variables specific functions
 
-    @api.depends('forced_logo_height', 'font_size_base')
+    @api.depends('forced_logo_height', 'font__size__base')
     def _compute_logo_height(self):
         """
         Computes the logo height based on the font size or the forced height.
         """
         for record in self:
             if record.forced_logo_height != 'null':
-                record.with_context(skip_customize_scss=True).logo_height = record.forced_logo_height
+                record.with_context(skip_customize_scss=True).logo__height = record.forced_logo_height
                 return
-            font_size_base = float(record.font_size_base.replace('rem', ''))
+            font_size_base = float(record.font__size__base.replace('rem', ''))
             # $font-size-base * $line-height-base + $nav-link-padding-y * 2;
-            record.with_context(skip_customize_scss=True).logo_height = str(font_size_base * 1.5 + 0.5 * 2) + 'rem'
+            record.with_context(skip_customize_scss=True).logo__height = str(font_size_base * 1.5 + 0.5 * 2) + 'rem'
 
     def _inverse_logo_height(self):
         """Sets the forced logo height to the current logo height."""
         for record in self:
-            record.with_context(skip_customize_scss=True).forced_logo_height = record.logo_height
+            record.with_context(skip_customize_scss=True).forced_logo_height = record.logo__height
