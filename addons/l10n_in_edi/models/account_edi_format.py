@@ -241,7 +241,7 @@ class AccountEdiFormat(models.Model):
             message.append(_("- Street2 should be min 3 and max 100 characters"))
         if not re.match("^.{3,100}$", partner.city or ""):
             message.append(_("- City required min 3 and max 100 characters"))
-        if not re.match("^.{3,50}$", partner.state_id.name or ""):
+        if partner.country_id.code == "IN" and not re.match("^.{3,50}$", partner.state_id.name or ""):
             message.append(_("- State required min 3 and max 50 characters"))
         if partner.country_id.code == "IN" and not re.match("^[0-9]{6,}$", partner.zip or ""):
             message.append(_("- Zip code required 6 digits"))
