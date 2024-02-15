@@ -107,6 +107,8 @@ class ResConfigSettings(models.TransientModel):
     pos_auto_validate_terminal_payment = fields.Boolean(related='pos_config_id.auto_validate_terminal_payment', readonly=False, string="Automatically validates orders paid with a payment terminal.")
     pos_trusted_config_ids = fields.Many2many(related='pos_config_id.trusted_config_ids', readonly=False)
     point_of_sale_ticket_unique_code = fields.Boolean(related='company_id.point_of_sale_ticket_unique_code', readonly=False)
+    pos_show_product_images = fields.Boolean(related='pos_config_id.show_product_images', readonly=False)
+    pos_show_category_images = fields.Boolean(related='pos_config_id.show_category_images', readonly=False)
 
     @api.model_create_multi
     def create(self, vals_list):
