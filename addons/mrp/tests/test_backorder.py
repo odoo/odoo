@@ -148,11 +148,6 @@ class TestMrpProductionBackorder(TestMrpCommon):
         self.assertEqual(sum(pbm_move.filtered(lambda m: m.product_id.id == product_to_use_1.id).mapped("product_qty")), 16)
         self.assertEqual(sum(pbm_move.filtered(lambda m: m.product_id.id == product_to_use_2.id).mapped("product_qty")), 4)
 
-        sam_move = production.move_finished_ids.move_dest_ids
-        self.assertEqual(len(sam_move), 1)
-        self.assertEqual(sam_move.product_id.id, product_to_build.id)
-        self.assertEqual(sum(sam_move.mapped("product_qty")), 4)
-
         mo_form = Form(production)
         mo_form.qty_producing = 1
         production = mo_form.save()
@@ -160,6 +155,11 @@ class TestMrpProductionBackorder(TestMrpCommon):
         action = production.button_mark_done()
         backorder = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
         backorder.save().action_backorder()
+
+        sam_move = production.move_finished_ids.move_dest_ids
+        self.assertEqual(len(sam_move), 1)
+        self.assertEqual(sam_move.product_id.id, product_to_build.id)
+        self.assertEqual(sum(sam_move.mapped("product_qty")), 1)
 
         mo_backorder = production.procurement_group_id.mrp_production_ids[-1]
         self.assertEqual(mo_backorder.delivery_count, 2)
@@ -169,7 +169,11 @@ class TestMrpProductionBackorder(TestMrpCommon):
         self.assertEqual(sum(pbm_move.filtered(lambda m: m.product_id.id == product_to_use_2.id).mapped("product_qty")), 4)
 
         sam_move |= mo_backorder.move_finished_ids.move_orig_ids
-        self.assertEqual(sum(sam_move.mapped("product_qty")), 4)
+        self.assertEqual(sum(sam_move.mapped("product_qty")), 1)
+
+        mo_backorder.button_mark_done()
+        self.assertEqual(len(sam_move), 1.0)
+        self.assertEqual(sam_move.product_qty, 4.0)
 
     def test_tracking_backorder_series_lot_1(self):
         """ Create a MO of 4 tracked products. all component is tracked by lots

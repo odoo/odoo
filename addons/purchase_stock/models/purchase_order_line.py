@@ -29,6 +29,7 @@ class PurchaseOrderLine(models.Model):
     product_description_variants = fields.Char('Custom Description')
     propagate_cancel = fields.Boolean('Propagate cancellation', default=True)
     forecasted_issue = fields.Boolean(compute='_compute_forecasted_issue')
+    location_final_id = fields.Many2one('stock.location', 'Location from procurement')
 
     def _compute_qty_received_method(self):
         super(PurchaseOrderLine, self)._compute_qty_received_method()
@@ -259,6 +260,10 @@ class PurchaseOrderLine(models.Model):
         self.ensure_one()
         self._check_orderpoint_picking_type()
         product = self.product_id.with_context(lang=self.order_id.dest_address_id.lang or self.env.user.lang)
+        location_dest = self.env['stock.location'].browse(self.order_id._get_destination_location())
+        location_final = self.location_final_id
+        if location_final and location_final._child_of(location_dest):
+            location_dest = location_final
         date_planned = self.date_planned or self.order_id.date_planned
         return {
             # truncate to 2000 to avoid triggering index limit error
@@ -268,7 +273,8 @@ class PurchaseOrderLine(models.Model):
             'date': date_planned,
             'date_deadline': date_planned,
             'location_id': self.order_id.partner_id.property_stock_supplier.id,
-            'location_dest_id': (self.orderpoint_id and not (self.move_ids | self.move_dest_ids)) and self.orderpoint_id.location_id.id or self.order_id._get_destination_location(),
+            'location_dest_id': location_dest.id,
+            'location_final_id': location_final.id,
             'picking_id': picking.id,
             'partner_id': self.order_id.dest_address_id.id,
             'move_dest_ids': [(4, x) for x in self.move_dest_ids.ids],
@@ -289,7 +295,7 @@ class PurchaseOrderLine(models.Model):
         }
 
     @api.model
-    def _prepare_purchase_order_line_from_procurement(self, product_id, product_qty, product_uom, company_id, values, po):
+    def _prepare_purchase_order_line_from_procurement(self, product_id, product_qty, product_uom, location_dest_id, name, origin, company_id, values, po):
         line_description = ''
         if values.get('product_description_variants'):
             line_description = values['product_description_variants']
@@ -302,6 +308,7 @@ class PurchaseOrderLine(models.Model):
             res['name'] += '\n' + line_description
         res['date_planned'] = values.get('date_planned')
         res['move_dest_ids'] = [(4, x.id) for x in values.get('move_dest_ids', [])]
+        res['location_final_id'] = location_dest_id.id
         res['orderpoint_id'] = values.get('orderpoint_id', False) and values.get('orderpoint_id').id
         res['propagate_cancel'] = values.get('propagate_cancel')
         res['product_description_variants'] = values.get('product_description_variants')

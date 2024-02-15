@@ -281,6 +281,12 @@ class StockMove(models.Model):
         vals['location_id'] = self.location_id.id
         return vals
 
+    def _prepare_procurement_values(self):
+        res = super()._prepare_procurement_values()
+        if self.raw_material_production_id.subcontractor_id:
+            res['warehouse_id'] = self.picking_type_id.warehouse_id
+        return res
+
     def _split(self, qty, restrict_partner_id=False):
         self.ensure_one()
         new_move_vals = super()._split(qty=qty, restrict_partner_id=restrict_partner_id)

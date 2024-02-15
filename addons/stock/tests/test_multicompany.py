@@ -587,7 +587,6 @@ class TestMultiCompany(TransactionCase):
         self.assertEqual(move_wha_to_cus.state, "waiting")
         self.assertEqual(move_transit_to_wha.state, "assigned")
         self.assertEqual(move_whb_to_transit.state, "assigned")
-
         move_whb_to_transit.picking_id.button_validate()
         self.assertEqual(self.env['stock.quant']._get_available_quantity(product_lot, intercom_location, lot_b), 1.0)
         with self.assertRaises(UserError):

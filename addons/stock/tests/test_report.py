@@ -772,6 +772,7 @@ class TestReports(TestReportsCommon):
                 'location_src_id': wh_2.lot_stock_id.id,
                 'location_dest_id': wh.lot_stock_id.id,
                 'picking_type_id': wh_2.int_type_id.id,
+                'location_dest_from_rule': True,
             })],
         })
         self.env.ref('stock.route_warehouse0_mto').active = True
@@ -1563,47 +1564,6 @@ class TestReports(TestReportsCommon):
         report = self.env['report.stock.report_reception']
         report_values = report._get_report_values(docids=[receipt.id])
         self.assertEqual(len(report_values['sources_to_lines']), 0, "The receipt and delivery are in different warehouses => no moves to link to should be found.")
-
-    def test_report_reception_4_pick_pack(self):
-        """ Check that reception report ignores outgoing moves that are not beginning of chain
-        """
-
-        warehouse = self.env['stock.warehouse'].search([('lot_stock_id', '=', self.stock_location.id)], limit=1)
-        warehouse.write({'delivery_steps': 'pick_pack_ship'})
-
-        ship_move = self.env['stock.move'].create({
-            'name': 'The ship move',
-            'product_id': self.product.id,
-            'product_uom_qty': 5.0,
-            'product_uom': self.product.uom_id.id,
-            'location_id': warehouse.wh_output_stock_loc_id.id,
-            'location_dest_id': self.env.ref('stock.stock_location_customers').id,
-            'warehouse_id': warehouse.id,
-            'picking_type_id': warehouse.out_type_id.id,
-            'procure_method': 'make_to_order',
-            'state': 'draft',
-        })
-
-        # create chained pick/pack moves to test with
-        ship_move._assign_picking()
-        ship_move._action_confirm()
-        pack_move = ship_move.move_orig_ids[0]
-        pick_move = pack_move.move_orig_ids[0]
-
-        self.assertEqual(pack_move.state, 'waiting', "Pack move wasn't created...")
-        self.assertEqual(pick_move.state, 'confirmed', "Pick move wasn't created...")
-
-        receipt_form = Form(self.env['stock.picking'], view='stock.view_picking_form')
-        receipt_form.partner_id = self.partner
-        receipt_form.picking_type_id = self.picking_type_in
-        with receipt_form.move_ids_without_package.new() as move_line:
-            move_line.product_id = self.product
-            move_line.product_uom_qty = 15
-        receipt = receipt_form.save()
-
-        report = self.env['report.stock.report_reception']
-        report_values = report._get_report_values(docids=[receipt.id])
-        self.assertEqual(len(report_values['sources_to_lines']), 1, "There should only be 1 line (pick move)")
 
     def test_report_reception_5_move_splitting(self):
         """ Check the complicated use cases of correct move splitting when assigning/unassigning when:

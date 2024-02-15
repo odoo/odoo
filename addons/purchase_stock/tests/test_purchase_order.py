@@ -526,8 +526,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         self.assertEqual(po.picking_ids.move_ids.product_uom_qty, 8)
 
     def test_packaging_propagation(self):
-        """
-        Editing the packaging on an purchase.order.line
+        """ Editing the packaging on an purchase.order.line
         should propagate to the delivery order, so that
         when we are editing the packaging, the lines can be merged
         with the new packaging and quantity.
@@ -560,24 +559,16 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         po.button_confirm()
         # the 3 moves for the 3 steps
         step_1 = po.order_line.move_ids
-        step_2 = step_1.move_dest_ids
-        step_3 = step_2.move_dest_ids
         self.assertEqual(step_1.product_packaging_id, packOf10)
-        self.assertEqual(step_2.product_packaging_id, packOf10)
-        self.assertEqual(step_3.product_packaging_id, packOf10)
 
         po.order_line[0].write({
             'product_packaging_id': packOf20.id,
             'product_uom_qty': 20
         })
         self.assertEqual(step_1.product_packaging_id, packOf20)
-        self.assertEqual(step_2.product_packaging_id, packOf20)
-        self.assertEqual(step_3.product_packaging_id, packOf20)
 
         po.order_line[0].write({'product_packaging_id': False})
         self.assertFalse(step_1.product_packaging_id)
-        self.assertFalse(step_2.product_packaging_id)
-        self.assertFalse(step_3.product_packaging_id)
 
     def test_putaway_strategy_in_backorder(self):
         stock_location = self.company_data['default_warehouse'].lot_stock_id
