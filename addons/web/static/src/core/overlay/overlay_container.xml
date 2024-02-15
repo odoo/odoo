@@ -5,14 +5,16 @@
         <div class="o-overlay-container">
             <t t-foreach="sortedOverlays" t-as="overlay" t-key="overlay.id">
                 <ErrorHandler onError="(error) => this.handleError(overlay, error)">
-                    <t t-if="overlay.env">
-                        <WithEnv env="overlay.env">
+                    <div class="o-overlay-item position-relative">
+                        <t t-if="overlay.env">
+                            <WithEnv env="overlay.env">
+                                <t t-component="overlay.component" t-props="overlay.props" />
+                            </WithEnv>
+                        </t>
+                        <t t-else="">
                             <t t-component="overlay.component" t-props="overlay.props" />
-                        </WithEnv>
-                    </t>
-                    <t t-else="">
-                        <t t-component="overlay.component" t-props="overlay.props" />
-                    </t>
+                        </t>
+                    </div>
                 </ErrorHandler>
             </t>
         </div>

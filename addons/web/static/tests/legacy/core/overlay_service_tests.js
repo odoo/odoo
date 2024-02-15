@@ -10,6 +10,10 @@ import { getFixture, mount, nextTick } from "../helpers/utils";
 let target = null;
 let overlay = null;
 
+function getOverlay(i) {
+    return target.querySelector(`.o-overlay-container :nth-child(${i}) :nth-child(1)`);
+}
+
 QUnit.module("overlay service", {
     async beforeEach() {
         registry.category("services").add("overlay", overlayService);
@@ -34,11 +38,11 @@ QUnit.test("simple case", async (assert) => {
 
     const remove = overlay.add(MyComp, {});
     await nextTick();
-    assert.containsOnce(target, ".o-overlay-container > .overlayed");
+    assert.containsOnce(target, ".o-overlay-container .overlayed");
 
     remove();
     await nextTick();
-    assert.containsNone(target, ".o-overlay-container > .overlayed");
+    assert.containsNone(target, ".o-overlay-container .overlayed");
 });
 
 QUnit.test("onRemove callback", async (assert) => {
@@ -68,20 +72,20 @@ QUnit.test("multiple overlays", async (assert) => {
     const remove3 = overlay.add(MyComp, { className: "o3" });
     await nextTick();
     assert.containsN(target, ".overlayed", 3);
-    assert.hasClass(target.querySelector(".overlayed:nth-child(1)"), "o1");
-    assert.hasClass(target.querySelector(".overlayed:nth-child(2)"), "o2");
-    assert.hasClass(target.querySelector(".overlayed:nth-child(3)"), "o3");
+    assert.hasClass(getOverlay(1), "o1");
+    assert.hasClass(getOverlay(2), "o2");
+    assert.hasClass(getOverlay(3), "o3");
 
     remove1();
     await nextTick();
     assert.containsN(target, ".overlayed", 2);
-    assert.hasClass(target.querySelector(".overlayed:nth-child(1)"), "o2");
-    assert.hasClass(target.querySelector(".overlayed:nth-child(2)"), "o3");
+    assert.hasClass(getOverlay(1), "o2");
+    assert.hasClass(getOverlay(2), "o3");
 
     remove2();
     await nextTick();
     assert.containsOnce(target, ".overlayed");
-    assert.hasClass(target.querySelector(".overlayed:nth-child(1)"), "o3");
+    assert.hasClass(getOverlay(1), "o3");
 
     remove3();
     await nextTick();
@@ -101,20 +105,20 @@ QUnit.test("sequence", async (assert) => {
     const remove3 = overlay.add(MyComp, { className: "o3" }, { sequence: 40 });
     await nextTick();
     assert.containsN(target, ".overlayed", 3);
-    assert.hasClass(target.querySelector(".overlayed:nth-child(1)"), "o3");
-    assert.hasClass(target.querySelector(".overlayed:nth-child(2)"), "o1");
-    assert.hasClass(target.querySelector(".overlayed:nth-child(3)"), "o2");
+    assert.hasClass(getOverlay(1), "o3");
+    assert.hasClass(getOverlay(2), "o1");
+    assert.hasClass(getOverlay(3), "o2");
 
     remove1();
     await nextTick();
     assert.containsN(target, ".overlayed", 2);
-    assert.hasClass(target.querySelector(".overlayed:nth-child(1)"), "o3");
-    assert.hasClass(target.querySelector(".overlayed:nth-child(2)"), "o2");
+    assert.hasClass(getOverlay(1), "o3");
+    assert.hasClass(getOverlay(2), "o2");
 
     remove2();
     await nextTick();
     assert.containsOnce(target, ".overlayed");
-    assert.hasClass(target.querySelector(".overlayed:nth-child(1)"), "o3");
+    assert.hasClass(getOverlay(1), "o3");
 
     remove3();
     await nextTick();

@@ -420,7 +420,7 @@ QUnit.module("ViewDialogs", (hooks) => {
             "a confirmation dialog has appeared on top"
         );
 
-        await click(document.body, ".o_dialog:nth-child(2) .btn-primary");
+        await click(document.body, ".o-overlay-item:nth-child(2) .btn-primary");
         assert.strictEqual(
             target.querySelector(".o_exported_lists_select").selectedOptions[0].textContent,
             "",
