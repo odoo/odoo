@@ -3921,20 +3921,22 @@ export class OdooEditor extends EventTarget {
                 // Find previous character.
                 let previousCharacter = focusOffset > 0 && focusNode.textContent[focusOffset - 1];
                 if (!previousCharacter) {
-                    focusNode = previousLeaf(focusNode);
-                    focusOffset = nodeSize(focusNode);
-                    previousCharacter = focusNode.textContent[focusOffset - 1];
+                    focusNode = previousLeaf(focusNode, this.editable);
+                    focusOffset = focusNode && nodeSize(focusNode);
+                    previousCharacter = focusNode && focusNode.textContent[focusOffset - 1];
                 }
                 // Move selection if previous character is zero-width space
-                if (previousCharacter === '\u200B' && !focusNode.parentElement.hasAttribute('data-o-link-zws')) {
+                if (focusNode && previousCharacter === '\u200B' && !focusNode.parentElement.hasAttribute('data-o-link-zws')) {
                     focusOffset -= 1;
                     while (focusNode && (focusOffset < 0 || !focusNode.textContent[focusOffset])) {
-                        focusNode = nextLeaf(focusNode);
+                        focusNode = nextLeaf(focusNode, this.editable);
                         focusOffset = focusNode && nodeSize(focusNode);
                     }
-                    const startContainer = ev.shiftKey ? anchorNode : focusNode;
-                    const startOffset = ev.shiftKey ? anchorOffset : focusOffset;
-                    setSelection(startContainer, startOffset, focusNode, focusOffset);
+                    if (focusNode) {
+                        const startContainer = ev.shiftKey ? anchorNode : focusNode;
+                        const startOffset = ev.shiftKey ? anchorOffset : focusOffset;
+                        setSelection(startContainer, startOffset, focusNode, focusOffset);
+                    }
                 }
             }
         } else if (IS_KEYBOARD_EVENT_RIGHT_ARROW(ev)) {
@@ -3962,25 +3964,27 @@ export class OdooEditor extends EventTarget {
                 // Find next character.
                 let nextCharacter = focusNode.textContent[focusOffset];
                 if (!nextCharacter) {
-                    focusNode = nextLeaf(focusNode);
+                    focusNode = nextLeaf(focusNode, this.editable);
                     focusOffset = 0;
-                    nextCharacter = focusNode.textContent[focusOffset];
+                    nextCharacter = focusNode && focusNode.textContent[focusOffset];
                 }
                 // Move selection if next character is zero-width space
                 if (nextCharacter === '\u200B' && !focusNode.parentElement.hasAttribute('data-o-link-zws')) {
                     focusOffset += 1;
                     let newFocusNode = focusNode;
                     while (newFocusNode && (!newFocusNode.textContent[focusOffset] || !closestElement(newFocusNode).isContentEditable)) {
-                        newFocusNode = nextLeaf(newFocusNode);
+                        newFocusNode = nextLeaf(newFocusNode, this.editable);
                         focusOffset = 0;
                     }
-                    if (!focusOffset && closestBlock(focusNode) !== closestBlock(newFocusNode)) {
+                    if (newFocusNode && !focusOffset && closestBlock(focusNode) !== closestBlock(newFocusNode)) {
                         newFocusNode = focusNode; // Do not move selection to next block.
-                        focusOffset = nodeSize(focusNode);
+                        focusOffset = focusNode && nodeSize(focusNode);
                     }
-                    const startContainer = ev.shiftKey ? anchorNode : newFocusNode;
-                    const startOffset = ev.shiftKey ? anchorOffset : focusOffset;
-                    setSelection(startContainer, startOffset, newFocusNode, focusOffset);
+                    if (newFocusNode) {
+                        const startContainer = ev.shiftKey ? anchorNode : newFocusNode;
+                        const startOffset = ev.shiftKey ? anchorOffset : focusOffset;
+                        setSelection(startContainer, startOffset, newFocusNode, focusOffset);
+                    }
                 }
             }
         }
