@@ -144,3 +144,10 @@ class Holidays(models.Model):
         timesheets.unlink()
         self._check_missing_global_leave_timesheets()
         return res
+
+    def _force_cancel(self, *args, **kwargs):
+        super()._force_cancel(*args, **kwargs)
+        # override this method to reevaluate timesheets after the leaves are updated via force cancel
+        timesheets = self.sudo().timesheet_ids
+        timesheets.holiday_id = False
+        timesheets.unlink()
