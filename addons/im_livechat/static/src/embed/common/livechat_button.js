@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { SESSION_STATE } from "@im_livechat/embed/common/livechat_service";
 import { Component, useRef, useState } from "@odoo/owl";
 import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder_owl";

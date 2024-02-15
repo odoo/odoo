@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { ThreadService } from "@mail/core/common/thread_service";
 import { compareDatetime } from "@mail/utils/common/misc";
 

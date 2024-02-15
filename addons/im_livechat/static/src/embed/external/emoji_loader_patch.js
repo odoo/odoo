@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { loader } from "@web/core/emoji_picker/emoji_picker";
 
 import { loadJS } from "@web/core/assets";

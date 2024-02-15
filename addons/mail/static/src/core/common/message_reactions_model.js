@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { AND, Record } from "@mail/core/common/record";
 
 export class MessageReactions extends Record {

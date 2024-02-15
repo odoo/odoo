@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { SESSION_STATE } from "@im_livechat/embed/common/livechat_service";
 import { browser } from "@web/core/browser/browser";
 import { cookie } from "@web/core/browser/cookie";

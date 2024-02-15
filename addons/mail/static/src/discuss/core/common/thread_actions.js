@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { threadActionsRegistry } from "@mail/core/common/thread_actions";
 import { AttachmentPanel } from "@mail/discuss/core/common/attachment_panel";
 import { ChannelInvitation } from "@mail/discuss/core/common/channel_invitation";

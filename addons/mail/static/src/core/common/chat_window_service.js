@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { assignDefined } from "@mail/utils/common/misc";
 
 import { browser } from "@web/core/browser/browser";

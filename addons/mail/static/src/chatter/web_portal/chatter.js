@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { AttachmentList } from "@mail/core/common/attachment_list";
 import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hook";
 import { Composer } from "@mail/core/common/composer";

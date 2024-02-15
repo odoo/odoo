@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { Message } from "@mail/core/common/message";
 import { MessageConfirmDialog } from "@mail/core/common/message_confirm_dialog";
 import { Message as MessageModel } from "@mail/core/common/message_model";

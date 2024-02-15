@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { Discuss } from "@mail/core/common/discuss";
 import { Call } from "@mail/discuss/call/common/call";
 import { useState } from "@odoo/owl";

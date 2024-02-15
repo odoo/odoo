@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { ChatWindow } from "@mail/core/common/chat_window";
 
 import { useService } from "@web/core/utils/hooks";

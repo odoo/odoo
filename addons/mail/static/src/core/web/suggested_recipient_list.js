@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { SuggestedRecipient } from "@mail/core/web/suggested_recipient";
 
 import { Component, useState } from "@odoo/owl";

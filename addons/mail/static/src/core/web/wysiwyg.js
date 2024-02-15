@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { renderToElement } from "@web/core/utils/render";
 import { Wysiwyg } from "@web_editor/js/wysiwyg/wysiwyg";
 import { closestBlock, setCursorEnd } from "@web_editor/js/editor/odoo-editor/src/OdooEditor";

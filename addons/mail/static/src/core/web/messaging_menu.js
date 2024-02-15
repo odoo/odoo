@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { ImStatus } from "@mail/core/common/im_status";
 import { NotificationItem } from "@mail/core/web/notification_item";
 import { onExternalClick, useDiscussSystray } from "@mail/utils/common/hooks";

@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { getGuestToken } from "@im_livechat/embed/common/livechat_service";
 import { livechatRoutingMap } from "@im_livechat/embed/cors/livechat_routing_map";
 

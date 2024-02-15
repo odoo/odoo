@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { threadActionsRegistry } from "@mail/core/common/thread_actions";
 
 import { _t } from "@web/core/l10n/translation";

@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { AND, Record } from "@mail/core/common/record";
 import { DEFAULT_AVATAR } from "@mail/core/common/persona_service";
 import { imageUrl } from "@web/core/utils/urls";

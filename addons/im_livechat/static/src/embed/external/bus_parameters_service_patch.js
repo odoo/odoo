@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { busParametersService } from "@bus/bus_parameters_service";
 
 import { serverUrl } from "@im_livechat/embed/common/livechat_data";

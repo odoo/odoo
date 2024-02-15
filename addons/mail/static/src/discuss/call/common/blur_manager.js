@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { closeStream } from "@mail/utils/common/misc";
 
 import { browser } from "@web/core/browser/browser";

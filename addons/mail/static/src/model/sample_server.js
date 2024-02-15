@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { SampleServer } from "@web/model/sample_server";
 import { patch } from "@web/core/utils/patch";
 

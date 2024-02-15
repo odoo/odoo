@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { onChange } from "@mail/utils/common/misc";
 import { markRaw, markup, reactive, toRaw } from "@odoo/owl";
 import { registry } from "@web/core/registry";

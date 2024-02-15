@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { isValidEmail } from "@im_livechat/embed/common/misc";
 
 import { Component, useState } from "@odoo/owl";

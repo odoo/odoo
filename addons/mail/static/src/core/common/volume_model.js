@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { Record } from "./record";
 
 export class Volume extends Record {

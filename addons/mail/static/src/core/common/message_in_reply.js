@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { Component, useState } from "@odoo/owl";
 
 import { DEFAULT_AVATAR } from "@mail/core/common/persona_service";
@@ -28,6 +26,6 @@ export class MessageInReply extends Component {
             return this.props.message.parentMessage.author.avatarUrl;
         }
 
-        return DEFAULT_AVATAR
+        return DEFAULT_AVATAR;
     }
 }

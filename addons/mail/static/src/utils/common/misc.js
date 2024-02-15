@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { reactive } from "@odoo/owl";
 
 export function assignDefined(obj, data, keys = Object.keys(data)) {

@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { EmojisFieldCommon } from "@mail/views/web/fields/emojis_field_common/emojis_field_common";
 
 import { useRef } from "@odoo/owl";

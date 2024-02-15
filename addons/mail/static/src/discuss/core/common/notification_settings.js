@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { useState, Component } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";

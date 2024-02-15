@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { LivechatButton } from "@im_livechat/embed/common/livechat_button";
 import { makeShadow, makeRoot } from "@im_livechat/embed/common/boot_helpers";
 import { serverUrl } from "@im_livechat/embed/common/livechat_data";

@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { LivechatChannelKanbanRenderer } from "@im_livechat/views/livechat_channel_kanban/livechat_channel_kanban_renderer";
 
 import { registry } from "@web/core/registry";

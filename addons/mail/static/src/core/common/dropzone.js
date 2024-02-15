@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { Component, useEffect, useRef, useState } from "@odoo/owl";
 
 export class Dropzone extends Component {
