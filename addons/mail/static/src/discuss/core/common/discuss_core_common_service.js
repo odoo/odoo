@@ -31,6 +31,7 @@ export class DiscussCoreCommon {
 
     setup() {
         this.messagingService.isReady.then((data) => {
+            this.store.updateBusSubscription();
             Record.MAKE_UPDATE(() => {
                 for (const channelData of data.channels) {
                     this.insertInitChannel(channelData);
