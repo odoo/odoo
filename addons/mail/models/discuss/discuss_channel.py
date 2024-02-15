@@ -879,6 +879,7 @@ class Channel(models.Model):
                 member_of_current_user_by_channel[member.channel_id] = member
         for channel in self:
             info = channel._channel_basic_info()
+            info["fetchChannelInfoState"] = "fetched"
             # find the channel member state
             if current_partner or current_guest:
                 info['message_needaction_counter'] = channel.message_needaction_counter

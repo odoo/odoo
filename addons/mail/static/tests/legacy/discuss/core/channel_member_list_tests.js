@@ -87,7 +87,7 @@ QUnit.test(
     }
 );
 
-QUnit.test("chat with member should be opened after clicking on channel member", async (assert) => {
+QUnit.test("chat with member should be opened after clicking on channel member", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     pyEnv["res.users"].create({ partner_id: partnerId });
@@ -125,7 +125,7 @@ QUnit.test("should show a button to load more members if they are not all loaded
     await contains("button", { text: "Load more" });
 });
 
-QUnit.test("Load more button should load more members", async (assert) => {
+QUnit.test("Load more button should load more members", async () => {
     // Test assumes at most 100 members are loaded at once.
     const pyEnv = await startServer();
     const channel_member_ids = [];
@@ -162,7 +162,7 @@ QUnit.test("Channel member count update after user joined", async () => {
     await contains(".o-discuss-ChannelMemberList h6", { text: "Offline - 2" });
 });
 
-QUnit.test("Channel member count update after user left", async (assert) => {
+QUnit.test("Channel member count update after user left", async () => {
     const pyEnv = await startServer();
     const userId = pyEnv["res.users"].create({ name: "Dobby" });
     const partnerId = pyEnv["res.partner"].create({ name: "Dobby", user_ids: [userId] });
