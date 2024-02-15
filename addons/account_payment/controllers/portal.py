@@ -59,14 +59,12 @@ class PortalAccount(portal.PortalAccount, PaymentPortal):
             'providers_sudo': providers_sudo,
             'payment_methods_sudo': payment_methods_sudo,
             'tokens_sudo': tokens_sudo,
+            'invoice_id': invoice.id,
             'transaction_route': f'/invoice/transaction/{invoice.id}/',
             'landing_route': invoice.get_portal_url(),
             'access_token': access_token,
         }
-        values.update(
-            **portal_page_values,
-            **payment_form_values,
-            **payment_context,
-            **self._get_extra_payment_form_values(**kwargs),
-        )
+        # Merge the dictionaries while allowing the redefinition of keys.
+        new_values = portal_page_values | payment_form_values | payment_context | self._get_extra_payment_form_values(**kwargs)
+        values |= new_values
         return values
