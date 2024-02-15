@@ -132,7 +132,7 @@ class BaseAutomation(models.Model):
 
             ('on_webhook', "On webhook"),
         ], string='Trigger',
-        compute='_compute_trigger_and_trigger_field_ids', readonly=False, store=True, required=True)
+        compute='_compute_trigger', readonly=False, store=True, required=True)
     trg_selection_field_id = fields.Many2one(
         'ir.model.fields.selection',
         string='Trigger Field',
@@ -197,7 +197,7 @@ class BaseAutomation(models.Model):
     )
     trigger_field_ids = fields.Many2many(
         'ir.model.fields', string='Trigger Fields',
-        compute='_compute_trigger_and_trigger_field_ids', readonly=False, store=True,
+        compute='_compute_trigger_field_ids', readonly=False, store=True,
         help="The automation rule will be triggered if and only if one of these fields is updated."
              "If empty, all fields are watched.")
     least_delay_msg = fields.Char(compute='_compute_least_delay_msg')
@@ -293,7 +293,6 @@ class BaseAutomation(models.Model):
         to_reset.trg_field_ref = False
         for automation in (self - to_reset):
             relation = automation.trigger_field_ids.relation
-            automation.trg_field_ref_model_name = relation
             # always re-assign to an empty value to make sure we have no discrepencies
             automation.trg_field_ref = self.env[relation]
 
@@ -354,7 +353,7 @@ class BaseAutomation(models.Model):
             record.on_change_field_ids = record.on_change_field_ids.filtered(lambda field: field.model_id == record.model_id)
 
     @api.depends('model_id', 'trigger')
-    def _compute_trigger_and_trigger_field_ids(self):
+    def _compute_trigger_field_ids(self):
         for automation in self:
             domain = [('model_id', '=', automation.model_id.id)]
             if automation.trigger == 'on_stage_set':
@@ -384,6 +383,10 @@ class BaseAutomation(models.Model):
                 continue
 
             automation.trigger_field_ids = self.env['ir.model.fields'].search(domain, limit=1)
+
+    @api.depends('trigger_field_ids')
+    def _compute_trigger(self):
+        for automation in self:
             automation.trigger = False if not automation.trigger_field_ids else automation.trigger
 
     @api.onchange('trigger', 'action_server_ids')
