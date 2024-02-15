@@ -21,7 +21,7 @@
             <t t-if="displayOptions">
                 <ul class="o-autocomplete--dropdown-menu ui-widget show"
                     t-att-class="ulDropdownClass"
-                    t-on-mousedown.prevent="" t-ref="sourcesList">
+                    t-ref="sourcesList">
                     <t t-foreach="sources" t-as="source" t-key="source.id">
                         <t t-if="source.isLoading">
                             <li class="ui-menu-item"
@@ -42,6 +42,7 @@
                                     t-on-mouseenter="() => this.onOptionMouseEnter([source_index, option_index])"
                                     t-on-mouseleave="() => this.onOptionMouseLeave([source_index, option_index])"
                                     t-on-click="() => this.onOptionClick([source_index, option_index])"
+                                    t-on-pointerdown="() => this.ignoreBlur = true"
                                 >
                                     <a
                                         href="#"
