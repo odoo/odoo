@@ -21,6 +21,34 @@ class TestHrEmployee(TestHrCommon):
             'image_1920': False
         })
 
+    def test_employee_smart_button_multi_company(self):
+        partner = self.env['res.partner'].create({'name': 'Partner Test'})
+        company_A = self.env['res.company'].create({
+            'name': 'company_A',
+        })
+        company_B = self.env['res.company'].create({
+            'name': 'company_B',
+        })
+        company_A_id = company_A.id
+        company_B_id = company_B.id
+        self.env['hr.employee'].create({
+            'name': 'employee_A',
+            'address_home_id': partner.id,
+            'company_id': company_A_id,
+        })
+        self.env['hr.employee'].create({
+            'name': 'employee_B',
+            'address_home_id': partner.id,
+            'company_id': company_B_id
+        })
+
+        partner.with_context(allowed_company_ids=[company_A_id])._compute_employees_count()
+        self.assertEqual(partner.employees_count, 1)
+        partner.with_context(allowed_company_ids=[company_B_id])._compute_employees_count()
+        self.assertEqual(partner.employees_count, 1)
+        partner.with_context(allowed_company_ids=[company_A_id, company_B_id])._compute_employees_count()
+        self.assertEqual(partner.employees_count, 2)
+
     def test_employee_linked_partner(self):
         user_partner = self.user_without_image.partner_id
         work_contact = self.employee_without_image.work_contact_id

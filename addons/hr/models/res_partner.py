@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, _
+from odoo import fields, models, _, api
 from odoo.exceptions import AccessError
 
 
@@ -28,17 +28,18 @@ class Partner(models.Model):
 
     def _compute_employees_count(self):
         for partner in self:
-            partner.employees_count = len(partner.employee_ids)
+            partner.employees_count = len([emp_id for emp_id in partner.employee_ids if emp_id.company_id.id in self.env.companies.ids])
 
     def action_open_employees(self):
         self.ensure_one()
-        if len(self.employee_ids) > 1:
+        if self.employees_count > 1:
             return {
                 'name': _('Related Employees'),
                 'type': 'ir.actions.act_window',
                 'res_model': 'hr.employee',
-                'view_mode': 'form',
-                'domain': [('id', 'in', self.employee_ids.ids)],
+                'view_mode': 'kanban',
+                'domain': [('id', 'in', self.employee_ids.ids),
+                           ('company_id', 'in', self.env.companies.ids)],
             }
         return {
             'name': _('Employee'),
