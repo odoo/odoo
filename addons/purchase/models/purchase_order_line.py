@@ -389,11 +389,14 @@ class PurchaseOrderLine(models.Model):
                         ._find_suitable_product_packaging(line.product_qty, line.product_uom)
                 line.product_packaging_id = suggested_packaging or line.product_packaging_id
 
-    @api.onchange('product_packaging_id')
+    @api.onchange('product_packaging_id', 'product_qty')
     def _onchange_product_packaging_id(self):
         if self.product_packaging_id and self.product_qty:
             newqty = self.product_packaging_id._check_qty(self.product_qty, self.product_uom, "UP")
+            if self.product_qty == 1:
+                self.product_qty = newqty
             if float_compare(newqty, self.product_qty, precision_rounding=self.product_uom.rounding) != 0:
+                self.product_qty = newqty
                 return {
                     'warning': {
                         'title': _('Warning'),
@@ -415,6 +418,13 @@ class PurchaseOrderLine(models.Model):
                 continue
             line.product_packaging_qty = line.product_packaging_id._compute_qty(line.product_qty, line.product_uom)
 
+    @api.onchange('product_packaging_qty')
+    def _onchange_product_packaging_qty(self):
+        if self.product_packaging_id and self.product_qty:
+            new_pkg_qty = self.product_packaging_id._compute_qty(self.product_qty, self.product_uom)
+            if float_compare(new_pkg_qty, self.product_packaging_qty, precision_rounding=self.product_uom.rounding) != 0:
+                self.product_packaging_qty = new_pkg_qty
+
     @api.depends('product_packaging_qty')
     def _compute_product_qty(self):
         for line in self:
@@ -422,7 +432,7 @@ class PurchaseOrderLine(models.Model):
                 packaging_uom = line.product_packaging_id.product_uom_id
                 qty_per_packaging = line.product_packaging_id.qty
                 product_qty = packaging_uom._compute_quantity(line.product_packaging_qty * qty_per_packaging, line.product_uom)
-                if float_compare(product_qty, line.product_qty, precision_rounding=line.product_uom.rounding) != 0:
+                if line.product_qty % qty_per_packaging == 0 and float_compare(product_qty, line.product_qty, precision_rounding=line.product_uom.rounding) != 0:
                     line.product_qty = product_qty
 
     @api.depends('product_uom', 'product_qty', 'product_id.uom_id')
