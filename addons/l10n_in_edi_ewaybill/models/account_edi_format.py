@@ -96,7 +96,7 @@ class AccountEdiFormat(models.Model):
                 error_message.append(_("- Transport document number and date is required when Transportation Mode is Rail,Air or Ship"))
         if error_message:
             error_message.insert(0, _("The following information are missing on the invoice (see eWayBill tab):"))
-        goods_lines = move.invoice_line_ids.filtered(lambda line: not (line.display_type or line.is_rounding_line or line.product_id.type == "service"))
+        goods_lines = move.invoice_line_ids.filtered(lambda line: not (line.display_type in ('line_section', 'line_note', 'rounding') or line.product_id.type == "service"))
         if not goods_lines:
             error_message.append(_('You need at least one product having "Product Type" as stockable or consumable.'))
         if base == "irn":
