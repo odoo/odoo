@@ -20,7 +20,7 @@
                             <field name="employee_id" options="{'no_create': True}" widget="many2one_avatar_user"/>
                             <field name="sale_line_id" attrs="{'required': True}" options="{'no_create': True}" context="{'search_default_order_id': sale_order_id}"/>
                             <field name="price_unit" widget="monetary" force_save="1" options="{'currency_field': 'currency_id'}"/>
-                            <field name="display_cost" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="display_cost" widget="monetary" options="{'currency_field': 'cost_currency_id'}"/>
                             <field name="is_cost_changed" invisible="1"/>
                             <field name="currency_id" invisible="1"/>
                             <field name="cost_currency_id" invisible="1"/>
