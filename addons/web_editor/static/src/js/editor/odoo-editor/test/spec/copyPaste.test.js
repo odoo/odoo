@@ -1935,6 +1935,65 @@ describe('Paste', () => {
                     `),
                 });
             });
+            it('should insert a list and a p tag inside a new list', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<ul><li>[]<br></li></ul>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<ul><li>abc</li><li>def</li></ul><p>ghi</p>');
+                    },
+                    contentAfter: '<ul><li>abc</li><li>def</li><li>ghi[]</li></ul>',
+                });
+            });
+            it('should insert content ending with a list inside a new list', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<ul><li>[]<br></li></ul>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<p>abc</p><ul><li>def</li><li>ghi</li></ul>');
+                    },
+                    contentAfter: '<ul><li>abc</li><li>def</li><li>ghi[]</li></ul>',
+                });
+            });
+            it('should convert a mixed list containing a paragraph into a checklist', async () => {
+                await testEditor(BasicEditor, {
+                    removeCheckIds: true,
+                    contentBefore: `<ul class="o_checklist"><li>[]<br></li></ul>`,
+                    stepFunction:  async editor => {
+                        await pasteHtml(editor, unformat(`
+                            <ul>
+                                <li>abc</li>
+                                <li>def</li>
+                                <li>ghi</li>
+                            </ul>
+                            <p>jkl</p>
+                            <ol>
+                                <li>mno</li>
+                                <li>pqr</li>
+                                <li>stu</li>
+                            </ol>
+                        `));
+                    },
+                    contentAfter: unformat(`
+                        <ul class="o_checklist">
+                            <li>abc</li>
+                            <li>def</li>
+                            <li>ghi</li>
+                            <li>jkl</li>
+                            <li>mno</li>
+                            <li>pqr</li>
+                            <li>stu[]</li>
+                        </ul>
+                    `),
+                });
+            });
+            it('should not unwrap a list twice when pasting on new list', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<ul><li>[]<br></li></ul>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<ul><ul><li>abc</li><li>def</li></ul></ul>');
+                    },
+                    contentAfter: '<ul><li class="oe-nested"><ul><li>abc</li><li>def[]</li></ul></li></ul>',
+                });
+            });
         });
     });
 
