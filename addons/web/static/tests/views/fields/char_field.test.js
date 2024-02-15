@@ -1,6 +1,6 @@
 import { expect, test } from "@odoo/hoot";
 import { queryAll, queryOne } from "@odoo/hoot-dom";
-import { animationFrame, Deferred } from "@odoo/hoot-mock";
+import { Deferred, animationFrame } from "@odoo/hoot-mock";
 import {
     clickSave,
     contains,
@@ -11,10 +11,8 @@ import {
     models,
     mountView,
     onRpc,
-    patchWithCleanup,
+    serverState,
 } from "@web/../tests/web_test_helpers";
-
-import { user } from "@web/core/user";
 
 class Currency extends models.Model {
     digits = fields.Integer({ string: "Digits" });
@@ -219,8 +217,9 @@ test.tags("desktop")("char field in editable list view", async () => {
 test("char field translatable", async () => {
     Partner._fields.name = fields.Char({ string: "Name", translate: true });
 
-    patchWithCleanup(user, { lang: "en_US" });
-    await makeMockServer({ multi_lang: true });
+    serverState.lang = "en_US";
+    serverState.multiLang = true;
+
     await mountView({ type: "form", resModel: "res.partner", resId: 1 });
 
     let call_get_field_translations = 0;
@@ -318,7 +317,9 @@ test("translation dialog should close if field is not there anymore", async () =
     // this can happen for example if the user click the back button of the browser.
     Partner._fields.name = fields.Char({ string: "Name", translate: true });
 
-    patchWithCleanup(user, { lang: "en_US" });
+    serverState.lang = "en_US";
+    serverState.multiLang = true;
+
     await makeMockServer({ multi_lang: true });
     await mountView({
         type: "form",
@@ -372,8 +373,9 @@ test("html field translatable", async () => {
     expect.assertions(5);
     Partner._fields.name = fields.Char({ string: "Name", translate: true });
 
-    patchWithCleanup(user, { lang: "en_US" });
-    await makeMockServer({ multi_lang: true });
+    serverState.lang = "en_US";
+    serverState.multiLang = true;
+
     await mountView({ type: "form", resModel: "res.partner", resId: 1 });
 
     onRpc(async (route, params) => {
