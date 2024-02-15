@@ -102,6 +102,7 @@ class MrpProduction(models.Model):
         readonly=False, required=True, precompute=True,
         domain="[('usage','=','internal')]",
         help="Location where the system will stock the finished products.")
+    location_final_id = fields.Many2one('stock.location', 'Final Location from procurement')
     date_deadline = fields.Datetime(
         'Deadline', copy=False, store=True, readonly=True, compute='_compute_date_deadline',
         help="Informative date allowing to define when the manufacturing order should be processed at the latest to fulfill delivery on time.")
@@ -970,7 +971,6 @@ class MrpProduction(models.Model):
         action = self.env['ir.actions.act_window']._for_xml_id('mrp.mrp_bom_form_action')
         action['view_mode'] = 'form'
         action['views'] = [(False, 'form')]
-        action['target'] = 'new'
 
         bom_lines_vals, byproduct_vals, operations_vals = self._get_bom_values()
         action['context'] = {
@@ -1108,7 +1108,9 @@ class MrpProduction(models.Model):
         for production in self:
             if production.product_id in production.bom_id.byproduct_ids.mapped('product_id'):
                 raise UserError(_("You cannot have %s  as the finished product and in the Byproducts", self.product_id.name))
-            moves.append(production._get_move_finished_values(production.product_id.id, production.product_qty, production.product_uom_id.id))
+            finished_move_values = production._get_move_finished_values(production.product_id.id, production.product_qty, production.product_uom_id.id)
+            finished_move_values['location_final_id'] = self.location_final_id.id
+            moves.append(finished_move_values)
             for byproduct in production.bom_id.byproduct_ids:
                 if byproduct._skip_byproduct_line(production.product_id):
                     continue

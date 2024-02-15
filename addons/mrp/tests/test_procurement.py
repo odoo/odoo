@@ -128,68 +128,6 @@ class TestProcurement(TestMrpCommon):
             production_product_4 = production_form.save()
             production_product_4.action_confirm()
 
-    def test_procurement_3(self):
-        warehouse = self.env['stock.warehouse'].search([], limit=1)
-        warehouse.write({'reception_steps': 'three_steps'})
-        warehouse.mto_pull_id.route_id.active = True
-        self.env['stock.location']._parent_store_compute()
-        warehouse.reception_route_id.rule_ids.filtered(
-            lambda p: p.location_src_id == warehouse.wh_input_stock_loc_id and
-            p.location_dest_id == warehouse.wh_qc_stock_loc_id).write({
-                'procure_method': 'make_to_stock'
-            })
-
-        finished_product = self.env['product.product'].create({
-            'name': 'Finished Product',
-            'type': 'product',
-        })
-        component = self.env['product.product'].create({
-            'name': 'Component',
-            'type': 'product',
-            'route_ids': [(4, warehouse.mto_pull_id.route_id.id)]
-        })
-        self.env['stock.quant']._update_available_quantity(component, warehouse.wh_input_stock_loc_id, 100)
-        bom = self.env['mrp.bom'].create({
-            'product_id': finished_product.id,
-            'product_tmpl_id': finished_product.product_tmpl_id.id,
-            'product_uom_id': self.uom_unit.id,
-            'product_qty': 1.0,
-            'type': 'normal',
-            'bom_line_ids': [
-                (0, 0, {'product_id': component.id, 'product_qty': 1.0})
-            ]})
-        mo_form = Form(self.env['mrp.production'])
-        mo_form.product_id = finished_product
-        mo_form.bom_id = bom
-        mo_form.product_qty = 5
-        mo_form.product_uom_id = finished_product.uom_id
-        mo_form.location_src_id = warehouse.lot_stock_id
-        mo = mo_form.save()
-        mo.action_confirm()
-        pickings = self.env['stock.picking'].search([('product_id', '=', component.id)])
-        self.assertEqual(len(pickings), 2.0)
-        picking_input_to_qc = pickings.filtered(lambda p: p.location_id == warehouse.wh_input_stock_loc_id)
-        picking_qc_to_stock = pickings - picking_input_to_qc
-        self.assertTrue(picking_input_to_qc)
-        self.assertTrue(picking_qc_to_stock)
-        picking_input_to_qc.action_assign()
-        self.assertEqual(picking_input_to_qc.state, 'assigned')
-        picking_input_to_qc.move_ids.write({'quantity': 5.0, 'picked': True})
-        picking_input_to_qc._action_done()
-        picking_qc_to_stock.action_assign()
-        self.assertEqual(picking_qc_to_stock.state, 'assigned')
-        picking_qc_to_stock.move_ids.write({'quantity': 3.0, 'picked': True})
-        picking_qc_to_stock.with_context(skip_backorder=True, picking_ids_not_to_backorder=picking_qc_to_stock.ids).button_validate()
-        self.assertEqual(picking_qc_to_stock.state, 'done')
-        mo.action_assign()
-        self.assertEqual(mo.move_raw_ids.quantity, 3.0)
-        produce_form = Form(mo)
-        produce_form.qty_producing = 3.0
-        mo = produce_form.save()
-        self.assertEqual(mo.move_raw_ids.quantity, 3.0)
-        picking_qc_to_stock.move_line_ids.quantity = 5.0
-        self.assertEqual(mo.move_raw_ids.quantity, 3.0)
-
     def test_link_date_mo_moves(self):
         """ Check link of shedule date for manufaturing with date stock move."""
 

@@ -75,7 +75,6 @@ class TestReorderingRule(TransactionCase):
         # Check purchase order created or not
         purchase_order = self.env['purchase.order'].search([('partner_id', '=', self.partner.id)])
         self.assertTrue(purchase_order, 'No purchase order created.')
-
         # Check the picking type on the purchase order
         purchase_order.picking_type_id = warehouse_2.in_type_id
         with self.assertRaises(UserError):
@@ -93,20 +92,21 @@ class TestReorderingRule(TransactionCase):
         purchase_order.button_confirm()
 
         self.assertEqual(purchase_order.picking_ids.move_ids.filtered(lambda m: m.product_id == self.product_01).product_qty, 12)
+        purchase_order.picking_ids.button_validate()
         next_picking = purchase_order.picking_ids.move_ids.move_dest_ids.picking_id
-        self.assertEqual(len(next_picking), 2)
-        self.assertEqual(next_picking[0].move_ids.filtered(lambda m: m.product_id == self.product_01).product_qty, 10)
-        self.assertEqual(next_picking[1].move_ids.filtered(lambda m: m.product_id == self.product_01).product_qty, 2)
+        self.assertEqual(len(next_picking), 1)
+        self.assertEqual(next_picking.move_ids.filtered(lambda m: m.product_id == self.product_01).product_qty, 12)
 
         # Increase the quantity on the PO
         purchase_order.order_line.product_qty = 15
-        self.assertEqual(purchase_order.picking_ids.move_ids.product_qty, 15)
-        self.assertEqual(next_picking[0].move_ids.filtered(lambda m: m.product_id == self.product_01).product_qty, 10)
-        self.assertEqual(next_picking[1].move_ids.filtered(lambda m: m.product_id == self.product_01).product_qty, 5)
+        receipt1, receipt2 = purchase_order.picking_ids
+        self.assertEqual(receipt1.move_ids.product_qty, 12)
+        self.assertEqual(receipt2.move_ids.product_qty, 3)
+        purchase_order.picking_ids[1].button_validate()
+        self.assertEqual(next_picking.move_ids.product_qty, 15)
 
     def test_reordering_rule_2(self):
-        """
-            - Receive products in 1 steps
+        """ - Receive products in 1 steps
             - The product has two reordering rules, each one applying in a sublocation
             - Processing the purchase order should fulfill the two sublocations
             - Increase the quantity on the RFQ for one of the POL, the extra quantity will go to
@@ -170,13 +170,10 @@ class TestReorderingRule(TransactionCase):
         self.assertEqual(self.product_01.with_context(location=subloc_2.id).virtual_available, 0)
 
         # increment the qty of the second po line
-        purchase_order.order_line.filtered(lambda pol: pol.orderpoint_id == order_point_2).with_context(debug=True).product_qty = 15
+        purchase_order.order_line.filtered(lambda pol: pol.orderpoint_id == order_point_2).product_qty = 15
         self.assertEqual(self.product_01.with_context(location=subloc_1.id).virtual_available, 5)
-        self.assertEqual(self.product_01.with_context(location=subloc_2.id).virtual_available, 0)
-        self.assertEqual(self.product_01.with_context(location=warehouse_1.lot_stock_id.id).virtual_available, 10)  # 5 on the main loc, 5 on subloc_1
-
-        self.assertEqual(purchase_order.picking_ids.move_ids[-1].product_qty, 5)
-        self.assertEqual(purchase_order.picking_ids.move_ids[-1].location_dest_id, warehouse_1.lot_stock_id)
+        self.assertEqual(self.product_01.with_context(location=subloc_2.id).virtual_available, 5)
+        self.assertEqual(self.product_01.with_context(location=warehouse_1.lot_stock_id.id).virtual_available, 10)  # 5 on the subloc_2, 5 on subloc_1
 
     def test_reordering_rule_3(self):
         """
@@ -682,8 +679,7 @@ class TestReorderingRule(TransactionCase):
         self.assertEqual("[A] product TEST", po_line.name)
 
     def test_multi_locations_and_reordering_rule(self):
-        """
-        Suppose two orderpoints for the same product, each one to a different location
+        """ Suppose two orderpoints for the same product, each one to a different location
         If the user triggers each orderpoint separately, it should still produce two
         different purchase order lines (one for each orderpoint)
         """
@@ -787,8 +783,7 @@ class TestReorderingRule(TransactionCase):
         ])
 
     def test_decrease_qty_multi_step_receipt(self):
-        """
-        Two-steps receipt. An orderpoint generates a move from Input to Stock
+        """ Two-steps receipt. An orderpoint generates a move from Input to Stock
         with 5 x Product01 and a purchase order to fulfill the need of that SM.
         Then, the user decreases the qty on the PO and confirms it. The existing
         SM should be updated and another one should be created (from Vendors to
@@ -824,21 +819,20 @@ class TestReorderingRule(TransactionCase):
 
         op.action_replenish()
 
-        moves = self.env['stock.move'].search([('id', '!=', out_move.id), ('product_id', '=', self.product_01.id)])
-        self.assertRecordValues(moves, [
-            {'location_id': input_location_id, 'location_dest_id': stock_location_id, 'product_uom_qty': 5}
-        ])
-
         purchase = self.env['purchase.order'].search([('partner_id', '=', self.partner.id)], order="id desc", limit=1)
         with Form(purchase) as form:
             with form.order_line.edit(0) as line:
                 line.product_qty = 4
         purchase.button_confirm()
-
         moves = self.env['stock.move'].search([('id', '!=', out_move.id), ('product_id', '=', self.product_01.id)], order='id desc')
         self.assertRecordValues(moves, [
             {'location_id': supplier_location_id, 'location_dest_id': input_location_id, 'product_qty': 4},
+        ])
+        moves.picking_id.button_validate()
+        moves = self.env['stock.move'].search([('id', '!=', out_move.id), ('product_id', '=', self.product_01.id)], order='id desc')
+        self.assertRecordValues(moves, [
             {'location_id': input_location_id, 'location_dest_id': stock_location_id, 'product_qty': 4},
+            {'location_id': supplier_location_id, 'location_dest_id': input_location_id, 'product_qty': 4},
         ])
 
     def test_decrease_qty_multi_step_receipt02(self):
@@ -874,9 +868,7 @@ class TestReorderingRule(TransactionCase):
 
         moves = self.env['stock.move'].search([('product_id', '=', self.product_01.id)], order='id desc')
         self.assertRecordValues(moves, [
-            {'location_id': input_location_id, 'location_dest_id': stock_location_id, 'product_qty': 6},
             {'location_id': supplier_location_id, 'location_dest_id': input_location_id, 'product_qty': 10},
-            {'location_id': input_location_id, 'location_dest_id': stock_location_id, 'product_qty': 4},
         ])
 
         with Form(purchase) as form:
@@ -886,7 +878,6 @@ class TestReorderingRule(TransactionCase):
         moves = self.env['stock.move'].search([('product_id', '=', self.product_01.id)], order='id desc')
         self.assertRecordValues(moves, [
             {'location_id': supplier_location_id, 'location_dest_id': input_location_id, 'product_qty': 1},
-            {'location_id': input_location_id, 'location_dest_id': stock_location_id, 'product_qty': 1},
         ])
 
     def test_add_line_to_existing_draft_po(self):

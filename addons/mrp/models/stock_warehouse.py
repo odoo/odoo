@@ -106,9 +106,7 @@ class StockWarehouse(models.Model):
 
     def _generate_global_route_rules_values(self):
         rules = super()._generate_global_route_rules_values()
-        location_src = self.manufacture_steps == 'mrp_one_step' and self.lot_stock_id or self.pbm_loc_id
         production_location = self._get_production_location()
-        location_dest_id = self.manufacture_steps == 'pbm_sam' and self.sam_loc_id or self.lot_stock_id
         rules.update({
             'manufacture_pull_id': {
                 'depends': ['manufacture_steps', 'manufacture_to_resupply'],
@@ -121,8 +119,8 @@ class StockWarehouse(models.Model):
                 },
                 'update_values': {
                     'active': self.manufacture_to_resupply,
-                    'name': self._format_rulename(location_dest_id, False, 'Production'),
-                    'location_dest_id': location_dest_id.id,
+                    'name': self._format_rulename(self.lot_stock_id, False, 'Production'),
+                    'location_dest_id': self.lot_stock_id.id,
                     'propagate_cancel': self.manufacture_steps == 'pbm_sam'
                 },
             },
@@ -135,11 +133,11 @@ class StockWarehouse(models.Model):
                     'auto': 'manual',
                     'route_id': self._find_global_route('stock.route_warehouse0_mto', _('Replenish on Order (MTO)'), raise_if_not_found=False).id,
                     'location_dest_id': production_location.id,
-                    'location_src_id': location_src.id,
+                    'location_src_id': self.lot_stock_id.id,
                     'picking_type_id': self.manu_type_id.id
                 },
                 'update_values': {
-                    'name': self._format_rulename(location_src, production_location, 'MTO'),
+                    'name': self._format_rulename(self.lot_stock_id, production_location, 'MTO'),
                     'active': self.manufacture_to_resupply,
                 },
             },
@@ -160,30 +158,6 @@ class StockWarehouse(models.Model):
                     'active': self.manufacture_steps != 'mrp_one_step' and self.manufacture_to_resupply,
                 }
             },
-            # The purpose to move sam rule in the manufacture route instead of
-            # pbm_route_id is to avoid conflict with receipt in multiple
-            # step. For example if the product is manufacture and receipt in two
-            # step it would conflict in WH/Stock since product could come from
-            # WH/post-prod or WH/input. We do not have this conflict with
-            # manufacture route since it is set on the product.
-            'sam_rule_id': {
-                'depends': ['manufacture_steps', 'manufacture_to_resupply'],
-                'create_values': {
-                    'procure_method': 'make_to_order',
-                    'company_id': self.company_id.id,
-                    'action': 'pull',
-                    'auto': 'manual',
-                    'route_id': self._find_global_route('mrp.route_warehouse0_manufacture', _('Manufacture'), raise_if_not_found=False).id,
-                    'name': self._format_rulename(self.sam_loc_id, self.lot_stock_id, False),
-                    'location_dest_id': self.lot_stock_id.id,
-                    'location_src_id': self.sam_loc_id.id,
-                    'picking_type_id': self.sam_type_id.id
-                },
-                'update_values': {
-                    'active': self.manufacture_steps == 'pbm_sam' and self.manufacture_to_resupply,
-                }
-            }
-
         })
         return rules
 

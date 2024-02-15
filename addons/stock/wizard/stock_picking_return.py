@@ -101,6 +101,7 @@ class ReturnPicking(models.TransientModel):
             'date': fields.Datetime.now(),
             'location_id': return_line.move_id.location_dest_id.id,
             'location_dest_id': self.location_id.id or return_line.move_id.location_id.id,
+            'location_final_id': False,
             'picking_type_id': new_picking.picking_type_id.id,
             'warehouse_id': self.picking_id.picking_type_id.warehouse_id.id,
             'origin_returned_move_id': return_line.move_id.id,

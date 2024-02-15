@@ -2961,7 +2961,6 @@ class TestMrpOrder(TestMrpCommon):
                 (0, 0, {'product_id': compo.id, 'product_qty': 1}),
             ],
         } for finished_product, compo in [(grandparent, parent), (parent, child), (child, component)]])
-
         none_production = self.env['mrp.production']
         for steps, case_description, in [('mrp_one_step', '1-step Manufacturing'), ('pbm', '2-steps Manufacturing'), ('pbm_sam', '3-steps Manufacturing')]:
             warehouse.manufacture_steps = steps

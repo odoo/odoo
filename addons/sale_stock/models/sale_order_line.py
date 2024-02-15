@@ -225,6 +225,7 @@ class SaleOrderLine(models.Model):
             'route_ids': self.route_id,
             'warehouse_id': self.order_id.warehouse_id or False,
             'partner_id': self.order_id.partner_shipping_id.id,
+            'location_final_id': self.order_id.partner_shipping_id.property_stock_customer,
             'product_description_variants': self.with_context(lang=self.order_id.partner_id.lang)._get_sale_order_line_multiline_description_variants(),
             'company_id': self.order_id.company_id,
             'product_packaging_id': self.product_packaging_id,
@@ -235,7 +236,7 @@ class SaleOrderLine(models.Model):
     def _get_qty_procurement(self, previous_product_uom_qty=False):
         self.ensure_one()
         qty = 0.0
-        outgoing_moves, incoming_moves = self._get_outgoing_incoming_moves()
+        outgoing_moves, incoming_moves = self._get_outgoing_incoming_moves(strict=False)
         for move in outgoing_moves:
             qty_to_compute = move.quantity if move.state == 'done' else move.product_uom_qty
             qty += move.product_uom._compute_quantity(qty_to_compute, self.product_uom, rounding_method='HALF-UP')
@@ -244,16 +245,31 @@ class SaleOrderLine(models.Model):
             qty -= move.product_uom._compute_quantity(qty_to_compute, self.product_uom, rounding_method='HALF-UP')
         return qty
 
-    def _get_outgoing_incoming_moves(self):
+    def _get_outgoing_incoming_moves(self, strict=True):
+        """ Return the outgoing and incoming moves of the sale order line.
+            @param strict: If True, only consider the moves that are strictly delivered to the customer (old behavior).
+                           If False, consider the moves that were created through the initial rule of the delivery route,
+                           to support the new push mechanism.
+        """
         outgoing_moves = self.env['stock.move']
         incoming_moves = self.env['stock.move']
 
         moves = self.move_ids.filtered(lambda r: r.state != 'cancel' and not r.scrapped and self.product_id == r.product_id)
+        if moves and not strict:
+            # The first move created was the one created from the intial rule that started it all.
+            sorted_moves = moves.sorted('id')
+            triggering_rule_ids = []
+            seen_wh_ids = set()
+            for move in sorted_moves:
+                if move.warehouse_id.id not in seen_wh_ids:
+                    triggering_rule_ids.append(move.rule_id.id)
+                    seen_wh_ids.add(move.warehouse_id.id)
         if self._context.get('accrual_entry_date'):
             moves = moves.filtered(lambda r: fields.Date.context_today(r, r.date) <= self._context['accrual_entry_date'])
 
         for move in moves:
-            if move.location_dest_id.usage == "customer":
+            if (strict and move.location_dest_id.usage == "customer") or \
+               (not strict and move.rule_id.id in triggering_rule_ids and move.location_final_id.usage == "customer"):
                 if not move.origin_returned_move_id or (move.origin_returned_move_id and move.to_refund):
                     outgoing_moves |= move
             elif move.location_dest_id.usage != "customer" and move.to_refund:
@@ -272,11 +288,11 @@ class SaleOrderLine(models.Model):
             'partner_id': self.order_id.partner_shipping_id.id,
         }
 
-    def _create_procurement(self, product_qty, procurement_uom, values):
+    def _create_procurements(self, product_qty, procurement_uom, values):
         self.ensure_one()
-        return self.env['procurement.group'].Procurement(
+        return [self.env['procurement.group'].Procurement(
             self.product_id, product_qty, procurement_uom, self.order_id.partner_shipping_id.property_stock_customer,
-            self.product_id.display_name, self.order_id.name, self.order_id.company_id, values)
+            self.product_id.display_name, self.order_id.name, self.order_id.company_id, values)]
 
     def _action_launch_stock_rule(self, previous_product_uom_qty=False):
         """
@@ -317,7 +333,7 @@ class SaleOrderLine(models.Model):
             line_uom = line.product_uom
             quant_uom = line.product_id.uom_id
             product_qty, procurement_uom = line_uom._adjust_uom_quantities(product_qty, quant_uom)
-            procurements.append(line._create_procurement(product_qty, procurement_uom, values))
+            procurements += line._create_procurements(product_qty, procurement_uom, values)
         if procurements:
             self.env['procurement.group'].run(procurements)
 

@@ -18,7 +18,7 @@ class StockRule(models.Model):
 
     def _get_message_dict(self):
         message_dict = super(StockRule, self)._get_message_dict()
-        source, destination, __ = self._get_message_values()
+        source, destination, __, __ = self._get_message_values()
         manufacture_message = _('When products are needed in <b>%s</b>, <br/> a manufacturing order is created to fulfill the need.', destination)
         if self.location_src_id:
             manufacture_message += _(' <br/><br/> The components will be taken from <b>%s</b>.', source)
@@ -158,8 +158,9 @@ class StockRule(models.Model):
             'product_description_variants': values.get('product_description_variants'),
             'product_qty': product_uom._compute_quantity(product_qty, bom.product_uom_id) if bom else product_qty,
             'product_uom_id': bom.product_uom_id.id if bom else product_uom.id,
-            'location_src_id': self.location_src_id.id or self.picking_type_id.default_location_src_id.id or location_dest_id.id,
-            'location_dest_id': location_dest_id.id,
+            'location_src_id': self.picking_type_id.default_location_src_id.id,
+            'location_dest_id': self.picking_type_id.default_location_dest_id.id or location_dest_id.id,
+            'location_final_id': location_dest_id.id,
             'bom_id': bom.id,
             'date_deadline': date_deadline,
             'date_start': date_planned,

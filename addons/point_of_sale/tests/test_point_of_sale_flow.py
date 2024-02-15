@@ -1104,7 +1104,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         self.assertEqual(pos_order.state, 'paid')
         self.assertEqual(len(picking_mls_no_stock), 0)
         self.assertEqual(len(picking_mls_stock), 1)
-        self.assertEqual(len(pickings.picking_type_id), 2)
+        self.assertEqual(len(pickings.picking_type_id), 1)
 
     def test_order_refund_picking(self):
         self.pos_config.open_ui()

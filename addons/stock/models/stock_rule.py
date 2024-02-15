@@ -3,13 +3,12 @@
 
 import logging
 from collections import defaultdict, namedtuple
-
 from dateutil.relativedelta import relativedelta
 
 from odoo import SUPERUSER_ID, _, api, fields, models, registry
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
-from odoo.tools import float_compare, float_is_zero, html_escape
+from odoo.tools import float_compare, float_is_zero
 from odoo.tools.misc import split_every
 
 _logger = logging.getLogger(__name__)
@@ -61,6 +60,10 @@ class StockRule(models.Model):
         domain="[('id', '=?', route_company_id)]")
     location_dest_id = fields.Many2one('stock.location', 'Destination Location', required=True, check_company=True, index=True)
     location_src_id = fields.Many2one('stock.location', 'Source Location', check_company=True, index=True)
+    location_dest_from_rule = fields.Boolean(
+        "Destination location origin from rule", default=False,
+        help="When set to True the destination location of the stock.move will be the rule."
+        "Otherwise, it takes it from the picking type.")
     route_id = fields.Many2one('stock.route', 'Route', required=True, ondelete='cascade', index=True)
     route_company_id = fields.Many2one(related='route_id.company_id', string='Route Company')
     procure_method = fields.Selection([
@@ -139,8 +142,9 @@ class StockRule(models.Model):
         """
         source = self.location_src_id and self.location_src_id.display_name or _('Source Location')
         destination = self.location_dest_id and self.location_dest_id.display_name or _('Destination Location')
+        direct_destination = self.picking_type_id and self.picking_type_id.default_location_dest_id != self.location_dest_id and self.picking_type_id.default_location_dest_id.display_name
         operation = self.picking_type_id and self.picking_type_id.name or _('Operation Type')
-        return source, destination, operation
+        return source, destination, direct_destination, operation
 
     def _get_message_dict(self):
         """ Return a dict with the different possible message used for the
@@ -149,20 +153,22 @@ class StockRule(models.Model):
         purchase_stock in order to complete the dictionary.
         """
         message_dict = {}
-        source, destination, operation = self._get_message_values()
+        source, destination, direct_destination, operation = self._get_message_values()
         if self.action in ('push', 'pull', 'pull_push'):
             suffix = ""
+            if self.action in ('pull', 'pull_push') and direct_destination and not self.location_dest_from_rule:
+                suffix = _("<br>The products will be moved towards <b>%(destination)s</b>, <br/> as specified from <b>%(operation)s</b> destination.", destination=direct_destination, operation=operation)
             if self.procure_method == 'make_to_order' and self.location_src_id:
-                suffix = _("<br>A need is created in <b>%s</b> and a rule will be triggered to fulfill it.", source)
+                suffix += _("<br>A need is created in <b>%s</b> and a rule will be triggered to fulfill it.", source)
             if self.procure_method == 'mts_else_mto' and self.location_src_id:
-                suffix = _("<br>If the products are not available in <b>%s</b>, a rule will be triggered to bring products in this location.", source)
+                suffix += _("<br>If the products are not available in <b>%s</b>, a rule will be triggered to bring products in this location.", source)
             message_dict = {
                 'pull': _('When products are needed in <b>%s</b>, <br/> <b>%s</b> are created from <b>%s</b> to fulfill the need.', destination, operation, source) + suffix,
                 'push': _('When products arrive in <b>%s</b>, <br/> <b>%s</b> are created to send them in <b>%s</b>.', source, operation, destination)
             }
         return message_dict
 
-    @api.depends('action', 'location_dest_id', 'location_src_id', 'picking_type_id', 'procure_method')
+    @api.depends('action', 'location_dest_id', 'location_src_id', 'picking_type_id', 'procure_method', 'location_dest_from_rule')
     def _compute_action_message(self):
         """ Generate dynamicaly a message that describe the rule purpose to the
         end user.
@@ -216,9 +222,12 @@ class StockRule(models.Model):
         if not company_id:
             company_id = self.sudo().warehouse_id and self.sudo().warehouse_id.company_id.id or self.sudo().picking_type_id.warehouse_id.company_id.id
         new_move_vals = {
+            'product_uom_qty': move_to_copy.quantity,
             'origin': move_to_copy.origin or move_to_copy.picking_id.name or "/",
             'location_id': move_to_copy.location_dest_id.id,
             'location_dest_id': self.location_dest_id.id,
+            'location_final_id': move_to_copy.location_final_id.id,
+            'rule_id': self.id,
             'date': new_date,
             'date_deadline': move_to_copy.date_deadline,
             'company_id': company_id,
@@ -342,7 +351,7 @@ class StockRule(models.Model):
             'product_uom_qty': qty_left,
             'partner_id': partner.id if partner else False,
             'location_id': self.location_src_id.id,
-            'location_dest_id': location_dest_id.id,
+            'location_final_id': location_dest_id.id,
             'move_dest_ids': move_dest_ids,
             'rule_id': self.id,
             'procure_method': self.procure_method,
@@ -350,7 +359,7 @@ class StockRule(models.Model):
             'picking_type_id': self.picking_type_id.id,
             'group_id': group_id,
             'route_ids': [(4, route.id) for route in values.get('route_ids', [])],
-            'warehouse_id': self.propagate_warehouse_id.id or self.warehouse_id.id,
+            'warehouse_id': self.warehouse_id.id,
             'date': date_scheduled,
             'date_deadline': False if self.group_propagation_option == 'fixed' else date_deadline,
             'propagate_cancel': self.propagate_cancel,
@@ -359,6 +368,8 @@ class StockRule(models.Model):
             'orderpoint_id': values.get('orderpoint_id') and values['orderpoint_id'].id,
             'product_packaging_id': values.get('product_packaging_id') and values['product_packaging_id'].id,
         }
+        if self.location_dest_from_rule:
+            move_values['location_dest_id'] = self.location_dest_id.id
         for field in self._get_custom_move_fields():
             if field in values:
                 move_values[field] = values.get(field)
@@ -461,7 +472,6 @@ class ProcurementGroup(models.Model):
                 raise UserError('\n'.join(errors))
             else:
                 raise ProcurementException(procurement_errors)
-
         actions_to_run = defaultdict(list)
         procurement_errors = []
         for procurement in procurements:

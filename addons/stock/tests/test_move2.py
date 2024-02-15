@@ -172,8 +172,7 @@ class TestPickShip(TestStockCommon):
         self.assertEqual(backorder.state, 'confirmed', 'Backorder should be waiting for reservation')
 
     def test_mto_to_mts(self):
-        """
-            10 in stock, create pick and ship, change destination of pick, ship should become MTS
+        """ 10 in stock, create pick and ship, change destination of pick, ship should become MTS
         """
         picking_pick, picking_ship = self.create_pick_ship()
         self.env['stock.quant'].create({
@@ -1894,7 +1893,7 @@ class TestSinglePicking(TestStockCommon):
         self.assertEqual(len(receipt.move_ids), 2, 'Moves were not merged')
 
     def test_merge_chained_moves(self):
-        """ Imagine multiple step delivery. Two different receipt picking for the same product should only generate
+        """ Imagine multiple step reception. Two different receipt picking for the same product should only generate
         1 picking from input to QC and another from QC to stock. The link at the end should follow this scheme.
         Move receipt 1 \
                         Move Input-> QC - Move QC -> Stock
@@ -1937,6 +1936,7 @@ class TestSinglePicking(TestStockCommon):
         })
         receipt1.action_confirm()
         receipt2.action_confirm()
+        (receipt1 | receipt2).button_validate()
 
         # Check following move has been created and grouped in one picking.
         self.assertTrue(move_receipt_1.move_dest_ids, 'No move created from push rules')
@@ -1945,11 +1945,13 @@ class TestSinglePicking(TestStockCommon):
 
         # Check link for input move are correct.
         input_move = move_receipt_2.move_dest_ids
-        self.assertEqual(len(input_move.move_dest_ids), 1)
+        self.assertEqual(len(input_move.move_dest_ids), 0, 'Push rule not yet triggered')
         self.assertEqual(set(input_move.move_orig_ids.ids), set((move_receipt_2 | move_receipt_1).ids),
                          'Move from input to QC should be merged and have the two receipt moves as origin.')
         self.assertEqual(move_receipt_1.move_dest_ids, input_move)
         self.assertEqual(move_receipt_2.move_dest_ids, input_move)
+        input_move.picking_id.button_validate()
+        self.assertEqual(len(input_move.move_dest_ids), 1)
 
         # Check link for quality check move are also correct.
         qc_move = input_move.move_dest_ids
@@ -1957,7 +1959,7 @@ class TestSinglePicking(TestStockCommon):
         self.assertTrue(qc_move.move_orig_ids == input_move, 'Move between QC and stock should only have the input move as origin')
 
     def test_merge_chained_moves_multi_confirm(self):
-        """ Imagine multiple step delivery. A receipt picking for the same product should by add to
+        """ Imagine multiple step reception. A receipt picking for the same product should by add to
         a existing picking from input to QC and another from QC to stock.
         This existing picking is confirm in the same time (not possible in stock, but can be with batch picking)
         and have some move to merge.
@@ -2007,10 +2009,13 @@ class TestSinglePicking(TestStockCommon):
             'location_dest_id': warehouse.wh_qc_stock_loc_id.id,
         })
         (receipt1 | receipt2).action_confirm()
+        # Validate first picking to trigger its push rules
+        move_receipt_1.quantity = 5
+        receipt1.button_validate()
 
         # Check following move has been created
         self.assertTrue(move_receipt_1.move_dest_ids, 'No move created from push rules')
-        self.assertTrue((move1_receipt_2 | move2_receipt_2).exists().move_dest_ids, 'No move created from push rules')
+        self.assertFalse((move1_receipt_2 | move2_receipt_2).exists().move_dest_ids, 'Push rule shoudn\'t be triggered yet')
         self.assertEqual(len((move1_receipt_2 | move2_receipt_2).exists()), 1, 'Move has been merged with the other one')
         self.assertEqual(move_receipt_1.move_dest_ids.picking_id, receipt2, 'Dest Move of receipt1 should be in the receipt2')
 
@@ -2638,67 +2643,6 @@ class TestRoutes(TestStockCommon):
         self.wh.write({'delivery_steps': 'pick_ship'})
         self.pick_ship_route = self.wh.route_ids.filtered(lambda r: '(pick + ship)' in r.name)
 
-    def test_pick_ship_1(self):
-        """ Enable the pick ship route, force a procurement group on the
-        pick. When a second move is added, make sure the `partner_id` and
-        `origin` fields are erased.
-        """
-        self._enable_pick_ship()
-
-        # create a procurement group and set in on the pick stock rule
-        procurement_group0 = self.env['procurement.group'].create({})
-        pick_rule = self.pick_ship_route.rule_ids.filtered(lambda rule: 'Stock → Output' in rule.name)
-        push_rule = self.pick_ship_route.rule_ids - pick_rule
-        pick_rule.write({
-            'group_propagation_option': 'fixed',
-            'group_id': procurement_group0.id,
-        })
-
-        ship_location = pick_rule.location_dest_id
-        customer_location = push_rule.location_dest_id
-        partners = self.env['res.partner'].search([], limit=2)
-        partner0 = partners[0]
-        partner1 = partners[1]
-        procurement_group1 = self.env['procurement.group'].create({'partner_id': partner0.id})
-        procurement_group2 = self.env['procurement.group'].create({'partner_id': partner1.id})
-
-        move1 = self.env['stock.move'].create({
-            'name': 'first out move',
-            'procure_method': 'make_to_order',
-            'location_id': ship_location.id,
-            'location_dest_id': customer_location.id,
-            'product_id': self.product1.id,
-            'product_uom': self.uom_unit.id,
-            'product_uom_qty': 1.0,
-            'warehouse_id': self.wh.id,
-            'group_id': procurement_group1.id,
-            'origin': 'origin1',
-        })
-
-        move2 = self.env['stock.move'].create({
-            'name': 'second out move',
-            'procure_method': 'make_to_order',
-            'location_id': ship_location.id,
-            'location_dest_id': customer_location.id,
-            'product_id': self.product1.id,
-            'product_uom': self.uom_unit.id,
-            'product_uom_qty': 1.0,
-            'warehouse_id': self.wh.id,
-            'group_id': procurement_group2.id,
-            'origin': 'origin2',
-        })
-
-        # first out move, the "pick" picking should have a partner and an origin
-        move1._action_confirm()
-        picking_pick = move1.move_orig_ids.picking_id
-        self.assertEqual(picking_pick.partner_id.id, procurement_group1.partner_id.id)
-        self.assertEqual(picking_pick.origin, move1.group_id.name)
-
-        # second out move, the "pick" picking should have lost its partner and origin
-        move2._action_confirm()
-        self.assertEqual(picking_pick.partner_id.id, False)
-        self.assertEqual(picking_pick.origin, False)
-
     def test_replenish_pick_ship_1(self):
         """ Creates 2 warehouses and make a replenish using one warehouse
         to ressuply the other one, Then check if the quantity and the product are matching
@@ -2774,6 +2718,9 @@ class TestRoutes(TestStockCommon):
             'route_ids': [(4, route.id)]
         })
         move1._action_confirm()
+        # Need to complete the move to trigger the push rules
+        move1.write({'quantity': 1, 'picked': True})
+        move1._action_done()
 
         pushed_move = move1.move_dest_ids
         self.assertEqual(pushed_move.location_dest_id.id, push_location.id)
@@ -2834,200 +2781,6 @@ class TestRoutes(TestStockCommon):
         self.assertEqual(move1.location_dest_id, new_loc)
         positive_quant = product.stock_quant_ids.filtered(lambda q: q.quantity > 0)
         self.assertEqual(positive_quant.location_id, new_loc)
-
-    def test_mtso_mto(self):
-        """ Run a procurement for 5 products when there are only 4 in stock then
-        check that MTO is applied on the moves when the rule is set to 'mts_else_mto'
-        """
-        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
-        warehouse.delivery_steps = 'pick_pack_ship'
-        partner_demo_customer = self.partner
-        final_location = partner_demo_customer.property_stock_customer
-        product_a = self.env['product.product'].create({
-            'name': 'ProductA',
-            'type': 'product',
-        })
-
-        self.env['stock.quant']._update_available_quantity(product_a, warehouse.wh_output_stock_loc_id, 4.0)
-
-        # We set quantities in the stock location to avoid warnings
-        # triggered by '_onchange_product_id_check_availability'
-        self.env['stock.quant']._update_available_quantity(product_a, warehouse.lot_stock_id, 4.0)
-
-        # We alter one rule and we set it to 'mts_else_mto'
-        values = {'warehouse_id': warehouse}
-        rule = self.env['procurement.group']._get_rule(product_a, final_location, values)
-        rule.procure_method = 'mts_else_mto'
-
-        pg = self.env['procurement.group'].create({'name': 'Test-pg-mtso-mto'})
-
-        self.env['procurement.group'].run([
-            pg.Procurement(
-                product_a,
-                5.0,
-                product_a.uom_id,
-                final_location,
-                'test_mtso_mto',
-                'test_mtso_mto',
-                warehouse.company_id,
-                {
-                    'warehouse_id': warehouse,
-                    'group_id': pg
-                }
-            )
-        ])
-
-        qty_available = self.env['stock.quant']._get_available_quantity(product_a, warehouse.wh_output_stock_loc_id)
-
-        # 3 pickings should be created.
-        picking_ids = self.env['stock.picking'].search([('group_id', '=', pg.id)])
-        self.assertEqual(len(picking_ids), 3)
-        for picking in picking_ids:
-            # Only the picking from Stock to Pack should be MTS
-            if picking.location_id == warehouse.lot_stock_id:
-                self.assertEqual(picking.move_ids.procure_method, 'make_to_stock')
-            else:
-                self.assertEqual(picking.move_ids.procure_method, 'make_to_order')
-
-            self.assertEqual(len(picking.move_ids), 1)
-            self.assertEqual(picking.move_ids.product_uom_qty, 5, 'The quantity of the move should be the same as on the SO')
-        self.assertEqual(qty_available, 4, 'The 4 products should still be available')
-
-    def test_mtso_mts(self):
-        """ Run a procurement for 4 products when there are 4 in stock then
-        check that MTS is applied on the moves when the rule is set to 'mts_else_mto'
-        """
-        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
-        warehouse.delivery_steps = 'pick_pack_ship'
-        partner_demo_customer = self.partner
-        final_location = partner_demo_customer.property_stock_customer
-        product_a = self.env['product.product'].create({
-            'name': 'ProductA',
-            'type': 'product',
-        })
-
-        self.env['stock.quant']._update_available_quantity(product_a, warehouse.wh_output_stock_loc_id, 4.0)
-
-        # We alter one rule and we set it to 'mts_else_mto'
-        values = {'warehouse_id': warehouse}
-        rule = self.env['procurement.group']._get_rule(product_a, final_location, values)
-        rule.procure_method = 'mts_else_mto'
-
-        pg = self.env['procurement.group'].create({'name': 'Test-pg-mtso-mts'})
-
-        self.env['procurement.group'].run([
-            pg.Procurement(
-                product_a,
-                4.0,
-                product_a.uom_id,
-                final_location,
-                'test_mtso_mts',
-                'test_mtso_mts',
-                warehouse.company_id,
-                {
-                    'warehouse_id': warehouse,
-                    'group_id': pg
-                }
-            )
-        ])
-
-        # A picking should be created with its move having MTS as procure method.
-        picking_ids = self.env['stock.picking'].search([('group_id', '=', pg.id)])
-        self.assertEqual(len(picking_ids), 1)
-        picking = picking_ids
-        self.assertEqual(picking.move_ids.procure_method, 'make_to_stock')
-        self.assertEqual(len(picking.move_ids), 1)
-        self.assertEqual(picking.move_ids.product_uom_qty, 4)
-
-    def test_mtso_multi_pg(self):
-        """ Run 3 procurements for 2 products at the same times when there are 4 in stock then
-        check that MTS is applied on the moves when the rule is set to 'mts_else_mto'
-        """
-        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
-        warehouse.delivery_steps = 'pick_pack_ship'
-        partner_demo_customer = self.partner
-        final_location = partner_demo_customer.property_stock_customer
-        product_a = self.env['product.product'].create({
-            'name': 'ProductA',
-            'type': 'product',
-        })
-
-        self.env['stock.quant']._update_available_quantity(product_a, warehouse.wh_output_stock_loc_id, 4.0)
-
-        # We alter one rule and we set it to 'mts_else_mto'
-        values = {'warehouse_id': warehouse}
-        rule = self.env['procurement.group']._get_rule(product_a, final_location, values)
-        rule.procure_method = 'mts_else_mto'
-
-        pg1 = self.env['procurement.group'].create({'name': 'Test-pg-mtso-mts-1'})
-        pg2 = self.env['procurement.group'].create({'name': 'Test-pg-mtso-mts-2'})
-        pg3 = self.env['procurement.group'].create({'name': 'Test-pg-mtso-mts-3'})
-
-        self.env['procurement.group'].run([
-            pg1.Procurement(
-                product_a,
-                2.0,
-                product_a.uom_id,
-                final_location,
-                'test_mtso_mts_1',
-                'test_mtso_mts_1',
-                warehouse.company_id,
-                {
-                    'warehouse_id': warehouse,
-                    'group_id': pg1
-                }
-            ),
-            pg2.Procurement(
-                product_a,
-                2.0,
-                product_a.uom_id,
-                final_location,
-                'test_mtso_mts_2',
-                'test_mtso_mts_2',
-                warehouse.company_id,
-                {
-                    'warehouse_id': warehouse,
-                    'group_id': pg2
-                }
-            ),
-            pg3.Procurement(
-                product_a,
-                2.0,
-                product_a.uom_id,
-                final_location,
-                'test_mtso_mts_3',
-                'test_mtso_mts_3',
-                warehouse.company_id,
-                {
-                    'warehouse_id': warehouse,
-                    'group_id': pg3
-                }
-            )
-        ])
-
-        pickings_pg1 = self.env['stock.picking'].search([('group_id', '=', pg1.id)])
-        pickings_pg2 = self.env['stock.picking'].search([('group_id', '=', pg2.id)])
-        pickings_pg3 = self.env['stock.picking'].search([('group_id', '=', pg3.id)])
-
-        # The 2 first procurements should have create only 1 picking since enough quantities
-        # are left in the delivery location
-        self.assertEqual(len(pickings_pg1), 1)
-        self.assertEqual(len(pickings_pg2), 1)
-        self.assertEqual(pickings_pg1.move_ids.procure_method, 'make_to_stock')
-        self.assertEqual(pickings_pg2.move_ids.procure_method, 'make_to_stock')
-
-        # The last one should have 3 pickings as there's nothing left in the delivery location
-        self.assertEqual(len(pickings_pg3), 3)
-        for picking in pickings_pg3:
-            # Only the picking from Stock to Pack should be MTS
-            if picking.location_id == warehouse.lot_stock_id:
-                self.assertEqual(picking.move_ids.procure_method, 'make_to_stock')
-            else:
-                self.assertEqual(picking.move_ids.procure_method, 'make_to_order')
-
-            # All the moves should be should have the same quantity as it is on each procurements
-            self.assertEqual(len(picking.move_ids), 1)
-            self.assertEqual(picking.move_ids.product_uom_qty, 2)
 
     def test_mtso_mto_adjust_01(self):
         """ Run '_adjust_procure_method' for products A & B:
@@ -3198,89 +2951,6 @@ class TestRoutes(TestStockCommon):
         self.assertEqual(move_A1.procure_method, 'make_to_order', 'Move A should be "make_to_stock"')
         self.assertEqual(move_A2.procure_method, 'make_to_stock', 'Move A should be "make_to_order"')
 
-    def test_delay_alert_3(self):
-        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
-        warehouse.delivery_steps = 'pick_pack_ship'
-        partner_demo_customer = self.partner
-        final_location = partner_demo_customer.property_stock_customer
-        product_a = self.env['product.product'].create({
-            'name': 'ProductA',
-            'type': 'product',
-        })
-        pg = self.env['procurement.group'].create({'name': 'Test-delay_alert_3'})
-        self.env['procurement.group'].run([
-            pg.Procurement(
-                product_a,
-                4.0,
-                product_a.uom_id,
-                final_location,
-                'delay',
-                'delay',
-                warehouse.company_id,
-                {
-                    'warehouse_id': warehouse,
-                    'group_id': pg
-                }
-            ),
-        ])
-        ship, pack, pick = self.env['stock.move'].search([('product_id',  '=', product_a.id)])
-
-        # by default they all the same `date`
-        self.assertEqual(set((ship + pack + pick).mapped('date')), {pick.date})
-
-        # pick - pack - ship
-        ship.date += timedelta(days=2)
-        pack.date += timedelta(days=1)
-        self.assertFalse(pick.delay_alert_date)
-        self.assertFalse(pack.delay_alert_date)
-        self.assertFalse(ship.delay_alert_date)
-
-        # move the pack after the ship
-        # pick - ship - pack
-        pack.date += timedelta(days=2)
-        self.assertFalse(pick.delay_alert_date)
-        self.assertFalse(pack.delay_alert_date)
-        self.assertTrue(ship.delay_alert_date)
-        self.assertAlmostEqual(ship.delay_alert_date, pack.date)
-
-        # restore the pack before the ship
-        # pick - pack - ship
-        pack.date -= timedelta(days=2)
-        self.assertFalse(pick.delay_alert_date)
-        self.assertFalse(pack.delay_alert_date)
-        self.assertFalse(ship.delay_alert_date)
-
-        # move the pick after the pack
-        # pack - ship - pick
-        pick.date += timedelta(days=3)
-        self.assertFalse(pick.delay_alert_date)
-        self.assertTrue(pack.delay_alert_date)
-        self.assertFalse(ship.delay_alert_date)
-        self.assertAlmostEqual(pack.delay_alert_date, pick.date)
-
-        # move the ship before the pack
-        # ship - pack - pick
-        ship.date -= timedelta(days=2)
-        self.assertFalse(pick.delay_alert_date)
-        self.assertTrue(pack.delay_alert_date)
-        self.assertTrue(ship.delay_alert_date)
-        self.assertAlmostEqual(pack.delay_alert_date, pick.date)
-        self.assertAlmostEqual(ship.delay_alert_date, pack.date)
-
-        # move the pack at the end
-        # ship - pick - pack
-        pack.date = pick.date + timedelta(days=2)
-        self.assertFalse(pick.delay_alert_date)
-        self.assertFalse(pack.delay_alert_date)
-        self.assertTrue(ship.delay_alert_date)
-        self.assertAlmostEqual(ship.delay_alert_date, pack.date)
-
-        # fix the ship
-        ship.date = pack.date + timedelta(days=2)
-        self.assertFalse(pick.delay_alert_date)
-        self.assertFalse(pack.delay_alert_date)
-        self.assertFalse(ship.delay_alert_date)
-
     def test_packaging_route(self):
         """Create a route for product and another route for its packaging. Create
         a move of this product with this packaging. Check packaging route has
@@ -3348,6 +3018,9 @@ class TestRoutes(TestStockCommon):
             'product_uom_qty': 1.0,
         })
         move1._action_confirm()
+        # Need to complete to move to trigger the push rule
+        move1.write({'quantity': 1, 'picked': True})
+        move1._action_done()
 
         pushed_move = move1.move_dest_ids
         self.assertEqual(pushed_move.location_dest_id.id, push_location_2.id)
@@ -3355,6 +3028,8 @@ class TestRoutes(TestStockCommon):
 
 class TestAutoAssign(TestStockCommon):
     def create_pick_ship(self):
+        warehouse = self.env['stock.location'].browse(self.stock_location).warehouse_id
+        warehouse.delivery_route_id.rule_ids.action = 'pull'
         picking_client = self.env['stock.picking'].create({
             'location_id': self.pack_location,
             'location_dest_id': self.customer_location,

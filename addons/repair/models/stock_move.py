@@ -37,6 +37,18 @@ class StockMove(models.Model):
                 remaining_moves -= move
         return super(StockMove, remaining_moves)._compute_picking_type_id()
 
+    @api.depends('repair_id', 'repair_id.location_dest_id')
+    def _compute_location_dest_id(self):
+        ids_to_super = set()
+        for move in self:
+            if move.repair_id and move.repair_line_type:
+                move.location_dest_id = move.repair_id[
+                    MAP_REPAIR_LINE_TYPE_TO_MOVE_LOCATIONS_FROM_REPAIR[move.repair_line_type]['location_dest_id']
+                ]
+            else:
+                ids_to_super.add(move.id)
+        return super(StockMove, self.browse(ids_to_super))._compute_location_dest_id()
+
     def copy_data(self, default=None):
         default = dict(default or {})
         vals_list = super().copy_data(default=default)
@@ -180,11 +192,6 @@ class StockMove(models.Model):
         if self.repair_id:
             return False
         return super()._should_be_assigned()
-
-    def _create_extra_move(self):
-        if self.repair_id:
-            return self
-        return super(StockMove, self)._create_extra_move()
 
     def _split(self, qty, restrict_partner_id=False):
         # When setting the Repair Order as done with partially done moves, do not split these moves

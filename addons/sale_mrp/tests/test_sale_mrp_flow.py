@@ -1346,11 +1346,11 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         # kit_1 --|- component_shelf1   x3
         #         |- component_shelf2   x2
 
-        stock_location_components = self.env['stock.location'].create({
+        stock_shelf_1 = self.env['stock.location'].create({
             'name': 'Shelf 1',
             'location_id': self.company_data['default_warehouse'].lot_stock_id.id,
         })
-        stock_location_14 = self.env['stock.location'].create({
+        stock_shelf_2 = self.env['stock.location'].create({
             'name': 'Shelf 2',
             'location_id': self.company_data['default_warehouse'].lot_stock_id.id,
         })
@@ -1380,8 +1380,8 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
             'rule_ids': [(0, 0, {
                 'name': 'Shelf1 -> Customer',
                 'action': 'pull',
-                'picking_type_id': self.company_data['default_warehouse'].in_type_id.id,
-                'location_src_id': stock_location_components.id,
+                'picking_type_id': self.company_data['default_warehouse'].out_type_id.id,
+                'location_src_id': stock_shelf_1.id,
                 'location_dest_id': self.ref('stock.stock_location_customers'),
             })],
         })
@@ -1392,8 +1392,8 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
             'rule_ids': [(0, 0, {
                 'name': 'Shelf2 -> Customer',
                 'action': 'pull',
-                'picking_type_id': self.company_data['default_warehouse'].in_type_id.id,
-                'location_src_id': stock_location_14.id,
+                'picking_type_id': self.company_data['default_warehouse'].out_type_id.id,
+                'location_src_id': stock_shelf_2.id,
                 'location_dest_id': self.ref('stock.stock_location_customers'),
             })],
         })
@@ -1425,9 +1425,9 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         moves = order.picking_ids.move_ids
         move_shelf1 = moves.filtered(lambda m: m.product_id == component_shelf1)
         move_shelf2 = moves.filtered(lambda m: m.product_id == component_shelf2)
-        self.assertEqual(move_shelf1.location_id.id, stock_location_components.id)
+        self.assertEqual(move_shelf1.location_id.id, stock_shelf_1.id)
         self.assertEqual(move_shelf1.location_dest_id.id, self.ref('stock.stock_location_customers'))
-        self.assertEqual(move_shelf2.location_id.id, stock_location_14.id)
+        self.assertEqual(move_shelf2.location_id.id, stock_shelf_2.id)
         self.assertEqual(move_shelf2.location_dest_id.id, self.ref('stock.stock_location_customers'))
 
     def test_11_sale_mrp_explode_kits_uom_quantities(self):

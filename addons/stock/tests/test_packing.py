@@ -42,76 +42,72 @@ class TestPacking(TestPackingCommon):
         """
         self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 20.0)
         self.env['stock.quant']._update_available_quantity(self.productB, self.stock_location, 20.0)
-        ship_move_a = self.env['stock.move'].create({
+        pick_move_a = self.env['stock.move'].create({
             'name': 'The ship move',
             'product_id': self.productA.id,
             'product_uom_qty': 5.0,
             'product_uom': self.productA.uom_id.id,
-            'location_id': self.ship_location.id,
-            'location_dest_id': self.customer_location.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.pack_location.id,
             'warehouse_id': self.warehouse.id,
             'picking_type_id': self.warehouse.out_type_id.id,
-            'procure_method': 'make_to_order',
             'state': 'draft',
         })
-        ship_move_b = self.env['stock.move'].create({
+        pick_move_b = self.env['stock.move'].create({
             'name': 'The ship move',
             'product_id': self.productB.id,
             'product_uom_qty': 5.0,
             'product_uom': self.productB.uom_id.id,
-            'location_id': self.ship_location.id,
-            'location_dest_id': self.customer_location.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.pack_location.id,
             'warehouse_id': self.warehouse.id,
             'picking_type_id': self.warehouse.out_type_id.id,
-            'procure_method': 'make_to_order',
             'state': 'draft',
         })
-        ship_move_a._assign_picking()
-        ship_move_b._assign_picking()
-        ship_move_a._action_confirm()
-        ship_move_b._action_confirm()
-        pack_move_a = ship_move_a.move_orig_ids[0]
-        pick_move_a = pack_move_a.move_orig_ids[0]
+        pick_move_a._assign_picking()
+        pick_move_b._assign_picking()
+        picking = pick_move_a.picking_id
+        picking.action_confirm()
+        picking.action_assign()
+        picking.button_validate()
 
-        pick_picking = pick_move_a.picking_id
-        packing_picking = pack_move_a.picking_id
-        shipping_picking = ship_move_a.picking_id
+        self.warehouse.pick_type_id.show_entire_packs = True
+        self.warehouse.pack_type_id.show_entire_packs = True
+        self.warehouse.out_type_id.show_entire_packs = True
 
-        pick_picking.picking_type_id.show_entire_packs = True
-        packing_picking.picking_type_id.show_entire_packs = True
-        shipping_picking.picking_type_id.show_entire_packs = True
+        pack_move_a = pick_move_a.move_dest_ids[0]
+        pack_picking = pack_move_a.picking_id
+        pack_picking.action_assign()
+        self.assertEqual(len(pack_picking.move_ids_without_package), 2)
+        pack_picking.move_line_ids.filtered(lambda ml: ml.product_id == self.productA).quantity = 1.0
+        pack_picking.move_line_ids.filtered(lambda ml: ml.product_id == self.productB).quantity = 2.0
+        pack_picking.move_ids_without_package.picked = True
 
-        pick_picking.action_assign()
-        self.assertEqual(len(pick_picking.move_ids_without_package), 2)
-        pick_picking.move_line_ids.filtered(lambda ml: ml.product_id == self.productA).quantity = 1.0
-        pick_picking.move_line_ids.filtered(lambda ml: ml.product_id == self.productB).quantity = 2.0
-        pick_picking.move_ids_without_package.picked = True
-
-        first_pack = pick_picking.action_put_in_pack()
-        self.assertEqual(len(pick_picking.package_level_ids), 1, 'Put some products in pack should create a package_level')
-        self.assertEqual(pick_picking.package_level_ids[0].state, 'new', 'A new pack should be in state "new"')
-        ml = pick_picking.move_line_ids[0].copy()
+        first_pack = pack_picking.action_put_in_pack()
+        self.assertEqual(len(pack_picking.package_level_ids), 1, 'Put some products in pack should create a package_level')
+        self.assertEqual(pack_picking.package_level_ids[0].state, 'new', 'A new pack should be in state "new"')
+        ml = pack_picking.move_line_ids[0].copy()
         ml.write({
             'quantity': 4.0,
             'result_package_id': False,
         })
-        ml = pick_picking.move_line_ids[1].copy()
+        ml = pack_picking.move_line_ids[1].copy()
         ml.write({
             'quantity': 3.0,
             'result_package_id': False,
         })
-        second_pack = pick_picking.action_put_in_pack()
-        self.assertEqual(len(pick_picking.move_ids_without_package), 2)
-        self.assertEqual(len(packing_picking.move_ids_without_package), 2)
-        pick_picking.move_ids.picked = True
-        pick_picking.button_validate()
-        self.assertEqual(len(packing_picking.move_ids_without_package), 2)
+        second_pack = pack_picking.action_put_in_pack()
+        self.assertEqual(len(pack_picking.move_ids_without_package), 2)
+        pack_picking.move_ids.picked = True
+        pack_picking.button_validate()
+        self.assertEqual(len(pack_picking.move_ids_without_package), 2)
         self.assertEqual(len(first_pack.quant_ids), 2)
         self.assertEqual(len(second_pack.quant_ids), 2)
-        packing_picking.action_assign()
-        self.assertEqual(len(packing_picking.package_level_ids), 2, 'Two package levels must be created after assigning picking')
-        packing_picking.package_level_ids.write({'is_done': True})
-        packing_picking._action_done()
+        ship_picking = pack_move_a.move_dest_ids[0].picking_id
+        ship_picking.action_assign()
+        self.assertEqual(len(ship_picking.package_level_ids), 2, 'Two package levels must be created after assigning picking')
+        ship_picking.package_level_ids.write({'is_done': True})
+        ship_picking._action_done()
 
     def test_pick_a_pack_confirm(self):
         pack = self.env['stock.quant.package'].create({'name': 'The pack to pick'})
@@ -430,31 +426,26 @@ class TestPacking(TestPackingCommon):
           * The automatically generated internal transfer should have package set by default.
         """
         prod = self.env['product.product'].create({'name': 'bad dragon', 'type': 'consu'})
-        ship_move = self.env['stock.move'].create({
+        pick_move = self.env['stock.move'].create({
             'name': 'The ship move',
             'product_id': prod.id,
             'product_uom_qty': 5.0,
             'product_uom': prod.uom_id.id,
-            'location_id': self.warehouse.wh_output_stock_loc_id.id,
-            'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+            'location_id': self.warehouse.lot_stock_id.id,
+            'location_dest_id': self.warehouse.wh_pack_stock_loc_id.id,
             'warehouse_id':  self.warehouse.id,
-            'picking_type_id':  self.warehouse.out_type_id.id,
-            'procure_method': 'make_to_order',
+            'picking_type_id':  self.warehouse.pick_type_id.id,
             'state': 'draft',
         })
 
-        # create chained pick/pack moves to test with
-        ship_move._assign_picking()
-        ship_move._action_confirm()
-        pack_move = ship_move.move_orig_ids[0]
-        pick_move = pack_move.move_orig_ids[0]
-
+        pick_move._assign_picking()
         picking = pick_move.picking_id
         picking.action_confirm()
         picking.action_put_in_pack()
+
         self.assertTrue(picking.move_line_ids.result_package_id)
         picking.button_validate()
-        self.assertEqual(pack_move.move_line_ids.result_package_id, picking.move_line_ids.result_package_id)
+        self.assertEqual(pick_move.move_dest_ids.move_line_ids.result_package_id, picking.move_line_ids.result_package_id)
 
     def test_pack_in_receipt_two_step_single_putway(self):
         """ Checks all works right in the following specific corner case:
@@ -745,31 +736,31 @@ class TestPacking(TestPackingCommon):
             'name': '00001',
         })
         self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 20.0, lot_id=lot1)
-        ship_move_a = self.env['stock.move'].create({
+        pick_move_a = self.env['stock.move'].create({
             'name': 'The ship move',
             'product_id': self.productA.id,
             'product_uom_qty': 5.0,
             'product_uom': self.productA.uom_id.id,
-            'location_id': self.ship_location.id,
-            'location_dest_id': self.customer_location.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.ship_location.id,
             'warehouse_id': self.warehouse.id,
             'picking_type_id': self.warehouse.out_type_id.id,
-            'procure_method': 'make_to_order',
             'state': 'draft',
         })
-        ship_move_a._assign_picking()
-        ship_move_a._action_confirm()
-        pack_move_a = ship_move_a.move_orig_ids[0]
-        pick_move_a = pack_move_a.move_orig_ids[0]
+        pick_move_a._action_confirm()
+        pick_move_a._action_assign()
+        pick_move_a.picked = True
+        pick_move_a.picking_id.button_validate()
+        pack_move_a = pick_move_a.move_dest_ids[0]
 
-        pick_picking = pick_move_a.picking_id
+        pack_picking = pack_move_a.picking_id
 
-        pick_picking.picking_type_id.show_entire_packs = True
+        pack_picking.picking_type_id.show_entire_packs = True
 
-        pick_picking.action_assign()
+        pack_picking.action_assign()
 
-        pick_picking.move_line_ids.quantity = 3
-        first_pack = pick_picking.action_put_in_pack()
+        pack_picking.move_line_ids.quantity = 3
+        pack_picking.action_put_in_pack()
 
     def test_action_assign_package_level(self):
         """calling _action_assign on move does not erase lines' "result_package_id"
@@ -986,7 +977,7 @@ class TestPacking(TestPackingCommon):
         picking.action_put_in_pack()
         picking.button_validate()
         delivery_type.show_entire_packs = True
-        picking, _, _ = create_picking(delivery_type, delivery_type.default_location_src_id, self.customer_location)
+        picking = moveA.move_dest_ids.picking_id
         packB = picking.package_level_ids[1]
         picking.package_level_ids_details[0].is_done = True
 
