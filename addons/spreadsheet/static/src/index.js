@@ -20,7 +20,12 @@ import * as spreadsheet from "@odoo/o-spreadsheet";
 const { corePluginRegistry, coreViewsPluginRegistry } = spreadsheet.registries;
 
 import { GlobalFiltersCorePlugin, GlobalFiltersUIPlugin } from "@spreadsheet/global_filters/index";
-import { PivotCorePlugin, PivotOdooCorePlugin, PivotUIPlugin } from "@spreadsheet/pivot/index"; // list depends on filter for its getters
+import {
+    PivotCorePlugin,
+    PivotOdooCorePlugin,
+    PivotUIGlobalFilterPlugin,
+    PivotUIPlugin,
+} from "@spreadsheet/pivot/index"; // list depends on filter for its getters
 import { ListCorePlugin, ListUIPlugin } from "@spreadsheet/list/index"; // pivot depends on filter for its getters
 import {
     ChartOdooMenuPlugin,
@@ -39,5 +44,6 @@ corePluginRegistry.add("chartOdooMenuPlugin", ChartOdooMenuPlugin);
 
 coreViewsPluginRegistry.add("OdooGlobalFiltersUIPlugin", GlobalFiltersUIPlugin);
 coreViewsPluginRegistry.add("OdooPivotUIPlugin", PivotUIPlugin);
+coreViewsPluginRegistry.add("OdooPivotGlobalFilterUIPlugin", PivotUIGlobalFilterPlugin);
 coreViewsPluginRegistry.add("OdooListUIPlugin", ListUIPlugin);
 coreViewsPluginRegistry.add("odooChartUIPlugin", OdooChartUIPlugin);
