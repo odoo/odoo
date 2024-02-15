@@ -1359,7 +1359,8 @@ export class TestRunner {
 
             const { lastResults } = this.state.currentTest;
             lastResults.errors.push(error);
-            if (lastResults.expectedErrors >= lastResults.errors.length) {
+            lastResults.caughtErrors++;
+            if (lastResults.expectedErrors >= lastResults.caughtErrors) {
                 return;
             }
 
