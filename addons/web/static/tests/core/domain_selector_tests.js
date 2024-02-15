@@ -176,6 +176,10 @@ QUnit.module("Components", (hooks) => {
                         { id: 41, display_name: "xpad" },
                     ],
                 },
+                "documents.document": {
+                    fields: { name: { string: "Name", type: "char" } },
+                    records: [{ id: 1, name: "My spreadsheet" }],
+                },
             },
         };
 
@@ -2177,6 +2181,24 @@ QUnit.module("Components", (hooks) => {
             assert.containsNone(target, '.form-switch label:contains("Include archived")');
         }
     );
+
+    QUnit.test("Include archived not shown when for documents model", async (assert) => {
+        serverData.models["documents.document"].fields.active = {
+            string: "Active",
+            type: "boolean",
+            searchable: true,
+        };
+        await makeDomainSelector({
+            resModel: "documents.document",
+            isDebugMode: true,
+            domain: `[("name", "=", "My spreadsheet")]`,
+            update(domain) {
+                assert.step(domain);
+            },
+        });
+        assert.containsOnce(target, SELECTORS.condition);
+        assert.containsNone(target, '.form-switch label:contains("Include archived")');
+    });
 
     QUnit.test("date/datetime edition: switch !=/is set", async (assert) => {
         await makeDomainSelector({

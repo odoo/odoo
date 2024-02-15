@@ -84,7 +84,8 @@ export class DomainSelector extends Component {
         });
         this.defaultCondition = defaultCondition;
 
-        this.showArchivedCheckbox = Boolean(this.fieldDefs.active);
+        this.showArchivedCheckbox =
+            Boolean(this.fieldDefs.active) && this.props.resModel !== "documents.document";
         this.includeArchived = false;
         if (this.showArchivedCheckbox) {
             if (this.tree.value === "&") {
