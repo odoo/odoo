@@ -403,8 +403,8 @@ class Users(models.Model):
         if replacement is not None:
             self._set_encrypted_password(self.env.user.id, replacement)
             if request and self == self.env.user:
-                self.env.flush_all()
-                self.env.registry.clear_cache()
+                self.flush()
+                self.env.registry.clear_caches()
                 # update session token so the user does not get logged out
                 new_token = self.env.user._compute_session_token(request.session.sid)
                 request.session.session_token = new_token
