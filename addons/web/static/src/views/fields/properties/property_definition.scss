@@ -7,24 +7,6 @@
         max-width: calc(#{$o-form-view-sheet-max-width} / 2);
     }
 
-    .o_field_property_definition_type {
-        img {
-            width: 20px;
-            height: 20px;
-        }
-
-        .o_input_dropdown {
-            input {
-                background-repeat: no-repeat;
-                background-size: contain;
-                padding-left: 25px;
-                background-position-x: 0px;
-                background-position-y: 3px;
-                background-size: 20px;
-            }
-        }
-    }
-
     .o_field_property_definition_kanban,
     .o_field_property_definition_value {
         .form-check-input {
@@ -60,5 +42,21 @@
                 display: block;
             }
         }
+    }
+}
+
+.o_field_property_definition_type .o_input_dropdown input {
+    background-repeat: no-repeat;
+    background-size: contain;
+    padding-left: 25px;
+    background-position-x: 0px;
+    background-position-y: 3px;
+    background-size: 20px;
+}
+
+.o_field_property_definition_type, .o_field_property_definition_type_menu {
+    img {
+        width: 20px;
+        height: 20px;
     }
 }
