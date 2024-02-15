@@ -11,6 +11,8 @@ class WebsiteDesign(models.Model):
 
     # DESIGN VARIABLES
 
+    paragraph_margin_top = fields.Char(string='Paragraph Margin Top', default='0')
+    paragraph_margin_bottom = fields.Char(string='Paragraph Margin Bottom', default='16px')
     body_line_height = fields.Char(string='Body Line Height', default='1.5')
     # Logo height requires two fields because it can be computed based on the
     # base font size or forced to a specific value.
