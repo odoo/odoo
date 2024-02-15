@@ -1206,6 +1206,7 @@ class AccountMove(models.Model):
                             price_subtotal=values['price_subtotal'],
                             is_refund=move.move_type in ('out_refund', 'in_refund'),
                             handle_price_include=False,
+                            extra_context={'_extra_grouping_key_': 'epd'},
                         ))
                 move.tax_totals = self.env['account.tax']._prepare_tax_totals(**kwargs)
                 if move.invoice_cash_rounding_id:
