@@ -62,11 +62,6 @@
         <field name="priority" eval="100"/>
         <field name="arch" type="xml">
             <tree editable="bottom" multi_edit="1">
-                <header>
-                    <button name="button_start" type="object" string="Start" class="btn btn-success text-uppercase"/>
-                    <button name="button_pending" type="object" string="Pause" class="btn btn-warning text-uppercase"/>
-                    <button name="action_mark_as_done" type="object" string="Done" class="btn btn-danger text-uppercase"/>
-                </header>
                 <field name="consumption" column_invisible="True"/>
                 <field name="company_id" column_invisible="True"/>
                 <field name="is_produced" column_invisible="True"/>
@@ -92,21 +87,30 @@
                 <field name="state" widget="badge" decoration-warning="state == 'progress'" decoration-success="state == 'done'" decoration-danger="state == 'cancel'" decoration-info="state not in ('progress', 'done', 'cancel')"
                   column_invisible="parent and parent.state == 'draft'"
                   invisible="production_state == 'draft'"/>
-                <button name="button_start" type="object" string="Start" class="btn-success"
+                <button name="button_start" type="object" string="Start" class="btn-success px-3"
                   invisible="production_state in ('draft', 'done', 'cancel') or working_state == 'blocked' or state in ('done', 'cancel') or is_user_working"/>
-                <button name="button_pending" type="object" string="Pause" class="btn-warning"
+                <button name="button_pending" type="object" string="Pause" class="btn-warning px-3"
                   invisible="production_state in ('draft', 'done', 'cancel') or working_state == 'blocked' or not is_user_working"/>
-                <button name="button_finish" type="object" string="Done" class="btn-success"
+                <button name="button_finish" type="object" string="Done" class="btn-success px-3"
                   invisible="production_state in ('draft', 'done', 'cancel') or working_state == 'blocked' or not is_user_working"/>
-                <button name="%(mrp.act_mrp_block_workcenter_wo)d" type="action" string="Block" context="{'default_workcenter_id': workcenter_id}" class="btn-danger"
-                  invisible="production_state in ('draft', 'done', 'cancel') or working_state == 'blocked'"/>
-                <button name="button_unblock" type="object" string="Unblock" context="{'default_workcenter_id': workcenter_id}" class="btn-danger"
+                <button name="button_unblock" type="object" string="Unblock" context="{'default_workcenter_id': workcenter_id}" class="btn-danger px-3"
                   invisible="production_state in ('draft', 'done', 'cancel') or working_state != 'blocked'"/>
-                <button name="action_open_wizard" type="object" icon="fa-external-link" class="oe_edit_only"
-                        title="Open Work Order" context="{'default_workcenter_id': workcenter_id}"/>
+                <widget name="mo_view_list_dropdown"/>
                 <field name="show_json_popover" column_invisible="True"/>
                 <field name="json_popover" widget="mrp_workorder_popover" string=" " invisible="not show_json_popover"/>
             </tree>
+        </field>
+    </record>
+
+    <record id="mrp_production_workorder_tree_editable_view_mo_form" model="ir.ui.view">
+        <field name="name">mrp.production.work.order.tree.editable</field>
+        <field name="model">mrp.workorder</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="mrp_production_workorder_tree_editable_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='show_json_popover']" position='before'>
+                <button name="action_open_wizard" type="object" icon="fa-external-link" class="oe_edit_only" title="Open Work Order" context="{'default_workcenter_id': workcenter_id}"/>
+            </xpath>
         </field>
     </record>
 
