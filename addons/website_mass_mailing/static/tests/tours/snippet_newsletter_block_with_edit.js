@@ -27,8 +27,8 @@ wTourUtils.registerWebsitePreviewTour('snippet_newsletter_block_with_edit', {
     // Change the link style.
     ...wTourUtils.clickOnEditAndWaitEditMode(),
     {
-        content: 'Click on the Subscribe button',
-        trigger: ':iframe .s_newsletter_block .js_subscribe_btn',
+        content: 'Click on the Subscribe form',
+        trigger: ':iframe .s_newsletter_block .s_newsletter_subscribe_form',
     },
     {
         content: 'Toggle the option to display the Thanks button',
