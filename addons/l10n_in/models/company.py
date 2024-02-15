@@ -12,3 +12,13 @@ class ResCompany(models.Model):
         ],
         string="HSN Code Digit",
     )
+    l10n_in_edi_env = fields.Selection(
+        selection=[
+            ("testing", "Testing"),
+            ("production", "Production"),
+        ],
+        string="Indian EDI Environment",
+        help="Enable the use of production credentials",
+        default="testing",
+        groups="base.group_system",
+    )

@@ -2,6 +2,7 @@
 from . import template_in
 from . import account
 from . import account_invoice
+from . import account_edi_format
 from . import company
 from . import product_template
 from . import port_code

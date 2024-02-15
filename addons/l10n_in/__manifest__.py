@@ -24,6 +24,7 @@ Sheet, now only Vertical format has been permitted Which is Supported By Odoo.
         'account_debit_note',
         'account',
         'account_audit_trail',
+        'account_edi',
     ],
     'auto_install': ['account'],
     'data': [

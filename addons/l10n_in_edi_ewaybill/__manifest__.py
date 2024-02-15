@@ -6,7 +6,7 @@
     "version": "1.03.00",
     "category": "Accounting/Localizations/EDI",
     "depends": [
-        "l10n_in_edi",
+        "l10n_in",
     ],
     "description": """
 Indian - E-waybill

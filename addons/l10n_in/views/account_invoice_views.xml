@@ -39,6 +39,9 @@
             <xpath expr="//field[@name='invoice_line_ids']/tree//field[@name='product_id']" position="after">
                 <field name="l10n_in_hsn_code" optional="hide" column_invisible="parent.country_code != 'IN'"/>
             </xpath>
+            <xpath expr="//group[@name='sale_info_group']" position="inside">
+                <field name="l10n_in_edi_show_cancel" invisible="1"/>
+            </xpath>
         </field>
     </record>
 </odoo>

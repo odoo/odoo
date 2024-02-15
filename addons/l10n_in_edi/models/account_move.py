@@ -3,29 +3,12 @@
 
 import json
 
-from odoo import api, fields, models, _
+from odoo import api, models, _
 from odoo.exceptions import UserError
 
 
 class AccountMove(models.Model):
     _inherit = "account.move"
-
-    l10n_in_edi_cancel_reason = fields.Selection(selection=[
-        ("1", "Duplicate"),
-        ("2", "Data Entry Mistake"),
-        ("3", "Order Cancelled"),
-        ("4", "Others"),
-        ], string="Cancel reason", copy=False)
-    l10n_in_edi_cancel_remarks = fields.Char("Cancel remarks", copy=False)
-    l10n_in_edi_show_cancel = fields.Boolean(compute="_compute_l10n_in_edi_show_cancel", string="E-invoice(IN) is sent?")
-
-    @api.depends('edi_document_ids')
-    def _compute_l10n_in_edi_show_cancel(self):
-        for invoice in self:
-            invoice.l10n_in_edi_show_cancel = bool(invoice.edi_document_ids.filtered(
-                lambda i: i.edi_format_id.code == "in_einvoice_1_03"
-                and i.state in ("sent", "to_cancel", "cancelled")
-            ))
 
     def button_cancel_posted_moves(self):
         """Mark the edi.document related to this move to be canceled."""
