@@ -282,6 +282,24 @@ class TestMailAPIPerformance(BaseMailPerformance):
         with self.assertQueryCount(admin=15, employee=15):
             activity.action_feedback(feedback='Zizisse Done !')
 
+    @warmup
+    def test_adv_activity_mixin_batched(self):
+        records = self.env['mail.test.activity'].create([{'name': 'Test'}] * 10)
+        MailActivity = self.env['mail.activity'].with_context({
+            'default_res_model': 'mail.test.activity',
+        })
+        activity_type = self.env.ref('mail.mail_activity_data_todo')
+
+        MailActivity.create([{
+            'summary': 'Test Activity',
+            'res_id': record.id,
+            'activity_type_id': activity_type.id,
+        } for record in records])
+
+        self.env.invalidate_all()
+        with self.assertQueryCount(3):
+            records.mapped('activity_date_deadline')
+
     @users('admin', 'employee')
     @warmup
     @mute_logger('odoo.models.unlink')
