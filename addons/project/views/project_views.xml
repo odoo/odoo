@@ -534,7 +534,7 @@
                                         <field name="alias_enabled" invisible="1"/>
                                         <label for="alias_name" class="fw-bold o_form_label" string="Create tasks by sending an email to"/>
                                         <field name="alias_value" class="oe_read_only d-inline" readonly="1" widget="email" attrs="{'invisible':  [('alias_name', '=', False)]}" />
-                                        <span class="oe_edit_only">
+                                        <span class="oe_edit_only" dir="ltr">
                                             <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
                                         </span>
                                     </div>
@@ -757,7 +757,7 @@
                     </div>
                     <field name="user_id" invisible="1"/>
                     <div class="row o_settings_container"/>
-                    <div name="alias_def" colspan="2" attrs="{'invisible': [('alias_domain', '=', False)]}">
+                    <div name="alias_def" colspan="2" attrs="{'invisible': [('alias_domain', '=', False)]}" dir="ltr">
                         <label for="alias_name" class="oe_inline mt-4" string="Create tasks by sending an email to"/>
                         <field name="alias_enabled" invisible="1"/>
                         <span>
