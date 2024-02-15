@@ -471,7 +471,7 @@ class StockWarehouseOrderpoint(models.Model):
         if self.env.context.get('written_after'):
             domain = expression.AND([domain, [('write_date', '>=', self.env.context.get('written_after'))]])
         move = self.env['stock.move'].search(domain, limit=1)
-        if move.picking_id:
+        if move.picking_id and any(move.warehouse_id != self.warehouse_id for move in move):
             action = self.env.ref('stock.stock_picking_action_picking_type')
             return {
                 'type': 'ir.actions.client',
