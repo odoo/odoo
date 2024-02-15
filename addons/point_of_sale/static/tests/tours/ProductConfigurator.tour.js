@@ -5,6 +5,8 @@ import * as Dialog from "@point_of_sale/../tests/tours/helpers/DialogTourMethods
 import * as Chrome from "@point_of_sale/../tests/tours/helpers/ChromeTourMethods";
 import * as ProductConfigurator from "@point_of_sale/../tests/tours/helpers/ProductConfiguratorTourMethods";
 import { registry } from "@web/core/registry";
+import * as Order from "@point_of_sale/../tests/tours/helpers/generic_components/OrderWidgetMethods";
+import { inLeftSide } from "@point_of_sale/../tests/tours/helpers/utils";
 
 registry.category("web_tour.tours").add("ProductConfiguratorTour", {
     test: true,
@@ -42,7 +44,7 @@ registry.category("web_tour.tours").add("ProductConfiguratorTour", {
 
             // Check that the product has been added to the order with correct attributes and price
             ProductScreen.selectedOrderlineHas(
-                "Configurable Chair (Red, Metal, Other: Custom Fabric)",
+                "Configurable Chair",
                 "1.0",
                 "11.0"
             ),
@@ -56,11 +58,22 @@ registry.category("web_tour.tours").add("ProductConfiguratorTour", {
             ProductConfigurator.fillCustomAttribute("Custom Fabric"),
             Dialog.confirm(),
             ProductScreen.selectedOrderlineHas(
-                "Configurable Chair (Red, Metal, Other: Custom Fabric)",
+                "Configurable Chair",
                 "2.0",
                 "22.0"
             ),
-
+            inLeftSide(Order.hasLine({
+                    withClass: ".selected",
+                    productName: "Configurable Chair",
+                    quantity: "2",
+                    price: "22.0",
+                    atts: {
+                        "Color": "Red ($ 1.00)",
+                        "Chair Legs": "Metal",
+                        "Fabrics": "Other"
+                    }
+                })
+            ),
             // Orderlines with different attributes shouldn't be merged
             ProductScreen.clickHomeCategory(),
             ProductScreen.clickDisplayedProduct("Configurable Chair"),
@@ -69,7 +82,7 @@ registry.category("web_tour.tours").add("ProductConfiguratorTour", {
             ProductConfigurator.pickRadio("Leather"),
             Dialog.confirm(),
             ProductScreen.selectedOrderlineHas(
-                "Configurable Chair (Blue, Metal, Leather)",
+                "Configurable Chair",
                 "1.0",
                 "10.0"
             ),
