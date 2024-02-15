@@ -89,6 +89,10 @@
                         <page string="Components" name="components">
                             <field name="bom_line_ids" widget="one2many" context="{'default_parent_product_tmpl_id': product_tmpl_id, 'default_product_id': False, 'default_bom_id': id}">
                                 <tree string="Components" editable="bottom">
+                                    <control>
+                                        <create string="Add a line"/>
+                                        <button name="action_add_from_catalog" string="Catalog" type="object" class="px-4 btn-link" context="{'order_id': parent.id}"/>
+                                    </control>
                                     <field name="company_id" column_invisible="True"/>
                                     <field name="sequence" widget="handle"/>
                                     <field name="product_id" context="{'default_detailed_type': 'product'}"/>
@@ -121,8 +125,12 @@
                             name="by_products"
                             invisible="type != 'normal'"
                             groups="mrp.group_mrp_byproducts">
-                            <field name="byproduct_ids"  context="{'form_view_ref' : 'mrp.mrp_bom_byproduct_form_view', 'default_bom_id': id}">
+                            <field name="byproduct_ids" context="{'form_view_ref' : 'mrp.mrp_bom_byproduct_form_view', 'default_bom_id': id}">
                                 <tree string="By-products"  editable="top">
+                                    <control>
+                                        <create string="Add a line"/>
+                                        <button name="action_add_from_catalog" string="Catalog" type="object" class="px-4 btn-link" context="{'order_id': parent.id}"/>
+                                    </control>
                                     <field name="company_id" column_invisible="True"/>
                                     <field name="product_uom_category_id" column_invisible="True"/>
                                     <field name="sequence" widget="handle"/>
@@ -135,7 +143,7 @@
                                     <field name="possible_bom_product_template_attribute_value_ids" column_invisible="True"/>
                                     <field name="bom_product_template_attribute_value_ids" optional="hide" widget="many2many_tags" options="{'no_create': True}" column_invisible="parent.product_id" groups="product.group_product_variant"/>
                                 </tree>
-                           </field>
+                            </field>
                        </page>
                         <page string="Miscellaneous" name="miscellaneous">
                             <group>

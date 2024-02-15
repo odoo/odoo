@@ -4,6 +4,7 @@
 from odoo import exceptions, Command, fields
 from odoo.tests import Form
 from odoo.addons.mrp.tests.common import TestMrpCommon
+from odoo.tests.common import HttpCase, tagged
 from odoo.tools import float_compare, float_round, float_repr
 
 from freezegun import freeze_time
@@ -2102,3 +2103,26 @@ class TestBoM(TestMrpCommon):
         report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_kit.id)
         line_values = report_values['lines']
         self.assertEqual(line_values['availability_state'], 'available')
+
+
+@tagged('-at_install', 'post_install')
+class TestTourBoM(HttpCase):
+    def test_mrp_bom_product_catalog(self):
+        product = self.env['product.product'].create({
+            'name': 'test1',
+            'type': 'product',
+        })
+        bom = self.env['mrp.bom'].create({
+            'product_id': product.id,
+            'product_tmpl_id': product.product_tmpl_id.id,
+            'product_qty': 1,
+            'type': 'normal'
+        })
+
+        self.assertEqual(len(bom.bom_line_ids), 0)
+
+        action = self.env.ref('mrp.mrp_bom_form_action')
+        url = '/web#model=mrp.bom&view_type=form&action=%s&id=%s' % (str(action.id), str(bom.id))
+
+        self.start_tour(url, 'test_mrp_bom_product_catalog', login='admin')
+        self.assertEqual(len(bom.bom_line_ids), 1)
