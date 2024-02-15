@@ -735,37 +735,42 @@ class MassMailing(models.Model):
         return self._action_view_documents_filtered('delivered')
 
     def _action_view_documents_filtered(self, view_filter):
+        def _fetch_trace_res_ids(trace_domain):
+            result = self.env['mailing.trace'].search_read(
+                domain=trace_domain, fields=['res_id'])
+            return [line['res_id'] for line in result]
+
         model_name = self.env['ir.model']._get(self.mailing_model_real).display_name
         helper_header = None
         helper_message = None
         if view_filter == 'reply':
-            found_traces = self.mailing_trace_ids.filtered(lambda trace: trace.trace_status == view_filter)
+            res_ids = _fetch_trace_res_ids([('trace_status', '=', 'reply')])
             helper_header = _("No %s replied to your mailing yet!", model_name)
             helper_message = _("To track how many replies this mailing gets, make sure "
                                "its reply-to address belongs to this database.")
         elif view_filter == 'bounce':
-            found_traces = self.mailing_trace_ids.filtered(lambda trace: trace.trace_status == view_filter)
+            res_ids = _fetch_trace_res_ids([('trace_status', '=', 'bounce')])
             helper_header = _("No %s address bounced yet!", model_name)
             helper_message = _("Bounce happens when a mailing cannot be delivered (fake address, "
                                "server issues, ...). Check each record to see what went wrong.")
         elif view_filter == 'clicked':
-            found_traces = self.mailing_trace_ids.filtered(lambda trace: trace.links_click_ids)
+            res_ids = _fetch_trace_res_ids([('links_click_ids', '!=', False)])
             helper_header = _("No %s clicked your mailing yet!", model_name)
             helper_message = _(
                 "Come back once your mailing has been sent to track who clicked on the embedded links.")
         elif view_filter == 'open':
-            found_traces = self.mailing_trace_ids.filtered(lambda trace: trace.trace_status in ('open', 'reply'))
+            res_ids = _fetch_trace_res_ids([('trace_status', 'in', ('open', 'reply'))])
             helper_header = _("No %s opened your mailing yet!", model_name)
             helper_message = _("Come back once your mailing has been sent to track who opened your mailing.")
         elif view_filter == 'delivered':
-            found_traces = self.mailing_trace_ids.filtered(lambda trace: trace.trace_status in ('sent', 'open', 'reply'))
+            res_ids = _fetch_trace_res_ids([('trace_status', 'in', ('sent', 'open', 'reply'))])
             helper_header = _("No %s received your mailing yet!", model_name)
             helper_message = _("Wait until your mailing has been sent to check how many recipients you managed to reach.")
         elif view_filter == 'sent':
-            found_traces = self.mailing_trace_ids.filtered(lambda trace: trace.sent_datetime)
+            res_ids = _fetch_trace_res_ids([('sent_datetime', '!=', False)])
         else:
-            found_traces = self.env['mailing.trace']
-        res_ids = found_traces.mapped('res_id')
+            res_ids = []
+
         action = {
             'name': model_name,
             'type': 'ir.actions.act_window',
