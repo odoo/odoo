@@ -180,9 +180,21 @@ export const editorCommands = {
 
         // In case the html inserted starts with a list and will be inserted within
         // a list, unwrap the list elements from the list.
-        if (closestElement(selection.anchorNode, 'UL, OL') &&
-            (container.firstChild.nodeName === 'UL' || container.firstChild.nodeName === 'OL')) {
-            container.replaceChildren(...container.firstChild.childNodes);
+        const isList = node => ['UL', 'OL'].includes(node.nodeName);
+        const hasSingleChild = container.childNodes.length === 1;
+        if (
+            closestElement(selection.anchorNode, 'UL, OL') &&
+            isList(container.firstChild)
+        ) {
+            unwrapContents(container.firstChild);
+        }
+        // Similarly if the html inserted ends with a list.
+        if (
+            closestElement(selection.focusNode, 'UL, OL') &&
+            isList(container.lastChild) &&
+            !hasSingleChild
+        ) {
+            unwrapContents(container.lastChild);
         }
 
         startNode = startNode || editor.document.getSelection().anchorNode;
