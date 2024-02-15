@@ -10,6 +10,7 @@ class WebsiteDesign(models.Model):
 
     # DESIGN VARIABLES
 
+    body__line__height = fields.Char(string='Body Line Height', default='1.5')
     # Logo height requires two fields because it can be computed based on the
     # base font size or forced to a specific value.
     logo__height = fields.Char(
