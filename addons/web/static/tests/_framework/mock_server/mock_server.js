@@ -2,10 +2,10 @@ import { after, before, globals, registerDebugInfo } from "@odoo/hoot";
 import { mockFetch, mockWebSocket } from "@odoo/hoot-mock";
 import { assets } from "@web/core/assets";
 import { registry } from "@web/core/registry";
+import { serverState } from "../mock_server_state.hoot";
 import { fetchModelDefinitions } from "../module_set.hoot";
 import { patchWithCleanup } from "../patch_test_helpers";
-import { constants } from "../test_constants.hoot";
-import { DEFAULT_FIELD_VALUES } from "./mock_fields";
+import { DEFAULT_FIELD_VALUES, FIELD_SYMBOL } from "./mock_fields";
 import {
     FIELD_NOT_FOUND,
     MockServerError,
@@ -23,12 +23,12 @@ const { fetch: realFetch } = globals;
  * @typedef {import("./mock_fields").FieldDefinition} FieldDefinition
  *
  * @typedef {{
- *  id: Number|"root";
- *  xmlId: string;
- *  name: string;
+ *  actionID?: string | number;
  *  appID?: number;
- *  actionID?: string|number;
  *  children?: MenuDefinition[];
+ *  id: Number | "root";
+ *  name: string;
+ *  xmlId: string;
  * }} MenuDefinition
  *
  * @typedef {MockServerBaseEnvironment & { [modelName: string]: Model }} MockServerEnvironment
@@ -49,11 +49,15 @@ const { fetch: realFetch } = globals;
  * @typedef {{ pure?: boolean }} RpcOptions
  *
  * @typedef {{
+ *  actions?: Partial<typeof MockServer["prototype"]["actions"]>;
+ *  lang?: string;
  *  lang_parameters?: Partial<typeof MockServer["prototype"]["lang_parameters"]>;
+ *  menus?: MenuDefinition[];
  *  models?: Iterable<ModelConstructor>;
  *  modules?: Partial<typeof MockServer["prototype"]["modules"]>;
  *  multi_lang?: typeof MockServer["prototype"]["multi_lang"];
  *  routes?: typeof MockServer["prototype"]["routes"];
+ *  timezone?: string;
  *  translations?: Record<string, string>;
  * }} ServerParams
  */
@@ -85,6 +89,7 @@ const authenticateUser = (user) => {
         throw new MockServerError("Unauthorized");
     }
     env.cookie.set("sid", user.id);
+    env.uid = user.id;
 };
 
 /**
@@ -115,7 +120,7 @@ class MockServerBaseEnvironment {
     cookie = new Map();
 
     get companies() {
-        return this.server.env["res.company"].read(constants.COMPANY_ID);
+        return this.server.env["res.company"].read(serverState.companyId);
     }
 
     get company() {
@@ -124,22 +129,22 @@ class MockServerBaseEnvironment {
 
     get context() {
         return {
-            lang: constants.LANG,
-            tz: constants.TIMEZONE,
-            uid: constants.USER_ID,
+            lang: serverState.lang,
+            tz: serverState.timezone,
+            uid: serverState.userId,
         };
     }
 
     get lang() {
-        return this.context.lang;
+        return serverState.lang;
     }
 
     get uid() {
-        return constants.USER_ID;
+        return serverState.userId;
     }
 
     get user() {
-        return this.server.env["res.users"].read(this.uid)[0];
+        return this.server.env["res.users"].read(serverState.userId)[0];
     }
 
     /**
@@ -159,14 +164,27 @@ export class MockServer {
     static current = null;
     /** @type {Record<string, ActionDefinition>} */
     static actions = {};
-    /** @type { MenuDefinition[] } */
-    static menus = [{ id: 99999, children: [], name: "App0", appID: 1 }];
+    /** @type {MenuDefinition[]} */
+    static menus = [
+        {
+            id: 99999,
+            appID: 1,
+            children: [],
+            name: "App0",
+        },
+    ];
     /** @type {MockServerEnvironment | null} */
     static models = [];
+    /** @type {ServerParams} */
+    static params = {};
     static rpcListeners = [];
 
     static get env() {
         return this.current?.env;
+    }
+
+    static get state() {
+        return serverState;
     }
 
     // Server params
@@ -174,22 +192,23 @@ export class MockServer {
         date_format: "%m/%d/%Y",
         decimal_point: ".",
         direction: "ltr",
-        grouping: "[3,0]",
+        grouping: [3, 0],
         time_format: "%H:%M:%S",
         thousands_sep: ",",
         week_start: 7,
     };
-    modules = { web: { messages: [] } };
-    multi_lang = false;
+    modules = {
+        web: { messages: [] },
+    };
 
     // Server env
     env = this.makeServerEnv();
 
     // Data
     /** @type {Record<string, ActionDefinition>} */
-    actions = {};
+    actions = { ...MockServer.actions };
     /** @type {MenuDefinition[]} */
-    menus = [];
+    menus = [...MockServer.menus];
     /** @type {Record<string, Model>} */
     models = {};
     /** @type {ModelConstructor[]} */
@@ -247,7 +266,10 @@ export class MockServer {
             }
         }
 
-        this.configure(params);
+        this.registerModels(MockServer.models);
+        if (params) {
+            this.configure(params);
+        }
 
         for (const [method, callback] of MockServer.rpcListeners) {
             this.onRpc(method, callback);
@@ -322,29 +344,43 @@ export class MockServer {
     }
 
     /**
-     * @param {Partial<ServerParams>} [params]
+     * @param {Partial<ServerParams>} params
      */
     configure(params) {
-        Object.assign(this.lang_parameters, params?.lang_parameters);
-        Object.assign(this.modules, params?.modules);
-        this.menus = this.constructor.menus;
-        this.actions = this.constructor.actions;
-
-        if (params?.multi_lang) {
-            this.multi_lang = params.multi_lang;
+        if (params.actions) {
+            Object.assign(this.actions, params.actions);
+        }
+        if (params.lang) {
+            serverState.lang = params.lang;
+        }
+        if (params.lang_parameters) {
+            Object.assign(this.lang_parameters, params.lang_parameters);
+        }
+        if (params.menus) {
+            this.menus.push(...params.menus);
+        }
+        if (params.models) {
+            this.registerModels(params.models);
+            if (this.started) {
+                this.loadModels();
+            }
+        }
+        if (params.modules) {
+            for (const [module, values] in Object.entries(params.modules)) {
+                this.registerTranslations(module, values.message || values);
+            }
+        }
+        if (params.multi_lang) {
+            serverState.multiLang = params.multi_lang;
+        }
+        if (params.timezone) {
+            serverState.timezone = params.timezone;
+        }
+        if (params.translations) {
+            this.registerTranslations("web", params.translations);
         }
 
-        if (params?.translations) {
-            this.modules.web ||= {};
-            this.modules.web.messages = Object.entries(params.translations).map(([id, string]) => ({
-                id,
-                string,
-            }));
-        }
-
-        this.registerModels([...MockServer.models, ...(params?.models || [])]);
-
-        for (const [route, callback] of Object.entries(params?.routes || {})) {
+        for (const [route, callback] of Object.entries(params.routes || {})) {
             this.onRpc(route, callback);
         }
 
@@ -439,6 +475,10 @@ export class MockServer {
 
         // Model fields
         for (const [fieldName, fieldGetter] of Object.entries(ModelClass._fields)) {
+            if (!(FIELD_SYMBOL in fieldGetter)) {
+                continue;
+            }
+
             const fieldGetterValue = fieldGetter();
             if (fieldGetterValue.name) {
                 throw new MockServerError(
@@ -526,10 +566,9 @@ export class MockServer {
         }
     }
 
-    /**
-     * @param {Iterable<Model>} models
-     */
-    async loadModels(models) {
+    async loadModels() {
+        const models = this.modelSpecs;
+        this.modelSpecs = [];
         if (this.modelNamesToFetch.size) {
             const modelEntries = await fetchModelDefinitions(this.modelNamesToFetch);
             this.modelNamesToFetch.clear();
@@ -735,9 +774,27 @@ export class MockServer {
         for (const ModelClass of ModelClasses) {
             const model = this.getModelDefinition(ModelClass);
             newSpecs.push(model);
-            this.modelSpecs.push(model);
+            if (!this.modelSpecs.includes(model)) {
+                this.modelSpecs.push(model);
+            }
         }
         return newSpecs;
+    }
+
+    /**
+     * @param {string} module
+     * @param {Record<string, string>} translations
+     */
+    registerTranslations(module, translations) {
+        this.modules[module] ||= {};
+        this.modules[module].messages ||= {};
+        if (Array.isArray(translations)) {
+            this.modules.web.messages.push(...translations);
+        } else {
+            for (const [id, string] of Object.entries(translations)) {
+                this.modules.web.messages.push({ id, string });
+            }
+        }
     }
 
     async start() {
@@ -746,7 +803,7 @@ export class MockServer {
         }
         this.started = true;
 
-        await this.loadModels(this.modelSpecs);
+        await this.loadModels();
         this.generateRecords();
 
         return this;
@@ -824,10 +881,15 @@ export class MockServer {
 
     /** @type {RouteCallback} */
     async mockLoadTranslations() {
+        const langParameters = { ...this.lang_parameters };
+        if (typeof langParameters.grouping !== "string") {
+            langParameters.grouping = JSON.stringify(langParameters.grouping);
+        }
         return {
-            lang_parameters: this.lang_parameters,
+            lang: serverState.lang,
+            lang_parameters: langParameters,
             modules: this.modules,
-            multi_lang: this.multi_lang,
+            multi_lang: serverState.multiLang,
         };
     }
 
@@ -867,25 +929,21 @@ export async function authenticate(login, password) {
 }
 
 /**
- *
  * @param {ActionDefinition[]} actions
  */
 export function defineActions(actions) {
-    const actionsMap = Object.fromEntries(actions.map((a) => [a.xmlId | a.id, { ...a }]));
+    actions = Object.fromEntries(actions.map((a) => [a.xmlId || a.id, { ...a }]));
     before(() => {
         const originalActions = MockServer.actions;
-        MockServer.actions = { ...originalActions, ...actionsMap };
+        MockServer.actions = { ...originalActions, ...actions };
         return () => (MockServer.menus = originalActions);
     });
 
-    const current = MockServer.current;
-    if (current) {
-        const originalActions = current.actions;
-        current.actions = { ...originalActions, ...actionsMap };
-        after(() => {
-            current.actions = originalActions;
-        });
+    if (MockServer.current) {
+        MockServer.current.configure({ actions });
     }
+
+    return actions;
 }
 
 /**
@@ -898,14 +956,11 @@ export function defineMenus(menus) {
         return () => (MockServer.menus = originalMenus);
     });
 
-    const current = MockServer.current;
-    if (current) {
-        const originalMenus = current.menus;
-        current.menus = [...originalMenus, ...menus];
-        after(() => {
-            current.menus = originalMenus;
-        });
+    if (MockServer.current) {
+        MockServer.current.configure({ menus });
     }
+
+    return menus;
 }
 
 /**
@@ -917,19 +972,33 @@ export function defineModels(ModelClasses) {
     const classes = Object.values(ModelClasses);
 
     before(() => {
-        const originalModels = [...MockServer.models];
-        MockServer.models = [...MockServer.models, ...classes];
+        const originalModels = MockServer.models;
+        MockServer.models = [...originalModels, ...classes];
         return () => (MockServer.models = originalModels);
     });
 
     if (MockServer.current) {
-        const specs = MockServer.current.registerModels(classes);
-        if (MockServer.current.started) {
-            MockServer.current.loadModels(specs);
-        }
+        MockServer.current.configure({ models: classes });
     }
 
     return ModelClasses;
+}
+
+/**
+ * @param {ServerParams} params
+ */
+export function defineParams(params) {
+    before(() => {
+        const originalParams = MockServer.params;
+        MockServer.params = { ...originalParams, ...params };
+        return () => (MockServer.params = originalParams);
+    });
+
+    if (MockServer.current) {
+        MockServer.current.configure(params);
+    }
+
+    return params;
 }
 
 /**
@@ -951,7 +1020,7 @@ export function logout() {
         env.cookie.delete("authenticated_user_sid");
     }
     env.cookie.delete("sid");
-    const [publicUser] = env["res.users"]._filter([["id", "=", this.publicUserId]], {
+    const [publicUser] = env["res.users"]._filter([["id", "=", serverState.PUBLIC_USER_ID]], {
         active_test: false,
     });
     authenticate(publicUser.login, publicUser.password);
@@ -995,15 +1064,15 @@ export function onRpc(method, callback, options) {
  */
 export async function withUser(userId, fn) {
     const { env } = MockServer;
-    const user = env.user;
+    const currentUser = env.user;
     const [targetUser] = env["res.users"]._filter([["id", "=", userId]], { active_test: false });
     authenticateUser(targetUser);
     let result;
     try {
         result = await fn();
     } finally {
-        if (user) {
-            authenticateUser(user);
+        if (currentUser) {
+            authenticateUser(currentUser);
         } else {
             logout();
         }

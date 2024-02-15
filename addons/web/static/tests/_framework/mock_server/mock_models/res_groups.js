@@ -1,4 +1,4 @@
-import { constants } from "../../test_constants.hoot";
+import { serverState } from "../../mock_server_state.hoot";
 import { ServerModel } from "../mock_model";
 
 export class ResGroups extends ServerModel {
@@ -6,7 +6,7 @@ export class ResGroups extends ServerModel {
 
     _records = [
         {
-            id: constants.GROUP_ID,
+            id: serverState.groupId,
             name: "Internal User",
         },
     ];
