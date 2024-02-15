@@ -929,7 +929,7 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
         }
     );
 
-    QUnit.test("can edit pivot domain", async (assert) => {
+    QUnit.test("can edit pivot domain with UPDATE_ODOO_PIVOT_DOMAIN", async (assert) => {
         const { model } = await createSpreadsheetWithPivot();
         const [pivotId] = model.getters.getPivotIds();
         assert.deepEqual(model.getters.getPivotDefinition(pivotId).domain, []);
@@ -952,6 +952,42 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
         assert.strictEqual(getCellValue(model, "B4"), "");
     });
 
+    QUnit.test("can edit pivot domain with UPDATE_PIVOT", async (assert) => {
+        const { model, pivotId } = await createSpreadsheetWithPivot();
+        assert.deepEqual(model.getters.getPivotDefinition(pivotId).domain, []);
+        assert.strictEqual(getCellValue(model, "B4"), 11);
+        model.dispatch("UPDATE_PIVOT", {
+            pivotId,
+            pivot: {
+                ...model.getters.getPivotDefinition(pivotId),
+                domain: [["foo", "in", [55]]],
+            },
+        });
+        assert.deepEqual(model.getters.getPivotDefinition(pivotId).domain, [["foo", "in", [55]]]);
+        await waitForDataLoaded(model);
+        assert.strictEqual(getCellValue(model, "B4"), "");
+        model.dispatch("REQUEST_UNDO");
+        await waitForDataLoaded(model);
+        assert.deepEqual(model.getters.getPivotDefinition(pivotId).domain, []);
+        await waitForDataLoaded(model);
+        assert.strictEqual(getCellValue(model, "B4"), 11);
+        model.dispatch("REQUEST_REDO");
+        assert.deepEqual(model.getters.getPivotDefinition(pivotId).domain, [["foo", "in", [55]]]);
+        await waitForDataLoaded(model);
+        assert.strictEqual(getCellValue(model, "B4"), "");
+    });
+
+    QUnit.test("updating a pivot without changing anything rejects the command", async (assert) => {
+        const { model, pivotId } = await createSpreadsheetWithPivot();
+        const result = model.dispatch("UPDATE_PIVOT", {
+            pivotId,
+            pivot: {
+                ...model.getters.getPivotDefinition(pivotId),
+            },
+        });
+        assert.strictEqual(result.isSuccessful, false);
+    });
+
     QUnit.test("edited domain is exported", async (assert) => {
         const { model } = await createSpreadsheetWithPivot();
         const [pivotId] = model.getters.getPivotIds();
@@ -960,6 +996,29 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
             domain: [["foo", "in", [55]]],
         });
         assert.deepEqual(model.exportData().pivots[pivotId].domain, [["foo", "in", [55]]]);
+    });
+
+    QUnit.test("can edit pivot groups", async (assert) => {
+        const { model } = await createSpreadsheetWithPivot();
+        const [pivotId] = model.getters.getPivotIds();
+        let definition = model.getters.getPivotDefinition(pivotId);
+        assert.deepEqual(definition.colGroupBys, ["foo"]);
+        assert.deepEqual(definition.rowGroupBys, ["bar"]);
+        model.dispatch("UPDATE_PIVOT", {
+            pivotId,
+            pivot: {
+                ...model.getters.getPivotDefinition(pivotId),
+                colGroupBys: [],
+                rowGroupBys: [],
+            },
+        });
+        definition = model.getters.getPivotDefinition(pivotId);
+        assert.deepEqual(definition.colGroupBys, []);
+        assert.deepEqual(definition.rowGroupBys, []);
+        model.dispatch("REQUEST_UNDO");
+        definition = model.getters.getPivotDefinition(pivotId);
+        assert.deepEqual(definition.colGroupBys, ["foo"]);
+        assert.deepEqual(definition.rowGroupBys, ["bar"]);
     });
 
     QUnit.test("field matching is removed when filter is deleted", async function (assert) {

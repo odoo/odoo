@@ -25,11 +25,13 @@ coreTypes.add("INSERT_PIVOT");
 coreTypes.add("RENAME_PIVOT");
 coreTypes.add("REMOVE_PIVOT");
 coreTypes.add("UPDATE_ODOO_PIVOT_DOMAIN");
+coreTypes.add("UPDATE_PIVOT");
 coreTypes.add("DUPLICATE_PIVOT");
 
 invalidateEvaluationCommands.add("UPDATE_ODOO_PIVOT_DOMAIN");
 invalidateEvaluationCommands.add("REMOVE_PIVOT");
 invalidateEvaluationCommands.add("ADD_PIVOT");
+invalidateEvaluationCommands.add("UPDATE_PIVOT");
 invalidateEvaluationCommands.add("INSERT_PIVOT");
 invalidateEvaluationCommands.add("RENAME_PIVOT");
 
@@ -52,6 +54,7 @@ inverseCommandRegistry
     .add("INSERT_PIVOT", identity)
     .add("RENAME_PIVOT", identity)
     .add("REMOVE_PIVOT", identity)
+    .add("UPDATE_PIVOT", identity)
     .add("UPDATE_ODOO_PIVOT_DOMAIN", identity);
 
 export { PivotCorePlugin, PivotUIPlugin, PivotOdooCorePlugin, PivotUIGlobalFilterPlugin };

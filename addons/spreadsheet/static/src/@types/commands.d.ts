@@ -69,6 +69,12 @@ declare module "@spreadsheet" {
     pivot: AddPivotDefinition;
   }
 
+  export interface UpdatePivotCommand {
+    type: "UPDATE_PIVOT";
+    pivotId: string;
+    pivot: ExtendedAddPivotDefinition;
+  }
+
   export interface InsertPivotCommand {
     type: "INSERT_PIVOT";
     pivotId: string;
@@ -99,6 +105,7 @@ declare module "@spreadsheet" {
     newPivotId: string;
   }
 
+  // this command is deprecated. use UPDATE_PIVOT instead
   export interface UpdatePivotDomainCommand {
     type: "UPDATE_ODOO_PIVOT_DOMAIN";
     pivotId: string;
@@ -117,6 +124,7 @@ declare module "@spreadsheet" {
     | RemovePivotCommand
     | DuplicatePivotCommand
     | UpdatePivotDomainCommand
+    | UpdatePivotCommand
     | ExtendedAddPivotCommand;
   export type AllCoreCommand = OdooCoreCommand | CoreCommand;
 
