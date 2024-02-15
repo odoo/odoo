@@ -1526,6 +1526,19 @@ export function queryAllAttributes(target, attribute, options) {
 
 /**
  * Performs a {@link queryAll} with the given arguments and returns a list of the
+ * *properties* of the matching nodes.
+ *
+ * @param {Target} target
+ * @param {string} property
+ * @param {QueryOptions} [options]
+ * @returns {any[]}
+ */
+export function queryAllProperties(target, property, options) {
+    return queryAll(target, options).map((node) => node[property]);
+}
+
+/**
+ * Performs a {@link queryAll} with the given arguments and returns a list of the
  * *texts* of the matching nodes.
  *
  * @param {Target} target

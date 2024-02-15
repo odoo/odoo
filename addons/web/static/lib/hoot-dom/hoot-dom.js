@@ -27,6 +27,7 @@ export {
     observe,
     queryAll,
     queryAllAttributes,
+    queryAllProperties,
     queryAllTexts,
     queryAllValues,
     queryAttribute,
