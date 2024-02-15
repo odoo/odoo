@@ -29,7 +29,7 @@ class PaymentProvider(models.Model):
                 provider.journal_id = payment_method.journal_id
             else:  # Fallback to the first journal of type bank that we find.
                 provider.journal_id = self.env['account.journal'].search([
-                    *self.env['account.journal']._check_company_domain(provider.company_id.id),
+                    ('company_id', '=', provider.company_id.id),
                     ('type', '=', 'bank'),
                 ], limit=1)
                 if provider.journal_id:
