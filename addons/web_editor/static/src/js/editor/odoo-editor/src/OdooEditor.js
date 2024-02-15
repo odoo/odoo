@@ -3127,6 +3127,10 @@ export class OdooEditor extends EventTarget {
         }
         if (this.autohideToolbar && !this.toolbar.contains(sel.anchorNode)) {
             if (!this.isMobile) {
+                if (this.powerboxTablePicker.el.style.display === 'block') {
+                    this.toolbar.style.visibility = 'hidden';
+                    return;
+                }
                 if (show !== undefined) {
                     this.toolbar.style.visibility = show ? 'visible' : 'hidden';
                 }
