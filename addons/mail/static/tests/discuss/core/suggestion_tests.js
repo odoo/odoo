@@ -181,3 +181,31 @@ QUnit.test("command suggestion are shown after deleting a character", async () =
     textarea.value = textarea.value.slice(0, -1);
     await contains(".o-mail-Composer-suggestion strong", { text: "help" });
 });
+
+QUnit.test("mention suggestion displays OdooBot before archived partners", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Jane", active: false });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "Our channel",
+        channel_type: "group",
+        channel_member_ids: [
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: partnerId }),
+            Command.create({ partner_id: pyEnv.odoobotId }),
+        ],
+    });
+    const { openDiscuss } = await start();
+    await openDiscuss(channelId);
+    await insertText(".o-mail-Composer-input", "@");
+    await contains(".o-mail-Composer-suggestion", { count: 3 });
+    await contains(".o-mail-Composer-suggestion", {
+        text: "Mitchell Admin",
+        before: [
+            ".o-mail-Composer-suggestion",
+            {
+                text: "OdooBot",
+                before: [".o-mail-Composer-suggestion", { text: "Jane" }],
+            },
+        ],
+    });
+});
