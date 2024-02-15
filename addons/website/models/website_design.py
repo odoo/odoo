@@ -52,12 +52,20 @@ class WebsiteDesign(models.Model):
 
     def _filter_design_variables(self, vals):
         """
-        Removes the keys in vals that are not design variables.
+        Removes the keys in vals that are not design variables and replaces _
+        by - in the keys to match the SCSS variable names.
 
         :param vals: dict of design variables to filter.
         :return: dict with only the keys that are design ones.
         """
-        return {key: vals[key] for key in vals if key not in NOT_DESIGN_FIELDS}
+        res = {}
+        for key in vals:
+            if key in NOT_DESIGN_FIELDS:
+                continue
+            # As python variable names cannot contains dashes, we replace them
+            # by double underscores.
+            res[key.replace('_', '-')] = vals[key]
+        return res
 
     # Variables specific functions
 
