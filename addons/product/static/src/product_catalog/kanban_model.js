@@ -19,15 +19,20 @@ export class ProductCatalogKanbanModel extends RelationalModel {
     async _loadData(params) {
         const result = await super._loadData(...arguments);
         if (!params.isMonoRecord && !params.groupBy.length) {
-            const orderLinesInfo = await rpc("/product/catalog/order_lines_info", {
-                order_id: params.context.order_id,
-                product_ids: result.records.map((rec) => rec.id),
-                res_model: params.context.product_catalog_order_model,
-            });
+            const orderLinesInfo = await rpc("/product/catalog/order_lines_info", this._getOrderLinesInfoParams(params, result.records.map((rec) => rec.id)));
             for (const record of result.records) {
                 record.productCatalogData = orderLinesInfo[record.id];
             }
         }
         return result;
+    }
+
+    _getOrderLinesInfoParams(params, productIds) {
+        return {
+            order_id: params.context.order_id,
+            product_ids: productIds,
+            res_model: params.context.product_catalog_order_model,
+            child_field: params.context?.child_field,
+        }
     }
 }

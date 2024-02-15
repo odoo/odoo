@@ -1127,8 +1127,8 @@ class SaleOrder(models.Model):
         lines_to_recompute._compute_discount()
         self.show_update_pricelist = False
 
-    def _default_order_line_values(self):
-        default_data = super()._default_order_line_values()
+    def _default_order_line_values(self, child_field=False):
+        default_data = super()._default_order_line_values(child_field)
         new_default_data = self.env['sale.order.line']._get_product_catalog_lines_data()
         return {**default_data, **new_default_data}
 
@@ -1847,7 +1847,7 @@ class SaleOrder(models.Model):
                 res[product.id]['readOnly'] = True
         return res
 
-    def _get_product_catalog_record_lines(self, product_ids):
+    def _get_product_catalog_record_lines(self, product_ids, **kwargs):
         grouped_lines = defaultdict(lambda: self.env['sale.order.line'])
         for line in self.order_line:
             if line.display_type or line.product_id.id not in product_ids:
