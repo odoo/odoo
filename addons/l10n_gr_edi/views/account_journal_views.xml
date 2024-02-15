@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+
+        <record id="account_journal_form_inherit_l10n_gr_edi" model="ir.ui.view">
+            <field name="name">account.journal.form.inherit.l10n_gr_edi</field>
+            <field name="model">account.journal</field>
+            <field name="inherit_id" ref="account.view_account_journal_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//field[@name='inbound_payment_method_line_ids']/tree/field[@name='payment_method_id']" position="after">
+                        <field name="l10n_gr_edi_payment_method_id"
+                               column_invisible="parent.type not in ['cash', 'bank'] or parent.country_code != 'GR'"/>
+                    </xpath>
+                    <xpath expr="//field[@name='outbound_payment_method_line_ids']/tree/field[@name='payment_method_id']" position="after">
+                        <field name="l10n_gr_edi_payment_method_id"
+                               column_invisible="parent.type not in ['cash', 'bank'] or parent.country_code != 'GR'"/>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+    </data>
+</odoo>
