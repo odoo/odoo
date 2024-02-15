@@ -2855,7 +2855,7 @@ class AccountMove(models.Model):
                 'credit': credit,
             })
 
-            if not is_refund or self.tax_cash_basis_origin_move_id or self._context.get('reverse_move_type'):
+            if not is_refund or self.tax_cash_basis_origin_move_id or self._context.get('reverse_move_type') or self.move_type == 'entry':
                 # We don't map tax repartition for non-refund operations, for cash basis entries,
                 # nor when reversing the move_type
                 # Indeed, cancelling a cash basis entry usually happens when unreconciling and invoice,
@@ -3902,7 +3902,7 @@ class AccountMoveLine(models.Model):
         help="Tags assigned to this line by the tax creating it, if any. It determines its impact on financial reports.", tracking=True)
     tax_audit = fields.Char(string="Tax Audit String", compute="_compute_tax_audit", store=True,
         help="Computed field, listing the tax grids impacted by this line, and the amount it applies to each of them.")
-    tax_tag_invert = fields.Boolean(string="Invert Tags", compute='_compute_tax_tag_invert', store=True, readonly=False,
+    tax_tag_invert = fields.Boolean(string="Invert Tags", compute='_compute_tax_tag_invert', store=True, readonly=False, copy=False,
         help="Technical field. True if the balance of this move line needs to be "
              "inverted when computing its total for each tag (for sales invoices, for example).")
 
@@ -4628,6 +4628,9 @@ class AccountMoveLine(models.Model):
                 elif record.tax_ids:
                     tax_type = record.tax_ids[0].type_tax_use
                     is_refund = (tax_type == 'sale' and record.debit) or (tax_type == 'purchase' and record.credit)
+
+                if record.tax_ids and record.move_id.reversed_entry_id:
+                    is_refund = not is_refund
 
                 record.tax_tag_invert = (tax_type == 'purchase' and is_refund) or (tax_type == 'sale' and not is_refund)
 
