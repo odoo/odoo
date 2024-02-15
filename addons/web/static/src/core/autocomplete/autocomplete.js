@@ -45,7 +45,6 @@ export class AutoComplete extends Component {
             }
         }, this.constructor.timeout);
 
-
         useExternalListener(window, "scroll", this.onWindowScroll, true);
 
         this.hotkey = useService("hotkey");
@@ -222,6 +221,9 @@ export class AutoComplete extends Component {
     }
 
     onInputBlur() {
+        if (this.ignoreBlur) {
+            return;
+        }
         const value = this.inputRef.el.value;
         if (
             this.props.autoSelect &&
@@ -336,7 +338,9 @@ export class AutoComplete extends Component {
         this.state.activeSourceOption = null;
     }
     onOptionClick(indices) {
+        this.ignoreBlur = false;
         this.selectOption(indices);
+        this.inputRef.el.focus();
     }
 
     onWindowScroll(ev) {
