@@ -741,7 +741,8 @@ options.Class.include({
             }
             case 'customizeWebsiteVariable': {
                 if ([
-                    "logo__height", "font__size__base", "body__line__height", "paragraph__margin__top", "paragraph__margin__bottom"
+                    "logo__height", "font__size__base", "body__line__height", "paragraph__margin__top", "paragraph__margin__bottom",
+                    "display__1__font__size", "display__2__font__size", "display__3__font__size", "display__4__font__size",
                 ].includes(params.variable)
                 ) {
                     const data = await this.options.wysiwyg.getWebsiteDesignData();
@@ -939,6 +940,7 @@ options.Class.include({
         });
         if ([
             'logo__height', 'font__size__base', 'body__line__height', "paragraph__margin__top", "paragraph__margin__bottom",
+            "display__1__font__size", "display__2__font__size", "display__3__font__size", "display__4__font__size"
             ].some(key => values[key])
         ) {
                 await this.options.wysiwyg.customizeWebsiteDesignData(values);

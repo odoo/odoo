@@ -4,18 +4,18 @@ import wTourUtils from '@website/js/tours/tour_utils';
 import {FONT_SIZE_CLASSES} from '@web_editor/js/editor/odoo-editor/src/utils/utils';
 
 const classNameInfo = new Map();
-classNameInfo.set("display-1-fs", {scssVariableName: "display-1-font-size", start: 80, end: 90});
-classNameInfo.set("display-2-fs", {scssVariableName: "display-2-font-size", start: 72, end: 80});
-classNameInfo.set("display-3-fs", {scssVariableName: "display-3-font-size", start: 64, end: 70});
-classNameInfo.set("display-4-fs", {scssVariableName: "display-4-font-size", start: 56, end: 60});
-classNameInfo.set("h1-fs", {scssVariableName: "h1-font-size", start: 48, end: 50});
-classNameInfo.set("h2-fs", {scssVariableName: "h2-font-size", start: 40, end: 42});
-classNameInfo.set("h3-fs", {scssVariableName: "h3-font-size", start: 32, end: 38});
-classNameInfo.set("h4-fs", {scssVariableName: "h4-font-size", start: 24, end: 34});
-classNameInfo.set("h5-fs", {scssVariableName: "h5-font-size", start: 20, end: 30});
-classNameInfo.set("h6-fs", {scssVariableName: "h6-font-size", start: 16, end: 26});
-classNameInfo.set("base-fs", {scssVariableName: "font__size__base", start: 16, end: 26});
-classNameInfo.set("o_small-fs", {scssVariableName: "small-font-size", start: 14, end: 24});
+classNameInfo.set("display-1-fs", {settingsVariableName: "display__1__font__size", start: 80, end: 90});
+classNameInfo.set("display-2-fs", {settingsVariableName: "display__2__font__size", start: 72, end: 80});
+classNameInfo.set("display-3-fs", {settingsVariableName: "display__3__font__size", start: 64, end: 70});
+classNameInfo.set("display-4-fs", {settingsVariableName: "display__4__font__size", start: 56, end: 60});
+classNameInfo.set("h1-fs", {settingsVariableName: "h1-font-size", start: 48, end: 50});
+classNameInfo.set("h2-fs", {settingsVariableName: "h2-font-size", start: 40, end: 42});
+classNameInfo.set("h3-fs", {settingsVariableName: "h3-font-size", start: 32, end: 38});
+classNameInfo.set("h4-fs", {settingsVariableName: "h4-font-size", start: 24, end: 34});
+classNameInfo.set("h5-fs", {settingsVariableName: "h5-font-size", start: 20, end: 30});
+classNameInfo.set("h6-fs", {settingsVariableName: "h6-font-size", start: 16, end: 26});
+classNameInfo.set("base-fs", {settingsVariableName: "font__size__base", start: 16, end: 26});
+classNameInfo.set("o_small-fs", {settingsVariableName: "small-font-size", start: 14, end: 24});
 
 function checkComputedFontSize(fontSizeClass, stage) {
     return {
@@ -52,15 +52,15 @@ function getFontSizeTestSteps(fontSizeClass) {
         {
             content: `Open the collapse to see the font size of ${fontSizeClass}`,
             trigger: `we-collapse:has(we-input[data-variable="` +
-            `${classNameInfo.get(fontSizeClass).scssVariableName}"]) we-toggler`,
+            `${classNameInfo.get(fontSizeClass).settingsVariableName}"]) we-toggler`,
         }, {
             content: `Check that the setting for ${fontSizeClass} is correct`,
-            trigger: `we-input[data-variable="${classNameInfo.get(fontSizeClass).scssVariableName}"]`
+            trigger: `we-input[data-variable="${classNameInfo.get(fontSizeClass).settingsVariableName}"]`
                 + ` input:value("${classNameInfo.get(fontSizeClass).start}")`,
             isCheck: true,
         }, {
             content: `Change the setting value of ${fontSizeClass}`,
-            trigger: `[data-variable="${classNameInfo.get(fontSizeClass).scssVariableName}"] input`,
+            trigger: `[data-variable="${classNameInfo.get(fontSizeClass).settingsVariableName}"] input`,
             // TODO: Remove "&& click body"
             run: `edit ${classNameInfo.get(fontSizeClass).end} && click body`,
         }, {
@@ -73,13 +73,13 @@ function getFontSizeTestSteps(fontSizeClass) {
         wTourUtils.goToTheme(),
         {
             content: `Check that the setting of ${fontSizeClass} has been updated`,
-            trigger: `we-input[data-variable="${classNameInfo.get(fontSizeClass).scssVariableName}"]`
+            trigger: `we-input[data-variable="${classNameInfo.get(fontSizeClass).settingsVariableName}"]`
                 + ` input:value("${classNameInfo.get(fontSizeClass).end}")`,
             isCheck: true,
         }, {
             content: `Close the collapse to hide the font size of ${fontSizeClass}`,
             trigger: `we-collapse:has(we-input[data-variable=` +
-                `"${classNameInfo.get(fontSizeClass).scssVariableName}"]) we-toggler`,
+                `"${classNameInfo.get(fontSizeClass).settingsVariableName}"]) we-toggler`,
             extra_trigger: `body:not(:has(.o_we_ui_loading))`,
         },
         checkComputedFontSize(fontSizeClass, "end"),
