@@ -1551,10 +1551,23 @@ class AccountTax(models.Model):
             'currency_id': line_vals['currency'].id,
             'partner_id': line_vals['partner'].id,
             'tax_repartition_line_id': tax_repartition_line.id,
+<<<<<<< HEAD
             'tax_ids': [Command.set(tax_vals['taxes'].ids)],
             'tax_tag_ids': [Command.set(tax_vals['tags'].ids)],
             'tax_id': tax_vals['group'].id or tax.id,
             'analytic_distribution': line_vals['analytic_distribution'] if tax.analytic else {},
+||||||| parent of 5754762e06f5 (temp)
+            'tax_ids': [Command.set(tax_vals['tax_ids'])],
+            'tax_tag_ids': [Command.set(tax_vals['tag_ids'])],
+            'tax_id': tax_vals['group'].id if tax_vals['group'] else tax_vals['id'],
+            'analytic_distribution': line_vals['analytic_distribution'] if tax_vals['analytic'] else {},
+=======
+            'tax_ids': [Command.set(tax_vals['tax_ids'])],
+            'tax_tag_ids': [Command.set(tax_vals['tag_ids'])],
+            'tax_id': tax_vals['group'].id if tax_vals['group'] else tax_vals['id'],
+            'analytic_distribution': line_vals['analytic_distribution'] if tax_vals['analytic'] else {},
+            '_extra_grouping_key_': line_vals.get('extra_context', {}).get('_extra_grouping_key_'),
+>>>>>>> 5754762e06f5 (temp)
         }
 
     @api.model
@@ -1576,6 +1589,7 @@ class AccountTax(models.Model):
             'tax_tag_ids': [Command.set(line_vals['tax_tags'].ids)],
             'tax_id': (line_vals['group_tax'] or tax).id,
             'analytic_distribution': line_vals['analytic_distribution'] if tax.analytic else {},
+            '_extra_grouping_key_': line_vals.get('extra_context', {}).get('_extra_grouping_key_'),
         }
 
     @api.model
