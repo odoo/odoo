@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { messageActionsRegistry } from "@mail/core/common/message_actions";
 
 messageActionsRegistry.add("pin", {

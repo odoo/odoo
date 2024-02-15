@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { CallContextMenu } from "@mail/discuss/call/common/call_context_menu";
 import { CallParticipantVideo } from "@mail/discuss/call/common/call_participant_video";
 import { useHover } from "@mail/utils/common/hooks";

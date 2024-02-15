@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { discussSidebarItemsRegistry } from "@mail/core/web/discuss_sidebar";
 
 import { useService } from "@web/core/utils/hooks";

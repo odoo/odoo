@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { DiscussChannelListController } from "@im_livechat/views/discuss_channel_list/discuss_channel_list_view_controller";
 
 import { listView } from "@web/views/list/list_view";

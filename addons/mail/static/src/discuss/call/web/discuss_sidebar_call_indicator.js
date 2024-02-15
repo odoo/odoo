@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { Thread } from "@mail/core/common/thread_model";
 import { discussSidebarChannelIndicatorsRegistry } from "@mail/discuss/core/web/discuss_sidebar_categories";
 

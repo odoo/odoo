@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { partnerCompareRegistry } from "@mail/core/common/partner_compare";
 
 partnerCompareRegistry.add(

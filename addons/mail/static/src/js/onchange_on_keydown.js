@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { patch } from "@web/core/utils/patch";
 import { useDebounced } from "@web/core/utils/timing";
 import { charField, CharField } from "@web/views/fields/char/char_field";

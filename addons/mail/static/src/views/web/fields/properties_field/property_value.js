@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { useOpenChat } from "@mail/core/web/open_chat_hook";
 
 import { TagsList } from "@web/core/tags_list/tags_list";

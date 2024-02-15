@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { Component, useState } from "@odoo/owl";
 
 import { useDiscussSystray } from "@mail/utils/common/hooks";

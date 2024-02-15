@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { BlurManager } from "@mail/discuss/call/common/blur_manager";
 import { monitorAudio } from "@mail/discuss/call/common/media_monitoring";
 import { closeStream, onChange } from "@mail/utils/common/misc";

@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { markup } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";

@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 
 import { Component, onWillStart, useExternalListener, useState } from "@odoo/owl";

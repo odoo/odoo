@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { Component, onWillStart, useState, useEffect } from "@odoo/owl";
 import { useOnBottomScrolled, useSequential } from "@mail/utils/common/hooks";
 

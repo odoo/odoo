@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { Record } from "@mail/core/common/record";
 import { markRaw } from "@odoo/owl";
 

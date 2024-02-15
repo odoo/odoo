@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { browser } from "@web/core/browser/browser";
 import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
@@ -77,8 +75,7 @@ patch(WebClient.prototype, {
             );
             await this.orm.call(USER_DEVICES_MODEL, "register_devices", [], kwargs);
         } catch (e) {
-            const invalidVapidErrorClass =
-                "odoo.addons.mail.tools.jwt.InvalidVapidError";
+            const invalidVapidErrorClass = "odoo.addons.mail.tools.jwt.InvalidVapidError";
             const warningMessage = "Error sending subscription information to the server";
             if (e.data?.name === invalidVapidErrorClass) {
                 const MAX_TRIES = 2;

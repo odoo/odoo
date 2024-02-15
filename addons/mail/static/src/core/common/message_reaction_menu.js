@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { loadEmoji } from "@web/core/emoji_picker/emoji_picker";
 import { onExternalClick } from "@mail/utils/common/hooks";
 

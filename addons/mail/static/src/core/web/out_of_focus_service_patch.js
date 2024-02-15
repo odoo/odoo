@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { OutOfFocusService, outOfFocusService } from "@mail/core/common/out_of_focus_service";
 import { patch } from "@web/core/utils/patch";
 import { _t } from "@web/core/l10n/translation";

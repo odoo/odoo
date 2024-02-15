@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { DateSection } from "@mail/core/common/date_section";
 import { Message } from "@mail/core/common/message";
 import { Record } from "@mail/core/common/record";

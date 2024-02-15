@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { Composer } from "@mail/core/common/composer";
 import { markEventHandled } from "@web/core/utils/misc";
 

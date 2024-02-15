@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { ThreadIcon } from "@mail/core/common/thread_icon";
 import { discussSidebarItemsRegistry } from "@mail/core/web/discuss_sidebar";
 

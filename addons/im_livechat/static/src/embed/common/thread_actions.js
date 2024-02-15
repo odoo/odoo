@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { SESSION_STATE } from "@im_livechat/embed/common/livechat_service";
 
 import { threadActionsRegistry } from "@mail/core/common/thread_actions";

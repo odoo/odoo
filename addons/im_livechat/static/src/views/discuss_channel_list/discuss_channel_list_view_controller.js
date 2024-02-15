@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { useState } from "@odoo/owl";
 
 import { ListController } from "@web/views/list/list_controller";

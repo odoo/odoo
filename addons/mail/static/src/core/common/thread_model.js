@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { DEFAULT_AVATAR } from "@mail/core/common/persona_service";
 import { AND, Record } from "@mail/core/common/record";
 import { compareDatetime } from "@mail/utils/common/misc";

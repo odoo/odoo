@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { Component, useExternalListener, useState } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { isEventHandled } from "@web/core/utils/misc";

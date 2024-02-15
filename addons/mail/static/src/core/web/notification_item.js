@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { ImStatus } from "@mail/core/common/im_status";
 import { RelativeTime } from "@mail/core/common/relative_time";
 import { useHover } from "@mail/utils/common/hooks";

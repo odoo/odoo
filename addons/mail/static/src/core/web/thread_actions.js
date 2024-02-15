@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { threadActionsRegistry } from "@mail/core/common/thread_actions";
 import { useComponent, useState } from "@odoo/owl";
 

@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { CallInvitation } from "@mail/discuss/call/common/call_invitation";
 
 import { Component, useState } from "@odoo/owl";

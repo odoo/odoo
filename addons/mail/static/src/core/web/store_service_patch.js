@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { Record } from "@mail/core/common/record";
 import { Store } from "@mail/core/common/store_service";
 

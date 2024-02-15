@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { NavigableList } from "@mail/core/common/navigable_list";
 import { cleanTerm } from "@mail/utils/common/format";
 

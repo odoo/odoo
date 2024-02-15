@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { Record } from "@mail/core/common/record";
 import { EMOJI_REGEX, htmlToTextContentInline } from "@mail/utils/common/format";
 

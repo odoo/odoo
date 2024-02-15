@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { MailColumnProgress } from "@mail/core/web/mail_column_progress";
 import { ActivityCell } from "@mail/views/web/activity/activity_cell";
 import { ActivityRecord } from "@mail/views/web/activity/activity_record";
@@ -165,7 +163,9 @@ export class ActivityRenderer extends Component {
             this.activeFilter.activityTypeId = typeId;
             this.activeFilter.resIds = new Set(
                 Object.entries(this.props.groupedActivities)
-                    .filter(([, resIds]) => typeId in resIds && name in resIds[typeId].count_by_state)
+                    .filter(
+                        ([, resIds]) => typeId in resIds && name in resIds[typeId].count_by_state
+                    )
                     .map(([key]) => parseInt(key))
             );
         }
