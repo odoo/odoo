@@ -10,5 +10,5 @@ def setup_provider(env, code):
     env['payment.provider']._setup_provider(code)
 
 
-def reset_payment_provider(env, code):
-    env['payment.provider']._remove_provider(code)
+def reset_payment_provider(env, code, **kwargs):
+    env['payment.provider']._remove_provider(code, **kwargs)

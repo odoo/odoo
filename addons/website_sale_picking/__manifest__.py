@@ -21,6 +21,7 @@ Allows customers to pay for their orders at a shop, instead of paying online.
     'demo': [
         'data/demo.xml',
     ],
+    'uninstall_hook': 'uninstall_hook',
     'assets': {
         'web.assets_frontend': [
             'website_sale_picking/static/src/**/*.js'

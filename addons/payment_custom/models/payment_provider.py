@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, fields, models
-from odoo.osv.expression import OR
+from odoo.osv.expression import AND
 
 
 class PaymentProvider(models.Model):
@@ -64,11 +64,11 @@ class PaymentProvider(models.Model):
                     f'</div>'
 
     @api.model
-    def _get_removal_domain(self, provider_code):
-        return OR([
-            super()._get_removal_domain(provider_code),
-            [('code', '=', 'custom'), ('custom_mode', '=', provider_code)],
-        ])
+    def _get_removal_domain(self, provider_code, custom_mode='', **kwargs):
+        res = super()._get_removal_domain(provider_code, custom_mode=custom_mode, **kwargs)
+        if provider_code == 'custom' and custom_mode:
+            return AND([res, [('custom_mode', '=', custom_mode)]])
+        return res
 
     @api.model
     def _get_removal_values(self):
