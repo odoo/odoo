@@ -124,7 +124,8 @@ class TestController(HttpCase):
         mimetype = response['result']['mimetype']
         self.assertEqual('image/gif', mimetype, "Wrong mimetype")
         # Ensure image info can be retrieved.
-        response = self.url_open('/web_editor/get_image_info',
+        response = self.url_open(
+            '/web_editor/get_image_info',
             headers={'Content-Type': 'application/json'},
             data=json_safe.dumps({
                 "params": {

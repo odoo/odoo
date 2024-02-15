@@ -20,10 +20,8 @@ import pytz
 import requests
 from datetime import datetime
 from lxml import etree, html
-from PIL import Image as I
+from PIL import Image as Img  # 'Image' is already a class name in this file
 from werkzeug import urls
-
-import odoo.modules
 
 from odoo import _, api, models, fields
 from odoo.exceptions import UserError, ValidationError
@@ -487,7 +485,7 @@ class Image(models.AbstractModel):
         try:
             with file_open(path, 'rb') as f:
                 # force complete image load to ensure it's valid image data
-                image = I.open(f)
+                image = Img.open(f)
                 image.load()
                 f.seek(0)
                 return base64.b64encode(f.read())
@@ -506,7 +504,7 @@ class Image(models.AbstractModel):
 
             req = requests.get(url, timeout=REMOTE_CONNECTION_TIMEOUT)
             # PIL needs a seekable file-like image so wrap result in IO buffer
-            image = I.open(io.BytesIO(req.content))
+            image = Img.open(io.BytesIO(req.content))
             # force a complete load of the image data to validate it
             image.load()
         except Exception:

@@ -63,7 +63,7 @@ export class WysiwygAdapterComponent extends Wysiwyg {
         savableSelector: { type: String, optional: true },
         beforeEditorActive: { type: Function, optional: true },
         removeWelcomeMessage: { type: Function },
-    }
+    };
     /**
      * @override
      */

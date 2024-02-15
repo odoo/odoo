@@ -84,12 +84,14 @@ class Crawler(HttpCaseWithUserDemo):
                 href = parts.replace(fragment='').to_url()
 
                 # FIXME: handle relative link (not parts.path.startswith /)
-                if parts.netloc or \
-                    not parts.path.startswith('/') or \
-                    parts.path == '/web' or\
-                    parts.path.startswith('/web/') or \
-                    parts.path.startswith('/en_US/') or \
-                    (parts.scheme and parts.scheme not in ('http', 'https')):
+                if (
+                    parts.netloc or
+                    not parts.path.startswith('/') or
+                    parts.path == '/web' or
+                    parts.path.startswith('/web/') or
+                    parts.path.startswith('/en_US/') or
+                    (parts.scheme and parts.scheme not in ('http', 'https'))
+                ):
                     continue
 
                 self.crawl(href, seen, msg)

@@ -283,7 +283,7 @@ class WithContext(HttpCase):
             self.assertIn('ZeroDivisionError: division by zero', r.text, "Error should be shown in debug.")
 
     def test_04_visitor_no_session(self):
-        with patch.object(root.session_store, 'save') as session_save,\
+        with patch.object(root.session_store, 'save') as session_save, \
              MockRequest(self.env, website=self.env['website'].browse(1)):
             # no session should be saved for website visitor
             self.url_open(self.page.url).raise_for_status()

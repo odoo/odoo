@@ -61,7 +61,7 @@ export class WebsiteDialog extends Component {
                 return this.props.close();
             }
             this.state.disabled = false;
-        }
+        };
     }
 
     get contentClasses() {

@@ -42,7 +42,7 @@ publicWidget.registry.websiteBlog = publicWidget.Widget.extend({
         this.$('#o_wblog_next_container').append(placeholder);
 
         // Use setTimeout() to calculate the 'offset()'' only after that size classes
-        // have been applyed and that $el has been resized.
+        // have been applied and that $el has been resized.
         setTimeout(() => {
             self._forumScrollAction($el, 300, function () {
                 window.location.href = nexInfo.url;

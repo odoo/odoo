@@ -186,7 +186,7 @@ export class WebsiteLoader extends Component {
         if (this.featuresInstallInfo.nbInstalled !== this.featuresInstallInfo.total) {
             this.trackModulesTimeout = setTimeout(() => this.trackModules(selectedFeatures), 1000);
         }
-    };
+    }
 
     /**
      * Depending on the features selected, returns the right waiting messages.
@@ -245,7 +245,7 @@ export class WebsiteLoader extends Component {
             }
         });
         return messagesList;
-    };
+    }
 
     /**
      * Prevents refreshing/leaving the page if the loader is displayed (and

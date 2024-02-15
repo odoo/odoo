@@ -69,7 +69,7 @@ class TestWebsiteAssets(odoo.tests.HttpCase):
 
     def test_02_t_cache_invalidation(self):
         self.authenticate(None, None)
-        page = self.url_open('/').text # add to cache
+        page = self.url_open('/').text  # add to cache
         public_assets_links = re.findall(r'(/web/assets/\d+/\w{7}/web.assets_frontend\..+)"/>', page)
         self.assertTrue(public_assets_links)
         self.authenticate('admin', 'admin')
@@ -80,7 +80,9 @@ class TestWebsiteAssets(odoo.tests.HttpCase):
         self.assertEqual(public_assets_links, admin_assets_links)
 
         snippets = self.env['ir.asset'].search([
-            ('path', '=like', 'website/static/src/snippets/s_social_media/000.scss'), # arbitrary, a unused css one that doesn't make the page fail when archived.
+            # arbitrary, a unused css one that doesn't make the page fail when
+            # archived.
+            ('path', '=like', 'website/static/src/snippets/s_social_media/000.scss'),
             ('bundle', '=', 'web.assets_frontend'),
         ])
         self.assertTrue(snippets)

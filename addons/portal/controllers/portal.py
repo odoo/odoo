@@ -36,7 +36,7 @@ def pager(url, total, page=1, step=30, scope=5, url_args=None):
     page = max(1, min(int(page if str(page).isdigit() else 1), page_count))
     scope -= 1
 
-    pmin = max(page - int(math.floor(scope/2)), 1)
+    pmin = max(page - int(math.floor(scope / 2)), 1)
     pmax = min(pmin + scope, page_count)
 
     if pmax - pmin < scope:
@@ -80,7 +80,7 @@ def pager(url, total, page=1, step=30, scope=5, url_args=None):
             'num': page_count
         },
         "pages": [
-            {'url': get_url(page_num), 'num': page_num} for page_num in range(pmin, pmax+1)
+            {'url': get_url(page_num), 'num': page_num} for page_num in range(pmin, pmax + 1)
         ]
     }
 
@@ -326,7 +326,7 @@ class CustomerPortal(Controller):
         """
         try:
             self._document_check_access(res_model, int(res_id), access_token=access_token)
-        except (AccessError, MissingError) as e:
+        except (AccessError, MissingError):
             raise UserError(_("The document does not exist or you do not have the rights to access it."))
 
         IrAttachment = request.env['ir.attachment']
@@ -363,7 +363,7 @@ class CustomerPortal(Controller):
         """
         try:
             attachment_sudo = self._document_check_access('ir.attachment', int(attachment_id), access_token=access_token)
-        except (AccessError, MissingError) as e:
+        except (AccessError, MissingError):
             raise UserError(_("The attachment does not exist or you do not have the rights to access it."))
 
         if attachment_sudo.res_model != 'mail.compose.message' or attachment_sudo.res_id != 0:

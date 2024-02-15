@@ -72,9 +72,10 @@ export const WebsiteRoot = publicRootData.PublicRoot.extend({
      */
     async _getGMapAPIKey(refetch) {
         if (refetch || !this._gmapAPIKeyProm) {
-            this._gmapAPIKeyProm = new Promise(async resolve => {
-                const data = await rpc('/website/google_maps_api_key');
-                resolve(JSON.parse(data).google_maps_api_key || '');
+            this._gmapAPIKeyProm = new Promise(resolve => {
+                rpc('/website/google_maps_api_key').then(data => {
+                     resolve(JSON.parse(data).google_maps_api_key || '');
+                });
             });
         }
         return this._gmapAPIKeyProm;
@@ -104,6 +105,7 @@ export const WebsiteRoot = publicRootData.PublicRoot.extend({
         // key changes meanwhile... it will not work but we can agree the user
         // can bother to reload the page at that moment.
         if (refetch || !this._gmapAPILoading) {
+            // TODO: remove `async` from `Promise(async resolve => {`
             this._gmapAPILoading = new Promise(async resolve => {
                 const key = await this._getGMapAPIKey(refetch);
 

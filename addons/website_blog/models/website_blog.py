@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
-import random
-
 from odoo import api, models, fields, _
 from odoo.addons.http_routing.models.ir_http import slug, unslug
 from odoo.addons.website.tools import text_from_html
@@ -152,7 +149,8 @@ class BlogTag(models.Model):
 class BlogPost(models.Model):
     _name = "blog.post"
     _description = "Blog Post"
-    _inherit = ['mail.thread', 'website.seo.metadata', 'website.published.multi.mixin',
+    _inherit = [
+        'mail.thread', 'website.seo.metadata', 'website.published.multi.mixin',
         'website.cover_properties.mixin', 'website.searchable.mixin']
     _order = 'id DESC'
     _mail_post_access = 'read'
@@ -346,6 +344,7 @@ class BlogPost(models.Model):
         else:
             domain.append([("post_date", "<=", fields.Datetime.now())])
         search_fields = ['name', 'author_name']
+
         def search_in_tags(env, search_term):
             tags_like_search = env['blog.tag'].search([('name', 'ilike', search_term)])
             return [('tag_ids', 'in', tags_like_search.ids)]

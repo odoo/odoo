@@ -799,7 +799,7 @@ options.Class.include({
             case 'variable':
                 await this._customizeWebsiteVariable(widgetValue, params);
                 break;
-            case "variables":
+            case "variables": {
                 const defaultVariables = params.defaultVariables ?
                     Object.fromEntries(params.defaultVariables.split(",")
                         .map((variable) => variable.split(":").map(v => v.trim()))) :
@@ -809,6 +809,7 @@ options.Class.include({
                 const variables = Object.assign(defaultVariables, overriddenVariables);
                 await this._customizeWebsiteVariables(variables, params.nullValue);
                 break;
+            }
             case 'color':
                 await this._customizeWebsiteColor(widgetValue, params);
                 break;

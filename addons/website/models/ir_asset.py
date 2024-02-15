@@ -7,7 +7,7 @@ from odoo import fields, models
 class IrAsset(models.Model):
     _inherit = 'ir.asset'
 
-    key = fields.Char(copy=False) # used to resolve multiple assets in a multi-website environment
+    key = fields.Char(copy=False)  # used to resolve multiple assets in a multi-website environment
     website_id = fields.Many2one('website', ondelete='cascade')
 
     def _get_asset_params(self):
@@ -17,7 +17,7 @@ class IrAsset(models.Model):
 
     def _get_asset_bundle_url(self, filename, unique, assets_params, ignore_params=False):
         route_prefix = '/web/assets'
-        if ignore_params: # we dont care about website id, match both
+        if ignore_params:  # we dont care about website id, match both
             route_prefix = '/web/assets%'
         elif website_id := assets_params.get('website_id', None):
             route_prefix = f'/web/assets/{website_id}'

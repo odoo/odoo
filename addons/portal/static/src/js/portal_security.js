@@ -19,7 +19,7 @@ publicWidget.registry.NewAPIKeyButton = publicWidget.Widget.extend({
         this.dialog = this.bindService("dialog");
     },
 
-    async _onClick(e){
+    async _onClick(e) {
         e.preventDefault();
         // This call is done just so it asks for the password confirmation before starting displaying the
         // dialog forms, to mimic the behavior from the backend, in which it asks for the password before
@@ -53,7 +53,7 @@ publicWidget.registry.NewAPIKeyButton = publicWidget.Widget.extend({
                     onClose: () => {
                         window.location = window.location;
                     },
-                })
+                });
             }
         });
     }
@@ -71,7 +71,7 @@ publicWidget.registry.RemoveAPIKeyButton = publicWidget.Widget.extend({
         this.dialog = this.bindService("dialog");
     },
 
-    async _onClick(e){
+    async _onClick(e) {
         e.preventDefault();
         await handleCheckIdentity(
             this.orm.call("res.users.apikeys", "remove", [parseInt(this.el.id)]),

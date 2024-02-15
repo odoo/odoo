@@ -370,7 +370,7 @@ class Website(Home):
                 icon = mod and '%s' % (module_sudo and module_sudo.icon or mod) or ''
                 suggested_controllers.append({
                     'value': url,
-                    'icon':  icon,
+                    'icon': icon,
                     'label': '%s (%s)' % (url, name),
                 })
 

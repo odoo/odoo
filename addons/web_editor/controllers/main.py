@@ -25,7 +25,6 @@ from odoo.tools.misc import file_open
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.image import image_data_uri, binary_to_image
 from odoo.addons.iap.tools import iap_tools
-from odoo.addons.base.models.assetsbundle import AssetsBundle
 
 from ..models.ir_attachment import SUPPORTED_IMAGE_MIMETYPES
 
@@ -55,9 +54,9 @@ def get_existing_attachment(IrAttachment, vals):
     return IrAttachment.search(domain, limit=1) or None
 
 class Web_Editor(http.Controller):
-    #------------------------------------------------------
+    # ------------------------------------------------------
     # convert font into picture
-    #------------------------------------------------------
+    # ------------------------------------------------------
     @http.route([
         '/web_editor/font_to_img/<icon>',
         '/web_editor/font_to_img/<icon>/<color>',
@@ -69,7 +68,7 @@ class Web_Editor(http.Controller):
         '/web_editor/font_to_img/<icon>/<color>/<bg>/<int:size>',
         '/web_editor/font_to_img/<icon>/<color>/<bg>/<int:width>x<int:height>',
         '/web_editor/font_to_img/<icon>/<color>/<bg>/<int:width>x<int:height>/<int:alpha>',
-        ], type='http', auth="none")
+    ], type='http', auth="none")
     def export_icon_to_png(self, icon, color='#000', bg=None, size=100, alpha=255, font='/web/static/src/libs/fontawesome/fonts/fontawesome-webfont.ttf', width=None, height=None):
         """ This method converts an unicode character to an image (using Font
             Awesome font by default) and is used only for mass mailing because
@@ -102,7 +101,7 @@ class Web_Editor(http.Controller):
         # Background standardization
         if bg is not None and bg.startswith('rgba'):
             bg = bg.replace('rgba', 'rgb')
-            bg = ','.join(bg.split(',')[:-1])+')'
+            bg = ','.join(bg.split(',')[:-1]) + ')'
 
         # Convert the opacity value compatible with PIL Image color (0 to 255)
         # when color specifier is 'rgba'
@@ -129,7 +128,7 @@ class Web_Editor(http.Controller):
         # Create a solid color image and apply the mask
         if color.startswith('rgba'):
             color = color.replace('rgba', 'rgb')
-            color = ','.join(color.split(',')[:-1])+')'
+            color = ','.join(color.split(',')[:-1]) + ')'
         iconimage = Image.new("RGBA", (boxw, boxh), color)
         iconimage.putalpha(imagemask)
 
@@ -148,13 +147,13 @@ class Web_Editor(http.Controller):
         response.headers['Access-Control-Allow-Methods'] = 'GET, POST'
         response.headers['Connection'] = 'close'
         response.headers['Date'] = time.strftime("%a, %d-%b-%Y %T GMT", time.gmtime())
-        response.headers['Expires'] = time.strftime("%a, %d-%b-%Y %T GMT", time.gmtime(time.time()+604800*60))
+        response.headers['Expires'] = time.strftime("%a, %d-%b-%Y %T GMT", time.gmtime(time.time() + 604800 * 60))
 
         return response
 
-    #------------------------------------------------------
+    # ------------------------------------------------------
     # Update a checklist in the editor on check/uncheck
-    #------------------------------------------------------
+    # ------------------------------------------------------
     @http.route('/web_editor/checklist', type='json', auth='user')
     def update_checklist(self, res_model, res_id, filename, checklistId, checked, **kwargs):
         record = request.env[res_model].browse(res_id)
@@ -182,9 +181,9 @@ class Web_Editor(http.Controller):
 
         return value
 
-    #------------------------------------------------------
+    # ------------------------------------------------------
     # Update a stars rating in the editor on check/uncheck
-    #------------------------------------------------------
+    # ------------------------------------------------------
     @http.route('/web_editor/stars', type='json', auth='user')
     def update_stars(self, res_model, res_id, filename, starsId, rating):
         record = request.env[res_model].browse(res_id)
@@ -204,11 +203,11 @@ class Web_Editor(http.Controller):
         star_index = 0
         for star in stars:
             classname = star.get('class', '')
-            if star_index < rating and (not 'fa-star' in classname or 'fa-star-o' in classname):
+            if star_index < rating and ('fa-star' not in classname or 'fa-star-o' in classname):
                 classname = re.sub(r"\s?fa-star-o\s?", '', classname)
                 classname = '%s fa-star' % classname
                 star.set('class', classname)
-            elif star_index >= rating and not 'fa-star-o' in classname:
+            elif star_index >= rating and 'fa-star-o' not in classname:
                 classname = re.sub(r"\s?fa-star\s?", '', classname)
                 classname = '%s fa-star-o' % classname
                 star.set('class', classname)

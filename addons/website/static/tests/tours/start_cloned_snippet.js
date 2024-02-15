@@ -30,6 +30,5 @@ wTourUtils.registerWebsitePreviewTour('website_start_cloned_snippet', {
                 }
             },
         },
-        
-    ]
+    ];
 });

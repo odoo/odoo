@@ -83,7 +83,7 @@ export const PortalHomeCounters = publicWidget.Widget.extend({
         const numberRpc = 3;
         const needed = Object.values(this.el.querySelectorAll('[data-placeholder_count]'))
                                 .map(documentsCounterEl => documentsCounterEl.dataset['placeholder_count']);
-        const counterByRpc = Math.ceil(needed.length / numberRpc);  // max counter, last can be less
+        const counterByRpc = Math.ceil(needed.length / numberRpc); // max counter, last can be less
         const countersAlwaysDisplayed = this._getCountersAlwaysDisplayed();
 
         const proms = [...Array(Math.min(numberRpc, needed.length)).keys()].map(async i => {

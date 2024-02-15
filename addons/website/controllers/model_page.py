@@ -65,7 +65,8 @@ class ModelPageController(Controller):
             ]))
 
             render_context = {
-                "main_object": page.sudo(), # The template reads some fields that are actually on view
+                # sudo because template reads some fields that are on view
+                "main_object": page.sudo(),
                 "record": record,
                 "listing": {
                     'href': '.',
@@ -129,6 +130,7 @@ class ModelPageController(Controller):
             "record_to_url": record_to_url,
             "layout_mode": layout_mode,
             "view_id": view.id,
-            "main_object": page.sudo(), # The template reads some fields that are actually on view
+            # sudo because template reads some fields that are on view
+            "main_object": page.sudo(),
         }
         return request.render(view.key, render_context)

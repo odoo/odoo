@@ -175,7 +175,7 @@ var PortalComposer = publicWidget.Widget.extend({
     _onSubmitCheckContent: function () {
         if (!this.$inputTextarea.val().trim() && !this.attachments.length) {
             return _t('Some fields are required. Please make sure to write a message or attach a document');
-        };
+        }
     },
 
     //--------------------------------------------------------------------------

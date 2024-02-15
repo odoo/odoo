@@ -4,11 +4,9 @@
 import logging
 from odoo.addons.base.tests.common import HttpCaseWithUserPortal, HttpCaseWithUserDemo
 
-from contextlib import nullcontext
-
 from odoo.sql_db import categorize_query
 from odoo.tools import mute_logger
-from odoo.tests.common import HttpCase, tagged
+from odoo.tests.common import tagged
 
 
 _logger = logging.getLogger(__name__)
@@ -53,7 +51,8 @@ class UtilPerf(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
             self.url_open(url)
 
         profiler = nested_profiler.profiler
-        self.assertEqual(len(profiler.sub_profilers), 1, "we expect to have only one accessed url") # if not adapt the code below
+        # if assert fail, need to adapt the code below
+        self.assertEqual(len(profiler.sub_profilers), 1, "we expect to have only one accessed url")
         route_profiler = profiler.sub_profilers[0]
         route_entries = route_profiler.collectors[0].entries
         entries = profiler.collectors[0].entries + route_entries
@@ -192,7 +191,7 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
                 }
                 expected_query_count = 5
                 if not readonly_enabled:
-                    select_tables_perf['ir_ui_view'] = 1 # Check if `view.track` to track visitor or not
+                    select_tables_perf['ir_ui_view'] = 1  # Check if `view.track` to track visitor or not
                     expected_query_count += 1
                 self._check_url_hot_query(self.page.url, expected_query_count, select_tables_perf)
                 self.assertEqual(self._get_url_hot_query(self.page.url, cache=False), 10)
@@ -219,7 +218,7 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
                 expected_query_count_no_cache = 10
                 insert_tables_perf = {}
                 if not readonly_enabled:
-                    select_tables_perf['ir_ui_view'] = 1 # Check if `view.track` to track visitor or not
+                    select_tables_perf['ir_ui_view'] = 1  # Check if `view.track` to track visitor or not
                     insert_tables_perf = {
                         'website_visitor': 1,
                         # Visitor upsert
@@ -253,7 +252,7 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
                 expected_query_count_no_cache = 8
                 insert_tables_perf = {}
                 if not readonly_enabled:
-                    select_tables_perf['ir_ui_view'] = 1 # Check if `view.track` to track visitor or not
+                    select_tables_perf['ir_ui_view'] = 1  # Check if `view.track` to track visitor or not
                     insert_tables_perf = {
                         'website_visitor': 1,
                         # Visitor upsert

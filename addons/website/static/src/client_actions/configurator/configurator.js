@@ -107,11 +107,11 @@ class IndustrySelectionAutoComplete extends AutoComplete {
         return {
             ...super.dropdownOptions,
             position: "bottom-fit",
-        }
+        };
     }
 
     get ulDropdownClass() {
-        return `${super.ulDropdownClass} custom-ui-autocomplete shadow-lg border-0 o_configurator_show_fast o_configurator_industry_dropdown`
+        return `${super.ulDropdownClass} custom-ui-autocomplete shadow-lg border-0 o_configurator_show_fast o_configurator_industry_dropdown`;
     }
 }
 

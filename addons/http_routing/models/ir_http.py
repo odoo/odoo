@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import contextlib
 import logging
 import os
 import re
@@ -704,7 +703,7 @@ class IrHttp(models.AbstractModel):
                     return response
             except werkzeug.exceptions.Forbidden:
                 # Rendering does raise a Forbidden if target is not visible.
-                pass # Use default error page handling.
+                pass  # Use default error page handling.
         elif code == 500:
             values = cls._get_values_500_error(request.env, values, exception)
         try:

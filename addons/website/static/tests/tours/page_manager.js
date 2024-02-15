@@ -34,7 +34,7 @@ const checkWebsiteFilter = [{
 }, {
 	content: "Check that the homepage is now the one of My Website 2",
 	trigger: ".o_list_table .o_data_row .o_data_cell[name=name]:contains('Home') " +
-			 "~ .o_data_cell[name=website_id]:contains('My Website 2')",
+             "~ .o_data_cell[name=website_id]:contains('My Website 2')",
 	run: () => null, // it's a check
 }, {
 	content: "Check that the search options are still open",
@@ -46,7 +46,7 @@ const checkWebsiteFilter = [{
 }, {
 	content: "Check that the homepage is now the one of My Website",
 	trigger: ".o_list_table .o_data_row .o_data_cell[name=name]:contains('Home') " +
-			 "~ .o_data_cell[name=website_id]:contains('My Website'):not(:contains('2'))",
+             "~ .o_data_cell[name=website_id]:contains('My Website'):not(:contains('2'))",
 	run: () => null, // it's a check
 }];
 

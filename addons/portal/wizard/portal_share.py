@@ -66,9 +66,10 @@ class PortalShare(models.TransientModel):
             self = self.with_context(lang=partner.lang)
             self.resource_ref.message_post_with_source(
                 'portal.portal_share_template',
-                render_values={'partner': partner, 'note': self.note, 'record': self.resource_ref,
-                        'share_link': share_link,
-                        'model_description': self.env['ir.model']._get(self.resource_ref._name).display_name.lower()},
+                render_values={
+                    'partner': partner, 'note': self.note, 'record': self.resource_ref,
+                    'share_link': share_link,
+                    'model_description': self.env['ir.model']._get(self.resource_ref._name).display_name.lower()},
                 subject=_("Invitation to access %s", self.resource_ref.display_name),
                 subtype_xmlid='mail.mt_note',
                 email_layout_xmlid='mail.mail_notification_light',
@@ -86,9 +87,10 @@ class PortalShare(models.TransientModel):
             self = self.with_context(lang=partner.lang)
             self.resource_ref.message_post_with_source(
                 'portal.portal_share_template',
-                render_values={'partner': partner, 'note': self.note, 'record': self.resource_ref,
-                        'share_link': share_link,
-                        'model_description': self.env['ir.model']._get(self.resource_ref._name).display_name.lower()},
+                render_values={
+                    'partner': partner, 'note': self.note, 'record': self.resource_ref,
+                    'share_link': share_link,
+                    'model_description': self.env['ir.model']._get(self.resource_ref._name).display_name.lower()},
                 subject=_("Invitation to access %s", self.resource_ref.display_name),
                 subtype_xmlid='mail.mt_note',
                 email_layout_xmlid='mail.mail_notification_light',

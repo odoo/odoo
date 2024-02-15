@@ -71,6 +71,7 @@ class TestDisableSnippetsAssets(TransactionCase):
         cache_clears = []
 
         init_clear_cache = self.env.registry.clear_cache
+
         def patched_clear_cache(*cache_names):
             for cache_name in cache_names:
                 cache_clears.append(cache_name)

@@ -6,8 +6,8 @@ registry.category("web_tour.tours").add("website_form_editor_tour_submit", {
     test: true,
     steps: () => [
     {
-        content:  "Try to send the form with some required fields not filled in",
-        extra_trigger:  "form[data-model_name='mail.mail']" +
+        content: "Try to send the form with some required fields not filled in",
+        extra_trigger: "form[data-model_name='mail.mail']" +
                         "[data-success-page='/contactus-thank-you']" +
                         ":has(.s_website_form_field:has(label:contains('Your Name')):has(input[type='text'][name='name'][required]))" +
                         ":has(.s_website_form_field:has(label:contains('Your Email')):has(input[type='email'][name='email_from'][required]))" +
@@ -30,11 +30,11 @@ registry.category("web_tour.tours").add("website_form_editor_tour_submit", {
                         ":has(.s_website_form_field:has(label:contains('Invoice Scan')))" +
                         ":has(.s_website_form_field:has(input[name='email_to'][value='test@test.test']))" +
                         ":has(.s_website_form_field:has(input[name='website_form_signature']))",
-        trigger:  ".s_website_form_send"
+        trigger: ".s_website_form_send"
     },
     {
-        content:  "Check if required fields were detected and complete the Subject field",
-        extra_trigger:  "form:has(#s_website_form_result.text-danger)" +
+        content: "Check if required fields were detected and complete the Subject field",
+        extra_trigger: "form:has(#s_website_form_result.text-danger)" +
                         ":has(.s_website_form_field:has(label:contains('Your Name')):not(.o_has_error))" +
                         ":has(.s_website_form_field:has(label:contains('Email')).o_has_error)" +
                         ":has(.s_website_form_field:has(label:contains('Your Question')).o_has_error)" +
@@ -45,16 +45,16 @@ registry.category("web_tour.tours").add("website_form_editor_tour_submit", {
                         ":has(.s_website_form_field:has(label:contains('Service')):not(.o_has_error))" +
                         ":has(.s_website_form_field:has(label:contains('State')):not(.o_has_error))" +
                         ":has(.s_website_form_field:has(label:contains('Invoice Scan')):not(.o_has_error))",
-        trigger:  "input[name=subject]",
-        run:      "text Jane Smith"
+        trigger: "input[name=subject]",
+        run: "text Jane Smith"
     },
     {
-        content:  "Update required field status by trying to Send again",
-        trigger:  ".s_website_form_send"
+        content: "Update required field status by trying to Send again",
+        trigger: ".s_website_form_send"
     },
     {
-        content:  "Check if required fields were detected and complete the Message field",
-        extra_trigger:  "form:has(#s_website_form_result.text-danger)" +
+        content: "Check if required fields were detected and complete the Message field",
+        extra_trigger: "form:has(#s_website_form_result.text-danger)" +
                         ":has(.s_website_form_field:has(label:contains('Your Name')):not(.o_has_error))" +
                         ":has(.s_website_form_field:has(label:contains('Email')).o_has_error)" +
                         ":has(.s_website_form_field:has(label:contains('Your Question')).o_has_error)" +
@@ -65,16 +65,16 @@ registry.category("web_tour.tours").add("website_form_editor_tour_submit", {
                         ":has(.s_website_form_field:has(label:contains('Service')):not(.o_has_error))" +
                         ":has(.s_website_form_field:has(label:contains('State')):not(.o_has_error))" +
                         ":has(.s_website_form_field:has(label:contains('Invoice Scan')):not(.o_has_error))",
-        trigger:  "textarea[name=body_html]",
-        run:      "text A useless message"
+        trigger: "textarea[name=body_html]",
+        run: "text A useless message"
     },
     {
-        content:  "Update required field status by trying to Send again",
-        trigger:  ".s_website_form_send"
+        content: "Update required field status by trying to Send again",
+        trigger: ".s_website_form_send"
     },
     {
-        content:  "Check if required fields was detected and check a product. If this fails, you probably broke the cleanForSave.",
-        extra_trigger:  "form:has(#s_website_form_result.text-danger)" +
+        content: "Check if required fields was detected and check a product. If this fails, you probably broke the cleanForSave.",
+        extra_trigger: "form:has(#s_website_form_result.text-danger)" +
                         ":has(.s_website_form_field:has(label:contains('Your Name')):not(.o_has_error))" +
                         ":has(.s_website_form_field:has(label:contains('Email')).o_has_error)" +
                         ":has(.s_website_form_field:has(label:contains('Your Question')).o_has_error)" +
@@ -85,34 +85,34 @@ registry.category("web_tour.tours").add("website_form_editor_tour_submit", {
                         ":has(.s_website_form_field:has(label:contains('Service')):not(.o_has_error))" +
                         ":has(.s_website_form_field:has(label:contains('State')):not(.o_has_error))" +
                         ":has(.s_website_form_field:has(label:contains('Invoice Scan')):not(.o_has_error))",
-        trigger:  "input[name=Products][value='Wiko Stairway']"
+        trigger: "input[name=Products][value='Wiko Stairway']"
     },
     {
-        content:  "Open datetime picker",
-        trigger:  ".s_website_form_datetime input",
-        run:      "click",
+        content: "Open datetime picker",
+        trigger: ".s_website_form_datetime input",
+        run: "click",
     },
     {
-        content:  "Complete Date field",
-        trigger:  ".o_date_picker .o_today",
+        content: "Complete Date field",
+        trigger: ".o_date_picker .o_today",
     },
     {
-        content:  "Check another product",
-        trigger:  "input[name='Products'][value='Xperia']"
+        content: "Check another product",
+        trigger: "input[name='Products'][value='Xperia']"
     },
     {
-        content:  "Check a service",
-        trigger:  "input[name='Service'][value='Development Service']"
+        content: "Check a service",
+        trigger: "input[name='Service'][value='Development Service']"
     },
     {
-        content:  "Complete Your Name field",
-        trigger:  "input[name='name']",
-        run:      "text chhagan"
+        content: "Complete Your Name field",
+        trigger: "input[name='name']",
+        run: "text chhagan"
     },
     {
-        content:  "Complete Email field",
-        trigger:  "input[name=email_from]",
-        run:      "text test@mail.com"
+        content: "Complete Email field",
+        trigger: "input[name=email_from]",
+        run: "text test@mail.com"
     },
     {
         content: "Complete Subject field",
@@ -120,9 +120,9 @@ registry.category("web_tour.tours").add("website_form_editor_tour_submit", {
         run: 'text subject',
     },
     {
-        content:  "Complete Your Question field",
-        trigger:  "textarea[name='description']",
-        run:      "text magan"
+        content: "Complete Your Question field",
+        trigger: "textarea[name='description']",
+        run: "text magan"
     },
     {
         content: "Check if conditional field is visible, it shouldn't.",
@@ -149,12 +149,12 @@ registry.category("web_tour.tours").add("website_form_editor_tour_submit", {
         run: 'text 44 - UK',
     },
     {
-        content:  "Send the form",
-        trigger:  ".s_website_form_send"
+        content: "Send the form",
+        trigger: ".s_website_form_send"
     },
     {
-        content:  "Check form is submitted without errors",
-        trigger:  "#wrap:has(h1:contains('Thank You!'))",
+        content: "Check form is submitted without errors",
+        trigger: "#wrap:has(h1:contains('Thank You!'))",
         isCheck: true,
     }
 ]});
@@ -178,17 +178,17 @@ registry.category("web_tour.tours").add("website_form_editor_tour_results", {
                 ]],
                 kwargs: {},
             });
-            var success = function(model, count) {
+            var success = function (model, count) {
                 if (count > 0) {
-                    $('body').append('<div id="website_form_editor_success_test_tour_'+model+'"></div>');
+                    $('body').append('<div id="website_form_editor_success_test_tour_' + model + '"></div>');
                 }
             };
             mailDef.then(success.bind(this, 'mail_mail'));
         }
     },
     {
-        content:  "Check mail.mail records have been created",
-        trigger:  "#website_form_editor_success_test_tour_mail_mail",
+        content: "Check mail.mail records have been created",
+        trigger: "#website_form_editor_success_test_tour_mail_mail",
         allowInvisible: true,
         isCheck: true,
     }

@@ -334,4 +334,4 @@ publicWidget.registry.portalChatter = publicWidget.Widget.extend({
     },
 });
 
-export default PortalChatter
+export default PortalChatter;

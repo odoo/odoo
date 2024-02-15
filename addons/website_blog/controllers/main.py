@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import werkzeug
-import itertools
 import pytz
 import babel.dates
 from collections import defaultdict
@@ -12,7 +11,6 @@ from odoo.addons.http_routing.models.ir_http import slug, unslug
 from odoo.addons.website.controllers.main import QueryURL
 from odoo.addons.portal.controllers.portal import _build_url_w_params
 from odoo.http import request
-from odoo.osv import expression
 from odoo.tools import html2plaintext
 from odoo.tools.misc import get_lang
 from odoo.tools import sql
@@ -121,7 +119,8 @@ class WebsiteBlog(http.Controller):
             state=state,
             **post
         )
-        total, details, fuzzy_search_term = request.website._search_with_fuzzy("blog_posts_only", search,
+        total, details, fuzzy_search_term = request.website._search_with_fuzzy(
+            "blog_posts_only", search,
             limit=page * self._blog_post_per_page, order="is_published desc, post_date desc, id asc", options=options)
         posts = details[0].get('results', BlogPost)
         first_post = BlogPost

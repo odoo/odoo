@@ -94,7 +94,6 @@ class Assets(models.AbstractModel):
                 new_asset['bundle'] = IrAsset._get_related_bundle(url, bundle)
             IrAsset.create(new_asset)
 
-
     @api.model
     def _get_content_from_url(self, url, url_info=None, custom_attachments=None):
         """

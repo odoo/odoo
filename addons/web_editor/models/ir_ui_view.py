@@ -18,9 +18,9 @@ EDITING_ATTRIBUTES = ['data-oe-model', 'data-oe-id', 'data-oe-field', 'data-oe-x
 class IrUiView(models.Model):
     _inherit = 'ir.ui.view'
 
-    #------------------------------------------------------
+    # ------------------------------------------------------
     # Save from html
-    #------------------------------------------------------
+    # ------------------------------------------------------
 
     @api.model
     def extract_embedded_fields(self, arch):
@@ -220,8 +220,9 @@ class IrUiView(models.Model):
     @api.model
     def to_field_ref(self, el):
         # filter out meta-information inserted in the document
-        attributes = {k: v for k, v in el.attrib.items()
-                           if not k.startswith('data-oe-')}
+        attributes = {
+            k: v for k, v in el.attrib.items()
+            if not k.startswith('data-oe-')}
         attributes['t-field'] = el.get('data-oe-expression')
 
         out = html.html_parser.makeelement(el.tag, attrib=attributes)

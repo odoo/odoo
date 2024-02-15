@@ -70,7 +70,7 @@ QUnit.module("redirect_field", (hooks) => {
                     </sheet>
                 </form>`,
         });
-        assert.containsOnce(target, ".oe_stat_button .o_button_icon.text-success")
+        assert.containsOnce(target, ".oe_stat_button .o_button_icon.text-success");
     });
 
     QUnit.test("clicking on redirect field works", async function (assert) {

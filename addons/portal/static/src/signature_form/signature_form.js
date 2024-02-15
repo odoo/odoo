@@ -13,8 +13,8 @@ import { NameAndSignature } from "@web/core/signature/name_and_signature";
  * button, and handles the RPC to save the result.
  */
 class SignatureForm extends Component {
-    static template = "portal.SignatureForm"
-    static components = { NameAndSignature }
+    static template = "portal.SignatureForm";
+    static components = { NameAndSignature };
     static props = ["*"];
 
     setup() {

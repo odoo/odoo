@@ -17,4 +17,4 @@ odoo.loader.bus.addEventListener("module-started", (e) => {
             },
         });
     }
-})
+});

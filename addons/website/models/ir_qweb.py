@@ -8,9 +8,7 @@ from collections import OrderedDict
 from odoo import models
 from odoo.http import request
 from odoo.tools import lazy
-from odoo.addons.base.models.assetsbundle import AssetsBundle
 from odoo.addons.http_routing.models.ir_http import url_for
-from odoo.osv import expression
 from odoo.addons.website.models import ir_http
 
 

@@ -81,7 +81,7 @@ class Http(models.AbstractModel):
 
     def _get_rewrites(self, website_id):
         domain = [('redirect_type', 'in', ('308', '404')), '|', ('website_id', '=', False), ('website_id', '=', website_id)]
-        return  {x.url_from: x for x in self.env['website.rewrite'].sudo().search(domain)}
+        return {x.url_from: x for x in self.env['website.rewrite'].sudo().search(domain)}
 
     def _generate_routing_rules(self, modules, converters):
         if not request:

@@ -53,7 +53,9 @@ wTourUtils.dragNDrop({
     run() {
         // Patch and ignore write on clipboard in tour as we don't have permissions
         const oldWriteText = browser.navigator.clipboard.writeText;
-        browser.navigator.clipboard.writeText = () => { console.info('Copy in clipboard ignored!') };
+        browser.navigator.clipboard.writeText = () => {
+            console.info('Copy in clipboard ignored!');
+        };
         this.$anchor[0].click();
         browser.navigator.clipboard.writeText = oldWriteText;
     }

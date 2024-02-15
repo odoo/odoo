@@ -22,7 +22,7 @@ class MockVisitor(common.BaseCase):
 
         with patch.object(WebsiteVisitor, '_get_visitor_from_request',
                           autospec=True, wraps=WebsiteVisitor,
-                          side_effect=_get_visitor_from_request) as _get_visitor_from_request_mock:
+                          side_effect=_get_visitor_from_request):
             yield
 
 

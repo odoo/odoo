@@ -18,7 +18,7 @@ export class PortalWizardUserListController extends ListController {
         this.isPortalActionOngoing = true;
         return super.beforeExecuteActionButton(clickParams);
     }
-    
+
     /**
      * @override
      */

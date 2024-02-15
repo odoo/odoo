@@ -118,7 +118,8 @@ class MailMessage(models.Model):
         safari = request and request.httprequest.user_agent and request.httprequest.user_agent.browser == 'safari'
         attachment_values['filename'] = attachment_values['name']
         attachment_values['mimetype'] = (
-            'application/octet-stream' if safari and
-            'video' in (attachment_values["mimetype"] or "")
-            else attachment_values["mimetype"])
+            'application/octet-stream'
+            if safari and 'video' in (attachment_values["mimetype"] or "")
+            else attachment_values["mimetype"]
+        )
         return attachment_values

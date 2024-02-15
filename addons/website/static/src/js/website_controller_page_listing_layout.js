@@ -9,7 +9,7 @@ publicWidget.registry.WebsiteControllerPageListingLayout = publicWidget.Widget.e
     events: {
         "change .listing_layout_switcher input": "_onApplyLayoutChange",
     },
-    
+
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
