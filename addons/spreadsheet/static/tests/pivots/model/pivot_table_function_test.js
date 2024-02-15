@@ -1,5 +1,6 @@
 /** @odoo-module */
 
+import { nextTick } from "@web/../tests/helpers/utils";
 import { setCellContent } from "../../utils/commands";
 import { getEvaluatedCell, getEvaluatedFormatGrid, getEvaluatedGrid } from "../../utils/getters";
 import { createSpreadsheetWithPivot } from "../../utils/pivot";
@@ -310,6 +311,40 @@ QUnit.test("ODOO.PIVOT.TABLE with multiple row groups", async function (assert) 
         [3,                    "",             95,             null],
         [null,                 null,           null,           null],
     ]);
+});
+
+QUnit.test("edit pivot groups", async function (assert) {
+    setCellContent(model, "A1", `=ODOO.PIVOT.TABLE("1")`, "42");
+    const originalGrid = getEvaluatedGrid(model, "A1:D7", "42");
+    // prettier-ignore
+    assert.deepEqual(originalGrid, [
+        ["(#1) Partner Pivot",    "xphone",       "xpad",         "Total"],
+        ["",            "Probability",  "Probability",  "Probability"],
+        [1,             "",             11,             11],
+        [2,             "",             15,             15],
+        [12,            10,             "",             10],
+        [17,            "",             95,             95],
+        ["Total",       10,             121,            131],
+    ]);
+    const [pivotId] = model.getters.getPivotIds();
+    model.dispatch("UPDATE_PIVOT", {
+        pivotId,
+        pivot: {
+            ...model.getters.getPivotDefinition(pivotId),
+            colGroupBys: [],
+            rowGroupBys: [],
+        },
+    });
+    await nextTick();
+    // prettier-ignore
+    assert.deepEqual(getEvaluatedGrid(model, "A1:B3", "42"), [
+        ["(#1) Partner Pivot",  "Total"],
+        ["",                    "Probability"],
+        ["Total",               131],
+    ]);
+    model.dispatch("REQUEST_UNDO");
+    await nextTick();
+    assert.deepEqual(getEvaluatedGrid(model, "A1:D7", "42"), originalGrid);
 });
 
 QUnit.test("Renaming the pivot reevaluates the ODOO.PIVOT.TABLE function", async function (assert) {

@@ -232,7 +232,7 @@ export class OdooPivot extends OdooViewsDataSource {
     }
 }
 
-class OdooPivotRuntimeDefinition extends PivotRuntimeDefinition {
+export class OdooPivotRuntimeDefinition extends PivotRuntimeDefinition {
     /**
      * @param {OdooPivotDefinition} definition
      * @param {Fields} fields
