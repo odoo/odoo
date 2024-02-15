@@ -581,6 +581,8 @@ const _fill = (target, value, options) => {
             dataTransfer.items.add(file);
         }
         target.files = dataTransfer.files;
+
+        events.push(dispatch(target, "change"));
     } else {
         if (options?.instantly) {
             // Simulates filling the clipboard with the value (can be from external source)
@@ -602,12 +604,12 @@ const _fill = (target, value, options) => {
                 events.push(dispatch(target, "compositionend"));
             }
         }
-    }
 
-    registerForChange(target, initialValue);
+        registerForChange(target, initialValue);
 
-    if (options?.confirm) {
-        events.push(_press(target, { key: "Enter" }));
+        if (options?.confirm) {
+            events.push(_press(target, { key: "Enter" }));
+        }
     }
 
     return events;
@@ -923,7 +925,7 @@ const _select = (target, value) => {
             `error when calling \`select()\`: no option found with value "${values.join(", ")}"`
         );
     }
-    const events = dispatch(target, "change");
+    const events = [dispatch(target, "change")];
     return events;
 };
 
