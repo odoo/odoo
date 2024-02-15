@@ -1,6 +1,7 @@
 /* @odoo-module */
 
 import { Record } from "@mail/core/common/record";
+import { deserializeDateTime } from "@web/core/l10n/dates";
 
 /**
  * @class ChannelMember
@@ -22,6 +23,8 @@ export class ChannelMember extends Record {
         return super.insert(...arguments);
     }
 
+    /** @type {string} */
+    create_date;
     /** @type {number} */
     id;
     persona = Record.one("Persona", { inverse: "channelMembers" });
@@ -35,6 +38,10 @@ export class ChannelMember extends Record {
      */
     getLangName() {
         return this.persona.lang_name;
+    }
+
+    get memberSince() {
+        return deserializeDateTime(this.create_date);
     }
 }
 

@@ -437,9 +437,11 @@ export class Thread extends Record {
     }
 
     get hasSelfAsMember() {
-        return this.channelMembers.some((channelMember) =>
-            channelMember.persona?.eq(this._store.self)
-        );
+        return Boolean(this.selfMember);
+    }
+
+    get selfMember() {
+        return this.channelMembers.find((member) => member.persona.eq(this._store.self));
     }
 
     get invitationLink() {

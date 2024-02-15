@@ -64,6 +64,7 @@ patch(MockServer.prototype, {
                 thread: { id: member.channel_id, model: "discuss.channel" },
                 id: member.id,
                 persona,
+                create_date: member.create_date,
             };
             dataList.push(data);
         }
