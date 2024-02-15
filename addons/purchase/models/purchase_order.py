@@ -827,8 +827,8 @@ class PurchaseOrder(models.Model):
         ]).filtered(lambda p: p.partner_id.with_company(p.company_id).receipt_reminder_email and\
             p.mapped('order_line.product_id.product_tmpl_id.type') != ['service'])
 
-    def _default_order_line_values(self):
-        default_data = super()._default_order_line_values()
+    def _default_order_line_values(self, child_field=False):
+        default_data = super()._default_order_line_values(child_field)
         new_default_data = self.env['purchase.order.line']._get_product_catalog_lines_data()
         return {**default_data, **new_default_data}
 
@@ -854,7 +854,7 @@ class PurchaseOrder(models.Model):
     def _get_product_catalog_order_data(self, products, **kwargs):
         return {product.id: self._get_product_price_and_data(product) for product in products}
 
-    def _get_product_catalog_record_lines(self, product_ids):
+    def _get_product_catalog_record_lines(self, product_ids, child_field=False):
         grouped_lines = defaultdict(lambda: self.env['purchase.order.line'])
         for line in self.order_line:
             if line.display_type or line.product_id.id not in product_ids:
