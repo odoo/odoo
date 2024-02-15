@@ -8,6 +8,9 @@ declare module "models" {
         channels: ReturnType<StoreClass["makeCachedFetchData"]>;
     }
     export interface Thread {
+        fetchChannelInfoDeferred: Promise<Thread>;
+        fetchChannelInfoState: 'not_fetched' | 'fetching' | 'fetched';
+        fetchChannelInfo: function;
         foldStateCount: number,
     }
 }

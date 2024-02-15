@@ -1,10 +1,26 @@
+import { Record } from "@mail/core/common/record";
 import { Thread } from "@mail/core/common/thread_model";
 
+import { rpc } from "@web/core/network/rpc";
+import { Deferred } from "@web/core/utils/concurrency";
 import { patch } from "@web/core/utils/patch";
 import { imageUrl } from "@web/core/utils/urls";
 import { _t } from "@web/core/l10n/translation";
 
-patch(Thread.prototype, {
+/** @type {import("models").Thread} */
+const threadPatch = {
+    setup() {
+        super.setup();
+        this.fetchChannelInfoDeferred = undefined;
+        this.fetchChannelInfoState = Record.attr("not_fetched", {
+            /** @this {import("models").Thread} */
+            onUpdate() {
+                if (this.fetchChannelInfoState === "fetched") {
+                    this._store.updateBusSubscription();
+                }
+            },
+        });
+    },
     get SETTINGS() {
         return [
             {
@@ -66,7 +82,34 @@ patch(Thread.prototype, {
         }
         return super.avatarUrl;
     },
+    async fetchChannelInfo() {
+        if (this.fetchChannelInfoState === "fetched") {
+            return this.fetchChannelInfoDeferred ?? Promise.resolve(this);
+        }
+        if (this.fetchChannelInfoStateState === "fetching") {
+            return this.fetchChannelInfoDeferred;
+        }
+        this.fetchChannelInfoState = "fetching";
+        this.fetchChannelInfoDeferred = new Deferred();
+        rpc("/discuss/channel/info", { channel_id: this.id }).then(
+            (channelData) => {
+                this.fetchChannelInfoState = "fetched";
+                if (channelData) {
+                    this._store.Thread.insert(channelData);
+                } else {
+                    this.delete();
+                }
+                this.fetchChannelInfoDeferred.resolve(channelData ? this : undefined);
+            },
+            (error) => {
+                this.fetchChannelInfoState = "not_fetched";
+                this.fetchChannelInfoDeferred.reject(error);
+            }
+        );
+        return this.fetchChannelInfoDeferred;
+    },
     incrementUnreadCounter() {
         this.message_unread_counter++;
     },
-});
+};
+patch(Thread.prototype, threadPatch);

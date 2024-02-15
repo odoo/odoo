@@ -598,6 +598,7 @@ patch(MockServer.prototype, {
             ]).length;
             const res = this._mockDiscussChannel__channel_basic_info([channel.id]);
             Object.assign(res, {
+                fetchChannelInfoState: "fetched",
                 message_needaction_counter: messageNeedactionCounter,
             });
             const memberOfCurrentUser = this._mockDiscussChannelMember__getAsSudoFromContext(
