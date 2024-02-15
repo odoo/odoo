@@ -7,6 +7,7 @@ import { PivotCorePlugin } from "./plugins/pivot_core_plugin";
 import { PivotUIPlugin } from "./plugins/pivot_ui_plugin";
 
 import { SEE_RECORDS_PIVOT, SEE_RECORDS_PIVOT_VISIBLE } from "./pivot_actions";
+import { PivotOdooCorePlugin } from "./plugins/pivot_odoo_core_plugin";
 
 const { coreTypes, invalidateEvaluationCommands } = spreadsheet;
 
@@ -52,4 +53,4 @@ inverseCommandRegistry
     .add("REMOVE_PIVOT", identity)
     .add("UPDATE_ODOO_PIVOT_DOMAIN", identity);
 
-export { PivotCorePlugin, PivotUIPlugin };
+export { PivotCorePlugin, PivotUIPlugin, PivotOdooCorePlugin };
