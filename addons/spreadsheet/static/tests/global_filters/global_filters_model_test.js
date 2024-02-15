@@ -47,7 +47,7 @@ import {
 import { GlobalFiltersUIPlugin } from "@spreadsheet/global_filters/plugins/global_filters_ui_plugin";
 import { migrate } from "@spreadsheet/o_spreadsheet/migration";
 import { toRangeData } from "../utils/zones";
-import { PivotUIPlugin } from "@spreadsheet/pivot/index";
+import { PivotUIGlobalFilterPlugin } from "@spreadsheet/pivot/index";
 const { DateTime } = luxon;
 const { toZone } = helpers;
 
@@ -70,7 +70,9 @@ const DEFAULT_FIELD_MATCHINGS = {
 };
 
 function getFiltersMatchingPivot(model, formula) {
-    const pivotUIPlugin = model["handlers"].find((handler) => handler instanceof PivotUIPlugin);
+    const pivotUIPlugin = model["handlers"].find(
+        (handler) => handler instanceof PivotUIGlobalFilterPlugin
+    );
     return pivotUIPlugin._getFiltersMatchingPivot(tokenize(formula));
 }
 
