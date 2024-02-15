@@ -428,6 +428,7 @@ export const messagingService = {
         const messaging = new Messaging(env, services);
         messaging.initialize();
         messaging.isReady.then(() => {
+            services["mail.store"].updateBusSubscription();
             services.bus_service.addEventListener("notification", (notifEvent) => {
                 messaging.handleNotification(notifEvent.detail);
             });

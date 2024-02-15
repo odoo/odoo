@@ -11,7 +11,7 @@ import { debounce } from "@web/core/utils/timing";
 export class Store {
     constructor(env) {
         this.setup(env);
-        this.lastChannelSubscription = "";
+        this.knownChannelIds = new Set();
         this.updateBusSubscription = debounce(this.updateBusSubscription, 0); // Wait for thread fully inserted.
     }
 
@@ -20,20 +20,41 @@ export class Store {
         this.discuss.activeTab = this.env.services.ui.isSmall ? "mailbox" : "all";
     }
 
+    /*
+     * Update the bus subscription if required. A subscription should be renewed
+     * if:
+     * - The user was added to the channel after the bus service started
+     * - The user left a channel
+     */
     updateBusSubscription() {
-        const channelIds = [];
-        const ids = Object.keys(this.threads).sort(); // Ensure channels processed in same order.
-        for (const id of ids) {
-            const thread = this.threads[id];
+        if (!this.isMessagingReady) {
+            return;
+        }
+        const allSelfChannelIds = new Set();
+        for (const thread of Object.values(this.threads)) {
             if (thread.model === "discuss.channel" && thread.hasSelfAsMember) {
-                channelIds.push(id);
+                if (thread.selfMember.memberSince < this.env.services["bus_service"].startedAt) {
+                    this.knownChannelIds.add(thread.id);
+                }
+                allSelfChannelIds.add(thread.id);
             }
         }
-        const channels = JSON.stringify(channelIds);
-        if (this.isMessagingReady && this.lastChannelSubscription !== channels) {
+        let shouldUpdateChannels = false;
+        for (const id of allSelfChannelIds) {
+            if (!this.knownChannelIds.has(id)) {
+                shouldUpdateChannels = true;
+                this.knownChannelIds.add(id);
+            }
+        }
+        for (const id of this.knownChannelIds) {
+            if (!allSelfChannelIds.has(id)) {
+                shouldUpdateChannels = true;
+                this.knownChannelIds.delete(id);
+            }
+        }
+        if (shouldUpdateChannels) {
             this.env.services["bus_service"].forceUpdateChannels();
         }
-        this.lastChannelSubscription = channels;
     }
 
     get self() {
