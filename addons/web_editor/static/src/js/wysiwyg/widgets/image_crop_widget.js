@@ -4,6 +4,7 @@ import core from "web.core";
 import Widget from "web.Widget";
 import {applyModifications, cropperDataFields, activateCropper, loadImage, loadImageInfo} from "web_editor.image_processing";
 import { Markup }  from "web.utils";
+import { scrollTo } from "web.dom";
 
 const _t = core._t;
 
@@ -47,6 +48,7 @@ const ImageCropWidget = Widget.extend({
         await this._super.apply(this, arguments);
         await loadImageInfo(this.media, this._rpc.bind(this));
         const isIllustration = /^\/web_editor\/shape\/illustration\//.test(this.media.dataset.originalSrc);
+        await this._scrollToInvisibleImage();
         if (this.media.dataset.originalSrc && !isIllustration) {
             this.originalSrc = this.media.dataset.originalSrc;
             this.originalId = this.media.dataset.originalId;
@@ -175,6 +177,41 @@ const ImageCropWidget = Widget.extend({
     _resetCropBox() {
         this.$cropperImage.cropper('clear');
         this.$cropperImage.cropper('crop');
+    },
+    /**
+     * Make sure the targeted image is in the visible viewport before crop.
+     *
+     * @private
+     */
+    async _scrollToInvisibleImage() {
+        const rect = this.media.getBoundingClientRect();
+        const viewportTop = this.document.documentElement.scrollTop || 0;
+        const viewportBottom = viewportTop + window.innerHeight;
+        const closestScrollable = el => {
+            if (!el) {
+                return null;
+            }
+            if (el.scrollHeight > el.clientHeight) {
+                return $(el);
+            } else {
+                return closestScrollable(el.parentElement);
+            }
+        }
+        // Give priority to the closest scrollable element (e.g. for images in
+        // HTML fields, the element to scroll is different from the document's
+        // scrolling element).
+        const $scrollable = closestScrollable(this.media);
+
+        // The image must be in a position that allows access to it and its crop
+        // options buttons. Otherwise, the crop widget container can be scrolled
+        // to allow editing.
+        if (rect.top < viewportTop || viewportBottom - rect.bottom < 100) {
+            await scrollTo(this.media, {
+                easing: "linear",
+                duration: 500,
+                ...($scrollable && {$scrollable}),
+            });
+        }
     },
 
     //--------------------------------------------------------------------------
