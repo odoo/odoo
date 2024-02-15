@@ -56,7 +56,8 @@ export class PivotUIPlugin extends OdooUIPlugin {
                 this._setupPivot(cmd.newPivotId);
                 break;
             }
-            case "UPDATE_ODOO_PIVOT_DOMAIN": {
+            case "UPDATE_ODOO_PIVOT_DOMAIN":
+            case "UPDATE_PIVOT": {
                 this._setupPivot(cmd.pivotId, { recreate: true });
                 break;
             }
@@ -69,10 +70,11 @@ export class PivotUIPlugin extends OdooUIPlugin {
             case "REDO": {
                 this.unusedPivots = undefined;
 
-                const domainEditionCommands = cmd.commands.filter(
-                    (cmd) => cmd.type === "UPDATE_ODOO_PIVOT_DOMAIN" || cmd.type === "ADD_PIVOT"
+                const pivotCommands = cmd.commands.filter((cmd) =>
+                    ["ADD_PIVOT", "UPDATE_ODOO_PIVOT_DOMAIN", "UPDATE_PIVOT"].includes(cmd.type)
                 );
-                for (const cmd of domainEditionCommands) {
+
+                for (const cmd of pivotCommands) {
                     if (!this.getters.isExistingPivot(cmd.pivotId)) {
                         continue;
                     }

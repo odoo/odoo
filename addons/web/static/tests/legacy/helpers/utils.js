@@ -993,7 +993,7 @@ export async function drag(from, pointerType = "mouse") {
         targetPosition = getTargetPosition(position);
 
         // Move, enter and drop the element on the target
-        await triggerEvent(source, null, "pointermove", targetPosition);
+        await triggerEvent(source, null, "pointermove", { ...targetPosition, button: -1 });
 
         // "pointerenter" is fired on every parent of `target` that do not contain
         // `from` (typically: different parent lists).
