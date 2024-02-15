@@ -31,22 +31,22 @@
     <t t-name="account.ListRenderer" t-inherit="web.ListRenderer" t-inherit-mode="primary">
         <xpath expr="//div[@t-ref='root']" position="before">
             <AccountDropZone
-                visible="state.dropzoneVisible"
-                hideZone="() => state.dropzoneVisible = false"/>
+                visible="dropzoneState.visible"
+                hideZone="() => dropzoneState.visible = false"/>
         </xpath>
         <xpath expr="//div[@t-ref='root']" position="attributes">
-            <attribute name="t-on-dragenter.stop.prevent">() => state.dropzoneVisible = true</attribute>
+            <attribute name="t-on-dragenter.stop.prevent">() => dropzoneState.visible = true</attribute>
         </xpath>
     </t>
 
     <t t-name="account.KanbanRenderer" t-inherit="web.KanbanRenderer" t-inherit-mode="primary">
         <xpath expr="//div[@t-ref='root']" position="before">
             <AccountDropZone
-                visible="state.dropzoneVisible"
-                hideZone="() => state.dropzoneVisible = false"/>
+                visible="dropzoneState.visible"
+                hideZone="() => dropzoneState.visible = false"/>
         </xpath>
         <xpath expr="//div[@t-ref='root']" position="attributes">
-            <attribute name="t-on-dragenter.stop.prevent">() => state.dropzoneVisible = true</attribute>
+            <attribute name="t-on-dragenter.stop.prevent">() => dropzoneState.visible = true</attribute>
         </xpath>
     </t>
 
@@ -80,13 +80,13 @@
             t-att-data-id="props.canResequence and props.record.id"
             t-att-tabindex="props.record.model.useSampleModel ? -1 : 0"
             t-on-click="onGlobalClick"
-            t-on-dragenter.stop.prevent="() => state.dropzoneVisible = true"
+            t-on-dragenter.stop.prevent="() => dropzoneState.visible = true"
             t-ref="root">
             <AccountFileUploader record="props.record">
                 <t t-set-slot="default">
                     <AccountDropZone
-                        visible="state.dropzoneVisible"
-                        hideZone="() => state.dropzoneVisible = false"/>
+                        visible="dropzoneState.visible"
+                        hideZone="() => dropzoneState.visible = false"/>
                     <t t-call="{{ templates[this.constructor.KANBAN_BOX_ATTRIBUTE] }}" t-call-context="renderingContext"/>
                 </t>
             </AccountFileUploader>
