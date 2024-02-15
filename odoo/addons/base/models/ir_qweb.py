@@ -578,8 +578,10 @@ class IrQWeb(models.AbstractModel):
         # error messages.
         _options['last_path_node'] = None
 
-        if not options.get('nsmap'):
-            _options['nsmap'] = {}
+        _options['nsmap'] = {
+            ns_prefix: str(ns_definition)
+            for ns_prefix, ns_definition in options.get('nsmap', {}).items()
+        }
 
         # generate code
 
