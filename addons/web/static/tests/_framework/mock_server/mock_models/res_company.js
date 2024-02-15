@@ -1,4 +1,4 @@
-import { constants } from "../../test_constants.hoot";
+import { serverState } from "../../mock_server_state.hoot";
 import * as fields from "../mock_fields";
 import { ServerModel } from "../mock_model";
 
@@ -10,10 +10,10 @@ export class ResCompany extends ServerModel {
 
     _records = [
         {
-            id: constants.COMPANY_ID,
+            id: serverState.companyId,
             active: true,
-            name: constants.COMPANY_NAME,
-            partner_id: constants.COMPANY_ID,
+            name: serverState.companyName,
+            partner_id: serverState.companyId,
         },
     ];
 }

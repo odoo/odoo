@@ -2,9 +2,12 @@
 
 import { after, before, describe, globals, start } from "@odoo/hoot";
 import { watchKeys } from "@odoo/hoot-dom";
-import { Deferred, mockLocation } from "@odoo/hoot-mock";
+import { Deferred } from "@odoo/hoot-mock";
+
+import { mockBrowserFactory } from "./mock_browser.hoot";
 import { CONFIG_SUFFIX, TEST_SUFFIX } from "./mock_module_loader";
 import { mockSessionFactory } from "./mock_session.hoot";
+import { mockUserFactory } from "./mock_user.hoot";
 
 /**
  * @typedef {{
@@ -116,28 +119,6 @@ const makeFixedFactory = (name) => {
 };
 
 /**
- * Browser module needs to be mocked to patch the `location` global object since
- * it can't be directly mocked on the window object.
- *
- * @param {string} name
- * @param {OdooModule} module
- */
-const mockBrowserFactory = (name, { fn }) => {
-    return (...args) => {
-        const browserModule = fn(...args);
-        Object.defineProperty(browserModule.browser, "location", {
-            set(value) {
-                mockLocation.href = value;
-            },
-            get() {
-                return mockLocation;
-            },
-        });
-        return browserModule;
-    };
-};
-
-/**
  * Toned-down version of the RPC + ORM features since this file cannot depend on
  * them.
  *
@@ -234,6 +215,7 @@ const DEFAULT_MOCKS = {
     "web.assets_unit_tests_setup.bundle.xml": makeFixedFactory,
     // Other mocks
     "@web/core/browser/browser": mockBrowserFactory,
+    "@web/core/user": mockUserFactory,
     "@web/session": mockSessionFactory,
 };
 

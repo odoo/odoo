@@ -1,4 +1,4 @@
-import { constants } from "../../test_constants.hoot";
+import { serverState } from "../../mock_server_state.hoot";
 import { ServerModel } from "../mock_model";
 
 export class ResUsers extends ServerModel {
@@ -6,19 +6,19 @@ export class ResUsers extends ServerModel {
 
     _records = [
         {
-            id: constants.USER_ID,
+            id: serverState.userId,
             active: true,
-            company_id: constants.COMPANY_ID,
-            company_ids: [constants.COMPANY_ID],
+            company_id: serverState.companyId,
+            company_ids: [serverState.companyId],
             login: "admin",
-            partner_id: constants.PARTNER_ID,
+            partner_id: serverState.partnerId,
             password: "admin",
         },
         {
-            id: constants.PUBLIC_USER_ID,
+            id: serverState.publicUserId,
             active: false,
             login: "public",
-            partner_id: constants.PUBLIC_PARTNER_ID,
+            partner_id: serverState.publicPartnerId,
             password: "public",
         },
     ];

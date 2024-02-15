@@ -1,4 +1,4 @@
-import { constants } from "../../test_constants.hoot";
+import { serverState } from "../../mock_server_state.hoot";
 import { ServerModel } from "../mock_model";
 
 export class ResPartner extends ServerModel {
@@ -6,23 +6,23 @@ export class ResPartner extends ServerModel {
 
     _records = [
         {
-            id: constants.COMPANY_ID,
+            id: serverState.companyId,
             active: true,
-            name: constants.COMPANY_NAME,
+            name: serverState.companyName,
         },
         {
-            id: constants.PARTNER_ID,
+            id: serverState.partnerId,
             active: true,
-            name: constants.PARTNER_NAME,
+            name: serverState.partnerName,
         },
         {
-            id: constants.PUBLIC_PARTNER_ID,
+            id: serverState.publicPartnerId,
             active: true,
             is_public: true,
-            name: constants.PUBLIC_PARTNER_NAME,
+            name: serverState.publicPartnerName,
         },
         {
-            id: constants.ODOOBOT_ID,
+            id: serverState.odoobotId,
             active: false,
             im_status: "bot",
             name: "OdooBot",

@@ -13,6 +13,8 @@ import { MockServer } from "./mock_server/mock_server";
  *  arch?: string;
  *  config?: Record<string, any>;
  *  env?: import("@web/env").OdooEnv;
+ *  resId?: number;
+ *  resModel: string;
  *  searchViewArch?: string;
  *  type: ViewType;
  *  [key: string]: any;
