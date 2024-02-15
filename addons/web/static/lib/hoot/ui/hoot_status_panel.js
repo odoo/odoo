@@ -29,10 +29,9 @@ const { Object, Math, clearInterval, document, performance, setInterval } = glob
 const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
 /**
- * @param {HTMLElement} target
  * @param {string} content
  */
-const spawnIncentive = (target, content) => {
+const spawnIncentive = (content) => {
     const incentive = document.createElement("div");
     const params = [
         `--_content: '${content}'`,
@@ -51,7 +50,7 @@ const spawnIncentive = (target, content) => {
     incentive.addEventListener("animationend", onEnd);
     incentive.addEventListener("animationcancel", onEnd);
 
-    target.appendChild(incentive);
+    document.querySelector("hoot-container").shadowRoot.appendChild(incentive);
 };
 
 /**
@@ -251,12 +250,11 @@ export class HootStatusPanel extends Component {
             updateTitle(this.runnerReporting.failed > 0);
 
             if (runner.config.fun) {
-                const container = this.canvasRef.el.offsetParent;
                 for (let i = 0; i < this.runnerReporting.failed; i++) {
-                    spawnIncentive(container, "😭");
+                    spawnIncentive("😭");
                 }
                 for (let i = 0; i < this.runnerReporting.passed; i++) {
-                    spawnIncentive(container, "🦉");
+                    spawnIncentive("🦉");
                 }
             }
         });
