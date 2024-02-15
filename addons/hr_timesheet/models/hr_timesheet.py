@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
+from statistics import mode
 import re
 
 from odoo import api, fields, models, _, _lt
@@ -16,14 +17,21 @@ class AccountAnalyticLine(models.Model):
         return [
             ('employee_id', '=', employee_id),
             ('project_id', '!=', False),
+            ('project_id.active', '=', True),
         ]
 
     @api.model
     def _get_favorite_project_id(self, employee_id=False):
-        last_timesheet_ids = self.search(self._get_favorite_project_id_domain(employee_id), limit=5)
-        if len(last_timesheet_ids.project_id) == 1:
-            return last_timesheet_ids.project_id.id
-        return False
+        last_timesheet_project_ids = self.search_read(
+            self._get_favorite_project_id_domain(employee_id),
+            ['project_id'], limit=5, load=False,
+        )
+        if not last_timesheet_project_ids:
+            internal_project = self.env.company.internal_project_id
+            return internal_project.active and internal_project.id
+        return mode([
+            record['project_id'] for record in last_timesheet_project_ids
+        ])
 
     @api.model
     def default_get(self, field_list):
