@@ -1244,17 +1244,27 @@ class TestFields(TransactionCaseWithUserDemo):
 
     def test_22_selection(self):
         """ test selection fields """
-        record = self.env['test_new_api.mixed'].create({})
+        record_list = self.env['test_new_api.selection'].create({})
+        self.assertIsInstance(record_list._fields['state'].selection, list)
+
+        # the following selection is defined by a callable (method name)
+        record_call = self.env['test_new_api.mixed'].create({})
+        self.assertIsInstance(record_call._fields['lang'].selection, str)
+
+        # one may assign a value
+        record_list.state = 'foo'
+        record_call.lang = self.env['res.lang'].search([], limit=1).code
 
         # one may assign False or None
-        record.lang = None
-        self.assertFalse(record.lang)
+        record_list.state = None
+        self.assertFalse(record_list.state)
+        record_call.lang = None
+        self.assertFalse(record_call.lang)
 
-        # one may assign a value, and it must be checked
-        for language in self.env['res.lang'].search([]):
-            record.lang = language.code
+        # the assigned value is only checked for the list case
         with self.assertRaises(ValueError):
-            record.lang = 'zz_ZZ'
+            record_list.state = 'zz_ZZ'
+        record_call.lang = 'zz_ZZ'
 
     def test_23_relation(self):
         """ test relation fields """
