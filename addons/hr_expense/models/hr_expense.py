@@ -406,7 +406,7 @@ class HrExpense(models.Model):
                     company=expense.company_id,
                 )[product_id.id]
             else:
-                expense.price_unit = expense.company_currency_id.round(expense.total_amount / expense.quantity) if expense.quantity else 0.
+                expense.price_unit = (expense.total_amount / expense.quantity) if expense.quantity else 0.
 
     @api.depends('product_id', 'company_id')
     def _compute_account_id(self):
