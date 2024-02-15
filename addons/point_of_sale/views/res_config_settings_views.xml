@@ -82,15 +82,15 @@
                             <setting help="Set a maximum difference allowed between the expected and counted money during the closing of the session">
                                 <field name="pos_set_maximum_difference" />
                                 <div class="content-group mt16" invisible="not pos_set_maximum_difference">
-                                    <label for="pos_amount_authorized_diff" string="Authorized Difference" class="fw-normal"/>
+                                    <label for="pos_amount_authorized_diff" string="Authorized Difference" class="fw-normal me-1"/>
                                     <field name="pos_amount_authorized_diff"/>
                                 </div>
                             </setting>
                             <setting id="iface_tipproduct" title="This product is used as reference on customer receipts." string="Tips" help="Accept customer tips or convert their change to a tip">
                                 <field name="pos_iface_tipproduct" readonly="pos_has_active_session"/>
                                 <div class="content-group" invisible="not pos_iface_tipproduct">
-                                    <div class="mt16" id="tip_product">
-                                        <label string="Tip Product" for="pos_tip_product_id" class="o_light_label"/>
+                                    <div class="row mt16" id="tip_product">
+                                        <label string="Tip Product" for="pos_tip_product_id" class="col-lg-3 o_light_label "/>
                                         <field name="pos_tip_product_id"/>
                                     </div>
                                 </div>
@@ -100,14 +100,14 @@
                             <div class="o_notification_alert alert alert-warning" invisible="pos_company_has_template" role="alert">
                                 There is no Chart of Accounts configured on the company. Please go to the invoicing settings to install a Chart of Accounts.
                             </div>
-                            <setting help="Start selling from a default product category">
+                            <setting help="Start selling from a default product POS category">
                                 <field name="pos_start_category"/>
                                 <div class="content-group mt16" invisible="not pos_start_category">
                                     <field name="pos_iface_start_categ_id" domain="[('id', 'in', pos_selectable_categ_ids)]"/>
                                 </div>
                             </setting>
 
-                            <setting id="multiple_employee_session" title="Employees can scan their badge or enter a PIN to log in to a PoS session. These credentials are configurable in the *HR Settings* tab of the employee form." string="Multi Employees per Session" help="Allow to log and switch between selected Employees">
+                            <setting id="multiple_employee_session" title="Employees can scan their badge or enter a PIN to log in to a PoS session. These credentials are configurable in the *HR Settings* tab of the employee form." string="Log in with Employees" help="Allow to log and switch between selected Employees">
                                 <field name="pos_module_pos_hr" readonly="pos_has_active_session"/>
                                 <div class="content-group mt16" invisible="not pos_module_pos_hr">
                                     <div class="text-warning" id="warning_text_employees">
@@ -115,7 +115,7 @@
                                     </div>
                                 </div>
                             </setting>
-                            <setting help="Pick which product categories are available">
+                            <setting help="Pick which product POS categories are available">
                                 <field name="pos_limit_categories" readonly="pos_has_active_session"/>
                                 <div class="content-group mt16" invisible="not pos_limit_categories">
                                     <field name="pos_iface_available_categ_ids" widget="many2many_tags" readonly="pos_has_active_session"/>
@@ -127,7 +127,7 @@
                             <setting invisible="is_kiosk_mode" help="Improve navigation for imprecise industrial touchscreens">
                                 <field name="pos_iface_big_scrollbars"/>
                             </setting>
-                            <setting id="margin_and_cost" string="Margins &amp; Costs" help="Show margins &amp; costs on product information">
+                            <setting id="margin_and_cost" string="Show margins &amp; Costs" help="Show margins &amp; costs on product information">
                                 <field name="pos_is_margins_costs_accessible_to_every_user"/>
                             </setting>
                             <setting string="Share Open Orders" help="Allow to access each other's active orders" id="is_order_shared" invisible="pos_module_pos_restaurant or is_kiosk_mode">
@@ -138,6 +138,18 @@
                                     </div>
                                     <div>
                                         <button name="%(point_of_sale.action_pos_config_tree)d" icon="oi-arrow-right" type="action" string="Point of Sales" class="btn-link"/>
+                                    </div>
+                                </div>
+                            </setting>
+                            <setting string="Hide pictures in POS" help="Self-ordering interfaces are not impacted.">
+                                <div class="content-group">
+                                    <div>
+                                        <field name="pos_show_product_images"/>
+                                        <label for="pos_show_product_images" string="Show product images" class="fw-normal me-1"/>
+                                    </div>
+                                    <div>
+                                        <field name="pos_show_category_images"/>
+                                        <label for="pos_show_category_images" string="Show category images" class="fw-normal me-1"/>
                                     </div>
                                 </div>
                             </setting>
@@ -376,15 +388,15 @@
                                 <field name="pos_ship_later"/>
                                 <div class="mt16" invisible="not pos_ship_later">
                                     <div>
-                                        <label for="pos_warehouse_id" string="Warehouse" class="fw-normal"/>
+                                        <label for="pos_warehouse_id" string="Warehouse" class="fw-normal me-1"/>
                                         <field name="pos_warehouse_id" required="pos_ship_later"/>
                                     </div>
                                     <div groups="stock.group_adv_location">
-                                        <label for="pos_route_id" string="Specific route" class="fw-normal"/>
+                                        <label for="pos_route_id" string="Specific route" class="fw-norma me-1"/>
                                         <field name="pos_route_id"/>
                                     </div>
                                     <div>
-                                        <label for="pos_picking_policy" class="fw-normal"/>
+                                        <label for="pos_picking_policy" class="fw-normal me-1"/>
                                         <field name="pos_picking_policy" required="pos_ship_later"/>
                                     </div>
                                 </div>
