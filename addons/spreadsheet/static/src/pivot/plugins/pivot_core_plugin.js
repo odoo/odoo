@@ -15,7 +15,6 @@ import { getMaxObjectId } from "@spreadsheet/helpers/helpers";
 import { SpreadsheetPivotTable } from "../pivot_table";
 import { CommandResult } from "../../o_spreadsheet/cancelled_reason";
 import { _t } from "@web/core/l10n/translation";
-import { Domain } from "@web/core/domain";
 import { deepCopy } from "@web/core/utils/objects";
 import { OdooCorePlugin } from "@spreadsheet/plugins";
 
@@ -337,7 +336,6 @@ export class PivotCorePlugin extends OdooCorePlugin {
         data.pivots = {};
         for (const id in this.pivots) {
             data.pivots[id] = deepCopy(this.pivots[id]);
-            data.pivots[id].domain = new Domain(data.pivots[id].domain).toJson();
         }
         data.pivotNextId = this.nextId;
     }
