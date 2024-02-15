@@ -114,12 +114,9 @@ export class DateTimeField extends Component {
                         toUpdate[this.emptyField] = false;
                     }
                 }
-                // Remove values that did not change
-                for (const fieldName in toUpdate) {
-                    if (areDatesEqual(toUpdate[fieldName], this.props.record.data[fieldName])) {
-                        delete toUpdate[fieldName];
-                    }
-                }
+                // we keep the unchanged values to make sure ORM protects both fields
+                // from being recomputed by the server, ORM team will handle this properly
+                // on master, then we can remove unchanged values
                 try {
                     await this.props.record.update(toUpdate);
                 } catch {
