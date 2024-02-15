@@ -1134,7 +1134,10 @@ Docs & License: https://fullcalendar.io/
                 var pointer = _this.dragging.pointer;
                 if (!pointer.wasTouchScroll) {
                     var _b = _this.hitDragging, initialHit = _b.initialHit, finalHit = _b.finalHit;
-                    if (initialHit && finalHit && isHitsEqual(initialHit, finalHit)) {
+                    var origY = pointer.origPageY, prevY = pointer.prevPageY;
+                    if (initialHit && finalHit && isHitsEqual(initialHit, finalHit)
+                        // patch to not trigger a `DateClicking` if `DateSelecting` (to be able to create 15' min event)
+                        && origY === prevY) {
                         calendar.triggerDateClick(initialHit.dateSpan, initialHit.dayEl, view, ev.origEvent);
                     }
                 }
