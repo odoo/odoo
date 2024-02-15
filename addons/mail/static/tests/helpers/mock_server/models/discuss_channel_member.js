@@ -54,6 +54,7 @@ patch(MockServer.prototype, "mail/models/discuss_channel_member", {
                 channel: { id: member.channel_id },
                 id: member.id,
                 persona: persona,
+                create_date: member.create_date,
             };
             dataList.push(data);
         }

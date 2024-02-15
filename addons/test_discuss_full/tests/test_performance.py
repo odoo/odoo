@@ -131,6 +131,9 @@ class TestDiscussFullPerformance(TransactionCase):
                             'channel': {
                                 'id': self.channel_general.id,
                             },
+                            'create_date': fields.Datetime.to_string(
+                                self.channel_general.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).create_date
+                            ),
                             'id': self.channel_general.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).id,
                             'persona': {
                                 'partner': {
@@ -183,6 +186,9 @@ class TestDiscussFullPerformance(TransactionCase):
                             'channel': {
                                 'id': self.channel_channel_public_1.id,
                             },
+                            'create_date': fields.Datetime.to_string(
+                                self.channel_channel_public_1.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).create_date
+                            ),
                             'id': self.channel_channel_public_1.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).id,
                             'persona': {
                                 'partner': {
@@ -235,6 +241,9 @@ class TestDiscussFullPerformance(TransactionCase):
                             'channel': {
                                 'id': self.channel_channel_public_2.id,
                             },
+                            'create_date': fields.Datetime.to_string(
+                                self.channel_channel_public_2.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).create_date
+                            ),
                             'id': self.channel_channel_public_2.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).id,
                             'persona': {
                                 'partner': {
@@ -287,6 +296,9 @@ class TestDiscussFullPerformance(TransactionCase):
                             'channel': {
                                 'id': self.channel_channel_group_1.id,
                             },
+                            'create_date': fields.Datetime.to_string(
+                                self.channel_channel_group_1.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).create_date
+                            ),
                             'id': self.channel_channel_group_1.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).id,
                             'persona': {
                                 'partner': {
@@ -339,6 +351,9 @@ class TestDiscussFullPerformance(TransactionCase):
                             'channel': {
                                 'id': self.channel_channel_group_2.id,
                             },
+                            'create_date': fields.Datetime.to_string(
+                                self.channel_channel_group_2.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).create_date
+                            ),
                             'id': self.channel_channel_group_2.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).id,
                             'persona': {
                                 'partner': {
@@ -392,6 +407,9 @@ class TestDiscussFullPerformance(TransactionCase):
                                 'channel': {
                                     'id': self.channel_group_1.id,
                                 },
+                                'create_date': fields.Datetime.to_string(
+                                    self.channel_group_1.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).create_date
+                                ),
                                 'id': self.channel_group_1.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).id,
                                 'persona': {
                                     'partner': {
@@ -414,6 +432,9 @@ class TestDiscussFullPerformance(TransactionCase):
                                 'channel': {
                                     'id': self.channel_group_1.id,
                                 },
+                                'create_date': fields.Datetime.to_string(
+                                    self.channel_group_1.channel_member_ids.filtered(lambda m: m.partner_id == self.users[12].partner_id).create_date
+                                ),
                                 'id': self.channel_group_1.channel_member_ids.filtered(lambda m: m.partner_id == self.users[12].partner_id).id,
                                 'persona': {
                                     'partner': {
@@ -482,6 +503,9 @@ class TestDiscussFullPerformance(TransactionCase):
                                 'channel': {
                                     'id': self.channel_chat_1.id,
                                 },
+                                'create_date': fields.Datetime.to_string(
+                                    self.channel_chat_1.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).create_date
+                                ),
                                 'id': self.channel_chat_1.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).id,
                                 'persona': {
                                     'partner': {
@@ -504,6 +528,9 @@ class TestDiscussFullPerformance(TransactionCase):
                                 'channel': {
                                     'id': self.channel_chat_1.id,
                                 },
+                                'create_date': fields.Datetime.to_string(
+                                    self.channel_chat_1.channel_member_ids.filtered(lambda m: m.partner_id == self.users[14].partner_id).create_date
+                                ),
                                 'id': self.channel_chat_1.channel_member_ids.filtered(lambda m: m.partner_id == self.users[14].partner_id).id,
                                 'persona': {
                                     'partner': {
@@ -572,6 +599,9 @@ class TestDiscussFullPerformance(TransactionCase):
                                 'channel': {
                                     'id': self.channel_chat_2.id,
                                 },
+                                'create_date': fields.Datetime.to_string(
+                                    self.channel_chat_2.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).create_date
+                                ),
                                 'id': self.channel_chat_2.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).id,
                                 'persona': {
                                     'partner': {
@@ -594,6 +624,9 @@ class TestDiscussFullPerformance(TransactionCase):
                                 'channel': {
                                     'id': self.channel_chat_2.id,
                                 },
+                                'create_date': fields.Datetime.to_string(
+                                    self.channel_chat_2.channel_member_ids.filtered(lambda m: m.partner_id == self.users[15].partner_id).create_date
+                                ),
                                 'id': self.channel_chat_2.channel_member_ids.filtered(lambda m: m.partner_id == self.users[15].partner_id).id,
                                 'persona': {
                                     'partner': {
@@ -662,6 +695,9 @@ class TestDiscussFullPerformance(TransactionCase):
                                 'channel': {
                                     'id': self.channel_chat_3.id,
                                 },
+                                'create_date': fields.Datetime.to_string(
+                                    self.channel_chat_3.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).create_date
+                                ),
                                 'id': self.channel_chat_3.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).id,
                                 'persona': {
                                     'partner': {
@@ -684,6 +720,9 @@ class TestDiscussFullPerformance(TransactionCase):
                                 'channel': {
                                     'id': self.channel_chat_3.id,
                                 },
+                                'create_date': fields.Datetime.to_string(
+                                    self.channel_chat_3.channel_member_ids.filtered(lambda m: m.partner_id == self.users[2].partner_id).create_date
+                                ),
                                 'id': self.channel_chat_3.channel_member_ids.filtered(lambda m: m.partner_id == self.users[2].partner_id).id,
                                 'persona': {
                                     'partner': {
@@ -752,6 +791,9 @@ class TestDiscussFullPerformance(TransactionCase):
                                 'channel': {
                                     'id': self.channel_chat_4.id,
                                 },
+                                'create_date': fields.Datetime.to_string(
+                                    self.channel_chat_4.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).create_date
+                                ),
                                 'id': self.channel_chat_4.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).id,
                                 'persona': {
                                     'partner': {
@@ -774,6 +816,9 @@ class TestDiscussFullPerformance(TransactionCase):
                                 'channel': {
                                     'id': self.channel_chat_4.id,
                                 },
+                                'create_date': fields.Datetime.to_string(
+                                    self.channel_chat_4.channel_member_ids.filtered(lambda m: m.partner_id == self.users[3].partner_id).create_date
+                                ),
                                 'id': self.channel_chat_4.channel_member_ids.filtered(lambda m: m.partner_id == self.users[3].partner_id).id,
                                 'persona': {
                                     'partner': {
@@ -846,6 +891,9 @@ class TestDiscussFullPerformance(TransactionCase):
                                 'channel': {
                                     'id': self.channel_livechat_1.id,
                                 },
+                                'create_date': fields.Datetime.to_string(
+                                    self.channel_livechat_1.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).create_date
+                                ),
                                 'id': self.channel_livechat_1.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).id,
                                 'persona': {
                                     'partner': {
@@ -862,6 +910,9 @@ class TestDiscussFullPerformance(TransactionCase):
                                 'channel': {
                                     'id': self.channel_livechat_1.id,
                                 },
+                                'create_date': fields.Datetime.to_string(
+                                    self.channel_livechat_1.channel_member_ids.filtered(lambda m: m.partner_id == self.users[1].partner_id).create_date
+                                ),
                                 'id': self.channel_livechat_1.channel_member_ids.filtered(lambda m: m.partner_id == self.users[1].partner_id).id,
                                 'persona': {
                                     'partner': {
@@ -929,6 +980,9 @@ class TestDiscussFullPerformance(TransactionCase):
                                 'channel': {
                                     'id': self.channel_livechat_2.id,
                                 },
+                                'create_date': fields.Datetime.to_string(
+                                    self.channel_livechat_2.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).create_date
+                                ),
                                 'id': self.channel_livechat_2.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).id,
                                 'persona': {
                                     'partner': {
@@ -945,6 +999,9 @@ class TestDiscussFullPerformance(TransactionCase):
                                 'channel': {
                                     'id': self.channel_livechat_2.id,
                                 },
+                                'create_date': fields.Datetime.to_string(
+                                    self.channel_livechat_2.channel_member_ids.filtered(lambda m: m.partner_id == self.env.ref('base.public_partner')).create_date
+                                ),
                                 'id': self.channel_livechat_2.channel_member_ids.filtered(lambda m: m.partner_id == self.env.ref('base.public_partner')).id,
                                 'persona': {
                                     'partner': {

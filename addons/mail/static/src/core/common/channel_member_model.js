@@ -2,6 +2,7 @@
 
 import { createLocalId } from "@mail/utils/common/misc";
 import { Record } from "@mail/core/common/record";
+import { deserializeDateTime } from "@web/core/l10n/dates";
 
 /**
  * @class ChannelMember
@@ -15,6 +16,7 @@ export class ChannelMember extends Record {
     id;
     personaLocalId;
     rtcSessionId;
+    create_date;
     threadId;
     /** @type {import("@mail/core/common/store_service").Store} */
     _store;
@@ -40,5 +42,9 @@ export class ChannelMember extends Record {
      */
     getLangName() {
         return this.persona.lang_name;
+    }
+
+    get memberSince() {
+        return deserializeDateTime(this.create_date);
     }
 }
