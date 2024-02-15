@@ -118,7 +118,7 @@ const afterTest = (runner, test) => {
     }
 
     // Errors count
-    const errorCount = currentResult.errors.length;
+    const errorCount = currentResult.caughtErrors;
     if (currentResult.expectedErrors) {
         if (currentResult.expectedErrors !== errorCount) {
             registerAssertion(
@@ -1750,6 +1750,7 @@ export class TestResult {
     aborted = false;
     /** @type {Assertion[]} */
     assertions = [];
+    caughtErrors = 0;
     duration = 0;
     /** @type {Error[]} */
     errors = [];
