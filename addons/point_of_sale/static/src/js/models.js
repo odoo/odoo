@@ -1801,7 +1801,33 @@ export class PosGlobalState extends PosModel {
      */
     async _addProducts(ids, setAvailable = true) {
         if (setAvailable) {
+<<<<<<< HEAD
             await this.env.services.orm.write("product.product", ids, { available_in_pos: true });
+||||||| parent of 210e811f1556 (temp)
+            await this.env.services.rpc({
+                model: "product.product",
+                method: "write",
+                args: [ids, { available_in_pos: true }],
+                context: this.env.session.user_context,
+            });
+=======
+            try {
+                await this.env.services.rpc({
+                    model: "product.product",
+                    method: "write",
+                    args: [ids, { available_in_pos: true }],
+                    context: this.env.session.user_context,
+                });
+            } catch (error) {
+                const ignoreError =
+                    this._isRPCError(error) &&
+                    error.message.data &&
+                    error.message.data.name === "odoo.exceptions.AccessError";
+                if (!ignoreError) {
+                    throw error;
+                }
+            }
+>>>>>>> 210e811f1556 (temp)
         }
         const product = await this.env.services.orm.call(
             "pos.session",
