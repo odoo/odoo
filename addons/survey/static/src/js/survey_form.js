@@ -1081,6 +1081,8 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
 
     /**
      * Apply visibility rules of conditional questions.
+     * When layout is "one_page", hide the empty sections (the ones without description and
+     * which don't have any question to be displayed because of conditional questions).
      *
      * @param {Number[] | String[] | Set | undefined} questionIds Conditional questions ids
      */
@@ -1088,6 +1090,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
         if (!questionIds || (!questionIds.length && !questionIds.size)) {
             return;
         }
+        // Questions visibility
         for (const questionId of questionIds) {
             const dependingQuestion = document.querySelector(`.js_question-wrapper[id="${questionId}"]`);
             if (!dependingQuestion) {  // Could be on different page
@@ -1107,6 +1110,16 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
                     }
                 });
                 $(dependingQuestion).find('textarea').val('');
+            }
+        }
+        // Sections visibility
+        if (this.options.questionsLayout === 'one_page') {
+            const sections = document.querySelectorAll('.js_section_wrapper');
+            for (const section of sections) {
+                if (!section.querySelector('.o_survey_description')) {
+                    const hasVisibleQuestions = Boolean(section.querySelector('.js_question-wrapper:not(.d-none)'));
+                    section.classList.toggle('d-none', !hasVisibleQuestions);
+                }
             }
         }
     },

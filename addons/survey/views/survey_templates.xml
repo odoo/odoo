@@ -185,10 +185,21 @@
             t-att-data-timer="timer_start"
             t-att-data-time-limit-minutes="time_limit_minutes"/>
         <t t-if="survey.questions_layout == 'one_page'">
-            <t t-foreach='survey.question_and_page_ids' t-as='question'>
-                <h2 t-if="question.is_page" t-field='question.title' class="o_survey_title pb16 text-break w-lg-50 mx-lg-auto" />
-                <div t-if="question.is_page" t-field='question.description' class="text-break w-lg-50 mx-lg-auto"/>
-                <t t-if="not question.is_page and question in answer.predefined_question_ids" t-call="survey.question_container"/>
+            <!-- Questions without section -->
+            <t t-foreach="survey.question_ids.filtered(lambda q: not q.page_id)" t-as="question">
+                <t t-if="question in answer.predefined_question_ids" t-call="survey.question_container"/>
+            </t>
+            <!-- Questions with section -->
+            <t t-foreach="survey.page_ids" t-as="page">
+                <t t-set="display_section" t-value="page.description or any(not q.triggering_answer_ids for q in page.question_ids)
+                    or (survey.questions_selection == 'random' and page.question_ids and page.random_questions_count > 0)"/>
+                <div t-attf-class="js_section_wrapper #{'d-none' if not display_section else ''}">
+                    <h2 t-field="page.title" class="o_survey_title pb16 text-break w-lg-50 mx-lg-auto" />
+                    <div t-field="page.description" class="o_survey_description text-break w-lg-50 mx-lg-auto"/>
+                    <t t-foreach="page.question_ids" t-as="question">
+                        <t t-if="question in answer.predefined_question_ids" t-call="survey.question_container"/>
+                    </t>
+                </div>
             </t>
 
             <div class="text-center mt16 mb256">
