@@ -5,6 +5,7 @@ import csv
 from collections import defaultdict
 from functools import wraps
 from inspect import getmembers
+from copy import deepcopy
 
 import logging
 import re
@@ -496,7 +497,7 @@ class AccountChartTemplate(models.AbstractModel):
                 created_models.add(model)
 
         created_vals = {}
-        for model, data in defer(list(data.items())):
+        for model, data in defer(list(deepcopy(data).items())):
             create_vals = []
             for xml_id, record in data.items():
                 # Extract the translations from the values
