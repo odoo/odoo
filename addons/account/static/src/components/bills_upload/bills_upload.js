@@ -134,7 +134,7 @@ export class AccountMoveUploadListRenderer extends ListRenderer {
 
     setup() {
         super.setup();
-        this.state = useState({ dropzoneVisible: false });
+        this.dropzoneState = useState({ visible: false });
     }
 }
 
@@ -173,7 +173,7 @@ export class AccountMoveUploadKanbanRenderer extends KanbanRenderer {
     };
     setup() {
         super.setup();
-        this.state.dropzoneVisible = false;
+        this.dropzoneState.visible = false;
     }
 }
 
@@ -210,8 +210,8 @@ export class DashboardKanbanRecord extends KanbanRecord {
     };
     setup() {
         super.setup();
-        this.state = useState({
-            dropzoneVisible: false,
+        this.dropzoneState = useState({
+            visible: false,
         });
     }
 }
