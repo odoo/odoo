@@ -33,7 +33,7 @@
                                     'default_order_id': sale_order_id,
                                 }"/>
                             <field name="price_unit" widget="monetary" force_save="1" options="{'currency_field': 'currency_id'}"/>
-                            <field name="display_cost" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="display_cost" widget="monetary" options="{'currency_field': 'cost_currency_id'}"/>
                             <field name="is_cost_changed" column_invisible="True"/>
                             <field name="currency_id" column_invisible="True"/>
                             <field name="cost_currency_id" column_invisible="True"/>
