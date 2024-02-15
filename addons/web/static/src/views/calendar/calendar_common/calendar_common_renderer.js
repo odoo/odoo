@@ -195,6 +195,9 @@ export class CalendarCommonRenderer extends Component {
         this.highlightEvent(info.event, "o_cw_custom_highlight");
     }
     onDateClick(info) {
+        if (info.jsEvent.defaultPrevented) {
+            return;
+        }
         this.props.createRecord(this.fcEventToRecord(info));
     }
     onDayRender(info) {
@@ -262,6 +265,7 @@ export class CalendarCommonRenderer extends Component {
         }
     }
     async onSelect(info) {
+        info.jsEvent.preventDefault();
         this.popover.close();
         await this.props.createRecord(this.fcEventToRecord(info));
         this.fc.api.unselect();
