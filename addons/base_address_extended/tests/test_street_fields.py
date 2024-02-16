@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
+from odoo.tests import Form
 from odoo.tests.common import TransactionCase
 
 
@@ -36,3 +37,35 @@ class TestStreetFields(TransactionCase):
             partner.street_number = number
             partner.street_name = name
             self.assertEqual(partner.street, street.strip(), 'Wrongly formatted street: expected %s, received %s' % (street, partner.street))
+
+    def test_city_id_onchange_and_children_sync(self):
+        """ Test that city_id onchange and its propagation to (contact-type) children contacts. """
+        Partner = self.env['res.partner']
+        usa = self.env.ref('base.us')
+        new_york_state = self.env.ref('base.state_us_27')
+        new_york_city = self.env['res.city'].create({
+            'name': 'New York',
+            'zipcode': '10001',
+            'country_id': usa.id,
+            'state_id': new_york_state.id
+        })
+        parent_form = Form(Partner)
+        parent_form.name = 'Parent Company'
+        parent_form.country_id = usa
+        parent_form.city_id = new_york_city
+        parent = parent_form.save()
+
+        child_form = Form(Partner)
+        child_form.name = 'Child Contact'
+        child_form.type = 'contact'
+        child_form.parent_id = parent
+        child = child_form.save()
+
+        self.assertRecordValues(child, [{
+            'name': 'Child Contact',
+            'city': 'New York',
+            'zip': '10001',
+            'country_id': usa.id,
+            'state_id': new_york_state.id,
+            'city_id': new_york_city.id,
+        }])
