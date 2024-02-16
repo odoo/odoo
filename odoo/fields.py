@@ -2697,6 +2697,7 @@ class Selection(Field):
 
     def __init__(self, selection=Default, string=Default, **kwargs):
         super(Selection, self).__init__(selection=selection, string=string, **kwargs)
+        self._selection = dict(selection) if isinstance(selection, list) else None
 
     def setup_nonrelated(self, model):
         super().setup_nonrelated(model)
@@ -2707,6 +2708,7 @@ class Selection(Field):
         # selection must be computed on related field
         field = self.related_field
         self.selection = lambda model: field._description_selection(model.env)
+        self._selection = None
 
     def _get_attrs(self, model_class, name):
         attrs = super()._get_attrs(model_class, name)
@@ -2799,6 +2801,8 @@ class Selection(Field):
             assert all(isinstance(key, str) for key in values), \
                 "Field %s with non-str value in selection" % self
 
+        self._selection = values
+
     def _selection_modules(self, model):
         """ Return a mapping from selection values to modules defining each value. """
         if not isinstance(self.selection, list):
@@ -2850,9 +2854,9 @@ class Selection(Field):
         return super(Selection, self).convert_to_column(value, record, values, validate)
 
     def convert_to_cache(self, value, record, validate=True):
-        if not validate or (isinstance(self.selection, str) or callable(self.selection)):
+        if not validate or self._selection is None:
             return value or None
-        if value in self.get_values(record.env):
+        if value in self._selection:
             return value
         if not value:
             return None
