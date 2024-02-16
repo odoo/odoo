@@ -255,21 +255,19 @@ class Location(models.Model):
                 vals['name'] = _("%s (copy)", location.name)
         return vals_list
 
-    def _get_putaway_strategy(self, product, quantity=0, package=None, packaging=None, additional_qty=None):
-        """Returns the location where the product has to be put, if any compliant
-        putaway strategy is found. Otherwise returns self.
-        The quantity should be in the default UOM of the product, it is used when
-        no package is specified.
-        """
-        self = self._check_access_putaway()
-        products = self.env.context.get('products', self.env['product.product'])
-        products |= product
+    def _get_package_type(self, package, packaging):
         # find package type on package or packaging
         package_type = self.env['stock.package.type']
         if package:
             package_type = package.package_type_id
         elif packaging:
             package_type = packaging.package_type_id
+        return package_type
+
+    def _get_location_putaway_rules(self, product, package_type):
+        self = self._check_access_putaway()
+        products = self.env.context.get('products', self.env['product.product'])
+        products |= product
 
         categ = products.categ_id if len(products.categ_id) == 1 else self.env['product.category']
         categs = categ
@@ -287,7 +285,16 @@ class Location(models.Model):
                                                            rule.category_id == categs[:1],  # same categ, not a parent
                                                            rule.category_id),
                                              reverse=True)
+        return putaway_rules
 
+    def _get_putaway_strategy(self, product, quantity=0, package=None, packaging=None, additional_qty=None):
+        """Returns the location where the product has to be put, if any compliant
+        putaway strategy is found. Otherwise returns self.
+        The quantity should be in the default UOM of the product, it is used when
+        no package is specified.
+        """
+        package_type = self._get_package_type(package, packaging)
+        putaway_rules = self._get_location_putaway_rules(product, package_type)
         putaway_location = None
         locations = self.child_internal_location_ids
         if putaway_rules:
@@ -333,6 +340,21 @@ class Location(models.Model):
             putaway_location = locations[0] if locations and self.usage == 'view' else self
 
         return putaway_location
+
+    def _update_last_used_putaway_rules(self, product, dest_location, package=None, packaging=None):
+        package_type = self._get_package_type(package, packaging)
+        putaway_rules = self._get_location_putaway_rules(product, package_type)
+        putaway_rules_last_used_subloc = putaway_rules.filtered(lambda rule: rule.sublocation == 'last_used')
+        for putaway_rule in putaway_rules_last_used_subloc:
+            placements = putaway_rule.product_last_used_placement_ids.filtered(lambda placement: placement.product_id.id == product.id)
+            if placements:
+                placements.last_location_id = dest_location
+            else:
+                self.env['product.last_used_placement'].create({
+                    'product_id': product.id,
+                    'putaway_rule_id': putaway_rule.id,
+                    'last_location_id': dest_location.id,
+                })
 
     def _get_next_inventory_date(self):
         """ Used to get the next inventory date for a quant located in this location. It is

@@ -13,6 +13,18 @@ class RemovalStrategy(models.Model):
     name = fields.Char('Name', required=True, translate=True)
     method = fields.Char("Method", required=True, translate=True, help="FIFO, LIFO...")
 
+class ProductLastUsedPlacement(models.Model):
+    _name = 'product.last_used_placement'
+    _description = 'Stores the last location used for a product in a last used putaway strategy'
+
+    putaway_rule_id = fields.Many2one('stock.putaway.rule', check_company=True, required=True, ondelete='cascade')
+    product_id = fields.Many2one(
+        'product.product', 'Product', check_company=True, required=True,
+        domain="[('product_tmpl_id', '=', context.get('active_id', False))] if context.get('active_model') == 'product.template' else [('type', '!=', 'service')]",
+        ondelete='cascade')
+    last_location_id = fields.Many2one(
+        'stock.location', 'Last used location of this product in this putaway rule',
+        check_company=True, required=True, ondelete='cascade')
 
 class StockPutawayRule(models.Model):
     _name = 'stock.putaway.rule'
@@ -63,6 +75,40 @@ class StockPutawayRule(models.Model):
     package_type_ids = fields.Many2many('stock.package.type', string='Package Type', check_company=True)
     storage_category_id = fields.Many2one('stock.storage.category', 'Storage Category', ondelete='cascade', check_company=True)
     active = fields.Boolean('Active', default=True)
+    sublocation = fields.Selection([
+        ('no', 'No'),
+        ('last_used', 'Last Used'),
+        ('closest_location', 'Closest Location')
+    ], default='no')
+    product_last_used_placement_ids = fields.One2many('product.last_used_placement', 'putaway_rule_id', check_company=True)
+
+    @api.onchange('sublocation', 'location_out_id', 'storage_category_id')
+    def _onchange_sublocation(self):
+        def storage_category_exist_on_sublocation(location, storage_category_id):
+            child_location_ids = self.env['stock.location'].search([('id', 'child_of', location.id)])
+            for location in child_location_ids:
+                if location.storage_category_id == storage_category_id:
+                    return True
+            return False
+
+        if self.sublocation != 'closest_location':
+            self.storage_category_id = None
+        elif not storage_category_exist_on_sublocation(self.location_out_id, self.storage_category_id):
+            return {
+                'warning': {
+                    'title': _("Warning"),
+                    'message': _("Selected storage category does not exist in the 'store to' location or any of its sublocations"),
+                },
+            }
+
+
+    @api.constrains('sublocation', 'storage_category_id')
+    def _check_storage_category_id(self):
+        for rule in self:
+            if rule.sublocation != 'closest_location' and rule.storage_category_id:
+                raise UserError(_("Storage categories cannot be set on a putaway rule with no sublocation."))
+            elif rule.sublocation != 'last_used':
+                rule.product_last_used_placement_ids.unlink()
 
     @api.onchange('location_in_id')
     def _onchange_location_in(self):
@@ -99,6 +145,10 @@ class StockPutawayRule(models.Model):
         checked_locations = set()
         for putaway_rule in self:
             location_out = putaway_rule.location_out_id
+            if putaway_rule.sublocation == 'last_used':
+                placements = putaway_rule.product_last_used_placement_ids.filtered(lambda placement: placement.product_id.id == product.id)
+                location_out = placements[0].last_location_id if placements else location_out
+
             child_locations = location_out.child_internal_location_ids
 
             if not putaway_rule.storage_category_id:
