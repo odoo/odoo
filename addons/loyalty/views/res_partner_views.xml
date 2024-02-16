@@ -12,7 +12,8 @@
                     type="object"
                     class="oe_stat_button"
                     icon="fa-money"
-                    groups="base.group_system">
+                    groups="base.group_system"
+                    invisible="loyalty_card_count == 0">
                     <field string="Loyalty Cards" name="loyalty_card_count" widget="statinfo"/>
                 </button>
             </div>
