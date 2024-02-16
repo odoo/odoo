@@ -18,42 +18,65 @@ class Paymentprovider(models.Model):
 
     #=== COMPUTE METHODS ===#
 
-    @api.depends('code')
+    def _ensure_payment_method_line(self, allow_create=True):
+        self.ensure_one()
+        if not self.id:
+            return
+
+        pay_method_line = self.env['account.payment.method.line'].search(
+            [('code', '=', self.code), ('payment_provider_id', '=', self.id)],
+            limit=1,
+        )
+
+        if not self.journal_id:
+            if pay_method_line:
+                pay_method_line.unlink()
+                return
+
+        if not pay_method_line:
+            pay_method_line = self.env['account.payment.method.line'].search(
+                [
+                    ('journal_id.company_id', '=', self.company_id.id),
+                    ('code', '=', self.code),
+                    ('payment_provider_id', '=', False),
+                ],
+                limit=1,
+            )
+        if pay_method_line:
+            pay_method_line.payment_provider_id = self
+            pay_method_line.journal_id = self.journal_id
+        elif allow_create:
+            default_payment_method_id = self._get_default_payment_method_id(self.code)
+            self.env['account.payment.method.line'].create({
+                'payment_method_id': default_payment_method_id,
+                'journal_id': self.journal_id.id,
+                'payment_provider_id': self.id,
+            })
+
+    @api.depends('code', 'state', 'company_id')
     def _compute_journal_id(self):
         for provider in self:
-            payment_method = self.env['account.payment.method.line'].search([
-                ('journal_id.company_id', '=', provider.company_id.id),
-                ('code', '=', provider.code)
-            ], limit=1)
-            if payment_method:
-                provider.journal_id = payment_method.journal_id
-            else:
-                provider.journal_id = False
+            pay_method_line = self.env['account.payment.method.line'].search(
+                [('code', '=', provider.code), ('payment_provider_id', '=', provider._origin.id)],
+                limit=1,
+            )
+
+            if pay_method_line:
+                provider.journal_id = pay_method_line.journal_id
+            elif provider.state in ('enabled', 'test'):
+                provider.journal_id = self.env['account.journal'].search(
+                    [
+                        ('company_id', '=', provider.company_id.id),
+                        ('type', '=', 'bank'),
+                    ],
+                    limit=1,
+                )
+                if provider.id:
+                    provider._ensure_payment_method_line()
 
     def _inverse_journal_id(self):
         for provider in self:
-            payment_method_line = self.env['account.payment.method.line'].search([
-                ('journal_id.company_id', '=', provider.company_id.id),
-                ('code', '=', provider.code),
-            ], limit=1)
-            if provider.journal_id:
-                if not payment_method_line:
-                    default_payment_method_id = provider._get_default_payment_method_id(
-                        provider.code
-                    )
-                    existing_payment_method_line = self.env['account.payment.method.line'].search([
-                        ('payment_method_id', '=', default_payment_method_id),
-                        ('journal_id', '=', provider.journal_id.id),
-                    ], limit=1)
-                    if not existing_payment_method_line:
-                        self.env['account.payment.method.line'].create({
-                            'payment_method_id': default_payment_method_id,
-                            'journal_id': provider.journal_id.id,
-                        })
-                else:
-                    payment_method_line.journal_id = provider.journal_id
-            elif payment_method_line:
-                payment_method_line.unlink()
+            provider._ensure_payment_method_line()
 
     @api.model
     def _get_default_payment_method_id(self, code):
