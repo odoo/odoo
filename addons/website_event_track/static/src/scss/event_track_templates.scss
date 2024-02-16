@@ -26,10 +26,19 @@
 }
 
 .o_we_online_agenda {
+    $-events-spacing: $grid-gutter-width * 0.5;
+
+    @if $o-wevent-migration-layer {
+        border-top: $border-width solid transparent;
+    }
+
     overflow-x: auto;
     table {
         border-collapse: separate;
         border-spacing: 0em 0em;
+        @if $o-wevent-migration-layer {
+            font-size: .9em;
+        }
         tr {
             height: 15px;
             line-height: 1em;
@@ -43,7 +52,11 @@
         }
         th.active, td:not(.active) {
             border: 0px;
+            @if $o-wevent-migration-layer {
+                border-right: $-events-spacing solid $body-bg;
+            } @else {
             border-right: 1em solid $body-bg;
+            }
             vertical-align: middle;
             span {
                 word-break: break-word;
@@ -62,7 +75,11 @@
                 @if #{$size} != 1 {
                     &.o_location_size_#{$size} {
                         width: calc(100% / (#{$size} - 1));
-                        min-width: 150px;
+                        @if $o-wevent-migration-layer {
+                            min-width: 220px;
+                        } @else {
+                            min-width: 150px;
+                        }
                     }
                 } @else {
                     width: calc(100%);
@@ -73,7 +90,14 @@
                 z-index: 1;
                 position: sticky;
                 left: 0;
-                min-width: 100px;
+                @if $o-wevent-migration-layer {
+                    --bg-opacity: 0.8;
+
+                    white-space: nowrap;
+                    backdrop-filter: blur(2px);
+                } @else {
+                    min-width: 100px;
+                }
             }
             div.o_we_agenda_card_content {
                 height: 100%;
@@ -84,6 +108,13 @@
                     cursor: pointer;
                 }
             }
+
+            @if $o-wevent-migration-layer {
+                .o_we_agenda_card_filter_badges .badge {
+                    padding: $btn-padding-y $btn-padding-x;
+                    cursor: pointer;
+                }
+            } @else {
             .badge {
                 height: fit-content;
                 max-width: 100%;
@@ -94,6 +125,7 @@
                 padding: 0.2em 0.5em;
                 border-radius: 1em;
                 line-height: 10px;
+            }
             }
             &.invisible {
                 visibility: visible !important;
@@ -150,10 +182,42 @@
     }
 }
 
+@if $o-wevent-migration-layer {
+    .o_we_online_agenda_overlay {
+        @include o-position-absolute(0, 0, 63px);
+        background-image: linear-gradient(90deg, rgba($body-color, 0), rgba($body-color, 0.1), rgba($body-color, 0.3));
+        opacity: 0;
+        transition: opacity .1s ease;
+    }
+
+    .o_we_online_agenda_has_scroll {
+        border-top-color: $border-color;
+
+        + .o_we_online_agenda_overlay {
+            opacity: 1;
+            transition: opacity .5s ease;
+        }
+    }
+
+    .o_we_online_agenda_has_scroll.o_we_online_agenda_is_scrolling + .o_we_online_agenda_overlay {
+        opacity: .5;
+    }
+
+    .o_we_track_day_header {
+        z-index: 2;
+    }
+}
+
 /*
  * EVENT TOOL: DATE
  */
 .o_wevent_event {
+    @if $o-wevent-migration-layer {
+        .o_wesession_list li.border-bottom:has(.collapse.show) {
+            border-bottom-color: transparent !important;
+        }
+    }
+
     .o_we_track_day_header {
         a.collapsed .oi {
             transform: rotate(-90deg);

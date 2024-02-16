@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<!-- ======================================================================= -->
+<!-- addons/website_event_meet/static/src/xml/website_event_meeting_room.xml -->
+<!-- ======================================================================= -->
+<t t-name="event_meet_create_room_modal__ml" t-inherit="website_event_meet.event_meet_create_room_modal" t-inherit-mode="extension">
+    <xpath expr="//h2" position="replace"/>
+
+    <xpath expr="//main" position="before">
+        <div class="modal-header">
+            <h5 class="modal-title">Launch a new topic</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"/>
+        </div>
+    </xpath>
+</t>
+
+</templates>

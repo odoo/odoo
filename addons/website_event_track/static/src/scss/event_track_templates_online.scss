@@ -15,6 +15,7 @@
 
     // Track card
     .o_wesession_track_card {
+        @if not $o-wevent-migration-layer {
         background-color: $o-wevent-bg-color-base;
         color: $o-wevent-color;
 
@@ -30,6 +31,7 @@
                 color: $o-wevent-color;
             }
         }
+        } // end if
 
         .o_wesession_track_card_header_badge {
             position: absolute;

@@ -10,6 +10,23 @@
     }
 
     // Ensure menu labels are not split
+
+    @if $o-wevent-migration-layer {
+        #o_wevent_submenu_desktop {
+            .nav {
+                column-gap: map-get($spacers, 3);
+
+                .nav-link {
+                    padding: 0;
+
+                    &.active {
+                        color: rgba($body-color, .7);
+                        cursor: default;
+                    }
+                }
+            }
+        }
+    } @else {
     #o_wevent_event_submenu {
         li.nav-item {
             white-space: nowrap;
@@ -20,6 +37,22 @@
             }
         }
     }
+    } // end else
+
+    @if $o-wevent-migration-layer {
+        // Custom utility classes to be applied on day numbers and to
+        // be used in conjunction with `small` side-content.
+        .o_wevent_day_header_number {
+            font-size: 2em + ($line-height-base - 1);
+        }
+
+        #o_wevent_event_main_sidebar {
+            @include media-breakpoint-up(lg) {
+                max-width: 19rem;
+            }
+        }
+    }
+
 
     .o_wevent_event_title {
 
@@ -67,6 +100,12 @@
         .o_record_cover_component {
             z-index: -1;
         }
+
+        @if $o-wevent-migration-layer {
+            &.o_wevent_event_main_cover {
+                min-height: 12rem;
+            }
+        }
     }
 }
 
@@ -74,6 +113,28 @@
  * EVENT PAGE VIEW
  */
 
+@if $o-wevent-migration-layer {
+    @for $-size from 1 through length($o-colors) {
+        .o_wevent_event .event_color_#{$-size - 1} {
+            $-color: if($-size == 1, $o-wevent-bg-color-dark, nth($o-colors, $-size));
+
+            --base: #{$-color};
+
+            --bg-solid: #{adjust-color($-color, $lightness: 25%, $saturation: 15%)};
+            --color-solid: #{adjust-color($-color, $lightness: -40%, $saturation: -15%)};
+
+            --bg-light: #{mix($-color, $body-bg, 15%)};
+            --color-light: #{color-contrast(mix($-color, $body-bg, 15%))};
+
+            --bg-lighter: #{mix($-color, $body-bg, 5%)};
+            --color-lighter: #{color-contrast(mix($-color, $body-bg, 5%))};
+
+
+            background-color: var(--bg, var(--bg-solid));
+            color: var(--color, var(--color-solid));
+        }
+    }
+} @else {
 .o_wevent_event .event_color_0 {
     background-color: $o-wevent-bg-color-base;
     color: $o-wevent-color;
@@ -114,6 +175,7 @@
     background-color: #ffc7f1;
     color: #6d2c70;
 }
+} // end else
 
 /*
  * SPONSORS

@@ -64,11 +64,13 @@
                 left: $card-spacer-x;
             }
         }
+        @if not $o-wevent-migration-layer {
         a {
             .card-body {
                 background-color: $o-wevent-bg-color-base !important;
                 color: $o-wevent-color;
             }
+        }
         }
     }
     .o_wevent_sidebar_title {

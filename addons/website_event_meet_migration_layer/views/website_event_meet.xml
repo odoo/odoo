@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!-- ============================================================= -->
+<!-- addons/website_event_meet/views/event_meet_templates_list.xml -->
+<!-- ============================================================= -->
+<template id="event_meet__ml" inherit_id="website_event_meet.event_meet" name="event_meet__ml">
+    <!-- Move navigation before the page content -->
+    <xpath expr="//div[hasclass('o_wemeet_container')]//div" position="before">
+        <t t-call="website_event.navbar"/>
+    </xpath>
+</template>
+
+
+<template id="community_main__ml" inherit_id="website_event_meet.community_main" name="community_main__ml">
+    <xpath expr="//div" position="attributes">
+        <attribute name="class"/>
+        <attribute name="t-attf-class">col-12 {{meeting_rooms and' col-lg-8 col-xl-9 pe-xxl-5'}}</attribute>
+    </xpath>
+
+     <!-- Remove navigation from inside the content -->
+    <xpath expr="//t[@t-call='website_event.navbar']" position="replace"/>
+
+    <xpath expr="//div/br" position="replace"/>
+</template>
+
+
+<!-- ============================================================= -->
+<!-- addons/website_event_meet/views/event_meet_templates_page.xml -->
+<!-- ============================================================= -->
+<template id="event_meet_main__ml" inherit_id="website_event_meet.event_meet_main" name="event_meet_main__ml">
+    <xpath expr="//div" position="replace">
+        <div class="o_wevent_online o_wemeet_index">
+            <!-- Options -->
+            <t t-set="option_widescreen" t-value="option_widescreen or False"/>
+            <!-- Drag/Drop Area -->
+            <div id="oe_structure_wemeet_index_1" class="oe_structure"/>
+            <!-- Content -->
+            <div t-att-class="'o_wevent_online_page_container %s' % ('container pb-3' if not option_widescreen else 'container-fluid pb-3')">
+                <div t-att-class="'row mb-5 mx-0 %s' % ('justify-content-center' if not meeting_rooms_other else '')">
+                    <t t-if="meeting_rooms_other">
+                        <t t-call="website_event_meet.meeting_room_aside"/>
+                    </t>
+                    <t t-call="website_event_meet.meeting_room_main"/>
+                </div>
+            </div>
+            <!-- Drag/Drop Area -->
+            <div id="oe_structure_wemeet_index_2" class="oe_structure"/>
+        </div>
+    </xpath>
+</template>
+
+<template id="meeting_room_aside__ml" inherit_id="website_event_meet.meeting_room_aside" name="meeting_room_aside__ml">
+    <xpath expr="//ul[@id='collapse_meet_room_aside']//a" position="attributes">
+        <a class="text-decoration-none text-reset"
+            t-att-href="'/event/%s/meeting_room/%s' % (slug(event), slug(meeting_room_other))">
+            <div class="flex-grow-1 mw-100">
+                <div class="text-truncate fw-bold" t-out="meeting_room_other.name"/>
+                <span class="opacity-75" t-out="meeting_room_other.summary"></span>
+                <div class="d-flex flex-column flex-xl-row flex-wrap justify-content-between align-items-center mt-1">
+                    <p class="d-flex justify-content-between align-items-center gap-2 m-0 opacity-75 small">
+                        <i class="fa fa-user"></i>
+                        <t t-out="meeting_room_other.room_participant_count"/>
+                        <t t-out="meeting_room_other.target_audience"/>
+                    </p>
+                    <small t-if="meeting_room_other.room_lang_id" class="badge text-bg-secondary"> <t t-out="meeting_room_other.room_lang_id.name"/></small>
+                </div>
+            </div>
+        </a>
+    </xpath>
+</template>
+
+</odoo>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!-- ======================================================================= -->
+<!-- addons/website_event_exhibitor/views/event_exhibitor_templates_list.xml -->
+<!-- ======================================================================= -->
+<template id="exhibitor_card__ml" inherit_id="website_event_exhibitor.exhibitor_card" name="exhibitor_card__ml">
+    <xpath expr="//main/h5" position="replace">
+        <h5 class="card-title d-flex align-items-start justify-content-between mt-0 mb-0">
+            <span t-field="sponsor.name" itemprop="name" class="text-break fs-6 mb-2"/>
+            <span t-if="sponsor.is_in_opening_hours and sponsor.chat_room_id" class="alert alert-danger mb-2 px-2 py-1 smaller lh-1">
+                Live
+            </span>
+        </h5>
+    </xpath>
+</template>
+
+<!-- ======================================================================= -->
+<!-- addons/website_event_exhibitor/views/event_exhibitor_templates_page.xml -->
+<!-- ======================================================================= -->
+<template id="event_exhibitor_main__ml" inherit_id="website_event_exhibitor.event_exhibitor_main" name="event_exhibitor_main__ml">
+    <xpath expr="//div" position="replace">
+        <div class="o_wevent_online o_wesponsor_index">
+            <!-- Options -->
+            <t t-set="option_widescreen" t-value="option_widescreen or False"/>
+            <!-- Drag/Drop Area -->
+            <div id="oe_structure_wesponsor_index_1" class="oe_structure"/>
+            <!-- Content -->
+            <div t-att-class="'o_wevent_online_page_container %s' % ('container pb-3' if not option_widescreen else 'container-fluid pb-3')">
+                <div t-att-class="'row mb-5 mx-0 %s' % ('justify-content-center' if not sponsors_other else '')">
+                    <t t-if="sponsors_other">
+                        <t t-call="website_event_exhibitor.exhibitor_aside"/>
+                    </t>
+                    <t t-call="website_event_exhibitor.exhibitor_main"/>
+                </div>
+            </div>
+            <!-- Drag/Drop Area -->
+            <div id="oe_structure_wesponsor_index_2" class="oe_structure"/>
+        </div>
+    </xpath>
+</template>
+
+</odoo>

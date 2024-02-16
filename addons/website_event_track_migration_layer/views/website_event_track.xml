@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!-- ================================================================= -->
+<!-- addons/website_event_track/views/event_track_templates_agenda.xml -->
+<!-- ================================================================= -->
+<template id="agenda_online__ml" inherit_id="website_event_track.agenda_online" name="agenda_online__ml">
+    <xpath expr="//div[hasclass('o_wevent_online')]" position="replace">
+        <div t-else="" class="container">
+            <!-- Options -->
+            <t t-set="option_track_wishlist" t-value="not event.is_done and is_view_active('website_event_track.agenda_topbar_wishlist')"/>
+            <!-- Topbar -->
+            <t t-call="website_event_track.agenda_topbar"/>
+        </div>
+
+        <!-- Drag/Drop Area -->
+        <div class="oe_structure" id="oe_structure_website_event_track_agenda_1"/>
+        <!-- Content -->
+        <div class="o_wevent_online o_weagenda_index mb-3">
+            <t t-call="website_event_track.agenda_main"/>
+        </div>
+        <!-- Drag/Drop Area -->
+        <div class="oe_structure" id="oe_structure_website_event_track_agenda_2"/>
+    </xpath>
+</template>
+
+<template id="agenda_topbar__ml" inherit_id="website_event_track.agenda_topbar" name="agenda_topbar__ml">
+    <!-- Address misleading search field:
+         clarify the user that the field will perform a "filter"
+         action rather than a "search" one. -->
+    <xpath expr="//input[@id='event_track_search']" position="attributes">
+        <attribute name="placeholder">Filter Tracks</attribute>
+        <attribute name="class" add="text-bg-light" separator=" "/>
+    </xpath>
+    <xpath expr="//i[hasclass('oi-search')]" position="attributes">
+        <attribute name="class" add="fa fa-filter" remove="oi oi-search"/>
+    </xpath>
+</template>
+
+<template id="agenda_main__ml" inherit_id="website_event_track.agenda_main" name="agenda_main__ml">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" remove="col-12" separator=" "/>
+    </xpath>
+    <xpath expr="//section/hr" position="replace"/>
+    <xpath expr="//div[hasclass('o_we_track_day_header')]" position="replace">
+        <div class="container">
+            <hr class="mt-2 mb-2"/>
+            <div class="o_we_track_day_header d-flex justify-content-between align-items-start pt-2 mb-3 w-100">
+                <time class="d-flex flex-grow-1 align-items-end gap-2" t-att-datetime="day">
+                    <span class="o_wevent_day_header_number lh-1" t-out="day" t-options="{'widget': 'date', 'format': 'dd'}"/>
+                    <div class="small">
+                        <div class="lh-1 fw-bold" t-out="day" t-options="{'widget': 'date', 'format': 'MMMM YYYY'}"/>
+                        <span class="lh-1" t-out="day" t-options="{'widget': 'date', 'format': 'EEEE '}"/>
+                        <span class="d-none d-md-inline small lh-1 text-muted">(timezone: <t t-out="event.date_tz"/>)</span>
+                    </div>
+                </time>
+                <small><b t-out="tracks_by_days[day]"/> <span class="text-muted"> tracks</span></small>
+            </div>
+        </div>
+    </xpath>
+
+    <xpath expr="//section" position="before">
+        <t t-set="event_has_complex_day" t-value="false"/>
+        <t t-foreach="days" t-as="day">
+            <t t-if="len(locations_by_days[day]) &gt; 5" t-set="event_has_complex_day" t-value="true"/>
+        </t>
+    </xpath>
+
+    <xpath expr="//div[hasclass('o_we_online_agenda')]" position="replace">
+        <div t-attf-class="{{event_has_complex_day and 'container-fluid' or 'container-xl'}} pe-0">
+            <div class="o_we_online_agenda mb-5">
+                <table id="table_search" class="table table-sm border-0 h-100">
+                    <!--Header-->
+                    <tr>
+                        <th class="border-0 position-sticky"/>
+                        <t t-foreach="locations" t-as="location">
+                            <th t-if="location" class="active text-center">
+                                <span t-out="location and location.name or 'Unknown'"/>
+                            </th>
+                        </t>
+                    </tr>
+
+                    <!-- Time Slots -->
+                    <t t-set="used_cells" t-value="[]"/>
+                    <t t-foreach="time_slots[day]" t-as="time_slot">
+                        <t t-set="is_round_hour" t-value="time_slot == time_slot.replace(minute=0)"/>
+                        <t t-set="is_half_hour" t-value="time_slot == time_slot.replace(minute=30)"/>
+
+                        <tr t-att-class="'%s' % ('active' if is_round_hour else '')">
+                            <td class="active bg-body">
+                                <b t-if="is_round_hour" t-out="time_slots[day][time_slot]['formatted_time']"/>
+                            </td>
+
+                            <t t-foreach="locations" t-as="location">
+                                <t t-set="tracks" t-value="time_slots[day][time_slot].get(location, {})"/>
+                                <t t-if="tracks">
+                                    <t t-foreach="tracks" t-as="track">
+                                        <t t-set="_classes"
+                                            t-value="'text-center %s %s %s' % (
+                                                'event_color_%s' % (track.color or 0),
+                                                'event_track h-100' if track else '',
+                                                'o_location_size_%d' % len(locations),
+                                            )"/>
+                                        <t t-if="track.location_id and track.location_id == location">
+                                            <td t-att-rowspan="tracks[track]['rowspan']"
+                                                t-att-class="_classes">
+                                                <t t-call="website_event_track.agenda_main_track"/>
+                                            </td>
+                                        </t>
+                                        <t t-else="">
+                                            <td t-att-colspan="len(locations)-1"
+                                                t-att-rowspan="tracks[track]['rowspan']"
+                                                t-att-class="_classes">
+                                                <t t-call="website_event_track.agenda_main_track"/>
+                                            </td>
+                                        </t>
+                                        <t t-set="used_cells" t-value="used_cells + tracks[track]['occupied_cells']"/>
+                                    </t>
+                                </t>
+                                <t t-elif="location and (time_slot, location) not in used_cells">
+                                    <td t-att-rowspan="1"
+                                        t-att-class="'o_location_size_%s %s' % (len(locations),
+                                            'o_we_agenda_time_slot_half' if is_half_hour else
+                                            'o_we_agenda_time_slot_main' if is_round_hour else
+                                            ''
+                                        )"><div/></td>
+                                </t>
+                            </t>
+                        </tr>
+                    </t>
+                </table>
+            </div>
+            <span class="o_we_online_agenda_overlay py-5 px-3 pe-none z-index-1"/>
+        </div>
+    </xpath>
+</template>
+
+<template id="agenda_main_track__ml" inherit_id="website_event_track.agenda_main_track" name="agenda_main_track__ml">
+    <xpath expr="//div[hasclass('o_we_agenda_card_content')]" position="replace">
+        <div class="o_we_agenda_card_content position-relative d-flex flex-column justify-content-center my-1">
+            <div class="o_we_agenda_card_title mb-1">
+                <t t-if="track.website_published or is_event_user">
+                    <a t-att-href="'/event/%s/track/%s' % (slug(event), slug(track))" class="text-reset fw-bold stretched-link">
+                        <t t-out="track.name"/>
+                    </a>
+                </t>
+                <t t-else="">
+                    <span class="fw-bold">
+                        <t t-out="track.name"/>
+                    </span>
+                </t>
+            </div>
+            <div class="opacity-75 text-center" t-if="track.partner_tag_line">
+                <small t-out="track.partner_tag_line"/>
+            </div>
+        </div>
+        <div class="o_we_agenda_card_filter_badges d-flex justify-content-center flex-wrap pb-1">
+            <t t-foreach="track.tag_ids" t-as="tag">
+                <span t-if="tag.color" t-att-title="tag.name"
+                        t-attf-class="me-1 mt-1 badge o_tag_color_hovered_{{str(tag.color)}}" t-out="tag.name"
+                        t-attf-onclick="
+                        var value = '#{tag.name}' ;
+                        var target = $('#event_track_search');
+                        if (target.val() == value) { target.val(''); } else { target.val(value); }
+                        target.trigger('input');
+                        "
+                />
+            </t>
+        </div>
+    </xpath>
+</template>
+
+<!-- =============================================================== -->
+<!-- addons/website_event_track/views/event_track_templates_list.xml -->
+<!-- =============================================================== -->
+<template id="tracks_display_list__ml" inherit_id="website_event_track.tracks_display_list" name="tracks_display_list__ml">
+    <xpath expr="//div[hasclass('o_we_track_day_header')]/div" position="replace">
+        <time class="d-flex flex-grow-1 align-items-end gap-2" t-if="tracks_date" t-att-datetime="tracks_date">
+            <span class="o_wevent_day_header_number lh-1" t-out="tracks_date" t-options="{'widget': 'date', 'format': 'dd'}"/>
+            <div class="small">
+                <div class="lh-1 fw-bold" t-out="tracks_date" t-options="{'widget': 'date', 'format': 'MMMM YYYY'}"/>
+                <span class="lh-1" t-out="tracks_date" t-options="{'widget': 'date', 'format': 'EEEE '}"/>
+                <span class="d-none d-md-inline small lh-1 text-muted">(timezone: <t t-out="event.date_tz"/>)</span>
+            </div>
+        </time>
+    </xpath>
+    <!-- Move and redesign unpublished badge -->
+    <xpath expr="//span[hasclass('o_wevent_online_badge_unpublished')]" position="replace"/>
+    <xpath expr="//div[@t-as='track']//span[hasclass('fw-bold','mb0')]" position="after">
+        <span t-if="not track.website_published and is_event_user" class="alert alert-danger px-2 py-1 align-top small">
+            Unpublished
+        </span>
+    </xpath>
+
+</template>
+
+<!-- =================================================================== -->
+<!-- addons/website_event_track/views/event_track_templates_proposal.xml -->
+<!-- =================================================================== -->
+<template id="event_track_proposal__ml" inherit_id="website_event_track.event_track_proposal" name="event_track_proposal__ml">
+    <!-- Allow title's block editions -->
+    <xpath expr="//section[hasclass('pt-3')]" position="replace">
+        <div class="oe_structure">
+            <section class="pt-3">
+                <h3 class="mt-0 mb-4">Call for Proposals</h3>
+            </section>
+        </div>
+    </xpath>
+    <!-- Move navigation on talk proposal page. -->
+    <xpath expr="//t[@t-call='website_event.navbar']" position="replace"/>
+    <xpath expr="//section[hasclass('row')]" position="before">
+        <t t-call="website_event.navbar"/>
+    </xpath>
+    <!-- Add drop area. -->
+    <xpath expr="//t[@t-call='website_event.navbar']" position="after">
+        <div class="oe_structure"/>
+    </xpath>
+    <!-- Remove unnecessary <br>. -->
+    <xpath expr="//section[hasclass('row')]//br" position="replace"/>
+</template>
+
+</odoo>

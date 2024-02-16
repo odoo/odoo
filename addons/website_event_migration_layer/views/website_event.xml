@@ -1,0 +1,356 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!-- =================================================== -->
+<!-- addons/website_event/views/event_templates_page.xml -->
+<!-- =================================================== -->
+<template id="navbar__ml" inherit_id="website_event.navbar" name="navbar__ml">
+    <!-- Remove the first container -->
+    <xpath expr="//div[hasclass('container')]" position="replace"/>
+
+    <!-- Replace the remaining block with the new navigation system -->
+    <xpath expr="//div[hasclass('mb-3')]" position="replace">
+        <t t-set="is_rendering_cta" t-value="event.menu_register_cta and not event.is_participating and not hide_register_cta"/>
+
+        <!-- Mobile -->
+        <section id="o_wevent_event_submenu">
+            <div id="o_wevent_submenu_mobile" class="container d-flex d-lg-none align-items-center mt-3 mb-3 mb-lg-2">
+                <a href="/event" title="All Events">
+                    <i class="oi oi-chevron-left"/>
+                    <span>All Events</span>
+                </a>
+                <!-- Add Register additional CTA button, in addition to menus -->
+                <a t-if="is_rendering_cta"
+                    t-att-href="'/event/%s/register' % (slug(event))"
+                    t-attf-class="btn btn-primary ms-auto"
+                    title="Registration">
+                    Registration
+                </a>
+                <div t-if="len(event.menu_id.child_id) &gt; 1" t-attf-class="dropdown o-dropdown--no-caret {{not is_rendering_cta and 'ms-auto' or 'ms-2'}}">
+                    <button class="dropdown-toggle btn btn-light" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa fa-bars" role="img"/>
+                    </button>
+                    <ul class="dropdown-menu" t-att-data-menu_name="editable and 'Event Menu'" t-att-data-content_menu_id="editable and event.menu_id.id" role="menu">
+                        <t t-foreach="event.menu_id.child_id" t-as="submenu">
+                            <t t-call="website.submenu">
+                                <t t-set="link_class" t-value="'dropdown-item'"/>
+                            </t>
+                        </t>
+                    </ul>
+                </div>
+            </div>
+            <!-- Desktop -->
+            <div id="o_wevent_submenu_desktop" class="d-none d-lg-block mt-3 mb-3 mb-lg-2">
+                <div class="container">
+                    <div class="d-flex align-items-baseline justify-content-between">
+                        <nav class="d-flex flex-wrap justify-content-between align-items-center gap-2 flex-grow-1">
+                            <ul class="breadcrumb p-0 m-0">
+                                <li class="breadcrumb-item"><a href="/event" title="Back to all events">Events</a></li>
+                                <li class="breadcrumb-item active" aria-current="page"><span class="pe-3" t-field="event.name"/></li>
+                            </ul>
+                            <ul class="nav" t-att-data-menu_name="editable and 'Event Menu'" t-att-data-content_menu_id="editable and event.menu_id.id">
+                                <t t-foreach="event.menu_id.child_id" t-as="submenu">
+                                    <t t-if="(submenu == event.register_menu_ids.menu_id) and (not is_rendering_cta and not hide_register_cta)" t-call="website.submenu">
+                                        <t t-set="item_class" t-value="'nav-item'"/>
+                                        <t t-set="link_class" t-value="'nav-link text-nowrap'"/>
+                                    </t>
+                                    <t t-elif="(submenu != event.register_menu_ids.menu_id)" t-call="website.submenu">
+                                        <t t-set="item_class" t-value="'nav-item'"/>
+                                        <t t-set="link_class" t-value="'nav-link text-nowrap'"/>
+                                    </t>
+                                </t>
+                            </ul>
+                        </nav>
+
+                        <!-- Workaround to avoid flickering while navigating between pages with and without CTA -->
+                        <span t-if="not is_rendering_cta" aria-hidden="true" class="btn invisible w-0 px-0">&#160;</span>
+
+                        <a t-else=""
+                            t-att-href="'/event/%s/register' % (slug(event))"
+                            t-attf-class="btn btn-primary ms-3"
+                            title="Registration">
+                            Registration
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </xpath>
+</template>
+
+
+<!-- =================================================== -->
+<!-- addons/website_event/views/event_templates_list.xml -->
+<!-- =================================================== -->
+<template id="index__ml" inherit_id="website_event.index" name="index__ml">
+    <xpath expr="//t[@t-call='website_event.searched_tags']" position="replace"/>
+</template>
+
+<template id="index_topbar__ml" inherit_id="website_event.index_topbar" name="index_topbar__ml">
+    <xpath expr="//div[hasclass('o_wevent_index_topbar_filters')]" position="after">
+        <t t-if="search_tags" t-call="website_event.searched_tags"/>
+    </xpath>
+</template>
+
+<template id="searched_tags__ml" inherit_id="website_event.searched_tags" name="searched_tags__ml">
+    <xpath expr="//div" position="replace">
+        <div class="d-flex align-items-center flex-wrap gap-2 mt-2">
+            <t t-foreach="search_tags" t-as="tag">
+                <span t-attf-class="d-inline-flex align-items-baseline rounded border ps-2 #{'o_tag_color_%s' % tag.color if tag.color else ''}">
+                    <t t-out="tag.display_name"/>
+                    <a t-att-href="'/event?%s' % keep_query('*', tags=str((search_tags - tag).ids))" class="btn border-0 py-1 px-2 text-reset opacity-75-hover">
+                        <i class="oi oi-close" role="img"/>
+                    </a>
+                </span>
+            </t>
+        </div>
+    </xpath>
+</template>
+
+
+<!-- ======================================================== -->
+<!-- addons/website_event/views/event_templates_page_misc.xml -->
+<!-- ======================================================== -->
+<template id="template_intro__ml" inherit_id="website_event.template_intro" name="template_intro__ml">
+    <xpath expr="//section" position="replace">
+        <div class="oe_structure">
+            <section class="s_title pt32 pb32" data-vcss="001" data-snippet="s_title" data-name="Title">
+                <div class="container s_allow_columns">
+                    <h1 class="display-3 o_default_snippet_text" style="text-align: center;">Introduction</h1>
+                </div>
+            </section>
+        </div>
+    </xpath>
+</template>
+
+
+<!-- ================================================================ -->
+<!-- addons/website_event/views/event_templates_page_registration.xml -->
+<!-- ================================================================ -->
+
+<!-- New Templates -->
+<template id="registration_template__ml" name="Registration">
+    <button t-if="event.event_registrations_open" type="button" data-bs-toggle="modal" data-bs-target="#modal_ticket_registration" class="btn btn-primary w-100">Register</button>
+    <div t-if="toast_message" class="o_wevent_register_toaster d-none" t-att-data-message="toast_message"/>
+    <t t-if="not event.event_registrations_open">
+        <!-- Delayed registration time -->
+        <div t-if="not event.event_registrations_started and not event.event_registrations_sold_out" class="alert alert-info mb-3 small" role="status">
+            Registrations will open on
+            <b t-out="event.start_sale_datetime" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'MMMM dd, y'}"/>, at
+            <b t-out="event.start_sale_datetime" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'h:mm a'}"/>
+            <small>(<t t-out="event.date_tz"/> time)</small>
+        </div>
+        <!-- Sold Out -->
+        <div t-elif="event.event_registrations_sold_out" class="alert alert-danger mb-3 small" role="status">
+            <b>Sold Out</b>
+        </div>
+        <!-- Registrations Closed -->
+        <div t-else="" class="alert alert-warning mb-3 small" role="status">
+            <em>Registrations <b>Closed</b></em>
+        </div>
+    </t>
+</template>
+
+<template id="event_description_dates__ml" name="Event Description Dates">
+    <div t-attf-class="o_wevent_dates_block mb-3 {{event.is_one_day and 'd-flex flex-wrap justify-content-between align-items-center gap-2'}}">
+        <div class="flex-wrap gap-3 w-lg-100">
+            <div t-if="event.is_one_day" class="card bg-transparent d-inline-flex align-items-end flex-row flex-grow-1 w-lg-100 gap-2 p-2 p-md-3">
+                <time t-field="event.date_begin" class="o_wevent_day_header_number lh-1" t-options="{'tz_name': event.date_tz, 'format': 'dd', 'date_only': 'true'}" t-att-datetime="event.date_begin"/>
+                <div class="small">
+                    <time t-field="event.date_begin" class="d-block lh-1" t-options="{'tz_name': event.date_tz, 'format': 'MMMM Y', 'date_only': 'true'}" t-att-datetime="event.date_begin"/>
+                    <time t-out="event.date_begin"  t-att-datetime="event.date_begin" class="fw-bold lh-1" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'time_only': 'true', 'format': 'short'}"/>
+                    <i class="fa fa-long-arrow-right mx-1 text-muted" role="img"/>
+                    <time t-out="event.date_end"  t-att-datetime="event.date_end" class="fw-bold lh-1" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'time_only': 'true', 'format': 'short'}"/>
+                </div>
+            </div>
+
+            <t t-else="">
+                <div class="d-flex flex-lg-column flex-wrap gap-2 w-100">
+                    <div class="flex-grow-1 w-lg-100">
+                        <small class="fw-bold">Starts</small>
+                        <div class="card bg-transparent d-flex align-items-end flex-row flex-grow-1 gap-2 py-3 px-2 px-md-3">
+                            <time t-field="event.date_begin" class="o_wevent_day_header_number lh-1" t-options="{'tz_name': event.date_tz, 'format': 'dd', 'date_only': 'true'}" t-att-datetime="event.date_begin"/>
+                            <div class="small">
+                                <time t-field="event.date_begin" class="d-block lh-1" t-options="{'tz_name': event.date_tz, 'format': 'MMMM Y', 'date_only': 'true'}" t-att-datetime="event.date_begin"/>
+                                <time t-out="event.date_begin"  t-att-datetime="event.date_begin" class="fw-bold lh-1" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'time_only': 'true', 'format': 'short'}"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1 w-lg-100">
+                        <small class="fw-bold">Ends</small>
+                        <div class="card bg-transparent d-flex align-items-end flex-row flex-grow-1 gap-2 py-3 px-2 px-md-3">
+                            <time t-field="event.date_end" class="o_wevent_day_header_number lh-1" t-options="{'tz_name': event.date_tz, 'format': 'dd', 'date_only': 'true'}" t-att-datetime="event.date_end"/>
+                            <div class="small">
+                                <time t-field="event.date_end" class="d-block lh-1" t-options="{'tz_name': event.date_tz, 'format': 'MMMM Y', 'date_only': 'true'}" t-att-datetime="event.date_end"/>
+                                <time t-out="event.date_end"  t-att-datetime="event.date_end" class="fw-bold lh-1" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'time_only': 'true', 'format': 'short'}"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </div>
+
+        <div t-attf-class="d-flex align-items-center flex-wrap gap-2 {{'flex-basis-50 flex-basis-md-auto' if event.is_one_day else 'mt-3'}}">
+            <small class="text-muted">Add to calendar:</small>
+            <div t-attf-class="d-flex align-items-center flex-shrink-0 flex-grow-1 {{'gap-1 gap-md-2' if event.is_one_day else 'gap-3'}}">
+                <a t-att-href="iCal_url" class="btn btn-light" title="Add to iCal">
+                    <i role="img" class="fa fa-apple"/>
+                </a>
+                <a t-att-href="iCal_url" class="btn btn-light" title="Add to Outlook">
+                    <i role="img" class="fa fa-windows"/>
+                </a>
+                <a t-att-href="google_url" class="btn btn-light" title="Add to Google" target="_blank">
+                    <i role="img" class="fa fa-google"/>
+                </a>
+            </div>
+        </div>
+    </div>
+</template>
+
+<!-- Cover Options -->
+<template id="opt_event_description_cover_hidden" name="Event Description Cover Hidden Option" inherit_id="website_event.event_description_full" active="False"/>
+<template id="opt_event_description_cover_top" name="Event Description Cover Top Option" inherit_id="website_event.event_description_full" active="False"/>
+
+<!-- Registration Page Customisations -->
+<template id="event_description_full__ml" inherit_id="website_event.event_description_full" name="event_description_full__ml">
+    <xpath expr="//t[@t-set='hide_register_cta']" position="after">
+        <t t-set="opt_event_description_cover_hidden" t-value="is_view_active('website_event_migration_layer.opt_event_description_cover_hidden')"/>
+        <t t-set="opt_event_description_cover_top" t-value="is_view_active('website_event_migration_layer.opt_event_description_cover_top')"/>
+        <t t-set="edition_cover_only" t-value="opt_event_description_cover_hidden and request.env.user.has_group('event.group_event_manager')"/>
+    </xpath>
+    <xpath expr="//section" position="attributes">
+        <attribute name="id" add="o_wevent_event_main" separator=" "/>
+    </xpath>
+    <xpath expr="//section" position="before">
+        <t t-if="opt_event_description_cover_top" t-call="website.record_cover">
+            <t t-set="_record" t-value="event"/>
+            <t t-set="use_filters" t-value="True"/>
+            <t t-set="use_size" t-value="True"/>
+            <t t-set="use_text_align" t-value="True"/>
+            <t t-set="additionnal_classes" t-value="'o_wevent_event_main_cover o_wevent_event_main_cover_top overflow-hidden h-auto'"/>
+
+            <div class="container d-flex flex-grow-1 h-100 w-100">
+                <div id="o_wevent_event_main_cover_content" class="d-flex flex-column align-items-baseline w-100 py-3">
+                    <span t-if="event.is_participating" class="badge text-bg-success o_wevent_badge">
+                        <i class="fa fa-check me-2" role="img"/>Registered
+                    </span>
+                    <div class="w-100 mt-auto">
+                        <h2 t-field="event.name" itemprop="name" placeholder="Event Title" class="mt-3"/>
+                        <p class="lead" t-field="event.subtitle" placeholder="Event Subtitle"/>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </xpath>
+    <xpath expr="//section/div" position="attributes">
+        <attribute name="class" remove="h-100" separator=" "/>
+    </xpath>
+    <xpath expr="//section/div//div[hasclass('col')]" position="attributes">
+        <attribute name="class" add="pe-xxl-5" separator=" "/>
+    </xpath>
+    <xpath expr="//section/div//div[hasclass('col')]//div[hasclass('container')]" position="attributes">
+        <attribute name="class" remove="container py-3" add="o_wevent_event_main_cta_block mb-3" separator=" "/>
+    </xpath>
+    <xpath expr="//div[hasclass('o_wevent_event_main_cta_block')]/t" position="replace">
+        <t t-call="website_event_migration_layer.registration_template__ml"/>
+    </xpath>
+
+     <xpath expr="//div[@itemprop='description']" position="before">
+        <div class="o_wevent_event_main_dates_mobile d-lg-none mt-3">
+            <t t-call="website_event_migration_layer.event_description_dates__ml"/>
+        </div>
+    </xpath>
+    <xpath expr="//div[@id='o_wevent_event_main_col']//t" position="replace">
+        <div t-if="edition_cover_only" class="css_non_editable_mode_hidden o_not_editable bg-info-light border border-info border-bottom-0 rounded-top p-2">
+            <em>Hidden for visitors</em>
+        </div>
+        <t t-if="not opt_event_description_cover_top" t-call="website.record_cover">
+            <t t-set="_record" t-value="event"/>
+            <t t-set="use_filters" t-value="True"/>
+            <t t-set="use_size" t-value="False"/>
+            <t t-set="use_text_align" t-value="True"/>
+            <t t-set="additionnal_classes" t-value="'o_wevent_event_main_cover overflow-hidden ' + ('css_non_editable_mode_hidden border border-info rounded-bottom' if edition_cover_only else 'd-none' if opt_event_description_cover_hidden else 'rounded')"/>
+
+            <div id="o_wevent_event_main_cover_content" class="p-3 mt-auto">
+                <span t-if="event.is_participating" class="badge text-bg-success o_wevent_badge">
+                    <i class="fa fa-check me-2" role="img"/>Registered
+                </span>
+                <h2 t-field="event.name" itemprop="name" placeholder="Event Title" class="mt-3"/>
+                <p class="lead" t-field="event.subtitle" placeholder="Event Subtitle"/>
+            </div>
+        </t>
+    </xpath>
+    <xpath expr="//section//div[hasclass('d-print-none')]" position="replace">
+        <aside id="o_wevent_event_main_sidebar" class="col-lg-4 my-3 mb-lg-0 d-print-none">
+            <!-- CTA (desktop only) -->
+            <div class="d-none d-lg-block mb-3">
+                <t t-call="website_event_migration_layer.registration_template__ml"/>
+            </div>
+            <!-- Date & Time (desktop only) -->
+            <div class="d-none d-lg-block border-bottom pb-2 mb-3">
+                <t t-call="website_event_migration_layer.event_description_dates__ml"/>
+            </div>
+            <header class="d-lg-none pt-4 pb-3">
+                <h4>Event Info</h4>
+            </header>
+            <!-- Location -->
+            <div t-if="event.address_id" class="o_wevent_sidebar_block border-bottom pb-3 mb-4">
+                <h6 class="o_wevent_sidebar_title">Location</h6>
+                <div class="mb-1" t-field="event.address_id" t-options='{
+                    "widget": "contact",
+                    "fields": ["name"]
+                }'/>
+                <small itemprop="location" class="d-block mb-2" t-field="event.address_id" t-options='{
+                    "widget": "contact",
+                    "fields": ["address"],
+                    "no_marker": True
+                }'/>
+                <small t-field="event.address_id" class="d-block mb-2" t-options='{
+                    "widget": "contact",
+                    "fields": ["phone", "mobile", "email"]
+                }'/>
+                <a t-att-href="event._google_map_link()" target="_blank" class="btn btn-light" title="Get directions">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="align-text-top" role="img" style="height: 1em; width: 1em">
+                        <rect width="24" height="24" opacity="0"/>
+                        <path role="presentation" fill="currentColor" d="M13.67 22h-.06a1 1 0 0 1-.92-.8l-1.54-7.57a1 1 0 0 0-.78-.78L2.8 11.31a1 1 0 0 1-.12-1.93l16-5.33A1 1 0 0 1 20 5.32l-5.33 16a1 1 0 0 1-1 .68z"/>
+                    </svg>
+                    Get directions
+                </a>
+            </div>
+            <!-- Organizer -->
+            <div t-if="event.organizer_id" class="o_wevent_sidebar_block border-bottom pb-3 mb-4">
+                <h6 class="o_wevent_sidebar_title">Organizer</h6>
+                <div class="mb-1" t-field="event.organizer_id"/>
+                <small itemprop="location" t-field="event.organizer_id" t-options="{'widget': 'contact', 'fields': ['phone', 'mobile', 'email']}"/>
+            </div>
+            <!-- Social -->
+            <div class="o_wevent_sidebar_block">
+                <h6 class="o_wevent_sidebar_title">Share</h6>
+                <p>Find out what people see and say about this event, and join the conversation.</p>
+                <t t-snippet-call="website.s_share">
+                    <t t-set="_no_title" t-value="True"/>
+                    <t t-set="_classes" t-valuef="o_wevent_sidebar_social mx-n1"/>
+                    <t t-set="_link_classes" t-valuef="o_wevent_social_link"/>
+                </t>
+            </div>
+        </aside>
+    </xpath>
+</template>
+
+
+<!-- ================================================ -->
+<!-- addons/website_event/views/snippets/snippets.xml -->
+<!-- ================================================ -->
+<template id="snippet_options__ml" inherit_id="website_event.snippet_options" name="snippet_options__ml">
+    <xpath expr="//div[@data-js='WebsiteEvent']" position="after">
+         <div data-selector="#wrap:has(#o_wevent_event_main)" groups="website.group_website_designer" data-no-check="true" string="Event Cover">
+            <we-select string="Position" data-no-preview="true" data-reload="/">
+                <we-button data-customize-website-views="">Inside content</we-button>
+                <we-button data-customize-website-views="website_event_migration_layer.opt_event_description_cover_top">Top</we-button>
+                <we-button data-customize-website-views="website_event_migration_layer.opt_event_description_cover_hidden">Hidden (visitor only)</we-button>
+            </we-select>
+        </div>
+    </xpath>
+</template>
+
+</odoo>

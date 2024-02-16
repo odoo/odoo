@@ -4,6 +4,16 @@ $o-wevent-bg-color-light: mix($o-wevent-bg-color-base, #E9ECEF);
 $o-wevent-bg-color-dark: mix($o-wevent-bg-color-base, #24363a);
 $o-wevent-color: $body-color;
 
+$o-wevent-migration-layer: false !default;
+
+@if $o-wevent-migration-layer {
+    $o-wevent-bg-color-base: $gray-100;
+    $o-wevent-bg-color-base-contrast: color-contrast($o-wevent-bg-color-base);
+    $o-wevent-bg-color-light: mix($o-wevent-bg-color-base, #E9ECEF);
+    $o-wevent-bg-color-dark: mix($o-wevent-bg-color-base, #24363a);
+    $o-wevent-color: $body-color;
+}
+
 .o_wevent_index, .o_wevent_event {
 
     // Simple colored tags according to assigned background color
@@ -73,6 +83,25 @@ $o-wevent-color: $body-color;
         .o_wevent_online_badge_unpublished{
             opacity: 0.4;
         }
+        @if $o-wevent-migration-layer {
+            .o_wesession_list_item {
+                --bg: var(--bg-lighter);
+                --color: var(--color-lighter);
+
+                margin: map-get($spacers, 2) 0;
+                border: 1px solid var(--o-border-color);
+                border-left: 3px solid var(--base);
+            }
+
+            .event_track {
+                --bg: var(--bg-light);
+                --color: var(--color-light);
+
+                > div {
+                    border-top: 3px solid var(--base);
+                }
+            }
+        } @else {
         .o_wesession_list_item{
             margin: 1rem 0;
             border: 1px solid;
@@ -103,6 +132,7 @@ $o-wevent-color: $body-color;
                 border-color: $o-wevent-bg-color-light;
             }
         }
+        } // end else
 
         .o_wevent_online_page_container {
 

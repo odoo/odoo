@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!-- ========================================================== -->
+<!-- addons/website_event_booth/views/event_booth_templates.xml -->
+<!-- ========================================================== -->
+<template id="event_booth_layout__ml" inherit_id="website_event_booth.event_booth_layout" name="event_booth_layout__ml">
+    <xpath expr="//h3" position="replace"/>
+</template>
+
+<template id="event_booth_registration__ml" inherit_id="website_event_booth.event_booth_registration" name="event_booth_registration__ml">
+    <xpath expr="//t[@t-call='website_event_booth.event_booth_order_progress']" position="replace">
+        <div class="oe_structure"/>
+        <div class="d-flex flex-wrap align-items-center justify-content-between my-3">
+            <h3 class="my-0">Get A Booth</h3>
+            <t t-call="website_event_booth.event_booth_order_progress">
+                <t t-set="step" t-value="'STEP_BOOTH_SELECTION'"/>
+            </t>
+        </div>
+        <div class="oe_structure"/>
+    </xpath>
+
+    <!--
+        Booth Card
+        Needs to be done this way in order to avoid braacking other tempmplates inheritances
+    -->
+    <xpath expr="//t[@t-as='booth_category']/div" position="attributes">
+        <attribute name="class"/>
+        <attribute name="t-attf-class">col-md-6 col-lg-4 mb-4 {{ (len(event.event_booth_category_ids) &gt; 3) and 'col-xxl-3' }}</attribute>
+    </xpath>
+    <xpath expr="//t[@t-as='booth_category']//label" position="attributes">
+        <attribute name="t-attf-class"/>
+        <attribute name="t-attf-class">d-block h-100 #{'o_wbooth_category_unavailable overflow-hidden' if booth_category_unavailable else ''}"</attribute>
+    </xpath>
+    <xpath expr="//t[@t-as='booth_category']//div[hasclass('card-body')]" position="attributes">
+        <attribute name="class" add="d-flex flex-wrap w-100 gap-2 justify-content-between flex-grow-0 pb-0" separator=" "/>
+    </xpath>
+    <xpath expr="//t[@t-as='booth_category']//h5" position="attributes">
+        <attribute name="class" add="my-0" separator=" "/>
+    </xpath>
+    <xpath expr="//t[@t-as='booth_category']//div[@t-field='booth_category.description']" position="replace"/>
+    <xpath expr="//t[@t-as='booth_category']//div[hasclass('card-body')]" position="after">
+        <div class="w-100 small" t-attf-id="o_wbooth_booth_description_#{booth_category.id}" t-field="booth_category.description"/>
+    </xpath>
+    <xpath expr="//t[@t-as='booth_category']//div[@t-if='booth_category_unavailable']" position="attributes">
+        <attribute name="class" add="text-bg-danger" remove="bg-danger" separator=" "/>
+    </xpath>
+
+    <xpath expr="//t[@t-if='available_booth_category_ids']//h4" position="replace">
+        <h5 class="my-0">Location</h5>
+    </xpath>
+    <xpath expr="//div[@name='booth_registration_submit']//div" position="attributes">
+        <attribute name="class" remove="flex-column align-content-end border-top" add="align-items-center gap-2 mt-4 mb-5" separator=" "/>
+    </xpath>
+    <xpath expr="//button[hasclass('o_wbooth_registration_submit')]" position="attributes">
+        <attribute name="class" remove="ms-auto fw-bold" separator=" "/>
+    </xpath>
+</template>
+
+<template id="event_booth_order_progress__ml" inherit_id="website_event_booth.event_booth_order_progress" name="event_booth_order_progress__ml">
+    <xpath expr="//ul" position="replace">
+        <ul class="o_wevent_booth_order_progress d-none d-md-block list-unstyled px-3 py-2 text-bg-light rounded m-0">
+            <li t-attf-class="position-relative float-start m-0 text-center">
+                <a t-if="step!='STEP_BOOTH_SELECTION'" class="d-inline-flex align-items-center text-decoration-none" t-attf-href="/event/#{slug(event)}/booth?#{keep_query('booth_category_id', 'booth_ids')}">
+                    <span>Booth Selection</span><span class="fa fa-angle-right d-inline-block align-middle mx-2 mx-lg-3 opacity-75"/>
+                </a>
+                <span t-else="" class="d-inline-flex align-items-center text-decoration-none text-reset">
+                    <span>Booth Selection</span><span class="fa fa-angle-right d-inline-block align-middle mx-2 mx-lg-3 opacity-75"/>
+                </span>
+            </li>
+            <li t-attf-class="d-inline-flex align-items-center position-relative float-start m-0 text-center #{'' if step=='STEP_DETAILS_FORM' else 'opacity-75'}">
+                Contact Details<span class="fa fa-angle-right d-inline-block align-middle mx-2 mx-lg-3 opacity-75"/>
+            </li>
+            <li class="position-relative float-start m-0 text-center opacity-75">
+                <span class="opacity-70">Confirmed</span>
+            </li>
+        </ul>
+    </xpath>
+</template>
+
+<!-- ======================================================================= -->
+<!-- addons/website_event_booth/views/event_booth_registration_templates.xml -->
+<!-- ======================================================================= -->
+<template id="event_booth_registration_details__ml" inherit_id="website_event_booth.event_booth_registration_details" name="event_booth_registration_details__ml">
+    <xpath expr="//t[@t-call='website_event_booth.event_booth_order_progress']" position="replace">
+        <div class="d-flex flex-wrap align-items-center justify-content-between mt-3">
+            <h3 class="my-0">Get A Booth</h3>
+            <t t-call="website_event_booth.event_booth_order_progress">
+                <t t-set="step" t-value="'STEP_DETAILS_FORM'"/>
+            </t>
+        </div>
+    </xpath>
+</template>
+
+</odoo>
