@@ -45,9 +45,7 @@ async function selectConnector(value, index = 0) {
     const toggler = get(`${SELECTORS.connector} .dropdown-toggle`, index);
     await contains(toggler).click();
     const dropdownMenu = get(`${SELECTORS.connector} .dropdown-menu `, index);
-    const items = [...queryAll(".dropdown-item", { root: dropdownMenu })];
-    const item = items.find((i) => i.innerText === value);
-    await contains(item).click();
+    await contains(`.dropdown-item:contains(${value})`, { root: dropdownMenu }).click();
 }
 
 async function makeExpressionEditor(params = {}) {

@@ -1,8 +1,8 @@
-import { Component, xml, useState, markup } from "@odoo/owl";
-
-import { after, afterEach, expect, getFixture, onError, test } from "@odoo/hoot";
+import { after, afterEach, expect, onError, test } from "@odoo/hoot";
+import { queryAll, queryAllTexts, queryOne } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
-import { contains, mountWithCleanup, patchWithCleanup } from "../web_test_helpers";
+import { Component, markup, useState, xml } from "@odoo/owl";
+import { contains, mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 import { CodeEditor } from "@web/core/code_editor/code_editor";
 import { debounce } from "@web/core/utils/timing";
@@ -25,12 +25,8 @@ afterEach(() => {
 });
 
 function getDomValue() {
-    const lines = [...getFixture().querySelectorAll(".ace_line")];
-    return lines
-        .map((line) => {
-            const spans = [...line.querySelectorAll(":scope > span")];
-            return spans.map((span) => span.textContent).join("");
-        })
+    return queryAll(".ace_line")
+        .map((line) => queryAllTexts(":scope > span", { root: line }).join(""))
         .join("\n");
 }
 
@@ -204,7 +200,7 @@ test("Default value correctly set and updates", async () => {
     // Disable XML autocompletion for xml end tag.
     // Necessary because the contains().edit() helpers triggers as if it was
     // a real user interaction.
-    const ace_editor = window.ace.edit(getFixture().querySelector(".ace_editor"));
+    const ace_editor = window.ace.edit(queryOne(".ace_editor"));
     ace_editor.setBehavioursEnabled(false);
 
     await editAce(textB);

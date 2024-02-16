@@ -46,7 +46,7 @@ test("trigger an error when response has 'error' key", async () => {
     after(restoreFetch);
 
     const error = new RPCError("message");
-    await expect(rpc("/test/")).rejects.toThrow(error.message);
+    await expect(rpc("/test/")).rejects.toThrow(error);
 });
 
 test("rpc with simple routes", async () => {
@@ -121,7 +121,7 @@ test("check trigger RPC:REQUEST and RPC:RESPONSE for a rpc with an error", async
     });
 
     const error = new RPCError("message");
-    await expect(rpc("/test/")).rejects.toThrow(error.message);
+    await expect(rpc("/test/")).rejects.toThrow(error);
     expect(["RPC:REQUEST", "RPC:RESPONSE(ko)"]).toVerifySteps();
 });
 
@@ -133,7 +133,7 @@ test("check connection aborted", async () => {
     const connection = rpc();
     connection.abort();
     const error = new ConnectionAbortedError();
-    await expect(connection).rejects.toThrow(error.message);
+    await expect(connection).rejects.toThrow(error);
     expect(["RPC:REQUEST", "RPC:RESPONSE"]).toVerifySteps();
 });
 
@@ -142,5 +142,5 @@ test("trigger a ConnectionLostError when response isn't json parsable", async ()
     after(restoreFetch);
 
     const error = new ConnectionLostError("/test/");
-    await expect(rpc("/test/")).rejects.toThrow(error.message);
+    await expect(rpc("/test/")).rejects.toThrow(error);
 });

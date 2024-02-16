@@ -1,5 +1,5 @@
-import { test, expect, describe } from "@odoo/hoot";
-import { patchWithCleanup } from "../../web_test_helpers";
+import { describe, expect, test } from "@odoo/hoot";
+import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 import { memoize, uniqueId } from "@web/core/utils/functions";
 
