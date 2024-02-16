@@ -210,6 +210,9 @@ class AccountEdiFormat(models.Model):
         """
         signed_xml = self._l10n_sa_sign_xml(unsigned_xml, x509_cert, invoice.l10n_sa_invoice_signature)
         if invoice._l10n_sa_is_simplified():
+            # Applying with_prefetch() to set the _prefetch_ids = _ids,
+            # preventing premature QR code computation for other invoices.
+            invoice = invoice.with_prefetch()
             return self._l10n_sa_apply_qr_code(invoice, signed_xml)
         return signed_xml
 
