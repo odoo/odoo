@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
+from contextlib import contextmanager
 from unittest.mock import patch
 from odoo.addons.account.models.account_payment_method import AccountPaymentMethod
 from odoo.fields import Command
@@ -15,13 +16,6 @@ class PaymentCommon(PaymentTestUtils):
     @classmethod
     def setUpClass(cls, chart_template_ref=None):
         super().setUpClass(chart_template_ref=chart_template_ref)
-
-        Method_get_payment_method_information = AccountPaymentMethod._get_payment_method_information
-
-        def _get_payment_method_information(self):
-            res = Method_get_payment_method_information(self)
-            res['none'] = {'mode': 'multi', 'domain': [('type', '=', 'bank')]}
-            return res
 
         cls.currency_euro = cls._prepare_currency('EUR')
         cls.currency_usd = cls._prepare_currency('USD')
@@ -77,20 +71,25 @@ class PaymentCommon(PaymentTestUtils):
             'arch': arch,
         })
 
-        with patch.object(AccountPaymentMethod, '_get_payment_method_information', _get_payment_method_information):
-            cls.env['account.payment.method'].sudo().create({
+        with cls.mocked_get_payment_method_information(cls):
+            cls.dummy_acquirer_method = cls.env['account.payment.method'].sudo().create({
                 'name': 'Dummy method',
                 'code': 'none',
                 'payment_type': 'inbound'
             })
-        cls.dummy_acquirer = cls.env['payment.acquirer'].create({
-            'name': "Dummy Acquirer",
-            'provider': 'none',
-            'state': 'test',
-            'allow_tokenization': True,
-            'redirect_form_view_id': redirect_form.id,
-            'journal_id': cls.company_data['default_journal_bank'].id,
-        })
+            with cls.mocked_get_default_payment_method_id(cls):
+                cls.dummy_acquirer = cls.env['payment.acquirer'].create({
+                    'name': "Dummy Acquirer",
+                    'provider': 'none',
+                    'state': 'test',
+                    'allow_tokenization': True,
+                    'redirect_form_view_id': redirect_form.id,
+                    'journal_id': cls.company_data['default_journal_bank'].id,
+                })
+
+            # The bank journal has been updated.
+            # Trigger the constraints with the 'flush' to have them evaluated with the mocked payment method.
+            cls.env['account.journal'].flush()
 
         cls.acquirer = cls.dummy_acquirer
         cls.amount = 1111.11
@@ -121,6 +120,27 @@ class PaymentCommon(PaymentTestUtils):
         })
 
     #=== Utils ===#
+
+    @contextmanager
+    def mocked_get_payment_method_information(self):
+        Method_get_payment_method_information = AccountPaymentMethod._get_payment_method_information
+
+        def _get_payment_method_information(record):
+            res = Method_get_payment_method_information(record)
+            res['none'] = {'mode': 'electronic', 'domain': [('type', '=', 'bank')]}
+            return res
+
+        with patch.object(AccountPaymentMethod, '_get_payment_method_information', _get_payment_method_information):
+            yield
+
+    @contextmanager
+    def mocked_get_default_payment_method_id(self):
+
+        def _get_default_payment_method_id(record):
+            return self.dummy_acquirer_method.id
+
+        with patch.object(self.env.registry['payment.acquirer'], '_get_default_payment_method_id', _get_default_payment_method_id):
+            yield
 
     @classmethod
     def _prepare_currency(cls, currency_code):
@@ -167,6 +187,12 @@ class PaymentCommon(PaymentTestUtils):
                 ('type', '=', 'bank')
             ], limit=1)
         acquirer.state = 'test'
+
+        with cls.mocked_get_payment_method_information(cls):
+            # The bank journal has been updated and the payment lines accordingly.
+            # Trigger the constraints with the 'flush' to have them evaluated with the mocked payment method.
+            cls.env['account.journal'].flush()
+
         return acquirer
 
     def create_transaction(self, flow, sudo=True, **values):

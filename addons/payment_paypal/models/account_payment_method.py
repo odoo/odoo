@@ -10,5 +10,5 @@ class AccountPaymentMethod(models.Model):
     @api.model
     def _get_payment_method_information(self):
         res = super()._get_payment_method_information()
-        res['paypal'] = {'mode': 'unique', 'domain': [('type', '=', 'bank')]}
+        res['paypal'] = {'mode': 'electronic', 'domain': [('type', '=', 'bank')]}
         return res

@@ -127,20 +127,7 @@ class AccountPaymentMethodLine(models.Model):
 
     @api.constrains('name')
     def _ensure_unique_name_for_journal(self):
-        self.flush(['name'])
-        self._cr.execute('''
-            SELECT apml.name, apm.payment_type
-            FROM account_payment_method_line apml
-            JOIN account_payment_method apm ON apml.payment_method_id = apm.id
-            WHERE apml.journal_id IS NOT NULL
-            GROUP BY apml.name, journal_id, apm.payment_type
-            HAVING count(apml.id) > 1
-        ''')
-        res = self._cr.fetchall()
-        if res:
-            (name, payment_type) = res[0]
-            raise UserError(_("You can't have two payment method lines of the same payment type (%s) "
-                              "and with the same name (%s) on a single journal.", payment_type, name))
+        self.journal_id._check_payment_method_line_ids_multiplicity()
 
     def unlink(self):
         """
