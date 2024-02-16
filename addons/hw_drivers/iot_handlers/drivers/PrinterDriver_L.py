@@ -21,6 +21,7 @@ from odoo.addons.hw_drivers.event_manager import event_manager
 from odoo.addons.hw_drivers.iot_handlers.interfaces.PrinterInterface_L import PPDs, conn, cups_lock
 from odoo.addons.hw_drivers.main import iot_devices
 from odoo.addons.hw_drivers.tools import helpers
+from odoo.addons.hw_drivers.websocket_client import send_to_controller
 
 _logger = logging.getLogger(__name__)
 
@@ -138,6 +139,14 @@ class PrinterDriver(Driver):
     def get_status(cls):
         status = 'connected' if any(iot_devices[d].device_type == "printer" and iot_devices[d].device_connection == 'direct' for d in iot_devices) else 'disconnected'
         return {'status': status, 'messages': ''}
+
+    def action(self, data):
+        action = data.get('action')
+        if action:
+            self._actions.get(action, '')(data)
+        else:
+            super().action(data)
+        send_to_controller(self.connection_type, {'print_id': data['print_id'], 'device_identifier': self.device_identifier})
 
     def disconnect(self):
         self.update_status('disconnected', 'Printer was disconnected')

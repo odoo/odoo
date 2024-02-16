@@ -13,19 +13,19 @@ from odoo.addons.hw_drivers.tools import helpers
 _logger = logging.getLogger(__name__)
 websocket.enableTrace(True, level=logging.getLevelName(_logger.getEffectiveLevel()))
 
-def send_to_controller(print_id, device_identifier):
+def send_to_controller(device_type, params):
+    routes = {
+        "printer": "/iot/printer/status",
+        }
     server = helpers.get_odoo_server_url()
     try:
         urllib3.disable_warnings()
         http = urllib3.PoolManager(cert_reqs='CERT_NONE')
         http.request(
             'POST',
-            server + "/iot/printer/status",
+            server + routes[device_type],
             body=json.dumps(
-                {'params': {
-                    'print_id': print_id,
-                    'device_identifier': device_identifier,
-                    }}).encode('utf8'),
+                {'params': params}).encode('utf8'),
             headers={
                 'Content-type': 'application/json',
                 'Accept': 'text/plain',
@@ -38,18 +38,16 @@ def send_to_controller(print_id, device_identifier):
 def on_message(ws, messages):
     """
         When a message is receive, this function is triggered
-        The message is load and if its type is 'print', is sent to the printer
+        The message is load and if its type is 'iot_action', is sent to the device
     """
     messages = json.loads(messages)
-    for document in messages:
-        if (document['message']['type'] == 'print'):
-            payload = document['message']['payload']
+    for message in messages:
+        if (message['message']['type'] == 'iot_action'):
+            payload = message['message']['payload']
             if helpers.get_mac_address() in payload['iotDevice']['iotIdentifiers']:
-                #send box confirmation
                 for device in payload['iotDevice']['identifiers']:
                     if device['identifier'] in main.iot_devices:
-                        main.iot_devices[device["identifier"]]._action_default(payload)
-                        send_to_controller(payload['print_id'], device['identifier'])
+                        main.iot_devices[device["identifier"]].action(payload)
 
 
 def on_error(ws, error):
