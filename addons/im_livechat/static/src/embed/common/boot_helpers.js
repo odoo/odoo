@@ -39,6 +39,7 @@ async function loadFont(name, url) {
 export function makeRoot(target) {
     const root = document.createElement("div");
     root.classList.add("o-livechat-root");
+    root.setAttribute("id", `o-livechat-root-${luxon.DateTime.now().ts + Math.random()}`);
     target.appendChild(root);
     return root;
 }

@@ -370,12 +370,16 @@ export class Message extends Component {
     }
 
     onClickDelete() {
-        this.env.services.dialog.add(MessageConfirmDialog, {
-            message: this.message,
-            messageComponent: Message,
-            prompt: _t("Are you sure you want to delete this message?"),
-            onConfirm: () => this.messageService.delete(this.message),
-        });
+        this.dialog.add(
+            MessageConfirmDialog,
+            {
+                message: this.message,
+                messageComponent: Message,
+                prompt: _t("Are you sure you want to delete this message?"),
+                onConfirm: () => this.messageService.delete(this.message),
+            },
+            { context: this }
+        );
     }
 
     onClickReplyTo(ev) {
@@ -496,9 +500,7 @@ export class Message extends Component {
     }
 
     openReactionMenu() {
-        this.dialog.add(MessageReactionMenu, {
-            message: this.props.message,
-        });
+        this.dialog.add(MessageReactionMenu, { message: this.props.message }, { context: this });
     }
 
     async onClickToggleTranslation() {
