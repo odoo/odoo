@@ -497,6 +497,10 @@ class BaseAutomation(models.Model):
                     ir_logging_sudo.create(self._prepare_loggin_values(message=msg % msg_args, level="ERROR"))
                 raise e
 
+        if not self.record_getter:
+            new_record = record.create(payload)
+            return new_record
+
         if not record.exists():
             msg = "Webhook #%s could not be triggered because no record to run it on was found."
             msg_args = (self.id,)
