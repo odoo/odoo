@@ -15,18 +15,17 @@ import {
     formatTechnical,
     formatTime,
     getFuzzyScore,
-    hootLog,
     makeCallbacks,
     normalize,
 } from "../hoot_utils";
 import { MockMath, internalRandom } from "../mock/math";
 import { cleanupNavigator } from "../mock/navigator";
-import { enableNetworkLogs } from "../mock/network";
 import { cleanupTime, setFrameRate } from "../mock/time";
 import { cleanupWindow, watchListeners } from "../mock/window";
 import { DEFAULT_CONFIG, FILTER_KEYS } from "./config";
 import { makeExpectFunction } from "./expect";
 import { makeFixtureManager } from "./fixture";
+import { logLevels, logger } from "./logger";
 import { Suite, suiteError } from "./suite";
 import { Tag } from "./tag";
 import { Test, testError } from "./test";
@@ -662,11 +661,10 @@ export class TestRunner {
                 table[key] = `[${[...table[key]].join(", ")}]`;
             }
         }
-        const groupName = hootLog("Configuration (click to expand)");
-        console.groupCollapsed(...groupName);
-        console.table(table);
-        console.groupEnd(...groupName);
-        console.log(...hootLog("Starting test suites"));
+        logger.groupCollapsed("Configuration (click to expand)");
+        logger.table(table);
+        logger.groupEnd();
+        logger.logRun("Starting test suites");
 
         // Adjust debug mode if more or less than 1 test will be run
         if (this.debug) {
@@ -674,11 +672,7 @@ export class TestRunner {
                 (test) => !test.config.skip && !test.config.multi
             );
             if (activeSingleTests.length !== 1) {
-                console.warn(
-                    ...hootLog(
-                        `disabling debug mode: ${activeSingleTests.length} tests will be run`
-                    )
-                );
+                logger.warn(`disabling debug mode: ${activeSingleTests.length} tests will be run`);
                 setParams({ debugTest: null });
                 this.debug = false;
             }
@@ -705,8 +699,10 @@ export class TestRunner {
             this.__afterEach(watchKeys(window, keys), watchKeys(document, keys));
         }
 
+        if (this.debug) {
+            logger.level = logLevels.DEBUG;
+        }
         enableEventLogs(this.debug);
-        enableNetworkLogs(this.debug);
         setFrameRate(this.config.frameRate);
 
         await this.#callbacks.call("before-all");
@@ -746,23 +742,7 @@ export class TestRunner {
 
                         suite.parent?.reporting.add({ suites: +1 });
 
-                        // Log suite results and reset counters
-                        const logArgs = [`"${suite.fullName}" ended`];
-                        const withArgs = [];
-                        if (suite.reporting.passed) {
-                            withArgs.push(suite.reporting.passed, "passed");
-                        }
-                        if (suite.reporting.failed) {
-                            withArgs.push(suite.reporting.failed, "failed");
-                        }
-                        if (suite.reporting.skipped) {
-                            withArgs.push(suite.reporting.skipped, "skipped");
-                        }
-                        if (withArgs.length) {
-                            logArgs.push("(", ...withArgs, ")");
-                        }
-
-                        console.log(...hootLog(...logArgs));
+                        logger.logSuite(suite);
                     }
                 }
                 nextJob();
@@ -861,7 +841,9 @@ export class TestRunner {
             // Log test errors and increment counters
             this.expect.__after(this, test);
             test.visited++;
-            if (!lastResults.pass) {
+            if (lastResults.pass) {
+                logger.logTest(test);
+            } else {
                 let failReason;
                 if (lastResults.errors.length) {
                     failReason = lastResults.errors.map((e) => e.message).join("\n");
@@ -869,7 +851,7 @@ export class TestRunner {
                     failReason = formatAssertions(lastResults.assertions);
                 }
 
-                console.error(...hootLog(`Test "${test.fullName}" failed:\n${failReason}`));
+                logger.error(`Test "${test.fullName}" failed:\n${failReason}`);
             }
 
             if (!test.config.multi || test.visited === test.config.multi) {
@@ -879,7 +861,7 @@ export class TestRunner {
         }
 
         if (!this.state.tests.length) {
-            console.error(...hootLog(`no tests to run`));
+            logger.error(`no tests to run`);
             await this.stop();
         } else if (!this.debug) {
             await this.stop();
@@ -901,18 +883,18 @@ export class TestRunner {
         const { passed, failed, assertions } = this.reporting;
         if (failed > 0) {
             // Use console.dir for this log to appear on runbot sub-builds page
-            console.dir(
-                `HOOT: failed ${failed} tests (${passed} passed, total time: ${this.totalTime})`
+            logger.logGlobal(
+                `failed ${failed} tests (${passed} passed, total time: ${this.totalTime})`
             );
-            console.error(...hootLog("test failed (see above for details)"));
+            logger.error("test failed (see above for details)");
         } else {
             // Use console.dir for this log to appear on runbot sub-builds page
-            console.dir(
-                `HOOT: passed ${passed} tests (${assertions} assertions, total time: ${this.totalTime})`
+            logger.logGlobal(
+                `passed ${passed} tests (${assertions} assertions, total time: ${this.totalTime})`
             );
             // This statement acts as a success code for the server to know when
             // all suites have passed.
-            console.log(...hootLog("test suite succeeded"));
+            logger.logRun("test suite succeeded");
         }
     }
 
@@ -1130,10 +1112,8 @@ export class TestRunner {
 
         if (skip) {
             if (ignoreSkip) {
-                console.warn(
-                    ...hootLog(
-                        `test "${job.fullName}" is explicitly included but marked as skipped: "skip" modifier has been ignored`
-                    )
+                logger.warn(
+                    `test "${job.fullName}" is explicitly included but marked as skipped: "skip" modifier has been ignored`
                 );
             } else {
                 job.config.skip = true;
@@ -1320,8 +1300,8 @@ export class TestRunner {
         }
 
         if (error.cause) {
-            console.error(...hootLog(error.cause));
+            logger.error(error.cause);
         }
-        console.error(...hootLog(error));
+        logger.error(error);
     }
 }
