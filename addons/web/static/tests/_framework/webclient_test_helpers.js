@@ -9,6 +9,7 @@ class TestClientAction extends Component {
         </div>`;
     static props = ["*"];
 }
+
 export function useTestClientAction() {
     const tag = "__test__client__action__";
     registry.category("actions").add(tag, TestClientAction);

@@ -89,7 +89,7 @@ test("Show copy button even on readonly empty field", async () => {
 test("Display a tooltip on click", async () => {
     mockService("popover", () => ({
         add(el, comp, params) {
-            expect(el.textContent).toBe("Copy");
+            expect(el).toHaveText("Copy");
             expect(params).toEqual({ tooltip: "Copied" });
             expect.step("copied tooltip");
             return () => {};

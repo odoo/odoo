@@ -39,6 +39,8 @@ export {
 export { Command } from "./_framework/mock_server/mock_model";
 export {
     MockServer,
+    defineActions,
+    defineMenus,
     defineModels,
     defineParams,
     getServerWebSockets,
@@ -91,6 +93,7 @@ export {
     mountView,
     mountViewInDialog,
 } from "./_framework/view_test_helpers";
+export { useTestClientAction } from "./_framework/webclient_test_helpers";
 
 export function defineWebModels() {
     return defineModels(webModels);

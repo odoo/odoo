@@ -1,6 +1,9 @@
 import { before, expect, test } from "@odoo/hoot";
-import { makeMockEnv, patchWithCleanup } from "../../web_test_helpers";
+import { makeMockEnv, patchWithCleanup } from "@web/../tests/web_test_helpers";
 
+import { localization } from "@web/core/l10n/localization";
+import { nbsp } from "@web/core/utils/strings";
+import { session } from "@web/session";
 import {
     parseFloat,
     parseFloatTime,
@@ -8,9 +11,6 @@ import {
     parseMonetary,
     parsePercentage,
 } from "@web/views/fields/parsers";
-import { localization } from "@web/core/l10n/localization";
-import { nbsp } from "@web/core/utils/strings";
-import { session } from "@web/session";
 
 before(async () => {
     await makeMockEnv();

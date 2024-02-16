@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { click } from "@odoo/hoot-dom";
+import { click, queryAttribute } from "@odoo/hoot-dom";
 import { Component, xml } from "@odoo/owl";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 
@@ -141,7 +141,7 @@ test("Limiting the visible tags displays a counter", async () => {
     expect(".rounded-circle", {
         message: "the counter displays 4 more items",
     }).toHaveText("+4");
-    expect(JSON.parse(document.querySelector(".rounded-circle").dataset.tooltipInfo), {
+    expect(JSON.parse(queryAttribute(".rounded-circle", "data-tooltip-info")), {
         message: "the counter has a tooltip displaying other items",
     }).toEqual({
         tags: [

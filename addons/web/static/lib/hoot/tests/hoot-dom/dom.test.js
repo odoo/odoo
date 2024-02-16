@@ -91,7 +91,7 @@ const makeSquare = (dimensions, className) => {
 
 const waitForIframes = () =>
     Promise.all(
-        [...getFixture().querySelectorAll("iframe")].map(
+        queryAll("iframe").map(
             (iframe) => new Promise((resolve) => iframe.addEventListener("load", resolve))
         )
     );
@@ -330,8 +330,6 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
         expect(matchMedia("not (prefers-color-scheme: dark)").matches).toBe(true);
         expect(matchMedia("(prefers-reduced-motion: reduce)").matches).toBe(true);
         expect(matchMedia("(prefers-reduced-motion: no-preference)").matches).toBe(false);
-
-
     });
 
     test("waitFor: already in fixture", async () => {

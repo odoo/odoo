@@ -334,7 +334,7 @@ describe("relativedelta absolute : period is singular", () => {
 
     test("type of date + relative delta", () => {
         const expr1 = "(datetime.date(2021,10,1) + relativedelta(day=15,days=3,hours=24))";
-        expect(evaluateExpr(expr1) instanceof PyDate).toBe(true);
+        expect(evaluateExpr(expr1)).toBeInstanceOf(PyDate);
     });
 });
 

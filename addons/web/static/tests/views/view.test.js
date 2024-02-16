@@ -1323,11 +1323,11 @@ test("callback recorders are moved from props to subenv", async () => {
         static props = ["*"];
         static template = xml`<div/>`;
         setup() {
-            expect(this.env.__getGlobalState__ instanceof CallbackRecorder).toBe(true); // put in env by View
-            expect(this.env.__getContext__ instanceof CallbackRecorder).toBe(true); // put in env by View
+            expect(this.env.__getGlobalState__).toBeInstanceOf(CallbackRecorder); // put in env by View
+            expect(this.env.__getContext__).toBeInstanceOf(CallbackRecorder); // put in env by View
             expect(this.env.__getLocalState__).toBe(null); // set by View
             expect(this.env.__beforeLeave__).toBe(null); // set by View
-            expect(this.env.__getOrderBy__ instanceof CallbackRecorder).toBe(true); // put in env by WithSearch
+            expect(this.env.__getOrderBy__).toBeInstanceOf(CallbackRecorder); // put in env by WithSearch
         }
     }
     viewRegistry.add("toy", { type: "toy", Controller: ToyController }, { force: true });

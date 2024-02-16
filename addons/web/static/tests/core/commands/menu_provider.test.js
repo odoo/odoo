@@ -1,14 +1,17 @@
-import { expect, getFixture, test } from "@odoo/hoot";
-
+import { expect, test } from "@odoo/hoot";
+import { press, queryAllTexts } from "@odoo/hoot-dom";
+import { animationFrame } from "@odoo/hoot-mock";
 import { Component, xml } from "@odoo/owl";
+import {
+    contains,
+    defineActions,
+    defineMenus,
+    mountWithCleanup,
+    useTestClientAction,
+} from "@web/../tests/web_test_helpers";
 
 import { Dialog } from "@web/core/dialog/dialog";
-import { contains, mountWithCleanup } from "../../web_test_helpers";
 import { WebClient } from "@web/webclient/webclient";
-import { press } from "@odoo/hoot-dom";
-import { animationFrame } from "@odoo/hoot-mock";
-import { defineActions, defineMenus } from "../../_framework/mock_server/mock_server";
-import { useTestClientAction } from "../../_framework/webclient_test_helpers";
 
 defineMenus([
     { id: 0, children: [], name: "UglyHack", appID: 0, xmlid: "menu_0" },
@@ -57,9 +60,7 @@ test("displays only apps if the search value is '/'", async () => {
     expect(".o_command_palette").toHaveCount(1);
     expect(".o_command_category").toHaveCount(1);
     expect(".o_command").toHaveCount(2);
-    expect(
-        [...getFixture().querySelectorAll(".o_command_name")].map((el) => el.textContent)
-    ).toEqual(["Contact", "Sales"]);
+    expect(queryAllTexts(".o_command_name")).toEqual(["Contact", "Sales"]);
 });
 
 test("displays apps and menu items if the search value is not only '/'", async () => {
@@ -71,9 +72,7 @@ test("displays apps and menu items if the search value is not only '/'", async (
     await animationFrame();
     expect(".o_command_palette").toHaveCount(1);
     expect(".o_command").toHaveCount(3);
-    expect(
-        [...getFixture().querySelectorAll(".o_command_name")].map((el) => el.textContent)
-    ).toEqual(["Sales", "Sales / Info", "Sales / Report"]);
+    expect(queryAllTexts(".o_command_name")).toEqual(["Sales", "Sales / Info", "Sales / Report"]);
 });
 
 test("opens an app", async () => {

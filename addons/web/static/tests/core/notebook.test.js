@@ -1,6 +1,6 @@
 import { expect, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
-import { click } from "@odoo/hoot-dom";
+import { click, queryFirst } from "@odoo/hoot-dom";
 import { Component, xml } from "@odoo/owl";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 
@@ -232,13 +232,13 @@ test("each page is different", async () => {
     }
 
     await mountWithCleanup(Parent);
-    const firstPage = document.querySelector("h3");
-    expect(firstPage instanceof HTMLElement).toBe(true);
+    const firstPage = queryFirst("h3");
+    expect(firstPage).toBeInstanceOf(HTMLElement);
 
     click(".o_notebook_headers .nav-item:nth-child(2) a");
     await animationFrame();
-    const secondPage = document.querySelector("h3");
-    expect(secondPage instanceof HTMLElement).toBe(true);
+    const secondPage = queryFirst("h3");
+    expect(secondPage).toBeInstanceOf(HTMLElement);
     expect(firstPage).not.toBe(secondPage);
 });
 
