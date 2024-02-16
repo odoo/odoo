@@ -38,6 +38,7 @@
                        groups="stock.group_stock_multi_locations"
                        options="{'no_create': True}"
                        invisible="sublocation != 'closest_location'"
+                       required="sublocation == 'closest_location'"
                        optional="show"/>
                 <field name="company_id" groups="stock.group_stock_multi_locations" force_save="1" readonly="context.get('fixed_location', False)" options="{'no_create': True}" optional="show"/>
             </tree>
