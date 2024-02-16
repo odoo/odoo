@@ -75,6 +75,7 @@ export const dialogService = {
                         }
                         options.onClose?.();
                     },
+                    rootId: options.context?.root?.el.getRootNode()?.host?.id,
                 }
             );
 
