@@ -155,3 +155,17 @@ class TestTaskState(TestProjectCommon):
 
         self.assertEqual(self.task_1.state, '04_waiting_normal')
         self.assertEqual(task_1_copy.state, '04_waiting_normal')
+
+    def test_task_created_in_waiting_stage_gets_in_progress_state(self):
+        """
+            Test that when a new task is created in the "Waiting" state (by grouping by state in Kanban view), it gets the state "In Progress" by default.
+        """
+        project_pigs = self.env['project.project'].search([('name', '=', 'Pigs')])
+        task = self.env['project.task'].with_context({
+            'default_state': '04_waiting_normal',
+        }).create({
+            'name': 'Task initially waiting state',
+            'project_id': project_pigs.id,
+        })
+
+        self.assertEqual(task.state, '01_in_progress', "The task should be in progress")
