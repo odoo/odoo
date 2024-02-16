@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <tr t-name="mrp.BomOverviewLine">
+    <tr t-name="mrp.BomOverviewLine" t-on-click="() => this.props.toggleFolded(identifier)">
         <td name="td_mrp_bom">
             <div class="text-truncate" t-attf-style="margin-left: {{ marginMultiplicator * 20 }}px">
                 <t t-if="data.level > 0 &amp;&amp; hasComponents">
-                    <button t-on-click="() => this.props.toggleFolded(identifier)" class="o_mrp_bom_unfoldable btn btn-light p-0" t-attf-aria-label="{{ props.isFolded ? 'Unfold' : 'Fold' }}" t-attf-title="{{ props.isFolded ? 'Unfold' : 'Fold' }}" style="margin-right: 1px">
+                    <span class="o_mrp_bom_unfoldable btn btn-light p-0" t-attf-aria-label="{{ props.isFolded ? 'Unfold' : 'Fold' }}" t-attf-title="{{ props.isFolded ? 'Unfold' : 'Fold' }}" style="margin-right: 1px">
                         <i t-attf-class="fa fa-fw fa-caret-{{ props.isFolded ? 'right' : 'down' }}" role="img"/>
-                    </button>
+                    </span>
                 </t>
                 <a href="#" t-on-click.prevent="() => this.goToAction(data.link_id, data.link_model)" t-esc="data.name"/>
                 <t t-if="data.phantom_bom">
