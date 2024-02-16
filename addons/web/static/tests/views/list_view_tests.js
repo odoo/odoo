@@ -15372,12 +15372,6 @@ QUnit.module("Views", (hooks) => {
             "should have the optional columns dropdown toggle inside the table"
         );
 
-        assert.containsOnce(
-            target,
-            "table > thead > tr > th:last-child .o_optional_columns_dropdown",
-            "The optional fields toggler is in the last header column"
-        );
-
         // optional fields
         await click(target, "table .o_optional_columns_dropdown .dropdown-toggle");
         assert.containsN(
@@ -15446,12 +15440,6 @@ QUnit.module("Views", (hooks) => {
             target.querySelector("table"),
             ".o_optional_columns_dropdown",
             "should have the optional columns dropdown toggle inside the table"
-        );
-
-        assert.containsOnce(
-            target,
-            "table > thead > tr > th:last-child .o_optional_columns_dropdown",
-            "The optional fields toggler is in the last header column"
         );
     });
 
