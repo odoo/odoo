@@ -177,3 +177,45 @@ class TestStockLandedCostsMrp(ValuationReconciliationTestCommon):
         # Check that he can validate the landed cost without an access error
         landed_cost.with_user(stock_manager).button_validate()
         self.assertEqual(landed_cost.state, 'done')
+
+    def test_landed_cost_on_mrp_03(self):
+        """
+            Do not apply landed costs to byproducts without cost_share
+        """
+        # Create product refrigerator & oven
+        byproduct1 = self.env['product.product'].create({
+            'name': 'Byproduct1',
+            'is_storable': True,
+            'categ_id': self.env.ref('product.product_category_goods').id,
+        })
+        byproduct2 = self.env['product.product'].create({
+            'name': 'Byproduct2',
+            'is_storable': True,
+            'categ_id': self.env.ref('product.product_category_goods').id,
+        })
+        self.bom_refri.write({
+            'byproduct_ids': [
+                (0, 0, {'product_id': byproduct1.id, 'product_qty': 1, 'cost_share': 100}),
+                (0, 0, {'product_id': byproduct2.id, 'product_qty': 1, 'cost_share': 0}),
+            ],
+        })
+        man_order_form = Form(self.env['mrp.production'].with_user(self.allow_user))
+        man_order_form.product_id = self.product_refrigerator
+        man_order_form.bom_id = self.bom_refri
+        man_order_form.product_qty = 2.0
+        man_order = man_order_form.save()
+        man_order.action_confirm()
+        # produce product
+        mo_form = Form(man_order.with_user(self.allow_user))
+        mo_form.qty_producing = 2
+        man_order = mo_form.save()
+        man_order.button_mark_done()
+
+        landed_cost = Form(self.env['stock.landed.cost'].with_user(self.allow_user)).save()
+        landed_cost.target_model = 'manufacturing'
+        landed_cost.mrp_production_ids = [(6, 0, [man_order.id])]
+        landed_cost.cost_lines = [(0, 0, {'product_id': self.landed_cost.id, 'price_unit': 5.0, 'split_method': 'equal'})]
+        landed_cost.compute_landed_cost()
+
+        # check the valuation adjustment lines
+        self.assertFalse(byproduct2 in landed_cost.valuation_adjustment_lines.product_id)
