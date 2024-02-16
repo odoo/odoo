@@ -28,8 +28,8 @@ QUnit.test("open the chatWindow of a user from the command palette", async () =>
     triggerHotkey("control+k");
     await insertText(".o_command_palette_search input", "@");
     await contains(".o_command", { count: 2 });
-    await click(".o_command.focused", { text: "Mitchell Admin" });
-    await contains(".o-mail-ChatWindow", { text: "Mitchell Admin" });
+    await click(".o_command.focused", { text: "OdooBot" });
+    await contains(".o-mail-ChatWindow", { text: "OdooBot" });
 });
 
 QUnit.test("open the chatWindow of a channel from the command palette", async () => {

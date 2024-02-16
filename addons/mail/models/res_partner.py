@@ -231,8 +231,9 @@ class Partner(models.Model):
             if "write_date" in fields:
                 data["write_date"] = odoo.fields.Datetime.to_string(partner.write_date)
             if 'user' in fields:
-                internal_users = partner.user_ids - partner.user_ids.filtered('share')
-                main_user = internal_users[0] if len(internal_users) > 0 else partner.user_ids[0] if len(partner.user_ids) > 0 else self.env['res.users']
+                users = partner.with_context(active_test=False).user_ids
+                internal_users = users - users.filtered('share')
+                main_user = internal_users[0] if len(internal_users) > 0 else users[0] if len(users) > 0 else self.env['res.users']
                 data['userId'] = main_user.id
                 data["isInternalUser"] = not main_user.share if main_user else False
             if not self.env.user._is_internal():

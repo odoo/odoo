@@ -160,10 +160,6 @@ export class SuggestionService {
         const mainSuggestionList = [];
         const extraSuggestionList = [];
         for (const partner of partners) {
-            if (partner.eq(this.store.odoobot)) {
-                // ignore archived partners (except OdooBot)
-                continue;
-            }
             if (!partner.name) {
                 continue;
             }

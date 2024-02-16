@@ -497,7 +497,9 @@ patch(MockServer.prototype, {
         if (!partners_to.includes(this.pyEnv.currentPartnerId)) {
             partners_to.push(this.pyEnv.currentPartnerId);
         }
-        const partners = this.getRecords("res.partner", [["id", "in", partners_to]]);
+        const partners = this.getRecords("res.partner", [["id", "in", partners_to]], {
+            active_test: false,
+        });
         const channels = this.pyEnv["discuss.channel"].searchRead([["channel_type", "=", "chat"]]);
         for (const channel of channels) {
             const channelMemberIds = this.pyEnv["discuss.channel.member"].search([
@@ -755,7 +757,9 @@ patch(MockServer.prototype, {
      * @returns {Object}
      */
     async _mockDiscussChannelCreateGroup(partners_to) {
-        const partners = this.getRecords("res.partner", [["id", "in", partners_to]]);
+        const partners = this.getRecords("res.partner", [["id", "in", partners_to]], {
+            active_test: false,
+        });
         const id = this.pyEnv["discuss.channel"].create({
             channel_type: "group",
             channel_member_ids: partners.map((partner) =>
