@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<templates xml:space="preserve">
-    <t t-inherit="web.OverlayContainer" t-inherit-mode="extension">
-        <xpath expr="//t[@t-foreach][@t-as='overlay']/*[1]" position="replace">
-            <t t-if="isVisible(overlay)">$0</t>
-        </xpath>
-    </t>
-</templates>

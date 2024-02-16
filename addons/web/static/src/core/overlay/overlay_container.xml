@@ -2,9 +2,9 @@
 <templates xml:space="preserve">
 
     <t t-name="web.OverlayContainer">
-        <div class="o-overlay-container">
+        <div class="o-overlay-container" t-ref="root">
             <t t-foreach="sortedOverlays" t-as="overlay" t-key="overlay.id">
-                <ErrorHandler onError="(error) => this.handleError(overlay, error)">
+                <ErrorHandler t-if="isVisible(overlay)" onError="(error) => this.handleError(overlay, error)">
                     <t t-if="overlay.env">
                         <WithEnv env="overlay.env">
                             <t t-component="overlay.component" t-props="overlay.props" />
