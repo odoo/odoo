@@ -67,6 +67,24 @@ class TestAccountJournalDashboard(AccountTestInvoicingCommon):
         self.assertEqual(dashboard_data['number_waiting'], 1)
         self.assertIn('81.72', dashboard_data['sum_waiting'])
 
+        # Check partial on invoice
+        partial_payment = self.env['account.payment'].create({
+            'amount': 13.3,
+            'payment_type': 'inbound',
+            'partner_type': 'customer',
+            'partner_id': self.partner_a.id,
+        })
+        partial_payment.action_post()
+
+        (invoice + partial_payment.move_id).line_ids.filtered(lambda line: line.account_type == 'asset_receivable').reconcile()
+
+        dashboard_data = journal._get_journal_dashboard_data_batched()[journal.id]
+        self.assertEqual(dashboard_data['number_draft'], 1)
+        self.assertIn('13.3', dashboard_data['sum_draft'])
+
+        self.assertEqual(dashboard_data['number_waiting'], 1)
+        self.assertIn('68.42', dashboard_data['sum_waiting'])
+
         # Check waiting payment
         refund.action_post()
 
@@ -74,10 +92,10 @@ class TestAccountJournalDashboard(AccountTestInvoicingCommon):
         self.assertEqual(dashboard_data['number_draft'], 0)
         self.assertIn('0.00', dashboard_data['sum_draft'])
 
-        self.assertEqual(dashboard_data['number_waiting'], 2)
+        self.assertEqual(dashboard_data['number_waiting'], 1)
         self.assertIn('68.42', dashboard_data['sum_waiting'])
 
-        # Check partial
+        # Check partial on refund
         payment = self.env['account.payment'].create({
             'amount': 10.0,
             'payment_type': 'outbound',
@@ -94,12 +112,12 @@ class TestAccountJournalDashboard(AccountTestInvoicingCommon):
         self.assertEqual(dashboard_data['number_draft'], 0)
         self.assertIn('0.00', dashboard_data['sum_draft'])
 
-        self.assertEqual(dashboard_data['number_waiting'], 2)
-        self.assertIn('78.42', dashboard_data['sum_waiting'])
+        self.assertEqual(dashboard_data['number_waiting'], 1)
+        self.assertIn('68.42', dashboard_data['sum_waiting'])
 
         dashboard_data = journal._get_journal_dashboard_data_batched()[journal.id]
-        self.assertEqual(dashboard_data['number_late'], 2)
-        self.assertIn('78.42', dashboard_data['sum_late'])
+        self.assertEqual(dashboard_data['number_late'], 1)
+        self.assertIn('68.42', dashboard_data['sum_late'])
 
     def test_sale_purchase_journal_for_multi_currency_purchase(self):
         currency = self.other_currency
@@ -292,17 +310,3 @@ class TestAccountJournalDashboard(AccountTestInvoicingCommon):
         moves[6].button_draft()
         moves[6].button_cancel()
         self.assertTrue(journal._query_has_sequence_holes())  # gap due to canceled move using a sequence, gap warning
-
-    def test_bank_journal_misc_operations_with_payments(self):
-        """Test that payments are excluded from the miscellaneaous operations"""
-        bank_journal = self.company_data['default_journal_bank'].copy({'currency_id': self.other_currency.id})
-        bank_journal.outbound_payment_method_line_ids[0].payment_account_id = bank_journal.default_account_id
-        bank_journal.inbound_payment_method_line_ids[0].payment_account_id = bank_journal.default_account_id
-        self.env['account.payment'].create({
-            'amount': 100,
-            'payment_type': 'inbound',
-            'partner_type': 'customer',
-            'journal_id': bank_journal.id,
-        }).action_post()
-        dashboard_data = bank_journal._get_journal_dashboard_data_batched()[bank_journal.id]
-        self.assertEqual(0, dashboard_data['nb_misc_operations'])

@@ -411,9 +411,13 @@ class AccountPaymentRegister(models.TransientModel):
                 wizard.communication = False
 
     @api.depends('can_edit_wizard')
+    @api.depends_context('force_group_payment')
     def _compute_group_payment(self):
+        force_group_payment = self._context.get('force_group_payment')
         for wizard in self:
-            if wizard.can_edit_wizard:
+            if force_group_payment:
+                wizard.group_payment = True
+            elif wizard.can_edit_wizard:
                 batches = wizard._get_batches()
                 wizard.group_payment = len(batches[0]['lines'].move_id) == 1
             else:
