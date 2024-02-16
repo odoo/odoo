@@ -2722,9 +2722,8 @@ class Selection(Field):
         if not self._base_fields:
             return
 
-        # determine selection (applying 'selection_add' extensions)
+        # determine selection (applying 'selection_add' extensions) as a dict
         values = None
-        labels = {}
 
         for field in self._base_fields:
             # We cannot use field.selection or field.selection_add here
@@ -2734,14 +2733,12 @@ class Selection(Field):
                     _logger.warning("%s: selection attribute will be ignored as the field is related", self)
                 selection = field.args['selection']
                 if isinstance(selection, list):
-                    if values is not None and values != [kv[0] for kv in selection]:
+                    if values is not None and list(values) != [kv[0] for kv in selection]:
                         _logger.warning("%s: selection=%r overrides existing selection; use selection_add instead", self, selection)
-                    values = [kv[0] for kv in selection]
-                    labels = dict(selection)
+                    values = dict(selection)
                     self.ondelete = {}
                 else:
                     values = None
-                    labels = {}
                     self.selection = selection
                     self.ondelete = None
 
@@ -2754,8 +2751,9 @@ class Selection(Field):
                 assert values is not None, \
                     "%s: selection_add=%r on non-list selection %r" % (self, selection_add, self.selection)
 
+                values_add = {kv[0]: (kv[1] if len(kv) > 1 else None) for kv in selection_add}
                 ondelete = field.args.get('ondelete') or {}
-                new_values = [kv[0] for kv in selection_add if kv[0] not in values]
+                new_values = [key for key in values_add if key not in values]
                 for key in new_values:
                     ondelete.setdefault(key, 'set null')
                 if self.required and new_values and 'set null' in ondelete.values():
@@ -2790,15 +2788,15 @@ class Selection(Field):
                             "'set [value]', 'cascade' or a callable" % (self, val, key)
                         )
 
-                values = merge_sequences(values, [kv[0] for kv in selection_add])
-                labels.update(kv for kv in selection_add if len(kv) == 2)
+                values = {
+                    key: values_add.get(key) or values[key]
+                    for key in merge_sequences(values, values_add)
+                }
                 self.ondelete.update(ondelete)
 
         if values is not None:
-            self.selection = [(value, labels[value]) for value in values]
-
-        if isinstance(self.selection, list):
-            assert all(isinstance(v, str) for v, _ in self.selection), \
+            self.selection = list(values.items())
+            assert all(isinstance(key, str) for key in values), \
                 "Field %s with non-str value in selection" % self
 
     def _selection_modules(self, model):
