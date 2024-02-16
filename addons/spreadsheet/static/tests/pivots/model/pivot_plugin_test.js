@@ -218,6 +218,39 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
         assert.equal(getEvaluatedCell(model, "G11").message, "Field non-existing does not exist");
     });
 
+    QUnit.test("invalid group dimensions", async function (assert) {
+        const { model } = await createSpreadsheetWithPivot({
+            arch: /*xml*/ `
+                <pivot>
+                    <field name="product_id" type="row"/>
+                    <field name="foo" type="col"/>
+                    <field name="bar" type="col"/>
+                    <field name="probability" type="measure"/>
+                </pivot>`,
+        });
+        const invalids = [
+            '=ODOO.PIVOT(1,"probability", "product_id", 1, "bar", false, "foo", 1)', // inverted col dimensions
+            '=ODOO.PIVOT(1,"probability", "product_id", 1, "bar", false, "f"&"oo", 1)', // inverted col dimensions, "foo" computed
+            '=ODOO.PIVOT(1,"probability", "product_id", 1, "bar", false)', // missing first col dimension
+            '=ODOO.PIVOT(1,"probability", "#product_id", 1, "#bar", 1, "#foo", 1)',
+            '=ODOO.PIVOT(1,"probability", "bar", false, "foo", 1, "product_id", 1)', // columns before rows
+
+            '=ODOO.PIVOT.HEADER(1, "product_id", 1, "bar", false, "foo", 1)', // inverted col dimensions
+            '=ODOO.PIVOT.HEADER(1, "product_id", 1, "bar", false)', // missing first col dimension
+            '=ODOO.PIVOT.HEADER(1, "#product_id", 1, "#bar", 1, "#foo", 1)',
+            '=ODOO.PIVOT.HEADER(1, "bar", false, "foo", 1, "product_id", 47)', // columns before rows
+        ];
+        for (const formula of invalids) {
+            setCellContent(model, "G10", formula);
+            assert.equal(getCellValue(model, "G10"), "#ERROR", formula);
+            assert.equal(
+                getEvaluatedCell(model, "G10").message,
+                "Dimensions don't match the pivot definition",
+                formula
+            );
+        }
+    });
+
     QUnit.test(
         "user context is combined with pivot context to fetch data",
         async function (assert) {
