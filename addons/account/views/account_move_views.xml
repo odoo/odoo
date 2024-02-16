@@ -395,7 +395,7 @@
                     <field name="move_name" string="Journal Entry" widget="open_move_widget"/>
                     <field name="partner_id" optional="show" readonly="move_type != 'entry'"/>
                     <field name="ref" readonly="False"/>
-                    <field name="display_name" optional="show"/>
+                    <field name="name" optional="show"/>
                     <field name="discount_amount_currency" string="Discount Amount" optional="show" invisible="not discount_amount_currency"/>
                     <field name="amount_residual" sum="Total Residual" string="Residual" readonly="1" invisible="not is_account_reconcile"/>
                     <field name="amount_residual_currency" string="Residual in Currency" optional="hide" readonly="1" invisible="is_same_currency or not is_account_reconcile"/>
@@ -422,6 +422,7 @@
                         '|', '|', '|',
                         ('name', 'ilike', self), ('ref', 'ilike', self), ('account_id', 'ilike', self), ('partner_id', 'ilike', self)]"/>
                     <field name="name"/>
+                    <field name="move_id"/>
                     <field name="ref"/>
                     <field name="payment_date" string="Due Date"/>
                     <field name="partner_id"/>
@@ -1699,7 +1700,7 @@
             <field name="view_mode">tree</field>
             <field name="view_id" ref="view_move_line_payment_tree"/>
             <field name="search_view_id" ref="view_account_move_line_payment_filter"/>
-            <field name="domain">[('parent_state', '=', 'posted'), ('amount_residual', '&lt;', 0), ('account_id.reconcile', '=', True), ('journal_id.type', '=', 'sale')]</field>
+            <field name="domain">[('parent_state', '=', 'posted'), ('date_maturity', '!=', False), ('amount_residual', '&lt;', 0), ('account_id.reconcile', '=', True), ('journal_id.type', '=', 'sale')]</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     Amounts to settle
@@ -1715,7 +1716,7 @@
             <field name="view_mode">tree</field>
             <field name="view_id" ref="view_move_line_payment_tree"/>
             <field name="search_view_id" ref="view_account_move_line_payment_filter"/>
-            <field name="domain">[('parent_state', '=', 'posted'), ('amount_residual', '&lt;', 0), ('account_id.reconcile', '=', True), ('journal_id.type', '=', 'purchase')]</field>
+            <field name="domain">[('parent_state', '=', 'posted'), ('date_maturity', '!=', False), ('amount_residual', '&lt;', 0), ('account_id.reconcile', '=', True), ('journal_id.type', '=', 'purchase')]</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     Amounts to settle
