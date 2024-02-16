@@ -147,7 +147,6 @@ const getEventConstructor = (eventType) => {
 
         // Keyboard events
         case "keydown":
-        case "keypress":
         case "keyup":
             return [KeyboardEvent, mapKeyboardEvent];
 
@@ -704,13 +703,6 @@ const _keyDown = (target, eventInit) => {
                 }
             }
         }
-
-        // Trigger 'keypress' event for printable characters
-        if (!ctrlKey && /^[\w ]$/.test(key)) {
-            const keyPressEvent = dispatch(target, "keypress", eventInit);
-            events.push(keyPressEvent);
-            prevented = isPrevented(keyPressEvent);
-        }
     }
 
     if (!prevented) {
@@ -816,14 +808,14 @@ const _keyUp = (target, eventInit) => {
         if (getTag(target) === "button" && target.type === "button") {
             /**
              * Special action: button 'Enter'
-             *  On: unprevented 'Enter' keydown & keypress on a <button type="button"/>
+             *  On: unprevented 'Enter' keydown on a <button type="button"/>
              *  Do: triggers a 'click' event on the button
              */
             events.push(...triggerClick(target, { button: 0 }));
         } else if ((parentForm = target.closest("form"))) {
             /**
              * Special action: form 'Enter'
-             *  On: unprevented 'Enter' keydown & keypress on any element that
+             *  On: unprevented 'Enter' keydown on any element that
              *      is not a <button type="button"/> in a form element
              *  Do: triggers a 'submit' event on the form
              */
@@ -833,7 +825,7 @@ const _keyUp = (target, eventInit) => {
     if (eventInit.key === " " && getTag(target) === "input" && target.type === "checkbox") {
         /**
          * Special action: input[type=checkbox] 'Space'
-         *  On: unprevented ' ' keydown & keypress on an <input type="checkbox"/>
+         *  On: unprevented ' ' keydown on an <input type="checkbox"/>
          *  Do: triggers a 'click' event on the input
          */
         events.push(...triggerClick(target, { button: 0 }));
@@ -944,6 +936,14 @@ const _select = (target, value) => {
     return events;
 };
 
+const DEPRECATED_EVENT_PROPERTIES = {
+    keyCode: "key",
+    which: "key",
+};
+const DEPRECATED_EVENTS = {
+    keypress: "keydown",
+    mousewheel: "wheel",
+};
 const DOUBLE_CLICK_DELAY = 500;
 const KEY_ALIASES = {
     alt: "Alt",
@@ -1232,11 +1232,12 @@ export function dblclick(target, options) {
 }
 
 /**
- * Creates a new {@link Event} of the given type and dispatches it on the given
+ * Creates a new DOM {@link Event} of the given type and dispatches it on the given
  * {@link Target}.
  *
  * Note that this function is free of side-effects and does not trigger any other
- * event or special action.
+ * event or special action. It also only supports standard DOM events, and will
+ * crash when trying to dispatch a non-standard or deprecated event.
  *
  * @template {EventType} T
  * @param {EventTarget} target
@@ -1247,6 +1248,26 @@ export function dblclick(target, options) {
  *  dispatch(document.querySelector("input"), "paste"); // Dispatches a "paste" event on the given <input>
  */
 export function dispatch(target, type, eventInit) {
+    if (type in DEPRECATED_EVENTS) {
+        throw new HootDomError(
+            `cannot dispatch "${type}" event: this event type is deprecated, use "${DEPRECATED_EVENTS[type]}" instead`
+        );
+    }
+    if (type !== type.toLowerCase()) {
+        throw new HootDomError(
+            `cannot dispatch "${type}" event: this event type is either non-standard or deprecated`
+        );
+    }
+    if (eventInit && typeof eventInit === "object") {
+        for (const key in eventInit) {
+            if (key in DEPRECATED_EVENT_PROPERTIES) {
+                throw new HootDomError(
+                    `cannot dispatch "${type}" event: property "${key}" is deprecated, use "${DEPRECATED_EVENT_PROPERTIES[key]}" instead`
+                );
+            }
+        }
+    }
+
     const [Constructor, processParams] = getEventConstructor(type);
     const event = new Constructor(type, processParams({ ...eventInit, target }));
 
@@ -1500,7 +1521,6 @@ export function hover(target, options) {
  *
  * The event sequence is as follow:
  *  - `keydown`
- *  - `keypress`
  *
  * Additional actions will be performed depending on the key pressed:
  * - `Tab`: focus next (or previous with `shift`) focusable element;
@@ -1669,7 +1689,6 @@ export function pointerUp(target, options) {
  *
  * The event sequence is as follow:
  *  - `keydown`
- *  - `keypress`
  *  - `keyup`
  *
  * @param {KeyStrokes} keyStrokes
