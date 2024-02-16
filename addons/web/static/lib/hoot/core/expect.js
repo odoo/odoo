@@ -21,12 +21,12 @@ import {
     ensureArguments,
     ensureArray,
     formatHumanReadable,
-    hootLog,
     isNil,
     isOfType,
     match,
     strictEqual,
 } from "../hoot_utils";
+import { logger } from "./logger";
 import { Test } from "./test";
 
 /**
@@ -826,10 +826,8 @@ export class Matchers {
             acceptedType: "any",
             predicate: (actual) => {
                 if (strictEqual(actual, expected)) {
-                    console.warn(
-                        ...hootLog(
-                            `Called \`'toEqual()\` on strictly equal values. Did you mean to use \`toBe()\`?`
-                        )
+                    logger.warn(
+                        `Called \`'toEqual()\` on strictly equal values. Did you mean to use \`toBe()\`?`
                     );
                     return true;
                 }

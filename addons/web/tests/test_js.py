@@ -35,7 +35,7 @@ class WebSuite(odoo.tests.HttpCase):
     @odoo.tests.no_retry
     def test_unit_desktop(self):
         # Unit tests suite (desktop)
-        self.browser_js('/web/tests/next?headless&tag=-mobile', "", "", login='admin', timeout=1800, success_signal="[HOOT] test suite succeeded", error_checker=unit_test_error_checker)
+        self.browser_js('/web/tests/next?headless&loglevel=2&tag=-mobile', "", "", login='admin', timeout=1800, success_signal="[HOOT] test suite succeeded", error_checker=unit_test_error_checker)
 
     @odoo.tests.no_retry
     def test_qunit_desktop(self):
@@ -94,7 +94,7 @@ class MobileWebSuite(odoo.tests.HttpCase):
     @odoo.tests.no_retry
     def test_unit_mobile(self):
         # Unit tests suite (mobile)
-        self.browser_js('/web/tests/next?headless&tag=-desktop&tag=-headless', "", "", login='admin', timeout=1800, success_signal="[HOOT] test suite succeeded", error_checker=unit_test_error_checker)
+        self.browser_js('/web/tests/next?headless&loglevel=2&tag=-desktop&tag=-headless', "", "", login='admin', timeout=1800, success_signal="[HOOT] test suite succeeded", error_checker=unit_test_error_checker)
 
     def test_qunit_mobile(self):
         # ! DEPRECATED

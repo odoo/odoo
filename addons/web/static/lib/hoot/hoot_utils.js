@@ -553,21 +553,6 @@ export function getFuzzyScore(pattern, string) {
 }
 
 /**
- * @param  {...unknown} args
- */
-export function hootLog(...args) {
-    const prefix = `%c[HOOT]%c`;
-    const styles = [`color:#ff0080`, `color:inherit`];
-    const firstArg = args.shift() ?? "";
-    if (typeof firstArg === "string") {
-        args.unshift(`${prefix} ${firstArg}`, ...styles);
-    } else {
-        args.unshift(prefix, ...styles, firstArg);
-    }
-    return args;
-}
-
-/**
  * Returns whether the given value is either `null` or `undefined`.
  *
  * @template T

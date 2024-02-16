@@ -1,6 +1,7 @@
 /** @odoo-module */
 /* eslint-disable no-restricted-syntax */
 
+import { makeNetworkLogger } from "../core/logger";
 import { ensureArray, makePublicListeners } from "../hoot_utils";
 import { mockedCancelAnimationFrame, mockedRequestAnimationFrame } from "./time";
 
@@ -18,7 +19,6 @@ const {
     SharedWorker,
     WebSocket,
     Worker,
-    console,
     document,
 } = globalThis;
 
@@ -59,43 +59,6 @@ const makeWorkerScope = (worker) => {
     return { execute, load };
 };
 
-/**
- * @param {string} prefix
- * @param {string} title
- */
-const makeNetworkLogger = (prefix, title) => {
-    /**
-     * @param {string} bullet
-     * @param {string} colorValue
-     * @param {() => any} getData
-     */
-    const log = async (bullet, colorValue, getData) => {
-        if (!allowLogs) {
-            return;
-        }
-        const color = `color: ${colorValue}`;
-        const styles = [`${color}; font-weight: bold;`, color];
-        console.groupCollapsed(`${bullet} %c${prefix}#${id}%c<${title}>`, ...styles, await getData());
-        console.trace();
-        console.groupEnd();
-    };
-
-    const id = nextNetworkLogId++;
-
-    return {
-        /**
-         * Request logger: blue-ish.
-         * @type {(getData: () => any) => void}
-         */
-        logRequest: log.bind(null, "->", "#66e"),
-        /**
-         * Response logger: orange.
-         * @type {(getData: () => any) => void}
-         */
-        logResponse: log.bind(null, "<-", "#f80"),
-    };
-};
-
 const BODY_SYMBOL = Symbol("body");
 const DEFAULT_URL = "https://www.hoot.test/";
 const HEADER = {
@@ -113,25 +76,16 @@ const openServerWebsockets = new Set();
 /** @type {Map<SharedWorker | Worker, Promise<any>>} */
 const openWorkers = new Map();
 
-let allowLogs = false;
 /** @type {(typeof fetch) | null} */
 let mockFetchFn = null;
 /** @type {((worker: Worker | MessagePort) => any) | null} */
 let mockWorkerConnection = null;
 /** @type {((websocket: ServerWebSocket) => any) | null} */
 let mockWebSocketConnection = null;
-let nextNetworkLogId = 1;
 
 //-----------------------------------------------------------------------------
 // Exports
 //-----------------------------------------------------------------------------
-
-/**
- * @param {boolean} toggle
- */
-export function enableNetworkLogs(toggle) {
-    allowLogs = toggle ?? true;
-}
 
 /** @type {typeof fetch} */
 export async function mockedFetch(input, init) {

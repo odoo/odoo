@@ -1,7 +1,7 @@
 /** @odoo-module alias=@odoo/hoot default=false */
 
+import { logger } from "./core/logger";
 import { TestRunner } from "./core/runner";
-import { hootLog } from "./hoot_utils";
 import { setupHootUI } from "./ui/setup_hoot_ui";
 
 /**
@@ -10,12 +10,6 @@ import { setupHootUI } from "./ui/setup_hoot_ui";
  *  ui: import("./ui/setup_hoot_ui").UiState
  * }} Environment
  */
-
-//-----------------------------------------------------------------------------
-// Global
-//-----------------------------------------------------------------------------
-
-const { console } = globalThis;
 
 //-----------------------------------------------------------------------------
 // Internal
@@ -32,10 +26,7 @@ const runner = new TestRunner();
  * @param {unknown} value
  */
 export function registerDebugInfo(value) {
-    if (!runner.debug) {
-        return;
-    }
-    console.debug(...hootLog("debug context provided:", value));
+    logger.logDebug("debug context provided:", value);
 }
 
 // Main test API
