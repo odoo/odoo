@@ -377,36 +377,6 @@ class TestCreateRecurrentEvents(TestRecurrentEvents):
         self.assertEqual(events[0].start_date, date(2019, 10, 22), "The first event has the initial start date")
         self.assertEqual(events[1].start_date, date(2019, 10, 29), "The start date of the second event is one week later")
 
-    def test_recurrency_with_this_event(self):
-        """
-        1) Create an event with a recurrence set on it
-        2) Try updating the event with a different recurrence without specifying 'recurrence_update'
-        3) Update the recurrence of one of the events, this time using the 'recurrence_update' as future_events
-        4) Finally, check that the updated event correctly reflects the recurrence
-        """
-        event = self.env['calendar.event'].create({
-            'name': "Test Event",
-            'allday': False,
-            'rrule': u'FREQ=DAILY;INTERVAL=1;COUNT=10',
-            'recurrency': True,
-            'start': datetime(2023, 7, 28, 1, 0),
-            'stop': datetime(2023, 7, 29, 18, 0),
-            })
-        events = self.env['calendar.recurrence'].search([('base_event_id', '=', event.id)]).calendar_event_ids
-        self.assertEqual(len(events), 10, "It should have 10 events in the recurrence")
-
-        # Update the recurrence without without specifying 'recurrence_update'
-        with self.assertRaises(UserError):
-            event.write({'rrule': u'FREQ=DAILY;INTERVAL=2;COUNT=5'})
-        # Update the recurrence of the earlier event
-        events[5].write({
-            'recurrence_update': 'future_events',
-            'count': 2,
-        })
-        updated_events = self.env['calendar.recurrence'].search([('base_event_id', '=', events[5].id)]).calendar_event_ids
-        self.assertEqual(len(updated_events), 2, "It should have 2 events in the recurrence")
-        self.assertTrue(updated_events[1].recurrency, "It should have recurrency in the updated events")
-
 class TestUpdateRecurrentEvents(TestRecurrentEvents):
 
     @classmethod
