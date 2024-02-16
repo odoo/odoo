@@ -26,7 +26,8 @@
                 <field name="qty_done" 
                     decoration-warning="product_uom_qty &lt; qty_done"
                     decoration-success="product_uom_qty == qty_done"/>
-                <field name="product_uom_id" groups="uom.group_uom"/>
+                <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="uom.group_uom"
+			        attrs="{'readonly': ['|', ('product_uom_qty', '!=', 0.0), '&amp;', ('state', '=', 'done'), ('id', '!=', False)]}"/>
             </tree>
         </field>
     </record>
