@@ -1503,14 +1503,27 @@ export function queryAllValues(target, options) {
 }
 
 /**
- * Returns the first node returned by {@link queryAll} with the given arguments.
+ * Performs a {@link queryAll} with the given arguments and returns the first result
+ * or `null`.
  *
  * @param {Target} target
  * @param {QueryOptions} options
- * @returns {Node}
+ * @returns {Node | null}
  */
 export function queryFirst(target, options) {
-    return queryAll(target, options)[0];
+    return queryAll(target, options)[0] || null;
+}
+
+/**
+ * Performs a {@link queryAll} with the given arguments and returns the last result
+ * or `null`.
+ *
+ * @param {Target} target
+ * @param {QueryOptions} options
+ * @returns {Node | null}
+ */
+export function queryLast(target, options) {
+    return queryAll(target, options).at(-1) || null;
 }
 
 /**
