@@ -69,6 +69,7 @@ const FIELD_OPERATORS = {
         { symbol: "between", description: _lt("is between") },
         { symbol: "!=", description: _lt("is set"), value: false },
         { symbol: "=", description: _lt("is not set"), value: false },
+        { symbol: "today", description: _lt("is today"), value: false },
     ],
     datetime: [
         { symbol: "between", description: _lt("is between") },
@@ -80,6 +81,7 @@ const FIELD_OPERATORS = {
         { symbol: "<=", description: _lt("is before or equal to") },
         { symbol: "!=", description: _lt("is set"), value: false },
         { symbol: "=", description: _lt("is not set"), value: false },
+        { symbol: "today", description: _lt("is today"), value: false },
     ],
     id: [{ symbol: "=", description: _lt("is") }],
     number: [
@@ -227,6 +229,19 @@ export class CustomFilterItem extends Component {
             const genericType = this.FIELD_TYPES[field.type];
             const operator = this.OPERATORS[genericType][condition.operator];
             const descriptionArray = [field.string, operator.description.toString()];
+            if (operator.symbol === "today") {
+                let domain;
+                if (genericType === "date") {
+                    domain = `[("${field.name}", "=", context_today().strftime("%Y-%m-%d"))]`;
+                } else if (genericType === "datetime") {
+                    domain = `[
+                        "&",
+                            ("${field.name}", ">=", datetime.datetime.combine(context_today(), datetime.time(0,0,0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")),
+                            ("${field.name}", "<", datetime.datetime.combine(context_today() + relativedelta(days=1), datetime.time(0,0,0) ).to_utc().strftime("%Y-%m-%d %H:%M:%S"))
+                    ]`;
+                }
+                return { description: descriptionArray.join(" "), domain, type: "filter" };
+            }
             const domainArray = [];
             let domainValue;
             // Field type specifics
