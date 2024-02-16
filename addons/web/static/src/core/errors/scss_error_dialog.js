@@ -18,7 +18,18 @@ const scssErrorNotificationService = {
             );
         });
         translationIsReady.then(() => {
-            for (const { cssRules } of assets) {
+            for (const asset of assets) {
+                let cssRules;
+                try {
+                    // The filter above isn't enough to protect against CORS errors when reading
+                    // the cssRules property. Indeed, it seems that if the protocol is http, reading
+                    // that property can also trigger a CORS error, even if the origin is the same.
+                    // Anyway, we never want this line to crash, so we protect it.
+                    // See opw 3746910.
+                    cssRules = asset.cssRules;
+                } catch {
+                    continue;
+                }
                 const lastRule = cssRules?.[cssRules?.length - 1];
                 if (lastRule?.selectorText === "css_error_message") {
                     const message = _t(
