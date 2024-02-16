@@ -1,7 +1,7 @@
 import { expect, test } from "@odoo/hoot";
-import { contains, mountWithCleanup } from "../web_test_helpers";
-
 import { Component, xml } from "@odoo/owl";
+import { contains, mountWithCleanup } from "@web/../tests/web_test_helpers";
+
 import { ColorList } from "@web/core/colorlist/colorlist";
 
 class Parent extends Component {

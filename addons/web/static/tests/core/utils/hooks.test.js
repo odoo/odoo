@@ -1,10 +1,14 @@
 import { describe, expect, getFixture, test } from "@odoo/hoot";
 import { click, queryOne } from "@odoo/hoot-dom";
 import { Deferred, animationFrame } from "@odoo/hoot-mock";
-import { getMockEnv } from "@web/../tests/_framework/env_test_helpers";
-import { contains, mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import {
+    getService,
+    makeMockEnv,
+    mountWithCleanup,
+    patchWithCleanup,
+} from "@web/../tests/web_test_helpers";
 
-import { Component, onMounted, useState, xml } from "@odoo/owl";
+import { Component, onMounted, reactive, useState, xml } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { CommandPalette } from "@web/core/commands/command_palette";
 import { registry } from "@web/core/registry";
@@ -19,73 +23,89 @@ import {
 
 describe("useAutofocus", () => {
     test.tags("desktop")("simple usecase", async () => {
+        const state = reactive({ text: "" });
+
         class MyComponent extends Component {
             static props = ["*"];
             static template = xml`
                 <span>
-                    <input type="text" t-ref="autofocus" />
+                    <input type="text" t-ref="autofocus" t-att-value="state.text" />
                 </span>
             `;
             setup() {
-                this.inputRef = useAutofocus();
+                useAutofocus();
+
+                this.state = useState(state);
             }
         }
 
-        const component = await mountWithCleanup(MyComponent);
-        expect(document.activeElement).toBe(component.inputRef.el);
+        await mountWithCleanup(MyComponent);
 
-        component.render();
+        expect("input").toBeFocused();
+
+        state.text = "a";
         await animationFrame();
-        expect(document.activeElement).toBe(component.inputRef.el);
+
+        expect("input").toBeFocused();
     });
 
     test.tags("desktop")("simple usecase when input type is number", async () => {
+        const state = reactive({ counter: 0 });
+
         class MyComponent extends Component {
             static props = ["*"];
             static template = xml`
                 <span>
-                    <input type="number" t-ref="autofocus" />
+                    <input type="number" t-ref="autofocus" t-att-value="state.counter" />
                 </span>
             `;
             setup() {
-                this.inputRef = useAutofocus();
+                useAutofocus();
+
+                this.state = useState(state);
             }
         }
 
-        const component = await mountWithCleanup(MyComponent);
-        expect(document.activeElement).toBe(component.inputRef.el);
+        await mountWithCleanup(MyComponent);
 
-        component.render();
+        expect("input").toBeFocused();
+
+        state.counter++;
         await animationFrame();
-        expect(document.activeElement).toBe(component.inputRef.el);
+
+        expect("input").toBeFocused();
     });
 
     test.tags("desktop")("conditional autofocus", async () => {
+        const state = reactive({ showInput: true });
+
         class MyComponent extends Component {
             static props = ["*"];
             static template = xml`
                 <span>
-                    <input t-if="showInput" type="text" t-ref="autofocus" />
+                    <input t-if="state.showInput" type="text" t-ref="autofocus" />
                 </span>
             `;
             setup() {
-                this.inputRef = useAutofocus();
-                this.showInput = true;
+                useAutofocus();
+
+                this.state = useState(state);
             }
         }
 
-        const component = await mountWithCleanup(MyComponent);
-        expect(document.activeElement).toBe(component.inputRef.el);
+        await mountWithCleanup(MyComponent);
 
-        component.showInput = false;
-        component.render();
-        await animationFrame();
-        expect(document.activeElement).toBe(document.body);
+        expect("input").toBeFocused();
 
-        component.showInput = true;
-        component.render();
+        state.showInput = false;
         await animationFrame();
-        expect(document.activeElement).toBe(component.inputRef.el);
+
+        expect(document.body).toBeFocused();
+
+        state.showInput = true;
+        await animationFrame();
+
+        expect("input").toBeFocused();
     });
 
     test("returns also a ref when screen has touch but it does not focus", async () => {
@@ -98,10 +118,30 @@ describe("useAutofocus", () => {
             `;
             static props = ["*"];
             setup() {
-                this.inputRef = useAutofocus();
+                const inputRef = useAutofocus();
                 onMounted(() => {
-                    expect(this.inputRef.el).toBeTruthy();
+                    expect(inputRef.el).toBeTruthy();
                 });
+            }
+        }
+
+        // TODO: mockTouch?
+        patchWithCleanup(window, { ontouchstart: () => {} });
+
+        await mountWithCleanup(MyComponent);
+        expect(document.body).toBeFocused();
+    });
+
+    test("works when screen has touch and you provide mobile param", async () => {
+        class MyComponent extends Component {
+            static props = ["*"];
+            static template = xml`
+                <span>
+                    <input type="text" t-ref="autofocus" />
+                </span>
+            `;
+            setup() {
+                useAutofocus({ mobile: true });
             }
         }
 
@@ -115,36 +155,13 @@ describe("useAutofocus", () => {
         });
 
         await mountWithCleanup(MyComponent);
-        expect(document.activeElement).toBe(document.body);
-    });
 
-    test("works when screen has touch and you provide mobile param", async () => {
-        class MyComponent extends Component {
-            static props = ["*"];
-            static template = xml`
-                <span>
-                    <input type="text" t-ref="autofocus" />
-                </span>
-            `;
-            setup() {
-                this.inputRef = useAutofocus({ mobile: true });
-            }
-        }
-
-        patchWithCleanup(browser, {
-            matchMedia: (media) => {
-                if (media === "(pointer:coarse)") {
-                    return { matches: true };
-                }
-                this._super();
-            },
-        });
-
-        const component = await mountWithCleanup(MyComponent);
-        expect(document.activeElement).toBe(component.inputRef.el);
+        expect("input").toBeFocused();
     });
 
     test.tags("desktop")("supports different ref names", async () => {
+        const state = reactive({ showSecond: true });
+
         class MyComponent extends Component {
             static props = ["*"];
             static template = xml`
@@ -154,23 +171,28 @@ describe("useAutofocus", () => {
                 </span>
             `;
             setup() {
-                this.secondRef = useAutofocus({ refName: "second" });
-                this.firstRef = useAutofocus({ refName: "first" }); // test requires this at second position
-                this.state = useState({ showSecond: true });
+                useAutofocus({ refName: "second" });
+                useAutofocus({ refName: "first" }); // test requires this at second position
+
+                this.state = useState(state);
             }
         }
 
-        const component = await mountWithCleanup(MyComponent);
+        await mountWithCleanup(MyComponent);
 
         // "first" is focused first since it has the last call to "useAutofocus"
-        expect(document.activeElement).toBe(component.firstRef.el);
+        expect("input:first").toBeFocused();
 
         // We now remove and add again the second input, which triggers the useEffect of the hook and and apply focus
-        component.state.showSecond = false;
+        state.showSecond = false;
         await animationFrame();
-        component.state.showSecond = true;
+
+        expect("input:first").toBeFocused();
+
+        state.showSecond = true;
         await animationFrame();
-        expect(document.activeElement).toBe(component.secondRef.el);
+
+        expect("input:last").toBeFocused();
     });
 
     test.tags("desktop")("can select its content", async () => {
@@ -182,50 +204,63 @@ describe("useAutofocus", () => {
                 </span>
             `;
             setup() {
-                this.inputRef = useAutofocus({ selectAll: true });
+                useAutofocus({ selectAll: true });
             }
         }
 
-        const component = await mountWithCleanup(MyComponent);
-        expect(document.activeElement).toBe(component.inputRef.el);
-        expect(component.inputRef.el.selectionStart).toBe(0);
-        expect(component.inputRef.el.selectionEnd).toBe(13);
+        await mountWithCleanup(MyComponent);
+
+        expect("input").toBeFocused();
+        expect("input").toHaveProperty("selectionStart", 0);
+        expect("input").toHaveProperty("selectionEnd", 13);
     });
 
     test.tags("desktop")(
         "autofocus outside of active element doesn't work (CommandPalette)",
         async () => {
+            const state = reactive({
+                showPalette: true,
+                text: "",
+            });
+
             class MyComponent extends Component {
                 static props = ["*"];
                 static template = xml`
-                <div>
-                    <input type="text" t-ref="autofocus" />
-                </div>
-            `;
+                    <div>
+                        <input type="text" t-ref="autofocus" t-att-value="state.text" />
+                    </div>
+                `;
                 setup() {
-                    this.inputRef = useAutofocus();
+                    useAutofocus();
+
+                    this.state = useState(state);
                 }
             }
 
-            const component = await mountWithCleanup(MyComponent);
-            expect(document.activeElement).toBe(component.inputRef.el);
+            await mountWithCleanup(MyComponent);
 
-            const config = { providers: [] };
-            component.env.services.dialog.add(CommandPalette, { config });
+            expect("input").toBeFocused();
+
+            getService("dialog").add(CommandPalette, {
+                config: { providers: [] },
+            });
             await animationFrame();
 
             expect(".o_command_palette").toHaveCount(1);
-            expect(document.activeElement).not.toBe(component.inputRef.el);
+            expect("input").not.toBeFocused();
 
-            component.render();
+            state.text = "a";
             await animationFrame();
-            expect(document.activeElement).not.toBe(component.inputRef.el);
+
+            expect("input").not.toBeFocused();
         }
     );
 });
 
 describe("useBus", () => {
     test("simple usecase", async () => {
+        const state = reactive({ child: true });
+
         class MyComponent extends Component {
             static props = ["*"];
             static template = xml`<div/>`;
@@ -237,15 +272,26 @@ describe("useBus", () => {
             }
         }
 
-        const component = await mountWithCleanup(MyComponent);
-        const env = getMockEnv();
+        class Parent extends Component {
+            static components = { MyComponent };
+            static props = ["*"];
+            static template = xml`<MyComponent t-if="state.child" />`;
 
-        env.bus.trigger("test-event");
+            setup() {
+                this.state = useState(state);
+            }
+        }
+
+        const { bus } = await makeMockEnv();
+        await mountWithCleanup(Parent);
+
+        bus.trigger("test-event");
         expect(["callback"]).toVerifySteps();
 
-        component.__owl__.app.destroy();
+        state.child = false;
+        await animationFrame();
 
-        env.bus.trigger("test-event");
+        bus.trigger("test-event");
         expect([]).toVerifySteps();
     });
 });
@@ -266,34 +312,49 @@ describe("useService", () => {
     });
 
     test("service that returns null", async () => {
+        let toyService;
         class MyComponent extends Component {
             static props = ["*"];
             static template = xml`<div/>`;
             setup() {
-                this.toyService = useService("toy_service");
+                toyService = useService("toy_service");
             }
         }
 
         registry.category("services").add("toy_service", {
             name: "toy_service",
-            start: () => {
-                return null;
-            },
+            start: () => null,
         });
 
-        const component = await mountWithCleanup(MyComponent);
-        expect(component.toyService).toBe(null);
+        await mountWithCleanup(MyComponent);
+
+        expect(toyService).toBe(null);
     });
 
     test("async service with protected methods", async () => {
+        const state = reactive({ child: true });
         let nbCalls = 0;
         let def = new Deferred();
+        let objectService;
+        let functionService;
+
         class MyComponent extends Component {
             static props = ["*"];
             static template = xml`<div/>`;
+
             setup() {
-                this.objectService = useService("object_service");
-                this.functionService = useService("function_service");
+                objectService = useService("object_service");
+                functionService = useService("function_service");
+            }
+        }
+
+        class Parent extends Component {
+            static components = { MyComponent };
+            static props = ["*"];
+            static template = xml`<MyComponent t-if="state.child" />`;
+
+            setup() {
+                this.state = useState(state);
             }
         }
 
@@ -323,36 +384,36 @@ describe("useService", () => {
             },
         });
 
-        const component = await mountWithCleanup(MyComponent);
+        await mountWithCleanup(Parent);
 
         // Functions and methods have the correct this
         def.resolve();
-        expect(await component.objectService.asyncMethod()).toBe(component.objectService);
-        expect(await component.objectService.asyncMethod.call("boundThis")).toBe("boundThis");
-        expect(await component.functionService()).toBe(component);
-        expect(await component.functionService.call("boundThis")).toBe("boundThis");
+        await expect(objectService.asyncMethod()).resolves.toBe(objectService);
+        await expect(objectService.asyncMethod.call("boundThis")).resolves.toBe("boundThis");
+        await expect(functionService()).resolves.toBe(undefined);
+        await expect(functionService.call("boundThis")).resolves.toBe("boundThis");
         expect(nbCalls).toBe(4);
 
         // Functions that were called before the component is destroyed but resolved after never resolve
         def = new Deferred();
-        component.objectService.asyncMethod().then(() => expect.step("resolved"));
-        component.objectService.asyncMethod.call("boundThis").then(() => expect.step("resolved"));
-        component.functionService().then(() => expect.step("resolved"));
-        component.functionService.call("boundThis").then(() => expect.step("resolved"));
+        objectService.asyncMethod().then(() => expect.step("resolved"));
+        objectService.asyncMethod.call("boundThis").then(() => expect.step("resolved"));
+        functionService().then(() => expect.step("resolved"));
+        functionService.call("boundThis").then(() => expect.step("resolved"));
         expect(nbCalls).toBe(8);
-        component.__owl__.app.destroy();
+
+        state.child = false;
+        await animationFrame();
         def.resolve();
         expect([]).toVerifySteps();
 
         // Calling the functions after the destruction rejects the promise
-        expect(component.objectService.asyncMethod()).rejects.toThrow("Component is destroyed");
-        expect(component.objectService.asyncMethod.call("boundThis")).rejects.toThrow(
+        await expect(objectService.asyncMethod()).rejects.toThrow("Component is destroyed");
+        await expect(objectService.asyncMethod.call("boundThis")).rejects.toThrow(
             "Component is destroyed"
         );
-        expect(component.functionService()).rejects.toThrow("Component is destroyed");
-        expect(component.functionService.call("boundThis")).rejects.toThrow(
-            "Component is destroyed"
-        );
+        await expect(functionService()).rejects.toThrow("Component is destroyed");
+        await expect(functionService.call("boundThis")).rejects.toThrow("Component is destroyed");
         expect(nbCalls).toBe(8);
     });
 });
@@ -370,25 +431,24 @@ describe("useSpellCheck", () => {
 
         await mountWithCleanup(MyComponent);
 
-        const fixture = getFixture();
-        const textArea = fixture.querySelector(".textArea");
-
-        expect(textArea.spellcheck).toBe(true);
-        expect(textArea).not.toHaveAttribute("spellcheck");
+        expect(".textArea").toHaveProperty("spellcheck", true);
+        expect(".textArea").not.toHaveAttribute("spellcheck");
 
         // Focus textarea
-        click(textArea);
-        expect(textArea).toBeFocused();
+        click(".textArea");
+        expect(".textArea").toBeFocused();
 
         // Click out to trigger blur
-        click(fixture);
+        click(getFixture());
 
-        expect(textArea.spellcheck).toBe(false);
-        expect(textArea).toHaveAttribute("spellcheck", "false");
+        expect(".textArea").toHaveProperty("spellcheck", false);
+        expect(".textArea").toHaveAttribute("spellcheck", "false");
 
-        await contains(textArea).focus();
-        expect(textArea.spellcheck).toBe(true);
-        expect(textArea).toHaveAttribute("spellcheck", "true");
+        // Focus textarea
+        click(".textArea");
+
+        expect(".textArea").toHaveProperty("spellcheck", true);
+        expect(".textArea").toHaveAttribute("spellcheck", "true");
     });
 
     test("use a different refName", async () => {
@@ -402,22 +462,19 @@ describe("useSpellCheck", () => {
 
         await mountWithCleanup(MyComponent);
 
-        const fixture = getFixture();
-        const textArea = fixture.querySelector(".textArea");
+        expect(".textArea").toHaveProperty("spellcheck", true);
+        expect(".textArea").not.toHaveAttribute("spellcheck");
 
-        expect(textArea.spellcheck).toBe(true);
-        expect(textArea).not.toHaveAttribute("spellcheck");
+        click(".textArea");
 
-        click(textArea);
-
-        expect(textArea).toBeFocused();
+        expect(".textArea").toBeFocused();
 
         // Click out to trigger blur
-        click(fixture);
+        click(getFixture());
 
         // Once these assertions pass, it means that the hook is working.
-        expect(textArea.spellcheck).toBe(false);
-        expect(textArea).toHaveAttribute("spellcheck", "false");
+        expect(".textArea").toHaveProperty("spellcheck", false);
+        expect(".textArea").toHaveAttribute("spellcheck", "false");
     });
 
     test("ref is on the root element and two editable elements", async () => {
@@ -435,42 +492,42 @@ describe("useSpellCheck", () => {
 
         await mountWithCleanup(MyComponent);
 
-        const fixture = getFixture();
-        const textArea = fixture.querySelector(".textArea");
-        const editableDiv = fixture.querySelector(".editableDiv");
-
-        expect(textArea.spellcheck).toBe(true);
-        expect(editableDiv.spellcheck).toBe(true);
-        expect(textArea).not.toHaveAttribute("spellcheck");
-        expect(editableDiv).not.toHaveAttribute("spellcheck");
+        expect(".textArea").toHaveProperty("spellcheck", true);
+        expect(".editableDiv").toHaveProperty("spellcheck", true);
+        expect(".textArea").not.toHaveAttribute("spellcheck");
+        expect(".editableDiv").not.toHaveAttribute("spellcheck");
 
         // Focus textarea
-        click(textArea);
-        expect(textArea).toBeFocused();
+        click(".textArea");
+        expect(".textArea").toBeFocused();
 
         // Focus editable div
-        click(editableDiv);
-        expect(editableDiv).toBeFocused();
+        click(".editableDiv");
+        expect(".editableDiv").toBeFocused();
 
         // Click out to trigger blur
-        click(fixture);
+        click(getFixture());
 
-        expect(textArea.spellcheck).toBe(false);
-        expect(editableDiv.spellcheck).toBe(false);
-        expect(textArea).toHaveAttribute("spellcheck", "false");
-        expect(editableDiv).toHaveAttribute("spellcheck", "false");
+        expect(".textArea").toHaveProperty("spellcheck", false);
+        expect(".editableDiv").toHaveProperty("spellcheck", false);
+        expect(".textArea").toHaveAttribute("spellcheck", "false");
+        expect(".editableDiv").toHaveAttribute("spellcheck", "false");
 
-        await contains(textArea).focus();
-        expect(textArea.spellcheck).toBe(true);
-        expect(textArea).toHaveAttribute("spellcheck", "true");
-        expect(editableDiv.spellcheck).toBe(false);
-        expect(editableDiv).toHaveAttribute("spellcheck", "false");
+        // Focus textarea
+        click(".textArea");
 
-        await contains(editableDiv).focus();
-        expect(textArea.spellcheck).toBe(false);
-        expect(textArea).toHaveAttribute("spellcheck", "false");
-        expect(editableDiv.spellcheck).toBe(true);
-        expect(editableDiv).toHaveAttribute("spellcheck", "true");
+        expect(".textArea").toHaveProperty("spellcheck", true);
+        expect(".textArea").toHaveAttribute("spellcheck", "true");
+        expect(".editableDiv").toHaveProperty("spellcheck", false);
+        expect(".editableDiv").toHaveAttribute("spellcheck", "false");
+
+        // Focus editable div
+        click(".editableDiv");
+
+        expect(".textArea").toHaveProperty("spellcheck", false);
+        expect(".textArea").toHaveAttribute("spellcheck", "false");
+        expect(".editableDiv").toHaveProperty("spellcheck", true);
+        expect(".editableDiv").toHaveAttribute("spellcheck", "true");
     });
 
     test("ref is on the root element and one element has disabled the spellcheck", async () => {
@@ -488,42 +545,42 @@ describe("useSpellCheck", () => {
 
         await mountWithCleanup(MyComponent);
 
-        const fixture = getFixture();
-        const textArea = fixture.querySelector(".textArea");
-        const editableDiv = fixture.querySelector(".editableDiv");
-
-        expect(textArea.spellcheck).toBe(true);
-        expect(editableDiv.spellcheck).toBe(false);
-        expect(textArea).not.toHaveAttribute("spellcheck");
-        expect(editableDiv).toHaveAttribute("spellcheck", "false");
+        expect(".textArea").toHaveProperty("spellcheck", true);
+        expect(".editableDiv").toHaveProperty("spellcheck", false);
+        expect(".textArea").not.toHaveAttribute("spellcheck");
+        expect(".editableDiv").toHaveAttribute("spellcheck", "false");
 
         // Focus textarea
-        click(textArea);
-        expect(textArea).toBeFocused();
+        click(".textArea");
+        expect(".textArea").toBeFocused();
 
         // Focus editable div
-        click(editableDiv);
-        expect(editableDiv).toBeFocused();
+        click(".editableDiv");
+        expect(".editableDiv").toBeFocused();
 
         // Click out to trigger blur
-        click(fixture);
+        click(getFixture());
 
-        expect(textArea.spellcheck).toBe(false);
-        expect(textArea).toHaveAttribute("spellcheck", "false");
-        expect(editableDiv.spellcheck).toBe(false);
-        expect(editableDiv).toHaveAttribute("spellcheck", "false");
+        expect(".textArea").toHaveProperty("spellcheck", false);
+        expect(".textArea").toHaveAttribute("spellcheck", "false");
+        expect(".editableDiv").toHaveProperty("spellcheck", false);
+        expect(".editableDiv").toHaveAttribute("spellcheck", "false");
 
-        await contains(textArea).focus();
-        expect(textArea.spellcheck).toBe(true);
-        expect(textArea).toHaveAttribute("spellcheck", "true");
-        expect(editableDiv.spellcheck).toBe(false);
-        expect(editableDiv).toHaveAttribute("spellcheck", "false");
+        // Focus textarea
+        click(".textArea");
 
-        await contains(editableDiv).focus();
-        expect(textArea.spellcheck).toBe(false);
-        expect(textArea).toHaveAttribute("spellcheck", "false");
-        expect(editableDiv.spellcheck).toBe(false);
-        expect(editableDiv).toHaveAttribute("spellcheck", "false");
+        expect(".textArea").toHaveProperty("spellcheck", true);
+        expect(".textArea").toHaveAttribute("spellcheck", "true");
+        expect(".editableDiv").toHaveProperty("spellcheck", false);
+        expect(".editableDiv").toHaveAttribute("spellcheck", "false");
+
+        // Focus editable div
+        click(".editableDiv");
+
+        expect(".textArea").toHaveProperty("spellcheck", false);
+        expect(".textArea").toHaveAttribute("spellcheck", "false");
+        expect(".editableDiv").toHaveProperty("spellcheck", false);
+        expect(".editableDiv").toHaveAttribute("spellcheck", "false");
     });
 });
 

@@ -9,14 +9,14 @@ test("handles connection error when behind a server", async () => {
     const restoreFetch = mockFetch(() => new Response("", { status: 502 }));
     after(restoreFetch);
     const error = new ConnectionLostError("/some_url");
-    await expect(download({ data: {}, url: "/some_url" })).rejects.toThrow(error.message);
+    await expect(download({ data: {}, url: "/some_url" })).rejects.toThrow(error);
 });
 
 test("handles connection error when network unavailable", async () => {
     const restoreFetch = mockFetch(() => Promise.reject());
     after(restoreFetch);
     const error = new ConnectionLostError("/some_url");
-    await expect(download({ data: {}, url: "/some_url" })).rejects.toThrow(error.message);
+    await expect(download({ data: {}, url: "/some_url" })).rejects.toThrow(error);
 });
 
 test("handles business error from server", async () => {

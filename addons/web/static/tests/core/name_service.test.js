@@ -1,8 +1,14 @@
 import { after, describe, expect, test } from "@odoo/hoot";
+import {
+    defineModels,
+    getService,
+    makeMockEnv,
+    models,
+    onRpc,
+} from "@web/../tests/web_test_helpers";
 
-import { defineModels, getService, makeMockEnv, models, onRpc } from "../web_test_helpers";
-import { rpcBus } from "@web/core/network/rpc";
 import { ERROR_INACCESSIBLE_OR_MISSING } from "@web/core/name_service";
+import { rpcBus } from "@web/core/network/rpc";
 
 class Dev extends models.Model {
     _name = "dev";

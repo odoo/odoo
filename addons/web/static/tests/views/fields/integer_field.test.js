@@ -9,7 +9,7 @@ import {
     models,
     mountView,
     onRpc,
-} from "../../web_test_helpers";
+} from "@web/../tests/web_test_helpers";
 
 class Product extends models.Model {
     price = fields.Integer({ string: "Price" });
@@ -190,17 +190,16 @@ test("basic flow in editable list view", async () => {
         resModel: "product",
         arch: '<tree editable="bottom"><field name="price"/></tree>',
     });
-    const zeroValues = Array.from(queryAllTexts("td")).filter((text) => text === "0");
+    const zeroValues = queryAllTexts("td").filter((text) => text === "0");
     expect(zeroValues.length).toBe(1, {
         message: "Unset integer values should not be rendered as zeros",
     });
-    const fixture = getFixture();
-    await contains(fixture.querySelector("td.o_data_cell")).click();
+    await contains("td.o_data_cell").click();
     expect('.o_field_widget[name="price"] input').toHaveCount(1);
-    await contains(fixture.querySelector('.o_field_widget[name="price"] input')).edit("-28");
-    expect(fixture.querySelector("td.o_data_cell")).toHaveText("-28");
+    await contains('.o_field_widget[name="price"] input').edit("-28");
+    expect("td.o_data_cell:first").toHaveText("-28");
     expect('.o_field_widget[name="price"] input').toHaveValue("10");
-    await contains(fixture).click();
+    await contains(getFixture()).click();
     expect(queryAllTexts("td.o_data_cell")).toEqual(["-28", "10"]);
 });
 

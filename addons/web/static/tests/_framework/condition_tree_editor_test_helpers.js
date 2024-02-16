@@ -1,4 +1,4 @@
-import { queryAll, queryOne } from "@odoo/hoot-dom";
+import { queryAll, queryAllTexts, queryOne } from "@odoo/hoot-dom";
 import { contains, fields, models } from "@web/../tests/web_test_helpers";
 
 export class Partner extends models.Model {
@@ -85,7 +85,7 @@ export function getTreeEditorContent(options = {}) {
 }
 
 export function get(selector, index = 0, target = document) {
-    return [...queryAll(selector, { root: target })].at(index);
+    return queryAll(selector, { root: target }).at(index);
 }
 
 function getValue(target) {
@@ -103,9 +103,7 @@ function getValue(target) {
 }
 
 export function getModelFieldSelectorValues(target = document) {
-    return queryAll("span.o_model_field_selector_chain_part", { root: target }).map(
-        (n) => n.textContent
-    );
+    return queryAllTexts("span.o_model_field_selector_chain_part", { root: target });
 }
 
 export function getCurrentPath(index = 0, target = document) {
@@ -127,7 +125,7 @@ export function getCurrentValue(index = 0, target = document) {
     const valueEditor = get(SELECTORS.valueEditor, index, target);
     const value = getValue(valueEditor);
     if (valueEditor) {
-        const tags = [...queryAll(".o_tag", { root: valueEditor })];
+        const tags = queryAll(".o_tag", { root: valueEditor });
         if (tags.length) {
             let text = `${tags.map((t) => t.innerText).join(" ")}`;
             if (value) {
