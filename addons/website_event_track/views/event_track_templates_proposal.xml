@@ -9,8 +9,8 @@
             <section class="row mb-3">
                 <div class="col-lg-8 col-xl-9 pe-xxl-5">
                     <t t-call="website_event.navbar"/>
-                    <section>
-                        <h3>Call for Proposals</h3>
+                    <section class="pt-3">
+                        <h3 class="mt-0 mb-4">Call for Proposals</h3>
                     </section>
                     <section id="forms" t-if="not event.website_track_proposal">
                         <h2>Proposals are closed!</h2>
@@ -20,7 +20,7 @@
                     </section>
                     <div class="oe_structure">
                     <section>
-                        <h4 class="mt-3">
+                        <h4 class="mt-0">
                             Introduction
                         </h4>
                         <p class="lead">
@@ -115,11 +115,11 @@
                 </div>
                 <aside class="col-lg-4 col-xl-3 mt-3 mt-lg-0 pt-3">
                     <h5 class="o_page_header">Talks Types</h5>
-                    <h6 class="fw-bold">Regular Talks</h6>
+                    <h6>Regular Talks</h6>
                     <p>
                         These are standard talks with slides, alocated in slots of 60 minutes.
                     </p>
-                    <h6 class="fw-bold">Lightning Talks</h6>
+                    <h6>Lightning Talks</h6>
                     <p>
                         These are 30 minutes talks on many different topics. Most topics are accepted in lightning talks.
                     </p>
@@ -152,7 +152,7 @@
             <label class="fw-normal" for="add_contact_information">Contact me through a different email/phone</label>
         </div>
         <div class="o_wetrack_contact_information d-none">
-            <h4><b>Contact Information</b></h4>
+            <h4><b class="fw-normal">Contact Information</b></h4>
             <div class="form-text text-muted mb16">
                 How can our team get in touch with you?
             </div> 
