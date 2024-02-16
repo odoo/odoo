@@ -23,7 +23,7 @@
                 <t t-call-assets="mail.assets_discuss_public_test_tours" t-if="'tests' in debug or test_mode_enabled"/>
                 <style>
                     body {
-                        direction: <t t-out="env['res.lang']._lang_get(lang or env.user.lang).direction or 'ltr'" />;
+                        direction: <t t-out="env['res.lang']._get_data(code=lang or env.user.lang).direction or 'ltr'" />;
                     }
                 </style>
             </head>

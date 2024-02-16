@@ -193,7 +193,7 @@ class IrHttp(models.AbstractModel):
         # otherwise fallback on the company lang, english or the first
         # lang installed
         env = request.env if request.env.uid else request.env['base'].with_user(SUPERUSER_ID).env
-        request.update_context(lang=get_lang(env)._get_cached('code'))
+        request.update_context(lang=get_lang(env).code)
 
         for key, val in list(args.items()):
             if not isinstance(val, models.BaseModel):
@@ -282,21 +282,18 @@ class IrHttp(models.AbstractModel):
             modules = self.pool._init_modules
         if not lang:
             lang = self._context.get("lang")
-        langs = self.env['res.lang']._lang_get(lang)
-        lang_params = None
-        if langs:
-            lang_params = {
-                "name": langs.name,
-                "direction": langs.direction,
-                "date_format": langs.date_format,
-                "time_format": langs.time_format,
-                "grouping": langs.grouping,
-                "decimal_point": langs.decimal_point,
-                "thousands_sep": langs.thousands_sep,
-                "week_start": langs.week_start,
-            }
-            lang_params['week_start'] = int(lang_params['week_start'])
-            lang_params['code'] = lang
+        lang_data = self.env['res.lang']._get_data(code=lang)
+        lang_params = {
+            "name": lang_data.name,
+            "code": lang_data.code,
+            "direction": lang_data.direction,
+            "date_format": lang_data.date_format,
+            "time_format": lang_data.time_format,
+            "grouping": lang_data.grouping,
+            "decimal_point": lang_data.decimal_point,
+            "thousands_sep": lang_data.thousands_sep,
+            "week_start": int(lang_data.week_start),
+        } if lang_data else None
 
         # Regional languages (ll_CC) must inherit/override their parent lang (ll), but this is
         # done server-side when the language is loaded, so we only need to load the user's lang.

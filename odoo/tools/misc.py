@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+from __future__ import annotations
 
 """
 Miscellaneous tools used by OpenERP.
@@ -35,6 +35,7 @@ from difflib import HtmlDiff
 from functools import wraps
 from itertools import islice, groupby as itergroupby
 from operator import itemgetter
+from typing import TYPE_CHECKING
 
 import babel
 import babel.dates
@@ -55,6 +56,9 @@ from .cache import *
 from .config import config
 from .parse_version import parse_version
 from .which import which
+
+if TYPE_CHECKING:
+    from odoo.addons.base.models.res_lang import LangData
 
 _logger = logging.getLogger(__name__)
 
@@ -1195,7 +1199,7 @@ class replace_exceptions(ContextDecorator):
 
 html_escape = markupsafe.escape
 
-def get_lang(env, lang_code=False):
+def get_lang(env, lang_code=False) -> LangData:
     """
     Retrieve the first lang object installed, by checking the parameter lang_code,
     the context and then the company. If no lang is installed from those variables,
@@ -1203,7 +1207,7 @@ def get_lang(env, lang_code=False):
 
     :param env:
     :param str lang_code: the locale (i.e. en_US)
-    :return res.lang: the first lang found that is installed on the system.
+    :return LangData: the first lang found that is installed on the system.
     """
     langs = [code for code, _ in env['res.lang'].get_installed()]
     lang = 'en_US' if 'en_US' in langs else langs[0]
@@ -1213,7 +1217,7 @@ def get_lang(env, lang_code=False):
         lang = context_lang
     elif (company_lang := env.user.with_context(lang='en_US').company_id.partner_id.lang) in langs:
         lang = company_lang
-    return env['res.lang']._lang_get(lang)
+    return env['res.lang']._get_data(code=lang)
 
 def babel_locale_parse(lang_code):
     try:
@@ -1276,7 +1280,8 @@ def formatLang(env, value, digits=2, grouping=True, monetary=False, dp=None, cur
     value /= rounding_unit_mapping.get(rounding_unit, 1)
 
     rounded_value = float_round(value, precision_digits=digits, rounding_method=rounding_method)
-    formatted_value = get_lang(env).format(f'%.{digits}f', rounded_value, grouping=grouping, monetary=monetary)
+    lang = env['res.lang'].browse(get_lang(env).id)
+    formatted_value = lang.format(f'%.{digits}f', rounded_value, grouping=grouping)
 
     if currency_obj and currency_obj.symbol:
         arguments = (formatted_value, NON_BREAKING_SPACE, currency_obj.symbol)
@@ -1469,9 +1474,9 @@ def format_decimalized_amount(amount, currency=None):
 
 def format_amount(env, amount, currency, lang_code=False):
     fmt = "%.{0}f".format(currency.decimal_places)
-    lang = get_lang(env, lang_code)
+    lang = env['res.lang'].browse(get_lang(env, lang_code).id)
 
-    formatted_amount = lang.format(fmt, currency.round(amount), grouping=True, monetary=True)\
+    formatted_amount = lang.format(fmt, currency.round(amount), grouping=True)\
         .replace(r' ', u'\N{NO-BREAK SPACE}').replace(r'-', u'-\N{ZERO WIDTH NO-BREAK SPACE}')
 
     pre = post = u''

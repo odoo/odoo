@@ -618,7 +618,7 @@ class ReportMoOverview(models.AbstractModel):
 
         product = move_raw.product_id
         currency = (production.company_id or self.env.company).currency_id
-        lg = self.env['res.lang']._lang_get(self.env.user.lang) or get_lang(self.env)
+        lg = self.env['res.lang']._get_data(code=self.env.user.lang) or get_lang(self.env)
         receipt_date = datetime.strptime(in_transit['delivery_date'], lg.date_format)
         mo_cost = self._get_replenishment_mo_cost(product, in_transit['quantity'], in_transit['uom_id'], currency)
         real_cost = product.standard_price * in_transit['uom_id']._compute_quantity(in_transit['quantity'], product.uom_id)

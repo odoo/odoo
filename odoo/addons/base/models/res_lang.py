@@ -6,15 +6,44 @@ import json
 import locale
 import logging
 import re
-from operator import itemgetter
+from typing import Any, Literal
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError, ValidationError
+from odoo.tools import OrderedSet, frozendict
 
 _logger = logging.getLogger(__name__)
 
 DEFAULT_DATE_FORMAT = '%m/%d/%Y'
 DEFAULT_TIME_FORMAT = '%H:%M:%S'
+
+
+class LangData(frozendict):
+    """ A ``dict``-like class which can access field value like a ``res.lang`` record.
+    Note: This data class cannot store data for fields with the same name as
+    ``dict`` methods, like ``dict.keys``.
+    """
+    __slots__ = ()
+
+    def __bool__(self) -> bool:
+        return bool(self.id)
+
+    def __getattr__(self, name: str) -> Any:
+        try:
+            return self[name]
+        except KeyError:
+            raise AttributeError
+
+
+class LangDataDict(frozendict):
+    """ A ``dict`` of :class:`LangData` objects indexed by some key, which returns
+    a special dummy :class:`LangData` for missing keys.
+    """
+    __slots__ = ()
+
+    def __missing__(self, key: Any) -> LangData:
+        some_lang = next(iter(self.values()))  # should have at least one active language
+        return LangData(dict.fromkeys(some_lang, False))
 
 
 class Lang(models.Model):
@@ -209,57 +238,71 @@ class Lang(models.Model):
                 partner.write({'lang': lang_code})
         return True
 
-    @tools.ormcache('code')
-    def _lang_get_id(self, code):
-        return self.with_context(active_test=True).search([('code', '=', code)]).id
-
-    @tools.ormcache('code')
-    def _lang_get_direction(self, code):
-        return self.with_context(active_test=True).search([('code', '=', code)]).direction
-
-    @tools.ormcache('url_code')
-    def _lang_get_code(self, url_code):
-        return self.with_context(active_test=True).search([('url_code', '=', url_code)]).code or url_code
-
-    def _lang_get(self, code):
-        """ Return the language using this code if it is active """
-        return self.browse(self._lang_get_id(code))
-
-    def _get_active(self, code):
-        """ Return the given language code if active, else return ``"en_US"``.
-        This method is convenient to retrieve a meaningful translated field
-        value from the database.
+    # ------------------------------------------------------------
+    # cached methods for **active** languages
+    # ------------------------------------------------------------
+    @property
+    def CACHED_FIELDS(self) -> OrderedSet:
+        """ Return fields to cache for the active languages
+        Please promise all these fields don't depend on other models and context
+        and are not translated.
+        Waning: Don't add method names of ``dict`` to CACHED_FIELDS for sake of the
+        implementation of LangData
         """
-        if not code or not self._lang_get_id(code):
-            return 'en_US'
-        return code
+        return OrderedSet(['id', 'name', 'code', 'iso_code', 'url_code', 'active', 'direction', 'date_format',
+                           'time_format', 'week_start', 'grouping', 'decimal_point', 'thousands_sep', 'flag_image_url'])
 
-    @tools.ormcache('self.code', 'monetary')
-    def _data_get(self, monetary=False):
-        thousands_sep = self.thousands_sep or ''
-        decimal_point = self.decimal_point
-        grouping = self.grouping
-        return grouping, thousands_sep, decimal_point
+    def _get_data(self, **kwargs: Any) -> LangData:
+        """ Get the language data for the given field value in kwargs
+        For example, get_data(code='en_US') will return the LangData
+        for the res.lang record whose 'code' field value is 'en_US'
 
-    @tools.ormcache('self.id')
-    def _get_cached_values(self):
-        self.ensure_one()
-        return {
-            'id': self.id,
-            'code': self.code,
-            'url_code': self.url_code,
-            'name': self.name,
-        }
+        :param dict kwargs: {field_name: field_value}
+                field_name is the only key in kwargs and in ``self.CACHED_FIELDS``
+                Try to reuse the used ``field_name``s: 'id', 'code', 'url_code'
+        :return: Valid LangData if (field_name, field_value) pair is for an
+                **active** language. Otherwise, Dummy LangData which will return
+                ``False`` for all ``self.CACHED_FIELDS``
+        :rtype: LangData
+        :raise: UserError if field_name is not in ``self.CACHED_FIELDS``
+        """
+        [[field_name, field_value]] = kwargs.items()
+        return self._get_active_by(field_name)[field_value]
 
-    def _get_cached(self, field):
-        return self._get_cached_values()[field]
+    def _lang_get(self, code: str):
+        """ Return the language using this code if it is active """
+        return self.browse(self._get_data(code=code).id)
+
+    def _get_code(self, code: str) -> str | Literal[False]:
+        """ Return the given language code if active, else return ``False`` """
+        return self._get_data(code=code).code
+
+    def _get_cached(self, field: str):
+        return self._get_active_by('id')[self.id].get(field)
 
     @api.model
-    @tools.ormcache()
-    def get_installed(self):
-        """ Return the installed languages as a list of (code, name) sorted by name. """
-        langs = self.sudo().with_context(active_test=True).search([])
-        return sorted([(lang.code, lang.name) for lang in langs], key=itemgetter(1))
+    def get_installed(self) -> list[tuple[str, str]]:
+        """ Return installed languages' (code, name) pairs sorted by name. """
+        return [(code, data.name) for code, data in self._get_active_by('code').items()]
+
+    @tools.ormcache('field')
+    def _get_active_by(self, field: str) -> LangDataDict:
+        """ Return a LangDataDict mapping active languages' **unique**
+        **required** ``self.CACHED_FIELDS`` values to their LangData.
+        Its items are ordered by languages' names
+        Try to reuse the used ``field``s: 'id', 'code', 'url_code'
+        """
+        if field not in self.CACHED_FIELDS:
+            raise UserError(_('Field "%s" is not cached', field))
+        if field == 'code':
+            langs = self.sudo().with_context(active_test=True).search_fetch([], self.CACHED_FIELDS, order='name')
+            return LangDataDict({
+                lang.code: LangData({f: lang[f] for f in self.CACHED_FIELDS})
+                for lang in langs
+            })
+        return LangDataDict({data[field]: data for data in self._get_active_by('code').values()})
+
+    # ------------------------------------------------------------
 
     def toggle_active(self):
         super().toggle_active()
@@ -311,7 +354,7 @@ class Lang(models.Model):
         self.env.registry.clear_cache()
         return super(Lang, self).unlink()
 
-    def format(self, percent, value, grouping=False, monetary=False):
+    def format(self, percent: str, value, grouping: bool = False) -> str:
         """ Format() will return the language-specific output for float values"""
         self.ensure_one()
         if percent[0] != '%':
@@ -321,7 +364,10 @@ class Lang(models.Model):
 
         # floats and decimal ints need special action!
         if grouping:
-            lang_grouping, thousands_sep, decimal_point = self._data_get(monetary)
+            data = self._get_data(id=self.id)
+            if not data:
+                raise UserError(_("The language %s is not installed.", self.name))
+            lang_grouping, thousands_sep, decimal_point = data.grouping, data.thousands_sep or '', data.decimal_point
             eval_lang_grouping = ast.literal_eval(lang_grouping)
 
             if percent[-1] in 'eEfFgG':

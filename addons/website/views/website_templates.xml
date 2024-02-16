@@ -131,7 +131,7 @@
             <t t-foreach="frontend_languages" t-as="lg">
         <link rel="alternate" t-att-hreflang="lg['hreflang']" t-att-href="url_localized(lang_code=lg['code'], prefetch_langs=True, canonical_domain=canonical_domain)"/>
             </t>
-        <link rel="alternate" hreflang="x-default" t-att-href="url_localized(lang_code=website.default_lang_id._get_cached('code'), canonical_domain=canonical_domain)"/>
+        <link rel="alternate" hreflang="x-default" t-att-href="url_localized(lang_code=website.default_lang_id._get_data(code='code'), canonical_domain=canonical_domain)"/>
         </t>
         <link t-if="request and website and website.is_public_user()" rel="canonical" t-att-href="url_localized(lang_code=lang,canonical_domain=canonical_domain)"/>
         <!-- TODO: Once we have style in DB, add this preconnect only if a
