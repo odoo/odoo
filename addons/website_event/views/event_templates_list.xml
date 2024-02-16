@@ -49,7 +49,7 @@
 <template id="index_topbar" name="Topbar">
         <div class="container mt-3 mb-4">
             <div class="o_wevent_index_topbar_filters d-flex d-print-none align-items-center justify-content-end flex-wrap gap-2 w-100">
-                <h2 class="my-0 me-auto pe-sm-4">Events</h2>
+                <h2 class="h4 my-0 me-auto pe-sm-4">Events</h2>
                     <t t-foreach="categories" t-as="category">
                         <div t-if="category.is_published and category.tag_ids and any(tag.color for tag in category.tag_ids)" class="dropdown d-none d-lg-block">
                             <a href="#" role="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown">
