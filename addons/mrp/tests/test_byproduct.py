@@ -318,6 +318,7 @@ class TestMrpByProduct(common.TransactionCase):
             'location_in_id': self.stock_location.id,
             'location_out_id': self.stock_location.id,
             'storage_category_id': stor_category.id,
+            'sublocation': 'closest_location',
         })
         self.env['stock.putaway.rule'].create({
             'product_id': self.product_a.id,
