@@ -164,7 +164,7 @@ class PosOrder(models.Model):
     def export_for_ui_shared_order(self, config_id):
         orders = super().export_for_ui_shared_order(config_id)
         self_orders = self.get_standalone_self_order().export_for_ui()
-        return orders + self_orders
+        return list({order['id']: order for order in orders + self_orders}.values())
 
     @api.model
     def export_for_ui_table_draft(self, table_ids):
