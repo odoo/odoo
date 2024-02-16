@@ -56,7 +56,7 @@ const monitorEvents = (target, formatStep) => {
 };
 
 describe(parseUrl(import.meta.url), () => {
-    test("clear", async () => {
+    test.tags`no focus`("clear", async () => {
         await mount(/* xml */ `<input type="text" value="Test" />`);
         monitorEvents("input");
 
@@ -123,7 +123,7 @@ describe(parseUrl(import.meta.url), () => {
         expect("input").not.toHaveValue();
     });
 
-    test("click", async () => {
+    test.tags`no focus`("click", async () => {
         await mount(/* xml */ `<button autofocus="" type="button">Click me</button>`);
         monitorEvents("button");
 
@@ -433,7 +433,7 @@ describe(parseUrl(import.meta.url), () => {
         ]).toVerifySteps();
     });
 
-    test("fill: text", async () => {
+    test.tags`no focus`("fill: text", async () => {
         await mount(/* xml */ `<input type="text" value="" />`);
         monitorEvents("input");
 
@@ -584,7 +584,7 @@ describe(parseUrl(import.meta.url), () => {
         ]).toVerifySteps();
     });
 
-    test("keyDown", async () => {
+    test.tags`no focus`("keyDown", async () => {
         await mount(/* xml */ `<input type="text" />`);
         monitorEvents("input");
 
@@ -627,7 +627,7 @@ describe(parseUrl(import.meta.url), () => {
         ]).toVerifySteps();
     });
 
-    test("pointerDown", async () => {
+    test.tags`no focus`("pointerDown", async () => {
         await mount(/* xml */ `<button type="button">Click me</button>`);
         monitorEvents("button");
 
@@ -640,7 +640,7 @@ describe(parseUrl(import.meta.url), () => {
         expect(["button.pointerup", "button.mouseup", "button.click"]).toVerifySteps();
     });
 
-    test("press key on text input", async () => {
+    test.tags`no focus`("press key on text input", async () => {
         await mount(/* xml */ `<input type="text" />`);
         monitorEvents("input");
 
@@ -679,7 +679,7 @@ describe(parseUrl(import.meta.url), () => {
         expect("input").toHaveValue(42);
     });
 
-    test("press 'Enter' on form input", async () => {
+    test.tags`no focus`("press 'Enter' on form input", async () => {
         await mount(/* xml */ `
             <form t-on-submit.prevent="">
                 <input type="text" />
@@ -709,7 +709,7 @@ describe(parseUrl(import.meta.url), () => {
         ]).toVerifySteps();
     });
 
-    test("press 'Enter' on form button", async () => {
+    test.tags`no focus`("press 'Enter' on form button", async () => {
         await mount(/* xml */ `
             <form t-on-submit.prevent="">
                 <button type="button" />
@@ -740,7 +740,7 @@ describe(parseUrl(import.meta.url), () => {
         ]).toVerifySteps();
     });
 
-    test("press 'Enter' on form submit button", async () => {
+    test.tags`no focus`("press 'Enter' on form submit button", async () => {
         await mount(/* xml */ `
             <form t-on-submit.prevent="">
                 <button type="submit" />
@@ -770,7 +770,7 @@ describe(parseUrl(import.meta.url), () => {
         ]).toVerifySteps();
     });
 
-    test("press 'Space' on checkbox input", async () => {
+    test.tags`no focus`("press 'Space' on checkbox input", async () => {
         await mount(/* xml */ `<input type="checkbox" checked="" />`);
         monitorEvents("input");
 
@@ -929,7 +929,7 @@ describe(parseUrl(import.meta.url), () => {
         expect(".scrollable").toHaveProperty("scrollLeft", 1200);
     });
 
-    test("select", async () => {
+    test.tags`no focus`("select", async () => {
         await mount(/* xml */ `
             <select>
                 <option value="a">A</option>

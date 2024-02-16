@@ -500,11 +500,26 @@ const triggerFocus = (target) => {
     if (previous === target) {
         return events;
     }
+    const hasFocus = document.hasFocus();
     if (previous !== target.ownerDocument.body) {
-        events.push(dispatch(previous, "blur", { relatedTarget: target }));
+        if (!hasFocus) {
+            previous.blur();
+        }
+        const blurEvent = dispatch(previous, "blur", { relatedTarget: target });
+        events.push(blurEvent);
+        if (hasFocus && !isPrevented(blurEvent)) {
+            previous.blur();
+        }
     }
     if (isNodeFocusable(target)) {
-        events.push(dispatch(target, "focus", { relatedTarget: previous }));
+        if (!hasFocus) {
+            target.focus();
+        }
+        const focusEvent = dispatch(target, "focus", { relatedTarget: previous });
+        events.push(focusEvent);
+        if (hasFocus && !isPrevented(focusEvent)) {
+            target.focus();
+        }
         if (!isNil(target.selectionStart) && !isNil(target.selectionEnd)) {
             target.selectionStart = target.selectionEnd = target.value.length;
         }
@@ -939,6 +954,7 @@ const KEY_ALIASES = {
     ctrl: "Control",
     del: "Delete",
     delete: "Delete",
+    enter: "Enter",
     esc: "Escape",
     escape: "Escape",
     meta: "Meta",
@@ -953,7 +969,6 @@ const LOG_COLORS = {
     lightBlue: "#9bbbdc",
     reset: "inherit",
 };
-const SPECIAL_EVENTS = ["blur", "focus", "select", "submit"];
 let allowLogs = false;
 /** @type {Event[]} */
 let currentEvents = [];
@@ -1221,8 +1236,7 @@ export function dblclick(target, options) {
  * {@link Target}.
  *
  * Note that this function is free of side-effects and does not trigger any other
- * event or special action (except the functions related to the event type, such
- * as `blur()` for the `"blur"` event).
+ * event or special action.
  *
  * @template {EventType} T
  * @param {EventTarget} target
@@ -1238,11 +1252,6 @@ export function dispatch(target, type, eventInit) {
 
     target.dispatchEvent(event);
     currentEvents.push(event);
-
-    // Check special methods
-    if (!event.defaultPrevented && SPECIAL_EVENTS.includes(type)) {
-        target[type]();
-    }
 
     return event;
 }
