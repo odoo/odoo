@@ -90,7 +90,7 @@ export class Thread extends Component {
                     this.threadService.fetchMoreMessages(this.props.thread);
                 }
             },
-            { init: null, ready: false }
+            { ready: false }
         );
         this.loadNewerState = useVisible(
             "load-newer",
@@ -99,12 +99,10 @@ export class Thread extends Component {
                     this.threadService.fetchMoreMessages(this.props.thread, "newer");
                 }
             },
-            { init: null, ready: false }
+            { ready: false }
         );
-        this.presentThresholdState = useVisible(
-            "present-treshold",
-            () => this.updateShowJumpPresent(),
-            { init: true }
+        this.presentThresholdState = useVisible("present-treshold", () =>
+            this.updateShowJumpPresent()
         );
         this.setupScroll();
         useEffect(
@@ -369,7 +367,7 @@ export class Thread extends Component {
 
     updateShowJumpPresent() {
         this.state.showJumpPresent =
-            this.props.thread.loadNewer || !this.presentThresholdState.isVisible;
+            this.props.thread.loadNewer || this.presentThresholdState.isVisible === false;
     }
 
     onClickLoadOlder() {
