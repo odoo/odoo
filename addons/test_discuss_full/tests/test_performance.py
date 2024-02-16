@@ -179,8 +179,8 @@ class TestDiscussFullPerformance(HttpCase):
                     "name": "OdooBot",
                     "out_of_office_date_end": False,
                     "type": "partner",
-                    "userId": False,
-                    "isInternalUser": False,
+                    "userId": self.user_root.id,
+                    "isInternalUser": True,
                     "write_date": fields.Datetime.to_string(self.user_root.partner_id.write_date),
                 },
                 "self": {

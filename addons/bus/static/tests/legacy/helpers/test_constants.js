@@ -6,6 +6,7 @@ export const TEST_GROUP_IDS = {
 
 export const TEST_USER_IDS = {
     odoobotId: 2,
+    odoobotUserId: 1,
     adminPartnerId: 3,
     adminUserId: 2,
     publicPartnerId: 4,

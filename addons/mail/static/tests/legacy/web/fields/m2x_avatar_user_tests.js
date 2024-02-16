@@ -115,13 +115,14 @@ QUnit.test('many2one_avatar_user widget edited by the smart action "Assign to...
     await contains(".o_field_many2one_avatar_user input", { value: "Mario" });
     triggerHotkey("control+k");
     await click(".o_command", { text: "Assign to ...ALT + I" });
-    await contains(".o_command", { count: 5 });
-    await contains(":nth-child(1 of .o_command)", { text: "Your Company, Mitchell Admin" });
-    await contains(":nth-child(2 of .o_command)", { text: "Public user" });
-    await contains(":nth-child(3 of .o_command)", { text: "Mario" });
-    await contains(":nth-child(4 of .o_command)", { text: "Luigi" });
-    await contains(":nth-child(5 of .o_command)", { text: "Yoshi" });
-    await click("#o_command_3");
+    await contains(".o_command", { count: 6 });
+    await contains(":nth-child(1 of .o_command)", { text: "OdooBot" });
+    await contains(":nth-child(2 of .o_command)", { text: "Your Company, Mitchell Admin" });
+    await contains(":nth-child(3 of .o_command)", { text: "Public user" });
+    await contains(":nth-child(4 of .o_command)", { text: "Mario" });
+    await contains(":nth-child(5 of .o_command)", { text: "Luigi" });
+    await contains(":nth-child(6 of .o_command)", { text: "Yoshi" });
+    await click(".o_command", { text: "Luigi" });
     await contains(".o_field_many2one_avatar_user input", { value: "Luigi" });
 });
 
@@ -185,11 +186,12 @@ QUnit.test('many2many_avatar_user widget edited by the smart action "Assign to..
     triggerHotkey("control+k");
     await contains(".o_command", { text: "Assign to ...ALT + I" });
     triggerHotkey("alt+i");
-    await contains(".o_command", { count: 3 });
-    await contains(":nth-child(1 of .o_command)", { text: "Your Company, Mitchell Admin" });
-    await contains(":nth-child(2 of.o_command)", { text: "Public user" });
-    await contains(":nth-child(3 of.o_command)", { text: "Luigi" });
-    await click("#o_command_2");
+    await contains(".o_command", { count: 4 });
+    await contains(":nth-child(1 of .o_command)", { text: "OdooBot" });
+    await contains(":nth-child(2 of .o_command)", { text: "Your Company, Mitchell Admin" });
+    await contains(":nth-child(3 of.o_command)", { text: "Public user" });
+    await contains(":nth-child(4 of.o_command)", { text: "Luigi" });
+    await click(".o_command", { text: "Luigi" });
     await contains(".o_tag_badge_text", { count: 3 });
     await contains(":nth-child(1 of .o_tag) .o_tag_badge_text", { text: "Mario" });
     await contains(":nth-child(2 of .o_tag) .o_tag_badge_text", { text: "Yoshi" });
@@ -198,7 +200,7 @@ QUnit.test('many2many_avatar_user widget edited by the smart action "Assign to..
 
 QUnit.test(
     'many2one_avatar_user widget edited by the smart action "Assign to me" in form view',
-    async (assert) => {
+    async () => {
         const pyEnv = await startServer();
         const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
             { name: "Mario" },
@@ -241,7 +243,7 @@ QUnit.test(
 
 QUnit.test(
     'many2one_avatar_user widget edited by the smart action "Assign to me" in list view',
-    async (assert) => {
+    async () => {
         const pyEnv = await startServer();
         const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
             { name: "Mario" },
