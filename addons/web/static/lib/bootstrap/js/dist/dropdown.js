@@ -257,6 +257,7 @@
   const CLASS_NAME_NAVBAR = 'navbar';
   const SELECTOR_DATA_TOGGLE = '[data-bs-toggle="dropdown"]';
   const SELECTOR_MENU = '.dropdown-menu:not(.o-dropdown--menu)';
+  const SELECTOR_MENU_NOT_SUB = '.dropdown-menu:not(.o-dropdown--menu):not(.o_wysiwyg_submenu)';
   const SELECTOR_NAVBAR_NAV = '.navbar-nav';
   const SELECTOR_VISIBLE_ITEMS = '.dropdown-menu .dropdown-item:not(.disabled):not(:disabled)';
   const PLACEMENT_TOP = isRTL() ? 'top-end' : 'top-start';
@@ -665,7 +666,7 @@
 
 
   EventHandler__default.default.on(document, EVENT_KEYDOWN_DATA_API, SELECTOR_DATA_TOGGLE, Dropdown.dataApiKeydownHandler);
-  EventHandler__default.default.on(document, EVENT_KEYDOWN_DATA_API, SELECTOR_MENU, Dropdown.dataApiKeydownHandler);
+  EventHandler__default.default.on(document, EVENT_KEYDOWN_DATA_API, SELECTOR_MENU_NOT_SUB, Dropdown.dataApiKeydownHandler);
   EventHandler__default.default.on(document, EVENT_CLICK_DATA_API, Dropdown.clearMenus);
   EventHandler__default.default.on(document, EVENT_KEYUP_DATA_API, Dropdown.clearMenus);
   EventHandler__default.default.on(document, EVENT_CLICK_DATA_API, SELECTOR_DATA_TOGGLE, function (event) {
