@@ -233,7 +233,7 @@ export const tourService = {
                 onStepConsummed(tour, step) {
                     bus.trigger("STEP-CONSUMMED", { tour, step });
                 },
-                onTourEnd({ name, rainbowManMessage, fadeout }) {
+                onTourEnd({ name, rainbowMan, rainbowManMessage, fadeout }) {
                     if (mode === "auto") {
                         transitionConfig.disabled = false;
                     }
@@ -251,7 +251,9 @@ export const tourService = {
                             )
                         );
                     }
-                    effect.add({ type: "rainbow_man", message, fadeout });
+                    if (rainbowMan) {
+                        effect.add({ type: "rainbow_man", message, fadeout });
+                    }
                     if (mode === "manual") {
                         consumedTours.add(name);
                         orm.call("web_tour.tour", "consume", [[name]]);
