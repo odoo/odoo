@@ -3,7 +3,7 @@
 import { registry } from "@web/core/registry";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { DashboardLoader, Status } from "./dashboard_loader";
-import { Spreadsheet } from "@odoo/o-spreadsheet";
+import { SpreadsheetComponent } from "@spreadsheet/actions/spreadsheet_component";
 import { useSetupAction } from "@web/webclient/actions/action_hook";
 import { DashboardMobileSearchPanel } from "./mobile_search_panel/mobile_search_panel";
 import { MobileFigureContainer } from "./mobile_figure_container/mobile_figure_container";
@@ -11,7 +11,7 @@ import { FilterValue } from "@spreadsheet/global_filters/components/filter_value
 import { useService } from "@web/core/utils/hooks";
 import { standardActionServiceProps } from "@web/webclient/actions/action_service";
 import { SpreadsheetShareButton } from "@spreadsheet/components/share_button/share_button";
-import { useSpreadsheetPrint, useSpreadsheetNotificationStore } from "@spreadsheet/hooks";
+import { useSpreadsheetPrint } from "@spreadsheet/hooks";
 import { router } from "@web/core/browser/router";
 
 import { Component, onWillStart, useState, useEffect } from "@odoo/owl";
@@ -20,7 +20,7 @@ export class SpreadsheetDashboardAction extends Component {
     static template = "spreadsheet_dashboard.DashboardAction";
     static components = {
         ControlPanel,
-        Spreadsheet,
+        SpreadsheetComponent,
         FilterValue,
         DashboardMobileSearchPanel,
         MobileFigureContainer,
@@ -76,7 +76,6 @@ export class SpreadsheetDashboardAction extends Component {
                 };
             },
         });
-        useSpreadsheetNotificationStore();
         useSpreadsheetPrint(() => this.state.activeDashboard?.model);
         /** @type {{ activeDashboard: import("./dashboard_loader").Dashboard}} */
         this.state = useState({ activeDashboard: undefined });

@@ -54,7 +54,7 @@
                 <t t-else="">
                     <MobileFigureContainer t-if="env.isSmall" spreadsheetModel="dashboard.model" t-key="dashboard.id"/>
                     <div t-else="" class="o_renderer">
-                        <Spreadsheet
+                        <SpreadsheetComponent
                             model="dashboard.model"
                             t-key="dashboard.id"/>
                     </div>
