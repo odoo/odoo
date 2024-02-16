@@ -346,10 +346,13 @@ const logEvents = (actionName) => {
  * @param {KeyStrokes} keyStrokes
  * @returns {KeyboardEventInit}
  */
-const parseKeyStroke = (keyStrokes) =>
+const parseKeyStrokes = (keyStrokes) =>
     (isIterable(keyStrokes) ? [...keyStrokes] : [keyStrokes])
-        .flatMap((keyStroke) => keyStroke.split(/[,+]+/))
-        .map((key) => ({ key: KEY_ALIASES[key.toLowerCase()] || key }));
+        .flatMap((keyStroke) => keyStroke.split(/\s*[,+]\s*/))
+        .map((key) => {
+            const lower = key.toLowerCase();
+            return { key: lower.length === 1 ? key : KEY_ALIASES[lower] || key };
+        });
 
 /**
  * @param {Event} ev
@@ -946,21 +949,33 @@ const DEPRECATED_EVENTS = {
 };
 const DOUBLE_CLICK_DELAY = 500;
 const KEY_ALIASES = {
+    // case insensitive aliases
     alt: "Alt",
-    caps: "Shift",
-    cmd: "Meta",
-    command: "Meta",
+    arrowdown: "ArrowDown",
+    arrowleft: "ArrowLeft",
+    arrowright: "ArrowRight",
+    arrowup: "ArrowUp",
+    backspace: "Backspace",
     control: "Control",
-    ctrl: "Control",
-    del: "Delete",
     delete: "Delete",
     enter: "Enter",
-    esc: "Escape",
     escape: "Escape",
     meta: "Meta",
     shift: "Shift",
-    space: " ",
     tab: "Tab",
+
+    // Other aliases
+    caps: "Shift",
+    cmd: "Meta",
+    command: "Meta",
+    ctrl: "Control",
+    del: "Delete",
+    down: "ArrowDown",
+    esc: "Escape",
+    left: "ArrowLeft",
+    right: "ArrowRight",
+    space: " ",
+    up: "ArrowUp",
     win: "Meta",
 };
 const LOG_COLORS = {
@@ -1538,7 +1553,7 @@ export function hover(target, options) {
  *  keyDown(" "); // Space key
  */
 export function keyDown(keyStrokes) {
-    const eventInits = parseKeyStroke(keyStrokes);
+    const eventInits = parseKeyStrokes(keyStrokes);
     for (const eventInit of eventInits) {
         _keyDown(getActiveElement(), eventInit);
     }
@@ -1558,7 +1573,7 @@ export function keyDown(keyStrokes) {
  *  keyUp("Enter");
  */
 export function keyUp(keyStrokes) {
-    const eventInits = parseKeyStroke(keyStrokes).reverse();
+    const eventInits = parseKeyStrokes(keyStrokes);
     for (const eventInit of eventInits) {
         _keyUp(getActiveElement(), eventInit);
     }
@@ -1702,7 +1717,7 @@ export function pointerUp(target, options) {
  *  keyDown(["ctrl", "v"]); // Pastes current clipboard content
  */
 export function press(keyStrokes) {
-    const eventInits = parseKeyStroke(keyStrokes);
+    const eventInits = parseKeyStrokes(keyStrokes);
     const activeElement = getActiveElement();
 
     for (const eventInit of eventInits) {
