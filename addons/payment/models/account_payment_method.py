@@ -12,7 +12,9 @@ class AccountPaymentMethodLine(models.Model):
     payment_acquirer_id = fields.Many2one(
         comodel_name='payment.acquirer',
         compute='_compute_payment_acquirer_id',
-        store=True
+        store=True,
+        readonly=False,
+        domain="[('provider', '=', code)]",
     )
     payment_acquirer_state = fields.Selection(
         related='payment_acquirer_id.state'
@@ -20,24 +22,34 @@ class AccountPaymentMethodLine(models.Model):
 
     @api.depends('payment_method_id')
     def _compute_payment_acquirer_id(self):
-        acquirers = self.env['payment.acquirer'].sudo().search([
-            ('provider', 'in', self.mapped('code')),
-            ('company_id', 'in', self.journal_id.company_id.ids),
-        ])
-
-        # Make sure to pick the active acquirer, if any.
-        acquirers_map = dict()
-        for acquirer in acquirers:
-            current_value = acquirers_map.get((acquirer.provider, acquirer.company_id), False)
-            if current_value and current_value.state != 'disabled':
-                continue
-
-            acquirers_map[(acquirer.provider, acquirer.company_id)] = acquirer
+        results = self.journal_id._get_journals_payment_method_information()
+        manage_acquirers = results['manage_acquirers']
+        method_information_mapping = results['method_information_mapping']
+        acquirers_per_code = results['acquirers_per_code']
 
         for line in self:
-            code = line.payment_method_id.code
-            company = line.journal_id.company_id
-            line.payment_acquirer_id = acquirers_map.get((code, company), False)
+            journal = line.journal_id
+            company = journal.company_id
+            if (
+                company
+                and line.payment_method_id
+                and manage_acquirers
+                and method_information_mapping[line.payment_method_id.id]['mode'] == 'electronic'
+            ):
+                acquirer_ids = acquirers_per_code.get(company.id, {}).get(line.code, set())
+
+                # Exclude the 'unique' / 'electronic' values that are already set on the journal.
+                protected_acquirer_ids = set()
+                for payment_type in ('inbound', 'outbound'):
+                    lines = journal[f'{payment_type}_payment_method_line_ids']
+                    for journal_line in lines:
+                        if journal_line.payment_method_id:
+                            if manage_acquirers and method_information_mapping[journal_line.payment_method_id.id]['mode'] == 'electronic':
+                                protected_acquirer_ids.add(journal_line.payment_acquirer_id.id)
+
+                candidates_acquirer_ids = acquirer_ids - protected_acquirer_ids
+                if candidates_acquirer_ids:
+                    line.payment_acquirer_id = list(candidates_acquirer_ids)[0]
 
     def _get_payment_method_domain(self):
         # OVERRIDE

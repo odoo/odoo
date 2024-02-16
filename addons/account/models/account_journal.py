@@ -198,71 +198,123 @@ class AccountJournal(models.Model):
         ('code_company_uniq', 'unique (code, company_id)', 'Journal codes must be unique per company.'),
     ]
 
+    def _get_journals_payment_method_information(self):
+        method_information = self.env['account.payment.method']._get_payment_method_information()
+        unique_electronic_ids = set()
+        electronic_names = set()
+        pay_methods = self.env['account.payment.method'].sudo().search([('code', 'in', list(method_information.keys()))])
+        manage_acquirers = 'payment_acquirer_id' in self.env['account.payment.method.line']._fields
+
+        # Split the payment method information per id.
+        method_information_mapping = {}
+        for pay_method in pay_methods:
+            code = pay_method.code
+            values = method_information_mapping[pay_method.id] = {
+                **method_information[code],
+                'payment_method': pay_method,
+                'company_journals': {},
+            }
+            if values['mode'] == 'unique':
+                unique_electronic_ids.add(pay_method.id)
+            elif manage_acquirers and values['mode'] == 'electronic':
+                unique_electronic_ids.add(pay_method.id)
+                electronic_names.add(pay_method.code)
+
+        # Load the acquirer to manage 'electronic' payment methods.
+        acquirers_per_code = {}
+        if manage_acquirers:
+            acquirers = self.env['payment.acquirer'].sudo().search([
+                ('company_id', 'in', self.company_id.ids),
+                ('provider', 'in', tuple(electronic_names)),
+            ])
+            for acquirer in acquirers:
+                acquirers_per_code.setdefault(acquirer.company_id.id, {}).setdefault(acquirer.provider, set()).add(acquirer.id)
+
+        # Collect the existing unique/electronic payment method lines.
+        if unique_electronic_ids:
+            self._cr.execute(
+                f'''
+                    SELECT
+                        apm.id,
+                        journal.company_id,
+                        journal.id,
+                        {'apml.payment_acquirer_id' if manage_acquirers else 'NULL'}
+                    FROM account_payment_method_line apml
+                    JOIN account_journal journal ON journal.id = apml.journal_id
+                    JOIN account_payment_method apm ON apm.id = apml.payment_method_id
+                    WHERE apm.id IN %s
+                ''',
+                [tuple(unique_electronic_ids)],
+            )
+            for pay_method_id, company_id, journal_id,  acquirer_id in self._cr.fetchall():
+                values = method_information_mapping[pay_method_id]
+                is_electronic = manage_acquirers and values['mode'] == 'electronic'
+                if is_electronic:
+                    journal_ids = values['company_journals'].setdefault(company_id, {}).setdefault(acquirer_id, set())
+                else:
+                    journal_ids = values['company_journals'].setdefault(company_id, set())
+                journal_ids.add(journal_id)
+        return {
+            'pay_methods': pay_methods,
+            'manage_acquirers': manage_acquirers,
+            'method_information_mapping': method_information_mapping,
+            'acquirers_per_code': acquirers_per_code,
+        }
+
     @api.depends('outbound_payment_method_line_ids', 'inbound_payment_method_line_ids')
     def _compute_available_payment_method_ids(self):
         """
         Compute the available payment methods id by respecting the following rules:
-            Methods of mode 'unique' cannot be used twice on the same company
-            Methods of mode 'multi' cannot be used twice on the same journal
+            Methods of mode 'unique' cannot be used twice on the same company.
+            Methods of mode 'electronic' cannot be used twice on the same company for the same 'payment_acquirer_id'.
+            Methods of mode 'multi' can be duplicated on the same journal.
         """
-        method_information = self.env['account.payment.method']._get_payment_method_information()
-        pay_methods = self.env['account.payment.method'].search([('code', 'in', list(method_information.keys()))])
-        pay_method_by_code = {x.code + x.payment_type: x for x in pay_methods}
-        unique_pay_methods = [k for k, v in method_information.items() if v['mode'] == 'unique']
+        results = self._get_journals_payment_method_information()
+        pay_methods = results['pay_methods']
+        manage_acquirers = results['manage_acquirers']
+        method_information_mapping = results['method_information_mapping']
+        acquirers_per_code = results['acquirers_per_code']
 
-        pay_methods_by_company = {}
-        pay_methods_by_journal = {}
-        if unique_pay_methods:
-            self._cr.execute('''
-                SELECT
-                    journal.id,
-                    journal.company_id,
-                    ARRAY_AGG(DISTINCT apm.id)
-                FROM account_payment_method_line apml
-                JOIN account_journal journal ON journal.id = apml.journal_id
-                JOIN account_payment_method apm ON apm.id = apml.payment_method_id
-                WHERE apm.code IN %s
-                GROUP BY
-                    journal.id,
-                    journal.company_id
-            ''', [tuple(unique_pay_methods)])
-            for journal_id, company_id, payment_method_ids in self._cr.fetchall():
-                pay_methods_by_company[company_id] = set(payment_method_ids)
-                pay_methods_by_journal[journal_id] = set(payment_method_ids)
+        # Compute the candidates for each journal.
+        for journal in self:
+            commands = [Command.clear()]
+            company = journal.company_id
 
-        pay_method_ids_commands_x_journal = {j: [Command.clear()] for j in self}
-        for payment_type in ('inbound', 'outbound'):
-            for code, vals in method_information.items():
-                payment_method = pay_method_by_code.get(code + payment_type)
+            # Exclude the 'unique' / 'electronic' values that are already set on the journal.
+            protected_acquirer_ids = set()
+            protected_payment_method_ids = set()
+            for payment_type in ('inbound', 'outbound'):
+                lines = journal[f'{payment_type}_payment_method_line_ids']
+                for line in lines:
+                    if line.payment_method_id:
+                        protected_payment_method_ids.add(line.payment_method_id.id)
+                        if manage_acquirers and method_information_mapping[line.payment_method_id.id]['mode'] == 'electronic':
+                            protected_acquirer_ids.add(line.payment_acquirer_id.id)
 
-                if not payment_method:
-                    continue
+            for pay_method in pay_methods:
+                values = method_information_mapping[pay_method.id]
 
                 # Get the domain of the journals on which the current method is usable.
-                method_domain = payment_method._get_payment_method_domain()
+                method_domain = pay_method._get_payment_method_domain()
+                if not journal.filtered_domain(method_domain):
+                    continue
 
-                for journal in self.filtered_domain(method_domain):
-                    protected_pay_method_ids = pay_methods_by_company.get(journal.company_id._origin.id, set()) \
-                                               - pay_methods_by_journal.get(journal._origin.id, set())
+                if values['mode'] == 'unique':
+                    # 'unique' are linked to a single journal per company.
+                    already_linked_journal_ids = values['company_journals'].get(company.id, set()) - {journal._origin.id}
+                    if not already_linked_journal_ids and pay_method.id not in protected_payment_method_ids:
+                        commands.append(Command.link(pay_method.id))
+                elif manage_acquirers and values['mode'] == 'electronic':
+                    # 'electronic' are linked to a single journal per company per acquirer.
+                    for acquirer_id in acquirers_per_code.get(company.id, {}).get(pay_method.code, set()):
+                        already_linked_journal_ids = values['company_journals'].get(company.id, {}).get(acquirer_id, set()) - {journal._origin.id}
+                        if not already_linked_journal_ids and acquirer_id not in protected_acquirer_ids:
+                            commands.append(Command.link(pay_method.id))
+                elif values['mode'] == 'multi':
+                    # 'multi' are unlimited.
+                    commands.append(Command.link(pay_method.id))
 
-                    if payment_type == 'inbound':
-                        lines = journal.inbound_payment_method_line_ids
-                    else:
-                        lines = journal.outbound_payment_method_line_ids
-
-                    already_used = payment_method in lines.payment_method_id
-                    is_protected = payment_method.id in protected_pay_method_ids
-                    if vals['mode'] == 'unique' and (already_used or is_protected):
-                        continue
-
-                    # Only the manual payment method can be used multiple time on a single journal.
-                    if payment_method.code != "manual" and already_used:
-                        continue
-
-                    pay_method_ids_commands_x_journal[journal].append(Command.link(payment_method.id))
-
-        for journal, pay_method_ids_commands in pay_method_ids_commands_x_journal.items():
-            journal.available_payment_method_ids = pay_method_ids_commands
+            journal.available_payment_method_ids = commands
 
     @api.depends('type')
     def _compute_default_account_type(self):
@@ -409,35 +461,69 @@ class AccountJournal(models.Model):
         """
         Check and ensure that the payment method lines multiplicity is respected.
         """
-        method_info = self.env['account.payment.method']._get_payment_method_information()
-        unique_codes = tuple(code for code, info in method_info.items() if info.get('mode') == 'unique')
-
-        if not unique_codes:
-            return
-
         self.flush(['inbound_payment_method_line_ids', 'outbound_payment_method_line_ids', 'company_id'])
-        self.env['account.payment.method.line'].flush(['payment_method_id', 'journal_id'])
+        self.env['account.payment.method.line'].flush(['payment_method_id', 'journal_id', 'name'])
         self.env['account.payment.method'].flush(['code'])
 
-        if unique_codes:
-            self._cr.execute('''
-                SELECT apm.id
-                FROM account_payment_method apm
-                JOIN account_payment_method_line apml on apm.id = apml.payment_method_id
-                JOIN account_journal journal on journal.id = apml.journal_id
-                JOIN res_company company on journal.company_id = company.id
-                WHERE apm.code in %s
-                GROUP BY
-                    company.id,
-                    apm.id
-                HAVING array_length(array_agg(journal.id), 1) > 1;
-            ''', [unique_codes])
+        results = self._get_journals_payment_method_information()
+        pay_methods = results['pay_methods']
+        manage_acquirers = results['manage_acquirers']
+        method_information_mapping = results['method_information_mapping']
+        acquirers_per_code = results['acquirers_per_code']
 
-        method_ids = [res[0] for res in self._cr.fetchall()]
-        if method_ids:
-            methods = self.env['account.payment.method'].browse(method_ids)
-            raise ValidationError(_("Some payment methods supposed to be unique already exists somewhere else.\n"
-                                    "(%s)", ', '.join([method.display_name for method in methods])))
+        failing_unicity_payment_methods = self.env['account.payment.method']
+        for journal in self:
+            company = journal.company_id
+
+            # Exclude the 'unique' / 'electronic' values that are already set on the journal.
+            protected_acquirer_ids = set()
+            protected_payment_method_ids = set()
+            for payment_type in ('inbound', 'outbound'):
+                lines = journal[f'{payment_type}_payment_method_line_ids']
+
+                # Ensure you don't have the same payment_method/name combination twice on the same journal.
+                counter = {}
+                for line in lines:
+                    if method_information_mapping[line.payment_method_id.id]['mode'] not in ('electronic', 'unique'):
+                        continue
+
+                    key = line.payment_method_id.id, line.name
+                    counter.setdefault(key, 0)
+                    counter[key] += 1
+                    if counter[key] > 1:
+                        raise ValidationError(_(
+                            "You can't have two payment method lines of the same payment type (%s) "
+                            "and with the same name (%s) on a single journal.",
+                            payment_type,
+                            line.name,
+                        ))
+
+                for line in lines:
+                    if line.payment_method_id.id in method_information_mapping:
+                        protected_payment_method_ids.add(line.payment_method_id.id)
+                        if manage_acquirers and method_information_mapping[line.payment_method_id.id]['mode'] == 'electronic':
+                            protected_acquirer_ids.add(line.payment_acquirer_id.id)
+
+            for pay_method in pay_methods:
+                values = method_information_mapping[pay_method.id]
+
+                if values['mode'] == 'unique':
+                    # 'unique' are linked to a single journal per company.
+                    already_linked_journal_ids = values['company_journals'].get(company.id, set()) - {journal._origin.id}
+                    if len(already_linked_journal_ids) > 1:
+                        failing_unicity_payment_methods |= pay_method
+                elif manage_acquirers and values['mode'] == 'electronic':
+                    # 'electronic' are linked to a single journal per company per acquirer.
+                    for acquirer_id in acquirers_per_code.get(company.id, {}).get(pay_method.code, set()):
+                        already_linked_journal_ids = values['company_journals'].get(company.id, {}).get(acquirer_id, set()) - {journal._origin.id}
+                        if len(already_linked_journal_ids) > 1:
+                            failing_unicity_payment_methods |= pay_method
+
+        if failing_unicity_payment_methods:
+            raise ValidationError(_(
+                "Some payment methods supposed to be unique already exists somewhere else.\n(%s)",
+                ', '.join(failing_unicity_payment_methods.mapped('display_name')),
+            ))
 
     @api.constrains('active')
     def _check_auto_post_draft_entries(self):
