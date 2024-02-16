@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <tr t-name="mrp.MoOverviewLine">
+    <tr t-name="mrp.MoOverviewLine" t-on-click="() => this.props.hasFoldButton? this.props.toggleFolded(data.index) : false">
         <td class="text-start">
             <div t-attf-style="margin-left: {{ marginMultiplicator * 20 }}px" class="d-inline-block">
-                <button t-if="props.hasFoldButton" t-on-click="() => this.props.toggleFolded(data.index)" class="btn btn-light p-0" t-attf-aria-label="{{ foldButtonTitle }}" t-attf-title="{{ foldButtonTitle }}" style="margin-right: 1px">
+                <span t-if="props.hasFoldButton" class="btn btn-light p-0" t-attf-aria-label="{{ foldButtonTitle }}" t-attf-title="{{ foldButtonTitle }}" style="margin-right: 1px">
                     <i t-attf-class="fa fa-fw fa-caret-{{ props.isFolded ? 'right' : 'down' }}" role="img"/>
-                </button>
+                </span>
                 <a t-if="data.id and data.model === 'mrp.workorder'" href="#" t-on-click.prevent="openWorkorder" t-out="data.name"/>
                 <a t-elif="data.id and data.model" href="#" t-on-click.prevent="openForm" t-out="data.name"/>
                 <t t-else="" t-out="data.name"/>
