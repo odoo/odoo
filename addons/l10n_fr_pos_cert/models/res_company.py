@@ -4,7 +4,7 @@ from odoo import models, api, fields, _
 from odoo.exceptions import UserError
 from datetime import datetime
 from odoo.fields import Datetime, Date
-from odoo.tools.misc import format_date
+from odoo.tools import format_date
 import pytz
 
 

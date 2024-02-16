@@ -3,7 +3,7 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError, UserError
-from odoo.tools.misc import formatLang
+from odoo.tools import formatLang
 
 
 class EventTemplateTicket(models.Model):

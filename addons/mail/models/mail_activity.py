@@ -11,8 +11,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import api, exceptions, fields, models, _, Command
 from odoo.osv import expression
-from odoo.tools import is_html_empty
-from odoo.tools.misc import clean_context, get_lang, groupby
+from odoo.tools import clean_context, get_lang, groupby, is_html_empty
 
 _logger = logging.getLogger(__name__)
 

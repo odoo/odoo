@@ -2,7 +2,7 @@ import stdnum
 
 from odoo import fields, models, _, api
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools.misc import format_date
+from odoo.tools import format_date
 
 
 class AccountPayment(models.Model):

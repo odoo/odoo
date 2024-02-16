@@ -3,7 +3,7 @@
 
 from odoo import _, fields, models
 from odoo.osv import expression
-from odoo.tools.misc import format_datetime
+from odoo.tools import format_datetime
 
 
 class StockQuantityHistory(models.TransientModel):

@@ -12,7 +12,7 @@ from odoo import fields, models, api, _
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import UserError
 from odoo.tools import split_every
-from odoo.tools.misc import _format_time_ago
+from odoo.tools.i18n import _format_time_ago
 from odoo.http import request
 from odoo.osv import expression
 

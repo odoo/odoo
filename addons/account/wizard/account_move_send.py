@@ -4,7 +4,7 @@ from werkzeug.urls import url_encode
 
 from odoo import _, api, fields, models, modules, tools, Command
 from odoo.exceptions import UserError
-from odoo.tools.misc import get_lang
+from odoo.tools import get_lang
 
 
 class AccountMoveSend(models.TransientModel):

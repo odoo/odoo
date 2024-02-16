@@ -12,9 +12,7 @@ from PIL import Image
 from lxml import etree, html
 
 from odoo import api, fields, models, _, _lt, tools
-from odoo.tools import posix_to_ldml, float_utils, format_date, format_duration, pycompat
-from odoo.tools.mail import safe_attrs
-from odoo.tools.misc import get_lang, babel_locale_parse
+from odoo.tools import babel_locale_parse, float_utils, format_date, format_duration, get_lang, posix_to_ldml, pycompat
 
 _logger = logging.getLogger(__name__)
 

@@ -6,7 +6,7 @@ from unittest.mock import patch
 
 from odoo import http
 from odoo.tests import common, tagged
-from odoo.tools.misc import get_lang
+from odoo.tools import get_lang
 from odoo.addons.web.controllers.export import ExportXlsxWriter, Export
 from odoo.addons.mail.tests.common import mail_new_test_user
 

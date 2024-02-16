@@ -3,8 +3,7 @@ from datetime import date
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
-from odoo.tools.misc import format_date
-from odoo.tools import frozendict, mute_logger, date_utils
+from odoo.tools import format_date, frozendict, mute_logger, date_utils
 
 import re
 from collections import defaultdict

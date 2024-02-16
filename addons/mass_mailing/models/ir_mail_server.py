@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, fields, models
-from odoo.tools.misc import format_date
+from odoo.tools import format_date
 
 
 class IrMailServer(models.Model):

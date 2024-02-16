@@ -11,8 +11,7 @@ from odoo import _, _lt, api, fields, models
 from odoo.fields import Command
 from odoo.models import BaseModel, NewId
 from odoo.osv.expression import AND, TRUE_DOMAIN, normalize_domain
-from odoo.tools import date_utils, unique
-from odoo.tools.misc import OrderedSet, get_lang
+from odoo.tools import OrderedSet, unique
 from odoo.exceptions import AccessError, UserError
 from collections import defaultdict
 

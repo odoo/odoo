@@ -10,9 +10,7 @@ from odoo import _, api, Command, fields, models, tools
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
-from odoo.tools import format_datetime, is_html_empty
-from odoo.tools.misc import formatLang
-from odoo.tools.translate import html_translate
+from odoo.tools import format_datetime, formatLang, html_translate, is_html_empty
 
 _logger = logging.getLogger(__name__)
 

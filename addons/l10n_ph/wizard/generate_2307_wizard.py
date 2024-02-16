@@ -6,7 +6,7 @@ import re
 import xlwt
 
 from odoo import fields, models
-from odoo.tools.misc import format_date
+from odoo.tools import format_date
 
 
 COLUMN_HEADER_MAP = {

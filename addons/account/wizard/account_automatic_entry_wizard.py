@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools.misc import format_date, formatLang
-from odoo.tools.float_utils import float_repr
-from odoo.tools import groupby
+from odoo.tools import float_repr, format_date, formatLang, groupby
 
 from collections import defaultdict
 from markupsafe import Markup, escape

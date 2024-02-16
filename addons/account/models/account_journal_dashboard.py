@@ -9,8 +9,9 @@ from odoo import models, api, _, fields
 from odoo.exceptions import UserError
 from odoo.osv import expression
 from odoo.release import version
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF, SQL
-from odoo.tools.misc import formatLang, format_date as odoo_format_date, get_lang
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF
+from odoo.tools import SQL, get_lang
+from odoo.tools import format_date as odoo_format_date
 
 
 def group_by_journal(vals_list):

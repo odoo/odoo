@@ -2,9 +2,8 @@
 from odoo import api, fields, models, _, Command
 from odoo.osv import expression
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import frozendict, groupby, split_every
+from odoo.tools import clean_context, formatLang, frozendict, groupby, split_every
 from odoo.tools.float_utils import float_round
-from odoo.tools.misc import clean_context, formatLang
 
 from collections import defaultdict
 from markupsafe import Markup

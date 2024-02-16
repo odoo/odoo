@@ -13,7 +13,6 @@ from odoo.addons.base.models.avatar_mixin import get_hsl_from_seed
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools import format_list, get_lang, html_escape
-from odoo.tools.misc import babel_locale_parse
 
 _logger = logging.getLogger(__name__)
 

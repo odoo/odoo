@@ -6,8 +6,7 @@ import werkzeug
 
 from odoo import api, fields, Command, models, _
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools.misc import format_date
-from odoo.tools import email_split, float_repr, float_round, is_html_empty
+from odoo.tools import email_split, float_repr, float_round, format_date, is_html_empty
 
 
 class HrExpense(models.Model):

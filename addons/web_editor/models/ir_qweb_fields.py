@@ -27,9 +27,8 @@ import odoo.modules
 
 from odoo import _, api, models, fields
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import ustr, posix_to_ldml, pycompat
+from odoo.tools import babel_locale_parse, file_open, get_lang, posix_to_ldml, pycompat, ustr
 from odoo.tools import html_escape as escape
-from odoo.tools.misc import file_open, get_lang, babel_locale_parse
 
 REMOTE_CONNECTION_TIMEOUT = 2.5
 
