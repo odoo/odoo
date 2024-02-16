@@ -702,18 +702,18 @@
         return true;
     }
     class JetSet extends Set {
-        add(...iterable) {
+        addMany(iterable) {
             for (const element of iterable) {
                 super.add(element);
             }
             return this;
         }
-        delete(...iterable) {
-            let deleted = false;
+        deleteMany(iterable) {
+            let wasDeleted = false;
             for (const element of iterable) {
-                deleted ||= super.delete(element);
+                wasDeleted ||= super.delete(element);
             }
-            return deleted;
+            return wasDeleted;
         }
     }
     /**
@@ -15239,6 +15239,9 @@
         if (locale.formulaArgSeparator === locale.decimalSeparator) {
             return false;
         }
+        if (locale.thousandsSeparator === locale.decimalSeparator) {
+            return false;
+        }
         try {
             formatValue(1, { locale, format: "#,##0.00" });
             formatValue(1, { locale, format: locale.dateFormat });
@@ -15329,7 +15332,7 @@
         if (locale.decimalSeparator === "." || !isNumber(content, locale)) {
             return content;
         }
-        return content.replace(locale.decimalSeparator, ".");
+        return content.replace(locale.thousandsSeparator, "").replace(locale.decimalSeparator, ".");
     }
     /**
      * Change a content string from the given locale to its canonical form (en_US locale). Also convert date string.
@@ -18631,6 +18634,12 @@
         let { col, row } = env.model.getters.getActivePosition();
         env.model.dispatch("OPEN_CELL_POPOVER", { col, row, popoverType: "LinkEditor" });
     };
+    const INSERT_LINK_NAME = (env) => {
+        const sheetId = env.model.getters.getActiveSheetId();
+        const { col, row } = env.model.getters.getActivePosition();
+        const cell = env.model.getters.getEvaluatedCell({ sheetId, col, row });
+        return cell && cell.link ? _lt("Edit link") : _lt("Insert link");
+    };
     //------------------------------------------------------------------------------
     // Filters action
     //------------------------------------------------------------------------------
@@ -19171,7 +19180,7 @@
     })
         .add("insert_link", {
         ...insertLink,
-        name: _lt("Insert link"),
+        name: INSERT_LINK_NAME,
         sequence: 150,
         separator: true,
     });
@@ -31839,9 +31848,9 @@
         allowDispatch(cmd) {
             switch (cmd.type) {
                 case "UPDATE_CELL":
-                    return this.checkCellOutOfSheet(cmd);
+                    return this.checkValidations(cmd, this.checkCellOutOfSheet, this.checkUselessUpdateCell);
                 case "CLEAR_CELL":
-                    return this.checkValidations(cmd, this.chainValidations(this.checkCellOutOfSheet, this.checkUselessClearCell));
+                    return this.checkValidations(cmd, this.checkCellOutOfSheet, this.checkUselessClearCell);
                 default:
                     return 0 /* CommandResult.Success */;
             }
@@ -32135,10 +32144,7 @@
             else {
                 style = before ? before.style : undefined;
             }
-            const locale = this.getters.getLocale();
-            let format = ("format" in after ? after.format : before && before.format) ||
-                detectDateFormat(afterContent, locale) ||
-                detectNumberFormat(afterContent);
+            const format = "format" in after ? after.format : before && before.format;
             /* Read the following IF as:
              * we need to remove the cell if it is completely empty, but we can know if it completely empty if:
              * - the command says the new content is empty and has no border/format/style
@@ -32179,12 +32185,11 @@
         }
         createLiteralCell(id, content, format, style) {
             const locale = this.getters.getLocale();
-            content = parseLiteral(content, locale).toString();
             return {
                 id,
-                content,
+                content: parseLiteral(content, locale).toString(),
                 style,
-                format,
+                format: format || detectDateFormat(content, locale) || detectNumberFormat(content),
                 isFormula: false,
             };
         }
@@ -32241,6 +32246,18 @@
             if (!cell)
                 return 98 /* CommandResult.NoChanges */;
             if (!cell.content && !cell.style && !cell.format) {
+                return 98 /* CommandResult.NoChanges */;
+            }
+            return 0 /* CommandResult.Success */;
+        }
+        checkUselessUpdateCell(cmd) {
+            const cell = this.getters.getCell(cmd);
+            const hasContent = "content" in cmd || "formula" in cmd;
+            const hasStyle = "style" in cmd;
+            const hasFormat = "format" in cmd;
+            if ((!hasContent || cell?.content === cmd.content) &&
+                (!hasStyle || deepEquals(cell?.style, cmd.style)) &&
+                (!hasFormat || cell?.format === cmd.format)) {
                 return 98 /* CommandResult.NoChanges */;
             }
             return 0 /* CommandResult.Success */;
@@ -36385,7 +36402,15 @@
             if (!this.rTrees[sheetId]) {
                 return;
             }
-            this.rTrees[sheetId].remove(item, deepEquals);
+            this.rTrees[sheetId].remove(item, this.rtreeItemComparer);
+        }
+        rtreeItemComparer(left, right) {
+            return (left.data == right.data &&
+                left.boundingBox.sheetId === right.boundingBox.sheetId &&
+                left.boundingBox?.zone.left === right.boundingBox.zone.left &&
+                left.boundingBox?.zone.top === right.boundingBox.zone.top &&
+                left.boundingBox?.zone.right === right.boundingBox.zone.right &&
+                left.boundingBox?.zone.bottom === right.boundingBox.zone.bottom);
         }
     }
     /**
@@ -36463,7 +36488,7 @@
             const queue = Array.from(ranges).reverse();
             while (queue.length > 0) {
                 const range = queue.pop();
-                visited.add(...this.encoder.encodeBoundingBox(range));
+                visited.addMany(this.encoder.encodeBoundingBox(range));
                 const impactedPositionIds = this.rTree.search(range).map((dep) => dep.data);
                 for (const positionId of impactedPositionIds) {
                     if (!visited.has(positionId)) {
@@ -36471,7 +36496,7 @@
                     }
                 }
             }
-            visited.delete(...ranges.flatMap((r) => this.encoder.encodeBoundingBox(r)));
+            visited.deleteMany(ranges.flatMap((r) => this.encoder.encodeBoundingBox(r)));
             return visited;
         }
     }
@@ -36602,9 +36627,9 @@
             const cells = positions.map((p) => this.encoder.encode(p));
             const cellsToCompute = new JetSet(cells);
             const arrayFormulasPositionIds = this.getArrayFormulasImpactedByChangesOf(cells);
-            cellsToCompute.add(...this.getCellsDependingOn(cells));
-            cellsToCompute.add(...arrayFormulasPositionIds);
-            cellsToCompute.add(...this.getCellsDependingOn(arrayFormulasPositionIds));
+            cellsToCompute.addMany(this.getCellsDependingOn(cells));
+            cellsToCompute.addMany(arrayFormulasPositionIds);
+            cellsToCompute.addMany(this.getCellsDependingOn(arrayFormulasPositionIds));
             this.evaluate(cellsToCompute);
         }
         getArrayFormulasImpactedByChangesOf(positionIds) {
@@ -36618,7 +36643,7 @@
                 }
                 if (!content) {
                     // The previous content could have blocked some array formulas
-                    impactedPositionIds.add(...this.getArrayFormulasBlockedByOrSpreadingOn(positionId));
+                    impactedPositionIds.addMany(this.getArrayFormulasBlockedByOrSpreadingOn(positionId));
                 }
             }
             return impactedPositionIds;
@@ -36666,7 +36691,7 @@
             }
             const arrayFormulas = this.spreadingRelations.getFormulaPositionsSpreadingOn(positionId);
             const cells = new JetSet(arrayFormulas);
-            cells.add(...this.getCellsDependingOn(arrayFormulas));
+            cells.addMany(this.getCellsDependingOn(arrayFormulas));
             return cells;
         }
         nextPositionsToUpdate = new JetSet();
@@ -36817,7 +36842,7 @@
                 this.setEvaluatedCell(positionId, evaluatedCell);
                 // check if formula dependencies present in the spread zone
                 // if so, they need to be recomputed
-                this.nextPositionsToUpdate.add(...this.getCellsDependingOn([positionId]));
+                this.nextPositionsToUpdate.addMany(this.getCellsDependingOn([positionId]));
             };
         }
         invalidateSpreading(positionId) {
@@ -36832,8 +36857,8 @@
                     continue;
                 }
                 this.evaluatedCells.delete(child);
-                this.nextPositionsToUpdate.add(...this.getCellsDependingOn([child]));
-                this.nextPositionsToUpdate.add(...this.getArrayFormulasBlockedByOrSpreadingOn(child));
+                this.nextPositionsToUpdate.addMany(this.getCellsDependingOn([child]));
+                this.nextPositionsToUpdate.addMany(this.getArrayFormulasBlockedByOrSpreadingOn(child));
             }
             this.spreadingRelations.removeNode(positionId);
         }
@@ -49358,11 +49383,10 @@
          * next cluster if the given cell is outside a cluster or at the border of a cluster in the given direction.
          */
         getEndOfCluster(startPosition, dim, dir) {
-            const sheet = this.getters.getActiveSheet();
             let currentPosition = startPosition;
             // If both the current cell and the next cell are not empty, we want to go to the end of the cluster
             const nextCellPosition = this.getNextCellPosition(startPosition, dim, dir);
-            let mode = !this.isCellEmpty(currentPosition, sheet.id) && !this.isCellEmpty(nextCellPosition, sheet.id)
+            let mode = !this.isEvaluatedCellEmpty(currentPosition) && !this.isEvaluatedCellEmpty(nextCellPosition)
                 ? "endOfCluster"
                 : "nextCluster";
             while (true) {
@@ -49372,7 +49396,7 @@
                     currentPosition.row === nextCellPosition.row) {
                     break;
                 }
-                const isNextCellEmpty = this.isCellEmpty(nextCellPosition, sheet.id);
+                const isNextCellEmpty = this.isEvaluatedCellEmpty(nextCellPosition);
                 if (mode === "endOfCluster" && isNextCellEmpty) {
                     break;
                 }
@@ -49386,10 +49410,20 @@
             return dim === "cols" ? currentPosition.col : currentPosition.row;
         }
         /**
-         * Check if a cell is empty or undefined in the model. If the cell is part of a merge,
-         * check if the merge containing the cell is empty.
+         * Checks if a cell is empty (i.e. does not have a content). If the cell is part of a merge,
+         * the check applies to the main cell of the merge.
          */
-        isCellEmpty({ col, row }, sheetId = this.getters.getActiveSheetId()) {
+        isCellEmpty({ col, row }) {
+            const sheetId = this.getters.getActiveSheetId();
+            const position = this.getters.getMainCellPosition({ sheetId, col, row });
+            return !(this.getters.getCorrespondingFormulaCell(position) || this.getters.getCell(position)?.content);
+        }
+        /**
+         * Checks if a cell evaluated value is empty. If the cell is part of a merge,
+         * the check applies to the main cell of the merge.
+         */
+        isEvaluatedCellEmpty({ col, row }) {
+            const sheetId = this.getters.getActiveSheetId();
             const position = this.getters.getMainCellPosition({ sheetId, col, row });
             const cell = this.getters.getEvaluatedCell(position);
             return cell.type === CellValueType.empty;
@@ -51672,9 +51706,9 @@
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.4.22';
-    __info__.date = '2024-02-09T14:30:22.415Z';
-    __info__.hash = '952543c';
+    __info__.version = '16.4.23';
+    __info__.date = '2024-02-16T15:04:29.705Z';
+    __info__.hash = 'cb5db1a';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
