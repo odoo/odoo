@@ -455,7 +455,6 @@ describe(parseUrl(import.meta.url), () => {
             // Fill
             ...[..."Test value"].flatMap(() => [
                 "input.keydown",
-                "input.keypress",
                 "input.input",
                 "input.keyup",
             ]),
@@ -601,7 +600,6 @@ describe(parseUrl(import.meta.url), () => {
             "input.click",
             // Key down
             "input.keydown",
-            "input.keypress",
             "input.input",
         ]).toVerifySteps();
 
@@ -658,7 +656,6 @@ describe(parseUrl(import.meta.url), () => {
             "input.click",
             // Key press
             "input.keydown",
-            "input.keypress",
             "input.input",
             "input.keyup",
         ]).toVerifySteps();
@@ -795,7 +792,6 @@ describe(parseUrl(import.meta.url), () => {
             "input.change",
             // Key press
             "input.keydown",
-            "input.keypress",
             "input.input",
             "input.keyup",
             // Click triggered by key press
@@ -893,7 +889,6 @@ describe(parseUrl(import.meta.url), () => {
         expect([
             "keydown:Shift.shift",
             "keydown:b.shift",
-            "keypress:b.shift",
             "input",
             "keyup:b.shift",
             "keyup:Shift.shift",
