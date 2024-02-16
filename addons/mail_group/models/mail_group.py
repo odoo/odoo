@@ -412,7 +412,6 @@ class MailGroup(models.Model):
 
         base_url = self.get_base_url()
         body = self.env['mail.render.mixin']._replace_local_links(message.body)
-        access_token = self._generate_group_access_token()
 
         # Email added in a dict to be sure to send only once the email to each address
         member_emails = {
@@ -430,11 +429,14 @@ class MailGroup(models.Model):
 
                 # SMTP headers related to the subscription
                 email_url_encoded = urls.url_quote(email_member)
+                unsubscribe_url = self._get_email_unsubscribe_url(email_member_normalized)
+
                 headers = {
                     ** self._notify_email_header_dict(),
                     'List-Archive': f'<{base_url}/groups/{slug(self)}>',
                     'List-Subscribe': f'<{base_url}/groups?email={email_url_encoded}>',
-                    'List-Unsubscribe': f'<{base_url}/groups?unsubscribe&email={email_url_encoded}>',
+                    'List-Unsubscribe': unsubscribe_url,
+                    'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
                     'Precedence': 'list',
                     'X-Auto-Response-Suppress': 'OOF',  # avoid out-of-office replies from MS Exchange
                 }
@@ -453,7 +455,7 @@ class MailGroup(models.Model):
                     'mailto': f'{self.alias_name}@{self.alias_domain}',
                     'group_url': f'{base_url}/groups/{slug(self)}',
                     'unsub_label': f'{base_url}/groups?unsubscribe',
-                    'unsub_url':  f'{base_url}/groups?unsubscribe&group_id={self.id}&token={access_token}&email={email_url_encoded}',
+                    'unsub_url':  unsubscribe_url,
                 }
                 template = self.env.ref('mail_group.mail_group_footer')
                 footer = template._render(template_values, engine='ir.qweb', minimal_qcontext=True)
@@ -666,10 +668,28 @@ class MailGroup(models.Model):
         data = (self.id, email_normalized, action)
         return hmac(self.env(su=True), 'mail_group-email-subscription', data)
 
+    def _generate_email_access_token(self, email):
+        """Generate an action token to be able to unsubscribe from the mailing
+        list, while hashing the target email to avoid spoofind other emails.
+
+        :param str email: email included in hash, should be normalized
+        """
+        return tools.hmac(self.env(su=True), 'mail_group-access-token-portal-email', (self.id, email))
+
     def _generate_group_access_token(self):
         """Generate an action token to be able to subscribe / unsubscribe from the mailing list."""
         self.ensure_one()
         return hmac(self.env(su=True), 'mail_group-access-token-portal', self.id)
+
+    def _get_email_unsubscribe_url(self, email_to):
+        params = urls.url_encode({
+            'email': email_to,
+            'token': self._generate_email_access_token(email_to),
+        })
+        return urls.url_join(
+            self.get_base_url(),
+            f'group/{self.id}/unsubscribe_oneclick?{params}'
+        )
 
     def _find_member(self, email, partner_id=None):
         """Return the <mail.group.member> corresponding to the given email address."""
