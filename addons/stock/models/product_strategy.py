@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, fields, models
+from odoo.osv import expression
 from odoo.exceptions import UserError
 from odoo.tools.float_utils import float_compare
 
@@ -61,8 +62,37 @@ class StockPutawayRule(models.Model):
         'res.company', 'Company', required=True,
         default=lambda s: s.env.company.id, index=True)
     package_type_ids = fields.Many2many('stock.package.type', string='Package Type', check_company=True)
-    storage_category_id = fields.Many2one('stock.storage.category', 'Storage Category', ondelete='cascade', check_company=True)
+    storage_category_id = fields.Many2one(
+        'stock.storage.category', 'Storage Category',
+        compute='_compute_storage_category', store=True, readonly=False,
+        ondelete='cascade', check_company=True)
     active = fields.Boolean('Active', default=True)
+    sublocation = fields.Selection([
+        ('no', 'No'),
+        ('last_used', 'Last Used'),
+        ('closest_location', 'Closest Location')
+    ], default='no')
+
+    @api.depends('sublocation')
+    def _compute_storage_category(self):
+        for rule in self:
+            if rule.sublocation != 'closest_location':
+                rule.storage_category_id = False
+
+    @api.onchange('sublocation', 'location_out_id', 'storage_category_id')
+    def _onchange_sublocation(self):
+        if self.sublocation == 'closest_location':
+            child_location_ids = self.env['stock.location'].search([
+                ('id', 'child_of', self.location_out_id.id),
+                ('storage_category_id', '=', self.storage_category_id.id)
+            ])
+            if not child_location_ids:
+                return {
+                    'warning': {
+                        'title': _("Warning"),
+                        'message': _("Selected storage category does not exist in the 'store to' location or any of its sublocations"),
+                    },
+                }
 
     @api.onchange('location_in_id')
     def _onchange_location_in(self):
@@ -88,6 +118,28 @@ class StockPutawayRule(models.Model):
                     raise UserError(_("Changing the company of this record is forbidden at this point, you should rather archive it and create a new one."))
         return super(StockPutawayRule, self).write(vals)
 
+    def _get_last_used_search_domain(self, product):
+        self.ensure_one()
+        domain = expression.AND([
+            [('state', '=', 'done')],
+            [('location_dest_id', 'child_of', self.location_out_id.id)],
+            [('product_id', '=', product.id)],
+        ])
+        if self.package_type_ids:
+            domain = expression.AND([
+                domain,
+                [('result_package_id.package_type_id', 'in', self.package_type_ids.ids)],
+            ])
+        return domain
+
+    def _get_last_used_location(self, product):
+        self.ensure_one()
+        return self.env['stock.move.line'].search(
+            domain=self._get_last_used_search_domain(product),
+            limit=1,
+            order='date desc'
+        ).location_dest_id
+
     def _get_putaway_location(self, product, quantity=0, package=None, packaging=None, qty_by_location=None):
         # find package type on package or packaging
         package_type = self.env['stock.package.type']
@@ -99,6 +151,10 @@ class StockPutawayRule(models.Model):
         checked_locations = set()
         for putaway_rule in self:
             location_out = putaway_rule.location_out_id
+            if putaway_rule.sublocation == 'last_used':
+                location_dest_id = putaway_rule._get_last_used_location(product)
+                location_out = location_dest_id or location_out
+
             child_locations = location_out.child_internal_location_ids
 
             if not putaway_rule.storage_category_id:

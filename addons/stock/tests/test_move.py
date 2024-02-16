@@ -1869,6 +1869,62 @@ class StockMove(TransactionCase):
         # check if the putaway wasn't applied since there are already 100kg products in the location
         self.assertEqual(move2.move_line_ids.location_dest_id.id, self.stock_location.id)
 
+    def test_putaway_rule_with_last_used_sublocation(self):
+        '''
+        1. Create a putaway rule with 'last_used' sublocation
+        2. Initial 'store_to' location is 'WH/Stock'
+        3. Create a move with a destinaltion location set to 'WH/Stock', then confirm the move
+        4. Set destination location of move line to 'shelf1'
+        5. Create another move with a destinaltion location set to 'WH/Stock', then confirm the move
+        6. Assert the destination location of move line is set to 'shelf1'
+        '''
+        shelf1_location = self.env['stock.location'].create({
+            'name': 'shelf1',
+            'usage': 'internal',
+            'location_id': self.stock_location.id,
+        })
+        # putaway from stock to child location with storage_category
+        putaway = self.env['stock.putaway.rule'].create({
+            'product_id': self.product.id,
+            'location_in_id': self.stock_location.id,
+            'location_out_id': self.stock_location.id,
+        })
+
+        self.stock_location.write({
+            'putaway_rule_ids': [(4, putaway.id, 0)],
+        })
+
+        # first move
+        move1 = self.env['stock.move'].create({
+            'name': 'test_move_1',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 1.0,
+        })
+        move1._action_confirm()
+        self.assertEqual(move1.move_line_ids[0].location_dest_id, self.stock_location)
+        move1.move_line_ids[0].location_dest_id = shelf1_location
+        self.assertEqual(move1.state, 'assigned')
+        self.assertEqual(len(move1.move_line_ids), 1)
+        move1._action_done()
+
+        # second move
+        move2 = self.env['stock.move'].create({
+            'name': 'test_move_2',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 1.0,
+        })
+        move2._action_confirm()
+        self.assertEqual(move1.state, 'assigned')
+        self.assertEqual(len(move2.move_line_ids), 1)
+
+        self.assertEqual(move2.move_line_ids.location_dest_id.id, self.stock_location.id)
+
     def test_availability_1(self):
         """ Check that the `availability` field on a move is correctly computed when there is
         more than enough products in stock.
