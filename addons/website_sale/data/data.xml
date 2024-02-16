@@ -82,7 +82,7 @@
             <field name="state">code</field>
             <field name="code">
 DynamicFilter = model.env['website.snippet.filter']
-response = DynamicFilter._get_products('latest_sold', model.env.context)
+response = DynamicFilter._get_products('latest_sold')
             </field>
         </record>
         <record id="dynamic_snippet_latest_viewed_products_action" model="ir.actions.server">
@@ -91,7 +91,7 @@ response = DynamicFilter._get_products('latest_sold', model.env.context)
             <field name="state">code</field>
             <field name="code">
 DynamicFilter = model.env['website.snippet.filter']
-res_products = DynamicFilter._get_products('latest_viewed', model.env.context)
+res_products = DynamicFilter._get_products('latest_viewed')
 for data in res_products:
     data['_latest_viewed'] = True
 response = res_products
@@ -103,8 +103,7 @@ response = res_products
             <field name="state">code</field>
             <field name="code">
 DynamicFilter = model.env['website.snippet.filter']
-model.env.context['product_template_id'] = request.params.get('productTemplateId')
-response = DynamicFilter._get_products('accessories', model.env.context)
+response = DynamicFilter._get_products('accessories', product_template_id=request.params.get('productTemplateId'))
             </field>
         </record>
         <record id="dynamic_snippet_recently_sold_with_action" model="ir.actions.server">
@@ -113,8 +112,7 @@ response = DynamicFilter._get_products('accessories', model.env.context)
             <field name="state">code</field>
             <field name="code">
 DynamicFilter = model.env['website.snippet.filter']
-model.env.context['product_template_id'] = request.params.get('productTemplateId')
-response = DynamicFilter._get_products('recently_sold_with', model.env.context)
+response = DynamicFilter._get_products('recently_sold_with', product_template_id=request.params.get('productTemplateId'))
             </field>
         </record>
         <record id="dynamic_snippet_alternative_products" model="ir.actions.server">
@@ -123,8 +121,7 @@ response = DynamicFilter._get_products('recently_sold_with', model.env.context)
             <field name="state">code</field>
             <field name="code">
 DynamicFilter = model.env['website.snippet.filter']
-model.env.context['product_template_id'] = request.params.get('productTemplateId')
-response = DynamicFilter._get_products('alternative_products', model.env.context)
+response = DynamicFilter._get_products('alternative_products', product_template_id=request.params.get('productTemplateId'))
             </field>
         </record>
         <!-- Dynamic Filter -->

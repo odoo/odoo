@@ -1920,8 +1920,15 @@ class WebsiteSale(payment_portal.PaymentPortal):
         return res
 
     @route('/shop/products/recently_viewed_delete', type='json', auth='public', website=True)
-    def products_recently_viewed_delete(self, product_id, **kwargs):
+    def products_recently_viewed_delete(self, product_id=None, product_template_id=None, **kwargs):
+        if not (product_id or product_template_id):
+            return
         visitor_sudo = request.env['website.visitor']._get_visitor_from_request()
         if visitor_sudo:
-            request.env['website.track'].sudo().search([('visitor_id', '=', visitor_sudo.id), ('product_id', '=', product_id)]).unlink()
+            domain = [('visitor_id', '=', visitor_sudo.id)]
+            if product_id:
+                domain += [('product_id', '=', int(product_id))]
+            else:
+                domain += [('product_id.product_tmpl_id', '=', int(product_template_id))]
+            request.env['website.track'].sudo().search(domain).unlink()
         return {}
