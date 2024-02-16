@@ -28623,9 +28623,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         allowDispatch(cmd) {
             switch (cmd.type) {
                 case "UPDATE_CELL":
-                    return this.checkCellOutOfSheet(cmd);
+                    return this.checkValidations(cmd, this.checkCellOutOfSheet, this.checkUselessUpdateCell);
                 case "CLEAR_CELL":
-                    return this.checkValidations(cmd, this.chainValidations(this.checkCellOutOfSheet, this.checkUselessClearCell));
+                    return this.checkValidations(cmd, this.checkCellOutOfSheet, this.checkUselessClearCell);
                 default:
                     return 0 /* CommandResult.Success */;
             }
@@ -29040,6 +29040,18 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             if (!cell)
                 return 89 /* CommandResult.NoChanges */;
             if (!cell.content && !cell.style && !cell.format) {
+                return 89 /* CommandResult.NoChanges */;
+            }
+            return 0 /* CommandResult.Success */;
+        }
+        checkUselessUpdateCell(cmd) {
+            const cell = this.getters.getCell(cmd);
+            const hasContent = "content" in cmd || "formula" in cmd;
+            const hasStyle = "style" in cmd;
+            const hasFormat = "format" in cmd;
+            if ((!hasContent || (cell === null || cell === void 0 ? void 0 : cell.content) === cmd.content) &&
+                (!hasStyle || deepEquals(cell === null || cell === void 0 ? void 0 : cell.style, cmd.style)) &&
+                (!hasFormat || (cell === null || cell === void 0 ? void 0 : cell.format) === cmd.format)) {
                 return 89 /* CommandResult.NoChanges */;
             }
             return 0 /* CommandResult.Success */;
@@ -34664,8 +34676,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             let row = zone.bottom;
             if (col > 0) {
                 let leftPosition = { sheetId, col: col - 1, row };
-                while (this.getters.getEvaluatedCell(leftPosition).type !== CellValueType.empty ||
-                    ((_a = this.getters.getCell(leftPosition)) === null || _a === void 0 ? void 0 : _a.content)) {
+                while ((_a = this.getters.getCell(leftPosition)) === null || _a === void 0 ? void 0 : _a.content) {
                     row += 1;
                     leftPosition = { sheetId, col: col - 1, row };
                 }
@@ -34674,8 +34685,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 col = zone.right;
                 if (col <= this.getters.getNumberCols(sheetId)) {
                     let rightPosition = { sheetId, col: col + 1, row };
-                    while (this.getters.getEvaluatedCell(rightPosition).type !== CellValueType.empty ||
-                        ((_b = this.getters.getCell(rightPosition)) === null || _b === void 0 ? void 0 : _b.content)) {
+                    while ((_b = this.getters.getCell(rightPosition)) === null || _b === void 0 ? void 0 : _b.content) {
                         row += 1;
                         rightPosition = { sheetId, col: col + 1, row };
                     }
@@ -36573,9 +36583,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     break;
                 case "FOCUS_RANGE":
                 case "CHANGE_RANGE":
-                    if (cmd.id !== this.focusedInputId) {
-                        const input = this.inputs[cmd.id];
-                        const range = input.ranges.find((range) => range.id === cmd.rangeId);
+                    const input = this.inputs[cmd.id];
+                    const range = input.ranges.find((range) => range.id === cmd.rangeId);
+                    if (range) {
                         const sheetId = this.getters.getActiveSheetId();
                         const zone = this.getters.getRangeFromSheetXC(sheetId, (range === null || range === void 0 ? void 0 : range.xc) || "A1").zone;
                         this.selection.capture(input, { cell: { col: zone.left, row: zone.top }, zone }, { handleEvent: input.handleEvent.bind(input) });
@@ -42528,11 +42538,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
          * next cluster if the given cell is outside a cluster or at the border of a cluster in the given direction.
          */
         getEndOfCluster(startPosition, dim, dir) {
-            const sheet = this.getters.getActiveSheet();
             let currentPosition = startPosition;
             // If both the current cell and the next cell are not empty, we want to go to the end of the cluster
             const nextCellPosition = this.getNextCellPosition(startPosition, dim, dir);
-            let mode = !this.isCellEmpty(currentPosition, sheet.id) && !this.isCellEmpty(nextCellPosition, sheet.id)
+            let mode = !this.isEvaluatedCellEmpty(currentPosition) && !this.isEvaluatedCellEmpty(nextCellPosition)
                 ? "endOfCluster"
                 : "nextCluster";
             while (true) {
@@ -42542,7 +42551,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     currentPosition.row === nextCellPosition.row) {
                     break;
                 }
-                const isNextCellEmpty = this.isCellEmpty(nextCellPosition, sheet.id);
+                const isNextCellEmpty = this.isEvaluatedCellEmpty(nextCellPosition);
                 if (mode === "endOfCluster" && isNextCellEmpty) {
                     break;
                 }
@@ -42556,13 +42565,24 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             return dim === "cols" ? currentPosition.col : currentPosition.row;
         }
         /**
-         * Check if a cell is empty or undefined in the model. If the cell is part of a merge,
-         * check if the merge containing the cell is empty.
+         * Check if a cell evaluated value is empty. If the cell is part of a merge,
+         * the check applies to the main cell of the merge.
          */
-        isCellEmpty({ col, row }, sheetId = this.getters.getActiveSheetId()) {
+        isEvaluatedCellEmpty({ col, row }) {
+            const sheetId = this.getters.getActiveSheetId();
             const position = this.getters.getMainCellPosition({ sheetId, col, row });
             const cell = this.getters.getEvaluatedCell(position);
             return cell.type === CellValueType.empty;
+        }
+        /**
+         * Checks if a cell is empty (i.e. does not have a content). If the cell is part of a merge,
+         * the check applies to the main cell of the merge.
+         */
+        isCellEmpty({ col, row }) {
+            var _a;
+            const sheetId = this.getters.getActiveSheetId();
+            const position = this.getters.getMainCellPosition({ sheetId, col, row });
+            return !((_a = this.getters.getCell(position)) === null || _a === void 0 ? void 0 : _a.content);
         }
         /** Computes the next cell position in the given direction by crossing through merges and skipping hidden cells.
          *
@@ -44660,9 +44680,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.1.35';
-    __info__.date = '2024-02-09T14:27:40.241Z';
-    __info__.hash = '1a4e99f';
+    __info__.version = '16.1.36';
+    __info__.date = '2024-02-16T15:01:26.822Z';
+    __info__.hash = 'ad5301c';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
