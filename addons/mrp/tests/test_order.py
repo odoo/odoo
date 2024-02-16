@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 from freezegun import freeze_time
 
 from odoo import Command, fields
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tests import Form
 from odoo.tools.misc import format_date
 
@@ -3900,3 +3900,22 @@ class TestMrpOrder(TestMrpCommon):
 
         self.assertEqual(wos[0].date_finished, dt + timedelta(hours=1, minutes=1))
         self.assertEqual(wos[1].date_finished, dt + timedelta(hours=1, minutes=2))
+
+    def test_bom_line_uom_is_subunit_of_product_uom_small_qty(self):
+        """
+        Ensure that when a bom line in a MO's bom has an edited uom, the user cannot enter a quantity to use which is so
+        small it will round down to 0.0
+        """
+        self.product_1.uom_id = self.uom_kgm.id
+        self.product_1.type = 'product'
+        self.product_6.uom_id = self.uom_unit.id
+
+        self.bom_4.bom_line_ids.product_uom_id = self.uom_gram.id
+        self.bom_4.bom_line_ids.product_qty = 4.0
+
+        manufacturing_order = self.env['mrp.production'].create({
+            'product_id': self.product_6.id,
+            'bom_id': self.bom_4.id,
+        })
+        with self.assertRaises(ValidationError):
+            manufacturing_order.action_confirm()

@@ -1392,8 +1392,23 @@ class MrpProduction(models.Model):
         if self.picking_type_id.auto_print_generated_mrp_lot:
             return self._autoprint_generated_lot(self.lot_producing_id)
 
+    def _check_qty_nonzero(self):
+        for record in self.move_raw_ids:
+            # legacy tests aren't considering this behavior - no need to enforce
+            if record.product_uom_qty == 0:
+                continue
+            to_unit = record.product_uom
+            converted_qty = record.product_uom_qty / to_unit.factor
+            converted_qty = float_round(converted_qty, precision_rounding=to_unit.rounding)
+            if float_compare(converted_qty, to_unit.rounding, precision_rounding=to_unit.rounding) == -1:
+                raise ValidationError(_(
+                    'The quantity for the component %(product)s is too low. Consider changing the UoM for this product '
+                    'from %(uom1)s to %(uom2)s.',
+                    product=record.product_id.name, uom1=record.product_id.uom_id.name, uom2=to_unit.name))
+
     def action_confirm(self):
         self._check_company()
+        self._check_qty_nonzero()
         moves_ids_to_confirm = set()
         move_raws_ids_to_adjust = set()
         workorder_ids_to_confirm = set()
