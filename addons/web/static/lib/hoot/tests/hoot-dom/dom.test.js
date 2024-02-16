@@ -312,6 +312,28 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
         expect(isVisible("body")).toBe(false); // not available from fixture
     });
 
+    test("matchMedia", async () => {
+        // Invalid syntax
+        expect(matchMedia("aaaa").matches).toBe(false);
+        expect(matchMedia("display-mode: browser").matches).toBe(false);
+
+        // Does not exist
+        expect(matchMedia("(a)").matches).toBe(false);
+        expect(matchMedia("(a: b)").matches).toBe(false);
+
+        // Defaults
+        expect(matchMedia("(display-mode:browser)").matches).toBe(true);
+        expect(matchMedia("(display-mode: standalone)").matches).toBe(false);
+        expect(matchMedia("not (display-mode: standalone)").matches).toBe(true);
+        expect(matchMedia("(prefers-color-scheme :light)").matches).toBe(true);
+        expect(matchMedia("(prefers-color-scheme : dark)").matches).toBe(false);
+        expect(matchMedia("not (prefers-color-scheme: dark)").matches).toBe(true);
+        expect(matchMedia("(prefers-reduced-motion: reduce)").matches).toBe(true);
+        expect(matchMedia("(prefers-reduced-motion: no-preference)").matches).toBe(false);
+
+
+    });
+
     test("waitFor: already in fixture", async () => {
         await mount(FULL_HTML_TEMPLATE);
 
