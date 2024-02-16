@@ -579,6 +579,7 @@ class MailMail(models.Model):
                     'state': 'exception',
                     'failure_reason': _('Error without exception. Probably due to sending an email without computed recipients.'),
                 })
+                mail.flush_recordset()
                 # Update notification in a transient exception state to avoid concurrent
                 # update in case an email bounces while sending all emails related to current
                 # mail record.
