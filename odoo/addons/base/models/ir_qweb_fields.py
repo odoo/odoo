@@ -137,7 +137,7 @@ class FieldConverter(models.AbstractModel):
 
         :returns: Model[res.lang]
         """
-        return get_lang(self.env)
+        return self.env['res.lang'].browse(get_lang(self.env).id)
 
 
 class IntegerConverter(models.AbstractModel):
@@ -469,8 +469,8 @@ class MonetaryConverter(models.AbstractModel):
             value = options['from_currency']._convert(value, display_currency, company, date)
 
         lang = self.user_lang()
-        formatted_amount = lang.format(fmt, display_currency.round(value),
-                                grouping=True, monetary=True).replace(r' ', '\N{NO-BREAK SPACE}').replace(r'-', '-\N{ZERO WIDTH NO-BREAK SPACE}')
+        formatted_amount = lang.format(fmt, display_currency.round(value), grouping=True)\
+            .replace(r' ', '\N{NO-BREAK SPACE}').replace(r'-', '-\N{ZERO WIDTH NO-BREAK SPACE}')
 
         pre = post = ''
         if display_currency.position == 'before':

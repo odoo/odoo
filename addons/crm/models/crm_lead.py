@@ -427,7 +427,7 @@ class Lead(models.Model):
         lang_codes = [code for code in self.mapped('partner_id.lang') if code]
         if lang_codes:
             lang_id_by_code = dict(
-                (code, self.env['res.lang']._lang_get_id(code))
+                (code, self.env['res.lang']._get_data(code=code).id)
                 for code in lang_codes
             )
         else:
@@ -667,7 +667,7 @@ class Lead(models.Model):
         # For other fields, get the info from the partner, but only if set
         values.update({f: partner[f] or self[f] for f in PARTNER_FIELDS_TO_SYNC if f != 'lang'})
         if partner.lang:
-            values['lang_id'] = self.env['res.lang']._lang_get_id(partner.lang)
+            values['lang_id'] = self.env['res.lang']._get_data(code=partner.lang).id
 
         # Fields with specific logic
         values.update(self._prepare_contact_name_from_partner(partner))
@@ -1996,7 +1996,7 @@ class Lead(models.Model):
         recipients = super()._message_get_suggested_recipients()
         try:
             # check if that language is correctly installed (and active) before using it
-            lang_code = self.lang_code if self.lang_code and self.env['res.lang']._lang_get(self.lang_code) else None
+            lang_code = self.env['res.lang']._get_data(code=self.lang_code).code or None
             if self.partner_id:
                 self._message_add_suggested_recipient(
                     recipients, partner=self.partner_id, lang=lang_code, reason=_('Customer'))

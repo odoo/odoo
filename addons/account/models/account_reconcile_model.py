@@ -263,7 +263,7 @@ class AccountReconcileModel(models.Model):
         help="Number of months in the past to consider entries from when applying this model.",
     )
     decimal_separator = fields.Char(
-        default=lambda self: self.env['res.lang']._lang_get(self.env.user.lang).decimal_point,
+        default=lambda self: self.env['res.lang']._get_data(code=self.env.user.lang).decimal_point,
         tracking=True,
         help="Every character that is nor a digit nor this separator will be removed from the matching string",
     )
