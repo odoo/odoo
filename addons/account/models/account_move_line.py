@@ -402,7 +402,7 @@ class AccountMoveLine(models.Model):
     # === Payment Fields === #
     # payment_date is the closest date to the date the aml was created between discount_date and date_maturity.
     payment_date = fields.Date(
-        string='Payment Date',
+        string='Next Payment Date',
         compute='_compute_payment_date',
         search='_search_payment_date',
     )
@@ -1164,19 +1164,25 @@ class AccountMoveLine(models.Model):
                 '&', ('discount_date', '=', False), ('date_maturity', operator, value),
             ]
 
-    def action_register_payment(self):
+    def action_payment_items_register_payment(self):
+        return self.action_register_payment({'force_group_payment': True})
+
+    def action_register_payment(self, ctx=None):
         ''' Open the account.payment.register wizard to pay the selected journal items.
         :return: An action opening the account.payment.register wizard.
         '''
+        context = {
+            'active_model': 'account.move.line',
+            'active_ids': self.ids,
+        }
+        if ctx:
+            context.update(ctx)
         return {
             'name': _('Register Payment'),
             'res_model': 'account.payment.register',
             'view_mode': 'form',
             'views': [[False, 'form']],
-            'context': {
-                'active_model': 'account.move.line',
-                'active_ids': self.ids,
-            },
+            'context': context,
             'target': 'new',
             'type': 'ir.actions.act_window',
         }
