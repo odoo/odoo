@@ -93,4 +93,4 @@ class ResPartner(models.Model):
         edi_identification = f'{self.peppol_eas}:{self.peppol_endpoint}'.lower()
         self.account_peppol_validity_last_check = fields.Date.context_today(self)
         self.account_peppol_is_endpoint_valid = self._check_peppol_participant_exists(edi_identification)
-        return True
+        return False
