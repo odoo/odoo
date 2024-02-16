@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import wTourUtils from "@website/js/tours/tour_utils";
 
 wTourUtils.registerWebsitePreviewTour("default_shape_gets_palette_colors", {

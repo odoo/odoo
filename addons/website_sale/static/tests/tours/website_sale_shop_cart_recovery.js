@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import tourUtils from "@website_sale/js/tours/tour_utils";

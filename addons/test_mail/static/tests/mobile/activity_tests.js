@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { start } from "@mail/../tests/helpers/test_utils";
 
 QUnit.module("activity");

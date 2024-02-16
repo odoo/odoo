@@ -1,4 +1,3 @@
-/** @odoo-module **/
 // @ts-check
 
 import * as spreadsheet from "@odoo/o-spreadsheet";

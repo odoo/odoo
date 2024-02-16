@@ -1,4 +1,3 @@
-/** @odoo-module */
 import { patch } from "@web/core/utils/patch";
 import { Order, Payment } from "@point_of_sale/app/store/models";
 import { floatIsZero } from "@web/core/utils/numbers";

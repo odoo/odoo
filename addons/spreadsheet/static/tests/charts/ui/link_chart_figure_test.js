@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { click, nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { session } from "@web/session";
 import { getBasicData } from "@spreadsheet/../tests/utils/data";

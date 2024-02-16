@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { useEffect, useState, useRef } from "@odoo/owl";
 
 export function useScrollDirection(refName, cb) {

@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { coreTypes } from "@odoo/o-spreadsheet";
 import { OdooCorePlugin } from "@spreadsheet/plugins";
 

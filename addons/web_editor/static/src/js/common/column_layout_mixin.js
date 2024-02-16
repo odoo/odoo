@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 export const ColumnLayoutMixin = {
     /**
      * Calculates the number of columns for the mobile or desktop version.

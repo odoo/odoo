@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import publicWidget from "@web/legacy/js/public/public_widget";
 import VariantMixin from "@website_sale/js/sale_variant_mixin";
 import wSaleUtils from "@website_sale/js/website_sale_utils";

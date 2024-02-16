@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { _t } from "@web/core/l10n/translation";
 import PortalChatter from "@portal/js/portal_chatter";
 import { rpc } from "@web/core/network/rpc";

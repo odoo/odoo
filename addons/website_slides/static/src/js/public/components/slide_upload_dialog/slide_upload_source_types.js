@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { Component, useState } from "@odoo/owl";
 
 export class SlideUploadSourceTypes extends Component {

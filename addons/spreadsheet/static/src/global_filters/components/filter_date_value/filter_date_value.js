@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { Component, onWillUpdateProps } from "@odoo/owl";
 import { DateTimeInput } from "@web/core/datetime/datetime_input";
 import { FILTER_DATE_OPTION, monthsOptions } from "@spreadsheet/assets_backend/constants";

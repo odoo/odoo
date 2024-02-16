@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import publicWidget from '@web/legacy/js/public/public_widget';
 import { rpc } from "@web/core/network/rpc";
 import { cartHandlerMixin } from '@website_sale/js/website_sale_utils';

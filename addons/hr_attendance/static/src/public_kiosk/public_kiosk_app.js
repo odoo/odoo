@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import {App, whenReady, Component, useState} from "@odoo/owl";
 import { CardLayout } from "@hr_attendance/components/card_layout/card_layout";
 import { KioskManualSelection } from "@hr_attendance/components/manual_selection/manual_selection";

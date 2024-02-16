@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { PortalWizardUserListController } from "../list/portal_wizard_user_list_controller";
 import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field";
 import { registry } from "@web/core/registry";

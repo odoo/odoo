@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { generateListDefinition } from "./data";
 import { createModelWithDataSource, waitForDataSourcesLoaded } from "./model";
 

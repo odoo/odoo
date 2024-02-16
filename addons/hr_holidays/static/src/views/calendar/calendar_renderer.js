@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { CalendarRenderer } from '@web/views/calendar/calendar_renderer';
 
 import { TimeOffCalendarCommonRenderer } from './common/calendar_common_renderer';

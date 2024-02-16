@@ -1,4 +1,3 @@
-/** @odoo-module **/
 import wsTourUtils from '@website_sale/js/tours/tour_utils';
 
 export function changePricelist(pricelistName) {

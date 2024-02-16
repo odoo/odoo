@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { Link } from "./link";
 import { ColorPalette } from '@web_editor/js/wysiwyg/widgets/color_palette';
 import weUtils from "@web_editor/js/common/utils";

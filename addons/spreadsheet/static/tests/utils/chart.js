@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { nextTick } from "@web/../tests/helpers/utils";
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import { createModelWithDataSource } from "./model";

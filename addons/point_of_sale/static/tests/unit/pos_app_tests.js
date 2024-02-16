@@ -1,4 +1,3 @@
-/** @odoo-module */
 import { Chrome } from "@point_of_sale/app/pos_app";
 import { getFixture, mount } from "@web/../tests/helpers/utils";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";

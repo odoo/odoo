@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { _t } from "@web/core/l10n/translation";
 import { clamp } from "@web/core/utils/numbers";
 import options from "@web_editor/js/editor/snippets.options";

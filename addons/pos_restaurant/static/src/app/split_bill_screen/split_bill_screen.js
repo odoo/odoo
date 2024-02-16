@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { Order } from "@point_of_sale/app/store/models";
 
 import { registry } from "@web/core/registry";

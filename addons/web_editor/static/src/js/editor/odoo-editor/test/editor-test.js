@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import './spec/utils.test.js';
 import './spec/align.test.js';
 import './spec/color.test.js';

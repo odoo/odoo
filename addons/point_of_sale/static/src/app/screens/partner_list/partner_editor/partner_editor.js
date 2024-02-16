@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { _t } from "@web/core/l10n/translation";
 import { getDataURLFromFile } from "@web/core/utils/urls";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";

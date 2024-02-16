@@ -1,4 +1,3 @@
-/** @odoo-module */
 import { click } from "@web/../tests/helpers/utils";
 import { mountPublicSpreadsheet } from "@spreadsheet/../tests/utils/ui";
 import { THIS_YEAR_GLOBAL_FILTER } from "@spreadsheet/../tests/utils/global_filter";

@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { accountMove as accountMoveService } from "@account/components/account_move_service/account_move_service";
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";

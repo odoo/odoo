@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import PaymentForm from '@payment/js/payment_form';
 
 PaymentForm.include({

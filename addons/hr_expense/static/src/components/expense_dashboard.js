@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { useService } from '@web/core/utils/hooks';
 import { getCurrency } from '@web/core/currency';
 import { Component, onWillStart, useState } from "@odoo/owl";

@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { click, editInput, getFixture, makeDeferred, mockSendBeacon, nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { FormController } from '@web/views/form/form_controller';

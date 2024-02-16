@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { Loader } from "@point_of_sale/app/loader/loader";
 import { getTemplate } from "@web/core/templates";
 import { mount, reactive, whenReady } from "@odoo/owl";

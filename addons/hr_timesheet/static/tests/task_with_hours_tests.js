@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { makeView } from "@web/../tests/views/helpers";
 import { click, clickDropdown, editInput, getFixture } from "@web/../tests/helpers/utils";
 

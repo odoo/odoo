@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import {getAffineApproximation, getProjective, transform} from '@web_editor/js/editor/perspective_utils';
 
 const epsilon = 100 * Number.EPSILON;

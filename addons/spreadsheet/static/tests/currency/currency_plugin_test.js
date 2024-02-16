@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { nextTick } from "@web/../tests/helpers/utils";
 import { createModelWithDataSource } from "../utils/model";
 

@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import wTourUtils from "@website/js/tours/tour_utils";
 
 import { FileSelectorControlPanel } from "@web_editor/components/media_dialog/file_selector";

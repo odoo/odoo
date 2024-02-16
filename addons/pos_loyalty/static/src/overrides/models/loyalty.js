@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { Order, Orderline } from "@point_of_sale/app/store/models";
 import { Mutex } from "@web/core/utils/concurrency";
 import { roundDecimals, roundPrecision } from "@web/core/utils/numbers";

@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { Component, onMounted, useRef, useState } from "@odoo/owl";
 import { ProductCustomAttribute } from "@point_of_sale/app/store/models/product_custom_attribute";
 import { useSelfOrder } from "@pos_self_order/app/self_order_service";

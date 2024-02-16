@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { Component, useRef } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { getLimits, useMovable, constrain } from "@point_of_sale/app/utils/movable_hook";

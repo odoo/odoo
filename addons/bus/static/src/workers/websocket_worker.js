@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { debounce } from "@bus/workers/websocket_worker_utils";
 
 /**

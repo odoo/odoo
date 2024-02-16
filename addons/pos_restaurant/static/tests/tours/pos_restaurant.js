@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import * as BillScreen from "@pos_restaurant/../tests/tours/helpers/BillScreenTourMethods";
 import * as PaymentScreen from "@point_of_sale/../tests/tours/helpers/PaymentScreenTourMethods";
 import * as Dialog from "@point_of_sale/../tests/tours/helpers/DialogTourMethods";

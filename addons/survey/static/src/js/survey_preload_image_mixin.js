@@ -1,6 +1,3 @@
-/** @odoo-module **/
-
-
 export default {
     /**
     * Load the target section background and render it when loaded.

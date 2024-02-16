@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import { getFirstListFunction, getNumberOfListFormulas } from "../list_helpers";
 import { Domain } from "@web/core/domain";

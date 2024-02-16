@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { registry } from "@web/core/registry";
 import * as Utils from "../helpers/utils";
 import * as CartPage from "../helpers/cart_page";

@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { _t } from "@web/core/l10n/translation";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { PartnerEditor } from "@point_of_sale/app/screens/partner_list/partner_editor/partner_editor";

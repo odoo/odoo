@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { Component } from "@odoo/owl";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 

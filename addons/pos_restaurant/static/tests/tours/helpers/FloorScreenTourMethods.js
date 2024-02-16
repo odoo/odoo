@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 export function table({ name, withClass = "", withoutClass, run = () => {}, numOfSeats }) {
     let trigger = `.floor-map .table${withClass}`;
     if (withoutClass) {

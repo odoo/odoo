@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { user } from "@web/core/user";
 
 /**

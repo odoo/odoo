@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { Component, useExternalListener, useState } from "@odoo/owl";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 

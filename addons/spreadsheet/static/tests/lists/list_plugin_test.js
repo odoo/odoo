@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { user } from "@web/core/user";
 import { session } from "@web/session";
 import { nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";

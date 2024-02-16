@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { browser } from "@web/core/browser/browser";
 import { click, getFixture, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { setupControlPanelServiceRegistry, toggleSearchBarMenu, toggleMenuItem, toggleMenuItemOption } from "@web/../tests/search/helpers";

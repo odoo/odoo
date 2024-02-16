@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { loadCSS } from "@web/core/assets";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Dialog } from "@web/core/dialog/dialog";

@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import wTourUtils from "@website/js/tours/tour_utils";
 import snippetNewsletterPopupUseTour from "@website_mass_mailing/../tests/tours/snippet_newsletter_popup_use";
 

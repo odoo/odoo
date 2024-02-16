@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";

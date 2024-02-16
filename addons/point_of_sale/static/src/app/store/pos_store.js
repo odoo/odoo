@@ -1,4 +1,3 @@
-/** @odoo-module */
 /* global waitForWebfonts */
 
 import { Order } from "@point_of_sale/app/store/models";

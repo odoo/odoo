@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { SaleOrderLineProductField } from '@sale/js/sale_product_field';
 import { serializeDateTime } from "@web/core/l10n/dates";
 import { x2ManyCommands } from "@web/core/orm_service";

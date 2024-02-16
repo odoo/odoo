@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { _t } from "@web/core/l10n/translation";
 import { INTERVAL_OPTIONS } from "@web/search/utils/dates";
 import { KanbanColumnQuickCreate } from "@web/views/kanban/kanban_column_quick_create";

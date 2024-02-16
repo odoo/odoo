@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import * as PosLoyalty from "@pos_loyalty/../tests/tours/PosLoyaltyTourMethods";
 import * as ProductScreen from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
 import * as TicketScreen from "@point_of_sale/../tests/tours/helpers/TicketScreenTourMethods";

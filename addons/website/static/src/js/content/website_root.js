@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { loadJS } from "@web/core/assets";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";

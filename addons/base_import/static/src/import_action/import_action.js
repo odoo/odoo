@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { _t } from "@web/core/l10n/translation";
 import { Component, onWillStart, onMounted, useState } from "@odoo/owl";
 import { registry } from "@web/core/registry";

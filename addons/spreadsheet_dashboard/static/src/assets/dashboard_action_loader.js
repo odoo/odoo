@@ -1,4 +1,4 @@
-/** @odoo-module **/
+
 
 import { registry } from "@web/core/registry";
 import { loadSpreadsheetAction } from "@spreadsheet/assets_backend/spreadsheet_action_loader";

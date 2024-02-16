@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { _t } from "@web/core/l10n/translation";
 import { CalendarController } from "@web/views/calendar/calendar_controller";
 import { ProjectTaskCalendarFilterPanel } from "./project_task_calendar_filter_panel/project_task_calendar_filter_panel";

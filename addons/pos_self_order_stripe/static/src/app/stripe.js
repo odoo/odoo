@@ -1,4 +1,3 @@
-/** @odoo-module **/
 /* global StripeTerminal */
 
 import { rpc } from "@web/core/network/rpc";

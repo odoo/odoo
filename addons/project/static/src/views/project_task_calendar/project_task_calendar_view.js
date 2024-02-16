@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { registry } from "@web/core/registry";
 import { calendarView } from "@web/views/calendar/calendar_view";
 import { ProjectControlPanel } from "@project/components/project_control_panel/project_control_panel";

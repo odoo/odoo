@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import options from "@web_editor/js/editor/snippets.options";
 const SelectUserValueWidget = options.userValueWidgetsRegistry['we-select'];
 import weUtils from "@web_editor/js/common/utils";

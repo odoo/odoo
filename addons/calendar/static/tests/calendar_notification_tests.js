@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { calendarNotificationService } from "@calendar/js/services/calendar_notification_service";

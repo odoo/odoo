@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 const buttonTriger = (buttonValue) => `div.numpad.row button.col:contains("${buttonValue}")`;
 export const click = (buttonValue, options = {}) => ({
     content: `click numpad button: ${buttonValue}`,

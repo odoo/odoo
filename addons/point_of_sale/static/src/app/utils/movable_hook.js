@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { useRefListener } from "@web/core/utils/hooks";
 import { onWillUnmount } from "@odoo/owl";
 

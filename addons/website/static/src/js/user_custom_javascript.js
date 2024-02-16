@@ -1,4 +1,3 @@
-/* @odoo-module */
 //
 // This file is meant to regroup your javascript code. You can either copy/past
 // any code that should be executed on each page loading or write your own

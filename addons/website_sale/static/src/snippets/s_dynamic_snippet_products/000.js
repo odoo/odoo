@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { rpc } from "@web/core/network/rpc";
 import DynamicSnippetCarousel from "@website/snippets/s_dynamic_snippet_carousel/000";

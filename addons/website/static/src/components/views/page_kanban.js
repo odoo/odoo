@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import {PageControllerMixin} from "./page_views_mixin";
 import {PageSearchModel} from "./page_search_model";
 import {registry} from '@web/core/registry';

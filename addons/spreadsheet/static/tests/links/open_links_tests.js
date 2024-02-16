@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import { registry } from "@web/core/registry";
 import { actionService } from "@web/webclient/actions/action_service";

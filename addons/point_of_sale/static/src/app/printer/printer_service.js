@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { Reactive } from "@web/core/utils/reactive";
 
 export const printerService = {

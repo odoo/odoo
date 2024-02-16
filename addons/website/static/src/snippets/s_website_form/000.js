@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
     import {ReCaptcha} from "@google_recaptcha/js/recaptcha";
     import { session } from "@web/session";
     import publicWidget from "@web/legacy/js/public/public_widget";

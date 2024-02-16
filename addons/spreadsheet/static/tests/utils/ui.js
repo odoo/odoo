@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { Model, Spreadsheet } from "@odoo/o-spreadsheet";
 import { registerCleanup } from "@web/../tests/helpers/cleanup";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";

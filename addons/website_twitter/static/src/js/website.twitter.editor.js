@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { _t } from "@web/core/l10n/translation";
 import dom from "@web/legacy/js/core/dom";
 import { rpc } from "@web/core/network/rpc";

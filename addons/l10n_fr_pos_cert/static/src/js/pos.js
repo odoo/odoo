@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { PosStore } from "@point_of_sale/app/store/pos_store";
 import { Order, Orderline } from "@point_of_sale/app/store/models";
 import { _t } from "@web/core/l10n/translation";

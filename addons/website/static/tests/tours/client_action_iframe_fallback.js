@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import wTourUtils from '@website/js/tours/tour_utils';
 
 wTourUtils.registerWebsitePreviewTour('client_action_iframe_fallback', {

@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { click, getFixture, triggerEvent } from "@web/../tests/helpers/utils";
 import { createSpreadsheetDashboard } from "../utils/dashboard_action";
 import { getDashboardServerData } from "../utils/data";

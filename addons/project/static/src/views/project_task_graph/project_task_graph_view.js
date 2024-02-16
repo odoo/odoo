@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { ProjectControlPanel } from "@project/components/project_control_panel/project_control_panel";
 import { registry } from "@web/core/registry";
 import { graphView } from "@web/views/graph/graph_view";

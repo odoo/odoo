@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { patch } from "@web/core/utils/patch";
 import { VideoSelector } from '@web_editor/components/media_dialog/video_selector';
 import wTourUtils from '@website/js/tours/tour_utils';

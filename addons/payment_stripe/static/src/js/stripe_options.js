@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 export class StripeOptions {
     /**
      * Prepare the options to init the Stripe JS Object.

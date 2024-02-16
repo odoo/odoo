@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 // jQuery extensions
 $.extend($.expr[':'], {
     o_editable: function (node, i, m) {

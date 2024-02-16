@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { Reactive } from "@web/core/utils/reactive";
 import { createRelatedModels } from "@point_of_sale/app/models/related_models";
 import { registry } from "@web/core/registry";

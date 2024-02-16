@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { MultiRecordSelector } from "@web/core/record_selectors/multi_record_selector";
 import { RELATIVE_DATE_RANGE_TYPES } from "@spreadsheet/helpers/constants";
 import { DateFilterValue } from "../filter_date_value/filter_date_value";

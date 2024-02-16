@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { registry } from "@web/core/registry";
 import * as Utils from "../helpers/utils";
 import * as LandingPage from "../helpers/landing_page";

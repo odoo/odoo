@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { Component, markup, useEffect, useRef } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { escape } from "@web/core/utils/strings";

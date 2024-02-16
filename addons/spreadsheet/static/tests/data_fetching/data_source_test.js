@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { nextTick } from "@web/../tests/helpers/utils";
 import { LoadableDataSource } from "@spreadsheet/data_sources/data_source";
 import { Deferred } from "@web/core/utils/concurrency";

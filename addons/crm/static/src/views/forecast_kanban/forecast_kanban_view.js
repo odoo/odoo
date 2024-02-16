@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { ForecastKanbanController } from "@crm/views/forecast_kanban/forecast_kanban_controller";
 import { CrmKanbanArchParser } from "@crm/views/crm_kanban/crm_kanban_arch_parser";
 import { ForecastKanbanModel } from "@crm/views/forecast_kanban/forecast_kanban_model";

@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 function addOptionalProduct(productName) {
     return {
         trigger: `table.o_sale_product_configurator_table_optional tr:has(td>div[name="o_sale_product_configurator_name"] h5:contains("${productName}")) td.o_sale_product_configurator_price button:contains("Add")`,

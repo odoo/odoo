@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { delay } from "@web/core/utils/concurrency";
 import { getDataURLFromFile } from "@web/core/utils/urls";

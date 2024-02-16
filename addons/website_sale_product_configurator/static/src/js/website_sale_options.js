@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import publicWidget from "@web/legacy/js/public/public_widget";
 import wSaleUtils from "@website_sale/js/website_sale_utils";
 import { OptionalProductsModal } from "@website_sale_product_configurator/js/sale_product_configurator_modal";

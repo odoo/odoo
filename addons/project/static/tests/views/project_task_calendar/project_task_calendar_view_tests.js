@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
 let serverData;
 QUnit.module("Project Task Calendar View", (hooks) => {

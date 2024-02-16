@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import * as FloorScreen from "@pos_restaurant/../tests/tours/helpers/FloorScreenTourMethods";
 import * as Dialog from "@point_of_sale/../tests/tours/helpers/DialogTourMethods";
 import * as TextInputPopup from "@point_of_sale/../tests/tours/helpers/TextInputPopupTourMethods";

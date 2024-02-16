@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { addModelNamesToFetch } from "@bus/../tests/helpers/model_definitions_helpers";
 
 import { start } from "@mail/../tests/helpers/test_utils";

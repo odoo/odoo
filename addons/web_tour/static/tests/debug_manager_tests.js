@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { disableTours } from "@web_tour/debug/debug_manager";
 
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";

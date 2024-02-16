@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { PublicWidget } from "@web/legacy/js/public/public_widget";
 
 var WebsiteEventTrackSuggestion = PublicWidget.extend({

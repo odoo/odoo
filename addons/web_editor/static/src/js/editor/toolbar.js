@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { utils as uiUtils } from "@web/core/ui/ui_service";
 import { ColorPalette } from "@web_editor/js/wysiwyg/widgets/color_palette";
 

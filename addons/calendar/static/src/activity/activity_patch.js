@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { Activity } from "@mail/core/web/activity";
 import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";

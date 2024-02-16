@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 /**
  * @typedef {"fixedPeriod"|"relative"|"from_to"} RangeType
  *

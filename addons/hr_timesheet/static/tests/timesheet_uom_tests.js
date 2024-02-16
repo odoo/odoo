@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { session } from "@web/session";
 
 import { makeView } from "@web/../tests/views/helpers";

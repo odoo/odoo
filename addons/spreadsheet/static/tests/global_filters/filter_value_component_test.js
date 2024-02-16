@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { Model } from "@odoo/o-spreadsheet";
 import { FilterValue } from "@spreadsheet/global_filters/components/filter_value/filter_value";
 import { addGlobalFilter, setCellContent, setCellFormat } from "../utils/commands";

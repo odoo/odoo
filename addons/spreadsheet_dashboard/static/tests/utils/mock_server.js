@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { RPCError } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 

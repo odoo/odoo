@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { nextTick } from "@web/../tests/helpers/utils";
 import { LoadingDataError } from "@spreadsheet/o_spreadsheet/errors";
 import { BatchEndpoint, Request, ServerData } from "@spreadsheet/data_sources/server_data";

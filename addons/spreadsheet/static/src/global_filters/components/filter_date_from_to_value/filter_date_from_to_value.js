@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { Component } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { DateTimeInput } from "@web/core/datetime/datetime_input";

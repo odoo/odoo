@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { freezeOdooData } from "../../src/helpers/model";
 import { createSpreadsheetWithChart } from "../utils/chart";
 import { setCellContent, setGlobalFilterValue } from "../utils/commands";

@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import options from "@web_editor/js/editor/snippets.options";
 import { rpc } from "@web/core/network/rpc";
 

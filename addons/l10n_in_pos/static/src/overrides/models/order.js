@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { Order } from "@point_of_sale/app/store/models";
 import { patch } from "@web/core/utils/patch";
 import { l10n_in_get_hsn_summary_table } from "@l10n_in/helpers/hsn_summary";

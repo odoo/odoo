@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import {
     fixed_tax,
     group_of_taxes,

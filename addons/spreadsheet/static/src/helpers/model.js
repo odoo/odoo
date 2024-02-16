@@ -1,4 +1,3 @@
-/** @odoo-module */
 // @ts-check
 
 import { DataSources } from "@spreadsheet/data_sources/data_sources";

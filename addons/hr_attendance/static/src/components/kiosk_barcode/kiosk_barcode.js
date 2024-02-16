@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { BarcodeScanner } from "@barcodes/components/barcode_scanner";
 
 export class KioskBarcodeScanner extends BarcodeScanner {

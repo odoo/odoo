@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { patch } from "@web/core/utils/patch";
 import { session } from '@web/session';
 import { OnboardingBanner } from "@web/views/onboarding_banner";

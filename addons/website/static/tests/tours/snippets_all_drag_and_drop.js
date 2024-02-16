@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import websiteTourUtils from "@website/js/tours/tour_utils";
 import { patch } from "@web/core/utils/patch";
 

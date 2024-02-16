@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { MockServer, getServerWebSockets, models } from "@web/../tests/web_test_helpers";
 
 export class BusBus extends models.Model {

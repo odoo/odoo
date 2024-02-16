@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { OdooBarChart } from "@spreadsheet/chart/odoo_chart/odoo_bar_chart";
 import { OdooChart } from "@spreadsheet/chart/odoo_chart/odoo_chart";
 import { OdooLineChart } from "@spreadsheet/chart/odoo_chart/odoo_line_chart";

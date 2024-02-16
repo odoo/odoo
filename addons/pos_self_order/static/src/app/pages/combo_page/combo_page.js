@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { Component, onWillUnmount, useState, useSubEnv } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/app/self_order_service";
 import { ComboSelection } from "@pos_self_order/app/components/combo_selection/combo_selection";

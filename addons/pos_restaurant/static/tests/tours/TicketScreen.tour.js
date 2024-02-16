@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import * as ProductScreenPos from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
 import * as ProductScreenResto from "@pos_restaurant/../tests/tours/helpers/ProductScreenTourMethods";
 const ProductScreen = { ...ProductScreenPos, ...ProductScreenResto };

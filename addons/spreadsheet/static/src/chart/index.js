@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import * as spreadsheet from "@odoo/o-spreadsheet";
 
 const { chartComponentRegistry } = spreadsheet.registries;

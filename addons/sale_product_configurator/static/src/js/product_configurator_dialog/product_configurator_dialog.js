@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { _t } from "@web/core/l10n/translation";
 import { Component, onWillStart, useState, useSubEnv } from "@odoo/owl";
 import { Dialog } from '@web/core/dialog/dialog';

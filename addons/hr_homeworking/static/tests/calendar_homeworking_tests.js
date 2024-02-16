@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import {
     click,
     getFixture, patchDate, patchWithCleanup,

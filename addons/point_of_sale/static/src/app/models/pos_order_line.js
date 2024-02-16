@@ -1,4 +1,3 @@
-/** @odoo-module */
 import { registry } from "@web/core/registry";
 import { uuidv4 } from "@point_of_sale/utils";
 import { Base } from "./related_models";

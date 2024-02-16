@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import publicWidget from "@web/legacy/js/public/public_widget";
 import "@website_sale/js/website_sale_delivery";
 import { rpc } from "@web/core/network/rpc";

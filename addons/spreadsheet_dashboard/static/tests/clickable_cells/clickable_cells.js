@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { getFixture, nextTick } from "@web/../tests/helpers/utils";
 import { getDashboardServerData } from "../utils/data";
 import { createSpreadsheetDashboard } from "../utils/dashboard_action";

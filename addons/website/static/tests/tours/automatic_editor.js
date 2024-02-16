@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import wTourUtils from "@website/js/tours/tour_utils";
 
 wTourUtils.registerWebsitePreviewTour('automatic_editor_on_new_website', {

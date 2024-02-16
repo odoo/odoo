@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { rpc } from "@web/core/network/rpc";
 import { useBus } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";

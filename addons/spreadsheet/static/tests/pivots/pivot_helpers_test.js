@@ -1,4 +1,3 @@
-/** @odoo-module */
 import { getFirstPivotFunction, getNumberOfPivotFormulas } from "@spreadsheet/pivot/pivot_helpers";
 import { getFirstListFunction, getNumberOfListFormulas } from "@spreadsheet/list/list_helpers";
 import { toNormalizedPivotValue } from "@spreadsheet/pivot/pivot_model";

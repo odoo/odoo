@@ -1,4 +1,3 @@
-/** @odoo-module */
 import * as PaymentScreen from "@point_of_sale/../tests/tours/helpers/PaymentScreenTourMethods";
 import * as ProductScreenPos from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
 import * as ProductScreenSale from "@pos_sale/../tests/helpers/ProductScreenTourMethods";

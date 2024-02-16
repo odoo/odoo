@@ -1,4 +1,3 @@
-/** @odoo-module **/
 /* global ace */
 
 import wTourUtils from "@website/js/tours/tour_utils";

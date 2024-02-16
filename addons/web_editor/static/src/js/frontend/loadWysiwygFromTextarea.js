@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { loadBundle } from "@web/core/assets";
 import { attachComponent } from '@web/legacy/utils';
 

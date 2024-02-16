@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import wTourUtils from '@website/js/tours/tour_utils';
 
 const WEBSITE_MAIN_COLOR = '#ABCDEF';

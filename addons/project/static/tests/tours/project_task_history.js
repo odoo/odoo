@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 /**
  * Project Task history tour.
  * Features tested:

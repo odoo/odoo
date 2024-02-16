@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { Component } from "@odoo/owl";
 import { formatCurrency } from "@web/core/currency";
 import { BadgeExtraPrice } from "../badge_extra_price/badge_extra_price";

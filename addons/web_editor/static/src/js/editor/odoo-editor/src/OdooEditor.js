@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import './commands/deleteBackward.js';
 import './commands/deleteForward.js';
 import './commands/enter.js';

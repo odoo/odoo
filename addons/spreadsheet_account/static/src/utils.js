@@ -1,4 +1,3 @@
-/** @odoo-module **/
 // @ts-check
 
 import { getOdooFunctions } from "@spreadsheet/helpers/odoo_functions_helpers";

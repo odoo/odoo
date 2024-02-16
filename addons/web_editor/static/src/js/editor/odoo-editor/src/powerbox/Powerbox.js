@@ -1,4 +1,3 @@
-/** @odoo-module **/
 import { patienceDiff } from './patienceDiff.js';
 import { closestBlock, getRangePosition } from '../utils/utils.js';
 

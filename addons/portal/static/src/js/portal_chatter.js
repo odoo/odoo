@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { renderToElement } from "@web/core/utils/render";
 import dom from "@web/legacy/js/core/dom";
 import publicWidget from "@web/legacy/js/public/public_widget";

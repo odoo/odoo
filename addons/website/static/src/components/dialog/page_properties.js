@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import {CheckBox} from '@web/core/checkbox/checkbox';
 import { _t } from "@web/core/l10n/translation";
 import {useService, useAutofocus} from "@web/core/utils/hooks";

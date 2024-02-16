@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { companyService } from "@web/webclient/company_service";
 import {
     checkLabels,

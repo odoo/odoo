@@ -1,4 +1,3 @@
-/** @odoo-module */
 /* global posmodel */
 
 import { registry } from "@web/core/registry";

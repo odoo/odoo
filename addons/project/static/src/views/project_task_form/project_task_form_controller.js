@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { FormController } from '@web/views/form/form_controller';
 import { DeleteSubtasksConfirmationDialog } from "@project/components/delete_subtasks_confirmation_dialog/delete_subtasks_confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";

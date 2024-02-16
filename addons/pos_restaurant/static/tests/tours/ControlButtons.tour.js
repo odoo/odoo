@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import * as TextInputPopup from "@point_of_sale/../tests/tours/helpers/TextInputPopupTourMethods";
 import * as Dialog from "@point_of_sale/../tests/tours/helpers/DialogTourMethods";
 import * as NumberPopup from "@point_of_sale/../tests/tours/helpers/NumberPopupTourMethods";

@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import wTourUtils from '@website/js/tours/tour_utils';
 import {FONT_SIZE_CLASSES} from '@web_editor/js/editor/odoo-editor/src/utils/utils';
 

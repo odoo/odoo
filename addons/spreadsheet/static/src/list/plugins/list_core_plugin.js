@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { CommandResult } from "../../o_spreadsheet/cancelled_reason";
 import { getMaxObjectId } from "../../helpers/helpers";
 import { TOP_LEVEL_STYLE } from "../../helpers/constants";

@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { setSelection } from '../../src/OdooEditor.js';
 import { Powerbox } from '../../src/powerbox/Powerbox.js';
 import { BasicEditor, _isMobile, insertText, testEditor, triggerEvent } from '../utils.js';

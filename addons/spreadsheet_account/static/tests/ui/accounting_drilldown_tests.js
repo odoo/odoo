@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { selectCell, setCellContent } from "@spreadsheet/../tests/utils/commands";
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import { getAccountingData } from "../accounting_test_data";

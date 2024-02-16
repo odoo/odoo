@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { setCellContent } from "@spreadsheet/../tests/utils/commands";
 import {
     createModelWithDataSource,

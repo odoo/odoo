@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { Component, onWillRender, useState, xml } from "@odoo/owl";
 import { escapeRegExp } from "@web/core/utils/strings";
 import { zip } from "@web/core/utils/arrays";

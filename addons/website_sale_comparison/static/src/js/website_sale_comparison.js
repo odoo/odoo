@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { Mutex } from "@web/core/utils/concurrency";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { cookie } from "@web/core/browser/cookie";;

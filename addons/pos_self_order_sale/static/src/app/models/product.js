@@ -1,4 +1,3 @@
-/** @odoo-module **/
 import { Product } from "@pos_self_order/app/models/product";
 import { patch } from "@web/core/utils/patch";
 

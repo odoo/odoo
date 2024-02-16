@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { registry } from "@web/core/registry";
 import { getPriceListChecksSteps } from '@website_event_booth_sale/../tests/tours/helpers/WebsiteEventBoothSaleTourMethods';
 import wsTourUtils from '@website_sale/js/tours/tour_utils';

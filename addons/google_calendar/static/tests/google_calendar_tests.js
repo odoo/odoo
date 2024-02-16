@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { click, getFixture, patchDate } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { patchUserWithCleanup } from "@web/../tests/helpers/mock_services";

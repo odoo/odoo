@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { evaluateExpr } from "@web/core/py_js/py";
 import { RadioField, radioField } from "@web/views/fields/radio/radio_field";
 import { registry } from "@web/core/registry";

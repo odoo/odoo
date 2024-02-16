@@ -1,4 +1,3 @@
-/** @odoo-module **/
 import { registry } from "@web/core/registry";
 
 const _console = window.console;

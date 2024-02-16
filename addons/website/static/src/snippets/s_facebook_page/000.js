@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { pick } from "@web/core/utils/objects";
 import { clamp } from "@web/core/utils/numbers";
 import publicWidget from "@web/legacy/js/public/public_widget";

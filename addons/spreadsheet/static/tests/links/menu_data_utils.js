@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { getBasicData } from "@spreadsheet/../tests/utils/data";
 
 export function getMenuServerData() {

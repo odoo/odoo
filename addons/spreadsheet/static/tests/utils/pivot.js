@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { PivotArchParser } from "@web/views/pivot/pivot_arch_parser";
 import { nextTick } from "@web/../tests/helpers/utils";
 

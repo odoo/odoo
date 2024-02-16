@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import paymentButton from '@payment/js/payment_button';
 
 paymentButton.include({

@@ -1,4 +1,3 @@
-/** @odoo-module */
 import { register_payment_method } from "@point_of_sale/app/store/pos_store";
 import { Payment } from "@point_of_sale/app/store/models";
 import { PaymentAdyen } from "@pos_adyen/app/payment_adyen";

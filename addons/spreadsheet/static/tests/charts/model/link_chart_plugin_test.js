@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { Model } from "@odoo/o-spreadsheet";
 import { getBasicData } from "@spreadsheet/../tests/utils/data";
 import { createBasicChart } from "@spreadsheet/../tests/utils/commands";

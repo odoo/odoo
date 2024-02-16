@@ -1,4 +1,3 @@
-/** @odoo-module **/
 import { TourError } from "@web_tour/tour_service/tour_utils";
 import { registry } from "@web/core/registry";
 

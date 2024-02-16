@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { URL_REGEX } from '../../src/OdooEditor.js';
 import {
     BasicEditor,

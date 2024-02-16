@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import { getFirstPivotFunction, getNumberOfPivotFormulas } from "../pivot_helpers";
 import { OdooUIPlugin } from "@spreadsheet/plugins";

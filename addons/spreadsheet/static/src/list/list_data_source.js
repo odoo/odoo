@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { OdooViewsDataSource } from "@spreadsheet/data_sources/odoo_views_data_source";
 import { LoadingDataError } from "@spreadsheet/o_spreadsheet/errors";
 import { EvaluationError } from "@odoo/o-spreadsheet";

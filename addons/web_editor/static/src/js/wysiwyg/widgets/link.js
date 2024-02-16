@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import * as OdooEditorLib from "@web_editor/js/editor/odoo-editor/src/OdooEditor";
 import { _t } from "@web/core/l10n/translation";
 import { isVisible } from "@web/core/utils/ui";

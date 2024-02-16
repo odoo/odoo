@@ -1,4 +1,3 @@
-/** @odoo-module */
 // @ts-check
 
 import { getFirstPivotFunction, getNumberOfPivotFormulas } from "./pivot_helpers";

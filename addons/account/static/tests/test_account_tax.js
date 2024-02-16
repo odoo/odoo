@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import {
     adapt_price_unit_to_another_taxes,
     computeSingleLineTaxes,

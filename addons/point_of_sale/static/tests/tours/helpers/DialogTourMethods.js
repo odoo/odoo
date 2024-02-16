@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { negate } from "@point_of_sale/../tests/tours/helpers/utils";
 
 export function confirm(confirmationText) {

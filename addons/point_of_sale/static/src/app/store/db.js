@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 /* The PosDB holds reference to data that is either
  * - static: does not change between pos reloads
  * - persistent : must stay between reloads ( orders )

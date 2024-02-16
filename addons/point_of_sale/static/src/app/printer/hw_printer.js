@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { rpc } from "@web/core/network/rpc";
 
 import { BasePrinter } from "@point_of_sale/app/printer/base_printer";

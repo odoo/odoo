@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { start } from "@mail/../tests/helpers/test_utils";
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 import { click, patchWithCleanup, getFixture, getNodesTextContent } from "@web/../tests/helpers/utils";

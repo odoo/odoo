@@ -1,4 +1,3 @@
-/** @odoo-module */
 import {
     eval_taxes_computation,
     eval_taxes_computation_prepare_context,

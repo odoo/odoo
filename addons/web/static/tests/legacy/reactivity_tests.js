@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { reactive, toRaw } from "@odoo/owl";
 
 const {

@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 export function amountIs(amount) {
     return {
         content: `displayed amount is ${amount}`,

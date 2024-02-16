@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { usePopover } from "@web/core/popover/popover_hook";
 import { user } from "@web/core/user";
 import { formatNumber, useNewAllocationRequest } from "@hr_holidays/views/hooks";

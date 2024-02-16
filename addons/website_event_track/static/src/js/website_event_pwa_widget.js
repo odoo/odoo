@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
     /*
      * The "deferredPrompt" Promise will resolve only if the "beforeinstallprompt" event
      * has been triggered. It allows to register this listener as soon as possible

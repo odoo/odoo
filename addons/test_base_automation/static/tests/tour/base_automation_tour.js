@@ -1,4 +1,3 @@
-/** @odoo-module */
 import { ORM } from "@web/core/orm_service";
 import { patch } from "@web/core/utils/patch";
 

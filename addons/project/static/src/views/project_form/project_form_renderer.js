@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { FormRendererWithHtmlExpander } from "../form_with_html_expander/form_renderer_with_html_expander";
 
 export class ProjectFormRenderer extends FormRendererWithHtmlExpander {

@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 //
 // This file is meant to allow to switch the type of an input #password
 // from password to text on mousedown on an input group.

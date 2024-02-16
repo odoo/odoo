@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { isBrowserFirefox } from "@web/core/browser/feature_detection";
 import { rpc } from "@web/core/network/rpc";
 import { Deferred } from "@web/core/utils/concurrency";

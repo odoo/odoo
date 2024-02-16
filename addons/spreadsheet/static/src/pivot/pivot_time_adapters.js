@@ -1,4 +1,3 @@
-/** @odoo-module */
 // @ts-check
 
 import { helpers, constants } from "@odoo/o-spreadsheet";

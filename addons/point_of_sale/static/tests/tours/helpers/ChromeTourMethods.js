@@ -1,4 +1,3 @@
-/** @odoo-module */
 import * as Dialog from "@point_of_sale/../tests/tours/helpers/DialogTourMethods";
 
 export function confirmPopup() {

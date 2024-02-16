@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { TimeOffCard } from "./time_off_card";
 import { useNewAllocationRequest } from "@hr_holidays/views/hooks";
 import { useBus, useService } from "@web/core/utils/hooks";

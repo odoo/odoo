@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 export function clickBack() {
     return {
         content: `Click on back button`,

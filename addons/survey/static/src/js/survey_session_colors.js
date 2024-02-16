@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 /**
  * Small tool that returns common colors for survey session widgets.
  * Source: https://www.materialui.co/colors (500)

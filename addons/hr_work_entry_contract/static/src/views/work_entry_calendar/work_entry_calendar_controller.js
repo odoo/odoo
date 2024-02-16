@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { registry } from "@web/core/registry";
 import { CalendarController } from '@web/views/calendar/calendar_controller';
 import { WorkEntryCalendarModel } from "@hr_work_entry_contract/views/work_entry_calendar/work_entry_calendar_model";

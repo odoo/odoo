@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { useService } from "@web/core/utils/hooks";
 import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
 import { MrpDocumentsKanbanRecord } from "@mrp/views/mrp_documents_kanban/mrp_documents_kanban_record";

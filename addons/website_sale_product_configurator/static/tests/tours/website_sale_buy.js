@@ -1,4 +1,3 @@
-/** @odoo-module **/
 /**
  * Add custom steps to handle the optional products modal introduced
  * by the product configurator module.

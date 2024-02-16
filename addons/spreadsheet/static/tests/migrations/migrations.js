@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { migrate, ODOO_VERSION } from "@spreadsheet/o_spreadsheet/migration";
 import { Model } from "@odoo/o-spreadsheet";
 

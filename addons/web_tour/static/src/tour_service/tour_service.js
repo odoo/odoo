@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { EventBus, markup, whenReady, reactive } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";

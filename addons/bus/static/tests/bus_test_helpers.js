@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { defineModels, webModels } from "@web/../tests/web_test_helpers";
 import { registry } from "@web/core/registry";
 import { BusBus } from "./mock_server/mock_models/bus_bus";

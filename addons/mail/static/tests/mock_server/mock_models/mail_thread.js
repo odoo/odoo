@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { Command, constants, models } from "@web/../tests/web_test_helpers";
 import { serializeDateTime, today } from "@web/core/l10n/dates";
 

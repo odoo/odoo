@@ -1,4 +1,3 @@
-/** @odoo-module */
 import { nextTick } from "@web/../tests/helpers/utils";
 
 import { selectCell } from "@spreadsheet/../tests/utils/commands";

@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { getFixture, getNodesTextContent } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 

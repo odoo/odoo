@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { _t } from "@web/core/l10n/translation";
 
 import PurchaseAdditionalTourSteps from "@purchase/js/tours/purchase_steps";

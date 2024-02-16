@@ -1,4 +1,3 @@
-/** @odoo-module */
 import { roundPrecision } from "@web/core/utils/numbers";
 
 // -------------------------------------------------------------------------

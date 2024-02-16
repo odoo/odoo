@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { _t } from "@web/core/l10n/translation";
 import { parseFloat } from "@web/views/fields/parsers";
 import { useErrorHandlers, useAsyncLockedMethod } from "@point_of_sale/app/utils/hooks";

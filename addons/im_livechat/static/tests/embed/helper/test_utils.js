@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { getPyEnv } from "@bus/../tests/helpers/mock_python_environment";
 
 import { LivechatButton } from "@im_livechat/embed/common/livechat_button";

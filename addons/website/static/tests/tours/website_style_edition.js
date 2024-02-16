@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import weUtils from "@web_editor/js/common/utils";
 import wTourUtils from "@website/js/tours/tour_utils";
 

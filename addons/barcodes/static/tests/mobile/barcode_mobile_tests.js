@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
     import {barcodeService} from "@barcodes/barcode_service";
     import { makeTestEnv } from "@web/../tests/helpers/mock_env";
     import { registry } from "@web/core/registry";

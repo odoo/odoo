@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { rpc } from "@web/core/network/rpc";
 import { ChatterComposer } from "./chatter_composer";
 import { ChatterMessageCounter } from "./chatter_message_counter";

@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { xml } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { notificationService } from "@web/core/notifications/notification_service";

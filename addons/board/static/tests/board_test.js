@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { BoardAction } from "@board/board_action";
 import { patchUserContextWithCleanup } from "@web/../tests/helpers/mock_services";
 import { click, dragAndDrop, getFixture, patchWithCleanup } from "@web/../tests/helpers/utils";

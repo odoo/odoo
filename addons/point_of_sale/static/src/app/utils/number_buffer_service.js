@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { parseFloat as oParseFloat } from "@web/views/fields/parsers";
 import { barcodeService } from "@barcodes/barcode_service";
 import { registry } from "@web/core/registry";

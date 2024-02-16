@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { Dialog } from "@web/core/dialog/dialog";
 import { useAutoFocusToLast } from "@point_of_sale/app/utils/hooks";
 import { Component, useState, useRef } from "@odoo/owl";

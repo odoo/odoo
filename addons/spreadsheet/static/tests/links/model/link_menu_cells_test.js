@@ -1,4 +1,3 @@
-/** @odoo-module */
 import { spreadsheetLinkMenuCellService } from "@spreadsheet/ir_ui_menu/index";
 import { Model } from "@odoo/o-spreadsheet";
 import { registry } from "@web/core/registry";

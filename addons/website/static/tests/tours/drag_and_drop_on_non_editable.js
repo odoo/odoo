@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import wTourUtils from '@website/js/tours/tour_utils';
 
 wTourUtils.registerWebsitePreviewTour("test_drag_and_drop_on_non_editable", {

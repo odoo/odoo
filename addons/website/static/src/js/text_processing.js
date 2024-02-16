@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import * as OdooEditorLib from "@web_editor/js/editor/odoo-editor/src/utils/utils";
 
 // SVG generator: contains all information needed to draw highlight SVGs
