@@ -173,7 +173,7 @@
         <!-- website.is_public_user() is needed for menus having a page with
         restricted visibility (only shown to logged in user): public users and
         logged in users can't share the menu cache. -->
-        <attribute name="t-cache">xmlid,website,website.is_public_user()</attribute>
+        <attribute name="t-cache">None if website.is_menu_cache_disabled() else (xmlid,website,website.is_public_user())</attribute>
     </xpath>
 
     <xpath expr="//header" position="before">
