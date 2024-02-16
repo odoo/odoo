@@ -27818,9 +27818,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         allowDispatch(cmd) {
             switch (cmd.type) {
                 case "UPDATE_CELL":
-                    return this.checkCellOutOfSheet(cmd);
+                    return this.checkValidations(cmd, this.checkCellOutOfSheet, this.checkUselessUpdateCell);
                 case "CLEAR_CELL":
-                    return this.checkValidations(cmd, this.chainValidations(this.checkCellOutOfSheet, this.checkUselessClearCell));
+                    return this.checkValidations(cmd, this.checkCellOutOfSheet, this.checkUselessClearCell);
                 default:
                     return 0 /* CommandResult.Success */;
             }
@@ -28175,6 +28175,18 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             if (!cell)
                 return 88 /* CommandResult.NoChanges */;
             if (!cell.content && !cell.style && !cell.format) {
+                return 88 /* CommandResult.NoChanges */;
+            }
+            return 0 /* CommandResult.Success */;
+        }
+        checkUselessUpdateCell(cmd) {
+            const cell = this.getters.getCell(cmd.sheetId, cmd.col, cmd.row);
+            const hasContent = "content" in cmd || "formula" in cmd;
+            const hasStyle = "style" in cmd;
+            const hasFormat = "format" in cmd;
+            if ((!hasContent || (cell === null || cell === void 0 ? void 0 : cell.content) === cmd.content) &&
+                (!hasStyle || deepEquals(cell === null || cell === void 0 ? void 0 : cell.style, cmd.style)) &&
+                (!hasFormat || (cell === null || cell === void 0 ? void 0 : cell.format) === cmd.format)) {
                 return 88 /* CommandResult.NoChanges */;
             }
             return 0 /* CommandResult.Success */;
@@ -43258,9 +43270,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.0.32';
-    __info__.date = '2024-02-09T14:25:28.385Z';
-    __info__.hash = '452dce2';
+    __info__.version = '16.0.33';
+    __info__.date = '2024-02-16T14:59:44.946Z';
+    __info__.hash = 'c0cefe8';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
