@@ -10,6 +10,7 @@
         <t t-set="display_description" t-valuef="true"/>
         <t t-set="display_extra_link" t-valuef="true"/>
         <t t-set="display_detail" t-valuef="true"/>
+        <t t-set="default_style" t-value="True"/>
     </t>
 </template>
 <template id="s_searchbar" name="Search">
@@ -53,6 +54,10 @@
                 <we-checkbox string="Content" data-dependencies="search_pages_opt" data-select-data-attribute="true" data-attribute-name="displayDescription"
                     data-apply-to=".search-query"/>
             </div>
+            <we-select string="Style">
+                <we-button data-set-searchbar-style="default">Default Input Style</we-button>
+                <we-button data-set-searchbar-style="light">Light</we-button>
+            </we-select>
         </div>
     </xpath>
     <xpath expr="//*[@t-set='so_content_addition_selector']" position="inside">, .s_searchbar_input</xpath>

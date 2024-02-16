@@ -3,6 +3,15 @@
 import options from '@web_editor/js/editor/snippets.options';
 
 options.registry.SearchBar = options.Class.extend({
+    /**
+     * @override
+     */
+    start() {
+        this.searchInputEl = this.$target[0].querySelector(".oe_search_box");
+        this.searchButtonEl = this.$target[0].querySelector(".oe_search_button");
+        return this._super(...arguments);
+    },
+
     //--------------------------------------------------------------------------
     // Options
     //--------------------------------------------------------------------------
@@ -40,6 +49,34 @@ options.registry.SearchBar = options.Class.extend({
     setOrderBy: function (previewMode, widgetValue, params) {
         const form = this.$target.parents('form');
         form.find(".o_search_order_by").attr("value", widgetValue);
+    },
+    /**
+     * Sets the style of the searchbar.
+     *
+     * @see this.selectClass for parameters
+     */
+    setSearchbarStyle(previewMode, widgetValue, params) {
+        const isLight = (widgetValue === "light");
+        this.searchInputEl.classList.toggle("border-0", isLight);
+        this.searchInputEl.classList.toggle("bg-light", isLight);
+        this.searchButtonEl.classList.toggle("btn-light", isLight);
+        this.searchButtonEl.classList.toggle("btn-primary", !isLight);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _computeWidgetState(methodName, params) {
+        if (methodName === "setSearchbarStyle") {
+            const searchInputIsLight = this.searchInputEl.matches(".border-0.bg-light");
+            const searchButtonIsLight = this.searchButtonEl.matches(".btn-light");
+            return searchInputIsLight && searchButtonIsLight ? "light" : "default";
+        }
+        return this._super(...arguments);
     },
 });
 
