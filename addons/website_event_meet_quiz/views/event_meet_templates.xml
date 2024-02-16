@@ -9,7 +9,7 @@
 
 <template id="community_leaderboard_small" name="Small Leaderboard">
     <div class="o_page_header d-flex flex-wrap justify-content-between align-items-end w-100">
-        <h4 class="mb-0">Leaderboard</h4>
+        <h4 class="fs-6 my-0">Leaderboard</h4>
         <a t-attf-href="#{'/event/%s/community/leaderboard' % (slug(event))}">View all</a>
     </div>
     <t t-call="website_event_meet_quiz.visitor_quiz_points_card"/>
