@@ -128,6 +128,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             'amount_total': 1128.0,
         }
         cls.env.user.groups_id += cls.env.ref('uom.group_uom')
+        (cls.tax_armageddon + cls.tax_armageddon.children_tax_ids).write({'type_tax_use': 'purchase'})
 
     def setUp(self):
         super(TestAccountMoveInInvoiceOnchanges, self).setUp()
