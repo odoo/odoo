@@ -36,9 +36,19 @@ class MailPush(models.Model):
 
         # process send notif
         devices = web_push_notifications_sudo.mail_push_device_id.grouped('id')
+
+        partners_to_notify = web_push_notifications_sudo.mail_push_device_id.partner_id.ids
+        user_ids = self.env['res.users'].search([('partner_id', 'in', partners_to_notify)])
+
+        for user in user_ids:
+            if not user.check_push_notification_schedule():
+                partners_to_notify.remove(user.partner_id.id)
+
         for web_push_notification_sudo in web_push_notifications_sudo:
             device = devices.get(web_push_notification_sudo.mail_push_device_id.id)
             if device.id in devices_to_unlink:
+                continue
+            if device.partner_id.id not in partners_to_notify:
                 continue
             try:
                 push_to_end_point(

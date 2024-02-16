@@ -11,6 +11,8 @@
                 <data>
                     <field name="email" position="before">
                         <field name="notification_type" widget="radio" readonly="0"/>
+                        <field name="notification_planning" invisible="notification_type == 'email'"/>
+                        <field name="notification_schedule_start" widget="float_time_range" options="{'end_time_field': 'notification_schedule_end'}" invisible="notification_type == 'email' or notification_planning != 'schedule'"/>
                     </field>
                 </data>
             </field>

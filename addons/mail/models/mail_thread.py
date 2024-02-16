@@ -3648,10 +3648,18 @@ class MailThread(models.AbstractModel):
         if not partner_ids:
             return
 
+        user_ids = self.env['res.users'].search([('partner_id', 'in', partner_ids)])
+        partners_to_notify = set(partner_ids)
+
+        for user in user_ids:
+            if not user.check_push_notification_schedule():
+                partners_to_notify.remove(user.partner_id.id)
+
         partner_devices_sudo = self.env['mail.push.device'].sudo()
         devices = partner_devices_sudo.search([
-            ('partner_id', 'in', partner_ids)
+            ('partner_id', 'in', list(partners_to_notify))
         ])
+
         if not devices:
             return
 

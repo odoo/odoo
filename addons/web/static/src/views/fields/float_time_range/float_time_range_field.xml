@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="web.TimeRangeField">
+        <div class="d-flex gap-2 align-items-center" t-ref="root">
+            <t t-if="props.readonly">
+                <span class="text-truncate" t-esc="getFormattedValue(0)" />
+            </t>
+            <t t-else="">
+                <input
+                    t-ref="start-date"
+                    type="time"
+                    t-att-id="props.endDateField and props.id"
+                    class="o_input cursor-pointer"
+                    t-att-placeholder="props.placeholder"
+                    t-att-value="getFormattedValue(0)"
+                    t-on-change="(ev) => this.onChange(ev.target.value, startDateField)"
+                    step="900"
+                />
+            </t>
+            <i class="fa fa-long-arrow-right" aria-label="Arrow icon" title="Arrow" />
+            <t t-if="props.readonly">
+                <span class="text-truncate" t-esc="getFormattedValue(1)" />
+            </t>
+            <t t-else="">
+                <input
+                    t-ref="end-date"
+                    type="time"
+                    t-att-id="props.startDateField and props.id"
+                    class="o_input cursor-pointer"
+                    t-att-placeholder="props.placeholder"
+                    t-att-value="getFormattedValue(1)"
+                    t-on-change="(ev) => this.onChange(ev.target.value, endDateField)"
+                    step="900"
+                />
+            </t>
+        </div>
+    </t>
+</templates>
