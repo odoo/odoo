@@ -125,6 +125,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             'amount_tax': 168.0,
             'amount_total': 1128.0,
         }
+        (cls.tax_armageddon + cls.tax_armageddon.children_tax_ids).write({'type_tax_use': 'purchase'})
 
     def setUp(self):
         super(TestAccountMoveInInvoiceOnchanges, self).setUp()
