@@ -84,12 +84,14 @@ class StockLot(models.Model):
         } for i in range(0, count)]
 
     @api.model
-    def _get_next_serial(self, company, product):
+    def _get_next_serial(self, company, product, domain=None, **kwargs):
         """Return the next serial number to be attributed to the product."""
         if product.tracking != "none":
-            last_serial = self.env['stock.lot'].search(
-                ['|', ('company_id', '=', company.id), ('company_id', '=', False), ('product_id', '=', product.id)],
-                limit=1, order='id DESC')
+            domain = domain or []
+            last_serial = self.env['stock.lot'].search(expression.AND([
+                domain,
+                ['|', ('company_id', '=', company.id), ('company_id', '=', False), ('product_id', '=', product.id)]
+            ]), limit=1, order='id DESC')
             if last_serial:
                 return self.env['stock.lot'].generate_lot_names(last_serial.name, 2)[1]['lot_name']
         return False
