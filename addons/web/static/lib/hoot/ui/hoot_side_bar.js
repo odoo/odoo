@@ -154,7 +154,7 @@ export class HootSideBar extends Component {
             unfolded: new Set(),
         });
 
-        runner.beforeAll(() => {
+        runner.__beforeAll(() => {
             const singleRootSuite = runner.rootSuites.filter((suite) => suite.currentJobs.length);
             if (singleRootSuite.length === 1) {
                 // Unfolds only root suite containing jobs

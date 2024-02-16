@@ -51,7 +51,7 @@ export class HootButtons extends Component {
         });
         this.runnerState = useState(runner.state);
 
-        runner.afterEach(({ id, lastResults }) => {
+        runner.__afterEach(({ id, lastResults }) => {
             if (!lastResults.pass) {
                 this.state.failed.push(id);
             }
