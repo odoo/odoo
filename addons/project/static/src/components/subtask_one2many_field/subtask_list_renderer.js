@@ -24,6 +24,20 @@ export class SubtaskListRenderer extends ListRenderer {
         }
     }
 
+    // Override the displayed text on subtask tooltip.
+    getCellTitle(column, record) {
+        let cellTitle = super.getCellTitle(column, record);
+        // Add subtask count to the tooltip of the name (title) column.
+        if (cellTitle && column.name === "name" && (record.data.closed_subtask_count || record.data.subtask_count)) {
+            cellTitle += ` (${record.data.closed_subtask_count}/${record.data.subtask_count}) sub-tasks`;
+        }
+        // Hide the tooltip on the project's column if the display_in_project is False.
+        else if (cellTitle && column.name === "project_id" && record.data.display_in_project == false) {
+            cellTitle = '';
+        }
+        return cellTitle;
+    }
+
     async onDeleteRecord(record) {
         this.dialog.add(ConfirmationDialog, {
             body: _t("Are you sure you want to delete this record?"),
