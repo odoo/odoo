@@ -100,6 +100,14 @@ export const CONFIG_SCHEMA = {
         parse: parseBoolean(true),
     },
     /**
+     * Log level used by the test runner. The higher the level, the more logs will
+     * be displayed.
+     */
+    loglevel: {
+        default: 0,
+        parse: parseNumber(0),
+    },
+    /**
      * Whether the test runner must be manually started after page load (defaults
      * to starting automatically).
      * @default false

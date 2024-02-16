@@ -336,9 +336,9 @@ const logEvents = (actionName) => {
         console.groupCollapsed(message, ...messageColors);
         console.dir(event);
         console.log(event.target);
-        console.groupEnd(message);
+        console.groupEnd();
     }
-    console.groupEnd(...groupName);
+    console.groupEnd();
     return events;
 };
 
