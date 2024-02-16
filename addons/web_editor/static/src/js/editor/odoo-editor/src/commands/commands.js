@@ -560,7 +560,7 @@ export const editorCommands = {
             node => closestElement(node).isContentEditable
         );
         let coloredTds = [];
-        if (selectedTds.length) {
+        if (selectedTds.length && mode === "backgroundColor") {
             for (const td of selectedTds) {
                 colorElement(td, color, mode);
             }
@@ -583,7 +583,9 @@ export const editorCommands = {
         if (isEmptyBlock(range.endContainer)) {
             selectionNodes.push(range.endContainer, ...descendants(range.endContainer));
         }
-        const selectedNodes = selectionNodes.filter(node => !closestElement(node, 'table.o_selected_table'))
+        const selectedNodes = mode === "backgroundColor"
+            ? selectionNodes.filter(node => !closestElement(node, 'table.o_selected_table'))
+            : selectionNodes;
         function getFonts(selectedNodes) {
             return selectedNodes.flatMap(node => {
                 let font = closestElement(node, 'font') || closestElement(node, 'span');
@@ -598,7 +600,7 @@ export const editorCommands = {
                     }
                 } else if (
                     (node.nodeType === Node.TEXT_NODE && isVisibleStr(node)) ||
-                    (isEmptyBlock(node.parentNode)) ||
+                    (node.nodeName === 'BR' && isEmptyBlock(node.parentNode)) ||
                     (node.nodeType === Node.ELEMENT_NODE &&
                     node.nodeName !== 'FIGURE' &&
                     ['inline', 'inline-block'].includes(getComputedStyle(node).display) &&
