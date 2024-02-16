@@ -332,6 +332,7 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
                 constraints.update({'cen_en16931_tax_line': _("Each invoice line shall have one and only one tax.")})
 
         for role in ('supplier', 'customer'):
+            constraints[f'cen_en16931_{role}_country'] = self._check_required_fields(vals[role], 'country_id')
             scheme_vals = vals['vals'][f'accounting_{role}_party_vals']['party_vals']['party_tax_scheme_vals'][-1:]
             if (
                 not (scheme_vals and scheme_vals[0]['company_id'] and scheme_vals[0]['company_id'][:2].isalpha())
