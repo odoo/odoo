@@ -7,7 +7,7 @@
                  itemscope="itemscope" itemtype="http://schema.org/Event">
                 <section>
                     <div class="container overflow-hidden">
-                        <h3>Get A Booth</h3>
+                        <h3 class="mt-3 mb-4">Get A Booth</h3>
                         <div class="row g-0">
                             <t t-out="0"/>
                         </div>
@@ -52,7 +52,7 @@
                           t-attf-action="/event/#{slug(event)}/booth/register" t-att-data-event-id="event.id">
                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                         <div class="row mb-3">
-                            <h4 class="mb-3">Choose your type of booth</h4>
+                            <h4 class="h5 mt-0 mb-3">Choose your type of booth</h4>
                             <t t-foreach="event.event_booth_category_ids" t-as="booth_category">
                                 <t t-set="booth_category_unavailable" t-value="booth_category not in available_booth_category_ids"/>
                                 <div class="col-md-6 col-lg-4 mb-4">
@@ -79,7 +79,7 @@
                         <t t-if="available_booth_category_ids">
                             <div class="row">
                                 <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
-                                    <h4 class="mb-0">Location</h4>
+                                    <h4 class="h5 mb-0">Location</h4>
                                     <div t-if="event.exhibition_map">
                                         <a class="text-decoration-none text-center" href="#" data-bs-toggle="modal" data-bs-target="#mapModal"><i class="fa fa-map-o me-2"/>View Plan</a>
                                         <div role="dialog" id="mapModal" class="modal" tabindex="-1">
