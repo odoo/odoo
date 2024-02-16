@@ -81,7 +81,7 @@ export class HootMain extends Component {
         });
 
         if (!runner.config.headless) {
-            runner.beforeAll(() => {
+            runner.__beforeAll(() => {
                 if (!runner.debug) {
                     return;
                 }
@@ -91,7 +91,7 @@ export class HootMain extends Component {
                     this.state.debugTest = runner.debug;
                 }
             });
-            runner.afterAll(() => {
+            runner.__afterAll(() => {
                 this.state.debugTest = null;
             });
 

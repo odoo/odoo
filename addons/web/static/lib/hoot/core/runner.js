@@ -50,8 +50,6 @@ import { EXCLUDE_PREFIX, setParams, urlParams } from "./url";
  *
  * @typedef {{
  *  auto?: boolean;
- *  callback?: () => MaybePromise<any>;
- *  dry?: boolean;
  * }} StartOptions
  */
 
@@ -236,6 +234,7 @@ export class TestRunner {
     #callbacks = makeCallbacks();
     /** @type {Job[]} */
     #currentJobs = [];
+    #dry = false;
     #failed = 0;
     #hasExcludeFilter = false;
     #hasIncludeFilter = false;
@@ -387,10 +386,13 @@ export class TestRunner {
                 `cannot add a test after the test runner started.`
             );
         }
+        if (this.#dry) {
+            fn = null;
+        }
         let test = markRaw(new Test(parentSuite, name, config, fn));
         const originalTest = this.tests.get(test.id);
         if (originalTest) {
-            if (originalTest.run === null) {
+            if (originalTest.runFn === null) {
                 test = originalTest;
                 test.setRunFn(fn);
             } else {
@@ -424,17 +426,10 @@ export class TestRunner {
      * @param {...Callback<Job>} callbacks
      */
     after(...callbacks) {
-        const { suite, test } = this.getCurrent();
-        if (test) {
-            for (const callback of callbacks) {
-                suite.callbacks.add("after-test", callback, true);
-            }
-        } else {
-            const callbackRegistry = suite ? suite.callbacks : this.#callbacks;
-            for (const callback of callbacks) {
-                callbackRegistry.add("after-suite", callback);
-            }
+        if (this.#dry) {
+            return;
         }
+        this.__after(...callbacks);
     }
 
     /**
@@ -444,9 +439,10 @@ export class TestRunner {
      * @param {...Callback<never>} callbacks
      */
     afterAll(...callbacks) {
-        for (const callback of callbacks) {
-            this.#callbacks.add("after-all", callback);
+        if (this.#dry) {
+            return;
         }
+        this.__afterAll(...callbacks);
     }
 
     /**
@@ -460,23 +456,10 @@ export class TestRunner {
      * @param {...Callback<Test>} callbacks
      */
     afterEach(...callbacks) {
-        const { suite, test } = this.getCurrent();
-        if (test) {
-            throw testError(test, `cannot call hook "afterEach" inside of a test`);
+        if (this.#dry) {
+            return;
         }
-        const callbackRegistry = suite ? suite.callbacks : this.#callbacks;
-        for (const callback of callbacks) {
-            callbackRegistry.add("after-test", callback);
-        }
-    }
-
-    /**
-     * Starts the test runner if it is not set to manual mode.
-     */
-    async autostart() {
-        if (!this.config.manual) {
-            await this.start();
-        }
+        this.__afterEach(...callbacks);
     }
 
     /**
@@ -495,17 +478,10 @@ export class TestRunner {
      * @param {...Callback<Job>} callbacks
      */
     before(...callbacks) {
-        const { suite, test } = this.getCurrent();
-        if (test) {
-            for (const callback of callbacks) {
-                suite.callbacks.add("after-test", callback(test), true);
-            }
-        } else {
-            const callbackRegistry = suite ? suite.callbacks : this.#callbacks;
-            for (const callback of callbacks) {
-                callbackRegistry.add("before-suite", callback);
-            }
+        if (this.#dry) {
+            return;
         }
+        this.__before(...callbacks);
     }
 
     /**
@@ -515,9 +491,10 @@ export class TestRunner {
      * @param {...Callback<never>} callbacks
      */
     beforeAll(...callbacks) {
-        for (const callback of callbacks) {
-            this.#callbacks.add("before-all", callback);
+        if (this.#dry) {
+            return;
         }
+        this.__beforeAll(...callbacks);
     }
 
     /**
@@ -531,14 +508,32 @@ export class TestRunner {
      * @param {...Callback<Test>} callbacks
      */
     beforeEach(...callbacks) {
-        const { suite, test } = this.getCurrent();
-        if (test) {
-            throw testError(test, `cannot call hook "beforeEach" inside of a test`);
+        if (this.#dry) {
+            return;
         }
-        const callbackRegistry = suite ? suite.callbacks : this.#callbacks;
-        for (const callback of callbacks) {
-            callbackRegistry.add("before-test", callback);
+        this.__beforeEach(...callbacks);
+    }
+
+    /**
+     * @param {() => Promise<void>} callback
+     * @returns {Promise<{ suites: Suite[]; tests: Test[] }>}
+     */
+    async dryRun(callback) {
+        if (this.state.status !== "ready") {
+            throw new HootError("cannot run a dry run after the test runner started");
         }
+
+        this.#dry = true;
+
+        await callback();
+        this.#currentJobs = this.prepareJobs();
+
+        this.#dry = false;
+
+        return {
+            suites: this.state.suites,
+            tests: this.state.tests,
+        };
     }
 
     /**
@@ -645,39 +640,19 @@ export class TestRunner {
      * again with the actual run functions.
      *
      * @param {StartOptions} [options]
-     * @returns {Promise<{ suites: Suite[]; tests: Test[] }>}
      */
     async start(options) {
         await whenReady();
 
         if ((options?.auto && this.config.manual) || this.state.status !== "ready") {
             // Already running or in manual mode
-            return {
-                suites: [],
-                tests: [],
-            };
+            return;
         }
         this.state.status = "running";
 
         this.#startTime = performance.now();
         if (!this.#currentJobs.length) {
             this.#currentJobs = this.prepareJobs();
-        }
-
-        if (options?.dry) {
-            // Dry run
-            this.state.status = "ready";
-            for (const test of this.tests.values()) {
-                // Soft resets all tests
-                test.run = null;
-            }
-            for (const suite of this.suites.values()) {
-                suite.callbacks.clear();
-            }
-            return {
-                suites: this.state.suites,
-                tests: this.state.tests,
-            };
         }
 
         // Config log
@@ -711,14 +686,14 @@ export class TestRunner {
 
         // Register default hooks
         const [addTestDone, flushTestDone] = batch((test) => this.state.done.push(test), 10);
-        this.afterAll(
+        this.__afterAll(
             flushTestDone,
             on(window, "error", (ev) => this.#onError(ev)),
             on(window, "unhandledrejection", (ev) => this.#onError(ev)),
             watchListeners(window, document, document.head, document.body)
         );
-        this.beforeEach(this.fixture.setup);
-        this.afterEach(
+        this.__beforeEach(this.fixture.setup);
+        this.__afterEach(
             cleanupWindow,
             cleanupNavigator,
             this.fixture.cleanup,
@@ -727,7 +702,7 @@ export class TestRunner {
         );
         if (this.config.watchkeys) {
             const keys = this.config.watchkeys?.split(/\s*,\s*/g) || [];
-            this.afterEach(watchKeys(window, keys), watchKeys(document, keys));
+            this.__afterEach(watchKeys(window, keys), watchKeys(document, keys));
         }
 
         enableEventLogs(this.debug);
@@ -909,11 +884,6 @@ export class TestRunner {
         } else if (!this.debug) {
             await this.stop();
         }
-
-        return {
-            suites: this.state.suites,
-            tests: this.state.tests,
-        };
     }
 
     async stop() {
@@ -943,6 +913,86 @@ export class TestRunner {
             // This statement acts as a success code for the server to know when
             // all suites have passed.
             console.log(...hootLog("test suite succeeded"));
+        }
+    }
+
+    /**
+     * @param {...Callback<Job>} callbacks
+     */
+    __after(...callbacks) {
+        const { suite, test } = this.getCurrent();
+        if (test) {
+            for (const callback of callbacks) {
+                suite.callbacks.add("after-test", callback, true);
+            }
+        } else {
+            const callbackRegistry = suite ? suite.callbacks : this.#callbacks;
+            for (const callback of callbacks) {
+                callbackRegistry.add("after-suite", callback);
+            }
+        }
+    }
+
+    /**
+     * @param {...Callback<never>} callbacks
+     */
+    __afterAll(...callbacks) {
+        for (const callback of callbacks) {
+            this.#callbacks.add("after-all", callback);
+        }
+    }
+
+    /**
+     * @param {...Callback<Test>} callbacks
+     */
+    __afterEach(...callbacks) {
+        const { suite, test } = this.getCurrent();
+        if (test) {
+            throw testError(test, `cannot call hook "afterEach" inside of a test`);
+        }
+        const callbackRegistry = suite ? suite.callbacks : this.#callbacks;
+        for (const callback of callbacks) {
+            callbackRegistry.add("after-test", callback);
+        }
+    }
+
+    /**
+     * @param {...Callback<Job>} callbacks
+     */
+    __before(...callbacks) {
+        const { suite, test } = this.getCurrent();
+        if (test) {
+            for (const callback of callbacks) {
+                suite.callbacks.add("after-test", callback(test), true);
+            }
+        } else {
+            const callbackRegistry = suite ? suite.callbacks : this.#callbacks;
+            for (const callback of callbacks) {
+                callbackRegistry.add("before-suite", callback);
+            }
+        }
+    }
+
+    /**
+     * @param {...Callback<never>} callbacks
+     */
+    __beforeAll(...callbacks) {
+        for (const callback of callbacks) {
+            this.#callbacks.add("before-all", callback);
+        }
+    }
+
+    /**
+     * @param {...Callback<Test>} callbacks
+     */
+    __beforeEach(...callbacks) {
+        const { suite, test } = this.getCurrent();
+        if (test) {
+            throw testError(test, `cannot call hook "beforeEach" inside of a test`);
+        }
+        const callbackRegistry = suite ? suite.callbacks : this.#callbacks;
+        for (const callback of callbacks) {
+            callbackRegistry.add("before-test", callback);
         }
     }
 

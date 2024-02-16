@@ -1,6 +1,6 @@
 // ! WARNING: this module cannot depend on modules defined in "@web" !
 
-import { after, before, describe, globals, start } from "@odoo/hoot";
+import { after, before, describe, dryRun, globals, start } from "@odoo/hoot";
 import { watchKeys } from "@odoo/hoot-dom";
 import { Deferred } from "@odoo/hoot-mock";
 
@@ -190,8 +190,7 @@ const runTests = async () => {
     );
 
     // Dry run
-    await describeSuite(testModuleNames);
-    const { suites } = await start({ dry: true });
+    const { suites } = await dryRun(() => describeSuite(testModuleNames));
 
     // Run all test files
     const suitePaths = suites.map((s) => s.fullName);

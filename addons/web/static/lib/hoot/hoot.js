@@ -57,6 +57,7 @@ export const getFixture = runner.fixture.get;
 export const mountOnFixture = runner.fixture.mount;
 
 // Other functions
+export const dryRun = runner.exportFn(runner.dryRun);
 export const getCurrent = runner.exportFn(runner.getCurrent);
 export const start = runner.exportFn(runner.start);
 

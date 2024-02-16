@@ -58,9 +58,18 @@ export class Test extends Job {
 
     /** @type {import("./expect").TestResult[]} */
     results = reactive([]);
-    status = Test.SKIPPED;
     /** @type {() => MaybePromise<void> | null} */
-    run = null;
+    runFn = null;
+    status = Test.SKIPPED;
+
+    #formattedCode = "";
+
+    get code() {
+        if (!this.#formattedCode) {
+            this.#formattedCode = formatFunctionSource(this.runFn);
+        }
+        return this.#formattedCode;
+    }
 
     /** @returns {typeof Test["prototype"]["results"][number]} */
     get lastResults() {
@@ -80,11 +89,17 @@ export class Test extends Job {
     }
 
     /**
+     * @param {...unknown} args
+     */
+    async run(...args) {
+        return this.runFn(...args);
+    }
+
+    /**
      * @param {() => MaybePromise<void>} fn
      */
     setRunFn(fn) {
-        // Makes the function async
-        this.run = typeof fn === "function" ? async (...args) => fn(...args) : null;
-        this.code = formatFunctionSource(fn);
+        this.runFn = fn;
+        this.#formattedCode = "";
     }
 }
