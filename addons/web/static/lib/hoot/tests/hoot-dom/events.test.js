@@ -911,8 +911,22 @@ describe(parseUrl(import.meta.url), () => {
         ]).toVerifySteps();
     });
 
-    test.todo("scroll", async () => {
-        expect(scroll()).toBeTruthy();
+    test("scroll", async () => {
+        await mount(/* xml */ `
+            <div class="scrollable" style="height: 200px; width: 200px; overflow: auto;">
+                <div style="height: 2000px; width: 2000px;"></div>
+            </div>
+        `);
+
+        scroll(".scrollable", { top: 500 });
+
+        expect(".scrollable").toHaveProperty("scrollTop", 500);
+        expect(".scrollable").toHaveProperty("scrollLeft", 0);
+
+        scroll(".scrollable", { left: 1200 });
+
+        expect(".scrollable").toHaveProperty("scrollTop", 500);
+        expect(".scrollable").toHaveProperty("scrollLeft", 1200);
     });
 
     test("select", async () => {
