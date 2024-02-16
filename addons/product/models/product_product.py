@@ -789,6 +789,7 @@ class ProductProduct(models.Model):
         return self._get_contextual_price()
 
     def _get_contextual_price(self):
+        # FIXME VFE this won't consider ptavs extra prices, since we rely on the template price
         self.ensure_one()
         return self.product_tmpl_id._get_contextual_price(self)
 

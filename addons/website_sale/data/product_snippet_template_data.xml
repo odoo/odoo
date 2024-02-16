@@ -1,18 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data>
+
         <!-- Templates for Dynamic Snippet -->
         <template id="dynamic_filter_template_product_product_add_to_cart" name="Classic Card">
             <t t-foreach="records" t-as="data" data-thumb="/website_sale/static/src/img/snippets_options/product_add_to_cart.svg">
                 <t t-set="record" t-value="data['_record']"/>
+                <t t-set="product_template_id" t-value="record.id if not record.is_product_variant else record.product_tmpl_id.id"/>
+                <t t-set="product_id" t-value="record.id if record.is_product_variant else record.product_variant_id.id"/>
                 <div class="o_carousel_product_card card h-100 w-100" t-att-data-add2cart-rerender="data.get('_add2cart_rerender')">
                     <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
-                    <input type="hidden" name="product-id" t-att-data-product-id="record.id"/>
                     <a class="o_carousel_product_img_link o_dynamic_product_hovered overflow-hidden" t-att-href="record.website_url">
                         <img class="card-img-top o_img_product_square o_img_product_cover h-auto" loading="lazy" t-att-src="data['image_512']"
                             t-att-alt="record.display_name"/>
                     </a>
-                    <i t-if="data.get('_latest_viewed')" class="fa fa-trash o_carousel_product_remove js_remove"/>
+                    <i t-if="data.get('_latest_viewed')"
+                        class="fa fa-trash o_carousel_product_remove js_remove"
+                        t-att-data-product-id="product_id"
+                        t-att-data-product-template-id="product_template_id"
+                        t-att-data-product-selected="record.is_product_variant"/>
                     <div class="o_carousel_product_card_body card-body d-flex flex-wrap">
                         <a t-att-href="record.website_url" class="text-decoration-none d-block w-100">
                             <div class="h6 card-title mb-0" t-field="record.display_name"/>
@@ -28,7 +33,15 @@
                                 <t t-call="website_sale.price_dynamic_filter_template_product_product"/>
                             </div>
                             <div class="o_dynamic_snippet_btn_wrapper" t-if="record._website_show_quick_add()">
-                                <button type="button" role="button" class="btn btn-primary js_add_cart ms-auto" title="Add to Cart">
+                                <button
+                                    type="button"
+                                    role="button"
+                                    class="btn btn-primary js_add_cart ms-auto"
+                                    title="Add to Cart"
+                                    t-att-data-product-id="product_id"
+                                    t-att-data-product-template-id="product_template_id"
+                                    t-att-data-product-selected="record.is_product_variant"
+                                >
                                     <i class="fa fa-fw fa-shopping-cart"/>
                                 </button>
                             </div>
@@ -188,7 +201,6 @@
                 <t t-set="record" t-value="data['_record']"/>
                 <div class="o_carousel_product_card card w-100 border-0 bg-transparent" t-att-data-add2cart-rerender="data.get('_add2cart_rerender')">
                     <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
-                    <input type="hidden" name="product-id" t-att-data-product-id="record.id"/>
                     <a class="o_carousel_product_img_link o_dynamic_product_hovered" t-att-href="record.website_url">
                         <div class="overflow-hidden rounded">
                             <img class="card-img-top o_img_product_square o_img_product_cover h-auto" loading="lazy" t-att-src="data['image_512']"
@@ -212,7 +224,17 @@
                         </div>
                         <div class="card-title h6 flex-grow-1 w-100 mt-2 mb-3" t-field="record.display_name"/>
                         <div class="text-end o_dynamic_snippet_btn_wrapper" t-if="record._website_show_quick_add()">
-                            <button type="button" role="button" class="btn btn-primary js_add_cart w-100" title="Add to Cart">
+                            <t t-set="product_template_id" t-value="record.id if not record.is_product_variant else record.product_tmpl_id.id"/>
+                            <t t-set="product_id" t-value="record.id if record.is_product_variant else record.product_variant_id.id"/>
+                            <button
+                                type="button"
+                                role="button"
+                                class="btn btn-primary js_add_cart w-100"
+                                title="Add to Cart"
+                                t-att-data-product-id="product_id"
+                                t-att-data-product-template-id="product_template_id"
+                                t-att-data-product-selected="record.is_product_variant"
+                            >
                                 Add to Cart
                             </button>
                         </div>
@@ -226,7 +248,6 @@
                 <t t-set="record" t-value="data['_record']"/>
                 <div class="o_carousel_product_card card w-100" t-att-data-add2cart-rerender="data.get('_add2cart_rerender')">
                     <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
-                    <input type="hidden" name="product-id" t-att-data-product-id="record.id"/>
                     <div class="row flex-row-reverse">
                         <div class="col-lg-6 d-flex align-items-center justify-content-center justify-content-lg-end o_wrap_product_img position-relative">
                             <img class="img img-fluid position-absolute o_img_product_cover w-100 h-100" loading="lazy" t-att-src="data['image_512']" t-att-alt="record.display_name"/>
@@ -247,7 +268,18 @@
                                 </div>
                                 <div class="card-text text-muted" t-field="record.description_sale"/>
                                 <div class="mt-4">
-                                    <button t-if="record._website_show_quick_add()" type="button" role="button" class="btn btn-primary js_add_cart mt-1" title="Add to Cart">
+                                    <t t-set="product_template_id" t-value="record.id if not record.is_product_variant else record.product_tmpl_id.id"/>
+                                    <t t-set="product_id" t-value="record.id if record.is_product_variant else record.product_variant_id.id"/>
+                                    <button
+                                        t-if="record._website_show_quick_add()"
+                                        type="button"
+                                        role="button"
+                                        class="btn btn-primary js_add_cart mt-1"
+                                        title="Add to Cart"
+                                        t-att-data-product-id="product_id"
+                                        t-att-data-product-template-id="product_template_id"
+                                        t-att-data-product-selected="record.is_product_variant"
+                                    >
                                         Add to Cart
                                     </button>
                                     <a class="btn btn-link me-1 mt-1" t-att-href="record.website_url">
@@ -272,7 +304,6 @@
                 <t t-set="record" t-value="data['_record']"/>
                 <div class="o_carousel_product_card card w-100 border-0 bg-light p-3" t-att-data-add2cart-rerender="data.get('_add2cart_rerender')">
                     <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
-                    <input type="hidden" name="product-id" t-att-data-product-id="record.id"/>
                     <div class="row h-100 p-0">
                         <div class="col-lg-4 position-static">
                             <a class="stretched-link o_dynamic_product_hovered" t-att-href="record.website_url">
@@ -295,7 +326,17 @@
                                         <t t-call="website_sale.price_dynamic_filter_template_product_product"/>
                                     </div>
                                     <div t-if="record._website_show_quick_add()" class="o_dynamic_snippet_btn_wrapper ms-auto">
-                                        <button type="button" role="button" class="btn btn-primary js_add_cart" title="Add to Cart">
+                                        <t t-set="product_template_id" t-value="record.id if not record.is_product_variant else record.product_tmpl_id.id"/>
+                                        <t t-set="product_id" t-value="record.id if record.is_product_variant else record.product_variant_id.id"/>
+                                        <button
+                                            type="button"
+                                            role="button"
+                                            class="btn btn-primary js_add_cart"
+                                            title="Add to Cart"
+                                            t-att-data-product-id="product_id"
+                                            t-att-data-product-template-id="product_template_id"
+                                            t-att-data-product-selected="record.is_product_variant"
+                                        >
                                             <i class="fa fa-fw fa-shopping-cart"/>
                                         </button>
                                     </div>
@@ -317,7 +358,6 @@
                 <t t-set="record" t-value="data['_record']"/>
                 <div class="o_carousel_product_card card w-100 border-0 o_dynamic_product_hovered o_cc o_cc5">
                     <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
-                    <input type="hidden" name="product-id" t-att-data-product-id="record.id"/>
                     <a class="stretched-link" t-att-href="record.website_url">
                         <img class="img img-fluid position-absolute w-100 h-100 o_img_product_cover" loading="lazy" t-att-src="data['image_512']" t-att-alt="record.display_name"/>
                     </a>
@@ -335,7 +375,17 @@
                                 <t t-call="website_sale.price_dynamic_filter_template_product_product"/>
                             </div>
                             <div t-if="record._website_show_quick_add()" class="o_dynamic_snippet_btn_wrapper">
-                                <button type="button" role="button" class="btn btn-primary js_add_cart" title="Add to Cart">
+                                <t t-set="product_template_id" t-value="record.id if not record.is_product_variant else record.product_tmpl_id.id"/>
+                                <t t-set="product_id" t-value="record.id if record.is_product_variant else record.product_variant_id.id"/>
+                                <button
+                                    type="button"
+                                    role="button"
+                                    class="btn btn-primary js_add_cart"
+                                    title="Add to Cart"
+                                    t-att-data-product-id="product_id"
+                                    t-att-data-product-template-id="product_template_id"
+                                    t-att-data-product-selected="record.is_product_variant"
+                                >
                                     Add to Cart
                                 </button>
                             </div>
@@ -404,5 +454,5 @@
             <field name="bundle">web.assets_frontend</field>
             <field name="path">website_sale/static/src/snippets/s_dynamic_snippet_products/000.scss</field>
         </record>
-    </data>
+
 </odoo>
