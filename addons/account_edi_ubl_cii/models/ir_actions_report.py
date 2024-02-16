@@ -71,6 +71,7 @@ class IrActionsReport(models.Model):
                 # If Factur-X hasn't been generated, generate and embed it anyway
                 if invoice.is_sale_document() \
                         and invoice.state == 'posted' \
+                        and edi_doc_codes \
                         and 'facturx_1_0_05' not in edi_doc_codes \
                         and self.env.ref('account_edi_ubl_cii.edi_facturx_1_0_05', raise_if_not_found=False):
                     # Add the attachments to the pdf file
