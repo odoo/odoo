@@ -207,11 +207,7 @@ def url_lang(path_or_uri, lang_code=None):
         location = werkzeug.urls.url_join(request.httprequest.path, location)
         lang_url_codes = [lg['url_code'] for lg in Lang.get_frontend_langs()]
         lang_code = pycompat.to_text(lang_code or request.context['lang'])
-
-        # lang_code might be `[lang]`, special case for lang switcher
-        lang_code_record = Lang._lang_get(lang_code)
-        lang_url_code = lang_code_record and lang_code_record._get_cached('url_code') or None
-
+        lang_url_code = Lang._get_data(code=lang_code).url_code
         lang_url_code = lang_url_code if lang_url_code in lang_url_codes else lang_code
         if (len(lang_url_codes) > 1 or force_lang) and is_multilang_url(location, lang_url_codes):
             loc, sep, qs = location.partition('?')
@@ -486,7 +482,7 @@ class IrHttp(models.AbstractModel):
         real_env = request.env
         try:
             request.registry['ir.http']._auth_method_public()  # it calls update_env
-            nearest_url_lang = request.env['ir.http'].get_nearest_lang(request.env['res.lang']._lang_get_code(url_lang_str))
+            nearest_url_lang = request.env['ir.http'].get_nearest_lang(request.env['res.lang']._get_data(url_code=url_lang_str).code or url_lang_str)
             cookie_lang = request.env['ir.http'].get_nearest_lang(request.httprequest.cookies.get('frontend_lang'))
             context_lang = request.env['ir.http'].get_nearest_lang(real_env.context.get('lang'))
             default_lang = cls._get_default_lang()

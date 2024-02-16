@@ -600,7 +600,7 @@ class Import(models.TransientModel):
         # Or a date/datetime if it matches the pattern
         date_patterns = [options['date_format']] if options.get(
             'date_format') else []
-        user_date_format = self.env['res.lang']._lang_get(self.env.user.lang).date_format
+        user_date_format = self.env['res.lang']._get_data(code=self.env.user.lang).date_format
         if user_date_format:
             try:
                 to_re(user_date_format)

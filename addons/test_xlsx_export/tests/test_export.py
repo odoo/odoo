@@ -377,8 +377,10 @@ class TestGroupedExport(XlsxCreatorCase):
 
     def test_decimal_separator(self):
         """ The decimal separator of the language used shouldn't impact the float representation in the exported xlsx """
-        get_lang(self.env).decimal_point = ','
-        get_lang(self.env).thousands_sep = '.'
+        lang_data = get_lang(self.env)
+        lang = self.env['res.lang'].browse(lang_data.id)
+        lang.decimal_point = ','
+        lang.thousands_sep = '.'
 
         values = [
                 {'int_sum': 1, 'float_min': 86420.864},

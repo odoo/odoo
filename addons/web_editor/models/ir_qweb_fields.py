@@ -277,7 +277,7 @@ class Date(models.AbstractModel):
                 attrs['data-oe-type'] = 'datetime'
                 return attrs
 
-            lg = self.env['res.lang']._lang_get(self.env.user.lang) or get_lang(self.env)
+            lg = get_lang(self.env, self.env.user.lang)
             locale = babel_locale_parse(lg.code)
             babel_format = value_format = posix_to_ldml(lg.date_format, locale=locale)
 
@@ -294,7 +294,7 @@ class Date(models.AbstractModel):
         if not value:
             return False
 
-        lg = self.env['res.lang']._lang_get(self.env.user.lang) or get_lang(self.env)
+        lg = get_lang(self.env, self.env.user.lang)
         date = datetime.strptime(value, lg.date_format)
         return fields.Date.to_string(date)
 
@@ -311,7 +311,7 @@ class DateTime(models.AbstractModel):
         if options.get('inherit_branding'):
             value = record[field_name]
 
-            lg = self.env['res.lang']._lang_get(self.env.user.lang) or get_lang(self.env)
+            lg = get_lang(self.env, self.env.user.lang)
             locale = babel_locale_parse(lg.code)
             babel_format = value_format = posix_to_ldml('%s %s' % (lg.date_format, lg.time_format), locale=locale)
             tz = record.env.context.get('tz') or self.env.user.tz
@@ -337,7 +337,7 @@ class DateTime(models.AbstractModel):
             return False
 
         # parse from string to datetime
-        lg = self.env['res.lang']._lang_get(self.env.user.lang) or get_lang(self.env)
+        lg = get_lang(self.env, self.env.user.lang)
         try:
             datetime_format = f'{lg.date_format} {lg.time_format}'
             dt = datetime.strptime(value, datetime_format)
