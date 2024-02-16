@@ -691,7 +691,7 @@ class Environment(Mapping):
         :rtype: str
         """
         lang = self.context.get('lang')
-        if lang and lang != 'en_US' and not self['res.lang']._lang_get_id(lang):
+        if lang and lang != 'en_US' and not self['res.lang']._get_data(code=lang):
             raise UserError(_('Invalid language code: %s', lang))
         return lang or None
 

@@ -1857,7 +1857,7 @@ class _String(Field):
             clean_records = records - cache.get_dirty_records(records, self)
             clean_records.invalidate_recordset([self.name])
             cache.update(records, self, itertools.repeat(cache_value), dirty=True)
-            if lang != 'en_US' and not records.env['res.lang']._lang_get_id('en_US'):
+            if lang != 'en_US' and not records.env['res.lang']._get_data(code='en_US'):
                 # if 'en_US' is not active, we always write en_US to make sure value_en is meaningful
                 cache.update(records.with_context(lang='en_US'), self, itertools.repeat(cache_value), dirty=True)
             return
@@ -1921,7 +1921,7 @@ class _String(Field):
                 new_store_translations = new_translations
             new_store_translations[lang] = cache_value
 
-            if not records.env['res.lang']._lang_get_id('en_US'):
+            if not records.env['res.lang']._get_data(code='en_US'):
                 new_store_translations['en_US'] = cache_value
                 new_store_translations.pop('_en_US', None)
             new_translations_list.append(new_store_translations)

@@ -78,7 +78,7 @@ class WebsiteForm(form.WebsiteForm):
             if 'company_id' not in values:
                 values['company_id'] = request.website.company_id.id
             lang = request.context.get('lang', False)
-            values['lang_id'] = values.get('lang_id') or request.env['res.lang']._lang_get_id(lang)
+            values['lang_id'] = values.get('lang_id') or request.env['res.lang']._get_data(code=lang).id
 
         result = super(WebsiteForm, self).insert_record(request, model, values, custom, meta=meta)
 

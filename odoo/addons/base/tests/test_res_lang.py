@@ -59,3 +59,61 @@ class test_res_lang(TransactionCase):
 
         with self.assertRaises(UserError):
             language.active = False
+
+    def test_get_data(self):
+        ResLang = self.env['res.lang']
+        en_id = ResLang._activate_lang('en_US').id
+        en_url_code = ResLang.browse(en_id).url_code
+        fr_id = ResLang._activate_lang('fr_FR').id
+        fr_direction = ResLang.browse(fr_id).direction
+        fr_data = ResLang._get_data(id=fr_id)
+        dummy_data = ResLang._get_data(id=0)
+
+        # test __eq__
+        self.env.registry.clear_cache()
+        self.assertEqual(ResLang._get_data(id=fr_id), fr_data)
+        self.assertEqual(ResLang._get_data(id=0), dummy_data)
+
+        # test __bool__
+        # data for an active language
+        self.assertTrue(ResLang._get_data(code='en_US'))
+        # data for an inactive language
+        self.assertFalse(ResLang._get_data(code='nl_NL'))
+        # data for an invalid dummy language
+        self.assertFalse(ResLang._get_data(code='dummy'))
+
+        # test dict conversion
+        self.assertEqual(
+            dict(ResLang._get_data(id=fr_id)),
+            ResLang.browse(fr_id).read(ResLang.CACHED_FIELDS)[0]
+        )
+        self.assertEqual(
+            dict(ResLang._get_data(id=0)),
+            dict.fromkeys(ResLang.CACHED_FIELDS, False)
+        )
+
+        # test performance
+        self.env.cache.clear()
+        self.env.registry.clear_cache()
+        # 1 query for res_lang +
+        # 1 query for ir_attachment to compute `flag_image_url`
+        with self.assertQueryCount(2):
+            # get cached field value for an active language
+            self.assertEqual(ResLang._get_data(code='en_US').url_code, en_url_code)
+            # get another cached field value for another active language
+            self.assertEqual(ResLang._get_data(code='fr_FR').direction, fr_direction)
+            # get field value for an inactive language
+            self.assertEqual(ResLang._get_data(code='nl_NL').direction, False)
+            # get field value for a dummy language
+            self.assertEqual(ResLang._get_data(code='dummy').direction, False)
+
+        # test programming error
+        with self.assertRaises(AttributeError):
+            # raise error for querying a not cached field of an active language
+            ResLang._get_data(code='en_US').flag_image
+        with self.assertRaises(AttributeError):
+            # raise error for querying a not cached field of an inactive language
+            ResLang._get_data(code='nl_NL').flag_image
+        with self.assertRaises(AttributeError):
+            # raise error for querying a not cached field of the dummy language
+            ResLang._get_data(code='dummy').flag_image

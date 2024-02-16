@@ -20,7 +20,7 @@ class TestStockLot(StockGenerateCommon):
             'type': 'product',
             'use_expiration_date': True,
         })
-        user_lang = get_lang(self.env)
+        user_lang = self.env['res.lang'].browse([get_lang(self.env).id])
         # Try first with the "day/month/year" date format.
         user_lang.date_format = "%d/%m/%y"
         list_lot_and_qty = [
@@ -67,7 +67,7 @@ class TestStockLot(StockGenerateCommon):
             'tracking': 'lot',
             'type': 'product',
         })
-        user_lang = get_lang(self.env)
+        user_lang = self.env['res.lang'].browse([get_lang(self.env).id])
         # Try first with the "day/month/year" date format.
         user_lang.date_format = "%d/%m/%y"
         list_lot_and_qty = [
@@ -96,7 +96,7 @@ class TestStockLot(StockGenerateCommon):
             'type': 'product',
             'use_expiration_date': True,
         })
-        user_lang = get_lang(self.env)
+        user_lang = self.env['res.lang'].browse([get_lang(self.env).id])
         # Month first in the system but day in the first place in the given dates.
         user_lang.date_format = "%m/%d/%y"
         list_lot_and_qty = [
@@ -224,7 +224,7 @@ class TestStockLot(StockGenerateCommon):
             'type': 'product',
             'use_expiration_date': True,
         })
-        user_lang = get_lang(self.env)
+        user_lang = self.env['res.lang'].browse([get_lang(self.env).id])
         user_lang.date_format = "%d/%m/%y"
         for lot_name in ["lot-001;20;4 Aug 2048", "lot-001\t04/08/2048\t20"]:
             move = self.get_new_move(product=product_lot)

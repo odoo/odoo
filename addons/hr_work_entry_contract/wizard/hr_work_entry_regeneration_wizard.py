@@ -86,7 +86,7 @@ class HrWorkEntryRegenerationWizard(models.TransientModel):
     def _date_to_string(self, date):
         if not date:
             return ''
-        user_date_format = self.env['res.lang']._lang_get(self.env.user.lang).date_format
+        user_date_format = self.env['res.lang']._get_data(code=self.env.user.lang).date_format
         return date.strftime(user_date_format)
 
     def _work_entry_fields_to_nullify(self):

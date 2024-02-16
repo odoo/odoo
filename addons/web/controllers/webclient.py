@@ -112,7 +112,7 @@ class WebClient(http.Controller):
         Request the definition of a bundle, including its javascript and css bundled assets
         """
         if 'lang' in bundle_params:
-            request.update_context(lang=bundle_params['lang'])
+            request.update_context(lang=request.env['res.lang']._get_code(bundle_params['lang']))
 
         debug = bundle_params.get('debug', request.session.debug)
         files = request.env["ir.qweb"]._get_asset_nodes(bundle_name, debug=debug, js=True, css=True)
