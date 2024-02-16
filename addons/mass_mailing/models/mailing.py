@@ -226,6 +226,7 @@ class MassMailing(models.Model):
     replied_ratio = fields.Float(compute="_compute_statistics", string='Replied Ratio')
     bounced_ratio = fields.Float(compute="_compute_statistics", string='Bounced Ratio')
     clicks_ratio = fields.Float(compute="_compute_clicks_ratio", string="Number of Clicks")
+    link_trackers_count = fields.Integer(compute="_compute_link_trackers_count", string="Link Trackers Count")
     next_departure = fields.Datetime(compute="_compute_next_departure", string='Scheduled date')
     # UX
     next_departure_is_past = fields.Boolean(compute="_compute_next_departure")
@@ -363,6 +364,16 @@ class MassMailing(models.Model):
         )
         past.next_departure_is_past = True
         (self - past).next_departure_is_past = False
+
+    def _compute_link_trackers_count(self):
+        result = self.env["link.tracker"].sudo()._read_group(
+            domain=[("mass_mailing_id", "in", self.ids)],
+            groupby=["mass_mailing_id"],
+            aggregates=["id:count"],
+        )
+        self.link_trackers_count = 0
+        for mailing, count in result:
+            mailing.link_trackers_count = count
 
     @api.depends('email_from', 'mail_server_id')
     def _compute_warning_message(self):
@@ -663,6 +674,24 @@ class MassMailing(models.Model):
         failed_mails.unlink()
         self.action_put_in_queue()
 
+    def action_view_link_trackers(self):
+        model_name = self.env['ir.model']._get('link.tracker').display_name
+        recipient = self.env['ir.model']._get(self.mailing_model_real).display_name
+        helper_header = _("No Link Tracker for that mailing!")
+        helper_message = _("Link Trackers will measure how many times each link is clicked as well as "
+                           "the proportion of %s who clicked at least once in your mailing.", recipient)
+        return {
+            'name': model_name,
+            'type': 'ir.actions.act_window',
+            'view_mode': 'tree,form',
+            'res_model': 'link.tracker',
+            'domain': [('mass_mailing_id', '=', self.id)],
+            'help': Markup('<p class="o_view_nocontent_smiling_face">%s</p><p>%s</p>') % (
+                helper_header, helper_message,
+            ),
+            'context': dict(self._context, create=False)
+        }
+
     def action_view_traces_scheduled(self):
         return self._action_view_traces_filtered('scheduled')
 
@@ -691,22 +720,7 @@ class MassMailing(models.Model):
         return action
 
     def action_view_clicked(self):
-        model_name = self.env['ir.model']._get('link.tracker').display_name
-        recipient = self.env['ir.model']._get(self.mailing_model_real).display_name
-        helper_header = _("No %s clicked your mailing yet!", recipient)
-        helper_message = _("Link Trackers will measure how many times each link is clicked as well as "
-                           "the proportion of %s who clicked at least once in your mailing.", recipient)
-        return {
-            'name': model_name,
-            'type': 'ir.actions.act_window',
-            'view_mode': 'tree,form',
-            'res_model': 'link.tracker',
-            'domain': [('mass_mailing_id', '=', self.id)],
-            'help': Markup('<p class="o_view_nocontent_smiling_face">%s</p><p>%s</p>') % (
-                helper_header, helper_message,
-            ),
-            'context': dict(self._context, create=False)
-        }
+        return self._action_view_documents_filtered('clicked')
 
     def action_view_opened(self):
         return self._action_view_documents_filtered('open')
@@ -721,32 +735,42 @@ class MassMailing(models.Model):
         return self._action_view_documents_filtered('delivered')
 
     def _action_view_documents_filtered(self, view_filter):
+        def _fetch_trace_res_ids(trace_domain):
+            result = self.env['mailing.trace'].search_read(
+                domain=trace_domain, fields=['res_id'])
+            return [line['res_id'] for line in result]
+
         model_name = self.env['ir.model']._get(self.mailing_model_real).display_name
         helper_header = None
         helper_message = None
         if view_filter == 'reply':
-            found_traces = self.mailing_trace_ids.filtered(lambda trace: trace.trace_status == view_filter)
+            res_ids = _fetch_trace_res_ids([('trace_status', '=', 'reply')])
             helper_header = _("No %s replied to your mailing yet!", model_name)
             helper_message = _("To track how many replies this mailing gets, make sure "
                                "its reply-to address belongs to this database.")
         elif view_filter == 'bounce':
-            found_traces = self.mailing_trace_ids.filtered(lambda trace: trace.trace_status == view_filter)
+            res_ids = _fetch_trace_res_ids([('trace_status', '=', 'bounce')])
             helper_header = _("No %s address bounced yet!", model_name)
             helper_message = _("Bounce happens when a mailing cannot be delivered (fake address, "
                                "server issues, ...). Check each record to see what went wrong.")
+        elif view_filter == 'clicked':
+            res_ids = _fetch_trace_res_ids([('links_click_ids', '!=', False)])
+            helper_header = _("No %s clicked your mailing yet!", model_name)
+            helper_message = _(
+                "Come back once your mailing has been sent to track who clicked on the embedded links.")
         elif view_filter == 'open':
-            found_traces = self.mailing_trace_ids.filtered(lambda trace: trace.trace_status in ('open', 'reply'))
+            res_ids = _fetch_trace_res_ids([('trace_status', 'in', ('open', 'reply'))])
             helper_header = _("No %s opened your mailing yet!", model_name)
             helper_message = _("Come back once your mailing has been sent to track who opened your mailing.")
         elif view_filter == 'delivered':
-            found_traces = self.mailing_trace_ids.filtered(lambda trace: trace.trace_status in ('sent', 'open', 'reply'))
+            res_ids = _fetch_trace_res_ids([('trace_status', 'in', ('sent', 'open', 'reply'))])
             helper_header = _("No %s received your mailing yet!", model_name)
             helper_message = _("Wait until your mailing has been sent to check how many recipients you managed to reach.")
         elif view_filter == 'sent':
-            found_traces = self.mailing_trace_ids.filtered(lambda trace: trace.sent_datetime)
+            res_ids = _fetch_trace_res_ids([('sent_datetime', '!=', False)])
         else:
-            found_traces = self.env['mailing.trace']
-        res_ids = found_traces.mapped('res_id')
+            res_ids = []
+
         action = {
             'name': model_name,
             'type': 'ir.actions.act_window',
