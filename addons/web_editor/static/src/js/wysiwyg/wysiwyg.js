@@ -37,7 +37,7 @@ const preserveCursor = OdooEditorLib.preserveCursor;
 const closestElement = OdooEditorLib.closestElement;
 const setSelection = OdooEditorLib.setSelection;
 const endPos = OdooEditorLib.endPos;
-const hasValidSelection = OdooEditorLib.hasValidSelection;
+const hasTableSelection = OdooEditorLib.hasTableSelection;
 const parseHTML = OdooEditorLib.parseHTML;
 const getCursorDirection = OdooEditorLib.getCursorDirection;
 const DIRECTIONS = OdooEditorLib.DIRECTIONS;
@@ -1576,9 +1576,10 @@ const Wysiwyg = Widget.extend({
         const selection = this.odooEditor.document.getSelection();
         const range = selection.rangeCount && selection.getRangeAt(0);
         const targetNode = range && range.startContainer;
-        const targetElement = targetNode && targetNode.nodeType === Node.ELEMENT_NODE
+        const closestTd = targetNode && closestElement(targetNode, 'td');
+        const targetElement = targetNode && targetNode.nodeType === Node.ELEMENT_NODE && !(closestTd && closestTd.style.backgroundImage)
             ? targetNode
-            : targetNode && targetNode.parentNode;
+            : closestTd ?  closestTd : targetNode.parentNode;
         const backgroundImage = $(targetElement).css('background-image');
         let backgroundGradient = false;
         if (weUtils.isColorGradient(backgroundImage)) {
@@ -1619,6 +1620,9 @@ const Wysiwyg = Widget.extend({
                     const oldColorpicker = colorpicker;
                     const hookEl = oldColorpicker ? oldColorpicker.el : elem;
                     const selectedColor = this._getSelectedColor($, eventName);
+                    // set table selection in firefox
+                    const selectedTds = [...this.$editable[0].querySelectorAll('.o_selected_td')];
+                    setSelection(selectedTds[0], 0, selectedTds[selectedTds.length - 1], selectedTds.length - 1);
                     const selection = this.odooEditor.document.getSelection();
                     const range = selection.rangeCount && selection.getRangeAt(0);
                     const hadNonCollapsedSelection = range && !selection.isCollapsed;
@@ -1648,8 +1652,11 @@ const Wysiwyg = Widget.extend({
                         // Deselect tables so the applied color can be seen
                         // without using `!important` (otherwise the selection
                         // hides it).
-                        if (this.odooEditor.deselectTable() && hasValidSelection(this.odooEditor.editable)) {
-                            this.odooEditor.document.getSelection().collapseToStart();
+                        if (hasTableSelection(this.odooEditor.editable)) {
+                            if (!ev.data.target.classList.contains('o_custom_gradient_btn')) {
+                                this.odooEditor.deselectTable();
+                                this.odooEditor.document.getSelection().collapseToStart();
+                            }
                         }
                         this._updateEditorUI(this.lastMediaClicked && { target: this.lastMediaClicked });
                         colorpicker.off('color_leave');

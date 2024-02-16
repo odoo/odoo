@@ -226,6 +226,7 @@ export class OdooEditor extends EventTarget {
                 isRootEditable: true,
                 placeholder: false,
                 showEmptyElementHint: true,
+                customGradientButtonEl: null,
                 defaultLinkAttributes: {},
                 plugins: [],
                 getUnremovableElements: () => [],
@@ -643,6 +644,7 @@ export class OdooEditor extends EventTarget {
         this.addDomListener(this.document, 'mouseup', this._onDocumentMouseup);
         this.addDomListener(this.document, 'click', this._onDocumentClick);
         this.addDomListener(this.document, 'scroll', this._onScroll, true);
+        this.addDomListener(this.document, 'dblclick', this._onDoubleClick);
 
         this.multiselectionRefresh = this.multiselectionRefresh.bind(this);
         this._resizeObserver = new ResizeObserver(this.multiselectionRefresh);
@@ -2391,6 +2393,7 @@ export class OdooEditor extends EventTarget {
      */
     _handleSelectionInTable(ev=undefined) {
         const selection = this.document.getSelection();
+        const selectedCells = this.editable.querySelectorAll('td.o_selected_td');
         // Selection could be gone if the document comes from an iframe that has been removed.
         const anchorNode = selection && selection.rangeCount && selection.getRangeAt(0) && selection.anchorNode;
         if (anchorNode && !ancestors(anchorNode).includes(this.editable)) {
@@ -2470,7 +2473,15 @@ export class OdooEditor extends EventTarget {
                 // Handle selecting an empty cell.
                 this._selectTableCells(range);
                 appliedCustomSelection = true;
+            } else if (startTd === endTd && ev.type === 'dblclick') {
+                // Single cell should be selected on double click.
+                this._selectTableCells(range);
+                appliedCustomSelection = true;
             }
+        } else if (selectedCells.length === 1 && selectedCells[0] === startTd) {
+            // The selection goes through a single cell -> select the cell.
+            this._selectTableCells(range);
+            appliedCustomSelection = true;
         }
         return appliedCustomSelection;
     }
@@ -4157,9 +4168,15 @@ export class OdooEditor extends EventTarget {
         }
 
         // Clean custom selections
-        if (this.deselectTable() && hasValidSelection(this.editable)) {
-            this.document.getSelection().collapseToStart();
+        if (hasTableSelection(this.editable)) {
+            if (!(this.options.customGradientButtonEl && this.options.customGradientButtonEl.classList.contains('o_custom_gradient_btn'))) {
+                this.deselectTable();
+                const selection = this.document.getSelection();
+                selection.rangeCount && selection.collapseToStart();
+            }
         }
+
+        this.observerFlush();
     }
     /**
      * Handle the hint preview for the Powerbox.
@@ -4490,6 +4507,12 @@ export class OdooEditor extends EventTarget {
         // Close Table UI.
         this._rowUi.classList.remove('o_open');
         this._columnUi.classList.remove('o_open');
+    }
+
+    _onDoubleClick(ev) {
+        if (closestElement(ev.target, 'td')) {
+            this._handleSelectionInTable(ev);
+        }
     }
 
     /**
