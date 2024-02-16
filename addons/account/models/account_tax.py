@@ -643,7 +643,7 @@ class AccountTax(models.Model):
         # mapping each child tax to its parent group
         all_taxes = self.env['account.tax']
         groups_map = {}
-        for tax in self.sorted(key=lambda r: r.sequence):
+        for tax in self.sorted(key=lambda r: (r.sequence, r._origin.id)):
             if tax.amount_type == 'group':
                 flattened_children = tax.children_tax_ids.flatten_taxes_hierarchy()
                 all_taxes += flattened_children

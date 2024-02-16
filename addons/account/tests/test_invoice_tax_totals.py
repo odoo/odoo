@@ -311,6 +311,7 @@ class TestTaxTotals(AccountTestInvoicingCommon):
             'amount': 10.0,
             'tax_group_id': self.tax_group1.id,
             'include_base_amount': True,
+            'sequence': 2,
         })
 
         tax_20 = self.env['account.tax'].create({
@@ -318,6 +319,7 @@ class TestTaxTotals(AccountTestInvoicingCommon):
             'amount_type': 'percent',
             'amount': 20.0,
             'tax_group_id': self.tax_group1.id,
+            'sequence': 2,
         })
 
         tax_30 = self.env['account.tax'].create({
@@ -326,6 +328,7 @@ class TestTaxTotals(AccountTestInvoicingCommon):
             'amount': 30.0,
             'tax_group_id': self.tax_group2.id,
             'include_base_amount': True,
+            'sequence': 1,
         })
 
         document = self._create_document_for_tax_totals_test([
