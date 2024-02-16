@@ -97,6 +97,12 @@ const ODOO_PIVOT = /** @satisfies {CustomFunctionDescription} */ ({
         assertDomainLength(domainArgs);
         const pivot = this.getters.getPivot(_pivotId);
         const value = pivot.getPivotCellValue(measure, domainArgs);
+        if (!value && !this.getters.areDomainArgsFieldsValid(_pivotId, domainArgs)) {
+            return {
+                value: CellErrorType.GenericError,
+                message: _t("Dimensions don't match the pivot definition"),
+            };
+        }
         if (measure === "__count") {
             return { value, format: "0" };
         }
@@ -124,12 +130,23 @@ const ODOO_PIVOT_HEADER = /** @satisfies {CustomFunctionDescription} */ ({
         assertPivotsExists(_pivotId, this.getters);
         assertDomainLength(domainArgs);
         const fieldName = domainArgs.at(-2);
-        const value = domainArgs.at(-1);
+        const valueArg = domainArgs.at(-1);
         const pivot = this.getters.getPivot(_pivotId);
         const format =
-            !fieldName || fieldName === "measure" || value === "false"
+            !fieldName || fieldName === "measure" || valueArg === "false"
                 ? undefined
                 : pivot.getPivotFieldFormat(fieldName);
+        if (
+            !this.getters.areDomainArgsFieldsValid(
+                _pivotId,
+                fieldName === "measure" ? domainArgs.slice(0, -2) : domainArgs
+            )
+        ) {
+            return {
+                value: CellErrorType.GenericError,
+                message: _t("Dimensions don't match the pivot definition"),
+            };
+        }
         return {
             value: pivot.computePivotHeaderValue(domainArgs),
             format,
