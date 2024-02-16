@@ -1087,6 +1087,7 @@ class TestPacking(TestPackingCommon):
             'location_out_id': self.stock_location.id,
             'package_type_ids': [(4, package_type.id)],
             'storage_category_id': stor_category.id,
+            'sublocation': 'closest_location',
         })
 
         # Receive 100 x P
@@ -1190,6 +1191,7 @@ class TestPacking(TestPackingCommon):
             'location_out_id': self.stock_location.id,
             'package_type_ids': [(4, package_type.id)],
             'storage_category_id': stor_category.id,
+            'sublocation': 'closest_location',
         })
 
         # Receive 50 x P_A and 50 x P_B
@@ -1285,6 +1287,7 @@ class TestPacking(TestPackingCommon):
             'location_in_id': self.stock_location.id,
             'location_out_id': self.stock_location.id,
             'storage_category_id': storage_category.id,
+            'sublocation': 'closest_location',
             'package_type_ids': [(4, package_type.id, 0)],
         })
 

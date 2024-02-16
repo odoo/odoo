@@ -273,6 +273,7 @@ class StockGenerateCommon(TransactionCase):
             'location_out_id': stock_location.id,
             'product_id': self.product_serial.id,
             'storage_category_id': stor_category.id,
+            'sublocation': 'closest_location',
         })
 
         # Receive 1 x P
