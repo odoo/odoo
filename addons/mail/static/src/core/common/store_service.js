@@ -49,7 +49,7 @@ export class Store extends BaseStore {
     /** @type {typeof import("@mail/core/common/volume_model").Volume} */
     Volume;
 
-    lastChannelSubscription = "[]";
+    knownChannelIds = new Set();
     /** This is the current logged partner / guest */
     self = Record.one("Persona");
     /**
@@ -227,26 +227,38 @@ export class Store extends BaseStore {
     }
 
     updateBusSubscription() {
-        const channelIds = [];
-        const ids = Object.keys(this.Thread.records).sort(); // Ensure channels processed in same order.
-        for (const id of ids) {
-            const thread = this.Thread.records[id];
+        if (!this.isMessagingReady) {
+            return;
+        }
+        const allSelfChannelIds = new Set();
+        for (const thread of Object.values(this.Thread.records)) {
             if (
                 thread.model === "discuss.channel" &&
-                !thread.isTransient &&
-                thread.fetchChannelInfoState === "fetched"
+                thread.fetchChannelInfoState === "fetched" &&
+                thread.hasSelfAsMember
             ) {
-                channelIds.push(id);
-                if (!thread.hasSelfAsMember) {
-                    this.env.services["bus_service"].addChannel(`discuss.channel_${thread.id}`);
+                if (thread.selfMember.memberSince < this.env.services["bus_service"].startedAt) {
+                    this.knownChannelIds.add(thread.id);
                 }
+                allSelfChannelIds.add(thread.id);
             }
         }
-        const channels = JSON.stringify(channelIds);
-        if (this.isMessagingReady && this.lastChannelSubscription !== channels) {
+        let shouldUpdateChannels = false;
+        for (const id of allSelfChannelIds) {
+            if (!this.knownChannelIds.has(id)) {
+                shouldUpdateChannels = true;
+                this.knownChannelIds.add(id);
+            }
+        }
+        for (const id of this.knownChannelIds) {
+            if (!allSelfChannelIds.has(id)) {
+                shouldUpdateChannels = true;
+                this.knownChannelIds.delete(id);
+            }
+        }
+        if (shouldUpdateChannels) {
             this.env.services["bus_service"].forceUpdateChannels();
         }
-        this.lastChannelSubscription = channels;
     }
 }
 Store.register();
