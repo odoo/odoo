@@ -3,7 +3,7 @@
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 import { start } from "@mail/../tests/helpers/test_utils";
 import { HIGHLIGHT_CLASS } from "@mail/core/common/message_search_hook";
-import { triggerHotkey } from "@web/../tests/helpers/utils";
+import { nextTick, triggerHotkey } from "@web/../tests/helpers/utils";
 import { click, contains, insertText, scroll } from "@web/../tests/utils";
 
 QUnit.module("discuss search");
@@ -161,12 +161,15 @@ QUnit.test("Search a message in 60 messages should return 30 message first", asy
     await insertText(".o_searchview_input", "message");
     triggerHotkey("Enter");
     await contains(".o-mail-SearchMessagesPanel .o-mail-Message", { count: 30 });
+    // give enough time to useVisible to potentially load more (unexpected) messages
+    await nextTick();
+    await contains(".o-mail-SearchMessagesPanel .o-mail-Message", { count: 30 });
 });
 
 QUnit.test("Scrolling to the bottom should load more searched message", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    for (let i = 0; i < 60; i++) {
+    for (let i = 0; i < 90; i++) {
         pyEnv["mail.message"].create({
             author_id: pyEnv.currentPartnerId,
             body: "This is a message",
@@ -183,6 +186,9 @@ QUnit.test("Scrolling to the bottom should load more searched message", async ()
     triggerHotkey("Enter");
     await contains(".o-mail-SearchMessagesPanel .o-mail-Message", { count: 30 });
     await scroll(".o-mail-SearchMessagesPanel .o-mail-ActionPanel", "bottom");
+    await contains(".o-mail-SearchMessagesPanel .o-mail-Message", { count: 60 });
+    // give enough time to useVisible to potentially load more (unexpected) messages
+    await nextTick();
     await contains(".o-mail-SearchMessagesPanel .o-mail-Message", { count: 60 });
 });
 
