@@ -317,10 +317,10 @@ const matchFilter = (filter, nodes, index) => {
  */
 const matchesQuery = (query, width, height) =>
     query
-        .replace(/\s+/g, "")
-        .split(",")
+        .toLowerCase()
+        .split(/\s*,\s*/)
         .some((orPart) =>
-            orPart.split("and").every((andPart) => matchesQueryPart(andPart, width, height))
+            orPart.split(/\s*\band\b\s*/).every((andPart) => matchesQueryPart(andPart, width, height))
         );
 
 /**
@@ -329,19 +329,59 @@ const matchesQuery = (query, width, height) =>
  * @param {number} height
  */
 const matchesQueryPart = (query, width, height) => {
-    if (/pointer:\s*coarse/.test(query)) {
-        return globalThis.ontouchstart !== undefined;
+    const [, key, value] = query.match(/\(\s*([\w-]+)\s*:\s*(.+)\s*\)/) || [];
+    let result = false;
+    if (key) {
+        switch (key) {
+            case "display-mode": {
+                result = value === mockedMatchMedia.DISPLAY_MODE;
+                break;
+            }
+            case "max-height": {
+                result = height <= parseInt(value);
+                break;
+            }
+            case "max-width": {
+                result = width <= parseInt(value);
+                break;
+            }
+            case "min-height": {
+                result = height >= parseInt(value);
+                break;
+            }
+            case "min-width": {
+                result = width >= parseInt(value);
+                break;
+            }
+            case "orientation": {
+                result = value === "landscape" ? width > height : width < height;
+                break;
+            }
+            case "pointer": {
+                switch (value) {
+                    case "coarse": {
+                        result = globalThis.ontouchstart !== undefined;
+                        break;
+                    }
+                    case "fine": {
+                        result = globalThis.ontouchstart === undefined;
+                        break;
+                    }
+                }
+                break;
+            }
+            case "prefers-color-scheme": {
+                result = value === mockedMatchMedia.COLOR_SCHEME;
+                break;
+            }
+            case "prefers-reduced-motion": {
+                result = value === mockedMatchMedia.REDUCED_MOTION;
+                break;
+            }
+        }
     }
-    const minWidth = query.match(/min-width:\s*(\d+)/)?.[1];
-    const maxWidth = query.match(/max-width:\s*(\d+)/)?.[1];
-    const minHeight = query.match(/min-height:\s*(\d+)/)?.[1];
-    const maxHeight = query.match(/max-height:\s*(\d+)/)?.[1];
-    const result =
-        (!minWidth || width >= parseInt(minWidth)) &&
-        (!maxWidth || width <= parseInt(maxWidth)) &&
-        (!minHeight || height >= parseInt(minHeight)) &&
-        (!maxHeight || height <= parseInt(maxHeight));
-    return query.includes("not") ? !result : result;
+
+    return query.startsWith("not") ? !result : result;
 };
 
 /**
@@ -1255,6 +1295,10 @@ export function mockedMatchMedia(query) {
         removeEventListener: (type, callback) => window.removeEventListener("resize", callback),
     };
 }
+
+mockedMatchMedia.COLOR_SCHEME = "light";
+mockedMatchMedia.DISPLAY_MODE = "browser";
+mockedMatchMedia.REDUCED_MOTION = "reduce";
 
 /**
  * Listens for DOM mutations on a given target.
