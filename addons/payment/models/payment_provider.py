@@ -383,7 +383,7 @@ class PaymentProvider(models.Model):
         for field_name, field in self._fields.items():
             required_for_provider_code = getattr(field, 'required_if_provider', None)
             if required_for_provider_code and any(
-                required_for_provider_code == provider.code and not provider[field_name]
+                required_for_provider_code == provider._get_code() and not provider[field_name]
                 for provider in enabled_providers
             ):
                 ir_field = self.env['ir.model.fields']._get(self._name, field_name)
