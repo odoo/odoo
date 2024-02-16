@@ -36,5 +36,5 @@ class ResPartner(models.Model):
         action = self.env['ir.actions.act_window']._for_xml_id('loyalty.loyalty_card_action')
         all_child = self.with_context(active_test=False).search([('id', 'child_of', self.ids)])
         action['domain'] = [('partner_id', 'in', all_child.ids)]
-        action['context'] = {'search_default_active' : True}
+        action['context'] = {'search_default_active' : True, 'create': False}
         return action
