@@ -131,7 +131,7 @@ export class HootReporting extends Component {
         this.uiState = useState(ui);
 
         let didShowDetail = false;
-        runner.afterEach((test) => {
+        runner.__afterEach((test) => {
             if (
                 showdetail &&
                 !(showdetail === "first-fail" && didShowDetail) &&
