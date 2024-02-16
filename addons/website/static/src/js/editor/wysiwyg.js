@@ -59,6 +59,8 @@ const WebsiteWysiwyg = Wysiwyg.extend({
         // Dropdown menu initialization: handle dropdown openings by hand
         var $dropdownMenuToggles = $editableWindow.$('.o_mega_menu_toggle, #top_menu_container .dropdown-toggle');
         $dropdownMenuToggles.removeAttr('data-bs-toggle').dropdown('dispose');
+        // Since bootstrap 5.1.3, removing bsToggle is not sufficient anymore.
+        $dropdownMenuToggles.siblings(".dropdown-menu").addClass("o_wysiwyg_submenu");
         $dropdownMenuToggles.on('click.wysiwyg_megamenu', ev => {
             this.odooEditor.observerUnactive();
             var $toggle = $(ev.currentTarget);
@@ -237,7 +239,7 @@ const WebsiteWysiwyg = Wysiwyg.extend({
             // menu itself.
             // FIXME normally removing the 'show' class should not be necessary here
             // TODO check that editor classes are removed here as well
-            var classes = _.without($el.attr('class').split(' '), 'dropdown-menu', 'o_mega_menu', 'show');
+            const classes = _.without($el.attr("class").split(" "), "dropdown-menu", "o_mega_menu", "show", "o_wysiwyg_submenu");
             promises.push(this._rpc({
                 model: 'website.menu',
                 method: 'write',
