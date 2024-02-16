@@ -1216,6 +1216,7 @@ class StockMove(TransactionCase):
             'location_in_id': self.stock_location.id,
             'location_out_id': self.stock_location.id,
             'storage_category_id': storage_category.id,
+            'sublocation': 'closest_location',
         })
         self.stock_location.write({
             'putaway_rule_ids': [(4, putaway.id, 0)],
@@ -1262,6 +1263,7 @@ class StockMove(TransactionCase):
             'location_in_id': self.stock_location.id,
             'location_out_id': self.stock_location.id,
             'storage_category_id': storage_category.id,
+            'sublocation': 'closest_location',
         })
         self.stock_location.write({
             'putaway_rule_ids': [(4, putaway.id, 0)],
@@ -1321,6 +1323,7 @@ class StockMove(TransactionCase):
             'location_in_id': self.stock_location.id,
             'location_out_id': self.stock_location.id,
             'storage_category_id': storage_category.id,
+            'sublocation': 'closest_location',
         })
         self.stock_location.write({
             'putaway_rule_ids': [(4, putaway.id, 0)],
@@ -1385,6 +1388,7 @@ class StockMove(TransactionCase):
             'location_in_id': self.stock_location.id,
             'location_out_id': self.stock_location.id,
             'storage_category_id': storage_category.id,
+            'sublocation': 'closest_location',
         })
         self.stock_location.write({
             'putaway_rule_ids': [(4, putaway.id, 0)],
@@ -1458,6 +1462,7 @@ class StockMove(TransactionCase):
             'location_out_id': self.stock_location.id,
             'storage_category_id': storage_category.id,
             'package_type_ids': [(4, package_type.id, 0)],
+            'sublocation': 'closest_location',
         })
         self.stock_location.write({
             'putaway_rule_ids': [(4, putaway.id, 0)],
@@ -1530,6 +1535,7 @@ class StockMove(TransactionCase):
             'location_out_id': self.stock_location.id,
             'storage_category_id': storage_category.id,
             'package_type_ids': [(4, package_type.id, 0)],
+            'sublocation': 'closest_location',
         })
         self.stock_location.write({
             'putaway_rule_ids': [(4, putaway.id, 0)],
@@ -1636,6 +1642,7 @@ class StockMove(TransactionCase):
             'location_out_id': self.stock_location.id,
             'storage_category_id': storage_category.id,
             'package_type_ids': [(4, package_type.id, 0)],
+            'sublocation': 'closest_location',
         })
         self.stock_location.write({
             'putaway_rule_ids': [(4, putaway.id, 0)],
@@ -1741,6 +1748,7 @@ class StockMove(TransactionCase):
             'location_out_id': self.stock_location.id,
             'storage_category_id': storage_category.id,
             'package_type_ids': [(4, package_type.id, 0)],
+            'sublocation': 'closest_location',
         })
         self.stock_location.write({
             'putaway_rule_ids': [(4, putaway.id, 0)],
@@ -1832,6 +1840,7 @@ class StockMove(TransactionCase):
             'location_in_id': self.stock_location.id,
             'location_out_id': self.stock_location.id,
             'storage_category_id': storage_category.id,
+            'sublocation': 'closest_location',
         })
         self.stock_location.write({
             'putaway_rule_ids': [(4, putaway.id, 0)],
