@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from types import SimpleNamespace
 
-from odoo import models, fields, _
+from odoo import api, models, fields, _
 from odoo.tools.safe_eval import safe_eval
 from odoo.exceptions import UserError
 
@@ -29,13 +30,35 @@ class AccountTaxPython(models.Model):
             ":param product: product.product recordset singleton or None\n"
             ":param partner: res.partner recordset singleton or None")
 
+    @api.model
+    def _convert_record_to_local_dict(self, record):
+        return SimpleNamespace(**{
+            field_name: record[field_name]
+            for field_name, field in record._fields.items()
+            if (
+                not field.relational
+                and (
+                    not field.groups
+                    or self.env.su
+                    or self.user_has_groups(field.groups)
+                )
+            )
+        })
+
     def _compute_amount(self, base_amount, price_unit, quantity=1.0, product=None, partner=None):
         self.ensure_one()
         if product and product._name == 'product.template':
             product = product.product_variant_id
         if self.amount_type == 'code':
-            company = self.env.company
-            localdict = {'base_amount': base_amount, 'price_unit':price_unit, 'quantity': quantity, 'product':product, 'partner':partner, 'company': company}
+            company = self.company_id
+            localdict = {
+                'base_amount': base_amount,
+                'price_unit': price_unit,
+                'quantity': quantity,
+                'product': self._convert_record_to_local_dict(product or self.env['product.product']),
+                'partner': self._convert_record_to_local_dict(partner or self.env['res.partner']),
+                'company': self._convert_record_to_local_dict(company or self.env['res.company']),
+            }
             try:
                 safe_eval(self.python_compute, localdict, mode="exec", nocopy=True)
             except Exception as e:
@@ -45,12 +68,17 @@ class AccountTaxPython(models.Model):
 
     def compute_all(self, price_unit, currency=None, quantity=1.0, product=None, partner=None, is_refund=False, handle_price_include=True):
         taxes = self.filtered(lambda r: r.amount_type != 'code')
-        company = self.env.company
         if product and product._name == 'product.template':
             product = product.product_variant_id
         for tax in self.filtered(lambda r: r.amount_type == 'code'):
-            localdict = self._context.get('tax_computation_context', {})
-            localdict.update({'price_unit': price_unit, 'quantity': quantity, 'product': product, 'partner': partner, 'company': company})
+            company = tax.company_id
+            localdict = {
+                'price_unit': price_unit,
+                'quantity': quantity,
+                'product': self._convert_record_to_local_dict(product or self.env['product.product']),
+                'partner': self._convert_record_to_local_dict(partner or self.env['res.partner']),
+                'company': self._convert_record_to_local_dict(company or self.env['res.company']),
+            }
             try:
                 safe_eval(tax.python_applicable, localdict, mode="exec", nocopy=True)
             except Exception as e:
