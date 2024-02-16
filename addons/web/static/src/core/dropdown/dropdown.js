@@ -120,11 +120,11 @@ export class Dropdown extends Component {
 
         // Set up UI active element related behavior ---------------------------
         let activeEl;
-        const uiService = useService("ui");
+        this.uiService = useService("ui");
         useEffect(
             () => {
                 Promise.resolve().then(() => {
-                    activeEl = uiService.activeElement;
+                    activeEl = this.uiService.activeElement;
                 });
             },
             () => []
@@ -133,7 +133,9 @@ export class Dropdown extends Component {
         this.popover = usePopover(DropdownPopover, {
             animation: false,
             arrow: false,
-            closeOnClickAway: (target) => uiService.getActiveElementOf(target) === activeEl,
+            closeOnClickAway: (target) => {
+                return this.popoverCloseOnClickAway(target, activeEl);
+            },
             closeOnEscape: false, // Handled via navigation and prevents closing root of nested dropdown
             env: this.__owl__.childEnv,
             holdOnHover: this.props.holdOnHover,
@@ -219,6 +221,10 @@ export class Dropdown extends Component {
         } else {
             this.closePopover();
         }
+    }
+
+    popoverCloseOnClickAway(target, activeEl) {
+        return this.uiService.getActiveElementOf(target) === activeEl;
     }
 
     setTargetElement(target) {
