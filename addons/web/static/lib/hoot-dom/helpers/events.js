@@ -215,7 +215,7 @@ const getPosition = (element, options) => {
 
     if (!isString && !relative && !Number.isNaN(posX) && !Number.isNaN(posY)) {
         // Absolute position
-        return toEventPosition(posX, posY);
+        return toEventPosition(posX, posY, position);
     }
 
     const { x, y, width, height } = getRect(element);
@@ -266,7 +266,7 @@ const getPosition = (element, options) => {
         }
     }
 
-    return toEventPosition(clientX, clientY);
+    return toEventPosition(clientX, clientY, position);
 };
 
 /**
@@ -421,16 +421,16 @@ const removeChangeTargetListeners = () => {
  * @param {number} x
  * @param {number} y
  */
-const toEventPosition = (x, y) => {
-    x ||= 0;
-    y ||= 0;
+const toEventPosition = (clientX, clientY, position) => {
+    clientX ||= 0;
+    clientY ||= 0;
     return {
-        clientX: x,
-        clientY: y,
-        pageX: x,
-        pageY: y,
-        screenX: x,
-        screenY: y,
+        clientX,
+        clientY,
+        pageX: position?.pageX ?? clientX,
+        pageY: position?.pageY ?? clientY,
+        screenX: position?.screenX ?? clientX,
+        screenY: position?.screenY ?? clientY,
     };
 };
 
@@ -1785,16 +1785,16 @@ export function scroll(target, position, options) {
     /** @type {ScrollToOptions} */
     const scrollOptions = {};
     const [x, y] = parsePosition(position);
-    if (x !== null) {
+    if (!Number.isNaN(x)) {
         scrollOptions.left = x;
     }
-    if (y !== null) {
+    if (!Number.isNaN(y)) {
         scrollOptions.top = y;
     }
     const element = getFirstTarget(target, { ...options, scrollable: true });
     /** @type {Event[]} */
     if (!hasTouch()) {
-        dispatch(target, "wheel");
+        dispatch(element, "wheel");
     }
     element.scrollTo(scrollOptions);
     dispatch(element, "scroll");
