@@ -39,6 +39,14 @@ insertRecords("res.company", [{ id: 1 }]);
 insertRecords("res.groups", [{ id: TEST_GROUP_IDS.groupUserId, name: "Internal User" }]);
 insertRecords("res.users", [
     {
+        active: false,
+        display_name: "OdooBot",
+        login: "__system__",
+        id: TEST_USER_IDS.odoobotUserId,
+        name: "Public user",
+        partner_id: TEST_USER_IDS.odoobotId,
+    },
+    {
         display_name: "Your Company, Mitchell Admin",
         id: TEST_USER_IDS.adminUserId,
         name: "Mitchell Admin",
