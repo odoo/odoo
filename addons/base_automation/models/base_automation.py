@@ -9,7 +9,7 @@ from uuid import uuid4
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import _, api, exceptions, fields, models
+from odoo import _, api, exceptions, fields, models, SUPERUSER_ID
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools import safe_eval
 from odoo.http import request
@@ -498,7 +498,7 @@ class BaseAutomation(models.Model):
                 raise e
 
         if not self.record_getter:
-            new_record = record.create(payload)
+            new_record = record.with_user(SUPERUSER_ID).create(payload)
             return new_record
 
         if not record.exists():
