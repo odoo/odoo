@@ -29,8 +29,8 @@ export class AttachmentPanel extends Component {
                 this.threadService.fetchMoreAttachments(nextProps.thread);
             }
         });
-        const loadOlderState = useVisible("load-older", () => {
-            if (loadOlderState.isVisible) {
+        useVisible("load-older", (isVisible) => {
+            if (isVisible) {
                 this.threadService.fetchMoreAttachments(this.props.thread);
             }
         });

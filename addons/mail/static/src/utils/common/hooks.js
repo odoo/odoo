@@ -127,15 +127,15 @@ export function useOnBottomScrolled(refName, callback, threshold = 1) {
  * @param {string} refName
  * @param {function} cb
  */
-export function useVisible(refName, cb, { init = false, ready = true } = {}) {
+export function useVisible(refName, cb, { ready = true } = {}) {
     const ref = useRef(refName);
     const state = useState({
-        isVisible: init,
+        isVisible: undefined,
         ready,
     });
     function setValue(value) {
         state.isVisible = value;
-        cb();
+        cb(state.isVisible);
     }
     const observer = new IntersectionObserver((entries) => {
         setValue(entries.at(-1).isIntersecting);

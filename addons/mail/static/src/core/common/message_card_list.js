@@ -38,7 +38,11 @@ export class MessageCardList extends Component {
     setup() {
         this.ui = useState(useService("ui"));
         useSubEnv({ messageCard: true });
-        this.loadMore = useVisible("load-more", () => this.props.onLoadMoreVisible?.());
+        useVisible("load-more", (isVisible) => {
+            if (isVisible) {
+                this.props.onLoadMoreVisible?.();
+            }
+        });
     }
 
     /**
