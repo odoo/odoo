@@ -8,6 +8,7 @@ from . import test_fuzzy
 from . import test_image_upload_progress
 from . import test_is_multilang
 from . import test_media
+from . import test_menu
 from . import test_multi_company
 from . import test_page_manager
 from . import test_page
