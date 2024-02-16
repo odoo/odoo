@@ -258,7 +258,7 @@ class Lang(models.Model):
     @tools.ormcache()
     def get_installed(self):
         """ Return the installed languages as a list of (code, name) sorted by name. """
-        langs = self.with_context(active_test=True).search([])
+        langs = self.sudo().with_context(active_test=True).search([])
         return sorted([(lang.code, lang.name) for lang in langs], key=itemgetter(1))
 
     def toggle_active(self):
