@@ -9,11 +9,11 @@
 # Ivana Bartonkova, 2023
 # Tomáš Píšek, 2023
 # Jiří Podhorecký, 2024
-# Katerina Horylova, 2024
-# Jakub Smolka, 2024
 # Wil Odoo, 2024
 # Aleš Fiala <f.ales1@seznam.cz>, 2024
 # Stanislav Kurinec, 2024
+# Katerina Horylova, 2024
+# Jakub Smolka, 2024
 # 
 msgid ""
 msgstr ""
@@ -21,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-29 10:44+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Stanislav Kurinec, 2024\n"
+"Last-Translator: Jakub Smolka, 2024\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1542,7 +1542,7 @@ msgstr "Fiskální pozici na daň lze definovat pouze jednou pro danou daň."
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "A temporary number can not be used in a real matching"
-msgstr "Dočasné číslo nelze použít při skutečné shodě."
+msgstr "Dočasné číslo nelze použít při skutečné shodě"
 
 #. module: account
 #: model:res.groups,name:account.group_warning_account
@@ -2058,7 +2058,7 @@ msgid ""
 " its reverse entry: %(reverse_entry)s."
 msgstr ""
 "Akruální záznam vytvořen dne %(date)s: %(accrual_entry)s."
-"                    A jeho storno záznam: %(reverse_entry)s."
+"                    A jeho opravný doklad: %(reverse_entry)s."
 
 #. module: account
 #. odoo-python
@@ -7985,7 +7985,7 @@ msgstr "Neplatný rozsah \"PSČ\", nastavte jej správně."
 #: code:addons/account/models/account_report.py:0
 #, python-format
 msgid "Invalid domain for expression '%s' of line '%s': %s"
-msgstr ""
+msgstr "Neplatná doména pro výraz '%s' řádku '%s': %s"
 
 #. module: account
 #. odoo-python
@@ -8704,7 +8704,7 @@ msgstr "Účetní položky, u kterých není nastaveno párovací číslo"
 #: code:addons/account/wizard/account_move_reversal.py:0
 #, python-format
 msgid "Journal should be the same type as the reversed entry."
-msgstr "Deník by měl být stejného typu jako u opravného záznamu."
+msgstr "Deník by měl být stejného typu jako u opravného dokladu."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__automatic_entry_default_journal_id
@@ -12106,29 +12106,29 @@ msgstr "Oprava záznamu: %s"
 #: model:ir.actions.act_window,name:account.action_view_account_move_reversal
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
 msgid "Reverse"
-msgstr "Opravit"
+msgstr "Vytvořit opravný doklad"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Reverse Entry"
-msgstr "Opravit záznam"
+msgstr "Vytvořit opravný doklad"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
 msgid "Reverse Journal Entry"
-msgstr "Opravit účetní záznam"
+msgstr "Vytvořit opravný doklad"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_move_reversal.py:0
 #, python-format
 msgid "Reverse Moves"
-msgstr "Opravné záznamy"
+msgstr "Opravné doklady"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
 msgid "Reverse and Create Invoice"
-msgstr "Opravit a vytvořit fakturu"
+msgstr "Vytvořit opravný doklad a fakturu"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__payment_state__reversed
@@ -15142,7 +15142,7 @@ msgstr "Tento záznam byl zduplikován z %s"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "This entry has been reversed from %s"
-msgstr "Tento záznam byl opraven z %s"
+msgstr "Tento záznam je opravným dokladem z %s"
 
 #. module: account
 #. odoo-python
@@ -16553,7 +16553,7 @@ msgstr "Můžete přečíslovat sekvenci pouze položek v tom samém deníku."
 #: code:addons/account/wizard/account_move_reversal.py:0
 #, python-format
 msgid "You can only reverse posted moves."
-msgstr "Můžete opravit pouze zaúčtované záznamy."
+msgstr "Můžete vytvářet opravné doklady pouze pro zaúčtované záznamy."
 
 #. module: account
 #. odoo-python

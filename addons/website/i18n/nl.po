@@ -5,8 +5,8 @@
 # Translators:
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2023
 # Martin Trigaux, 2024
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
 # Wil Odoo, 2024
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
 # Jolien De Paepe, 2024
 # 
 msgid ""
@@ -958,10 +958,12 @@ msgid ""
 "                                                            <option value=\"3\">Three</option>\n"
 "                                                        </select>"
 msgstr ""
-"<select id=\"exampleSelect\" class=\"form-select\"><option j=1 value=\"Open "
-"this select menu\">Open dit keuzemenu</option><option j=2 value=One> "
-"Een</option><option j=3 value=Two> Twee</option><option j=4 value=Three> "
-"Drie</option></select>"
+"<select id=\"exampleSelect\" class=\"form-select\">\n"
+"                                                            <option selected=\"true\">Open dit selectiemenu</option>\n"
+"                                                            <option value=\"1\">Een</option>\n"
+"                                                            <option value=\"2\">Twee</option>\n"
+"                                                            <option value=\"3\">Drie</option>\n"
+"                                                        </select>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.header_text_element
@@ -4369,6 +4371,18 @@ msgid "Display this website when users visit this domain"
 msgstr "Toon de website wanneer de bezoeker dit domein bezoekt"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/components/edit_head_body_dialog/edit_head_body_dialog.xml:0
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid ""
+"Do not copy/paste code you do not understand, this could put your data at "
+"risk."
+msgstr ""
+"Kopieer/plak geen code die je niet begrijpt, dit kan uw gegevens in gevaar "
+"brengen."
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_cards
 msgid ""
 "Do you need specific information? Our specialists will help you with "
@@ -6263,6 +6277,16 @@ msgstr ""
 "Als je de huidige bewerkingen verwijdert, gaan alle niet-opgeslagen "
 "wijzigingen verloren. Je kunt annuleren om terug te keren naar de "
 "bewerkingsmodus."
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/components/resource_editor/resource_editor_warning.xml:0
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid ""
+"If you need to add analytics or marketing tags, inject code in your <head> "
+"or <body> instead."
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -13314,6 +13338,17 @@ msgstr ""
 #, python-format
 msgid "Your Email"
 msgstr "Je e-mail"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_embed_code/000.js:0
+#, python-format
+msgid ""
+"Your Embed Code snippet doesn't have anything to display. Click on Edit to "
+"modify it."
+msgstr ""
+"Je snippet Code insluiten heeft niets om weer te geven. Klik op Wijzigen om "
+"deze te wijzigen."
 
 #. module: website
 #. odoo-javascript

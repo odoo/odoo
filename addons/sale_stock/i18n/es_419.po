@@ -4,9 +4,8 @@
 # 
 # Translators:
 # Iran Villalobos López, 2023
-# Fernanda Alvarez, 2023
-# Lucia Pacheco, 2024
 # Wil Odoo, 2024
+# Fernanda Alvarez, 2024
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
 # 
 msgid ""
@@ -30,7 +29,7 @@ msgid ""
 "                Manual actions may be needed."
 msgstr ""
 ".\n"
-"            Puede que se necesiten acciones manuales."
+"                Es posible que se necesiten acciones manuales."
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -81,7 +80,7 @@ msgid ""
 "                </span>"
 msgstr ""
 "<span invisible=\"not display_delivery_alert\">\n"
-"                   Ya se realizaron algunas entregas. Se pueden crear devoluciones a partir de las órdenes de envío.\n"
+"                   Ya se realizaron algunas de las entregas. Se pueden crear devoluciones a partir de las órdenes de envío.\n"
 "                </span>"
 
 #. module: sale_stock
@@ -105,10 +104,10 @@ msgid ""
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
 "Según la configuración del producto, se puede calcular de forma automática la cantidad enviada:\n"
-"  - Manual: la cantidad se establece de forma manual en la línea\n"
-"  - Analítica de gastos: la cantidad equivale a la suma de los gastos registrados\n"
-"  - Hojas de horas: la cantidad equivale a la suma de las horas registradas en las tareas vinculadas a esta línea de venta\n"
-"  - Movimientos del inventario: la cantidad viene de las recolecciones confirmadas\n"
+"- Manual: la cantidad se establece de forma manual en la línea\n"
+"- Analítica de gastos: la cantidad equivale a la suma de los gastos registrados\n"
+"- Hojas de horas: la cantidad equivale a la suma de las horas registradas en las tareas vinculadas a esta línea de venta\n"
+"- Movimientos del inventario: la cantidad viene de las recolecciones confirmadas\n"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -303,8 +302,8 @@ msgid ""
 "shortest."
 msgstr ""
 "Si entrega todos los productos a la vez, se programará la orden de entrega "
-"con base en el mayor plazo de entrega del producto. En caso contrario, se "
-"basará en el más corto."
+"según el mayor plazo de entrega del producto. En caso contrario, se basará "
+"en el más corto."
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
@@ -338,7 +337,7 @@ msgid ""
 "used in international transactions."
 msgstr ""
 "Los términos de comercio internacional son una serie de condiciones "
-"comerciales usadas en las transacciones internacionales."
+"comerciales que se usan en las transacciones internacionales."
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_users_view_form
@@ -388,7 +387,7 @@ msgstr "Lote/serie"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "Manual actions may be needed."
-msgstr "Puede que se necesiten acciones manuales."
+msgstr "Es posible que se necesiten acciones manuales."
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_res_config_settings__use_security_lead
@@ -397,9 +396,9 @@ msgid ""
 "for delivery that many days earlier than the actual promised date, to cope "
 "with unexpected delays in the supply chain."
 msgstr ""
-"Margen de error en las fechas prometidas a los clientes. Se programará la "
-"entrega de los productos unos días antes de la fecha real prometida con el "
-"fin de evitar retrasos inesperados en la cadena de suministro."
+"Margen de error en la fecha de entrega que se le prometió al cliente. Se "
+"programará la entrega de los productos unos días antes de la fecha real "
+"prometida para evitar retrasos inesperados en la cadena de suministro."
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_res_company__security_lead
@@ -412,8 +411,7 @@ msgid ""
 msgstr ""
 "Margen de error en las fechas prometidas a los clientes. Se programará el "
 "aprovisionamiento y la entrega de los productos unos días antes de la fecha "
-"real prometida con el fin de evitar retrasos inesperados en la cadena de "
-"suministro."
+"real prometida para evitar retrasos inesperados en la cadena de suministro."
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_delivered_method
@@ -423,7 +421,7 @@ msgstr "Método para actualizar la cantidad entregada"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "Move forward expected delivery dates by"
-msgstr "Adelantar las fechas de entrega previstas por"
+msgstr "Adelantar las fechas de entrega previstas"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -680,7 +678,7 @@ msgid ""
 msgstr ""
 "La dirección de entrega en la orden de venta cambió<br/>\n"
 "                        de <strong>\"%s\"</strong> a <strong>\"%s\"</strong>,\n"
-"                        Debería informar al contacto sobre este documento."
+"                        Informe al contacto que se encuentra en el documento."
 
 #. module: sale_stock
 #. odoo-javascript
@@ -690,8 +688,8 @@ msgid ""
 "The ordered quantity cannot be decreased below the amount already delivered."
 " Instead, create a return in your inventory."
 msgstr ""
-"La cantidad ordenada no puede disminuir por debajo del importe que ya se "
-"entregó. En su lugar, cree una devolución en su inventario."
+"La cantidad ordenada no puede ser menor que la cantidad entregada. En su "
+"lugar, cree una devolución en su inventario."
 
 #. module: sale_stock
 #. odoo-python
@@ -701,9 +699,9 @@ msgid ""
 "The ordered quantity of a sale order line cannot be decreased below the "
 "amount already delivered. Instead, create a return in your inventory."
 msgstr ""
-"La cantidad ordenada en una línea de una orden de venta no puede disminuir "
-"por debajo del importe que ya se entregó. En cambio, cree una devolución en "
-"su inventario."
+"La cantidad ordenada en una línea de una orden de venta no puede ser menor "
+"que la cantidad que ya se entregó. En cambio, cree una devolución en su "
+"inventario."
 
 #. module: sale_stock
 #. odoo-javascript

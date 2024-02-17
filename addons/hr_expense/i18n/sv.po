@@ -5,13 +5,12 @@
 # Translators:
 # Martin Wilderoth <martin.wilderoth@linserv.se>, 2023
 # Haojun Zou <apollo_zhj@msn.com>, 2023
+# Björn Hayer, 2023
 # Patrik Lermon <patrik.lermon@gmail.com>, 2023
 # Robin Calvin, 2023
 # lynnliuying <lynn.liu1971@gmail.com>, 2023
 # Kim Asplund <kim.asplund@gmail.com>, 2023
-# Björn Hayer, 2023
 # Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023
-# Daniel Löfgren, 2023
 # Jakob Krabbe <jakob.krabbe@vertel.se>, 2023
 # Christelle Wehbe <libanon_cristelle@hotmail.com>, 2023
 # Kristoffer Grundström <lovaren@gmail.com>, 2023
@@ -53,6 +52,13 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "$600.00"
+msgstr ""
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "%(date_from)s - %(date_to)s"
 msgstr ""
 
 #. module: hr_expense
@@ -1382,14 +1388,15 @@ msgstr "Namn"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
-msgid "New Expense Reports"
+msgid "New Expense Report, paid by %(paid_by)s"
 msgstr ""
 
 #. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_calendar_event_id
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__activity_calendar_event_id
-msgid "Next Activity Calendar Event"
-msgstr "Nästa Kalenderhändelse för Aktivitet"
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "New Expense Reports"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_date_deadline
@@ -1676,12 +1683,6 @@ msgstr "Offentlig-anställd"
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "Quantity"
 msgstr "Antal"
-
-#. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__rating_ids
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__rating_ids
-msgid "Ratings"
-msgstr "Betyg"
 
 #. module: hr_expense
 #. odoo-javascript
@@ -2049,11 +2050,6 @@ msgid ""
 "than some expenses of this report. Please verify this report does not "
 "contain duplicates."
 msgstr ""
-
-#. module: hr_expense
-#: model:ir.model.constraint,message:hr_expense.constraint_hr_expense_sheet_journal_id_required_posted
-msgid "The journal must be set on posted expense"
-msgstr "Journalen måste ställas in på bokförda utlägg"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__employee_journal_id
