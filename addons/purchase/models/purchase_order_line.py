@@ -314,7 +314,7 @@ class PurchaseOrderLine(models.Model):
             return {'warning': warning}
         return {}
 
-    @api.depends('product_qty', 'product_uom', 'company_id')
+    @api.depends('partner_id', 'product_qty', 'product_uom', 'company_id')
     def _compute_price_unit_and_date_planned_and_name(self):
         for line in self:
             if not line.product_id or line.invoice_lines or not line.company_id:
@@ -334,7 +334,8 @@ class PurchaseOrderLine(models.Model):
             if not seller:
                 unavailable_seller = line.product_id.seller_ids.filtered(
                     lambda s: s.partner_id == line.order_id.partner_id)
-                if not unavailable_seller and line.price_unit and line.product_uom == line._origin.product_uom:
+                if not unavailable_seller and line.price_unit and\
+                   (line.product_uom == line._origin.product_uom or not line._origin.id):
                     # Avoid to modify the price unit if there is no price list for this partner and
                     # the line has already one to avoid to override unit price set manually.
                     continue
@@ -353,6 +354,7 @@ class PurchaseOrderLine(models.Model):
                     False
                 )
                 line.price_unit = float_round(price_unit, precision_digits=max(line.currency_id.decimal_places, self.env['decimal.precision'].precision_get('Product Price')))
+                line.discount = 0
                 continue
 
             price_unit = line.env['account.tax']._fix_tax_included_price_company(seller.price, line.product_id.supplier_taxes_id, line.taxes_id, line.company_id) if seller else 0.0
