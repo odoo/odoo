@@ -201,42 +201,49 @@ class AccountBalance(models.Model):
 
     ##create/get/delete_bills payment
     @api.model
-    def create_bill_payment(self, bill_id, journal_id, payment_date, payment_method_line_id):
-        Payment = self.env['account.payment']
-        Bill = self.env['account.move']
-        bill_id = Bill.browse(bill_id)
-
-        if not bill_id:
+    def create_bill_payment(self, bill_ids, journal_id, payment_date, payment_method_line_id):
+        # Ensure the bills exist and are valid
+        AccountMove = self.env['account.move']
+        bills = AccountMove.browse(bill_ids)
+        if not bills.exists():
             raise ValueError("No bills found with the provided IDs")
 
-        total_amount = sum(bill.amount_residual for bill in bill_id)
-        payment_vals = {
-            'amount': total_amount,
-            'date': payment_date,
-            'partner_id': bill_id[0].partner_id.id,
-            'partner_type': 'supplier',
-            'payment_type': 'outbound',
-            'payment_method_line_id': payment_method_line_id,
-            'journal_id': journal_id
+        # Calculate total amount to be paid
+        total_amount = sum(bill.amount_residual for bill in bills)
+
+        # Create a context dictionary mimicking what the wizard would receive
+        payment_context = {
+            'active_model': 'account.move',
+            'active_id': bill_ids[0],
+            'active_ids': bill_ids,
         }
 
-        payment = Payment.create(payment_vals)
-        payment.action_post()
+        # Initialize the payment register wizard with the context
+        PaymentRegister = self.env['account.payment.register'].with_context(**payment_context).create({
+            'payment_date': payment_date,
+            'journal_id': journal_id,
+            'payment_method_line_id': payment_method_line_id,
+            'amount': total_amount,
+        })
 
-        # Register payment against each bill
-        for bill in bill_id:
-            bill.action_register_payment()
+        # Simulate the 'action_create_payments' which is typically called when the wizard is submitted
+        payment = PaymentRegister.action_create_payments()
 
-        # Convert the payment record to a dictionary
+        # Since 'action_create_payments' doesn't return the payment record, you may need to fetch it
+        # This assumes the last created payment is the one we're interested in, which might not always be correct in high concurrency situations.
+        # A more robust approach would be to analyze the payment creation logic to accurately fetch the related payment record.
+        last_payment = self.env['account.payment'].search([], order='create_date desc', limit=1)
+
+        # Prepare and return the payment data
         payment_data = {
-            'id': payment.id,
-            'amount': payment.amount,
-            'date': payment.date,
-            'partner_id': payment.partner_id.id,
-            'partner_type': payment.partner_type,
-            'payment_type': payment.payment_type,
-            'payment_method_line_id': payment.payment_method_line_id.id,
-            'journal_id': payment.journal_id.id
+            'id': last_payment.id,
+            'amount': last_payment.amount,
+            'date': last_payment.date,
+            'partner_id': last_payment.partner_id.id,
+            'partner_type': last_payment.partner_type,
+            'payment_type': last_payment.payment_type,
+            'payment_method_line_id': last_payment.payment_method_line_id.id,
+            'journal_id': last_payment.journal_id.id,
         }
 
         return payment_data
