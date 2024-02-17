@@ -17,6 +17,7 @@
             <base:vatCode t-esc="vatnumber[9:10]"/>
             <base:countyCode t-esc="vatnumber[11:13]"/>
         </t>
+        <base:taxpayerId t-elif="vatnumber.startswith('HU')" t-esc="vatnumber[2:]"/>
         <t t-else="else">
             <base:taxpayerId t-esc="vatnumber[:8]"/>
             <base:vatCode t-esc="vatnumber[8:9]"/>
@@ -72,6 +73,7 @@
                     <case t-esc="line_data['vat_type']"/>
                     <reason t-esc="line_data['vat_reason']"/>
                 </vatOutOfScope>
+                <vatDomesticReverseCharge t-if="line_data['vat_type']=='REV'" t-esc="format_bool(True)"/>
                 <noVatCharge t-if="line_data['vat_type']=='NO-VAT'" t-esc="format_bool(True)"/>
             </lineVatRate>
             <lineVatData t-if="line_data['sum_vat']!=0">
@@ -95,29 +97,38 @@
                 <invoice>
                     <invoiceReference t-if="invoice.move_type=='out_refund' and invoice.reversed_entry_id">
                         <originalInvoiceNumber t-esc="invoice.reversed_entry_id.name"/>
-                        <modifyWithoutMaster t-esc="format_bool(False)"/>
+                        <modifyWithoutMaster t-esc="format_bool(not invoice.reversed_entry_id.l10n_hu_actual_transaction_id)"/>
                         <modificationIndex t-esc="invoice.l10n_hu_invoice_chain"/>
                     </invoiceReference>
                     <invoiceHead>
                         <supplierInfo>
-                            <supplierTaxNumber>
+                            <t t-if="company_partner.l10n_hu_is_vat_group_member">
+                                <supplierTaxNumber>
+                                    <t t-call="l10n_hu_edi.nav_online_invoice_xml_3_0_vatnumber">
+                                        <t t-if="invoice.fiscal_position_id.foreign_vat" t-set="vatnumber" t-value="invoice.fiscal_position_id.foreign_vat"/>
+                                        <t t-else="else" t-set="vatnumber" t-value="company_partner.l10n_hu_vat_group_number"/>
+                                    </t>
+                                </supplierTaxNumber>
+                                <supplierGroupMemberTaxNumber>
+                                    <t t-call="l10n_hu_edi.nav_online_invoice_xml_3_0_vatnumber">
+                                        <t t-set="vatnumber" t-value="company_partner.vat"/>
+                                    </t>
+                                </supplierGroupMemberTaxNumber>
+                            </t>
+                            <supplierTaxNumber t-else="else">
                                 <t t-call="l10n_hu_edi.nav_online_invoice_xml_3_0_vatnumber">
                                     <t t-if="invoice.fiscal_position_id.foreign_vat" t-set="vatnumber" t-value="invoice.fiscal_position_id.foreign_vat"/>
                                     <t t-else="else" t-set="vatnumber" t-value="company_partner.vat"/>
                                 </t>
                             </supplierTaxNumber>
-                            <groupMemberTaxNumber t-if="company_partner.l10n_hu_is_vat_group_member">
-                                <t t-call="l10n_hu_edi.nav_online_invoice_xml_3_0_vatnumber">
-                                    <t t-set="vatnumber" t-value="company_partner.l10n_hu_vat_group_member"/>
-                                </t>
-                            </groupMemberTaxNumber>
                             <supplierName t-esc="company_partner.name"/>
                             <supplierAddress>
                                 <t t-call="l10n_hu_edi.nav_online_invoice_xml_3_0_address">
                                     <t t-set="partner" t-value="company_partner"/>
                                 </t>
                             </supplierAddress>
-                            <supplierBankAccountNumber t-if="company_partner_bank_account" t-esc="company_partner_bank_account.acc_number"/>
+                            <supplierBankAccountNumber t-if="company_partner_bank_account and format_bank(company_partner_bank_account.acc_number)" t-esc="format_bank(company_partner_bank_account.acc_number)"/>
+                            <individualExemption t-if="company_partner.l10n_hu_company_tax_arrangments=='ie'" t-esc="format_bool(True)"/>
                         </supplierInfo>
                         <customerInfo t-if="not invoice_partner.is_company">
                             <customerVatStatus t-translation="off">PRIVATE_PERSON</customerVatStatus>
@@ -126,13 +137,27 @@
                             <customerVatStatus t-if="invoice_partner.country_code=='HU'" t-translation="off">DOMESTIC</customerVatStatus>
                             <customerVatStatus t-else="else" t-translation="off">OTHER</customerVatStatus>
                             <customerVatData>
-                                <customerTaxNumber t-if="invoice_partner.country_code=='HU'">
-                                    <t t-call="l10n_hu_edi.nav_online_invoice_xml_3_0_vatnumber">
-                                        <t t-set="vatnumber" t-value="invoice_partner.vat"/>
+                                <t t-if="invoice_partner.country_code=='HU'">
+                                    <t t-if="company_partner.l10n_hu_is_vat_group_member">
+                                        <customerTaxNumber>
+                                            <t t-call="l10n_hu_edi.nav_online_invoice_xml_3_0_vatnumber">
+                                                <t t-set="vatnumber" t-value="invoice_partner.l10n_hu_vat_group_number"/>
+                                            </t>
+                                        </customerTaxNumber>
+                                        <customerGroupMemberTaxNumber>
+                                            <t t-call="l10n_hu_edi.nav_online_invoice_xml_3_0_vatnumber">
+                                                <t t-set="vatnumber" t-value="invoice_partner.vat"/>
+                                            </t>
+                                        </customerGroupMemberTaxNumber>
                                     </t>
-                                </customerTaxNumber>
-                                <communityVatNumber t-if="invoice_partner.country_code!='HU' and invoice_partner.country_code in eu_country_codes" t-esc="invoice_partner.vat"/>
-                                <thirdStateTaxId t-if="invoice_partner.country_code not in eu_country_codes" t-esc="invoice_partner.vat or 'Ismeretlen'" t-translation="off"/>
+                                    <customerTaxNumber t-else="else">
+                                        <t t-call="l10n_hu_edi.nav_online_invoice_xml_3_0_vatnumber">
+                                            <t t-set="vatnumber" t-value="invoice_partner.vat"/>
+                                        </t>
+                                    </customerTaxNumber>
+                                </t>
+                                <communityVatNumber t-elif="invoice_partner.country_code in eu_country_codes" t-esc="invoice_partner.vat"/>
+                                <thirdStateTaxId t-else="else" t-esc="invoice_partner.vat or 'Ismeretlen'" t-translation="off"/>
                             </customerVatData>
                             <customerName t-esc="invoice_partner.display_name"/>
                             <customerAddress>
@@ -140,11 +165,12 @@
                                     <t t-set="partner" t-value="invoice_partner"/>
                                 </t>
                             </customerAddress>
-                            <customerBankAccountNumber t-if="invoice_partner_bank_account" t-esc="invoice_partner_bank_account.acc_number"/>
+                            <customerBankAccountNumber t-if="format_bank(invoice_partner_bank_account.acc_number)" t-esc="format_bank(invoice_partner_bank_account.acc_number)"/>
                         </customerInfo>
                         <invoiceDetail>
                             <invoiceCategory t-translation="off">NORMAL</invoiceCategory>
                             <invoiceDeliveryDate t-esc="format_date(invoice.l10n_hu_delivery_date)"/>
+                            <smallBusinessIndicator t-if="company_partner.l10n_hu_company_tax_arrangments=='sb'" t-esc="format_bool(True)"/>
                             <t t-if="invoice.currency_id.name=='HUF'">
                                 <currencyCode t-translation="off">HUF</currencyCode>
                                 <exchangeRate t-translation="off">1.00</exchangeRate>
@@ -155,6 +181,7 @@
                             </t>
                             <paymentMethod t-if="invoice.l10n_hu_payment_mode" t-esc="invoice.l10n_hu_payment_mode"/>
                             <paymentDate t-if="invoice.invoice_date_due" t-esc="format_date(invoice.invoice_date_due)"/>
+                            <cashAccountingIndicator t-if="company_partner.l10n_hu_company_tax_arrangments=='ca'" t-esc="format_bool(True)"/>
                             <invoiceAppearance t-translation="off">PAPER</invoiceAppearance>
                         </invoiceDetail>
                     </invoiceHead>
@@ -177,6 +204,7 @@
                                         <case t-esc="tax['vat_type']"/>
                                         <reason t-esc="tax['vat_reason']"/>
                                     </vatOutOfScope>
+                                    <vatDomesticReverseCharge t-if="tax['vat_type']=='REV'" t-esc="format_bool(True)"/>
                                     <noVatCharge t-if="tax['vat_type']=='NO-VAT'" t-esc="format_bool(True)"/>
                                 </vatRate>
                                 <vatRateNetData>

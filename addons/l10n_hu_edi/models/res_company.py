@@ -11,8 +11,8 @@ class ResCompany(models.Model):
     l10n_hu_is_vat_group_member = fields.Boolean(
         "TAX Group membership", related="partner_id.l10n_hu_is_vat_group_member", readonly=False
     )
-    l10n_hu_vat_group_member = fields.Char(
-        "Group Member TAX Number", related="partner_id.l10n_hu_vat_group_member", readonly=False
+    l10n_hu_vat_group_number = fields.Char(
+        "TAX Group Number", related="partner_id.l10n_hu_vat_group_number", readonly=False
     )
 
     l10n_hu_company_tax_arrangments = fields.Selection(

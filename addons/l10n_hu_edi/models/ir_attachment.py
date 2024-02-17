@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models, tools
+from odoo import api, models, tools, _
+from odoo.exceptions import UserError
 from lxml import etree, objectify
 
 
@@ -24,3 +25,21 @@ class IrAttachment(models.Model):
                 ),
             )
         return
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_check_l10n_hu(self):
+        if (
+            self.env["account.move"]
+            .sudo()
+            .search_count(
+                [
+                    ("l10n_hu_attachment_id", "in", self.ids),
+                    ("country_code", "=", "HU"),
+                    ("state", "=", "posted"),
+                    "|",
+                    ("l10n_hu_actual_transaction_id", "=", False),
+                    ("l10n_hu_actual_transaction_id.reply_status", "!=", "error"),
+                ]
+            )
+        ):
+            raise UserError(_("Cannot delete a PDF once it has been posted and not rejected by NAV"))

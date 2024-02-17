@@ -2,20 +2,21 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+import re
 
 
 class ResPartner(models.Model):
     _inherit = "res.partner"
-    _rec_names_search = ["display_name", "email", "ref", "vat", "company_registry", "l10n_hu_vat_group_member"]
+    _rec_names_search = ["display_name", "email", "ref", "vat", "company_registry", "l10n_hu_vat_group_number"]
 
     l10n_hu_is_vat_group_member = fields.Boolean(
         "TAX Group membership", default=False, help="If the company is a member of a vat group.", index=True
     )
-    l10n_hu_vat_group_member = fields.Char(
-        "Group Member TAX Number",
+    l10n_hu_vat_group_number = fields.Char(
+        "TAX Group Number",
         size=13,
         copy=False,
-        help="Group Membership VAT Number, if this company is a member of a Hungarian VAT group",
+        help="TAX Group Number, if this company is a member of a Hungarian TAX group",
         index=True,
     )
 
@@ -32,53 +33,60 @@ class ResPartner(models.Model):
     def _commercial_fields(self):
         return super()._commercial_fields() + [
             "l10n_hu_is_vat_group_member",
-            "l10n_hu_vat_group_member",
+            "l10n_hu_vat_group_number",
             "l10n_hu_company_tax_arrangments",
         ]
 
-    @api.depends("vat", "company_id", "company_registry", "l10n_hu_is_vat_group_member", "l10n_hu_vat_group_member")
-    def _compute_same_vat_partner_id(self):
-        for partner in self:
-            # use _origin to deal with onchange()
-            partner_id = partner._origin.id
-            # active_test = False because if a partner has been deactivated you still want to raise the error,
-            # so that you can reactivate it instead of creating a new one, which would loose its history.
-            Partner = self.with_context(active_test=False).sudo()
-            domain = [
-                ("vat", "=", partner.vat),
-                ("l10n_hu_is_vat_group_member", "=", False),
-            ]
-            # So for the hungarian group VAT handling: we will alert
-            # if the vat and the group vat is the same together
-            if Partner.l10n_hu_is_vat_group_member:
-                domain = (
-                    ["|", "&"]
-                    + domain
-                    + [
-                        "&",
-                        "&",
-                        ("vat", "=", partner.vat),
-                        ("l10n_hu_vat_group_member", "=", partner.l10n_hu_vat_group_member),
-                        ("l10n_hu_is_vat_group_member", "=", True),
-                    ]
-                )
-            if partner.company_id:
-                domain += [("company_id", "in", [False, partner.company_id.id])]
-            if partner_id:
-                domain += [("id", "!=", partner_id), "!", ("id", "child_of", partner_id)]
-            # For VAT number being only one character, we will skip the check just like the regular check_vat
-            should_check_vat = partner.vat and len(partner.vat) != 1
-            partner.same_vat_partner_id = should_check_vat and not partner.parent_id and Partner.search(domain, limit=1)
-            # check company_registry
-            domain = [
-                ("company_registry", "=", partner.company_registry),
-                ("company_id", "in", [False, partner.company_id.id]),
-            ]
-            if partner_id:
-                domain += [("id", "!=", partner_id), "!", ("id", "child_of", partner_id)]
-            partner.same_company_registry_partner_id = (
-                bool(partner.company_registry) and not partner.parent_id and Partner.search(domain, limit=1)
-            )
+    __check_vat_hu_companies_eu_re = re.compile(r"^HU(\d{7})(\d)$")
+    __check_vat_hu_companies_re = re.compile(
+        r"^(\d{7})(\d)(?P<optional_1>-)?([1-5])(?P<optional_2>-)?(0[2-9]|[13][0-9]|2[02-9]|4[0-4]|51)$"
+    )
+    __check_vat_hu_individual_re = re.compile(r"^8\d{9}$")
+
+    def check_vat_hu(self, vat):
+        # Hungarian tax number verification - offline method
+        # The tax number consists of 11 digits. The eighth digit is the control number.
+        # The control number is generated as follows:
+        # The first seven digits are multiplied by the digits 9, 7, 3, 1, 9, 7, 3 in descending order of their local
+        # value, the multiplications are added together and the number at the local value of 1 in the result is
+        # subtracted from 10. The difference is the control number.
+
+        # 8xxxxxxxxy, Tin number for individual, it has to start with an 8 and finish with the check digit
+
+        # Magyar adószám ellenőrzése - offline módszer
+        # Az adószám 11 számjegyből áll. A nyolcadik számjegye az ellenőrző szám.
+        # Az ellenőrző szám képzése az alábbiak szerint történik:
+        # Az első hét számjegyet helyiértékük csökkenő sorrendjében szorozzuk a 9, 7, 3, 1, 9, 7, 3 számjegyekkel,
+        # a szorzatokat összeadjuk, és az eredmény 1-es helyiértékén lévő számot kivonjuk 10-ből. A különbség
+        # az ellenőrző szám.
+
+        # Another: https://prog.hu/tudastar/180161/javascript-adoszam-regex
+
+        if vat and vat.startswith("HU"):
+            # HU12345678
+            vat_regex = self.__check_vat_hu_companies_eu_re
+
+        # positive individual match
+        elif self.__check_vat_hu_individual_re.match(vat):
+            return True
+
+        else:
+            # 12345678-1-12
+            # 12345678112
+            vat_regex = self.__check_vat_hu_companies_re
+
+        matches = re.fullmatch(vat_regex, vat)
+        if not matches:
+            return False
+
+        identifier_number, check_digit, *_ = matches.groups()
+
+        multipliers = [9, 7, 3, 1, 9, 7, 3]
+        checksum_digit = sum(map(lambda n, m: int(n) * m, identifier_number, multipliers)) % 10
+        if checksum_digit > 0:
+            checksum_digit = 10 - checksum_digit
+
+        return int(check_digit) == checksum_digit
 
     @api.model
     def _run_vies_test(self, vat_number, default_country):

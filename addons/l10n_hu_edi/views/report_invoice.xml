@@ -29,12 +29,12 @@
                     <ul class="list-unstyled">
                         <li><t t-esc="o.company_id.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'/></li>
                         <li>
-                            <t t-if="not o.fiscal_position_id.foreign_vat and o.company_id.partner_id.l10n_hu_is_vat_group_member">Group Tax ID</t>
+                            <t t-if="not o.fiscal_position_id.foreign_vat and o.company_id.partner_id.l10n_hu_is_vat_group_member">Group Member Tax ID</t>
                             <t t-else="else" t-esc="o.company_id.country_id.vat_label or 'Tax ID'"/>:
                             <span t-if="o.fiscal_position_id.foreign_vat" t-esc="o.fiscal_position_id.foreign_vat"/>
                             <span t-else="else" t-esc="o.company_id.vat"/>
                         </li>
-                        <li t-if="not o.fiscal_position_id.foreign_vat and o.company_id.partner_id.l10n_hu_is_vat_group_member">Group Member Tax ID: <span t-field="o.company_id.partner_id.l10n_hu_vat_group_member"/></li>
+                        <li t-if="not o.fiscal_position_id.foreign_vat and o.company_id.partner_id.l10n_hu_is_vat_group_member">Group Tax ID: <span t-field="o.company_id.partner_id.l10n_hu_vat_group_number"/></li>
                         <li t-if="o.partner_id.commercial_partner_id.country_id and o.partner_id.commercial_partner_id.country_id.code!='HU'">
                             EU Tax ID: <span t-esc="'HU%s' % o.company_id.vat[:8]"/>
                         </li>
@@ -79,7 +79,7 @@
         </xpath>
         <xpath expr="//div[@name='shipping_address_block']/../.." position="replace"/>
         <xpath expr="//div[@name='address_not_same_as_shipping']//span[@t-field='o.partner_id.vat']/.." position="after">
-            <div t-if="o.partner_id.l10n_hu_is_vat_group_member">Group Member Tax ID: <span t-field="o.partner_id.l10n_hu_vat_group_member"/></div>
+            <div t-if="o.partner_id.l10n_hu_is_vat_group_member">Group Tax ID: <span t-field="o.partner_id.l10n_hu_vat_group_number"/></div>
             <div groups="account.group_delivery_invoice_address" name="shipping_address_block">
                 <div/>
                 <strong>Shipping Address:</strong>
@@ -90,13 +90,13 @@
             <strong>Customer:</strong>
         </xpath>
         <xpath expr="//div[@name='address_same_as_shipping']//span[@t-field='o.partner_id.vat']/.." position="after">
-            <div t-if="o.partner_id.l10n_hu_is_vat_group_member">Group Member Tax ID: <span t-field="o.partner_id.l10n_hu_vat_group_member"/></div>
+            <div t-if="o.partner_id.l10n_hu_is_vat_group_member">Group Tax ID: <span t-field="o.partner_id.l10n_hu_vat_group_number"/></div>
         </xpath>
         <xpath expr="//div[@name='no_shipping']//address" position="before">
             <strong>Customer:</strong>
         </xpath>
         <xpath expr="//div[@name='no_shipping']//span[@t-field='o.partner_id.vat']/.." position="after">
-            <div t-if="o.partner_id.l10n_hu_is_vat_group_member">Group Member Tax ID: <span t-field="o.partner_id.l10n_hu_vat_group_member"/></div>
+            <div t-if="o.partner_id.l10n_hu_is_vat_group_member">Group Tax ID: <span t-field="o.partner_id.l10n_hu_vat_group_number"/></div>
         </xpath>
         <xpath expr="//div[@name='due_date']" position="after">
             <div class="col-auto col-3 mw-100 mb-2" t-if="o.l10n_hu_delivery_date" name="l10n_hu_delivery_date">
@@ -116,6 +116,10 @@
                     Rate:
                     <span t-field="o.l10n_hu_currency_rate"/>
                 </p>
+            </div>
+            <div class="col-auto col-3 mw-100 mb-2" t-if="o.reversed_entry_id" name="reversed_entry">
+                <strong>Original Invoice:</strong>
+                <p class="m-0" t-field="o.reversed_entry_id.name"/>
             </div>
         </xpath>
         <xpath expr="//table[@name='invoice_line_table']//span[@t-field='line.quantity']" position="attributes">

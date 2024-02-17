@@ -16,43 +16,6 @@ import logging
 _logger = logging.getLogger(__name__)
 
 
-class AES_ECB_Cipher(object):
-    """
-    Usage:
-        c = AES_ECB_Cipher('password').encrypt('message')
-        m = AES_ECB_Cipher('password').decrypt(c)
-    Tested under Python 3.10.10 and cryptography==3.4.8.
-    """
-
-    def __init__(self, key):
-        self.bs = int(ciphers.algorithms.AES.block_size / 8)
-        self.key = key.encode()
-
-    def encrypt(self, message):
-        encryptor = self._get_cipher().encryptor()
-        ct = encryptor.update(self._pad(message).encode()) + encryptor.finalize()
-        return b64encode(ct).decode("utf-8")
-
-    def decrypt(self, enc):
-        decryptor = self._get_cipher().decryptor()
-        try:
-            enc = b64decode(enc)
-        except Exception:  # noqa: BLE001
-            pass
-        ct = decryptor.update(enc) + decryptor.finalize()
-        return self._unpad(ct).decode("utf-8")
-
-    def _get_cipher(self):
-        return ciphers.Cipher(ciphers.algorithms.AES(self.key), ciphers.modes.ECB())
-
-    def _pad(self, s):
-        return s + (self.bs - len(s) % self.bs) * chr(self.bs - len(s) % self.bs)
-
-    @staticmethod
-    def _unpad(s):
-        return s[: -ord(s[len(s) - 1 :])]
-
-
 def egyadat(path, fn, root, dest, f=None):
     if root.xpath(path):
         val = root.xpath(path)[0].text
@@ -148,15 +111,65 @@ class L10nHuNavCommunication(models.Model):
         default="draft",
     )
 
+    # High Level APIs
+
+    def _do_taxpayer_query(self, vatnumber):
+        self._check_status()
+
+        if self.state != "prod":
+            raise UserError(_("The taxpayer data query function is only available in the production system!"))
+
+        return self._do_taxpayer_query_api(vatnumber, self.vat_hu[:8], self.username, self.password, self.sign_key)
+
+    def _do_token_request(self):
+        self._check_status()
+
+        return self._do_token_request_api(
+            self.vat_hu[:8], self.username, self.password, self.sign_key, self.back_key, self.state == "test"
+        )
+
+    def _do_invoice_upload(self, invoices, token=None):
+        self._check_status()
+
+        if not token:
+            token_resp = self._do_token_request()
+            token = token_resp.get("ExchangeToken")
+
+        return self._do_invoice_upload_api(
+            invoices,
+            token,
+            self.vat_hu[:8],
+            self.username,
+            self.password,
+            self.sign_key,
+            self.back_key,
+            self.state == "test",
+        )
+
+    def _do_query_transaction(self, transaction, query_original=False):
+        self._check_status()
+
+        return self._do_query_transaction_api(
+            transaction,
+            query_original,
+            self.vat_hu[:8],
+            self.username,
+            self.password,
+            self.sign_key,
+            self.state == "test",
+        )
+
+    # Low Level APIs
+
     @api.model
     def _check_login(self, vat_hu, username, password, sign_key, back_key):
         # try PRODUCTION first
-        response = self.do_token_request(vat_hu, username, password, sign_key, back_key, demo=False)
+        response = self._do_token_request_api(vat_hu, username, password, sign_key, back_key, demo=False)
         if "ExchangeToken" in response:
             return "prod"
 
         # try TEST system
-        response = self.do_token_request(vat_hu, username, password, sign_key, back_key, demo=True)
+        response = self._do_token_request_api(vat_hu, username, password, sign_key, back_key, demo=True)
         if "ExchangeToken" in response:
             return "test"
 
@@ -300,7 +313,43 @@ class L10nHuNavCommunication(models.Model):
 
     @api.model
     def _AESCipher(self, key):
-        return AES_ECB_Cipher(key)
+        class _AES_ECB_Cipher(object):
+            """
+            Usage:
+                c = _AES_ECB_Cipher('password').encrypt('message')
+                m = _AES_ECB_Cipher('password').decrypt(c)
+            Tested under Python 3.10.10 and cryptography==3.4.8.
+            """
+
+            def __init__(self, key):
+                self.bs = int(ciphers.algorithms.AES.block_size / 8)
+                self.key = key.encode()
+
+            def encrypt(self, message):
+                encryptor = self._get_cipher().encryptor()
+                ct = encryptor.update(self._pad(message).encode()) + encryptor.finalize()
+                return b64encode(ct).decode("utf-8")
+
+            def decrypt(self, enc):
+                decryptor = self._get_cipher().decryptor()
+                try:
+                    enc = b64decode(enc)
+                except Exception:  # noqa: BLE001
+                    pass
+                ct = decryptor.update(enc) + decryptor.finalize()
+                return self._unpad(ct).decode("utf-8")
+
+            def _get_cipher(self):
+                return ciphers.Cipher(ciphers.algorithms.AES(self.key), ciphers.modes.ECB())
+
+            def _pad(self, s):
+                return s + (self.bs - len(s) % self.bs) * chr(self.bs - len(s) % self.bs)
+
+            @staticmethod
+            def _unpad(s):
+                return s[: -ord(s[len(s) - 1 :])]
+
+        return _AES_ECB_Cipher(key)
 
     @api.model
     def _gen_request_id(self):
@@ -309,14 +358,20 @@ class L10nHuNavCommunication(models.Model):
 
     @api.model
     def _calc_PasswordHash(self, value):
+        "SHA-512 hash"
         digest = hashes.Hash(hashes.SHA512())
-        digest.update(value.encode())
+        if isinstance(value, str):
+            value = value.encode()
+        digest.update(value)
         return digest.finalize().hex().upper()
 
     @api.model
-    def _calc_InvoiceHash(self, value):
+    def _calc_SHA3_512_hash(self, value):
+        "SHA3-512 hash"
         digest = hashes.Hash(hashes.SHA3_512())
-        digest.update(value.encode())
+        if isinstance(value, str):
+            value = value.encode()
+        digest.update(value)
         return digest.finalize().hex().upper()
 
     @api.model
@@ -330,7 +385,7 @@ class L10nHuNavCommunication(models.Model):
         # join the strings
         s = "".join(s)
         # return back the uppered hexdigest
-        return self._calc_InvoiceHash(s)
+        return self._calc_SHA3_512_hash(s)
 
     @api.model
     def _gen_nav_format_timestamp(self, timestamp=None):
@@ -363,7 +418,13 @@ class L10nHuNavCommunication(models.Model):
         headers = {"content-type": "application/xml", "accept": "application/xml"}
         if self.env.context.get("nav_comm_debug"):
             _logger.warning("REQUEST: POST: %s==>headers:%s\ndata:%s", str(url), str(headers), str(data))
-        response_object = requests.post(url, data=data.encode("utf-8"), headers=headers)
+        try:
+            response_object = requests.post(url, data=data.encode("UTF-8"), headers=headers, timeout=(5, 12))
+        except requests.ConnectionError as e:
+            failure_info = str(e)
+            raise UserError(_("Communication error to NAV: %s", failure_info))
+        except requests.exceptions.ReadTimeout as e:
+            raise UserError(_("Communication error to NAV: Connection timed out."))
         if self.env.context.get("nav_comm_debug"):
             _logger.warning(
                 "RESPONSE: status_code:%s\nheaders:%s\ndata:%s",
@@ -502,7 +563,7 @@ class L10nHuNavCommunication(models.Model):
                 self.env,
                 xml_to_validate,
                 f"l10n_hu_navservice.{xsd_fname}",
-                self.env["ir.attachment"]._l10n_hu_navservice_load_xsd_files,
+                self.env["ir.attachment"].sudo()._l10n_hu_navservice_load_xsd_files,
             )
         except FileNotFoundError:
             _logger.warning(_("The XSD validation files from NAV have not been found"))
@@ -635,27 +696,7 @@ class L10nHuNavCommunication(models.Model):
         return response
 
     @api.model
-    def do_token_request(
-        self, nav_vat=None, nav_username=None, nav_password=None, nav_key_crypt=None, nav_key_decrypt=None, demo=None
-    ):
-        if self.ids:
-            self._check_status()
-
-            if not nav_vat or not nav_username or not nav_password or not nav_key_crypt:
-                nav_vat, nav_username, nav_password, nav_key_crypt, nav_key_decrypt = (
-                    self.vat_hu[:8],
-                    self.username,
-                    self.password,
-                    self.sign_key,
-                    self.back_key,
-                )
-
-        if not nav_vat or not nav_username or not nav_password or not nav_key_crypt:
-            raise UserError(_("Missing NAV connection parameter."))
-
-        if demo is None:
-            demo = self.state == "test"
-
+    def _do_token_request_api(self, nav_vat, nav_username, nav_password, nav_key_crypt, nav_key_decrypt, demo):
         xml_content = self._generate_xml_TokenExchangeRequest(
             nav_vat,
             nav_username,
@@ -684,7 +725,7 @@ class L10nHuNavCommunication(models.Model):
 
         self._xml_validator(content, "TokenExchangeRequest")
 
-        return f'<?xml version="1.0" encoding="UTF-8"?>{content}'
+        return '<?xml version="1.0" encoding="UTF-8"?>' + str(content)
 
     @api.model
     def _parse_response_xml_TokenExchangeResponse(self, response_xml, decode_password):
@@ -702,27 +743,7 @@ class L10nHuNavCommunication(models.Model):
         return response
 
     @api.model
-    def do_taxpayer_query(
-        self,
-        vatnumber,
-        nav_vat=None,
-        nav_username=None,
-        nav_password=None,
-        nav_key_crypt=None,
-        demo=None,
-    ):
-        if not nav_vat or not nav_username or not nav_password or not nav_key_crypt:
-            (
-                nav_vat,
-                nav_username,
-                nav_password,
-                nav_key_crypt,
-                dummy_nav_key_decrypt,
-            ) = self._get_nav_connection_credentials(prod=True)
-
-        if not nav_vat or not nav_username or not nav_password or not nav_key_crypt:
-            raise UserError(_("Taxpayer validation needs a NAV Credential for the production system!"))
-
+    def _do_taxpayer_query_api(self, vatnumber, nav_vat, nav_username, nav_password, nav_key_crypt):
         xml_content = self._generate_xml_QueryTaxpayerRequest(
             vatnumber, nav_vat, nav_username, nav_password, nav_key_crypt
         )
@@ -760,7 +781,7 @@ class L10nHuNavCommunication(models.Model):
 
         self._xml_validator(content, "QueryTaxpayerRequest")
 
-        return f'<?xml version="1.0" encoding="UTF-8"?>{content}'
+        return '<?xml version="1.0" encoding="UTF-8"?>' + str(content)
 
     @api.model
     def _parse_response_xml_QueryTaxpayerResponse(self, response_xml):
@@ -803,61 +824,30 @@ class L10nHuNavCommunication(models.Model):
         return response
 
     @api.model
-    def do_invoice_upload(
+    def _do_invoice_upload_api(
         self,
         invoices,
-        token=None,
-        nav_vat=None,
-        nav_username=None,
-        nav_password=None,
-        nav_key_crypt=None,
-        nav_key_decrypt=None,
-        demo=None,
+        token,
+        nav_vat,
+        nav_username,
+        nav_password,
+        nav_key_crypt,
+        nav_key_decrypt,
+        demo,
     ):
-        if self.ids:
-            self._check_status()
-
-            if not nav_vat or not nav_username or not nav_password or not nav_key_crypt:
-                nav_vat, nav_username, nav_password, nav_key_crypt, nav_key_decrypt = (
-                    self.vat_hu[:8],
-                    self.username,
-                    self.password,
-                    self.sign_key,
-                    self.back_key,
-                )
-
-        if not nav_vat or not nav_username or not nav_password or not nav_key_crypt:
-            raise UserError(_("Missing NAV connection parameter."))
-
-        if demo is None:
-            demo = self.state == "test"
-
-        if not token:
-            token_resp = self.do_token_request(
-                nav_vat=nav_vat,
-                nav_username=nav_username,
-                nav_password=nav_password,
-                nav_key_crypt=nav_key_crypt,
-                nav_key_decrypt=nav_key_decrypt,
-                demo=demo,
-            )
-            token = token_resp.get("ExchangeToken")
-
         invoice_xmls = {}
+        nav_hun_30 = self.env.ref("l10n_hu_edi.edi_hun_nav_3_0")
         for invoice in invoices:
-            attachment_obj = self.env["ir.attachment"].search(
-                [
-                    ("name", "=", "invoice_data_navxml.xml"),
-                    ("res_id", "=", invoice.id),
-                    ("res_model", "=", invoice._name),
-                    ("mimetype", "=", "application/xml"),
-                ],
-                limit=1,
-            )
-            if not attachment_obj:
+            edi_document = invoice._get_edi_document(nav_hun_30)
+
+            if not edi_document.edi_content:
                 raise UserError(_("No NAV XML is generated for invoice %s (*%s)!", invoice.name, invoice.id))
 
-            invoice_xmls[len(invoice_xmls) + 1] = (invoice._l10n_hu_get_nav_operation(), attachment_obj.raw)
+                # attachment_id = invoice._get_edi_attachment(nav_hun_30)
+                # if not attachment_id:
+                #     raise UserError(_("No NAV XML is generated for invoice %s (*%s)!", invoice.name, invoice.id))
+
+            invoice_xmls[len(invoice_xmls) + 1] = (invoice, b64decode(edi_document.edi_content))
 
         xml_content = self._generate_xml_ManageInvoiceRequest(
             token, invoice_xmls, nav_vat, nav_username, nav_password, nav_key_crypt
@@ -888,15 +878,13 @@ class L10nHuNavCommunication(models.Model):
         hashs = []
         # index should be 1, 2, ...
         for index in range(1, len(invoice_xmls) + 1):
-            operation, invoice_xml = invoice_xmls[index]
-            inv_data_b64 = b64encode(invoice_xml).decode("utf-8")
+            invoice, invoice_xml = invoice_xmls[index]
             inv_data = {
                 "index": index,
-                "operation": operation,
-                "invoice_base64": inv_data_b64,
+                **invoice._l10n_hu_get_manageinvoice_fields(invoice_xml),
             }
             template_values["invoices"].append(inv_data)
-            hashs.append(self._calc_InvoiceHash(f"{operation}{inv_data_b64}"))
+            hashs.append(self._calc_SHA3_512_hash(f"{inv_data['operation']}{inv_data['invoice_base64']}"))
 
         template_values.update(
             self._gen_communication_values(
@@ -915,7 +903,7 @@ class L10nHuNavCommunication(models.Model):
 
         self._xml_validator(content, "ManageInvoiceRequest")
 
-        return f'<?xml version="1.0" encoding="UTF-8"?>{content}'
+        return '<?xml version="1.0" encoding="UTF-8"?>' + str(content)
 
     @api.model
     def _parse_response_xml_ManageInvoiceResponse(self, response_xml):
@@ -924,34 +912,9 @@ class L10nHuNavCommunication(models.Model):
         return response
 
     @api.model
-    def do_query_transaction(
-        self,
-        transaction,
-        nav_vat=None,
-        nav_username=None,
-        nav_password=None,
-        nav_key_crypt=None,
-        query_original=False,
-        demo=None,
+    def _do_query_transaction_api(
+        self, transaction, query_original, nav_vat, nav_username, nav_password, nav_key_crypt, demo
     ):
-        if self.ids:
-            self._check_status()
-
-            if not nav_vat or not nav_username or not nav_password or not nav_key_crypt:
-                nav_vat, nav_username, nav_password, nav_key_crypt, dummy_nav_key_decrypt = (
-                    self.vat_hu[:8],
-                    self.username,
-                    self.password,
-                    self.sign_key,
-                    self.back_key,
-                )
-
-        if not nav_vat or not nav_username or not nav_password or not nav_key_crypt:
-            raise UserError(_("Missing NAV connection parameter."))
-
-        if demo is None:
-            demo = self.state == "test"
-
         xml_content = self._generate_xml_QueryTransactionStatusRequest(
             nav_vat, nav_username, nav_password, nav_key_crypt, transaction, query_original=query_original
         )
@@ -990,7 +953,7 @@ class L10nHuNavCommunication(models.Model):
 
         self._xml_validator(content, "QueryTransactionStatusRequest")
 
-        return f'<?xml version="1.0" encoding="UTF-8"?>{content}'
+        return '<?xml version="1.0" encoding="UTF-8"?>' + str(content)
 
     @api.model
     def _parse_response_xml_QueryTransactionStatusResponse(self, response_xml):

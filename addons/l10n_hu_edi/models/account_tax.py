@@ -22,6 +22,7 @@ L10N_HU_TAX_TYPE = [
     ),
     ("VAT-EUE", "EUE - Non-reverse charge transaction performed in another Member State"),
     ("VAT-HO", "HO - Transaction in a third country"),
+    ("VAT-REV", "REV - Domestic Reverse Charge"),
 ]
 
 
@@ -45,23 +46,25 @@ class AccountTax(models.Model):
             if tax.l10n_hu_tax_type == "VAT-TAM":
                 tax.l10n_hu_tax_reason = "TAM Tárgyi adómentes"
             if tax.l10n_hu_tax_type == "VAT-KBAET":
-                tax.l10n_hu_tax_reason = "KBAET EU-ba eladás - ÁFA tv.89.§"
+                tax.l10n_hu_tax_reason = "KBAET EU-ba eladás - ÁFA tv. 89.§"
             if tax.l10n_hu_tax_type == "VAT-KBAUK":
-                tax.l10n_hu_tax_reason = "KBAUK Új közlekedési eszköz EU-n belülre - ÁFA tv.89.§(2)"
+                tax.l10n_hu_tax_reason = "KBAUK Új közlekedési eszköz EU-n belülre - ÁFA tv. 89.§(2)"
             if tax.l10n_hu_tax_type == "VAT-EAM":
-                tax.l10n_hu_tax_reason = "EAM Termékexport 3.országba - ÁFA tv.98-109.§"
+                tax.l10n_hu_tax_reason = "EAM Termékexport 3.országba - ÁFA tv. 98-109.§"
             if tax.l10n_hu_tax_type == "VAT-NAM":
-                tax.l10n_hu_tax_reason = "NAM egyéb export ügylet ÁFA tv 110-118.§"
+                tax.l10n_hu_tax_reason = "NAM egyéb export ügylet ÁFA tv. 110-118.§"
             if tax.l10n_hu_tax_type == "VAT-ATK":
-                tax.l10n_hu_tax_reason = "ATK ÁFA tárgyán kívüli - ÁFA tv.2-3.§"
+                tax.l10n_hu_tax_reason = "ATK ÁFA tárgyán kívüli - ÁFA tv. 2-3.§"
             if tax.l10n_hu_tax_type == "VAT-EUFAD37":
-                tax.l10n_hu_tax_reason = "EUFAD37 ÁFA tv. 37.§ (1) Fordított ÁFA másik EU-s országban"
+                tax.l10n_hu_tax_reason = "EUFAD37 ÁFA tv. 37.§(1) Fordított ÁFA másik EU-s országban"
             if tax.l10n_hu_tax_type == "VAT-EUFADE":
-                tax.l10n_hu_tax_reason = "EUFADE Fordított ÁFA másik EU-s országban nem ÁFA tv. 37.§ (1)"
+                tax.l10n_hu_tax_reason = "EUFADE Fordított ÁFA másik EU-s országban nem ÁFA tv. 37.§(1)"
             if tax.l10n_hu_tax_type == "VAT-EUE":
                 tax.l10n_hu_tax_reason = "EUE 2.EU-s országban teljesített eladás"
             if tax.l10n_hu_tax_type == "VAT-HO":
                 tax.l10n_hu_tax_reason = "HO Szolgáltatás 3.országba"
+            if tax.l10n_hu_tax_type == "VAT-REV":
+                tax.l10n_hu_tax_reason = "Belföldi fordított adózás - Áfa tv. 142.§"
 
 
 class AccountTaxTemplate(models.Model):

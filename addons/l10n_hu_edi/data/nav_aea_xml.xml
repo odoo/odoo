@@ -71,7 +71,7 @@
                 <fiz_mod t-if="invoice.l10n_hu_payment_mode == 'VOUCHER'" t-esc="format_text('utalvány')"/>
                 <penznem t-esc="format_text(invoice.currency_id.name)"/>
                 <szla_forma t-esc="format_text('papír alapon továbbított számla')"/>
-                <kibocsato_bankszla t-if="company_partner_bank_account" t-esc="format_text(company_partner_bank_account.acc_number)"/>
+                <kibocsato_bankszla t-if="company_partner_bank_account and format_bank(company_partner_bank_account.acc_number)" t-esc="format_text(company_partner_bank_account.acc_number)"/>
             </nem_kotelezo>
             <osszesites>
                 <afarovat t-foreach="tax_summary_data['tax_summary']" t-as="tax">

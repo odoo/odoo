@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, fields, _
+from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 from odoo.tools import float_round
 
@@ -40,13 +40,35 @@ class L10nHuNavAdatellenorzesWiz(models.TransientModel):
     data = fields.Binary("XML File Data", readonly=True)
     state = fields.Selection([("draft", "draft"), ("done", "done")], string="Status", default="draft", required=True)
 
+    @api.model
+    def format_cdata(self, value, use_cdata):
+        if use_cdata:
+            return Markup("<![CDATA[{0}]]>").format(value)
+        else:
+            return f"{value}"
+
+    @api.model
+    def format_num(self, value):
+        if isinstance(value, float):
+            return "{:.2f}".format(float_round(value, precision_digits=2))
+        return f"{value}"
+
+    def _get_invoice_xml(self, invoice):
+        return self.env["ir.qweb"]._render(
+            "l10n_hu_edi.nav_AEA_invoice_xml",
+            {
+                **self.env["account.edi.format"]._l10n_hu_edi_generate_xml_data(invoice),
+                "format_text": partial(self.format_cdata, use_cdata=self.use_cdata),
+                "format_num": self.format_num,
+            },
+        )
+
     def do_generate(self):
         self.ensure_one()
 
         invoice_tbl = self.env["account.move"].sudo()
         nav_comm_tbl = self.env["l10n_hu.nav_communication"]
         qweb_tbl = self.env["ir.qweb"]
-        edi_format_tbl = self.env["account.edi.format"]
 
         if not (self.name_from or self.name_to or self.date_from or self.date_to):
             raise UserError(_("Please enter at least one search term!"))
@@ -84,35 +106,14 @@ class L10nHuNavAdatellenorzesWiz(models.TransientModel):
         if not invoices:
             raise UserError(_("No invoice to export!"))
 
-        def format_cdata(value, use_cdata):
-            if use_cdata:
-                return Markup("<![CDATA[{0}]]>").format(value)
-            else:
-                return f"{value}"
-
-        def format_num(value):
-            if isinstance(value, float):
-                return "{:.2f}".format(float_round(value, precision_digits=2))
-            return f"{value}"
-
         render_datas = {
             "invoices": invoices,
-            "invoice_xmls": [
-                qweb_tbl._render(
-                    "l10n_hu_edi.nav_AEA_invoice_xml",
-                    {
-                        **edi_format_tbl._l10n_hu_edi_generate_xml_data(i),
-                        "format_text": partial(format_cdata, use_cdata=self.use_cdata),
-                        "format_num": format_num,
-                    },
-                )
-                for i in invoices
-            ],
+            "invoice_xmls": [self._get_invoice_xml(i) for i in invoices],
             "export_date": fields.Date.context_today(self),
-            "format_text": partial(format_cdata, use_cdata=self.use_cdata),
+            "format_text": partial(self.format_cdata, use_cdata=self.use_cdata),
             "format_bool": nav_comm_tbl._gen_nav_format_bool,
             "format_date": nav_comm_tbl._gen_nav_format_date,
-            "format_num": format_num,
+            "format_num": self.format_num,
         }
 
         xml_content = Markup("<?xml version='1.0' encoding='UTF-8'?>") + qweb_tbl._render(

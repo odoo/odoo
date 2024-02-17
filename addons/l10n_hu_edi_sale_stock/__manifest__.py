@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    "name": "Hungarian Invoicing Localisation - Sale",
+    "name": "Hungarian Invoicing Localisation - Sale-Stock",
     "version": "16.0.1.0.0",
     "icon": "/l10n_hu/static/description/icon.png",
     "category": "Accounting/Localizations/EDI",
@@ -16,7 +16,7 @@ This is a glue module between Hungarian EDI and Sale
     "website": "https://www.odootech.hu",
     "depends": [
         "l10n_hu_edi",
-        "sale",
+        "sale_stock",
     ],
     "data": [],
     "demo": [],

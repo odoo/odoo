@@ -32,7 +32,7 @@ if do_test:
     class TestNavApiLowLevel(TransactionCase):
         def test_nav_api_taxpayerquery_by_param(self):
             NAV_Conn = self.env["l10n_hu.nav_communication"]
-            response = NAV_Conn.do_taxpayer_query("27725414-2-13", *PRODUCTION_CRED)
+            response = NAV_Conn._do_taxpayer_query_api("27725414-2-13", *PRODUCTION_CRED)
 
             _logger.info("TAXPAYER QUERY by PARAM response = %s", str(response))
 
@@ -105,7 +105,14 @@ if do_test:
             )
 
         def test_nav_api_taxpayerquery_by_obj(self):
-            response = self.cred_obj.do_taxpayer_query("27725414-2-13")
+            response = self.cred_obj._do_taxpayer_query_api(
+                "27725414-2-13",
+                nav_vat=self.cred_obj.vat_hu[:8],
+                nav_username=self.cred_obj.username,
+                nav_password=self.cred_obj.password,
+                nav_key_crypt=self.cred_obj.sign_key,
+                nav_key_decrypt=self.cred_obj.back_key,
+            )
 
             _logger.info("TAXPAYER QUERY by OBJ response = %s", str(response))
 
@@ -114,7 +121,14 @@ if do_test:
             self.assertEqual(response["ShortName"], "Fruitsys Zrt.", "Response data 'ShortName' mismatch")
 
         def test_nav_api_token(self):
-            response = self.cred_obj.do_token_request()
+            response = self.cred_obj._do_token_request_api(
+                nav_vat=self.cred_obj.vat_hu[:8],
+                nav_username=self.cred_obj.username,
+                nav_password=self.cred_obj.password,
+                nav_key_crypt=self.cred_obj.sign_key,
+                nav_key_decrypt=self.cred_obj.back_key,
+                demo=self.cred_obj.state == "test",
+            )
 
             _logger.info("TOKEN response = %s", str(response))
 
@@ -164,7 +178,14 @@ if do_test:
         def test_nav_api_taxpayerquery_by_obj(self):
             # without production credentials taxpayerquery is not possible
             with self.assertRaises(UserError):
-                self.cred_obj.do_taxpayer_query("27725414-2-13")
+                self.cred_obj._do_taxpayer_query_api(
+                    "27725414-2-13",
+                    nav_vat=self.cred_obj.vat_hu[:8],
+                    nav_username=self.cred_obj.username,
+                    nav_password=self.cred_obj.password,
+                    nav_key_crypt=self.cred_obj.sign_key,
+                    nav_key_decrypt=self.cred_obj.back_key,
+                )
 
 
 @tagged("post_install_l10n", "-at_install", "post_install", "odootech")

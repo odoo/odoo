@@ -6,7 +6,7 @@
     "version": "16.0.1.0.0",
     "icon": "/l10n_hu/static/description/icon.png",
     "category": "Accounting/Localizations/EDI",
-    "author": "OdooTech Zrt. & BDSC Business Consulting Kft.",
+    "author": "OdooTech Zrt., BDSC Business Consulting Kft., Odoo S.A.",
     "description": """
 Hungarian Invoicing extension.
 ==============================
@@ -28,6 +28,7 @@ With this module you can issue a hungarian invoice.
         "data/load_xsd_data.xml",
         "data/uom_uom.xml",
         "data/account_edi_data.xml",
+        "data/account_tax_template_data.xml",
         "views/report_templates.xml",
         "views/report_invoice.xml",
         "views/l10n_hu_nav_communication.xml",

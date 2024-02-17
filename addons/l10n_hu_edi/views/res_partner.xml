@@ -9,7 +9,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='vat']" position="after">
                 <field name="l10n_hu_is_vat_group_member" attrs="{'invisible': ['|', ('is_company','=',False), ('country_id', '!=', %(base.hu)d)]}"/>
-                <field name="l10n_hu_vat_group_member" attrs="{'required': [('l10n_hu_is_vat_group_member','=',True)], 'invisible': [('l10n_hu_is_vat_group_member', '=', False)]}"/>
+                <field name="l10n_hu_vat_group_number" attrs="{'required': [('l10n_hu_is_vat_group_member','=',True)], 'invisible': [('l10n_hu_is_vat_group_member', '=', False)]}"/>
                 <field name="l10n_hu_company_tax_arrangments"  attrs="{'invisible': ['|', ('is_company','=',False), ('country_id', '!=', %(base.hu)d)]}"/>
             </xpath>
         </field>
@@ -23,7 +23,7 @@
             <xpath expr="//field[@name='name']" position="attributes">
                 <attribute name="filter_domain">['|', '|', '|', '|', ('display_name', 'ilike', self),
                                                  ('ref', '=', self), ('email', 'ilike', self), ('vat', 'ilike', self),
-                                                 ('l10n_hu_vat_group_member', 'ilike', self)]</attribute>
+                                                 ('l10n_hu_vat_group_number', 'ilike', self)]</attribute>
             </xpath>
         </field>
     </record>

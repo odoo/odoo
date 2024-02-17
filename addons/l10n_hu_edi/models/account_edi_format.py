@@ -5,8 +5,11 @@ from odoo import fields, api, models, _
 from odoo.tools import float_repr, float_round
 from odoo.exceptions import UserError
 from lxml import etree
+import time
 import socket
 import logging
+import re
+import datetime
 
 _logger = logging.getLogger(__name__)
 
@@ -30,10 +33,13 @@ class AccountEdiFormat(models.Model):
             tax = line.tax_ids.filtered(lambda l: l.l10n_hu_tax_type)
             lnchain = 0
             if invoice.reversed_entry_id:
-                previous_invoices = invoice.reversed_entry_id.reversal_move_id.filtered(lambda m: m.state == "posted")
+                lnchain += len(invoice.reversed_entry_id.line_ids.filtered(lambda li: li.l10n_hu_line_number))
+                previous_invoices = invoice.reversed_entry_id.reversal_move_id.filtered(
+                    lambda m: m.state == "posted" and m != invoice
+                )
                 if previous_invoices:
                     # count of all of the previous lines
-                    lnchain = len(previous_invoices.mapped("line_ids").filtered(lambda li: li.l10n_hu_line_number))
+                    lnchain += len(previous_invoices.mapped("line_ids").filtered(lambda li: li.l10n_hu_line_number))
 
             line_data = {
                 "line_object": line,
@@ -46,10 +52,8 @@ class AccountEdiFormat(models.Model):
             }
 
             if line.display_type == "product":
-                price_unit = line.price_unit * (1 - (line.discount / 100.0))
-
                 taxes_res = line.tax_ids.compute_all(
-                    price_unit,
+                    line.price_unit * (1 - (line.discount / 100.0)),
                     quantity=line.quantity,
                     currency=line.currency_id,
                     product=line.product_id,
@@ -73,7 +77,7 @@ class AccountEdiFormat(models.Model):
                     {
                         "quantity": line.quantity,
                         "uom": "PIECE",
-                        "price_unit": price_unit,
+                        "price_unit": line.price_unit,
                         "sum_net": line_gross - amount,
                         "sum_gross": line_gross,
                         "sum_vat": amount,
@@ -300,6 +304,22 @@ class AccountEdiFormat(models.Model):
                 reprnum = reprnum.rstrip(".")
             return reprnum
 
+        def format_bank(value):
+            if not isinstance(value, str):
+                return None
+            items = re.fullmatch(
+                re.compile(r"^([A-Z]{2}\d\d[a-zA-Z\d]{11,30})|(\d{8})[- ]?(\d{8})[- ]?(\d{8})?$"), value
+            )
+            if not items:
+                return None
+
+            items = items.groups()
+            # IBAN "HU43117421732604478700000000"
+            if items[0]:
+                return items[0]
+            # HU format: "1134567822345678", "11345678-22345678", "11345678-22345678-", "113456782234567800000000", "1134567822345678-00000000"
+            return "-".join([i for i in items[1:] if i])
+
         company_bank = None
         if "out" in invoice.move_type and invoice.partner_bank_id:
             company_bank = invoice.partner_bank_id
@@ -327,6 +347,7 @@ class AccountEdiFormat(models.Model):
             "format_datetime": conn_obj._gen_nav_format_timestamp,
             "format_monetary": format_monetary,
             "format_float": format_float,
+            "format_bank": format_bank,
             "float_round": float_round,
         }
 
@@ -337,39 +358,56 @@ class AccountEdiFormat(models.Model):
             self._l10n_hu_edi_get_electronic_invoice_template(invoice),
             self._l10n_hu_edi_generate_xml_data(invoice),
         )
+
         if minimisation:
             # XML minimalisation
             parser = etree.XMLParser(remove_blank_text=True)
             elem = etree.XML(xml_content_unformatted, parser=parser)
-            xml_content = etree.tostring(elem)
+            self.env["l10n_hu.nav_communication"]._xml_validator(elem, "InvoiceData")
+            xml_content = etree.tostring(elem, encoding="UTF-8", xml_declaration=True)
+            # Because lxml randomly reorders the namespace definitions, we need to replace back
+            xml_content = re.sub(
+                b"<InvoiceData .*><invoiceNumber>",
+                b'<InvoiceData xmlns="http://schemas.nav.gov.hu/OSA/3.0/data" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://schemas.nav.gov.hu/OSA/3.0/data invoiceData.xsd" xmlns:common="http://schemas.nav.gov.hu/NTCA/1.0/common" xmlns:base="http://schemas.nav.gov.hu/OSA/3.0/base"><invoiceNumber>',
+                xml_content,
+            )
+
         else:
-            xml_content = xml_content_unformatted.encode()
+            self.env["l10n_hu.nav_communication"]._xml_validator(xml_content_unformatted, "InvoiceData")
+            xml_content = ('<?xml version="1.0" encoding="UTF-8"?>' + str(xml_content_unformatted)).encode("UTF-8")
 
-        self.env["l10n_hu.nav_communication"]._xml_validator(xml_content, "InvoiceData")
-
-        return b'<?xml version="1.0" encoding="utf-8"?>\n' + xml_content
+        return xml_content.replace(b"version='1.0'", b'version="1.0"').replace(b"encoding='UTF-8'", b'encoding="UTF-8"')
 
     def _l10n_hu_post_invoice_step_1(self, invoice):
         """Sends the xml to NAV."""
         # == Generate XML ==
         xml_filename = "invoice_data_navxml.xml"
         xml = self._l10n_hu_edi_generate_xml(invoice)
-        attachment = self.env["ir.attachment"].create(
-            {
-                "name": xml_filename,
-                "res_id": invoice.id,
-                "res_model": invoice._name,
-                "type": "binary",
-                "raw": xml,
-                "mimetype": "application/xml",
-                "description": _("Hungarian invoice NAV 3.0 XML generated for the %s document.", invoice.name),
-            }
+        attachment = (
+            self.env["ir.attachment"]
+            .sudo()
+            .create(
+                {
+                    "name": xml_filename,
+                    "res_id": invoice.id,
+                    "res_model": invoice._name,
+                    "type": "binary",
+                    "raw": xml,
+                    "mimetype": "application/xml",
+                    "description": _("Hungarian invoice NAV 3.0 XML generated for the %s document.", invoice.name),
+                }
+            )
         )
+
+        nav_hun_30 = self.env.ref("l10n_hu_edi.edi_hun_nav_3_0")
+        edi_document = invoice._get_edi_document(nav_hun_30)
+        if not edi_document.attachment_id:
+            edi_document.sudo().attachment_id = attachment
 
         # == Upload ==
         conn_obj = self.env["l10n_hu.nav_communication"]._get_best_communication(invoice.company_id)
         try:
-            response = conn_obj.do_invoice_upload(invoice)
+            response = conn_obj._do_invoice_upload(invoice)
         except Exception as e:  # noqa: BLE001
             _logger.error(e)
             if isinstance(e, socket.timeout):
@@ -398,11 +436,11 @@ class AccountEdiFormat(models.Model):
                     "production_mode": conn_obj.state == "prod",
                 }
             )
-            invoice.l10n_hu_actual_transaction_id = tr_obj
+            invoice.sudo().l10n_hu_actual_transaction_id = tr_obj
 
             main_message = _("Invoice submission succeeded. Waiting for answer.")
             transaction_message = _("Transaction")
-            invoice.with_context(no_new_invoice=True).message_post(
+            invoice.sudo().with_context(no_new_invoice=True).message_post(
                 body=f"{main_message}<br/>{transaction_message}: {invoice.l10n_hu_actual_transaction_id._get_html_link()}",
                 attachment_ids=attachment.ids,
             )
@@ -427,7 +465,7 @@ class AccountEdiFormat(models.Model):
                 "blocking_level": "warning",
             }
 
-        invoice_state_response = conn_obj.do_query_transaction(invoice.l10n_hu_actual_transaction_id.transaction_code)
+        invoice_state_response = conn_obj._do_query_transaction(invoice.l10n_hu_actual_transaction_id.transaction_code)
         response = {}
         if invoice_state_response["funcCode"] == "OK":
             inv_data = invoice_state_response["invoices"][1]
@@ -553,6 +591,10 @@ class AccountEdiFormat(models.Model):
         return response
 
     def _l10n_hu_edi_check_invoice_for_errors(self, invoice):
+        """
+        Check for invoice error before issuing.
+        @param invoice: Invoice record
+        """
         error_message = []
 
         if invoice.journal_id.restrict_mode_hash_table:
@@ -570,43 +612,47 @@ class AccountEdiFormat(models.Model):
         if not company_partner.zip or not company_partner.city or not company_partner.street:
             if invoice.is_sale_document(include_receipts=True):
                 error_message.append(_("Please set issuer address properly!"))
-            else:
-                error_message.append(_("Please set customer address properly!"))
 
-        if company_partner.l10n_hu_is_vat_group_member and not company_partner.l10n_hu_vat_group_member:
+        if company_partner.l10n_hu_is_vat_group_member and not company_partner.l10n_hu_vat_group_number:
             error_message.append(
-                _(
-                    "Your company is selected to be member of a TAX Group, but no Group Membership VAT Number is provided!"
-                )
+                _("Your company is selected to be member of a TAX Group, but no TAX Group Number is provided!")
             )
 
         invoice_partner = invoice.partner_id.commercial_partner_id
         if invoice_partner.is_company:
             if not invoice_partner.country_id:
-                error_message.append(_("Missing country for partner!"))
+                error_message.append(_("The customer country is missing!"))
 
             else:
                 eu_country_codes = set(self.env.ref("base.europe").country_ids.mapped("code"))
                 if invoice_partner.country_code in eu_country_codes and not invoice_partner.vat:
                     error_message.append(_("Missing VAT number for partner!"))
 
+                if (
+                    invoice.is_sale_document(include_receipts=True)
+                    and invoice_partner.country_code in eu_country_codes
+                    and not (invoice_partner.city and invoice_partner.zip and invoice_partner.street)
+                ):
+                    error_message.append(_("Please set issuer address properly!"))
+
             if (
-                invoice_partner.country_code == "HUF"
+                invoice_partner.country_code == "HU"
                 and invoice_partner.l10n_hu_is_vat_group_member
-                and not invoice_partner.l10n_hu_vat_group_member
+                and not invoice_partner.l10n_hu_vat_group_number
             ):
                 error_message.append(
-                    _(
-                        "The partner is selected to be member of a TAX Group, but no Group Membership VAT Number is provided!"
-                    )
+                    _("The partner is selected to be member of a TAX Group, but no TAX Group Number is provided!")
                 )
+
+        # Outgoing Invoices (for later use)
+        # if invoice.is_sale_document(include_receipts=True):
 
         # Incoming Invoices
         if invoice.is_purchase_document(include_receipts=True):
             # the currency rate and the delivery date is coming from the issuer
-            if not invoice.l10n_hu_currency_rate and invoice.currency_id.code != "HUF":
+            if not invoice.l10n_hu_currency_rate and invoice.currency_id.name != "HUF":
                 error_message.append(_("The currency rate used on the invoice is not specified!"))
-            if not invoice.delivery_date:
+            if not invoice.l10n_hu_delivery_date:
                 error_message.append(_("The delivery date on the invoice is not specified!"))
 
         for line in invoice.invoice_line_ids.filtered(lambda l: l.display_type in ("product", "rounding")):
@@ -671,6 +717,16 @@ class AccountEdiFormat(models.Model):
             return journal.type in ["sale", "purchase"] and journal.country_code == "HU"
         return super()._is_enabled_by_default_on_journal(journal)
 
+    def _l10n_hu_edi_send_invoice(self, invoice):
+        if invoice.l10n_hu_actual_transaction_id:
+            return {invoice: self._l10n_hu_post_invoice_step_2(invoice)}
+
+        res_step_1 = self._l10n_hu_post_invoice_step_1(invoice)
+        if not res_step_1.get("error"):
+            time.sleep(3)
+            return {invoice: self._l10n_hu_post_invoice_step_2(invoice)}
+        return {invoice: res_step_1}
+
     def _get_move_applicability(self, move):
         # EXTENDS account_edi
         self.ensure_one()
@@ -679,24 +735,11 @@ class AccountEdiFormat(models.Model):
 
         # Determine on which invoices the EDI must be generated.
         if move.country_code == "HU" and move.move_type in ("out_invoice", "out_refund"):
-            if move.l10n_hu_actual_transaction_id:
-                return {
-                    "post": self._l10n_hu_edi_post_invoice_step_2,
-                    "edi_content": self._l10n_hu_edi_generate_xml,
-                    # "cancel": self._l10n_hu_edi_cancel_invoice,
-                }
-            else:
-                return {
-                    "post": self._l10n_hu_edi_post_invoice_step_1,
-                    "edi_content": self._l10n_hu_edi_generate_xml,
-                    # "cancel": self._l10n_hu_edi_cancel_invoice,
-                }
-
-    def _l10n_hu_edi_post_invoice_step_1(self, invoice):
-        return {invoice: self._l10n_hu_post_invoice_step_1(invoice)}
-
-    def _l10n_hu_edi_post_invoice_step_2(self, invoice):
-        return {invoice: self._l10n_hu_post_invoice_step_2(invoice)}
+            return {
+                "post": self._l10n_hu_edi_send_invoice,
+                "edi_content": self._l10n_hu_edi_generate_xml,
+                # "cancel": self._l10n_hu_edi_cancel_invoice,
+            }
 
     def _l10n_hu_edi_cancel_invoice(self, invoice):
         return {invoice: {"success": True}}

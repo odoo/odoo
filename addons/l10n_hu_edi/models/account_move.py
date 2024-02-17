@@ -6,6 +6,7 @@ from odoo.exceptions import UserError
 from functools import lru_cache
 from odoo.addons.account.models.account_move import MAX_HASH_VERSION
 from odoo.tools import formatLang, float_round
+from base64 import b64encode
 
 import logging
 
@@ -52,6 +53,7 @@ class AccountMove(models.Model):
     l10n_hu_transaction_ids = fields.One2many(
         "l10n_hu.upload_transaction", "invoice_id", string="Upload Transaction History"
     )
+    l10n_hu_attachment_id = fields.Many2one("ir.attachment", readonly=True, copy=False)
 
     l10n_hu_currency_rate = fields.Float(
         "Currency rate at post",
@@ -234,6 +236,14 @@ class AccountMove(models.Model):
             operation = "MODIFY"
         return operation
 
+    def _l10n_hu_get_manageinvoice_fields(self, invoice_xml):
+        "Helper method for extendable XML generation fields"
+        self.ensure_one()
+        return {
+            "operation": self._l10n_hu_get_nav_operation(),
+            "invoice_base64": b64encode(invoice_xml).decode("UTF-8"),
+        }
+
     def _retry_edi_documents_error_hook(self):
         # OVERRIDE
         nav_hun_30 = self.env.ref("l10n_hu_edi.edi_hun_nav_3_0")
@@ -254,7 +264,7 @@ class AccountMove(models.Model):
     def button_draft(self):
         # OVERRIDE
         for move in self:
-            if move.l10n_hu_transaction_ids and not move.l10n_hu_actual_transaction_id.reply_status == "error":
+            if move.l10n_hu_transaction_ids and move.l10n_hu_actual_transaction_id.reply_status != "error":
                 raise UserError(
                     _(
                         "You can't edit the following journal entry %s because an electronic document has already been "
@@ -264,7 +274,23 @@ class AccountMove(models.Model):
                     )
                 )
 
-        return super().button_draft()
+        res = super().button_draft()
+        # Remove the invoice PDF
+        self.mapped("l10n_hu_attachment_id").unlink()
+        # Clear some fields
+        self.write(
+            {
+                "l10n_hu_invoice_chain": None,
+                "l10n_hu_currency_rate": None,
+                "l10n_hu_attachment_id": None,
+            }
+        )
+        self.mapped("line_ids").write(
+            {
+                "l10n_hu_line_number": None,
+            }
+        )
+        return res
 
     def action_reverse(self):
         for move in self.filtered(lambda x: x.country_code == "HU"):
@@ -315,13 +341,15 @@ class AccountMove(models.Model):
 
             # invoice chain numbering
             if invoice.move_type == "out_invoice":
-                if invoice.l10n_hu_invoice_chain != 1:
-                    invoice.write({"l10n_hu_invoice_chain": 1})
+                if invoice.l10n_hu_invoice_chain != 0:
+                    invoice.write({"l10n_hu_invoice_chain": 0})
             elif invoice.move_type == "out_refund":
-                other_refunds = invoice.reversed_entry_id.reversal_move_id.filtered(lambda m: m.state == "posted")
-                # original (=1) + numbers of previous refunds + 1
-                if invoice.l10n_hu_invoice_chain != len(other_refunds) + 2:
-                    invoice.write({"l10n_hu_invoice_chain": len(other_refunds) + 2})
+                other_refunds = invoice.reversed_entry_id.reversal_move_id.filtered(
+                    lambda m: m.state == "posted" and m != invoice
+                )
+                # numbers of previous refunds + 1
+                if invoice.l10n_hu_invoice_chain != len(other_refunds) + 1:
+                    invoice.write({"l10n_hu_invoice_chain": len(other_refunds) + 1})
 
             # line numbering
             ln = 1
@@ -342,12 +370,36 @@ class AccountMove(models.Model):
             if invoice.l10n_hu_actual_transaction_id:
                 invoice.l10n_hu_actual_transaction_id = False
 
+    def _post(self, soft=True):
+        "We need to generate the PDF-s during the posting of the invoices"
+        posted_moves = super()._post(soft=soft)
+        for move in posted_moves.filtered(
+            lambda move: move.country_code == "HU" and move.move_type in ("out_invoice", "out_refund")
+        ):
+            pdf_content, dummy_mimetype = self.env["ir.actions.report"]._render_qweb_pdf(
+                "account.report_invoice", res_ids=[move.id]
+            )
+            main_attachment = move.attachment_ids.filtered(lambda x: x.raw == pdf_content)
+            if main_attachment:
+                move.with_context(tracking_disable=True).sudo().write(
+                    {
+                        "message_main_attachment_id": main_attachment.id,
+                        "l10n_hu_attachment_id": main_attachment.id,
+                    }
+                )
+
+        return posted_moves
+
     def write(self, vals):
         # We need to modify the hungarian invoices *before* the actual posting.
         # Because there is not any method what is adapted inside the _post for this,
         # we need to catch the moment with this hackish code.
         if vals.get("state") == "posted":
-            hu_invoices = self.filtered(lambda move: move.state == "draft" and move.country_code == "HU")
+            hu_invoices = self.filtered(
+                lambda move: move.state == "draft"
+                and move.country_code == "HU"
+                and move.move_type in ("out_invoice", "out_refund")
+            )
             hu_invoices._l10n_hu_edi_fix_fields()
 
         return super().write(vals)
