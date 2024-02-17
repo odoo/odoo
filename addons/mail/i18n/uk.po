@@ -880,7 +880,7 @@ msgstr "Додати опис"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_server_action_form_template
 msgid "Add a description to your activity..."
-msgstr ""
+msgstr "Додайте опис до вашої дії..."
 
 #. module: mail
 #. odoo-python
@@ -948,6 +948,8 @@ msgid ""
 "Adding more members to this chat isn't possible; it's designed for just two "
 "people."
 msgstr ""
+"Додати більше учасників до цього чату неможливо; він розрахований лише на "
+"двох осіб."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__partner_ids
@@ -989,6 +991,9 @@ msgid ""
 "%(alias_model_name)s (%(matching_id)s) and used by the %(parent_name)s "
 "%(parent_model_name)s."
 msgstr ""
+"Псевдонім %(matching_name)s (%(current_id)s) вже підключено з "
+"%(alias_model_name)s (%(matching_id)s) і використовується %(parent_name)s "
+"%(parent_model_name)s."
 
 #. module: mail
 #. odoo-python
@@ -998,6 +1003,8 @@ msgid ""
 "Alias %(matching_name)s (%(current_id)s) is already linked with "
 "%(alias_model_name)s (%(matching_id)s)."
 msgstr ""
+"Псевдонім %(matching_name)s (%(current_id)s) вже зʼєднано з "
+"%(alias_model_name)s (%(matching_id)s)."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_contact
@@ -1031,7 +1038,7 @@ msgstr "Назва домену псевдоніму"
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_search
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_tree
 msgid "Alias Domains"
-msgstr ""
+msgstr "Домени псевдоніму"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_full_name
@@ -1053,7 +1060,7 @@ msgstr "Статус псевдоніма"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_domain
 msgid "Alias domain name"
-msgstr ""
+msgstr "Назва домену псевдоніму"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_status
@@ -1079,6 +1086,8 @@ msgid ""
 "Aliases %(alias_names)s is already used as bounce or catchall address. "
 "Please choose another alias."
 msgstr ""
+"Псевдоніми %(alias_names)s уже використовуються як адреси для повернення або"
+" catchall. Виберіть інший псевдонім."
 
 #. module: mail
 #. odoo-javascript
@@ -1093,12 +1102,12 @@ msgstr "Всі"
 #: code:addons/mail/static/src/discuss/core/common/thread_model_patch.js:0
 #, python-format
 msgid "All Messages"
-msgstr ""
+msgstr "Усі повідомлення"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel_member__custom_notifications
 msgid "All Messages if not specified"
-msgstr ""
+msgstr "Усі повідомлення, якщо не вказано"
 
 #. module: mail
 #. odoo-python
@@ -1110,7 +1119,7 @@ msgstr "Усі партнери повинні належати до того ж
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__allow_public_upload
 msgid "Allow Public Upload"
-msgstr ""
+msgstr "Дозволити публічне завантаження"
 
 #. module: mail
 #. odoo-python
@@ -1213,7 +1222,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_view_form_confirm_delete
 msgid "Are you sure you want to delete this Mail Template?"
-msgstr ""
+msgstr "Ви впевнені, що хочете видалити цей шаблон листа?"
 
 #. module: mail
 #. odoo-javascript
@@ -1243,7 +1252,7 @@ msgstr "Ви впевнені, що хочете забрати з чорног�
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__responsible_type__on_demand
 msgid "Ask at launch"
-msgstr ""
+msgstr "Запитувати при запуску"
 
 #. module: mail
 #. odoo-javascript
@@ -1515,7 +1524,7 @@ msgstr "Базові шбалони"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__sfu_server_key
 msgid "Base64 encoded key"
-msgstr ""
+msgstr "Закодований ключ Base64"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__composition_batch
@@ -1613,13 +1622,13 @@ msgstr "Повернення"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias_domain__bounce_alias
 msgid "Bounce Alias"
-msgstr ""
+msgstr "Псевдонім повернень"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias_domain__bounce_email
 #: model:ir.model.fields,field_description:mail.field_res_company__bounce_email
 msgid "Bounce Email"
-msgstr ""
+msgstr "Email повернень"
 
 #. module: mail
 #. odoo-python
@@ -1629,11 +1638,14 @@ msgid ""
 "Bounce alias %(bounce)s is already used for another domain with same name. "
 "Use another bounce or simply use the other alias domain."
 msgstr ""
+"Псевдонім повернень %(bounce)s вже використовується для іншого домену з "
+"такою ж назвою. Використовуйте іншу відмову або просто використовуйте інший "
+"псевдонім домену."
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_alias_domain_bounce_email_uniques
 msgid "Bounce emails should be unique"
-msgstr ""
+msgstr "Листи повернень повинні бути унікальними"
 
 #. module: mail
 #. odoo-python
@@ -1643,6 +1655,9 @@ msgid ""
 "Bounce/Catchall '%(matching_alias_name)s' is already used by "
 "%(document_name)s. Choose another alias or change it on the other document."
 msgstr ""
+"Повернення/Catchall '%(matching_alias_name)s' вже використовується "
+"%(document_name)s. Виберіть інший псевдонім або змініть його в іншому "
+"документі."
 
 #. module: mail
 #. odoo-python

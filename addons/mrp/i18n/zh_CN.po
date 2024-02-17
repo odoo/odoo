@@ -7,6 +7,7 @@
 # Wil Odoo, 2024
 # Jeffery CHEN <jeffery9@gmail.com>, 2024
 # Chloe Wang, 2024
+# 湘子 南 <1360857908@qq.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Chloe Wang, 2024\n"
+"Last-Translator: 湘子 南 <1360857908@qq.com>, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1696,7 +1697,7 @@ msgid ""
 "the status of work orders upon MO confirmation. If this feature is ticked, "
 "and nothing is specified, Odoo will assume that all operations can be "
 "started simultaneously."
-msgstr "创建会影响生产订单（MO）确定后安排和工单状态的作业级依赖项。如果勾选该功能，且未指定任何内容，Odoo将假定所有作业可以同时开始。"
+msgstr "创建会影响生产订单（MO）确定后安排和工单状态的作业级依赖项。如果勾选该功能，且未指定任何内容，ERP 将假定所有作业可以同时开始."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__created_production_id
@@ -2611,35 +2612,35 @@ msgstr "如果该启用字段设置为错误，则可以隐藏而非删除源记
 msgid ""
 "If this checkbox is ticked, Odoo will automatically print the allocation "
 "report labels of a MO when it is done."
-msgstr "如果勾选该复选框，Odoo 将在完成 MO 后自动打印分配报告标签。"
+msgstr "如果勾选该复选框，ERP 将在完成 MO 后自动打印分配报告标签。"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_picking_type__auto_print_mrp_reception_report
 msgid ""
 "If this checkbox is ticked, Odoo will automatically print the allocation "
 "report of a MO when it is done and has assigned moves."
-msgstr "如果勾选该复选框，Odoo 将在 MO 完成并分配移动后自动打印分配报告。"
+msgstr "如果勾选该复选框，ERP 将在 MO 完成并分配移动后自动打印分配报告。"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_picking_type__auto_print_done_mrp_lot
 msgid ""
 "If this checkbox is ticked, Odoo will automatically print the lot/SN label "
 "of a MO when it is done."
-msgstr "如果勾选该复选框，Odoo 将在完成 MO 时自动打印批次/SN 标签。"
+msgstr "如果勾选该复选框，ERP 将在完成 MO 时自动打印批次/SN 标签。"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_picking_type__auto_print_done_mrp_product_labels
 msgid ""
 "If this checkbox is ticked, Odoo will automatically print the product labels"
 " of a MO when it is done."
-msgstr "如果勾选该复选框，Odoo 将在完成 MO 时自动打印产品标签。"
+msgstr "如果勾选该复选框，ERP 将在完成 MO 时自动打印产品标签。"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_picking_type__auto_print_done_production_order
 msgid ""
 "If this checkbox is ticked, Odoo will automatically print the production "
 "order of a MO when it is done."
-msgstr "如果勾选该复选框，Odoo 将在 MO 完成后自动打印生产单。"
+msgstr "如果勾选该复选框，ERP 将在 MO 完成后自动打印生产单。"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__image_height
@@ -2968,7 +2969,7 @@ msgstr "系统搜索组件的位置。"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__location_dest_id
 msgid "Location where the system will stock the finished products."
-msgstr "系统存储成品的位置。"
+msgstr "系统成品入库的位置。"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_unbuild__location_dest_id
@@ -3700,9 +3701,9 @@ msgid ""
 "                                install the IoT App on a computer that is on the same local network as the\n"
 "                                barcode operator and configure the routing of the reports."
 msgstr ""
-"Odoo 默认打开 PDF 预览。如果您想立即打印、\n"
+"ERP 默认打开 PDF 预览。如果您想立即打印、\n"
 "                                在与条码操作员位于同一本地网络的计算机上安装 IoT 应用程序，并配置报告的路由。\n"
-"                                条码操作员的计算机上安装物联网应用程序，并配置报告的路由。"
+"                                条码操作员的计算机上安装物联网应用程序，并配置报告的路由."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__oee
@@ -5312,7 +5313,7 @@ msgstr "库存规则报告"
 #: code:addons/mrp/models/stock_warehouse.py:0
 #, python-format
 msgid "Store Finished Product"
-msgstr "存储成品"
+msgstr "入库单"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__store_fname
@@ -6328,7 +6329,7 @@ msgid ""
 "If not activated, and any of the components consumption is edited manually on the manufacturing order, Odoo assumes manual consumption also."
 msgstr ""
 "如果启用，则专门手动记录该组件的消耗登记。\n"
-"如果未启用，且任何组件消耗量在制造订单中手动编辑，Odoo会假定手动消耗。"
+"如果未启用，且任何组件消耗量在制造订单中手动编辑，ERP 会假定手动消耗."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__ready_to_produce__asap
@@ -6358,7 +6359,7 @@ msgid ""
 "perfectly integrated into the process. Workers can trigger feedback loops, "
 "maintenance alerts, scrap products, etc."
 msgstr ""
-"通过Odoo工作中心控制面板，工作人员可以在店铺启动工单，并遵循工作表中的指示。质量测试已集成至过程。工作人员可以触发反馈回路、维护警报、报废产品等。"
+"通过 ERP 工作中心控制面板，工作人员可以在店铺启动工单，并遵循工作表中的指示。质量测试已集成至过程。工作人员可以触发反馈回路、维护警报、报废产品等."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_consumption_warning

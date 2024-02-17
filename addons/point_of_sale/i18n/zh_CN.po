@@ -5,8 +5,9 @@
 # Translators:
 # Jeffery CHEN <jeffery9@gmail.com>, 2023
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2024
-# Chloe Wang, 2024
 # Wil Odoo, 2024
+# Chloe Wang, 2024
+# 湘子 南 <1360857908@qq.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-29 10:44+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: 湘子 南 <1360857908@qq.com>, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3573,7 +3574,7 @@ msgstr "最大值已达到"
 msgid ""
 "Meanwhile connection is back, Odoo Point of Sale will operate limited "
 "operations. Check your connection or continue with limited functionalities"
-msgstr "在连接恢复的同时，Odoo 销售点将进行有限的操作。请检查您的连接或继续使用有限的功能"
+msgstr "在连接恢复的同时，ERP 销售点将进行有限的操作。请检查您的连接或继续使用有限的功能"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_has_error
@@ -3971,7 +3972,7 @@ msgstr "OK"
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
 #, python-format
 msgid "Odoo Point of Sale"
-msgstr "Odoo 销售点"
+msgstr "ERP 销售点"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.office_combo_product_template
@@ -4013,6 +4014,12 @@ msgid ""
 "Only a negative quantity is allowed for this refund line. Click on +/- to "
 "modify the quantity to be refunded."
 msgstr "对于退款行项目仅允许负数量。点击 +/- 修改要退款的数量。"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_config.py:0
+#, python-format
+msgid "Only administrators can edit receipt headers and footers"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__only_round_cash_method
@@ -4701,7 +4708,7 @@ msgid ""
 "Some browsers don't allow HTTP calls from websites to devices in the network (for security reasons). If it is the case, you will need to follow Odoo's documentation for 'Self-signed certificate for ePOS printers' and 'Secure connection (HTTPS)' to solve the issue. "
 msgstr ""
 "请检查打印机是否仍然连接。\n"
-"某些浏览器不允许从网站到网络设备的 HTTP 调用（出于安全原因）。如果是这种情况，您需要按照 Odoo 文档中的 \"ePOS 打印机自签名证书 \"和 \"安全连接 (HTTPS) \"来解决问题。"
+"某些浏览器不允许从网站到网络设备的 HTTP 调用（出于安全原因）。如果是这种情况，您需要按照 ERP 文档中的 \"ePOS 打印机自签名证书 \"和 \"安全连接 (HTTPS) \"来解决问题."
 
 #. module: point_of_sale
 #. odoo-python
@@ -6475,7 +6482,7 @@ msgstr "开始日期"
 #: code:addons/point_of_sale/static/src/app/generic_components/order_widget/order_widget.js:0
 #, python-format
 msgid "Start adding products"
-msgstr ""
+msgstr "开始添加产品"
 
 #. module: point_of_sale
 #. odoo-python
@@ -7325,7 +7332,7 @@ msgstr "本产品用于客户收据的参考。"
 msgid ""
 "This sequence is automatically created by Odoo but you can change it to "
 "customize the reference numbers of your orders lines."
-msgstr "此序列由 Odoo 自动创建，但您可以进行更改以自定义订单详情的参考号。"
+msgstr "此序列由 ERP 自动创建，但您可以进行更改以自定义订单详情的参考号."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__sequence_id
@@ -7333,7 +7340,7 @@ msgstr "此序列由 Odoo 自动创建，但您可以进行更改以自定义订
 msgid ""
 "This sequence is automatically created by Odoo but you can change it to "
 "customize the reference numbers of your orders."
-msgstr "此序列由 Odoo 自动创建，但您可以进行更改以自定义订单详情的参考号。"
+msgstr "此序列由 ERP 自动创建，但您可以进行更改以自定义订单详情的参考号."
 
 #. module: point_of_sale
 #. odoo-python

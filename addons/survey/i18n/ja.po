@@ -5,7 +5,7 @@
 # Translators:
 # Wil Odoo, 2023
 # Junko Augias, 2023
-# Ryoko Tsuda <ryoko@quartile.co>, 2023
+# Ryoko Tsuda <ryoko@quartile.co>, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2023\n"
+"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1342,7 +1342,7 @@ msgstr "検定合格"
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
 msgid "Certified"
-msgstr "認証済み"
+msgstr "検定済"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__certification_mail_template_id
@@ -1427,7 +1427,7 @@ msgstr "閉じる"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
 msgid "Close Live Session"
-msgstr "閉じるライブセッション"
+msgstr "ライブセッションを閉じる"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_1_question_3_choice_1
@@ -1898,7 +1898,7 @@ msgstr "重複した質問"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
 msgid "Edit Survey"
-msgstr "調査の編集"
+msgstr "アンケート調査の編集"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_void_content
@@ -2523,7 +2523,7 @@ msgstr "フォロー中　"
 #: model:ir.model.fields,field_description:survey.field_survey_survey__certification
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
 msgid "Is a Certification"
-msgstr "認定"
+msgstr "検定"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__is_page
@@ -2543,7 +2543,7 @@ msgstr "見当違いですか？"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
 msgid "Is not a Certification"
-msgstr "認定以外"
+msgstr "検定以外"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_user_input__is_session_answer
@@ -3031,7 +3031,7 @@ msgstr "MyCompanyのベンダー"
 #. module: survey
 #: model:survey.survey,title:survey.vendor_certification
 msgid "MyCompany Vendor Certification"
-msgstr "MyCompanyのベンダー認定"
+msgstr "MyCompanyのベンダー検定"
 
 #. module: survey
 #. odoo-python
@@ -3366,7 +3366,7 @@ msgstr "この回答を選択したアンケート結果のみを表示します
 #: code:addons/survey/models/survey_survey.py:0
 #, python-format
 msgid "Only survey users can manage sessions."
-msgstr "唯一のアンケートユーザーがセッションを管理することができます。"
+msgstr "唯一のアンケートユーザがセッションを管理することができます。"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_session_code
@@ -3385,7 +3385,7 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
 msgid "Open Session Manager"
-msgstr "オープンセッションマネージャ"
+msgstr "セッションマネージャを開く"
 
 #. module: survey
 #. odoo-javascript
@@ -4309,7 +4309,7 @@ msgstr "ライブセッションを開始"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_start
 msgid "Start Survey"
-msgstr "スタートアンケート"
+msgstr "アンケート開始"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__start_datetime
@@ -4418,7 +4418,7 @@ msgstr "夏"
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_line_view_search
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_search
 msgid "Survey"
-msgstr "調査"
+msgstr "アンケート調査"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_access_error
@@ -4428,7 +4428,7 @@ msgstr "アンケートアクセスエラー"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_response_line_view_tree
 msgid "Survey Answer Line"
-msgstr "調査の回答行"
+msgstr "アンケート回答行"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__survey_first_submitted
@@ -4519,7 +4519,7 @@ msgstr "アンケート: 検定合格"
 #. module: survey
 #: model:mail.template,name:survey.mail_template_user_input_invite
 msgid "Survey: Invite"
-msgstr "調査：招待"
+msgstr "アンケート：招待"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_survey_form
@@ -4752,7 +4752,7 @@ msgstr "製品を比較するためのツールは、決めるのに便利です
 #: code:addons/survey/controllers/main.py:0
 #, python-format
 msgid "The user has not succeeded the certification"
-msgstr "ユーザーが認証を成功していません"
+msgstr "ユーザーが検定に成功していません"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form
