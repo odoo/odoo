@@ -4,18 +4,20 @@
 # 
 # Translators:
 # e2f <projects@e2f.com>, 2023
-# Raymond Yu <cl_yu@hotmail.com>, 2023
-# Martin Trigaux, 2023
-# Jeffery CHEN <jeffery9@gmail.com>, 2023
 # Emily Jia <eji@odoo.com>, 2023
+# Raymond Yu <cl_yu@hotmail.com>, 2023
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2023
+# Jeffery CHEN <jeffery9@gmail.com>, 2023
+# Martin Trigaux, 2023
+# 湘子 南 <1360857908@qq.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-17 10:54+0000\n"
+"POT-Creation-Date: 2023-05-25 11:24+0000\n"
 "PO-Revision-Date: 2023-01-17 14:58+0000\n"
-"Last-Translator: Emily Jia <eji@odoo.com>, 2023\n"
+"Last-Translator: 湘子 南 <1360857908@qq.com>, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -120,6 +122,13 @@ msgid "<u>Sales</u>"
 msgstr "<u>销售</u>"
 
 #. module: sale_timesheet
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_1
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_2
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_3
+msgid "About us"
+msgstr "关于我们"
+
+#. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_sale_order_line__qty_delivered_method
 msgid ""
 "According to product configuration, the delivered quantity can be automatically computed by mechanism :\n"
@@ -133,6 +142,12 @@ msgstr ""
 " - 费用分析：数量是来自过账费用的数量总和\n"
 " - 工时表：数量是与此销售线相关联的任务记录的时数\n"
 " - 库存变动：数量来自已确认的选择\n"
+
+#. module: sale_timesheet
+#: model:account.analytic.account,name:sale_timesheet.account_analytic_account_project_support
+#: model:project.project,name:sale_timesheet.project_support
+msgid "After-Sales Services"
+msgstr "售后服务"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__allocated_hours
@@ -161,6 +176,19 @@ msgstr "分析行"
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__analytic_line_ids
 msgid "Analytic lines"
 msgstr "分析明细行"
+
+#. module: sale_timesheet
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_1
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_2
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_3
+msgid ""
+"As a leading professional services firm,\n"
+"                                we know that success is all about the\n"
+"                                commitment we put on strong services."
+msgstr ""
+"作为一家领先的专业服务公司，\n"
+"                                       我们知道项目成功与否\n"
+"                                       是我们对优质服务的承诺。"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -369,6 +397,11 @@ msgid "Customer"
 msgstr "客户"
 
 #. module: sale_timesheet
+#: model:product.template,name:sale_timesheet.product_service_order_timesheet_product_template
+msgid "Customer Care (Prepaid Hours)"
+msgstr "客户服务（预付时间）"
+
+#. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_kanban_inherit_sale_timesheet
 msgid "Customer Ratings"
 msgstr "客户点评"
@@ -438,6 +471,28 @@ msgid "Fixed price services"
 msgstr "固定价格服务"
 
 #. module: sale_timesheet
+#: model:product.template,name:sale_timesheet.product_service_deliver_manual_product_template
+msgid "Furniture Delivery (Manual)"
+msgstr "家具交付（手动）"
+
+#. module: sale_timesheet
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_1
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_2
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_3
+msgid ""
+"Great quotation templates will significantly\n"
+"                                <strong>boost your success rate</strong>. The\n"
+"                                first section is usually about your company,\n"
+"                                your references, your methodology or\n"
+"                                guarantees, your team, SLA, terms and conditions, etc."
+msgstr ""
+"完善的报价模板将显著\n"
+"                                <strong>提高您的成功率。</strong>\n"
+"                                第一节通常是关于您的公司、\n"
+"                                您的参考资料、您的方法或\n"
+"                                担保、您的团队、SLA、期限和条件等"
+
+#. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__has_displayed_warning_upsell
 msgid "Has Displayed Warning Upsell"
 msgstr "已显示警告超售"
@@ -459,6 +514,21 @@ msgstr "小时成本"
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__id
 msgid "ID"
 msgstr "ID"
+
+#. module: sale_timesheet
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_1
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_2
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_3
+msgid ""
+"If you edit a quotation from the 'Preview' of a quotation, you will\n"
+"                        update that quotation only. If you edit the quotation\n"
+"                        template (from the Configuration menu), all future quotations will\n"
+"                        use this modified template."
+msgstr ""
+"如果您从报价的“预览”中编辑报价，您将会\n"
+" 仅更新该报价。如果您编辑报价\n"
+" 模板（从配置菜单），所有未来的报价将\n"
+" 使用此修改后的模板。"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__info_invoice
@@ -573,6 +643,16 @@ msgid "Journal Item"
 msgstr "会计分录"
 
 #. module: sale_timesheet
+#: model:product.template,name:sale_timesheet.product_service_deliver_timesheet_2_product_template
+msgid "Junior Architect (Invoice on Timesheets)"
+msgstr "初级架构师（工时表结算单）"
+
+#. module: sale_timesheet
+#: model:product.template,name:sale_timesheet.product_service_deliver_milestones_product_template
+msgid "Kitchen Assembly (Milestones)"
+msgstr "厨房组装(里程碑)"
+
+#. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__write_uid
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__write_uid
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__write_uid
@@ -611,10 +691,13 @@ msgid "Margin"
 msgstr "毛利"
 
 #. module: sale_timesheet
+#. odoo-python
+#: code:addons/sale_timesheet/models/project.py:0
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__other_costs
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__other_revenues
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__timesheet_invoice_type__other_costs
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__timesheet_invoice_type__other_revenues
+#, python-format
 msgid "Materials"
 msgstr "材料"
 
@@ -729,8 +812,29 @@ msgstr "订单关联"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
-msgid "Ordered,"
-msgstr "已订购,"
+msgid "Hours Ordered,"
+msgstr "小时订购,"
+
+#. module: sale_timesheet
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_1
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_2
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_3
+msgid "Our Offer"
+msgstr "我们的报价"
+
+#. module: sale_timesheet
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_1
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_2
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_3
+msgid "Our Quality"
+msgstr "我们的质量"
+
+#. module: sale_timesheet
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_1
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_2
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_3
+msgid "Our Service"
+msgstr "我们的服务"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_product_product__service_upsell_threshold
@@ -739,6 +843,13 @@ msgid ""
 "Percentage of time delivered compared to the prepaid amount that must be "
 "reached for the upselling opportunity activity to be triggered."
 msgstr "与必须达到的预付金额相比，交付时间的百分比，以触发加售销售机会活动。"
+
+#. module: sale_timesheet
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_1
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_2
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_3
+msgid "Price"
+msgstr "价格"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__pricing_type
@@ -762,6 +873,19 @@ msgid ""
 "Product of the sales order item. Must be a service invoiced based on "
 "timesheets on tasks."
 msgstr "销售订单项的产品。必须带有基于任务工时表的服务结算单。"
+
+#. module: sale_timesheet
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_1
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_2
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_3
+msgid ""
+"Product quality is the foundation we\n"
+"                                stand on; we build it with a relentless\n"
+"                                focus on fabric, performance and craftsmanship."
+msgstr ""
+"产品质量是我们\n"
+"        立足的根本；我们坚持不懈地\n"
+"        专注于产品质地、性能和工艺。"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_project
@@ -850,8 +974,8 @@ msgstr "剩余的小时数。"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
-msgid "Remaining)"
-msgstr "剩余)"
+msgid "Hours Remaining)"
+msgstr "剩余时间)"
 
 #. module: sale_timesheet
 #: model_terms:ir.actions.act_window,help:sale_timesheet.timesheet_action_billing_report
@@ -882,6 +1006,7 @@ msgstr "销售预支付结算单"
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__sale_order_id
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__sale_order_id
 #: model:ir.model.fields,field_description:sale_timesheet.field_timesheets_analysis_report__order_id
+#: model:project.project,name:sale_timesheet.so_template_project
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_report_search_sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
 #, python-format
@@ -974,6 +1099,11 @@ msgid "Sell services and invoice time spent"
 msgstr "销售服务，并针对所用时间开结算单"
 
 #. module: sale_timesheet
+#: model:product.template,name:sale_timesheet.product_service_deliver_timesheet_1_product_template
+msgid "Senior Architect (Invoice on Timesheets)"
+msgstr "高级架构师（工时表结算单）"
+
+#. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__product_id
 msgid "Service"
 msgstr "服务"
@@ -1006,6 +1136,7 @@ msgstr "在为任务花费的时间开票时默认使用的服务。 它可以�
 
 #. module: sale_timesheet
 #: model:ir.actions.act_window,name:sale_timesheet.product_template_action_default_services
+#: model:project.project,label_tasks:sale_timesheet.project_support
 msgid "Services"
 msgstr "服务"
 
@@ -1033,6 +1164,11 @@ msgstr "任务循环"
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__pricing_type__task_rate
 msgid "Task rate"
 msgstr "任务率"
+
+#. module: sale_timesheet
+#: model:project.project,label_tasks:sale_timesheet.so_template_project
+msgid "Tasks"
+msgstr "任务"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_report_project_task_user
@@ -1117,6 +1253,20 @@ msgid ""
 "This cost overrides the employee's default employee hourly wage in "
 "employee's HR Settings"
 msgstr "此成本覆盖员工HR设置中员工的默认员工时薪"
+
+#. module: sale_timesheet
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_1
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_2
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_3
+msgid ""
+"This is a <strong>sample quotation template</strong>. You should\n"
+"                                customize it to fit your own needs from the <i>Sales</i>\n"
+"                                application, using the menu: Configuration /\n"
+"                                Quotation Templates."
+msgstr ""
+"这是一个<strong>报价模板示例</strong>。您应该\n"
+"           从<i>销售</i>\n"
+"           应用定制它以满足自己的需求，使用菜单：配置/ 报价模板。"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product__service_upsell_threshold
@@ -1372,9 +1522,39 @@ msgid "Warning Employee Rate"
 msgstr "员工警告比率"
 
 #. module: sale_timesheet
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_1
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_2
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_3
+msgid ""
+"We always ensure that our products are\n"
+"                                set at a fair price so that you will be\n"
+"                                happy to buy them."
+msgstr ""
+"我们始终确保我们的产品\n"
+"         价格合理，这样您就会\n"
+"         很乐意购买。"
+
+#. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__wizard_id
 msgid "Wizard"
 msgstr "向导"
+
+#. module: sale_timesheet
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_1
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_2
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_3
+msgid ""
+"You can <strong>set a description per product</strong>. Odoo will\n"
+"                        automatically create a quotation using the descriptions\n"
+"                        of all products in the proposal. The table of content\n"
+"                        on the left is generated automatically using the styles you\n"
+"                        used in your description (heading 1, heading 2, ...)"
+msgstr ""
+"您可以<strong>设置每个产品描述。</strong>Odoo 将\n"
+"                        使用建议中所有产品的描述\n"
+"                        自动创建一个报价。左边的内容表\n"
+"                        是根据您描述中使用的样式\n"
+"                        自动生成的（标题 1、标题 2…）"
 
 #. module: sale_timesheet
 #. odoo-python

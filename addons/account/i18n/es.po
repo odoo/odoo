@@ -95,7 +95,7 @@ msgstr ""
 #: code:addons/account/models/account_payment_term.py:0
 #, python-format
 msgid " (<b>%(amount)s</b> if paid before <b>%(date)s</b>)"
-msgstr ""
+msgstr " (<b>%(amount)s</b> si se paga antes de <b>%(date)s</b>)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bills_count
@@ -412,6 +412,8 @@ msgid ""
 "<b>%(count)s#</b> Installment of <b>%(amount)s</b> on <b style='color: "
 "#704A66;'>%(date)s</b>"
 msgstr ""
+"<b>%(count)s#</b> Cuota de <b>%(amount)s</b> el <b style='color: "
+"#704A66;'>%(date)s</b>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
@@ -1088,7 +1090,7 @@ msgstr "<span>Informes</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Running Balance</span>"
-msgstr ""
+msgstr "<span>Saldo actualizado</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -7866,7 +7868,7 @@ msgstr ""
 #: code:addons/account/models/account_report.py:0
 #, python-format
 msgid "Invalid domain for expression '%s' of line '%s': %s"
-msgstr ""
+msgstr "Dominio no válido para la expresión '%s' de la línea '%s': %s"
 
 #. module: account
 #. odoo-python
@@ -10924,7 +10926,7 @@ msgstr ""
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_30_days_end_month_the_10
 msgid "Payment terms: 30 days End of Month on the 10th"
-msgstr ""
+msgstr "Plazo de pago: 30 días al fin de mes el día 10"
 
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_advance
@@ -11111,7 +11113,7 @@ msgstr "Por favor, primero defina un país fiscal para la empresa %s."
 #: code:addons/account/models/account_journal_dashboard.py:0
 #, python-format
 msgid "Please install Accounting for this feature"
-msgstr ""
+msgstr "Por favor instale la aplicación Contabilidad para esta funcionalidad"
 
 #. module: account
 #. odoo-python
@@ -11150,7 +11152,7 @@ msgstr "Por favor utilice la siguiente referencia al realizar su pago: "
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line_template__plus_report_expression_ids
 msgid "Plus Tax Report Expressions"
-msgstr ""
+msgstr "Expresiones de informe de impuestos aditivos"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__default_pos_receivable_account_id
@@ -13609,6 +13611,8 @@ msgid ""
 "Tax report expressions whose '+' tag will be assigned to move lines by this "
 "repartition line"
 msgstr ""
+"Expresiones de informe de impuestos cuya etiqueta \"+\" asignará esta línea "
+"de reparto a los apuntes"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line_template__minus_report_expression_ids
@@ -13616,6 +13620,8 @@ msgid ""
 "Tax report expressions whose '-' tag will be assigned to move lines by this "
 "repartition line"
 msgstr ""
+"Expresiones de informe de impuestos cuya etiqueta \"-\" asignará esta línea "
+"de reparto a los apuntes"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__early_pay_discount_computation
@@ -14888,7 +14894,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__document_type
 msgid "The type of documnet on which the repartition line should be applied"
-msgstr ""
+msgstr "El tipo de documento en el que se debe aplicar la línea de reparto"
 
 #. module: account
 #. odoo-python
@@ -17398,7 +17404,7 @@ msgstr "aquí"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "if paid before"
-msgstr ""
+msgstr "si se paga antes de"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__payment_tolerance_type__fixed_amount
@@ -17584,7 +17590,7 @@ msgstr "{label}: asiento de ajuste de {new_date}"
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "{percent:0.2f}% recognized on {new_date}"
-msgstr ""
+msgstr "{percent:0.2f}% reconocido el {new_date}"
 
 #. module: account
 #. odoo-python

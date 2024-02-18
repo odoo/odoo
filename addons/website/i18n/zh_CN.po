@@ -19,6 +19,8 @@
 # Martin Trigaux, 2023
 # Wil Odoo, 2023
 # Chloe Wang, 2023
+# Yazi Tian, 2024
+# 湘子 南 <1360857908@qq.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -26,7 +28,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-25 11:22+0000\n"
 "PO-Revision-Date: 2023-01-17 14:59+0000\n"
-"Last-Translator: Chloe Wang, 2023\n"
+"Last-Translator: 湘子 南 <1360857908@qq.com>, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3750,6 +3752,15 @@ msgid "Display this website when users visit this domain"
 msgstr "用户访问此域时显示此网站"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid ""
+"Do not copy/paste code you do not understand, this could put your data at "
+"risk."
+msgstr "不要复制/粘贴您不理解的代码，这可能会使您的数据处于危险之中."
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_cards
 msgid ""
 "Do you need specific information? Our specialists will help you with "
@@ -4819,6 +4830,16 @@ msgid "Google Search Console"
 msgstr "Google 搜索控制台"
 
 #. module: website
+#. odoo-python
+#: code:addons/website/models/res_config_settings.py:0
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+#, python-format
+msgid ""
+"Google doesn't need to be pinged anymore. It will automatically fetch your "
+"/sitemap.xml."
+msgstr "谷歌不需要再被监视了。它将自动获取 /sitemap.xml."
+
+#. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__google_search_console
 #: model:ir.model.fields,help:website.field_website__google_search_console
 msgid "Google key, or Enable to access first reply"
@@ -5309,6 +5330,15 @@ msgid ""
 "If you discard the current edits, all unsaved changes will be lost. You can "
 "cancel to return to edit mode."
 msgstr "如果您放弃当前的编辑，所有未保存的更改都将丢失。您可以取消以返回编辑模式。"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_embed_code/options.js:0
+#, python-format
+msgid ""
+"If you need to add analytics or marketing tags, inject code in your <head> "
+"or <body> instead. The option is in the \"Theme\" tab."
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -11129,6 +11159,15 @@ msgstr "您的动态片段将显示在此处... 显示此消息是因为您没�
 #, python-format
 msgid "Your Email"
 msgstr "您的电子邮件"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_embed_code/000.js:0
+#, python-format
+msgid ""
+"Your Embed Code snippet doesn't have anything to display. Click on Edit to "
+"modify it."
+msgstr "您的嵌入代码片段没有任何要显示的内容。单击编辑来修改它."
 
 #. module: website
 #. odoo-javascript
