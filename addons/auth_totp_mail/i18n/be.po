@@ -39,18 +39,36 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Шаноўны <t t-out=\"object.partner_id.name or ''\"></t><br><br>\n"
+"        <t t-out=\"user.name  or ''\"></t> папрасіў вас актываваць двухфактарную аўтэнтыфікацыю для абароны вашага ўліковага запісу.<br><br>\n"
+"        Двухфактарная аўтэнтыфікацыя (\"2FA\") - гэта сістэма падвойнай аўтэнтыфікацыі.\n"
+"        Першая выконваецца з вашым паролем, а другая - з дапамогай кода, які вы атрымліваеце праз вызначаны мабільны дадатак.\n"
+"        Сярод папулярных - Authy, Google Authenticator або Microsoft Authenticator.\n"
+"\n"
+"        <p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"            <a t-att-href=\"object.get_totp_invite_url()\" style=\"background-color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">\n"
+"                Актываваць маю двухфактарную аўтэнтыфікацыю\n"
+"            </a>\n"
+"        </p>\n"
+"    </p>\n"
+"</div>\n"
+"        "
 
 #. module: auth_totp_mail
 #. odoo-python
 #: code:addons/auth_totp_mail/models/res_users.py:0
 #, python-format
 msgid "Account Security"
-msgstr ""
+msgstr "Бяспека ўліковага запісу"
 
 #. module: auth_totp_mail
 #: model:mail.template,subject:auth_totp_mail.mail_template_totp_invite
 msgid "Invitation to activate two-factor authentication on your Odoo account"
 msgstr ""
+"Запрашэнне актываваць двухфактарную аўтэнтыфікацыю ў вашым уліковым запісе "
+"Odoo"
 
 #. module: auth_totp_mail
 #. odoo-python
@@ -60,31 +78,33 @@ msgid ""
 "Invitation to use two-factor authentication sent for the following user(s): "
 "%s"
 msgstr ""
+"Запрашэнне выкарыстоўваць двухфактарную аўтэнтыфікацыю адпраўлена наступным "
+"карыстальнікам: %s"
 
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.view_users_form
 msgid "Invite to use 2FA"
-msgstr ""
+msgstr "Запрашэнне да выкарыстання 2FA"
 
 #. module: auth_totp_mail
 #: model:ir.actions.server,name:auth_totp_mail.action_invite_totp
 msgid "Invite to use two-factor authentication"
-msgstr ""
+msgstr "Запрашэнне да выкарыстання двухфактарнай аўтэнтыфікацыі"
 
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.res_users_view_form
 msgid "Name"
-msgstr ""
+msgstr "Назва"
 
 #. module: auth_totp_mail
 #: model:ir.actions.server,name:auth_totp_mail.action_activate_two_factor_authentication
 msgid "Open two-factor authentication configuration"
-msgstr ""
+msgstr "Адкрыць канфігурацыю двухфактарнай аўтэнтыфікацыі"
 
 #. module: auth_totp_mail
 #: model:mail.template,name:auth_totp_mail.mail_template_totp_invite
 msgid "Settings: 2Fa Invitation"
-msgstr ""
+msgstr "Налады: Запрашэнне 2Fa"
 
 #. module: auth_totp_mail
 #: model:ir.model,name:auth_totp_mail.model_res_users

@@ -303,7 +303,7 @@ msgid ""
 "            Manual actions may be needed."
 msgstr ""
 ".\n"
-"            Puede que se necesiten acciones manuales."
+"            Es posible que se necesiten acciones manuales."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_orderpoint_snooze__predefined_date__day
@@ -7199,6 +7199,14 @@ msgid ""
 msgstr ""
 "Las rutas se crearán para este almacén de reabastecimiento y podrá "
 "seleccionarlas en los productos y las categorías de producto"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_location.py:0
+#: code:addons/stock/models/stock_rule.py:0
+#, python-format
+msgid "Rule %s belongs to %s while the route belongs to %s."
+msgstr "La ruta %s pertenece a %s mientras que la ruta pertenece a %s."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__rule_message

@@ -6876,7 +6876,7 @@ msgstr "Localização de reabastecimento "
 #. module: stock
 #: model:stock.route,name:stock.route_warehouse0_mto
 msgid "Replenish on Order (MTO)"
-msgstr "Reabastecer no pedido (sob demanda)"
+msgstr "Reposição por pedido (sob demanda)"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_product_replenish
@@ -7178,6 +7178,14 @@ msgid ""
 msgstr ""
 "Rotas serão criadas para estes reabastecimento de armazéns e você pode "
 "selecioná-los sobre nos produtos e categorias de produtos"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_location.py:0
+#: code:addons/stock/models/stock_rule.py:0
+#, python-format
+msgid "Rule %s belongs to %s while the route belongs to %s."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__rule_message
