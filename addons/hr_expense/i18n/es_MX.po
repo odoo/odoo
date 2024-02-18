@@ -27,6 +27,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
+msgid "%(date_from)s - %(date_to)s"
+msgstr "%(date_from)s - %(date_to)s"
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
 msgid ""
 "%(user)s confirms this expense is not a duplicate with similar expense."
 msgstr ""
@@ -1347,6 +1354,13 @@ msgstr "Nombre"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
+msgid "New Expense Report, paid by %(paid_by)s"
+msgstr "Nuevo reporte de gastos, pagado por %(paid_by)s"
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
 msgid "New Expense Reports"
 msgstr "Nuevos reportes de gastos"
 
@@ -2048,11 +2062,6 @@ msgstr ""
 "este reporte no contiene duplicados."
 
 #. module: hr_expense
-#: model:ir.model.constraint,message:hr_expense.constraint_hr_expense_sheet_journal_id_required_posted
-msgid "The journal must be set on posted expense"
-msgstr "El diario debe establecerse en gastos publicados"
-
-#. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__employee_journal_id
 msgid "The journal used when the expense is paid by employee."
 msgstr "El diario se utiliza cuando los gastos los cubre el empleado"
@@ -2082,6 +2091,8 @@ msgid ""
 "The work email of some employees is missing. Please add it on the employee "
 "form"
 msgstr ""
+"Falta el correo electrónico de trabajo de algunos empleados. Agréguelo al "
+"formulario de cada empleado."
 
 #. module: hr_expense
 #. odoo-python
