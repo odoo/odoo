@@ -311,3 +311,43 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
         self.assertEqual(aml_output[0].credit, 0.0, "Cost of Good Sold entry missing or mismatching")
         self.assertEqual(aml_expense[0].credit, 0.0, "Cost of Good Sold entry missing or mismatching")
         self.assertEqual(aml_expense[0].debit, 0.0, "Cost of Good Sold entry missing or mismatching")
+
+    def test_action_pos_order_invoice(self):
+        self.company.point_of_sale_update_stock_quantities = 'closing'
+
+        # Setup a running session, with a paid pos order that is not invoiced
+        self.pos_config.open_ui()
+        current_session = self.pos_config.current_session_id
+        self.pos_order_pos0 = self.PosOrder.create({
+            'company_id': self.company.id,
+            'partner_id': self.partner.id,
+            'session_id': self.pos_config.current_session_id.id,
+            'lines': [(0, 0, {
+                'product_id': self.product.id,
+                'price_unit': 450,
+                'qty': 1.0,
+                'price_subtotal': 450,
+                'price_subtotal_incl': 450,
+            })],
+            'amount_total': 450,
+            'amount_tax': 0,
+            'amount_paid': 0,
+            'amount_return': 0,
+        })
+        context_make_payment = {"active_ids": [self.pos_order_pos0.id], "active_id": self.pos_order_pos0.id}
+        self.pos_make_payment_0 = self.PosMakePayment.with_context(context_make_payment).create({
+            'amount': 450.0,
+            'payment_method_id': self.cash_payment_method.id,
+        })
+        context_payment = {'active_id': self.pos_order_pos0.id}
+        self.pos_make_payment_0.with_context(context_payment).check()
+
+        # Invoice the pos order afterward (session still running)
+        self.pos_order_pos0.action_pos_order_invoice()
+
+        # Check that the stock output journal item from the invoice is reconciled (with its counterpart from the valuation entry)
+        stock_output_account = self.category.property_stock_account_output_categ_id
+        related_amls = current_session._get_related_account_moves().line_ids
+        stock_output_amls = related_amls.filtered_domain([('account_id', '=', stock_output_account.id)])
+
+        self.assertTrue(all(stock_output_amls.mapped('reconciled')))
