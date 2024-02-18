@@ -3,8 +3,8 @@
 # 	* sale
 # 
 # Translators:
-# Wil Odoo, 2024
 # Sarah Park, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-07 10:23+0000\n"
 "PO-Revision-Date: 2024-01-17 11:21+0000\n"
-"Last-Translator: Sarah Park, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -50,7 +50,7 @@ msgstr "%(attribute)s: %(values)s"
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 msgid "%(line_description)s (Cancelled)"
-msgstr ""
+msgstr "%(line_description)s (취소됨)"
 
 #. module: sale
 #. odoo-python
@@ -720,12 +720,12 @@ msgstr "<i class=\"fa fa-fw fa-check\" role=\"img\" aria-label=\"Done\" title=\"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<i class=\"fa fa-fw fa-check\"/> Authorized"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-check\"/> 인증 완료"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<i class=\"fa fa-fw fa-check\"/> Paid"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-check\"/> 결제 완료"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
@@ -735,7 +735,7 @@ msgstr "<i class=\"fa fa-fw fa-clock-o\"/> 만료됨"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<i class=\"fa fa-fw fa-clock-o\"/> Waiting Payment"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-clock-o\"/> 결제 대기 중"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_kanban
@@ -880,7 +880,7 @@ msgstr "<span>세금</span>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_document_kanban
 msgid "<span>Visibility</span>"
-msgstr ""
+msgstr "<span>공개</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -950,7 +950,7 @@ msgstr "<strong>기간이 만료된 제안서입니다!</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<strong>This quotation has been cancelled.</strong>"
-msgstr ""
+msgstr "<strong>취소된 견적서입니다.</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1639,7 +1639,7 @@ msgstr "작성일자"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "Create Draft"
-msgstr ""
+msgstr "초안 생성"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__advance_payment_method
@@ -1675,7 +1675,7 @@ msgstr "새로운 견적서를 생성하세요. 신규 매출을 향한 첫 단�
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_view_sale_advance_payment_inv
 msgid "Create invoice(s)"
-msgstr ""
+msgstr "청구서 생성"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_invoice_salesteams
@@ -1873,7 +1873,7 @@ msgstr "견적서 유효 기간 기본값"
 msgid ""
 "Default period during which the quote is valid and can still be accepted by "
 "the customer. The default can be changed per order or template."
-msgstr ""
+msgstr "견적서가 유효하고 고객이 아직 수락할 수 있는 기본 기간입니다. 기본값은 주문이나 서식별로 변경될 수 있습니다."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_company__sale_discount_product_id
@@ -3792,14 +3792,14 @@ msgstr "주문서를 확정하려면 고객에게 온라인 서명을 요청하�
 msgid ""
 "Request a payment to confirm orders, in full (100%) or partial. The default "
 "can be changed per order or template."
-msgstr ""
+msgstr "주문을 확정할 수 있도록 전체 (100%) 또는 부분 결제를 요청하세요. 기본값은 주문이나 서식별로 변경될 수 있습니다."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid ""
 "Request customers to sign quotations to validate orders. The default can be "
 "changed per order or template."
-msgstr ""
+msgstr "주문을 확정할 수 있도록 고객에게 견적서 서명을 요청하세요. 기본값은 주문이나 서식별로 변경될 수 있습니다."
 
 #. module: sale
 #. odoo-python
@@ -3864,7 +3864,7 @@ msgstr "판매 주문 수"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.mail_activity_plan_action_sale_order
 msgid "Sale Order Plans"
-msgstr ""
+msgstr "판매 주문 계획"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_warning_sale
@@ -4528,6 +4528,8 @@ msgid ""
 "Team %(team_name)s has %(sale_order_count)s active sale orders. Consider "
 "cancelling them or archiving the team instead."
 msgstr ""
+"%(team_name)s 팀에 %(sale_order_count)s개의 판매주문서가 활성화 상태입니다. 확인 후 취소하거나 보관 "
+"처리하시기 바랍니다."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -4715,6 +4717,13 @@ msgstr "주문서를 확정하기 위해 고객이 반드시 결제해야 하는
 #: model:ir.model.fields,help:sale.field_res_config_settings__prepayment_percent
 msgid "The percentage of the amount needed to be paid to confirm quotations."
 msgstr "견적서를 확정하기 위해 결제해야 하는 금액 비율입니다."
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/models/product_template.py:0
+#, python-format
+msgid "The product (%s) has incompatible values: %s"
+msgstr "해당 품목 (%s)에 호환되지 않는 값이 있습니다: %s"
 
 #. module: sale
 #. odoo-python

@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Wichanon Jamwutthipreecha, 2024
-# Rasareeyar Lappiam, 2024
 # Wil Odoo, 2024
+# Rasareeyar Lappiam, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-17 10:14+0000\n"
 "PO-Revision-Date: 2024-01-17 11:21+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Rasareeyar Lappiam, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -5286,6 +5286,8 @@ msgid ""
 "\n"
 "Generate tasks in Project app from a form published on your website. This module requires the use of the *Form Builder* module in order to build the form.\n"
 msgstr ""
+"\n"
+"สร้างงานในแอปโปรเจ็กต์จากแบบฟอร์มที่เผยแพร่บนเว็บไซต์ของคุณ โมดูลนี้จำเป็นต้องใช้โมดูล *Form Builder* เพื่อสร้างแบบฟอร์ม\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_intrastat
@@ -7764,6 +7766,8 @@ msgid ""
 "\n"
 "Search project tasks according to the assignees' skills\n"
 msgstr ""
+"\n"
+"ค้นหางานโปรเจ็กต์ตามทักษะของผู้ได้รับมอบหมาย\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_event_sale
@@ -8061,6 +8065,20 @@ msgid ""
 "The generation of the QR-bill is automatic if you meet the previous criteria. The QR-bill will be appended after the invoice when printing or sending by mail.\n"
 "\n"
 msgstr ""
+"\n"
+"การประยุกต์ใช้สำหรับประเทศสวิตเซอร์แลนด์\n"
+"==================\n"
+"โมดูลนี้กำหนดแผนผังบัญชีสำหรับประเทศสวิตเซอร์แลนด์ (Swiss PME/KMU 2015) ภาษีและการเปิดใช้งานการสร้างใบเรียกเก็บเงิน QR โค้ด เมื่อคุณพิมพ์ใบแจ้งหนี้หรือส่งผ่านทางอีเมล\n"
+"ใบเรียกเก็บเงิน QR โค้ดจะถูกแนบกับใบแจ้งหนี้และทำให้การชำระเงินเป็นเรื่องที่ง่ายขึ้น\n"
+"\n"
+"ใบเรียกเก็บเงิน QR โค้ดจะถูกสร้างขึ้นหาก:\n"
+"    - พาร์ทเนอร์ที่ตั้งค่าในใบแจ้งหนี้ของคุณมีที่อยู่ที่สมบูรณ์ (ถนน เมือง รหัสไปรษณีย์ และประเทศ) ในประเทศสวิตเซอร์แลนด์\n"
+"    - เลือกตัวเลือกในการสร้างรหัส QR โค้ดในประเทศสวิตเซอร์แลนด์ในใบแจ้งหนี้ (ทำโดยค่าเริ่มต้น)\n"
+"    - ตั้งค่าหมายเลขบัญชี/QR IBAN ที่ถูกต้องในสมุดรายวันธนาคารของคุณ\n"
+"    - (เมื่อใช้ QR-IBAN): อ้างอิงการชำระเงินในใบแจ้งหนี้เป็นอ้างอิง QR\n"
+"\n"
+"การสร้างบิล QR เป็นอัตโนมัติหากคุณตรงตามเกณฑ์ก่อนหน้านี้ ใบเรียกเก็บเงิน QR โค้ดจะถูกแนบหลังใบแจ้งหนี้เมื่อพิมพ์หรือส่งทางอีเมล\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ch_hr_payroll
@@ -8739,6 +8757,8 @@ msgid ""
 "\n"
 "This is the base module to manage the accounting chart for Republic of Ireland in Odoo.\n"
 msgstr ""
+"\n"
+"นี่คือโมดูลพื้นฐานในการจัดการแผนผังการบัญชีสำหรับประเทศไอร์แลนด์ใน Odoo\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_tw
@@ -14943,7 +14963,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_pe_website_sale
 msgid "Be able to see Identification Type in ecommerce checkout form."
-msgstr ""
+msgstr "สามารถดูประเภทการระบุตัวตนในแบบฟอร์มการชำระเงินอีคอมเมิร์ซ"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_view_form
@@ -15744,7 +15764,7 @@ msgstr "ยกเลิกการปรับรุ่น"
 #. odoo-python
 #: code:addons/base/models/res_users.py:0
 msgid "Cannot aggregate on %s parameter"
-msgstr ""
+msgstr "ไม่สามารถรวมพารามิเตอร์ %s ได้"
 
 #. module: base
 #. odoo-python
@@ -15784,7 +15804,7 @@ msgstr "Cannot duplicate configuration!"
 #. odoo-python
 #: code:addons/base/models/res_users.py:0
 msgid "Cannot groupby on %s parameter"
-msgstr ""
+msgstr "ไม่สามารถจัดกลุ่มตามพารามิเตอร์ %s ได้"
 
 #. module: base
 #. odoo-python
@@ -16174,12 +16194,12 @@ msgstr "หมู่เกาะ (คีลิง) โคโคส"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_codabox
 msgid "CodaBox"
-msgstr ""
+msgstr "CodaBox"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_codabox
 msgid "CodaBox integration to retrieve your CODA and SODA files."
-msgstr ""
+msgstr "การรวม CodaBox เพื่อดึงไฟล์ CODA และ SODA ของคุณ"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_import_language
@@ -19023,7 +19043,7 @@ msgstr "ข้อมูลพนักงานในการนัดหมา
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_employment_hero
 msgid "Employment Hero Payroll"
-msgstr ""
+msgstr "บัญชีเงินเดือนการจ้างงาน Hero"
 
 #. module: base
 #. odoo-python
@@ -22598,6 +22618,8 @@ msgid ""
 "Integrate features developped in Mail in use case involving resources "
 "instead of users"
 msgstr ""
+"ผสานรวมฟีเจอร์ที่พัฒนาในจดหมาย "
+"ในกรณีการใช้งานที่เกี่ยวข้องกับทรัพยากรแทนที่จะเป็นผู้ใช้"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_loyalty_delivery
@@ -23976,7 +23998,7 @@ msgstr "การปรับเข้ากับท้องถิ่น"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_company_form
 msgid "Localization features are available for this country:"
-msgstr ""
+msgstr "ฟีเจอร์การประยุกต์ใช้มีให้สำหรับประเทศนี้:"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_logging_form_view
@@ -29286,7 +29308,7 @@ msgstr "ประเทศเปรู - บันทึกการจัดส
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_pe_website_sale
 msgid "Peruvian eCommerce"
-msgstr ""
+msgstr "อีคอมเมิร์ซของประเทศเปรู"
 
 #. module: base
 #: model:res.country,name:base.ph
@@ -29826,7 +29848,7 @@ msgstr "โปรเจ็กต์ - การขาย - ค่าใช้จ
 #: model:ir.module.module,shortdesc:base.module_project_enterprise_hr_skills
 #: model:ir.module.module,shortdesc:base.module_project_hr_skills
 msgid "Project - Skills"
-msgstr ""
+msgstr "โปรเจ็กต์ - ทักษะ"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_account_asset
@@ -30070,7 +30092,7 @@ msgstr "การสมัครสมาชิกการขายของโ
 #: model:ir.module.module,summary:base.module_project_enterprise_hr_skills
 #: model:ir.module.module,summary:base.module_project_hr_skills
 msgid "Project skills"
-msgstr ""
+msgstr "ทักษะของโปรเจ็กต์"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk_fsm_sale
@@ -31018,7 +31040,7 @@ msgstr "ไอดีทรัพยากร"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_resource_mail
 msgid "Resource Mail"
-msgstr ""
+msgstr "จดหมายทรัพยากร"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__res_model
@@ -33658,7 +33680,7 @@ msgstr "ชื่อแม่แบบ"
 #: code:addons/base/models/assetsbundle.py:0
 #: code:addons/base/models/assetsbundle.py:0
 msgid "Template name is missing."
-msgstr ""
+msgstr "ชื่อเทมเพลตขาดหาย"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_base_automation
@@ -35985,7 +36007,7 @@ msgstr "ไม่สามารถถอนการติดตั้งได
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__uninstalled_l10n_module_ids
 msgid "Uninstalled L10N Module"
-msgstr ""
+msgstr "ถอนการติดตั้งโมดูล L10N"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_uninstall
@@ -38122,7 +38144,7 @@ msgstr "เช่น เซิร์ฟเวอร์ขาออกของ�
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "e.g. New Address"
-msgstr ""
+msgstr "เช่น ที่อยู่ใหม่"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
