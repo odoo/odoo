@@ -30,7 +30,10 @@ export async function insertPivotInSpreadsheet(model, params) {
     };
     const pivotId = model.getters.getNextPivotId();
     const dataSourceId = model.getters.getPivotDataSourceId(pivotId);
-    const dataSource = model.config.custom.dataSources.add(dataSourceId, OdooPivot, pivot);
+    const dataSource = model.config.custom.dataSources.add(dataSourceId, OdooPivot, {
+        definition: pivot,
+        getters: model.getters,
+    });
     await dataSource.load();
     const { cols, rows, measures, rowTitle } = dataSource.getTableStructure().export();
     const table = {

@@ -19,6 +19,7 @@ declare module "@spreadsheet" {
         getLastPivotGroupValue(domain: Array<string | number>): string | boolean | number;
         getTableStructure(): SpreadsheetPivotTable;
         getPivotCellValue(measure: string, domain: Array<string | number>): string | boolean | number;
+        getPivotFieldFormat(name: string): string;
     }
 
     export interface CommonPivotDefinition {
@@ -34,10 +35,6 @@ declare module "@spreadsheet" {
         model: string;
         domain: Array;
         context: Object;
-    }
-
-    export interface PivotHandler {
-      getTable(payload: ExtendedInsertPivotPayload): SpreadsheetPivotTable;
     }
 
     export interface SpreadsheetPivotDefinition extends CommonPivotDefinition {

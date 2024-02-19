@@ -95,11 +95,12 @@ const ODOO_PIVOT = /** @satisfies {CustomFunctionDescription} */ ({
         assertPivotsExists(_pivotId, this.getters);
         assertMeasureExist(_pivotId, measure, this.getters);
         assertDomainLength(domainArgs);
-        const value = this.getters.getPivotCellValue(_pivotId, measure, domainArgs);
+        const pivot = this.getters.getPivot(_pivotId);
+        const value = pivot.getPivotCellValue(measure, domainArgs);
         if (measure === "__count") {
             return { value, format: "0" };
         }
-        const format = this.getters.getPivotFieldFormat(_pivotId, measure);
+        const format = pivot.getPivotFieldFormat(measure);
         return { value, format };
     },
     returns: ["NUMBER", "STRING"],
@@ -124,12 +125,13 @@ const ODOO_PIVOT_HEADER = /** @satisfies {CustomFunctionDescription} */ ({
         assertDomainLength(domainArgs);
         const fieldName = domainArgs.at(-2);
         const value = domainArgs.at(-1);
+        const pivot = this.getters.getPivot(_pivotId);
         const format =
             !fieldName || fieldName === "measure" || value === "false"
                 ? undefined
-                : this.getters.getPivotFieldFormat(_pivotId, fieldName);
+                : pivot.getPivotFieldFormat(fieldName);
         return {
-            value: this.getters.computePivotHeaderValue(_pivotId, domainArgs),
+            value: pivot.computePivotHeaderValue(domainArgs),
             format,
         };
     },
@@ -181,8 +183,8 @@ const ODOO_PIVOT_TABLE = /** @satisfies {CustomFunctionDescription} */ ({
     ) {
         const _pivotId = toString(pivotId);
         assertPivotsExists(_pivotId, this.getters);
-        /** @type {SpreadsheetPivotTable} */
-        const table = this.getters.getPivotTableStructure(_pivotId);
+        const pivot = this.getters.getPivot(_pivotId);
+        const table = pivot.getTableStructure();
         const _includeColumnHeaders = toBoolean(includeColumnHeaders);
         const cells = table.getPivotCells(toBoolean(includeTotal), _includeColumnHeaders);
         const headerRows = _includeColumnHeaders ? table.getNumberOfHeaderRows() : 0;
