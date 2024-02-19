@@ -77,20 +77,25 @@
             <div class="before-footer" />
 
             <div t-if="props.data.pos_qr_code">
-                <br /><br />
+                <br/>
                 <div class="pos-receipt-order-data mb-2">
-                    Scan me to get an invoice from the Odoo portal.
+                    Need an invoice for your purchase ?
                 </div>
-                <img id="posqrcode" t-att-src="props.data.pos_qr_code" class="pos-receipt-qrcode"/>
             </div>
 
-            <div t-if="props.data.ticket_code">
-                <br /><br />
+            <div t-if="['qr_code', 'qr_code_and_url'].includes(props.data.headerData.company.point_of_sale_ticket_portal_url_display_mode) and props.data.pos_qr_code" class="mb-2">
+                <img id="posqrcode" t-att-src="props.data.pos_qr_code" class="pos-receipt-logo"/>
+            </div>
+
+            <div t-if="props.data.pos_qr_code">
                 <div class="pos-receipt-order-data">
-                    You can go to <t t-out="props.data.base_url"/>/pos/ticket and use the code below to request an invoice online
+                    Unique Code: <t t-esc="props.data.ticket_code"/>
                 </div>
-                <div class="pos-receipt-order-data">
-                    Unique Code: <t t-out="props.data.ticket_code"/>
+            </div>
+
+            <div t-if="['url', 'qr_code_and_url'].includes(props.data.headerData.company.point_of_sale_ticket_portal_url_display_mode) and props.data.pos_qr_code">
+                <div class="pos-receipt-order-data" t-attf-class="{{ props.data.ticket_portal_url_display_mode === 'qr_code_and_url' ? 'mt-3' : '' }}">
+                    Portal URL: <t t-out="props.data.base_url"/>/pos/ticket
                 </div>
             </div>
 
