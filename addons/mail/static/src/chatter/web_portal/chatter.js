@@ -57,7 +57,7 @@ export class Chatter extends Component {
         "close?",
         "compactHeight?",
         "displayName?",
-        "hasActivities?",
+        "has_activities?",
         "hasFollowers?",
         "hasMessageList?",
         "isChatterAside?",
@@ -73,7 +73,7 @@ export class Chatter extends Component {
     ];
     static defaultProps = {
         compactHeight: false,
-        hasActivities: true,
+        has_activities: true,
         hasFollowers: true,
         hasMessageList: true,
         isChatterAside: false,
@@ -276,9 +276,6 @@ export class Chatter extends Component {
     load(thread, requestList = ["followers", "attachments", "messages", "suggestedRecipients"]) {
         if (!thread.id || !this.state.thread?.eq(thread)) {
             return;
-        }
-        if (this.props.hasActivities && !requestList.includes("activities")) {
-            requestList.push("activities");
         }
         this.threadService.fetchData(thread, requestList);
     }

@@ -602,7 +602,7 @@ patch(MockServer.prototype, {
             return res;
         }
         res["canPostOnReadonly"] = thread_model === "discuss.channel"; // model that have attr _mail_post_access='read'
-        if (request_list.includes("activities")) {
+        if (this.pyEnv.mockServer.models[thread_model].has_activities) {
             const activities = this.pyEnv["mail.activity"].searchRead([
                 ["id", "in", thread.activity_ids || []],
             ]);
