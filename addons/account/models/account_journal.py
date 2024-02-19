@@ -263,14 +263,18 @@ class AccountJournal(models.Model):
                     if vals['mode'] == 'unique' and (already_used or is_protected):
                         continue
 
-                    # Only the manual payment method can be used multiple time on a single journal.
-                    if payment_method.code != "manual" and already_used:
+                    # Some payment methods can be used multiple times on a single journal.
+                    if payment_method.code not in self._get_reusable_payment_methods() and already_used:
                         continue
 
                     pay_method_ids_commands_x_journal[journal].append(Command.link(payment_method.id))
 
         for journal, pay_method_ids_commands in pay_method_ids_commands_x_journal.items():
             journal.available_payment_method_ids = pay_method_ids_commands
+
+    @api.model
+    def _get_reusable_payment_methods(self):
+        return {'manual'}
 
     @api.depends('type')
     def _compute_default_account_type(self):
