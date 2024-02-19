@@ -6195,3 +6195,29 @@ class StockMove(TransactionCase):
 
         self.assertEqual(picking.scheduled_date, today + relativedelta(day=5))
         self.assertEqual(backorder.scheduled_date, today + relativedelta(day=10))
+
+    def test_internal_transfer_with_tracked_product(self):
+        """
+        Test That we can do an internal transfer with a tracked products
+        """
+        sn01 = self.env['stock.lot'].create({
+            'name': 'sn_1',
+            'product_id': self.product_serial.id,
+        })
+        self.env['stock.quant']._update_available_quantity(self.product_serial, self.stock_location, 1.0, sn01)
+
+        with Form(self.env['stock.picking']) as picking_form:
+            picking_form.picking_type_id = self.env.ref('stock.picking_type_internal')
+            with picking_form.move_ids_without_package.new() as move:
+                move.product_id = self.product_serial
+                move.product_uom_qty = 1
+            picking = picking_form.save()
+
+        picking.action_confirm()
+        self.assertEqual(picking.state, 'assigned')
+        self.assertFalse(picking.move_ids_without_package.lot_ids)
+
+        with picking_form.move_ids_without_package.edit(0) as line_form:
+            line_form.lot_ids.add(sn01)
+        picking = picking_form.save()
+        self.assertEqual(picking.move_ids_without_package.lot_ids, sn01)
