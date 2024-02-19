@@ -124,4 +124,6 @@ class IrModel(models.Model):
             for fname, field in model_definition["fields"].items():
                 if fname in tracked_field_names:
                     field['tracking'] = True
+            if isinstance(self.env[model_name], self.env.registry['mail.activity.mixin']):
+                model_definition["has_activities"] = True
         return model_definitions

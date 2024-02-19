@@ -42,7 +42,7 @@ QUnit.test("simple chatter on a record", async () => {
     await contains(".o-mail-Chatter-topbar");
     await contains(".o-mail-Thread");
     await assertSteps([
-        `/mail/thread/data - {"request_list":["followers","attachments","suggestedRecipients","activities"],"thread_id":${partnerId},"thread_model":"res.partner"}`,
+        `/mail/thread/data - {"request_list":["followers","attachments","suggestedRecipients"],"thread_id":${partnerId},"thread_model":"res.partner"}`,
         `/mail/thread/messages - {"thread_id":${partnerId},"thread_model":"res.partner","limit":30}`,
     ]);
 });
@@ -514,36 +514,6 @@ QUnit.test("basic chatter rendering", async () => {
         views: [[false, "form"]],
     });
     await contains(".o-mail-Chatter");
-});
-
-QUnit.test("basic chatter rendering without activities", async () => {
-    const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({ display_name: "second partner" });
-    const views = {
-        "res.partner,false,form": `
-            <form string="Partners">
-                <sheet>
-                    <field name="name"/>
-                </sheet>
-                <div class="oe_chatter">
-                    <field name="message_follower_ids"/>
-                    <field name="message_ids"/>
-                </div>
-            </form>`,
-    };
-    const { openView } = await start({ serverData: { views } });
-    openView({
-        res_model: "res.partner",
-        res_id: partnerId,
-        views: [[false, "form"]],
-    });
-    await contains(".o-mail-Chatter");
-    await contains(".o-mail-Chatter-topbar");
-    await contains("button[aria-label='Attach files']");
-    await contains("button", { count: 0, text: "Activities" });
-
-    await contains(".o-mail-Followers");
-    await contains(".o-mail-Thread");
 });
 
 QUnit.test(

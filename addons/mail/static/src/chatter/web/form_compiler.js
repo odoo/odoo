@@ -6,7 +6,6 @@ import { append, createElement, setAttributes } from "@web/core/utils/xml";
 import { FormCompiler } from "@web/views/form/form_compiler";
 
 function compileChatter(node, params) {
-    let hasActivities = false;
     let hasFollowers = false;
     let hasMessageList = false;
     let hasParentReloadOnAttachmentsChanged;
@@ -16,9 +15,6 @@ function compileChatter(node, params) {
     for (const childNode of node.children) {
         const options = evaluateExpr(childNode.getAttribute("options") || "{}");
         switch (childNode.getAttribute("name")) {
-            case "activity_ids":
-                hasActivities = true;
-                break;
             case "message_follower_ids":
                 hasFollowers = true;
                 hasParentReloadOnFollowersUpdate = Boolean(options["post_refresh"]);
@@ -37,7 +33,7 @@ function compileChatter(node, params) {
     const chatterContainerXml = createElement("t");
     setAttributes(chatterContainerXml, {
         "t-component": "__comp__.mailComponents.Chatter",
-        hasActivities,
+        has_activities: "__comp__.props.archInfo.has_activities",
         hasFollowers,
         hasMessageList,
         hasParentReloadOnAttachmentsChanged,
