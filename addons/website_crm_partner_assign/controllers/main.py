@@ -132,7 +132,9 @@ class WebsiteAccount(CustomerPortal):
 
         if date_begin and date_end:
             domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
-        # pager
+        # pager: bypass activities access rights for search but still apply access rules
+        leads_sudo = CrmLead.sudo()._search(domain)
+        domain = [('id', 'in', leads_sudo)]
         opp_count = CrmLead.search_count(domain)
         pager = request.website.pager(
             url="/my/opportunities",
