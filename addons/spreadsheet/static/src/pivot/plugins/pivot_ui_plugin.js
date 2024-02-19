@@ -2,31 +2,21 @@
 
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import { getFirstPivotFunction, getNumberOfPivotFormulas } from "../pivot_helpers";
-import { OdooPivot } from "../pivot_data_source";
 import { OdooUIPlugin } from "@spreadsheet/plugins";
-import { pivotTimeAdapter } from "../pivot_time_adapters";
+import { pivotRegistry } from "./pivot_registry";
 
-const { astToFormula, helpers } = spreadsheet;
-const { formatValue } = helpers;
+const { astToFormula } = spreadsheet;
 
 /**
- * @typedef {import("./pivot_core_plugin").OdooPivotDefinition} OdooPivotDefinition
- * @typedef {import("@spreadsheet/global_filters/plugins/global_filters_core_plugin").FieldMatching} FieldMatching
- * @typedef {import("@odoo/o-spreadsheet").Token} Token
+ * @typedef {import("@spreadsheet").Pivot} Pivot
  */
 
 export class PivotUIPlugin extends OdooUIPlugin {
     static getters = /** @type {const} */ ([
         "getPivot",
         "getFirstPivotFunction",
-        "computePivotHeaderValue",
-        "getPivotHeaderFormattedValue",
-        "getPivotFieldFormat",
         "getPivotIdFromPosition",
-        "getPivotCellValue",
-        "getPivotGroupByValues",
         "getPivotDataSourceId",
-        "getPivotTableStructure",
         "getPivotDomainArgsFromPosition",
         "isPivotUnused",
     ]);
@@ -39,7 +29,7 @@ export class PivotUIPlugin extends OdooUIPlugin {
         switch (cmd.type) {
             case "START":
                 for (const pivotId of this.getters.getPivotIds()) {
-                    this._setupPivotDataSource(pivotId);
+                    this._setupPivot(pivotId);
                 }
         }
     }
@@ -51,25 +41,21 @@ export class PivotUIPlugin extends OdooUIPlugin {
     handle(cmd) {
         switch (cmd.type) {
             case "REFRESH_PIVOT":
-                this._refreshOdooPivot(cmd.id);
+                this._refreshPivot(cmd.id);
                 break;
             case "REFRESH_ALL_DATA_SOURCES":
-                this._refreshOdooPivots();
+                this._refreshAllPivots();
                 break;
             case "ADD_PIVOT": {
-                const { id } = cmd;
-                this._setupPivotDataSource(id);
+                this._setupPivot(cmd.id);
                 break;
             }
             case "DUPLICATE_PIVOT": {
-                const { newPivotId } = cmd;
-                this._setupPivotDataSource(newPivotId);
+                this._setupPivot(cmd.newPivotId);
                 break;
             }
             case "UPDATE_ODOO_PIVOT_DOMAIN": {
-                const pivotDefinition = this.getters.getPivotDefinition(cmd.pivotId);
-                const dataSourceId = this.getPivotDataSourceId(cmd.pivotId);
-                this.dataSources.add(dataSourceId, OdooPivot, pivotDefinition);
+                this._setupPivot(cmd.pivotId, { recreate: true });
                 break;
             }
             case "DELETE_SHEET":
@@ -88,10 +74,7 @@ export class PivotUIPlugin extends OdooUIPlugin {
                     if (!this.getters.isExistingPivot(cmd.pivotId)) {
                         continue;
                     }
-
-                    const pivotDefinition = this.getters.getPivotDefinition(cmd.pivotId);
-                    const dataSourceId = this.getPivotDataSourceId(cmd.pivotId);
-                    this.dataSources.add(dataSourceId, OdooPivot, pivotDefinition);
+                    this._setupPivot(cmd.pivotId, { recreate: true });
                 }
                 break;
             }
@@ -180,10 +163,9 @@ export class PivotUIPlugin extends OdooUIPlugin {
             }
             const includeTotal = args[2];
             const includeColumnHeaders = args[3];
-            const pivotCells = this.getPivotTableStructure(pivotId).getPivotCells(
-                includeTotal,
-                includeColumnHeaders
-            );
+            const pivotCells = dataSource
+                .getTableStructure(pivotId)
+                .getPivotCells(includeTotal, includeColumnHeaders);
             const pivotCol = position.col - mainPosition.col;
             const pivotRow = position.row - mainPosition.row;
             const pivotCell = pivotCells[pivotCol][pivotRow];
@@ -201,77 +183,8 @@ export class PivotUIPlugin extends OdooUIPlugin {
     }
 
     /**
-     * Return all possible values in the pivot for a given field.
-     *
-     * @param {string} pivotId Id of the pivot
-     * @param {string} fieldName
-     * @returns {Array<string>}
-     */
-    getPivotGroupByValues(pivotId, fieldName) {
-        return this.getters.getPivot(pivotId).getPossibleValuesForGroupBy(fieldName);
-    }
-
-    /**
-     * High level method computing the result of ODOO.PIVOT.HEADER functions.
-     *
-     * @param {string} pivotId Id of a pivot
-     * @param {(string | number)[]} domainArgs arguments of the function (except the first one which is the pivot id)
-     */
-    computePivotHeaderValue(pivotId, domainArgs) {
-        const dataSource = this.getters.getPivot(pivotId);
-        return dataSource.computePivotHeaderValue(domainArgs);
-    }
-
-    /**
-     * High level method computing the formatted result of ODOO.PIVOT.HEADER functions.
-     *
      * @param {string} pivotId
-     * @param {(string | number)[]} pivotArgs arguments of the function (except the first one which is the pivot id)
-     */
-    getPivotHeaderFormattedValue(pivotId, pivotArgs) {
-        const dataSource = this.getters.getPivot(pivotId);
-        const value = dataSource.computePivotHeaderValue(pivotArgs);
-        if (typeof value === "string") {
-            return value;
-        }
-        const format = this.getPivotFieldFormat(pivotId, pivotArgs.at(-2));
-        const locale = this.getters.getLocale();
-        return formatValue(value, { format, locale });
-    }
-
-    /**
-     * @param {string} pivotId
-     * @param {string} fieldName
-     * @returns {string | undefined}
-     */
-    getPivotFieldFormat(pivotId, fieldName) {
-        const dataSource = this.getPivot(pivotId);
-        const { field, aggregateOperator } = dataSource.parseGroupField(fieldName);
-        return this._getFieldFormat(field, aggregateOperator);
-    }
-
-    /**
-     * Get the value for a pivot cell
-     *
-     * @param {string} pivotId Id of a pivot
-     * @param {string} measure Field name of the measures
-     * @param {Array<string>} domain Domain
-     *
-     * @returns {string|number|undefined}
-     */
-    getPivotCellValue(pivotId, measure, domain) {
-        const dataSource = this.getters.getPivot(pivotId);
-        return dataSource.getPivotCellValue(measure, domain);
-    }
-
-    getPivotTableStructure(pivotId) {
-        const dataSource = this.getters.getPivot(pivotId);
-        return dataSource.getTableStructure();
-    }
-
-    /**
-     * @param {string} pivotId
-     * @returns {OdooPivot|undefined}
+     * @returns {Pivot|undefined}
      */
     getPivot(pivotId) {
         const dataSourceId = this.getPivotDataSourceId(pivotId);
@@ -291,55 +204,36 @@ export class PivotUIPlugin extends OdooUIPlugin {
     // ---------------------------------------------------------------------
 
     /**
-     * @param {import("../../data_sources/metadata_repository").Field} field
-     * @param {"day" | "week" | "month" | "quarter" | "year"} aggregateOperator
-     * @returns {string | undefined}
-     */
-    _getFieldFormat(field, aggregateOperator) {
-        switch (field.type) {
-            case "integer":
-                return "0";
-            case "float":
-                return "#,##0.00";
-            case "monetary":
-                return this.getters.getCompanyCurrencyFormat() || "#,##0.00";
-            case "date":
-            case "datetime": {
-                const timeAdapter = pivotTimeAdapter(aggregateOperator);
-                return timeAdapter.getFormat(this.getters.getLocale());
-            }
-            default:
-                return undefined;
-        }
-    }
-
-    /**
      * Refresh the cache of a pivot
      *
      * @param {string} pivotId Id of the pivot
      */
-    _refreshOdooPivot(pivotId) {
-        const dataSource = this.getters.getPivot(pivotId);
-        dataSource.load({ reload: true });
+    _refreshPivot(pivotId) {
+        const pivot = this.getters.getPivot(pivotId);
+        pivot.load({ reload: true });
     }
 
     /**
      * Refresh the cache of all the pivots
      */
-    _refreshOdooPivots() {
+    _refreshAllPivots() {
         for (const pivotId of this.getters.getPivotIds()) {
-            this._refreshOdooPivot(pivotId, false);
+            this._refreshPivot(pivotId);
         }
     }
 
     /**
      * @param {string} pisvotId
      */
-    _setupPivotDataSource(pivotId) {
+    _setupPivot(pivotId, { recreate } = { recreate: false }) {
         const dataSourceId = this.getPivotDataSourceId(pivotId);
         const definition = this.getters.getPivotDefinition(pivotId);
-        if (!this.dataSources.contains(dataSourceId)) {
-            this.dataSources.add(dataSourceId, OdooPivot, definition);
+        if (recreate || !this.dataSources.contains(dataSourceId)) {
+            const cls = pivotRegistry.get(definition.type);
+            this.dataSources.add(dataSourceId, cls, {
+                definition,
+                getters: this.getters,
+            });
         }
     }
 
