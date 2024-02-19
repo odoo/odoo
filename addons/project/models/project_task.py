@@ -11,7 +11,7 @@ from odoo.addons.rating.models import rating_data
 from odoo.addons.web_editor.tools import handle_history_divergence
 from odoo.exceptions import UserError, ValidationError, AccessError
 from odoo.osv import expression
-from odoo.tools.misc import get_lang
+from odoo.tools import format_list
 from odoo.addons.resource.models.utils import filter_domain_leaf
 
 
@@ -620,7 +620,7 @@ class Task(models.Model):
             self.invalidate_recordset(fnames=['user_ids'])
             self._origin.fetch(['user_ids'])
         for task in self.with_context(prefetch_fields=False):
-            task.portal_user_names = ', '.join(task.user_ids.mapped('name'))
+            task.portal_user_names = format_list(self.env, task.user_ids.mapped('name'))
 
     def _search_portal_user_names(self, operator, value):
         if operator != 'ilike' and not isinstance(value, str):
@@ -864,7 +864,7 @@ class Task(models.Model):
         if fields and (not check_group_user or self.env.user.has_group('base.group_portal')) and not self.env.su:
             unauthorized_fields = set(fields) - (self.SELF_READABLE_FIELDS if operation == 'read' else self.SELF_WRITABLE_FIELDS)
             if unauthorized_fields:
-                unauthorized_field_list = ', '.join(unauthorized_fields)
+                unauthorized_field_list = format_list(self.env, list(unauthorized_fields))
                 if operation == 'read':
                     error_message = _('You cannot read the following fields on tasks: %(field_list)s', field_list=unauthorized_field_list)
                 else:
