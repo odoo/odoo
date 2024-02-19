@@ -2,8 +2,8 @@
 
 import { negate } from "@point_of_sale/../tests/tours/utils/common";
 
-export function confirm(confirmationText) {
-    let trigger = ".modal-footer .btn-primary";
+export function confirm(confirmationText, button = ".btn-primary") {
+    let trigger = `.modal-footer ${button}`;
     if (confirmationText) {
         trigger += `:contains("${confirmationText}")`;
     }

@@ -783,23 +783,18 @@ class TestUi(TestPointOfSaleHttpCommon):
             self.assertEqual(rounding_line.balance, rounding_applied, 'Rounding amount is incorrect!')
 
     def test_pos_closing_cash_details(self):
-        """Test if the cash closing details correctly show the cash difference
-           if there is a difference at the opening of the PoS session. This also test if the accounting
-           move are correctly created for the opening cash difference.
-           e.g. If the previous session was closed with 100$ and the opening count is 50$,
-           the closing popup should show a difference of 50$.
+        """Test cash difference *loss* at closing.
         """
         self.main_pos_config.open_ui()
         current_session = self.main_pos_config.current_session_id
-        current_session.post_closing_cash_details(100)
+        current_session.post_closing_cash_details(0)
         current_session.close_session_from_ui()
-
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'CashClosingDetails', login="pos_user")
-        #check accounting move for the pos opening cash difference
-        pos_session = self.main_pos_config.current_session_id
-        self.assertEqual(len(pos_session.statement_line_ids), 1)
-        self.assertEqual(pos_session.statement_line_ids[0].amount, -10)
+        cash_diff_line = self.env['account.bank.statement.line'].search([
+            ('payment_ref', 'ilike', 'Cash difference observed during the counting (Loss)')
+        ])
+        self.assertAlmostEqual(cash_diff_line.amount, -1.00)
 
     def test_cash_payments_should_reflect_on_next_opening(self):
         self.main_pos_config.with_user(self.pos_user).open_ui()

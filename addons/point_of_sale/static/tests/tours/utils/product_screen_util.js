@@ -377,21 +377,6 @@ export function totalAmountIs(amount) {
 export function modeIsActive(mode) {
     return inLeftSide(Numpad.isActive(mode));
 }
-export function checkSecondCashClosingDetailsLineAmount(amount, sign) {
-    return [
-        ...Chrome.clickMenuOption("Close Register"),
-        {
-            content: "Check closing details",
-            trigger: `.cash-overview tr:nth-child(2) td:contains("${amount}")`,
-            run: () => {}, // it's a check
-        },
-        {
-            content: "Check closing details",
-            trigger: `.cash-overview tr:nth-child(2) .cash-sign:contains("${sign}")`,
-            run: () => {}, // it's a check
-        },
-    ];
-}
 export function noDiscountApplied(originalPrice) {
     return inLeftSide({
         content: "no discount is applied",
