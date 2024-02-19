@@ -195,6 +195,15 @@ export class OdooPivot extends OdooViewsDataSource {
         return this._model.getPivotCellDomain(domain);
     }
 
+    /**
+     * @param {string} fieldName
+     * @returns {{ value: string | number | boolean, label: string }[]}
+     */
+    getPossibleFieldValues(fieldName) {
+        this._assertDataIsLoaded();
+        return this._model.getPossibleFieldValues(fieldName);
+    }
+
     async copyModelWithOriginalDomain() {
         await this.loadMetadata();
         this._runtimeDefinition = new OdooPivotRuntimeDefinition(
