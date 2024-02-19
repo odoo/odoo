@@ -98,3 +98,32 @@ QUnit.test("Send message button activation (access rights dependent)", async fun
     await assertSendButton(true, "Draft record", "mail.test.multi.company");
     await assertSendButton(true, "Draft record", "mail.test.multi.company.read");
 });
+
+QUnit.test("basic chatter rendering with a model without activities", async () => {
+    const pyEnv = await startServer();
+    const recordId = pyEnv["mail.test.simple"].create({ name: "new record" });
+    const views = {
+        "mail.test.simple,false,form": `
+            <form string="Records">
+                <sheet>
+                    <field name="name"/>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>`,
+    };
+    const { openView } = await start({ serverData: { views } });
+    await openView({
+        res_model: "mail.test.simple",
+        res_id: recordId,
+        views: [[false, "form"]],
+    });
+    await contains(".o-mail-Chatter");
+    await contains(".o-mail-Chatter-topbar");
+    await contains("button[aria-label='Attach files']");
+    await contains("button", { count: 0, text: "Activities" });
+    await contains(".o-mail-Followers");
+    await contains(".o-mail-Thread");
+});

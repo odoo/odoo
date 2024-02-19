@@ -16,4 +16,14 @@ patch(MockServer.prototype, {
         }
         return rpcResult;
     },
+
+    mockGetViews(modelName, kwargs) {
+        const result = super.mockGetViews(...arguments);
+        for (const modelName of Object.keys(result.models)) {
+            if (this.models[modelName].has_activities) {
+                result.models[modelName].has_activities = true;
+            }
+        }
+        return result;
+    },
 });
