@@ -118,9 +118,9 @@ class AccountEdiCommon(models.AbstractModel):
             return UOM_TO_UNECE_CODE.get(xmlid[line.product_uom_id.id], 'C62')
         return 'C62'
 
-    def _find_value(self, xpath, tree):
+    def _find_value(self, xpath, tree, nsmap=False):
         # avoid 'TypeError: empty namespace prefix is not supported in XPath'
-        nsmap = {k: v for k, v in tree.nsmap.items() if k is not None}
+        nsmap = nsmap or {k: v for k, v in tree.nsmap.items() if k is not None}
         return find_xml_value(xpath, tree, nsmap)
 
     # -------------------------------------------------------------------------
