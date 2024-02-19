@@ -6,6 +6,7 @@ import { useWindowListener } from "../hoot_utils";
 import { MockMath, generateSeed, internalRandom } from "../mock/math";
 import { toggleColorScheme, useColorScheme } from "./hoot_colors";
 import { HootCopyButton } from "./hoot_copy_button";
+import { logLevels } from "../core/logger";
 
 /**
  * @typedef {"dark" | "light"} ColorScheme
@@ -13,6 +14,12 @@ import { HootCopyButton } from "./hoot_copy_button";
  * @typedef {{
  * }} HootConfigDropdownProps
  */
+
+//-----------------------------------------------------------------------------
+// Global
+//-----------------------------------------------------------------------------
+
+const { Object } = globalThis;
 
 //-----------------------------------------------------------------------------
 // Exports
@@ -81,6 +88,17 @@ export class HootConfigDropdown extends Component {
                     </label>
                     <label
                         class="cursor-pointer flex items-center gap-1 p-1 hover:bg-gray-300 dark:hover:bg-gray-700"
+                        title="Awaits user input before running the tests"
+                    >
+                        <input
+                            type="checkbox"
+                            class="appearance-none border border-primary rounded-sm w-4 h-4"
+                            t-model="config.manual"
+                        />
+                        <span>Manual</span>
+                    </label>
+                    <label
+                        class="cursor-pointer flex items-center gap-1 p-1 hover:bg-gray-300 dark:hover:bg-gray-700"
                         title="Re-run current tests and abort after a given amount of failed tests"
                     >
                         <input
@@ -99,6 +117,34 @@ export class HootConfigDropdown extends Component {
                                 class="outline-none w-full border-b border-primary px-1"
                                 t-model.number="config.bail"
                             />
+                        </small>
+                    </t>
+                    <label
+                        class="cursor-pointer flex items-center gap-1 p-1 hover:bg-gray-300 dark:hover:bg-gray-700"
+                        title="Controls the verbosity of the logs"
+                    >
+                        <input
+                            type="checkbox"
+                            class="appearance-none border border-primary rounded-sm w-4 h-4"
+                            t-att-checked="config.loglevel"
+                            t-on-change="onLogLevelChange"
+                        />
+                        <span>Log level</span>
+                    </label>
+                    <t t-if="config.loglevel">
+                        <small class="flex items-center p-1 pt-0 gap-1">
+                            <span class="text-muted whitespace-nowrap ms-1">Level:</span>
+                            <select
+                                class="outline-none w-full border-b border-primary px-1"
+                                t-model.number="config.loglevel"
+                            >
+                                <t t-foreach="logLevels" t-as="level" t-key="level.value">
+                                    <option
+                                        t-att-value="level.value"
+                                        t-esc="level.label"
+                                    />
+                                </t>
+                            </select>
                         </small>
                     </t>
                     <label
@@ -163,6 +209,10 @@ export class HootConfigDropdown extends Component {
         </div>
     `;
 
+    logLevels = Object.entries(logLevels)
+        .filter(([, value]) => value)
+        .map(([label, value]) => ({ label, value }));
+
     refresh = refresh;
     toggleColorScheme = toggleColorScheme;
 
@@ -190,10 +240,23 @@ export class HootConfigDropdown extends Component {
         });
     }
 
+    /**
+     * @param {Event} ev
+     */
     onBailChange(ev) {
         this.config.bail = ev.target.checked ? 1 : 0;
     }
 
+    /**
+     * @param {Event} ev
+     */
+    onLogLevelChange(ev) {
+        this.config.loglevel = ev.target.checked ? logLevels.SUITES : logLevels.RUNNER;
+    }
+
+    /**
+     * @param {Event} ev
+     */
     onRandomChange(ev) {
         if (ev.target.checked) {
             this.resetSeed();
