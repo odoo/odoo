@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="partner_demo_company_my" model="res.partner">
+    <record id="base.partner_demo_company_my" model="res.partner" forcecreate="1">
         <field name="name">MY Company</field>
         <field name="vat">MY647828492048102</field>
         <field name="street">1 Wisma Dato Dagang</field>
@@ -14,23 +14,23 @@
         <field name="website">www.myexample.com</field>
     </record>
 
-    <record id="demo_company_my" model="res.company">
+    <record id="base.demo_company_my" model="res.company" forcecreate="1">
         <field name="name">MY Company</field>
-        <field name="partner_id" ref="partner_demo_company_my"/>
+        <field name="partner_id" ref="base.partner_demo_company_my"/>
     </record>
 
     <function model="res.company" name="_onchange_country_id">
-        <value eval="[ref('demo_company_my')]"/>
+        <value eval="[ref('base.demo_company_my')]"/>
     </function>
 
     <function model="res.users" name="write">
         <value eval="[ref('base.user_root'), ref('base.user_admin'), ref('base.user_demo')]"/>
-        <value eval="{'company_ids': [(4, ref('l10n_my.demo_company_my'))]}"/>
+        <value eval="{'company_ids': [(4, ref('base.demo_company_my'))]}"/>
     </function>
 
     <function model="account.chart.template" name="try_loading">
         <value eval="[]"/>
         <value>my</value>
-        <value model="res.company" eval="obj().env.ref('l10n_my.demo_company_my')"/>
+        <value model="res.company" eval="obj().env.ref('base.demo_company_my')"/>
     </function>
 </odoo>

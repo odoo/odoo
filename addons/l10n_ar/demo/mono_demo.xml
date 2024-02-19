@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="partner_mono" model="res.partner">
+    <record id="base.partner_mono" model="res.partner" forcecreate="1">
         <field name="name">(AR) Monotributista</field>
         <field name="l10n_ar_afip_responsibility_type_id" ref="res_RM"/>
         <field name="l10n_latam_identification_type_id" ref="l10n_ar.it_cuit"/>
@@ -16,9 +16,9 @@
         <field name="website">www.example.com</field>
     </record>
 
-    <record id="company_mono" model="res.company">
+    <record id="base.company_mono" model="res.company" forcecreate="1">
         <field name="currency_id" ref="base.ARS"/>
-        <field name="partner_id" ref="partner_mono"/>
+        <field name="partner_id" ref="base.partner_mono"/>
         <field name="name">(AR) Monotributista</field>
         <field name="l10n_ar_gross_income_type">exempt</field>
         <field name="l10n_ar_afip_start_date" eval="time.strftime('%Y-%m')+'-1'"/>
@@ -26,25 +26,25 @@
 
     <function model="res.users" name="write">
         <value eval="[ref('base.user_root'), ref('base.user_admin'), ref('base.user_demo')]"/>
-        <value eval="{'company_ids': [(4, ref('l10n_ar.company_mono'))]}"/>
+        <value eval="{'company_ids': [(4, ref('base.company_mono'))]}"/>
     </function>
 
     <function model="account.chart.template" name="try_loading">
         <value eval="[]"/>
         <value>ar_base</value>
-        <value model="res.company" eval="obj().env.ref('l10n_ar.company_mono')"/>
+        <value model="res.company" eval="obj().env.ref('base.company_mono')"/>
     </function>
 
     <data noupdate="1">
 
         <record id="sale_expo_journal_mono" model="account.journal">
             <field name="name">Expo Sales Journal</field>
-            <field name="company_id" ref="l10n_ar.company_mono"/>
+            <field name="company_id" ref="base.company_mono"/>
             <field name="type">sale</field>
             <field name="code">S0002</field>
             <field name="l10n_latam_use_documents" eval="True"/>
             <field name="l10n_ar_afip_pos_number">2</field>
-            <field name="l10n_ar_afip_pos_partner_id" ref="l10n_ar.partner_mono"/>
+            <field name="l10n_ar_afip_pos_partner_id" ref="base.partner_mono"/>
             <field name="l10n_ar_afip_pos_system">FEERCEL</field>
         </record>
 
