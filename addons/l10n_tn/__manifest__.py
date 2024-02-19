@@ -1,5 +1,3 @@
-# -*- encoding: utf-8 -*-
-
 {
     "name": "Tunisia - Accounting",
     "version": "1.0",

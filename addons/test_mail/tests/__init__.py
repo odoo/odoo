@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from . import test_invite
 from . import test_ir_actions
 from . import test_mail_activity

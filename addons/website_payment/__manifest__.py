@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 {
     'name': 'Website Payment',
     'category': 'Hidden',

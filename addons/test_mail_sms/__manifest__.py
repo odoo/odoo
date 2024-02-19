@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 {
     'name': 'SMS Tests',
     'version': '1.0',

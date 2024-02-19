@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import json as json_
 import re
 

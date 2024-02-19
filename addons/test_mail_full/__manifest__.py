@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 {
     'name': 'Mail Tests (Full)',
     'version': '1.0',

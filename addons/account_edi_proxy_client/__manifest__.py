@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 {
     'name': 'Proxy features for account_edi',
     'description': """

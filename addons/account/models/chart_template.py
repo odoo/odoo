@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import ast
 import csv
 from collections import defaultdict

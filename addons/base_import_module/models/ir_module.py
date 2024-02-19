@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import ast
 import base64
 import json

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Test for date ranges."""
 
 from odoo.tests import common

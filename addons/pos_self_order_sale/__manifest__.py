@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 {
     "name": "POS Self Order Sale",
     "category": "Sales/Point Of Sale",

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 {
     'name': 'Live Chat',
     'version': '1.0',

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from odoo import models, _
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, float_repr, is_html_empty, html2plaintext, cleanup_xml_node
 from lxml import etree

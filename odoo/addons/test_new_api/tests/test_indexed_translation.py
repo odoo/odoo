@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import odoo.tests
 from odoo.addons.base.tests.test_translate import SPECIAL_CHARACTERS
 

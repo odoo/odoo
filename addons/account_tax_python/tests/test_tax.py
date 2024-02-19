@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from odoo.addons.account.tests.test_tax import TestTaxCommon
 from odoo.tests import tagged
 

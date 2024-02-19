@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from odoo.addons.stock.tests.common import TestStockCommon
 from odoo.tests import Form
 

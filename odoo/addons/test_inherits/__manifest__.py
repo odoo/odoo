@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 {
     'name': 'test-inherits',
     'version': '0.1',

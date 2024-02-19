@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import threading
 from odoo import fields, models, api, _
 from odoo.exceptions import ValidationError

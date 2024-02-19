@@ -1,5 +1,3 @@
-# -*- coding:utf-8 -*-
-
 from odoo.exceptions import UserError
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged

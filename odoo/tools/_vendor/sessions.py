@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 r"""
     Vendored copy of https://github.com/pallets/werkzeug/blob/2b2c4c3dd3cf7389e9f4aa06371b7332257c6289/src/werkzeug/contrib/sessions.py
 

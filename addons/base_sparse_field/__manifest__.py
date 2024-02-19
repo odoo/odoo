@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 {
     'name': "Sparse Fields",
     'summary': """Implementation of sparse fields.""",

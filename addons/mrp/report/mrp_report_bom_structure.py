@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from collections import defaultdict, OrderedDict
 from datetime import date, timedelta
 import json

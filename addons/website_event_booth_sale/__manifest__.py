@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 {
     'name': 'Online Event Booth Sale',
     'category': 'Marketing/Events',

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from collections import defaultdict
 from urllib3.util.ssl_ import create_urllib3_context, DEFAULT_CIPHERS

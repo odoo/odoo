@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 {
     'name': 'test-import-export',
     'version': '0.1',

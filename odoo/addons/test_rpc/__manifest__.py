@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 {
     "name": "Test RPC",
     "version": "1.0",

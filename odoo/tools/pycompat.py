@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #pylint: disable=deprecated-module
 import csv
 import codecs

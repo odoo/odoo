@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import qrcode
 import zipfile
 from io import BytesIO

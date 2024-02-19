@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 {
     'name' : 'Import/Export Invoices From XML/PDF',
     'description':"""

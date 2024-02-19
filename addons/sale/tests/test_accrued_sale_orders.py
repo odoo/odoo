@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from freezegun import freeze_time
 from odoo import Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon

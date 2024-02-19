@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import datetime
 from dateutil.relativedelta import relativedelta
 from unittest.mock import patch

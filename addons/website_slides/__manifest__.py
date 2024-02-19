@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 {
     'name': 'eLearning',
     'version': '2.7',

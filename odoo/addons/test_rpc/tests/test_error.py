@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from functools import partial
 from xmlrpc.client import Fault
 

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 {
     'name': 'POS Viva Wallet',
     'version': '1.0',

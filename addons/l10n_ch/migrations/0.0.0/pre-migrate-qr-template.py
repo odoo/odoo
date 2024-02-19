@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-
-
 def migrate(cr, version):
     """ From 12.0, to saas-13.3, l10n_ch_swissqr_template
     used to inherit from another template. This isn't the case

@@ -1,4 +1,3 @@
-# -*- coding:utf-8 -*-
 from odoo import api, models
 
 class ReportSwissQR(models.AbstractModel):

@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import odoo
 
 def migrate(cr, version):

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import odoo.tests
 
 SEARCH_PANEL_ERROR = {'error_msg': "Too many items to display.", }

@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from odoo.exceptions import AccessError
 from odoo.tests import tagged
 from odoo.tests.common import users

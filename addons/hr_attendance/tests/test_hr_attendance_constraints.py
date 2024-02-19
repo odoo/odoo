@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import time
 
 from odoo.tests.common import tagged, TransactionCase

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 The module :mod:`odoo.tests.form` provides an implementation of a client form
 view for server-side unit tests.

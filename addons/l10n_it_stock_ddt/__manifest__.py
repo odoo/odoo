@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 {
     'name': "Italy - Stock DDT",
     'countries': ['it'],

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from odoo import api, models
 from odoo.addons.auth_totp.controllers.home import TRUSTED_DEVICE_AGE
 

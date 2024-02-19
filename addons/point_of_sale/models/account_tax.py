@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from odoo import _, api, models
 from odoo.exceptions import UserError
 from odoo.tools import split_every

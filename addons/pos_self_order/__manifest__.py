@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 {
     "name": "POS Self Order",
     'version': '1.0',

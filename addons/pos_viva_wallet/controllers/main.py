@@ -1,4 +1,3 @@
-# coding: utf-8
 import logging
 import json
 from odoo import http, _

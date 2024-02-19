@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import re
 import uuid
 from datetime import timedelta

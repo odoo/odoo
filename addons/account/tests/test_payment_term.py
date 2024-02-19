@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.exceptions import ValidationError
 from odoo.tests import Form, tagged

@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 {
     'name': 'Booths Sale/Exhibitors Bridge',
     'category': 'Marketing/Events',

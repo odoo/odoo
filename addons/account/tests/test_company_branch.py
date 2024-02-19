@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from contextlib import nullcontext
 from freezegun import freeze_time
 from functools import partial

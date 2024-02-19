@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 {
     "name": "Uganda - Accounting",
     "countries": ["ug"],

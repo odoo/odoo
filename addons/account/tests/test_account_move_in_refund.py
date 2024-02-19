@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # pylint: disable=bad-whitespace
 from lxml import etree
 

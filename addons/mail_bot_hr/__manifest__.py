@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 {
     'name': "OdooBot - HR",
     'summary': """Bridge module between hr and mailbot.""",

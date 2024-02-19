@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from . import test_new_fields
 from . import test_search
 from . import test_onchange

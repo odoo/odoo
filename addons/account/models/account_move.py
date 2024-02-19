@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from collections import defaultdict
 from contextlib import ExitStack, contextmanager
 from datetime import date, timedelta

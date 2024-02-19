@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 {
     'name': 'Events Organization',
     'version': '1.8',

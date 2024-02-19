@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Classes defining the populate factory for Accounting Journals and related models."""
 import logging
 

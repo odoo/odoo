@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import time
 
 from odoo.tests import tagged, Form

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from contextlib import nullcontext
 
 from odoo import api, fields, models, _, tools, Command

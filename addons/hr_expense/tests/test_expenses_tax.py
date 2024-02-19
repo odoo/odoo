@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from odoo import Command
 from odoo.addons.hr_expense.tests.common import TestExpenseCommon
 from odoo.tests import tagged

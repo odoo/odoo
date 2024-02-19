@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 {
     'name': "Hr Recruitment Interview Forms",
     'version': '1.0',

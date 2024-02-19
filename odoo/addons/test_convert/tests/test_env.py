@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Tests the ability to update environmental information on various nodes (e.g.
 change user, add context keys, ...)

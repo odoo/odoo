@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 {
     'name': "test read_group",
     'description': "Tests for read_group",

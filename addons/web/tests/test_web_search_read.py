@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from odoo.tests import common
 from unittest.mock import patch
 

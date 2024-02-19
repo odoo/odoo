@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from odoo.tests import Form, tagged
 from odoo.tests.common import TransactionCase
 from odoo import Command

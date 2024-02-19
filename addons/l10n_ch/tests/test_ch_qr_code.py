@@ -1,5 +1,3 @@
-# -*- coding:utf-8 -*-
-
 from odoo import Command
 from odoo.tests import tagged
 from odoo.exceptions import UserError

@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from odoo.http import request
 from odoo.addons.portal.controllers.portal import CustomerPortal
 

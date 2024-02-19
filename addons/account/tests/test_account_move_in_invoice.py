@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # pylint: disable=bad-whitespace
 from freezegun import freeze_time
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon

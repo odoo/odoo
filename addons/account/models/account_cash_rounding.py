@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from odoo import models, fields, api, _
 from odoo.tools import float_round
 from odoo.exceptions import ValidationError

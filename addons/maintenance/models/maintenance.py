@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import ast
 from dateutil.relativedelta import relativedelta
 

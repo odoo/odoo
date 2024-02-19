@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from odoo.addons.l10n_ar.tests.common import TestAr
 from odoo.tests import tagged
 from odoo import Command

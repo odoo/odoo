@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from odoo import http, _
 from odoo.addons.website_sale.controllers.main import WebsiteSale
 from odoo.addons.website_sale.controllers.delivery import WebsiteSaleDelivery

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Tests for various autodetection magics for CSV imports
 """

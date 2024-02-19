@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from . import models
 
 def _create_picking_seq(env):

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Classes extending the populate factory for Companies and related models.
 
 Only adding specificities of basic accounting applications.

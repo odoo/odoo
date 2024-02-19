@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from hashlib import sha256
 from base64 import b64encode
 from lxml import etree

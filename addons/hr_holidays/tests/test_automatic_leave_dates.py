@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from datetime import date, datetime
 
 from odoo.tests import Form

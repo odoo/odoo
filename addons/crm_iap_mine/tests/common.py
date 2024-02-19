@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from contextlib import contextmanager
 from unittest.mock import patch
 

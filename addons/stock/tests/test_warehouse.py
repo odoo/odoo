@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from odoo.addons.stock.tests.common2 import TestStockCommon
 from odoo.tests import Form
 from odoo.exceptions import UserError

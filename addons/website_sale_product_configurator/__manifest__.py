@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 {
     'name': "Website Sale Product Configurator",
     'summary': "Bridge module for website_sale / sale_product_configurator",

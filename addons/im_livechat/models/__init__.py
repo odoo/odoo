@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*
-
 from . import chatbot_message
 from . import chatbot_script
 from . import chatbot_script_answer

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import werkzeug
 
 from odoo import http

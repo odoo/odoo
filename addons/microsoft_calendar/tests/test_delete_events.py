@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from unittest.mock import patch, ANY, call
 from datetime import timedelta
 

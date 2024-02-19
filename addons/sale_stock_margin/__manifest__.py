@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 {
     'name': "Sale Stock Margin",
     'category': 'Sales/Sales',

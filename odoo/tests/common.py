@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 The module :mod:`odoo.tests.common` provides unittest test cases and a few
 helpers and classes to write tests.

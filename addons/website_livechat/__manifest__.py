@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 {
     'name': 'Website Live Chat',
     'category': 'Hidden',

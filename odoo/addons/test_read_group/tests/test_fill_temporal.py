@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Test for fill temporal."""
 
 from odoo.tests import common

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Utilities for generating, parsing and checking XML/XSD files on top of the lxml.etree module."""
 
 import logging

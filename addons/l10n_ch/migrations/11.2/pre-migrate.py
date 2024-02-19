@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-
-
 def migrate(cr, version):
     cr.execute("SELECT res_id FROM ir_model_data WHERE module = 'l10n_ch' AND name='account_tax_report_line_chtax_solde_formula'")
 

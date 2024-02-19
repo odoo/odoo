@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #pylint: disable=too-many-lines
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged

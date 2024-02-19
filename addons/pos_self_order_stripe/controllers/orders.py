@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from odoo import http, fields
 from odoo.http import request
 from odoo.tools import float_is_zero

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # pylint: disable=C0326
 from odoo import Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon

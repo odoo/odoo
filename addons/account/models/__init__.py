@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from . import sequence_mixin
 from . import partner
 from . import ir_http

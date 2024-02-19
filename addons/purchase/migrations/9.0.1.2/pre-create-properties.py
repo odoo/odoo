@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 def convert_field(cr, model, field, target_model):
     table = model.replace('.', '_')
 

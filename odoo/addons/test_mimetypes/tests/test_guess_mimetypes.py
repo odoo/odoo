@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import os.path
 
 from odoo.tests.common import BaseCase

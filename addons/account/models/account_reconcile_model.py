@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from odoo import api, fields, models, Command, tools, _
 from odoo.exceptions import UserError, ValidationError
 import re

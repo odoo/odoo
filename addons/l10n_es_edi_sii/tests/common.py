@@ -1,4 +1,3 @@
-# coding: utf-8
 import base64
 from pytz import timezone
 from datetime import datetime

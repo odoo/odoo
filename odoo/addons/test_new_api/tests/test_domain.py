@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from itertools import combinations
 
 from odoo import Command

@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from odoo import Command
 from odoo.addons.project.tests.test_project_base import TestProjectCommon
 from odoo.tests import Form, tagged

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from odoo import api, SUPERUSER_ID
 
 FIXED_ACCOUNTS_MAP = {

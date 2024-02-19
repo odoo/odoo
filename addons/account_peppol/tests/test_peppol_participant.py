@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*
-
 from contextlib import contextmanager
 from freezegun import freeze_time
 from unittest.mock import Mock, patch
