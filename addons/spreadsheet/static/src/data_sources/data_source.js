@@ -94,6 +94,10 @@ export class LoadableDataSource {
         return this._isFullyLoaded;
     }
 
+    isLoadedAndValid() {
+        return this.isReady() && this._isValid;
+    }
+
     /**
      * @protected
      */
