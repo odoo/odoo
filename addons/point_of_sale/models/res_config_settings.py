@@ -111,6 +111,7 @@ class ResConfigSettings(models.TransientModel):
     point_of_sale_ticket_unique_code = fields.Boolean(related='company_id.point_of_sale_ticket_unique_code', readonly=False)
     pos_show_product_images = fields.Boolean(related='pos_config_id.show_product_images', readonly=False)
     pos_show_category_images = fields.Boolean(related='pos_config_id.show_category_images', readonly=False)
+    point_of_sale_ticket_portal_url_display_mode = fields.Selection(related='company_id.point_of_sale_ticket_portal_url_display_mode', readonly=False, required=True)
     pos_note_ids = fields.Many2many(related='pos_config_id.note_ids', readonly=False)
     pos_module_pos_sms = fields.Boolean(related="pos_config_id.module_pos_sms", readonly=False)
 
