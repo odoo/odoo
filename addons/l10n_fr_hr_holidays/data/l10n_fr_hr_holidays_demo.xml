@@ -17,7 +17,7 @@
     </record>
 
     <record id="l10n_fr_part_time_employee" model="hr.employee">
-        <field name="company_id" ref="l10n_fr.demo_company_fr"/>
+        <field name="company_id" ref="base.demo_company_fr"/>
         <field name="active" eval="1"/>
         <field name="name">Mitchell Admin</field>
         <field name="user_id" ref="base.user_admin"/>
@@ -27,7 +27,7 @@
 
     <record id="l10n_fr_holiday_status_cl" model="hr.leave.type">
         <field name="name">Paid Time Off</field>
-        <field name="company_id" ref="l10n_fr.demo_company_fr"/>
+        <field name="company_id" ref="base.demo_company_fr"/>
         <field name="requires_allocation">yes</field>
         <field name="employee_requests">no</field>
         <field name="leave_validation_type">both</field>
@@ -37,7 +37,7 @@
         <field name="color">2</field>
         <field name="has_valid_allocation">True</field>
     </record>
-    <record id="l10n_fr.demo_company_fr" model="res.company">
+    <record id="base.demo_company_fr" model="res.company">
         <field name="l10n_fr_reference_leave_type" ref="l10n_fr_holiday_status_cl"/>
     </record>
 

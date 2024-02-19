@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="partner_demo_company_nl" model="res.partner">
+    <record id="base.partner_demo_company_nl" model="res.partner" forcecreate="1">
         <field name="name">NL Company</field>
         <field name="vat">NL219987701B73</field>
         <field name="street">Bloemstraat 42</field>
@@ -13,29 +13,29 @@
         <field name="website">www.nlexample.com</field>
     </record>
 
-    <record id="demo_company_nl" model="res.company">
+    <record id="base.demo_company_nl" model="res.company" forcecreate="1">
         <field name="name">NL Company</field>
-        <field name="partner_id" ref="partner_demo_company_nl"/>
+        <field name="partner_id" ref="base.partner_demo_company_nl"/>
     </record>
 
-    <record id="demo_bank_nl" model="res.partner.bank">
+    <record id="base.demo_bank_nl" model="res.partner.bank" forcecreate="1">
         <field name="acc_number">NL78RABO7948612920</field>
-        <field name="partner_id" ref="partner_demo_company_nl"/>
-        <field name="company_id" ref="demo_company_nl"/>
+        <field name="partner_id" ref="base.partner_demo_company_nl"/>
+        <field name="company_id" ref="base.demo_company_nl"/>
     </record>
 
     <function model="res.company" name="_onchange_country_id">
-        <value eval="[ref('demo_company_nl')]"/>
+        <value eval="[ref('base.demo_company_nl')]"/>
     </function>
 
     <function model="res.users" name="write">
         <value eval="[ref('base.user_root'), ref('base.user_admin'), ref('base.user_demo')]"/>
-        <value eval="{'company_ids': [(4, ref('l10n_nl.demo_company_nl'))]}"/>
+        <value eval="{'company_ids': [(4, ref('base.demo_company_nl'))]}"/>
     </function>
 
     <function model="account.chart.template" name="try_loading">
         <value eval="[]"/>
         <value>nl</value>
-        <value model="res.company" eval="obj().env.ref('l10n_nl.demo_company_nl')"/>
+        <value model="res.company" eval="obj().env.ref('base.demo_company_nl')"/>
     </function>
 </odoo>
