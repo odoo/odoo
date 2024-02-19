@@ -613,7 +613,6 @@ QUnit.test("basic chatter rendering without followers", async () => {
                     <field name="name"/>
                 </sheet>
                 <div class="oe_chatter">
-                    <field name="activity_ids"/>
                     <field name="message_ids"/>
                     <!-- no message_follower_ids field -->
                 </div>
@@ -644,7 +643,6 @@ QUnit.test("basic chatter rendering without messages", async () => {
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids"/>
-                    <field name="activity_ids"/>
                     <!-- no message_ids field -->
                 </div>
             </form>`,
@@ -726,9 +724,7 @@ QUnit.test(
                     <sheet>
                         <field name="name"/>
                     </sheet>
-                    <div class="oe_chatter">
-                        <field name="activity_ids"/>
-                    </div>
+                    <div class="oe_chatter"/>
                 </form>`,
         };
         const { env, openFormView } = await start({ serverData: { views } });

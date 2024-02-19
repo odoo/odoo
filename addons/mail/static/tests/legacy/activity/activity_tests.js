@@ -20,7 +20,6 @@ const views = {
         <form string="Fake">
             <sheet></sheet>
             <div class="oe_chatter">
-                <field name="activity_ids"/>
                 <field name="message_ids"/>
             </div>
         </form>`,
