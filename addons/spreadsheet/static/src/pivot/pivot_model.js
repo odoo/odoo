@@ -222,6 +222,41 @@ export class OdooPivotModel extends PivotModel {
     }
 
     /**
+     * @param {string} fieldName
+     * @returns {{ value: string | number | boolean, label: string }[]}
+     */
+    getPossibleFieldValues(fieldName) {
+        const field = this.metaData.fields[fieldName];
+        if (!field) {
+            return [];
+        }
+        const valuesWithLabels = [];
+        const valuesUniqueness = new Set();
+        const groupBys = (
+            this._isCol(field) ? this.metaData.fullColGroupBys : this.metaData.fullRowGroupBys
+        )
+            .map(this.parseGroupField)
+            .map(({ field }) => field.name);
+        const tree = this._isCol(field) ? this.data.colGroupTree : this.data.rowGroupTree;
+        const groupByIndex = groupBys.indexOf(fieldName);
+        const visitTree = (tree) => {
+            const { values, labels } = tree.root;
+            if (values[groupByIndex] && !valuesUniqueness.has(values[groupByIndex])) {
+                valuesUniqueness.add(values[groupByIndex]);
+                valuesWithLabels.push({
+                    value: values[groupByIndex],
+                    label: labels[groupByIndex],
+                });
+            }
+            [...tree.directSubTrees.values()].forEach((subTree) => {
+                visitTree(subTree);
+            });
+        };
+        visitTree(tree);
+        return valuesWithLabels;
+    }
+
+    /**
      * @returns {SpreadsheetPivotTable}
      */
     _buildTableStructure() {
