@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="view_estate_tree">
+            <field name="name">estate.tree</field>
+            <field name="model">estate</field>
+            <field name="arch" type="xml">
+                <tree string="Estate">
+                    <field name="name"/>
+                    <field name="postcode"/>
+                    <field name="bedrooms"/>
+                    <field name="living_area"/>
+                    <field name="expected_price"/>
+                    <field name="selling_price"/>
+                    <field name='date_availability'/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="estate_list_action" model="ir.actions.act_window">
+            <field name="name">estate.list</field>
+            <field name="res_model">estate</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_estate_tree"/>
+        </record>
+
+        <record model="ir.ui.view" id="view_estate_form">
+            <field name="name">estate.form</field>
+            <field name="model">estate</field>
+            <field name="arch" type="xml">
+
+                    <form string="Estate Property">
+
+                        <sheet>
+
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+
+                            <group>
+                                <group>
+                                    <field name="postcode"/>
+                                    <field name="date_availability"/>
+                                </group>
+
+                                <group>
+                                    <field name="expected_price"/>
+                                    <field name="selling_price"/>
+                                </group>
+
+                            </group>
+
+                                <notebook>
+                                    <page string="Descripcion">
+                                        <group>
+                                            <field name="description" string="Descripcion"/>
+                                            <field name="bedrooms" string="Numero de Habitaciones"/>
+                                            <field name="living_area" string="Sala de Estar"/>
+                                            <field name="facades" string="Fachada"/>
+                                            <field name="garage" string="Garage"/>
+                                            <field name="garden" string="Jardin"/>
+                                            <field name="garden_area" string="Zona de Jardin"/>
+                                            <field name="garden_orientation" string="Orientacion del Jardin"/>
+                                        </group>
+                                    </page>
+                                </notebook>
+
+                        </sheet>
+                        <group>
+
+                        </group>
+                    </form>
+            </field>
+        </record>
+
+        <record id="estate_form_action" model="ir.actions.act_window">
+            <field name="name">estate.form</field>
+            <field name="res_model">estate</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_estate_form"/>
+        </record>
+
+    </data>
+</odoo>

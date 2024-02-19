@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <menuitem id="menu_estate" name="Real Estate" web_icon="estate\static\description\icon.png" sequence="5" groups="group_user,group_admin"/>
+
+            <menuitem parent="menu_estate" sequence="10" id="menu_real_estate" name="Advertisements"  groups="group_user,group_admin"/>
+
+                <menuitem parent="menu_real_estate" sequence="15" action="estate_list_action" id="menu_real_estate_properties" name="Properties" groups="group_user,group_admin"/>
+
+    </data>
+</odoo>

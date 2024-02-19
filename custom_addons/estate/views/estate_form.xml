@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="estate_view_form" model="ir.ui.view">
+            <field name="name">estate.form</field>
+            <field name="model">estate</field>
+            <field name="arch" type="xml">
+
+                    <form string="Estado">
+                        <sheet>
+                            <group>
+                                <field name="name"/>
+                                <field name="state"/>
+                            </group>
+                        </sheet>
+                    </form>
+            </field>
+        </record>
+
+    </data>
+</odoo>
