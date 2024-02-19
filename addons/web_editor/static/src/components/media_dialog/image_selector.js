@@ -141,7 +141,7 @@ export class ImageSelector extends FileSelector {
         await fetch(url).then(async result => {
             const blob = await result.blob();
             blob.id = new Date().getTime();
-            blob.name = new URL(url).pathname.split("/").findLast(s => s);
+            blob.name = new URL(url, window.location.href).pathname.split("/").findLast(s => s);
             await this.uploadFiles([blob]);
         }).catch(async () => {
             await new Promise(resolve => {
