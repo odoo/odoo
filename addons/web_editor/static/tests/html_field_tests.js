@@ -762,7 +762,8 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
         await nextTick();
         // Click on the edit link icon
         document.querySelector("a.mx-1.o_we_edit_link.text-dark").click();
-        await nextTick();
+        // Make sure popover is closed
+        await new Promise(resolve => $(a).on('hidden.bs.popover.link_popover', resolve));
         let labelInputField = document.querySelector(".modal input#o_link_dialog_label_input");
         let linkPreview = document.querySelector(".modal a#link-preview");
         assert.strictEqual(labelInputField.value, 'This website',
@@ -796,12 +797,5 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
         await click(document, ".modal .modal-footer button.btn-primary");
         assert.strictEqual(p.innerText.replaceAll('\u200B', ''), 'New label',
             "The link's label should be updated");
-        // In this scenario, the link is automatically selected, causing the
-        // floating toolbar to open. We must close it to prevent undesired
-        // elements from being added to the <body>, which would result in a
-        // test error.
-        await nextTick();
-        await click(document, ".note-editable.odoo-editor-editable");
-        await nextTick();
     });
 });
