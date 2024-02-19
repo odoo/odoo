@@ -151,6 +151,39 @@ class test_challenge(TestGamificationCommon):
             unchanged_goal_ids.user_id,
         )
 
+    def test_30_create_challenge_with_sum_goal(self):
+        challenge = self.env['gamification.challenge'].create({
+            'name': 'test',
+            'state': 'draft',
+            'user_domain': '[("active", "=", True)]', #Include all active users to get a least one participant
+            'reward_id': 1,
+        })
+
+        model = self.env['ir.model'].search([('model', '=', 'gamification.badge')])[0]
+        field = self.env['ir.model.fields'].search([('model', '=', 'gamification.badge'), ('name', '=', 'rule_max_number')])[0]
+
+        sum_goal = self.env['gamification.goal.definition'].create({
+            'name': 'test',
+            'computation_mode': 'sum',
+            'model_id': model.id,
+            'field_id': field.id
+        })
+
+        self.env['gamification.challenge.line'].create({
+            'challenge_id': challenge.id,
+            'definition_id': sum_goal.id,
+            'condition': 'higher',
+            'target_goal': 1
+        })
+
+        challenge.action_start()
+
+        self.assertEqual(
+            challenge.state,
+            'inprogress',
+            "Challenge failed to start",
+        )
+
 
 class test_badge_wizard(TestGamificationCommon):
 
