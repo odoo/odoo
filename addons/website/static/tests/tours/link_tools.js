@@ -87,7 +87,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     {
         content: "The link should have the secondary button style.",
         trigger: 'iframe .s_text_image a.btn.btn-secondary[href="http://odoo.be"]:contains("odoo website")',
-        run: () => {}, // It's a check.
+        isCheck: true,
     },
     // 4. Add link on image.
     ...wTourUtils.clickOnEditAndWaitEditMode(),
@@ -119,12 +119,12 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     {
         content: "Check that the second image is not within a link.",
         trigger: 'iframe .s_three_columns .row > :nth-child(2) div > img',
-        run: () => {}, // It's a check.
+        isCheck: true,
     },
     {
         content: "Check that link tools appear.",
         trigger: 'iframe .popover div a:contains("http://odoo.com")',
-        run: () => {}, // It's a check.
+        isCheck: true,
     },
     // 5. Remove link from image.
     {
@@ -134,7 +134,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     {
         content: "Check that image is not within a link anymore.",
         trigger: 'iframe .s_three_columns .row > :nth-child(1) div > img',
-        run: () => {}, // It's a check.
+        isCheck: true,
     },
     // 6. Add mega menu with Cards template and edit URL on text-selected card.
     // TODO somehow, if this testing phase is added at the end of the tour
@@ -165,7 +165,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     {
         content: "Wait for drop",
         trigger: '.oe_menu_editor:first-child:contains("Mega")',
-        run: () => {}, // This is a check.
+        isCheck: true,
     },
     wTourUtils.clickOnElement("Save button", ".btn-primary:contains('Save')"),
     wTourUtils.clickOnElement("mega menu", "iframe header .o_mega_menu_toggle"),
@@ -180,7 +180,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     {
         content: "Check nothing is lost",
         trigger: "iframe header .s_mega_menu_cards a[href='https://www.odoo.com']:has(img):has(h4):has(p font)",
-        run: () => {}, // This is a check.
+        isCheck: true,
     },
     // 7. Create new a link from a URL-like text.
     {
@@ -205,7 +205,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
         // input at input[name=url]
         content: "Check that link was created",
         trigger: "iframe .s_text_image p a[href='http://odoo.com']:contains('odoo.com')",
-        run: () => null,
+        isCheck: true,
     },
     {
         content: "Click on link to open the link tools",
@@ -220,7 +220,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     {
         content: "Check that link was updated",
         trigger: "iframe .s_text_image p a[href='https://odoo.com']:contains('odoo.com')",
-        run: () => null,
+        isCheck: true,
     },
     {
         content: "Change it back http",
@@ -230,7 +230,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     {
         content: "Check that link was updated",
         trigger: "iframe .s_text_image p a[href='http://odoo.com']:contains('odoo.com')",
-        run: () => null,
+        isCheck: true,
     },
     // 9. Test conversion between http and mailto links.
     {
@@ -241,7 +241,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     {
         content: "Check that link was updated and link content is synced with URL",
         trigger: "iframe .s_text_image p a[href='mailto:callme@maybe.com']:contains('callme@maybe.com')",
-        run: () => null,
+        isCheck: true,
     },
     {
         content: "Change URL back into a http one",
@@ -264,7 +264,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     {
         content: "Popover should be shown",
         trigger: "iframe .o_edit_menu_popover .o_we_url_link:contains('http://callmemaybe.com')",
-        run: () => null,
+        isCheck: true,
     },
     */
     {
@@ -284,7 +284,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     {
         content: "Check that links's href was updated",
         trigger: "iframe .s_text_image p a[href='http://callmemaybe.com/shop']:contains('callmemaybe.com/shop')",
-        run: () => null,
+        isCheck: true,
     },
     // TODO this step is disabled for now because it is a cause of race
     // condition (last check: 57 over 162 tries failed on this). The popover
@@ -294,7 +294,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     {
         content: "Check popover content is up-to-date",
         trigger: "iframe .popover div a:contains('http://callmemaybe.com/shop')",
-        run: () => null,
+        isCheck: true,
     },
     */
     {
