@@ -106,8 +106,8 @@ class IrUiView(models.Model):
                 self._copy_field_terms_translations(custom_snippet_view, 'arch_db', record, html_field)
 
     @api.model
-    def _copy_field_terms_translations(self, record_from, name_field_from, record_to, name_field_to):
-        """ Copy the terms translation from a record/field ``Model1.Field1``
+    def _copy_field_terms_translations(self, records_from, name_field_from, record_to, name_field_to):
+        """ Copy the terms translation from records/field ``Model1.Field1``
         to a (possibly) completely different record/field ``Model2.Field2``.
 
         For instance, copy the translations of a
@@ -120,11 +120,7 @@ class IrUiView(models.Model):
         record_to.check_access_rule('write')
         record_to.check_field_access_rights('write', [name_field_to])
 
-        # This will also implicitly check for `read` access rights
-        if not record_from[name_field_from] or not record_to[name_field_to]:
-            return
-
-        field_from = record_from._fields[name_field_from]
+        field_from = records_from._fields[name_field_from]
         field_to = record_to._fields[name_field_to]
         error_callable_msg = "'translate' property of field %r is not callable"
         if not callable(field_from.translate):
@@ -134,19 +130,25 @@ class IrUiView(models.Model):
         if not field_to.store:
             raise ValueError("Field %r is not stored" % field_to)
 
+        # This will also implicitly check for `read` access rights
+        if not record_to[name_field_to] or not any(records_from.mapped(name_field_from)):
+            return
+
         lang_env = self.env.lang or 'en_US'
         langs = set(lang for lang, _ in self.env['res.lang'].get_installed())
 
         # 1. Get translations
-        record_from.flush_model([name_field_from])
+        records_from.flush_model([name_field_from])
         existing_translation_dictionary = field_to.get_translation_dictionary(
             record_to[name_field_to],
             {lang: record_to.with_context(prefetch_langs=True, lang=lang)[name_field_to] for lang in langs if lang != lang_env}
         )
-        extra_translation_dictionary = field_from.get_translation_dictionary(
-            record_from[name_field_from],
-            {lang: record_from.with_context(prefetch_langs=True, lang=lang)[name_field_from] for lang in langs if lang != lang_env}
-        )
+        extra_translation_dictionary = {}
+        for record_from in records_from:
+            extra_translation_dictionary.update(field_from.get_translation_dictionary(
+                record_from[name_field_from],
+                {lang: record_from.with_context(prefetch_langs=True, lang=lang)[name_field_from] for lang in langs if lang != lang_env}
+            ))
         existing_translation_dictionary.update(extra_translation_dictionary)
         translation_dictionary = existing_translation_dictionary
 
