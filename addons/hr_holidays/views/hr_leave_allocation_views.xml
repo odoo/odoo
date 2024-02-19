@@ -119,10 +119,10 @@
                             <div name="duration_display">
                                 <field name="number_of_days_display" nolabel="1" style="width: 5rem;"
                                     invisible="type_request_unit == 'hour'"
-                                    readonly="state == 'validate'"/>
+                                    readonly="0"/>
                                 <field name="number_of_hours_display" nolabel="1" style="width: 5rem;"
                                     invisible="type_request_unit != 'hour'"
-                                    readonly="state == 'validate'"/>
+                                    readonly="0"/>
                                 <span class="ml8" invisible="type_request_unit == 'hour'">Days</span>
                                 <span class="ml8" invisible="type_request_unit != 'hour'">Hours</span>
                             </div>
