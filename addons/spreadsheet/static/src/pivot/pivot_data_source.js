@@ -9,12 +9,14 @@ import { OdooPivotModel } from "./pivot_model";
 import { EvaluationError } from "@odoo/o-spreadsheet";
 import { LOADING_ERROR } from "@spreadsheet/data_sources/data_source";
 import { PivotRuntimeDefinition } from "./pivot_runtime";
+import { pivotTimeAdapter } from "./pivot_time_adapters";
 /**
  * @typedef {import("@spreadsheet").Pivot<OdooPivotRuntimeDefinition>} IPivot
  * @typedef {import("./pivot_runtime").PivotMeasure} PivotMeasure
  * @typedef {import("@spreadsheet").WebPivotModelParams} WebPivotModelParams
  * @typedef {import("@spreadsheet").Fields} Fields
  * @typedef {import("@spreadsheet").OdooPivotDefinition} OdooPivotDefinition
+ * @typedef {import("@spreadsheet").OdooGetters} OdooGetters
  */
 
 /**
@@ -25,9 +27,11 @@ export class OdooPivot extends OdooViewsDataSource {
      *
      * @override
      * @param {Object} services Services (see DataSource)
-     * @param {OdooPivotDefinition} definition
+     * @param {Object} params
+     * @param {OdooPivotDefinition} params.definition
+     * @param {OdooGetters} params.getters
      */
-    constructor(services, definition) {
+    constructor(services, { definition, getters }) {
         const params = {
             metaData: {
                 resModel: definition.model,
@@ -43,6 +47,8 @@ export class OdooPivot extends OdooViewsDataSource {
         this._runtimeDefinition = undefined;
         /** @type {OdooPivotModel | undefined} */
         this._model = undefined;
+        /** @type {OdooGetters} */
+        this.getters = getters;
         this.setup();
     }
 
@@ -130,6 +136,32 @@ export class OdooPivot extends OdooViewsDataSource {
     getTableStructure() {
         this._assertDataIsLoaded();
         return this._model.getTableStructure();
+    }
+
+    /**
+     * Get the format associated to a pivot field (based on its type)
+     * e.g. integer => 0, float => #,##0.00, monetary => #,##0.00
+     *
+     * @param {string} fieldName
+     * @returns {string | undefined}
+     */
+    getPivotFieldFormat(fieldName) {
+        const { field, aggregateOperator } = this.parseGroupField(fieldName);
+        switch (field.type) {
+            case "integer":
+                return "0";
+            case "float":
+                return "#,##0.00";
+            case "monetary":
+                return this.getters.getCompanyCurrencyFormat() || "#,##0.00";
+            case "date":
+            case "datetime": {
+                const timeAdapter = pivotTimeAdapter(aggregateOperator);
+                return timeAdapter.getFormat(this.getters.getLocale());
+            }
+            default:
+                return undefined;
+        }
     }
 
     //--------------------------------------------------------------------------
