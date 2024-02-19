@@ -211,7 +211,7 @@ class Goal(models.Model):
 
                         if definition.computation_mode == 'sum':
                             field_name = definition.field_id.name
-                            res = Obj._read_group(domain, [], [field_name])
+                            res = Obj._read_group(domain, [], [f'{field_name}:{definition.computation_mode}'])
                             new_value = res[0][0] or 0.0
 
                         else:  # computation mode = count
