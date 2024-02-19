@@ -22,6 +22,10 @@ class PurchaseOrder(models.Model):
     _rec_names_search = ['name', 'partner_ref']
     _order = 'priority desc, id desc'
 
+    _sql_constraints = [
+        ('name_uniq', 'unique(name, company_id)', 'Order Reference must be unique per company!'),
+    ]
+
     @api.depends('order_line.price_total')
     def _amount_all(self):
         for order in self:

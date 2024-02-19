@@ -35,6 +35,7 @@ class SaleOrder(models.Model):
     _check_company_auto = True
 
     _sql_constraints = [
+        ('name_uniq', 'unique(name, company_id)', 'Order Reference must be unique per company!'),
         ('date_order_conditional_required',
          "CHECK((state = 'sale' AND date_order IS NOT NULL) OR state != 'sale')",
          "A confirmed sales order requires a confirmation date."),
