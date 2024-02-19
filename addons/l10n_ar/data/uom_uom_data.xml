@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo noupdate="True">
 
+    <!-- Categoria -->
+    <record id="product_uom_afip" model="uom.category">
+        <field name="name">Otros</field>
+    </record>
+
+    <!--  -->
     <record model='uom.uom' id='uom.product_uom_kgm'>
         <field name='l10n_ar_afip_code'>01</field>
     </record>
@@ -57,5 +63,23 @@
     </record>
     <record model='uom.uom' id='uom.product_uom_ton'>
         <field name='l10n_ar_afip_code'>29</field>
+    </record>
+    <!-- AFIP -->
+    <record id="product_uom_afip_sin" model="uom.uom">
+        <field name="name">SIN DESCRIPCION</field>
+        <field name="category_id" ref="product_uom_afip"/>
+        <field name='l10n_ar_afip_code'>00</field>
+    </record>
+    <record id="product_uom_afip_sa" model="uom.uom">
+        <field name="name">SEÑAS/ANTICIPOS</field>
+        <field name="category_id" ref="product_uom_afip"/>
+        <field name="uom_type">smaller</field>
+        <field name='l10n_ar_afip_code'>97</field>
+    </record>
+    <record id="product_uom_afip_bo" model="uom.uom">
+        <field name="name">BONIFICACION</field>
+        <field name="category_id" ref="product_uom_afip"/>
+        <field name="uom_type">smaller</field>
+        <field name='l10n_ar_afip_code'>99</field>
     </record>
 </odoo>
