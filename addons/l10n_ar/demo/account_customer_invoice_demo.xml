@@ -4,7 +4,7 @@
     <!-- TODO This demo data is for functional testing and demo but also was used for tests. Test cases should be moved to proper tests -->
     <!-- TODO also, once written the proper tests, we should remove price and name information from lines because it is overwriten by "_onchange_product_id" method. That methods is called to set taxes and uom from products -->
     <!-- Invoice to gritti support service, vat 21 -->
-    <record id="demo_invoice_1" model="account.move" context="{'allowed_company_ids': [ref('company_ri')]}">
+    <record id="demo_invoice_1" model="account.move" context="{'allowed_company_ids': [ref('base.company_ri')]}">
         <field name="partner_id" ref="res_partner_gritti_agrimensura"/>
         <field name="invoice_user_id" ref="base.user_demo"/>
         <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
@@ -16,7 +16,7 @@
     </record>
 
     <!-- Invoice to CMR with vat 21, 27 and 10,5 -->
-    <record id="demo_invoice_2" model="account.move" context="{'allowed_company_ids': [ref('company_ri')]}">
+    <record id="demo_invoice_2" model="account.move" context="{'allowed_company_ids': [ref('base.company_ri')]}">
         <field name="partner_id" ref="res_partner_cmr"/>
         <field name="invoice_user_id" ref="base.user_demo"/>
         <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
@@ -30,7 +30,7 @@
     </record>
 
     <!-- Invoice to ADHOC with vat cero and 21 -->
-    <record id="demo_invoice_3" model="account.move" context="{'allowed_company_ids': [ref('company_ri')]}">
+    <record id="demo_invoice_3" model="account.move" context="{'allowed_company_ids': [ref('base.company_ri')]}">
         <field name="partner_id" ref="l10n_ar.res_partner_adhoc"/>
         <field name="invoice_user_id" ref="base.user_demo"/>
         <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
@@ -43,7 +43,7 @@
     </record>
 
     <!-- Invoice to ADHOC with vat exempt and 21 -->
-    <record id="demo_invoice_4" model="account.move" context="{'allowed_company_ids': [ref('company_ri')]}">
+    <record id="demo_invoice_4" model="account.move" context="{'allowed_company_ids': [ref('base.company_ri')]}">
         <field name="partner_id" ref="l10n_ar.res_partner_adhoc"/>
         <field name="invoice_user_id" ref="base.user_demo"/>
         <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
@@ -56,7 +56,7 @@
     </record>
 
     <!-- Invoice to ADHOC with all type of taxes -->
-    <record id="demo_invoice_5" model="account.move" context="{'allowed_company_ids': [ref('company_ri')]}">
+    <record id="demo_invoice_5" model="account.move" context="{'allowed_company_ids': [ref('base.company_ri')]}">
         <field name="partner_id" ref="l10n_ar.res_partner_adhoc"/>
         <field name="invoice_user_id" ref="base.user_demo"/>
         <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
@@ -73,7 +73,7 @@
     </record>
 
     <!-- Invoice to cerro castor, fiscal position changes taxes to exempt -->
-    <record id="demo_invoice_6" model="account.move" context="{'allowed_company_ids': [ref('company_ri')]}">
+    <record id="demo_invoice_6" model="account.move" context="{'allowed_company_ids': [ref('base.company_ri')]}">
         <field name="partner_id" ref="res_partner_cerrocastor"/>
         <field name="journal_id" ref="l10n_ar.sale_expo_journal_ri"/>
         <field name="invoice_user_id" ref="base.user_demo"/>
@@ -92,7 +92,7 @@
     </record>
 
     <!-- Export invoice to expresso, fiscal position changes tax to exempt (type 4 because it have services) -->
-    <record id="demo_invoice_7" model="account.move" context="{'allowed_company_ids': [ref('company_ri')]}">
+    <record id="demo_invoice_7" model="account.move" context="{'allowed_company_ids': [ref('base.company_ri')]}">
         <field name="partner_id" ref="res_partner_expresso"/>
         <field name="journal_id" ref="l10n_ar.sale_expo_journal_ri"/>
         <field name="invoice_user_id" ref="base.user_demo"/>
@@ -111,7 +111,7 @@
     </record>
 
     <!-- Invoice to consumidor final -->
-    <record id="demo_invoice_8" model="account.move" context="{'allowed_company_ids': [ref('company_ri')]}">
+    <record id="demo_invoice_8" model="account.move" context="{'allowed_company_ids': [ref('base.company_ri')]}">
         <field name="partner_id" ref="l10n_ar.par_cfa"/>
         <field name="invoice_user_id" ref="base.user_demo"/>
         <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
@@ -127,7 +127,7 @@
         <field name="active" eval="True"/>
     </record>
 
-    <record id="demo_invoice_10" model="account.move" context="{'allowed_company_ids': [ref('company_ri')]}">
+    <record id="demo_invoice_10" model="account.move" context="{'allowed_company_ids': [ref('base.company_ri')]}">
         <field name="partner_id" ref="l10n_ar.res_partner_adhoc"/>
         <field name="invoice_user_id" ref="base.user_demo"/>
         <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
@@ -140,7 +140,7 @@
     </record>
 
     <!-- Invoice to ADHOC with many lines in order to prove rounding error, with 4 decimals of precision for the currency and 2 decimals for the product the error apperar -->
-    <record id="demo_invoice_11" model="account.move" context="{'allowed_company_ids': [ref('company_ri')]}">
+    <record id="demo_invoice_11" model="account.move" context="{'allowed_company_ids': [ref('base.company_ri')]}">
         <field name="partner_id" ref="l10n_ar.res_partner_adhoc"/>
         <field name="invoice_user_id" ref="base.user_demo"/>
         <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
@@ -155,7 +155,7 @@
     </record>
 
     <!-- Invoice to ADHOC with many lines in order to test rounding error, it is required to use a 4 decimal precision in prodct in order to the error occur -->
-    <record id="demo_invoice_12" model="account.move" context="{'allowed_company_ids': [ref('company_ri')]}">
+    <record id="demo_invoice_12" model="account.move" context="{'allowed_company_ids': [ref('base.company_ri')]}">
         <field name="partner_id" ref="l10n_ar.res_partner_adhoc"/>
         <field name="invoice_user_id" ref="base.user_demo"/>
         <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
@@ -170,7 +170,7 @@
     </record>
 
     <!-- Invoice to ADHOC with many lines in order to test zero amount invoices y rounding error. it is required to set the product decimal precision to 4 and change 260.59 for 260.60 in order to reproduce the error -->
-    <record id="demo_invoice_13" model="account.move" context="{'allowed_company_ids': [ref('company_ri')]}">
+    <record id="demo_invoice_13" model="account.move" context="{'allowed_company_ids': [ref('base.company_ri')]}">
         <field name="partner_id" ref="l10n_ar.res_partner_adhoc"/>
         <field name="invoice_user_id" ref="base.user_demo"/>
         <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
@@ -189,7 +189,7 @@
     </record>
 
     <!-- Export invoice to expresso, fiscal position changes tax to exempt (type 1 because only products) -->
-    <record id="demo_invoice_14" model="account.move" context="{'allowed_company_ids': [ref('company_ri')]}">
+    <record id="demo_invoice_14" model="account.move" context="{'allowed_company_ids': [ref('base.company_ri')]}">
         <field name="partner_id" ref="res_partner_expresso"/>
         <field name="journal_id" ref="l10n_ar.sale_expo_journal_ri"/>
         <field name="invoice_user_id" ref="base.user_demo"/>
@@ -203,7 +203,7 @@
     </record>
 
     <!-- Export invoice to expresso, fiscal position changes tax to exempt (type 2 because only service) -->
-    <record id="demo_invoice_15" model="account.move" context="{'allowed_company_ids': [ref('company_ri')]}">
+    <record id="demo_invoice_15" model="account.move" context="{'allowed_company_ids': [ref('base.company_ri')]}">
         <field name="partner_id" ref="res_partner_expresso"/>
         <field name="journal_id" ref="l10n_ar.sale_expo_journal_ri"/>
         <field name="invoice_user_id" ref="base.user_demo"/>
@@ -217,7 +217,7 @@
     </record>
 
     <!-- Export invoice to expresso, fiscal position changes tax to exempt (type 1 because it have products only, used to test refund of expo) -->
-    <record id="demo_invoice_16" model="account.move" context="{'allowed_company_ids': [ref('company_ri')]}">
+    <record id="demo_invoice_16" model="account.move" context="{'allowed_company_ids': [ref('base.company_ri')]}">
         <field name="partner_id" ref="res_partner_expresso"/>
         <field name="journal_id" ref="l10n_ar.sale_expo_journal_ri"/>
         <field name="invoice_user_id" ref="base.user_demo"/>
@@ -232,7 +232,7 @@
     </record>
 
     <!-- Invoice to ADHOC with 100% of discount -->
-    <record id="demo_invoice_17" model="account.move" context="{'allowed_company_ids': [ref('company_ri')]}">
+    <record id="demo_invoice_17" model="account.move" context="{'allowed_company_ids': [ref('base.company_ri')]}">
         <field name="partner_id" ref="l10n_ar.res_partner_adhoc"/>
         <field name="invoice_user_id" ref="base.user_demo"/>
         <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
@@ -244,7 +244,7 @@
     </record>
 
     <!-- Invoice to ADHOC with 100% of discount and with different VAT aliquots -->
-    <record id="demo_invoice_18" model="account.move" context="{'allowed_company_ids': [ref('company_ri')]}">
+    <record id="demo_invoice_18" model="account.move" context="{'allowed_company_ids': [ref('base.company_ri')]}">
         <field name="partner_id" ref="l10n_ar.res_partner_adhoc"/>
         <field name="invoice_user_id" ref="base.user_demo"/>
         <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
@@ -258,7 +258,7 @@
     </record>
 
     <!-- Invoice to ADHOC with multiple taxes and perceptions -->
-    <record id="demo_invoice_19" model="account.move" context="{'allowed_company_ids': [ref('company_ri')]}">
+    <record id="demo_invoice_19" model="account.move" context="{'allowed_company_ids': [ref('base.company_ri')]}">
         <field name="partner_id" ref="l10n_ar.res_partner_adhoc"/>
         <field name="invoice_user_id" ref="base.user_demo"/>
         <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>

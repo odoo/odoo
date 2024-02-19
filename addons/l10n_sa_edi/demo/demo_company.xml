@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="l10n_sa.partner_demo_company_sa" model="res.partner">
+    <record id="base.partner_demo_company_sa" model="res.partner">
         <field name="vat">399999999900003</field>
         <field name="state_id" ref="base.state_sa_70"/>
         <field name="street2">Somewhere close to Mecca</field>
@@ -46,7 +46,7 @@
         <value model="account.journal"
                eval="obj().search([
                     ('type', '=', 'sale'),
-                    ('company_id', '=', ref('l10n_sa.demo_company_sa'))], limit=1).ids"/>
+                    ('company_id', '=', ref('base.demo_company_sa'))], limit=1).ids"/>
     </function>
 
 </odoo>
