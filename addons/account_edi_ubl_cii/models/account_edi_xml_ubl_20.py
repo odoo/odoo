@@ -16,8 +16,8 @@ class AccountEdiXmlUBL20(models.AbstractModel):
     _inherit = 'account.edi.common'
     _description = "UBL 2.0"
 
-    # EXTENDS account.edi.common
-    def _find_value(self, xpath, tree):
+    def _find_value(self, xpath, tree, nsmap=False):
+        # EXTENDS account.edi.common
         return super()._find_value(xpath, tree, UBL_NAMESPACES)
 
     # -------------------------------------------------------------------------
