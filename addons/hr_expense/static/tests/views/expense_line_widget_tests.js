@@ -39,7 +39,6 @@ QUnit.module("Views", {}, function () {
                     <div class="o_attachment_preview"/>
                     <div class="oe_chatter">
                         <field name="message_follower_ids"/>
-                        <field name="activity_ids"/>
                         <field name="message_ids"/>
                     </div>
                 </form>`,
