@@ -492,7 +492,7 @@ export class Thread extends Record {
     }
 
     get persistentMessages() {
-        return this.messages.filter((message) => !message.isTransient);
+        return this.messages.filter((message) => !message.is_transient);
     }
 
     get prefix() {
