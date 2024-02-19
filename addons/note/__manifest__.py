@@ -6,7 +6,6 @@
     'version': '1.0',
     'category': 'Productivity/Notes',
     'description': "",
-    'website': 'https://www.odoo.com/app/notes',
     'summary': 'Organize your work with memos',
     'sequence': 260,
     'depends': [
