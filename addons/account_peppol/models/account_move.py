@@ -26,8 +26,8 @@ class AccountMove(models.Model):
         self.ensure_one()
 
         res = super()._need_ubl_cii_xml()
-        partner = self.partner_id
-        if partner.ubl_cii_format in {False, 'facturx', 'oioubl_201'}:
+        partner = self.partner_id.commercial_partner_id
+        if partner.ubl_cii_format in {False, 'facturx', 'oioubl_201'} or self.company_id.account_peppol_proxy_state != 'active':
             return res
         if not partner.peppol_eas or not partner.peppol_endpoint:
             return False
