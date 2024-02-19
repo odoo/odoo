@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="partner_demo_company_ca" model="res.partner">
+    <record id="base.partner_demo_company_ca" model="res.partner" forcecreate="1">
         <field name="name">CA Company</field>
         <field name="vat">725562771</field>
         <field name="street">112 Place Charles-Le Moyne</field>
@@ -13,24 +13,24 @@
         <field name="website">www.caexample.com</field>
     </record>
 
-    <record id="demo_company_ca" model="res.company">
+    <record id="base.demo_company_ca" model="res.company" forcecreate="1">
         <field name="name">CA Company</field>
         <field name="paperformat_id" ref="base.paperformat_us"/>
-        <field name="partner_id" ref="partner_demo_company_ca"/>
+        <field name="partner_id" ref="base.partner_demo_company_ca"/>
     </record>
 
     <function model="res.company" name="_onchange_country_id">
-        <value eval="[ref('demo_company_ca')]"/>
+        <value eval="[ref('base.demo_company_ca')]"/>
     </function>
 
     <function model="res.users" name="write">
         <value eval="[ref('base.user_root'), ref('base.user_admin'), ref('base.user_demo')]"/>
-        <value eval="{'company_ids': [Command.link(ref('l10n_ca.demo_company_ca'))]}"/>
+        <value eval="{'company_ids': [Command.link(ref('base.demo_company_ca'))]}"/>
     </function>
 
     <function model="account.chart.template" name="try_loading">
         <value eval="[]"/>
         <value>ca_2023</value>
-        <value model="res.company" eval="obj().env.ref('l10n_ca.demo_company_ca')"/>
+        <value model="res.company" eval="obj().env.ref('base.demo_company_ca')"/>
     </function>
 </odoo>
