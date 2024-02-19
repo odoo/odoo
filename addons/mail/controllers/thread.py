@@ -112,6 +112,7 @@ class ThreadController(http.Controller):
                 "thread_id": thread_id,
                 "message_data": message_post_params,
                 "date": post_data["date"],
+                "author_id": request.env.user.partner_id.id,
             })
         message_data = thread.message_post(**message_post_params).message_format()[0]
         if "temporary_id" in request.context:

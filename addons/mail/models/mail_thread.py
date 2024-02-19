@@ -4521,8 +4521,8 @@ class MailThread(models.AbstractModel):
         if 'suggestedRecipients' in request_list:
             res['suggestedRecipients'] = self._message_get_suggested_recipients()
         if 'scheduledMessages' in request_list:
-            res['scheduledMessages'] = self.env['discuss.scheduler'].search_read([
+            res['scheduledMessages'] = self.env['discuss.scheduler'].search([
                 ("thread_model", "=", self._name),
                 ("thread_id", "=", self.id)
-            ])
+            ])._message_scheduled_format()
         return res

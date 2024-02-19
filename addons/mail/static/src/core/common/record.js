@@ -32,9 +32,12 @@ export function OR(...args) {
  * @param {Object} vals
  */
 function updateFields(record, vals) {
-    for (const [fieldName, value] of Object.entries(vals)) {
+    for (let [fieldName, value] of Object.entries(vals)) {
         const fieldDefinition = record.Model._fields.get(fieldName);
         if (!fieldDefinition || Record.isAttr(fieldDefinition)) {
+            if (Object.keys(record.casts).includes(fieldName)) {
+                value = record.casts[fieldName](value);
+            }
             updateAttr(record, fieldName, value);
         } else {
             updateRelation(record, fieldName, value);
@@ -1034,6 +1037,7 @@ class RecordList extends Array {
  */
 
 export class Record {
+    casts = {};
     /** @param {FieldDefinition} */
     static isAttr(definition) {
         return Boolean(definition?.[ATTR_SYM]);

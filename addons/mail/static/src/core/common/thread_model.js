@@ -53,6 +53,7 @@ export class Thread extends Record {
         return this.get(data);
     }
 
+    scheduledMessages = Record.many("ScheduledMessage");
     /** @type {number} */
     id;
     /** @type {string} */

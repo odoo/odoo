@@ -11,6 +11,7 @@ class DiscussScheduler(models.Model):
     date = fields.Datetime()
     thread_model = fields.Char()
     thread_id = fields.Integer()
+    author_id = fields.Many2one('res.partner')
 
     def _send_scheduled_message_cron(self):
         messages = self.env["discuss.scheduler"].search([])
@@ -24,4 +25,19 @@ class DiscussScheduler(models.Model):
         data = []
         for message in messages:
             data.append(message["message_data"])
+        return data
+
+    def _message_scheduled_format(self):
+        data = []
+        for message in self:
+            data.append({
+                "id": message.id,
+                "thread": {
+                    "model": message.thread_model,
+                    "id": message.thread_id
+                },
+                "author": message.author_id.mail_partner_format().get(message.author_id),
+                "body": message.message_data["body"],
+                "date": fields.Datetime.to_string(message.date),
+            })
         return data
