@@ -483,8 +483,28 @@ export class StaticList extends DataPoint {
     }
 
     _applyCommands(commands, { canAddOverLimit, reload } = {}) {
-        const isOnLastPage = this.limit + this.offset >= this.count;
         const { CREATE, UPDATE, DELETE, UNLINK, LINK, SET } = x2ManyCommands;
+
+        // For performance reasons, we split commands by record ids, such that we have quick access
+        // to all commands concerning a given record. At the end, we re-build the list of commands
+        // from this structure.
+        let lastCommandIndex = -1;
+        const commandsByIds = {};
+        function addOwnCommand(command) {
+            commandsByIds[command[1]] = commandsByIds[command[1]] || [];
+            commandsByIds[command[1]].push({ command, index: ++lastCommandIndex });
+        }
+        function getOwnCommands(id) {
+            commandsByIds[id] = commandsByIds[id] || [];
+            return commandsByIds[id];
+        }
+        for (const command of this._commands) {
+            addOwnCommand(command);
+        }
+
+        // For performance reasons, we accumulate removed ids (commands DELETE and UNLINK), and at
+        // the end, we filter once this.records and this._currentIds to remove them.
+        const removedIds = {};
 
         const recordsToLoad = [];
         for (const command of commands) {
@@ -493,17 +513,17 @@ export class StaticList extends DataPoint {
                     const virtualId = getId("virtual");
                     const record = this._createRecordDatapoint(command[2], { virtualId });
                     this.records.push(record);
-                    this._commands.push([CREATE, virtualId]);
+                    addOwnCommand([CREATE, virtualId]);
                     this._currentIds.splice(this.offset + this.limit, 0, virtualId);
                     this.count++;
                     break;
                 }
                 case UPDATE: {
-                    const existingCommand = this._commands.find((c) => {
-                        return (c[0] === CREATE || c[0] === UPDATE) && c[1] === command[1];
-                    });
+                    const existingCommand = getOwnCommands(command[1]).some(
+                        (x) => x.command[0] === CREATE || x.command[0] === UPDATE
+                    );
                     if (!existingCommand) {
-                        this._commands.push([UPDATE, command[1]]);
+                        addOwnCommand([UPDATE, command[1]]);
                     }
                     const record = this._cache[command[1]];
                     if (!record) {
@@ -541,44 +561,33 @@ export class StaticList extends DataPoint {
                 }
                 case DELETE:
                 case UNLINK: {
+                    // If we receive an UNLINK command and we already have a SET command
+                    // containing the record to unlink, we just remove it from the SET command.
+                    // If there's a SET command, we know it's the first one (see @_replaceWith).
+                    if (command[0] === UNLINK) {
+                        const firstCommand = this._commands[0];
+                        const hasReplaceWithCommand = firstCommand && firstCommand[0] === SET;
+                        if (hasReplaceWithCommand && firstCommand[2].includes(command[1])) {
+                            firstCommand[2] = firstCommand[2].filter((id) => id !== command[1]);
+                            break;
+                        }
+                    }
+                    const ownCommands = getOwnCommands(command[1]);
                     if (command[0] === DELETE) {
-                        if (!this._commands.find((c) => c[0] === CREATE && c[1] === command[1])) {
-                            this._commands.push([DELETE, command[1]]);
+                        const hasCreateCommand = ownCommands.some((x) => x.command[0] === CREATE);
+                        ownCommands.splice(0); // reset to the empty list
+                        if (!hasCreateCommand) {
+                            addOwnCommand([DELETE, command[1]]);
                         }
-                        this._commands = this._commands.filter((c) => {
-                            return !(c[0] === CREATE || c[0] === UPDATE) || c[1] !== command[1];
-                        });
                     } else {
-                        // FORGET
-                        const replaceWithIndex = this._commands.findIndex(
-                            (c) => c[0] === SET && c[2].includes(command[1])
-                        );
-                        if (replaceWithIndex >= 0) {
-                            const ids = this._commands[replaceWithIndex][2];
-                            this._commands[replaceWithIndex][2] = ids.filter(
-                                (id) => id !== command[1]
-                            );
+                        const linkToIndex = ownCommands.findIndex((x) => x.command[0] === LINK);
+                        if (linkToIndex >= 0) {
+                            ownCommands.splice(linkToIndex, 1);
                         } else {
-                            const linkToIndex = this._commands.findIndex(
-                                (c) => c[0] === LINK && c[1] === command[1]
-                            );
-                            if (linkToIndex >= 0) {
-                                this._commands.splice(linkToIndex, 1);
-                            } else {
-                                this._commands.push([UNLINK, command[1]]);
-                            }
+                            addOwnCommand([UNLINK, command[1]]);
                         }
                     }
-                    const record = this._cache[command[1]];
-                    if (record) {
-                        const index = this.records.findIndex((r) => r.id === record.id);
-                        if (index >= 0) {
-                            this.records.splice(index, 1);
-                        }
-                    }
-                    const index = this._currentIds.findIndex((id) => id === command[1]);
-                    this._currentIds.splice(index, 1);
-                    this.count--;
+                    removedIds[command[1]] = true;
                     break;
                 }
                 case LINK: {
@@ -604,17 +613,48 @@ export class StaticList extends DataPoint {
                         }
                     }
                     this._currentIds.push(record.resId);
-                    this._commands.push([command[0], command[1]]);
+                    addOwnCommand([command[0], command[1]]);
                     this.count++;
                     break;
                 }
             }
         }
-        // if we aren't on the last page, and *n* records of the current page have been removed,
-        // the first *n* records of the next page become the last *n* ones of the current
-        // page, so we need to add (and maybe load) them.
+
+        // Re-generate the new list of commands
+        this._commands = Object.values(commandsByIds)
+            .flat()
+            .sort((x, y) => x.index - y.index)
+            .map((x) => x.command);
+
+        // Filter out removed records and ids from this.records and this._currentIds
+        if (Object.keys(removedIds).length) {
+            let removeCommandsByIdsCopy = Object.assign({}, removedIds);
+            this.records = this.records.filter((r) => {
+                const id = r.resId || r._virtualId;
+                if (removeCommandsByIdsCopy[id]) {
+                    delete removeCommandsByIdsCopy[id];
+                    return false;
+                }
+                return true;
+            });
+            const nextCurrentIds = [];
+            removeCommandsByIdsCopy = Object.assign({}, removedIds);
+            for (const id of this._currentIds) {
+                if (removeCommandsByIdsCopy[id]) {
+                    delete removeCommandsByIdsCopy[id];
+                } else {
+                    nextCurrentIds.push(id);
+                }
+            }
+            this._currentIds = nextCurrentIds;
+            this.count = this._currentIds.length;
+        }
+
+        // Fill the page if it isn't full w.r.t. the limit. This may happen if we aren't on the last
+        // page and records of the current have been removed, or if we applied commands to remove
+        // some records and to add others, but we were on the limit.
         const nbMissingRecords = this.limit - this.records.length;
-        if (!isOnLastPage && nbMissingRecords > 0) {
+        if (nbMissingRecords > 0) {
             const lastRecordIndex = this.limit + this.offset;
             const firstRecordIndex = lastRecordIndex - nbMissingRecords;
             const nextRecordIds = this._currentIds.slice(firstRecordIndex, lastRecordIndex);
