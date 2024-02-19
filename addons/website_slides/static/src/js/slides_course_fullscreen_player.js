@@ -685,7 +685,7 @@
                 } else if (slide.category === 'video' && slide.videoSourceType === 'google_drive') {
                     $content.html(QWeb.render('website.slides.fullscreen.video.google_drive', {widget: this}));
                 } else if (slide.category === 'article'){
-                    var $wpContainer = $('<div>').addClass('o_wslide_fs_article_content bg-white block w-100 overflow-auto');
+                    var $wpContainer = $('<div>').addClass('o_wslide_fs_article_content bg-white block w-100 overflow-auto p-3');
                     $wpContainer.html(slide.htmlContent);
                     $content.append($wpContainer);
                     this.trigger_up('widgets_start_request', {
