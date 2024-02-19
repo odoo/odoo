@@ -106,7 +106,7 @@ export class Many2OneField extends Component {
         this.addDialog = useOwnedDialogs();
 
         this.focusInput = () => {
-            this.autocompleteContainerRef.el.querySelector("input").focus();
+            this.autocompleteContainerRef.el?.querySelector("input").focus();
         };
 
         this.state = useState({

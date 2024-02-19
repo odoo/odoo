@@ -49,10 +49,6 @@
                         <group>
                             <field name="attachment_ids" widget="many2many_binary" string="Attach a file" nolabel="1" colspan="2"/>
                         </group>
-                        <group>
-                            <field name="template_id" string="Load template" options="{'no_create': True}" class="w-50"
-                                context="{'default_model': model, 'default_body_html': body, 'default_subject': subject}"/>
-                        </group>
                     </div>
                     <notebook invisible="composition_mode != 'mass_mail'">
                         <page string="Content" name="page_content">
@@ -78,7 +74,7 @@
                             </group>
                         </page>
                     </notebook>
-                    <footer>
+                    <footer class="align-items-center">
                         <button string="Send" name="action_send_mail"
                                 type="object" class="btn-primary o_mail_send" data-hotkey="q"
                                 invisible="subtype_is_log"/>
@@ -86,10 +82,12 @@
                                 type="object" class="btn-primary" data-hotkey="q"
                                 invisible="not subtype_is_log"/>
                         <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x" />
-                        <button icon="fa-cloud-upload" type="object"
-                                name="open_template_creation_wizard" string="Save Template"
-                                invisible="not can_edit_body"
-                                class="float-end btn-secondary" data-hotkey="w" help="Save as a new template"/>
+                        <span class="flex-grow-1"/>
+                        <field name="template_id" placeholder="Load template" options="{'no_create': True}" class="w-25 mx-2"
+                            context="{'default_model': model, 'default_body_html': body, 'default_subject': subject}"/>
+                        <button type="object" name="open_template_creation_wizard" string="Save Template"
+                                invisible="not can_edit_body" class="float-end btn-secondary" data-hotkey="w"
+                                help="Save as a new template"/>
                     </footer>
                 </form>
             </field>
