@@ -34,7 +34,7 @@ class UtmCampaign(models.Model):
 
     @api.depends('title')
     def _compute_name(self):
-        new_names = self.env['utm.mixin']._get_unique_names(self._name, [c.title for c in self])
+        new_names = self.env['utm.mixin']._get_unique_names(self._name, [c.title for c in self], lowercase=False)
         for campaign, new_name in zip(self, new_names):
             campaign.name = new_name
 
@@ -43,7 +43,7 @@ class UtmCampaign(models.Model):
         for vals in vals_list:
             if not vals.get('title') and vals.get('name'):
                 vals['title'] = vals['name']
-        new_names = self.env['utm.mixin']._get_unique_names(self._name, [vals.get('name') for vals in vals_list])
+        new_names = self.env['utm.mixin']._get_unique_names(self._name, [vals.get('name') for vals in vals_list], lowercase=False)
         for vals, new_name in zip(vals_list, new_names):
             if new_name:
                 vals['name'] = new_name

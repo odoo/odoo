@@ -29,7 +29,7 @@ class UtmMixin(models.AbstractModel):
         if not self.env.is_superuser() and self.env.user.has_group('sales_team.group_sale_salesman'):
             return values
 
-        for url_param, field_name, cookie_name in self.env['utm.mixin'].tracking_fields():
+        for __, field_name, cookie_name, lowercase in self.env['utm.mixin'].tracking_fields():
             if field_name in fields:
                 field = self._fields[field_name]
                 value = False
@@ -38,7 +38,7 @@ class UtmMixin(models.AbstractModel):
                     value = request.httprequest.cookies.get(cookie_name)
                 # if we receive a string for a many2one, we search/create the id
                 if field.type == 'many2one' and isinstance(value, str) and value:
-                    record = self._find_or_create_record(field.comodel_name, value)
+                    record = self._find_or_create_record(field.comodel_name, value, lowercase)
                     value = record.id
                 if value:
                     values[field_name] = value
@@ -52,16 +52,16 @@ class UtmMixin(models.AbstractModel):
         # To force the call of overridden method, we use self.env['utm.mixin'].tracking_fields() which respects overridden
         # methods of utm.mixin, but will ignore overridden method on crm.lead
         return [
-            # ("URL_PARAMETER", "FIELD_NAME_MIXIN", "NAME_IN_COOKIES")
-            ('utm_campaign', 'campaign_id', 'odoo_utm_campaign'),
-            ('utm_source', 'source_id', 'odoo_utm_source'),
-            ('utm_medium', 'medium_id', 'odoo_utm_medium'),
+            # ("URL_PARAMETER", "FIELD_NAME_MIXIN", "NAME_IN_COOKIES", "LOWERCASE")
+            ('utm_campaign', 'campaign_id', 'odoo_utm_campaign', False),
+            ('utm_source', 'source_id', 'odoo_utm_source', True),
+            ('utm_medium', 'medium_id', 'odoo_utm_medium', True),
         ]
 
-    def _find_or_create_record(self, model_name, name):
+    def _find_or_create_record(self, model_name, name, lowercase=False):
         """Based on the model name and on the name of the record, retrieve the corresponding record or create it."""
         Model = self.env[model_name]
-
+        name = name.lower() if lowercase else name
         record = Model.with_context(active_test=False).search([('name', '=', name)], limit=1)
 
         if not record:
@@ -74,7 +74,7 @@ class UtmMixin(models.AbstractModel):
         return record
 
     @api.model
-    def _get_unique_names(self, model_name, names):
+    def _get_unique_names(self, model_name, names, lowercase=True):
         """Generate unique names for the given model.
 
         Take a list of names and return for each names, the new names to set
@@ -104,6 +104,8 @@ class UtmMixin(models.AbstractModel):
                 return match.group(1), int(match.group(2) or '1')
             return name, 1
 
+        if lowercase:
+            names = [name.lower() for name in names]
         # Remove potential counter part in each names
         names_without_counter = {_split_name_and_count(name)[0] for name in names}
 
