@@ -1798,10 +1798,10 @@ export function resize(target, dimensions, options) {
     if (element === getDefaultRootNode()) {
         setDimensions(width, height);
     } else {
-        if (width !== null) {
+        if (!Number.isNaN(width)) {
             element.style.setProperty("width", `${width}px`, "important");
         }
-        if (height !== null) {
+        if (!Number.isNaN(height)) {
             element.style.setProperty("height", `${height}px`, "important");
         }
     }
@@ -1839,8 +1839,7 @@ export function scroll(target, position, options) {
     if (!hasTouch()) {
         dispatch(element, "wheel");
     }
-    element.scrollTo(scrollOptions);
-    dispatch(element, "scroll");
+    element.scrollTo(scrollOptions); // will dispatch a trusted "scroll" event
 
     return logEvents("scroll");
 }
