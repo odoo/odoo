@@ -105,6 +105,7 @@ export class ClosePosPopup extends Component {
                 }
                 this.moneyDetails = moneyDetails;
             },
+            context: "Closing",
         });
     }
     async downloadSalesReport() {
@@ -224,5 +225,9 @@ export class ClosePosPopup extends Component {
         if (response.redirect) {
             window.location = "/web#action=point_of_sale.action_client_pos_menu";
         }
+    }
+    getMovesTotalAmount() {
+        const amounts = this.props.default_cash_details.moves.map((move) => move.amount);
+        return amounts.reduce((acc, x) => acc + x, 0);
     }
 }
