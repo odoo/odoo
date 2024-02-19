@@ -1128,6 +1128,7 @@ Please change the quantity done or the rounding precision of your unit of measur
         quants = self.env['stock.quant'].search([('product_id', '=', self.product_id.id),
                                                  ('lot_id', 'in', self.lot_ids.ids),
                                                  ('quantity', '!=', 0),
+                                                 ('location_id', '!=', self.location_id.id),# Exclude the source location
                                                  '|', ('location_id.usage', '=', 'customer'),
                                                       '&', ('company_id', '=', self.company_id.id),
                                                            ('location_id.usage', 'in', ('internal', 'transit'))])
