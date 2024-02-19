@@ -281,12 +281,6 @@
                                     </div>
                                 </div>
                             </setting>
-                            <setting help="Print a QR code on the receipt to allow the user to easily request the invoice for an order." documentation="/applications/sales/point_of_sale/receipts_invoices.html">
-                                <field name="point_of_sale_use_ticket_qr_code"/>
-                            </setting>
-                            <setting help="Add a 5-digit code on the receipt to allow the user to request the invoice for an order on the portal.">
-                                <field name="point_of_sale_ticket_unique_code"/>
-                            </setting>
                             <setting id="order_reference" groups="base.group_no_one" string="Order Reference" help="Generation of your order references">
                                 <field name="pos_sequence_id" readonly="1"/>
                             </setting>
@@ -296,6 +290,17 @@
                                     <div class="content-group mt16" invisible="not pos_module_pos_sms">
                                         <div class="text-warning mb4" id="warning_text_pos_sms" >
                                             Save this page and come back here to set up the feature.
+                                        </div>
+                                    </div>
+                                </div>
+                            </setting>
+                            <setting help="Print information on the receipt to allow the customer to easily request the invoice anytime, from Odoo's portal." documentation="/applications/sales/point_of_sale/receipts_invoices.html">
+                                <field name="point_of_sale_use_ticket_qr_code"/>
+                                <div class="content-group mt16" invisible="not point_of_sale_use_ticket_qr_code">
+                                    <div class="col mt16">
+                                        <div class="content-group row">
+                                            <label for="point_of_sale_ticket_portal_url_display_mode" class="col-lg-2" string="Print"/>
+                                            <field name="point_of_sale_ticket_portal_url_display_mode"/>
                                         </div>
                                     </div>
                                 </div>
@@ -331,7 +336,7 @@
                             </setting>
                             <setting title="The transactions are processed by Mercado Pago on terminal" string="Mercado Pago" help="Accept payments with Mercado Pago on a terminal">
                                 <field name="module_pos_mercado_pago"/>
-                            </setting>                            
+                            </setting>
                         </block>
 
                         <block title="Connected Devices" id="pos_connected_devices_section">

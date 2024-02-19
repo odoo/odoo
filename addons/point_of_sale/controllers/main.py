@@ -114,7 +114,7 @@ class PosController(PortalAccount):
             else:
                 date_order = datetime(*[int(i) for i in form_values['date_order'].split('-')])
                 order = request.env['pos.order'].sudo().search([
-                    ('pos_reference', '=like', '%' + form_values['pos_reference'].replace('%', r'\%').replace('_', r'\_')),
+                    ('pos_reference', '=like', '%' + form_values['pos_reference'].strip().replace('%', r'\%').replace('_', r'\_')),
                     ('date_order', '>=', date_order),
                     ('date_order', '<', date_order + timedelta(days=1)),
                     ('ticket_code', '=', form_values['ticket_code']),
