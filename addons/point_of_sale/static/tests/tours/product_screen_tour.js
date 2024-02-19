@@ -148,9 +148,20 @@ registry.category("web_tour.tours").add("CashClosingDetails", {
     test: true,
     steps: () =>
         [
-            ProductScreen.enterOpeningAmount("90"),
+            ProductScreen.enterOpeningAmount("0"),
             Dialog.confirm("Open session"),
-            ProductScreen.checkSecondCashClosingDetailsLineAmount("10.00", "-"),
+            ProductScreen.addOrderline("Desk Organizer", "10"), //5.1 per item
+            ProductScreen.totalAmountIs("51.00"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.changeIs("0.0"),
+            PaymentScreen.clickValidate(),
+            Chrome.clickMenuOption("Close Register"),
+            ProductScreen.closeWithCashAmount("50.0"),
+            ProductScreen.cashDifferenceIs("-1.00"),
+            Dialog.confirm("Close Register"),
+            Dialog.confirm("Proceed Anyway", ".btn-secondary"),
+            ProductScreen.lastClosingCashIs("50.00"),
         ].flat(),
 });
 

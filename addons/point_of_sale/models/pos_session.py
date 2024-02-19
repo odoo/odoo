@@ -3,11 +3,10 @@
 from collections import defaultdict
 from datetime import timedelta
 from itertools import groupby
-from markupsafe import Markup, escape
 
 from odoo import api, fields, models, _, Command
 from odoo.exceptions import AccessError, UserError, ValidationError
-from odoo.tools import float_is_zero, float_compare, convert
+from odoo.tools import float_is_zero, float_compare, convert, plaintext2html
 from odoo.service.common import exp_version
 from odoo.osv.expression import AND
 
@@ -61,10 +60,6 @@ class PosSession(models.Model):
         readonly=True)
     cash_register_balance_start = fields.Monetary(
         string="Starting Balance",
-        readonly=True)
-    cash_register_total_entry_encoding = fields.Monetary(
-        compute='_compute_cash_balance',
-        string='Total Cash Transaction',
         readonly=True)
     cash_register_balance_end = fields.Monetary(
         compute='_compute_cash_balance',
@@ -201,18 +196,16 @@ class PosSession(models.Model):
             cash_payment_method = session.payment_method_ids.filtered('is_cash_count')[:1]
             if cash_payment_method:
                 total_cash_payment = 0.0
-                last_session = session.search([('config_id', '=', session.config_id.id), ('id', '<', session.id)], limit=1)
                 result = self.env['pos.payment']._read_group([('session_id', '=', session.id), ('payment_method_id', '=', cash_payment_method.id)], aggregates=['amount:sum'])
                 total_cash_payment = result[0][0] or 0.0
                 if session.state == 'closed':
-                    session.cash_register_total_entry_encoding = session.cash_real_transaction + total_cash_payment
+                    total_cash = session.cash_real_transaction + total_cash_payment
                 else:
-                    session.cash_register_total_entry_encoding = sum(session.statement_line_ids.mapped('amount')) + total_cash_payment
+                    total_cash = sum(session.statement_line_ids.mapped('amount')) + total_cash_payment
 
-                session.cash_register_balance_end = last_session.cash_register_balance_end_real + session.cash_register_total_entry_encoding
+                session.cash_register_balance_end = session.cash_register_balance_start + total_cash
                 session.cash_register_difference = session.cash_register_balance_end_real - session.cash_register_balance_end
             else:
-                session.cash_register_total_entry_encoding = 0.0
                 session.cash_register_balance_end = 0.0
                 session.cash_register_difference = 0.0
 
@@ -433,7 +426,7 @@ class PosSession(models.Model):
                 self.env.cr.rollback()
                 return self._close_session_action(balance)
 
-            self.sudo()._post_statement_difference(cash_difference_before_statements, False)
+            self.sudo()._post_statement_difference(cash_difference_before_statements)
             if self.move_id.line_ids:
                 self.move_id.sudo().with_company(self.company_id)._post()
                 # Set the uninvoiced orders' state to 'done'
@@ -442,12 +435,12 @@ class PosSession(models.Model):
                 self.move_id.sudo().unlink()
             self.sudo().with_company(self.company_id)._reconcile_account_move_lines(data)
         else:
-            self.sudo()._post_statement_difference(self.cash_register_difference, False)
+            self.sudo()._post_statement_difference(self.cash_register_difference)
 
         self.write({'state': 'closed'})
         return True
 
-    def _post_statement_difference(self, amount, is_opening):
+    def _post_statement_difference(self, amount):
         if amount:
             if self.config_id.cash_control:
                 st_line_vals = {
@@ -463,9 +456,8 @@ class PosSession(models.Model):
                         _('Please go on the %s journal and define a Loss Account. This account will be used to record cash difference.',
                           self.cash_journal_id.name))
 
-                st_line_vals['payment_ref'] = _("Cash difference observed during the counting (Loss)") + (_(' - opening') if is_opening else _(' - closing'))
-                if not is_opening:
-                    st_line_vals['counterpart_account_id'] = self.cash_journal_id.loss_account_id.id
+                st_line_vals['payment_ref'] = _("Cash difference observed during the counting (Loss) - closing")
+                st_line_vals['counterpart_account_id'] = self.cash_journal_id.loss_account_id.id
             else:
                 # self.cash_register_difference  > 0.0
                 if not self.cash_journal_id.profit_account_id:
@@ -473,11 +465,16 @@ class PosSession(models.Model):
                         _('Please go on the %s journal and define a Profit Account. This account will be used to record cash difference.',
                           self.cash_journal_id.name))
 
-                st_line_vals['payment_ref'] = _("Cash difference observed during the counting (Profit)") + (_(' - opening') if is_opening else _(' - closing'))
-                if not is_opening:
-                    st_line_vals['counterpart_account_id'] = self.cash_journal_id.profit_account_id.id
+                st_line_vals['payment_ref'] = _("Cash difference observed during the counting (Profit) - closing")
+                st_line_vals['counterpart_account_id'] = self.cash_journal_id.profit_account_id.id
 
-            self.env['account.bank.statement.line'].create(st_line_vals)
+            created_line = self.env['account.bank.statement.line'].create(st_line_vals)
+
+            if created_line:
+                created_line.move_id.message_post(body=_(
+                    "Related Session: %(link)s",
+                    link=self._get_html_link()
+                ))
 
     def _close_session_action(self, amount_to_balance):
         # NOTE This can't handle `bank_payment_method_diffs` because there is no field in the wizard that can carry it.
@@ -540,7 +537,7 @@ class PosSession(models.Model):
             raise UserError(_('This session is already closed.'))
         # Prevent the session to be opened again.
         self.write({'state': 'closing_control', 'stop_at': fields.Datetime.now(), 'closing_notes': notes})
-        self._post_cash_details_message('Closing', self.cash_register_difference, notes)
+        self._post_cash_details_message('Closing', self.cash_register_balance_end, self.cash_register_difference, notes)
 
     def post_closing_cash_details(self, counted_cash):
         """
@@ -654,7 +651,6 @@ class PosSession(models.Model):
         cash_in_count = 0
         cash_out_count = 0
         cash_in_out_list = []
-        last_session = self.search([('config_id', '=', self.config_id.id), ('id', '!=', self.id)], limit=1)
         for cash_move in self.sudo().statement_line_ids.sorted('create_date'):
             if cash_move.amount > 0:
                 cash_in_count += 1
@@ -675,10 +671,10 @@ class PosSession(models.Model):
             'opening_notes': self.opening_notes,
             'default_cash_details': {
                 'name': default_cash_payment_method_id.name,
-                'amount': last_session.cash_register_balance_end_real
+                'amount': self.cash_register_balance_start
                           + total_default_cash_payment_amount
                           + sum(self.sudo().statement_line_ids.mapped('amount')),
-                'opening': last_session.cash_register_balance_end_real,
+                'opening': self.cash_register_balance_start,
                 'payment_amount': total_default_cash_payment_amount,
                 'moves': cash_in_out_list,
                 'id': default_cash_payment_method_id.id
@@ -1578,21 +1574,18 @@ class PosSession(models.Model):
         self.state = 'opened'
         self.opening_notes = notes
         difference = cashbox_value - self.cash_register_balance_start
+        self._post_cash_details_message('Opening', self.cash_register_balance_start, difference, notes)
         self.cash_register_balance_start = cashbox_value
-        self.sudo()._post_statement_difference(difference, True)
-        self._post_cash_details_message('Opening', difference, notes)
 
-    def _post_cash_details_message(self, state, difference, notes):
-        message = ""
-        if difference:
-            message = f"{state} difference: " \
-                      f"{self.currency_id.symbol + ' ' if self.currency_id.position == 'before' else ''}" \
-                      f"{self.currency_id.round(difference)} " \
-                      f"{self.currency_id.symbol if self.currency_id.position == 'after' else ''}" + Markup('<br/>')
+    def _post_cash_details_message(self, state, expected, difference, notes):
+        message = (state + " difference: " + self.currency_id.format(difference) + '\n' +
+           state + " expected: " + self.currency_id.format(expected) + '\n' +
+           state + " counted: " + self.currency_id.format(expected + difference) + '\n')
+
         if notes:
-            message += escape(notes).replace('\n', Markup('<br/>'))
+            message += notes
         if message:
-            self.message_post(body=message)
+            self.message_post(body=plaintext2html(message))
 
     def action_view_order(self):
         return {

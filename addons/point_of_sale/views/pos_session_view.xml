@@ -88,6 +88,9 @@
                 <field name="user_id" widget="many2one_avatar_user" readonly="state != 'opening_control'"/>
                 <field name="start_at" />
                 <field name="stop_at" />
+                <field name="cash_register_balance_start"/>
+                <field name="cash_register_balance_end_real"/>
+                <field name="cash_register_balance_end"/>
                 <field name="state" widget="badge" decoration-info="state in ('opening_control')" decoration-success="state in ('opened', 'closed')" decoration-warning="state == 'closing_control'" />
             </tree>
         </field>

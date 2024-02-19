@@ -58,6 +58,7 @@ export class CashOpeningPopup extends Component {
                     this.moneyDetails = moneyDetails;
                 }
             },
+            context: "Opening",
         });
     }
     handleInputChange() {

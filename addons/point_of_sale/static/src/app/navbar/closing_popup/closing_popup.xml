@@ -43,15 +43,18 @@
                                     <td>Opening</td>
                                     <td class="align-top" t-esc="env.utils.formatCurrency(props.default_cash_details.opening)"/>
                                 </tr>
-                                <tr t-foreach="props.default_cash_details.moves" t-as="move" t-key="move_index">
-                                    <td>
-                                        <div class="flex d-flex flex-row">
-                                            <div class="cash-sign me-1" t-esc="move.amount &lt; 0 ? '-' : '+'"/>
-                                            <t t-esc="move.name"/>
-                                        </div>
-                                    </td>
-                                    <td class="align-top" t-esc="env.utils.formatCurrency(Math.abs(move.amount))"/>
-                                </tr>
+                                <t t-set="_totalAmount" t-value="getMovesTotalAmount()" />
+                                <t t-if="_totalAmount != 0">
+                                    <tr>
+                                        <td>
+                                            <div class="flex d-flex flex-row">
+                                                <div class="cash-sign me-1" t-esc="_totalAmount &lt; 0 ? '-' : '+'"/>
+                                                Total Moves
+                                            </div>
+                                        </td>
+                                        <td class="align-top" t-esc="env.utils.formatCurrency(Math.abs(_totalAmount))"/>
+                                    </tr>
+                                </t>
                                 <tr t-if="props.default_cash_details.payment_amount">
                                     <td>
                                         <div class="flex d-flex flex-row">
