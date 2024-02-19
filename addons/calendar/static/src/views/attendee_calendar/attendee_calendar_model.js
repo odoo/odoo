@@ -1,11 +1,9 @@
 /** @odoo-module **/
 
-import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { user } from "@web/core/user";
 import { CalendarModel } from "@web/views/calendar/calendar_model";
 import { askRecurrenceUpdatePolicy } from "@calendar/views/ask_recurrence_update_policy_hook";
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 
 export class AttendeeCalendarModel extends CalendarModel {
     setup(params, { dialog }) {
@@ -153,45 +151,6 @@ export class AttendeeCalendarModel extends CalendarModel {
                 }
             }
         }
-    }
-
-    /**
-     * Archives a record, ask for the recurrence update policy in case of recurrent event.
-     */
-    async archiveRecord(record) {
-        let recurrenceUpdate = false;
-        if (record.rawRecord.recurrency) {
-            recurrenceUpdate = await askRecurrenceUpdatePolicy(this.dialog);
-            if (!recurrenceUpdate) {
-                return;
-            }
-        } else {
-            const confirm = await new Promise((resolve) => {
-                this.dialog.add(
-                    ConfirmationDialog,
-                    {
-                        body: _t("Are you sure you want to delete this record?"),
-                        confirm: resolve.bind(null, true),
-                    },
-                    {
-                        onClose: resolve.bind(null, false),
-                    }
-                );
-            });
-            if (!confirm) {
-                return;
-            }
-        }
-        await this._archiveRecord(record.id, recurrenceUpdate);
-    }
-
-    async _archiveRecord(id, recurrenceUpdate) {
-        if (!recurrenceUpdate && recurrenceUpdate !== "self_only") {
-            await this.orm.call(this.resModel, "action_archive", [[id]]);
-        } else {
-            await this.orm.call(this.resModel, "action_mass_archive", [[id], recurrenceUpdate]);
-        }
-        await this.load();
     }
 }
 AttendeeCalendarModel.services = [...CalendarModel.services, "dialog", "orm"];

@@ -136,6 +136,6 @@ export class AttendeeCalendarCommonPopover extends CalendarCommonPopover {
     }
 
     async onClickArchive() {
-        await this.props.model.archiveRecord(this.props.record);
+        await this.props.deleteRecord(this.props.record);
     }
 }
