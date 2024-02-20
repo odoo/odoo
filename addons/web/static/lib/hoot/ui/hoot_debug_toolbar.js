@@ -29,7 +29,7 @@ export class HootDebugToolBar extends Component {
             <details class="flex flex-col overflow-hidden rounded shadow bg-gray-200 dark:bg-gray-800" open="">
                 <summary class="flex items-center gap-1 px-2 bg-gray-300 dark:bg-gray-700">
                     <i class="fa fa-bug text-skip" />
-                    <HootTestPath full="true" inert="true" test="props.test" />
+                    <HootTestPath full="true" test="props.test" />
                 </summary>
                 <div class="flex gap-2 px-2">
                     <div class="flex gap-px rounded my-1 overflow-hidden min-w-fit">

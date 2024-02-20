@@ -107,8 +107,8 @@ export class HootStatusPanel extends Component {
                     <span class="hidden md:block">
                         <strong class="text-primary" t-esc="runnerReporting.tests" />
                         tests completed
-                        (<strong class="text-primary" t-esc="runnerReporting.assertions" /> assertions,
-                        total time: <strong class="text-primary" t-esc="env.runner.totalTime" />)
+                        (total time: <strong class="text-primary" t-esc="env.runner.totalTime" />
+                        <t t-if="env.runner.aborted">, run aborted by user</t>)
                     </span>
                     <span class="md:hidden flex items-center gap-1">
                         <i class="fa fa-clock-o" />

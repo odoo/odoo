@@ -801,7 +801,7 @@ export function title(string) {
 
 /** @type {EventTarget["addEventListener"]} */
 export function useWindowListener(type, callback, options) {
-    return useExternalListener(windowTarget, type, callback, options);
+    return useExternalListener(windowTarget, type, (ev) => ev.isTrusted && callback(ev), options);
 }
 
 export class HootError extends Error {
