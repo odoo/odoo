@@ -302,3 +302,31 @@ class TestWebsiteSaleCoupon(TransactionCase):
         order._gc_abandoned_coupons()
 
         self.assertEqual(len(order.applied_coupon_ids), 0, "The coupon should've been removed from the order as more than 4 days")
+
+    def test_02_remove_coupon(self):
+        # 1. Simulate a frontend order (website, product)
+        order = self.empty_order
+        order.website_id = self.env['website'].browse(1)
+        self.env['sale.order.line'].create({
+            'product_id': self.env['product.product'].create({
+                'name': 'Product A', 'list_price': 100, 'sale_ok': True
+            }).id,
+            'name': 'Product A',
+            'order_id': order.id,
+        })
+
+        # 2. Apply the coupon
+        self._apply_promo_code(order, self.coupon.code)
+
+        # 3. Remove the coupon
+        coupon_line = order.website_order_line.filtered(
+            lambda l: l.coupon_id and l.coupon_id.id == self.coupon.id
+        )
+
+        kwargs = {
+            'line_id': None, 'product_id': coupon_line.product_id.id, 'add_qty': None, 'set_qty': 0
+        }
+        order._cart_update(**kwargs)
+
+        msg = "The coupon should've been removed from the order"
+        self.assertEqual(len(order.applied_coupon_ids), 0, msg=msg)
