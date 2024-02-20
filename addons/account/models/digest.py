@@ -17,30 +17,21 @@ class Digest(models.Model):
 
         start, end, companies = self._get_kpi_compute_parameters()
 
-        self._cr.execute("""
-            SELECT line.company_id AS company, -SUM(line.balance) AS total
-              FROM account_move_line line
-              JOIN account_move move
-                ON move.id = line.move_id
-              JOIN account_account account
-                ON account.id = line.account_id
-             WHERE line.company_id = ANY(%s)
-               AND line.date > %s::DATE
-               AND line.date <= %s::DATE
-               AND account.internal_group = 'income'
-               AND move.state = 'posted'
-          GROUP BY line.company_id
-        """, [companies.ids, start, end])
-
-        result = self._cr.dictfetchall()
-        total_per_companies = {
-            values['company']: values['total']
-            for values in result
-        }
+        total_per_companies = dict(self.env['account.move.line'].sudo()._read_group(
+            groupby=['company_id'],
+            aggregates=['balance:sum'],
+            domain=[
+                ('company_id', 'in', companies.ids),
+                ('date', '>', start),
+                ('date', '<=', end),
+                ('account_id.internal_group', '=', 'income'),
+                ('parent_state', '=', 'posted'),
+            ],
+        ))
 
         for record in self:
             company = record.company_id or self.env.company
-            record.kpi_account_total_revenue_value = total_per_companies.get(company.id, 0)
+            record.kpi_account_total_revenue_value = -total_per_companies.get(company, 0)
 
     def _compute_kpis_actions(self, company, user):
         res = super(Digest, self)._compute_kpis_actions(company, user)

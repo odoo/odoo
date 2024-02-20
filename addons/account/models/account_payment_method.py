@@ -177,7 +177,7 @@ class AccountPaymentMethodLine(models.Model):
         :param account_id: The id of an account.account.
         """
         account = self.env['account.account'].browse(account_id)
-        if not account.reconcile and account.account_type not in ('asset_cash', 'liability_credit_card') and account.internal_group != 'off_balance':
+        if not account.reconcile and account.account_type not in ('asset_cash', 'liability_credit_card', 'off_balance'):
             account.reconcile = True
 
     @api.model_create_multi
