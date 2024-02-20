@@ -6,7 +6,7 @@
     'category': 'Accounting/Payment Acquirers',
     'sequence': 340,
     'summary': 'Payment Acquirer: Adyen Implementation',
-    'description': """Adyen Payment Acquirer""",
+    'description': " ",  # Non-empty string to avoid loading the README file.
     'depends': ['payment'],
     'data': [
         'views/payment_adyen_templates.xml',

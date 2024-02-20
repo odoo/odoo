@@ -79,6 +79,7 @@ function factory(dependencies) {
             }
             if ('message_type' in data) {
                 data2.message_type = data.message_type;
+                data2.is_automated_message = data.message_type === 'auto_message';
             }
             if ('model' in data && 'res_id' in data && data.model && data.res_id) {
                 const originThreadData = {
@@ -548,6 +549,9 @@ function factory(dependencies) {
             if (this.message_type === 'notification') {
                 return this.env._t("System notification");
             }
+            if (this.message_type === "auto_comment") {
+                return this.env._t("Automated Targeted Notification");
+            }
             if (!this.is_discussion && !this.is_notification) {
                 return this.env._t("Note");
             }
@@ -746,6 +750,9 @@ function factory(dependencies) {
             default: false,
         }),
         isTransient: attr({
+            default: false,
+        }),
+        is_automated_message: attr({
             default: false,
         }),
         is_discussion: attr({

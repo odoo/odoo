@@ -40,7 +40,7 @@ class MailTracking(models.Model):
 
     def _compute_field_groups(self):
         for tracking in self:
-            model = self.env[tracking.mail_message_id.model]
+            model = self.env[tracking.field.model]
             field = model._fields.get(tracking.field.name)
             tracking.field_groups = field.groups if field else 'base.group_system'
 

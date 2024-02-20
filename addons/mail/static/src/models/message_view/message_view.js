@@ -35,7 +35,7 @@ function factory(dependencies) {
             }
             this.message.originThread.update({
                 composer: insertAndReplace({
-                    isLog: !this.message.is_discussion && !this.message.is_notification,
+                    isLog: !this.message.is_automated_message && !this.message.is_discussion && !this.message.is_notification,
                 }),
             });
             this.threadView.update({

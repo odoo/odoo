@@ -10232,7 +10232,7 @@ msgstr "نسبة من السعر"
 #: model:ir.model.fields.selection,name:account.selection__account_tax__amount_type__division
 #: model:ir.model.fields.selection,name:account.selection__account_tax_template__amount_type__division
 msgid "Percentage of Price Tax Included"
-msgstr "يشمل ضريبة نسبة من السعر "
+msgstr "نسبة من السعر شاملة الضريبة "
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_line__amount_type__percentage
@@ -10319,6 +10319,14 @@ msgstr "يرجى التواصل مع محاسبك لطباعة نتائج صحة
 #, python-format
 msgid "Please define a payment method line on your payment."
 msgstr "الرجاء تحديد بند لطريقة الدفع في دفعتك. "
+
+#. module: account
+#: code:addons/account/models/account_payment.py:0
+#, python-format
+msgid ""
+"The selected payment method is not available for this payment, please select"
+" the payment method again."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
