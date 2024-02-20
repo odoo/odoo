@@ -341,11 +341,16 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
         content: "Check that the link's href was updated and click on it",
         trigger: "iframe .s_text_image p a[href='/this-address-does-not-exist']",
     },
+    // TODO this step is disabled for now because it is a cause of race
+    // condition (last check: 3 times over 95). The popover seems to sometimes
+    // unexpectedly close.
+    /*
     {
-        content: "Check popover content is up-to-date",
+        content: "Check popover content is up-to-date (2)",
         trigger: "iframe .popover div a:contains('/this-address-does-not-exist')",
         isCheck: true,
     },
+    */
     // 13. Check that ZWS is not added in the link label input.
     clickOnImgStep,
     {
