@@ -685,6 +685,30 @@ class TestOnchange(SavepointCaseWithUserDemo):
         self.assertEqual(payment.tag_repeat, 3)
         self.assertEqual(payment.tag_string, 'BarBarBar')
 
+    def test_onchange_inherited_in_one2many(self):
+        move = self.env['test_new_api.move'].create({})
+        view = self.env["ir.ui.view"].create({
+            "model": "test_new_api.move",
+            "type": "form",
+            "arch": """<form>
+                <field name="payment_ids">
+                    <form>
+                        <!-- tag_repeat is inherited from move model -->
+                        <field name="tag_repeat" />
+                    </form>
+                </field>
+            </form>"""
+        })
+
+        with Form(move, view) as form:
+            with form.payment_ids.new() as line:
+                line.tag_repeat = 1
+            self.assertEqual(len(form.payment_ids), 1)
+
+        self.assertEqual(len(move.payment_ids), 1)
+        self.assertEqual(move.payment_ids.move_id, move)
+        self.assertEqual(move.payment_ids.tag_repeat, 1)
+
     def test_display_name(self):
         self.env['ir.ui.view'].create({
             'name': 'test_new_api.multi.tag form view',

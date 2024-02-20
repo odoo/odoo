@@ -1018,7 +1018,8 @@ class Base(models.AbstractModel):
             field = self._fields.get(field_name)
             if field and field.inherited:
                 parent_name, field_name = field.related.split('.', 1)
-                record[parent_name]._update_cache({field_name: record[field_name]})
+                if parent := record[parent_name]:
+                    parent._update_cache({field_name: record[field_name]})
 
         # make a snapshot based on the initial values of record
         snapshot0 = RecordSnapshot(record, fields_spec, fetch=(not first_call))
