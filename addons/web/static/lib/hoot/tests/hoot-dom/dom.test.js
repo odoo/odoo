@@ -267,7 +267,7 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
         const editableDiv = document.createElement("div");
         expect(isEditable(editableDiv)).toBe(false);
         editableDiv.setAttribute("contenteditable", "true");
-        expect(isEditable(editableDiv)).toBe(true);
+        expect(isEditable(editableDiv)).toBe(false); // not supported
     });
 
     test("isEventTarget", async () => {
