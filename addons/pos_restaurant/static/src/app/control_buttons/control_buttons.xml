@@ -25,6 +25,10 @@
                 <button class="btn btn-light rounded-0 fw-bolder" t-on-click="clickTransferOrder">
                     <i class="oi oi-arrow-right me-1" />Transfer / Merge
                 </button>
+                <button class="btn btn-light rounded-0 fw-bolder" t-on-click="sendOrderInPreparatonByCateg">
+                    <i class="fa fa-fire me-1" role="img" aria-label="Preparation Batch" title="Preparation Batch" />
+                    <t>Send</t>
+                </button>
                 <SelectPartnerButton partner="partner" t-if="pos.config.module_pos_restaurant" />
             </t>
         </xpath>
