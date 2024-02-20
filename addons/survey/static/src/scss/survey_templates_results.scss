@@ -23,6 +23,9 @@
         border: none !important;
     }
     .o_survey_result {
+        // force to print background-images to render the leaderboard bar
+        -webkit-print-color-adjust: exact !important; /* Chrome, Safari */
+        print-color-adjust: exact !important; /*Firefox*/
         canvas {
             margin-bottom: 2rem;
         }
@@ -112,6 +115,14 @@
 }
 
 .o_survey_results_question {
+    .o_survey_results_question_header {
+        button[aria-expanded="true"] i.fa-caret-right{
+            display: none;
+        }
+        button[aria-expanded="false"] i.fa-caret-down{
+            display: none;
+        }
+    }
     .o_survey_results_question_pill {
         .only_right_radius {
             border-radius: 0 2em 2em 0;
