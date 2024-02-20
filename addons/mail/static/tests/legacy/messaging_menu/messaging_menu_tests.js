@@ -1145,3 +1145,27 @@ QUnit.test("can open messaging menu even if channels are not fetched", async () 
     def.resolve();
     await contains(".o-mail-NotificationItem", { text: "General" });
 });
+
+QUnit.test("Latest needaction is shown in thread preview", async () => {
+    const pyEnv = await startServer();
+    for (let i = 1; i <= 2; i++) {
+        const messageId = pyEnv["mail.message"].create({
+            body: `message ${i}`,
+            message_type: "comment",
+            model: "res.partner",
+            needaction: true,
+            needaction_partner_ids: [pyEnv.currentPartnerId],
+            res_id: pyEnv.currentPartnerId,
+        });
+        pyEnv["mail.notification"].create({
+            mail_message_id: messageId,
+            notification_status: "sent",
+            notification_type: "inbox",
+            res_partner_id: pyEnv.currentPartnerId,
+        });
+    }
+    await start();
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await contains(".o-mail-NotificationItem", { text: pyEnv.currentPartner.name });
+    await contains(".o-mail-NotificationItem", { text: "You: message 2" });
+});
