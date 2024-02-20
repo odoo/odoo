@@ -1,8 +1,18 @@
 @include media-breakpoint-down(md) {
-    img, .media_iframe_video, span.fa, i.fa {
+    img, .media_iframe_video {
         &:not(.o_animate) {
             transform: none !important;
         }
+    }
+
+    // For RTL (Right-to-Left) purposes, don't disable the transform directive
+    // for Font Awesome icons that are flipped by 180deg.
+    $not-selectors: '';
+    @each $class in $rtl-fa-classes {
+        $not-selectors: '#{$not-selectors}:not(.#{$class})';
+    }
+    .fa:where(#{$not-selectors}:not(.o_animate)) {
+        transform: none !important;
     }
 }
 
