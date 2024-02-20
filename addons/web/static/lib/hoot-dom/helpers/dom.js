@@ -320,7 +320,9 @@ const matchesQuery = (query, width, height) =>
         .toLowerCase()
         .split(/\s*,\s*/)
         .some((orPart) =>
-            orPart.split(/\s*\band\b\s*/).every((andPart) => matchesQueryPart(andPart, width, height))
+            orPart
+                .split(/\s*\band\b\s*/)
+                .every((andPart) => matchesQueryPart(andPart, width, height))
         );
 
 /**
@@ -1103,10 +1105,10 @@ export function isDisplayed(target) {
 }
 
 /**
- * Returns whether the given node is editable, meaning that it is an {@link Element}
- * that is either:
- * - an `":enabled"` `<input>` or `<textarea>` element;
- * - an element with the `contenteditable` property set to "true".
+ * Returns whether the given node is editable, meaning that it is an `":enabled"`
+ * `<input>` or `<textarea>` {@link Element};
+ *
+ * Note: this does NOT support elements with `contenteditable="true"`.
  *
  * @param {Node} node
  * @returns {boolean}
@@ -1119,7 +1121,7 @@ export function isEditable(node) {
     return (
         isElement(node) &&
         !node.matches?.(":disabled") &&
-        (["input", "textarea"].includes(getTag(node)) || node.contentEditable === "true")
+        ["input", "textarea"].includes(getTag(node))
     );
 }
 
