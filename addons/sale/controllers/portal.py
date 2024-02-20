@@ -215,7 +215,7 @@ class CustomerPortal(payment_portal.PaymentPortal):
             sale_order_id=order_sudo.id,
             **kwargs,
         )  # In sudo mode to read the fields of providers and partner (if logged out).
-        payment_methods_sudo = request.env['payment.method'].sudo()._get_compatible_payment_methods(
+        payment_methods_sudo = request.env['payment.method'].sudo().with_context(sale_order_id=order_sudo.id)._get_compatible_payment_methods(
             providers_sudo.ids,
             partner_sudo.id,
             currency_id=currency.id,
