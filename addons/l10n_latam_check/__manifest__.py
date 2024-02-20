@@ -43,15 +43,16 @@ There are 2 main Payment Methods additions:
     'author': 'ADHOC SA',
     'license': 'LGPL-3',
     'depends': [
-        'account_check_printing',
+        'account',
         'base_vat',
     ],
     'data': [
         'data/account_payment_method_data.xml',
         'wizards/l10n_latam_payment_mass_transfer_views.xml',
         'security/ir.model.access.csv',
+        'security/security.xml',
         'views/account_payment_view.xml',
-        'views/account_journal_view.xml',
+        'views/l10n_latam_check_view.xml',
         'wizards/account_payment_register_views.xml',
     ],
     'installable': True,
