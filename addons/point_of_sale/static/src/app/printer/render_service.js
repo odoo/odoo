@@ -80,9 +80,13 @@ registry.category("services").add("renderer", renderService);
  */
 const applyWhenMounted = async ({ el, container, callback }) => {
     const elClone = el.cloneNode(true);
+    const sameClassElements = container.querySelectorAll(`.${[...el.classList].join(".")}`);
+    // Remove all elements with the same class as the one we are about to add
+    sameClassElements.forEach(element => {
+        element.remove();
+    });
     container.appendChild(elClone);
     const res = await callback(elClone);
-    elClone.remove();
     return res;
 };
 
