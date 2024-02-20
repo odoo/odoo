@@ -35,6 +35,22 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
             ],
         })
 
+        cls.pay_30_percents_now_balance_60_days = cls.env['account.payment.term'].create({
+            'name': '30% Now, Balance 60 Days',
+            'line_ids': [
+                Command.create({
+                    'value_amount': 30,
+                    'value': 'percent',
+                    'nb_days': 0,
+                }),
+                Command.create({
+                    'value_amount': 70,
+                    'value': 'percent',
+                    'nb_days': 60,
+                })
+            ]
+        })
+
     # ========================== Tests Payment Terms ==========================
     def test_early_payment_end_date(self):
         inv_1200_10_percents_discount_no_tax = self.env['account.move'].create({
@@ -74,6 +90,11 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
 
         report = self.env['ir.actions.report'].with_context(force_report_rendering=True)._render_qweb_pdf('account.account_invoices', res_ids=out_invoice.id)
         self.assertTrue(report)
+
+        #Test for invoices with multiple due dates and no early discount
+        out_invoice.invoice_payment_term_id = self.pay_30_percents_now_balance_60_days
+        new_report = self.env['ir.actions.report']._render_qweb_pdf('account.account_invoices', res_ids=out_invoice.id)
+        self.assertTrue(new_report)
 
     # ========================== Tests Taxes Amounts =============================
     def test_fixed_tax_amount_discounted_payment_mixed(self):
