@@ -298,6 +298,10 @@ export class ListUIPlugin extends spreadsheet.UIPlugin {
         return this.getters.getListDataSource(listId).getListCellValue(position, fieldName);
     }
 
+    getListCurrency(listId, position, fieldName) {
+        return this.getters.getListDataSource(listId).getListCurrency(position, fieldName);
+    }
+
     /**
      * Get the currently selected list id
      * @returns {number|undefined} Id of the list, undefined if no one is selected
@@ -338,6 +342,7 @@ export class ListUIPlugin extends spreadsheet.UIPlugin {
 
 ListUIPlugin.getters = [
     "getListComputedDomain",
+    "getListCurrency",
     "getListHeaderValue",
     "getListIdFromPosition",
     "getListCellValue",
