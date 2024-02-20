@@ -1637,10 +1637,10 @@ export function registerPseudoClass(pseudoClass, predicate) {
 export function setDimensions(width, height) {
     Object.assign(currentDimensions, { width, height });
     const defaultRoot = getDefaultRoot();
-    if (width !== null) {
+    if (!Number.isNaN(width)) {
         defaultRoot.style.setProperty("width", `${width}px`, "important");
     }
-    if (height !== null) {
+    if (!Number.isNaN(height)) {
         defaultRoot.style.setProperty("height", `${height}px`, "important");
     }
 }
