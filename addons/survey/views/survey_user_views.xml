@@ -13,9 +13,9 @@
                     ('email', 'ilike', self)]"/>
                 <field name="partner_id"/>
                 <field name="survey_id"/>
-                <filter name="completed" string="Completed" domain="[('state', '=', 'done')]"/>
-                <filter string="In Progress" name="in_progress" domain="[('state', '=', 'in_progress')]"/>
                 <filter string="New" name="new" domain="[('state', '=', 'new')]"/>
+                <filter string="In Progress" name="in_progress" domain="[('state', '=', 'in_progress')]"/>
+                <filter name="completed" string="Completed" domain="[('state', '=', 'done')]"/>
                 <separator/>
                 <filter string="Quizz passed" name="scoring_success" domain="[('scoring_success','=', True)]"/>
                 <separator/>
@@ -126,8 +126,8 @@
                 <field name="scoring_percentage"/>
                 <field name="state" widget="badge"
                     decoration-success="state == 'done'"
-                    decoration-warning="state == 'new'"
-                    decoration-info="state == 'in_progress'"/>
+                    decoration-info="state == 'new'"
+                    decoration-warning="state == 'in_progress'"/>
             </tree>
         </field>
     </record>
