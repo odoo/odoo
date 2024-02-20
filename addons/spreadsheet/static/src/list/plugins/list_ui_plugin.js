@@ -16,6 +16,7 @@ const { astToFormula } = spreadsheet;
 export class ListUIPlugin extends OdooUIPlugin {
     static getters = /** @type {const} */ ([
         "getListComputedDomain",
+        "getListCurrency",
         "getListHeaderValue",
         "getListIdFromPosition",
         "getListCellValue",
@@ -315,6 +316,10 @@ export class ListUIPlugin extends OdooUIPlugin {
      */
     getListCellValue(listId, position, fieldName) {
         return this.getters.getListDataSource(listId).getListCellValue(position, fieldName);
+    }
+
+    getListCurrency(listId, position, fieldName) {
+        return this.getters.getListDataSource(listId).getListCurrency(position, fieldName);
     }
 
     /**

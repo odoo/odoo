@@ -19,7 +19,7 @@ const { createCurrencyFormat } = helpers;
 export class CurrencyPlugin extends OdooUIPlugin {
     static getters = /** @type {const} */ ([
         "getCurrencyRate",
-        "getCurrencyFormat",
+        "computeFormatFromCurrency",
         "getCompanyCurrencyFormat",
     ]);
 
@@ -65,10 +65,7 @@ export class CurrencyPlugin extends OdooUIPlugin {
     }
 
     /**
-     *
      * @param {Currency | undefined} currency
-     * @private
-     *
      * @returns {string | undefined}
      */
     computeFormatFromCurrency(currency) {
@@ -80,20 +77,6 @@ export class CurrencyPlugin extends OdooUIPlugin {
             position: currency.position,
             decimalPlaces: currency.decimalPlaces,
         });
-    }
-
-    /**
-     * Returns the default display format of a given currency
-     * @param {string} currencyName
-     * @returns {string | undefined}
-     */
-    getCurrencyFormat(currencyName) {
-        const currency = this.serverData.batch.get(
-            "res.currency",
-            "get_currencies_for_spreadsheet",
-            currencyName
-        );
-        return this.computeFormatFromCurrency(currency);
     }
 
     /**
