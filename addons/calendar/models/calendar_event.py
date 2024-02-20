@@ -128,7 +128,7 @@ class Meeting(models.Model):
     location = fields.Char('Location', tracking=True)
     videocall_location = fields.Char('Meeting URL', compute='_compute_videocall_location', store=True, copy=True)
     access_token = fields.Char('Invitation Token', store=True, copy=False, index=True)
-    videocall_source = fields.Selection([('discuss', 'Discuss'), ('custom', 'Custom')], compute='_compute_videocall_source')
+    videocall_source = fields.Selection([('discuss', 'Discuss'), ('custom', 'Custom')], compute='_compute_videocall_source', inverse="_inverse_videocall_source")
     videocall_channel_id = fields.Many2one('discuss.channel', 'Discuss Channel')
     # visibility
     privacy = fields.Selection(
@@ -489,6 +489,11 @@ class Meeting(models.Model):
                 event.videocall_source = 'discuss'
             else:
                 event.videocall_source = 'custom'
+
+    def _inverse_videocall_source(self):
+        for event in self:
+            if event.videocall_source == 'discuss':
+                event.set_discuss_videocall_location()
 
     def _set_discuss_videocall_location(self):
         """
