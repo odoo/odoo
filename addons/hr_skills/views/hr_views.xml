@@ -57,7 +57,7 @@
         <field name="inherit_id" ref="hr.view_employee_form"/>
         <field name="arch" type="xml">
             <xpath expr="//page[@name='public']" position="before">
-                <page name="public" string="Resumé">
+                <page name="skills_resume" string="Resumé">
                     <div class="row">
                         <div class="o_hr_skills_editable o_hr_skills_group o_group_resume col-lg-7 d-flex">
                             <!-- This field uses a custom tree view rendered by the 'hr_resume' widget.
@@ -98,7 +98,7 @@
         <field name="inherit_id" ref="hr.hr_employee_public_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//page[@name='public']" position="before">
-                <page name="public" string="Resumé">
+                <page name="skills_resume" string="Resumé">
                     <div class="row">
                         <div class="o_hr_skills_group o_group_resume col-lg-7 d-flex">
                             <!-- This field uses a custom tree view rendered by the 'hr_resume' widget.
@@ -138,7 +138,7 @@
         <field name="inherit_id" ref="hr.res_users_view_form_profile" />
         <field name="arch" type="xml">
             <xpath expr="//page[@name='public']" position="before">
-                <page name="public" string="Resumé">
+                <page name="skills_resume" string="Resumé">
                     <div class="row">
                         <div class="o_hr_skills_group o_group_resume col-lg-7 d-flex">
                             <!-- This field uses a custom tree view rendered by the 'hr_resume' widget.
