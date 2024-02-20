@@ -4,7 +4,7 @@ from contextlib import nullcontext
 from odoo import api, fields, models, _, tools, Command
 from odoo.osv import expression
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools.sql import SQL
+from odoo.tools import SQL, Query
 from bisect import bisect_left
 from collections import defaultdict
 import re
@@ -12,6 +12,7 @@ import re
 ACCOUNT_REGEX = re.compile(r'(?:(\S*\d+\S*))?(.*)')
 ACCOUNT_CODE_REGEX = re.compile(r'^[A-Za-z0-9.]+$')
 ACCOUNT_CODE_NUMBER_REGEX = re.compile(r'(.*?)(\d*)(\D*?)$')
+EXCLUDE_INITIAL_BALANCE_TYPES = ('income', 'income_other', 'expense', 'expense_depreciation', 'expense_direct_cost', 'off_balance')
 
 class AccountAccount(models.Model):
     _name = "account.account"
@@ -73,7 +74,8 @@ class AccountAccount(models.Model):
     )
     include_initial_balance = fields.Boolean(string="Bring Accounts Balance Forward",
         help="Used in reports to know if we should consider journal items from the beginning of time instead of from the fiscal year only. Account types that should be reset to zero at each new fiscal year (like expenses, revenue..) should not have this option set.",
-        compute="_compute_include_initial_balance", store=True, precompute=True,
+        compute="_compute_include_initial_balance",
+        search="_search_include_initial_balance",
     )
     internal_group = fields.Selection(
         selection=[
@@ -82,13 +84,12 @@ class AccountAccount(models.Model):
             ('liability', 'Liability'),
             ('income', 'Income'),
             ('expense', 'Expense'),
-            ('off_balance', 'Off Balance'),
+            ('off', 'Off Balance'),
         ],
         string="Internal Group",
-        compute="_compute_internal_group", store=True, precompute=True,
+        compute="_compute_internal_group",
+        search='_search_internal_group',
     )
-    #has_unreconciled_entries = fields.Boolean(compute='_compute_has_unreconciled_entries',
-    #    help="The account has at least one unreconciled debit and credit since last time the invoices & payments matching was performed.")
     reconcile = fields.Boolean(string='Allow Reconciliation', tracking=True,
         compute='_compute_reconcile', store=True, readonly=False, precompute=True,
         help="Check this box if this account allows invoices & payments matching of journal items.")
@@ -126,6 +127,11 @@ class AccountAccount(models.Model):
                                help="If set, this account will belong to Non Trade Receivable/Payable in reports and filters.\n"
                                     "If not, this account will belong to Trade Receivable/Payable in reports and filters.")
 
+    def _field_to_sql(self, alias: str, fname: str, query: (Query | None) = None, flush: bool = True) -> SQL:
+        if fname == 'internal_group':
+            return SQL("split_part(account_account.account_type, '_', 1)", to_flush=self._fields['account_type'])
+        return super()._field_to_sql(alias, fname, query, flush)
+
     @api.constrains('company_id', 'code')
     def _constrains_code(self):
         # check for duplicates in each root company
@@ -148,10 +154,10 @@ class AccountAccount(models.Model):
                     + "\n" + "\n".join(f"- {duplicate.code} in {duplicate.company_id.name}" for duplicate in duplicates)
                 )
 
-    @api.constrains('reconcile', 'internal_group', 'tax_ids')
+    @api.constrains('reconcile', 'account_type', 'tax_ids')
     def _constrains_reconcile(self):
         for record in self:
-            if record.internal_group == 'off_balance':
+            if record.account_type == 'off_balance':
                 if record.reconcile:
                     raise UserError(_('An Off-Balance account can not be reconcilable'))
                 if record.tax_ids:
@@ -502,13 +508,33 @@ class AccountAccount(models.Model):
     @api.depends('account_type')
     def _compute_include_initial_balance(self):
         for account in self:
-            account.include_initial_balance = account.account_type not in ('income', 'income_other', 'expense', 'expense_depreciation', 'expense_direct_cost', 'off_balance')
+            account.include_initial_balance = account.account_type not in EXCLUDE_INITIAL_BALANCE_TYPES
+
+    def _search_include_initial_balance(self, operator, value):
+        if operator not in ['=', '!='] or not isinstance(value, bool):
+            raise UserError(_('Operation not supported'))
+        if operator != '=':
+            value = not value
+        return [('account_type', 'not in' if value else 'in', EXCLUDE_INITIAL_BALANCE_TYPES)]
+
+    def _get_internal_group(self, account_type):
+        return account_type.split('_', maxsplit=1)[0]
 
     @api.depends('account_type')
     def _compute_internal_group(self):
         for account in self:
-            if account.account_type:
-                account.internal_group = 'off_balance' if account.account_type == 'off_balance' else account.account_type.split('_')[0]
+            account.internal_group = account.account_type and account._get_internal_group(account.account_type)
+
+    def _search_internal_group(self, operator, value):
+        if operator not in ['=', 'in', '!=', 'not in']:
+            raise UserError(_('Operation not supported'))
+        domain = expression.OR([[('account_type', '=like', group)] for group in {
+            self._get_internal_group(v) + '%'
+            for v in (value if isinstance(value, (list, tuple)) else [value])
+        }])
+        if operator in ('!=', 'not in'):
+            return ['!'] + expression.normalize_domain(domain)
+        return domain
 
     @api.depends('account_type')
     def _compute_reconcile(self):
@@ -631,7 +657,7 @@ class AccountAccount(models.Model):
 
     @api.onchange('account_type')
     def _onchange_account_type(self):
-        if self.internal_group == 'off_balance':
+        if self.account_type == 'off_balance':
             self.tax_ids = False
 
     def _split_code_name(self, code_name):

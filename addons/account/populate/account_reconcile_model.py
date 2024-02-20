@@ -61,7 +61,7 @@ class AccountReconcileModelLine(models.Model):
             :param type (str): the type to filter on. If not set, do not filter. Valid values are:
                                payable, receivable, liquidity, other, False.
             :param group (str): the group to filter on. If not set, do not filter. Valid values are:
-                                asset, liability, equity, off_balance, False.
+                                asset, liability, equity, off, False.
             :return (Model<account.account>): the recordset of accounts found.
             """
             domain = self.env['account.account']._check_company_domain(company_id)

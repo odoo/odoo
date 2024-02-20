@@ -141,7 +141,7 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
         )
 
     def test_two_codes_mixing_balance(self):
-        self.account_revenue_c1.sudo().include_initial_balance = True
+        self.account_revenue_c1.sudo().account_type = 'asset_receivable'
         self.env["account.move"].create(
             {
                 "company_id": self.company_data["company"].id,
@@ -577,7 +577,7 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
 
     def test_balance_account_by_year(self):
         # On balance accounts, we sum the lines from the creation up to the last dat of date_range
-        self.account_revenue_c1.sudo().include_initial_balance = True
+        self.account_revenue_c1.sudo().account_type = 'asset_receivable'
         self.assertEqual(
             self.env["account.account"].spreadsheet_fetch_debit_credit(
                 [
@@ -598,7 +598,7 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
         )
 
     def test_balance_quarter_date_period(self):
-        self.account_revenue_c1.sudo().include_initial_balance = True
+        self.account_revenue_c1.sudo().account_type = 'asset_receivable'
         self.env["account.move"].create(
             {
                 "company_id": self.company_data["company"].id,
@@ -643,7 +643,7 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
         )
 
     def test_balance_month_date_period(self):
-        self.account_revenue_c1.sudo().include_initial_balance = True
+        self.account_revenue_c1.sudo().account_type = 'asset_receivable'
         self.env["account.move"].create(
             {
                 "company_id": self.company_data["company"].id,
@@ -684,7 +684,7 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
         )
 
     def test_balance_day_date_period(self):
-        self.account_revenue_c1.sudo().include_initial_balance = True
+        self.account_revenue_c1.sudo().account_type = 'asset_receivable'
         self.env["account.move"].create(
             {
                 "company_id": self.company_data["company"].id,
@@ -730,7 +730,7 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
         )
 
     def test_move_state_ignore_cancel(self):
-        self.account_revenue_c1.sudo().include_initial_balance = True
+        self.account_revenue_c1.sudo().account_type = 'asset_receivable'
         self.env["account.move"].create(
             {
                 "company_id": self.company_data["company"].id,
@@ -793,7 +793,7 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
         )
 
     def test_move_state_unposted(self):
-        self.account_revenue_c1.sudo().include_initial_balance = True
+        self.account_revenue_c1.sudo().account_type = 'asset_receivable'
         move = self.env["account.move"].create(
             {
                 "company_id": self.company_data["company"].id,
