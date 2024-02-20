@@ -58,7 +58,7 @@ class ApplicantGetRefuseReason(models.TransientModel):
             if len(applicants) > 1:
                 applicants.with_context(active_test=True).message_mail_with_source(
                     self.template_id,
-                    auto_delete_keep_log=False,
+                    auto_delete_keep_log=True,
                     **message_values
                 )
             else:
