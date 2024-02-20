@@ -1590,8 +1590,95 @@ class AccountMove(models.Model):
             self.currency_id = self.invoice_vendor_bill_id.currency_id
             self.fiscal_position_id = self.invoice_vendor_bill_id.fiscal_position_id
 
+<<<<<<< HEAD
             # Reset
             self.invoice_vendor_bill_id = False
+||||||| parent of 79bc230926d1 (temp)
+    def _get_violated_lock_dates(self, invoice_date, has_tax):
+        """Get all the lock dates affecting the current invoice_date.
+
+        :param invoice_date: The invoice date
+        :param has_tax: If any taxes are involved in the lines of the invoice
+        :return: a list of tuples containing the lock dates affecting this move, ordered chronologically.
+        """
+        locks = []
+        user_lock_date = self.company_id._get_user_fiscal_lock_date()
+        if invoice_date and user_lock_date and invoice_date <= user_lock_date:
+            locks.append((user_lock_date, _('user')))
+        tax_lock_date = self.company_id.tax_lock_date
+        if invoice_date and tax_lock_date and has_tax and invoice_date <= tax_lock_date:
+            locks.append((tax_lock_date, _('tax')))
+        locks.sort()
+        return locks
+
+    @api.onchange('invoice_date', 'highest_name', 'company_id')
+    def _onchange_invoice_date(self):
+        if self.invoice_date:
+            if not self.invoice_payment_term_id and (not self.invoice_date_due or self.invoice_date_due < self.invoice_date):
+                self.invoice_date_due = self.invoice_date
+
+            accounting_date = self.invoice_date
+            if not self.is_sale_document(include_receipts=True):
+                accounting_date = self._get_accounting_date(self.invoice_date, self._affect_tax_report())
+            if accounting_date != self.date:
+                self.date = accounting_date
+                self._onchange_currency()
+            else:
+                self._onchange_recompute_dynamic_lines()
+
+    @api.onchange('journal_id')
+    def _onchange_journal(self):
+        if self.journal_id and self.journal_id.currency_id:
+            new_currency = self.journal_id.currency_id
+            if new_currency != self.currency_id:
+                self.currency_id = new_currency
+                self._onchange_currency()
+        if self.state == 'draft' and self._get_last_sequence(lock=False) and self.name and self.name != '/':
+            self.name = '/'
+=======
+    def _get_violated_lock_dates(self, invoice_date, has_tax):
+        """Get all the lock dates affecting the current invoice_date.
+
+        :param invoice_date: The invoice date
+        :param has_tax: If any taxes are involved in the lines of the invoice
+        :return: a list of tuples containing the lock dates affecting this move, ordered chronologically.
+        """
+        locks = []
+        user_lock_date = self.company_id._get_user_fiscal_lock_date()
+        if invoice_date and user_lock_date and invoice_date <= user_lock_date:
+            locks.append((user_lock_date, _('user')))
+        tax_lock_date = self.company_id.tax_lock_date
+        if invoice_date and tax_lock_date and has_tax and invoice_date <= tax_lock_date:
+            locks.append((tax_lock_date, _('tax')))
+        locks.sort()
+        return locks
+
+    @api.onchange('invoice_date', 'highest_name', 'company_id')
+    def _onchange_invoice_date(self):
+        if self.invoice_date:
+            if not self.invoice_payment_term_id and (not self.invoice_date_due or self.invoice_date_due < self.invoice_date):
+                self.invoice_date_due = self.invoice_date
+
+            accounting_date = self.invoice_date
+            if not self.is_sale_document(include_receipts=True):
+                accounting_date = self._get_accounting_date(self.invoice_date, self._affect_tax_report())
+            if self._context.get('force_onchange_currency') or accounting_date != self.date:
+                if accounting_date != self.date:
+                    self.date = accounting_date
+                self._onchange_currency()
+            else:
+                self._onchange_recompute_dynamic_lines()
+
+    @api.onchange('journal_id')
+    def _onchange_journal(self):
+        if self.journal_id and self.journal_id.currency_id:
+            new_currency = self.journal_id.currency_id
+            if new_currency != self.currency_id:
+                self.currency_id = new_currency
+                self._onchange_currency()
+        if self.state == 'draft' and self._get_last_sequence(lock=False) and self.name and self.name != '/':
+            self.name = '/'
+>>>>>>> 79bc230926d1 (temp)
 
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
@@ -3544,6 +3631,7 @@ class AccountMove(models.Model):
             if move.line_ids.account_id.filtered(lambda account: account.deprecated):
                 raise UserError(_("A line of this move is using a deprecated account, you cannot post it."))
 
+<<<<<<< HEAD
         if soft:
             future_moves = self.filtered(lambda move: move.date > fields.Date.context_today(self))
             for move in future_moves:
@@ -3554,6 +3642,29 @@ class AccountMove(models.Model):
             to_post = self - future_moves
         else:
             to_post = self
+||||||| parent of 79bc230926d1 (temp)
+            # Handle case when the invoice_date is not set. In that case, the invoice_date is set at today and then,
+            # lines are recomputed accordingly.
+            # /!\ 'check_move_validity' must be there since the dynamic lines will be recomputed outside the 'onchange'
+            # environment.
+            if not move.invoice_date:
+                if move.is_sale_document(include_receipts=True):
+                    move.invoice_date = fields.Date.context_today(self)
+                    move.with_context(check_move_validity=False)._onchange_invoice_date()
+                elif move.is_purchase_document(include_receipts=True):
+                    raise UserError(_("The Bill/Refund date is required to validate this document."))
+=======
+            # Handle case when the invoice_date is not set. In that case, the invoice_date is set at today and then,
+            # lines are recomputed accordingly.
+            # /!\ 'check_move_validity' must be there since the dynamic lines will be recomputed outside the 'onchange'
+            # environment.
+            if not move.invoice_date:
+                if move.is_sale_document(include_receipts=True):
+                    move.invoice_date = fields.Date.context_today(self)
+                    move.with_context(check_move_validity=False, force_onchange_currency=True)._onchange_invoice_date()
+                elif move.is_purchase_document(include_receipts=True):
+                    raise UserError(_("The Bill/Refund date is required to validate this document."))
+>>>>>>> 79bc230926d1 (temp)
 
         for move in to_post:
             affects_tax_report = move._affect_tax_report()
