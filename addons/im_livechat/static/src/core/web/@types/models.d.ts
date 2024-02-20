@@ -1,9 +1,14 @@
 declare module "models" {
     export interface DiscussApp {
-        livechat: DiscussAppCategory,
+        livechatThreads: Thread,
+        defaultLivechatCategory: DiscussAppCategory,
     }
     export interface Thread {
         anonymous_country: Object,
         anonymous_name: String,
+        appAsLivechat: DiscussApp,
+    }
+    export interface DiscussAppCategory {
+        isLivechatCategory: Boolean,
     }
 }

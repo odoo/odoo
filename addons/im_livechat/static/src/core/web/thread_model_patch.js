@@ -1,14 +1,28 @@
-/* @odoo-module */
-
+import { Record } from "@mail/core/common/record";
 import { Thread } from "@mail/core/common/thread_model";
 
 import { patch } from "@web/core/utils/patch";
 
 patch(Thread.prototype, {
+    setup() {
+        super.setup(...arguments);
+        this.livechatChannel = Record.one("LivechatChannel");
+        this.appAsLivechat = Record.one("DiscussApp", {
+            compute() {
+                return this.channel_type === "livechat" ? this._store.discuss : null;
+            },
+        });
+    },
     _computeDiscussAppCategory() {
-        return this.channel_type === "livechat"
-            ? this._store.discuss.livechat
-            : super._computeDiscussAppCategory();
+        if (this.channel_type !== "livechat") {
+            return super._computeDiscussAppCategory();
+        }
+        if (this.livechatChannel) {
+            return {
+                id: `im_livechat.category_${this.livechatChannel.id}`,
+            };
+        }
+        return this.appAsLivechat?.defaultLivechatCategory;
     },
     get hasMemberList() {
         return this.channel_type === "livechat" || super.hasMemberList;

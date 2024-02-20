@@ -25,7 +25,7 @@ export class DiscussApp extends Record {
                 name: _t("Direct messages"),
                 canView: false,
                 canAdd: true,
-                sequence: 30,
+                sequence: 100,
                 serverStateKey: "is_discuss_sidebar_category_chat_open",
                 addTitle: _t("Start a conversation"),
                 addHotkey: "d",

@@ -64,6 +64,10 @@ export class DiscussAppCategory extends Record {
         },
         inverse: "discussAppCategory",
     });
+
+    get openStateKey() {
+        return this.serverStateKey ?? this.id;
+    }
 }
 
 DiscussAppCategory.register();
