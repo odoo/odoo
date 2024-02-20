@@ -48,8 +48,11 @@ function odooListFormat(id, position, field, getters, locale) {
         case "float":
             return "#,##0.00";
         case "monetary": {
-            const currencyName = getters.getListCellValue(id, position, field.currency_field);
-            return getters.getCurrencyFormat(currencyName);
+            const currency = getters.getListCurrency(id, position, field.currency_field);
+            if (!currency) {
+                return "#,##0.00";
+            }
+            return getters.computeFormatFromCurrency(currency);
         }
         case "date":
             return locale.dateFormat;
