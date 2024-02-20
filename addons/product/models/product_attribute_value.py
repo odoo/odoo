@@ -50,17 +50,12 @@ class ProductAttributeValue(models.Model):
         max_width=70,
         max_height=70,
     )
-
-    _sql_constraints = [
-        ('value_company_uniq',
-         'unique (name, attribute_id)',
-         "You cannot create two values with the same name for the same attribute.")
-    ]
+    active = fields.Boolean(default=True)
 
     @api.depends('pav_attribute_line_ids')
     def _compute_is_used_on_products(self):
         for pav in self:
-            pav.is_used_on_products = bool(pav.pav_attribute_line_ids)
+            pav.is_used_on_products = bool(pav.pav_attribute_line_ids.filtered('product_tmpl_id.active'))
 
     @api.depends('attribute_id')
     @api.depends_context('show_attribute')
@@ -98,26 +93,35 @@ class ProductAttributeValue(models.Model):
             self.env.invalidate_all()
         return res
 
+    def check_is_used_on_products(self):
+        for pav in self.filtered('is_used_on_products'):
+            return _(
+                "You cannot delete the value %(value)s because it is used on the following"
+                " products:\n%(products)s\n",
+                value=pav.display_name,
+                products=", ".join(pav.pav_attribute_line_ids.product_tmpl_id.mapped('display_name')),
+            )
+        return False
+
     @api.ondelete(at_uninstall=False)
     def _unlink_except_used_on_product(self):
+        if is_used_on_products := self.check_is_used_on_products():
+            raise UserError(is_used_on_products)
+
+    def unlink(self):
+        pavs_to_archive = self.env['product.attribute.value']
         for pav in self:
-            if pav.is_used_on_products:
-                raise UserError(_(
-                    "You cannot delete the value %(value)s because it is used on the following "
-                    "products:\n%(products)s\n If the value has been associated to a product in the"
-                    " past, you will not be able to delete it.",
-                    value=pav.display_name,
-                    products=", ".join(pav.pav_attribute_line_ids.product_tmpl_id.mapped('display_name')),
-                ))
             linked_products = pav.env['product.template.attribute.value'].search(
                 [('product_attribute_value_id', '=', pav.id)]
             ).with_context(active_test=False).ptav_product_variant_ids
-            unlinkable_products = linked_products._filter_to_unlink()
-            if linked_products != unlinkable_products:
-                raise UserError(_(
-                    "You cannot delete value %s because it was used in some products.",
-                    pav.display_name
-                ))
+            active_linked_products = linked_products.filtered('active')
+            if not active_linked_products:
+                # If product attribute value found on non-active product variants
+                # archive PAV instead of deleting
+                pavs_to_archive |= pav
+        if pavs_to_archive:
+            pavs_to_archive.action_archive()
+        return super(ProductAttributeValue, self - pavs_to_archive).unlink()
 
     def _without_no_variant_attributes(self):
         return self.filtered(lambda pav: pav.attribute_id.create_variant != 'no_variant')

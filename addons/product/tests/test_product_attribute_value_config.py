@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import time
-from psycopg2 import IntegrityError
 
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command
@@ -716,12 +715,6 @@ class TestProductAttributeValueConfig(TestProductAttributeValueCommon):
 
         with self.assertRaises(UserError, msg="can't change the product of a product template attribute value"):
             self.computer_ram_attribute_lines.product_template_value_ids[0].product_tmpl_id = self.computer_case.id
-
-        with mute_logger('odoo.sql_db'), self.assertRaises(IntegrityError, msg="can't have two values with the same name for the same attribute"):
-            self.env['product.attribute.value'].create({
-                'name': '32 GB',
-                'attribute_id': self.ram_attribute.id,
-            })
 
     @mute_logger('odoo.models.unlink')
     def test_inactive_related_product_update(self):
