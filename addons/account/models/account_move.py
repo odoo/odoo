@@ -70,6 +70,7 @@ class AccountMove(models.Model):
     _sequence_index = "journal_id"
     _rec_names_search = ['name', 'partner_id.name', 'ref']
     _systray_view = 'activity'
+    _mailing_enabled = True
 
     @property
     def _sequence_monthly_regex(self):
@@ -4887,6 +4888,9 @@ class AccountMove(models.Model):
     # ------------------------------------------------------------
     # MAIL.THREAD
     # ------------------------------------------------------------
+
+    def _mailing_get_default_domain(self, mailing):
+        return ['&', ('move_type', '=', 'out_invoice'), ('state', '=', 'posted')]
 
     @api.model
     def message_new(self, msg_dict, custom_values=None):
