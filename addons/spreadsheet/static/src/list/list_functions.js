@@ -42,12 +42,11 @@ const ODOO_LIST = {
             case "float":
                 return "#,##0.00";
             case "monetary": {
-                const currencyName = this.getters.getListCellValue(
-                    id,
-                    position,
-                    field.currency_field
-                );
-                return this.getters.getCurrencyFormat(currencyName);
+                const currency = this.getters.getListCurrency(id, position, field.currency_field);
+                if (!currency) {
+                    return "#,##0.00";
+                }
+                return this.getters.computeFormatFromCurrency(currency);
             }
             case "date":
                 return this.locale.dateFormat;

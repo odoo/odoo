@@ -62,16 +62,13 @@ export class ListDataSource extends OdooViewsDataSource {
             return;
         }
         const { domain, orderBy, context } = this._searchParams;
-        this.data = await this._orm.searchRead(
-            this._metaData.resModel,
-            domain,
-            this._getFieldsToFetch(),
-            {
-                order: orderByToString(orderBy),
-                limit: this.maxPosition,
-                context,
-            }
-        );
+        const { records } = await this._orm.webSearchRead(this._metaData.resModel, domain, {
+            specification: this._getReadSpec(),
+            order: orderByToString(orderBy),
+            limit: this.maxPosition,
+            context,
+        });
+        this.data = records;
         this.maxPositionFetched = this.maxPosition;
     }
 
@@ -79,14 +76,33 @@ export class ListDataSource extends OdooViewsDataSource {
      * Get the fields to fetch from the server.
      * Automatically add the currency field if the field is a monetary field.
      */
-    _getFieldsToFetch() {
-        const fields = this._metaData.columns.filter((f) => this.getField(f));
+    _getReadSpec() {
+        const spec = {};
+        const fields = this._metaData.columns.map((f) => this.getField(f)).filter(Boolean);
         for (const field of fields) {
-            if (this.getField(field).type === "monetary") {
-                fields.push(this.getField(field).currency_field);
+            switch (field.type) {
+                case "monetary":
+                    spec[field.name] = {};
+                    spec[field.currency_field] = {
+                        fields: {
+                            name: {}, // currency code
+                            symbol: {},
+                            decimal_places: {},
+                            position: {},
+                        },
+                    };
+                    break;
+                case "many2one":
+                case "many2many":
+                case "one2many":
+                    spec[field.name] = { fields: { display_name: {} } };
+                    break;
+                default:
+                    spec[field.name] = field;
+                    break;
             }
         }
-        return fields;
+        return spec;
     }
 
     /**
@@ -143,12 +159,12 @@ export class ListDataSource extends OdooViewsDataSource {
         }
         switch (field.type) {
             case "many2one":
-                return record[fieldName].length === 2 ? record[fieldName][1] : "";
+                return record[fieldName].display_name ?? "";
             case "one2many":
             case "many2many": {
                 const labels = record[fieldName]
-                    .map((id) => this._metadataRepository.getRecordDisplayName(field.relation, id))
-                    .filter((value) => value !== undefined);
+                    .map(({ display_name }) => display_name)
+                    .filter((displayName) => displayName !== undefined);
                 return labels.join(", ");
             }
             case "selection": {
@@ -175,6 +191,25 @@ export class ListDataSource extends OdooViewsDataSource {
             default:
                 return record[fieldName] || "";
         }
+    }
+
+    /**
+     * @param {number} position
+     * @param {string} currencyFieldName
+     * @returns {import("@spreadsheet/currency/currency_data_source").Currency | undefined}
+     */
+    getListCurrency(position, currencyFieldName) {
+        this._assertDataIsLoaded();
+        const currency = this.data[position]?.[currencyFieldName];
+        if (!currency) {
+            return undefined;
+        }
+        return {
+            code: currency.name,
+            symbol: currency.symbol,
+            decimalPlaces: currency.decimal_places,
+            position: currency.position,
+        };
     }
 
     //--------------------------------------------------------------------------
