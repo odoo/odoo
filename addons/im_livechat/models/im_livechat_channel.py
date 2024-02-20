@@ -102,11 +102,19 @@ class ImLivechatChannel(models.Model):
     # --------------------------
     def action_join(self):
         self.ensure_one()
-        return self.write({'user_ids': [(4, self._uid)]})
+        self.user_ids = [Command.link(self._uid)]
+        self.env["bus.bus"]._sendone(self.env.user.partner_id, "mail.record/insert", {
+            "LivechatChannel": {"id": self.id, "hasSelfAsMember": True}
+        })
+        return True
 
     def action_quit(self):
         self.ensure_one()
-        return self.write({'user_ids': [(3, self._uid)]})
+        self.user_ids = [Command.unlink(self._uid)]
+        self.env["bus.bus"]._sendone(self.env.user.partner_id, "mail.record/insert", {
+            "LivechatChannel": {"id": self.id, "hasSelfAsMember": False}
+        })
+        return True
 
     def action_view_rating(self):
         """ Action to display the rating relative to the channel, so all rating of the

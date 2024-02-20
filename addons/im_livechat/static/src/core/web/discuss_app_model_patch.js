@@ -2,8 +2,8 @@ import { LivechatChannel } from "@im_livechat/core/web/livechat_channel_model";
 
 import { DiscussApp } from "@mail/core/common/discuss_app_model";
 import { Record } from "@mail/core/common/record";
-
 import { _t } from "@web/core/l10n/translation";
+
 import { patch } from "@web/core/utils/patch";
 
 patch(DiscussApp.prototype, {

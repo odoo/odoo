@@ -1,4 +1,7 @@
 declare module "models" {
+    export interface Persona {
+        hasLivechatAccess: boolean;
+    }
     export interface DiscussApp {
         livechatThreads: Thread,
         defaultLivechatCategory: DiscussAppCategory,
