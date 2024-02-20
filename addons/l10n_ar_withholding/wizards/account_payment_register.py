@@ -14,13 +14,16 @@ class AccountPaymentRegister(models.TransientModel):
     l10n_ar_net_amount = fields.Monetary(compute='_compute_l10n_ar_net_amount', readonly=True, help="Net amount after withholdings")
     l10n_ar_adjustment_warning = fields.Boolean(compute="_compute_l10n_ar_adjustment_warning")
 
-    @api.depends('l10n_latam_check_id', 'amount', 'l10n_ar_net_amount')
+    @api.depends('l10n_latam_move_check_ids.amount', 'amount', 'l10n_ar_net_amount', 'l10n_latam_new_check_ids.amount', 'payment_method_code')
     def _compute_l10n_ar_adjustment_warning(self):
-        for rec in self:
-            if rec.l10n_latam_check_id and rec.l10n_ar_net_amount != rec.l10n_latam_check_id.amount:
-                rec.l10n_ar_adjustment_warning = True
-            else:
-                rec.l10n_ar_adjustment_warning = False
+        wizard_register = self
+        for wizard in self:
+            checks = wizard.l10n_latam_new_check_ids if wizard.filtered(lambda x: x._is_latam_check_payment(check_subtype='new_check')) else wizard.l10n_latam_move_check_ids
+            checks_amount = sum(checks.mapped('amount'))
+            if checks_amount and wizard.l10n_ar_net_amount != checks_amount:
+                wizard.l10n_ar_adjustment_warning = True
+                wizard_register -= wizard
+        wizard_register.l10n_ar_adjustment_warning = False
 
     @api.depends('l10n_ar_withholding_ids.amount', 'amount')
     def _compute_l10n_ar_net_amount(self):
