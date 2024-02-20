@@ -142,7 +142,7 @@ class BaseAutomation(models.Model):
         help="Some triggers need a reference to a selection field. This field is used to store it.")
     trg_field_ref_model_name = fields.Char(
         string='Trigger Field Model',
-        compute='_compute_trg_field_ref__model_name')
+        compute='_compute_trg_field_ref_model_name')
     trg_field_ref = fields.Many2oneReference(
         model_field='trg_field_ref_model_name',
         compute='_compute_trg_field_ref',
@@ -281,23 +281,14 @@ class BaseAutomation(models.Model):
 
     @api.depends('trigger', 'trigger_field_ids')
     def _compute_trg_selection_field_id(self):
-        to_reset = self.filtered(lambda a: a.trigger not in ['on_priority_set', 'on_state_set'] or len(a.trigger_field_ids) != 1)
-        to_reset.trg_selection_field_id = False
-        for automation in (self - to_reset):
-            # always re-assign to an empty value to make sure we have no discrepencies
-            automation.trg_selection_field_id = self.env['ir.model.fields.selection']
+        self.trg_selection_field_id = False
 
     @api.depends('trigger', 'trigger_field_ids')
     def _compute_trg_field_ref(self):
-        to_reset = self.filtered(lambda a: a.trigger not in ['on_stage_set', 'on_tag_set'] or len(a.trigger_field_ids) != 1)
-        to_reset.trg_field_ref = False
-        for automation in (self - to_reset):
-            relation = automation.trigger_field_ids.relation
-            # always re-assign to an empty value to make sure we have no discrepencies
-            automation.trg_field_ref = self.env[relation]
+        self.trg_field_ref = False
 
     @api.depends('trg_field_ref', 'trigger_field_ids')
-    def _compute_trg_field_ref__model_name(self):
+    def _compute_trg_field_ref_model_name(self):
         to_compute = self.filtered(lambda a: a.trigger in ['on_stage_set', 'on_tag_set'] and a.trg_field_ref is not False)
         # wondering why we check based on 'is not'? Because the ref could be an empty recordset
         # and we still need to introspec on the model in that case - not just ignore it
