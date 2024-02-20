@@ -283,8 +283,19 @@ class WebsiteForum(WebsiteProfile):
         # Compatibility pre-v14
         return request.redirect(_build_url_w_params("/forum/%s/%s" % (slug(forum), slug(question)), request.params), code=301)
 
-    @http.route(['''/forum/<model("forum.forum"):forum>/<model("forum.post", "[('forum_id','=',forum.id),('parent_id','=',False),('can_view', '=', True)]"):question>'''],
-                type='http', auth="public", website=True, sitemap=True)
+    def sitemap_forum_post(env, rule, qs):
+        ForumPost = env['forum.post']
+        dom = expression.AND([
+            env['website'].get_current_website().website_domain(),
+            [('parent_id', '=', False), ('can_view', '=', True)],
+        ])
+        for forum_post in ForumPost.search(dom):
+            loc = '/forum/%s/%s' % (slug(forum_post.forum_id), slug(forum_post))
+            if not qs or qs.lower() in loc:
+                yield {'loc': loc, 'lastmod': forum_post.write_date.date()}
+
+    @http.route(['''/forum/<model("forum.forum"):forum>/<model("forum.post"):question>'''],
+                type='http', auth="public", website=True, sitemap=sitemap_forum_post)
     def question(self, forum, question, **post):
         if not forum.active:
             return request.render("website_forum.header", {'forum': forum})
