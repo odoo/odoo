@@ -376,10 +376,11 @@ form: module.record_id""" % (xml_id,)
                 return None
             # else create it normally
 
+        foreign_record_to_create = False
         if xid and xid.partition('.')[0] != self.module:
             # updating a record created by another module
             record = self.env['ir.model.data']._load_xmlid(xid)
-            if not record:
+            if not record and not (foreign_record_to_create := nodeattr2bool(rec, 'forcecreate')):  # Allow foreign records if explicitely stated
                 if self.noupdate and not nodeattr2bool(rec, 'forcecreate', True):
                     # if it doesn't exist and we shouldn't create it, skip it
                     return None
@@ -453,6 +454,8 @@ form: module.record_id""" % (xml_id,)
                 res['sequence'] = sequence
 
         data = dict(xml_id=xid, values=res, noupdate=self.noupdate)
+        if foreign_record_to_create:
+            model = model.with_context(foreign_record_to_create=foreign_record_to_create)
         record = model._load_records([data], self.mode == 'update')
         if rec_id:
             self.idref[rec_id] = record.id
