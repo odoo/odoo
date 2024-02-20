@@ -64,15 +64,8 @@ export class HootTestPath extends Component {
                     class="text-primary truncate font-bold p-1"
                     t-att-class="{ 'text-skip': props.test.config.skip }"
                     t-att-title="props.test.name"
-                >
-                    <t t-esc="props.test.name" />
-                    <t t-if="props.showStatus and !props.test.config.skip">
-                        <t t-set="expectLength" t-value="props.test.lastResults?.assertions?.length or 0" />
-                        <span class="select-none" t-attf-title="{{ expectLength }} assertions passed">
-                            (<t t-esc="expectLength" />)
-                        </span>
-                    </t>
-                </span>
+                    t-esc="props.test.name"
+                />
                 <t t-if="props.canCopy">
                     <HootCopyButton text="props.test.name" altText="props.test.id" />
                 </t>

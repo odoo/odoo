@@ -79,6 +79,7 @@ const {
     Math,
     performance,
     Promise,
+    removeEventListener,
     Set,
     setTimeout,
     window,
@@ -160,6 +161,22 @@ const suppressConsole = (reason) => {
     });
 };
 
+/**
+ * @param {Event} ev
+ */
+const warnUserEvent = (ev) => {
+    if (!ev.isTrusted) {
+        return;
+    }
+
+    console.warn(
+        `User event detected: "${ev.type}"\n\n`,
+        `Note that this kind of interaction can interfere with the current test and should be avoided.`
+    );
+
+    removeEventListener(ev.type, warnUserEvent);
+};
+
 const ORINAL_CONSOLE_METHODS = {
     error: console.error,
     warn: console.warn,
@@ -171,6 +188,7 @@ const ORINAL_CONSOLE_METHODS = {
 
 export class TestRunner {
     // Properties
+    aborted = false;
     /** @type {boolean | Test | Suite} */
     debug = false;
     /** @type {Suite[]} */
@@ -728,8 +746,13 @@ export class TestRunner {
         const [addTestDone, flushTestDone] = batch((test) => this.state.done.push(test), 10);
         this.__afterAll(
             flushTestDone,
+            // Catch errors
             on(window, "error", (ev) => this.#onError(ev)),
             on(window, "unhandledrejection", (ev) => this.#onError(ev)),
+            // Warn user events
+            on(window, "pointermove", warnUserEvent),
+            on(window, "pointerdown", warnUserEvent),
+            on(window, "keydown", warnUserEvent),
             watchListeners(window, document, document.head, document.body)
         );
         this.__beforeEach(this.fixture.setup);
@@ -843,7 +866,7 @@ export class TestRunner {
                     );
                 }
             }).then(() => {
-                test.lastResults.aborted = true;
+                this.aborted = true;
                 this.debug = false; // Remove debug mode to let the runner stop
             });
 
@@ -869,15 +892,6 @@ export class TestRunner {
                 for (const callbackRegistry of callbackChain) {
                     await callbackRegistry.call("after-test", test);
                 }
-
-                if (this.config.bail) {
-                    if (!test.config.skip && !lastResults.pass) {
-                        this.#failed++;
-                    }
-                    if (this.#failed >= this.config.bail) {
-                        return this.stop();
-                    }
-                }
             });
 
             if (suppressErrors) {
@@ -900,6 +914,14 @@ export class TestRunner {
                 logger.error(`Test "${test.fullName}" failed:\n${failReason}`);
             }
 
+            if (this.config.bail) {
+                if (!test.config.skip && !lastResults.pass) {
+                    this.#failed++;
+                }
+                if (this.#failed >= this.config.bail) {
+                    return this.stop();
+                }
+            }
             if (!test.config.multi || test.visited === test.config.multi) {
                 addTestDone(test);
                 nextJob();
@@ -916,9 +938,12 @@ export class TestRunner {
 
     async stop() {
         this.#currentJobs = [];
-        this.#resolveCurrent();
         this.state.status = "done";
         this.totalTime = formatTime(performance.now() - this.#startTime);
+
+        if (this.#resolveCurrent !== noop) {
+            return this.#resolveCurrent();
+        }
 
         while (this.#missedCallbacks.length) {
             await this.#missedCallbacks.shift()();
