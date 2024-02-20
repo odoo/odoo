@@ -1,6 +1,7 @@
 /* @odoo-module */
 
 import { makeFakePresenceService } from "@bus/../tests/helpers/mock_services";
+import { waitUntilSubscribe } from "@bus/../tests/helpers/websocket_event_deferred";
 
 import { start } from "@mail/../tests/helpers/test_utils";
 
@@ -17,6 +18,7 @@ QUnit.test("Spaces in notifications are not encoded", async () => {
     const channelId = pyEnv["discuss.channel"].create({ channel_type: "chat" });
     const channel = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]])[0];
     await openDiscuss();
+    await waitUntilSubscribe();
     pyEnv["bus.bus"]._sendone(channel, "discuss.channel/new_message", {
         id: channelId,
         message: {

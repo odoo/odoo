@@ -26,6 +26,7 @@ import {
     scroll,
     step,
 } from "@web/../tests/utils";
+import { waitUntilSubscribe } from "@bus/../tests/helpers/websocket_event_deferred";
 
 QUnit.module("discuss");
 
@@ -1829,7 +1830,7 @@ QUnit.test("restore thread scroll position", async () => {
 });
 
 QUnit.test("Message shows up even if channel data is incomplete", async () => {
-    const { openDiscuss, pyEnv } = await start();
+    const { env, openDiscuss, pyEnv } = await start();
     openDiscuss();
     await contains(".o-mail-DiscussSidebarCategory-chat");
     await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
@@ -1852,6 +1853,8 @@ QUnit.test("Message shows up even if channel data is incomplete", async () => {
         ],
         channel_type: "chat",
     });
+    env.services["bus_service"].forceUpdateChannels();
+    await waitUntilSubscribe();
     await pyEnv.withUser(correspondentUserId, () =>
         rpc("/discuss/channel/notify_typing", {
             is_typing: true,
@@ -2076,4 +2079,43 @@ QUnit.test("Newly created chat should be at the top of the direct message list",
         text: "Jerry Golay",
         before: [".o-mail-DiscussSidebar-item", { text: "Albert" }],
     });
+});
+
+QUnit.test("Leaving a channel should not trigger channel info RPC", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "Sales" });
+    const { openDiscuss } = await start({
+        mockRPC(route, args) {
+            if (route === "/discuss/channel/info") {
+                step(`/discuss/channel/info - ${args.channel_id}`);
+            }
+        },
+    });
+    await openDiscuss(channelId);
+    await click("[title='Leave this channel']", {
+        parent: [".o-mail-DiscussSidebarChannel", { text: "Sales" }],
+    });
+    await assertSteps([]);
+    await click("[title='Add or join a channel']");
+    await insertText(".o-discuss-ChannelSelector input", "Sales");
+    await click(".o-discuss-ChannelSelector-suggestion", { text: "Sales" });
+    await assertSteps([`/discuss/channel/info - ${channelId}`]);
+});
+
+QUnit.test("Can leave channel that is initially locally pinned", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "general", channel_member_ids: [] });
+    const { openDiscuss } = await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-DiscussSidebarChannel.o-active", { text: "general" });
+    await click("[title='Add Users']");
+    await click(".o-discuss-ChannelInvitation-selectable", { text: "Mitchell Admin" });
+    await click("button", { text: "Invite to Channel" });
+    await insertText(".o-mail-Composer-input", "/leave");
+    await contains(".o-mail-Composer-suggestion strong", { count: 1 });
+    await triggerHotkey("Enter");
+    await contains(".o-mail-Composer-input", { value: "/leave " });
+    await triggerHotkey("Enter");
+    await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "general" });
+    await contains(".o-mail-Discuss", { text: "No conversation selected." });
 });

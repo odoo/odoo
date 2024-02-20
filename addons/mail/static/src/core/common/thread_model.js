@@ -125,6 +125,20 @@ export class Thread extends Record {
     custom_channel_name;
     /** @type {string} */
     description;
+    displayToSelf = Record.attr(false, {
+        compute() {
+            return this._computeDisplayToSelf();
+        },
+        onUpdate() {
+            if (
+                !this.isLocallyPinned &&
+                !this.displayToSelf &&
+                this.eq(this._store.discuss.thread)
+            ) {
+                this._store.discuss.thread = undefined;
+            }
+        },
+    });
     followers = Record.many("Follower");
     selfFollower = Record.one("Follower", {
         /** @this {import("models").Thread} */
@@ -161,11 +175,22 @@ export class Thread extends Record {
             }
         },
     });
+    isLocallyPinned = Record.attr(false, {
+        onUpdate() {
+            if (
+                !this.isLocallyPinned &&
+                !this.displayToSelf &&
+                this.eq(this._store.discuss.thread)
+            ) {
+                this._store.discuss.thread = undefined;
+            }
+        },
+    });
     is_pinned = Record.attr(undefined, {
         /** @this {import("models").Thread} */
         onUpdate() {
-            if (!this.is_pinned && this.eq(this._store.discuss.thread)) {
-                this._store.discuss.thread = undefined;
+            if (this.is_pinned) {
+                this.isLocallyPinned = false;
             }
         },
     });
@@ -254,8 +279,6 @@ export class Thread extends Record {
     custom_notifications = false;
     /** @type {String} */
     mute_until_dt;
-    /** @type {Boolean} */
-    isLocallyPinned = false;
     /** @type {"not_fetched"|"pending"|"fetched"} */
     fetchMembersState = "not_fetched";
 
@@ -266,6 +289,10 @@ export class Thread extends Record {
         if (this.type === "channel") {
             return this._store.discuss.channels;
         }
+    }
+
+    _computeDisplayToSelf() {
+        return this.is_pinned || (["channel", "group"].includes(this.type) && this.hasSelfAsMember);
     }
 
     get accessRestrictedToGroupText() {
@@ -339,10 +366,6 @@ export class Thread extends Record {
             );
         }
         return this.name;
-    }
-
-    get displayToSelf() {
-        return this.is_pinned || (["channel", "group"].includes(this.type) && this.hasSelfAsMember);
     }
 
     /** @type {import("models").Persona[]} */

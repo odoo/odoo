@@ -2,7 +2,7 @@
 
 import { simpleNotificationService } from "@bus/simple_notification_service";
 import { addBusServicesToRegistry } from "@bus/../tests/helpers/test_utils";
-import { getPyEnv } from "@bus/../tests/helpers/mock_python_environment";
+import { getPyEnv, startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { registry } from "@web/core/registry";
 import { browser } from "@web/core/browser/browser";
@@ -13,6 +13,7 @@ import { createWebClient } from "@web/../tests/webclient/helpers";
 QUnit.module("simple_notification");
 
 QUnit.test("receive and display simple notification with message", async () => {
+    await startServer();
     addBusServicesToRegistry();
     registry.category("services").add("simple_notification", simpleNotificationService);
     await createWebClient({});
@@ -24,6 +25,7 @@ QUnit.test("receive and display simple notification with message", async () => {
 });
 
 QUnit.test("receive and display simple notification with title", async () => {
+    await startServer();
     addBusServicesToRegistry();
     registry.category("services").add("simple_notification", simpleNotificationService);
     await createWebClient({});
@@ -36,6 +38,7 @@ QUnit.test("receive and display simple notification with title", async () => {
 });
 
 QUnit.test("receive and display simple notification with specific type", async () => {
+    await startServer();
     addBusServicesToRegistry();
     registry.category("services").add("simple_notification", simpleNotificationService);
     await createWebClient({});
@@ -48,6 +51,7 @@ QUnit.test("receive and display simple notification with specific type", async (
 });
 
 QUnit.test("receive and display simple notification as sticky", async () => {
+    await startServer();
     addBusServicesToRegistry();
     registry.category("services").add("simple_notification", simpleNotificationService);
     await createWebClient({});

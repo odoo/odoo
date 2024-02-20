@@ -1,9 +1,12 @@
 /** @odoo-module */
 
 import { WEBSOCKET_CLOSE_CODES } from "@bus/workers/websocket_worker";
+import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 import { patchWebsocketWorkerWithCleanup } from "@bus/../tests/helpers/mock_websocket";
 
+import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
+import { Deferred } from "@web/core/utils/concurrency";
 
 QUnit.module("Websocket Worker");
 
@@ -91,4 +94,24 @@ QUnit.test("notification event is broadcasted", async function (assert) {
     );
 
     assert.verifySteps(["broadcast notification"]);
+});
+
+QUnit.test("notifications are batched by the mock server", async (assert) => {
+    const notificationsReceivedDeferred = new Deferred();
+    const pyEnv = await startServer();
+    await makeTestEnv({ activateMockServer: true });
+    patchWebsocketWorkerWithCleanup({
+        broadcast(type, message) {
+            if (type === "notification") {
+                notificationsReceivedDeferred.resolve(message);
+            }
+        },
+    });
+    pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "bus.event", { foo: 1 });
+    pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "bus.event", { bar: 2 });
+    const notifications = await notificationsReceivedDeferred;
+    const messages = notifications.map(({ message }) => message);
+    assert.strictEqual(messages.length, 2);
+    assert.strictEqual(messages[0].payload.foo, 1);
+    assert.strictEqual(messages[1].payload.bar, 2);
 });

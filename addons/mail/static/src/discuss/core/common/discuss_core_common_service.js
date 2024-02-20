@@ -27,7 +27,11 @@ export class DiscussCoreCommon {
             this.store.updateBusSubscription();
             this.busService.subscribe("discuss.channel/joined", async (payload) => {
                 const { channel, invited_by_user_id: invitedByUserId } = payload;
-                const thread = await this.store.Thread.getOrFetch(channel);
+                let thread = this.store.Thread.get({ model: "discuss.channel", id: channel.id });
+                if (thread?.fetchChannelInfoState === "left") {
+                    thread.fetchChannelInfoState = "not_fetched";
+                }
+                thread = await this.store.Thread.getOrFetch(channel);
                 if (invitedByUserId && invitedByUserId !== this.store.self?.user?.id) {
                     this.notificationService.add(
                         _t("You have been invited to #%s", thread.displayName),
@@ -40,7 +44,9 @@ export class DiscussCoreCommon {
                 this.notificationService.add(_t("You unsubscribed from %s.", thread.displayName), {
                     type: "info",
                 });
-                thread.delete();
+                thread.fetchChannelInfoState = "left";
+                thread.isLocallyPinned = false;
+                thread.selfMember?.delete();
             });
             this.busService.subscribe("discuss.channel/delete", (payload) => {
                 const thread = this.store.Thread.insert({
@@ -96,6 +102,7 @@ export class DiscussCoreCommon {
                 const thread = this.store.Thread.get({ model: "discuss.channel", id: payload.id });
                 if (thread) {
                     thread.is_pinned = false;
+                    thread.isLocallyPinned = false;
                     this.notificationService.add(
                         _t("You unpinned your conversation with %s", thread.displayName),
                         { type: "info" }

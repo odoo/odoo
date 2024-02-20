@@ -3,6 +3,7 @@
 import { rpc } from "@web/core/network/rpc";
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { waitUntilSubscribe } from "@bus/../tests/helpers/websocket_event_deferred";
 
 import { Command } from "@mail/../tests/helpers/command";
 import { start } from "@mail/../tests/helpers/test_utils";
@@ -10,6 +11,7 @@ import { start } from "@mail/../tests/helpers/test_utils";
 import { config as transitionConfig } from "@web/core/transition";
 import { makeDeferred, nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
 import {
+    assertSteps,
     click,
     contains,
     createFile,
@@ -17,6 +19,7 @@ import {
     focus,
     insertText,
     scroll,
+    step,
     triggerEvents,
 } from "@web/../tests/utils";
 
@@ -307,11 +310,12 @@ QUnit.test(
                     );
                 } else if (route === "/discuss/channel/set_last_seen_message") {
                     assert.strictEqual(args.channel_id, channelId);
-                    assert.step("rpc:set_last_seen_message");
+                    step("rpc:set_last_seen_message");
                 }
             },
         });
-        openDiscuss(channelId);
+        await openDiscuss(channelId);
+        await waitUntilSubscribe();
         await focus(".o-mail-Composer-input");
         // simulate receiving a message
         await pyEnv.withUser(userId, () =>
@@ -322,7 +326,7 @@ QUnit.test(
             })
         );
         await contains(".o-mail-Message");
-        assert.verifySteps(["rpc:set_last_seen_message"]);
+        await assertSteps(["rpc:set_last_seen_message"]);
     }
 );
 

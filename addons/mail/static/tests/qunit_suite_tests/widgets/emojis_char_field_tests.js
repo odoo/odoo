@@ -29,7 +29,6 @@ QUnit.module("widgets", {}, (hooks) => {
     QUnit.module("emojis_char_field_tests.js");
 
     QUnit.test("emojis_char_field_tests widget: insert emoji at end of word", async function (assert) {
-        assert.expect(2);
         const {openFormView} =  await start({serverData});
         await openFormView("mailing.mailing");
 
@@ -44,7 +43,6 @@ QUnit.module("widgets", {}, (hooks) => {
     });
 
     QUnit.test("emojis_char_field_tests widget: insert emoji as new word", async function (assert) {
-        assert.expect(2);
         const {openFormView} =  await start({serverData});
         await openFormView("mailing.mailing");
 

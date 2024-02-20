@@ -32,8 +32,8 @@ patch(MockServer.prototype, {
     /**
      * Simulates `_build_bus_channel_list` on `ir.websocket`.
      */
-    _mockIrWebsocket__buildBusChannelList() {
-        const channels = super._mockIrWebsocket__buildBusChannelList();
+    _mockIrWebsocket__buildBusChannelList(channels) {
+        channels = [...super._mockIrWebsocket__buildBusChannelList(channels)];
         const guest = this._mockMailGuest__getGuestFromContext();
         const authenticatedUserId = this.pyEnv.cookie.get("authenticated_user_sid");
         const authenticatedPartner = authenticatedUserId

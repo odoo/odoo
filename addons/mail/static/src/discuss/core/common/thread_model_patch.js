@@ -18,7 +18,7 @@ const threadPatch = {
         this.fetchChannelInfoState = Record.attr("not_fetched", {
             /** @this {import("models").Thread} */
             onUpdate() {
-                if (this.fetchChannelInfoState === "fetched") {
+                if (["fetched", "left"].includes(this.fetchChannelInfoState)) {
                     this._store.updateBusSubscription();
                 }
             },
@@ -89,11 +89,14 @@ const threadPatch = {
         }
         return super.avatarUrl;
     },
+    _computeDisplayToSelf() {
+        return this.fetchChannelInfoState !== "left" && super._computeDisplayToSelf();
+    },
     async fetchChannelInfo() {
-        if (this.fetchChannelInfoState === "fetched") {
+        if (["fetched", "left"].includes(this.fetchChannelInfoState)) {
             return this.fetchChannelInfoDeferred ?? Promise.resolve(this);
         }
-        if (this.fetchChannelInfoStateState === "fetching") {
+        if (this.fetchChannelInfoState === "fetching") {
             return this.fetchChannelInfoDeferred;
         }
         this.fetchChannelInfoState = "fetching";

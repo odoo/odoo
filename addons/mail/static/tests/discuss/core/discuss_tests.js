@@ -6,7 +6,7 @@ import { start } from "@mail/../tests/helpers/test_utils";
 
 import { assertSteps, click, contains, insertText, step } from "@web/../tests/utils";
 import { patchWebsocketWorkerWithCleanup } from "@bus/../tests/helpers/mock_websocket";
-import { patchDate } from "@web/../tests/helpers/utils";
+import { nextTick, patchDate } from "@web/../tests/helpers/utils";
 
 QUnit.module("discuss");
 
@@ -27,6 +27,7 @@ QUnit.test("bus subscription is refreshed when channel is joined", async () => {
     pyEnv["discuss.channel"].create([{ name: "General" }, { name: "Sales" }]);
     patchWebsocketWorkerWithCleanup({
         _sendToServer({ event_name, data }) {
+            super._sendToServer(...arguments);
             if (event_name === "subscribe") {
                 step(`subscribe - ${JSON.stringify(data.channels)}`);
             }
@@ -37,6 +38,7 @@ QUnit.test("bus subscription is refreshed when channel is joined", async () => {
     const { openDiscuss } = await start();
     await assertSteps(["subscribe - []"]);
     await openDiscuss();
+    await nextTick(); // Wait for the initial fetch to occur.
     await assertSteps([]);
     await click(".o-mail-DiscussSidebar i[title='Add or join a channel']");
     await insertText(".o-discuss-ChannelSelector input", "new channel");
@@ -49,6 +51,7 @@ QUnit.test("bus subscription is refreshed when channel is left", async () => {
     pyEnv["discuss.channel"].create({ name: "General" });
     patchWebsocketWorkerWithCleanup({
         _sendToServer({ event_name, data }) {
+            super._sendToServer(...arguments);
             if (event_name === "subscribe") {
                 step(`subscribe - ${JSON.stringify(data.channels)}`);
             }
@@ -59,6 +62,7 @@ QUnit.test("bus subscription is refreshed when channel is left", async () => {
     const { openDiscuss } = await start();
     await assertSteps(["subscribe - []"]);
     await openDiscuss();
+    await nextTick(); // Wait for the initial fetch to occur.
     await assertSteps([]);
     await click("[title='Leave this channel']");
     await assertSteps(["subscribe - []"]);
