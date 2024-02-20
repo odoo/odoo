@@ -1,4 +1,4 @@
-import { after } from "@odoo/hoot";
+import { createJobScopedGetter } from "@odoo/hoot";
 import { Domain } from "@web/core/domain";
 import {
     deserializeDate,
@@ -1159,6 +1159,7 @@ const VALID_AGGREGATE_FUNCTIONS = [
 
 const domParser = new DOMParser();
 const xmlSerializer = new XMLSerializer();
+let modelInstanceLock = false;
 
 /**
  * Local model used by the {@link MockServer} to store the definition of a model.
@@ -1174,47 +1175,65 @@ const xmlSerializer = new XMLSerializer();
  * @extends {Array<ModelRecord>}
  */
 export class Model extends Array {
-    /** @type {Model | null} */
-    static __def__ = null;
+    static definitionGetter = null;
 
     static get definition() {
-        if (!this.__def__) {
-            const definition = new this();
-            assignArray(definition, definition._records);
+        if (!this.definitionGetter) {
+            this.definitionGetter = createJobScopedGetter((previous) => {
+                modelInstanceLock = true;
+                const model = new this();
+                modelInstanceLock = false;
 
-            // Name
-            const className = this.name.toLowerCase();
-            definition._name ||= className || "anonymous";
-            if (className) {
-                if (!onlyChars(definition._name).includes(onlyChars(className))) {
-                    console.warn(
-                        `Warning: model name "${definition._name}" is not consistent with its class name "${this.name}": this may lead to typos or confusions when writing tests`
-                    );
+                // Inheritted properties
+                if (previous) {
+                    model._computes = new Set(previous._computes);
+                    model._fetch = previous._fetch;
+                    model._fields = { ...previous._fields };
+                    model._inherit = previous._inherit;
+                    model._name = previous._name;
+                    model._onChanges = { ...previous._onChanges };
+                    model._order = previous._order;
+                    model._parent_name = previous._parent_name;
+                    model._rec_name = previous._rec_name;
+                    model._records = JSON.parse(JSON.stringify(previous._records));
+                    model._views = { ...previous._views };
                 }
-            }
 
-            // Fields
-            for (const [key, value] of Object.entries(definition)) {
-                if (value?.[fields.FIELD_SYMBOL]) {
-                    definition._fields[key] = value;
-                    delete definition[key];
+                // Records
+                assignArray(model, model._records);
+
+                // Name
+                const constructorName = this.name.toLowerCase();
+                model._name ||= constructorName || "anonymous";
+                if (constructorName) {
+                    if (!onlyChars(model._name).includes(onlyChars(constructorName))) {
+                        console.warn(
+                            `Warning: model name "${model._name}" is not consistent with its class name "${this.name}": this may lead to typos or confusions when writing tests`
+                        );
+                    }
                 }
-            }
 
-            // Views
-            for (const [key, value] of Object.entries(definition._views)) {
-                const [viewType, viewId] = safeSplit(key);
-                const actualKey = definition._getViewKey(viewType, viewId);
+                // Fields
+                for (const [key, value] of Object.entries(model)) {
+                    if (value?.[fields.FIELD_SYMBOL]) {
+                        model._fields[key] = value;
+                        delete model[key];
+                    }
+                }
 
-                delete definition._views[key];
-                definition._views[actualKey] = value || `<${viewType} />`;
-            }
+                // Views
+                for (const [key, value] of Object.entries(model._views)) {
+                    const [viewType, viewId] = safeSplit(key);
+                    const actualKey = model._getViewKey(viewType, viewId);
 
-            this.__def__ = definition;
+                    delete model._views[key];
+                    model._views[actualKey] = value || `<${viewType} />`;
+                }
 
-            after(() => (this.__def__ = null));
+                return model;
+            });
         }
-        return this.__def__;
+        return this.definitionGetter();
     }
 
     static get _fields() {
@@ -1330,13 +1349,20 @@ export class Model extends Array {
     constructor() {
         super(...arguments);
 
-        const { __def__: definition } = this.constructor;
-        if (definition) {
-            for (const key of Object.keys(this)) {
-                if (key.startsWith("_")) {
-                    this[key] = definition[key];
-                }
-            }
+        if (!modelInstanceLock) {
+            const modelInstance = this.constructor.definition;
+
+            this._computes = modelInstance._computes;
+            this._fetch = modelInstance._fetch;
+            this._fields = modelInstance._fields;
+            this._inherit = modelInstance._inherit;
+            this._name = modelInstance._name;
+            this._onChanges = modelInstance._onChanges;
+            this._order = modelInstance._order;
+            this._parent_name = modelInstance._parent_name;
+            this._rec_name = modelInstance._rec_name;
+            this._records = modelInstance._records;
+            this._views = modelInstance._views;
         }
     }
 
