@@ -1,7 +1,8 @@
-import { after, before, globals, registerDebugInfo } from "@odoo/hoot";
+import { after, createJobScopedGetter, globals, registerDebugInfo } from "@odoo/hoot";
 import { mockFetch, mockWebSocket } from "@odoo/hoot-mock";
 import { assets } from "@web/core/assets";
 import { registry } from "@web/core/registry";
+import { isIterable } from "@web/core/utils/arrays";
 import { serverState } from "../mock_server_state.hoot";
 import { fetchModelDefinitions } from "../module_set.hoot";
 import { patchWithCleanup } from "../patch_test_helpers";
@@ -12,6 +13,7 @@ import {
     getRecordQualifier,
     safeSplit,
 } from "./mock_server_utils";
+import { deepCopy, isObject } from "@web/core/utils/objects";
 
 const { fetch: realFetch } = globals;
 
@@ -55,8 +57,8 @@ const { fetch: realFetch } = globals;
  *  menus?: MenuDefinition[];
  *  models?: Iterable<ModelConstructor>;
  *  modules?: Partial<typeof MockServer["prototype"]["modules"]>;
- *  multi_lang?: typeof MockServer["prototype"]["multi_lang"];
- *  routes?: typeof MockServer["prototype"]["routes"];
+ *  multi_lang?: import("../mock_server_state.hoot").ServerState["multiLang"];
+ *  routes?: Parameters<MockServer["onRpc"]>;
  *  timezone?: string;
  *  translations?: Record<string, string>;
  * }} ServerParams
@@ -155,6 +157,21 @@ class MockServerBaseEnvironment {
     }
 }
 
+const getCurrentParams = createJobScopedGetter((previous) => ({
+    ...previous,
+    actions: deepCopy(previous?.actions || {}),
+    menus: deepCopy(previous?.menus || []),
+    models: [...(previous?.models || [])], // own instance getters, no need to deep copy
+    routes: [...(previous?.routes || [])], // functions, no need to deep copy
+}));
+
+const DEFAULT_MENU = {
+    id: 99999,
+    appID: 1,
+    children: [],
+    name: "App0",
+};
+
 //-----------------------------------------------------------------------------
 // Exports
 //-----------------------------------------------------------------------------
@@ -162,22 +179,6 @@ class MockServerBaseEnvironment {
 export class MockServer {
     /** @type {MockServer | null} */
     static current = null;
-    /** @type {Record<string, ActionDefinition>} */
-    static actions = {};
-    /** @type {MenuDefinition[]} */
-    static menus = [
-        {
-            id: 99999,
-            appID: 1,
-            children: [],
-            name: "App0",
-        },
-    ];
-    /** @type {MockServerEnvironment | null} */
-    static models = [];
-    /** @type {ServerParams} */
-    static params = {};
-    static rpcListeners = [];
 
     static get env() {
         return this.current?.env;
@@ -206,9 +207,9 @@ export class MockServer {
 
     // Data
     /** @type {Record<string, ActionDefinition>} */
-    actions = { ...MockServer.actions };
+    actions = {};
     /** @type {MenuDefinition[]} */
-    menus = [...MockServer.menus];
+    menus = [DEFAULT_MENU];
     /** @type {Record<string, Model>} */
     models = {};
     /** @type {ModelConstructor[]} */
@@ -249,6 +250,7 @@ export class MockServer {
                 `cannot instantiate a new MockServer: one is already running`
             );
         }
+
         MockServer.current = this;
 
         // Set default routes
@@ -266,13 +268,9 @@ export class MockServer {
             }
         }
 
-        this.registerModels(MockServer.models);
+        this.configure(getCurrentParams());
         if (params) {
             this.configure(params);
-        }
-
-        for (const [method, callback] of MockServer.rpcListeners) {
-            this.onRpc(method, callback);
         }
 
         const { loadCSS, loadJS } = assets;
@@ -379,9 +377,10 @@ export class MockServer {
         if (params.translations) {
             this.registerTranslations("web", params.translations);
         }
-
-        for (const [route, callback] of Object.entries(params.routes || {})) {
-            this.onRpc(route, callback);
+        if (params.routes) {
+            for (const [route, callback, options] of params.routes) {
+                this.onRpc(route, callback, options);
+            }
         }
 
         return this;
@@ -932,35 +931,17 @@ export async function authenticate(login, password) {
  * @param {ActionDefinition[]} actions
  */
 export function defineActions(actions) {
-    actions = Object.fromEntries(actions.map((a) => [a.xmlId || a.id, { ...a }]));
-    before(() => {
-        const originalActions = MockServer.actions;
-        MockServer.actions = { ...originalActions, ...actions };
-        return () => (MockServer.menus = originalActions);
-    });
-
-    if (MockServer.current) {
-        MockServer.current.configure({ actions });
-    }
-
-    return actions;
+    return defineParams(
+        { actions: Object.fromEntries(actions.map((a) => [a.xmlId || a.id, { ...a }])) },
+        "add"
+    ).actions;
 }
 
 /**
  * @param {MenuDefinition[]} menus
  */
 export function defineMenus(menus) {
-    before(() => {
-        const originalMenus = MockServer.menus;
-        MockServer.menus = [...originalMenus, ...menus];
-        return () => (MockServer.menus = originalMenus);
-    });
-
-    if (MockServer.current) {
-        MockServer.current.configure({ menus });
-    }
-
-    return menus;
+    return defineParams({ menus }, "add").menus;
 }
 
 /**
@@ -969,30 +950,28 @@ export function defineMenus(menus) {
  * @param  {ModelConstructor[] | Record<string, ModelConstructor>} ModelClasses
  */
 export function defineModels(ModelClasses) {
-    const classes = Object.values(ModelClasses);
-
-    before(() => {
-        const originalModels = MockServer.models;
-        MockServer.models = [...originalModels, ...classes];
-        return () => (MockServer.models = originalModels);
-    });
-
-    if (MockServer.current) {
-        MockServer.current.configure({ models: classes });
-    }
-
-    return ModelClasses;
+    return defineParams({ models: Object.values(ModelClasses) }, "add").models;
 }
 
 /**
  * @param {ServerParams} params
+ * @param {"add" | "replace"} [mode="replace"]
  */
-export function defineParams(params) {
-    before(() => {
-        const originalParams = MockServer.params;
-        MockServer.params = { ...originalParams, ...params };
-        return () => (MockServer.params = originalParams);
-    });
+export function defineParams(params, mode) {
+    const currentParams = getCurrentParams();
+    for (const [key, value] of Object.entries(params)) {
+        if (mode === "add" && isObject(value)) {
+            if (isIterable(value)) {
+                currentParams[key] ||= [];
+                currentParams[key].push(...value);
+            } else {
+                currentParams[key] ||= {};
+                Object.assign(currentParams[key], value);
+            }
+        } else {
+            currentParams[key] = value;
+        }
+    }
 
     if (MockServer.current) {
         MockServer.current.configure(params);
@@ -1045,15 +1024,7 @@ export async function makeMockServer(params) {
  * @type {typeof MockServer["prototype"]["onRpc"]}
  */
 export function onRpc(method, callback, options) {
-    before(() => {
-        const originalListeners = [...MockServer.rpcListeners];
-        MockServer.rpcListeners = [...MockServer.rpcListeners, [method, callback, options]];
-        return () => (MockServer.rpcListeners = originalListeners);
-    });
-
-    if (MockServer.current) {
-        MockServer.current.onRpc(method, callback, options);
-    }
+    return defineParams({ routes: [[method, callback, options]] }, "add").routes;
 }
 
 /**

@@ -315,7 +315,7 @@ export class TestRunner {
             this.addSuite([], suiteName, () => this.addSuite(config, otherNames, fn));
             return;
         }
-        const { suite: parentSuite } = this.getCurrent();
+        const parentSuite = this.#suiteStack.at(-1);
         if (typeof fn !== "function") {
             throw suiteError(
                 { name: suiteName, parent: parentSuite },
@@ -369,7 +369,7 @@ export class TestRunner {
         if (!name) {
             throw new HootError(`a test name must not be empty, got ${name}`);
         }
-        const { suite: parentSuite } = this.getCurrent();
+        const parentSuite = this.#suiteStack.at(-1);
         if (!parentSuite) {
             throw testError({ name, parent: null }, `cannot register a test outside of a suite.`);
         }
@@ -511,6 +511,52 @@ export class TestRunner {
             return;
         }
         this.__beforeEach(...callbacks);
+    }
+
+    /**
+     * @template T
+     * @template {(previous: T | null) => T} F
+     * @param {F} instanceGetter
+     * @param {() => any} [afterCallback]
+     * @returns {F}
+     */
+    createJobScopedGetter(instanceGetter, afterCallback) {
+        /** @type {F} */
+        const getInstance = () => {
+            const currentJob = this.state.currentTest || this.#suiteStack.at(-1) || this;
+            if (!instances.has(currentJob)) {
+                let parentInstance;
+                let current = currentJob;
+                while (current !== this) {
+                    current = current.parent || this;
+                    if (instances.has(current)) {
+                        parentInstance = instances.get(current);
+                        break;
+                    }
+                }
+
+                if (canRegisterAfterCallback) {
+                    this.after(() => {
+                        instances.delete(currentJob);
+
+                        if (afterCallback) {
+                            canRegisterAfterCallback = false;
+                            afterCallback();
+                            canRegisterAfterCallback = true;
+                        }
+                    });
+                }
+
+                instances.set(currentJob, instanceGetter(parentInstance));
+            }
+            return instances.get(currentJob);
+        };
+
+        /** @type {Map<Job, T>} */
+        const instances = new Map();
+        let canRegisterAfterCallback = true;
+
+        return getInstance;
     }
 
     /**

@@ -778,10 +778,7 @@ export async function paste() {
  * @returns {boolean}
  */
 export function strictEqual(a, b) {
-    if (Number.isNaN(a) && Number.isNaN(b)) {
-        return true;
-    }
-    return a === b;
+    return Number.isNaN(a) ? Number.isNaN(b) : a === b;
 }
 
 /**
