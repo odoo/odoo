@@ -9,9 +9,7 @@ patch(DiscussAppCategory.prototype, {
      */
     sortThreads(t1, t2) {
         if (this.id === "livechat") {
-            return (
-                compareDatetime(t2.lastInterestDateTime, t1.lastInterestDateTime) || t2.id - t1.id
-            );
+            return compareDatetime(t2.last_interest_dt, t1.last_interest_dt) || t2.id - t1.id;
         }
         return super.sortThreads(t1, t2);
     },

@@ -1,7 +1,6 @@
 import { DEFAULT_AVATAR } from "@mail/core/common/persona_service";
 import { AND, Record } from "@mail/core/common/record";
 
-import { deserializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
 import { Deferred } from "@web/core/utils/concurrency";
@@ -257,14 +256,14 @@ export class Thread extends Record {
     });
     hasLoadingFailed = false;
     canPostOnReadonly;
-    /** @type {String} */
-    last_interest_dt;
+    /** @type {luxon.DateTime} */
+    last_interest_dt = Record.attr(undefined, { type: "datetime" });
     /** @type {Boolean} */
     is_editable;
     /** @type {false|'mentions'|'no_notif'} */
     custom_notifications = false;
-    /** @type {String} */
-    mute_until_dt;
+    /** @type {luxon.DateTime} */
+    mute_until_dt = Record.attr(undefined, { type: "datetime" });
     /** @type {Boolean} */
     isLocallyPinned = false;
     /** @type {"not_fetched"|"pending"|"fetched"} */
@@ -528,20 +527,6 @@ export class Thread extends Record {
     get videoCount() {
         return Object.values(this._store.RtcSession.records).filter((session) => session.hasVideo)
             .length;
-    }
-
-    get lastInterestDateTime() {
-        if (!this.last_interest_dt) {
-            return undefined;
-        }
-        return deserializeDateTime(this.last_interest_dt);
-    }
-
-    get muteUntilDateTime() {
-        if (!this.mute_until_dt) {
-            return undefined;
-        }
-        return deserializeDateTime(this.mute_until_dt);
     }
 
     /** @param {import("models").Persona} persona */

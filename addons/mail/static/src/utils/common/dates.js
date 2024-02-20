@@ -1,9 +1,11 @@
 const { DateTime } = luxon;
 
-export function computeDelay(dateStr) {
+/**
+ * @param {luxon.DateTime} datetime
+ */
+export function computeDelay(datetime) {
     const today = DateTime.now().startOf("day");
-    const date = DateTime.fromISO(dateStr);
-    return date.diff(today, "days").days;
+    return datetime.diff(today, "days").days;
 }
 
 export function getMsToTomorrow() {

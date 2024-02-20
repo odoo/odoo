@@ -3,7 +3,7 @@
 
     <t t-name="discuss.NotificationSettings">
         <div class="o-discuss-NotificationSettings">
-            <t t-if="props.thread.muteUntilDateTime">
+            <t t-if="props.thread.mute_until_dt">
                 <button class="btn w-100 d-flex p-1 opacity-75 opacity-100-hover" t-on-click="selectUnmute">
                     <div class="d-flex flex-column flex-grow-1 text-start px-2 py-1 rounded">
                         <span class="fs-6 fw-bold">Unmute Channel</span>

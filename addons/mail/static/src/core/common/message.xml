@@ -53,7 +53,7 @@
                                     (from <a t-att-href="message.resUrl"><t t-esc="message.thread?.prefix"/><t t-esc="message.thread?.displayName"/></a>)
                                 </t>
                             </small>
-                            <div t-if="props.message.scheduledDate" t-att-class="{ 'ms-2': props.isInChatWindow and isAlignedRight }" t-att-title="messageService.scheduledDateSimple(props.message)">
+                            <div t-if="props.message.scheduledDatetime" t-att-class="{ 'ms-2': props.isInChatWindow and isAlignedRight }" t-att-title="messageService.scheduledDateSimple(props.message)">
                                 <span class="text-600 cursor-pointer">
                                     <i class="fa fa-calendar-o"/>
                                 </span>

@@ -7,8 +7,7 @@ import { start } from "@mail/../tests/helpers/test_utils";
 
 import { url } from "@web/core/utils/urls";
 import { contains } from "@web/../tests/utils";
-
-const { DateTime } = luxon;
+import { deserializeDateTime } from "@web/core/l10n/dates";
 
 QUnit.module("thread (patch)");
 
@@ -43,7 +42,7 @@ QUnit.test("Rendering of visitor banner", async () => {
     await contains(
         `img.o-website_livechat-VisitorBanner-avatar[data-src='${url(
             `/web/image/mail.guest/${guestId}/avatar_128?unique=${
-                DateTime.fromSQL(guest.write_date).ts
+                deserializeDateTime(guest.write_date).ts
             }`
         )}']`
     );

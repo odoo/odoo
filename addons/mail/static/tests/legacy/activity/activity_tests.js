@@ -4,7 +4,7 @@ import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { start } from "@mail/../tests/helpers/test_utils";
 
-import { serializeDate, today } from "@web/core/l10n/dates";
+import { deserializeDateTime, serializeDate, today } from "@web/core/l10n/dates";
 import {
     mockTimeout,
     patchDate,
@@ -14,8 +14,6 @@ import {
 } from "@web/../tests/helpers/utils";
 import { click, contains, createFile, inputFiles } from "@web/../tests/utils";
 import { getOrigin } from "@web/core/utils/urls";
-
-const { DateTime } = luxon;
 
 const views = {
     "res.fake,false,form": `
@@ -553,6 +551,6 @@ QUnit.test("Activity avatar should have a unique timestamp", async () => {
     await contains(
         `.o-mail-Activity-sidebar img[data-src="${getOrigin()}/web/image/res.partner/${
             pyEnv.currentPartnerId
-        }/avatar_128?unique=${DateTime.fromSQL(partner.write_date).ts}`
+        }/avatar_128?unique=${deserializeDateTime(partner.write_date).ts}`
     );
 });

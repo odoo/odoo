@@ -36,12 +36,12 @@ threadActionsRegistry
         },
         component: NotificationSettings,
         icon(component) {
-            return component.thread.muteUntilDateTime
+            return component.thread.mute_until_dt
                 ? "fa fa-fw text-danger fa-bell-slash"
                 : "fa fa-fw fa-bell";
         },
         iconLarge(component) {
-            return component.thread.muteUntilDateTime
+            return component.thread.mute_until_dt
                 ? "fa fa-fw fa-lg text-danger fa-bell-slash"
                 : "fa fa-fw fa-lg fa-bell";
         },

@@ -156,7 +156,7 @@ export class MessageService {
     }
 
     scheduledDateSimple(message) {
-        return message.scheduledDate.toLocaleString(DateTime.TIME_24_SIMPLE, {
+        return message.scheduledDatetime.toLocaleString(DateTime.TIME_24_SIMPLE, {
             locale: user.lang?.replace("_", "-"),
         });
     }

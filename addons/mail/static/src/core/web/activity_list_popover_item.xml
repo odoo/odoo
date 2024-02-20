@@ -33,8 +33,8 @@
                         <small class="text-truncate" t-esc="props.activity.user_id[1]"/>
                         <small t-if="props.activity.state !== 'today'" class="mx-1">-</small>
                     </t>
-                    <small t-if="['overdue', 'planned'].includes(props.activity.state)" class="fw-bold" t-att-title="dateDeadlineFormatted" t-esc="delayLabel"/>
-                    <small t-if="props.activity.state === 'done'" class="fw-bold" t-att-title="dateDoneFormatted" t-esc="dateDoneFormatted"/>
+                    <small t-if="['overdue', 'planned'].includes(props.activity.state)" class="fw-bold" t-att-title="props.activity.dateDeadlineFormatted" t-esc="delayLabel"/>
+                    <small t-if="props.activity.state === 'done'" class="fw-bold" t-att-title="dateDoneFormatted" t-esc="props.activity.dateDoneFormatted"/>
                 </div>
             </div>
             <div t-if="props.activity.attachment_ids?.length" class="mx-5">

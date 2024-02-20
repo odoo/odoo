@@ -9,9 +9,9 @@ import { start } from "@mail/../tests/helpers/test_utils";
 
 import { url } from "@web/core/utils/urls";
 import { nextTick } from "@web/../tests/helpers/utils";
+import { deserializeDateTime } from "@web/core/l10n/dates";
 
 import { click, contains, insertText } from "@web/../tests/utils";
-const { DateTime } = luxon;
 
 QUnit.module("discuss sidebar (patch)");
 
@@ -239,7 +239,7 @@ QUnit.test("Smiley face avatar for livechat item linked to a guest", async () =>
     await contains(
         `.o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel img[data-src='${url(
             `/web/image/mail.guest/${guestId}/avatar_128?unique=${
-                DateTime.fromSQL(guest.write_date).ts
+                deserializeDateTime(guest.write_date).ts
             }`
         )}']`
     );
@@ -262,7 +262,7 @@ QUnit.test("Partner profile picture for livechat item linked to a partner", asyn
     await contains(
         `.o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel img[data-src='${url(
             `/web/image/res.partner/${partnerId}/avatar_128?unique=${
-                DateTime.fromSQL(partner.write_date).ts
+                deserializeDateTime(partner.write_date).ts
             }`
         )}']`
     );

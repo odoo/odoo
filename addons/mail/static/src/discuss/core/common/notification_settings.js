@@ -15,10 +15,10 @@ export class NotificationSettings extends Component {
 
     get muteUntilText() {
         if (
-            this.props.thread.muteUntilDateTime &&
-            this.props.thread.muteUntilDateTime.year <= new Date().getFullYear() + 2
+            this.props.thread.mute_until_dt &&
+            this.props.thread.mute_until_dt.year <= new Date().getFullYear() + 2
         ) {
-            return _t("Until ") + this.props.thread.muteUntilDateTime.toFormat("MM/dd, HH:mm");
+            return _t("Until ") + this.props.thread.mute_until_dt.toFormat("MM/dd, HH:mm");
         }
         // Forever is a special case, so we don't want to display the date.
         return undefined;
