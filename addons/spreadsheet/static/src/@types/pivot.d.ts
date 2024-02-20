@@ -110,7 +110,6 @@ declare module "@spreadsheet" {
     export interface WebPivotModelParams {
         metaData: PivotMetaData;
         searchParams: PivotSearchParams;
-        name: string;
     }
 
     export interface OdooPivotModelParams {

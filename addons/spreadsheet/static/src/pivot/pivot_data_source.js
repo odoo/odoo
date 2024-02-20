@@ -277,7 +277,6 @@ class OdooPivotRuntimeDefinition extends PivotRuntimeDefinition {
                 fieldAttrs: {},
                 fields,
             },
-            name: this.name,
         };
     }
 }
