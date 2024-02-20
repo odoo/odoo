@@ -339,10 +339,7 @@ export class ProductScreen extends Component {
 
         if (this.searchWord !== "") {
             const product = this.pos.selectedCategory?.id
-                ? this.pos.models["product.product"].getBy(
-                      "pos_categ_ids",
-                      this.pos.selectedCategory.id
-                  )
+                ? this.getProductsByCategory(this.pos.selectedCategory.id)
                 : this.pos.models["product.product"].getAll();
             list = fuzzyLookup(
                 this.searchWord,
@@ -350,10 +347,7 @@ export class ProductScreen extends Component {
                 (product) => product.display_name + product.description_sale
             );
         } else if (this.pos.selectedCategory?.id) {
-            list = this.pos.models["product.product"].getBy(
-                "pos_categ_ids",
-                this.pos.selectedCategory.id
-            );
+            list = this.getProductsByCategory(this.pos.selectedCategory.id);
         } else {
             list = this.pos.models["product.product"].getAll();
         }
@@ -365,6 +359,18 @@ export class ProductScreen extends Component {
         return list.sort(function (a, b) {
             return a.display_name.localeCompare(b.display_name);
         });
+    }
+
+    getProductsByCategory(categoryId) {
+        const products = new Set(
+            this.pos.models["product.product"].getBy("pos_categ_ids", categoryId) || []
+        );
+        const childCategories = this.pos.models["pos.category"].get(categoryId).child_id;
+        for (const { id } of childCategories) {
+            const childProducts = this.getProductsByCategory(id);
+            childProducts.forEach((product) => products.add(product));
+        }
+        return Array.from(products);
     }
 
     getProductListToNotDisplay() {
