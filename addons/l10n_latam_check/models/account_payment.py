@@ -9,6 +9,8 @@ class AccountPayment(models.Model):
     _inherit = 'account.payment'
     _rec_names_search = ['name', 'check_number']
 
+    l10n_latam_check_ids = fields.One2many('l10n_latam.account.payment.check', 'payment_id', string="Checks")
+
     # Third party check operation links
     l10n_latam_check_id = fields.Many2one(
         comodel_name='account.payment',
