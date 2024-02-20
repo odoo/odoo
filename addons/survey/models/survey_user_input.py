@@ -29,7 +29,7 @@ class SurveyUserInput(models.Model):
     end_datetime = fields.Datetime('End date and time', readonly=True)
     deadline = fields.Datetime('Deadline', help="Datetime until customer can open the survey and submit answers")
     state = fields.Selection([
-        ('new', 'Not started yet'),
+        ('new', 'New'),
         ('in_progress', 'In Progress'),
         ('done', 'Completed')], string='Status', default='new', readonly=True)
     test_entry = fields.Boolean(readonly=True)
