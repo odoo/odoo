@@ -290,10 +290,8 @@ class Base(models.AbstractModel):
             selection_labels = dict(self.fields_get()[group_by]['selection'])
 
         def adapt(value):
-            if field_type == 'selection':
-                value = selection_labels.get(value, False)
             if isinstance(value, tuple):
-                value = value[1]  # FIXME should use technical value (0)
+                value = value[0]
             return value
 
         result = {}
