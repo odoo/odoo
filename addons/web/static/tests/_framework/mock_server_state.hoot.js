@@ -1,8 +1,16 @@
-import { after, before, getCurrent } from "@odoo/hoot";
+import { after, before, createJobScopedGetter } from "@odoo/hoot";
 
-const applyDescriptors = (object, descriptors) => Object.defineProperties(object, descriptors);
+/**
+ * @typedef {typeof SERVER_STATE_VALUES} ServerState
+ */
 
-const getDescriptors = (object) => Object.getOwnPropertyDescriptors(object);
+const notifySubscribers = () => {
+    // Apply new state to all subscribers
+    for (const [target, callback] of subscriptions) {
+        const descriptors = Object.getOwnPropertyDescriptors(callback(serverState));
+        Object.defineProperties(target, descriptors);
+    }
+};
 
 const SERVER_STATE_VALUES = {
     companyId: 1,
@@ -21,14 +29,21 @@ const SERVER_STATE_VALUES = {
     userId: 7,
 };
 
-const stateChangeInitiators = new WeakSet();
-/** @type {Map<any, (state: typeof SERVER_STATE_VALUES) => any>} */
+const getServerStateValues = createJobScopedGetter(
+    (previousValues) => ({
+        ...SERVER_STATE_VALUES,
+        ...previousValues,
+    }),
+    notifySubscribers
+);
+
+/** @type {Map<any, (state: ServerState) => any>} */
 const subscriptions = new Map([[odoo, (state) => ({ ...odoo, debug: state.debug })]]);
 
 /**
  * @template T
  * @param {T} target
- * @param {(state: typeof SERVER_STATE_VALUES) => T} callback
+ * @param {(state: ServerState) => T} callback
  */
 export function onServerStateChange(target, callback) {
     before(() => {
@@ -41,35 +56,15 @@ export function onServerStateChange(target, callback) {
 
 export const serverState = new Proxy(SERVER_STATE_VALUES, {
     get(target, p) {
-        return Reflect.get(target, p);
+        return Reflect.get(getServerStateValues(), p);
     },
     set(target, p, newValue) {
-        const notifySubscribers = () => {
-            for (const [target, callback] of subscriptions) {
-                applyDescriptors(target, getDescriptors(callback(serverState)));
-            }
-        };
-
-        const { suite, test } = getCurrent();
-        const initiator = test || suite;
-        if (!stateChangeInitiators.has(initiator)) {
-            // Save initial state and restore it after the test
-            stateChangeInitiators.add(initiator);
-            const initialState = getDescriptors(target);
-
-            after(() => {
-                applyDescriptors(target, initialState);
-                stateChangeInitiators.delete(initiator);
-
-                notifySubscribers();
-            });
-        }
-
-        const result = Reflect.set(target, p, newValue);
+        const result = Reflect.set(getServerStateValues(), p, newValue);
         if (result) {
-            // Apply new state to all subscribers
             notifySubscribers();
         }
         return result;
     },
 });
+
+before(notifySubscribers);
