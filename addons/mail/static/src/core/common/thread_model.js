@@ -1,6 +1,5 @@
 import { DEFAULT_AVATAR } from "@mail/core/common/persona_service";
 import { AND, Record } from "@mail/core/common/record";
-import { compareDatetime } from "@mail/utils/common/misc";
 
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
@@ -200,8 +199,7 @@ export class Thread extends Record {
     pendingNewMessages = Record.many("Message");
     needactionMessages = Record.many("Message", {
         inverse: "threadAsNeedaction",
-        sort: (t1, t2) =>
-            compareDatetime(t2.lastInterestDateTime, t1.lastInterestDateTime) || t2.id - t1.id,
+        sort: (message1, message2) => message1.id - message2.id,
     });
     /** @type {string} */
     name;
