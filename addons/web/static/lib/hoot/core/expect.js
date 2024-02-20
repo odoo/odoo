@@ -1304,11 +1304,16 @@ export class Matchers {
             name: "toHaveAttribute",
             acceptedType: ["string", "node", "node[]"],
             transform: queryAll,
-            predicate: each((node) =>
-                expectsValue
-                    ? match(getNodeAttribute(node, attribute), value)
-                    : node.hasAttribute(attribute)
-            ),
+            predicate: each((node) => {
+                if (!expectsValue) {
+                    return node.hasAttribute(attribute);
+                }
+                const attrValue = getNodeAttribute(node, attribute);
+                if (value instanceof RegExp) {
+                    return value.test(attrValue);
+                }
+                return strictEqual(attrValue, value);
+            }),
             message: (pass) =>
                 options?.message ||
                 (pass
@@ -1425,7 +1430,7 @@ export class Matchers {
      * itself, and for that attribute value to match the given `value` if any.
      *
      * @param {string} property
-     * @param {string} [value]
+     * @param {any} [value]
      * @param {ExpectOptions} [options]
      * @example
      *  expect("button").toHaveProperty("tabIndex", 0);
@@ -1447,9 +1452,16 @@ export class Matchers {
             name: "toHaveAttribute",
             acceptedType: ["string", "node", "node[]"],
             transform: queryAll,
-            predicate: each((node) =>
-                expectsValue ? strictEqual(node[property], value) : !isNil(node[property])
-            ),
+            predicate: each((node) => {
+                const propValue = node[property];
+                if (!expectsValue) {
+                    return isNil(propValue);
+                }
+                if (value instanceof RegExp) {
+                    return value.test(propValue);
+                }
+                return strictEqual(propValue, value);
+            }),
             message: (pass) =>
                 options?.message ||
                 (pass
@@ -1536,14 +1548,14 @@ export class Matchers {
         ]);
 
         const texts = ensureArray(text);
-        const expectsText = isNil(text);
+        const expectsText = !isNil(text);
         return this.#resolve({
             name: "toHaveText",
             acceptedType: ["string", "node", "node[]"],
             transform: queryAll,
             predicate: each((node) => {
                 const nodeText = getNodeText(node);
-                if (expectsText) {
+                if (!expectsText) {
                     return nodeText.length > 0;
                 }
                 return texts.every((text) => {
