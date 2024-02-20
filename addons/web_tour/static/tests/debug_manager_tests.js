@@ -12,8 +12,19 @@ import { click, getFixture, patchWithCleanup } from "@web/../tests/helpers/utils
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { makeFakeLocalizationService, fakeCommandService } from "@web/../tests/helpers/mock_services";
 import { popoverService } from "@web/core/popover/popover_service";
-import { DebugMenuParent } from "@web/../tests/core/debug/debug_manager_tests";
 import { mountInFixture } from "@web/../tests/helpers/mount_in_fixture";
+import { DebugMenu } from "@web/core/debug/debug_menu";
+import { useOwnDebugContext } from "@web/core/debug/debug_context";
+import { Component, xml } from "@odoo/owl";
+
+export class DebugMenuParent extends Component {
+    static template = xml`<DebugMenu/>`;
+    static components = { DebugMenu };
+    static props = ["*"];
+    setup() {
+        useOwnDebugContext({ categories: ["default", "custom"] });
+    }
+}
 
 const debugRegistry = registry.category("debug");
 let target;
