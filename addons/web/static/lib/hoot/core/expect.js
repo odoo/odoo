@@ -154,8 +154,18 @@ const afterTest = (runner, test) => {
         }
     }
 
+    if (runner.aborted) {
+        registerAssertion(
+            new Assertion({
+                label: "aborted",
+                message: `test was aborted, results may not be relevant`,
+                pass: false,
+            })
+        );
+    }
+
     // Set test status
-    if (currentResult.aborted) {
+    if (runner.aborted) {
         test.status = Test.ABORTED;
     } else if (currentResult.pass) {
         test.status ||= Test.PASSED;
@@ -1759,7 +1769,6 @@ export class Matchers {
 }
 
 export class TestResult {
-    aborted = false;
     /** @type {Assertion[]} */
     assertions = [];
     duration = 0;

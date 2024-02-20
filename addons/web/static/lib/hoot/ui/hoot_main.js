@@ -95,7 +95,7 @@ export class HootMain extends Component {
                 this.state.debugTest = null;
             });
 
-            useWindowListener("keydown", this.onWindowKeyDown, { capture: true });
+            useWindowListener("keydown", (ev) => this.onWindowKeyDown(ev), { capture: true });
         }
     }
 
@@ -103,9 +103,6 @@ export class HootMain extends Component {
      * @param {KeyboardEvent} ev
      */
     onWindowKeyDown(ev) {
-        if (!ev.isTrusted) {
-            return;
-        }
         const { runner } = this.env;
         switch (ev.key) {
             case "d": {

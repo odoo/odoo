@@ -365,7 +365,7 @@ export class HootSearch extends Component {
         });
         this.runnerState = useState(runner.state);
 
-        useWindowListener("click", this.onWindowClick);
+        useWindowListener("click", (ev) => this.onWindowClick(ev));
     }
 
     /**
