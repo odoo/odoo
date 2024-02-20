@@ -18,7 +18,7 @@
         </record>
 
         <record id="estate_list_action" model="ir.actions.act_window">
-            <field name="name">estate.list</field>
+            <field name="name">Propiedades</field>
             <field name="res_model">estate</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_estate_tree"/>
@@ -41,11 +41,13 @@
                                 <group>
                                     <field name="postcode"/>
                                     <field name="date_availability"/>
+                                    <field name="state"/>
                                 </group>
 
                                 <group>
                                     <field name="expected_price"/>
                                     <field name="selling_price"/>
+                                    <field name="active"/>
                                 </group>
 
                             </group>
@@ -78,6 +80,26 @@
             <field name="res_model">estate</field>
             <field name="view_mode">form</field>
             <field name="view_id" ref="view_estate_form"/>
+        </record>
+
+        <record id="view_estate_search" model="ir.ui.view">
+            <field name="name">estate.search</field>
+            <field name="model">estate</field>
+            <field name="arch" type="xml">
+                <search string="estate search">
+                    <field name="name"/>
+                    <field name="postcode"/>
+                    <field name="expected_price"/>
+                    <field name="bedrooms"/>
+                    <field name="living_area"/>
+                    <field name="facades"/>
+<!--                    <separator/>-->
+                    <filter string="Disponibilidad" name="nuevo_or_oferta_recibida" domain="['|',('state', '=', 'nuevo'), ('state', '=', 'oferta_recibida')]"/>
+<!--                    <group expand="1" string="Group By">-->
+                    <filter string="Codigo Postal" name="codigo_postal" context="{'group_by':'postcode'}"/>
+<!--                    </group>-->
+                </search>
+            </field>
         </record>
 
     </data>

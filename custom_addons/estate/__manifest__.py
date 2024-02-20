@@ -13,6 +13,8 @@
         'views/estate_menu.xml',
         # 'views/view_estate.xml',
         #'views/estate_form.xml',
+        'views/estate_type.xml',
+
     ],
     'application': True,
     'installable': True,
