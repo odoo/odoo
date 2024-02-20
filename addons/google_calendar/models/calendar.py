@@ -97,7 +97,7 @@ class Meeting(models.Model):
             self._check_modify_event_permission(values)
         # check if the google url was deleted from odoo and needs to be cleared in google side
         has_google_videocall_location = any(rec.videocall_location and rec.videocall_source == "google_meet" for rec in self)
-        clear_meet_url = has_google_videocall_location and 'videocall_location' in values and self.MEET_ROUTE not in values.get('videocall_location', '')
+        clear_meet_url = has_google_videocall_location and 'videocall_location' in values and self.MEET_ROUTE not in (values['videocall_location'] or '')
         res = super(Meeting, self.with_context(dont_notify=notify_context, clear_meet_url=clear_meet_url)).write(values)
         if recurrence_update_setting in ('all_events',) and len(self) == 1 and values.keys() & self._get_google_synced_fields():
             self.recurrence_id.need_sync = True
@@ -156,7 +156,7 @@ class Meeting(models.Model):
         if videocall_location := google_event.get_meeting_url():
             values['videocall_location'] = videocall_location
         elif related_event.videocall_source == "google_meet":
-            values["videocall_source"] = "discuss"
+            values["videocall_location"] = False
         if partner_commands:
             # Add partner_commands only if set from Google. The write method on calendar_events will
             # override attendee commands if the partner_ids command is set but empty.
