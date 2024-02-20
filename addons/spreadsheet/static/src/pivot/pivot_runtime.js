@@ -22,8 +22,6 @@ export class PivotRuntimeDefinition {
      * @param {Fields} fields
      */
     constructor(definition, fields) {
-        /** @type {string} */
-        this._name = definition.name;
         /** @type {SortedColumn} */
         this._sortedColumn = definition.sortedColumn;
         /** @type {Array<PivotMeasure>} */
@@ -32,10 +30,6 @@ export class PivotRuntimeDefinition {
         this._columns = definition.colGroupBys.map((name) => new PivotDimension(fields, name));
         /** @type {Array<PivotDimension>} */
         this._rows = definition.rowGroupBys.map((name) => new PivotDimension(fields, name));
-    }
-
-    get name() {
-        return this._name;
     }
 
     get sortedColumn() {
