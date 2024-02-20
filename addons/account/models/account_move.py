@@ -469,8 +469,9 @@ class AccountMove(models.Model):
             accounting_date = self.invoice_date
             if not self.is_sale_document(include_receipts=True):
                 accounting_date = self._get_accounting_date(self.invoice_date, self._affect_tax_report())
-            if accounting_date != self.date:
-                self.date = accounting_date
+            if self._context.get('force_onchange_currency') or accounting_date != self.date:
+                if accounting_date != self.date:
+                    self.date = accounting_date
                 self._onchange_currency()
             else:
                 self._onchange_recompute_dynamic_lines()
@@ -3114,7 +3115,7 @@ class AccountMove(models.Model):
             if not move.invoice_date:
                 if move.is_sale_document(include_receipts=True):
                     move.invoice_date = fields.Date.context_today(self)
-                    move.with_context(check_move_validity=False)._onchange_invoice_date()
+                    move.with_context(check_move_validity=False, force_onchange_currency=True)._onchange_invoice_date()
                 elif move.is_purchase_document(include_receipts=True):
                     raise UserError(_("The Bill/Refund date is required to validate this document."))
 
