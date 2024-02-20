@@ -1,6 +1,5 @@
 import { Record } from "@mail/core/common/record";
 
-import { deserializeDateTime } from "@web/core/l10n/dates";
 import { FileModelMixin } from "@web/core/file_viewer/file_model";
 
 export class Attachment extends FileModelMixin(Record) {
@@ -29,8 +28,8 @@ export class Attachment extends FileModelMixin(Record) {
     thread = Record.one("Thread", { inverse: "attachments" });
     res_name;
     message = Record.one("Message");
-    /** @type {string} */
-    create_date;
+    /** @type {luxon.DateTime} */
+    create_date = Record.attr(undefined, { type: "datetime" });
 
     get isDeletable() {
         return true;
@@ -40,8 +39,7 @@ export class Attachment extends FileModelMixin(Record) {
         if (!this.create_date) {
             return undefined;
         }
-        const datetime = deserializeDateTime(this.create_date);
-        return `${datetime.monthLong}, ${datetime.year}`;
+        return `${this.create_date.monthLong}, ${this.create_date.year}`;
     }
 }
 

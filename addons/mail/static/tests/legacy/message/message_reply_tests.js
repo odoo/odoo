@@ -3,11 +3,11 @@
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { start } from "@mail/../tests/helpers/test_utils";
+import { deserializeDateTime } from "@web/core/l10n/dates";
 
 import { getOrigin } from "@web/core/utils/urls";
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
 import { click, contains } from "@web/../tests/utils";
-const { DateTime } = luxon;
 
 QUnit.module("message reply");
 
@@ -93,6 +93,6 @@ QUnit.test("reply shows correct author avatar", async (assert) => {
     await contains(
         `.o-mail-MessageInReply-avatar[data-src='${`${getOrigin()}/web/image/res.partner/${
             pyEnv.currentPartnerId
-        }/avatar_128?unique=${DateTime.fromSQL(partner.write_date).ts}`}`
+        }/avatar_128?unique=${deserializeDateTime(partner.write_date).ts}`}`
     );
 });

@@ -99,16 +99,4 @@ export class ActivityListPopoverItem extends Component {
             model: "res.users",
         });
     }
-
-    get dateDeadlineFormatted() {
-        return luxon.DateTime.fromISO(this.props.activity.date_deadline).toLocaleString(
-            luxon.DateTime.DATE_SHORT
-        );
-    }
-
-    get dateDoneFormatted() {
-        return luxon.DateTime.fromISO(this.props.activity.date_done).toLocaleString(
-            luxon.DateTime.DATE_SHORT
-        );
-    }
 }

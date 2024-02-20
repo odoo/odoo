@@ -3,6 +3,7 @@
 import { rpc } from "@web/core/network/rpc";
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { deserializeDateTime } from "@web/core/l10n/dates";
 
 import { Command } from "@mail/../tests/helpers/command";
 import { patchBrowserNotification } from "@mail/../tests/helpers/patch_notifications";
@@ -13,8 +14,6 @@ import { browser } from "@web/core/browser/browser";
 import { getOrigin } from "@web/core/utils/urls";
 import { makeDeferred, patchWithCleanup, triggerHotkey } from "@web/../tests/helpers/utils";
 import { assertSteps, click, contains, insertText, step, triggerEvents } from "@web/../tests/utils";
-
-const { DateTime } = luxon;
 
 QUnit.module("messaging menu");
 
@@ -76,7 +75,7 @@ QUnit.test("rendering with OdooBot has a request (default)", async () => {
     await contains(
         `.o-mail-NotificationItem img[data-src='${getOrigin()}/web/image/res.partner/${
             pyEnv.odoobotId
-        }/avatar_128?unique=${DateTime.fromSQL(odoobot.write_date).ts}']`
+        }/avatar_128?unique=${deserializeDateTime(odoobot.write_date).ts}']`
     );
     await contains(".o-mail-NotificationItem", { text: "OdooBot has a request" });
 });
@@ -167,7 +166,7 @@ QUnit.test("rendering with PWA installation request", async () => {
     await contains(
         `.o-mail-NotificationItem img[data-src='${getOrigin()}/web/image/res.partner/${
             pyEnv.odoobotId
-        }/avatar_128?unique=${DateTime.fromSQL(odoobot.write_date).ts}']`
+        }/avatar_128?unique=${deserializeDateTime(odoobot.write_date).ts}']`
     );
     await contains(".o-mail-NotificationItem-name", { text: "OdooBot has a suggestion" });
     await contains(".o-mail-NotificationItem-text", {

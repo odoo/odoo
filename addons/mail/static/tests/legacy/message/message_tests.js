@@ -653,7 +653,7 @@ QUnit.test("basic rendering of message", async () => {
     const partner = pyEnv["res.partner"].searchRead([["id", "=", partnerId]])[0];
     await contains(
         `.o-mail-Message .o-mail-Message-sidebar .o-mail-Message-avatarContainer img.cursor-pointer[data-src='${getOrigin()}/web/image/res.partner/${partnerId}/avatar_128?unique=${
-            DateTime.fromSQL(partner.write_date).ts
+            deserializeDateTime(partner.write_date).ts
         }']`
     );
     await contains(".o-mail-Message .o-mail-Message-header .o-mail-Message-author.cursor-pointer", {

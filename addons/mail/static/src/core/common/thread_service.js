@@ -745,7 +745,7 @@ export class ThreadService {
         }
         if (
             thread.correspondent?.eq(this.store.odoobot) ||
-            thread.muteUntilDateTime ||
+            thread.mute_until_dt ||
             thread.custom_notifications === "no_notif" ||
             (thread.custom_notifications === "mentions" &&
                 !message.recipients?.includes(this.store.self))

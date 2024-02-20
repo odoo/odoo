@@ -24,8 +24,7 @@ patch(ThreadService.prototype, {
             .filter((thread) => thread.isUnread)
             .sort(
                 (t1, t2) =>
-                    compareDatetime(t1.lastInterestDateTime, t2.lastInterestDateTime) ||
-                    t1.id - t2.id
+                    compareDatetime(t1.last_interest_dt, t2.last_interest_dt) || t1.id - t2.id
             )[0];
         if (!oldestUnreadThread) {
             return false;
