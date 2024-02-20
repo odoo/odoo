@@ -690,3 +690,33 @@ QUnit.test("record list assign should update inverse fields", async (assert) => 
     jane.thread = [];
     assert.ok(jane.notIn(general.members));
 });
+
+QUnit.test("datetime type record", async (assert) => {
+    (class Thread extends Record {
+        static id = "name";
+        name;
+        date = Record.attr(undefined, {
+            type: "datetime",
+            onUpdate: () => step("DATE_UPDATED"),
+        });
+    }).register();
+    const store = await start();
+    await assertSteps([]);
+    const general = store.Thread.insert({ name: "General", date: "2024-02-20 14:42:00" });
+    await assertSteps(["DATE_UPDATED"]);
+    assert.ok(general.date instanceof luxon.DateTime);
+    assert.ok(general.date.day === 20);
+    store.Thread.insert({ name: "General", date: "2024-02-21 14:42:00" });
+    await assertSteps(["DATE_UPDATED"]);
+    assert.ok(general.date.day === 21);
+    store.Thread.insert({ name: "General", date: "2024-02-21 14:42:00" });
+    await assertSteps([]);
+    store.Thread.insert({ name: "General", date: undefined });
+    await assertSteps(["DATE_UPDATED"]);
+    assert.ok(general.date === undefined);
+    const now = luxon.DateTime.now();
+    const thread = store.Thread.insert({ name: "General", date: now });
+    await assertSteps(["DATE_UPDATED"]);
+    assert.ok(thread.date instanceof luxon.DateTime);
+    assert.ok(thread.date.equals(now));
+});

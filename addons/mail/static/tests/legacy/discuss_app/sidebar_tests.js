@@ -6,11 +6,11 @@ import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { Command } from "@mail/../tests/helpers/command";
 import { start } from "@mail/../tests/helpers/test_utils";
+import { deserializeDateTime } from "@web/core/l10n/dates";
 
 import { getOrigin } from "@web/core/utils/urls";
 import { assertSteps, click, contains, insertText, step } from "@web/../tests/utils";
 import { triggerHotkey } from "@web/../tests/helpers/utils";
-const { DateTime } = luxon;
 
 QUnit.module("discuss sidebar");
 
@@ -1053,7 +1053,7 @@ QUnit.test("chat - avatar: should have correct avatar", async () => {
     await contains(".o-mail-DiscussSidebarChannel img");
     await contains(
         `img[data-src='${getOrigin()}/web/image/res.partner/${partnerId}/avatar_128?unique=${
-            DateTime.fromSQL(partner.write_date).ts
+            deserializeDateTime(partner.write_date).ts
         }']`
     );
 });

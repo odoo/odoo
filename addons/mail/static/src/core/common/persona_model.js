@@ -51,8 +51,8 @@ export class Persona extends Record {
     notification_preference;
     isAdmin = false;
     isInternalUser = false;
-    /** @type {string} */
-    write_date;
+    /** @type {luxon.DateTime} */
+    write_date = Record.attr(undefined, { type: "datetime" });
 
     /**
      * @returns {boolean}

@@ -1,8 +1,6 @@
 import { Record } from "@mail/core/common/record";
 import { EMOJI_REGEX, htmlToTextContentInline } from "@mail/utils/common/format";
 
-import { toRaw } from "@odoo/owl";
-
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { omit } from "@web/core/utils/objects";
@@ -37,6 +35,8 @@ export class Message extends Record {
     author = Record.one("Persona");
     body = Record.attr("", { html: true });
     composer = Record.one("Composer", { inverse: "message", onDelete: (r) => r.delete() });
+    /** @type {DateTime} */
+    date = Record.attr(undefined, { type: "datetime" });
     /** @type {string} */
     default_subject;
     /** @type {number|string} */
@@ -64,8 +64,8 @@ export class Message extends Record {
             }
         },
     });
-    /** @type {string} */
-    scheduledDatetime;
+    /** @type {DateTime} */
+    scheduledDatetime = Record.attr(undefined, { type: "datetime" });
     starredPersonas = Record.many("Persona");
     onlyEmojis = Record.attr(false, {
         compute() {
@@ -94,10 +94,10 @@ export class Message extends Record {
     temporary_id = null;
     /** @type {string|undefined} */
     notificationType;
-    /** @type {string} */
-    create_date;
-    /** @type {string} */
-    write_date;
+    /** @type {luxon.DateTime} */
+    create_date = Record.attr(undefined, { type: "datetime" });
+    /** @type {luxon.DateTime} */
+    write_date = Record.attr(undefined, { type: "datetime" });
 
     /**
      * We exclude the milliseconds because datetime string from the server don't
@@ -121,16 +121,7 @@ export class Message extends Record {
     }
 
     get datetime() {
-        if (!this._datetime) {
-            this._datetime = toRaw(this.date ? deserializeDateTime(this.date) : this.now);
-        }
-        return this._datetime;
-    }
-
-    get scheduledDate() {
-        return toRaw(
-            this.scheduledDatetime ? deserializeDateTime(this.scheduledDatetime) : undefined
-        );
+        return this.date || DateTime.now();
     }
 
     get datetimeShort() {

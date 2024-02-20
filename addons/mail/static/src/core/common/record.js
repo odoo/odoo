@@ -1,5 +1,6 @@
 import { onChange } from "@mail/utils/common/misc";
 import { markRaw, markup, reactive, toRaw } from "@odoo/owl";
+import { deserializeDate, deserializeDateTime } from "@web/core/l10n/dates";
 import { registry } from "@web/core/registry";
 
 export const modelRegistry = registry.category("discuss.model");
@@ -51,6 +52,18 @@ function updateAttr(record, fieldName, value) {
     // ensure each field write goes through the proxy exactly once to trigger reactives
     const targetRecord = record._proxyUsed.has(fieldName) ? record : record._proxy;
     let shouldChange = record[fieldName] !== value;
+    if (fieldDefinition?.type === "datetime" && value) {
+        if (!(value instanceof luxon.DateTime)) {
+            value = deserializeDateTime(value);
+        }
+        shouldChange = !record[fieldName]?.equals(value);
+    }
+    if (fieldDefinition?.type === "date" && value) {
+        if (!(value instanceof luxon.DateTime)) {
+            value = deserializeDate(value);
+        }
+        shouldChange = !record[fieldName]?.equals(value);
+    }
     let newValue = value;
     if (fieldDefinition?.html && Record.trusted) {
         shouldChange =
@@ -1530,10 +1543,12 @@ export class Record {
      *   This is called at least once at record creation.
      * @property {(Object, Object) => number} [sort] if defined, this field is automatically sorted
      *   by this function.
+     * @param {'datetime'|'date'} [param1.type] if defined, automatically transform to a
+     * specific type.
      * @returns {T}
      */
-    static attr(def, { compute, eager = false, html, onUpdate, sort } = {}) {
-        return [ATTR_SYM, { compute, default: def, eager, html, onUpdate, sort }];
+    static attr(def, { compute, eager = false, html, onUpdate, sort, type } = {}) {
+        return [ATTR_SYM, { compute, default: def, eager, html, onUpdate, sort, type }];
     }
     /** @returns {Record|Record[]} */
     static insert(data, options = {}) {

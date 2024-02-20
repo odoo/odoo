@@ -88,14 +88,14 @@ export class Activity extends Record {
     can_write;
     /** @type {'suggest'|'trigger'} */
     chaining_type;
-    /** @type {string} */
-    create_date;
+    /** @type {luxon.DateTime} */
+    create_date = Record.attr(undefined, { type: "datetime" });
     /** @type {[number, string]} */
     create_uid;
-    /** @type {string} */
-    date_deadline;
-    /** @type {string} */
-    date_done;
+    /** @type {luxon.DateTime} */
+    date_deadline = Record.attr(undefined, { type: "date" });
+    /** @type {luxon.DateTime} */
+    date_done = Record.attr(undefined, { type: "date" });
     /** @type {string} */
     display_name;
     /** @type {boolean} */
@@ -134,6 +134,18 @@ export class Activity extends Record {
     write_date;
     /** @type {[number, string]} */
     write_uid;
+
+    get dateDeadlineFormatted() {
+        return this.date_deadline.toLocaleString(luxon.DateTime.DATE_SHORT);
+    }
+
+    get dateDoneFormatted() {
+        return this.date_done.toLocaleString(luxon.DateTime.DATE_SHORT);
+    }
+
+    get dateCreateFormatted() {
+        return this.create_date.toLocaleString(luxon.DateTime.DATETIME_SHORT);
+    }
 }
 
 Activity.register();
