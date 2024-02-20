@@ -348,10 +348,7 @@ export class ProductScreen extends Component {
 
         if (this.searchWord !== "") {
             const product = this.pos.selectedCategoryId
-                ? this.pos.models["product.product"].getBy(
-                      "pos_categ_ids",
-                      this.pos.selectedCategoryId
-                  )
+                ? this.getProductsByCategory(this.pos.selectedCategoryId)
                 : this.pos.models["product.product"].getAll();
             list = fuzzyLookup(
                 this.searchWord,
@@ -359,10 +356,7 @@ export class ProductScreen extends Component {
                 (product) => product.display_name + product.description_sale
             );
         } else if (this.pos.selectedCategoryId) {
-            list = this.pos.models["product.product"].getBy(
-                "pos_categ_ids",
-                this.pos.selectedCategoryId
-            );
+            list = this.getProductsByCategory(this.pos.selectedCategoryId);
         } else {
             list = this.pos.models["product.product"].getAll();
         }
@@ -374,6 +368,16 @@ export class ProductScreen extends Component {
         return list.sort(function (a, b) {
             return a.display_name.localeCompare(b.display_name);
         });
+    }
+
+    getProductsByCategory(categoryId) {
+        let products = new Set(this.pos.models['product.product'].getBy('pos_categ_ids', categoryId) || []);
+        let childCategories = this.pos.models['pos.category'].get(categoryId).child_id;
+        for (const { id } of childCategories) {
+            let childProducts = this.getProductsByCategory(id);
+            childProducts.forEach(product => products.add(product));
+        }
+        return Array.from(products);
     }
 
     getProductListToNotDisplay() {
