@@ -307,6 +307,10 @@ export class ListUIPlugin extends spreadsheet.UIPlugin {
         return this.getters.getListDataSource(listId).getListCellValue(position, fieldName);
     }
 
+    getListCurrency(listId, position, fieldName) {
+        return this.getters.getListDataSource(listId).getListCurrency(position, fieldName);
+    }
+
     /**
      * @param {string} id
      * @returns {import("@spreadsheet/list/list_data_source").default|undefined}
@@ -343,6 +347,7 @@ export class ListUIPlugin extends spreadsheet.UIPlugin {
 
 ListUIPlugin.getters = [
     "getListComputedDomain",
+    "getListCurrency",
     "getListHeaderValue",
     "getListIdFromPosition",
     "getListCellValue",
