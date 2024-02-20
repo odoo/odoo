@@ -14,6 +14,7 @@ import {
     pointerUp,
     press,
     queryOne,
+    resize,
     scroll,
     select,
     setInputFiles,
@@ -21,6 +22,7 @@ import {
 } from "../../../hoot-dom/hoot-dom";
 import { after, describe, expect, test } from "../../hoot";
 import { mockUserAgent } from "../../mock/navigator";
+import { Deferred, animationFrame, delay } from "../../mock/time";
 import { mount, parseUrl } from "../local_helpers";
 
 /**
@@ -453,11 +455,7 @@ describe(parseUrl(import.meta.url), () => {
             "input.mouseup",
             "input.click",
             // Fill
-            ...[..."Test value"].flatMap(() => [
-                "input.keydown",
-                "input.input",
-                "input.keyup",
-            ]),
+            ...[..."Test value"].flatMap(() => ["input.keydown", "input.input", "input.keyup"]),
         ]).toVerifySteps();
     });
 
@@ -913,15 +911,50 @@ describe(parseUrl(import.meta.url), () => {
             </div>
         `);
 
+        monitorEvents(".scrollable");
+
         scroll(".scrollable", { top: 500 });
+        await animationFrame();
 
         expect(".scrollable").toHaveProperty("scrollTop", 500);
         expect(".scrollable").toHaveProperty("scrollLeft", 0);
+        expect(["div.wheel", "div.scroll", "div.scrollend"]).toVerifySteps();
 
         scroll(".scrollable", { left: 1200 });
+        await animationFrame();
 
         expect(".scrollable").toHaveProperty("scrollTop", 500);
         expect(".scrollable").toHaveProperty("scrollLeft", 1200);
+        expect(["div.wheel", "div.scroll", "div.scrollend"]).toVerifySteps();
+    });
+
+    test("resize", async () => {
+        await mount(/* xml */ `
+            <div class="resizable" style="height: 200px; width: 200px; overflow: auto;"/>
+        `);
+
+        monitorEvents(".resizable");
+
+        expect(".resizable").toHaveStyle({
+            height: "200px",
+            width: "200px",
+        });
+
+        resize(".resizable", { height: 300 });
+
+        expect(".resizable").toHaveStyle({
+            height: "300px",
+            width: "200px",
+        });
+        expect(["div.resize"]).toVerifySteps();
+
+        resize(".resizable", { width: 264 });
+
+        expect(".resizable").toHaveStyle({
+            height: "300px",
+            width: "264px",
+        });
+        expect(["div.resize"]).toVerifySteps();
     });
 
     test.tags`no focus`("select", async () => {
