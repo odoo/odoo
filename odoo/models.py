@@ -5173,7 +5173,7 @@ class BaseModel(metaclass=MetaModel):
         if module:
             prefix = module + "."
             for data in to_create:
-                if data.get('xml_id') and not data['xml_id'].startswith(prefix):
+                if data.get('xml_id') and not data['xml_id'].startswith(prefix) and not self.env.context.get('foreign_record_to_create'):
                     _logger.warning("Creating record %s in module %s.", data['xml_id'], module)
 
         if self.env.context.get('import_file'):
