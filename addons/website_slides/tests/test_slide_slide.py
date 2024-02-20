@@ -8,7 +8,7 @@ class TestSlideInternals(slides_common.SlidesCase):
 
     def test_change_content_type(self):
         """ To prevent constraint violation when changing type from video to webpage and vice-versa """
-        slide = self.env['slide.slide'].create({
+        slide = self.env['slide.slide'].with_context(website_slides_skip_fetch_metadata=True).create({
             'channel_id': self.channel.id,
             'slide_type': 'video',
             'is_published': True,
