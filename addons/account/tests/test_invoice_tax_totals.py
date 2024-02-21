@@ -35,6 +35,12 @@ class TestTaxTotals(AccountTestInvoicingCommon):
             'sequence': 5
         })
 
+        cls.tax_10 = cls.env['account.tax'].create({
+            'name': "tax_10a",
+            'amount_type': 'percent',
+            'amount': 10.0,
+        })
+
         cls.tax_16 = cls.env['account.tax'].create({
             'name': "tax_16",
             'amount_type': 'percent',
@@ -732,6 +738,14 @@ class TestTaxTotals(AccountTestInvoicingCommon):
         ]
         run_case('round_per_line', lines, [16.60])
         run_case('round_globally', lines, [16.59])
+
+        lines = [
+            (54.45, self.tax_10),
+            (600, self.tax_10),
+            (-500, self.tax_10),
+        ]
+        run_case('round_per_line', lines, [15.45])
+        run_case('round_globally', lines, [15.45])
 
     def test_invoice_foreign_currency_tax_totals(self):
         self.env['res.currency.rate'].create({
