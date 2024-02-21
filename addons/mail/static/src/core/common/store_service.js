@@ -145,10 +145,12 @@ export class Store extends BaseStore {
             if (bNeedaction > 0 && aNeedaction === 0) {
                 return 1;
             }
-            if (a.message_unread_counter > 0 && b.message_unread_counter === 0) {
+            const aUnread = a.message_unread_counter;
+            const bUnread = b.message_unread_counter;
+            if (aUnread > 0 && bUnread === 0) {
                 return -1;
             }
-            if (b.message_unread_counter > 0 && a.message_unread_counter === 0) {
+            if (bUnread > 0 && aUnread === 0) {
                 return 1;
             }
             if (
