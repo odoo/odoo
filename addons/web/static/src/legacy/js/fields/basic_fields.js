@@ -3028,7 +3028,7 @@ var BooleanToggle = FieldBoolean.extend({
         event.stopPropagation();
         if (!this.$input.prop('disabled')) {
             await this._setValue(!this.value);
-            this._render();
+            await this._render();
         }
     },
 });
