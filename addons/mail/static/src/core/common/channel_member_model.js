@@ -1,4 +1,5 @@
 import { Record } from "@mail/core/common/record";
+import { deserializeDateTime } from "@web/core/l10n/dates";
 
 export class ChannelMember extends Record {
     static id = "id";
@@ -13,6 +14,8 @@ export class ChannelMember extends Record {
         return super.insert(...arguments);
     }
 
+    /** @type {string} */
+    create_date;
     /** @type {number} */
     id;
     persona = Record.one("Persona", { inverse: "channelMembers" });
@@ -26,6 +29,10 @@ export class ChannelMember extends Record {
      */
     getLangName() {
         return this.persona.lang_name;
+    }
+
+    get memberSince() {
+        return deserializeDateTime(this.create_date);
     }
 }
 
