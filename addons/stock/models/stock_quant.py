@@ -434,7 +434,7 @@ class StockQuant(models.Model):
                 with self._cr.savepoint(flush=False):  # Avoid flush compute store of package
                     self._cr.execute("SELECT 1 FROM stock_quant WHERE id = %s FOR UPDATE NOWAIT", [quant.id], log_exceptions=False)
                     quant.write({
-                        'quantity': quant.quantity + quantity,
+                        'quantity': float_round(quant.quantity + quantity, precision_rounding=quant.product_uom_id.rounding),
                         'in_date': in_date,
                     })
                     break
