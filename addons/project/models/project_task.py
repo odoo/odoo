@@ -257,6 +257,7 @@ class Task(models.Model):
                                      column2="depends_on_id", string="Blocked By", tracking=True, copy=False,
                                      domain="[('project_id', '!=', False), ('id', '!=', id)]")
     depend_on_count = fields.Integer(string="Depending on Tasks", compute='_compute_depend_on_count', compute_sudo=True)
+    closed_depend_on_count = fields.Integer(string="Closed Depending on Tasks", compute='_compute_depend_on_count', compute_sudo=True)
     dependent_ids = fields.Many2many('project.task', relation="task_dependencies_rel", column1="depends_on_id",
                                      column2="task_id", string="Block", copy=False,
                                      domain="[('project_id', '!=', False), ('id', '!=', id)]", export_string_translation=False)
@@ -514,17 +515,26 @@ class Task(models.Model):
     @api.depends('depend_on_ids')
     def _compute_depend_on_count(self):
         tasks_with_dependency = self.filtered('allow_task_dependencies')
-        (self - tasks_with_dependency).depend_on_count = 0
+        tasks_without_dependency = self - tasks_with_dependency
+        tasks_without_dependency.depend_on_count = 0
+        tasks_without_dependency.closed_depend_on_count = 0
+        if not any(self._ids):
+            for task in self:
+                task.depend_on_count = len(task.depend_on_ids)
+                task.closed_depend_on_count = len(task.depend_on_ids.filtered(lambda r: r.state in CLOSED_STATES))
+            return
         if tasks_with_dependency:
             # need the sudo for project sharing
-            depend_on_count = {
-                dependent_on.id: count
-                for dependent_on, count in self.env['project.task']._read_group([
-                    ('dependent_ids', 'in', tasks_with_dependency.ids),
-                ], ['dependent_ids'], ['__count'])
+            total_and_closed_depend_on_count = {
+                dependent_on.id: (count, sum(s in CLOSED_STATES for s in states))
+                for dependent_on, states, count in self.env['project.task']._read_group(
+                    [('dependent_ids', 'in', tasks_with_dependency.ids)],
+                    ['dependent_ids'],
+                    ['state:array_agg', '__count'],
+                )
             }
             for task in tasks_with_dependency:
-                task.depend_on_count = depend_on_count.get(task._origin.id or task.id, 0)
+                task.depend_on_count, task.closed_depend_on_count = total_and_closed_depend_on_count.get(task._origin.id or task.id, (0, 0))
 
     @api.depends('dependent_ids')
     def _compute_dependent_tasks_count(self):
