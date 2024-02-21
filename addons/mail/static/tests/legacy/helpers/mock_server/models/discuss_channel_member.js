@@ -55,6 +55,7 @@ patch(MockServer.prototype, {
                 persona = this._mockMailGuestGuestFormat([guest.id]).get(guest.id);
             }
             const data = {
+                create_date: member.create_date,
                 thread: { id: member.channel_id, model: "discuss.channel" },
                 id: member.id,
                 persona,

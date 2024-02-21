@@ -290,6 +290,7 @@ class TestDiscussFullPerformance(HttpCase):
         members = channel.channel_member_ids
         member_0 = members.filtered(lambda m: m.partner_id == self.users[0].partner_id)
         last_interest_dt = fields.Datetime.to_string(member_0.last_interest_dt)
+        member_0_create_date = fields.Datetime.to_string(member_0.create_date)
         write_date_0 = fields.Datetime.to_string(self.users[0].partner_id.write_date)
         member_1 = members.filtered(lambda m: m.partner_id == self.users[1].partner_id)
         member_2 = members.filtered(lambda m: m.partner_id == self.users[2].partner_id)
@@ -314,6 +315,7 @@ class TestDiscussFullPerformance(HttpCase):
                         sorted(
                             [
                                 {
+                                    "create_date": member_0_create_date,
                                     "thread": {
                                         "id": channel.id,
                                         "model": "discuss.channel",
@@ -377,6 +379,7 @@ class TestDiscussFullPerformance(HttpCase):
                         sorted(
                             [
                                 {
+                                    "create_date": member_0_create_date,
                                     "thread": {
                                         "id": channel.id,
                                         "model": "discuss.channel",
@@ -440,6 +443,7 @@ class TestDiscussFullPerformance(HttpCase):
                         sorted(
                             [
                                 {
+                                    "create_date": member_0_create_date,
                                     "thread": {
                                         "id": channel.id,
                                         "model": "discuss.channel",
@@ -503,6 +507,7 @@ class TestDiscussFullPerformance(HttpCase):
                         sorted(
                             [
                                 {
+                                    "create_date": member_0_create_date,
                                     "thread": {
                                         "id": channel.id,
                                         "model": "discuss.channel",
@@ -627,6 +632,7 @@ class TestDiscussFullPerformance(HttpCase):
                         sorted(
                             [
                                 {
+                                    "create_date": member_0_create_date,
                                     "thread": {
                                         "id": channel.id,
                                         "model": "discuss.channel",
@@ -690,6 +696,7 @@ class TestDiscussFullPerformance(HttpCase):
                         sorted(
                             [
                                 {
+                                    "create_date": member_0_create_date,
                                     "thread": {
                                         "id": channel.id,
                                         "model": "discuss.channel",
@@ -712,6 +719,7 @@ class TestDiscussFullPerformance(HttpCase):
                                     "seen_message_id": False,
                                 },
                                 {
+                                    "create_date": fields.Datetime.to_string(member_12.create_date),
                                     "thread": {
                                         "id": channel.id,
                                         "model": "discuss.channel",
@@ -775,6 +783,7 @@ class TestDiscussFullPerformance(HttpCase):
                         sorted(
                             [
                                 {
+                                    "create_date": member_0_create_date,
                                     "thread": {
                                         "id": channel.id,
                                         "model": "discuss.channel",
@@ -797,6 +806,7 @@ class TestDiscussFullPerformance(HttpCase):
                                     "seen_message_id": False,
                                 },
                                 {
+                                    "create_date": fields.Datetime.to_string(member_14.create_date),
                                     "thread": {
                                         "id": channel.id,
                                         "model": "discuss.channel",
@@ -860,6 +870,7 @@ class TestDiscussFullPerformance(HttpCase):
                         sorted(
                             [
                                 {
+                                    "create_date": member_0_create_date,
                                     "thread": {
                                         "id": channel.id,
                                         "model": "discuss.channel",
@@ -882,6 +893,7 @@ class TestDiscussFullPerformance(HttpCase):
                                     "seen_message_id": False,
                                 },
                                 {
+                                    "create_date": fields.Datetime.to_string(member_15.create_date),
                                     "thread": {
                                         "id": channel.id,
                                         "model": "discuss.channel",
@@ -945,6 +957,7 @@ class TestDiscussFullPerformance(HttpCase):
                         sorted(
                             [
                                 {
+                                    "create_date": member_0_create_date,
                                     "thread": {
                                         "id": channel.id,
                                         "model": "discuss.channel",
@@ -967,6 +980,7 @@ class TestDiscussFullPerformance(HttpCase):
                                     "seen_message_id": False,
                                 },
                                 {
+                                    "create_date": fields.Datetime.to_string(member_2.create_date),
                                     "thread": {
                                         "id": channel.id,
                                         "model": "discuss.channel",
@@ -1030,6 +1044,7 @@ class TestDiscussFullPerformance(HttpCase):
                         sorted(
                             [
                                 {
+                                    "create_date": member_0_create_date,
                                     "thread": {
                                         "id": channel.id,
                                         "model": "discuss.channel",
@@ -1052,6 +1067,7 @@ class TestDiscussFullPerformance(HttpCase):
                                     "seen_message_id": False,
                                 },
                                 {
+                                    "create_date": fields.Datetime.to_string(member_3.create_date),
                                     "thread": {
                                         "id": channel.id,
                                         "model": "discuss.channel",
@@ -1121,6 +1137,7 @@ class TestDiscussFullPerformance(HttpCase):
                         sorted(
                             [
                                 {
+                                    "create_date": member_0_create_date,
                                     "thread": {
                                         "id": channel.id,
                                         "model": "discuss.channel",
@@ -1139,6 +1156,7 @@ class TestDiscussFullPerformance(HttpCase):
                                     "seen_message_id": False,
                                 },
                                 {
+                                    "create_date": fields.Datetime.to_string(member_1.create_date),
                                     "thread": {
                                         "id": channel.id,
                                         "model": "discuss.channel",
@@ -1211,6 +1229,7 @@ class TestDiscussFullPerformance(HttpCase):
                         "ADD",
                         [
                             {
+                                "create_date": member_0_create_date,
                                 "thread": {
                                     "id": channel.id,
                                     "model": "discuss.channel",
@@ -1229,6 +1248,7 @@ class TestDiscussFullPerformance(HttpCase):
                                 "seen_message_id": False,
                             },
                             {
+                                "create_date": fields.Datetime.to_string(member_g.create_date),
                                 "thread": {
                                     "id": channel.id,
                                     "model": "discuss.channel",

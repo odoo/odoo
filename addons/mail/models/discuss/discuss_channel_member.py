@@ -3,6 +3,7 @@
 import logging
 import requests
 
+import odoo
 from odoo import api, fields, models, _
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.osv import expression
@@ -179,7 +180,14 @@ class ChannelMember(models.Model):
 
     def _discuss_channel_member_format(self, fields=None):
         if not fields:
-            fields = {'id': True, 'channel': {}, 'persona': {}, 'fetched_message_id': True, 'seen_message_id': True}
+            fields = {
+                "channel": {},
+                "create_date": True,
+                "fetched_message_id": True,
+                "id": True,
+                "persona": {},
+                "seen_message_id": True,
+            }
         members_formatted_data = {}
         for member in self:
             data = {}
@@ -187,6 +195,8 @@ class ChannelMember(models.Model):
                 data['id'] = member.id
             if 'channel' in fields:
                 data['thread'] = member.channel_id._channel_format(fields=fields.get('channel')).get(member.channel_id)
+            if 'create_date' in fields:
+                data['create_date'] = odoo.fields.Datetime.to_string(member.create_date)
             if 'persona' in fields:
                 if member.partner_id:
                     # sudo: res.partner - reading _get_partner_data related to a member is considered acceptable
