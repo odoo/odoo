@@ -1584,20 +1584,23 @@ class AccountTax(models.Model):
         def default_grouping_key_generator(base_line, tax_values):
             return {'tax': tax_values['tax_repartition_line'].tax_id}
 
+        def accounting_grouping_key_generator(base_line, tax_values):
+            return self._get_generation_dict_from_base_line(base_line, tax_values)
+
         results = {
             'base_amount_currency': 0.0,
             'base_amount': 0.0,
             'display_base_amount_currency': 0.0,
             'display_base_amount': 0.0,
-            'tax_amount_currency': 0.0,
-            'tax_amount': 0.0,
+            'tax_amount_currency': defaultdict(lambda: 0.0),
+            'tax_amount': defaultdict(lambda: 0.0),
             'tax_details': defaultdict(lambda: {
                 'base_amount_currency': 0.0,
                 'base_amount': 0.0,
                 'display_base_amount_currency': 0.0,
                 'display_base_amount': 0.0,
-                'tax_amount_currency': 0.0,
-                'tax_amount': 0.0,
+                'tax_amount_currency': defaultdict(lambda: 0.0),
+                'tax_amount': defaultdict(lambda: 0.0),
                 'group_tax_details': [],
                 'records': set(),
             }),
@@ -1606,15 +1609,15 @@ class AccountTax(models.Model):
                 'base_amount': 0.0,
                 'display_base_amount_currency': 0.0,
                 'display_base_amount': 0.0,
-                'tax_amount_currency': 0.0,
-                'tax_amount': 0.0,
+                'tax_amount_currency': defaultdict(lambda: 0.0),
+                'tax_amount': defaultdict(lambda: 0.0),
                 'tax_details': defaultdict(lambda: {
                     'base_amount_currency': 0.0,
                     'base_amount': 0.0,
                     'display_base_amount_currency': 0.0,
                     'display_base_amount': 0.0,
-                    'tax_amount_currency': 0.0,
-                    'tax_amount': 0.0,
+                    'tax_amount_currency': defaultdict(lambda: 0.0),
+                    'tax_amount': defaultdict(lambda: 0.0),
                     'group_tax_details': [],
                     'records': set(),
                 }),
@@ -1640,6 +1643,7 @@ class AccountTax(models.Model):
                     continue
 
                 grouping_key = frozendict(grouping_key_generator(base_line, tax_values))
+                accounting_grouping_key = frozendict(accounting_grouping_key_generator(base_line, tax_values))
                 base_amount_currency = currency.round(tax_values['base_amount_currency'])
                 base_amount = comp_currency.round(tax_values['base_amount'])
                 display_base_amount_currency = currency.round(tax_values['display_base_amount_currency'])
@@ -1670,20 +1674,30 @@ class AccountTax(models.Model):
 
                 # 'global'/'local' tax amount.
                 for sub_results in (results, record_results, global_local_results, record_local_results):
-                    sub_results['tax_amount_currency'] += tax_values['tax_amount_currency']
-                    sub_results['tax_amount'] += tax_values['tax_amount']
+                    sub_results['tax_amount_currency'][accounting_grouping_key] += tax_values['tax_amount_currency']
+                    sub_results['tax_amount'][accounting_grouping_key] += tax_values['tax_amount']
 
             # Rounding of tax amounts for the line.
             if currency:
                 for sub_results in [record_results] + list(record_results['tax_details'].values()):
-                    sub_results['tax_amount_currency'] = currency.round(sub_results['tax_amount_currency'])
-                    sub_results['tax_amount'] = comp_currency.round(sub_results['tax_amount'])
+                    for key in ('tax_amount_currency', 'tax_amount'):
+                        for grouping_key, amount in sub_results[key].items():
+                            sub_results[key][grouping_key] = currency.round(amount)
+
+            for sub_results in [record_results] + list(record_results['tax_details'].values()):
+                for key in ('tax_amount_currency', 'tax_amount'):
+                    sub_results[key] = sum(sub_results[key].values())
 
         # Rounding of tax amounts.
         if currency:
             for sub_results in [results] + list(results['tax_details'].values()):
-                sub_results['tax_amount_currency'] = currency.round(sub_results['tax_amount_currency'])
-                sub_results['tax_amount'] = comp_currency.round(sub_results['tax_amount'])
+                for key in ('tax_amount_currency', 'tax_amount'):
+                    for grouping_key, amount in sub_results[key].items():
+                        sub_results[key][grouping_key] = currency.round(amount)
+
+        for sub_results in [results] + list(results['tax_details'].values()):
+            for key in ('tax_amount_currency', 'tax_amount'):
+                sub_results[key] = sum(sub_results[key].values())
 
         return results
 
@@ -1866,7 +1880,7 @@ class AccountTax(models.Model):
         tax_details_by_tax = defaultdict(list)
         to_process = []
         for base_line in base_lines:
-            tax_details_results = self._prepare_base_line_tax_details(base_line, company)
+            tax_details_results = self._prepare_base_line_tax_details(base_line, company, split_repartition_lines=True)
             to_process.append((base_line, tax_details_results))
             for tax_values in tax_details_results['tax_values_list']:
                 tax_details_by_tax[tax_values['id']].append(tax_values)
