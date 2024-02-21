@@ -131,7 +131,7 @@ export class Dropdown extends Component {
         );
 
         this.popover = usePopover(DropdownPopover, {
-            animation: false,
+            animation: true,
             arrow: false,
             closeOnClickAway: (target) => uiService.getActiveElementOf(target) === activeEl,
             closeOnEscape: false, // Handled via navigation and prevents closing root of nested dropdown
