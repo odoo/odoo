@@ -132,10 +132,12 @@ export class Store extends BaseStore {
              *
              * In each group, thread with most recent message comes first
              */
-            if (a.correspondent?.eq(this.odoobot) && !b.correspondent?.eq(this.odoobot)) {
+            const aOdooBot = a.isCorrespondentOdooBot;
+            const bOdooBot = b.isCorrespondentOdooBot;
+            if (aOdooBot && !bOdooBot) {
                 return 1;
             }
-            if (b.correspondent?.eq(this.odoobot) && !a.correspondent?.eq(this.odoobot)) {
+            if (bOdooBot && !aOdooBot) {
                 return -1;
             }
             if (a.needactionMessages.length > 0 && b.needactionMessages.length === 0) {
