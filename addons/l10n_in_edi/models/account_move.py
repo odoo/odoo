@@ -18,6 +18,7 @@ class AccountMove(models.Model):
         ], string="Cancel reason", copy=False)
     l10n_in_edi_cancel_remarks = fields.Char("Cancel remarks", copy=False)
     l10n_in_edi_show_cancel = fields.Boolean(compute="_compute_l10n_in_edi_show_cancel", string="E-invoice(IN) is sent?")
+    l10n_in_display_null_pan_warning = fields.Boolean(string="Display warning", compute="_compute_l10n_in_edi_display_null_pan_warning")
 
     @api.depends('edi_document_ids')
     def _compute_l10n_in_edi_show_cancel(self):
@@ -61,3 +62,17 @@ class AccountMove(models.Model):
         """
         param_name = 'l10n_in_edi.manage_invoice_negative_lines'
         return bool(self.env['ir.config_parameter'].sudo().get_param(param_name))
+
+    @api.depends('move_type', 'line_ids.tax_tag_ids', 'amount_residual', 'partner_id.l10n_in_pan')
+    def _compute_l10n_in_edi_display_null_pan_warning(self):
+        for record in self:
+            record.l10n_in_display_null_pan_warning = (
+                record.country_code == 'IN'
+                and not record.partner_id.l10n_in_pan
+                and record.move_type in ['in_invoice', 'out_invoice']
+                and record.amount_residual > 0
+                and (
+                    record.line_ids.mapped("tax_tag_ids")
+                    & record.env.ref("l10n_in.tax_tag_base_tcs") + record.env.ref("l10n_in.tax_tag_base_tds")
+                )
+            )

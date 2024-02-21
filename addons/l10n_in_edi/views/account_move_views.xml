@@ -10,6 +10,13 @@
                 <field name="l10n_in_edi_cancel_reason" invisible="country_code != 'IN' or state != 'posted' or not l10n_in_edi_show_cancel"/>
                 <field name="l10n_in_edi_cancel_remarks" invisible="country_code != 'IN' or state != 'posted' or not l10n_in_edi_show_cancel"/>
             </xpath>
+             <xpath expr="//header" position="after">
+                <field name="l10n_in_display_null_pan_warning" invisible="1"/>
+                <div class="alert alert-warning main mb-0" role="alert"
+                        invisible="not l10n_in_display_null_pan_warning">
+                        If the partner has no PAN Number, please apply TDS / TCS at a higher rate.
+                </div>
+            </xpath>
         </field>
     </record>
 </odoo>
