@@ -48,6 +48,8 @@ export class ProjectTask extends models.Model {
     });
     planned_date_begin = fields.Datetime({ string: "Start Date" });
     date_deadline = fields.Datetime({ string: "Stop Date" });
+    depend_on_ids = fields.Many2many({ relation: "project.task" });
+    closed_depend_on_count = fields.Integer();
 
     _records = [
         {
