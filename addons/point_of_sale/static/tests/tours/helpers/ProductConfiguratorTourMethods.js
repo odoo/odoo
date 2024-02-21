@@ -38,3 +38,13 @@ export function fillCustomAttribute(value) {
         },
     ];
 }
+
+export function isOptionShown(option) {
+    return [
+        {
+            content: `option ${option} is shown`,
+            trigger: `.form-check-label:contains('${option}')`,
+            run: () => {},
+        },
+    ];
+}
