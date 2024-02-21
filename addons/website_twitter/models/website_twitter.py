@@ -19,8 +19,8 @@ _logger = logging.getLogger(__name__)
 class WebsiteTwitter(models.Model):
     _inherit = 'website'
 
-    twitter_api_key = fields.Char(string='Twitter API key', help='Twitter API Key', groups='base.group_system')
-    twitter_api_secret = fields.Char(string='Twitter API secret', help='Twitter API Secret', groups='base.group_system')
+    twitter_api_key = fields.Char(string='X API key', help='X API Key', groups='base.group_system')
+    twitter_api_secret = fields.Char(string='X API secret', help='X API Secret', groups='base.group_system')
     twitter_screen_name = fields.Char(string='Get favorites from this screen name')
 
     @api.model
@@ -32,7 +32,7 @@ class WebsiteTwitter(models.Model):
             request.raise_for_status()
             return request.json()
         except requests.HTTPError as e:
-            _logger.debug("Twitter API request failed with code: %r, msg: %r, content: %r",
+            _logger.debug("X API request failed with code: %r, msg: %r, content: %r",
                           e.response.status_code, e.response.reason, e.response.content)
             raise
 
@@ -42,7 +42,7 @@ class WebsiteTwitter(models.Model):
         website = self.env['website'].search([('twitter_api_key', '!=', False),
                                           ('twitter_api_secret', '!=', False),
                                           ('twitter_screen_name', '!=', False)])
-        _logger.debug("Refreshing tweets for website IDs: %r", website.ids)
+        _logger.debug("Refreshing posts for website IDs: %r", website.ids)
         website.fetch_favorite_tweets()
 
     def fetch_favorite_tweets(self):
@@ -50,7 +50,7 @@ class WebsiteTwitter(models.Model):
         tweet_ids = []
         for website in self:
             if not all((website.sudo().twitter_api_key, website.sudo().twitter_api_secret, website.twitter_screen_name)):
-                _logger.debug("Skip fetching favorite tweets for unconfigured website %s", website)
+                _logger.debug("Skip fetching favorite posts for unconfigured website %s", website)
                 continue
             params = {'screen_name': website.twitter_screen_name}
             last_tweet = WebsiteTweets.search([('website_id', '=', website.id),
@@ -58,7 +58,7 @@ class WebsiteTwitter(models.Model):
                                                      limit=1, order='tweet_id desc')
             if last_tweet:
                 params['since_id'] = int(last_tweet.tweet_id)
-            _logger.debug("Fetching favorite tweets using params %r", params)
+            _logger.debug("Fetching favorite posts using params %r", params)
             response = self._request(website, REQUEST_FAVORITE_LIST_URL, params=params)
             for tweet_dict in response:
                 tweet_id = tweet_dict['id']  # unsigned 64-bit snowflake ID

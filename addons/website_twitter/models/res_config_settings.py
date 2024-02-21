@@ -13,13 +13,13 @@ _logger = logging.getLogger(__name__)
 TWITTER_EXCEPTION = {
     304: _lt('There was no new data to return.'),
     400: _lt('The request was invalid or cannot be otherwise served. Requests without authentication are considered invalid and will yield this response.'),
-    401: _lt('Authentication credentials were missing or incorrect. Maybe screen name tweets are protected.'),
-    403: _lt('The request is understood, but it has been refused or access is not allowed. Please check your Twitter API Key and Secret.'),
+    401: _lt('Authentication credentials were missing or incorrect. Maybe screen name posts are protected.'),
+    403: _lt('The request is understood, but it has been refused or access is not allowed. Please check your X API Key and Secret.'),
     429: _lt('Request cannot be served due to the applications rate limit having been exhausted for the resource.'),
-    500: _lt('Twitter seems broken. Please retry later. You may consider posting an issue on Twitter forums to get help.'),
-    502: _lt('Twitter is down or being upgraded.'),
-    503: _lt('The Twitter servers are up, but overloaded with requests. Try again later.'),
-    504: _lt('The Twitter servers are up, but the request could not be serviced due to some failure within our stack. Try again later.')
+    500: _lt('X seems broken. Please retry later. You may consider posting an issue on X forums to get help.'),
+    502: _lt('X is down or being upgraded.'),
+    503: _lt('The X servers are up, but overloaded with requests. Try again later.'),
+    504: _lt('The X servers are up, but the request could not be serviced due to some failure within our stack. Try again later.')
 }
 
 
@@ -29,17 +29,17 @@ class ResConfigSettings(models.TransientModel):
     twitter_api_key = fields.Char(
         related='website_id.twitter_api_key', readonly=False,
         string='API Key',
-        help='Twitter API key you can get it from https://apps.twitter.com/')
+        help='X API key you can get it from https://apps.twitter.com/')
     twitter_api_secret = fields.Char(
         related='website_id.twitter_api_secret', readonly=False,
         string='API secret',
-        help='Twitter API secret you can get it from https://apps.twitter.com/')
+        help='X API secret you can get it from https://apps.twitter.com/')
     twitter_screen_name = fields.Char(
         related='website_id.twitter_screen_name', readonly=False,
         string='Favorites From',
-        help='Screen Name of the Twitter Account from which you want to load favorites.'
+        help='Screen Name of the X Account from which you want to load favorites.'
              'It does not have to match the API Key/Secret.')
-    twitter_server_uri = fields.Char(string='Twitter server uri', readonly=True)
+    twitter_server_uri = fields.Char(string='X server uri', readonly=True)
 
     def _get_twitter_exception_message(self, error_code):
         if error_code in TWITTER_EXCEPTION:
@@ -55,11 +55,11 @@ class ResConfigSettings(models.TransientModel):
             _logger.info("%s - %s" % (e.response.status_code, e.response.reason), exc_info=True)
             raise UserError("%s - %s" % (e.response.status_code, e.response.reason) + ':' + self._get_twitter_exception_message(e.response.status_code))
         except IOError:
-            _logger.info('We failed to reach a twitter server.', exc_info=True)
-            raise UserError(_('Internet connection refused: We failed to reach a twitter server.'))
+            _logger.info('We failed to reach a X server.', exc_info=True)
+            raise UserError(_('Internet connection refused: We failed to reach a X server.'))
         except Exception:
-            _logger.info('Please double-check your Twitter API Key and Secret!', exc_info=True)
-            raise UserError(_('Twitter authorization error! Please double-check your Twitter API Key and Secret!'))
+            _logger.info('Please double-check your X API Key and Secret!', exc_info=True)
+            raise UserError(_('X authorization error! Please double-check your X API Key and Secret!'))
 
     @api.model_create_multi
     def create(self, vals_list):
