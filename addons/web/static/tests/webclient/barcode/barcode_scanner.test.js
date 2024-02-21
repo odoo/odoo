@@ -53,16 +53,11 @@ test("Barcode scanner crop overlay", async () => {
         return stream;
     }
     // simulate an environment with a camera/webcam
-    patchWithCleanup(
-        browser,
-        Object.assign({}, browser, {
-            navigator: {
-                mediaDevices: {
-                    getUserMedia: mockUserMedia,
-                },
-            },
-        })
-    );
+    patchWithCleanup(browser.navigator, {
+        mediaDevices: {
+            getUserMedia: mockUserMedia,
+        },
+    });
 
     patchWithCleanup(BarcodeDialog.prototype, {
         async isVideoReady() {

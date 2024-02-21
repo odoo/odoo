@@ -127,11 +127,6 @@ test("can toggle multiple companies at once", async () => {
 });
 
 test("single company selected: toggling it off will keep it", async () => {
-    patchWithCleanup(browser, {
-        setTimeout(fn) {
-            return fn(); // s.t. we can directly assert changes in the hash
-        },
-    });
     const scMenu = await createSwitchCompanyMenu();
 
     /**
