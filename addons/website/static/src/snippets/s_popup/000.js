@@ -5,6 +5,7 @@ import publicWidget from "web.public.widget";
 import {getCookie, setCookie} from "web.utils.cookies";
 import dom from "web.dom";
 import {throttleForAnimation} from "@web/core/utils/timing";
+import {setUtmsHtmlDataset} from '@website/js/content/inject_dom';
 
 // TODO In master, export this class too or merge it with PopupWidget
 const SharedPopupWidget = publicWidget.Widget.extend({
@@ -362,6 +363,25 @@ publicWidget.registry.cookies_bar = PopupWidget.extend({
         this.cookieValue = `{"required": true, "optional": ${ev.target.id === 'cookies-consent-all'}}`;
         this._onHideModal();
     },
+    /**
+     * @override
+     */
+    _onHideModal() {
+        this._super(...arguments);
+        const params = new URLSearchParams(window.location.search);
+        const trackingFields = {
+            utm_campaign: "odoo_utm_campaign",
+            utm_source: "odoo_utm_source",
+            utm_medium: "odoo_utm_medium",
+        };
+        for (const [key, value] of params) {
+            if (key in trackingFields) {
+                // Using same cookie expiration value as in python side
+                setCookie(trackingFields[key], value, 31 * 24 * 60 * 60, "required");
+            }
+        }
+        setUtmsHtmlDataset();
+    }
 });
 
 export default PopupWidget;
