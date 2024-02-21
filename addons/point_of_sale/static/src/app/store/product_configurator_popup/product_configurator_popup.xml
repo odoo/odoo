@@ -165,6 +165,7 @@
                         <RadioProductAttribute t-if="attribute.display_type === 'radio' or attribute.display_type === 'pills'" attribute="attribute"/>
                         <SelectProductAttribute t-elif="attribute.display_type === 'select'" attribute="attribute"/>
                         <ColorProductAttribute t-elif="attribute.display_type === 'color'" attribute="attribute"/>
+                        <MultiProductAttribute t-elif="attribute.display_type === 'multi'" attribute="attribute"/>
                     </div>
                 </main>
 
