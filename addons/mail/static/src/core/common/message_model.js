@@ -187,12 +187,11 @@ export class Message extends Record {
         return dateDay;
     }
 
-    get datetime() {
-        if (!this._datetime) {
-            this._datetime = toRaw(this.date ? deserializeDateTime(this.date) : this.now);
-        }
-        return this._datetime;
-    }
+    datetime = Record.attr(undefined, {
+        compute() {
+            return toRaw(this.date ? deserializeDateTime(this.date) : this.now);
+        },
+    });
 
     get scheduledDate() {
         return toRaw(
