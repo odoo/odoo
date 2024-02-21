@@ -1638,13 +1638,15 @@ QUnit.test(
                 }
             },
         });
-        openDiscuss(channelId);
+        await openDiscuss(channelId);
         await contains(".o-mail-Message", { count: 30 });
         messageFetchShouldFail = true;
         await click("button", { text: "Load More" });
-        await contains(".o-mail-Thread", { text: "An error occurred while fetching messages." });
+        await contains(".o-mail-Thread-error", {
+            text: "An error occurred while fetching messages.",
+        });
         await contains("button", { text: "Click here to retry" });
-        await contains("button", { count: 0, text: "Load More" });
+        await contains("button", { text: "Load More", count: 0 });
     }
 );
 
