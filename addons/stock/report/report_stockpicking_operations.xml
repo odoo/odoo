@@ -11,7 +11,7 @@
                             <div class="row">
                                 <div class="col-6" name="div_outgoing_address">
                                     <div t-if="o.should_print_delivery_address()">
-                                        <span><strong>Delivery Address:</strong></span>
+                                        <strong>Delivery Address</strong>
                                         <div t-field="o.move_ids[0].partner_id"
                                             t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'>
                                                 <div class="bg-light border-1 rounded h-100 d-flex flex-column align-items-center justify-content-center p-4 opacity-75 text-muted text-center">
@@ -21,7 +21,7 @@
                                         </div>
                                     </div>
                                     <div t-elif="o.picking_type_id.code != 'internal' and o.picking_type_id.warehouse_id.partner_id">
-                                        <span><strong>Warehouse Address:</strong></span>
+                                        <strong>Warehouse Address</strong>
                                         <div t-field="o.picking_type_id.warehouse_id.partner_id"
                                             t-options='{"widget": "contact", "fields": ["name", "phone"], "no_marker": True, "phone_icons": True}'>
                                                 <div class="bg-light border-1 rounded h-100 d-flex flex-column align-items-center justify-content-center p-4 opacity-75 text-muted text-center">
@@ -35,15 +35,15 @@
                                     <t t-set="show_partner" t-value="False" />
                                     <t t-set="show_full_address" t-value="False" />
                                     <div t-if="o.picking_type_id.code=='incoming' and o.partner_id">
-                                        <span><strong>Vendor:</strong></span>
+                                        <strong>Vendor Address</strong>
                                         <t t-set="show_partner" t-value="True" />
                                     </div>
                                     <div t-elif="o.picking_type_id.code=='internal' and o.partner_id">
-                                        <span><strong>Warehouse:</strong></span>
+                                        <strong>Warehouse Address</strong>
                                         <t t-set="show_partner" t-value="True" />
                                     </div>
                                     <div t-elif="o.picking_type_id.code=='outgoing' and o.partner_id and o.partner_id != o.partner_id.commercial_partner_id">
-                                        <span><strong>Customer Address:</strong></span>
+                                        <strong>Customer Address</strong>
                                         <t t-set="show_partner" t-value="True" />
                                         <t t-set="show_full_address" t-value="True" />
                                     </div>
@@ -72,18 +72,18 @@
                                 </div>
                             </div>
                             <div class="oe_structure"></div>
-                            <div class="row">
-                                <div t-if="o.origin" class="col-auto" name="div_origin">
-                                    <strong>Order:</strong>
-                                    <p t-field="o.origin">S0001</p>
+                            <div id="informations" class="row mb-4">
+                                <div t-if="o.origin" class="col" name="div_origin">
+                                    <strong>Order</strong>
+                                    <div t-field="o.origin">S0001</div>
                                 </div>
-                                <div class="col-auto" name="div_state">
-                                    <strong>Status:</strong>
-                                    <p t-field="o.state">Draft</p>
+                                <div class="col" name="div_state">
+                                    <strong>Status</strong>
+                                    <div t-field="o.state">Draft</div>
                                 </div>
-                                <div t-if="o.scheduled_date" class="col-auto" name="div_sched_date">
-                                    <strong>Scheduled Date:</strong>
-                                    <p t-field="o.scheduled_date">2023-09-24</p>
+                                <div t-if="o.scheduled_date" class="col" name="div_sched_date">
+                                    <strong>Scheduled Date</strong>
+                                    <div t-field="o.scheduled_date">2023-09-24</div>
                                 </div>
                             </div>
                             <table class="table table-sm mt16" t-if="o.move_line_ids and o.move_ids_without_package">

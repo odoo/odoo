@@ -10,24 +10,23 @@
                      id="sar_amounts" class="row clearfix ms-auto my-3 text-nowrap table">
                     <t t-set="sar_rate"
                        t-value="o.env['res.currency']._get_conversion_rate(o.currency_id, o.company_id.currency_id, o.company_id, o.invoice_date)"/>
-                    <div name="exchange_rate" class="col-auto">
+                    <div name="exchange_rate" class="col">
                         <strong>Exchange Rate</strong>
-                        <p class="m-0" t-esc="sar_rate" t-options='{"widget": "float", "precision": 5}'/>
+                        <div t-esc="sar_rate" t-options='{"widget": "float", "precision": 5}'/>
                     </div>
-                    <div name="sar_subtotal" class="col-auto">
+                    <div name="sar_subtotal" class="col">
                         <strong>Subtotal (SAR)</strong>
-                        <p class="m-0" t-esc="o.amount_untaxed_signed"
+                        <div t-esc="o.amount_untaxed_signed"
                            t-options='{"widget": "monetary", "display_currency": o.company_currency_id}'/>
                     </div>
-                    <div name="sar_vat_amount" class="col-auto">
+                    <div name="sar_vat_amount" class="col">
                         <strong>VAT Amount (SAR)</strong>
-                        <p class="m-0"
-                           t-esc="o.currency_id._convert(o.amount_tax, o.company_id.currency_id, o.company_id, o.invoice_date)"
-                           t-options='{"widget": "monetary", "display_currency": o.company_currency_id}'/>
+                        <div t-esc="o.currency_id._convert(o.amount_tax, o.company_id.currency_id, o.company_id, o.invoice_date)"
+                            t-options='{"widget": "monetary", "display_currency": o.company_currency_id}'/>
                     </div>
-                    <div name="sar_total" class="col-auto">
+                    <div name="sar_total" class="col">
                         <strong>Total (SAR)</strong>
-                        <p class="m-0" t-esc="o.amount_total_signed"
+                        <div t-esc="o.amount_total_signed"
                            t-options='{"widget": "monetary", "display_currency": o.company_currency_id}'/>
                     </div>
                 </div>

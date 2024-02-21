@@ -18,16 +18,16 @@
             <t t-set="information_block">
                 <strong>
                     <t t-if="doc.partner_shipping_id == doc.partner_invoice_id">
-                        Invoicing and Shipping Address:
+                        Invoicing and Shipping Address
                     </t>
                     <t t-else="">
-                        Invoicing Address:
+                        Invoicing Address
                     </t>
                 </strong>
                 <div t-field="doc.partner_invoice_id"
                     t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
                 <t t-if="doc.partner_shipping_id != doc.partner_invoice_id">
-                    <strong>Shipping Address:</strong>
+                    <strong>Shipping Address</strong>
                     <div t-field="doc.partner_shipping_id"
                         t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
                 </t>
@@ -43,25 +43,25 @@
                 <span t-field="doc.name">SO0000</span>
             </h2>
 
-            <div class="row mt-4 mb-2" id="informations">
-                <div t-if="doc.client_order_ref" class="col-auto col-3 mw-100 mb-2" name="informations_reference">
-                    <strong>Your Reference:</strong><br/>
-                    <span class="m-0" t-field="doc.client_order_ref">SO0000</span>
+            <div class="row mb-4" id="informations">
+                <div t-if="doc.client_order_ref" class="col" name="informations_reference">
+                    <strong>Your Reference</strong>
+                    <div t-field="doc.client_order_ref">SO0000</div>
                 </div>
-                <div t-if="doc.date_order" class="col-auto col-3 mw-100 mb-2" name="informations_date">
-                    <strong t-if="doc.state in ['draft', 'sent']">Quotation Date:</strong>
-                    <strong t-else="">Order Date:</strong><br/>
-                    <span class="m-0" t-field="doc.date_order" t-options='{"widget": "date"}'>2023-12-31</span>
+                <div t-if="doc.date_order" class="col" name="informations_date">
+                    <strong t-if="doc.state in ['draft', 'sent']">Quotation Date</strong>
+                    <strong t-else="">Order Date</strong>
+                    <div t-field="doc.date_order" t-options='{"widget": "date"}'>2023-12-31</div>
                 </div>
                 <div t-if="doc.validity_date and doc.state in ['draft', 'sent']"
-                    class="col-auto col-3 mw-100 mb-2"
+                    class="col"
                     name="expiration_date">
-                    <strong>Expiration:</strong><br/>
-                    <span class="m-0" t-field="doc.validity_date">2023-12-31</span>
+                    <strong>Expiration</strong>
+                    <div t-field="doc.validity_date">2023-12-31</div>
                 </div>
-                <div t-if="doc.user_id.name" class="col-auto col-3 mw-100 mb-2">
-                    <strong>Salesperson:</strong><br/>
-                    <span class="m-0" t-field="doc.user_id">Mitchell Admin</span>
+                <div t-if="doc.user_id.name" class="col">
+                    <strong>Salesperson</strong>
+                    <div t-field="doc.user_id">Mitchell Admin</div>
                 </div>
             </div>
 

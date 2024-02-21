@@ -52,8 +52,9 @@ $report-text-colors: null;
 // impose the width, so to have evenly size columns.
 // This should work fine in most cases, but will yield ugly results
 // when 6+ columns are rendered
-.col-auto {
-    -webkit-box-flex: 1 !important;
+.col {
+    -webkit-box-flex: 1;
+    flex: 1 0 0%;
 }
 
 // Report footer need to support bootstrap columns (2, 3 and 4 columns)
