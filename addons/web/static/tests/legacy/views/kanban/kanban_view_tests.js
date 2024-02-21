@@ -14029,7 +14029,9 @@ QUnit.module("Views", (hooks) => {
                     const result = await performRPC(route, args);
                     if (result.groups.length) {
                         result.groups[0].__fold = false;
-                        result.groups[1].__fold = true;
+                        if (result.groups[1]) {
+                            result.groups[1].__fold = true;
+                        }
                     }
                     return result;
                 }

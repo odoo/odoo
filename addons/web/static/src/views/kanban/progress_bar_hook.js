@@ -51,12 +51,7 @@ class ProgressBarState {
                     [group.groupByField.name]: group.serverValue,
                 });
             }
-            let groupValue = group.displayName || group.value;
-            if (groupValue === true) {
-                groupValue = "True";
-            } else if (groupValue === false) {
-                groupValue = "False";
-            }
+            const groupValue = this._getGroupValue(group);
             const pbCount = this._pbCounts[groupValue];
             const { fieldName, colors } = this.progressAttributes;
             const { selection: fieldSelection } = this.model.root.fields[fieldName];
@@ -265,12 +260,7 @@ class ProgressBarState {
             for (const group of this.model.root.groups) {
                 if (!group.isFolded) {
                     const groupInfo = this.getGroupInfo(group);
-                    let groupValue = group.displayName || group.value;
-                    if (groupValue === true) {
-                        groupValue = "True";
-                    } else if (groupValue === false) {
-                        groupValue = "False";
-                    }
+                    const groupValue = this._getGroupValue(group);
                     const counts = res[groupValue];
                     for (const bar of groupInfo.bars) {
                         bar.count = (counts && counts[bar.value]) || 0;
@@ -318,6 +308,28 @@ class ProgressBarState {
             );
             return progressBar.count;
         }
+    }
+
+    /**
+     * We must be able to match groups returned by the read_progress_bar call with groups previously
+     * returned by web_read_group. When grouped on date(time) fields, the key of each group is the
+     * displayName of the period (e.g. "W8 2024"). When grouped on boolean fields, it's "True" and
+     * "False". For falsy values (e.g. unset many2one), it's "False". In all other cases, it's the
+     * group's value (e.g. the id for a many2one).
+     *
+     * @param {Group} group
+     * @return string
+     */
+    _getGroupValue(group) {
+        if (group.groupByField.type === "date" || group.groupByField.type === "datetime") {
+            return group.displayName || "False";
+        }
+        if (group.value === true) {
+            return "True";
+        } else if (group.value === false) {
+            return "False";
+        }
+        return group.value;
     }
 }
 

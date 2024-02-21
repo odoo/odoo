@@ -1949,6 +1949,9 @@ export class Model extends Array {
         for (const group of groups) {
             const records = this._filter(group.__domain);
             let groupByValue = group[groupBy]; // always technical value here
+            if (Array.isArray(groupByValue)) {
+                groupByValue = groupByValue[0];
+            }
 
             // special case for bool values: rpc call response with capitalized strings
             if (!(groupByValue in data)) {
