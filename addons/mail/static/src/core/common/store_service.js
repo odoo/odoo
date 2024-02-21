@@ -137,10 +137,12 @@ export class Store extends BaseStore {
             if (bOdooBot && !aOdooBot) {
                 return -1;
             }
-            if (a.needactionMessages.length > 0 && b.needactionMessages.length === 0) {
+            const aNeedaction = a.needactionMessages.length;
+            const bNeedaction = b.needactionMessages.length;
+            if (aNeedaction > 0 && bNeedaction === 0) {
                 return -1;
             }
-            if (b.needactionMessages.length > 0 && a.needactionMessages.length === 0) {
+            if (bNeedaction > 0 && aNeedaction === 0) {
                 return 1;
             }
             if (a.message_unread_counter > 0 && b.message_unread_counter === 0) {
