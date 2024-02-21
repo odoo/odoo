@@ -420,7 +420,7 @@
                 t-att-data-graph-data="graph_data"
                 t-att-data-right-answers="list(question_data['right_answers'].mapped('value'))">
                 <!-- canvas element for drawing bar chart -->
-                <canvas class="mx-auto"/>
+                <canvas class="mx-auto w-100 h-auto"/>
             </div>
             <div role="tabpanel" t-att-id="'survey_data_question_%d' % question.id"
                 t-attf-class="tab-pane #{'active' if not question_answered else ''}">
@@ -494,7 +494,7 @@
                 data-graph-type= "multi_bar"
                 t-att-data-graph-data="graph_data">
                 <!-- canvas element for drawing Multibar chart -->
-                <canvas class="mx-auto"/>
+                <canvas class="mx-auto w-100 h-auto"/>
             </div>
             <div role="tabpanel" t-attf-class="tab-pane #{'active' if not question_answered else ''}" t-att-id="'survey_data_question_%d' % question.id">
                 <table class="table table-hover table-sm text-end">
