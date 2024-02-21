@@ -1205,6 +1205,29 @@ test("performRPC: read_progress_bar grouped by datetime", async () => {
     });
 });
 
+test("performRPC: read_progress_bar grouped by many2one", async () => {
+    await makeMockServer();
+
+    await expect(
+        ormRequest({
+            model: "bar",
+            method: "read_progress_bar",
+            kwargs: {
+                domain: [],
+                group_by: "partner_id",
+                progress_bar: {
+                    colors: { new: "aaa", dev: "bbb", done: "ccc" },
+                    field: "select",
+                },
+            },
+        })
+    ).resolves.toEqual({
+        1: { dev: 0, done: 0, new: 2 },
+        2: { dev: 0, done: 0, new: 1 },
+        False: { dev: 1, done: 2, new: 0 },
+    });
+});
+
 test("many2one_ref should auto fill inverse field", async () => {
     Bar._records = [{ id: 1 }];
     Foo._records = [{ id: 2, many2one_reference: 1, res_model: "bar" }];
