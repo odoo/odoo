@@ -74,18 +74,10 @@ export class Store extends BaseStore {
     users = {};
     internalUserGroupId = null;
     imStatusTrackedPersonas = Record.many("Persona", {
-        compute() {
-            return Object.values(this.Persona?.records ?? []).filter(
-                (persona) =>
-                    persona.type === "partner" &&
-                    persona.im_status !== "im_partner" &&
-                    !persona.is_public
-            );
-        },
+        inverse: "storeAsTrackedImStatus",
         onUpdate() {
             this.updateImStatusRegistration();
         },
-        eager: true,
     });
     hasLinkPreviewFeature = true;
     // messaging menu
