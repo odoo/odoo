@@ -26,13 +26,11 @@ export function l10n_in_get_hsn_summary_table(base_lines, display_uom){
 
         const price_unit = base_line.price_unit;
         const quantity = base_line.quantity;
-        const product = base_line.product;
-        let uom = base_line.uom;
-        const tax_values_list = base_line.taxes;
+        let uom = base_line.uom || {};
+        const tax_values_list = base_line.tax_values_list;
 
         // Compute the taxes.
         const eval_context = eval_taxes_computation_prepare_context(price_unit, quantity, {
-            product: product,
             rounding_method: "round_per_line",
             precision_rounding: 0.01,
         });
@@ -53,7 +51,7 @@ export function l10n_in_get_hsn_summary_table(base_lines, display_uom){
         const key = {
             l10n_in_hsn_code: l10n_in_hsn_code,
             rate: rate,
-            uom: uom,
+            uom_name: uom.name || "",
         };
         const keyStr = JSON.stringify(key);
 
@@ -86,7 +84,7 @@ export function l10n_in_get_hsn_summary_table(base_lines, display_uom){
     for(const value of Object.values(results_map)){
         items.push({
             l10n_in_hsn_code: value.l10n_in_hsn_code,
-            uom: value.uom,
+            uom_name: value.uom_name,
             rate: value.rate,
             quantity: value.quantity,
             amount_untaxed: value.amount_untaxed,
