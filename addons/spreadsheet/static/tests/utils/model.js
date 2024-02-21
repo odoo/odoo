@@ -10,6 +10,7 @@ import { Model } from "@odoo/o-spreadsheet";
 import { DataSources } from "@spreadsheet/data_sources/data_sources";
 import { getBasicServerData } from "./data";
 import { nameService } from "@web/core/name_service";
+import { waitForDataLoaded } from "@spreadsheet/helpers/model";
 
 /**
  * @typedef {import("@spreadsheet/../tests/utils/data").ServerData} ServerData
@@ -60,22 +61,7 @@ export async function createModelWithDataSource(params = {}) {
  * @param {Model} model
  */
 export async function waitForDataSourcesLoaded(model) {
-    function readAllCellsValue() {
-        for (const sheetId of model.getters.getSheetIds()) {
-            const cells = model.getters.getEvaluatedCells(sheetId);
-            for (const cellId in cells) {
-                cells[cellId].value;
-            }
-        }
+    if (model.config.custom.dataSources) {
+        await waitForDataLoaded(model);
     }
-    // Read a first time in order to trigger the RPC
-    readAllCellsValue();
-    await model.config.custom.dataSources?.waitForAllLoaded();
-    await nextTick();
-    // Read a second time to trigger the compute format (which could trigger a RPC for currency, in list)
-    readAllCellsValue();
-    await nextTick();
-    // Read a third time to trigger the RPC to get the correct currency
-    readAllCellsValue();
-    await nextTick();
 }
