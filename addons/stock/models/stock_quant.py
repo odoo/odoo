@@ -9,7 +9,7 @@ from collections import defaultdict
 from psycopg2 import Error
 
 from odoo import _, api, fields, models
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import RedirectWarning, UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools import check_barcode_encoding, groupby
 from odoo.tools.float_utils import float_compare, float_is_zero
@@ -775,6 +775,19 @@ class StockQuant(models.Model):
             else:
                 return sum([available_quantity for available_quantity in availaible_quantities.values() if float_compare(available_quantity, 0, precision_rounding=rounding) > 0])
 
+    def _raise_fix_unreserve_action(self, product_id):
+        action = self.env.ref('stock.stock_quant_stock_move_line_desynchronization', raise_if_not_found=False)
+        if action and self.user_has_groups('base.group_system'):
+            msg = _(
+                'It is not possible to reserve more products of %s than you have in stock.\n\n'
+                'You can fix the discrepancies by clicking on the button below.\n'
+                'The correction will remove the reservation of the impacted operations on all companies.\n'
+                'If the error persists, or you see this message appear often, '
+                'please submit a Support Ticket at https://www.odoo.com/help',
+                product_id.display_name
+            )
+            raise RedirectWarning(msg, action.id, _('Fix discrepancies'))
+
     def _get_reserve_quantity(self, product_id, location_id, quantity, lot_id=None, package_id=None, owner_id=None, strict=False):
         """ Get the quantity available to reserve for the set of quants
         sharing the combination of `product_id, location_id` if `strict` is set to False or sharing
@@ -797,7 +810,12 @@ class StockQuant(models.Model):
             # if we want to unreserve
             available_quantity = sum(quants.mapped('reserved_quantity'))
             if float_compare(abs(quantity), available_quantity, precision_rounding=rounding) > 0:
-                raise UserError(_('It is not possible to unreserve more products of %s than you have in stock.', product_id.display_name))
+                self._raise_fix_unreserve_action(product_id)
+                raise UserError(_(
+                    'It is not possible to unreserve more products of %s than you have in stock.\n'
+                    'Please contact your system administrator to rectify this issue.',
+                    product_id.display_name
+                ))
         else:
             return reserved_quants
 
