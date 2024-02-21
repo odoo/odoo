@@ -330,8 +330,8 @@ class Field(MetaField('DummyField', (object,), {})):
 
     def __repr__(self):
         if self.name is None:
-            return "<%s.%s>" % (__name__, type(self).__name__)
-        return "%s.%s" % (self.model_name, self.name)
+            return f"{'<%s.%s>'!r}" % (__name__, type(self).__name__)
+        return f"{'%s.%s'!r}" % (self.model_name, self.name)
 
     ############################################################################
     #
