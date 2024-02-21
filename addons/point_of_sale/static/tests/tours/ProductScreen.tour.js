@@ -8,6 +8,7 @@ import * as ReceiptScreen from "@point_of_sale/../tests/tours/helpers/ReceiptScr
 import { registry } from "@web/core/registry";
 import * as Order from "@point_of_sale/../tests/tours/helpers/generic_components/OrderWidgetMethods";
 import { inLeftSide } from "./helpers/utils";
+import * as ProductConfiguratorPopup from "@point_of_sale/../tests/tours/helpers/ProductConfiguratorTourMethods";
 
 registry.category("web_tour.tours").add("ProductScreenTour", {
     test: true,
@@ -203,6 +204,22 @@ registry.category("web_tour.tours").add("limitedProductPricelistLoading", {
 
             ProductScreen.scan_barcode("0100300"),
             ProductScreen.selectedOrderlineHas("Test Product 3", "1.0", "50.0"),
+            Chrome.endTour(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("MultiProductOptionsTour", {
+    test: true,
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+
+            ProductScreen.clickShowProductsMobile(),
+            ProductScreen.clickDisplayedProduct("Product A"),
+            ProductConfiguratorPopup.isOptionShown("Value 1"),
+            ProductConfiguratorPopup.isOptionShown("Value 2"),
+            Dialog.confirm("Ok"),
+
             Chrome.endTour(),
         ].flat(),
 });
