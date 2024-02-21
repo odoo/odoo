@@ -156,7 +156,7 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
 
     QUnit.test("rename pivot with empty name is refused", async (assert) => {
         const { model } = await createSpreadsheetWithPivot();
-        const result = model.dispatch("RENAME_ODOO_PIVOT", {
+        const result = model.dispatch("RENAME_PIVOT", {
             pivotId: "1",
             name: "",
         });
@@ -165,17 +165,17 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
 
     QUnit.test("rename pivot with incorrect id is refused", async (assert) => {
         const { model } = await createSpreadsheetWithPivot();
-        const result = model.dispatch("RENAME_ODOO_PIVOT", {
+        const result = model.dispatch("RENAME_PIVOT", {
             pivotId: "invalid",
             name: "name",
         });
         assert.deepEqual(result.reasons, [CommandResult.PivotIdNotFound]);
     });
 
-    QUnit.test("Undo/Redo for RENAME_ODOO_PIVOT", async function (assert) {
+    QUnit.test("Undo/Redo for RENAME_PIVOT", async function (assert) {
         const { model } = await createSpreadsheetWithPivot();
         assert.equal(model.getters.getPivotName("1"), "Partner Pivot");
-        model.dispatch("RENAME_ODOO_PIVOT", { pivotId: "1", name: "test" });
+        model.dispatch("RENAME_PIVOT", { pivotId: "1", name: "test" });
         assert.equal(model.getters.getPivotName("1"), "test");
         model.dispatch("REQUEST_UNDO");
         assert.equal(model.getters.getPivotName("1"), "Partner Pivot");

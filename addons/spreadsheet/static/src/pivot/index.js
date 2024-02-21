@@ -22,7 +22,7 @@ function identity(cmd) {
 
 coreTypes.add("ADD_PIVOT");
 coreTypes.add("INSERT_PIVOT");
-coreTypes.add("RENAME_ODOO_PIVOT");
+coreTypes.add("RENAME_PIVOT");
 coreTypes.add("REMOVE_PIVOT");
 coreTypes.add("UPDATE_ODOO_PIVOT_DOMAIN");
 coreTypes.add("DUPLICATE_PIVOT");
@@ -31,7 +31,7 @@ invalidateEvaluationCommands.add("UPDATE_ODOO_PIVOT_DOMAIN");
 invalidateEvaluationCommands.add("REMOVE_PIVOT");
 invalidateEvaluationCommands.add("ADD_PIVOT");
 invalidateEvaluationCommands.add("INSERT_PIVOT");
-invalidateEvaluationCommands.add("RENAME_ODOO_PIVOT");
+invalidateEvaluationCommands.add("RENAME_PIVOT");
 
 cellMenuRegistry.add("pivot_see_records", {
     name: _t("See records"),
@@ -50,7 +50,7 @@ cellMenuRegistry.add("pivot_see_records", {
 inverseCommandRegistry
     .add("ADD_PIVOT", identity)
     .add("INSERT_PIVOT", identity)
-    .add("RENAME_ODOO_PIVOT", identity)
+    .add("RENAME_PIVOT", identity)
     .add("REMOVE_PIVOT", identity)
     .add("UPDATE_ODOO_PIVOT_DOMAIN", identity);
 

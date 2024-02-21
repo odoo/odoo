@@ -59,17 +59,19 @@ declare module "@spreadsheet" {
     definition: OdooPivotDefinition;
   }
 
-  export type ExtendedAddPivotDefinition = AddPivotDefinition | OdooPivotDefinition;
+  export type ExtendedAddPivotDefinition =
+    | AddPivotDefinition
+    | OdooPivotDefinition;
 
   export interface AddPivotCommand {
     type: "ADD_PIVOT";
-    id: string;
+    pivotId: string;
     pivot: AddPivotDefinition;
   }
 
   export interface InsertPivotCommand {
     type: "INSERT_PIVOT";
-    id: string;
+    pivotId: string;
     sheetId: string;
     col: number;
     row: number;
@@ -81,7 +83,7 @@ declare module "@spreadsheet" {
   }
 
   export interface RenamePivotCommand {
-    type: "RENAME_ODOO_PIVOT";
+    type: "RENAME_PIVOT";
     pivotId: string;
     name: string;
   }
