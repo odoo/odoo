@@ -36,11 +36,11 @@
                 </div>
                 <div class="oe_structure"/>
                 <div class="row mt32 mb32">
-                    <div t-if="o.pack_date" class="col-auto">
+                    <div t-if="o.pack_date" class="col">
                         <strong>Pack Date:</strong>
                         <span t-field="o.pack_date">2021-9-01</span>
                     </div>
-                    <div t-if="o.package_type_id" class="o_packaging_type col-auto">
+                    <div t-if="o.package_type_id" class="o_packaging_type col">
                         <strong>Package Type:</strong>
                         <span t-field="o.package_type_id.name">Pallet</span>
                     </div>
