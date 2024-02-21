@@ -295,7 +295,7 @@ export class PosStore extends Reactive {
                     continue;
                 }
 
-                if (item.product_id && product.id === item.product_id.id) {
+                if (item.raw.product_id && product.id === item.raw.product_id) {
                     applicableRules[item.pricelist_id.id].push(item);
                 } else if (
                     item.raw.product_tmpl_id &&
