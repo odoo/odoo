@@ -1,7 +1,7 @@
 import { Record } from "@mail/core/common/record";
 
 export class LivechatChannel extends Record {
-    static id = "id";
+    static id = [["id"]];
 
     appCategory = Record.one("DiscussAppCategory", {
         compute() {

@@ -1,11 +1,11 @@
-import { AND, Record } from "@mail/core/common/record";
+import { Record } from "@mail/core/common/record";
 import { markup } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { rpc } from "@web/core/network/rpc";
 import { debounce } from "@web/core/utils/timing";
 
 export class Chatbot extends Record {
-    static id = AND("script", "thread");
+    static id = [["script", "thread"]];
     static MESSAGE_DELAY = 1500;
     // Time to wait without user input before considering a multi line step as
     // completed.

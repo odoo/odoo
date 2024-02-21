@@ -1,7 +1,7 @@
 import { Record } from "@mail/core/common/record";
 
 export class RtcSession extends Record {
-    static id = "id";
+    static id = [["id"]];
     /** @type {Object.<number, import("models").RtcSession>} */
     static records = {};
     /** @returns {import("models").RtcSession} */

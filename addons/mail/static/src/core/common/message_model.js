@@ -9,7 +9,7 @@ import { url } from "@web/core/utils/urls";
 const { DateTime } = luxon;
 
 export class Message extends Record {
-    static id = "id";
+    static id = [["id"]];
     /** @type {Object.<number, import("models").Message>} */
     static records = {};
     /** @returns {import("models").Message} */

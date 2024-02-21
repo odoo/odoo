@@ -2,7 +2,7 @@ import { Record } from "@mail/core/common/record";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 
 export class ChannelMember extends Record {
-    static id = "id";
+    static id = [["id"]];
     /** @type {Object.<number, import("models").ChannelMember>} */
     static records = {};
     /** @returns {import("models").ChannelMember} */

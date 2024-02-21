@@ -1,5 +1,5 @@
 import { DEFAULT_AVATAR } from "@mail/core/common/persona_service";
-import { AND, Record } from "@mail/core/common/record";
+import { Record } from "@mail/core/common/record";
 
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
@@ -15,7 +15,7 @@ import { Deferred } from "@web/core/utils/concurrency";
  */
 
 export class Thread extends Record {
-    static id = AND("model", "id");
+    static id = [["model", "id"]];
     /** @type {Object.<string, import("models").Thread>} */
     static records = {};
     /** @returns {import("models").Thread} */
