@@ -164,22 +164,7 @@
         </div>
         <t t-if="state.showScheduledMessages">
             <t t-foreach="scheduledMessages" t-as="scheduledMessage" t-key="scheduledMessage.id">
-                <div class="o-mail-Message position-relative">
-                    <div class="o-mail-Message-core position-relative d-flex flex-shrink-0">
-                        <div class="o-mail-Message-sidebar d-flex flex-shrink-0">
-                            <div class="o-mail-Message-avatarContainer position-relative bg-view">
-                                <img class="o-mail-Message-avatar w-100 h-100 rounded" t-att-src="scheduledMessage.author.avatarUrl"/>
-                            </div>
-                        </div>
-                        <div class="w-100 o-min-width-0" t-ref="messageContent">
-                            <div class="position-relative overflow-x-auto d-inline-block">
-                                <div class="position-relative text-break o-mail-Message-body">
-                                    <t t-out="scheduledMessage.body"/>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <Message message="scheduledMessage.message"/>
             </t>
         </t>
     </div>

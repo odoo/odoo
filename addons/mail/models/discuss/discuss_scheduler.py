@@ -36,8 +36,15 @@ class DiscussScheduler(models.Model):
                     "model": message.thread_model,
                     "id": message.thread_id
                 },
-                "author": message.author_id.mail_partner_format().get(message.author_id),
-                "body": message.message_data["body"],
+                "message": {
+                    "id": f"scheduled_{message.id}",
+                    "author": message.author_id.mail_partner_format().get(message.author_id),
+                    "body": message.message_data["body"],
+                    "thread": {
+                        "model": message.thread_model,
+                        "id": message.thread_id
+                    },
+                },
                 "date": fields.Datetime.to_string(message.date),
             })
         return data

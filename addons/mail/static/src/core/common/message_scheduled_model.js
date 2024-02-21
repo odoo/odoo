@@ -16,6 +16,7 @@ export class ScheduledMessage extends Record {
     }
     thread = Record.one("Thread", { inverse: "scheduledMessages" });
     author = Record.one("Persona");
+    message = Record.one("Message");
     /** @type {number} */
     id;
     /** @type {luxon.DateTime} */
