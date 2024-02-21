@@ -5,12 +5,11 @@
             <field name="name">Mail: Email Queue Manager</field>
             <field name="model_id" ref="model_mail_mail"/>
             <field name="state">code</field>
-            <field name="code">model.process_email_queue()</field>
+            <field name="code">model.process_email_queue(batch_size=1000)</field>
             <field name="user_id" ref="base.user_root"/>
             <field name="interval_number">1</field>
             <field name="interval_type">hours</field>
-            <field name="numbercall">-1</field>
-            <field eval="False" name="doall"/>
+            <field name="priority">6</field>
         </record>
 
         <record id="ir_cron_module_update_notification" model="ir.cron">
