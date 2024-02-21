@@ -316,7 +316,7 @@ QUnit.test("Renaming the pivot reevaluates the ODOO.PIVOT.TABLE function", async
     const pivotId = model.getters.getPivotIds()[0];
     setCellContent(model, "A1", `=ODOO.PIVOT.TABLE("1")`, "42");
     assert.equal(getEvaluatedCell(model, "A1", "42").value, "(#1) Partner Pivot");
-    model.dispatch("RENAME_ODOO_PIVOT", {
+    model.dispatch("RENAME_PIVOT", {
         pivotId,
         name: "New Name",
     });

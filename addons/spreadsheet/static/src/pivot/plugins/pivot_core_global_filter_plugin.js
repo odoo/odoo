@@ -67,7 +67,7 @@ export class PivotCoreGlobalFilterPlugin extends OdooCorePlugin {
         switch (cmd.type) {
             case "ADD_PIVOT": {
                 if (cmd.pivot.type === "ODOO") {
-                    this._addPivot(cmd.id, undefined);
+                    this._addPivot(cmd.pivotId, undefined);
                 }
                 break;
             }
