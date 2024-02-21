@@ -1123,7 +1123,8 @@ class MassMailing(models.Model):
     @api.model
     def _process_mass_mailing_queue(self):
         mass_mailings = self.search([('state', 'in', ('in_queue', 'sending')), '|', ('schedule_date', '<', fields.Datetime.now()), ('schedule_date', '=', False)])
-        for mass_mailing in mass_mailings:
+        count_total = len(mass_mailings)
+        for count_done, mass_mailing in enumerate(mass_mailings, start=1):
             context_user = mass_mailing.user_id or mass_mailing.write_uid or self.env.user
             mass_mailing = mass_mailing.with_context(
                 **self.env['res.users'].with_user(context_user).context_get()
@@ -1138,6 +1139,7 @@ class MassMailing(models.Model):
                     # send the KPI mail only if it's the first sending
                     'kpi_mail_required': not mass_mailing.sent_date,
                 })
+            self.env['ir.cron']._notify_progress(done=count_done, remaining=count_total - count_done)
 
         if self.env['ir.config_parameter'].sudo().get_param('mass_mailing.mass_mailing_reports'):
             mailings = self.env['mailing.mailing'].search([

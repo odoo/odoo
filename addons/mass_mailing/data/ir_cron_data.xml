@@ -10,8 +10,7 @@
             <field name="user_id" ref="base.user_root" />
             <field name="interval_number">1</field>
             <field name="interval_type">days</field>
-            <field name="numbercall">-1</field>
-            <field eval="False" name="doall" />
+            <field name="priority">6</field>
         </record>
         <!-- Cron that processes the a/b testing -->
         <record id="ir_cron_mass_mailing_ab_testing" model="ir.cron">
