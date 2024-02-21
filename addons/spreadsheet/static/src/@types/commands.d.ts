@@ -105,6 +105,31 @@ declare module "@spreadsheet" {
     newPivotId: string;
   }
 
+  export interface AddThreadCommand {
+    type: "ADD_COMMENT_THREAD";
+    threadId: number;
+    sheetId: string;
+    col: number;
+    row: number;
+  }
+
+  export interface EditThreadCommand {
+    type: "EDIT_COMMENT_THREAD";
+    threadId: number;
+    sheetId: string;
+    col: number;
+    row: number;
+    isResolved: boolean;
+  }
+
+  export interface DeleteThreadCommand {
+    type: "DELETE_COMMENT_THREAD";
+    threadId: number;
+    sheetId: string;
+    col: number;
+    row: number;
+  }
+
   // this command is deprecated. use UPDATE_PIVOT instead
   export interface UpdatePivotDomainCommand {
     type: "UPDATE_ODOO_PIVOT_DOMAIN";
@@ -125,7 +150,11 @@ declare module "@spreadsheet" {
     | DuplicatePivotCommand
     | UpdatePivotDomainCommand
     | UpdatePivotCommand
-    | ExtendedAddPivotCommand;
+    | ExtendedAddPivotCommand
+    | AddThreadCommand
+    | DeleteThreadCommand
+    | EditThreadCommand;
+
   export type AllCoreCommand = OdooCoreCommand | CoreCommand;
 
   type OdooLocalCommand = RefreshAllDataSourcesCommand;
