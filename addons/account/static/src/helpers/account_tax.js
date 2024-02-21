@@ -167,12 +167,10 @@ export function ascending_process_taxes_batch(batch) {
  * [!] Mirror of the same method in account_tax.py.
  * PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
 */
-export function prepare_taxes_computation(tax_values_list, kwargs={}) {
-    // Kwargs.
-    const force_price_include = kwargs.hasOwnProperty("force_price_include") ? kwargs.force_price_include : false;
-    const is_refund = kwargs.hasOwnProperty("is_refund") ? kwargs.is_refund : false;
-    const include_caba_tags = kwargs.hasOwnProperty("include_caba_tags") ? kwargs.include_caba_tags : false;
-
+export function prepare_taxes_computation(
+    tax_values_list,
+    {force_price_include=false, is_refund=false, include_caba_tags=false}={},
+) {
     // Flatten the taxes and order them.
     const sorted_tax_values_list = tax_values_list.sort(
         (v1, v2) => v1.sequence - v2.sequence || v1.id - v2.id
@@ -348,12 +346,11 @@ export function eval_taxes_computation_product_fields(){
  * [!] Mirror of the same method in account_tax.py.
  * PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
 */
-export function eval_taxes_computation_prepare_context(price_unit, quantity, kwargs={}) {
-    const rounding_method = kwargs.hasOwnProperty("rounding_method") ? kwargs.rounding_method : "round_per_line";
-    const precision_rounding = kwargs.hasOwnProperty("precision_rounding") ? kwargs.precision_rounding : 0.01;
-    const reverse = kwargs.hasOwnProperty("reverse") ? kwargs.reverse : false;
-    const product = kwargs.product || {};
-
+export function eval_taxes_computation_prepare_context(
+    price_unit,
+    quantity,
+    {product={}, rounding_method="round_per_line", precision_rounding=0.01, reverse=false}={},
+) {
     const product_values = {};
     for(const field_name of eval_taxes_computation_product_fields()){
         product_values.field_name = product[field_name];
@@ -532,13 +529,15 @@ export function adapt_price_unit_to_another_taxes(price_unit, original_tax_value
     }
 
     let taxes_computation = prepare_taxes_computation(original_tax_values_list);
-    let evaluation_context = eval_taxes_computation_prepare_context(price_unit, 1.0, { rounding_method: 'round_globally' });
+    let evaluation_context = eval_taxes_computation_prepare_context(price_unit, 1.0, {
+        rounding_method: "round_globally",
+    });
     taxes_computation = eval_taxes_computation(taxes_computation, evaluation_context);
     price_unit = taxes_computation.total_excluded;
 
     taxes_computation = prepare_taxes_computation(new_tax_values_list);
     evaluation_context = eval_taxes_computation_prepare_context(price_unit, 1.0, {
-        rounding_method: 'round_globally',
+        rounding_method: "round_globally",
         reverse: true,
     });
     taxes_computation = eval_taxes_computation(taxes_computation, evaluation_context);
@@ -555,7 +554,14 @@ export function adapt_price_unit_to_another_taxes(price_unit, original_tax_value
 // PURE JS HELPERS
 // -------------------------------------------------------------------------
 
-export function computeSingleLineTaxes(tax_values_list, eval_context, kwargs={}) {
-    const taxes_computation = prepare_taxes_computation(tax_values_list, kwargs);
+export function computeSingleLineTaxes(
+    tax_values_list,
+    eval_context,
+    {force_price_include=false, is_refund=false, include_caba_tags=false}={},
+) {
+    const taxes_computation = prepare_taxes_computation(
+        tax_values_list,
+        {force_price_include: force_price_include, is_refund: is_refund, include_caba_tags: include_caba_tags},
+    );
     return eval_taxes_computation(taxes_computation, eval_context);
 }

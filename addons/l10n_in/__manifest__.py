@@ -58,11 +58,12 @@ Sheet, now only Vertical format has been permitted Which is Supported By Odoo.
     'license': 'LGPL-3',
     'assets': {
         'web.assets_backend': [
-            'l10n_in/static/src/helpers/*.js',
             'l10n_in/static/src/components/**/*',
+            'l10n_in/static/src/helpers/*.js',
         ],
-        'web.qunit_suite_tests': [
-            'l10n_in/static/tests/*.js',
+        'web.assets_frontend': [
+            'l10n_in/static/src/components/tests_shared_js_python/*',
+            'l10n_in/static/src/helpers/*.js',
         ],
     },
 }

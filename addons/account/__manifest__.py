@@ -74,6 +74,7 @@ You could use this simplified accounting in case you work with an (external) acc
         'data/account_reports_data.xml',
         'views/uom_uom_views.xml',
         'views/product_views.xml',
+        'views/tests_shared_js_python.xml',
     ],
     'demo': [
         'demo/account_demo.xml',
@@ -100,6 +101,8 @@ You could use this simplified accounting in case you work with an (external) acc
         'web.assets_frontend': [
             'account/static/src/js/account_portal_sidebar.js',
             'account/static/src/js/account_portal.js',
+            'account/static/src/components/tests_shared_js_python/*',
+            'account/static/src/helpers/*.js',
         ],
         'web.assets_tests': [
             'account/static/tests/tours/**/*',
