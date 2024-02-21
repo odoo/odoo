@@ -37,10 +37,25 @@ class TestTaxTotals(AccountTestInvoicingCommon):
             'sequence': 5
         })
 
+        cls.tax_10 = cls.env['account.tax'].create({
+            'name': "tax_10a",
+            'amount_type': 'percent',
+            'amount': 10.0,
+        })
         cls.tax_16 = cls.env['account.tax'].create({
             'name': "tax_16",
             'amount_type': 'percent',
             'amount': 16.0,
+        })
+        cls.tax_23_1 = cls.env['account.tax'].create({
+            'name': "tax_23_1",
+            'amount_type': 'percent',
+            'amount': 23.0,
+        })
+        cls.tax_23_2 = cls.env['account.tax'].create({
+            'name': "tax_23_2",
+            'amount_type': 'percent',
+            'amount': 23.0,
         })
         cls.tax_53 = cls.env['account.tax'].create({
             'name': "tax_53",
@@ -597,6 +612,66 @@ class TestTaxTotals(AccountTestInvoicingCommon):
             }],
             'subtotals_order': ["Untaxed Amount", "Tax withholding"],
         })
+
+    def test_taxtotals_with_different_tax_rounding_methods(self):
+        def run_case(rounding_line, lines, expected_tax_group_amounts):
+            self.env.company.tax_calculation_rounding_method = rounding_line
+            document = self._create_document_for_tax_totals_test(lines)
+            tax_amounts = document.tax_totals['groups_by_subtotal']['Untaxed Amount']
+            if len(expected_tax_group_amounts) != len(tax_amounts):
+                self.fail("Wrong number of values to compare.")
+            for tax_amount, expected in zip(tax_amounts, expected_tax_group_amounts):
+                actual = tax_amount['tax_group_amount']
+                if document.currency_id.compare_amounts(actual, expected) != 0:
+                    self.fail(f'{document.currency_id.round(actual)} != {expected}')
+
+        # one line, two taxes
+        lines = [
+            (100.41, self.tax_16 + self.tax_53),
+        ]
+        run_case('round_per_line', lines, [69.29])
+        run_case('round_globally', lines, [69.29])
+
+        # two lines, different taxes
+        lines = [
+            (50.4, self.tax_17a),
+            (47.21, self.tax_17b),
+        ]
+        run_case('round_per_line', lines, [16.60])
+        run_case('round_globally', lines, [16.60])
+
+        # two lines, same tax
+        lines = [
+            (50.4, self.tax_17a),
+            (47.21, self.tax_17a),
+        ]
+        run_case('round_per_line', lines, [16.60])
+        run_case('round_globally', lines, [16.59])
+
+        lines = [
+            (54.45, self.tax_10),
+            (100.0, self.tax_10),
+        ]
+        run_case('round_per_line', lines, [15.45])
+        run_case('round_globally', lines, [15.45])
+
+        lines = [
+            (54.45, self.tax_10),
+            (600, self.tax_10),
+            (-500, self.tax_10),
+        ]
+        run_case('round_per_line', lines, [15.45])
+        # 5.445 + 60 - 50 = 15.444999999999993 ~= 15.44
+        # 5.445 - 50 + 60 = 15.445 ~= 15.45
+        # 5.445 + 10 = 15.445 ~= 15.45
+        run_case('round_globally', lines, [15.44])
+
+        lines = [
+            (94.7, self.tax_23_1),
+            (32.8, self.tax_23_2),
+        ]
+        run_case('round_per_line', lines, [29.32])
+        run_case('round_globally', lines, [29.32])
 
     def test_invoice_foreign_currency_tax_totals(self):
         self.env['res.currency.rate'].create({
