@@ -2,12 +2,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Twitter Snippet',
+    'name': 'X Snippet',
     'category': 'Website/Website',
-    'summary': 'Twitter scroller snippet in website',
+    'summary': 'X scroller snippet in website',
     'version': '1.0',
     'description': """
-This module adds a Twitter scroller building block to the website builder, so that you can display Twitter feeds on any page of your website.
+This module adds a X scroller building block to the website builder, so that you can display X feeds on any page of your website.
     """,
     'depends': ['website'],
     'data': [

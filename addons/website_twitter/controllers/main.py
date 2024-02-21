@@ -20,11 +20,11 @@ class Twitter(http.Controller):
         debug = request.env.user.has_group('website.group_website_restricted_editor')
         if not key or not secret:
             if debug:
-                return {"error": _("Please set the Twitter API Key and Secret in the Website Settings.")}
+                return {"error": _("Please set the X API Key and Secret in the Website Settings.")}
             return []
         if not screen_name:
             if debug:
-                return {"error": _("Please set a Twitter screen name to load favorites from, "
+                return {"error": _("Please set a X screen name to load favorites from, "
                                    "in the Website Settings (it does not have to be yours)")}
             return []
         TwitterTweets = request.env['website.twitter.tweet']
@@ -34,7 +34,7 @@ class Twitter(http.Controller):
                 limit=int(limit), order="tweet_id desc")
         if len(tweets) < 12:
             if debug:
-                return {"error": _("Twitter user @%(username)s has less than 12 favorite tweets. "
+                return {"error": _("X user @%(username)s has less than 12 favorite posts. "
                                    "Please add more or choose a different screen name.",
                                    username=screen_name)}
             else:

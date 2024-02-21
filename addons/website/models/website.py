@@ -102,7 +102,7 @@ class Website(models.Model):
             return base64.b64encode(f.read())
 
     logo = fields.Binary('Website Logo', default=_default_logo, help="Display this logo on the website.")
-    social_twitter = fields.Char('Twitter Account', default=_default_social_twitter)
+    social_twitter = fields.Char('X Account', default=_default_social_twitter)
     social_facebook = fields.Char('Facebook Account', default=_default_social_facebook)
     social_github = fields.Char('GitHub Account', default=_default_social_github)
     social_linkedin = fields.Char('LinkedIn Account', default=_default_social_linkedin)
