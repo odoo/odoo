@@ -3,7 +3,7 @@
 
 from collections import Counter, defaultdict
 
-from odoo import _, api, fields, tools, models
+from odoo import _, api, fields, tools, models, Command
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import OrderedSet, groupby
 from odoo.tools.float_utils import float_compare, float_is_zero, float_round
@@ -741,7 +741,14 @@ class StockMoveLine(models.Model):
                 candidate.quantity -= candidate.product_id.uom_id._compute_quantity(quantity, candidate.product_uom_id, rounding_method='HALF-UP')
                 break
 
-        self.env['stock.move.line'].browse(to_unlink_candidate_ids).unlink()
+        move_line_to_unlink = self.env['stock.move.line'].browse(to_unlink_candidate_ids)
+        if self.env['ir.config_parameter'].sudo().get_param('stock.break_mto'):
+            for m in (move_line_to_unlink.move_id | move_to_reassign):
+                m.write({
+                    'procure_method': 'make_to_stock',
+                    'move_orig_ids': [Command.clear()]
+                })
+        move_line_to_unlink.unlink()
         move_to_reassign._action_assign()
 
     def _get_aggregated_properties(self, move_line=False, move=False):
