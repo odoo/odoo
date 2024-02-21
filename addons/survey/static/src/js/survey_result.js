@@ -125,8 +125,6 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
                         self.chartConfig = self._getSectionResultsChartConfig();
                         break;
                 }
-                window.addEventListener("afterprint", self._onAfterPrint.bind(self));
-                window.addEventListener("beforeprint", self._onBeforePrint.bind(self));
                 self.chart = self._loadChart();
             }
         });
@@ -134,27 +132,6 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
 
     willStart: async function () {
         await loadBundle("web.chartjs_lib");
-    },
-
-    // -------------------------------------------------------------------------
-    // Handlers
-    // -------------------------------------------------------------------------
-
-    /**
-     * Prepare chart for media print
-     * @private
-     */
-    _onBeforePrint: function () {
-        const printWidth = 630; // Value to fit any graphic into the width of an A4 portrait page
-        this.chart.resize(printWidth, Math.floor(printWidth / this.chart.aspectRatio));
-    },
-
-    /**
-     * Turn back chart to original size, for media screen
-     * @private
-     */
-    _onAfterPrint: function () {
-        this.chart.resize();
     },
 
     // -------------------------------------------------------------------------
