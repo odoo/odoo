@@ -10,13 +10,13 @@
                     <div name="div_outgoing_address">
                         <div name="outgoing_delivery_address"
                             t-if="o.should_print_delivery_address()">
-                            <span><strong>Delivery Address:</strong></span>
+                            <strong>Delivery Address</strong>
                             <div t-field="o.move_ids[0].partner_id"
                                 t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
                         </div>
                         <div name="outgoing_warehouse_address"
                              t-elif="o.picking_type_id.code != 'internal' and o.picking_type_id.warehouse_id.partner_id">
-                            <span><strong>Warehouse Address:</strong></span>
+                            <strong>Warehouse Address</strong>
                             <div t-field="o.picking_type_id.warehouse_id.partner_id"
                                 t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
                         </div>
@@ -27,11 +27,11 @@
                         <div class="col-7" name="div_incoming_address">
                             <t t-set="show_partner" t-value="False" />
                             <div name="vendor_address" t-if="o.picking_type_id.code=='incoming' and partner">
-                                <span><strong>Vendor Address:</strong></span>
+                                <strong>Vendor Address</strong>
                                 <t t-set="show_partner" t-value="True" />
                             </div>
                             <div name="customer_address" t-if="o.picking_type_id.code=='outgoing' and partner and partner != partner.commercial_partner_id">
-                                <span><strong>Customer Address:</strong></span>
+                                <strong>Customer Address</strong>
                                 <t t-set="show_partner" t-value="True" />
                             </div>
                             <div t-if="show_partner" name="partner_header">
@@ -46,15 +46,15 @@
                         <span t-field="o.name">WH/OUT/0001</span>
                     </h2>
                     <div class="oe_structure"></div>
-                    <div class="row mt32 mb32">
-                        <div t-if="o.origin" class="col-auto" name="div_origin">
-                            <strong>Order:</strong>
-                            <p t-field="o.origin">S0001</p>
+                    <div id="informations" class="row mb-4">
+                        <div t-if="o.origin" class="col" name="div_origin">
+                            <strong>Order</strong>
+                            <div t-field="o.origin">S0001</div>
                         </div>
-                        <div t-if="o.state" class="col-auto" name="div_sched_date">
-                            <strong>Shipping Date:</strong>
-                                <p t-if="o.state == 'done'" t-field="o.date_done"/>
-                                <p t-else="" t-field="o.scheduled_date"/>
+                        <div t-if="o.state" class="col" name="div_sched_date">
+                            <strong>Shipping Date</strong>
+                            <div t-if="o.state == 'done'" t-field="o.date_done"/>
+                            <div t-else="" t-field="o.scheduled_date"/>
                         </div>
                     </div>
                     <div class="oe_structure"></div>
