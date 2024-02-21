@@ -175,13 +175,13 @@ export function prepare_taxes_computation(tax_values_list, kwargs={}) {
 
     // Flatten the taxes and order them.
     const sorted_tax_values_list = tax_values_list.sort(
-        (v1, v2) => v1.sequence - v2.sequence || v1.tax_id - v2.tax_id
+        (v1, v2) => v1.sequence - v2.sequence || v1.id - v2.id
     );
     let flatten_tax_values_list = [];
     for (const tax_values of sorted_tax_values_list) {
         if (tax_values.amount_type === "group") {
             const sorted_children_tax_ids = tax_values._children_tax_ids.sort(
-                (v1, v2) => v1.sequence - v2.sequence || v1.tax_id - v2.tax_id
+                (v1, v2) => v1.sequence - v2.sequence || v1.id - v2.id
             );
             for (const child_tax_values of sorted_children_tax_ids) {
                 flatten_tax_values_list.push(child_tax_values);
@@ -306,7 +306,7 @@ export function prepare_taxes_computation(tax_values_list, kwargs={}) {
         if (batch.include_base_amount) {
             for (const next_batch of ascending_batches.toSpliced(0, i + 1)) {
                 for (const next_tax_values of next_batch.taxes) {
-                    subsequent_tax_ids.push(next_tax_values.tax_id);
+                    subsequent_tax_ids.push(next_tax_values.id);
                     if (include_caba_tags || next_tax_values.tax_exigibility !== "on_payment") {
                         for (const tag_id of next_tax_values[base_tags_field]) {
                             subsequent_tag_ids.add(tag_id);
@@ -453,7 +453,7 @@ export function eval_taxes_computation(taxes_computation, eval_context) {
                 reverse: reverse,
             });
             if (tax_amount === undefined) {
-                skipped.add(tax_values.tax_id);
+                skipped.add(tax_values.id);
                 tax_amount = 0.0;
             }
             tax_values.tax_amount = tax_amount;
@@ -488,7 +488,7 @@ export function eval_taxes_computation(taxes_computation, eval_context) {
     }
 
     if (skipped.length > 0) {
-        eval_tax_values_list = eval_tax_values_list.filter(tax_values => !skipped.has(tax_values.tax_id));
+        eval_tax_values_list = eval_tax_values_list.filter(tax_values => !skipped.has(tax_values.id));
     }
 
     let total_excluded = null;
@@ -520,7 +520,7 @@ export function eval_taxes_computation(taxes_computation, eval_context) {
 
 export function adapt_price_unit_to_another_taxes(price_unit, original_tax_values_list, new_tax_values_list) {
     const original_tax_ids = new Set(original_tax_values_list.map(x => x.id));
-    const new_tax_ids = new Set(new_tax_values_list.map(x => x.tax_id));
+    const new_tax_ids = new Set(new_tax_values_list.map(x => x.id));
     if (
         (
             original_tax_ids.size === new_tax_ids.size
