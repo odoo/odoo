@@ -128,6 +128,7 @@ class ReportSaleDetails(models.AbstractModel):
                 cash_counted = session.cash_register_balance_end_real
             is_cash_method = False
             for payment in payments:
+                account_payments = self.env['account.payment'].search([('pos_session_id', '=', session.id)])
                 if payment['session'] == session.id:
                     if not payment['cash']:
                         ref_value = "Closing difference in %s (%s)" % (payment['name'], session.name)
@@ -144,6 +145,19 @@ class ReportSaleDetails(models.AbstractModel):
                                 move_name = 'Difference observed during the counting (Profit)'
                                 payment['cash_moves'] = [{'name': move_name, 'amount': payment['money_difference']}]
                             elif is_loss:
+                                move_name = 'Difference observed during the counting (Loss)'
+                                payment['cash_moves'] = [{'name': move_name, 'amount': payment['money_difference']}]
+                            payment['count'] = True
+                        elif payment['id'] in account_payments.mapped('pos_payment_method_id.id'):
+                            account_payment = account_payments.filtered(lambda p: p.pos_payment_method_id.id == payment['id'])
+                            payment['final_count'] = payment['total']
+                            payment['money_counted'] = account_payment.amount
+                            payment['money_difference'] = payment['money_counted'] - payment['final_count']
+                            payment['cash_moves'] = []
+                            if payment['money_difference'] > 0:
+                                move_name = 'Difference observed during the counting (Profit)'
+                                payment['cash_moves'] = [{'name': move_name, 'amount': payment['money_difference']}]
+                            elif payment['money_difference'] < 0:
                                 move_name = 'Difference observed during the counting (Loss)'
                                 payment['cash_moves'] = [{'name': move_name, 'amount': payment['money_difference']}]
                             payment['count'] = True
