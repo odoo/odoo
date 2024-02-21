@@ -5,6 +5,7 @@ from datetime import datetime, timedelta
 from os.path import basename, join as opj
 from unittest.mock import patch
 from freezegun import freeze_time
+from urllib3.util import parse_url
 
 import odoo
 from odoo.tests import new_test_user, tagged
@@ -299,6 +300,22 @@ class TestHttpStatic(TestHttpStaticCommon):
             })
         self.assertFalse(att.checksum)
         self.assertDownloadGizeh(f'/web/image/{att.id}')
+
+    def test_static19_fallback_redirection_loop(self):
+        bad_path = '/test_http/static/idontexist.png'
+        self.assertRaises(FileNotFoundError, file_open, bad_path[1:])
+
+        self.env['ir.attachment'].create({
+            'name': 'idontexist.png',
+            'mimetype': 'image/png',
+            'url': bad_path,
+            'public': True,
+        })
+
+        res = self.url_open(bad_path, allow_redirects=False)
+        location = parse_url(res.headers.get('Location', ''))
+        self.assertNotEqual(location.path, bad_path, "loop detected")
+        self.assertEqual(res.status_code, 404)
 
 
 @tagged('post_install', '-at_install')
