@@ -106,6 +106,10 @@ class Warehouse(models.Model):
                 }
             }
 
+    @api.model
+    def _create_and_get_stock_location_id(self, values):
+        return self.env['stock.location'].with_context(active_test=False).create(values)
+
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
@@ -114,14 +118,14 @@ class Warehouse(models.Model):
                         'location_id': self.env.ref('stock.stock_location_locations').id}
             if vals.get('company_id'):
                 loc_vals['company_id'] = vals.get('company_id')
-            vals['view_location_id'] = self.env['stock.location'].create(loc_vals).id
+            vals['view_location_id'] = self._create_and_get_stock_location_id(loc_vals).id
             sub_locations = self._get_locations_values(vals)
 
             for field_name, values in sub_locations.items():
                 values['location_id'] = vals['view_location_id']
                 if vals.get('company_id'):
                     values['company_id'] = vals.get('company_id')
-                vals[field_name] = self.env['stock.location'].with_context(active_test=False).create(values).id
+                vals[field_name] = self._create_and_get_stock_location_id(values).id
 
         # actually create WH
         warehouses = super().create(vals_list)
