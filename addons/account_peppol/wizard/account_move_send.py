@@ -54,7 +54,7 @@ class AccountMoveSend(models.TransientModel):
     @api.depends('move_ids')
     def _compute_peppol_warning(self):
         for wizard in self:
-            invalid_partners = wizard.move_ids.partner_id.filtered(
+            invalid_partners = wizard.move_ids.partner_id.commercial_partner_id.filtered(
                 lambda partner: not partner.account_peppol_is_endpoint_valid)
             if not invalid_partners:
                 wizard.peppol_warning = False
@@ -69,7 +69,7 @@ class AccountMoveSend(models.TransientModel):
         for wizard in self:
             # show peppol option if either the ubl option is available or any move already has a ubl file generated
             # and moves are not processing/done and if partners have an edi format set to one that works for peppol
-            invalid_partners = wizard.move_ids.partner_id.filtered(
+            invalid_partners = wizard.move_ids.partner_id.commercial_partner_id.filtered(
                 lambda partner: partner.ubl_cii_format in {False, 'facturx', 'oioubl_201'})
             wizard.enable_peppol = (
                 wizard.company_id.account_peppol_proxy_state == 'active' \
@@ -136,18 +136,19 @@ class AccountMoveSend(models.TransientModel):
                     invoice.peppol_move_state = 'skipped'
                     continue
 
-                if not invoice.partner_id.peppol_eas or not invoice.partner_id.peppol_endpoint:
+                partner = invoice.partner_id.commercial_partner_id
+                if not partner.peppol_eas or not partner.peppol_endpoint:
                     # should never happen but in case it does, we need to handle it
                     invoice.peppol_move_state = 'error'
                     invoice_data['error'] = _('The partner is missing Peppol EAS and/or Endpoint identifier.')
                     continue
 
-                if not invoice.partner_id.account_peppol_is_endpoint_valid:
+                if not partner.account_peppol_is_endpoint_valid:
                     invoice.peppol_move_state = 'error'
                     invoice_data['error'] = _('Please verify partner configuration in partner settings.')
                     continue
 
-                receiver_identification = f"{invoice.partner_id.peppol_eas}:{invoice.partner_id.peppol_endpoint}"
+                receiver_identification = f"{partner.peppol_eas}:{partner.peppol_endpoint}"
                 params['documents'].append({
                     'filename': filename,
                     'receiver': receiver_identification,
