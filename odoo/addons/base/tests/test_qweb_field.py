@@ -56,3 +56,17 @@ class TestQwebFieldInteger(common.TransactionCase):
             self.value_to_html(125125, {'format_decimalized_number': True, 'precision_digits': 3}),
             "125.125k"
         )
+
+
+class TestQwebFieldDuration(common.TransactionCase):
+    def value_to_html(self, value, options=None, lang=None):
+        options = options or {}
+        language = self.env.lang if not lang else self.env['res.lang']._activate_lang(lang)
+        return self.env['ir.qweb.field.duration'].with_context({'lang': language.code}).value_to_html(value, options)
+
+    def test_duration_value_to_html(self):
+        """
+        Babel version < 2.10.0 format_timedelta() key errors:
+            'pl_PL' locale, duration with 'format': 'short'
+        """
+        self.value_to_html(value=1800, options={'format': 'short'}, lang='pl_PL')

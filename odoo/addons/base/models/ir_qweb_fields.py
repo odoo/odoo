@@ -639,13 +639,21 @@ class DurationConverter(models.AbstractModel):
             v, r = divmod(r, secs_per_unit)
             if not v:
                 continue
-            section = babel.dates.format_timedelta(
-                v*secs_per_unit,
-                granularity=round_to,
-                add_direction=options.get('add_direction'),
-                format=options.get('format', 'long'),
-                threshold=1,
-                locale=locale)
+
+            fmt_timedelta_args = {
+                'delta': v * secs_per_unit,
+                'granularity': round_to,
+                'add_direction': options.get('add_direction'),
+                'format': options.get('format', 'long'),
+                'threshold': 1,
+                'locale': locale,
+            }
+            try:
+                section = babel.dates.format_timedelta(**fmt_timedelta_args)
+            except KeyError:
+                # Work around babel issues formatting some values for certain locales
+                del fmt_timedelta_args['format']
+                section = babel.dates.format_timedelta(**fmt_timedelta_args)
             if section:
                 sections.append(section)
 
