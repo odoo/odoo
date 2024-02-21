@@ -190,9 +190,9 @@
                             <field name="allow_task_dependencies" invisible="1" />
                             <field name="partner_id" options="{'no_open': True, 'no_create': True, 'no_edit': True}" invisible="not project_id"/>
                             <field name="date_deadline" invisible="state in ['1_done', '1_canceled']" decoration-danger="date_deadline &lt; current_date"/>
-                            <field name="recurring_task" />
-                            <label for="repeat_interval" invisible="not recurring_task"/>
-                            <div invisible="not recurring_task" class="d-flex" >
+                            <field name="recurring_task" groups="project.group_project_recurring_tasks"/>
+                            <label for="repeat_interval" invisible="not recurring_task" groups="project.group_project_recurring_tasks"/>
+                            <div invisible="not recurring_task" class="d-flex" groups="project.group_project_recurring_tasks">
                                 <field name="repeat_interval" required="recurring_task"
                                        class="me-2" style="max-width: 2rem !important;" />
                                 <field name="repeat_unit" required="recurring_task"
