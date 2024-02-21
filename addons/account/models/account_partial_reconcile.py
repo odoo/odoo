@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo import api, fields, models, _, Command
 from odoo.exceptions import UserError, ValidationError
+from odoo.tools import frozendict
 
 from datetime import date
 
@@ -259,6 +260,7 @@ class AccountPartialReconcile(models.Model):
             'account_id': account.id,
             'tax_ids': [Command.set(tax_ids.ids)],
             'tax_tag_ids': [Command.set(all_tags.ids)],
+            'analytic_distribution': base_line.analytic_distribution,
         }
 
     @api.model
@@ -278,6 +280,7 @@ class AccountPartialReconcile(models.Model):
             'amount_currency': -cb_base_line_vals['amount_currency'],
             'currency_id': cb_base_line_vals['currency_id'],
             'partner_id': cb_base_line_vals['partner_id'],
+            'analytic_distribution': cb_base_line_vals['analytic_distribution'],
         }
 
     @api.model
@@ -307,6 +310,7 @@ class AccountPartialReconcile(models.Model):
             'amount_currency': amount_currency,
             'currency_id': tax_line.currency_id.id,
             'partner_id': tax_line.partner_id.id,
+            'analytic_distribution': tax_line.analytic_distribution,
             # No need to set tax_tag_invert as on the base line; it will be computed from the repartition line
         }
 
@@ -328,6 +332,7 @@ class AccountPartialReconcile(models.Model):
             'amount_currency': -cb_tax_line_vals['amount_currency'],
             'currency_id': cb_tax_line_vals['currency_id'],
             'partner_id': cb_tax_line_vals['partner_id'],
+            'analytic_distribution': cb_tax_line_vals['analytic_distribution'],
         }
 
     @api.model
@@ -343,6 +348,7 @@ class AccountPartialReconcile(models.Model):
             base_line_vals['partner_id'],
             base_line_vals['account_id'],
             tuple(base_taxes.filtered(lambda x: x.tax_exigibility == 'on_payment').ids),
+            frozendict(base_line_vals['analytic_distribution'] or {}),
         )
 
     @api.model
@@ -357,6 +363,7 @@ class AccountPartialReconcile(models.Model):
             base_line.partner_id.id,
             (account or base_line.account_id).id,
             tuple(base_line.tax_ids.flatten_taxes_hierarchy().filtered(lambda x: x.tax_exigibility == 'on_payment').ids),
+            frozendict(base_line.analytic_distribution or {}),
         )
 
     @api.model
@@ -373,6 +380,7 @@ class AccountPartialReconcile(models.Model):
             tax_line_vals['account_id'],
             tuple(base_taxes.filtered(lambda x: x.tax_exigibility == 'on_payment').ids),
             tax_line_vals['tax_repartition_line_id'],
+            frozendict(tax_line_vals['analytic_distribution'] or {}),
         )
 
     @api.model
@@ -388,6 +396,7 @@ class AccountPartialReconcile(models.Model):
             (account or tax_line.account_id).id,
             tuple(tax_line.tax_ids.filtered(lambda x: x.tax_exigibility == 'on_payment').ids),
             tax_line.tax_repartition_line_id.id,
+            frozendict(tax_line.analytic_distribution or {}),
         )
 
     def _create_tax_cash_basis_moves(self):
