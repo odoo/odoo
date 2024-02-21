@@ -1256,9 +1256,15 @@ class WebsiteSale(http.Controller):
         country = request.env["res.country"].search([
             ('code', '=', address.pop('country')),
         ], limit=1)
+        state_name = address.pop('state')
         state = request.env["res.country.state"].search([
-            ('code', '=', address.pop('state')),
+            ('code', '=', state_name),
+            ('country_id', '=', country.id)
         ], limit=1)
+        if not state:
+            state = request.env["res.country.state"].search([
+                ('code', '=', state_name),
+            ], limit=1)
         address.update(country_id=country, state_id=state)
 
     def _create_or_edit_partner(self, partner_details, edit=False, **custom_values):
