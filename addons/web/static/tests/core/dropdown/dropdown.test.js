@@ -1,4 +1,4 @@
-import { after, destroy, expect, getFixture, mountOnFixture, test } from "@odoo/hoot";
+import { after, beforeEach, destroy, expect, getFixture, mountOnFixture, test } from "@odoo/hoot";
 import {
     click,
     hover,
@@ -82,6 +82,15 @@ function startOpenState() {
     });
     return state;
 }
+
+beforeEach(() => {
+    // Patch to skip animations
+    patchWithCleanup(HTMLElement.prototype, {
+        animate: () => ({
+            finished: new Promise((resolve) => resolve()),
+        }),
+    });
+})
 
 test("can be rendered", async () => {
     await mountWithCleanup(SimpleDropdown);
