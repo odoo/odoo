@@ -156,28 +156,16 @@ export class Store extends BaseStore {
             if (bUnread > 0 && aUnread === 0) {
                 return 1;
             }
-            if (
-                !a.newestPersistentNotEmptyOfAllMessage?.datetime &&
-                b.newestPersistentNotEmptyOfAllMessage?.datetime
-            ) {
+            const aMessageDatetime = a.newestPersistentNotEmptyOfAllMessage?.datetime;
+            const bMessageDateTime = b.newestPersistentNotEmptyOfAllMessage?.datetime;
+            if (!aMessageDatetime && bMessageDateTime) {
                 return 1;
             }
-            if (
-                !b.newestPersistentNotEmptyOfAllMessage?.datetime &&
-                a.newestPersistentNotEmptyOfAllMessage?.datetime
-            ) {
+            if (!bMessageDateTime && aMessageDatetime) {
                 return -1;
             }
-            if (
-                a.newestPersistentNotEmptyOfAllMessage?.datetime &&
-                b.newestPersistentNotEmptyOfAllMessage?.datetime &&
-                a.newestPersistentNotEmptyOfAllMessage?.datetime !==
-                    b.newestPersistentNotEmptyOfAllMessage?.datetime
-            ) {
-                return (
-                    b.newestPersistentNotEmptyOfAllMessage.datetime -
-                    a.newestPersistentNotEmptyOfAllMessage.datetime
-                );
+            if (aMessageDatetime && bMessageDateTime && aMessageDatetime !== bMessageDateTime) {
+                return bMessageDateTime - aMessageDatetime;
             }
             return b.localId > a.localId ? 1 : -1;
         },
