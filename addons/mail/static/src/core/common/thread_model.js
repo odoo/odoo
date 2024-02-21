@@ -203,6 +203,11 @@ export class Thread extends Record {
     isAdmin = false;
     loadOlder = false;
     loadNewer = false;
+    isCorrespondentOdooBot = Record.attr(undefined, {
+        compute() {
+            return this.correspondent2?.eq(this._store.odoobot);
+        },
+    });
     isLoadingAttachments = false;
     isLoadedDeferred = new Deferred();
     isLoaded = false;
