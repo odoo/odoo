@@ -36,10 +36,22 @@ class PosOnlineDeliveryProvider(models.Model):
     access_token = fields.Char(copy=False)
     access_token_expiration_timestamp = fields.Float(copy=False)
     config_ids = fields.Many2many('pos.config', 'pos_config_delivery_provider_rel', 'delivery_provider_id', 'config_id', string='Point of Sale')
+    available_pos_category_ids = fields.Many2many('pos.category', string='Available Point of Sale Categories', compute='_compute_available_pos_category_ids')
+    pos_category_ids = fields.Many2many('pos.category', string='Point of Sale Categories', help='The categories of products that will be sent for the menu.')
+    last_menu_synchronization = fields.Datetime('Last Menu Synchronization', copy=False)
 
     # Module-related fields
     module_id = fields.Many2one(string="Corresponding Module", comodel_name='ir.module.module')
     module_state = fields.Selection(string="Installation State", related='module_id.state', store=True)  # Stored for sorting.
+
+    @api.depends('config_ids')
+    def _compute_available_pos_category_ids(self):
+        configs_to_check = self.config_ids or self.env['pos.config'].search([('company_id', '=', self.company_id.id)])
+        categogy_domain = self.env['pos.category'].search([])
+        for config_id in configs_to_check:
+            if config_id.limit_categories:
+                categogy_domain = categogy_domain & config_id.iface_available_categ_ids
+        self.available_pos_category_ids = categogy_domain
 
     @api.onchange('state')
     def _onchange_state(self):
@@ -88,3 +100,6 @@ class PosOnlineDeliveryProvider(models.Model):
                 'type': 'ir.actions.client',
                 'tag': 'reload',
             }
+
+    def ensure_enabled(self):
+        pass

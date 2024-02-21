@@ -26,10 +26,13 @@
                     </div>
                     <group>
                         <group name="provider_state" invisible="module_state not in ('installed', False)">
+                            <field name="available_pos_category_ids" invisible="1"/>
                             <field name="code" groups="base.group_no_one" readonly="id"/>
                             <field name="state" widget="radio"/>
                             <field name="company_id" groups="base.group_multi_company" options='{"no_open":True}'/>
                             <field name="config_ids" widget="many2many_tags" options="{'create':false}" placeholder="All PoS"/>
+                            <field name="available_pos_category_ids" invisible="1"/>
+                            <field name="pos_category_ids" widget="many2many_tags" options="{'create':false}" placeholder="All Available PoS Categories (depending on the PoS mentioned above)" domain="[('id', 'in', available_pos_category_ids)]"/>
                         </group>
                     </group>
                     <notebook invisible="module_id and module_state != 'installed'">

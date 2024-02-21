@@ -8,17 +8,34 @@
             <field name="image_128" position="before">
                 <!-- === Update Menu Buttons === -->
                 <div class="oe_button_box" name="button_box">
-                    <button name="action_upload_menu" class="oe_stat_button" type="object" icon="fa-upload">
+                    <button name="action_upload_menu" class="oe_stat_button h-auto" type="object" icon="fa-upload">
                         <div class="o_stat_info o_field_widget">
                             <span class="o_stat_text">Update Menu on Deliveroo</span>
+                            <field name="last_menu_synchronization" widget="statinfo" string="Last Synchronization"/>
                         </div>
                     </button>
                 </div>
             </field>
             <field name="client_secret" position="after">
+                <field name="code" invisible="1"/>
                 <field name="webhook_secret" invisible="code != 'deliveroo'" required="code == 'deliveroo'"/>
                 <field name="site_id" invisible="code != 'deliveroo'" required="code == 'deliveroo'"/>
+                <field name="site_description" invisible="code != 'deliveroo'"/>
             </field>
+            <page name="configuration" position="after">
+                <page string="Mealtimes" name="mealtimes">
+                    <field name="mealtime_ids">
+                        <tree editable="bottom">
+                            <field name="weekday" string="Every"/>
+                            <field name="start_hour" string="From" widget="float_time"/>
+                            <field name="end_hour" string="To" widget="float_time"/>
+                            <field name="image_1920" string="Image" widget="image"/>
+                            <field name="name" optional="hide"/>
+                            <field name="description" optional="hide" placeholder="If no description is provided, the Deliveroo description will be used."/>
+                        </tree>
+                    </field>
+                </page>
+            </page>
         </field>
     </record>
 </odoo>
