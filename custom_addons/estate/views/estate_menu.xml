@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <menuitem id="menu_estate" name="Real Estate" web_icon="estate\static\description\icon.png" sequence="5" groups="group_user,group_admin"/>
+        <!-- Main menu -->
+        <menuitem id="menu_estate" name="Real Estate" web_icon="estate\static\description\icon.png" sequence="1" groups="group_user,group_admin"/>
 
-            <menuitem parent="menu_estate" sequence="10" id="menu_real_estate" name="Advertisements"  groups="group_user,group_admin"/>
+        <!-- Submenus -->
+        <menuitem parent="menu_estate" sequence="10" id="menu_real_estate" name="Anuncios"  groups="group_user,group_admin"/>
+            <menuitem parent="menu_real_estate" action="estate_list_action" id="menu_real_estate_properties" name="Propiedades" groups="group_user,group_admin"/>
 
-                <menuitem parent="menu_real_estate" sequence="15" action="estate_list_action" id="menu_real_estate_properties" name="Properties" groups="group_user,group_admin"/>
+        <menuitem id="menu_estate_type" name="Tipos" parent="menu_estate" sequence="20"/>
+            <menuitem parent="menu_estate_type" action="estate.action_estate_type" id="menu_estate_type_property" name="Propiedades" groups="group_user,group_admin"/>
+
 
     </data>
 </odoo>

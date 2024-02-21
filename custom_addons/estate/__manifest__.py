@@ -10,11 +10,10 @@
         'security/security.xml',
         'security/ir.model.access.csv',
         'views/estate.xml',
-        'views/estate_menu.xml',
         # 'views/view_estate.xml',
         #'views/estate_form.xml',
         'views/estate_type.xml',
-
+        'views/estate_menu.xml',
     ],
     'application': True,
     'installable': True,
