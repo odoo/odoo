@@ -47,7 +47,7 @@ export class PivotUIPlugin extends OdooUIPlugin {
                 this._refreshAllPivots();
                 break;
             case "ADD_PIVOT": {
-                this._setupPivot(cmd.id);
+                this._setupPivot(cmd.pivotId);
                 break;
             }
             case "DUPLICATE_PIVOT": {

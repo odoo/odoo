@@ -45,7 +45,7 @@ export class PivotCorePlugin extends OdooCorePlugin {
      */
     allowDispatch(cmd) {
         switch (cmd.type) {
-            case "RENAME_ODOO_PIVOT":
+            case "RENAME_PIVOT":
                 if (!(cmd.pivotId in this.pivots)) {
                     return CommandResult.PivotIdNotFound;
                 }
@@ -54,12 +54,12 @@ export class PivotCorePlugin extends OdooCorePlugin {
                 }
                 break;
             case "ADD_PIVOT":
-                if (cmd.id !== this.nextId.toString()) {
+                if (cmd.pivotId !== this.nextId.toString()) {
                     return CommandResult.InvalidNextId;
                 }
                 break;
             case "INSERT_PIVOT": {
-                if (!(cmd.id in this.pivots)) {
+                if (!(cmd.pivotId in this.pivots)) {
                     return CommandResult.PivotIdNotFound;
                 }
                 break;
@@ -83,21 +83,21 @@ export class PivotCorePlugin extends OdooCorePlugin {
     handle(cmd) {
         switch (cmd.type) {
             case "ADD_PIVOT": {
-                const { id, pivot } = cmd;
-                this._addPivot(id, pivot);
-                this.history.update("nextId", parseInt(id, 10) + 1);
+                const { pivotId, pivot } = cmd;
+                this._addPivot(pivotId, pivot);
+                this.history.update("nextId", parseInt(pivotId, 10) + 1);
                 break;
             }
             case "INSERT_PIVOT": {
-                const { sheetId, col, row, id, table } = cmd;
+                const { sheetId, col, row, pivotId, table } = cmd;
                 /** @type { { col: number, row: number } } */
                 const position = { col, row };
                 const { cols, rows, measures, rowTitle } = table;
                 const spTable = new SpreadsheetPivotTable(cols, rows, measures, rowTitle);
-                this._insertPivot(sheetId, position, id, spTable);
+                this._insertPivot(sheetId, position, pivotId, spTable);
                 break;
             }
-            case "RENAME_ODOO_PIVOT": {
+            case "RENAME_PIVOT": {
                 this.history.update("pivots", cmd.pivotId, "name", cmd.name);
                 break;
             }

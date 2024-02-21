@@ -45,11 +45,11 @@ export async function insertPivotInSpreadsheet(model, params) {
     const [col, row] = params.anchor || [0, 0];
     const id = model.getters.getNextPivotId();
     model.dispatch("ADD_PIVOT", {
-        id,
+        pivotId: id,
         pivot,
     });
     model.dispatch("INSERT_PIVOT", {
-        id,
+        pivotId: id,
         sheetId: params.sheetId || model.getters.getActiveSheetId(),
         col,
         row,
