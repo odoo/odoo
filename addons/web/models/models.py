@@ -283,17 +283,9 @@ class Base(models.AbstractModel):
         :return a dictionnary mapping group_by values to dictionnaries mapping
                 progress bar field values to the related number of records
         """
-        group_by_fullname = group_by.partition(':')[0]
-        group_by_fieldname = group_by_fullname.split(".")[0]  # split on "." in case we group on a property
-        field_type = self._fields[group_by_fieldname].type
-        if field_type == 'selection':
-            selection_labels = dict(self.fields_get()[group_by]['selection'])
-
         def adapt(value):
-            if field_type == 'selection':
-                value = selection_labels.get(value, False)
             if isinstance(value, tuple):
-                value = value[1]  # FIXME should use technical value (0)
+                value = value[0]
             return value
 
         result = {}

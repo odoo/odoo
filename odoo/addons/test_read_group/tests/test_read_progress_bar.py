@@ -112,9 +112,9 @@ class TestReadProgressBar(common.TransactionCase):
         }
         result = self.env['x_progressbar'].read_progress_bar([], 'x_country_id', progress_bar)
         self.assertEqual(result, {
-            c1.display_name: {'foo': 3, 'bar': 1, 'baz': 1},
-            c2.display_name: {'foo': 1, 'bar': 2, 'baz': 1},
-            c3.display_name: {'foo': 2, 'bar': 0, 'baz': 4},
+            str(c1.id): {'foo': 3, 'bar': 1, 'baz': 1},
+            str(c2.id): {'foo': 1, 'bar': 2, 'baz': 1},
+            str(c3.id): {'foo': 2, 'bar': 0, 'baz': 4},
         })
 
         # check date aggregation and format
@@ -145,9 +145,9 @@ class TestReadProgressBar(common.TransactionCase):
         }
         result = self.env['x_progressbar'].read_progress_bar([], 'x_country_id', progress_bar)
         self.assertEqual(result, {
-            c1.display_name: {'foo': 3, 'bar': 1, 'baz': 1},
-            c2.display_name: {'foo': 1, 'bar': 2, 'baz': 1},
-            c3.display_name: {'foo': 2, 'bar': 0, 'baz': 4},
+            str(c1.id): {'foo': 3, 'bar': 1, 'baz': 1},
+            str(c2.id): {'foo': 1, 'bar': 2, 'baz': 1},
+            str(c3.id): {'foo': 2, 'bar': 0, 'baz': 4},
         })
 
         result = self.env['x_progressbar'].read_progress_bar([], 'x_date:week', progress_bar)
