@@ -1,6 +1,6 @@
 .o_searchview {
     --SearchBar-background-color: $input-focus-bg;
-    
+
     background-color: var(--SearchBar-background-color);
     border: $input-border-width solid $border-color;
 
@@ -8,7 +8,7 @@
         border-color: $input-focus-border-color;
         color: $input-focus-color;
 
-        + .o-dropdown .o_searchview_dropdown_toggler {
+        + .o_searchview_dropdown_toggler {
             border-top-color: $input-focus-border-color;
             border-right-color: $input-focus-border-color;
             border-bottom-color: $input-focus-border-color;
@@ -76,7 +76,7 @@
         .o_generator_menu_delete {
             @include o-hover-opacity(0.8, 1);
             @include o-position-absolute($dropdown-item-padding-x*.3, $dropdown-item-padding-x*.2, auto, auto);
-            
+
             &:hover {
                 background-color: map-get($grays, '100');
             }
@@ -132,57 +132,57 @@
             display: flex;
             padding: 15px 20px 0 20px;
             position: relative;
-    
+
             .o_searchview_input {
                 border-bottom: 1px solid $o-brand-secondary;
                 margin-bottom: 15px;
                 width: 100%;
                 background-color: var(--o-input-background-color, #{$input-bg});
             }
-    
+
             .o_searchview_facet {
                 border-radius: 10px;
                 display: inline-flex;
                 order: 1;
-    
+
                 .o_searchview_facet_label {
                     border-radius: 2em 0em 0em 2em;
                 }
             }
-    
+
             .o_searchview_autocomplete {
                 top: 100%;
-    
+
                 > li {
                     margin: 5px 0px;
                 }
             }
         }
-    
+
         .o_mobile_search_filter {
             padding: 8px 20px 15%;
             flex: auto;
-    
+
             .dropdown {
                 margin-top: 15px;
                 flex-direction: column;
                 line-height: 2;
-    
+
                 &:not(.show) {
                     box-shadow: 0 0 0 1px $border-color;
                 }
             }
-    
+
             .dropdown, .dropdown-toggle {
                 width: 100%;
             }
-    
+
             // We disable the backdrop in this case because it prevents any
             // interaction outside of a dropdown while it is open.
             .dropdown-backdrop {
                 z-index: -1;
             }
-    
+
             .dropdown-menu {
                 // Here we use !important because of popper js adding custom style
                 // to element so to override it use !important

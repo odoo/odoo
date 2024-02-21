@@ -4,13 +4,14 @@
         border: none;
     }
 
-    &button {
-        &.active,
-        &:hover,
-        &:focus,
-        &:active {
-            outline: none;
-            box-shadow: none !important;
+    &.btn-secondary, &.btn-outline-secondary {
+        transition: background-color .2s ease-in-out, border-color .2s ease-in-out;
+
+        &.show {
+            $-value: map-get($o-btns-bs-outline-override, 'secondary');
+            color: map-get($-value, 'active-color');
+            background-color: map-get($-value, 'active-background');
+            border-color: map-get($-value, 'active-border');
         }
     }
 
@@ -33,20 +34,19 @@
 .o-dropdopwn-item,
 .o_menu_item {
     &.o-dropdown-caret:not(.o-dropdown-no-caret) {
-        padding-right: 25px;
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: center;
+        gap: 5px;
 
         &:after {
             content: "\f0d7";
             font-family: FontAwesome;
-            margin-left: 10px;
             display: inline-block;
-            vertical-align: middle;
+            margin-left: auto;
 
             transform: rotate(0deg);
             transition: .25s ease-in-out;
-
-            position: absolute;
-            right: 10px;
         }
 
         &.show:after {
@@ -54,6 +54,8 @@
         }
 
         &.o-dropdown--has-parent {
+            padding-right: 8px;
+
             &:after {
                 transform: rotate(-90deg);
             }
