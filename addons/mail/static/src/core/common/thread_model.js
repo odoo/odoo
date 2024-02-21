@@ -147,6 +147,11 @@ export class Thread extends Record {
         }
         return this.message_needaction_counter;
     }
+    isCorrespondentOdooBot = Record.attr(undefined, {
+        compute() {
+            return this.correspondent?.eq(this._store.odoobot);
+        },
+    });
     isLoadingAttachments = false;
     isLoadedDeferred = new Deferred();
     isLoaded = Record.attr(false, {
