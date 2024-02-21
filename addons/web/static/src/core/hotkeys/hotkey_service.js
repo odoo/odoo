@@ -337,6 +337,7 @@ export const hotkeyService = {
                     "bg-black-50",
                     "h6"
                 );
+                overlay.style.zIndex = 1;
                 const overlayKbd = document.createElement("kbd");
                 overlayKbd.className = "small";
                 overlayKbd.appendChild(document.createTextNode(hotkey.toUpperCase()));
