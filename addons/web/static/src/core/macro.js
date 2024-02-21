@@ -172,27 +172,40 @@ export class MacroEngine {
             subtree: true,
             characterData: true,
         };
-        this.observer = new MutationObserver(this.delayedCheck.bind(this));
-        this.iframeObserver = new MutationObserver(() => {
-            const iframeEl = document.querySelector("iframe.o_iframe");
-            if (iframeEl) {
-                iframeEl.addEventListener("load", () => {
-                    if (iframeEl.contentDocument) {
-                        this.observer.observe(iframeEl.contentDocument, this.observerOptions);
+        this.observer = new MutationObserver((mutationList, observer) => {
+            this.delayedCheck();
+            //When iframes are added to "this.target"
+            mutationList.forEach((mutationRecord) =>
+                Array.from(mutationRecord.addedNodes).forEach((node) => {
+                    let iframes = [];
+                    if (String(node.tagName).toLowerCase() === "iframe") {
+                        iframes = [node];
+                    } else if (node instanceof HTMLElement) {
+                        iframes = Array.from(node.querySelectorAll("iframe"));
+                    }
+                    iframes.forEach((iframeEl) => this.observeIframe(iframeEl, observer));
+                })
+            );
+        });
+    }
+
+    observeIframe(iframeEl, observer) {
+        const observeIframeContent = () => {
+            if (iframeEl.contentDocument) {
+                iframeEl.contentDocument.addEventListener("readystatechange", () => {
+                    if (iframeEl.contentDocument.readyState === "complete") {
+                        this.delayedCheck();
+                        observer.observe(iframeEl.contentDocument, this.observerOptions);
                     }
                 });
-                // If the iframe was added without a src, its load event was immediately fired and
-                // will not fire again unless another src is set. Unfortunately, the case of this
-                // happening and the iframe content being altered programmaticaly may happen.
-                // (E.g. at the moment this was written, the mass mailing editor iframe is added
-                // without src and its content rewritten immediately afterwards).
-                if (!iframeEl.src) {
-                    if (iframeEl.contentDocument) {
-                        this.observer.observe(iframeEl.contentDocument, this.observerOptions);
-                    }
+                if (!iframeEl.src || iframeEl.contentDocument.readyState === "complete") {
+                    this.delayedCheck();
+                    observer.observe(iframeEl.contentDocument, this.observerOptions);
                 }
             }
-        });
+        };
+        observeIframeContent();
+        iframeEl.addEventListener("load", observeIframeContent);
     }
 
     async activate(descr, exclusive = false) {
@@ -216,7 +229,10 @@ export class MacroEngine {
         if (!this.isRunning) {
             this.isRunning = true;
             this.observer.observe(this.target, this.observerOptions);
-            this.iframeObserver.observe(this.target, { childList: true, subtree: true });
+            //When iframes already exist at "this.target" initialization
+            this.target
+                .querySelectorAll("iframe")
+                .forEach((el) => this.observeIframe(el, this.observer));
         }
         this.delayedCheck();
     }
@@ -227,7 +243,6 @@ export class MacroEngine {
             browser.clearTimeout(this.timeout);
             this.timeout = null;
             this.observer.disconnect();
-            this.iframeObserver.disconnect();
         }
     }
 
