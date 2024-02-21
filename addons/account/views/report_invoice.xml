@@ -10,7 +10,7 @@
                         <div class="col-6">
                             <t t-set="information_block">
                                 <div groups="account.group_delivery_invoice_address" name="shipping_address_block">
-                                    <strong>Shipping Address:</strong>
+                                    <strong>Shipping Address</strong>
                                     <div t-field="o.partner_shipping_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
                                 </div>
                             </t>
@@ -64,41 +64,41 @@
                             <span t-if="o.name != '/'" t-field="o.name">INV/2023/0001</span>
                         </h2>
                         <div class="oe_structure"></div>
-                        <div id="informations" class="row mt-3 mb-1">
-                            <div t-attf-class="#{'col-auto col-3 mw-100' if report_type != 'html' else 'col'} mb-2" t-if="o.invoice_date" name="invoice_date">
-                                <t t-if="o.move_type == 'out_invoice'"><strong>Invoice Date:</strong></t>
-                                <t t-elif="o.move_type == 'out_refund'"><strong>Credit Note Date:</strong></t>
-                                <t t-elif="o.move_type == 'out_receipt'"><strong>Receipt Date:</strong></t>
-                                <t t-else=""><strong>Date:</strong></t><br/>
-                                <span t-field="o.invoice_date">2023-09-12</span>
+                        <div id="informations" class="row mb-4">
+                            <div class="col" t-if="o.invoice_date" name="invoice_date">
+                                <t t-if="o.move_type == 'out_invoice'"><strong>Invoice Date</strong></t>
+                                <t t-elif="o.move_type == 'out_refund'"><strong>Credit Note Date</strong></t>
+                                <t t-elif="o.move_type == 'out_receipt'"><strong>Receipt Date</strong></t>
+                                <t t-else=""><strong>Date</strong></t>
+                                <div t-field="o.invoice_date">2023-09-12</div>
                             </div>
-                            <div t-attf-class="#{'col-auto col-3 mw-100' if report_type != 'html' else 'col'} mb-2" t-if="o.invoice_date_due and o.move_type == 'out_invoice' and o.state == 'posted'" name="due_date">
-                                <strong>Due Date:</strong><br/>
-                                <span t-field="o.invoice_date_due">2023-10-31</span>
+                            <div class="col" t-if="o.invoice_date_due and o.move_type == 'out_invoice' and o.state == 'posted'" name="due_date">
+                                <strong>Due Date</strong>
+                                <div t-field="o.invoice_date_due">2023-10-31</div>
                             </div>
-                            <div t-attf-class="#{'col-auto col-3 mw-100' if report_type != 'html' else 'col'} mb-2" t-if="o.delivery_date" name="delivery_date">
-                                <strong>Delivery Date:</strong><br/>
-                                <span t-field="o.delivery_date">2023-09-25</span>
+                            <div class="col" t-if="o.delivery_date" name="delivery_date">
+                                <strong>Delivery Date</strong>
+                                <div t-field="o.delivery_date">2023-09-25</div>
                             </div>
-                            <div t-attf-class="#{'col-auto col-3 mw-100' if report_type != 'html' else 'col'} mb-2" t-if="o.invoice_origin" name="origin">
-                                <strong>Source:</strong><br/>
-                                <span t-field="o.invoice_origin">SO123</span>
+                            <div class="col" t-if="o.invoice_origin" name="origin">
+                                <strong>Source</strong>
+                                <div t-field="o.invoice_origin">SO123</div>
                             </div>
-                            <div t-attf-class="#{'col-auto col-3 mw-100' if report_type != 'html' else 'col'} mb-2" t-if="o.partner_id.ref" name="customer_code">
-                                <strong>Customer Code:</strong><br/>
-                                <span t-field="o.partner_id.ref"/>
+                            <div class="col" t-if="o.partner_id.ref" name="customer_code">
+                                <strong>Customer Code</strong>
+                                <div t-field="o.partner_id.ref"/>
                             </div>
-                            <div t-attf-class="#{'col-auto col-3 mw-100' if report_type != 'html' else 'col'} mb-2" t-if="o.ref" name="reference">
-                                <strong>Reference:</strong><br/>
-                                <span t-field="o.ref">INV/2023/00001</span>
+                            <div class="col" t-if="o.ref" name="reference">
+                                <strong>Reference</strong>
+                                <div t-field="o.ref">INV/2023/00001</div>
                             </div>
-                            <div t-attf-class="#{'col-auto col-3 mw-100' if report_type != 'html' else 'col'} mb-2" t-if="o.invoice_incoterm_id" name="incoterm_id">
-                                <strong>Incoterm:</strong><br/>
-                                <p t-if="o.incoterm_location">
+                            <div class="col" t-if="o.invoice_incoterm_id" name="incoterm_id">
+                                <strong>Incoterm</strong>
+                                <div t-if="o.incoterm_location">
                                     <span t-field="o.invoice_incoterm_id.code"/> <br/>
                                     <span t-field="o.incoterm_location"/>
-                                </p>
-                                <span t-else="" t-field="o.invoice_incoterm_id.code" class="m-0"/>
+                                </div>
+                                <div t-else="" t-field="o.invoice_incoterm_id.code" class="m-0"/>
                             </div>
                         </div>
 

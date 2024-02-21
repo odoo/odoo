@@ -428,34 +428,34 @@
                      class="row clearfix ms-auto text-nowrap border-top border-bottom p-2">
                     <t t-set="exchange_rate"
                        t-value="abs(o.amount_total_signed) / o.amount_total if o.amount_total else 0"/>
-                    <div name="exchange_rate" t-attf-class="#{'col-auto col-3 mw-100' if report_type != 'html' else 'col'}">
+                    <div name="exchange_rate" class="col">
                         <strong>سعر الصرف</strong><br/>
                         <strong>Exchange Rate</strong>
-                        <p class="m-0"
+                        <div
                            t-out="exchange_rate"
                            t-options='{"widget": "float", "precision": 5}'
                         />
                     </div>
-                    <div name="subtotal_company_currency" t-attf-class="#{'col-auto col-3 mw-100' if report_type != 'html' else 'col'}">
+                    <div name="subtotal_company_currency" class="col">
                         <strong>الإجمالي الفرعي</strong><br/>
                         <strong>Subtotal</strong>
-                        <p class="m-0"
+                        <div
                            t-out="abs(o.amount_untaxed_signed)"
                            t-options='{"widget": "monetary", "display_currency": o.company_currency_id}'
                         />
                     </div>
-                    <div name="vat_amount_company_currency" t-attf-class="#{'col-auto col-3 mw-100' if report_type != 'html' else 'col'}">
+                    <div name="vat_amount_company_currency" class="col">
                         <strong>قيمة الضريبة</strong><br/>
                         <strong>VAT Amount</strong>
-                        <p class="m-0"
+                        <div
                            t-out="abs(o.amount_tax_signed)"
                            t-options='{"widget": "monetary", "display_currency": o.company_currency_id}'
                         />
                     </div>
-                    <div name="total_company_currency" t-attf-class="#{'col-auto col-3 mw-100' if report_type != 'html' else 'col'}">
+                    <div name="total_company_currency" class="col">
                         <strong>المجموع</strong><br/>
                         <strong>Total</strong>
-                        <p class="m-0"
+                        <div
                            t-out="abs(o.amount_total_signed)"
                            t-options='{"widget": "monetary", "display_currency": o.company_currency_id}'
                         />

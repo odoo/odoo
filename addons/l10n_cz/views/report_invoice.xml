@@ -22,7 +22,7 @@
 
         <!-- add taxable supply -->
         <xpath expr="//div[@name='due_date']" position="after">
-            <div t-attf-class="#{'col-auto col-3 mw-100' if report_type != 'html' else 'col'} mb-2" t-if="o.taxable_supply_date and o.company_id.country_code == 'CZ'" name="taxable_supply_date">
+            <div class="col" t-if="o.taxable_supply_date and o.company_id.country_code == 'CZ'" name="taxable_supply_date">
                 <strong>Taxable Supply:</strong>
                 <p class="m-0" t-field="o.taxable_supply_date"/>
             </div>
