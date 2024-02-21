@@ -1,5 +1,5 @@
 /** @odoo-module */
-import { Component, whenReady } from "@odoo/owl";
+import { Component, onWillStart, whenReady } from "@odoo/owl";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { useSelfOrder } from "@pos_self_order/app/self_order_service";
 import { Router } from "@pos_self_order/app/router";
@@ -37,6 +37,15 @@ export class selfOrderIndex extends Component {
 
     setup() {
         this.selfOrder = useSelfOrder();
+        onWillStart(async () => {
+            if ("serviceWorker" in navigator) {
+                navigator.serviceWorker
+                    .register("/pos-self/service-worker.js", { scope: "/pos-self" })
+                    .catch((error) => {
+                        console.error("Service worker registration failed, error:", error);
+                    });
+            }
+        });
     }
     get selfIsReady() {
         return Object.values(this.selfOrder.productByIds).length > 0;

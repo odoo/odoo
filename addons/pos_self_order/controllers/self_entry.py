@@ -60,7 +60,11 @@ class PosSelfKiosk(http.Controller):
                             **pos_config._get_self_ordering_data(),
                         },
                         "base_url": request.env['pos.session'].get_base_url(),
-                    }
+                    },
+                    'manifest_data':{
+                        'config_id': config_id,
+                        'access_token': config_access_token,
+                    },
                 }
             )
 
