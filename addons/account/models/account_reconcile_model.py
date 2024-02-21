@@ -814,19 +814,27 @@ class AccountReconcileModel(models.Model):
                 }
 
         # Search without any matching based on textual information.
-        if partner:
+        if self.matching_order == 'new_first':
+            order = 'date_maturity DESC, date DESC, id DESC'
+        else:
+            order = 'date_maturity ASC, date ASC, id ASC'
 
-            if self.matching_order == 'new_first':
-                order = 'date_maturity DESC, date DESC, id DESC'
+        if not partner:
+            st_line_currency = st_line.foreign_currency_id or st_line.journal_id.currency_id or st_line.company_currency_id
+            if st_line_currency == self.company_id.currency_id:
+                aml_amount_field = 'amount_residual'
             else:
-                order = 'date_maturity ASC, date ASC, id ASC'
-
-            amls = self.env['account.move.line'].search(aml_domain, order=order)
-            if amls:
-                return {
-                    'allow_auto_reconcile': False,
-                    'amls': amls,
-                }
+                aml_amount_field = 'amount_residual_currency'
+            aml_domain += [
+                ('currency_id', '=', st_line_currency.id),
+                (aml_amount_field, '=', -st_line.amount_residual),
+            ]
+        amls = self.env['account.move.line'].search(aml_domain, order=order)
+        if amls:
+            return {
+                'allow_auto_reconcile': False,
+                'amls': amls,
+            }
 
     def _get_invoice_matching_rules_map(self):
         """ Get a mapping <priority_order, rule> that could be overridden in others modules.
