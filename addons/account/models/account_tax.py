@@ -323,7 +323,7 @@ class AccountTax(models.Model):
                 old_value = ast.literal_eval(old_value)
                 new_value = ast.literal_eval(new_value)
                 diff_keys = [key for key in old_value if old_value[key] != new_value[key]]
-                repartition_line = self.env['account.tax.repartition.line'].search([('id', '=', new_value['id'])])
+                repartition_line = self.env['account.tax.repartition.line'].search([('id', '=', new_value[_('id')])])
                 body = Markup("<b>{type}</b> {rep} {seq}:<ul class='mb-0 ps-4'>{changes}</ul>").format(
                     type=repartition_line.document_type.capitalize(),
                     rep=_('repartition line'),
