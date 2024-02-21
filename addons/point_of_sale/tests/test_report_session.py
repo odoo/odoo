@@ -37,13 +37,22 @@ class TestReportSession(TestPoSCommon):
 
         payment_context = {"active_ids": order.ids, "active_id": order.id}
         order_payment = self.env['pos.make.payment'].with_context(**payment_context).create({
-            'amount': 150,
+            'amount': 60,
             'payment_method_id': self.bank_split_pm1.id
         })
         order_payment.with_context(**payment_context).check()
-        session.action_pos_session_closing_control(bank_payment_method_diffs={self.bank_split_pm1.id: 50})
+
+        order_payment = self.env['pos.make.payment'].with_context(**payment_context).create({
+            'amount': 90,
+            'payment_method_id': self.bank_pm1.id
+        })
+        order_payment.with_context(**payment_context).check()
+
+        session.action_pos_session_closing_control(bank_payment_method_diffs={self.bank_split_pm1.id: 50, self.bank_pm1.id: 40})
 
         # PoS Orders have negative IDs to avoid conflict, so reports[0] will correspond to the newest order
         report = self.env['report.point_of_sale.report_saledetails'].get_sale_details(session_ids=[session.id])
         split_payment_bank = [p for p in report['payments'] if p.get('id', 0) == self.bank_split_pm1.id]
         self.assertEqual(split_payment_bank[0]['cash_moves'][0]['amount'], 50)
+        bank_payment = [p for p in report['payments'] if p.get('id', 0) == self.bank_pm1.id]
+        self.assertEqual(bank_payment[0]['cash_moves'][0]['amount'], 40)
