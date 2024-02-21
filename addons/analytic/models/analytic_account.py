@@ -116,6 +116,12 @@ class AccountAnalyticAccount(models.Model):
                 vals['name'] = _("%s (copy)", account.name)
         return vals_list
 
+    def web_read(self, specification: dict[str, dict]) -> list[dict]:
+        self_context = self
+        if len(self) == 1:
+            self_context = self.with_context(analytic_plan_id=self.plan_id.id)
+        return super(AccountAnalyticAccount, self_context).web_read(specification)
+
     def _read_group_select(self, aggregate_spec, query):
         # flag balance/debit/credit as aggregatable, and manually sum the values
         # from the records in the group
