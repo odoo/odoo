@@ -115,6 +115,7 @@ class TestWebPushNotification(SMSCommon):
         self.assertEqual(payload_value['options']['data']['res_id'], self.record_simple.id)
         self.assertEqual(payload_value['options']['data']['model'], self.record_simple._name)
         self.assertIn('icon', payload_value['options'])
+        self.assertIn('res.partner', payload_value['options']['icon'])
         self.assertEqual(push_to_end_point.call_args.kwargs['device']['endpoint'], 'https://test.odoo.com/webpush/user2')
         self.assertIn('vapid_private_key', push_to_end_point.call_args.kwargs)
         self.assertIn('vapid_public_key', push_to_end_point.call_args.kwargs)
