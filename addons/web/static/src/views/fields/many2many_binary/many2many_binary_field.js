@@ -72,6 +72,7 @@ export const many2ManyBinaryField = {
     ],
     supportedTypes: ["many2many"],
     isEmpty: () => false,
+    isSet: (value) => value.count > 0,
     relatedFields: [
         { name: "name", type: "char" },
         { name: "mimetype", type: "char" },
