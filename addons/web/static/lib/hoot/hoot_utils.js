@@ -446,6 +446,7 @@ export function formatTechnical(
                 const proto =
                     value.constructor.name === "Object" ? "" : `${value.constructor.name} `;
                 return `${baseIndent}${proto}{\n${Object.entries(value)
+                    .sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0))
                     .map(
                         ([k, v]) =>
                             `${startIndent}${k}: ${formatTechnical(v, {
@@ -592,6 +593,9 @@ export function isOfType(value, type) {
     }
 }
 
+/**
+ * @param {unknown} value
+ */
 export function toExplicitString(value) {
     const strValue = String(value);
     switch (strValue) {
@@ -600,7 +604,11 @@ export function toExplicitString(value) {
         case "\t":
             return "\\t";
     }
-    return strValue;
+    // replace zero-width spaces with their explicit representation
+    return strValue.replace(
+        /[\u200B-\u200D\uFEFF]/g,
+        (char) => `\\u${char.charCodeAt(0).toString(16).padStart(4, "0")}`
+    );
 }
 
 /**
