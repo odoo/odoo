@@ -1167,7 +1167,16 @@ class Picking(models.Model):
 
     def _pre_action_done_hook(self):
         for picking in self:
-            if all(not move.picked for move in picking.move_ids):
+            has_quantity = False
+            has_pick = False
+            for move in picking.move_ids:
+                if move.picked:
+                    has_pick = True
+                if move.quantity:
+                    has_quantity = True
+                if has_quantity and has_pick:
+                    break
+            if has_quantity and not has_pick:
                 picking.move_ids.picked = True
         if not self.env.context.get('skip_backorder'):
             pickings_to_backorder = self._check_backorder()
