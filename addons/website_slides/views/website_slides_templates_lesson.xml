@@ -296,7 +296,7 @@
     </div>
     <div t-if="slide.tag_ids" class="pb-2">
         <t t-foreach="slide.tag_ids" t-as="tag">
-            <a t-att-href="'/slides/%s/tag/%s' % (slug(slide.channel_id), slug(tag))" class="badge text-bg-info py-1 px-2" t-esc="tag.name"/>
+            <a t-att-href="'/slides/%s/tag/%s' % (slug(slide.channel_id), slug(tag))" class="badge text-bg-info" t-esc="tag.name"/>
         </t>
     </div>
     <t t-set="editor_message">BUILDING BLOCKS DROPPED HERE WILL BE SHOWN ACROSS ALL LESSONS</t>

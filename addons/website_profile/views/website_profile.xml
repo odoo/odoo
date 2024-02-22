@@ -604,10 +604,10 @@
                     <img class="position-absolute" t-attf-src="/website_profile/static/src/img/rank_#{user_index + 1}.svg" alt="User rank" style="bottom: 0; right: -10px"/>
                 </div>
                 <h3 class="mt-2 mb-0" t-esc="user['name']"></h3>
-                <span class="badge text-bg-danger fw-normal px-2" t-if="not user['website_published']">Unpublished</span>
+                <span class="badge text-bg-danger fw-normal" t-if="not user['website_published']">Unpublished</span>
                 <strong class="text-muted" t-esc="user['rank']"/>
                 <div class="h3 my-2" t-if="user['karma_gain']">
-                    <span t-attf-class="badge rounded-pill px-3 py-2 #{ 'text-bg-success' if user['karma_gain'] > 0 else 'text-bg-warning'}">
+                    <span t-attf-class="badge rounded-pill #{ 'text-bg-success' if user['karma_gain'] > 0 else 'text-bg-warning'}">
                         <t t-if="user['karma_gain'] > 0">+ </t><t t-esc="user['karma_gain']"/> XP
                     </span>
                 </div>
@@ -643,7 +643,7 @@
             </t>
         </td>
         <td class="align-middle fw-bold text-end text-nowrap">
-            <span t-if="not user['website_published']" class="badge text-bg-danger fw-normal px-2 py-1 m-1">Unpublished</span>
+            <span t-if="not user['website_published']" class="badge text-bg-danger fw-normal m-1">Unpublished</span>
         </td>
         <td class="align-middle fw-bold text-end text-nowrap">
             <b t-esc="user['karma']"/> <span class="text-muted small fw-bold">XP</span>

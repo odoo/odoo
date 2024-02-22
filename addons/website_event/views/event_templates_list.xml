@@ -255,7 +255,7 @@
                                         <input class="form-check-input pe-none" type="radio" name="Online Events" t-att-checked="is_active"/>
                                         <label class="form-check-label" for="Online Events">Online Events</label>
                                     </div>
-                                    <span t-out="country['country_id_count']" class="badge rounded-pill px-2 text-bg-light ms-auto"/>
+                                    <span t-out="country['country_id_count']" class="badge rounded-pill text-bg-light ms-auto"/>
                                 </a>
                             </t>
                         </li>
@@ -335,7 +335,7 @@
                             <div class="d-flex flex-wrap gap-1 small">
                                 <t t-foreach="event.tag_ids.filtered(lambda tag: tag.category_id.website_id == website or not tag.category_id.website_id)" t-as="tag">
                                     <span t-if="tag.color"
-                                        t-attf-class="badge rounded-pill px-2 p-1 #{'o_badge_color_%s' % tag.color if tag.color else 'text-bg-light'}">
+                                        t-attf-class="badge rounded-pill #{'o_badge_color_%s' % tag.color if tag.color else 'text-bg-light'}">
                                         <t t-out="tag.name"/>
                                     </span>
                                 </t>
