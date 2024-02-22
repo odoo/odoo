@@ -5,6 +5,11 @@ import { _t } from "@web/core/l10n/translation";
 const MINUTE = 60 * 1000;
 const HOUR = 60 * MINUTE;
 
+/**
+ * @typedef {Object} Props
+ * @property {luxon.DateTime} datetime
+ * @extends {Component<Props, Env>}
+ */
 export class RelativeTime extends Component {
     static props = ["datetime"];
     static template = xml`<t t-esc="relativeTime"/>`;
