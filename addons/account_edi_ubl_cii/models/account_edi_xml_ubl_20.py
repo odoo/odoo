@@ -521,7 +521,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                 'id': invoice.name,
                 'issue_date': invoice.invoice_date,
                 'due_date': invoice.invoice_date_due,
-                'note_vals': [{'note': html2plaintext(invoice.narration)}] if invoice.narration else [],
+                'note_vals': self._get_note_vals_list(invoice),
                 'order_reference': order_reference,
                 'sales_order_id': sales_order_id,
                 'accounting_supplier_party_vals': {
@@ -564,6 +564,9 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             vals['vals']['document_type_code'] = 380
 
         return vals
+
+    def _get_note_vals_list(self, invoice):
+        return [{'note': html2plaintext(invoice.narration)}] if invoice.narration else []
 
     def _export_invoice_constraints(self, invoice, vals):
         constraints = self._invoice_constraints_common(invoice)
