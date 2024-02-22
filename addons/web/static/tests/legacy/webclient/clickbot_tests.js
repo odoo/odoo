@@ -7,6 +7,7 @@ import { browser } from "@web/core/browser/browser";
 import { ListRenderer } from "@web/views/list/list_renderer";
 import { SUCCESS_SIGNAL } from "@web/webclient/clickbot/clickbot";
 import { onWillStart, onWillUpdateProps } from "@odoo/owl";
+import { getFixture } from "../helpers/utils";
 
 let serverData;
 let clickEverywhereDef;
@@ -119,7 +120,7 @@ QUnit.module("clickbot", (hooks) => {
                     name: "menu 2",
                     appID: 2,
                     actionID: 1022,
-                    xmlid: "app2_menu1",
+                    xmlid: "app2_menu2",
                 },
             },
         };
@@ -174,7 +175,7 @@ QUnit.module("clickbot", (hooks) => {
             'Clicking on: filter "Not Bar"',
             'Clicking on: filter "Date"',
             'Clicking on: filter option "October"',
-            "Testing menu menu 2 app2_menu1",
+            "Testing menu menu 2 app2_menu2",
             'Clicking on: menu item "menu 2"',
             "Testing 2 filters",
             'Clicking on: filter "Not Bar"',
@@ -184,6 +185,68 @@ QUnit.module("clickbot", (hooks) => {
             "Successfully tested 2 menus",
             "Successfully tested 0 modals",
             "Successfully tested 10 filters",
+            SUCCESS_SIGNAL,
+        ]);
+    });
+
+    QUnit.test("clickbot clickeverywhere test (with dropdown menu)", async (assert) => {
+        serverData.menus.root.children = [2];
+        serverData.menus[2].children = [5];
+        serverData.menus[5] = {
+            id: 5,
+            children: [3, 4],
+            name: "a dropdown",
+            appID: 2,
+            xmlid: "app2_dropdown_menu",
+        };
+
+        patchDate(2017, 9, 8, 15, 35, 11); // October 8 2017, 15:35:11
+        patchWithCleanup(browser, {
+            console: {
+                log: (msg) => {
+                    assert.step(msg);
+                    if (msg === SUCCESS_SIGNAL) {
+                        clickEverywhereDef.resolve();
+                    }
+                },
+                error: (msg) => {
+                    assert.step(msg);
+                    clickEverywhereDef.resolve();
+                },
+            },
+        });
+        await createWebClient({ serverData });
+        assert.containsOnce(getFixture(), ".o_menu_sections .dropdown-toggle:contains(a dropdown)");
+        clickEverywhereDef = makeDeferred();
+        window.clickEverywhere();
+        await clickEverywhereDef;
+        assert.verifySteps([
+            "Clicking on: apps menu toggle button",
+            "Testing app menu: app2",
+            "Testing menu App2 app2",
+            'Clicking on: menu item "App2"',
+            "Testing 2 filters",
+            'Clicking on: filter "Not Bar"',
+            'Clicking on: filter "Date"',
+            'Clicking on: filter option "October"',
+            "Clicking on: menu toggler",
+            "Testing menu menu 1 app2_menu1",
+            'Clicking on: menu item "menu 1"',
+            "Testing 2 filters",
+            'Clicking on: filter "Not Bar"',
+            'Clicking on: filter "Date"',
+            'Clicking on: filter option "October"',
+            "Clicking on: menu toggler",
+            "Testing menu menu 2 app2_menu2",
+            'Clicking on: menu item "menu 2"',
+            "Testing 2 filters",
+            'Clicking on: filter "Not Bar"',
+            'Clicking on: filter "Date"',
+            'Clicking on: filter option "October"',
+            "Successfully tested 1 apps",
+            "Successfully tested 2 menus",
+            "Successfully tested 0 modals",
+            "Successfully tested 6 filters",
             SUCCESS_SIGNAL,
         ]);
     });
