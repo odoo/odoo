@@ -11,6 +11,8 @@ from odoo import _, api, Command, fields, models, modules, tools
 from odoo.exceptions import AccessError
 from odoo.osv import expression
 from odoo.tools import clean_context, groupby as tools_groupby, SQL
+import markdown
+from markdown.extensions.codehilite import CodeHiliteExtension
 
 _logger = logging.getLogger(__name__)
 _image_dataurl = re.compile(r'(data:image/[a-z]+?);base64,([a-z0-9+/\n]{3,}=*)\n*([\'"])(?: data-filename="([^"]*)")?', re.I)
@@ -84,7 +86,17 @@ class Message(models.Model):
     # content
     subject = fields.Char('Subject')
     date = fields.Datetime('Date', default=fields.Datetime.now)
-    body = fields.Html('Contents', default='', sanitize_style=True)
+    body = fields.Html('Contents', sanitize_style=True)
+    markdown = fields.Text("Markdown")
+    parsed_markdown = fields.Text("markdown converted to html", compute="_compute_parsed_markdown")
+    @api.depends('markdown')
+    def _compute_parsed_markdown(self):
+        markdown_extentions = ["attr_list", "fenced_code", CodeHiliteExtension()]
+        for message in self:
+            if message.markdown:
+                message.parsed_markdown = markdown.markdown(message.markdown, extensions=markdown_extentions)
+            else:
+                message.parsed_markdown = None
     description = fields.Char(
         'Short description', compute="_compute_description",
         help='Message description: either the subject, or the beginning of the body')
@@ -998,6 +1010,7 @@ class Message(models.Model):
             vals.update(message_sudo._message_format_extras(format_reply))
             vals.pop("starred_partner_ids", None)
             vals.update({
+                'body': message_sudo.get_body(),
                 'author': author,
                 'default_subject': default_subject,
                 'notifications': message_sudo.notification_ids._filtered_for_web_client()._notification_format(),
@@ -1155,7 +1168,7 @@ class Message(models.Model):
             'id': message.id,
             'date': message.date,
             'message_type': message.message_type,
-            'body': message.body,
+            'body': message.get_body(),
             'notifications': message.notification_ids._filtered_for_web_client()._notification_format(),
             'thread': {
                 'id': message.res_id,
@@ -1214,7 +1227,7 @@ class Message(models.Model):
         """ Return subset of "void" messages """
         return self.filtered(
             lambda msg:
-                (not msg.body or tools.is_html_empty(msg.body)) and
+                (not msg.get_body() or tools.is_html_empty(msg.get_body())) and
                 (not msg.subtype_id or not msg.subtype_id.description) and
                 not msg.attachment_ids and
                 not msg.tracking_value_ids
@@ -1226,7 +1239,7 @@ class Message(models.Model):
         Default `max_char` is the longest known mail client preview length (Outlook 2013)."""
         self.ensure_one()
 
-        plaintext_ct = tools.html_to_inner_content(self.body)
+        plaintext_ct = tools.html_to_inner_content(self.get_body())
         return textwrap.shorten(plaintext_ct, max_char) if max_char else plaintext_ct
 
     @api.model
@@ -1287,3 +1300,7 @@ class Message(models.Model):
 
     def _get_search_domain_share(self):
         return ['&', '&', ('is_internal', '=', False), ('subtype_id', '!=', False), ('subtype_id.internal', '=', False)]
+
+    def get_body(self):
+        self.ensure_one()
+        return self.parsed_markdown if not self.body and self.markdown else self.body

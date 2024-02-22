@@ -45,6 +45,7 @@ export class Message extends Record {
     attachments = Record.many("Attachment", { inverse: "message" });
     author = Record.one("Persona");
     body = Record.attr("", { html: true });
+    markdown;
     composer = Record.one("Composer", { inverse: "message", onDelete: (r) => r.delete() });
     /** @type {DateTime} */
     date = Record.attr(undefined, { type: "datetime" });

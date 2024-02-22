@@ -57,7 +57,7 @@ class MailBot(models.AbstractModel):
                 self.env.user.odoobot_state = "onboarding_emoji"
                 return _("To start, try to send me an emoji :)")
             # easter eggs
-            elif odoobot_state == "idle" and body in ['❤️', _('i love you'), _('love')]:
+            elif odoobot_state == "idle" and any(love in body for love in ['❤️', _('i love you'), _('love')]):
                 return _("Aaaaaw that's really cute but, you know, bots don't work that way. You're too human for me! Let's keep it professional ❤️")
             elif _('fuck') in body or "fuck" in body:
                 return _("That's not nice! I'm a bot but I have feelings... 💔")

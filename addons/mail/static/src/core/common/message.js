@@ -467,15 +467,27 @@ export class Message extends Component {
      */
     prepareMessageBody(element) {}
 
-    enterEditMode() {
+    async enterEditMode() {
         const message = toRaw(this.props.message);
-        const text = convertBrToLineBreak(message.body);
+        let messageContent;
+        if (message.markdown) {
+            messageContent = message.markdown;
+        } else {
+            const [{ markdown }] = await rpc("/mail/thread/message/markdown", {
+                message_id: message.id,
+            });
+            message.markdown = markdown;
+            messageContent = markdown;
+        }
+        if (!messageContent) {
+            messageContent = convertBrToLineBreak(message.body);
+        }
         message.composer = {
             mentionedPartners: message.recipients,
-            text,
+            text: messageContent,
             selection: {
-                start: text.length,
-                end: text.length,
+                start: messageContent.length,
+                end: messageContent.length,
                 direction: "none",
             },
         };

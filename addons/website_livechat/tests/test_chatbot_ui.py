@@ -78,7 +78,7 @@ class TestLivechatChatbotUI(TestLivechatCommon, ChatbotCase):
         for conversation_message, expected_message in zip(conversation_messages, expected_messages):
             [body, operator, user_script_answer_id] = expected_message
 
-            self.assertIn(body, conversation_message.body)
+            self.assertIn(body, conversation_message.get_body())
 
             if operator:
                 self.assertEqual(conversation_message.author_id, operator)
