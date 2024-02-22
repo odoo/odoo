@@ -78,14 +78,10 @@ QUnit.test(
             {
                 anonymous_name: "Visitor 11",
                 channel_member_ids: [
-                    [
-                        0,
-                        0,
-                        {
-                            last_interest_dt: "2021-01-01 10:00:00",
-                            partner_id: pyEnv.currentPartnerId,
-                        },
-                    ],
+                    Command.create({
+                        last_interest_dt: "2021-01-01 10:00:00",
+                        partner_id: pyEnv.currentPartnerId,
+                    }),
                     Command.create({ guest_id: guestId_1 }),
                 ],
                 channel_type: "livechat",
@@ -94,14 +90,10 @@ QUnit.test(
             {
                 anonymous_name: "Visitor 12",
                 channel_member_ids: [
-                    [
-                        0,
-                        0,
-                        {
-                            last_interest_dt: "2021-02-01 10:00:00",
-                            partner_id: pyEnv.currentPartnerId,
-                        },
-                    ],
+                    Command.create({
+                        last_interest_dt: "2021-02-01 10:00:00",
+                        partner_id: pyEnv.currentPartnerId,
+                    }),
                     Command.create({ guest_id: guestId_2 }),
                 ],
                 channel_type: "livechat",
