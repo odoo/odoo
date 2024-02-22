@@ -273,3 +273,9 @@ class Project(models.Model):
             })
 
         return buttons
+
+    def action_view_tasks(self):
+        # Using the timesheet filter hide context
+        action = super().action_view_tasks()
+        action['context']['allow_timesheets'] = self.allow_timesheets
+        return action
