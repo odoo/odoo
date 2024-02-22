@@ -44,6 +44,7 @@ class DiscussScheduler(models.Model):
                         "model": message.thread_model,
                         "id": message.thread_id
                     },
+                    "date": fields.Datetime.to_string(message.date),
                 },
                 "date": fields.Datetime.to_string(message.date),
             })
