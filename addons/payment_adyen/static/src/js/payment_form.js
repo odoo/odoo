@@ -57,7 +57,7 @@ odoo.define('payment_adyen.payment_form', require => {
             if (!this.$('div[name="o_payment_error"]')) { // Don't replace a specific server error.
                 this._displayError(
                     _t("Incorrect Payment Details"),
-                    error.message.data.message
+                    _t("Please verify your payment details."),
                 );
             }
             else {
