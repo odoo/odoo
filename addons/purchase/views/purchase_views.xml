@@ -172,6 +172,7 @@
                         <group>
                             <field name="partner_id" widget="res_partner_many2one" context="{'res_partner_search_mode': 'supplier', 'show_vat': True}"
                                 placeholder="Name, TIN, Email, or Reference"
+                                default_focus="1"
                             />
                             <field name="partner_ref"/>
                             <field name="currency_id" groups="base.group_multi_currency" force_save="1"/>
