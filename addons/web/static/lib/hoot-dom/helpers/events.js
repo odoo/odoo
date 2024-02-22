@@ -67,7 +67,7 @@ import {
 // Global
 //-----------------------------------------------------------------------------
 
-const { console, DataTransfer, document, Object, String, Touch, TypeError } = globalThis;
+const { console, DataTransfer, document, Math, Object, String, Touch, TypeError } = globalThis;
 
 //-----------------------------------------------------------------------------
 // Internal
@@ -218,8 +218,8 @@ const getPosition = (element, options) => {
     }
 
     const { x, y, width, height } = getRect(element);
-    let clientX = Math.floor(x);
-    let clientY = Math.floor(y);
+    let clientX = x;
+    let clientY = y;
 
     if (isString) {
         const positions = position.split("-");
@@ -230,7 +230,7 @@ const getPosition = (element, options) => {
         } else if (positions.includes("right")) {
             clientX += Math.ceil(width) + 1;
         } else {
-            clientX += Math.floor(width / 2);
+            clientX += width / 2;
         }
 
         // Y position
@@ -239,12 +239,12 @@ const getPosition = (element, options) => {
         } else if (positions.includes("bottom")) {
             clientY += Math.ceil(height) + 1;
         } else {
-            clientY += Math.floor(height / 2);
+            clientY += height / 2;
         }
     } else {
         // X position
         if (Number.isNaN(posX)) {
-            clientX += Math.floor(width / 2);
+            clientX += width / 2;
         } else {
             if (relative) {
                 clientX += posX || 0;
@@ -255,7 +255,7 @@ const getPosition = (element, options) => {
 
         // Y position
         if (Number.isNaN(posY)) {
-            clientY += Math.floor(height / 2);
+            clientY += height / 2;
         } else {
             if (relative) {
                 clientY += posY || 0;
