@@ -17,8 +17,6 @@ class AccountChartTemplate(models.AbstractModel):
             'property_stock_account_input_categ_id': 'account_210230',
             'property_stock_account_output_categ_id': 'account_110640',
             'property_stock_valuation_account_id': 'account_110610',
-            'property_tax_payable_account_id': 'account_210760',
-            'property_tax_receivable_account_id': 'account_210760',
         }
 
     @template('cl', 'res.company')
