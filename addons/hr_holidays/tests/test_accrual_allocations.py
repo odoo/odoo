@@ -1483,3 +1483,29 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             allocation.action_validate()
             allocation_data = leave_type.get_allocation_data(self.employee_emp, datetime.date(2024, 2, 1))
             self.assertEqual(allocation_data[self.employee_emp][0][1]['virtual_remaining_leaves'], 2)
+
+    def test_added_type_during_onchange(self):
+        """
+            The purpose is to test whether the value of the `added_value_type`
+            field is correctly propagated from the first level to the second
+            during creation on the dialog form view.
+        """
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
+            'name': 'Accrual Plan For Test',
+            'is_based_on_worked_time': False,
+            'accrued_gain_time': 'end',
+            'carryover_date': 'year_start',
+            'level_ids': [(0, 0, {
+                'start_count': 1,
+                'start_type': 'day',
+                'added_value': 4,
+                'added_value_type': 'hour',
+                'frequency': 'monthly',
+                'cap_accrued_time': True,
+                'maximum_leave': 100,
+            })],
+        })
+        # Simulate the onchange of the dialog form view
+        # Trigger the `_compute_added_value_type` method (with virtual records)
+        res = self.env['hr.leave.accrual.level'].onchange({'accrual_plan_id': {'id': accrual_plan.id}}, [], {'added_value_type': {}})
+        self.assertEqual(res['value']['added_value_type'], accrual_plan.level_ids[0].added_value_type)
