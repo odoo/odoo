@@ -340,3 +340,22 @@ ProductScreen.check.totalAmountIs('6.00');
 PosLoyalty.check.hasRewardLine('Free Product', '-3.00');
 
 Tour.register('PosLoyaltyTour12', { test: true, url: '/pos/web' }, getSteps());
+
+startSteps();
+
+ProductScreen.do.clickHomeCategory();
+ProductScreen.do.confirmOpeningPopup();
+
+ProductScreen.do.clickDisplayedProduct('Product A');
+ProductScreen.check.selectedOrderlineHas('Product A', '1.00', '20.00');
+PosLoyalty.check.orderTotalIs('20.00');
+
+ProductScreen.do.clickDisplayedProduct('Product B');
+ProductScreen.check.selectedOrderlineHas('Product B', '1.00', '30.00');
+PosLoyalty.check.orderTotalIs('50.00');
+
+ProductScreen.do.clickDisplayedProduct('Product A');
+ProductScreen.check.selectedOrderlineHas('Product A', '2.00', '40.00');
+PosLoyalty.check.orderTotalIs('66.00');
+
+Tour.register('PosLoyaltyMinAmountAndSpecificProductTour', {test: true, url: '/pos/web'}, getSteps());

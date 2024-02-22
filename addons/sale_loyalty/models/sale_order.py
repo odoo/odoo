@@ -839,24 +839,26 @@ class SaleOrder(models.Model):
         products_per_rule = programs._get_valid_products(products)
 
         # Prepare amounts
-        no_effect_lines = self._get_no_effect_on_threshold_lines()
-        base_untaxed_amount = self.amount_untaxed - sum(line.price_subtotal for line in no_effect_lines)
-        base_tax_amount = self.amount_tax - sum(line.price_tax for line in no_effect_lines)
-        amounts_per_program = {p: {'untaxed': base_untaxed_amount, 'tax': base_tax_amount} for p in programs}
-        for line in self.order_line:
-            if not line.reward_id or line.reward_id.reward_type != 'discount':
+        so_products_per_rule = programs._get_valid_products(self.order_line.product_id)
+        lines_per_rule = defaultdict(lambda: self.env['sale.order.line'])
+        # Skip lines that have no effect on the minimum amount to reach.
+        for line in self.order_line - self._get_no_effect_on_threshold_lines():
+            is_discount = line.reward_id.reward_type == 'discount'
+            reward_program = line.reward_id.program_id
+            # Skip lines for automatic discounts.
+            if is_discount and reward_program.trigger == 'auto':
                 continue
             for program in programs:
-                # Do not consider the program's discount + automatic discount lines for the amount to check.
-                if line.reward_id.program_id.trigger == 'auto' or line.reward_id.program_id == program:
-                    amounts_per_program[program]['untaxed'] -= line.price_subtotal
-                    amounts_per_program[program]['tax'] -= line.price_tax
+                # Skip lines for the current program's discounts.
+                if is_discount and reward_program == program:
+                    continue
+                for rule in program.rule_ids:
+                    # Skip lines to which the rule doesn't apply.
+                    if line.product_id in so_products_per_rule.get(rule, []):
+                        lines_per_rule[rule] |= line
 
         result = {}
         for program in programs:
-            untaxed_amount = amounts_per_program[program]['untaxed']
-            tax_amount = amounts_per_program[program]['tax']
-
             # Used for error messages
             # By default False, but True if no rules and applies_on current -> misconfigured coupons program
             code_matched = not bool(program.rule_ids) and program.applies_on == 'current' # Stays false if all triggers have code and none have been activated
@@ -875,6 +877,8 @@ class SaleOrder(models.Model):
                     continue
                 code_matched = True
                 rule_amount = rule._compute_amount(self.currency_id)
+                untaxed_amount = sum(lines_per_rule[rule].mapped('price_subtotal'))
+                tax_amount = sum(lines_per_rule[rule].mapped('price_tax'))
                 if rule_amount > (rule.minimum_amount_tax_mode == 'incl' and (untaxed_amount + tax_amount) or untaxed_amount):
                     continue
                 minimum_amount_matched = True
