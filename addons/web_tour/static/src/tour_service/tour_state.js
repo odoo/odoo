@@ -35,6 +35,15 @@ const ALLOWED_KEYS = {
 
     // Used to order the tours.
     sequence: INTEGER,
+
+    // Open DevTools at tour initialization.
+    debug: BOOLEAN,
+
+    // To check if triggers of the current step have been found.
+    triggersFound: BOOLEAN,
+
+    // To check if triggers of the current step have been found.
+    hasError: BOOLEAN,
 };
 
 function getPrefixedName(tourName, key) {

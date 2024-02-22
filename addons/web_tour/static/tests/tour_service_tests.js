@@ -747,7 +747,67 @@ QUnit.module("Tour service", (hooks) => {
   "content": "content",
   "trigger": ".button6"
 },`;
-    const expectedError = "error: Tour tour1 failed at step content (trigger: .wrong_selector)";
-        assert.verifySteps([expectedWarning, expectedError]);
+        const expectedError = [
+            "error: Tour tour1 failed at step content (trigger: .wrong_selector)",
+            `error: The error appears to be that one or more items in the following list cannot be found in DOM. : {"trigger":".wrong_selector"}`,
+        ];
+        assert.verifySteps([expectedWarning, ...expectedError]);
+    });
+
+    QUnit.test("a failing tour logs the step that failed in run", async function (assert) {
+        patchWithCleanup(browser.console, {
+            log: (s) => assert.step(`log: ${s}`),
+            warn: (s) => {},
+            error: (s) => assert.step(`error: ${s}`),
+        });
+        const env = await makeTestEnv({});
+
+        const { Component: OverlayContainer, props: overlayContainerProps } = registry
+            .category("main_components")
+            .get("OverlayContainer");
+
+        class Root extends Component {
+            static components = { OverlayContainer };
+            static template = xml/*html*/ `
+                <t>
+                    <button class="button0">Button 0</button>
+                    <button class="button1">Button 1</button>
+                    <button class="button2">Button 2</button>
+                    <OverlayContainer t-props="props.overlayContainerProps" />
+                </t>
+            `;
+            static props = ["*"];
+        }
+
+        await mount(Root, target, { env, props: { overlayContainerProps } });
+        registry.category("web_tour.tours").add("tour2", {
+            test: true,
+            steps: () => [
+                {
+                    trigger: ".button0",
+                },
+                {
+                    trigger: ".button1",
+                    run() {
+                        const el = document.querySelector(".wrong_selector");
+                        el.click();
+                    },
+                },
+            ],
+        });
+        env.services.tour_service.startTour("tour2", { mode: "auto" });
+        await mock.advanceTime(750);
+        assert.verifySteps(["log: Tour tour2 on step: '.button0'"]);
+        await mock.advanceTime(750);
+        assert.verifySteps(["log: Tour tour2 on step: '.button1'"]);
+        await mock.advanceTime(750);
+
+        const expectedError = [
+            "error: Tour tour2 failed at step .button1",
+            "error: Triggers have been found. The error seems to be in run()",
+            "error: Cannot read properties of null (reading 'click')",
+            "error: tour not succeeded",
+        ];
+        assert.verifySteps(expectedError);
     });
 });

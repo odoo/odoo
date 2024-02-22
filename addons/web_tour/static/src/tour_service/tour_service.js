@@ -45,7 +45,6 @@ import { callWithUnloadCheck } from "./tour_utils";
  * @property {number} [width]
  * @property {number} [timeout]
  * @property {boolean} [consumeVisibleOnly]
- * @property {boolean} [noPrepend]
  * @property {string} [consumeEvent]
  * @property {boolean} [mobile]
  * @property {string} [title]
@@ -316,6 +315,7 @@ export const tourService = {
                 startUrl: "",
                 showPointerDuration: 0,
                 redirect: true,
+                debug: false,
             };
             options = Object.assign(defaultOptions, options);
             const tour = tours[tourName];
@@ -325,9 +325,15 @@ export const tourService = {
             tourState.set(tourName, "currentIndex", 0);
             tourState.set(tourName, "stepDelay", options.stepDelay);
             tourState.set(tourName, "keepWatchBrowser", options.keepWatchBrowser);
+            tourState.set(tourName, "debug", options.debug);
             tourState.set(tourName, "showPointerDuration", options.showPointerDuration);
             tourState.set(tourName, "mode", options.mode);
             tourState.set(tourName, "sequence", tour.sequence);
+            if (tourState.get(tourName, "debug") !== false) {
+                // Starts the tour with a debugger to allow you to choose devtools configuration.
+                // eslint-disable-next-line no-debugger
+                debugger;
+            }
             const pointer = createPointer(tourName, {
                 bounce: !(options.mode === "auto" && options.keepWatchBrowser),
             });

@@ -3,6 +3,7 @@
 import { browser } from "@web/core/browser/browser";
 import { debounce } from "@web/core/utils/timing";
 import { isVisible } from "@web/core/utils/ui";
+import { pick } from "@web/core/utils/objects";
 import { tourState } from "./tour_state";
 import {
     callWithUnloadCheck,
@@ -81,7 +82,7 @@ function describeStep(step) {
 /**
  * @param {TourStep} step
  */
-function describeFailedStepSimple(step, tour) {
+function describeFailedStepSimple(tour, step) {
     return `Tour ${tour.name} failed at step ${describeStep(step)}`;
 }
 
@@ -89,7 +90,7 @@ function describeFailedStepSimple(step, tour) {
  * @param {TourStep} step
  * @param {Tour} tour
  */
-function describeFailedStepDetailed(step, tour) {
+function describeFailedStepDetailed(tour, step) {
     const offset = 3;
     const stepIndex = tour.steps.findIndex((s) => s === step);
     const start = stepIndex - offset >= 0 ? stepIndex - offset : 0;
@@ -113,7 +114,7 @@ function describeFailedStepDetailed(step, tour) {
             highlight ? "\n-----------------------" : ""
         }`;
     }
-    return `${describeFailedStepSimple(step, tour)}\n\n${result.trim()}`;
+    return `${describeFailedStepSimple(tour, step)}\n\n${result.trim()}`;
 }
 
 /**
@@ -159,6 +160,38 @@ function canContinue(el, step) {
         (!step.allowInvisible ? isVisible(el) : true) &&
         (!el.disabled || step.isCheck)
     );
+}
+
+/**
+ * @param {TourStep} step
+ * @param {Tour} tour
+ * @param {Array<string>} [errors]
+ */
+function throwError(tour, step, errors = []) {
+    const debugMode = tourState.get(tour.name, "debug");
+    const triggersFound = tourState.get(tour.name, "triggersFound");
+    // The logged text shows the relative position of the failed step.
+    // Useful for finding the failed step.
+    console.warn(describeFailedStepDetailed(tour, step));
+    // console.error notifies the test runner that the tour failed.
+    console.error(describeFailedStepSimple(tour, step));
+    if (triggersFound) {
+        console.error(`Triggers have been found. The error seems to be in run()`);
+    } else {
+        console.error(
+            `The error appears to be that one or more items in the following list cannot be found in DOM. : ${JSON.stringify(
+                pick(step, "trigger", "extra_trigger", "alt_trigger", "skip_trigger")
+            )}`
+        );
+    }
+    if (errors.length) {
+        console.error(errors.join(", "));
+    }
+    tourState.set(tour.name, "hasError", true);
+    if (debugMode !== false) {
+        // eslint-disable-next-line no-debugger
+        debugger;
+    }
 }
 
 /**
@@ -274,14 +307,34 @@ let tourTimeout;
 
 /** @type {TourStepCompiler} */
 export function compileStepAuto(stepIndex, step, options) {
-    const { tour, pointer, stepDelay, keepWatchBrowser, showPointerDuration, onStepConsummed } = options;
+    const { tour, pointer, stepDelay, keepWatchBrowser } = options;
+    const { showPointerDuration, onStepConsummed } = options;
+    const debugMode = tourState.get(tour.name, "debug");
     let skipAction = false;
+
+    async function tryToDoAction(action) {
+        try {
+            await action();
+        } catch (error) {
+            throwError(tour, step, [error.message]);
+        }
+    }
+
     return [
+        {
+            action: () => {
+                tourState.set(tour.name, "triggersFound", false);
+                if (step.break && debugMode !== false) {
+                    // eslint-disable-next-line no-debugger
+                    debugger;
+                }
+            },
+        },
         {
             action: async () => {
                 // This delay is important for making the current set of tour tests pass.
                 // IMPROVEMENT: Find a way to remove this delay.
-                await new Promise(resolve => requestAnimationFrame(resolve))
+                await new Promise((resolve) => requestAnimationFrame(resolve));
             },
         },
         {
@@ -289,14 +342,10 @@ export function compileStepAuto(stepIndex, step, options) {
                 skipAction = false;
                 console.log(`Tour ${tour.name} on step: '${describeStep(step)}'`);
                 if (!keepWatchBrowser) {
-                    browser.clearTimeout(tourTimeout);
-                    tourTimeout = browser.setTimeout(() => {
-                        // The logged text shows the relative position of the failed step.
-                        // Useful for finding the failed step.
-                        console.warn(describeFailedStepDetailed(step, tour));
-                        // console.error notifies the test runner that the tour failed.
-                        console.error(describeFailedStepSimple(step, tour));
-                    }, (step.timeout || 10000) + stepDelay);
+                    tourTimeout = browser.setTimeout(
+                        () => throwError(tour, step),
+                        (step.timeout || 10000) + stepDelay
+                    );
                 }
                 await new Promise((resolve) => browser.setTimeout(resolve, stepDelay));
             },
@@ -319,6 +368,7 @@ export function compileStepAuto(stepIndex, step, options) {
                 return canContinue(stepEl, step) && stepEl;
             },
             action: async (stepEl) => {
+                tourState.set(tour.name, "triggersFound", true);
                 tourState.set(tour.name, "currentIndex", stepIndex + 1);
 
                 if (skipAction) {
@@ -345,19 +395,21 @@ export function compileStepAuto(stepIndex, step, options) {
 
                 let result;
                 if (typeof step.run === "function") {
-                    const willUnload = await callWithUnloadCheck(() =>
-                        // `this.$anchor` is expected in many `step.run`.
-                        step.run.call({ $anchor: $anchorEl }, actionHelper)
-                    );
+                    const willUnload = await callWithUnloadCheck(async () => {
+                        await tryToDoAction(() =>
+                            // `this.$anchor` is expected in many `step.run`.
+                            step.run.call({ $anchor: $anchorEl }, actionHelper)
+                        );
+                    });
                     result = willUnload && "will unload";
                 } else if (step.run !== undefined) {
                     const m = step.run.match(/^([a-zA-Z0-9_]+) *(?:\(? *(.+?) *\)?)?$/);
-                    actionHelper[m[1]](m[2]);
+                    await tryToDoAction(() => actionHelper[m[1]](m[2]));
                 } else if (!step.isCheck) {
                     if (stepIndex === tour.steps.length - 1) {
                         console.warn('Tour %s: ignoring action (auto) of last step', tour.name);
                     } else {
-                        actionHelper.auto();
+                        await tryToDoAction(() => actionHelper.auto());
                     }
                 }
 
@@ -366,7 +418,31 @@ export function compileStepAuto(stepIndex, step, options) {
         },
         {
             action: () => {
+                //Step is passed, timeout can be cleared.
+                browser.clearTimeout(tourTimeout);
                 onStepConsummed(tour, step);
+            },
+        },
+        {
+            action: async () => {
+                if (step.pause && debugMode !== false) {
+                    const styles = [
+                        "background: black; color: white; font-size: 14px",
+                        "background: black; color: orange; font-size: 14px",
+                    ];
+                    console.log(
+                        `%cTour is paused. Use %cplay()%c to continue.`,
+                        styles[0],
+                        styles[1],
+                        styles[0]
+                    );
+                    await new Promise((resolve) => {
+                        window.play = () => {
+                            resolve();
+                            delete window.play;
+                        };
+                    });
+                }
             },
         },
     ];
@@ -422,9 +498,13 @@ export function compileTourToMacro(tour, options) {
             .concat([
                 {
                     action() {
-                        tourState.clear(tour.name);
-                        onTourEnd(tour);
                         clearTimeout(tourTimeout);
+                        if (!tourState.get(tour.name, "hasError")) {
+                            tourState.clear(tour.name);
+                            onTourEnd(tour);
+                        } else {
+                            console.error("tour not succeeded");
+                        }
                     },
                 },
             ]),
