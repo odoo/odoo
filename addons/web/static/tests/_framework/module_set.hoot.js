@@ -7,6 +7,7 @@ import { Deferred } from "@odoo/hoot-mock";
 import { mockBrowserFactory } from "./mock_browser.hoot";
 import { CONFIG_SUFFIX, TEST_SUFFIX } from "./mock_module_loader";
 import { mockSessionFactory } from "./mock_session.hoot";
+import { makeTemplateFactory } from "./mock_templates.hoot";
 import { mockUserFactory } from "./mock_user.hoot";
 
 /**
@@ -210,10 +211,10 @@ const runTests = async () => {
 const DEFAULT_MOCKS = {
     // Fixed modules
     "@web/core/template_inheritance": makeFixedFactory,
-    "@web/core/templates": makeFixedFactory,
     "web.assets_unit_tests_setup.bundle.xml": makeFixedFactory,
     // Other mocks
     "@web/core/browser/browser": mockBrowserFactory,
+    "@web/core/templates": makeTemplateFactory,
     "@web/core/user": mockUserFactory,
     "@web/session": mockSessionFactory,
 };
