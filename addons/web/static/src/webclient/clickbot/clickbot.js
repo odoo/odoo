@@ -214,7 +214,7 @@ async function ensureAppsMenu() {
  */
 async function getNextMenu() {
     const menuToggles = document.querySelectorAll(
-        ".o_menu_sections > .dropdown > .dropdown-toggle, .o_menu_sections > .dropdown-item"
+        ".o_menu_sections > .dropdown-toggle, .o_menu_sections > .dropdown-item"
     );
     if (state.menuIndex === menuToggles.length) {
         state.menuIndex = 0;
@@ -223,11 +223,11 @@ async function getNextMenu() {
     let menuToggle = menuToggles[state.menuIndex];
     if (menuToggle.classList.contains("dropdown-toggle")) {
         // the current menu is a dropdown toggler -> open it and pick a menu inside the dropdown
-        if (!menuToggle.nextElementSibling) {
-            // might already be opened if the last menu was blacklisted
+        let dropdownMenu = getPopoverForTarget(menuToggle);
+        if (!dropdownMenu) {
             await triggerClick(menuToggle, "menu toggler");
+            dropdownMenu = getPopoverForTarget(menuToggle);
         }
-        const dropdownMenu = getPopoverForTarget(menuToggle);
         if (!dropdownMenu) {
             state.menuIndex = 0; // empty More menu has no dropdown (FIXME?)
             return;
