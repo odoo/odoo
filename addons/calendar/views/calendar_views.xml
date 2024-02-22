@@ -108,7 +108,7 @@
                 </div>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <button icon="fa-bars" type="object" name="action_open_calendar_event" invisible="not res_id">
+                        <button icon="fa-bars" type="object" name="action_open_calendar_event" invisible="not (res_id and res_model_name)">
                             <field name="res_model_name"/>
                         </button>
                     </div>
