@@ -458,13 +458,17 @@ export class Link extends Component {
                 $link.html(this.state.originalHTML);
             } else if (linkInfos.content && linkInfos.content.length) {
                 let contentWrapperEl = $link[0];
-                // Update the first child element that has the same inner text
+                const text = $link[0].innerText.replaceAll("\u200B", "").trim();
+                // Update the first not ZWS child element that has the same inner text
                 // as the link with the new content while preserving child
                 // elements within the link. (e.g. the link is bold and italic)
-                while (contentWrapperEl.firstElementChild
-                    && (contentWrapperEl.firstElementChild.innerText === $link[0].innerText)) {
-                    contentWrapperEl = contentWrapperEl.firstElementChild;
-                }
+                let child;
+                do {
+                    contentWrapperEl = child || contentWrapperEl;
+                    child = [...contentWrapperEl.children].find(
+                        (element) => !element.hasAttribute("data-o-link-zws")
+                    );
+                } while (child?.innerText.replaceAll('\u200B', '').trim() === text);
                 contentWrapperEl.innerText = linkInfos.content;
             } else {
                 $link.text(linkInfos.url);
