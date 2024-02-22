@@ -30,6 +30,7 @@ paymentForm.include({
             return;
         }
 
+<<<<<<< HEAD
         // Check if instantiation of the component is needed.
         this.adyenComponents ??= {}; // Store the component of each instantiated payment method.
         if (flow === 'token') {
@@ -38,6 +39,35 @@ paymentForm.include({
             this._setPaymentFlow('direct'); // Overwrite the flow even if no re-instantiation.
             if (paymentMethodCode === 'paypal') { // PayPal uses its own button to submit.
                 this._hideInputs();
+||||||| parent of 23175dfa9cec (temp)
+        /**
+         * Handle the error event of the Adyen drop-in.
+         *
+         * @private
+         * @param {object} error - The error in the drop-in
+         * @return {undefined}
+         */
+        _dropinOnError: function (error) {
+            if (!this.$('div[name="o_payment_error"]')) { // Don't replace a specific server error.
+                this._displayError(
+                    _t("Incorrect Payment Details"),
+                    error.message.data.message
+                );
+=======
+        /**
+         * Handle the error event of the Adyen drop-in.
+         *
+         * @private
+         * @param {object} error - The error in the drop-in
+         * @return {undefined}
+         */
+        _dropinOnError: function (error) {
+            if (!this.$('div[name="o_payment_error"]')) { // Don't replace a specific server error.
+                this._displayError(
+                    _t("Incorrect Payment Details"),
+                    _t("Please verify your payment details."),
+                );
+>>>>>>> 23175dfa9cec (temp)
             }
             return; // Don't re-instantiate if already done for this payment method.
         }
