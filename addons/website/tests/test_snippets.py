@@ -126,3 +126,6 @@ class TestSnippets(HttpCase):
             'url': base + '/web/image/website.s_banner_default_image',
         })
         self.start_tour(self.env['website'].get_client_action_url('/'), 'snippet_image_gallery_thumbnail_update', login='admin')
+
+    def test_dropdowns_and_header_hide_on_scroll(self):
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'dropdowns_and_header_hide_on_scroll', login='admin')
