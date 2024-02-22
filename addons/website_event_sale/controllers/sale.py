@@ -12,7 +12,7 @@ class WebsiteEventSale(WebsiteSale):
                        self)._prepare_shop_payment_confirmation_values(order)
         values['events'] = order.order_line.event_id
         attendee_per_event_read_group = request.env['event.registration'].sudo()._read_group(
-            [('sale_order_id', '=', order.id)],
+            [('sale_order_id', '=', order.id), ('state', 'in', ['open', 'done'])],
             groupby=['event_id'],
             aggregates=['id:array_agg'],
         )
