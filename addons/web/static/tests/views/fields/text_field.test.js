@@ -168,7 +168,7 @@ test("press enter inside editable list", async () => {
     expect(queryOne("textarea.o_input")).toBe(document.activeElement);
     expect("textarea.o_input").toHaveValue("Description as text");
     await fieldTextArea("description").press("Enter");
-    expect("textarea.o_input").toHaveValue("Description as text"); // JUM, should be changed to "Description as text\n" with your change in hoot.
+    expect("textarea.o_input").toHaveValue("Description as text\n");
     expect(queryOne("textarea.o_input")).toBe(document.activeElement);
     expect("tr.o_data_row").toHaveCount(1);
 });
