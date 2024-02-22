@@ -2365,20 +2365,31 @@ export class OdooEditor extends EventTarget {
             return false;
         }
         let range;
-        if (selection.rangeCount > 1) {
-            // Firefox selection in table works with multiple ranges.
-            const startRange = getDeepRange(this.editable, {range: selection.getRangeAt(0)});
-            const endRange = getDeepRange(this.editable, {range: selection.getRangeAt(selection.rangeCount - 1)});
-            range = this.document.createRange();
-            range.setStart(startRange.startContainer, 0);
-            range.setEnd(endRange.startContainer, 0);
-        } else {
+        if (this.isFirefox) {
+            if (selection.rangeCount > 1) {
+                // In Firefox, selecting multiple cells within a table using the mouse can create multiple ranges.
+                // This behavior can cause the original selection (where the selection started) to be lost.
+                // To address this, we reset the selection to the _latestComputedSelection, ensuring that
+                // even when multiple ranges are selected, the original selection remains accessible.
+                this.historyResetLatestComputedSelection(true);
+            } else if (
+                ev &&
+                closestElement(ev.target, 'table') === closestElement(selection.anchorNode, 'table') &&
+                closestElement(ev.target, 'td') !== closestElement(selection.focusNode, 'td')
+            ) {
+                // When we modify a multiple range selection to a single range selection,
+                // Firefox stops updating the selection automatically.
+                // As a result, we need to manually update the selection based on the current target.
+                setSelection(selection.anchorNode, selection.anchorOffset, ev.target, 0);
+            }
             // We need the triple click correction only for a bug in firefox
             // where it gives a selection of a full cell as tr 0 tr 1. The
             // correction makes it so it gives us the cell and not its neighbor.
             // In all other cases we don't want to make that correction so as to
             // avoid flicker when hovering borders.
             range = getDeepRange(this.editable, { correctTripleClick: anchorNode && anchorNode.nodeName === 'TR' });
+        } else {
+            range = getDeepRange(this.editable);
         }
         const startTd = closestElement(range.startContainer, 'td');
         const endTd = closestElement(range.endContainer, 'td');
