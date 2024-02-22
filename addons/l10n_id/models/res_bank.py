@@ -30,6 +30,13 @@ class ResBank(models.Model):
 
         return super()._get_error_messages_for_qr(qr_method, debtor_partner, currency)
 
+    def _check_for_qr_code_errors(self, qr_method, amount, currency, debtor_partner, free_communication, structured_communication):
+        if qr_method == 'id_qr':
+            if not amount:
+                return _("The amount must be set to generate a QR code.")
+
+        return super()._check_for_qr_code_errors(qr_method, amount, currency, debtor_partner, free_communication, structured_communication)
+
     def _get_qr_vals(self, qr_method, amount, currency, debtor_partner, free_communication, structured_communication):
         """Override
 
@@ -60,7 +67,7 @@ class ResBank(models.Model):
 
     def _get_qr_code_generation_params(self, qr_method, amount, currency, debtor_partner, free_communication, structured_communication):
         if qr_method == 'id_qr':
-            if not self._context.get('from_portal'):
+            if not self._context.get('is_online_qr'):
                 return {}
             return {
                 'barcode_type': 'QR',
