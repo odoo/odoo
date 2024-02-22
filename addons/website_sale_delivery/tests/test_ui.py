@@ -7,7 +7,9 @@ import odoo.tests
 class TestUi(odoo.tests.HttpCase):
 
     def test_01_free_delivery_when_exceed_threshold(self):
-        
+        if not self.env['ir.module.module']._get('payment_custom').state == 'installed':
+            return self.skipTest('The payment_custom module is not installed thus the tour cannot be tested.')
+
         # Avoid Shipping/Billing address page
         self.env.ref('base.partner_admin').write({
             'street': '215 Vine St',
