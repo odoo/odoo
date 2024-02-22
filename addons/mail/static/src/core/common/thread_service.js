@@ -631,7 +631,7 @@ export class ThreadService {
         }
         const message = this.store.Message.insert(data, { html: true });
         thread.messages.add(message);
-        if (!message.isEmpty && this.store.hasLinkPreviewFeature) {
+        if (message.hasLink && this.store.hasLinkPreviewFeature) {
             rpc("/mail/link_preview", { message_id: data.id }, { silent: true });
         }
         return message;

@@ -7,6 +7,7 @@ import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 import { start } from "@mail/../tests/helpers/test_utils";
 
 import { click, contains, insertText } from "@web/../tests/utils";
+import { assertSteps, step } from "@web/../tests/legacy/utils";
 
 QUnit.module("link preview");
 
@@ -380,4 +381,31 @@ QUnit.test("Delete all link previews at once", async () => {
     await click(".modal-footer button", { text: "Delete all previews" });
     await contains(".o-mail-LinkPreviewCard", { count: 0 });
     await contains(".o-mail-LinkPreviewImage", { count: 0 });
+});
+
+QUnit.test("link preview request is only made when message contains URL", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "Sales" });
+    const { openDiscuss } = await start({
+        mockRPC(route) {
+            if (route === "/mail/link_preview") {
+                step(route);
+            }
+        },
+    });
+    await openDiscuss(channelId);
+    await insertText(".o-mail-Composer-input", "Hello, this message does not contain any link");
+    await click("button:enabled", { text: "Send" });
+    await contains(".o-mail-Message", {
+        text: "Hello, this message does not contain any link",
+    });
+    await assertSteps([]);
+    await insertText(".o-mail-Composer-input", "#");
+    await click(".o-mail-NavigableList-item", { text: "#Sales" });
+    await click("button:enabled", { text: "Send" });
+    await contains(".o-mail-Message", { text: "#Sales" });
+    await assertSteps([]);
+    await insertText(".o-mail-Composer-input", "https://www.odoo.com");
+    await click("button:enabled", { text: "Send" });
+    await assertSteps(["/mail/link_preview"]);
 });
