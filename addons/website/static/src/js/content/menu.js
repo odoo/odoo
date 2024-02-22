@@ -353,6 +353,40 @@ publicWidget.registry.StandardAffixedHeader = BaseAnimatedHeader.extend({
 publicWidget.registry.FixedHeader = BaseAnimatedHeader.extend({
     selector: 'header.o_header_fixed:not(.o_header_sidebar)',
 
+    /**
+     * @override
+     */
+    start() {
+        const _super = this._super(...arguments);
+        this.dropdownToggleEls = [];
+        if (this.hiddenOnScrollEl) {
+            this.dropdownToggleEls = this.hiddenOnScrollEl.querySelectorAll(".dropdown-toggle");
+            for (const dropdownToggleEl of this.dropdownToggleEls) {
+                this.__onDropdownShow = this._onDropdownShow.bind(this);
+                dropdownToggleEl.addEventListener("show.bs.dropdown", this.__onDropdownShow);
+            }
+            this.searchbarEl = this.hiddenOnScrollEl
+                .querySelector(":not(.modal-content) > .o_searchbar_form");
+            if (this.searchbarEl) {
+                this.__onSearchbarInput = this._onSearchbarInput.bind(this);
+                this.searchbarEl.addEventListener("input", this.__onSearchbarInput);
+            }
+        }
+        return _super;
+    },
+    /**
+     * @override
+     */
+    destroy() {
+        for (const dropdownToggleEl of this.dropdownToggleEls) {
+            dropdownToggleEl.removeEventListener("show.bs.dropdown", this.__onDropdownShow);
+        }
+        if (this.searchbarEl) {
+            this.searchbarEl.removeEventListener("input", this.__onSearchbarInput);
+        }
+        this._super(...arguments);
+    },
+
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
@@ -377,14 +411,28 @@ publicWidget.registry.FixedHeader = BaseAnimatedHeader.extend({
         }
 
         if (this.hiddenOnScrollEl) {
+            let elHeight = 0;
+            if (this.fixedHeader && this.searchbarEl?.matches(".show")) {
+                // Close the dropdown of the search bar if it's open when
+                // scrolling. Otherwise, the calculated height of the
+                // 'hiddenOnScrollEl' element will be incorrect because it will
+                // include the dropdown height.
+                this.searchbarEl.querySelector("input").blur();
+                elHeight = this.hiddenOnScrollEl.offsetHeight;
+            } else {
+                elHeight = this.hiddenOnScrollEl.scrollHeight;
+            }
             const scrollDelta = window.matchMedia(`(prefers-reduced-motion: reduce)`).matches ?
                 scroll : Math.floor(scroll / 4);
-            const elHeight = Math.max(0, this.hiddenOnScrollEl.scrollHeight - scrollDelta);
+            elHeight = Math.max(0, elHeight - scrollDelta);
             this.hiddenOnScrollEl.classList.toggle("hidden", elHeight === 0);
             if (elHeight === 0) {
                 this.hiddenOnScrollEl.removeAttribute("style");
             } else {
-                this.hiddenOnScrollEl.style.overflow = "hidden";
+                // When the page hasn't been scrolled yet, we don't set overflow
+                // to hidden. Without this, the dropdowns would be invisible.
+                // (e.g., "user menu" dropdown).
+                this.hiddenOnScrollEl.style.overflow = this.fixedHeader ? "hidden" : "";
                 this.hiddenOnScrollEl.style.height = `${elHeight}px`;
                 let elPadding = parseInt(getComputedStyle(this.hiddenOnScrollEl).paddingBlock);
                 if (elHeight < elPadding * 2) {
@@ -396,6 +444,44 @@ publicWidget.registry.FixedHeader = BaseAnimatedHeader.extend({
                     this.hiddenOnScrollEl.style.paddingBlock = "";
                 }
             }
+            if (!this.fixedHeader && this.dropdownClickedEl) {
+                const dropdown = Dropdown.getOrCreateInstance(this.dropdownClickedEl);
+                dropdown.show();
+                this.dropdownClickedEl = null;
+            }
+        }
+    },
+    /**
+     * Called when a dropdown within 'this.hiddenOnScrollEl' is clicked.
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _onDropdownShow(ev) {
+        // If a dropdown inside the element 'this.hiddenOnScrollEl' is clicked
+        // while the header is fixed, we need to scroll the page up so that the
+        // 'this.hiddenOnScrollEl' element is no longer overflow hidden. Without
+        // this, the dropdown would be invisible.
+        if (this.fixedHeader) {
+            ev.preventDefault();
+            this.scrollableEl.scrollTo({ top: 0, behavior: "smooth" });
+            this.dropdownClickedEl = ev.currentTarget;
+        }
+    },
+    /**
+     * Called when a searchbar within 'this.hiddenOnScrollEl' receives input.
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _onSearchbarInput(ev) {
+        // Prevents the dropdown with search results from being hidden when the
+        // header is fixed (see comment in '_onDropdownClick').
+        // The scroll animation is instantaneous because the dropdown could open
+        // before reaching the top of the page, which would result in an
+        // incorrect calculated height of the header.
+        if (this.fixedHeader) {
+            this.scrollableEl.scrollTo({ top: 0 });
         }
     },
 });
