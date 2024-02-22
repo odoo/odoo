@@ -719,4 +719,10 @@ QUnit.test("datetime type record", async (assert) => {
     await assertSteps(["DATE_UPDATED"]);
     assert.ok(thread.date instanceof luxon.DateTime);
     assert.ok(thread.date.equals(now));
+    store.Thread.insert({ name: "General", date: false });
+    await assertSteps(["DATE_UPDATED"]);
+    assert.ok(general.date === false);
+    store.Thread.insert({ name: "General", date: "2024-02-22 14:42:00" });
+    await assertSteps(["DATE_UPDATED"]);
+    assert.ok(general.date.day === 22);
 });
