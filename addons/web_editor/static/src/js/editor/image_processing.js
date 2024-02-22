@@ -233,6 +233,8 @@ export async function applyModifications(img, dataOptions = {}) {
     // Crop
     const container = document.createElement('div');
     const original = await loadImage(originalSrc);
+    // loadImage may have ended up loading a different src (see: LOAD_IMAGE_404)
+    originalSrc = original.getAttribute('src');
     container.appendChild(original);
     await activateCropper(original, 0, data);
     let croppedImg = $(original).cropper('getCroppedCanvas', {width, height});
@@ -358,6 +360,7 @@ export function loadImage(src, img = new Image()) {
         img.src = source;
     };
     // The server will return a placeholder image with the following src.
+    // grep: LOAD_IMAGE_404
     const placeholderHref = "/web/image/__odoo__unknown__src__/";
 
     return new Promise((resolve, reject) => {
@@ -419,6 +422,8 @@ async function _updateImageData(src, key = 'objectURL') {
 }
 /**
  * Returns the size of a cached image.
+ * Warning: this supposes that the image is already in the cache, i.e. that
+ * _updateImageData was called before.
  *
  * @param {String} src used as a key on the image cache map.
  * @returns {Number} size of the image in bytes.
