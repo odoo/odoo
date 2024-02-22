@@ -150,6 +150,7 @@ export class PartnerList extends Component {
         });
     }
     async saveChanges(processedChanges) {
+<<<<<<< HEAD
         let partner;
 
         if (processedChanges.id) {
@@ -161,6 +162,15 @@ export class PartnerList extends Component {
         }
 
         this.state.selectedPartner = partner;
+||||||| parent of 894468918bfd (temp)
+        const partnerId = await this.orm.call("res.partner", "create_from_ui", [processedChanges]);
+        await this.pos.load_new_partners();
+        this.state.selectedPartner = this.pos.db.get_partner_by_id(partnerId);
+=======
+        const partnerId = await this.orm.call("res.partner", "create_from_ui", [processedChanges]);
+        await this.pos._loadPartners([partnerId]);
+        this.state.selectedPartner = this.pos.db.get_partner_by_id(partnerId);
+>>>>>>> 894468918bfd (temp)
         this.confirm();
     }
     async searchPartner() {
