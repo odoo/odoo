@@ -16,8 +16,6 @@ class AccountChartTemplate(models.AbstractModel):
             'property_stock_account_input_categ_id': 'a4960',
             'property_stock_account_output_categ_id': 'a4960',
             'property_stock_valuation_account_id': 'a1410',
-            'property_tax_payable_account_id': 'a2650',
-            'property_tax_receivable_account_id': 'a1650',
             'code_digits': '4',
         }
 
