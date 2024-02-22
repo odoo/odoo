@@ -78,6 +78,8 @@
                 <filter name="customer" string="Customer" domain="[('usage', '=', 'customer')]" help="Customer Locations"/>
                 <filter name="prod_inv_location" string="Production" domain="[('usage', 'in', ['inventory', 'production'])]" help="Production Locations"/>
                 <filter name="supplier" string="Vendor" domain="[('usage', '=', 'supplier')]" help="Vendor Locations"/>
+                <separator/>
+                <filter name="empty_location" string="Empty Locations" domain="[('is_empty', '=', True)]"/>
                 <field name="location_id" string="Parent Location"/>
                 <field name="usage" string="Location Type"/>
                 <field name="warehouse_id" string="Warehouse"/>
@@ -101,6 +103,7 @@
                 <field name="active" column_invisible="True"/>
                 <field name="complete_name" string="Location"/>
                 <field name="usage"/>
+                <field name="is_empty" invisible="usage not in ['internal', 'transit']"/>
                 <field name="storage_category_id" readonly="usage != 'internal'" groups="stock.group_stock_storage_categories"/>
                 <field name="company_id" groups="base.group_multi_company"/>
             </tree>
