@@ -13,6 +13,7 @@
         # 'views/view_estate.xml',
         #'views/estate_form.xml',
         'views/estate_type.xml',
+         'views/estate_tag.xml',
         'views/estate_menu.xml',
     ],
     'application': True,

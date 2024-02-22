@@ -1,2 +1,2 @@
 # -*- coding: utf-8 -*-
-from . import estate, estate_type
+from . import estate, estate_type, estate_tag

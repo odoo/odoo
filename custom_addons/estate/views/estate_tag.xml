@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="view_estate_tag_form">
+            <field name="name">estate_tag.form</field>
+            <field name="model">estate_tag</field>
+            <field name="arch" type="xml">
+                <form string="Tags">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_estate_tag_tree">
+            <field name="name">estate_tag.tree</field>
+            <field name="model">estate_tag</field>
+            <field name="arch" type="xml">
+                <tree string="Tags">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_estate_tag">
+            <field name="name">Tags</field>
+            <field name="res_model">estate_tag</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_estate_tag_tree"/>
+        </record>
+
+    </data>
+</odoo>

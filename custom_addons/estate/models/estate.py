@@ -5,9 +5,6 @@ class RealEstate(models.Model):
     _name = "estate"
     _description = "Real Estate"
 
-#    create_uid = fields.Many2one('res.users', string='Create User', ondelete='SET NULL')
-#    write_uid = fields.Many2one('res.users', string='Write User', ondelete='SET NULL')
-
     name = fields.Char(default="Desconocido",string='Titulo', required=True)
     description = fields.Text(string='Descripcion')
     postcode = fields.Char(string='Codigo Postal')
@@ -23,3 +20,7 @@ class RealEstate(models.Model):
     garden_area = fields.Integer(string='Zona de Jardin')
     garden_orientation = fields.Selection([('norte', 'Norte'), ('sur', 'Sur'), ('este', 'Este'), ('oeste', 'Oeste')], string='Orientacion del Jardin')
     state = fields.Selection([('nuevo', 'Nuevo'), ('oferta_recibida', 'Oferta recibida'), ('oferta_aceptada', 'Oferta aceptada'), ('vendido', 'Vendido'), ('cancelado', 'Cancelado')], string='Estado', default='nuevo', required=True)
+    type_id = fields.Many2one('estate_type', string='Tipo')
+    user_id = fields.Many2one('res.users', string='Vendedor', default=lambda self: self.env.user) #Verificar parametros a agregar
+    partner_id = fields.Many2one('res.partner', string='Comprador', copy=False) #Verificar parametros a agregar
+    tag_ids = fields.Many2many('estate_tag', string='Tags')

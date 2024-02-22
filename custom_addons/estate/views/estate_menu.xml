@@ -8,9 +8,9 @@
         <menuitem parent="menu_estate" sequence="10" id="menu_real_estate" name="Anuncios"  groups="group_user,group_admin"/>
             <menuitem parent="menu_real_estate" action="estate_list_action" id="menu_real_estate_properties" name="Propiedades" groups="group_user,group_admin"/>
 
-        <menuitem id="menu_estate_type" name="Tipos" parent="menu_estate" sequence="20"/>
-            <menuitem parent="menu_estate_type" action="estate.action_estate_type" id="menu_estate_type_property" name="Propiedades" groups="group_user,group_admin"/>
-
+        <menuitem id="menu_estate_type" name="Configuracion" parent="menu_estate" sequence="20" groups="group_user,group_admin"/>
+            <menuitem parent="menu_estate_type" action="action_estate_type" id="menu_estate_type_properties" name="Tipos de Propiedades"/>
+            <menuitem parent="menu_estate_type" id="menu_estate_tag" action="action_estate_tag" name="Etiquetas de Propiedades"/>
 
     </data>
 </odoo>

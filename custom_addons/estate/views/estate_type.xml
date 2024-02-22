@@ -5,7 +5,7 @@
             <field name="name">estate_type.form</field>
             <field name="model">estate_type</field>
             <field name="arch" type="xml">
-                <form string="Real Estate Property Type">
+                <form string="Tipos de Propiedades">
                     <sheet>
                         <group>
                             <field name="name"/>
@@ -19,18 +19,18 @@
             <field name="name">estate_type.tree</field>
             <field name="model">estate_type</field>
             <field name="arch" type="xml">
-                <tree string="Real Estate Property Types">
+                <tree string="Tipos de Propiedades">
                     <field name="name"/>
                 </tree>
             </field>
         </record>
 
         <record model="ir.actions.act_window" id="action_estate_type">
-            <field name="name">Real Estate Property Types</field>
+            <field name="name">Tipos de Propiedades</field>
             <field name="res_model">estate_type</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_estate_type_tree"/>
         </record>
 
-    </data>
+    </data> 
 </odoo>

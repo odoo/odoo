@@ -13,6 +13,8 @@
                     <field name="expected_price"/>
                     <field name="selling_price"/>
                     <field name='date_availability'/>
+                    <field name="type_id"/>
+                    <field name="tag_ids" widget="many2many_tags"/>
                 </tree>
             </field>
         </record>
@@ -42,12 +44,14 @@
                                     <field name="postcode"/>
                                     <field name="date_availability"/>
                                     <field name="state"/>
+                                    <field name="type_id"/>
                                 </group>
 
                                 <group>
                                     <field name="expected_price"/>
                                     <field name="selling_price"/>
                                     <field name="active"/>
+                                    <field name="tag_ids" widget="many2many_tags"/>
                                 </group>
 
                             </group>
@@ -65,6 +69,14 @@
                                             <field name="garden_orientation" string="Orientacion del Jardin"/>
                                         </group>
                                     </page>
+
+                                    <page string="Mas Informacion">
+                                        <group>
+                                            <field name="user_id" string="Vendedor"/>
+                                            <field name="partner_id" string="Comprador"/>
+                                        </group>
+                                    </page>
+
                                 </notebook>
 
                         </sheet>
@@ -89,6 +101,7 @@
                 <search string="estate search">
                     <field name="name"/>
                     <field name="postcode"/>
+                    <field name="type_id"/>
                     <field name="expected_price"/>
                     <field name="bedrooms"/>
                     <field name="living_area"/>
