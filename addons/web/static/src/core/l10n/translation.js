@@ -12,7 +12,7 @@ export const translationIsReady = new Deferred();
  * Translate a term, or return the term if no translation can be found.
  *
  * @param {string} term
- * @returns {string|LazyTranslatedString}
+ * @returns {string}
  */
 export function _t(term, ...values) {
     if (translatedTerms[translationLoaded]) {
