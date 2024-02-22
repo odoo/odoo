@@ -54,6 +54,7 @@ import {
     lastLeaf,
     firstLeaf,
     paragraphRelatedElements,
+    convertList,
 } from '../utils/utils.js';
 
 const TEXT_CLASSES_REGEX = /\btext-[^\s]*\b/;
@@ -231,11 +232,25 @@ export const editorCommands = {
         } else if (container.childElementCount > 1) {
             // Grab the content of the first child block and isolate it.
             if (shouldUnwrap(container.firstChild) && !isSelectionAtStart) {
+                // Unwrap the deepest nested first <li> element in the
+                // container to extract and paste the text content of the list.
+                if (container.firstChild.nodeName === 'LI') {
+                    const deepestBlock = closestBlock(firstLeaf(container.firstChild));
+                    splitAroundUntil(deepestBlock, container.firstChild);
+                    container.firstElementChild.replaceChildren(...deepestBlock.childNodes);
+                }
                 containerFirstChild.replaceChildren(...container.firstElementChild.childNodes);
                 container.firstElementChild.remove();
             }
             // Grab the content of the last child block and isolate it.
             if (shouldUnwrap(container.lastChild) && !isSelectionAtEnd) {
+                // Unwrap the deepest nested last <li> element in the container
+                // to extract and paste the text content of the list.
+                if (container.lastChild.nodeName === 'LI') {
+                    const deepestBlock = closestBlock(lastLeaf(container.lastChild));
+                    splitAroundUntil(deepestBlock, container.lastChild);
+                    container.lastElementChild.replaceChildren(...deepestBlock.childNodes);
+                }
                 containerLastChild.replaceChildren(...container.lastElementChild.childNodes);
                 container.lastElementChild.remove();
             }
@@ -259,6 +274,9 @@ export const editorCommands = {
         // element if it's a block then we insert the content in the right places.
         let currentNode = startNode;
         let lastChildNode = false;
+        const currentList = currentNode && closestElement(currentNode, 'UL, OL');
+        const mode = currentList && getListMode(currentList);
+
         const _insertAt = (reference, nodes, insertBefore) => {
             for (const child of (insertBefore ? nodes.reverse() : nodes)) {
                 reference[insertBefore ? 'before' : 'after'](child);
@@ -287,7 +305,7 @@ export const editorCommands = {
                 // If we arrive here, the o_enter index should always be 0.
                 const parent = currentNode.nextSibling.parentElement;
                 const index = [...parent.childNodes].indexOf(currentNode.nextSibling);
-                currentNode.nextSibling.parentElement.oEnter(index);
+                parent.oEnter(index);
             }
         }
 
@@ -345,10 +363,20 @@ export const editorCommands = {
             ) {
                 nodeToInsert = setTagName(nodeToInsert, block.nodeName);
             }
+            let convertedList;
+            if (
+                currentList &&
+                (
+                    (nodeToInsert.nodeName === 'LI' && nodeToInsert.classList.contains('oe-nested')) ||
+                    isList(nodeToInsert)
+                )
+            ) {
+                convertedList = convertList(nodeToInsert, mode);
+            }
             if (currentNode.tagName !== 'BR' && isShrunkBlock(currentNode)) {
                 currentNode.remove();
             }
-            currentNode = nodeToInsert;
+            currentNode = convertedList || nodeToInsert;
         }
 
         currentNode = lastChildNode || currentNode;
@@ -369,7 +397,7 @@ export const editorCommands = {
             currentNode = currentNode.nextSibling;
             lastPosition = getDeepestPosition(...rightPos(currentNode));
         } else {
-            lastPosition = [...paragraphRelatedElements, 'LI'].includes(currentNode.nodeName)
+            lastPosition = [...paragraphRelatedElements, 'LI', 'UL', 'OL'].includes(currentNode.nodeName)
                 ? rightPos(lastLeaf(currentNode))
                 : rightPos(currentNode);
         }
