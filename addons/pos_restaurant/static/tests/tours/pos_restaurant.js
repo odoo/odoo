@@ -234,6 +234,19 @@ function checkMergeTableIsCancelHelpers() {
     ];
 }
 
+function checkMergeTable4IsMergeHelpers() {
+    return {
+        content: `Verify table 4 is merge`,
+        trigger: 'div.table div.label:contains("4")',
+        isCheck: true,
+        run: () => {
+            if ($("div.table div.label:contains('4')").length < 2) {
+                throw new TourError("Table isn't merge");
+            }
+        },
+    };
+}
+
 registry.category("web_tour.tours").add("MergeTableTour", {
     test: true,
     url: "/pos/ui",
@@ -279,16 +292,7 @@ registry.category("web_tour.tours").add("MergeTableTour", {
                     window.location.reload();
                 },
             },
-            {
-                content: `Verify table 4 and 5 is merge`,
-                trigger: 'div.table div.label:contains("4")',
-                isCheck: true,
-                run: () => {
-                    if ($("div.table div.label:contains('4')").length < 2) {
-                        throw new TourError("Table isn't merge");
-                    }
-                },
-            },
+            checkMergeTable4IsMergeHelpers(),
             Chrome.clickMenuButton(),
             {
                 content: `click on Edit Plan in the burger menu`,
@@ -318,15 +322,6 @@ registry.category("web_tour.tours").add("MergeTableTour", {
                 content: `click on Edit Plan in the burger menu`,
                 trigger: 'a.dropdown-item:contains("Edit Plan")',
             },
-            {
-                content: `Verify table 4 and 5 is merge`,
-                trigger: 'div.table div.label:contains("4")',
-                isCheck: true,
-                run: () => {
-                    if ($("div.table div.label:contains('4')").length < 2) {
-                        throw new TourError("Table isn't merge");
-                    }
-                },
-            },
+            checkMergeTable4IsMergeHelpers(),
         ].flat(),
 });
