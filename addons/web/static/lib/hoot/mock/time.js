@@ -222,7 +222,7 @@ export function cancelAllTimers() {
 }
 
 export async function cleanupTime() {
-    await runAllTimers();
+    await runAllTimers(true);
 
     setDateParams(DEFAULT_DATE);
     timeZone = DEFAULT_TIMEZONE;
@@ -377,19 +377,24 @@ export function mockTimeZone(tz) {
  * animations, and then advances the current time by that amount.
  *
  * @see {@link advanceTime}
+ * @param {boolean} [preventTimers=false]
  * @returns {Promise<number>} time consumed by timers (in ms).
  */
-export async function runAllTimers() {
+export async function runAllTimers(preventTimers = false) {
     if (!timers.size) {
         return 0;
     }
 
-    allowTimers = false;
+    if (preventTimers) {
+        allowTimers = false;
+    }
 
     const endts = Math.max(...[...timers.values()].map(([, init, delay]) => init + delay));
     const ms = await advanceTime(Math.ceil(endts - now()));
 
-    allowTimers = true;
+    if (preventTimers) {
+        allowTimers = true;
+    }
 
     return ms;
 }
