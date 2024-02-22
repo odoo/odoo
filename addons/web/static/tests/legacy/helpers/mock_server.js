@@ -788,7 +788,7 @@ export class MockServer {
 
         // For each model, fetch the information of the fields used in the views only
         Object.entries(modelFields).forEach(([modelName, fields]) => {
-            models[modelName] = this.mockFieldsGet(modelName, [...fields]);
+            models[modelName] = { fields: this.mockFieldsGet(modelName, [...fields]) };
         });
 
         if (kwargs.options.load_filters && "search" in views) {

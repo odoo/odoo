@@ -18,7 +18,7 @@ export class HierarchyArchParser {
             xmlDoc,
         };
         const fieldNextIds = {};
-        const fields = models[modelName];
+        const fields = models[modelName].fields;
 
         visitXML(xmlDoc, (node) => {
             if (node.hasAttribute("t-name")) {

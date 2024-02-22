@@ -5,7 +5,11 @@ import { FAKE_FIELDS } from "./helpers";
 
 function parseArch(arch, options = {}) {
     const parser = new CalendarArchParser();
-    return parser.parse(arch, { fake: "fields" in options ? options.fields : FAKE_FIELDS }, "fake");
+    return parser.parse(
+        arch,
+        { fake: { fields: "fields" in options ? options.fields : FAKE_FIELDS } },
+        "fake"
+    );
 }
 
 function check(assert, paramName, paramValue, expectedName, expectedValue) {

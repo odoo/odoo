@@ -183,9 +183,9 @@ class TestACL(TransactionCaseWithUserDemo):
         Partner = self.env['res.partner']
         self._set_field_groups(Partner, 'email', GROUP_SYSTEM)
         views = Partner.with_user(self.user_demo).get_views([(False, 'form')])
-        self.assertFalse('email' in views['models']['res.partner'])
+        self.assertFalse('email' in views['models']['res.partner']["fields"])
         views = Partner.with_user(self.env.ref("base.user_admin")).get_views([(False, 'form')])
-        self.assertTrue('email' in views['models']['res.partner'])
+        self.assertTrue('email' in views['models']['res.partner']["fields"])
 
 
 class TestIrRule(TransactionCaseWithUserDemo):

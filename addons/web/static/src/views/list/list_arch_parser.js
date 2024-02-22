@@ -52,7 +52,7 @@ export class ListArchParser {
         const widgetNodes = {};
         let widgetNextId = 0;
         const columns = [];
-        const fields = models[modelName];
+        const fields = models[modelName].fields;
         let buttonId = 0;
         const groupBy = {
             buttons: {},
@@ -144,7 +144,7 @@ export class ListArchParser {
                 groupBy.buttons[fieldName] = groupByArchInfo.buttons;
                 groupBy.fields[fieldName] = {
                     fieldNodes: groupByArchInfo.fieldNodes,
-                    fields: models[coModelName],
+                    fields: models[coModelName].fields,
                 };
                 return false;
             } else if (node.tagName === "header") {
