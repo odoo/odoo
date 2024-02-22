@@ -205,3 +205,15 @@ class Project(models.Model):
         action = self.env['ir.actions.act_window']._for_xml_id('hr_timesheet.act_hr_timesheet_line_by_project')
         action['display_name'] = _("%(name)s's Timesheets", name=self.name)
         return action
+
+    def action_view_tasks(self):
+        # Using the timesheet filter hide context
+        action = super().action_view_tasks()
+        action['context']['allow_timesheets'] = self.allow_timesheets
+        return action
+
+    def action_project_sharing(self):
+        # Using the timesheet filter hide context
+        action = super().action_project_sharing()
+        action['context']['allow_timesheets'] = self.allow_timesheets
+        return action
