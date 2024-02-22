@@ -7,6 +7,7 @@ import * as NumberPopup from "@point_of_sale/../tests/tours/helpers/NumberPopupT
 import * as Chrome from "@point_of_sale/../tests/tours/helpers/ChromeTourMethods";
 import * as ProductScreenPos from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
 import * as ProductScreenResto from "@pos_restaurant/../tests/tours/helpers/ProductScreenTourMethods";
+import * as Utils from "@point_of_sale/../tests/tours/helpers/utils";
 const ProductScreen = { ...ProductScreenPos, ...ProductScreenResto };
 import { registry } from "@web/core/registry";
 
@@ -31,6 +32,24 @@ registry.category("web_tour.tours").add("FloorScreenTour", {
             FloorScreen.selectedTableIs("3"),
             FloorScreen.clickTable("1"),
             FloorScreen.selectedTableIs("1"),
+
+            //test copy floor
+            FloorScreen.clickFloor("Main Floor"),
+            FloorScreen.clickEditButton("Copy"),
+            FloorScreen.selectedFloorIs("Main Floor (copy)"),
+            Utils.refresh(),
+            Chrome.clickMenuOption("Edit Plan"),
+            FloorScreen.clickFloor("Main Floor (copy)"),
+            FloorScreen.hasTable("2"),
+            FloorScreen.hasTable("4"),
+            FloorScreen.hasTable("5"),
+            FloorScreen.clickEditButton("Delete"),
+            Dialog.confirm(),
+            Utils.refresh(),
+            Chrome.clickMenuOption("Edit Plan"),
+            Utils.elementDoesNotExist(
+                ".floor-selector .button-floor:contains('Main Floor (copy)')"
+            ),
 
             // test add table
             FloorScreen.clickFloor("Main Floor"),
