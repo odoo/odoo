@@ -668,6 +668,7 @@ class MailThread(models.AbstractModel):
             if not template:
                 continue
 
+            post_kwargs.setdefault('message_type', 'auto_comment')
             composition_mode = post_kwargs.pop('composition_mode', default_composition_mode)
             post_kwargs.setdefault('message_type', 'auto_comment')
             if composition_mode == 'mass_mail':
@@ -1665,13 +1666,27 @@ class MailThread(models.AbstractModel):
                 stored_date = datetime.datetime.now()
             msg_dict['date'] = stored_date.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
 
+<<<<<<< HEAD
         msg_dict.update(self._message_parse_extract_from_parent(self._get_parent_message(msg_dict)))
+||||||| parent of a912f29a0d22 (temp)
+        parent_message = self._get_parent_message(msg_dict)
+        if parent_message:
+            msg_dict['parent_id'] = parent_message.id
+            msg_dict['is_internal'] = bool(parent_message.subtype_id and parent_message.subtype_id.internal)
+
+=======
+        parent_message = self._get_parent_message(msg_dict)
+        if parent_message:
+            msg_dict.update(self._message_parse_extract_from_parent(parent_message))
+
+>>>>>>> a912f29a0d22 (temp)
         msg_dict['is_bounce'] = self._message_parse_is_bounce(message, msg_dict)
         msg_dict.update(self._message_parse_extract_payload(message, msg_dict, save_original=save_original))
         if msg_dict['is_bounce']:
             msg_dict.update(self._message_parse_extract_bounce(message, msg_dict))
         return msg_dict
 
+<<<<<<< HEAD
     def _message_parse_extract_from_parent(self, parent_message):
         """Derive message values from the parent."""
         if parent_message:
@@ -1683,6 +1698,20 @@ class MailThread(models.AbstractModel):
             }
         return {}
 
+||||||| parent of a912f29a0d22 (temp)
+=======
+    def _message_parse_extract_from_parent(self, parent_message):
+        """Derive message values from the parent."""
+        if parent_message:
+            parent_is_internal = bool(parent_message.subtype_id and parent_message.subtype_id.internal)
+            parent_is_auto_comment = parent_message.message_type == 'auto_comment'
+            return {
+                'is_internal': parent_is_internal and not parent_is_auto_comment,
+                'parent_id': parent_message.id,
+            }
+        return {}
+
+>>>>>>> a912f29a0d22 (temp)
     def _get_bounced_message_data(self, message, message_dict):
         """Find the original <mail.message> and the bounced email references based on an incoming email.
 
