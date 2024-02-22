@@ -123,6 +123,7 @@ class PaymentTransaction(models.Model):
         :rtype: dict
         """
         customer = self._stripe_create_customer()
+<<<<<<< HEAD
         return {
             'customer': customer['id'],
             'description': self.reference,
@@ -165,6 +166,96 @@ class PaymentTransaction(models.Model):
                     **self._stripe_prepare_mandate_options(),
                 )
         return payment_intent_payload
+||||||| parent of f53939f1261d (temp)
+        common_session_values = self._get_common_stripe_session_values(pmt_values, customer)
+        base_url = self.provider_id.get_base_url()
+        if self.operation == 'online_redirect':
+            return_url = f'{urls.url_join(base_url, StripeController._checkout_return_url)}' \
+                         f'?reference={urls.url_quote_plus(self.reference)}'
+            # Specify a future usage for the payment intent to:
+            # 1. attach the payment method to the created customer
+            # 2. trigger a 3DS check if one if required, while the customer is still present
+            future_usage = 'off_session' if self.tokenize else None
+            capture_method = 'manual' if self.provider_id.capture_manually else 'automatic'
+            checkout_session = self.provider_id._stripe_make_request(
+                'checkout/sessions', payload={
+                    **common_session_values,
+                    'mode': 'payment',
+                    'success_url': return_url,
+                    'cancel_url': return_url,
+                    'line_items[0][price_data][currency]': self.currency_id.name,
+                    'line_items[0][price_data][product_data][name]': self.reference,
+                    'line_items[0][price_data][unit_amount]': payment_utils.to_minor_currency_units(
+                        self.amount, self.currency_id
+                    ),
+                    'line_items[0][quantity]': 1,
+                    'payment_intent_data[description]': self.reference,
+                    'payment_intent_data[setup_future_usage]': future_usage,
+                    'payment_intent_data[capture_method]': capture_method,
+                }
+            )
+            self.stripe_payment_intent = checkout_session['payment_intent']
+        else:  # 'validation'
+            # {CHECKOUT_SESSION_ID} is a template filled by Stripe when the Session is created
+            return_url = f'{urls.url_join(base_url, StripeController._validation_return_url)}' \
+                         f'?reference={urls.url_quote_plus(self.reference)}' \
+                         f'&checkout_session_id={{CHECKOUT_SESSION_ID}}'
+            checkout_session = self.provider_id._stripe_make_request(
+                'checkout/sessions', payload={
+                    **common_session_values,
+                    'mode': 'setup',
+                    'success_url': return_url,
+                    'cancel_url': return_url,
+                    'setup_intent_data[description]': self.reference,
+                }
+            )
+        return checkout_session
+=======
+        common_session_values = self._get_common_stripe_session_values(pmt_values, customer)
+        base_url = self.provider_id.get_base_url()
+        if self.operation == 'online_redirect':
+            return_url = f'{urls.url_join(base_url, StripeController._checkout_return_url)}' \
+                         f'?reference={urls.url_quote_plus(self.reference)}'
+            # Specify a future usage for the payment intent to:
+            # 1. attach the payment method to the created customer
+            # 2. trigger a 3DS check if one if required, while the customer is still present
+            future_usage = 'off_session' if self.tokenize else None
+            capture_method = 'manual' if self.provider_id.capture_manually else 'automatic'
+            checkout_session = self.provider_id._stripe_make_request(
+                'checkout/sessions', payload={
+                    **common_session_values,
+                    'mode': 'payment',
+                    'success_url': return_url,
+                    'cancel_url': return_url,
+                    'line_items[0][price_data][currency]': self.currency_id.name,
+                    'line_items[0][price_data][product_data][name]': self.reference,
+                    'line_items[0][price_data][unit_amount]': payment_utils.to_minor_currency_units(
+                        self.amount, self.currency_id
+                    ),
+                    'line_items[0][quantity]': 1,
+                    'payment_intent_data[description]': self.reference,
+                    'payment_intent_data[setup_future_usage]': future_usage,
+                    'payment_intent_data[capture_method]': capture_method,
+                }
+            )
+            self.stripe_payment_intent = checkout_session['payment_intent']
+        else:  # 'validation'
+            # {CHECKOUT_SESSION_ID} is a template filled by Stripe when the Session is created
+            return_url = f'{urls.url_join(base_url, StripeController._validation_return_url)}' \
+                         f'?reference={urls.url_quote_plus(self.reference)}' \
+                         f'&checkout_session_id={{CHECKOUT_SESSION_ID}}'
+            checkout_session = self.provider_id._stripe_make_request(
+                'checkout/sessions', payload={
+                    **common_session_values,
+                    'mode': 'setup',
+                    'currency': self.currency_id.name,
+                    'success_url': return_url,
+                    'cancel_url': return_url,
+                    'setup_intent_data[description]': self.reference,
+                }
+            )
+        return checkout_session
+>>>>>>> f53939f1261d (temp)
 
     def _stripe_create_customer(self):
         """ Create and return a Customer.
