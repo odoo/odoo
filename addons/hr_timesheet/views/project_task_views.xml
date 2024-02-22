@@ -199,8 +199,11 @@
             <field name="priority">10</field>
             <field name="arch" type="xml">
                 <xpath expr="//filter[@name='blocking']/following-sibling::separator[1]" position="after">
-                    <filter string="Timesheets 80%" name="timesheet_80" domain="[('remaining_hours_percentage', '&gt;', 0.0), ('remaining_hours_percentage', '&lt;=', 0.2)]" groups="hr_timesheet.group_hr_timesheet_user"/>
-                    <filter string="Timesheets &gt;100%" name="timesheet_exceeded" domain="[('overtime', '&gt;', 0)]" groups="hr_timesheet.group_hr_timesheet_user"/>
+                    <filter string="Timesheets 80%" name="timesheet_80"
+                        domain="[('remaining_hours_percentage', '&gt;', 0.0), ('remaining_hours_percentage', '&lt;=', 0.2)]"
+                        groups="hr_timesheet.group_hr_timesheet_user" invisible="not context.get('allow_timesheets')"/>
+                    <filter string="Timesheets &gt;100%" name="timesheet_exceeded" domain="[('overtime', '&gt;', 0)]"
+                        groups="hr_timesheet.group_hr_timesheet_user" invisible="not context.get('allow_timesheets')"/>
                     <separator/>
                 </xpath>
             </field>
