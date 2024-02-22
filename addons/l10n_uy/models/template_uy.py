@@ -14,8 +14,6 @@ class AccountChartTemplate(models.AbstractModel):
             'property_account_income_categ_id': 'uy_code_4102',
             'property_account_expense_categ_id': 'uy_code_5100',
             'code_digits': '6',
-            'property_tax_payable_account_id': 'base_default_vat',
-            'property_tax_receivable_account_id': 'base_default_vat',
             'name': _('Uruguayan Generic Chart of Accounts'),
         }
 

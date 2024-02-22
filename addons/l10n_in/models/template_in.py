@@ -13,8 +13,6 @@ class AccountChartTemplate(models.AbstractModel):
             'property_account_payable_id': 'p11211',
             'property_account_expense_categ_id': 'p2107',
             'property_account_income_categ_id': 'p20011',
-            'property_tax_payable_account_id': 'p11239',
-            'property_tax_receivable_account_id': 'p10059',
             'code_digits': '6',
             'display_invoice_amount_total_words': True,
         }
