@@ -35,6 +35,8 @@ from odoo.tools import (
 )
 
 from requests import Session
+import markdown
+from markdown.extensions.codehilite import CodeHiliteExtension
 
 MAX_DIRECT_PUSH = 5
 
@@ -2135,6 +2137,9 @@ class MailThread(models.AbstractModel):
             _logger.warning("Posting HTML message using body_is_html=True, use a Markup object instead (user: %s)",
                 self.env.user.id)
             body = Markup(body)
+        elif self._name == "discuss.channel":
+            body = Markup(body).unescape() # do not interfere with markdown conversion
+            body = Markup(markdown.markdown(body, extensions=["attr_list", "fenced_code", CodeHiliteExtension()]))
         msg_values.update({
             # author
             'author_id': author_id,

@@ -7,6 +7,8 @@ from werkzeug.exceptions import NotFound
 from odoo import http
 from odoo.http import request
 from odoo.addons.mail.models.discuss.mail_guest import add_guest_to_context
+import markdown
+from markdown.extensions.codehilite import CodeHiliteExtension
 
 
 class ThreadController(http.Controller):
@@ -122,7 +124,7 @@ class ThreadController(http.Controller):
             raise NotFound()
         if not message_sudo.model or not message_sudo.res_id:
             raise NotFound()
-        body = Markup(body) if body else body  # may contain HTML such as @mentions
+        body = Markup(markdown.markdown(body, extensions=["attr_list", "fenced_code", CodeHiliteExtension()])) if body else body  # may contain HTML such as @mentions
         guest.env[message_sudo.model].browse([message_sudo.res_id])._message_update_content(
             message_sudo, body, attachment_ids=attachment_ids, partner_ids=partner_ids
         )

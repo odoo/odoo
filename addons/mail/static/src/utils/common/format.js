@@ -34,8 +34,7 @@ export async function prettifyMessageContent(rawBody, validRecords = []) {
     // Suggested URL Javascript regex of http://stackoverflow.com/questions/3809401/what-is-a-good-regular-expression-to-match-a-url
     // Adapted to make http(s):// not required if (and only if) www. is given. So `should.notmatch` does not match.
     // And further extended to include Latin-1 Supplement, Latin Extended-A, Latin Extended-B and Latin Extended Additional.
-    const escapedAndCompactContent = escapeAndCompactTextContent(rawBody);
-    let body = escapedAndCompactContent.replace(/&nbsp;/g, " ").trim();
+    let body = escape(rawBody.replace(/&nbsp;/g, " ")).trim();
     // This message will be received from the mail composer as html content
     // subtype but the urls will not be linkified. If the mail composer
     // takes the responsibility to linkify the urls we end up with double
@@ -105,7 +104,8 @@ function linkify(text) {
     let curIndex = 0;
     let result = "";
     let match;
-    while ((match = urlRegexp.exec(text)) !== null) {
+    const markdownLinkRegex = /\[.*\](\(.*\))/g;
+    while ((match = urlRegexp.exec(text.replaceAll(markdownLinkRegex, ""))) !== null) {
         result += _escapeEntities(text.slice(curIndex, match.index));
         // Decode the url first, in case it's already an encoded url
         const url = decodeURI(match[0]);
