@@ -27,7 +27,7 @@ export class RelativeTime extends Component {
             return;
         }
         const delta = Date.now() - datetime.ts;
-        if (delta < 45 * 1000) {
+        if (Math.abs(delta) < 45 * 1000) {
             this.relativeTime = _t("now");
         } else {
             this.relativeTime = datetime.toRelative();
