@@ -189,7 +189,8 @@ export class PivotCoreGlobalFilterPlugin extends OdooCorePlugin {
     export(data) {
         for (const id in this.pivots) {
             const pivot = this.getters.getPivotDefinition(id);
-            data.pivots[id].fieldMatching =
+            const formulaId = this.getters.getPivotFormulaId(id);
+            data.pivots[formulaId].fieldMatching =
                 pivot.type === "ODOO" ? this.pivots[id].fieldMatching : {};
         }
     }
