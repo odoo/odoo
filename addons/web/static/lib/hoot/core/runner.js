@@ -622,12 +622,18 @@ export class TestRunner {
     }
 
     /**
-     * @param {Callback<ErrorEvent | PromiseRejectionEvent>} callback
+     * Registers callbacks that will be executed when an error occurs during the
+     * execution of the test runner.
+     *
+     * If called within a test, the given callbacks will only be called once.
+     *
+     * @param {...Callback<ErrorEvent | PromiseRejectionEvent>} callbacks
      */
-    onError(callback) {
-        const { suite, test } = this.getCurrent();
-        const callbacks = suite ? suite.callbacks : this.#callbacks;
-        callbacks.add("error", callback, Boolean(test));
+    onError(...callbacks) {
+        if (this.#dry) {
+            return;
+        }
+        this.__onError(...callbacks);
     }
 
     /**
@@ -1046,6 +1052,17 @@ export class TestRunner {
         const callbackRegistry = suite ? suite.callbacks : this.#callbacks;
         for (const callback of callbacks) {
             callbackRegistry.add("before-test", callback);
+        }
+    }
+
+    /**
+     * @param {...Callback<ErrorEvent | PromiseRejectionEvent>} callbacks
+     */
+    __onError(...callbacks) {
+        const { suite, test } = this.getCurrent();
+        const callbackRegistry = suite ? suite.callbacks : this.#callbacks;
+        for (const callback of callbacks) {
+            callbackRegistry.add("error", callback, Boolean(test));
         }
     }
 
