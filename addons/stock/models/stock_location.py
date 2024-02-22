@@ -96,6 +96,7 @@ class Location(models.Model):
     incoming_move_line_ids = fields.One2many('stock.move.line', 'location_dest_id') # used to compute weight
     net_weight = fields.Float('Net Weight', compute="_compute_weight")
     forecast_weight = fields.Float('Forecasted Weight', compute="_compute_weight")
+    is_empty = fields.Boolean('Is Empty', compute='_compute_is_empty', search='_search_is_empty')
 
     _sql_constraints = [('barcode_company_uniq', 'unique (barcode,company_id)', 'The barcode for a location must be unique per company!'),
                         ('inventory_freq_nonneg', 'check(cyclic_inventory_frequency >= 0)', 'The inventory frequency (days) for a location must be non-negative')]
@@ -127,6 +128,15 @@ class Location(models.Model):
                 location.complete_name = '%s/%s' % (location.location_id.complete_name, location.name)
             else:
                 location.complete_name = location.name
+
+    def _compute_is_empty(self):
+        groups = self.env['stock.quant']._read_group(
+            [('location_id.usage', 'in', ('internal', 'transit')),
+             ('location_id', 'in', self.ids)],
+            ['location_id'], ['quantity:sum'])
+        groups = dict(groups)
+        for location in self:
+            location.is_empty = groups.get(location, 0) <= 0
 
     @api.depends('cyclic_inventory_frequency', 'last_inventory_date', 'usage', 'company_id')
     def _compute_next_inventory_date(self):
@@ -198,6 +208,17 @@ class Location(models.Model):
         inter_company_location = self.env.ref('stock.stock_location_inter_company')
         if inter_company_location in self:
             raise ValidationError(_('The %s location is required by the Inventory app and cannot be deleted, but you can archive it.', inter_company_location.name))
+
+    def _search_is_empty(self, operator, value):
+        if operator not in ('=', '!=') or not isinstance(value, bool):
+            raise NotImplementedError(_('The search does not support the %(operator)s operator or %(value)s value.'), operator=operator, value=value)
+        groups = self.env['stock.quant']._read_group([
+            ('location_id.usage', 'in', ['internal', 'transit'])],
+            ['location_id'], ['quantity:sum'])
+        location_ids = {loc.id for loc, quantity in groups if quantity >= 0}
+        if value and operator == '=' or not value and operator == '!=':
+            return [('id', 'not in', list(location_ids))]
+        return [('id', 'in', list(location_ids))]
 
     def write(self, values):
         if 'company_id' in values:
