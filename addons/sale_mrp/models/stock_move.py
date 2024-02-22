@@ -10,6 +10,8 @@ class StockMove(models.Model):
     def _prepare_procurement_values(self):
         res = super()._prepare_procurement_values()
         res['analytic_account_id'] = self.sale_line_id.order_id.analytic_account_id
+        if self.sale_line_id.order_id.analytic_account_id:
+            res['analytic_distribution'] = {self.sale_line_id.order_id.analytic_account_id.id: 100}
         return res
 
 
