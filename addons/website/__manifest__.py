@@ -25,6 +25,7 @@
         # security.xml first, data.xml need the group to exist (checking it)
         'security/website_security.xml',
         'security/ir.model.access.csv',
+        'data/image_library.xml',
         'data/ir_asset.xml',
         'data/ir_cron_data.xml',
         'data/mail_mail_data.xml',
