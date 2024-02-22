@@ -13,7 +13,7 @@
                 <field name="all_discount_product_ids" invisible="1"/>
                 <sheet>
                     <group>
-                        <group string="Reward" id="reward_type_group">
+                        <group string="Reward" id="reward_type_group" attrs="{'invisible': [('program_type', 'in', ('gift_card', 'ewallet'))]}">
                             <field name="reward_type" widget="selection" force_save="1" attrs="{'readonly' : [('program_type', '=', 'buy_x_get_y')]}"/>
                             <label for="discount" attrs="{'invisible': [('reward_type', '!=', 'discount')]}"/>
                             <div class="d-flex flex-row" attrs="{'invisible': [('reward_type', '!=', 'discount')]}">
@@ -31,7 +31,7 @@
                             <field name="reward_product_tag_id" attrs="{'required': [('reward_type', '=', 'product'), ('reward_product_ids', '=', [])]}"/>
                         </group>
 
-                        <group string="Discount" attrs="{'invisible': [('reward_type', '!=', 'discount')]}">
+                        <group string="Discount" attrs="{'invisible': ['|', ('reward_type', '!=', 'discount'), ('program_type', 'in', ('gift_card', 'ewallet'))], }">
                             <field name="discount_max_amount"/>
                             <field name="discount_product_domain" groups="base.group_no_one" widget="domain" options="{'model': 'product.product', 'in_dialog': true}" attrs="{'invisible': [('discount_applicability', '!=', 'specific')]}"/>
                             <field name="discount_product_ids" widget="many2many_tags" attrs="{'invisible': [('discount_applicability', '!=', 'specific')]}"/>
@@ -47,13 +47,13 @@
                                 <field name="point_name" no_label="1"/>
                                 <span attrs="{'invisible': [('clear_wallet', '!=', True)]}"> (or more)</span>
                             </div>
-                            <label for="clear_wallet" string="Clear all promo point(s)" attrs="{'invisible': [('user_has_debug', '=', False), ('program_type', 'in', ('loyalty', 'buy_x_get_y'))]}"/>
-                            <div class="o_row" attrs="{'invisible': [('user_has_debug', '=', False), ('program_type', 'in', ('loyalty', 'buy_x_get_y'))]}">
+                            <label for="clear_wallet" string="Clear all promo point(s)" attrs="{'invisible': ['|','&amp;',('user_has_debug', '=', False), ('program_type', 'in', ('loyalty', 'buy_x_get_y')), ('program_type', 'in', ('ewallet','gift_card'))]}"/>
+                            <div class="o_row" attrs="{'invisible': ['|','&amp;',('user_has_debug', '=', False), ('program_type', 'in', ('loyalty', 'buy_x_get_y')), ('program_type', 'in', ('ewallet','gift_card'))]}">
                                 <field name="clear_wallet"/>
                             </div>
                         </group>
                     </group>
-                    <group>
+                    <group attrs="{'invisible': [('program_type', 'in', ('gift_card', 'ewallet'))]}">
                         <field name="description" string="Description on order"/>
                         <field name="discount_line_product_id" string="Discount product" groups="base.group_no_one"/>
                     </group>
