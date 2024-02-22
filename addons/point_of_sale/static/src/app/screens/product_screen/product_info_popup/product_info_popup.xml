@@ -21,7 +21,7 @@
                 <div class="section-financials-body d-flex flex-column flex-sm-row">
                     <table class="table table-borderless mb-0">
                         <tr>
-                            <td>Price excl. VAT:</td>
+                            <td>Price excl. Tax:</td>
                             <td><t t-esc="env.utils.formatCurrency(props.info.productInfo.all_prices.price_without_tax)"/></td>
                         </tr>
                         <tr t-if="_hasMarginsCostsAccessRights()">
@@ -112,7 +112,7 @@
                 <div class="section-order-body">
                     <table class="table table-borderless w-100 w-sm-50 mb-0">
                         <tr>
-                            <td>Total Price excl. VAT:</td>
+                            <td>Total Price excl. Tax:</td>
                             <td t-esc="props.info.orderPriceWithoutTaxCurrency" class="table-value"/>
                         </tr>
                         <tr t-if="_hasMarginsCostsAccessRights()">
