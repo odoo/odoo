@@ -430,7 +430,7 @@ export class WysiwygAdapterComponent extends Wysiwyg {
             [["id", "=", this.websiteDesignId]],
             []
         );
-        console.log("design record", this.designData);
+        console.table(this.designData);
         this.designDataUpToDate = true;
         return this.designData;
     }

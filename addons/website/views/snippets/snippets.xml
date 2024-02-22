@@ -1787,7 +1787,7 @@
             <t t-foreach="used_display_font_sizes" t-as="depth">
                 <we-input t-attf-string="#{display_label} #{depth}" class="o_we_sublevel_1"
                           data-customize-website-variable="null"
-                          t-attf-data-variable="display__#{depth}__font__size"
+                          t-attf-data-variable="display_#{depth}_font_size"
                           data-unit="px"
                           data-save-unit="rem"/>
             </t>
@@ -1862,7 +1862,7 @@
             <we-button data-customize-button-style="flat">Flat</we-button>
         </we-select>
         <we-input string="Border Width" class="o_we_sublevel_1" data-customize-website-variable=""
-            data-variable="btn-primary-outline-border-width" data-dependencies="btn_primary_outline_opt"
+            data-variable="btn_primary_outline_border_width" data-dependencies="btn_primary_outline_opt"
             data-unit="px" data-save-unit="rem"/>
         <we-select string="Secondary Style" data-button="secondary" data-no-preview="true">
             <we-button data-customize-button-style="fill">Fill</we-button>
@@ -1870,7 +1870,7 @@
             <we-button data-customize-button-style="flat">Flat</we-button>
         </we-select>
         <we-input string="Border Width" class="o_we_sublevel_1" data-customize-website-variable=""
-            data-variable="btn-secondary-outline-border-width" data-dependencies="btn_secondary_outline_opt"
+            data-variable="btn_secondary_outline_border_width" data-dependencies="btn_secondary_outline_opt"
             data-unit="px" data-save-unit="rem"/>
         <we-row string="Font Family">
             <we-fontfamilypicker data-variable="buttons-font"/>
@@ -1880,27 +1880,27 @@
         </we-row>
         <we-collapse>
             <we-row string="Padding">
-                <we-input title="Y" data-customize-website-variable="" data-variable="btn-padding-y" data-unit="px" data-save-unit="rem"/>
-                <we-input title="X" data-customize-website-variable="" data-variable="btn-padding-x" data-unit="px" data-save-unit="rem"/>
+                <we-input title="Y" data-customize-website-variable="" data-variable="btn_padding_y" data-unit="px" data-save-unit="rem"/>
+                <we-input title="X" data-customize-website-variable="" data-variable="btn_padding_x" data-unit="px" data-save-unit="rem"/>
             </we-row>
             <we-row string="Small" class="o_we_sublevel_1">
-                <we-input title="Y" data-customize-website-variable="" data-variable="btn-padding-y-sm" data-unit="px" data-save-unit="rem"/>
-                <we-input title="X" data-customize-website-variable="" data-variable="btn-padding-x-sm" data-unit="px" data-save-unit="rem"/>
+                <we-input title="Y" data-customize-website-variable="" data-variable="btn_padding_y_sm" data-unit="px" data-save-unit="rem"/>
+                <we-input title="X" data-customize-website-variable="" data-variable="btn_padding_x_sm" data-unit="px" data-save-unit="rem"/>
             </we-row>
             <we-row string="Large" class="o_we_sublevel_1">
-                <we-input title="Y" data-customize-website-variable="" data-variable="btn-padding-y-lg" data-unit="px" data-save-unit="rem"/>
-                <we-input title="X" data-customize-website-variable="" data-variable="btn-padding-x-lg" data-unit="px" data-save-unit="rem"/>
+                <we-input title="Y" data-customize-website-variable="" data-variable="btn_padding_y_lg" data-unit="px" data-save-unit="rem"/>
+                <we-input title="X" data-customize-website-variable="" data-variable="btn_padding_x_lg" data-unit="px" data-save-unit="rem"/>
             </we-row>
         </we-collapse>
         <we-collapse>
-            <we-input string="Font Size" data-customize-website-variable="" data-variable="btn-font-size" data-unit="px" data-save-unit="rem"/>
-            <we-input string="Small" class="o_we_sublevel_1" data-customize-website-variable="" data-variable="btn-font-size-sm" data-unit="px" data-save-unit="rem"/>
-            <we-input string="Large" class="o_we_sublevel_1" data-customize-website-variable="" data-variable="btn-font-size-lg" data-unit="px" data-save-unit="rem"/>
+            <we-input string="Font Size" data-customize-website-variable="" data-variable="btn_font_size" data-unit="px" data-save-unit="rem"/>
+            <we-input string="Small" class="o_we_sublevel_1" data-customize-website-variable="" data-variable="btn_font_size_sm" data-unit="px" data-save-unit="rem"/>
+            <we-input string="Large" class="o_we_sublevel_1" data-customize-website-variable="" data-variable="btn_font_size_lg" data-unit="px" data-save-unit="rem"/>
         </we-collapse>
         <we-collapse>
-            <we-input string="Round Corners" data-customize-website-variable="" data-variable="btn-border-radius" data-unit="px" data-save-unit="rem"/>
-            <we-input string="Small" class="o_we_sublevel_1" data-customize-website-variable="" data-variable="btn-border-radius-sm" data-unit="px" data-save-unit="rem"/>
-            <we-input string="Large" class="o_we_sublevel_1" data-customize-website-variable="" data-variable="btn-border-radius-lg" data-unit="px" data-save-unit="rem"/>
+            <we-input string="Round Corners" data-customize-website-variable="" data-variable="btn_border_radius" data-unit="px" data-save-unit="rem"/>
+            <we-input string="Small" class="o_we_sublevel_1" data-customize-website-variable="" data-variable="btn_border_radius_sm" data-unit="px" data-save-unit="rem"/>
+            <we-input string="Large" class="o_we_sublevel_1" data-customize-website-variable="" data-variable="btn_border_radius_lg" data-unit="px" data-save-unit="rem"/>
         </we-collapse>
         <we-select string="On Click Effect" data-variable="btn-ripple">
             <we-button data-customize-website-variable="false">None</we-button>
