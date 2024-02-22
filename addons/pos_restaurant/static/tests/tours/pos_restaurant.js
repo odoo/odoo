@@ -256,11 +256,7 @@ registry.category("web_tour.tours").add("MergeTableTour", {
             ReceiptScreen.clickNextOrder(),
             ...checkMergeTableIsCancelHelpers(),
             ...mergeTableHelpers("5", "4"),
-            Chrome.clickMenuButton(),
-            {
-                content: `click on Edit Plan in the burger menu`,
-                trigger: 'a.dropdown-item:contains("Edit Plan")',
-            },
+            Chrome.clickMenuOption("Edit Plan"),
             {
                 content: `select linked table`,
                 trigger: 'div.isLinked div.label:contains("4")',
@@ -269,11 +265,7 @@ registry.category("web_tour.tours").add("MergeTableTour", {
                 content: `unlink in edit plan if unlink possible`,
                 trigger: '.edit-buttons button:contains("Unlink")',
             },
-            Chrome.clickMenuButton(),
-            {
-                content: `click on Edit Plan in the burger menu`,
-                trigger: 'a.dropdown-item:contains("Edit Plan")',
-            },
+            Chrome.clickMenuOption("Edit Plan"),
             ...checkMergeTableIsCancelHelpers(),
             ...mergeTableHelpers("5", "4"),
             {
@@ -294,11 +286,7 @@ registry.category("web_tour.tours").add("MergeTableTour", {
                     }
                 },
             },
-            Chrome.clickMenuButton(),
-            {
-                content: `click on Edit Plan in the burger menu`,
-                trigger: 'a.dropdown-item:contains("Edit Plan")',
-            },
+            Chrome.clickMenuOption("Edit Plan"),
             {
                 content: `select linked table`,
                 trigger: 'div.isLinked div.label:contains("4")',
@@ -307,28 +295,16 @@ registry.category("web_tour.tours").add("MergeTableTour", {
                 content: `unlink in edit plan if unlink possible`,
                 trigger: '.edit-buttons button:contains("Unlink")',
             },
-            Chrome.clickMenuButton(),
-            {
-                content: `click on Edit Plan in the burger menu`,
-                trigger: 'a.dropdown-item:contains("Edit Plan")',
-            },
+            Chrome.clickMenuOption("Edit Plan"),
             ...checkMergeTableIsCancelHelpers(),
-            Chrome.clickMenuButton(),
-            {
-                content: `click on Edit Plan in the burger menu`,
-                trigger: 'a.dropdown-item:contains("Edit Plan")',
-            },
+            Chrome.clickMenuOption("Edit Plan"),
             FloorScreen.clickTable("4"),
             FloorScreen.ctrlClickTable("5"),
             {
                 content: `link in edit plan if link possible`,
                 trigger: '.edit-buttons button:contains("Link")',
             },
-            Chrome.clickMenuButton(),
-            {
-                content: `click on Edit Plan in the burger menu`,
-                trigger: 'a.dropdown-item:contains("Edit Plan")',
-            },
+            Chrome.clickMenuOption("Edit Plan"),
             {
                 content: `Verify table 4 and 5 is merge`,
                 trigger: 'div.table div.label:contains("4")',

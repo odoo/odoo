@@ -8,6 +8,7 @@ import { nbsp } from "@web/core/utils/strings";
 import * as Numpad from "@point_of_sale/../tests/tours/helpers/NumpadTourMethods";
 import * as Order from "@point_of_sale/../tests/tours/helpers/generic_components/OrderWidgetMethods";
 import * as Dialog from "@point_of_sale/../tests/tours/helpers/DialogTourMethods";
+import * as Chrome from "@point_of_sale/../tests/tours/helpers/ChromeTourMethods";
 
 function assert(condition, message) {
     if (!condition) {
@@ -281,10 +282,7 @@ registry.category("web_tour.tours").add("pos_pricelist", {
                 content: "select fixed pricelist",
                 trigger: ".selection-item:contains('min_quantity ordering')",
             },
-            {
-                content: "open the navbar menu",
-                trigger: ".menu-button",
-            },
+            Chrome.clickMenuButton(),
             {
                 content: "confirm closing the frontend",
                 trigger: ".close-button",

@@ -180,13 +180,6 @@ export function changeFiscalPosition(name) {
         },
     ];
 }
-export function clickCloseButton() {
-    return [
-        {
-            trigger: ".close-button",
-        },
-    ];
-}
 export function closeWithCashAmount(val) {
     return [
         {
