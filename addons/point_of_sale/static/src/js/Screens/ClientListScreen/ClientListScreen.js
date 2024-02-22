@@ -159,7 +159,7 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
                     method: 'create_from_ui',
                     args: [event.detail.processedChanges],
                 });
-                await this.env.pos.load_new_partners();
+                await this.env.pos._loadPartners([partnerId]);
                 this.state.selectedClient = this.env.pos.db.get_partner_by_id(partnerId);
                 this.state.detailIsShown = false;
                 this.render();
