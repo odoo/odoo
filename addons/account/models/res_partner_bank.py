@@ -128,8 +128,8 @@ class ResPartnerBank(models.Model):
         available_qr_methods = self.get_available_qr_methods_in_sequence()
         candidate_methods = qr_method and [(qr_method, dict(available_qr_methods)[qr_method])] or available_qr_methods
         for candidate_method, candidate_name in candidate_methods:
-            error_msg = self._get_error_messages_for_qr(candidate_method, debtor_partner, currency)
-            if not error_msg:
+            error_message = self._get_error_messages_for_qr(candidate_method, debtor_partner, currency)
+            if not error_message:
                 error_message = self._check_for_qr_code_errors(candidate_method, amount, currency, debtor_partner, free_communication, structured_communication)
 
                 if not error_message:
@@ -142,9 +142,9 @@ class ResPartnerBank(models.Model):
                         'structured_communication': structured_communication,
                     }
 
-                elif not silent_errors:
-                    error_header = _("The following error prevented '%s' QR-code to be generated though it was detected as eligible: ", candidate_name)
-                    raise UserError(error_header + error_message)
+            if not silent_errors:
+                error_header = _("The following error prevented '%s' QR-code to be generated though it was detected as eligible: ", candidate_name)
+                raise UserError(error_header + error_message)
 
         return None
 
