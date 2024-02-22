@@ -164,7 +164,7 @@
         </div>
         <t t-if="state.showScheduledMessages">
             <t t-foreach="scheduledMessages" t-as="scheduledMessage" t-key="scheduledMessage.id">
-                <Message message="scheduledMessage.message"/>
+                <Message message="scheduledMessage.message" thread="state.thread"/>
             </t>
         </t>
     </div>
