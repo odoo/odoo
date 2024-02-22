@@ -44,22 +44,20 @@ class AccountMove(models.Model):
         self.ensure_one()
         transactions = self.transaction_ids.filtered(lambda tx: tx.state in ('pending', 'authorized', 'done'))
         pending_transactions = transactions.filtered(
-            lambda tx: tx.state == 'pending' and tx.provider_code not in ('none', 'custom'))
+            lambda tx: tx.state in {'pending', 'authorized'}
+                       and tx.provider_code not in {'none', 'custom'})
         enabled_feature = str2bool(
             self.env['ir.config_parameter'].sudo().get_param(
                 'account_payment.enable_portal_payment'
             )
         )
         return enabled_feature and bool(
-            (
-                self.amount_residual
-                or not transactions
-            )
+            (self.amount_residual or not transactions)
             and self.state == 'posted'
             and self.payment_state in ('not_paid', 'partial')
             and self.amount_total
             and self.move_type == 'out_invoice'
-            and (pending_transactions or not transactions or self.amount_paid < self.amount_total)
+            and not pending_transactions
         )
 
     def get_portal_last_transaction(self):
