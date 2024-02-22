@@ -72,7 +72,7 @@ test.skip("rendering with OdooBot has a request (default)", async () => {
 
     await waitFor(".o-mail-NotificationItem");
 
-    expect(".o-mail-NotificationItem").toContain("OdooBot has a request");
+    expect(".o-mail-NotificationItem").toHaveText("OdooBot has a request");
     expect(".o-mail-NotificationItem img").toHaveAttribute(
         "src",
         `/web/image?field=avatar_128&id=${constants.ODOOBOT_ID}&model=res.partner`
