@@ -1,5 +1,4 @@
 /** @odoo-module */
-
 export function inLeftSide(steps) {
     return [
         {
@@ -23,5 +22,23 @@ export function negateStep(step) {
     return {
         ...step,
         trigger: negate(step.trigger),
+    };
+}
+
+export function refresh() {
+    return {
+        content: `refresh page`,
+        trigger: "body",
+        run: () => {
+            window.location.reload();
+        },
+    };
+}
+
+export function elementDoesNotExist(selector) {
+    return {
+        content: `Check that element "${selector}" don't exist.`,
+        trigger: negate(selector),
+        isCheck: true,
     };
 }
