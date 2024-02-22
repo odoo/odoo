@@ -69,8 +69,8 @@ test("Tags can be displayed with an image", async () => {
 
     await mountWithCleanup(Parent);
     expect(".o_tag").toHaveCount(2);
-    expect(".o_tag:nth-of-type(1) img").toHaveAttribute("src", "fake/url");
-    expect(".o_tag:nth-of-type(2) img").toHaveAttribute("src", "fake/url/2");
+    expect(".o_tag:nth-of-type(1) img").toHaveAttribute("data-src", "fake/url");
+    expect(".o_tag:nth-of-type(2) img").toHaveAttribute("data-src", "fake/url/2");
 });
 
 test("Tags can be displayed with an icon", async () => {
