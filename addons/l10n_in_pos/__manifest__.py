@@ -13,6 +13,7 @@
     'data': [
         'views/pos_order_line_views.xml',
         'data/pos_bill_data.xml',
+        'views/res_config_settings_views.xml',
     ],
     'demo': [
         'data/product_demo.xml',
@@ -25,4 +26,5 @@
         ],
     },
     'license': 'LGPL-3',
+    'post_init_hook': 'post_init',
 }

@@ -1082,6 +1082,7 @@ class TestPoSBasicConfig(TestPoSCommon):
             {'account_id': self.tax_received_account.id, 'balance': -9.72, 'reconciled': False},
             {'account_id': self.receivable_account.id, 'balance': 117.72, 'reconciled': True},
         ])
+
     def test_closing_entry_by_product(self):
         # set the Group by Product at Closing Entry
         self.config.is_closing_entry_by_product = True
