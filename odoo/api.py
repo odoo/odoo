@@ -684,7 +684,7 @@ class Environment(Mapping):
         #   - when loading an binary image on a template
         return self['res.company'].browse(user_company_ids)
 
-    @property
+    @lazy_property
     def lang(self):
         """Return the current language code.
 
