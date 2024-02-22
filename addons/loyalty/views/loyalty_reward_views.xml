@@ -17,7 +17,11 @@
                             <field name="reward_type" widget="selection" force_save="1" readonly="program_type == 'buy_x_get_y'"/>
                             <label for="discount" invisible="reward_type != 'discount'"/>
                             <div class="d-flex flex-row" invisible="reward_type != 'discount'">
-                                <field name="discount" class="oe_inline me-1"/>
+                                <field
+                                    name="discount"
+                                    class="oe_inline me-1 text-end"
+                                    style="max-width: 4rem;"
+                                />
                                 <field name="discount_mode" no_label="1" class="w-auto me-1"/>
                                 <span>on</span>
                             </div>
@@ -43,7 +47,11 @@
                         <group>
                             <label for="required_points" string="In exchange of"/>
                             <div class="o_row">
-                                <field name="required_points" class="oe_edit_only col-2 oe_inline text-center pe-2"/>
+                                <field
+                                    name="required_points"
+                                    class="oe_edit_only col-2 oe_inline text-end pe-2"
+                                    style="max-width: 4rem;"
+                                />
                                 <field name="point_name" no_label="1"/>
                                 <span invisible="not clear_wallet"> (or more)</span>
                             </div>

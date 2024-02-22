@@ -32,7 +32,10 @@ class LoyaltyProgram(models.Model):
         readonly=False, required=True, store=True, precompute=True)
     currency_symbol = fields.Char(related='currency_id.symbol')
     pricelist_ids = fields.Many2many(
-        'product.pricelist', string="Pricelist", domain="[('currency_id', '=', currency_id)]"
+        string="Pricelist",
+        help="This program is specific to this pricelist set.",
+        comodel_name='product.pricelist',
+        domain="[('currency_id', '=', currency_id)]",
     )
 
     total_order_count = fields.Integer("Total Order Count", compute="_compute_total_order_count")

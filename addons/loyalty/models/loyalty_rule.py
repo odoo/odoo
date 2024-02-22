@@ -60,9 +60,13 @@ class LoyaltyRule(models.Model):
 
     minimum_qty = fields.Integer('Minimum Quantity', default=1)
     minimum_amount = fields.Monetary('Minimum Purchase', 'currency_id')
-    minimum_amount_tax_mode = fields.Selection([
-        ('incl', 'Included'),
-        ('excl', 'Excluded')], default='incl', required=True,
+    minimum_amount_tax_mode = fields.Selection(
+        selection=[
+            ('incl', "tax included"),
+            ('excl', "tax excluded"),
+        ],
+        default='incl',
+        required=True,
     )
 
     mode = fields.Selection([
