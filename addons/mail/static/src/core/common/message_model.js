@@ -156,7 +156,7 @@ export class Message extends Record {
     }
 
     get hasActions() {
-        return !this.is_transient;
+        return !this.is_transient && !this.is_scheduled;
     }
 
     get isHistory() {
