@@ -406,6 +406,13 @@ export class Record extends DataPoint {
         this._setInvalidField(fieldName);
     }
 
+    resetFieldValidity(fieldName) {
+        const bm = this.model.__bm__;
+        bm.setDirty(this.__bm_handle__);
+        this._invalidFields.delete(fieldName);
+        this.model.notify();
+    }
+
     isInvalid(fieldName) {
         return this._invalidFields.has(fieldName);
     }

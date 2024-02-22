@@ -548,6 +548,10 @@ export class Record extends DataPoint {
         return !this.resId;
     }
 
+    get isValid() {
+        return !this._invalidFields.size;
+    }
+
     // -------------------------------------------------------------------------
     // Public
     // -------------------------------------------------------------------------
@@ -945,6 +949,12 @@ export class Record extends DataPoint {
             this._invalidFields.add(fieldName);
             this.model.notify();
         }
+    }
+
+    resetFieldValidity(fieldName) {
+        this.dirty = true;
+        this._invalidFields.delete(fieldName);
+        this.model.notify();
     }
 
     /**
