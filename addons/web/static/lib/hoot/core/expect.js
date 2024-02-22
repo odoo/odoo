@@ -1244,51 +1244,6 @@ export class Matchers {
     }
 
     /**
-     * Expects the received {@link Target} to contain the given {@link Target}.
-     *
-     * @param {Target} target
-     * @param {ExpectOptions} [options]
-     * @example
-     *  expect("ul").toContain(queryOne("li"));
-     */
-    toContain(target, options) {
-        this.#saveStack();
-
-        ensureArguments([
-            [target, ["string", "node", "node[]"]],
-            [options, ["object", null]],
-        ]);
-
-        const nodes = queryAll(target);
-        return this.#resolve({
-            name: "toContain",
-            acceptedType: ["string", "node", "node[]"],
-            transform: queryAll,
-            predicate: each((node) => nodes.every((n) => node.contains(n))),
-            message: (pass) =>
-                options?.message ||
-                (pass
-                    ? `%elements% [contain!do not contain] ${formatHumanReadable(nodes)}`
-                    : `expected %elements%[! not] to contain the given value`),
-            details: (actual) => {
-                const contained = [];
-                const missing = [];
-                for (const node of nodes) {
-                    if (actual.some((n) => n.contains(node))) {
-                        contained.push(node);
-                    } else {
-                        missing.push(node);
-                    }
-                }
-                return [
-                    [Markup.green("Contained:"), contained],
-                    [Markup.red("Missing:"), missing],
-                ];
-            },
-        });
-    }
-
-    /**
      * Expects the received {@link Target} to have the given attribute set on
      * itself, and for that attribute value to match the given `value` if any.
      *
