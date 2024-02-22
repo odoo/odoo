@@ -39,6 +39,16 @@ export class Message extends Record {
     date = Record.attr(undefined, { type: "datetime" });
     /** @type {string} */
     default_subject;
+    hasLink = Record.attr(false, {
+        compute() {
+            if (this.isBodyEmpty) {
+                return false;
+            }
+            const div = document.createElement("div");
+            div.innerHTML = this.body;
+            return Boolean(div.querySelector("a:not([data-oe-model])"));
+        },
+    });
     /** @type {number|string} */
     id;
     /** @type {boolean} */

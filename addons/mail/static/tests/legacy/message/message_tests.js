@@ -292,9 +292,11 @@ QUnit.test("Update the link previews when a message is edited", async (assert) =
     openDiscuss(channelId);
     await click(".o-mail-Message [title='Expand']");
     await click(".o-mail-Message-moreMenu [title='Edit']");
-    await insertText(".o-mail-Message .o-mail-Composer-input", "Goodbye World", { replace: true });
+    await insertText(".o-mail-Message .o-mail-Composer-input", "http://odoo.com", {
+        replace: true,
+    });
     await click(".o-mail-Message a", { text: "save" });
-    await contains(".o-mail-Message-body", { text: "Goodbye World" });
+    await contains(".o-mail-Message-body", { text: "http://odoo.com" });
     assert.verifySteps(["link_preview"]);
 });
 
