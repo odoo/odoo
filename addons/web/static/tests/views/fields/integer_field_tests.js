@@ -6,7 +6,9 @@ import {
     click,
     clickSave,
     editInput,
+    findElement,
     getFixture,
+    nextTick,
     patchWithCleanup,
     triggerEvent,
 } from "@web/../tests/helpers/utils";
@@ -379,4 +381,56 @@ QUnit.module("Fields", (hooks) => {
             "Integer value must be not formatted if input type is number."
         );
     });
+
+    QUnit.test(
+        "no need to focus out of the input to save the record after correcting an invalid input",
+        async function (assert) {
+            await makeView({
+                type: "form",
+                serverData,
+                resModel: "partner",
+                resId: 1,
+                arch: '<form><field name="int_field"/></form>',
+            });
+
+            const input = findElement(target, ".o_field_widget[name=int_field] input");
+            assert.strictEqual(input.value, "10");
+
+            input.value = "a";
+            triggerEvent(input, null, "input", {});
+            assert.strictEqual(input.value, "a");
+            await clickSave(target);
+            assert.containsOnce(target, ".o_form_status_indicator span i.fa-warning");
+            input.value = "1";
+            triggerEvent(input, null, "input", {});
+            await nextTick();
+            assert.containsNone(target, ".o_form_status_indicator span i.fa-warning");
+            assert.containsOnce(target, ".o_form_button_save");
+        }
+    );
+
+    QUnit.test(
+        "make a valid integer field invalid, then reset the original value to make it valid again",
+        async function (assert) {
+            // This test is introduced to fix a bug:
+            // Have a valid value, change it to an invalid value, blur, then change it back to the same valid value.
+            // The field was considered not dirty, so the onChange code wasn't executed, and the model still thought the value was invalid.
+            await makeView({
+                type: "form",
+                serverData,
+                resModel: "partner",
+                resId: 1,
+                arch: '<form><field name="int_field"/></form>',
+            });
+            const fieldSelector = ".o_field_widget[name=int_field]";
+            const inputSelector = fieldSelector + " input";
+            assert.strictEqual(target.querySelector(inputSelector).value, "10");
+            await editInput(target.querySelector(inputSelector), null, "a");
+            assert.strictEqual(target.querySelector(inputSelector).value, "a");
+            assert.hasClass(target.querySelector(fieldSelector), "o_field_invalid");
+            await editInput(target.querySelector(inputSelector), null, "10");
+            assert.strictEqual(target.querySelector(inputSelector).value, "10");
+            assert.doesNotHaveClass(target.querySelector(fieldSelector), "o_field_invalid");
+        }
+    );
 });
