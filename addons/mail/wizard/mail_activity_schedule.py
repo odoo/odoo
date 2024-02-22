@@ -50,7 +50,7 @@ class MailActivitySchedule(models.TransientModel):
     plan_id = fields.Many2one('mail.activity.plan', domain="[('id', 'in', plan_available_ids)]",
                               compute='_compute_plan_id', store=True, readonly=False)
     plan_has_user_on_demand = fields.Boolean(related="plan_id.has_user_on_demand")
-    plan_assignation_summary = fields.Html(related='plan_id.assignation_summary')
+    plan_summary = fields.Html(compute='_compute_plan_summary')
     plan_on_demand_user_id = fields.Many2one(
         'res.users', 'Assigned To',
         help='Choose assignation for activities with on demand assignation.',
@@ -149,6 +149,22 @@ class MailActivitySchedule(models.TransientModel):
     @api.depends('res_model_id', 'res_ids')
     def _compute_plan_date(self):
         self.plan_date = False
+
+    @api.depends('plan_date', 'plan_id')
+    def _compute_plan_summary(self):
+        self.plan_summary = False
+        for scheduler in self:
+            summaries = []
+            for template in scheduler.plan_id.template_ids:
+                summary = template.activity_type_id.name
+                if template.summary:
+                    summary += f": {template.summary}"
+                # We don't display deadlines when the user doesn't specify a plan_date
+                if scheduler.plan_date:
+                    summary += f" ({format_date(self.env, template._get_date_deadline(scheduler.plan_date))})"
+                summaries.append(Markup('<li>%s</li>') % summary)
+            if summaries:
+                scheduler.plan_summary = Markup('<ul>%s</ul>') % Markup().join(summaries)
 
     @api.depends('res_model')
     def _compute_activity_type_id(self):

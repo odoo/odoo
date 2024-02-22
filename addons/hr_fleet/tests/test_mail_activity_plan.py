@@ -43,8 +43,7 @@ class TestActivitySchedule(ActivityScheduleHRCase):
         # Happy case
         form = self._instantiate_activity_schedule_wizard(employees)
         form.plan_id = self.plan_fleet
-        self.assertEqual(form.plan_assignation_summary,
-                         '<ul><li>To-Do: Car return</li></ul>')
+        self.assertEqual(form.plan_summary, "<ul><li>To-Do: Car return</li></ul>")
         self.assertFalse(form.has_error)
         wizard = form.save()
         wizard.action_schedule_plan()
