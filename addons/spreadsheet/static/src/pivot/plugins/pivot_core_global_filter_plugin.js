@@ -34,7 +34,7 @@ export class PivotCoreGlobalFilterPlugin extends OdooCorePlugin {
                             this.getters.getPivotDefinition(id).type === "ODOO" && id in this.pivots
                     ),
             getDisplayName: (pivotId) => this.getters.getPivotName(pivotId),
-            getTag: (pivotId) => sprintf(_t("Pivot #%s"), pivotId),
+            getTag: (pivotId) => sprintf(_t("Pivot #%s"), this.getters.getPivotFormulaId(pivotId)),
             getFieldMatching: (pivotId, filterId) => this.getPivotFieldMatching(pivotId, filterId),
             getModel: (pivotId) => {
                 const pivot = this.getters.getPivotDefinition(pivotId);
