@@ -26,11 +26,7 @@ registry.category("web_tour.tours").add("FloorScreenTour", {
 
             // clicking table in active mode does not open product screen
             // instead, table is selected
-            Chrome.clickMenuButton(),
-            {
-                content: `click edit button`,
-                trigger: `.toggle-edit-button`,
-            },
+            Chrome.clickMenuOption("Edit Plan"),
             FloorScreen.clickTable("3"),
             FloorScreen.selectedTableIs("3"),
             FloorScreen.clickTable("1"),
