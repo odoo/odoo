@@ -41,6 +41,17 @@ let currentEnv = null;
 // Exports
 //-----------------------------------------------------------------------------
 
+/**
+ * Empties the given registry.
+ *
+ * @param {import("@web/core/registry").Registry} registry
+ */
+export function clearRegistry(registry) {
+    registry.content = {};
+    registry.elements = null;
+    registry.entries = null;
+}
+
 export function getMockEnv() {
     return currentEnv;
 }

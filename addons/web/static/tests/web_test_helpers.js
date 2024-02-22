@@ -31,6 +31,7 @@ import { defineModels } from "./_framework/mock_server/mock_server";
 export { findComponent, mountWithCleanup } from "./_framework/component_test_helpers";
 export { contains } from "./_framework/dom_test_helpers";
 export {
+    clearRegistry,
     getService,
     makeDialogMockEnv,
     makeMockEnv,
@@ -47,8 +48,8 @@ export {
     makeMockServer,
     onRpc,
 } from "./_framework/mock_server/mock_server";
-export { serverState } from "./_framework/mock_server_state.hoot";
 export { makeServerError } from "./_framework/mock_server/mock_server_utils";
+export { serverState } from "./_framework/mock_server_state.hoot";
 export { patchWithCleanup } from "./_framework/patch_test_helpers";
 export {
     deleteFavorite,
