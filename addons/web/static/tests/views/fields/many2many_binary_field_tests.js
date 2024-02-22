@@ -21,11 +21,17 @@ QUnit.module("Fields", (hooks) => {
                             type: "many2many",
                             relation: "ir.attachment",
                         },
+                        attachment_ids: {
+                            string: "Files",
+                            type: "many2many",
+                            relation: "ir.attachment",
+                        },
                     },
                     records: [
                         {
                             id: 1,
                             picture_ids: [17],
+                            attachment_ids: [17],
                         },
                     ],
                 },
@@ -289,5 +295,58 @@ QUnit.module("Fields", (hooks) => {
             "Error on file: bad_file.txt"
         );
         assert.hasClass(target.querySelector(".o_notification"), "border-danger");
+    });
+
+    QUnit.test('widget many2many_binary required', async function (assert) {
+        assert.expect(6);
+        const fakeHTTPService = {
+            start() {
+                return {
+                    post: (route, params) => {
+                        assert.strictEqual(route, "/web/binary/upload_attachment");
+                        assert.strictEqual(
+                            params.ufile[0].name,
+                            "fake_file.tiff",
+                            "file is correctly uploaded to the server"
+                        );
+                        const file = {
+                            id: 10,
+                            name: params.ufile[0].name,
+                            mimetype: "text/plain",
+                        };
+                        serverData.models["ir.attachment"].records.push(file);
+                        return JSON.stringify([file]);
+                    },
+                };
+            },
+        };
+        serviceRegistry.add("http", fakeHTTPService);
+        serverData.views = {
+            "ir.attachment,false,list": '<tree string="Pictures"><field name="name"/></tree>',
+        };
+
+        await makeView({
+            serverData,
+            resModel: 'turtle',
+            type: 'form',
+            arch:`<form string="Turtles">
+                    <group>
+                        <field name="picture_ids" widget="many2many_binary" options="{'accepted_file_extensions': 'image/*'}"/>
+                        <field name="attachment_ids" widget="many2many_binary" required="1"/>
+                    </group>
+                </form>`,
+            resId: 1,
+            mockRPC: function (route, { method }) {
+                assert.step(method);
+            },
+        });
+
+        assert.verifySteps(['get_views', 'read', 'read'], 'We should read the attachments');
+
+        await click(target.querySelector(".o_field_many2many_binary[name='attachment_ids'] .o_attachment_delete"));
+
+        await clickSave(target);
+        assert.verifySteps([], "No save should be performed");
+        assert.containsOnce(target, ".o_form_label.o_field_invalid[for='attachment_ids']", 'An invalid field should be present in the view');
     });
 });
