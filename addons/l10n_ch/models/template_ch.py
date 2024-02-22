@@ -14,8 +14,6 @@ class AccountChartTemplate(models.AbstractModel):
             'property_account_payable_id': 'ch_coa_2000',
             'property_account_expense_categ_id': 'ch_coa_4200',
             'property_account_income_categ_id': 'ch_coa_3200',
-            'property_tax_payable_account_id': 'ch_coa_2201',
-            'property_tax_receivable_account_id': 'ch_coa_1176',
         }
 
     @template('ch', 'res.company')

@@ -13,8 +13,6 @@ class AccountChartTemplate(models.AbstractModel):
             'property_account_payable_id': 'dk_coa_7440',
             'property_account_expense_categ_id': 'dk_coa_1610',
             'property_account_income_categ_id': 'dk_coa_1010',
-            'property_tax_payable_account_id': 'dk_coa_7840',
-            'property_tax_receivable_account_id': 'dk_coa_6320',
             'code_digits': '4',
         }
 
