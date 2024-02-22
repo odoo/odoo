@@ -56,13 +56,13 @@ function updateAttr(record, fieldName, value) {
         if (!(value instanceof luxon.DateTime)) {
             value = deserializeDateTime(value);
         }
-        shouldChange = !record[fieldName]?.equals(value);
+        shouldChange = !record[fieldName] || !value.equals(record[fieldName]);
     }
     if (fieldDefinition?.type === "date" && value) {
         if (!(value instanceof luxon.DateTime)) {
             value = deserializeDate(value);
         }
-        shouldChange = !record[fieldName]?.equals(value);
+        shouldChange = !record[fieldName] || !value.equals(record[fieldName]);
     }
     let newValue = value;
     if (fieldDefinition?.html && Record.trusted) {

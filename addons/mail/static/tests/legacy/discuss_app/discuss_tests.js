@@ -2034,6 +2034,29 @@ QUnit.test("Notification settings: mute channel will change the style of sidebar
     await contains(".o-mail-DiscussSidebar-item[class*='opacity-50']", { text: "Mario Party" });
 });
 
+QUnit.test("Notification settings: change the mute duration of the channel", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "Mario Party",
+        channel_type: "channel",
+    });
+    const { openDiscuss } = await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-DiscussSidebar-item", { text: "Mario Party" });
+    await contains(".o-mail-DiscussSidebar-item[class*='opacity-50']", {
+        text: "Mario Party",
+        count: 0,
+    });
+    await click("[title='Notification Settings']");
+    await click("[title='Mute Channel']");
+    await click("[title='For 15 minutes']");
+    await click("[title='Notification Settings']");
+    await click(".o-discuss-NotificationSettings span", { text: "Unmute Channel" });
+    await click("[title='Notification Settings']");
+    await click("[title='Mute Channel']");
+    await click("[title='For 1 hour']");
+});
+
 QUnit.test("Notification settings: mute/unmute channel works correctly", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
