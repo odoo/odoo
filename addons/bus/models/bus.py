@@ -39,6 +39,8 @@ def hashable(key):
 def channel_with_db(dbname, channel):
     if isinstance(channel, models.Model):
         return (dbname, channel._name, channel.id)
+    if isinstance(channel, tuple) and len(channel) == 2 and isinstance(channel[0], models.Model):
+        return (dbname, channel[0]._name, channel[0].id, channel[1])
     if isinstance(channel, str):
         return (dbname, channel)
     return channel

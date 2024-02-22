@@ -1,6 +1,6 @@
 /* @odoo-module */
 
-import { getPyEnv } from "@bus/../tests/helpers/mock_python_environment";
+import { getPyEnv, startServer } from "@bus/../tests/helpers/mock_python_environment";
 import { addBusServicesToRegistry } from "@bus/../tests/helpers/test_utils";
 import { assetsWatchdogService } from "@bus/services/assets_watchdog_service";
 
@@ -13,6 +13,7 @@ import { registry } from "@web/core/registry";
 QUnit.module("Bus Assets WatchDog");
 
 QUnit.test("can listen on bus and displays notifications in DOM", async (assert) => {
+    await startServer();
     addBusServicesToRegistry();
     registry.category("services").add("assetsWatchdog", assetsWatchdogService);
     patchWithCleanup(browser, {
