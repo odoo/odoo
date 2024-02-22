@@ -740,26 +740,8 @@ options.Class.include({
                 return this._getEnabledCustomizeValues(params.possibleValues, true);
             }
             case 'customizeWebsiteVariable': {
-                if ([
-                    "logo__height", "font__size__base", "body__line__height", "paragraph__margin__top", "paragraph__margin__bottom",
-                    "display__1__font__size", "display__2__font__size", "display__3__font__size", "display__4__font__size",
-                ].includes(params.variable)
-                ) {
-                    const data = await this.options.wysiwyg.getWebsiteDesignData();
-                    return data[params.variable];
-                }
-                const ownerDocument = this.$target[0].ownerDocument;
-                const style = ownerDocument.defaultView.getComputedStyle(ownerDocument.documentElement);
-                let finalValue = weUtils.getCSSVariableValue(params.variable, style);
-                if (!params.colorNames) {
-                    return finalValue;
-                }
-                let tempValue = finalValue;
-                while (tempValue) {
-                    finalValue = tempValue;
-                    tempValue = weUtils.getCSSVariableValue(tempValue.replaceAll("'", ''), style);
-                }
-                return finalValue;
+                const data = await this.options.wysiwyg.getWebsiteDesignData();
+                return data[params.variable];
             }
             case 'customizeWebsiteColor': {
                 const ownerDocument = this.$target[0].ownerDocument;
@@ -938,15 +920,8 @@ options.Class.include({
         Object.keys(values).forEach((key) => {
             values[key] = values[key] || defaultValue;
         });
-        if ([
-            'logo__height', 'font__size__base', 'body__line__height', "paragraph__margin__top", "paragraph__margin__bottom",
-            "display__1__font__size", "display__2__font__size", "display__3__font__size", "display__4__font__size"
-            ].some(key => values[key])
-        ) {
-                await this.options.wysiwyg.customizeWebsiteDesignData(values);
-            return;
-        }
-        return this.orm.call("web_editor.assets", "make_scss_customization", [url, values]);
+        await this.options.wysiwyg.customizeWebsiteDesignData(values);
+        return;
     },
     /**
      * Refreshes all public widgets related to the given element.

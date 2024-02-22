@@ -18,6 +18,23 @@ class WebsiteDesign(models.Model):
     display__3__font__size = fields.Char(string='Display 3 Font Size', default='4rem')
     display__4__font__size = fields.Char(string='Display 4 Font Size', default='3.5rem')
 
+    btn__primary__outline__border__width = fields.Char(string='Primary Button Outline Border Width', default='1px')
+    btn__secondary__outline__border__width = fields.Char(string='Secondary Button Outline Border Width', default='1px')
+    btn__padding__y = fields.Char(string='Button Padding Y', default='6px')
+    btn__padding__x = fields.Char(string='Button Padding X', default='16px')
+    btn__font__size = fields.Char(string='Button Font Size', default='16px')
+    btn__padding__y__sm = fields.Char(string='Button Padding Y SM', default='1px')
+    btn__padding__x__sm = fields.Char(string='Button Padding X SM', default='8px')
+    btn__font__size__sm = fields.Char(string='Button Font Size SM', default='12px')
+    btn__padding__y__lg = fields.Char(string='Button Padding Y LG', default='16px')
+    btn__padding__x__lg = fields.Char(string='Button Padding X LG', default='40px')
+    btn__font__size__lg = fields.Char(string='Button Font Size LG', default='20px')
+    btn__border__radius = fields.Char(string='Button Border Radius', default='6.4px')
+    btn__border__radius__sm = fields.Char(string='Button Border Radius SM', default='4.8px')
+    btn__border__radius__lg = fields.Char(string='Button Border Radius LG', default='32px')
+    # btn-border-width is not customizable via the theme option but there are themes that use it.
+    # Shouldn't we delete it ?
+
     body__line__height = fields.Char(string='Body Line Height', default='1.5')
     # Logo height requires two fields because it can be computed based on the
     # base font size or forced to a specific value.
