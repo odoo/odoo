@@ -2,7 +2,16 @@
 
 import { describe, expect, test } from "@odoo/hoot";
 import { isIterable, isRegExpFilter } from "@web/../lib/hoot-dom/hoot_dom_utils";
-import { deepEqual, formatHumanReadable, generateHash, lookup, match, title } from "../hoot_utils";
+import {
+    deepEqual,
+    formatHumanReadable,
+    formatTechnical,
+    generateHash,
+    lookup,
+    match,
+    title,
+    toExplicitString,
+} from "../hoot_utils";
 import { parseUrl } from "./local_helpers";
 
 describe(parseUrl(import.meta.url), () => {
@@ -53,6 +62,20 @@ describe(parseUrl(import.meta.url), () => {
         expect(formatHumanReadable(document.createElement("div"))).toBe(`<div>`);
     });
 
+    test("formatTechnical", () => {
+        expect(
+            formatTechnical({
+                b: 2,
+                a: true,
+            })
+        ).toBe(
+            `{
+  a: true,
+  b: 2,
+}`
+        );
+    });
+
     test("generateHash", () => {
         expect(generateHash("abc").length).toBe(8);
         expect(generateHash("abcdef").length).toBe(8);
@@ -91,5 +114,11 @@ describe(parseUrl(import.meta.url), () => {
 
     test("title", () => {
         expect(title("abcDef")).toBe("AbcDef");
+    });
+
+    test("toExplicitString", () => {
+        expect(toExplicitString("\n")).toBe(`\\n`);
+        expect(toExplicitString("\t")).toBe(`\\t`);
+        expect(toExplicitString("\u200B")).toBe(`\\u200b`);
     });
 });
