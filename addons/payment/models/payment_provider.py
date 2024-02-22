@@ -322,6 +322,20 @@ class PaymentProvider(models.Model):
                     }
                 }
 
+    @api.onchange('company_id')
+    def _onchange_company_block_if_existing_transactions(self):
+        """ Raise a user error when the company is changed and linked transactions exist.
+
+        :return: None
+        :raise UserError: If transactions are linked to the provider.
+        """
+        if self._origin.company_id != self.company_id and self.env['payment.transaction'].search(
+            [('provider_id', '=', self._origin.id)], limit=1
+        ):
+            raise UserError(_(
+                "You cannot change the company of a payment provider with existing transactions."
+            ))
+
     #=== CRUD METHODS ===#
 
     @api.model_create_multi
