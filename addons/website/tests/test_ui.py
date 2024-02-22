@@ -515,3 +515,40 @@ class TestUi(odoo.tests.HttpCase):
             'path': 'website/static/tests/tour_utils/widget_lifecycle_patch_wysiwyg.js',
         })
         self.start_tour(self.env['website'].get_client_action_url('/'), 'widget_lifecycle', login='admin')
+
+    def test_drop_404_ir_attachment_url(self):
+        website_snippets = self.env.ref('website.snippets')
+        self.env['ir.ui.view'].create([{
+            'name': '404 Snippet',
+            'type': 'qweb',
+            'key': 'website.s_404_snippet',
+            'arch': """
+                <section class="s_404_snippet">
+                    <div class="container">
+                        <img class="img-responsive img-thumbnail" src="/web/image/website.404_ir_attachment"/>
+                    </div>
+                </section>
+            """,
+        }, {
+            'type': 'qweb',
+            'inherit_id': website_snippets.id,
+            'arch': """
+                <xpath expr="//t[@t-snippet='website.s_parallax']" position="after">
+                    <t t-snippet="website.s_404_snippet"
+                       t-thumbnail="/website/static/src/img/snippets_thumbs/s_website_form.svg"/>
+                </xpath>
+            """,
+        }])
+        attachment = self.env['ir.attachment'].create({
+            'name': '404_ir_attachment',
+            'type': 'url',
+            'url': '/web/static/__some__typo__.png',
+            'mimetype': 'image/png',
+        })
+        self.env['ir.model.data'].create({
+            'name': '404_ir_attachment',
+            'module': 'website',
+            'model': 'ir.attachment',
+            'res_id': attachment.id,
+        })
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'drop_404_ir_attachment_url', login='admin')
