@@ -20,7 +20,6 @@
                             <label for="minimum_amount" invisible="program_type == 'buy_x_get_y'"/>
                             <div class="d-flex flex-row">
                                 <field name="minimum_amount" class="oe_inline me-1"/>
-                                <span>tax</span>
                                 <field name="minimum_amount_tax_mode" class="ms-1"/>
                             </div>
                             <separator string="Among" colspan="2"/>
@@ -37,8 +36,17 @@
                                 <field name="reward_point_amount" class="oe_inline me-1"/>
                                 <field name="reward_point_name" class="w-auto"/>
                             </div>
-                            <label for="reward_point_mode" string=""/>
-                            <field name="reward_point_mode" widget="radio" nolabel="1" invisible="program_type not in ('promotion', 'promo_code', 'next_order_coupons', 'loyalty', 'buy_x_get_y')"/>     
+                            <label
+                                for="reward_point_mode"
+                                string=""
+                                invisible="program_type not in ('promotion', 'promo_code', 'next_order_coupons', 'loyalty', 'buy_x_get_y')"
+                            />
+                            <field
+                                name="reward_point_mode"
+                                widget="radio"
+                                nolabel="1"
+                                invisible="program_type not in ('promotion', 'promo_code', 'next_order_coupons', 'loyalty', 'buy_x_get_y')"
+                            />
                         </group>
                     </group>
                 </sheet>
