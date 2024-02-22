@@ -1,12 +1,13 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import date, timedelta
 from freezegun import freeze_time
 
 from odoo import Command
-from odoo.addons.sale_loyalty.tests.common import TestSaleCouponCommon
 from odoo.exceptions import ValidationError
+
+from odoo.addons.sale_loyalty.tests.common import TestSaleCouponCommon
+
 
 class TestProgramRules(TestSaleCouponCommon):
     # Test all the validity rules to allow a customer to have a reward.
@@ -16,6 +17,7 @@ class TestProgramRules(TestSaleCouponCommon):
         # Test case: Based on the minimum purchased
 
         self.immediate_promotion_program.rule_ids.write({
+            'product_ids': False,
             'minimum_amount': 1006,
             'minimum_amount_tax_mode': 'excl'
         })
@@ -70,6 +72,91 @@ class TestProgramRules(TestSaleCouponCommon):
         order._update_programs_and_rewards()
         self._claim_reward(order, self.immediate_promotion_program)
         self.assertEqual(len(order.order_line.ids), 3, "The promo offer should be applied as the initial amount required is now tax included")
+
+    def test_program_rules_min_amount_not_reached_and_specific_product(self):
+        """
+        Test that the discount isn't applied if the min amount isn't reached for the specified
+        product.
+        """
+        self.env['loyalty.program'].search([]).active = False
+        order = self.empty_order
+        program = self.env['loyalty.program'].create({
+            'name': "Discount on Product A",
+            'program_type': 'promotion',
+            'trigger': 'auto',
+            'applies_on': 'current',
+            'rule_ids': [Command.create({
+                'minimum_amount': 110,
+                'minimum_amount_tax_mode': 'excl',
+                'product_ids': [Command.set(self.product_A.ids)],
+            })],
+            'reward_ids': [Command.create({
+                'reward_type': 'discount',
+                'discount': 10,
+                'discount_mode': 'percent',
+                'discount_applicability': 'specific',
+                'discount_product_ids': [Command.set(self.product_A.ids)],
+            })],
+        })
+        self.env['sale.order.line'].create([{
+            'product_id': self.product_A.id,
+            'product_uom_qty': 1.0,
+            'order_id': order.id,
+        }, {
+            'product_id': self.product_B.id,
+            'product_uom_qty': 40.0,
+            'order_id': order.id,
+        }])
+        self.assertEqual(len(order.order_line), 2)
+        self.assertEqual(order.amount_untaxed, 300)
+
+        order._update_programs_and_rewards()
+        self._claim_reward(order, program)
+
+        self.assertEqual(len(order.order_line), 2)
+        self.assertEqual(order.amount_untaxed, 300)
+
+    def test_program_rules_min_amount_reached_and_specific_product(self):
+        """
+        Test that the discount is applied if the min amount is reached for the specified product.
+        """
+        self.env['loyalty.program'].search([]).active = False
+        order = self.empty_order
+        program = self.env['loyalty.program'].create({
+            'name': "Discount on Product A",
+            'program_type': 'promotion',
+            'trigger': 'auto',
+            'applies_on': 'current',
+            'rule_ids': [Command.create({
+                'minimum_amount': 110,
+                'minimum_amount_tax_mode': 'excl',
+                'product_ids': [Command.set(self.product_A.ids)],
+            })],
+            'reward_ids': [Command.create({
+                'reward_type': 'discount',
+                'discount': 10,
+                'discount_mode': 'percent',
+                'discount_applicability': 'specific',
+                'discount_product_ids': [Command.set(self.product_A.ids)],
+            })],
+        })
+        self.env['sale.order.line'].create([{
+            'product_id': self.product_A.id,
+            'product_uom_qty': 2.0,
+            'order_id': order.id,
+        }, {
+            'product_id': self.product_B.id,
+            'product_uom_qty': 20.0,
+            'order_id': order.id,
+        }])
+        self.assertEqual(len(order.order_line), 2)
+        self.assertEqual(order.amount_untaxed, 300)
+
+        order._update_programs_and_rewards()
+        self._claim_reward(order, program)
+
+        self.assertEqual(len(order.order_line), 3)
+        self.assertEqual(order.amount_untaxed, 280)
 
     def test_program_rules_coupon_qty_and_amount_remove_not_eligible(self):
         ''' This test will:
