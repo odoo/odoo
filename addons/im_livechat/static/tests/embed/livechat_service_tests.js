@@ -7,7 +7,6 @@ import { loadDefaultConfig, start } from "@im_livechat/../tests/embed/helper/tes
 import { Command } from "@mail/../tests/helpers/command";
 
 import { cookie } from "@web/core/browser/cookie";
-import { Deferred } from "@web/core/utils/concurrency";
 import { triggerHotkey } from "@web/../tests/helpers/utils";
 import { assertSteps, click, contains, insertText, step } from "@web/../tests/utils";
 import { browser } from "@web/core/browser/browser";
@@ -62,14 +61,10 @@ QUnit.test("previous operator prioritized", async () => {
 QUnit.test("Only necessary requests are made when creating a new chat", async () => {
     const pyEnv = await startServer();
     const livechatChannelId = await loadDefaultConfig();
-    const linkPreviewDeferred = new Deferred();
     await start({
         mockRPC(route, args) {
             if (!route.includes("assets")) {
                 step(`${route} - ${JSON.stringify(args)}`);
-            }
-            if (route === "/mail/link_preview") {
-                linkPreviewDeferred.resolve();
             }
         },
     });
@@ -91,9 +86,7 @@ QUnit.test("Only necessary requests are made when creating a new chat", async ()
     await assertSteps([]);
     await triggerHotkey("Enter");
     await contains(".o-mail-Message", { text: "Hello!" });
-    await linkPreviewDeferred;
     const [threadId] = pyEnv["discuss.channel"].search([], { order: "id DESC" });
-    const [messageId] = pyEnv["mail.message"].search([["body", "=", "Hello!"]]);
     await assertSteps([
         `/im_livechat/get_session - ${JSON.stringify({
             channel_id: livechatChannelId,
@@ -126,6 +119,5 @@ QUnit.test("Only necessary requests are made when creating a new chat", async ()
             thread_id: threadId,
             thread_model: "discuss.channel",
         })}`,
-        `/mail/link_preview - {"message_id":${messageId}}`,
     ]);
 });
