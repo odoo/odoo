@@ -355,3 +355,24 @@ registry.category("web_tour.tours").add("PosLoyaltyTour11.2", {
             PosLoyalty.finalizeOrder("Cash", "50"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("PosLoyaltyMinAmountAndSpecificProductTour", {
+    test: true,
+    url: "/pos/web",
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+
+            ProductScreen.clickDisplayedProduct("Product A"),
+            ProductScreen.selectedOrderlineHas("Product A", "1.00", "20.00"),
+            PosLoyalty.orderTotalIs("20.00"),
+
+            ProductScreen.clickDisplayedProduct("Product B"),
+            ProductScreen.selectedOrderlineHas("Product B", "1.00", "30.00"),
+            PosLoyalty.orderTotalIs("50.00"),
+
+            ProductScreen.clickDisplayedProduct("Product A"),
+            ProductScreen.selectedOrderlineHas("Product A", "2.00", "40.00"),
+            PosLoyalty.orderTotalIs("66.00"),
+        ].flat(),
+});
