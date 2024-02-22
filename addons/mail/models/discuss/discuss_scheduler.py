@@ -29,6 +29,8 @@ class DiscussScheduler(models.Model):
 
     def _message_scheduled_format(self):
         data = []
+        com_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
+        note_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
         for message in self:
             data.append({
                 "id": message.id,
@@ -40,6 +42,8 @@ class DiscussScheduler(models.Model):
                     "id": f"scheduled_{message.id}",
                     "author": message.author_id.mail_partner_format().get(message.author_id),
                     "body": message.message_data["body"],
+                    'is_note': message.message_data["subtype_xmlid"] == "mail.mt_note",
+                    'is_discussion': message.message_data["subtype_xmlid"] == "mail.mt_comment",
                     "thread": {
                         "model": message.thread_model,
                         "id": message.thread_id
