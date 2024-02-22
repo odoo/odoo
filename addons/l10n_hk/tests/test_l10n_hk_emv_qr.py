@@ -87,3 +87,17 @@ class TestL10nHKEmvQrCode(AccountTestInvoicingCommon):
         # Check the whole qr code string
         qr_code_string = ''.join(emv_qr_vals)
         self.assertEqual(qr_code_string, '00020101021226330012hk.com.hkicl0313+852-678912345204000053033445405100.05802HK5914company_1_data6002HK6304CD39')
+
+    def test_invoice_default_code(self):
+        """ If no QR method is selected by default, and the country does not match, it should not be selecting the EMV QR method. """
+        self.acc_emv_hk.country_code = 'NZ'
+
+        self.assertIsNone(self.emv_qr_invoice._generate_qr_code())
+
+    def test_invoice_wrong_method(self):
+        """ If an EMV QR is selected on the invoice with a wrong country, it should raise errors messages. """
+        self.acc_emv_hk.country_code = 'NZ'
+        self.emv_qr_invoice.qr_code_method = 'emv_qr'
+
+        error_message = self.acc_emv_hk._get_error_messages_for_qr('emv_qr', self.partner_a, self.env.ref('base.HKD'))
+        self.assertIsNotNone(error_message)
