@@ -43,7 +43,7 @@ class AccrualPlanLevel(models.Model):
     added_value_type = fields.Selection([
         ('day', 'Days'),
         ('hour', 'Hours')
-    ], compute="_compute_added_value_type", store=True, required=True, default="day")
+    ], compute="_compute_added_value_type", store=True, required=True, readonly=False, default="day")
     frequency = fields.Selection([
         ('hourly', 'Hourly'),
         ('daily', 'Daily'),
