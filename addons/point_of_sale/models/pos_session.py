@@ -216,7 +216,7 @@ class PosSession(models.Model):
             },
             'res.country': {
                 'domain': [],
-                'fields': ['id', 'name', 'code'],
+                'fields': ['id', 'name', 'code', 'vat_label'],
             },
             'res.lang': {
                 'domain': [],
