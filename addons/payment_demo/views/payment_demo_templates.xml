@@ -1,18 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <template id="payment_demo.token_form" inherit_id="payment.token_form">
-        <xpath expr="//t[@t-set='hide_secured_by']" position="attributes">
-            <attribute name="t-value" separator=" " add="or provider_sudo.code == 'demo'"/>
-        </xpath>
-    </template>
-
-    <template id="payment_demo.payment_method_form" inherit_id="payment.method_form">
-        <xpath expr="//t[@t-set='hide_secured_by']" position="attributes">
-            <attribute name="t-value" separator=" " add="or provider_sudo.code == 'demo'"/>
-        </xpath>
-    </template>
-
     <template id="inline_form">
         <div t-attf-id="demo-container-{{provider_id}}">
             <t t-call="payment_demo.payment_details"/>
