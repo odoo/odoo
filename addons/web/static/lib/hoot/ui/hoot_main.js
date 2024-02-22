@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { Component, useState, xml } from "@odoo/owl";
-import { createURL, setParams, urlParams } from "../core/url";
+import { createURL, setParams } from "../core/url";
 import { useWindowListener } from "../hoot_utils";
 import { HootButtons } from "./hoot_buttons";
 import { HootConfigDropdown } from "./hoot_config_dropdown";
@@ -108,7 +108,7 @@ export class HootMain extends Component {
             case "d": {
                 if (ev.altKey) {
                     ev.preventDefault();
-                    setParams({ debugTest: !urlParams.debugTest });
+                    setParams({ debugTest: !runner.config.debugTest });
                 }
                 break;
             }
