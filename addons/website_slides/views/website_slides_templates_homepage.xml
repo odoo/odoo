@@ -339,7 +339,7 @@
         </a>
         <div class="card-body p-3">
             <a class="card-title h5 mb-2 o_wslides_desc_truncate_2" t-attf-href="/slides/#{slug(channel)}" t-field="channel.name"/>
-            <span t-if="not channel.is_published" class="badge text-bg-danger p-1">Unpublished</span>
+            <span t-if="not channel.is_published" class="badge text-bg-danger">Unpublished</span>
             <div class="card-text d-flex flex-column flex-grow-1 mt-1">
                 <div class="fw-light o_wslides_desc_truncate_3" t-field="channel.description_short"/>
                 <div t-if="channel_frontend_tags" class="mt-auto pt-1 o_wslides_desc_truncate_2_badges">
@@ -359,7 +359,7 @@
                 <small t-if="channel.total_time" class="fw-bold" t-esc="channel.total_time" t-options="{'widget': 'duration', 'unit': 'hour', 'round': 'minute'}"/>
                 <div class="d-flex flex-grow-1 justify-content-end">
                     <t t-if="channel.is_member and channel.completed">
-                        <span class="badge rounded-pill text-bg-success pull-right py-1 px-2"><i class="fa fa-check"/> Completed</span>
+                        <span class="badge rounded-pill text-bg-success pull-right"><i class="fa fa-check"/> Completed</span>
                     </t>
                     <div t-elif="channel.is_member and channel.channel_type != 'documentation'" class="progress w-50" style="height: 6px">
                         <div class="progress-bar" role="progressbar" t-att-aria-valuenow="channel.completion" aria-valuemin="0" aria-valuemax="100" t-attf-style="width:#{channel.completion}%;" aria-label="Progress bar"/>

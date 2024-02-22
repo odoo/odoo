@@ -324,10 +324,10 @@
                     <span class="o_wforum_relative_datetime ms-2 opacity-75 small text-muted">
                     </span>
                     <t t-if="answer">
-                        <span t-if="_question_creator == _answer_creator" class="badge ms-2 border border-dark rounded-pill px-2 py-1 text-reset">
+                        <span t-if="_question_creator == _answer_creator" class="badge ms-2 border border-dark rounded-pill text-reset">
                             Author
                         </span>
-                        <span t-if="question.forum_id.mode == 'questions'" t-attf-class="o_wforum_answer_correct_badge badge #{ 'd-inline' if answer.is_correct else 'd-none' } ms-auto border border-success rounded-pill px-2 py-1 text-success">
+                        <span t-if="question.forum_id.mode == 'questions'" t-attf-class="o_wforum_answer_correct_badge badge #{ 'd-inline' if answer.is_correct else 'd-none' } ms-auto border border-success rounded-pill text-success">
                             Best Answer
                         </span>
                     </t>
@@ -541,7 +541,7 @@
                             <t t-set="show_name" t-value="True"/>
                         </span>
                         <span class="ms-2 mb-2 small text-muted"><small class="o_wforum_relative_datetime"/></span>
-                        <span t-if="_question_creator == _comment_author" class="badge ms-2 border border-dark rounded-pill px-2 py-1 text-reset">
+                        <span t-if="_question_creator == _comment_author" class="badge ms-2 border border-dark rounded-pill text-reset">
                             Author
                         </span>
                     </header>
