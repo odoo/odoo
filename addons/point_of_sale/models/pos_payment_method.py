@@ -201,5 +201,5 @@ class PosPaymentMethod(models.Model):
         debtor_partner = self.env['res.partner'].browse(debtor_partner)
         currency = self.env['res.currency'].browse(currency)
 
-        return payment_bank.with_context(from_portal=True).build_qr_code_base64(
+        return payment_bank.with_context(is_online_qr=True).build_qr_code_base64(
             float(amount), free_communication, structured_communication, currency, debtor_partner, self.qr_code_method, silent_errors=False)
