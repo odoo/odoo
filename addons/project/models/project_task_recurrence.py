@@ -82,6 +82,8 @@ class ProjectTaskRecurrence(models.Model):
 
     def _create_next_occurrence(self, occurrence_from):
         self.ensure_one()
+        # Prevent double mail_followers creation
+        self = self.with_context(mail_create_nosubscribe=True)
         if occurrence_from.allow_recurring_tasks:
             self.env['project.task'].sudo().create(
                 self._create_next_occurrence_values(occurrence_from)
