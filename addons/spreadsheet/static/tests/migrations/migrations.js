@@ -381,7 +381,7 @@ QUnit.test("group year/quarter/month filters to a single filter type", (assert) 
     ]);
 });
 
-QUnit.test("Pivot are migrated from 6 to 8", (assert) => {
+QUnit.test("Pivot are migrated from 6 to 9", (assert) => {
     const data = {
         pivots: {
             1: {
@@ -400,6 +400,7 @@ QUnit.test("Pivot are migrated from 6 to 8", (assert) => {
         name: "Name",
         model: "Model",
         measures: [],
+        formulaId: "1",
     });
 });
 

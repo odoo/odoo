@@ -1,11 +1,10 @@
-/** @odoo-module */
 // @ts-check
+
 /**
- *
  * @typedef {import("@spreadsheet").OdooPivotDefinition} OdooPivotDefinition
  * @typedef {import("@spreadsheet").PivotDefinition} PivotDefinition
+ * @typedef {import("@spreadsheet").CorePivotDefinition} CorePivotDefinition
  * @typedef {import("@spreadsheet").AllCoreCommand} AllCoreCommand
- *
  * @typedef {import("@spreadsheet").SPTableCell} SPTableCell
  */
 
@@ -23,9 +22,10 @@ const { isDefined } = helpers;
 export class PivotCorePlugin extends OdooCorePlugin {
     static getters = /** @type {const} */ ([
         "areDomainArgsFieldsValid",
-        "getNextPivotId",
         "getPivotDefinition",
         "getPivotDisplayName",
+        "getPivotId",
+        "getPivotFormulaId",
         "getPivotIds",
         "getPivotName",
         "isExistingPivot",
@@ -33,9 +33,17 @@ export class PivotCorePlugin extends OdooCorePlugin {
     constructor(config) {
         super(config);
 
-        this.nextId = 1;
-        /** @type {Object.<string, PivotDefinition>} */
+        this.nextFormulaId = 1;
+
+        /** @type {Object.<string, CorePivotDefinition>} */
         this.pivots = {};
+
+        /**
+         * formulaIds is a mapping between the formula id (the one used
+         * in the formulae) and the pivot internal id (pivotId, uuid).
+         */
+        /** @type {Object<string, string>} */
+        this.formulaIds = {};
     }
 
     /**
@@ -53,11 +61,6 @@ export class PivotCorePlugin extends OdooCorePlugin {
                     return CommandResult.EmptyName;
                 }
                 break;
-            case "ADD_PIVOT":
-                if (cmd.pivotId !== this.nextId.toString()) {
-                    return CommandResult.InvalidNextId;
-                }
-                break;
             case "INSERT_PIVOT": {
                 if (!(cmd.pivotId in this.pivots)) {
                     return CommandResult.PivotIdNotFound;
@@ -68,10 +71,6 @@ export class PivotCorePlugin extends OdooCorePlugin {
                 if (!(cmd.pivotId in this.pivots)) {
                     return CommandResult.PivotIdNotFound;
                 }
-                if (cmd.newPivotId !== this.nextId.toString()) {
-                    return CommandResult.InvalidNextId;
-                }
-                break;
         }
         return CommandResult.Success;
     }
@@ -85,7 +84,6 @@ export class PivotCorePlugin extends OdooCorePlugin {
             case "ADD_PIVOT": {
                 const { pivotId, pivot } = cmd;
                 this._addPivot(pivotId, pivot);
-                this.history.update("nextId", parseInt(pivotId, 10) + 1);
                 break;
             }
             case "INSERT_PIVOT": {
@@ -94,7 +92,8 @@ export class PivotCorePlugin extends OdooCorePlugin {
                 const position = { col, row };
                 const { cols, rows, measures, rowTitle } = table;
                 const spTable = new SpreadsheetPivotTable(cols, rows, measures, rowTitle);
-                this._insertPivot(sheetId, position, pivotId, spTable);
+                const formulaId = this.getPivotFormulaId(pivotId);
+                this._insertPivot(sheetId, position, formulaId, spTable);
                 break;
             }
             case "RENAME_PIVOT": {
@@ -104,6 +103,8 @@ export class PivotCorePlugin extends OdooCorePlugin {
             case "REMOVE_PIVOT": {
                 const pivots = { ...this.pivots };
                 delete pivots[cmd.pivotId];
+                const formulaId = this.getPivotFormulaId(cmd.pivotId);
+                this.history.update("formulaIds", formulaId, undefined);
                 this.history.update("pivots", pivots);
                 break;
             }
@@ -111,7 +112,7 @@ export class PivotCorePlugin extends OdooCorePlugin {
                 const { pivotId, newPivotId } = cmd;
                 const pivot = deepCopy(this.pivots[pivotId]);
                 this._addPivot(newPivotId, pivot);
-                this.history.update("nextId", parseInt(newPivotId, 10) + 1);
+                this.history.update("nextFormulaId", parseInt(newPivotId, 10) + 1);
                 break;
             }
             case "UPDATE_ODOO_PIVOT_DOMAIN": {
@@ -130,7 +131,8 @@ export class PivotCorePlugin extends OdooCorePlugin {
      * @returns {string}
      */
     getPivotDisplayName(id) {
-        return `(#${id}) ${this.getPivotName(id)}`;
+        const formulaId = this.getPivotFormulaId(id);
+        return `(#${formulaId}) ${this.getPivotName(id)}`;
     }
 
     /**
@@ -142,21 +144,31 @@ export class PivotCorePlugin extends OdooCorePlugin {
     }
 
     /**
-     * Retrieve the next available id for a new pivot
-     *
-     * @returns {string} id
-     */
-    getNextPivotId() {
-        return this.nextId.toString();
-    }
-
-    /**
      * @param {string} id Id of the pivot
      *
      * @returns {PivotDefinition}
      */
     getPivotDefinition(id) {
         return this.pivots[id];
+    }
+
+    /**
+     * Get the pivot ID from the one used in a PIVOT formula.
+     *
+     * @param {string} formulaId
+     * @returns {string | undefined}
+     */
+    getPivotId(formulaId) {
+        return this.formulaIds[formulaId];
+    }
+
+    /**
+     * Get the pivot formula id (the one used in a PIVOT formula) from a pivot id
+     * @param {string} pivotId
+     * @returns {string|undefined}
+     */
+    getPivotFormulaId(pivotId) {
+        return this.pivots[pivotId]?.formulaId;
     }
 
     /**
@@ -221,11 +233,17 @@ export class PivotCorePlugin extends OdooCorePlugin {
     /**
      * @param {string} id
      * @param {PivotDefinition} pivot
+     * @param {string} formulaId
      */
-    _addPivot(id, pivot) {
+    _addPivot(id, pivot, formulaId = this.nextFormulaId.toString()) {
         const pivots = { ...this.pivots };
-        pivots[id] = pivot;
+        pivots[id] = {
+            ...pivot,
+            formulaId,
+        };
         this.history.update("pivots", pivots);
+        this.history.update("formulaIds", formulaId, id);
+        this.history.update("nextFormulaId", this.nextFormulaId + 1);
     }
 
     /**
@@ -358,10 +376,10 @@ export class PivotCorePlugin extends OdooCorePlugin {
     import(data) {
         if (data.pivots) {
             for (const [id, pivot] of Object.entries(data.pivots)) {
-                this._addPivot(id, deepCopy(pivot));
+                this._addPivot(id, deepCopy(pivot), pivot.formulaId);
             }
         }
-        this.nextId = data.pivotNextId || getMaxObjectId(this.pivots) + 1;
+        this.nextFormulaId = data.pivotNextId || getMaxObjectId(this.pivots) + 1;
     }
     /**
      * Export the pivots
@@ -373,6 +391,6 @@ export class PivotCorePlugin extends OdooCorePlugin {
         for (const id in this.pivots) {
             data.pivots[id] = deepCopy(this.pivots[id]);
         }
-        data.pivotNextId = this.nextId;
+        data.pivotNextId = this.nextFormulaId;
     }
 }

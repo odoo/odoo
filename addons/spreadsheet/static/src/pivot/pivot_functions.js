@@ -23,13 +23,18 @@ const { CellErrorType } = spreadsheet;
 //--------------------------------------------------------------------------
 
 /**
- * @param {string} pivotId
+ * Get the pivot ID from the formula pivot ID.
+ *
+ * @param {string} pivotFormulaId ID of the pivot (as used in the formula)
  * @param {import("@spreadsheet").OdooGetters} getters
+ * @returns {string}
  */
-function assertPivotsExists(pivotId, getters) {
-    if (!getters.isExistingPivot(pivotId)) {
-        throw new EvaluationError(sprintf(_t('There is no pivot with id "%s"'), pivotId));
+function getPivotId(pivotFormulaId, getters) {
+    const pivotId = getters.getPivotId(pivotFormulaId);
+    if (!pivotId) {
+        throw new EvaluationError(sprintf(_t('There is no pivot with id "%s"'), pivotFormulaId));
     }
+    return pivotId;
 }
 
 /**
@@ -84,20 +89,20 @@ const ODOO_PIVOT = /** @satisfies {CustomFunctionDescription} */ ({
     ],
     category: "Odoo",
     /**
-     * @param {FPayload} pivotId
+     * @param {FPayload} formulaId
      * @param {FPayload} measureName
      * @param  {...FPayload} domain
      */
-    compute: function (pivotId, measureName, ...domain) {
-        const _pivotId = toString(pivotId);
+    compute: function (formulaId, measureName, ...domain) {
+        const _pivotFormulaId = toString(formulaId);
         const measure = toString(measureName);
         const domainArgs = domain.map(toString);
-        assertPivotsExists(_pivotId, this.getters);
-        assertMeasureExist(_pivotId, measure, this.getters);
+        const pivotId = getPivotId(_pivotFormulaId, this.getters);
+        assertMeasureExist(pivotId, measure, this.getters);
         assertDomainLength(domainArgs);
-        const pivot = this.getters.getPivot(_pivotId);
+        const pivot = this.getters.getPivot(pivotId);
         const value = pivot.getPivotCellValue(measure, domainArgs);
-        if (!value && !this.getters.areDomainArgsFieldsValid(_pivotId, domainArgs)) {
+        if (!value && !this.getters.areDomainArgsFieldsValid(pivotId, domainArgs)) {
             return {
                 value: CellErrorType.GenericError,
                 message: _t("Dimensions don't match the pivot definition"),
@@ -125,9 +130,9 @@ const ODOO_PIVOT_HEADER = /** @satisfies {CustomFunctionDescription} */ ({
      * @param  {...FPayload} domain
      */
     compute: function (pivotId, ...domain) {
-        const _pivotId = toString(pivotId);
+        const _pivotFormulaId = toString(pivotId);
         const domainArgs = domain.map(toString);
-        assertPivotsExists(_pivotId, this.getters);
+        const _pivotId = getPivotId(_pivotFormulaId, this.getters);
         assertDomainLength(domainArgs);
         const fieldName = domainArgs.at(-2);
         const valueArg = domainArgs.at(-1);
@@ -198,8 +203,8 @@ const ODOO_PIVOT_TABLE = /** @satisfies {CustomFunctionDescription} */ ({
         includeTotal = { value: true },
         includeColumnHeaders = { value: true }
     ) {
-        const _pivotId = toString(pivotId);
-        assertPivotsExists(_pivotId, this.getters);
+        const _pivotFormulaId = toString(pivotId);
+        const _pivotId = getPivotId(_pivotFormulaId, this.getters);
         const pivot = this.getters.getPivot(_pivotId);
         const table = pivot.getTableStructure();
         const _includeColumnHeaders = toBoolean(includeColumnHeaders);
@@ -221,7 +226,7 @@ const ODOO_PIVOT_TABLE = /** @satisfies {CustomFunctionDescription} */ ({
             result[col] = [];
             for (const row of tableRows) {
                 const pivotCell = cells[col][row];
-                result[col].push(getPivotCellValueAndFormat.call(this, _pivotId, pivotCell));
+                result[col].push(getPivotCellValueAndFormat.call(this, _pivotFormulaId, pivotCell));
             }
         }
         if (_includeColumnHeaders) {

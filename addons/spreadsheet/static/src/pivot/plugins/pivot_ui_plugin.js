@@ -98,7 +98,7 @@ export class PivotUIPlugin extends OdooUIPlugin {
         if (cell && cell.isFormula) {
             const pivotFunction = this.getters.getFirstPivotFunction(cell.compiledFormula.tokens);
             if (pivotFunction) {
-                return pivotFunction.args[0]?.toString();
+                return this.getters.getPivotId(pivotFunction.args[0]?.toString());
             }
         }
         return undefined;
@@ -156,9 +156,10 @@ export class PivotUIPlugin extends OdooUIPlugin {
             cell.compiledFormula.tokens
         );
         if (functionName === "ODOO.PIVOT.TABLE") {
-            const pivotId = args[0];
+            const formulaId = args[0];
+            const pivotId = this.getters.getPivotId(formulaId);
             const dataSource = this.getPivot(pivotId);
-            if (!this.getters.isExistingPivot(pivotId) || !dataSource.isReady()) {
+            if (!pivotId || !dataSource.isReady()) {
                 return undefined;
             }
             const includeTotal = args[2];
