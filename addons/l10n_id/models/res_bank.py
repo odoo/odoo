@@ -19,7 +19,9 @@ class ResBank(models.Model):
         return rslt
 
     def _get_error_messages_for_qr(self, qr_method, debtor_partner, currency):
-        if qr_method == 'id_qr' and self.country_code == 'ID':
+        if qr_method == 'id_qr':
+            if self.country_code != 'ID':
+                return _("You cannot generate a QRIS QR code with a bank account that is not in Indonesia.")
             if currency.name not in ['IDR']:
                 return _("You cannot generate a QRIS QR code with a currency other than IDR")
             if not (self.l10n_id_qris_api_key and self.l10n_id_qris_mid):
