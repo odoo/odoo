@@ -15,8 +15,6 @@ class AccountChartTemplate(models.AbstractModel):
             'property_account_payable_id': 'account_common_4100',
             'property_account_expense_categ_id': 'account_common_600',
             'property_account_income_categ_id': 'account_common_7000',
-            'property_tax_payable_account_id': 'account_common_4750',
-            'property_tax_receivable_account_id': 'account_common_4700',
         }
 
     @template('es_common', 'res.company')

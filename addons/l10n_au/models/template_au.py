@@ -18,8 +18,6 @@ class AccountChartTemplate(models.AbstractModel):
             'property_stock_account_input_categ_id': 'au_21210',
             'property_stock_account_output_categ_id': 'au_11340',
             'property_stock_valuation_account_id': 'au_11330',
-            'property_tax_payable_account_id': 'au_21320',
-            'property_tax_receivable_account_id': 'au_21320',
         }
 
     @template('au', 'res.company')
