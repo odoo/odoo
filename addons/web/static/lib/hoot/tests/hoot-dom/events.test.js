@@ -1,5 +1,6 @@
 /** @odoo-module */
 
+import { Component, xml } from "@odoo/owl";
 import {
     clear,
     click,
@@ -22,7 +23,7 @@ import {
 } from "../../../hoot-dom/hoot-dom";
 import { after, describe, expect, test } from "../../hoot";
 import { mockUserAgent } from "../../mock/navigator";
-import { Deferred, animationFrame, delay } from "../../mock/time";
+import { animationFrame } from "../../mock/time";
 import { mount, parseUrl } from "../local_helpers";
 
 /**
@@ -985,5 +986,43 @@ describe(parseUrl(import.meta.url), () => {
             // Select
             "select.change",
         ]).toVerifySteps();
+    });
+
+    test("can trigger synthetic event handlers", async () => {
+        await mount(
+            class extends Component {
+                static props = {};
+                static template = xml`
+                    <button t-on-click.synthetic="onClick">Click me</button>
+                `;
+
+                onClick() {
+                    expect.step("click");
+                }
+            }
+        );
+
+        click("button");
+
+        expect(["click"]).toVerifySteps();
+    });
+
+    test("synthetic event handlers are not cleaned up between tests", async () => {
+        await mount(
+            class extends Component {
+                static props = {};
+                static template = xml`
+                    <button t-on-click.synthetic="onClick">Click me</button>
+                `;
+
+                onClick() {
+                    expect.step("clack");
+                }
+            }
+        );
+
+        click("button");
+
+        expect(["clack"]).toVerifySteps();
     });
 });

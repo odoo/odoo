@@ -98,7 +98,7 @@ const mockEventListeners = (target) => {
     /** @type {addEventListener} */
     const mockedAddEventListener = (type, callback, options) => {
         const listeners = listenerMap.get(target);
-        if (listeners) {
+        if (listeners && !R_OWL_SYNTHETIC_LISTENER.test(String(callback))) {
             if (options?.once) {
                 const originalCallback = callback;
                 callback = (...args) => {
@@ -150,6 +150,8 @@ const unregisterListener = (listeners, type, callback) => {
         delete listeners[type];
     }
 };
+
+const R_OWL_SYNTHETIC_LISTENER = /\bnativeToSyntheticEvent\b/;
 
 // Early export: needed for mockHistory
 export const mockLocation = new MockLocation();
