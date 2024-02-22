@@ -263,10 +263,7 @@ registry.category("web_tour.tours").add("MergeTableTour", {
                 content: `select linked table`,
                 trigger: 'div.isLinked div.label:contains("4")',
             },
-            {
-                content: `unlink in edit plan if unlink possible`,
-                trigger: '.edit-buttons button:contains("Unlink")',
-            },
+            FloorScreen.clickEditButton("Unlink"),
             Chrome.clickMenuButton(),
             {
                 content: `click on Edit Plan in the burger menu`,
@@ -301,10 +298,7 @@ registry.category("web_tour.tours").add("MergeTableTour", {
                 content: `select linked table`,
                 trigger: 'div.isLinked div.label:contains("4")',
             },
-            {
-                content: `unlink in edit plan if unlink possible`,
-                trigger: '.edit-buttons button:contains("Unlink")',
-            },
+            FloorScreen.clickEditButton("Unlink"),
             Chrome.clickMenuButton(),
             {
                 content: `click on Edit Plan in the burger menu`,
@@ -318,10 +312,7 @@ registry.category("web_tour.tours").add("MergeTableTour", {
             },
             FloorScreen.clickTable("4"),
             FloorScreen.ctrlClickTable("5"),
-            {
-                content: `link in edit plan if link possible`,
-                trigger: '.edit-buttons button:contains("Link")',
-            },
+            FloorScreen.clickEditButton("Link"),
             Chrome.clickMenuButton(),
             {
                 content: `click on Edit Plan in the burger menu`,
