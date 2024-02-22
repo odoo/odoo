@@ -7,7 +7,7 @@ class IrModel(models.Model):
     _inherit = 'ir.model'
 
     def _get_model_definitions(self, model_names_to_fetch):
-        fields_by_model_names = {}
+        model_definitions = {}
         for model_name in model_names_to_fetch:
             model = self.env[model_name]
             # get fields, relational fields are kept only if the related model is in model_names_to_fetch
@@ -31,5 +31,5 @@ class IrModel(models.Model):
                         field_data['inverse_fname_by_model_name'] = {field.model_name: field.name for field in inverse_fields}
                     if field_data['type'] == 'many2one_reference':
                         field_data['model_name_ref_fname'] = model._fields[fname].model_field
-            fields_by_model_names[model_name] = fields_data_by_fname
-        return fields_by_model_names
+            model_definitions[model_name] = {"fields": fields_data_by_fname}
+        return model_definitions

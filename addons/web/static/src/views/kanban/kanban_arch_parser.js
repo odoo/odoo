@@ -24,7 +24,7 @@ export const KANBAN_TOOLTIP_ATTRIBUTE = "kanban-tooltip";
 
 export class KanbanArchParser {
     parse(xmlDoc, models, modelName) {
-        const fields = models[modelName];
+        const fields = models[modelName].fields;
         const className = xmlDoc.getAttribute("class") || null;
         let defaultOrder = stringToOrderBy(xmlDoc.getAttribute("default_order") || null);
         const defaultGroupBy = xmlDoc.getAttribute("default_group_by");
@@ -92,7 +92,10 @@ export class KanbanArchParser {
             if (node.tagName === "field") {
                 // In kanban, we display many2many fields as tags by default
                 const widget = node.getAttribute("widget");
-                if (!widget && models[modelName][node.getAttribute("name")].type === "many2many") {
+                if (
+                    !widget &&
+                    models[modelName].fields[node.getAttribute("name")].type === "many2many"
+                ) {
                     node.setAttribute("widget", "many2many_tags");
                 }
                 const fieldInfo = Field.parseFieldNode(node, models, modelName, "kanban", jsClass);

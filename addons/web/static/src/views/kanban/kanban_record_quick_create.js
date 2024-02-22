@@ -231,7 +231,7 @@ export class KanbanRecordQuickCreate extends Component {
     }
 
     async getQuickCreateProps(props) {
-        let quickCreateFields = DEFAULT_QUICK_CREATE_FIELDS;
+        let quickCreateFields = { fields: DEFAULT_QUICK_CREATE_FIELDS };
         let quickCreateForm = DEFAULT_QUICK_CREATE_VIEW;
         let quickCreateRelatedModels = {};
 
@@ -241,7 +241,7 @@ export class KanbanRecordQuickCreate extends Component {
                 resModel: props.group.resModel,
                 views: [[false, "form"]],
             });
-            quickCreateFields = fields;
+            quickCreateFields = { fields: fields };
             quickCreateForm = views.form;
             quickCreateRelatedModels = relatedModels;
         }
@@ -261,7 +261,7 @@ export class KanbanRecordQuickCreate extends Component {
             resModel: props.group.resModel,
             onValidate: props.onValidate,
             onCancel: props.onCancel,
-            fields: quickCreateFields,
+            fields: quickCreateFields.fields,
             context: props.group.context,
             archInfo,
         };

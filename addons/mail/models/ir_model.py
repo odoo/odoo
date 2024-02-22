@@ -117,11 +117,11 @@ class IrModel(models.Model):
         return model_class
 
     def _get_model_definitions(self, model_names_to_fetch):
-        fields_by_model_names = super()._get_model_definitions(model_names_to_fetch)
-        for model_name, field_by_fname in fields_by_model_names.items():
+        model_definitions = super()._get_model_definitions(model_names_to_fetch)
+        for model_name, model_definition in model_definitions.items():
             model = self.env[model_name]
             tracked_field_names = model._track_get_fields() if 'mail.thread' in model._inherit else []
-            for fname, field in field_by_fname.items():
+            for fname, field in model_definition["fields"].items():
                 if fname in tracked_field_names:
                     field['tracking'] = True
-        return fields_by_model_names
+        return model_definitions

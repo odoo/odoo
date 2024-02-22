@@ -19,7 +19,7 @@ export class CalendarParseArchError extends Error {}
 
 export class CalendarArchParser {
     parse(arch, models, modelName) {
-        const fields = models[modelName];
+        const fields = models[modelName].fields;
         const fieldNames = new Set(fields.display_name ? ["display_name"] : []);
         const fieldMapping = { date_start: "date_start" };
         let jsClass = null;

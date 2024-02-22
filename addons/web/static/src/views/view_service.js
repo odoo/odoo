@@ -100,7 +100,7 @@ export const viewService = {
                     .then((result) => {
                         const { models, views } = result;
                         const viewDescriptions = {
-                            fields: models[resModel],
+                            fields: models[resModel].fields,
                             relatedModels: models,
                             views: {},
                         };

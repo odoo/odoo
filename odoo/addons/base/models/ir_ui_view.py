@@ -2429,9 +2429,9 @@ class Model(models.AbstractModel):
         result['models'] = {}
 
         for model, model_fields in models.items():
-            result['models'][model] = self.env[model].fields_get(
+            result['models'][model] = {"fields": self.env[model].fields_get(
                 allfields=model_fields, attributes=self._get_view_field_attributes()
-            )
+            )}
 
         # Add related action information if asked
         if options.get('toolbar'):

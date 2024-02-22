@@ -123,7 +123,7 @@ class Form:
 
         views = record.get_views([(view_id, 'form')])
         object.__setattr__(self, '_models_info', views['models'])
-        # self._models_info = {model_name: {field_name: field_info}}
+        # self._models_info = {model_name: {fields: {field_name: field_info}}}
         tree = etree.fromstring(views['views']['form']['arch'])
         view = self._process_view(tree, record)
         object.__setattr__(self, '_view', view)
@@ -160,7 +160,7 @@ class Form:
             field_name = node.get('name')
 
             # add field_info into fields
-            field_info = self._models_info.get(model._name, {}).get(field_name) or {'type': None}
+            field_info = self._models_info.get(model._name, {}).get("fields", {}).get(field_name) or {'type': None}
             fields[field_name] = field_info
             fields_spec[field_name] = field_spec = {}
 
@@ -263,8 +263,11 @@ class Form:
             subnode = etree.fromstring(subviews['views'][view_type]['arch'])
             views[view_type] = subnode
             node.append(subnode)
-            for model_name, fields in subviews['models'].items():
-                self._models_info.setdefault(model_name, {}).update(fields)
+            for model_name, value in subviews['models'].items():
+                model_info = self._models_info.setdefault(model_name, {})
+                if "fields" not in model_info:
+                    model_info["fields"] = {}
+                model_info["fields"].update(value["fields"])
 
         # pick the first editable subview
         view_type = next(
