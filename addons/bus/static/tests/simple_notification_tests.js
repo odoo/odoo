@@ -2,7 +2,7 @@
 
 import { simpleNotificationService } from "@bus/simple_notification_service";
 import { addBusServicesToRegistry } from "@bus/../tests/helpers/test_utils";
-import { getPyEnv } from "@bus/../tests/helpers/mock_python_environment";
+import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { registry } from "@web/core/registry";
 import { browser } from "@web/core/browser/browser";
@@ -13,10 +13,10 @@ import { createWebClient } from "@web/../tests/webclient/helpers";
 QUnit.module("simple_notification");
 
 QUnit.test("receive and display simple notification with message", async () => {
+    const pyEnv = await startServer();
     addBusServicesToRegistry();
     registry.category("services").add("simple_notification", simpleNotificationService);
     await createWebClient({});
-    const pyEnv = await getPyEnv();
     pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "simple_notification", {
         message: "simple notification",
     });
@@ -24,10 +24,10 @@ QUnit.test("receive and display simple notification with message", async () => {
 });
 
 QUnit.test("receive and display simple notification with title", async () => {
+    const pyEnv = await startServer();
     addBusServicesToRegistry();
     registry.category("services").add("simple_notification", simpleNotificationService);
     await createWebClient({});
-    const pyEnv = await getPyEnv();
     pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "simple_notification", {
         message: "simple notification",
         title: "simple title",
@@ -36,10 +36,10 @@ QUnit.test("receive and display simple notification with title", async () => {
 });
 
 QUnit.test("receive and display simple notification with specific type", async () => {
+    const pyEnv = await startServer();
     addBusServicesToRegistry();
     registry.category("services").add("simple_notification", simpleNotificationService);
     await createWebClient({});
-    const pyEnv = await getPyEnv();
     pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "simple_notification", {
         message: "simple notification",
         type: "info",
@@ -48,10 +48,10 @@ QUnit.test("receive and display simple notification with specific type", async (
 });
 
 QUnit.test("receive and display simple notification as sticky", async () => {
+    const pyEnv = await startServer();
     addBusServicesToRegistry();
     registry.category("services").add("simple_notification", simpleNotificationService);
     await createWebClient({});
-    const pyEnv = await getPyEnv();
     patchWithCleanup(browser, {
         setTimeout(fn) {
             /**

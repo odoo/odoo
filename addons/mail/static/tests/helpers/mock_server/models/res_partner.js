@@ -296,6 +296,11 @@ patch(MockServer.prototype, {
         if (search_term) {
             search_term = search_term.toLowerCase(); // simulates ILIKE
         }
+        const memberPartnerIds = new Set(
+            this.getRecords("discuss.channel.member", [["channel_id", "=", channel_id]]).map(
+                (member) => member.partner_id
+            )
+        );
         // simulates domain with relational parts (not supported by mock server)
         const matchingPartners = [
             ...this._mockResPartnerMailPartnerFormat(
@@ -308,8 +313,8 @@ patch(MockServer.prototype, {
                         if (!partner) {
                             return false;
                         }
-                        // not current partner
-                        if (partner.id === this.pyEnv.currentPartnerId) {
+                        // user should not already be a member of the channel
+                        if (memberPartnerIds.has(partner.id)) {
                             return false;
                         }
                         // no name is considered as return all

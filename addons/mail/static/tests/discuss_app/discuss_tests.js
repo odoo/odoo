@@ -3,6 +3,7 @@
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 import { makeFakePresenceService } from "@bus/../tests/helpers/mock_services";
 import { TEST_USER_IDS } from "@bus/../tests/helpers/test_constants";
+import { waitUntilSubscribe } from "@bus/../tests/helpers/websocket_event_deferred";
 
 import { Command } from "@mail/../tests/helpers/command";
 import { patchUiSize } from "@mail/../tests/helpers/patch_ui_size";
@@ -1828,6 +1829,8 @@ QUnit.test("Message shows up even if channel data is incomplete", async () => {
         ],
         channel_type: "chat",
     });
+    env.services["bus_service"].forceUpdateChannels();
+    await waitUntilSubscribe();
     await pyEnv.withUser(correspondentUserId, () =>
         env.services.rpc("/discuss/channel/notify_typing", {
             is_typing: true,

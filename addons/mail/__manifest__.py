@@ -145,8 +145,10 @@ For more specific needs, you may also assign custom-defined actions
             # discuss (loaded last to fix dependencies)
             ('remove', 'mail/static/src/discuss/**/*'),
             'mail/static/src/discuss/core/common/**/*',
+            'mail/static/src/discuss/core/public_web/**/*',
             'mail/static/src/discuss/core/web/**/*',
             'mail/static/src/discuss/**/common/**/*',
+            'mail/static/src/discuss/**/public_web/**/*',
             'mail/static/src/discuss/**/web/**/*',
             ('remove', 'mail/static/src/discuss/**/*.dark.scss'),
             'mail/static/src/views/fields/**/*',
@@ -214,9 +216,11 @@ For more specific needs, you may also assign custom-defined actions
             # discuss (loaded last to fix dependencies)
             ('remove', 'mail/static/src/discuss/**/*'),
             'mail/static/src/discuss/core/common/**/*',
+            'mail/static/src/discuss/core/public_web/**/*',
             'mail/static/src/discuss/core/public/**/*',
             'mail/static/src/discuss/**/common/**/*',
             'mail/static/src/discuss/**/public/**/*',
+            'mail/static/src/discuss/**/public_web/**/*',
             ('remove', 'mail/static/src/discuss/**/*.dark.scss'),
         ]
     },
