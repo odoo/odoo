@@ -21,21 +21,12 @@ export function clickMenuButton() {
         trigger: ".menu-button",
     };
 }
-export function closeSession() {
+export function clickMenuOption(name) {
     return [
         clickMenuButton(),
         {
-            content: "click on the close session menu button",
-            trigger: ".close-button",
-        },
-        {
-            content: "click on the close session popup button",
-            trigger: ".close-pos-popup .modal-footer .button.highlight",
-        },
-        {
-            content: "check that the session is closed without error",
-            trigger: ".o_web_client",
-            isCheck: true,
+            content: `click on something in the burger menu`,
+            trigger: `a.dropdown-item:contains(${name})`,
         },
     ];
 }
