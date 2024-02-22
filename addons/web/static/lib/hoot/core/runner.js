@@ -278,37 +278,38 @@ export class TestRunner {
 
         const initialConfig = { ...DEFAULT_CONFIG, ...config };
         this.config = reactive({ ...initialConfig, ...urlParams }, () => {
-            for (const key in this.config) {
-                if (this.config[key] !== initialConfig[key]) {
-                    setParams({ [key]: this.config[key] });
-                } else {
-                    setParams({ [key]: null });
-                }
-            }
+            setParams(
+                Object.fromEntries(
+                    Object.entries(this.config).map(([key, value]) => [
+                        key,
+                        value === initialConfig[key] ? null : value,
+                    ])
+                )
+            );
         });
 
         // Debug
-        this.debug = Boolean(urlParams.debugTest);
+        this.debug = Boolean(this.config.debugTest);
 
         // Text filter
-        if (urlParams.filter) {
+        if (this.config.filter) {
             this.#hasIncludeFilter = true;
-            this.textFilter = parseRegExp(normalize(urlParams.filter));
+            this.textFilter = parseRegExp(normalize(this.config.filter));
         }
 
         // Suites
-        if (urlParams.suite?.length) {
-            this.#include("suites", urlParams.suite);
+        if (this.config.suite?.length) {
+            this.#include("suites", this.config.suite);
         }
 
         // Tags
-        if (urlParams.tag?.length) {
-            this.#include("tags", urlParams.tag);
+        if (this.config.tag?.length) {
+            this.#include("tags", this.config.tag);
         }
 
         // Tests
-        if (urlParams.test?.length) {
-            this.#include("tests", urlParams.test);
+        if (this.config.test?.length) {
+            this.#include("tests", this.config.test);
         }
 
         // Random seed
@@ -920,6 +921,8 @@ export class TestRunner {
                 logger.error(`Test "${test.fullName}" failed:\n${failReason}`);
             }
 
+            await this.#callbacks.call("after-post-test", test);
+
             if (this.config.bail) {
                 if (!test.config.skip && !lastResults.pass) {
                     this.#failed++;
@@ -1012,6 +1015,15 @@ export class TestRunner {
         const callbackRegistry = suite ? suite.callbacks : this.#callbacks;
         for (const callback of callbacks) {
             callbackRegistry.add("after-test", callback);
+        }
+    }
+
+    /**
+     * @param {...Callback<Test>} callbacks
+     */
+    __afterPostTest(...callbacks) {
+        for (const callback of callbacks) {
+            this.#callbacks.add("after-post-test", callback);
         }
     }
 

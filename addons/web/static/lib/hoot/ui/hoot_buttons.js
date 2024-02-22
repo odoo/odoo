@@ -3,6 +3,7 @@
 import { Component, useState, xml } from "@odoo/owl";
 import { refresh, subscribeToURLParams } from "../core/url";
 import { HootLink } from "./hoot_link";
+import { Test } from "../core/test";
 
 /**
  * @typedef {{
@@ -51,8 +52,8 @@ export class HootButtons extends Component {
         });
         this.runnerState = useState(runner.state);
 
-        runner.__afterEach(({ id, lastResults }) => {
-            if (!lastResults.pass) {
+        runner.__afterPostTest(({ id, status }) => {
+            if (status === Test.FAILED) {
                 this.state.failed.push(id);
             }
         });

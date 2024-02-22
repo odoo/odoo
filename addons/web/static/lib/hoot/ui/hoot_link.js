@@ -2,7 +2,7 @@
 
 import { Component, useState, xml } from "@odoo/owl";
 import { FILTER_KEYS } from "../core/config";
-import { EXCLUDE_PREFIX, createURL, urlParams } from "../core/url";
+import { EXCLUDE_PREFIX, createURL } from "../core/url";
 import { ensureArray } from "../hoot_utils";
 
 /**
@@ -72,11 +72,12 @@ export class HootLink extends Component {
 
         const { type, id, options } = this.props;
         const ids = ensureArray(id);
+        const { config } = this.env.runner;
         const nextParams = Object.fromEntries(
-            FILTER_KEYS.map((k) => [k, new Set(urlParams[k] || [])])
+            FILTER_KEYS.map((k) => [k, new Set(config[k] || [])])
         );
-        if (urlParams.filter) {
-            nextParams.filter = new Set([urlParams.filter]);
+        if (config.filter) {
+            nextParams.filter = new Set([config.filter]);
         }
 
         switch (type) {

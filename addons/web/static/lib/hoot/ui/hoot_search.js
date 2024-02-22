@@ -295,7 +295,7 @@ export class HootSearch extends Component {
                         <input
                             type="checkbox"
                             class="hidden"
-                            t-att-checked="urlParams.debugTest"
+                            t-att-checked="env.runner.config.debugTest"
                             t-att-disabled="isRunning"
                             t-on-change="toggleDebug"
                         />
@@ -346,9 +346,8 @@ export class HootSearch extends Component {
 
         this.rootRef = useRef("root");
         this.searchInputRef = useRef("search-input");
-        this.urlParams = subscribeToURLParams("debugTest");
 
-        const query = this.urlParams.filter || "";
+        const query = runner.config.filter || "";
         this.state = useState({
             categories: {
                 /** @type {Suite[]} */
@@ -590,7 +589,7 @@ export class HootSearch extends Component {
             }
         }
 
-        if (this.urlParams.fun) {
+        if (this.env.runner.config.fun) {
             this.verifySecretSequenceStep(ev);
         }
     }
@@ -635,7 +634,7 @@ export class HootSearch extends Component {
     }
 
     toggleDebug() {
-        setParams({ debugTest: !this.urlParams.debugTest });
+        setParams({ debugTest: !this.env.runner.config.debugTest });
     }
 
     toggleRegExp() {

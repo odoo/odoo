@@ -3,7 +3,7 @@
 import { Component, onWillRender, useState, xml } from "@odoo/owl";
 import { parseRegExp } from "../../hoot-dom/hoot_dom_utils";
 import { Test } from "../core/test";
-import { EXCLUDE_PREFIX, subscribeToURLParams } from "../core/url";
+import { EXCLUDE_PREFIX } from "../core/url";
 import { formatTime, getFuzzyScore, normalize } from "../hoot_utils";
 import { HootJobButtons } from "./hoot_job_buttons";
 import { HootTestPath } from "./hoot_test_path";
@@ -25,6 +25,10 @@ const { Boolean, RegExp } = globalThis;
 //-----------------------------------------------------------------------------
 // Internal
 //-----------------------------------------------------------------------------
+
+const sortByDurationAscending = (a, b) => a.duration - b.duration;
+
+const sortByDurationDescending = (a, b) => b.duration - a.duration;
 
 const COLORS = {
     failed: "text-fail",
@@ -119,8 +123,6 @@ export class HootReporting extends Component {
         const { runner, ui } = this.env;
         const { showdetail } = runner.config;
 
-        this.urlParams = subscribeToURLParams("filter");
-
         this.runnerState = useState(runner.state);
         this.state = useState({
             /** @type {string[]} */
@@ -131,7 +133,7 @@ export class HootReporting extends Component {
         this.uiState = useState(ui);
 
         let didShowDetail = false;
-        runner.__afterEach((test) => {
+        runner.__afterPostTest((test) => {
             if (
                 showdetail &&
                 !(showdetail === "first-fail" && didShowDetail) &&
@@ -196,17 +198,13 @@ export class HootReporting extends Component {
             });
         }
 
-        let predicate;
-        if (sortResults) {
-            predicate =
-                sortResults === "asc"
-                    ? (a, b) => a.duration - b.duration
-                    : (a, b) => b.duration - a.duration;
-        } else {
-            predicate = (a, b) => b.status - a.status;
+        if (!sortResults) {
+            return results;
         }
 
-        return results.sort(predicate);
+        return results.sort(
+            sortResults === "asc" ? sortByDurationAscending : sortByDurationDescending
+        );
     }
 
     getEmptyMessage() {
@@ -217,13 +215,13 @@ export class HootReporting extends Component {
         return {
             statusFilter,
             statusFilterClassName: COLORS[statusFilter],
-            filter: this.urlParams.filter,
+            filter: this.env.runner.config.filter,
             selectedSuiteName: selectedSuiteId && this.env.runner.suites.get(selectedSuiteId).name,
         };
     }
 
     getQueryFilter() {
-        const { filter } = this.urlParams;
+        const { filter } = this.env.runner.config;
         if (!filter) {
             return null;
         }

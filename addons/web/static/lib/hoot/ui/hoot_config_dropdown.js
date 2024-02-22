@@ -1,12 +1,12 @@
 /** @odoo-module */
 
 import { Component, useRef, useState, xml } from "@odoo/owl";
+import { logLevels } from "../core/logger";
 import { refresh } from "../core/url";
 import { useWindowListener } from "../hoot_utils";
 import { MockMath, generateSeed, internalRandom } from "../mock/math";
 import { toggleColorScheme, useColorScheme } from "./hoot_colors";
 import { HootCopyButton } from "./hoot_copy_button";
-import { logLevels } from "../core/logger";
 
 /**
  * @typedef {"dark" | "light"} ColorScheme
@@ -266,8 +266,9 @@ export class HootConfigDropdown extends Component {
     }
 
     resetSeed() {
-        this.config.random = generateSeed();
-        internalRandom.seed = this.config.random;
-        MockMath.random.seed = this.config.random;
+        const newSeed = generateSeed();
+        this.config.random = newSeed;
+        internalRandom.seed = newSeed;
+        MockMath.random.seed = newSeed;
     }
 }

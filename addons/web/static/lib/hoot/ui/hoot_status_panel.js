@@ -261,7 +261,7 @@ export class HootStatusPanel extends Component {
 
         if (!runner.config.headless) {
             runner.__beforeEach(startTimer);
-            runner.__afterEach(stopTimer);
+            runner.__afterPostTest(stopTimer);
         }
 
         useEffect(
