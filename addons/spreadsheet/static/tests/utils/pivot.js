@@ -11,11 +11,12 @@ import { createModelWithDataSource, waitForDataSourcesLoaded } from "./model";
 
 /**
  * @param {Model} model
+ * @param {string} pivotId
  * @param {object} params
  * @param {string} params.arch
  * @param {[number, number]} [params.anchor]
  */
-export async function insertPivotInSpreadsheet(model, params) {
+export async function insertPivotInSpreadsheet(model, pivotId, params) {
     const archInfo = new PivotArchParser().parse(params.arch || getBasicPivotArch());
     const pivot = {
         type: "ODOO",
@@ -28,14 +29,16 @@ export async function insertPivotInSpreadsheet(model, params) {
         rowGroupBys: archInfo.rowGroupBys,
         name: "Partner Pivot",
     };
-    const pivotId = model.getters.getNextPivotId();
-    const dataSourceId = model.getters.getPivotDataSourceId(pivotId);
-    const dataSource = model.config.custom.dataSources.add(dataSourceId, OdooPivot, {
-        definition: pivot,
-        getters: model.getters,
+    model.dispatch("ADD_PIVOT", {
+        pivotId,
+        pivot,
     });
-    await dataSource.load();
-    const { cols, rows, measures, rowTitle } = dataSource.getTableStructure().export();
+    const ds = model.getters.getPivot(pivotId);
+    if (!(ds instanceof OdooPivot)) {
+        throw new Error("The pivot data source is not an OdooPivot");
+    }
+    await ds.load();
+    const { cols, rows, measures, rowTitle } = ds.getTableStructure().export();
     const table = {
         cols,
         rows,
@@ -43,13 +46,8 @@ export async function insertPivotInSpreadsheet(model, params) {
         rowTitle,
     };
     const [col, row] = params.anchor || [0, 0];
-    const id = model.getters.getNextPivotId();
-    model.dispatch("ADD_PIVOT", {
-        pivotId: id,
-        pivot,
-    });
     model.dispatch("INSERT_PIVOT", {
-        pivotId: id,
+        pivotId,
         sheetId: params.sheetId || model.getters.getActiveSheetId(),
         col,
         row,
@@ -72,9 +70,10 @@ export async function createSpreadsheetWithPivot(params = {}) {
         serverData: params.serverData,
     });
     const arch = params.arch || serverData.views["partner,false,pivot"];
-    await insertPivotInSpreadsheet(model, { arch });
+    const pivotId = "PIVOT#1";
+    await insertPivotInSpreadsheet(model, pivotId, { arch });
     const env = model.config.custom.env;
     env.model = model;
     await waitForDataSourcesLoaded(model);
-    return { model, env };
+    return { model, env, pivotId };
 }

@@ -49,6 +49,10 @@ declare module "@spreadsheet" {
 
     export type PivotDefinition = OdooPivotDefinition | SpreadsheetPivotDefinition;
 
+    export type CorePivotDefinition = PivotDefinition & {
+        formulaId: string;
+    }
+
     export interface Field {
         name: string;
         type: string;
