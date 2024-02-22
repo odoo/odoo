@@ -2403,6 +2403,13 @@ var FieldMany2ManyBinaryMultiFiles = AbstractField.extend({
         this.metadata = {};
     },
 
+    /**
+     * @override
+     * @returns {boolean}
+     */
+    isSet: function () {
+        return !!this.value && this.value.count;
+    },
     destroy: function () {
         this._super();
         $(window).off(this.fileupload_id);
