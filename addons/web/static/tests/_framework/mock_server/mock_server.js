@@ -3,6 +3,7 @@ import { mockFetch, mockWebSocket } from "@odoo/hoot-mock";
 import { assets } from "@web/core/assets";
 import { registry } from "@web/core/registry";
 import { isIterable } from "@web/core/utils/arrays";
+import { deepCopy, isObject } from "@web/core/utils/objects";
 import { serverState } from "../mock_server_state.hoot";
 import { fetchModelDefinitions } from "../module_set.hoot";
 import { patchWithCleanup } from "../patch_test_helpers";
@@ -13,7 +14,6 @@ import {
     getRecordQualifier,
     safeSplit,
 } from "./mock_server_utils";
-import { deepCopy, isObject } from "@web/core/utils/objects";
 
 const { fetch: realFetch } = globals;
 
