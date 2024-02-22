@@ -118,7 +118,7 @@ export class Field extends Component {
     static parseFieldNode = function (node, models, modelName, viewType, jsClass) {
         const name = node.getAttribute("name");
         const widget = node.getAttribute("widget");
-        const fields = models[modelName];
+        const fields = models[modelName].fields;
         if (!fields[name]) {
             throw new Error(`"${modelName}"."${name}" field is undefined.`);
         }
@@ -208,7 +208,7 @@ export class Field extends Component {
                 views[viewType] = {
                     ...archInfo,
                     limit: archInfo.limit || 40,
-                    fields: models[fields[name].relation],
+                    fields: models[fields[name].relation].fields,
                 };
             }
 
@@ -232,7 +232,7 @@ export class Field extends Component {
                 fieldInfo.viewMode = viewMode;
             }
             if (Object.keys(views).length) {
-                fieldInfo.relatedFields = models[fields[name].relation];
+                fieldInfo.relatedFields = models[fields[name].relation]?.fields;
                 fieldInfo.views = views;
             }
         }

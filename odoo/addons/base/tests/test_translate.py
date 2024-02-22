@@ -916,7 +916,7 @@ class TestTranslationWrite(TransactionCase):
 
         # check that get_views() also returns the expected label
         info = model.get_views([(False, 'form')])
-        self.assertEqual(info['models'][model._name]['name']['string'], LABEL)
+        self.assertEqual(info['models'][model._name]["fields"]['name']['string'], LABEL)
 
 
 class TestXMLTranslation(TransactionCase):

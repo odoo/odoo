@@ -1493,22 +1493,22 @@ export class Model extends Array {
         const views = {};
 
         // Determine all the models/fields used in the views
-        // modelFields = {modelName: Set([...fieldNames])}
+        // modelFields = {modelName: {fields: Set([...fieldNames])}}
         const modelFields = {};
         kwargs.views.forEach(([viewId, viewType]) => {
             views[viewType] = getView(this, [viewId, viewType], kwargs);
             for (const [modelName, fields] of Object.entries(views[viewType].models)) {
-                modelFields[modelName] ||= new Set();
+                modelFields[modelName] ||= { fields: new Set() };
                 for (const field of fields) {
-                    modelFields[modelName].add(field);
+                    modelFields[modelName].fields.add(field);
                 }
             }
             delete views[viewType].models;
         });
 
         // For each model, fetch the information of the fields used in the views only
-        for (const [modelName, fields] of Object.entries(modelFields)) {
-            models[modelName] = MockServer.env[modelName].fields_get(fields);
+        for (const [modelName, value] of Object.entries(modelFields)) {
+            models[modelName] = { fields: MockServer.env[modelName].fields_get(value.fields) };
         }
 
         if (kwargs.options.load_filters && "search" in views) {

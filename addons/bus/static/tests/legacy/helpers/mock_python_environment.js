@@ -41,11 +41,12 @@ async function getModelDefinitions() {
     }
     const modelDefinitions = new Map(Object.entries(await response.json()));
 
-    for (const [modelName, fields] of modelDefinitions) {
+    for (const [modelName, modelDefinition] of modelDefinitions) {
         // insert fields present in the fieldsToInsert registry : if the field
         // exists, update its default value according to the one in the
         // registry; If it does not exist, add it to the model definition.
         const fieldNamesToFieldToInsert = fieldsToInsertRegistry.category(modelName).getEntries();
+        const fields = modelDefinition.fields;
         for (const [fname, fieldToInsert] of fieldNamesToFieldToInsert) {
             if (fname in fields) {
                 fields[fname].default = fieldToInsert.default;
@@ -71,7 +72,9 @@ async function getModelDefinitions() {
     // add models present in the fake models registry to the model definitions.
     const fakeModels = modelDefinitionsRegistry.category("fakeModels").getEntries();
     for (const [modelName, fields] of fakeModels) {
-        modelDefinitions.set(modelName, fields);
+        const modelDefinition = {};
+        modelDefinition.fields = fields;
+        modelDefinitions.set(modelName, modelDefinition);
     }
     return modelDefinitions;
 }
@@ -226,13 +229,13 @@ export async function startServer({ actions, views = {} } = {}) {
     const recordsToInsertRegistry = registry
         .category("bus.model.definitions")
         .category("recordsToInsert");
-    for (const [modelName, fields] of modelDefinitions) {
+    for (const [modelName, modelDefinition] of modelDefinitions) {
         const records = [];
         if (recordsToInsertRegistry.contains(modelName)) {
             // prevent tests from mutating the records.
             records.push(...JSON.parse(JSON.stringify(recordsToInsertRegistry.get(modelName))));
         }
-        models[modelName] = { fields: { ...fields }, records };
+        models[modelName] = { ...modelDefinition, records };
 
         // generate default views for this model if none were passed.
         const viewArchsSubRegistries = registry.category("bus.view.archs").subRegistries;

@@ -209,7 +209,7 @@ export const FAKE_FIELDS = {
 
 function makeFakeModelState() {
     const fakeFieldNode = createElement("field", { name: "name" });
-    const fakeModels = { event: FAKE_FIELDS };
+    const fakeModels = { event: { fields: FAKE_FIELDS } };
     return {
         canCreate: true,
         canDelete: true,
