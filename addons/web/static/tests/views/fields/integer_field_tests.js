@@ -6,7 +6,9 @@ import {
     click,
     clickSave,
     editInput,
+    findElement,
     getFixture,
+    nextTick,
     patchWithCleanup,
     triggerEvent,
 } from "@web/../tests/helpers/utils";
@@ -286,6 +288,33 @@ QUnit.module("Fields", (hooks) => {
             "Placeholder"
         );
     });
+
+    QUnit.test(
+        "no need to focus out of the input to save the record after correcting an invalid input",
+        async function (assert) {
+            await makeView({
+                type: "form",
+                serverData,
+                resModel: "partner",
+                resId: 1,
+                arch: '<form><field name="int_field"/></form>',
+            });
+
+            const input = findElement(target, ".o_field_widget[name=int_field] input");
+            assert.strictEqual(input.value, "10");
+
+            input.value = "a";
+            triggerEvent(input, null, "input", {});
+            assert.strictEqual(input.value, "a");
+            await clickSave(target);
+            assert.containsOnce(target, ".o_form_status_indicator span i.fa-warning");
+            input.value = "1";
+            triggerEvent(input, null, "input", {});
+            await nextTick();
+            assert.containsNone(target, ".o_form_status_indicator span i.fa-warning");
+            assert.containsOnce(target, ".o_form_button_save");
+        }
+    );
 
     QUnit.test(
         "make a valid integer field invalid, then reset the original value to make it valid again",
