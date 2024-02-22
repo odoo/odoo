@@ -2,18 +2,14 @@
 <odoo>
 
     <template id="payment_demo.token_form" inherit_id="payment.token_form">
-        <xpath expr="//p[@name='o_payment_secured_by_desktop']" position="attributes">
-            <attribute name="t-att-class"/>
-            <attribute name="class">d-none</attribute>
-        </xpath>
-        <xpath expr="//p[@name='o_payment_secured_by_mobile']" position="attributes">
-            <attribute name="class" separator=" " add="d-none"/>
+        <xpath expr="//t[@t-set='hide_secured_by']" position="attributes">
+            <attribute name="t-value" separator=" " add="or provider_sudo.code == 'demo'"/>
         </xpath>
     </template>
 
     <template id="payment_demo.payment_method_form" inherit_id="payment.method_form">
-        <xpath expr="//p[@name='o_payment_secured_by']" position="attributes">
-            <attribute name="class" separator=" " add="d-none"/>
+        <xpath expr="//t[@t-set='hide_secured_by']" position="attributes">
+            <attribute name="t-value" separator=" " add="or provider_sudo.code == 'demo'"/>
         </xpath>
     </template>
 
