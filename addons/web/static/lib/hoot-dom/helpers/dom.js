@@ -922,7 +922,7 @@ export function getNodeValue(node) {
         case "week":
             return node.valueAsDate.toISOString();
     }
-    return node.value.trim();
+    return node.value;
 }
 
 /**

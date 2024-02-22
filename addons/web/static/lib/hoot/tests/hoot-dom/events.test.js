@@ -815,6 +815,17 @@ describe(parseUrl(import.meta.url), () => {
         expect("input").toHaveValue(4);
     });
 
+    test("press 'Enter' on textarea", async () => {
+        await mount(/* xml */ `<textarea t-att-value="'aaa'" />`);
+
+        expect("textarea").toHaveValue("aaa");
+
+        click("textarea");
+        press("Enter");
+
+        expect("textarea").toHaveValue("aaa\n");
+    });
+
     test("special keys modifiers: Windows", async () => {
         mockUserAgent("Windows");
 

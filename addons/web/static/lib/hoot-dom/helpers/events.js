@@ -73,6 +73,26 @@ const { console, DataTransfer, document, Math, Object, String, Touch, TypeError 
 // Internal
 //-----------------------------------------------------------------------------
 
+const canDrag = () => currentPointerDownTarget?.draggable;
+
+/**
+ * @param {EventTarget} target
+ * @param {string[]} eventSequence
+ * @param {EventInit} eventInit
+ */
+const dispatchEventSequence = (target, eventSequence, eventInit) => {
+    for (const eventType of eventSequence) {
+        if (!eventType) {
+            continue;
+        }
+        const event = dispatch(target, eventType, eventInit);
+        if (isPrevented(event)) {
+            return true;
+        }
+    }
+    return false;
+};
+
 /**
  * @template T
  * @param {MaybeIterable<T>} value
@@ -84,13 +104,13 @@ const ensureArray = (value) => (isIterable(value) ? [...value] : [value]);
  * Returns the list of nodes containing n2 (included) that do not contain n1.
  *
  * @param {Element} el1
- * @param {Element} el2
+ * @param {Element} [el2]
  */
 const getDifferentParents = (el1, el2) => {
-    const parents = [el2];
+    const parents = [el2 || el1];
     while (parents[0].parentElement) {
         const parent = parents[0].parentElement;
-        if (parent.contains(el1)) {
+        if (el2 && parent.contains(el1)) {
             break;
         }
         parents.unshift(parent);
@@ -368,8 +388,9 @@ const registerFileInput = ({ target }) => {
 /**
  * @param {EventTarget} target
  * @param {string} initialValue
+ * @param {boolean} confirmNow
  */
-const registerForChange = (target, initialValue) => {
+const registerForChange = (target, initialValue, confirmNow) => {
     const triggerChange = () => {
         removeChangeTargetListeners();
 
@@ -378,10 +399,30 @@ const registerForChange = (target, initialValue) => {
         }
     };
 
+    const isInput = getTag(target) === "input";
+    if (isInput) {
+        changeTargetListeners.push(
+            on(target, "keydown", (ev) => !isPrevented(ev) && ev.key === "Enter" && triggerChange())
+        );
+    }
+
     changeTargetListeners.push(
-        on(target, "keydown", (ev) => !isPrevented(ev) && ev.key === "Enter" && triggerChange()),
-        on(target, "blur", triggerChange)
+        on(target, "blur", triggerChange),
+        on(target, "change", removeChangeTargetListeners)
     );
+
+    if (confirmNow) {
+        // Triggers confirm action right away
+        if (isInput) {
+            _press(target, { key: "Enter" });
+        } else {
+            const parent = target.parentElement || getDocument(target).body;
+            _click(parent, {
+                position: { x: 1, y: 1 },
+                relative: true,
+            });
+        }
+    }
 };
 
 /**
@@ -420,6 +461,33 @@ const removeChangeTargetListeners = () => {
 };
 
 /**
+ * @param {HTMLElement | null} target
+ */
+const setPointerDownTarget = (target) => {
+    previousPointerDownTarget = currentPointerDownTarget;
+    currentPointerDownTarget = target || null;
+};
+
+/**
+ * @param {HTMLElement | null} target
+ * @param {PointerOptions} [options]
+ */
+const setPointerTarget = (target, options) => {
+    previousPointerTarget = currentPointerTarget;
+    currentPointerTarget = target || null;
+
+    if (currentPointerTarget === previousPointerTarget) {
+        return;
+    }
+
+    if (target) {
+        currentPosition = getPosition(target, options);
+    } else {
+        currentPosition = {};
+    }
+};
+
+/**
  * @param {number} x
  * @param {number} y
  */
@@ -441,9 +509,9 @@ const toEventPosition = (clientX, clientY, position) => {
  * @param {PointerEventInit} eventInit
  */
 const triggerClick = (target, pointerInit) => {
-    const events = [dispatch(target, "click", pointerInit)];
-    if (isPrevented(events[0])) {
-        return events;
+    const clickEvent = dispatch(target, "click", pointerInit);
+    if (isPrevented(clickEvent)) {
+        return;
     }
     if (isFirefox()) {
         // Thanks Firefox
@@ -457,7 +525,7 @@ const triggerClick = (target, pointerInit) => {
                      *  Do: triggers a 'change' event on the input
                      */
                     target.checked = target.type === "radio" ? true : !target.checked;
-                    events.push(dispatch(target, "change"));
+                    dispatch(target, "change");
                 }
                 break;
             }
@@ -470,7 +538,7 @@ const triggerClick = (target, pointerInit) => {
                  */
                 target = target.control;
                 if (target) {
-                    return [...events, ...triggerClick(target, pointerInit)];
+                    triggerClick(target, pointerInit);
                 }
                 break;
             }
@@ -483,24 +551,21 @@ const triggerClick = (target, pointerInit) => {
                  */
                 const parent = target.parentElement;
                 if (parent && getTag(parent) === "select") {
-                    events.push(dispatch(parent, "change"));
+                    dispatch(parent, "change");
                 }
                 break;
             }
         }
     }
-    return events;
 };
 
 /**
  * @param {EventTarget} target
  */
 const triggerFocus = (target) => {
-    /** @type {Event[]} */
-    const events = [];
     const previous = getActiveElement(target);
     if (previous === target) {
-        return events;
+        return;
     }
     const hasFocus = document.hasFocus();
     if (previous !== target.ownerDocument.body) {
@@ -508,7 +573,6 @@ const triggerFocus = (target) => {
             previous.blur();
         }
         const blurEvent = dispatch(previous, "blur", { relatedTarget: target });
-        events.push(blurEvent);
         if (hasFocus && !isPrevented(blurEvent)) {
             previous.blur();
         }
@@ -518,7 +582,6 @@ const triggerFocus = (target) => {
             target.focus();
         }
         const focusEvent = dispatch(target, "focus", { relatedTarget: previous });
-        events.push(focusEvent);
         if (hasFocus && !isPrevented(focusEvent)) {
             target.focus();
         }
@@ -526,7 +589,6 @@ const triggerFocus = (target) => {
             target.selectionStart = target.selectionEnd = target.value.length;
         }
     }
-    return events;
 };
 
 /**
@@ -549,30 +611,20 @@ const _clear = (target, options) => {
     // - Control + A: selects all the text
     // - Backspace: deletes the text
     fullClear = true;
-    const events = [
-        _press(target, { ctrlKey: true, key: "a" }),
-        _press(target, { key: "Backspace" }),
-    ];
+    _press(target, { ctrlKey: true, key: "a" });
+    _press(target, { key: "Backspace" });
     fullClear = false;
 
-    registerForChange(target, initialValue);
-
-    if (options?.confirm) {
-        events.push(_press(target, { key: "Enter" }));
-    }
+    registerForChange(target, initialValue, options?.confirm);
 };
 
 /**
  * @param {EventTarget} target
- * @param {PointerOptions} [options]
+ * @param {PointerOptions} [option]
  */
 const _click = (target, options) => {
-    const pointerInit = {
-        ...getPosition(target, options),
-        button: options?.button || 0,
-    };
-    const events = [..._pointerDown(target, pointerInit), ..._pointerUp(target, pointerInit)];
-    return events;
+    _pointerDown(target, options);
+    _pointerUp(target, options);
 };
 
 /**
@@ -581,8 +633,6 @@ const _click = (target, options) => {
  * @param {FillOptions} [options]
  */
 const _fill = (target, value, options) => {
-    /** @type {Event[]} */
-    const events = [];
     const initialValue = target.value;
 
     if (getTag(target) === "input" && target.type === "file") {
@@ -599,37 +649,62 @@ const _fill = (target, value, options) => {
         }
         target.files = dataTransfer.files;
 
-        events.push(dispatch(target, "change"));
+        dispatch(target, "change");
+        return;
+    }
+
+    if (options?.instantly) {
+        // Simulates filling the clipboard with the value (can be from external source)
+        globalThis.navigator.clipboard.writeTextSync(value);
+        _press(target, { ctrlKey: true, key: "v" });
     } else {
-        if (options?.instantly) {
-            // Simulates filling the clipboard with the value (can be from external source)
-            globalThis.navigator.clipboard.writeTextSync(value);
-            events.push(..._press(target, { ctrlKey: true, key: "v" }));
-        } else {
-            if (options?.composition) {
-                isComposing = true;
-                // Simulates the start of a composition
-                events.push(dispatch(target, "compositionstart"));
-            }
-            for (const char of String(value)) {
-                const key = char.toLowerCase();
-                events.push(..._press(target, { key, shiftKey: key !== char }));
-            }
-            if (options?.composition) {
-                isComposing = false;
-                // Simulates the end of a composition
-                events.push(dispatch(target, "compositionend"));
-            }
+        if (options?.composition) {
+            isComposing = true;
+            // Simulates the start of a composition
+            dispatch(target, "compositionstart");
         }
-
-        registerForChange(target, initialValue);
-
-        if (options?.confirm) {
-            events.push(_press(target, { key: "Enter" }));
+        for (const char of String(value)) {
+            const key = char.toLowerCase();
+            _press(target, { key, shiftKey: key !== char });
+        }
+        if (options?.composition) {
+            isComposing = false;
+            // Simulates the end of a composition
+            dispatch(target, "compositionend");
         }
     }
 
-    return events;
+    registerForChange(target, initialValue, options?.confirm);
+};
+
+/**
+ * @param {EventTarget} target
+ * @param {PointerOptions} options
+ */
+const _hover = (target, options) => {
+    if (target === currentPointerTarget) {
+        return;
+    }
+
+    setPointerTarget(target, options);
+
+    const eventInit = { ...currentPosition };
+
+    dispatchEventSequence(target, ["pointerover", !hasTouch() && "mouseover"], eventInit);
+
+    for (const parent of getDifferentParents(currentPointerTarget, previousPointerTarget)) {
+        dispatchEventSequence(
+            parent,
+            ["pointerenter", !hasTouch() && "mouseenter", canDrag() && "dragenter"],
+            eventInit
+        );
+    }
+
+    dispatchEventSequence(
+        target,
+        ["pointermove", hasTouch() ? "touchmove" : "mousemove", canDrag() && "drag"],
+        eventInit
+    );
 };
 
 /**
@@ -639,162 +714,163 @@ const _fill = (target, value, options) => {
 const _keyDown = (target, eventInit) => {
     registerSpecialKey(eventInit, true);
 
-    const events = [dispatch(target, "keydown", eventInit)];
-    const { ctrlKey, key, shiftKey } = events[0];
+    const keyDownEvent = dispatch(target, "keydown", eventInit);
 
+    if (isPrevented(keyDownEvent)) {
+        return;
+    }
+
+    const { ctrlKey, key, shiftKey } = keyDownEvent;
     let inputData = null;
     let inputType = null;
     let nextValue = target.value;
-    let prevented = isPrevented(events[0]);
 
-    if (!prevented) {
-        if (isEditable(target)) {
-            switch (key) {
-                case "Backspace": {
-                    const { selectionStart, selectionEnd, value } = target;
-                    if (fullClear) {
-                        // Remove all characters
-                        nextValue = "";
-                    } else if (isNil(selectionStart) || isNil(selectionEnd)) {
-                        // Remove last character
-                        nextValue = value.slice(0, -1);
-                    } else if (selectionStart === selectionEnd) {
-                        // Remove previous character from target value
-                        nextValue = value.slice(0, selectionStart - 1) + value.slice(selectionEnd);
-                    } else {
-                        // Remove current selection from target value
-                        nextValue = deleteSelection(target);
-                    }
-                    inputType = "deleteContentBackward";
-                    break;
-                }
-                case "Delete": {
-                    const { selectionStart, selectionEnd, value } = target;
-                    if (fullClear) {
-                        // Remove all characters
-                        nextValue = "";
-                    } else if (isNil(selectionStart) || isNil(selectionEnd)) {
-                        // Remove first character
-                        nextValue = value.slice(1);
-                    } else if (selectionStart === selectionEnd) {
-                        // Remove next character from target value
-                        nextValue = value.slice(0, selectionStart) + value.slice(selectionEnd + 1);
-                    } else {
-                        // Remove current selection from target value
-                        nextValue = deleteSelection(target);
-                    }
-                    inputType = "deleteContentForward";
-                    break;
-                }
-                default: {
-                    if (key.length === 1 && !ctrlKey) {
-                        // Character coming from the keystroke
-                        // ! TODO: Doesn't work with non-roman locales
-                        const { selectionStart, selectionEnd, value } = target;
-                        inputData = shiftKey ? key.toUpperCase() : key.toLowerCase();
-                        // Insert character in target value
-                        if (isNil(selectionStart) && isNil(selectionEnd)) {
-                            nextValue += inputData;
-                        } else {
-                            nextValue =
-                                value.slice(0, selectionStart) +
-                                inputData +
-                                value.slice(selectionEnd);
-                        }
-                        inputType = isComposing ? "insertCompositionText" : "insertText";
-                    }
-                }
-            }
-        }
-    }
-
-    if (!prevented) {
+    if (isEditable(target)) {
         switch (key) {
-            case "a": {
-                if (ctrlKey) {
-                    // Select all
-                    if (isEditable(target)) {
-                        events.push(dispatch(target, "select"));
-                    } else {
-                        const selection = globalThis.getSelection();
-                        const range = document.createRange();
-                        range.selectNodeContents(target);
-                        selection.removeAllRanges();
-                        selection.addRange(range);
-                    }
-                }
-                break;
-            }
-            /**
-             * Special action: shift focus
-             *  On: unprevented 'Tab' keydown
-             *  Do: focus next (or previous with 'Shift') focusable element
-             */
-            case "Tab": {
-                const next = shiftKey ? getPreviousFocusableElement() : getNextFocusableElement();
-                if (next) {
-                    events.push(...triggerFocus(next));
-                }
-                break;
-            }
-            /**
-             * Special action: copy
-             *  On: unprevented 'Control + c' keydown
-             *  Do: copy current selection to clipboard
-             */
-            case "c": {
-                if (ctrlKey) {
-                    // Get selection from window
-                    const text = globalThis.getSelection().toString();
-                    globalThis.navigator.clipboard.writeTextSync(text);
-                }
-                break;
-            }
-            /**
-             * Special action: paste
-             *  On: unprevented 'Control + v' keydown on editable element
-             *  Do: paste current clipboard content to current element
-             */
-            case "v": {
-                if (ctrlKey && isEditable(target)) {
-                    // Set target value (synchonously)
-                    const value = globalThis.navigator.clipboard.readTextSync();
-                    nextValue = value;
-
-                    inputType = "insertFromPaste";
-                }
-                break;
-            }
-            /**
-             * Special action: cut
-             *  On: unprevented 'Control + x' keydown on editable element
-             *  Do: cut current selection to clipboard and remove selection
-             */
-            case "x": {
-                if (ctrlKey && isEditable(target)) {
-                    // Get selection from window
-                    const text = globalThis.getSelection().toString();
-                    globalThis.navigator.clipboard.writeTextSync(text);
-
+            case "Backspace": {
+                const { selectionStart, selectionEnd, value } = target;
+                if (fullClear) {
+                    // Remove all characters
+                    nextValue = "";
+                } else if (isNil(selectionStart) || isNil(selectionEnd)) {
+                    // Remove last character
+                    nextValue = value.slice(0, -1);
+                } else if (selectionStart === selectionEnd) {
+                    // Remove previous character from target value
+                    nextValue = value.slice(0, selectionStart - 1) + value.slice(selectionEnd);
+                } else {
+                    // Remove current selection from target value
                     nextValue = deleteSelection(target);
-                    inputType = "deleteByCut";
+                }
+                inputType = "deleteContentBackward";
+                break;
+            }
+            case "Delete": {
+                const { selectionStart, selectionEnd, value } = target;
+                if (fullClear) {
+                    // Remove all characters
+                    nextValue = "";
+                } else if (isNil(selectionStart) || isNil(selectionEnd)) {
+                    // Remove first character
+                    nextValue = value.slice(1);
+                } else if (selectionStart === selectionEnd) {
+                    // Remove next character from target value
+                    nextValue = value.slice(0, selectionStart) + value.slice(selectionEnd + 1);
+                } else {
+                    // Remove current selection from target value
+                    nextValue = deleteSelection(target);
+                }
+                inputType = "deleteContentForward";
+                break;
+            }
+            case "Enter": {
+                if (target.tagName === "TEXTAREA") {
+                    // Insert new line
+                    nextValue += "\n";
+                    inputType = "insertLineBreak";
                 }
                 break;
             }
-        }
-
-        if (target.value !== nextValue) {
-            target.value = nextValue;
-            events.push(
-                dispatch(target, "input", {
-                    data: inputData,
-                    inputType,
-                })
-            );
+            default: {
+                if (key.length === 1 && !ctrlKey) {
+                    // Character coming from the keystroke
+                    // ! TODO: Doesn't work with non-roman locales
+                    const { selectionStart, selectionEnd, value } = target;
+                    inputData = shiftKey ? key.toUpperCase() : key.toLowerCase();
+                    // Insert character in target value
+                    if (isNil(selectionStart) && isNil(selectionEnd)) {
+                        nextValue += inputData;
+                    } else {
+                        nextValue =
+                            value.slice(0, selectionStart) + inputData + value.slice(selectionEnd);
+                    }
+                    inputType = isComposing ? "insertCompositionText" : "insertText";
+                }
+            }
         }
     }
 
-    return events;
+    switch (key) {
+        case "a": {
+            if (ctrlKey) {
+                // Select all
+                if (isEditable(target)) {
+                    dispatch(target, "select");
+                } else {
+                    const selection = globalThis.getSelection();
+                    const range = document.createRange();
+                    range.selectNodeContents(target);
+                    selection.removeAllRanges();
+                    selection.addRange(range);
+                }
+            }
+            break;
+        }
+        /**
+         * Special action: shift focus
+         *  On: unprevented 'Tab' keydown
+         *  Do: focus next (or previous with 'Shift') focusable element
+         */
+        case "Tab": {
+            const next = shiftKey ? getPreviousFocusableElement() : getNextFocusableElement();
+            if (next) {
+                triggerFocus(next);
+            }
+            break;
+        }
+        /**
+         * Special action: copy
+         *  On: unprevented 'Control + c' keydown
+         *  Do: copy current selection to clipboard
+         */
+        case "c": {
+            if (ctrlKey) {
+                // Get selection from window
+                const text = globalThis.getSelection().toString();
+                globalThis.navigator.clipboard.writeTextSync(text);
+            }
+            break;
+        }
+        /**
+         * Special action: paste
+         *  On: unprevented 'Control + v' keydown on editable element
+         *  Do: paste current clipboard content to current element
+         */
+        case "v": {
+            if (ctrlKey && isEditable(target)) {
+                // Set target value (synchonously)
+                const value = globalThis.navigator.clipboard.readTextSync();
+                nextValue = value;
+
+                inputType = "insertFromPaste";
+            }
+            break;
+        }
+        /**
+         * Special action: cut
+         *  On: unprevented 'Control + x' keydown on editable element
+         *  Do: cut current selection to clipboard and remove selection
+         */
+        case "x": {
+            if (ctrlKey && isEditable(target)) {
+                // Get selection from window
+                const text = globalThis.getSelection().toString();
+                globalThis.navigator.clipboard.writeTextSync(text);
+
+                nextValue = deleteSelection(target);
+                inputType = "deleteByCut";
+            }
+            break;
+        }
+    }
+
+    if (target.value !== nextValue) {
+        target.value = nextValue;
+        dispatch(target, "input", {
+            data: inputData,
+            inputType,
+        });
+    }
 };
 
 /**
@@ -802,7 +878,7 @@ const _keyDown = (target, eventInit) => {
  * @param {KeyboardEventInit} eventInit
  */
 const _keyUp = (target, eventInit) => {
-    const events = [dispatch(target, "keyup", eventInit)];
+    dispatch(target, "keyup", eventInit);
 
     registerSpecialKey(eventInit, false);
 
@@ -814,7 +890,7 @@ const _keyUp = (target, eventInit) => {
              *  On: unprevented 'Enter' keydown on a <button type="button"/>
              *  Do: triggers a 'click' event on the button
              */
-            events.push(...triggerClick(target, { button: 0 }));
+            triggerClick(target, { button: 0 });
         } else if ((parentForm = target.closest("form"))) {
             /**
              * Special action: form 'Enter'
@@ -822,7 +898,7 @@ const _keyUp = (target, eventInit) => {
              *      is not a <button type="button"/> in a form element
              *  Do: triggers a 'submit' event on the form
              */
-            events.push(dispatch(parentForm, "submit"));
+            dispatch(parentForm, "submit");
         }
     }
     if (eventInit.key === " " && getTag(target) === "input" && target.type === "checkbox") {
@@ -831,82 +907,129 @@ const _keyUp = (target, eventInit) => {
          *  On: unprevented ' ' keydown on an <input type="checkbox"/>
          *  Do: triggers a 'click' event on the input
          */
-        events.push(...triggerClick(target, { button: 0 }));
+        triggerClick(target, { button: 0 });
     }
-
-    return events;
 };
 
 /**
  * @param {EventTarget} target
- * @param {PointerEventInit} eventInit
+ * @param {PointerOptions} options
  */
-const _pointerDown = (target, eventInit) => {
-    currentPointerTarget = target;
-    if (currentPointerTarget !== previousPointerTarget) {
+const _leave = (target, options) => {
+    if (target !== currentPointerTarget) {
+        return;
+    }
+
+    setPointerTarget(null, options);
+
+    const eventInit = { ...currentPosition };
+
+    dispatchEventSequence(
+        target,
+        ["pointermove", hasTouch() ? "touchmove" : "mousemove", canDrag() && "drag"],
+        eventInit
+    );
+
+    dispatchEventSequence(target, ["pointerout", !hasTouch() && "mouseout"], eventInit);
+    dispatchEventSequence(
+        target,
+        ["pointerleave", !hasTouch() && "mouseleave", canDrag() && "dragleave"],
+        eventInit
+    );
+};
+
+/**
+ * @param {EventTarget} target
+ * @param {PointerOptions} options
+ */
+const _pointerDown = (target, options) => {
+    setPointerTarget(target, options);
+    setPointerDownTarget(target);
+
+    const eventInit = {
+        ...currentPosition,
+        button: options?.button || 0,
+    };
+
+    if (currentPointerDownTarget !== previousPointerDownTarget) {
         currentClickCount = 0;
     }
 
-    const events = [dispatch(target, "pointerdown", eventInit)];
-    if (!isPrevented(events[0])) {
-        // pointer events are triggered along their related counterparts:
-        // - mouse events in desktop environment
-        // - touch events in mobile environment
-        const relatedType = hasTouch() ? "touchstart" : "mousedown";
-        const relatedEvent = dispatch(target, relatedType, eventInit);
-        events.push(relatedEvent);
-
-        if (!isPrevented(relatedEvent)) {
-            // Focus the element (if focusable)
-            events.push(...triggerFocus(target));
-            if (eventInit.button === 2) {
-                /**
-                 * Special action: context menu
-                 *  On: unprevented 'pointerdown' with right click and its related
-                 *      event on an element
-                 *  Do: triggers a 'contextmenu' event
-                 */
-                events.push(dispatch(target, "contextmenu", eventInit));
-            }
-        }
+    const prevented = dispatchEventSequence(
+        target,
+        ["pointerdown", hasTouch() ? "touchstart" : "mousedown"],
+        eventInit
+    );
+    if (prevented) {
+        return;
+    }
+    if (canDrag()) {
+        /**
+         * Special action: drag start
+         *  On: unprevented 'pointerdown' on a draggable element
+         *  Do: triggers a 'dragstart' event
+         */
+        dispatch(target, "dragstart", eventInit);
     }
 
-    return events;
+    // Focus the element (if focusable)
+    triggerFocus(target);
+
+    if (eventInit.button === 2) {
+        /**
+         * Special action: context menu
+         *  On: unprevented 'pointerdown' with right click and its related
+         *      event on an element
+         *  Do: triggers a 'contextmenu' event
+         */
+        dispatch(target, "contextmenu", eventInit);
+    }
 };
 
 /**
  * @param {EventTarget} target
- * @param {PointerEventInit} eventInit
+ * @param {PointerOptions} options
  */
-const _pointerUp = (target, eventInit) => {
-    const events = [dispatch(target, "pointerup", eventInit)];
-    if (!events.some(isPrevented)) {
-        // pointer events are triggered along their related counterparts:
-        // - mouse events in desktop environment
-        // - touch events in mobile environment
-        const relatedType = hasTouch() ? "touchend" : "mouseup";
-        events.push(dispatch(target, relatedType, eventInit));
-    }
+const _pointerUp = (target, options) => {
+    setPointerTarget(target, options);
 
-    if (target === currentPointerTarget && !events.some(isPrevented)) {
-        previousPointerTarget = currentPointerTarget;
+    const eventInit = {
+        ...currentPosition,
+        button: options?.button || 0,
+    };
 
-        events.push(...triggerClick(target, eventInit));
-        currentClickCount++;
-        if (!hasTouch() && currentClickCount % 2 === 0) {
-            events.push(dispatch(target, "dblclick", eventInit));
+    const prevented = dispatchEventSequence(
+        target,
+        ["pointerup", hasTouch() ? "touchend" : "mouseup"],
+        eventInit
+    );
+
+    if (!prevented) {
+        if (target === currentPointerDownTarget) {
+            triggerClick(target, eventInit);
+            currentClickCount++;
+            if (!hasTouch() && currentClickCount % 2 === 0) {
+                dispatch(target, "dblclick", eventInit);
+            }
+        }
+
+        if (canDrag()) {
+            /**
+             * Special action: drag end
+             *  On: unprevented 'pointerup' on a draggable element
+             *  Do: triggers a 'dragend' event
+             */
+            dispatch(target, "dragend", eventInit);
         }
     }
 
-    currentPointerTarget = null;
-    currentPointerTimeout = globalThis.setTimeout(() => {
+    setPointerDownTarget(null);
+    currentPointerDownTimeout = globalThis.setTimeout(() => {
         // Use `globalThis.setTimeout` to potentially make use of the mock timeouts
         // since the events run in the same temporal context as the tests
         currentClickCount = 0;
-        currentPointerTimeout = 0;
+        currentPointerDownTimeout = 0;
     }, DOUBLE_CLICK_DELAY);
-
-    return events;
 };
 
 /**
@@ -914,7 +1037,8 @@ const _pointerUp = (target, eventInit) => {
  * @param {KeyboardEventInit} eventInit
  */
 const _press = (target, eventInit) => {
-    return [..._keyDown(target, eventInit), ..._keyUp(target, eventInit)];
+    _keyDown(target, eventInit);
+    _keyUp(target, eventInit);
 };
 
 /**
@@ -935,8 +1059,7 @@ const _select = (target, value) => {
             `error when calling \`select()\`: no option found with value "${values.join(", ")}"`
         );
     }
-    const events = [dispatch(target, "change")];
-    return events;
+    dispatch(target, "change");
 };
 
 const DEPRECATED_EVENT_PROPERTIES = {
@@ -999,12 +1122,17 @@ const specialKeys = {
 };
 let isComposing = false;
 
-// Pointer global variables
+// Pointer down global variables
+let currentPointerDownTarget = null;
+let currentPointerDownTimeout = 0;
+let currentPointerTarget = null;
+let currentPosition = {};
+let previousPointerDownTarget = null;
+let previousPointerTarget = null;
+
+// Other global variables
 let currentClickCount = 0;
 let currentFileInput = null;
-let currentPointerTarget = null;
-let currentPointerTimeout = 0;
-let previousPointerTarget = null;
 
 //-----------------------------------------------------------------------------
 // Event init attributes mappers
@@ -1154,6 +1282,7 @@ export function check(target, options) {
 
     const checkTarget = getTag(element) === "label" ? element.control : element;
     if (!checkTarget.checked) {
+        _hover(element, options);
         _click(element, options);
 
         if (!checkTarget.checked) {
@@ -1222,6 +1351,7 @@ export function clear(options) {
 export function click(target, options) {
     const element = getFirstTarget(target, options);
 
+    _hover(element, options);
     _click(element, options);
 
     return logEvents("click");
@@ -1240,6 +1370,7 @@ export function click(target, options) {
 export function dblclick(target, options) {
     const element = getFirstTarget(target, options);
 
+    _hover(element, options);
     _click(element, options);
     _click(element, options);
 
@@ -1340,6 +1471,7 @@ export function drag(target, options) {
         /** @type {DragHelpers["cancel"]} */
         function cancel() {
             _press(getDocument().body, { key: "Escape" });
+
             return logEvents("cancel");
         },
         true
@@ -1351,17 +1483,10 @@ export function drag(target, options) {
             if (to) {
                 moveTo(to, options);
             }
-            _pointerUp(currentTarget || source, targetPosition);
-            if (canTriggerDragEvents) {
-                /**
-                 * Special action: drag events
-                 *  On: unprevented 'pointerdown' and related events not immediatly
-                 *      followed by a pointer up sequence
-                 *  Do: trigger drag events along the pointer events
-                 */
-                dispatch(currentTarget || source, "dragend", targetPosition);
-            }
-            return logEvents("drop");
+
+            _pointerUp(currentTarget || source);
+
+            return logEvents("drag & drop");
         },
         true
     );
@@ -1370,32 +1495,9 @@ export function drag(target, options) {
         /** @type {DragHelpers["moveTo"]} */
         function moveTo(to, options) {
             currentTarget = queryOne(to);
-            if (!currentTarget) {
-                return dragHelpers;
+            if (currentTarget) {
+                _hover(currentTarget, options);
             }
-
-            // Recompute target position
-            targetPosition = getPosition(currentTarget, options);
-
-            // Move, enter and drop the element on the target
-            dispatch(source, "pointermove", targetPosition);
-            dispatch(source, hasTouch() ? "touchmove" : "mousemove", targetPosition);
-            if (canTriggerDragEvents) {
-                dispatch(source, "drag", targetPosition);
-            }
-
-            // "pointerenter" is fired on every parent of `target` that do not contain
-            // `from` (typically: different parent lists).
-            for (const parent of getDifferentParents(source, currentTarget)) {
-                dispatch(parent, "pointerenter", targetPosition);
-                if (!hasTouch()) {
-                    dispatch(parent, "mouseenter", targetPosition);
-                }
-                if (canTriggerDragEvents) {
-                    dispatch(parent, "dragenter", targetPosition);
-                }
-            }
-
             return dragHelpers;
         },
         false
@@ -1407,21 +1509,9 @@ export function drag(target, options) {
 
     let dragEndReason = null;
     let currentTarget;
-    let targetPosition;
 
     // Pointer down on main target
-    const startEventInit = {
-        ...getPosition(source, options),
-        button: options?.button || 0,
-    };
-
-    const pointerDownEvents = _pointerDown(source, startEventInit);
-    const canTriggerDragEvents =
-        source.draggable && !pointerDownEvents.slice(0, 2).some(isPrevented);
-
-    if (canTriggerDragEvents) {
-        dispatch(source, "dragstart", startEventInit);
-    }
+    _pointerDown(source, options);
 
     return dragHelpers;
 }
@@ -1516,17 +1606,8 @@ export function fill(value, options) {
  */
 export function hover(target, options) {
     const element = getFirstTarget(target, options);
-    const position = getPosition(element, options);
-    dispatch(element, "pointerover", position);
-    if (!hasTouch()) {
-        dispatch(element, "mouseover", position);
-    }
-    dispatch(element, "pointerenter", position);
-    if (!hasTouch()) {
-        dispatch(element, "mouseenter", position);
-    }
-    dispatch(element, "pointermove", position);
-    dispatch(element, hasTouch() ? "touchmove" : "mousemove", position);
+
+    _hover(element, options);
 
     return logEvents("hover");
 }
@@ -1600,19 +1681,9 @@ export function keyUp(keyStrokes) {
  *  leave("button"); // Moves out of <button>
  */
 export function leave(target, options) {
-    for (const element of queryAll(target, options)) {
-        const position = getPosition(options);
-        dispatch(element, "pointermove", position);
-        dispatch(element, hasTouch() ? "touchmove" : "mousemove", position);
-        dispatch(element, "pointerout", position);
-        if (!hasTouch()) {
-            dispatch(element, "mouseout", position);
-        }
-        dispatch(element, "pointerleave", position);
-        if (!hasTouch()) {
-            dispatch(element, "mouseleave", position);
-        }
-    }
+    const element = getFirstTarget(target, options);
+
+    _leave(element, options);
 
     return logEvents("leave");
 }
@@ -1665,11 +1736,8 @@ export function on(target, type, listener, options) {
  */
 export function pointerDown(target, options) {
     const element = getFirstTarget(target, options);
-    const pointerInit = {
-        ...getPosition(element, options),
-        button: options?.button || 0,
-    };
-    _pointerDown(element, pointerInit);
+
+    _pointerDown(element, options);
 
     return logEvents("pointerDown");
 }
@@ -1690,11 +1758,8 @@ export function pointerDown(target, options) {
  */
 export function pointerUp(target, options) {
     const element = getFirstTarget(target, options);
-    const pointerInit = {
-        ...getPosition(element, options),
-        button: options?.button || 0,
-    };
-    _pointerUp(element, pointerInit);
+
+    _pointerUp(element, options);
 
     return logEvents("pointerUp");
 }
@@ -1754,8 +1819,8 @@ export function setInputFiles(files) {
  * @param {HTMLElement} fixture
  */
 export function setupEventActions(fixture) {
-    if (currentPointerTimeout) {
-        globalThis.clearTimeout(currentPointerTimeout);
+    if (currentPointerDownTimeout) {
+        globalThis.clearTimeout(currentPointerDownTimeout);
     }
 
     removeChangeTargetListeners();
@@ -1766,8 +1831,12 @@ export function setupEventActions(fixture) {
 
     currentClickCount = 0;
     currentFileInput = null;
+    currentPointerDownTarget = null;
+    currentPointerDownTimeout = 0;
     currentPointerTarget = null;
-    currentPointerTimeout = 0;
+    currentPosition = {};
+    previousPointerDownTarget = null;
+    previousPointerTarget = null;
 
     // Special keys
     specialKeys.altKey = false;
@@ -1891,6 +1960,7 @@ export function uncheck(target, options) {
 
     const checkTarget = getTag(element) === "label" ? element.control : element;
     if (checkTarget.checked) {
+        _hover(element, options);
         _click(element, options);
 
         if (checkTarget.checked) {
