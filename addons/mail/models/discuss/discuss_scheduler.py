@@ -29,8 +29,6 @@ class DiscussScheduler(models.Model):
 
     def _message_scheduled_format(self):
         data = []
-        com_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
-        note_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
         for message in self:
             data.append({
                 "id": message.id,
@@ -50,6 +48,5 @@ class DiscussScheduler(models.Model):
                     },
                     "date": fields.Datetime.to_string(message.date),
                 },
-                "date": fields.Datetime.to_string(message.date),
             })
         return data
