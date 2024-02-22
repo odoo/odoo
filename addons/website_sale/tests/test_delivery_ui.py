@@ -7,6 +7,7 @@ import odoo.tests
 class TestUi(odoo.tests.HttpCase):
 
     def test_01_free_delivery_when_exceed_threshold(self):
+<<<<<<< HEAD:addons/website_sale/tests/test_delivery_ui.py
         if self.env['ir.module.module']._get('payment_custom').state != 'installed':
             self.skipTest("Transfer provider is not installed")
 
@@ -17,6 +18,13 @@ class TestUi(odoo.tests.HttpCase):
         })
         transfer_provider._transfer_ensure_pending_msg_is_set()
 
+||||||| parent of c3f8c204373e (temp):addons/website_sale_delivery/tests/test_ui.py
+        
+=======
+        if not self.env['ir.module.module']._get('payment_custom').state == 'installed':
+            return self.skipTest('The payment_custom module is not installed thus the tour cannot be tested.')
+
+>>>>>>> c3f8c204373e (temp):addons/website_sale_delivery/tests/test_ui.py
         # Avoid Shipping/Billing address page
         self.env.ref('base.partner_admin').write({
             'street': '215 Vine St',
