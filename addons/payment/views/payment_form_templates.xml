@@ -212,9 +212,11 @@
                     />
                 </div>
                 <!-- === Provider name (only for desktop and tablet) === -->
+                <t t-set="hide_secured_by" t-value="False"/>
                 <div class="col d-none d-md-block">
                     <p name="o_payment_secured_by_desktop" t-att-class="'mb-0 small text-600'
-                                    + (' ms-4 ms-md-0' if allow_token_selection else '')"
+                                    + (' ms-4 ms-md-0' if allow_token_selection else '')
+                                    + (' d-none' if hide_secured_by else '')"
                     >
                         <span><i class="fa fa-lock"/> Secured by</span>
                         <span t-out="dict(provider_sudo._fields['code']._description_selection(
@@ -240,7 +242,8 @@
         </div>
         <!-- === Provider name (only for mobile) === -->
         <p name="o_payment_secured_by_mobile"
-           class="align-self-end d-block d-md-none mb-0 small text-600"
+           t-att-class="'align-self-end d-block d-md-none mb-0 small text-600'
+                        + (' d-none' if hide_secured_by else '')"
         >
             <span><i class="fa fa-lock"/> Secured by</span>
             <span t-out="dict(provider_sudo._fields['code']._description_selection(
@@ -350,7 +353,11 @@
                     </label>
                 </div>
                 <!-- === Provider name === -->
-                <p name="o_payment_secured_by" class="align-self-end mb-0 ms-auto small text-600">
+                <t t-set="hide_secured_by" t-value="False"/>
+                <p name="o_payment_secured_by"
+                   t-att-class="'align-self-end mb-0 ms-auto small text-600'
+                                + (' d-none' if hide_secured_by else '')"
+                >
                     <span><i class="fa fa-lock"/> Secured by</span>
                     <span t-out="dict(provider_sudo._fields['code']._description_selection(
                                      provider_sudo.env
