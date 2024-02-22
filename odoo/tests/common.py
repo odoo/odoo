@@ -914,7 +914,7 @@ class ChromeBrowser:
     """ Helper object to control a Chrome headless process. """
     remote_debugging_port = 0  # 9222, change it in a non-git-tracked file
 
-    def __init__(self, test_case: HttpCase, success_signal: Callable[[str], bool], headless: bool = True):
+    def __init__(self, test_case: HttpCase, success_signal: Callable[[str], bool], headless: bool = True, debug: bool = False):
         self._logger = test_case._logger
         self.test_case = test_case
         self.success_signal = success_signal
@@ -941,6 +941,7 @@ class ChromeBrowser:
             window_size=test_case.browser_size,
             touch_enabled=test_case.touch_enabled,
             headless=headless,
+            debug=debug,
         )
         self.ws = self._open_websocket()
         self._request_id = itertools.count()
@@ -1043,7 +1044,8 @@ class ChromeBrowser:
             self,
             user_data_dir: str,
             window_size: str, touch_enabled: bool,
-            headless=True
+            headless=True,
+            debug=False,
     ):
         headless_switches = {
             '--headless': '',
@@ -1081,6 +1083,9 @@ class ChromeBrowser:
             # enable Chrome's Touch mode, useful to detect touch capabilities using
             # "'ontouchstart' in window"
             switches['--touch-events'] = ''
+        if debug is not False:
+            switches['--auto-open-devtools-for-tabs'] = ''
+            switches['--start-maximized'] = ''
 
         cmd = [self.executable]
         cmd += ['%s=%s' % (k, v) if v else k for k, v in switches.items()]
@@ -1788,7 +1793,7 @@ class HttpCase(TransactionCase):
 
         return session
 
-    def browser_js(self, url_path, code, ready='', login=None, timeout=60, cookies=None, error_checker=None, watch=False, success_signal='test successful', **kw):
+    def browser_js(self, url_path, code, ready='', login=None, timeout=60, cookies=None, error_checker=None, watch=False, success_signal='test successful', debug=False, **kw):
         """ Test js code running in the browser
         - optionnally log as 'login'
         - load page given by url_path
@@ -1807,13 +1812,16 @@ class HttpCase(TransactionCase):
         if any(f.filename.endswith('/coverage/execfile.py') for f in inspect.stack()  if f.filename):
             timeout = timeout * 1.5
 
+        if debug is not False:
+            watch = True
+            timeout = 1e6
         if watch:
             self._logger.warning('watch mode is only suitable for local testing')
 
         if isinstance(success_signal, str):
             ss = lambda s: s == success_signal
 
-        browser = ChromeBrowser(self, headless=not watch, success_signal=ss)
+        browser = ChromeBrowser(self, headless=not watch, success_signal=ss, debug=debug)
         try:
             self.authenticate(login, login, browser=browser)
             # Flush and clear the current transaction.  This is useful in case
@@ -1826,6 +1834,8 @@ class HttpCase(TransactionCase):
                 parsed = werkzeug.urls.url_parse(url)
                 qs = parsed.decode_query()
                 qs['watch'] = '1'
+                if debug is not False:
+                    qs['debug'] = "assets"
                 url = parsed.replace(query=werkzeug.urls.url_encode(qs)).to_url()
             self._logger.info('Open "%s" in browser', url)
 
@@ -1870,6 +1880,7 @@ class HttpCase(TransactionCase):
         options = {
             'stepDelay': step_delay or 0,
             'keepWatchBrowser': kwargs.get('watch', False),
+            'debug': kwargs.get('debug', False),
             'startUrl': url_path,
         }
         code = kwargs.pop('code', f"odoo.startTour({tour_name!r}, {json.dumps(options)})")
