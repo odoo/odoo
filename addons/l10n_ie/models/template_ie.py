@@ -15,8 +15,6 @@ class AccountChartTemplate(models.AbstractModel):
             'property_account_income_categ_id': 'l10n_ie_account_70',
             'property_stock_valuation_account_id': 'l10n_ie_account_630',
             'property_advance_tax_payment_account_id': 'l10n_ie_account_2132',
-            'property_tax_payable_account_id': 'l10n_ie_account_3804',
-            'property_tax_receivable_account_id': 'l10n_ie_account_2131',
             'code_digits': '6',
         }
 
