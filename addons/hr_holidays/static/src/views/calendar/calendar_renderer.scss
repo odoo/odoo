@@ -8,8 +8,11 @@
             .fc-daygrid-day-number {
                 font-weight: 600;
             }
+        }
 
-            &:not(.fc-disabled-day):not(:hover):not(.fc-day-today) .fc-daygrid-day-number {
+        > .fc-view-container > .fc-dayGridYear-view .hr_mandatory_day:not(.fc-day-disabled):not(.fc-day-today) .fc-daygrid-day-top:not(:hover),
+        > .fc-view-harness > .fc-dayGridMonth-view .hr_mandatory_day:not(.fc-day-disabled):not(.fc-day-today) {
+            .fc-daygrid-day-number {
                 color: var(--mandatory-day-color) !important;
             }
         }
