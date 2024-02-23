@@ -151,7 +151,6 @@
                             </record>
                         </field>
                     </record>
-
                     <record id="l10n_bg_tax_report_20" model="account.report.line">
                         <field name="name">[20] All VAT charged (amount from class 21 to class 24)</field>
                         <field name="code">BG_TR_20</field>
@@ -253,9 +252,10 @@
                         <field name="expression_ids">
                             <record id="l10n_bg_tax_report_33_balance" model="account.report.expression">
                                 <field name="label">balance</field>
-                                <field name="engine">aggregation</field>
-                                <field name="figure_type">integer</field>
-                                <field name="formula">(BG_TR_11.balance + BG_TR_12_1.balance + BG_TR_13.balance)/(BG_TR_01.balance + BG_TR_17.balance + BG_TR_18.balance + BG_TR_19.balance)</field>
+                                <field name="engine">external</field>
+                                <field name="figure_type" eval="False"/>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
                             </record>
                         </field>
                     </record>
@@ -287,9 +287,10 @@
                         <field name="expression_ids">
                             <record id="l10n_bg_tax_report_43_balance" model="account.report.expression">
                                 <field name="label">balance</field>
-                                <field name="engine">aggregation</field>
                                 <field name="figure_type">integer</field>
-                                <field name="formula">BG_TR_42.balance * BG_TR_33.balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
                             </record>
                         </field>
                     </record>
@@ -323,8 +324,95 @@
                             <record id="l10n_bg_tax_report_60_tag" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
-                                <field name="formula">BG_TR_20.balance - BG_TR_40.balance</field>
+                                <field name="formula">BG_TR_40.balance - BG_TR_20.balance</field>
+                                <field name="subformula">if_above(BGN(0))</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_bg_tax_report_d" model="account.report.line">
+                <field name="name">Section D. VAT for deposition</field>
+                <field name="children_ids">
+                    <record id="l10n_bg_tax_report_70" model="account.report.line">
+                        <field name="name">[70] Tax for payment from Art. 50, deducted in accordance with Art. 92, para. 1 of the VAT Act</field>
+                        <field name="code">BG_TR_70</field>
+                        <field name="expression_ids">
+                            <record id="l10n_bg_tax_report_70_refund" model="account.report.expression">
+                                <field name="label">refund</field>
+                                <field name="date_scope">from_beginning</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">4531 + 4532 + 4534 + 4538 + 4539</field>
+                            </record>
+                            <record id="l10n_bg_tax_report_70_refund_remaining" model="account.report.expression">
+                                <field name="label">refund_remaining</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">BG_TR_70.refund</field>
                                 <field name="subformula">if_below(BGN(0))</field>
+                            </record>
+                            <record id="l10n_bg_tax_report_70_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">BG_TR_70.refund_remaining + BG_TR_50.balance</field>
+                                <field name="subformula">if_above(BGN(0))</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_bg_tax_report_71" model="account.report.line">
+                        <field name="name">[71] Tax for payment from Art. 50, effectively paid</field>
+                        <field name="code">BG_TR_71</field>
+                        <field name="expression_ids">
+                            <record id="l10n_bg_tax_report_71_refund" model="account.report.expression">
+                                <field name="label">refund</field>
+                                <field name="date_scope">from_beginning</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">4531 + 4532 + 4534 + 4538 + 4539</field>
+                            </record>
+                            <record id="l10n_bg_tax_report_71_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">BG_TR_50.balance - BG_TR_70.balance</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_bg_tax_report_e" model="account.report.line">
+                <field name="name">Section E: Refundable VAT</field>
+                <field name="children_ids">
+                    <record id="l10n_bg_tax_report_80" model="account.report.line">
+                        <field name="name">[80] According to Art. 92, para. 1 of the VAT Act within a 30-day period from the submission of this declaration</field>
+                        <field name="code">BG_TR_80</field>
+                        <field name="expression_ids">
+                            <record id="l10n_bg_tax_report_80_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_bg_tax_report_81" model="account.report.line">
+                        <field name="name">[81] According to Art. 92, para. 3 of the VAT Act within a 30-day period from the submission of this declaration</field>
+                        <field name="code">BG_TR_81</field>
+                        <field name="expression_ids">
+                            <record id="l10n_bg_tax_report_81_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_bg_tax_report_82" model="account.report.line">
+                        <field name="name">[82] According to Art. 92, para. 4 of the VAT Act within a 30-day period from the submission of this declaration</field>
+                        <field name="code">BG_TR_82</field>
+                        <field name="expression_ids">
+                            <record id="l10n_bg_tax_report_82_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
                             </record>
                         </field>
                     </record>
