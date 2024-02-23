@@ -497,8 +497,10 @@
                     }
 
                     &:hover > .fc-day-number {
-                        --o-cw-color: #{$o-white};
-                        --o-cw-bg: #{mix($o-white, $o-action, 50%)};
+                        $-bg: mix($o-view-background-color, $o-action, 75%);
+
+                        --o-cw-color: #{color-contrast($-bg)};
+                        --o-cw-bg: #{$-bg};
 
                         &:before {
                             display: block;
