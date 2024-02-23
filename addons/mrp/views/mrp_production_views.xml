@@ -110,6 +110,15 @@
             <field name="state">code</field>
             <field name="code">action = records.action_plan_with_components_availability()</field>
         </record>
+        
+        <record id="action_plan_with_MO_deadline" model="ir.actions.server">
+            <field name="name">Plan based on MO deadline</field>
+            <field name="model_id" ref="mrp.model_mrp_production"/>
+            <field name="binding_model_id" ref="mrp.model_mrp_production"/>
+            <field name="binding_view_types">list,form</field>
+            <field name="state">code</field>
+            <field name="code">action = records.action_plan_with_MO_deadline()</field>
+        </record>
 
         <record id="action_production_order_merge" model="ir.actions.server">
             <field name="name">Merge</field>
@@ -293,7 +302,7 @@
                             </div>
                         </group>
                         <group name="group_extra_info">
-                            <label for="date_start" string="Scheduled Date" invisible="state in ['progress', 'to_close', 'done', 'cancel']"/>
+                            <label for="date_start" string="Scheduled Date kinho" invisible="state in ['progress', 'to_close', 'done', 'cancel']"/>
                             <label for="date_start" string="Start Date" invisible="state not in ['progress', 'to_close', 'done', 'cancel']"/>
                             <div class="o_row">
                                 <field name="date_start"
@@ -646,7 +655,7 @@
         </record>
 
         <record id="mrp_production_action" model="ir.actions.act_window">
-            <field name="name">Manufacturing Orders</field>
+            <field name="name">Manufacturing Orders Kinho</field>
             <field name="res_model">mrp.production</field>
             <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
             <field name="view_id" eval="False"/>

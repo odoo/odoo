@@ -2323,6 +2323,26 @@ class MrpProduction(models.Model):
             if expected_date and production.components_availability_state != 'unavailable':
                 production.date_start = expected_date
         self.filtered(lambda p: p.state == 'confirmed').button_plan()
+    
+    def action_plan_with_MO_deadline(self):
+        for production in self.filtered(lambda p: p.state in ('draft', 'confirmed')):
+            if production.state == 'draft':
+                production.action_confirm()
+            
+            if production._has_workorders():
+                last_workorder = production._has_workorders()[-1]
+                production.date_start = last_workorder.date_start
+                print("date_start = {}".format(
+                    last_workorder.date_start
+                ))
+                print("date_end = {}".format(
+                    last_workorder.date_finished
+                ))
+                print(last_workorder.date_start)
+            else:
+                pass
+            
+        #self.filtered(lambda p: p.state == 'confirmed').button_plan()
 
     def _has_workorders(self):
         return self.workorder_ids
