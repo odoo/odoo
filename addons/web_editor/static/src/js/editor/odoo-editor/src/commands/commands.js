@@ -49,6 +49,7 @@ import {
     fillEmpty,
     isEmptyBlock,
     getCursorDirection,
+    paragraphRelatedElements,
 } from '../utils/utils.js';
 
 const TEXT_CLASSES_REGEX = /\btext-[^\s]*\b/;
@@ -288,6 +289,15 @@ export const editorCommands = {
                     }
                 }
             }
+            // Ensure that all adjacent paragraph elements are converted to
+            // <li> when inserting in a list.
+            if (
+                isBlock(nodeToInsert) &&
+                currentNode.nodeName === 'LI' &&
+                paragraphRelatedElements.includes(nodeToInsert.nodeName)
+            ) {
+                setTagName(nodeToInsert, 'LI');
+            }
             if (insertBefore) {
                 currentNode.before(nodeToInsert);
                 insertBefore = false;
@@ -304,7 +314,7 @@ export const editorCommands = {
         selection.removeAllRanges();
         const newRange = new Range();
         let lastPosition = rightPos(currentNode);
-        if (lastPosition[0] === editor.editable) {
+        if (lastPosition[0] === editor.editable || ['UL', 'OL'].includes(lastPosition[0].nodeName)) {
             // Correct the position if it happens to be in the editable root.
             lastPosition = getDeepestPosition(...lastPosition);
         }
