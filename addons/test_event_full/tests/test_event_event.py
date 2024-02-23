@@ -77,9 +77,6 @@ class TestEventEvent(TestEventFullCommon):
     @freeze_time('2021-12-01 11:00:00')
     @users('event_user')
     def test_event_seats_and_schedulers(self):
-        now = datetime.now()  # used to force create_date, as sql is not wrapped by freeze gun
-        self.env.cr._now = now
-
         test_event = self.env['event.event'].browse(self.test_event.ids)
         ticket_1 = test_event.event_ticket_ids.filtered(lambda ticket: ticket.name == 'Ticket1')
         ticket_2 = test_event.event_ticket_ids.filtered(lambda ticket: ticket.name == 'Ticket2')
@@ -93,14 +90,15 @@ class TestEventEvent(TestEventFullCommon):
         self.assertFalse(ticket_2.sale_available)
 
         # make 9 registrations (let 1 on ticket)
-        with self.mock_mail_gateway():
+        with self.mock_datetime_and_now(self.reference_now), \
+             self.mock_mail_gateway():
             self.env['event.registration'].create([
-                {'create_date': now,
-                 'email': 'test.customer.%02d@test.example.com' % x,
-                 'phone': '04560011%02d' % x,
-                 'event_id': test_event.id,
-                 'event_ticket_id': ticket_1.id,
-                 'name': 'Customer %d' % x,
+                {
+                     'email': 'test.customer.%02d@test.example.com' % x,
+                     'phone': '04560011%02d' % x,
+                     'event_id': test_event.id,
+                     'event_ticket_id': ticket_1.id,
+                     'name': 'Customer %d' % x,
                 }
                 for x in range(0, 9)
             ])
@@ -113,27 +111,29 @@ class TestEventEvent(TestEventFullCommon):
         self.assertEqual(ticket_2.seats_available, 0)
 
         # prevent registration due to ticket limit
-        with self.assertRaises(exceptions.ValidationError):
+        with self.mock_datetime_and_now(self.reference_now), \
+             self.assertRaises(exceptions.ValidationError):
             self.env['event.registration'].create([
-                {'create_date': now,
-                 'email': 'additional.customer.%02d@test.example.com' % x,
-                 'phone': '04560011%02d' % x,
-                 'event_id': test_event.id,
-                 'event_ticket_id': ticket_1.id,
-                 'name': 'Additional Customer %d' % x,
+                {
+                     'email': 'additional.customer.%02d@test.example.com' % x,
+                     'phone': '04560011%02d' % x,
+                     'event_id': test_event.id,
+                     'event_ticket_id': ticket_1.id,
+                     'name': 'Additional Customer %d' % x,
                 }
                 for x in range(0, 2)
             ])
 
         # make 20 registrations (on free ticket)
-        with self.mock_mail_gateway():
+        with self.mock_datetime_and_now(self.reference_now), \
+             self.mock_mail_gateway():
             self.env['event.registration'].create([
-                {'create_date': now,
-                 'email': 'other.customer.%02d@test.example.com' % x,
-                 'phone': '04560011%02d' % x,
-                 'event_id': test_event.id,
-                 'event_ticket_id': ticket_2.id,
-                 'name': 'Other Customer %d' % x,
+                {
+                     'email': 'other.customer.%02d@test.example.com' % x,
+                     'phone': '04560011%02d' % x,
+                     'event_id': test_event.id,
+                     'event_ticket_id': ticket_2.id,
+                     'name': 'Other Customer %d' % x,
                 }
                 for x in range(0, 20)
             ])
@@ -144,14 +144,15 @@ class TestEventEvent(TestEventFullCommon):
         self.assertEqual(ticket_2.seats_available, 0)
 
         # prevent registration due to event limit
-        with self.assertRaises(exceptions.ValidationError):
+        with self.mock_datetime_and_now(self.reference_now), \
+             self.assertRaises(exceptions.ValidationError):
             self.env['event.registration'].create([
-                {'create_date': now,
-                 'email': 'additional.customer.%02d@test.example.com' % x,
-                 'phone': '04560011%02d' % x,
-                 'event_id': test_event.id,
-                 'event_ticket_id': ticket_2.id,
-                 'name': 'Additional Customer %d' % x,
+                {
+                     'email': 'additional.customer.%02d@test.example.com' % x,
+                     'phone': '04560011%02d' % x,
+                     'event_id': test_event.id,
+                     'event_ticket_id': ticket_2.id,
+                     'name': 'Additional Customer %d' % x,
                 }
                 for x in range(0, 2)
             ])
