@@ -239,8 +239,8 @@ class OdooPivotRuntimeDefinition extends PivotRuntimeDefinition {
      */
     constructor(definition, fields) {
         super(definition, fields);
-        /** @type {Array} */
-        this._domain = definition.domain;
+        /** @type {Domain} */
+        this._domain = new Domain(definition.domain);
         /** @type {Object} */
         this._context = definition.context;
         /** @type {string} */
