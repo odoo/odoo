@@ -138,10 +138,17 @@ class AccountEdiDocument(models.Model):
                         reconciled_lines = move.line_ids.filtered(lambda line: line.account_id.user_type_id.type in ('receivable', 'payable'))
                         reconciled_amls = reconciled_lines.mapped('matched_debit_ids.debit_move_id') \
                                           | reconciled_lines.mapped('matched_credit_ids.credit_move_id')
-                        reconciled_amls\
+                        payments = reconciled_amls\
                             .filtered(lambda x: x.move_id.payment_id or x.move_id.statement_line_id)\
-                            .move_id\
-                            ._update_payments_edi_documents()
+                            .move_id
+                        changed_payments = self.env['account.move']
+                        for payment in payments:
+                            amls = payment.line_ids.filtered(lambda x: x.account_id.user_type_id.type == 'receivable')
+                            if all(amls.mapped('reconciled')):
+                                matched_invoices = payment._get_reconciled_invoices()
+                                if matched_invoices and all(inv.edi_state == 'sent' for inv in matched_invoices):
+                                    changed_payments |= payment
+                        changed_payments._update_payments_edi_documents()
                 else:
                     document.write({
                         'error': move_result.get('error', False),
