@@ -29,7 +29,7 @@ try:
 except ImportError:
     from decorator import decorator
 
-from .exceptions import AccessError, CacheMiss
+from .exceptions import AccessError, UserError, CacheMiss
 from .tools import clean_context, frozendict, lazy_property, OrderedSet, Query, SQL, StackMap
 from .tools.translate import _
 
@@ -690,7 +690,22 @@ class Environment(Mapping):
 
         :rtype: str
         """
-        return self.context.get('lang') or None
+        lang = self.context.get('lang')
+        if lang and lang != 'en_US' and not self['res.lang']._lang_get_id(lang):
+            raise UserError(_('Invalid language code: %s', lang))
+        return lang or None
+
+    @lazy_property
+    def _lang(self):
+        """Return the technical language code of the current context for **model_terms** translated field
+
+        :rtype: str
+        """
+        context = self.context
+        lang = self.lang or 'en_US'
+        if context.get('edit_translations') or context.get('check_translations'):
+            lang = '_' + lang
+        return lang
 
     def clear(self):
         """ Clear all record caches, and discard all fields to recompute.
@@ -972,7 +987,7 @@ class Cache(object):
             cache_value = field_cache.get(record.id, EMPTY_DICT)
             if cache_value is None:
                 return True
-            lang = field._lang(record.env)
+            lang = (record.env.lang or 'en_US') if field.translate is True else record.env._lang
             return lang in cache_value
 
         return record.id in field_cache
@@ -993,7 +1008,7 @@ class Cache(object):
             field_cache = self._get_field_cache(record, field)
             cache_value = field_cache[record._ids[0]]
             if field.translate and cache_value is not None:
-                lang = field._lang(record.env)
+                lang = (record.env.lang or 'en_US') if field.translate is True else record.env._lang
                 return cache_value[lang]
             return cache_value
         except KeyError:
@@ -1099,7 +1114,7 @@ class Cache(object):
             if env.context.get('prefetch_langs'):
                 installed = [lang for lang, _ in env['res.lang'].get_installed()]
                 langs = OrderedSet(installed + ['en_US'])
-                _langs = [f'_{l}' for l in langs] if field._lang(env, validate=True).startswith('_') else []
+                _langs = [f'_{l}' for l in langs] if field.translate is not True and env._lang.startswith('_') else []
                 for id_, val in zip(records._ids, values):
                     if val is None:
                         field_cache.setdefault(id_, None)
@@ -1112,7 +1127,7 @@ class Cache(object):
                             **val
                         }
             else:
-                lang = field._lang(env, validate=True)
+                lang = (env.lang or 'en_US') if field.translate is True else env._lang
                 for id_, val in zip(records._ids, values):
                     if val is None:
                         field_cache.setdefault(id_, None)
@@ -1174,7 +1189,7 @@ class Cache(object):
         """ Return the cached values of ``field`` for ``records`` until a value is not found. """
         field_cache = self._get_field_cache(records, field)
         if field.translate:
-            lang = field._lang(records.env)
+            lang = (records.env.lang or 'en_US') if field.translate is True else records.env._lang
 
             def get_value(id_):
                 cache_value = field_cache[id_]
@@ -1235,7 +1250,7 @@ class Cache(object):
         """ Return the ids of ``records`` that have no value for ``field``. """
         field_cache = self._get_field_cache(records, field)
         if field.translate:
-            lang = field._lang(records.env)
+            lang = (records.env.lang or 'en_US') if field.translate is True else records.env._lang
             for record_id in records._ids:
                 cache_value = field_cache.get(record_id, False)
                 if cache_value is False or not (cache_value is None or lang in cache_value):
