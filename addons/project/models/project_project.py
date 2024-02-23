@@ -399,6 +399,8 @@ class Project(models.Model):
 
     def copy_data(self, default=None):
         vals_list = super().copy_data(default=default)
+        if default and 'name' in default:
+            return vals_list
         return [dict(vals, name=_("%s (copy)", project.name)) for project, vals in zip(self, vals_list)]
 
     def copy(self, default=None):
