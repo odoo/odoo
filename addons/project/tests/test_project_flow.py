@@ -461,3 +461,19 @@ class TestProjectFlow(TestProjectCommon, MailCommon):
         with self.mock_mail_gateway():
             self.task_1.copy() # if the feature that prevents assignement mails from being sent when copying a task is broken, this will create a mail
         self.assertNotSentEmail(self.user_projectuser.email_formatted) # check that no mail was received for the assignee of the task
+
+    def test_copy_project_with_default_name(self):
+        """ Test the new project after the duplication got the exepected name
+
+            Test Cases:
+            ==========
+            1. Duplicate a project
+            2. Check the new project got the name of the project to copy plus `(copy)`
+            3. Duplicate a project with default name
+            4. Check the new project got the name defined in the default
+        """
+        project = self.project_pigs.copy()
+        self.assertEqual(project.name, 'Pigs (copy)', "The name of the copied project should be 'Pigs (copy)'")
+
+        project = self.project_pigs.copy({'name': 'Pigs 2'})
+        self.assertEqual(project.name, 'Pigs 2', "The name of the copied project should be 'Pigs 2'")
