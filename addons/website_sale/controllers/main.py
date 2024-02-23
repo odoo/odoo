@@ -1460,9 +1460,16 @@ class WebsiteSale(payment_portal.PaymentPortal):
         country = request.env["res.country"].search([
             ('code', '=', address.pop('country')),
         ], limit=1)
+
+        state_code = address.pop('state', '')
         state = request.env["res.country.state"].search([
-            ('code', '=', address.pop('state', '')),
+            ('code', '=', state_code),
+            ('country_id', '=', country.id),
         ], limit=1)
+        if not state:
+            state = request.env["res.country.state"].search([
+                ('code', '=', state_code),
+            ], limit=1)
         address.update(country_id=country, state_id=state)
 
     def _create_or_edit_partner(self, partner_details, edit=False, **custom_values):
