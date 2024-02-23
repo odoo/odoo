@@ -341,8 +341,13 @@ patch(MockServer.prototype, {
                         Thread: {
                             id: channel.id,
                             is_pinned: true,
+<<<<<<< HEAD
                             last_interest_dt: now,
                             model: "discuss.channel",
+||||||| parent of b73384009d30 (temp)
+=======
+                            model: "discuss.channel",
+>>>>>>> b73384009d30 (temp)
                         },
                     },
                 ]);

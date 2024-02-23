@@ -603,7 +603,17 @@ class Channel(models.Model):
             },
         }
         bus_notifications = [
+<<<<<<< HEAD
             (self, "mail.record/insert", payload),
+||||||| parent of b73384009d30 (temp)
+            ((self, "members"), "mail.record/insert", {"Thread": {"id": self.id, "is_pinned": True}}),
+            (self, "discuss.channel/last_interest_dt_changed", payload),
+=======
+            ((self, "members"), "mail.record/insert", {
+                "Thread": {"id": self.id, "is_pinned": True, "model": "discuss.channel"}
+            }),
+            (self, "discuss.channel/last_interest_dt_changed", payload),
+>>>>>>> b73384009d30 (temp)
             (self, "discuss.channel/new_message", {"id": self.id, "message": message_format}),
         ]
         # sudo: bus.bus - sending on safe channel (discuss.channel)

@@ -117,7 +117,31 @@ patch(MockServer.prototype, {
                 if (typeof target === "string") {
                     return channel === target;
                 }
+<<<<<<< HEAD
                 return channel?.__model === target?.model && channel?.id === target?.id;
+||||||| parent of b73384009d30 (temp)
+                if (Array.isArray(channel)) {
+                    const { __model: cModel, id: cId } = channel;
+                    const { __model: tModel, id: tId } = target;
+                    return (
+                        Array.isArray(target) &&
+                        cModel === tModel &&
+                        cId === tId &&
+                        channel[1] === target[1]
+                    );
+                }
+                return channel?.__model === target.__model && channel?.id === target?.id;
+=======
+                if (Array.isArray(channel) !== Array.isArray(target)) {
+                    return false;
+                }
+                if (Array.isArray(channel)) {
+                    const { __model: cModel, id: cId } = channel[0];
+                    const { __model: tModel, id: tId } = target[0];
+                    return cModel === tModel && cId === tId && channel[1] === target[1];
+                }
+                return channel?.__model === target.__model && channel?.id === target?.id;
+>>>>>>> b73384009d30 (temp)
             })
         );
         if (notifications.length === 0) {
