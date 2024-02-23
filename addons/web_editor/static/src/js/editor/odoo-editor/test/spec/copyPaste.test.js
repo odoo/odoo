@@ -1911,6 +1911,30 @@ describe('Paste', () => {
                     `),
                 });
             });
+            it('should convert multiple paragraphs into a checklist', async () => {
+                await testEditor(BasicEditor, {
+                    removeCheckIds: true,
+                    contentBefore: `<ul class="o_checklist"><li>[]<br></li></ul>`,
+                    stepFunction:  async editor => {
+                        await pasteHtml(editor, unformat(`
+                            <p>abc</p>
+                            <p>def</p>
+                            <p>ghi</p>
+                            <p>jkl</p>
+                            <p>mno</p>
+                        `));
+                    },
+                    contentAfter: unformat(`
+                        <ul class="o_checklist">
+                            <li>abc</li>
+                            <li>def</li>
+                            <li>ghi</li>
+                            <li>jkl</li>
+                            <li>mno[]</li>
+                        </ul>
+                    `),
+                });
+            });
         });
     });
 
