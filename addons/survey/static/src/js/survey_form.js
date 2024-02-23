@@ -165,7 +165,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
         const $target = $(event.currentTarget);
         const $choiceItemGroup = $target.closest('.o_survey_form_choice');
 
-        this._applyCommentAreaVisibility($target);
+        this._applyCommentAreaVisibility($choiceItemGroup);
         const isQuestionComplete = this._checkConditionalQuestionsConfiguration($target, $choiceItemGroup);
         if (isQuestionComplete && this.options.usersCanGoBack) {
             const isLastQuestion = this.$('button[value="finish"]').length !== 0;
