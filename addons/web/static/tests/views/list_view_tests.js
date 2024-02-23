@@ -12168,6 +12168,7 @@ QUnit.module("Views", (hooks) => {
             await click(rows[1], ".o_list_record_selector input");
             await click(rows[0].querySelector(".o_data_cell"));
             target.querySelector(".o_data_row .o_data_cell input").value = "oof";
+            await triggerEvents(target, ".o_data_row .o_data_cell input", ["input"]);
 
             const discardButton = $(".o_list_button_discard:visible").get(0);
             // Simulates an actual click (event chain is: mousedown > change > blur > focus > mouseup > click)
@@ -12212,6 +12213,7 @@ QUnit.module("Views", (hooks) => {
             await click(rows[1], ".o_list_record_selector input");
             await click(rows[0].querySelector(".o_data_cell"));
             target.querySelector(".o_data_row .o_data_cell input").value = "oof";
+            await triggerEvents(target, ".o_data_row .o_data_cell input", ["input"]);
 
             await triggerEvents($(".o_list_button_discard:visible").get(0), null, ["mousedown"]);
             await triggerEvents(target, ".o_data_row .o_data_cell input", [
@@ -12314,6 +12316,7 @@ QUnit.module("Views", (hooks) => {
             await click(rows[1], ".o_list_record_selector input");
             await click(rows[0].querySelector(".o_data_cell"));
             target.querySelector(".o_data_row .o_data_cell input").value = "oof";
+            await triggerEvents(target, ".o_data_row .o_data_cell input", ["input"]);
 
             const discardButton = $(".o_list_button_discard:visible").get(0);
             // Simulates an actual click (event chain is: mousedown > change > blur > focus > mouseup > click)

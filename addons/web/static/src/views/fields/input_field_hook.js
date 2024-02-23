@@ -62,7 +62,11 @@ export function useInputField(params) {
                 try {
                     val = params.parse(val);
                 } catch {
-                    component.props.record.setInvalidField(component.props.name);
+                    const resetLastSetValue = () => {
+                        isInvalid = false;
+                        ev.target.value = lastSetValue;
+                    };
+                    component.props.record.setInvalidField(component.props.name, resetLastSetValue);
                     isInvalid = true;
                 }
             }

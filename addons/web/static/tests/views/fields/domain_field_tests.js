@@ -7,6 +7,7 @@ import {
     clickSave,
     editInput,
     getFixture,
+    getNodesTextContent,
     makeDeferred,
     nextTick,
     patchDate,
@@ -519,6 +520,79 @@ QUnit.module("Fields", (hooks) => {
         assert.verifySteps(['[["id","<",40]]']);
     });
 
+    QUnit.test("domain field: edit domain in textarea, discard and leave", async function (assert) {
+        patchWithCleanup(odoo, { debug: true });
+
+        serverData.models.partner.records[0].foo = false;
+        serverData.models.partner.fields.bar.type = "char";
+        serverData.models.partner.records[0].bar = "product";
+
+        serverData.views = {
+            "partner,false,form": `
+                <form>
+                    <field name="bar"/>
+                    <field name="foo" widget="domain" options="{'model': 'bar'}"/>
+                </form>`,
+            "partner,false,search": `<search />`,
+            "partner,false,list": `<tree><field name="foo"/></tree>`,
+        };
+
+        serverData.actions = {
+            1: {
+                id: 1,
+                name: "test",
+                res_id: 1,
+                res_model: "partner",
+                type: "ir.actions.act_window",
+                views: [
+                    [false, "list"],
+                    [false, "form"],
+                ],
+            },
+        };
+
+        const webClient = await createWebClient({
+            serverData,
+            mockRPC(route) {
+                if (route === "/web/domain/validate") {
+                    return true;
+                }
+            },
+        });
+
+        await doAction(webClient, 1);
+        assert.containsOnce(target, ".o_list_view");
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_data_cell")), [
+            "",
+            "blip",
+            "gnap",
+            "abc",
+            "blop",
+        ]);
+
+        await click(target.querySelector(".o_data_row .o_data_cell"));
+        assert.containsOnce(target, ".o_form_view");
+
+        await editInput(target, dsHelpers.SELECTORS.debugArea, "[['id', '<', 40]]");
+        assert.strictEqual(
+            target.querySelector(dsHelpers.SELECTORS.debugArea).value,
+            "[['id', '<', 40]]"
+        );
+
+        await clickDiscard(target);
+        assert.strictEqual(target.querySelector(dsHelpers.SELECTORS.debugArea).value, "[]");
+
+        await click(target.querySelector(".o_breadcrumb .o_back_button"));
+        assert.containsOnce(target, ".o_list_view");
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_data_cell")), [
+            "",
+            "blip",
+            "gnap",
+            "abc",
+            "blop",
+        ]);
+    });
+
     QUnit.test(
         "domain field: manually set an invalid domain with textarea",
         async function (assert) {
@@ -558,7 +632,7 @@ QUnit.module("Fields", (hooks) => {
                         throw new Error("should not save");
                     }
                     if (route === "/web/domain/validate") {
-                        return JSON.stringify(domain) === "[[\"abc\",\"=\",1]]";
+                        return JSON.stringify(domain) === '[["abc","=",1]]';
                     }
                 },
             });

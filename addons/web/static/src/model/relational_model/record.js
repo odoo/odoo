@@ -1,7 +1,6 @@
 /* @odoo-module */
 
 import { markRaw, markup, toRaw } from "@odoo/owl";
-import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Domain } from "@web/core/domain";
 import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
@@ -181,10 +180,11 @@ export class Record extends DataPoint {
         });
     }
 
-    discard() {
+    async discard() {
         if (this.model._closeUrgentSaveNotification) {
             this.model._closeUrgentSaveNotification();
         }
+        await this.model._askChanges();
         return this.model.mutex.exec(() => this._discard());
     }
 
@@ -231,9 +231,9 @@ export class Record extends DataPoint {
         return this.model.mutex.exec(() => this._save(options));
     }
 
-    async setInvalidField(fieldName) {
+    async setInvalidField() {
         this.dirty = true;
-        return this._setInvalidField(fieldName);
+        return this._setInvalidField(...arguments);
     }
 
     switchMode(mode) {
@@ -1110,19 +1110,10 @@ export class Record extends DataPoint {
         }
     }
 
-    async _setInvalidField(fieldName) {
-        const canProceed = this.model.hooks.onWillSetInvalidField(this, fieldName);
+    async _setInvalidField(fieldName, undoChange) {
+        const canProceed = this.model.hooks.onWillSetInvalidField(this, undoChange);
         if (canProceed === false) {
             return;
-        }
-        if (this.selected && this.model.multiEdit && !this._invalidFields.has(fieldName)) {
-            await this.model.dialog.add(AlertDialog, {
-                body: _t("No valid record to save"),
-                confirm: async () => {
-                    await this.discard();
-                    this.switchMode("readonly");
-                },
-            });
         }
         this._invalidFields.add(fieldName);
     }

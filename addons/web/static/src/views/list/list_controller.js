@@ -4,6 +4,7 @@ import { _t } from "@web/core/l10n/translation";
 import {
     deleteConfirmationMessage,
     ConfirmationDialog,
+    AlertDialog,
 } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { download } from "@web/core/network/download";
 import { evaluateExpr, evaluateBooleanExpr } from "@web/core/py_js/py";
@@ -62,8 +63,10 @@ export class ListController extends Component {
         // "Discard". So we set a flag on mousedown (which triggers the update) to block the multi
         // save or invalid notification.
         // However, if the mouseup (and click) is done outside "Discard", we finally want to do it.
-        // We use `nextActionAfterMouseup` for this purpose: it registers a callback to execute if
-        // the mouseup following a mousedown on "Discard" isn't done on "Discard".
+        // We use `nextActionAfterMouseup` for this purpose: it registers callbacks to execute if
+        // the mouseup following a mousedown on "Discard":
+        //   - is done on "Discard" (confirmDiscard)
+        //   - isn't done on "Discard" (cancelDiscard)
         this.hasMousedownDiscard = false;
         this.nextActionAfterMouseup = null;
 
@@ -280,10 +283,12 @@ export class ListController extends Component {
             "mouseup",
             (mouseUpEvent) => {
                 this.hasMousedownDiscard = false;
+                const cancel = this.nextActionAfterMouseup?.cancelDiscard || (() => {});
+                const confirm = this.nextActionAfterMouseup?.confirmDiscard || (() => {});
                 if (mouseUpEvent.target !== mouseDownEvent.target) {
-                    if (this.nextActionAfterMouseup) {
-                        this.nextActionAfterMouseup();
-                    }
+                    cancel();
+                } else {
+                    confirm();
                 }
                 this.nextActionAfterMouseup = null;
             },
@@ -565,7 +570,9 @@ export class ListController extends Component {
 
     onWillSaveMulti(editedRecord, changes, validSelectedRecords) {
         if (this.hasMousedownDiscard) {
-            this.nextActionAfterMouseup = () => this.model.root.multiSave(editedRecord);
+            this.nextActionAfterMouseup = {
+                cancelDiscard: () => this.model.root.multiSave(editedRecord),
+            };
             return false;
         }
         if (validSelectedRecords.length > 1) {
@@ -614,10 +621,23 @@ export class ListController extends Component {
         return true;
     }
 
-    onWillSetInvalidField(record, fieldName) {
+    onWillSetInvalidField(record, fieldName, undoChange) {
         if (this.hasMousedownDiscard) {
-            this.nextActionAfterMouseup = () => record.setInvalidField(fieldName);
+            this.nextActionAfterMouseup = {
+                cancelDiscard: () => record.setInvalidField(fieldName),
+                confirmDiscard: undoChange,
+            };
             return false;
+        }
+        if (record.selected && this.model.multiEdit && !record.isFieldInvalid(fieldName)) {
+            console.log("open dialog");
+            this.dialogService.add(AlertDialog, {
+                body: _t("No valid record to save"),
+                confirm: async () => {
+                    await record.discard();
+                    record.switchMode("readonly");
+                },
+            });
         }
         return true;
     }
