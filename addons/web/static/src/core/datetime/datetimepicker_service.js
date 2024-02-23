@@ -83,8 +83,6 @@ export const datetimePickerService = {
                     if (areDatesEqual(lastInitialProps?.value, deepCopy(pickerProps.value))) {
                         return;
                     }
-
-                    lastInitialProps = null; // Next pickerProps are considered final
                     inputsChanged = ensureArray(pickerProps.value).map(() => false);
 
                     hookParams.onApply?.(pickerProps.value);
