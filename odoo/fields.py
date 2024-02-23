@@ -281,7 +281,7 @@ class Field(MetaField('DummyField', (object,), {})):
         return "%s.%s" % (self.model_name, self.name)
 
     def __repr__(self):
-        return "%s.%s" % (self.model_name, self.name)
+        return f"{'%s.%s'!r}" % (self.model_name, self.name)
 
     ############################################################################
     #
