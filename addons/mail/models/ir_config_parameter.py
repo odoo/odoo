@@ -23,9 +23,10 @@ class IrConfigParameter(models.Model):
         and MailComposer._action_send_mail_mass_mail() to force the cron queue
         usage and avoid force sending too much emails in a given transaction.
         100 by default;
-      * 'mail.batch_size': used in MailComposer._action_send_mail_mass_mail()
-        and in MailThread._notify_thread_by_email() to generate batch of
-        MailMail based on res_ids or recipients. 500 by default;
+      * 'mail.batch_size': used in MailComposer._action_send_mail_mass_mail(),
+        in MailThread._notify_thread_by_email() and in MailTemplate.send_mail_batch()
+        to generate batch of MailMail based on res_ids or recipients.
+        500 by default;
 
     Mail Gateway
       * 'mail.gateway.loop.minutes' and 'mail.gateway.loop.threshold': block
