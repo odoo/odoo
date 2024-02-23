@@ -597,7 +597,7 @@ class IrQWeb(models.AbstractModel):
     # assume cache will be invalidated by third party on write to ir.ui.view
     def _get_template_cache_keys(self):
         """ Return the list of context keys to use for caching ``_compile``. """
-        return ['lang', 'inherit_branding', 'edit_translations', 'profile']
+        return ['lang', 'inherit_branding', 'inherit_branding_auto', 'edit_translations', 'profile']
 
     @tools.conditional(
         'xml' not in tools.config['dev_mode'],
