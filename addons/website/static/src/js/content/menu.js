@@ -900,10 +900,35 @@ publicWidget.registry.HeaderGeneral = publicWidget.Widget.extend({
     events: {
         "show.bs.offcanvas #top_menu_collapse, #top_menu_collapse_mobile": "_onCollapseShow",
         "hidden.bs.offcanvas #top_menu_collapse, #top_menu_collapse_mobile": "_onCollapseHidden",
-        "show.bs.modal #o_search_modal": "_onSearchModalShow",
-        "shown.bs.modal #o_search_modal": "_onSearchModalShown",
         "shown.bs.offcanvas #top_menu_collapse_mobile": "_onMobileMenuToggled",
         "hidden.bs.offcanvas #top_menu_collapse_mobile": "_onMobileMenuToggled",
+    },
+
+    /**
+     * @override
+     */
+    start() {
+        this.searchModalEl = document.querySelector("#o_shared_blocks #o_search_modal");
+        if (this.searchModalEl) {
+            // Fix in stable because we moved '#o_search_modal' within
+            // '#o_shared_blocks' (see 'adapt_content.js'). TODO: remove this in
+            // master and add a new 'publicWidget' for '#o_search_modal'.
+            this.__onSearchModalShow = this._onSearchModalShow.bind(this);
+            this.searchModalEl.addEventListener("show.bs.modal", this.__onSearchModalShow);
+            this.__onSearchModalShown = this._onSearchModalShown.bind(this);
+            this.searchModalEl.addEventListener("shown.bs.modal", this.__onSearchModalShown);
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    destroy() {
+        if (this.searchModalEl) {
+            this.searchModalEl.removeEventListener("show.bs.modal", this.__onSearchModalShow);
+            this.searchModalEl.removeEventListener("shown.bs.modal", this.__onSearchModalShown);
+        }
+        this._super(...arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -946,11 +971,7 @@ publicWidget.registry.HeaderGeneral = publicWidget.Widget.extend({
      * @private
      */
     _onSearchModalShown(ev) {
-        const searchModalEl = this.el.querySelector("#o_search_modal");
-        const searchInputEl = this.el.querySelector(".search-query");
-        if (searchModalEl) {
-            searchInputEl.focus();
-        }
+        this.searchModalEl.querySelector(".search-query").focus();
     },
 });
 
