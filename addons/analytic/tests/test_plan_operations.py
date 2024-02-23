@@ -67,3 +67,28 @@ class TestAnalyticPlanOperations(TransactionCase):
         test_account.unlink()
         plan.unlink()
         distribution_model._validate_distribution()
+
+    def test_validate_company_plans(self):
+        company_2 = self.env['res.company'].create({
+            'name': 'company_2',
+        })
+        mandatory_plan = self.env['account.analytic.plan'].create([{
+            'name': 'Mandatory Plan',
+            'default_applicability': 'optional',
+        }])
+        mandatory_plan.with_company(company_2).write({'default_applicability': 'mandatory'})
+        self.env['account.analytic.applicability'].create({
+            'business_domain': 'general',
+            'analytic_plan_id': mandatory_plan.id,
+            'applicability': 'mandatory',
+            'company_id': company_2.id,
+        })
+        self.env['account.analytic.account'].create([{
+            'name': 'Mandatory Account',
+            'code': 'manda',
+            'plan_id': mandatory_plan.id,
+        }])
+        distribution_model = self.env['account.analytic.distribution.model'].create({}).with_context(validate_analytic=True)
+
+        # only mandatory applicability is in company_2, should not raise
+        distribution_model._validate_distribution(business_domain='general')
