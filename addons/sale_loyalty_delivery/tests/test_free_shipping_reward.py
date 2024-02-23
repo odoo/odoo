@@ -336,7 +336,7 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
         })
         product = self.env['product.product'].create({
             'name': 'Test product',
-            'type': 'product',
+            'type': 'consu',
             'list_price': 200.0,
             'invoice_policy': 'delivery',
         })
