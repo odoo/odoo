@@ -2542,7 +2542,7 @@ export class Wysiwyg extends Component {
                 category: _t('Media'),
                 name: _t('Image'),
                 priority: 40,
-                description: _t('Insert an image'),
+                description: _t('Insert a picture'),
                 fontawesome: 'fa-file-image-o',
                 callback: () => {
                     this.openMediaDialog();
