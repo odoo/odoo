@@ -975,3 +975,22 @@ class TestExpenses(TestExpenseCommon):
             sheet_names,
             "The report name should be 'New Expense Report, paid by (employee|company)' as a fallback",
         )
+
+    def test_foreign_currencies_total(self):
+        Expense = self.env['hr.expense'].with_user(self.expense_user_employee)
+        Expense.create([{
+            'name': 'Company expense',
+            'payment_mode': 'company_account',
+            'total_amount_currency': 1000.00,
+            'employee_id': self.expense_employee.id,
+        },
+        {
+            'name': 'Company expense 2',
+            'payment_mode': 'company_account',
+            'currency_id': self.currency_data['currency'].id,
+            'total_amount_currency': 1000.00,
+            'total_amount': 2000.00,
+            'employee_id': self.expense_employee.id,
+        }])
+        expense_state = Expense.get_expense_dashboard()
+        self.assertEqual(expense_state['to_submit']['amount'], 3000.00)
