@@ -212,9 +212,11 @@ class AccountMove(models.Model):
                         lambda line: line.account_id == product_interim_account and not line.reconciled and line.move_id.state == "posted"
                     )
 
-                    stock_aml = product_account_moves.filtered(lambda aml: aml.move_id.sudo().stock_valuation_layer_ids.stock_move_id)
-                    invoice_aml = product_account_moves.filtered(lambda aml: aml.move_id == move)
-                    correction_amls = product_account_moves - stock_aml - invoice_aml
+                    correction_amls = product_account_moves.filtered(
+                        lambda aml: aml.move_id.sudo().stock_valuation_layer_ids.stock_valuation_layer_id or (aml.display_type == 'cogs' and not aml.quantity)
+                    )
+                    invoice_aml = product_account_moves.filtered(lambda aml: aml not in correction_amls and aml.move_id == move)
+                    stock_aml = product_account_moves - correction_amls - invoice_aml
                     # Reconcile.
                     if correction_amls:
                         if sum(correction_amls.mapped('balance')) > 0:
