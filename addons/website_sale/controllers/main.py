@@ -960,6 +960,9 @@ class WebsiteSale(http.Controller):
                         partner_id = int(kw.get('partner_id'))
                     if partner_id in shippings.mapped('id'):
                         order.partner_shipping_id = partner_id
+                        if order.carrier_id:
+                            # update carrier rates on shipping address change
+                            order._check_carrier_quotation(force_carrier_id=order.carrier_id.id)
 
         values = {
             'order': order,
