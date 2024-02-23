@@ -1845,7 +1845,8 @@ class MailThread(models.AbstractModel):
         """
         self.ensure_one()
         result = []
-        if 'user_id' in self._fields:
+        user_field = self._fields.get('user_id')
+        if user_field and user_field.type == 'many2one' and user_field.comodel_name == 'res.users':
             thread = self.sudo()  # SUPERUSER because of a read on res.users that would crash otherwise
             if thread.user_id and thread.user_id.partner_id:
                 thread._message_add_suggested_recipient(
