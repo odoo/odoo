@@ -17,6 +17,9 @@ class TestSMSSchedule(EventCase, SMSCase):
     def setUpClass(cls):
         super(TestSMSSchedule, cls).setUpClass()
 
+        # consider asynchronous sending as default sending
+        cls.env["ir.config_parameter"].set_param("event.event_mail_async", False)
+
         cls.sms_template_sub = cls.env['sms.template'].create({
             'name': 'Test subscription',
             'model_id': cls.env.ref('event.model_event_registration').id,
