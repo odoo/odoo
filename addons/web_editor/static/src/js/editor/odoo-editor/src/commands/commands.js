@@ -316,6 +316,11 @@ export const editorCommands = {
                     }
                 }
             }
+            // Ensure that all adjacent paragraph elements are converted to
+            // <li> when inserting in a list.
+            if (block.nodeName === "LI" && paragraphRelatedElements.includes(nodeToInsert.nodeName)) {
+                setTagName(nodeToInsert, "LI");
+            }
             // Contenteditable false property changes to true after the node is
             // inserted into DOM.
             const isNodeToInsertContentEditable = nodeToInsert.isContentEditable;
