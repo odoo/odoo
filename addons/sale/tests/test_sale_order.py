@@ -446,6 +446,26 @@ class TestSaleOrder(SaleCommon):
         self.assertFalse(public_user.has_group('sale.group_auto_done_setting'))
         self.assertTrue(self.sale_order.locked)
 
+    def test_generate_account_analytic_when_confirm_so(self):
+        """ Test generate account analytic when SO with expense product is confirmed """
+        restaurant_expenses_product = self.env['product.product'].create({
+            'name': 'Restaurant Expenses',
+            'type': 'service',
+            'expense_policy': 'sales_price',
+            'list_price': 14.0,
+            'standard_price': 10.0,
+        })
+        sale_order = self.env['sale.order'].with_user(self.sale_user).create({
+            'partner_id': self.partner.id,
+            'order_line': [Command.create({
+                'product_id': restaurant_expenses_product.id,
+                'product_uom_qty': 1,
+            })],
+        })
+        self.assertFalse(sale_order.analytic_account_id)
+        sale_order.action_confirm()
+        self.assertTrue(sale_order.analytic_account_id, "An analytic account should be generated")
+
 
 @tagged('post_install', '-at_install')
 class TestSaleOrderInvoicing(AccountTestInvoicingCommon, SaleCommon):
