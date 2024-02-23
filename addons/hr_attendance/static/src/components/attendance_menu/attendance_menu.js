@@ -64,6 +64,9 @@ export class ActivityMenu extends Component {
                 async err => {
                     await rpc("/hr_attendance/systray_check_in_out")
                     await this.searchReadEmployee()
+                },
+                {
+                    enableHighAccuracy: true,
                 }
             )
         } else {
