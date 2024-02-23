@@ -26,8 +26,8 @@ import { browser } from "@web/core/browser/browser";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { _t } from "@web/core/l10n/translation";
+import { formatList } from "@web/core/l10n/utils";
 import { usePopover } from "@web/core/popover/popover_hook";
-import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 import { escape } from "@web/core/utils/strings";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
@@ -233,11 +233,16 @@ export class Chatter extends Component {
                     text
                 )}</span>`;
             });
-        const formatter = new Intl.ListFormat(user.lang?.replace("_", "-"), { type: "unit" });
         if (this.state.thread && this.state.thread.recipients.length > 5) {
-            recipients.push("…");
+            recipients.push(
+                escape(
+                    _t("%(recipientCount)s more", {
+                        recipientCount: this.state.thread.recipients.length - 5,
+                    })
+                )
+            );
         }
-        return markup(formatter.format(recipients));
+        return markup(formatList(recipients));
     }
 
     changeThread(threadModel, threadId, webRecord) {

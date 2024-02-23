@@ -248,7 +248,7 @@ test("Load 100 recipients at once", async () => {
     await contains("button[title='Show Followers']", { text: "210" });
     await click("button", { text: "Send message" });
     await contains(".o-mail-Chatter", {
-        text: "To: partner1, partner2, partner3, partner4, partner5, …",
+        text: "To: partner1, partner2, partner3, partner4, partner5, and 95 more",
     });
     await contains("button[title='Show all recipients']");
     await click("button[title='Show all recipients']");
