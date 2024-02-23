@@ -3,11 +3,13 @@
 
 from odoo.addons.test_event_full.tests.common import TestWEventCommon
 from odoo.exceptions import ValidationError
+from odoo.tests import tagged
 
+
+@tagged('event_mail')
 class TestTemplateRefModel(TestWEventCommon):
 
     def test_template_ref_model_constraint(self):
-
         test_cases = [
             ('mail', 'mail.template', True),
             ('mail', 'sms.template', False),
