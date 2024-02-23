@@ -13,7 +13,6 @@ var PortalComposer = portalComposer.PortalComposer;
 PortalComposer.include({
     events: Object.assign({}, PortalComposer.prototype.events, {
         'click .stars i': '_onClickStar',
-        'mouseleave .stars': '_onMouseleaveStarBlock',
         'mousemove .stars i': '_onMoveStar',
         'mouseleave .stars i': '_onMoveLeaveStar',
     }),
@@ -37,15 +36,6 @@ PortalComposer.include({
             'default_rating_value': 4.0,
             'force_submit_url': false,
         }, this.options);
-        // star input widget
-        this.labels = {
-            '0': "",
-            '1': _t("I hate it"),
-            '2': _t("I don't like it"),
-            '3': _t("It's okay"),
-            '4': _t("I like it"),
-            '5': _t("I love it"),
-        };
         this.user_click = false; // user has click or not
         this.set("star_value", this.options.default_rating_value);
         this.on("change:star_value", this, this._onChangeStarValue);
@@ -98,7 +88,6 @@ PortalComposer.include({
         if (decimal) {
             this.$('.stars').find("i:eq(" + index + ")").removeClass('fa-star-o fa-star fa-star-half-o').addClass('fa-star-half-o');
         }
-        this.$('.rate_text .badge').text(this.labels[index]);
     },
     /**
      * @private
@@ -111,17 +100,10 @@ PortalComposer.include({
     },
     /**
      * @private
-     */
-    _onMouseleaveStarBlock: function () {
-        this.$('.rate_text').hide();
-    },
-    /**
-     * @private
      * @param {MouseEvent} ev
      */
     _onMoveStar: function (ev) {
         var index = this.$('.stars i').index(ev.currentTarget);
-        this.$('.rate_text').show();
         this.set("star_value", index + 1);
     },
     /**
