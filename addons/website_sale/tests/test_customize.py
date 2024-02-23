@@ -457,3 +457,6 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
 
     def test_10_shop_editor_set_product_ribbon(self):
         self.start_tour("/", 'shop_editor_set_product_ribbon', login="admin")
+
+    def test_11_select_product_filters(self):
+        self.start_tour("/shop", 'website_sale.filtered_products_tour')

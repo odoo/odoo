@@ -293,7 +293,7 @@
                 <div class="container oe_website_sale pt-2">
                     <div class="row o_wsale_products_main_row align-items-start flex-nowrap">
                         <aside t-if="hasLeftColumn" id="products_grid_before" class="d-none d-lg-block position-sticky col-3 px-3 clearfix">
-                            <div class="o_wsale_products_grid_before_rail vh-100 pe-lg-2 pb-lg-5 overflow-y-scroll">
+                            <div class="o_wsale_products_grid_before_rail vh-100 p-lg-2 pb-lg-5 overflow-y-scroll">
                                 <div t-if="opt_wsale_categories" class="products_categories mb-3">
                                     <t t-call="website_sale.products_categories_list"/>
                                 </div>
@@ -809,7 +809,8 @@
                     <input t-if="category" type="hidden" name="category" t-att-value="category.id" />
                     <input type="hidden" name="search" t-att-value="search" />
                     <input type="hidden" name="order" t-att-value="order"/>
-                    <a t-if="attrib_values" t-att-href="keep('/shop'+ ('/category/'+slug(category)) if category else None, attrib=0)" t-attf-class="btn btn-{{navClass}} d-flex py-1 mb-2">
+                    <a t-if="attrib_values" t-att-href="keep('/shop'+ ('/category/'+slug(category)) if category else None, attrib=0)"
+                        t-attf-class="btn btn-{{navClass}} d-flex py-1 mb-2 align-items-center" >
                         <small class="mx-auto"><b>Clear Filters</b></small>
                         <i class="oi oi-close"/>
                     </a>
@@ -916,11 +917,11 @@
                         <div class="col-lg-6 d-flex align-items-center">
                             <ol class="breadcrumb p-0 mb-2 m-lg-0">
                                 <li class="breadcrumb-item o_not_editable">
-                                    <a t-att-href="keep(category=0)">All Products</a>
+                                    <a class="keep_filters" t-att-href="keep(category=0)">All Products</a>
                                 </li>
                                 <li t-nocache="The category does not have to be cached, as the product can be accessed via different paths."
                                     t-if="category" class="breadcrumb-item">
-                                    <a t-att-href="keep('/shop/category/%s' % slug(category), category=0)" t-field="category.name" />
+                                    <a class="keep_filters" t-att-href="keep('/shop/category/%s' % slug(category), category=0)" t-field="category.name" />
                                 </li>
                                 <li class="breadcrumb-item active">
                                     <span t-field="product.name" />

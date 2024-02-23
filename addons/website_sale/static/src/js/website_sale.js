@@ -894,20 +894,52 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
     _applyHashFromSearch() {
         const params = $.deparam(window.location.search.slice(1));
         if (params.attrib) {
-            const dataValueIds = [];
+            const dataValueBySequence = {};
             for (const attrib of [].concat(params.attrib)) {
                 const attribSplit = attrib.split('-');
-                const attribValueSelector = `.js_variant_change[name="ptal-${attribSplit[0]}"][value="${attribSplit[1]}"]`;
+                const attribValueSelector = `.js_variant_change[data-attribute_id="${attribSplit[0]}"][data-attribute_value_id="${attribSplit[1]}"]`;
                 const attribValue = this.el.querySelector(attribValueSelector);
                 if (attribValue !== null) {
-                    dataValueIds.push(attribValue.dataset.value_id);
+                    const attribute_id = attribValue.dataset.attribute_id
+                    const sequence = attribValue.dataset.sequence
+                    if (!dataValueBySequence[attribute_id] || dataValueBySequence[attribute_id].sequence > sequence) {
+                        dataValueBySequence[attribute_id] = {
+                            value_id: attribValue.dataset.value_id,
+                            sequence,
+                        };
+                    }
                 }
             }
+            const dataValueIds = Object.values(dataValueBySequence)
             if (dataValueIds.length) {
-                window.location.hash = `attr=${dataValueIds.join(',')}`;
+                window.location.hash = `attr=${dataValueIds.map(dataValue => dataValue.value_id).join(',')}`;
             }
         }
         this._applyHash();
+
+        // Update hrefs of cached elements when attributes change
+        const cachedProducts = this.el.querySelectorAll(".oe_product_image_link")
+        for (const product of cachedProducts) {
+            product.href = this._applyFiltersToLinks(product.href)
+        }
+        const cachedBreadcrumbs = this.el.querySelectorAll(".keep_filters")
+        for (const breadcrumb of cachedBreadcrumbs) {
+            breadcrumb.href = this._applyFiltersToLinks(breadcrumb.href)
+        }
+    },
+    /**
+     * @private
+     */
+    _applyFiltersToLinks: function (href) {
+        const splitter = 'attrib='
+        const baseUrl = href.slice(href.indexOf('/shop')).split(splitter, 1)[0]
+        const attribParams = window.location.search.split(/\&attrib=|\?attrib=/).slice(1).filter(
+            (attrib) => attrib.length > 0
+        ).join('&' + splitter)
+        if (attribParams.length > 0){
+            return baseUrl + (baseUrl.includes('?') ? '' : '?') + splitter + attribParams
+        }
+        return baseUrl
     },
     /**
      * @private
