@@ -31,3 +31,23 @@ export function uniqueId(prefix = "") {
 }
 // set nextId on the function itself to be able to patch then
 uniqueId.nextId = 0;
+
+export function iter(iterable) {
+    const gen = (function* (iterable) {
+        yield* iterable;
+    })(iterable);
+    const next = gen.next;
+    gen.next = function (_value) {
+        const _next = next.call(this, _value);
+        this.current = _next.value;
+        return _next;
+    };
+    return gen;
+}
+export function next(iterator) {
+    const { value, done } = iterator.next();
+    if (!done) {
+        return value;
+    }
+    return undefined;
+}
