@@ -11,6 +11,9 @@ class IrConfigParameter(models.Model):
     # While being there, let us document quickly mail ICP.
 
     # Emailing
+    # * 'mail.mail.queue.batch.size': used in MailMail.process_email_queue()
+    #   to limit maximum number of mail.mail managed by each cron call to VALUE.
+    #   10000 by default;
     # * 'mail.session.batch.size': used in MailMail._split_by_mail_configuration()
     #   to prepare batches of maximum VALUE mails to give at '_send()' at each
     #   iteration. For each iteration an SMTP server is opened and closed. It
