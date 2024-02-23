@@ -316,6 +316,11 @@ export const editorCommands = {
                     currentNode[currentNode.textContent ? 'after' : 'before'](br);
                 }
             }
+            // Ensure that all adjacent paragraph elements are converted to
+            // <li> when inserting in a list.
+            if (block.nodeName === "LI" && paragraphRelatedElements.includes(nodeToInsert.nodeName)) {
+                setTagName(nodeToInsert, "LI");
+            }
             if (insertBefore) {
                 currentNode.before(nodeToInsert);
                 insertBefore = false;
