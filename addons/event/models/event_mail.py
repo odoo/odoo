@@ -164,11 +164,7 @@ class EventMailScheduler(models.Model):
         """
         self.ensure_one()
         if self.notification_type == "mail":
-            # not efficient, going to be replaced
-            self.event_id.mail_attendees(
-                self.template_ref.id,
-                filter_func=lambda self: self.id in registrations.ids,
-            )
+            self._send_mail(registrations)
         return True
 
     def _execute_attendee_based(self):
@@ -244,6 +240,26 @@ class EventMailScheduler(models.Model):
                 scheduler.template_ref.name, scheduler.template_ref.id,
                 scheduler.template_ref._name, tpl_model)
         return self - missing - invalid
+
+    def _send_mail(self, registrations):
+        """ Mail action: send mail to attendees """
+        organizer = self.event_id.organizer_id
+        company = self.env.company
+        author = self.env.ref('base.user_root').partner_id
+        if organizer.email:
+            author = organizer
+        elif company.email:
+            author = company.partner_id
+        elif self.env.user.email:
+            author = self.env.user.partner_id
+
+        template = self.template_ref
+        email_values = {
+            'author_id': author.id,
+        }
+        if not template.email_from:
+            email_values['email_from'] = author.email_formatted
+        template.send_mail_batch(registrations.ids, email_values=email_values)
 
     def _template_model_by_notification_type(self):
         return {
@@ -323,3 +339,4 @@ You receive this email because you are:
                 if autocommit and not getattr(threading.current_thread(), 'testing', False):
                     self.env.cr.commit()
         return True
+
