@@ -79,10 +79,10 @@ class EventMailRegistration(models.Model):
         todo = self.filtered(
             lambda r: r.scheduler_id.notification_type == "sms"
         )
-        for reg_mail in todo:
-            reg_mail.registration_id._message_sms_schedule_mass(
-                template=reg_mail.scheduler_id.template_ref,
-                mass_keep_log=True
+        for scheduler, reg_mails in todo.grouped('scheduler_id').items():
+            reg_mails.registration_id._message_sms_schedule_mass(
+                template=scheduler.template_ref,
+                mass_keep_log=True,
             )
         todo.write({'mail_sent': True})
 

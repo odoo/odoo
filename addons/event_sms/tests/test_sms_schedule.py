@@ -33,32 +33,39 @@ class TestSMSSchedule(EventCase, SMSCase):
             'lang': '{{ object.partner_id.lang }}'
         })
 
-        cls.test_event = cls.env['event.event'].create({
-            'date_begin': fields.Datetime.to_string(datetime.today() + timedelta(days=1)),
-            'date_end': fields.Datetime.to_string(datetime.today() + timedelta(days=15)),
-            'date_tz': 'Europe/Brussels',
-            'event_mail_ids': [
-                (5, 0),
-                (0, 0, {  # right at subscription
-                    'interval_unit': 'now',
-                    'interval_type': 'after_sub',
-                    'notification_type': 'sms',
-                    'template_ref': 'sms.template,%i' % cls.sms_template_sub.id}),
-                (0, 0, {  # 3 days before event
-                    'interval_nbr': 3,
-                    'interval_unit': 'days',
-                    'interval_type': 'before_event',
-                    'notification_type': 'sms',
-                    'template_ref': 'sms.template,%i' % cls.sms_template_rem.id}),
-            ],
-            'name': 'TestEvent',
-        })
+        cls._setup_test_reports()
+
+        cls.reference_now = datetime(2021, 3, 20, 14, 30, 15, 123456)
+        cls.event_date_begin = datetime(2021, 3, 25, 8, 0, 0)
+        cls.event_date_end = datetime(2021, 3, 27, 18, 0, 0)
+        with cls.mock_datetime_and_now(cls, cls.reference_now):
+            cls.test_event = cls.env['event.event'].create({
+                'date_begin': cls.event_date_begin,
+                'date_end': cls.event_date_end,
+                'date_tz': 'Europe/Brussels',
+                'event_mail_ids': [
+                    (5, 0),
+                    (0, 0, {  # right at subscription
+                        'interval_unit': 'now',
+                        'interval_type': 'after_sub',
+                        'notification_type': 'sms',
+                        'template_ref': 'sms.template,%i' % cls.sms_template_sub.id}),
+                    (0, 0, {  # 3 days before event
+                        'interval_nbr': 3,
+                        'interval_unit': 'days',
+                        'interval_type': 'before_event',
+                        'notification_type': 'sms',
+                        'template_ref': 'sms.template,%i' % cls.sms_template_rem.id}),
+                ],
+                'name': 'TestEvent',
+            })
 
     @users('user_eventmanager')
     def test_sms_schedule(self):
         test_event = self.env['event.event'].browse(self.test_event.ids)
+        now = self.reference_now
 
-        with self.mockSMSGateway():
+        with self.mock_datetime_and_now(now), self.mockSMSGateway():
             self._create_registrations(test_event, 3)
 
         # check subscription scheduler
@@ -91,7 +98,7 @@ class TestSMSSchedule(EventCase, SMSCase):
         self.assertEqual(before_scheduler.scheduled_date, test_event.date_begin + timedelta(days=-3))
 
         # execute event reminder scheduler explicitly
-        with self.mockSMSGateway():
+        with self.mock_datetime_and_now(now + timedelta(days=3)), self.mockSMSGateway():
             before_scheduler.execute()
 
         # verify that subscription scheduler was auto-executed after each registration

@@ -372,8 +372,8 @@ class TestMailSchedule(EventCase, MockEmail, CronMixinCase):
             ])
         self.assertEqual(len(self._new_mails), 2,
                          'EventMail: should be limited to new registrations')
-        self.assertEqual(self.mail_mail_create_mocked.call_count, 2,
-                         'EventMail: should create one mail / new registration')
+        self.assertEqual(self.mail_mail_create_mocked.call_count, 1,
+                         'EventMail: should create mails in batch for new registrations')
 
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
     @users('user_eventmanager')
