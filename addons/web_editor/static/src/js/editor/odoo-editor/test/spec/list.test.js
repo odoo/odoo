@@ -36,6 +36,20 @@ describe('List', () => {
                             contentAfter: '<ul><li>ab[]cd</li></ul>',
                         });
                     });
+                    it('should turn a ordered list into a unordered list', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: '<ol><li>ab[]cd</li></ol>',
+                            stepFunction: toggleUnorderedList,
+                            contentAfter: '<ul><li>ab[]cd</li></ul>',
+                        });
+                    });
+                    it('should turn a checked list into a unordered list', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: '<ul class="o_checklist"><li>ab[]cd</li></ul>',
+                            stepFunction: toggleUnorderedList,
+                            contentAfter: '<ul><li>ab[]cd</li></ul>',
+                        });
+                    });
                     it('should turn a heading into a list', async () => {
                         await testEditor(BasicEditor, {
                             contentBefore: '<h1>ab[]cd</h1>',
@@ -305,6 +319,20 @@ describe('List', () => {
                             contentAfter: '<ol><li>ab[]cd</li></ol>',
                         });
                     });
+                    it('should turn a unordered list into a ordered list', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: '<ul><li>ab[]cd</li></ul>',
+                            stepFunction: toggleOrderedList,
+                            contentAfter: '<ol><li>ab[]cd</li></ol>',
+                        });
+                    });
+                    it('should turn a checked list into a ordered list', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: '<ul class="o_checklist"><li>ab[]cd</li></ul>',
+                            stepFunction: toggleOrderedList,
+                            contentAfter: '<ol><li>ab[]cd</li></ol>',
+                        });
+                    });
                     it('should turn a heading into a list', async () => {
                         await testEditor(BasicEditor, {
                             contentBefore: '<h1>ab[]cd</h1>',
@@ -520,6 +548,22 @@ describe('List', () => {
                             contentBefore: '<p>ab[]cd</p>',
                             stepFunction: toggleCheckList,
                             // JW cAfter: '<ul class="o_checklist"><li>ab[]cd</li></ul>',
+                            contentAfter: '<ul class="o_checklist"><li>ab[]cd</li></ul>',
+                        });
+                    });
+                    it('should turn a ordered list into a checklist', async () => {
+                        await testEditor(BasicEditor, {
+                            removeCheckIds: true,
+                            contentBefore: '<ol><li>ab[]cd</li></ol>',
+                            stepFunction: toggleCheckList,
+                            contentAfter: '<ul class="o_checklist"><li>ab[]cd</li></ul>',
+                        });
+                    });
+                    it('should turn a unordered list into a checklist', async () => {
+                        await testEditor(BasicEditor, {
+                            removeCheckIds: true,
+                            contentBefore: '<ul><li>ab[]cd</li></ul>',
+                            stepFunction: toggleCheckList,
                             contentAfter: '<ul class="o_checklist"><li>ab[]cd</li></ul>',
                         });
                     });
