@@ -81,10 +81,9 @@ class IrQWeb(models.AbstractModel):
         # update options
 
         irQweb = irQweb.with_context(website_id=current_website.id)
-
         if 'inherit_branding' not in irQweb.env.context and not self.env.context.get('rendering_bundle'):
             if editable:
-                # in edit mode add brancding on ir.ui.view tag nodes
+                # in edit mode add branding on ir.ui.view tag nodes
                 irQweb = irQweb.with_context(inherit_branding=True)
             elif has_group_restricted_editor and not translatable:
                 # will add the branding on fields (into values)
