@@ -1595,6 +1595,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
             and partner_sudo != order_sudo.partner_shipping_id
         ):
             order_sudo.partner_shipping_id = partner_id
+            if order_sudo.carrier_id:
+                # update carrier rates on shipping address change
+                order_sudo._check_carrier_quotation(force_carrier_id=order_sudo.carrier_id.id)
         else:
             # TODO someday we should gracefully handle invalid addresses
             return
