@@ -3,7 +3,9 @@ import {
     queryAllProperties,
     queryFirst,
     queryText,
+    queryAllTexts,
     queryValue,
+    queryAllValues,
     resize,
 } from "@odoo/hoot-dom";
 import {
@@ -342,8 +344,10 @@ test("Render with initial empty value: datetime field", async () => {
     // Add an end date
     await contains(".o_add_date").click();
 
-    const [startInput, endInput] = queryAll(".o_field_daterange input");
-    expect(startInput.value).toBe(endInput.value);
+    expect(queryAllValues(".o_field_daterange input")).toEqual([
+        "08/14/2014 12:00:00",
+        "08/14/2014 13:00:00",
+    ]);
 });
 
 test("Render with initial empty value and optional start date", async () => {
@@ -364,15 +368,17 @@ test("Render with initial empty value and optional start date", async () => {
 
     // Select a value (today)
     await contains(".o_today").click();
-    expect(".o_field_daterange input:eq(0)").toHaveValue("08/14/2014 12:00:00");
+    expect(".o_field_daterange input:eq(0)").toHaveValue("08/14/2014 13:00:00");
     expect(".o_add_date").toBeVisible();
     expect(".o_add_date").toHaveText("Add start date");
 
     // Add an end date
     await contains(".o_add_date").click();
 
-    const [startInput, endInput] = queryAll(".o_field_daterange input");
-    expect(startInput.value).toBe(endInput.value);
+    expect(queryAllValues(".o_field_daterange input")).toEqual([
+        "08/14/2014 12:00:00",
+        "08/14/2014 13:00:00",
+    ]);
 });
 
 test("initial empty date with optional start date", async () => {
@@ -401,9 +407,11 @@ test("initial empty date with optional start date", async () => {
     // Add an end date
     await contains(".o_add_date").click();
 
-    const [startInput, endInput] = queryAll(".o_field_daterange input");
     expect(".o_datetime_picker").toHaveCount(1);
-    expect(startInput.value).toBe(endInput.value);
+    expect(queryAllValues(".o_field_daterange input")).toEqual([
+        "03/13/2017 00:00:00",
+        "03/13/2017 01:00:00",
+    ]);
 });
 
 test("initial empty date with optional end date", async () => {
@@ -432,8 +440,46 @@ test("initial empty date with optional end date", async () => {
     // Add a start date
     await contains(".o_add_date").click();
 
-    const [startInput, endInput] = queryAll(".o_field_daterange input");
-    expect(startInput.value).toBe(endInput.value);
+    expect(queryAllValues(".o_field_daterange input")).toEqual([
+        "03/12/2017 23:00:00",
+        "03/13/2017 00:00:00",
+    ]);
+});
+
+test.tags("desktop")("select a range in the month on the right panel", async () => {
+    mockDate("2014-08-14 12:34:56", +0);
+
+    Partner._records[0].datetime = false;
+    Partner._records[0].datetime_end = "2017-03-13 00:00:00";
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="datetime" widget="daterange" options="{'end_date_field': 'datetime_end'}"/>
+            </form>`,
+        resId: 1,
+    });
+
+    expect(".o_add_date").not.toBeVisible();
+    await contains(".o_field_daterange input").focus();
+    expect(".o_add_date").toBeVisible();
+    expect(".o_add_date").toHaveText("Add start date");
+
+    // Add a start date
+    await contains(".o_add_date").click();
+
+    expect(queryAllValues(".o_field_daterange input")).toEqual([
+        "03/12/2017 23:00:00",
+        "03/13/2017 00:00:00",
+    ]);
+
+    await contains(getPickerCell("19").at(1)).click();
+    await contains(getPickerCell("9").at(1)).click();
+
+    // verify that the panels are not shifted
+    expect(queryAllTexts(".o_header_part")).toEqual(["March 2017", "April 2017"]);
 });
 
 test.tags("desktop")("Datetime field - open datepicker and switch page", async () => {

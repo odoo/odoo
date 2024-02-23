@@ -142,7 +142,9 @@ export class DateTimeField extends Component {
      */
     async addDate(valueIndex) {
         const values = this.values;
-        values[valueIndex] = values[valueIndex ? 0 : 1];
+        values[valueIndex] = valueIndex
+            ? values[0].plus({ hours: 1 })
+            : values[1].minus({ hours: 1 });
 
         this.state.focusedDateIndex = valueIndex;
         this.state.value = values;

@@ -705,7 +705,7 @@ test.tags("desktop")("additional month, empty range value", async () => {
         ],
         time: [
             [13, 0],
-            [13, 0],
+            [14, 0],
         ],
     });
 
@@ -866,7 +866,7 @@ test.tags("desktop")("range value, previous month", async () => {
         ],
         time: [
             [13, 0],
-            [13, 0],
+            [14, 0],
         ],
     });
 
@@ -901,7 +901,7 @@ test.tags("desktop")("range value, previous month", async () => {
         ],
         time: [
             [13, 0],
-            [13, 0],
+            [14, 0],
         ],
     });
 });
