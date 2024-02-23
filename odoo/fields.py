@@ -1819,7 +1819,7 @@ class _String(Field):
         return res[0] if res else None
 
     def get_translation_fallback_langs(self, env):
-        lang = self._lang(env)
+        lang = (env.lang or 'en_US') if self.translate is True else env._lang
         if lang == '_en_US':
             return '_en_US', 'en_US'
         if lang == 'en_US':
@@ -1827,16 +1827,6 @@ class _String(Field):
         if lang.startswith('_'):
             return lang, lang[1:], '_en_US', 'en_US'
         return lang, 'en_US'
-
-    def _lang(self, env, validate=False):
-        """ Usually validate can be set to False for read, but should be set to True for write or fetch"""
-        context = env.context
-        lang = env.lang or 'en_US'
-        if validate and lang != 'en_US' and not env['res.lang']._lang_get_id(lang):
-            raise UserError(_('Invalid language code: %s', lang))
-        if callable(self.translate) and (context.get('edit_translations') or context.get('check_translations')):
-            lang = '_' + lang
-        return lang
 
     def write(self, records, value):
         if not self.translate or value is False or value is None:
@@ -1854,14 +1844,12 @@ class _String(Field):
             dirty_records.flush_recordset([self.name])
 
         dirty = self.store and any(records._ids)
-        lang = self._lang(records.env, validate=True)
+        lang = (records.env.lang or 'en_US') if self.translate is True else records.env._lang
 
         # not dirty fields
         if not dirty:
             cache.update_raw(records, self, [{lang: cache_value} for _id in records._ids], dirty=False)
             return
-
-        assert not lang.startswith('_')
 
         # model translation
         if not callable(self.translate):

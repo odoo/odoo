@@ -610,6 +610,20 @@ class TestTranslationWrite(TransactionCase):
             # Illegal context lang starts with "_" should raise UserError
             category.with_context(lang='_en_US').name = '_Customers'
 
+    def test_01_invalid_lang(self):
+        self.env['res.lang']._activate_lang('nl_NL')
+        self.category.with_context(lang='nl_NL').name = 'Reblochon nl_NL'
+        self.env.ref('base.lang_nl').active = False
+
+        # [inactive_lang, non_existing_lang, technical_lang, sql_injection_lang]
+        langs = ['nl_NL', 'Dummy', '_en_US', "'', NOW("]
+
+        for lang in langs:
+            with self.assertRaises(UserError):
+                self.category.with_context(lang=lang).name = 'new value'
+            with self.assertRaises(UserError):
+                self.category.with_context(lang=lang).create({'name': 'new value'})
+
     def test_03_fr_single(self):
         self.env['res.lang']._activate_lang('fr_FR')
         self.env['res.partner'].with_context(active_test=False).search([]).write({'lang': 'fr_FR'})
