@@ -164,10 +164,10 @@ class PaymentTransaction(models.Model):
                 'mandate': self.token_id.stripe_mandate or None,
             })
         else:
+            customer = self._stripe_create_customer()
+            payment_intent_payload['customer'] = customer['id']
             if self.tokenize:
-                customer = self._stripe_create_customer()
                 payment_intent_payload.update(
-                    customer=customer['id'],
                     setup_future_usage='off_session',
                     **self._stripe_prepare_mandate_options(),
                 )
