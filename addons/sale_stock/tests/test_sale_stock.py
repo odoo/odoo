@@ -1,12 +1,17 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from datetime import datetime, timedelta
 
-from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
-from odoo.addons.sale.tests.common import TestSaleCommon
+from freezegun import freeze_time
+
+from odoo import Command
 from odoo.exceptions import UserError
 from odoo.tests import Form, tagged
-from odoo import Command
+
+from odoo.addons.sale.tests.common import SaleCommon, TestSaleCommon
+from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import (
+    ValuationReconciliationTestCommon,
+)
 
 
 @tagged('post_install', '-at_install')
@@ -1762,3 +1767,38 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         picking.button_validate()
         self.assertEqual(sale_order.order_line.qty_delivered, -1.0)
         self.assertEqual(sale_order.order_line.qty_to_invoice, -1.0)
+
+
+class TestSaleOrder(SaleCommon):
+
+    @freeze_time('2017-01-07')
+    def test_order_onchange(self):
+        order = self.empty_order
+        storable_product = self.env['product.product'].create({
+            'name': 'Test Storable',
+            'type': 'product',
+            'list_price': 25.0,
+        })
+        order.order_line = [
+            Command.create({
+                'product_id': storable_product.id,
+                'product_uom_qty': 15.12,
+                'price_unit': 50.0,
+            }),
+        ]
+        # retrieve the onchange spec for calling 'onchange'
+        order_form = Form(order)
+        # spec = order_form._view['onchange']
+        # onchange_vals = order_form._onchange_values()
+        # res = order.onchange(
+        #     dict(
+        #         onchange_vals,
+        #         commitment_date='2017-01-12',
+        #     ),
+        #     'commitment_date',
+        #     spec
+        # )
+        # self.assertEqual(res['value']['order_line'][1][2]['product_uom_qty'], 15.12)
+        order_form.commitment_date = '2017-01-12'
+        order_form.save()
+        self.assertEqual(order.order_line.price_unit, 50.0)
