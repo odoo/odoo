@@ -3910,9 +3910,13 @@ export class OdooEditor extends EventTarget {
             const ancestorsList = [commonAncestorElement, ...ancestors(commonAncestorElement, blockEl)];
             // Wrap rangeContent with clones of their ancestors to keep the styles.
             for (const ancestor of ancestorsList) {
-                const clone = ancestor.cloneNode();
-                clone.append(...rangeContent.childNodes);
-                rangeContent.appendChild(clone);
+                // Keep the formatting by keeping inline ancestors and paragraph
+                // related ones like headings etc.
+                if (!isBlock(ancestor) || paragraphRelatedElements.includes(ancestor.nodeName)) {
+                    const clone = ancestor.cloneNode();
+                    clone.append(...rangeContent.childNodes);
+                    rangeContent.appendChild(clone);
+                }
             }
         }
         const dataHtmlElement = document.createElement('data');
@@ -4939,6 +4943,12 @@ export class OdooEditor extends EventTarget {
             this._applyCommand("insert", text);
         } else if (odooEditorHtml) {
             const fragment = parseHTML(this.document, odooEditorHtml);
+            const selector = this.options.renderingClasses.map(c => `.${c}`).join(',');
+            if (selector) {
+                for (const element of fragment.querySelectorAll(selector)) {
+                    element.classList.remove(...this.options.renderingClasses);
+                }
+            }
             // Instantiate DOMPurify with the correct window.
             this.DOMPurify ??= DOMPurify(this.document.defaultView);
             this.DOMPurify.sanitize(fragment, { IN_PLACE: true });
