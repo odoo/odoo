@@ -435,6 +435,14 @@ class IrAttachment(models.Model):
                 if not any(has_group(g) for g in attachment.get_serving_groups()):
                     raise ValidationError("Sorry, you are not allowed to write on this document")
 
+    @api.constrains('url')
+    def _check_url_validity(self):
+        for attachment in self:
+            if attachment.type == 'url' and attachment.url:
+                # Make sure that any URL that is inputted is a valid URL if the type is url
+                if not re.match(r"^(ht|f)tp(s?)\:\/\/[0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*(:(0-9)*)*(\/?)([a-zA-Z0-9\-\.\?\,\'\/\\\+&amp;%\$#_]*)?$", attachment.url):
+                    raise ValidationError(_("Please enter a valid URL \nExample: https://www.odoo.com"))
+
     @api.model
     def check(self, mode, values=None):
         """ Restricts the access to an ir.attachment, according to referred mode """
