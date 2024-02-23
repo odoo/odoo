@@ -2332,13 +2332,14 @@ class MrpProduction(models.Model):
             if production._has_workorders():
                 # plan backwards from last work order
                 last_workorder = production._has_workorders()[-1]
-                production.date_start = last_workorder.date_start
+                # is it the correct form to get the last work order?
+                # or exist another way (for date_start, date_deadline..)
                 production.date_start = last_workorder.date_start
                 # but last_workorder.date_start is False, how do bypass it?
             elif production.date_deadline:
                 # plan backwards from MO deadline using produce delay.
                 days_delay = production.bom_id.produce_delay
-                production.date_start = production.date_start + relativedelta(days=days_delay)
+                production.date_start = production.date_deadline + relativedelta(days=days_delay)
             else:
                 # use MO scheduled date
                 # i will pass, because scheduled_date == date_start
