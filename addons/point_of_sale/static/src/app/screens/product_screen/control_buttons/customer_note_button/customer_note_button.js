@@ -5,6 +5,7 @@ import { Component } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { TextInputPopup } from "@point_of_sale/app/utils/input_popups/text_input_popup";
 import { useService } from "@web/core/utils/hooks";
+import { makeAwaitable } from "@point_of_sale/app/store/make_awaitable_dialog";
 
 export class OrderlineNoteButton extends Component {
     static template = "point_of_sale.OrderlineNoteButton";
@@ -21,13 +22,16 @@ export class OrderlineNoteButton extends Component {
     }
     async onClick() {
         const selectedOrderline = this.pos.get_order().get_selected_orderline();
-        this.dialog.add(TextInputPopup, {
-            rows: 4,
+        const oldNote = selectedOrderline.getNote();
+        const payload = await makeAwaitable(this.dialog, TextInputPopup, {
             startingValue: this.props.getter(selectedOrderline),
             title: _t("Add %s", this.props.label),
-            getPayload: (note) => {
-                this.props.setter(selectedOrderline, note);
-            },
         });
+
+        if (typeof payload === "string") {
+            this.props.setter(selectedOrderline, payload);
+        }
+
+        return { confirmed: typeof payload === "string", inputNote: payload, oldNote };
     }
 }
