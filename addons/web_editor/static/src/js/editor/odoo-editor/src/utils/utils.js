@@ -2112,7 +2112,7 @@ export function setTagName(el, newTagName) {
         return el;
     }
     const n = document.createElement(newTagName);
-    if (paragraphRelatedElements.includes(el.nodeName)) {
+    if (el.nodeName !== 'LI') {
         const attributes = el.attributes;
         for (const attr of attributes) {
             n.setAttribute(attr.name, attr.value);
