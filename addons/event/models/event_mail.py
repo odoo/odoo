@@ -297,16 +297,21 @@ class EventMailRegistration(models.Model):
     mail_sent = fields.Boolean('Mail Sent')
 
     def execute(self):
-        now = fields.Datetime.now()
-        todo = self.filtered(lambda reg_mail:
-            not reg_mail.mail_sent and \
-            reg_mail.registration_id.state in ['open', 'done'] and \
-            (reg_mail.scheduled_date and reg_mail.scheduled_date <= now) and \
-            reg_mail.scheduler_id.notification_type == 'mail'
-        )
+        todo = self._filter_to_skip(keep_type='mail')
+
         done = self.browse()
-        for reg_mail in todo:
-            organizer = reg_mail.scheduler_id.event_id.organizer_id
+        for scheduler, reg_mails in todo.grouped('scheduler_id').items():
+            template = None
+            try:
+                template = scheduler.template_ref.exists()
+            except MissingError:
+                pass
+
+            if not template:
+                _logger.warning("Cannot process ticket %s, because Mail Scheduler %s has reference to non-existent template", reg_mails.registration_id, scheduler)
+                continue
+
+            organizer = scheduler.event_id.organizer_id
             company = self.env.company
             author = self.env.ref('base.user_root').partner_id
             if organizer.email:
@@ -319,21 +324,28 @@ class EventMailRegistration(models.Model):
             email_values = {
                 'author_id': author.id,
             }
-            template = None
-            try:
-                template = reg_mail.scheduler_id.template_ref.exists()
-            except MissingError:
-                pass
-
-            if not template:
-                _logger.warning("Cannot process ticket %s, because Mail Scheduler %s has reference to non-existent template", reg_mail.registration_id, reg_mail.scheduler_id)
-                continue
-
             if not template.email_from:
                 email_values['email_from'] = author.email_formatted
-            template.send_mail(reg_mail.registration_id.id, email_values=email_values)
-            done |= reg_mail
+            template.send_mail_batch(reg_mails.registration_id.ids, email_values=email_values)
+            done += reg_mails
         done.write({'mail_sent': True})
+
+    def _filter_to_skip(self, keep_type=None):
+        """ Filter mail registrations to skip: already done, registrations
+        canceled (or draft), scheduled for later. Optional can be filtered
+        on a scheduler notification type to keep.
+
+        :param str keep_type: if given, a 'notification_type' defined on the
+          scheduler e.g. 'mail' or 'sms' (with sms module);
+        """
+        now = fields.Datetime.now()
+        return self.filtered(
+            lambda reg_mail:
+                not reg_mail.mail_sent  # not already done
+                and reg_mail.registration_id.state in ['open', 'done']  # notify only active
+                and reg_mail.scheduled_date and reg_mail.scheduled_date <= now  # really scheduled
+                and (keep_type is None or reg_mail.scheduler_id.notification_type == keep_type)  # optional type filter
+        )
 
     @api.depends('registration_id', 'scheduler_id.interval_unit', 'scheduler_id.interval_type')
     def _compute_scheduled_date(self):
