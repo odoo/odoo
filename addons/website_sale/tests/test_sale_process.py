@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
+from unittest.mock import patch
 
 from werkzeug.exceptions import Forbidden
 
@@ -296,6 +297,45 @@ class TestWebsiteSaleCheckoutAddress(TransactionCaseWithUserDemo, HttpCaseWithUs
             self.default_address_values['partner_id'] = new_partner.id
             self.WebsiteSaleController.address(**self.default_billing_address_values)
             self.assertEqual(new_partner.company_id, self.website.company_id, "Public user edited billing (the partner itself) should not get its company modified.")
+
+    def test_03_carrier_rate_on_shipping_address_change(self):
+        """ Test that when a shipping address is changed the price of delivery is recalculated
+        and updated on the order."""
+        # Create a dummy carrier.
+        dummy_delivery_product = self.env['product.product'].create({
+            'name': 'Dummy',
+            'type': 'service',
+            'categ_id': self.env.ref('delivery.product_category_deliveries').id,
+        })
+        carrier = self.env['delivery.carrier'].create({
+            'name': 'Fixed',
+            'product_id': dummy_delivery_product.id,
+            'website_published': True,
+        })
+        partner = self.env.user.partner_id
+        order = self._create_so(partner.id)
+        order.carrier_id = carrier.id  # Set the carrier on the order.
+        shipping_partner_values = {'name': 'dummy', 'parent_id': partner.id, 'type': 'delivery'}
+        shipping_partner = self.env['res.partner'].create(shipping_partner_values)
+        with MockRequest(self.env, website=self.website, sale_order_id=order.id):
+            with patch(
+                'odoo.addons.delivery.models.delivery_carrier.DeliveryCarrier.rate_shipment',
+                return_value={'success': True, 'price': 10, 'warning_message': ''}
+            ) as rate_shipment_mock:
+                # Change a shipping address of the order in the checkout.
+                self.WebsiteSaleController.update_cart_address(
+                    partner_id=shipping_partner.id, mode='shipping'
+                )
+                self.assertGreaterEqual(
+                    rate_shipment_mock.call_count,
+                    1,
+                    msg="The carrier rate must be recalculated when shipping address is changed.",
+                )
+                self.assertEqual(
+                    order.order_line.filtered(lambda l: l.is_delivery)[0].price_unit,
+                    10,
+                    msg="The recalculated delivery price must be updated on the order.",
+                )
 
     def test_04_apply_empty_pl(self):
         ''' Ensure empty pl code reset the applied pl '''
