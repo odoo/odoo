@@ -663,6 +663,10 @@ class AccountJournal(models.Model):
             if journal.type == 'bank' and not journal.bank_account_id and vals.get('bank_acc_number'):
                 journal.set_bank_account(vals.get('bank_acc_number'), vals.get('bank_id'))
 
+            # Create the secure_sequence_id if necessary
+            if journal.restrict_mode_hash_table and not journal.secure_sequence_id:
+                journal._create_secure_sequence(['secure_sequence_id'])
+
         return journals
 
     def set_bank_account(self, acc_number, bank_id=None):
