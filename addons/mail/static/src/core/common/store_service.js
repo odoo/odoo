@@ -86,13 +86,7 @@ export class Store extends BaseStore {
     /** @type {boolean} */
     hasMessageTranslationFeature;
     imStatusTrackedPersonas = Record.many("Persona", {
-        /** @this {import("models").Store} */
-        compute() {
-            return Object.values(this.Persona?.records ?? []).filter(
-                (persona) => persona.im_status !== "im_partner" && !persona.is_public
-            );
-        },
-        eager: true,
+        inverse: "storeAsTrackedImStatus",
         /** @this {import("models").Store} */
         onUpdate() {
             this.env.services["im_status"].registerToImStatus(

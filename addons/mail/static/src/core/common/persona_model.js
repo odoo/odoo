@@ -34,6 +34,16 @@ export class Persona extends Record {
     landlineNumber;
     /** @type {string} */
     mobileNumber;
+    storeAsTrackedImStatus = Record.one("Store", {
+        /** @this {import("models").Persona} */
+        compute() {
+            if (this.type === "partner" && this.im_status !== "im_partner" && !this.is_public) {
+                return this._store;
+            }
+        },
+        eager: true,
+        inverse: "imStatusTrackedPersonas",
+    });
     /** @type {'partner' | 'guest'} */
     type;
     /** @type {string} */
