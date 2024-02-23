@@ -113,6 +113,7 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
         # EXTENDS account.edi.xml.ubl_21
         vals = super()._get_partner_party_vals(partner, role)
 
+        partner = partner.commercial_partner_id
         vals.update({
             'endpoint_id': partner.peppol_endpoint,
             'endpoint_id_attrs': {'schemeID': partner.peppol_eas},
@@ -133,7 +134,7 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
     def _get_delivery_vals_list(self, invoice):
         # EXTENDS account.edi.xml.ubl_21
         supplier = invoice.company_id.partner_id.commercial_partner_id
-        customer = invoice.commercial_partner_id
+        customer = invoice.partner_id
 
         economic_area = self.env.ref('base.europe').country_ids.mapped('code') + ['NO']
         intracom_delivery = (customer.country_id.code in economic_area
