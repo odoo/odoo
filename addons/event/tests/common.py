@@ -104,3 +104,56 @@ class EventCase(common.TransactionCase):
             'phone': f'04560000{idx}{idx}',
         } for idx in range(0, reg_count)])
         return registrations
+
+    @classmethod
+    def _setup_test_reports(cls):
+        cls.test_report_view = cls.env["ir.ui.view"].create({
+            "arch_db": """
+<t t-call="web.html_container">
+    <t t-foreach="docs" t-as="registration">
+        <t t-call="web.external_layout">
+            <div class="page">
+                <p>This is a sample of an external report.</p>
+            </div>
+        </t>
+    </t>
+</t>""",
+            "key": "event_registration_test_report",
+            "name": "event_registration_test_report",
+            "type": "qweb",
+        })
+        cls.env["ir.model.data"].create({
+            "model": "ir.ui.view",
+            "module": "event",
+            "name": "event_registration_test_report",
+            "res_id": cls.test_report_view.id,
+        })
+
+        cls.test_report_action = cls.env['ir.actions.report'].create({
+            'name': 'Test Report on event.registration',
+            'model': 'event.registration',
+            'print_report_name': "f'TestReport for {object.name}'",
+            'report_type': 'qweb-pdf',
+            'report_name': 'event.event_registration_test_report',
+        })
+
+        cls.template_subscription = cls.env['mail.template'].create({
+            "body_html": """<div>Hello your registration to <t t-out="object.event_id.name"/> is confirmed.</div>""",
+            "email_from": "{{ (object.event_id.organizer_id.email_formatted or object.event_id.user_id.email_formatted or '') }}",
+            "email_to": """{{ (object.email and '"%s" <%s>' % (object.name, object.email)) or object.partner_id.email_formatted or '' }}""",
+            "lang": "{{ object.event_id.lang or object.partner_id.lang }}",
+            "model_id": cls.env['ir.model']._get_id("event.registration"),
+            "name": "Event: Registration Confirmation TEST",
+            "subject": "Confirmation for {{ object.event_id.name }}",
+            "report_template_ids": [(4, cls.test_report_action.id)],
+        })
+        cls.template_reminder = cls.env['mail.template'].create({
+            "body_html": """<div>Hello this is a reminder for your registration to  <t t-out="object.event_id.name"/>.</div>""",
+            "email_from": "{{ (object.event_id.organizer_id.email_formatted or object.event_id.user_id.email_formatted or '') }}",
+            "email_to": """{{ (object.email and '"%s" <%s>' % (object.name, object.email)) or object.partner_id.email_formatted or '' }}""",
+            "lang": "{{ object.event_id.lang or object.partner_id.lang }}",
+            "model_id": cls.env['ir.model']._get_id("event.registration"),
+            "name": "Event: Registration Reminder TEST",
+            "subject": "Reminder for {{ object.event_id.name }}: {{ object.get_date_range_str() }}",
+            "report_template_ids": [(4, cls.test_report_action.id)],
+        })
