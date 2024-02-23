@@ -8,9 +8,11 @@ from freezegun import freeze_time
 from odoo import Command
 from odoo.addons.event.tests.common import EventCase
 from odoo.addons.mail.tests.common import MockEmail
+from odoo.tests import tagged
 from odoo.tools import formataddr, mute_logger
 
 
+@tagged('event_mail')
 class TestMailSchedule(EventCase, MockEmail):
 
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
@@ -34,11 +36,10 @@ class TestMailSchedule(EventCase, MockEmail):
         event_date_begin = datetime(2021, 3, 22, 8, 0, 0)
         event_date_end = datetime(2021, 3, 24, 18, 0, 0)
 
-        with freeze_time(now):
+        with self.mock_datetime_and_now(now):
             # create with admin to force create_date
             test_event = self.env['event.event'].create({
                 'name': 'TestEventMail',
-                'create_date': now,
                 'user_id': self.user_eventmanager.id,
                 'date_begin': event_date_begin,
                 'date_end': event_date_end,
@@ -95,15 +96,13 @@ class TestMailSchedule(EventCase, MockEmail):
         self.assertEqual(event_next_scheduler.mail_count_done, 0)
 
         # create some registrations
-        with freeze_time(now), self.mock_mail_gateway():
+        with self.mock_datetime_and_now(now), self.mock_mail_gateway():
             reg1 = self.env['event.registration'].create({
-                'create_date': now,
                 'event_id': test_event.id,
                 'name': 'Reg1',
                 'email': 'reg1@example.com',
             })
             reg2 = self.env['event.registration'].create({
-                'create_date': now,
                 'event_id': test_event.id,
                 'name': 'Reg2',
                 'email': 'reg2@example.com',
@@ -211,9 +210,8 @@ class TestMailSchedule(EventCase, MockEmail):
         # NEW REGISTRATION EFFECT ON SCHEDULERS
         # --------------------------------------------------
 
-        with freeze_time(now_start), self.mock_mail_gateway():
+        with self.mock_datetime_and_now(now_start), self.mock_mail_gateway():
             reg3 = self.env['event.registration'].create({
-                'create_date': now_start,
                 'event_id': test_event.id,
                 'name': 'Reg3',
                 'email': 'reg3@example.com',
@@ -353,7 +351,7 @@ class TestMailSchedule(EventCase, MockEmail):
         event_date_begin = datetime(2023, 7, 26, 8, 0, 0)
         event_date_end = datetime(2023, 7, 28, 18, 0, 0)
 
-        with freeze_time(now):
+        with self.mock_datetime_and_now(now):
             test_event = self.env['event.event'].with_user(self.user_eventmanager).create({
                 'name': 'TestEventMail',
                 'date_begin': event_date_begin,
@@ -377,15 +375,13 @@ class TestMailSchedule(EventCase, MockEmail):
 
         event_prev_scheduler = self.env['event.mail'].search([('event_id', '=', test_event.id), ('interval_type', '=', 'before_event')])
 
-        with freeze_time(now), self.mock_mail_gateway():
+        with self.mock_datetime_and_now(now), self.mock_mail_gateway():
             self.env['event.registration'].create({
-                'create_date': now,
                 'event_id': test_event.id,
                 'name': 'Reg1',
                 'email': 'reg1@example.com',
             })
             self.env['event.registration'].create({
-                'create_date': now,
                 'event_id': test_event.id,
                 'name': 'Reg2',
                 'email': 'reg2@example.com',
