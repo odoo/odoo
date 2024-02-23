@@ -181,10 +181,11 @@ export class Record extends DataPoint {
         });
     }
 
-    discard() {
+    async discard() {
         if (this.model._closeUrgentSaveNotification) {
             this.model._closeUrgentSaveNotification();
         }
+        await this.model._askChanges();
         return this.model.mutex.exec(() => this._discard());
     }
 
