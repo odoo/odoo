@@ -8,9 +8,14 @@
             .fc-day-number {
                 font-weight: 600;
             }
+        }
 
-            &:not(.fc-disabled-day):not(:hover):not(.fc-today) .fc-day-number {
-                color: var(--mandatory-day-color) !important;
+        > .fc-view-container {
+            > .fc-dayGridYear-view .hr_mandatory_day:not(.fc-disabled-day):not(.fc-today):not(:hover),
+            > .fc-dayGridMonth-view .hr_mandatory_day:not(.fc-disabled-day):not(.fc-today) {
+                .fc-day-number {
+                    color: var(--mandatory-day-color) !important;
+                }
             }
         }
 
