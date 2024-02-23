@@ -220,14 +220,12 @@ class TestMailTemplateLanguages(TestMailTemplateCommon):
     def test_template_send_email_batch(self):
         """ Test 'send_email' on template in batch """
         self.env.invalidate_all()
-        mails = self.env['mail.mail'].sudo()
         with self.with_user(self.user_employee.login), self.assertQueryCount(935):  # test_mail: 935
             template = self.test_template.with_env(self.env)
-            for record in self.test_records_batch:
-                mails += mails.browse(template.send_mail(record.id))
+            mails_sudo = template.send_mail_batch(self.test_records_batch.ids)
 
-        self.assertEqual(len(mails), 100)
-        for idx, (mail, record) in enumerate(zip(mails, self.test_records_batch)):
+        self.assertEqual(len(mails_sudo), 100)
+        for idx, (mail, record) in enumerate(zip(mails_sudo, self.test_records_batch)):
             self.assertEqual(sorted(mail.attachment_ids.mapped('name')), ['first.txt', 'second.txt'])
             self.assertEqual(mail.email_cc, self.test_template.email_cc)
             self.assertEqual(mail.email_to, self.test_template.email_to)
@@ -257,14 +255,12 @@ class TestMailTemplateLanguages(TestMailTemplateCommon):
     def test_template_send_email_wreport_batch(self):
         """ Test 'send_email' on template in batch with dynamic reports """
         self.env.invalidate_all()
-        mails = self.env['mail.mail'].sudo()
         with self.with_user(self.user_employee.login), self.assertQueryCount(1645):  # test_mail: 1645
             template = self.test_template_wreports.with_env(self.env)
-            for record in self.test_records_batch:
-                mails += mails.browse(template.send_mail(record.id))
+            mails_sudo = template.send_mail_batch(self.test_records_batch.ids)
 
-        self.assertEqual(len(mails), 100)
-        for idx, (mail, record) in enumerate(zip(mails, self.test_records_batch)):
+        self.assertEqual(len(mails_sudo), 100)
+        for idx, (mail, record) in enumerate(zip(mails_sudo, self.test_records_batch)):
             self.assertEqual(
                 sorted(mail.attachment_ids.mapped('name')),
                 [f'TestReport for {record.name}.html', f'TestReport2 for {record.name}.html', 'first.txt', 'second.txt']
@@ -316,17 +312,13 @@ class TestMailTemplateLanguages(TestMailTemplateCommon):
         test_records[1].write({'customer_id': customers[1].id})
 
         self.env.invalidate_all()
-        mails = self.env['mail.mail'].sudo()
         with self.with_user(self.user_employee.login), self.assertQueryCount(53):
             template = self.test_template.with_env(self.env)
-            for record in self.test_records:
-                mails += mails.browse(
-                    template.send_mail(record.id, email_layout_xmlid='mail.test_layout')
-                )
+            mails_sudo = template.send_mail_batch(self.test_records.ids, email_layout_xmlid='mail.test_layout')
 
-        self.assertEqual(mails[0].body_html,
+        self.assertEqual(mails_sudo[0].body_html,
                          f'<body><p>SpanishBody for {test_records[0].name}</p> Spanish Layout para Spanish Model Description</body>')
-        self.assertEqual(mails[0].subject, f'SpanishSubject for {test_records[0].name}')
-        self.assertEqual(mails[1].body_html,
+        self.assertEqual(mails_sudo[0].subject, f'SpanishSubject for {test_records[0].name}')
+        self.assertEqual(mails_sudo[1].body_html,
                          f'<body><p>EnglishBody for {test_records[1].name}</p> English Layout for Lang Chatter Model</body>')
-        self.assertEqual(mails[1].subject, f'EnglishSubject for {test_records[1].name}')
+        self.assertEqual(mails_sudo[1].subject, f'EnglishSubject for {test_records[1].name}')
