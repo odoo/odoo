@@ -669,8 +669,6 @@ publicWidget.registry.HeaderGeneral = publicWidget.Widget.extend({
     selector: 'header#top',
     disabledInEditableMode: false,
     events: {
-        "show.bs.modal #o_search_modal": "_onSearchModalShow",
-        "shown.bs.modal #o_search_modal": "_onSearchModalShown",
         "shown.bs.offcanvas #top_menu_collapse_mobile": "_onMobileMenuToggled",
         "hidden.bs.offcanvas #top_menu_collapse_mobile": "_onMobileMenuToggled",
     },
@@ -687,6 +685,20 @@ publicWidget.registry.HeaderGeneral = publicWidget.Widget.extend({
         //       #wrapwrap to the body, this code should not be needed anymore.
         document.querySelector("#wrapwrap").classList.toggle("overflow-hidden");
     },
+});
+
+publicWidget.registry.SearchModal = publicWidget.Widget.extend({
+    selector: "#o_shared_blocks #o_search_modal",
+    disabledInEditableMode: false,
+    events: {
+        "show.bs.modal": "_onSearchModalShow",
+        "shown.bs.modal": "_onSearchModalShown",
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
     /**
      * @private
      */
@@ -699,11 +711,7 @@ publicWidget.registry.HeaderGeneral = publicWidget.Widget.extend({
      * @private
      */
     _onSearchModalShown(ev) {
-        const searchModalEl = this.el.querySelector("#o_search_modal");
-        const searchInputEl = this.el.querySelector(".search-query");
-        if (searchModalEl) {
-            searchInputEl.focus();
-        }
+        this.el.querySelector(".search-query").focus();
     },
 });
 
