@@ -341,6 +341,7 @@ patch(MockServer.prototype, {
                         Thread: {
                             id: channel.id,
                             is_pinned: true,
+                            model: "discuss.channel",
                         },
                     },
                 ]);
