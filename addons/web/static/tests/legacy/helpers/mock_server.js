@@ -590,7 +590,7 @@ export class MockServer {
             case "action_unarchive":
                 return this.mockWrite(args.model, [args.args[0], { active: true }]);
             case "copy":
-                return this.mockCopy(args.model, args.args);
+                return this.mockCopy(args.model, args.args, args.kwargs);
             case "create":
                 return this.mockCreate(args.model, args.args[0], args.kwargs);
             case "fields_get":
@@ -646,20 +646,22 @@ export class MockServer {
      *
      * @private
      * @param {string} modelName
-     * @param {[number, Record<string, any>]} params the ID of a valid record
-     * @returns {number} the ID of the duplicated record
+     * @param {number[]} ids array of ids of some valid records
+     * @param {Object} [kwargs={}]
+     * @param {Object} [kwargs.default] default data
+     * @returns {number[]} the IDs of the duplicated record
      */
-    mockCopy(modelName, [ids, defaultData]) {
+    mockCopy(modelName, [ids], kwargs = {}) {
         const model = this.models[modelName];
         const newIDs = [];
-        ids.forEach((id) => {
+        for (const id of ids) {
             const newID = this.getUnusedID(modelName);
             const originalRecord = model.records.find((record) => record.id === id);
-            const duplicatedRecord = { ...originalRecord, ...defaultData, id: newID };
+            const duplicatedRecord = { ...originalRecord, ...kwargs.default, id: newID };
             duplicatedRecord.display_name = `${originalRecord.display_name} (copy)`;
             model.records.push(duplicatedRecord);
             newIDs.push(newID);
-        })
+        }
         return newIDs;
     }
 

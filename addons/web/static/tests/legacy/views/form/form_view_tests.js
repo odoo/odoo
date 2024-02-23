@@ -4612,6 +4612,12 @@ QUnit.module("Views", (hooks) => {
             arch: '<form><field name="foo"/></form>',
             resId: 1,
             actionMenus: {},
+            mockRPC: function (route, { method, model, args }) {
+                if (method === "copy" && model === "partner") {
+                    assert.deepEqual(args, [[1]]);
+                    assert.step("copy");
+                }
+            }
         });
 
         assert.strictEqual(
@@ -4622,6 +4628,7 @@ QUnit.module("Views", (hooks) => {
 
         await toggleActionMenu(target);
         await toggleMenuItem(target, "Duplicate");
+        assert.verifySteps(["copy"]);
 
         assert.strictEqual(
             target.querySelector(".o_control_panel .o_breadcrumb").textContent,
