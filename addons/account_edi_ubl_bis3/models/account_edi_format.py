@@ -95,7 +95,7 @@ class AccountEdiFormat(models.Model):
         # Misc.
 
         for partner_vals in (values['customer_vals'], values['supplier_vals']):
-            partner = partner_vals['partner']
+            partner = partner_vals['partner'].commercial_partner_id
             if partner.country_id.code in COUNTRY_EAS:
                 partner_vals['bis3_endpoint'] = partner.vat
                 partner_vals['bis3_endpoint_scheme'] = COUNTRY_EAS[partner.country_id.code]

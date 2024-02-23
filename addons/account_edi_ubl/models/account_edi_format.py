@@ -199,7 +199,7 @@ class AccountEdiFormat(models.Model):
             'bank_account': invoice.partner_bank_id,
             'note': html2plaintext(invoice.narration) if invoice.narration else False,
             'format_monetary': format_monetary,
-            'customer_vals': {'partner': invoice.commercial_partner_id},
+            'customer_vals': {'partner': invoice.partner_id},
             'supplier_vals': {'partner': invoice.company_id.partner_id.commercial_partner_id},
         }
 

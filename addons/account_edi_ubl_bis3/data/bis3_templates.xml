@@ -18,7 +18,7 @@
                     <cbc:ID t-esc="partner_vals['partner_identification']"/>
                 </cac:PartyIdentification>
                 <cac:PartyName>
-                    <cbc:Name t-esc="partner.name"/>
+                    <cbc:Name t-esc="partner.display_name"/>
                 </cac:PartyName>
                 <cac:PostalAddress>
                     <cbc:StreetName
@@ -41,8 +41,8 @@
                         <cbc:IdentificationCode t-esc="partner.country_id.code"/>
                     </cac:Country>
                 </cac:PostalAddress>
-                <cac:PartyTaxScheme t-if="partner.vat">
-                    <cbc:CompanyID t-esc="partner.vat"/>
+                <cac:PartyTaxScheme t-if="partner.commercial_partner_id.vat">
+                    <cbc:CompanyID t-esc="partner.commercial_partner_id.vat"/>
                     <cac:TaxScheme>
                         <cbc:ID>VAT</cbc:ID>
                     </cac:TaxScheme>

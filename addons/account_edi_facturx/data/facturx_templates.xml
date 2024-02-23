@@ -80,7 +80,7 @@
                 xmlns:rsm="urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100"
                 xmlns:udt="urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100">
                 <!-- Contact. -->
-                <ram:Name t-if="partner.name" t-esc="partner.name"/>
+                <ram:Name t-if="partner.display_name" t-esc="partner.display_name"/>
 
                 <ram:SpecifiedLegalOrganization t-if="SpecifiedLegalOrganization">
                     <ram:ID t-esc="SpecifiedLegalOrganization"/>
@@ -163,7 +163,7 @@
                         <ram:BuyerTradeParty>
                             <!-- Address. -->
                             <t t-call="account_edi_facturx.account_invoice_partner_facturx_export">
-                                <t t-set="partner" t-value="record.commercial_partner_id"/>
+                                <t t-set="partner" t-value="record.partner_id"/>
                                 <t t-set="SpecifiedLegalOrganization" t-value="buyer_specified_legal_organization"/>
                             </t>
 
