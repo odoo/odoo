@@ -86,7 +86,7 @@ class AnalyticMixin(models.AbstractModel):
 
     def _validate_distribution(self, **kwargs):
         if self.env.context.get('validate_analytic', False):
-            mandatory_plans_ids = [plan['id'] for plan in self.env['account.analytic.plan'].sudo().get_relevant_plans(**kwargs) if plan['applicability'] == 'mandatory']
+            mandatory_plans_ids = [plan['id'] for plan in self.env['account.analytic.plan'].sudo().with_company(self.company_id).get_relevant_plans(**kwargs) if plan['applicability'] == 'mandatory']
             if not mandatory_plans_ids:
                 return
             decimal_precision = self.env['decimal.precision'].precision_get('Percentage Analytic')

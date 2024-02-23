@@ -233,7 +233,7 @@ class AccountAnalyticPlan(models.Model):
         else:
             score = 0
             applicability = self.default_applicability
-            for applicability_rule in self.applicability_ids:
+            for applicability_rule in self.applicability_ids.filtered(lambda rule: rule.company_id == self.env.company):
                 score_rule = applicability_rule._get_score(**kwargs)
                 if score_rule > score:
                     applicability = applicability_rule.applicability
