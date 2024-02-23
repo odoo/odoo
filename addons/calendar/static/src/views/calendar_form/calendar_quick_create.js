@@ -18,18 +18,20 @@ const QUICK_CREATE_CALENDAR_EVENT_FIELDS = {
     description: { type: "string" }
 };
 
-function getDefaultValuesFromRecord(data) {
+export function getDefaultValuesFromRecord(data, fields) {
     const context = {};
-    for (let fieldName in QUICK_CREATE_CALENDAR_EVENT_FIELDS) {
+    for (let fieldName in fields) {
         if (fieldName in data) {
             let value = data[fieldName];
-            const { type } = QUICK_CREATE_CALENDAR_EVENT_FIELDS[fieldName]
+            const { type } = fields[fieldName]
             if (type === 'many2many') {
                 value = value.records.map((record) => record.resId);
             } else if (type === 'date') {
                 value = value && serializeDate(value);
             } else if (type === "datetime") {
                 value = value && serializeDateTime(value);
+            } else if (type === 'many2one') {
+                value = value[0]
             }
             context[`default_${fieldName}`] = value || false;
         }
@@ -44,7 +46,7 @@ export class CalendarQuickCreateFormController extends CalendarFormController {
     };
 
     goToFullEvent() {
-        const context = getDefaultValuesFromRecord(this.model.root.data)
+        const context = getDefaultValuesFromRecord(this.model.root.data, QUICK_CREATE_CALENDAR_EVENT_FIELDS)
         this.props.goToFullEvent(context);
     }
 }
