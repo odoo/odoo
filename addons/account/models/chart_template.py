@@ -308,18 +308,19 @@ class AccountChartTemplate(models.AbstractModel):
                 elif model_name == 'account.account':
                     # Point or create xmlid to existing record to avoid duplicate code
                     account = self.ref(xmlid, raise_if_not_found=False)
-                    if not account or (account and account.code != values['code']):
-                        existing_account = self.env['account.account'].search([
-                            *self.env['account.account']._check_company_domain(company),
-                            ('code', '=', values['code']),
-                        ])
-                        if existing_account:
+                    normalized_code = f'{values["code"]:<0{int(template_data.get("code_digits", 6))}}'
+                    if not account or not re.match(f'^{values["code"]}0*$', account.code):
+                        query = self.env['account.account']._search(self.env['account.account']._check_company_domain(company))
+                        query.add_where("account_account.code SIMILAR TO %s", [f'{values["code"]}0*'])
+                        accounts = self.env['account.account'].browse(query)
+                        account = accounts.sorted(key=lambda x: x.code != normalized_code)[0] if accounts else None
+                        if account:
                             self.env['ir.model.data']._update_xmlids([{
                                 'xml_id': f"account.{company.id}_{xmlid}",
-                                'record': existing_account,
+                                'record': account,
                                 'noupdate': True,
                             }])
-                            account = existing_account
+
                     # on existing accounts, only tag_ids are to be updated using default data
                     if account and 'tag_ids' in data[model_name][xmlid]:
                         data[model_name][xmlid] = {'tag_ids': data[model_name][xmlid]['tag_ids']}
