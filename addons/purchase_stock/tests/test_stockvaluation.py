@@ -2978,14 +2978,25 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         bill.invoice_date = bill_date
         bill.action_post()
 
-        # Check that we have price difference amls
-        self.assertEqual(len(bill.line_ids), 4)
+        product_accounts = self.product1.product_tmpl_id.get_product_accounts()
+        payable_id = self.company_data['default_account_payable'].id
+        stock_in_id = product_accounts['stock_input'].id
+        expense_id = product_accounts['expense'].id
+        self.assertRecordValues(bill.line_ids, [
+            # pylint: disable=bad-whitespace
+            {'debit': 30,   'credit': 0,    'account_id': stock_in_id,  'reconciled': True,     'amount_currency': 90},
+            {'debit': 0,    'credit': 30,   'account_id': payable_id,   'reconciled': False,    'amount_currency': -90},
+            {'debit': 0,    'credit': 15,   'account_id': expense_id,   'reconciled': False,    'amount_currency': 0},
+            {'debit': 15,   'credit': 0,    'account_id': stock_in_id,  'reconciled': True,     'amount_currency': 0},
+        ])
 
-        # Check that all the amls use the bill date exchange rate
-        self.assertEqual(
-            [self.eur_currency._convert(line.amount_currency, company.currency_id, company, bill_date) for line in bill.line_ids],
-            [line.balance for line in bill.line_ids]
-        )
+        stock_amls = self.env['account.move.line'].search([('account_id', '=', stock_in_id)])
+        self.assertRecordValues(stock_amls, [
+            # pylint: disable=bad-whitespace
+            {'debit': 30,   'credit': 0,    'account_id': stock_in_id,  'reconciled': True, 'amount_currency': 90},
+            {'debit': 15,   'credit': 0,    'account_id': stock_in_id,  'reconciled': True, 'amount_currency': 0},
+            {'debit': 0,    'credit': 45,   'account_id': stock_in_id,  'reconciled': True, 'amount_currency': -90},
+        ])
 
     def test_analytic_distribution_propagation_with_exchange_difference(self):
         # Create 2 rates in order to generate an exchange difference later.
@@ -3074,3 +3085,91 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         for line in exchange_account_move.line_ids:
             self.assertTrue(line.analytic_distribution)
             self.assertEqual(line.analytic_distribution[str(analytic_account.id)], 100)
+
+    def test_curr_rates_and_out_qty(self):
+        """
+        Company in USD
+        Yesterday:  1000 EUR = 4335.1 USD
+        Today:      1000 EUR = 4348.0 USD
+
+        Yesterday: Buy and receive one auto-AVCO product at 1000 EUR
+        Today:
+        - Deliver the product
+        - Bill the PO
+
+        When posting the bill, we should generate an exchange diff compensation
+        """
+        usd_currency = self.env.ref('base.USD')
+        eur_currency = self.env.ref('base.EUR')
+
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        customer_location = self.env.ref('stock.stock_location_customers')
+        stock_location = warehouse.lot_stock_id
+
+        today = fields.Date.today()
+        yesterday = today - timedelta(days=1)
+
+        self.env.company.currency_id = usd_currency.id
+
+        self.env['res.currency.rate'].search([]).unlink()
+        self.env['res.currency.rate'].create([{
+            'name': day.strftime('%Y-%m-%d'),
+            'rate': 1 / rate,
+            'currency_id': eur_currency.id,
+            'company_id': self.env.company.id,
+        } for (day, rate) in [
+            (yesterday, 4.3351),
+            (today, 4.3480),
+        ]])
+
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'average'
+
+        with freeze_time(yesterday):
+            po = self.env['purchase.order'].create({
+                'partner_id': self.partner_id.id,
+                'currency_id': eur_currency.id,
+                'order_line': [
+                    (0, 0, {
+                        'name': self.product1.name,
+                        'product_id': self.product1.id,
+                        'product_qty': 1.0,
+                        'product_uom': self.product1.uom_po_id.id,
+                        'price_unit': 1000.0,
+                        'taxes_id': False,
+                    }),
+                ],
+            })
+            po.button_confirm()
+
+            receipt = po.picking_ids
+            receipt.move_ids.move_line_ids.quantity = 1.0
+            receipt.button_validate()
+
+        delivery = self.env['stock.picking'].create({
+            'location_id': stock_location.id,
+            'location_dest_id': customer_location.id,
+            'picking_type_id': warehouse.out_type_id.id,
+            'move_ids': [(0, 0, {
+                'name': self.product1.name,
+                'product_id': self.product1.id,
+                'product_uom_qty': 1.0,
+                'location_id': stock_location.id,
+                'location_dest_id': customer_location.id,
+            })]
+        })
+        delivery.action_confirm()
+        delivery.move_ids.quantity = 1.0
+        delivery.button_validate()
+
+        action = po.action_create_invoice()
+        bill = self.env["account.move"].browse(action["res_id"])
+        bill.invoice_date = bill.date = today
+        bill.action_post()
+
+        in_stock_amls = self.env['account.move.line'].search([('account_id', '=', self.stock_input_account.id)], order='id')
+        self.assertRecordValues(in_stock_amls, [
+            # pylint: disable=bad-whitespace
+            {'debit': 0,        'credit': 4335.1,   'reconciled': True},
+            {'debit': 4348,     'credit': 0,        'reconciled': True},
+            {'debit': 0,        'credit': 12.9,     'reconciled': True},
+        ])
