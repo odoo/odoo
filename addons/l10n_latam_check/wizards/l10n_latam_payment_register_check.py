@@ -16,7 +16,6 @@ class l10nLatamCheckPaymentRegisterCheck(models.TransientModel):
     company_id = fields.Many2one(related='payment_register_id.company_id')
     currency_id = fields.Many2one(related='payment_register_id.currency_id')
     name = fields.Char(string='Number')
-
     l10n_latam_check_bank_id = fields.Many2one(
         comodel_name='res.bank',
         string='Check Bank',
@@ -35,7 +34,7 @@ class l10nLatamCheckPaymentRegisterCheck(models.TransientModel):
 
     @api.onchange('name')
     def _onchange_name(self):
-        for rec in self.filtered(lambda x: x.journal_id.company_id.country_id.code == "AR" and x.name
+        for rec in self.filtered(lambda x: x.payment_register_id.journal_id.company_id.country_id.code == "AR" and x.name
                                  and x.name.isdecimal()):
             rec.name = '%08d' % int(rec.name)
 

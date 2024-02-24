@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
 
-from odoo import models, fields, api
+from odoo import models, fields, api, _
 
 _logger = logging.getLogger(__name__)
 
@@ -12,7 +12,26 @@ class l10nLatamAccountPaymentCheck(models.TransientModel):
     _description = 'Account payment check'
     _check_company_auto = True
 
-    payment_ids = fields.Many2many('account.payment', required=True, ondelete='cascade')
+    payment_ids = fields.Many2many(
+        comodel_name='account.payment',
+        relation='account_payment_account_payment_check_rel',
+        column1="check_id",
+        column2="payment_id",
+        required=True,
+        string='Check Operations',
+        readonly=True,
+    )
+    l10n_latam_check_current_journal_id = fields.Many2one(
+        comodel_name='account.journal',
+        string="Check Current Journal",
+        compute='_compute_check_info', store=True,
+    )
+    partner_id = fields.Many2one(
+        comodel_name='res.partner',
+        string="Partner",
+        compute='_compute_check_info', store=True,
+    )
+
     company_id = fields.Many2one('res.company')
     currency_id = fields.Many2one('res.currency')
     name = fields.Char(string='Number')
@@ -20,34 +39,79 @@ class l10nLatamAccountPaymentCheck(models.TransientModel):
     l10n_latam_check_bank_id = fields.Many2one(
         comodel_name='res.bank',
         string='Check Bank',
-        compute='_compute_l10n_latam_check_bank_id', store=True, readonly=False,
+        # compute='_compute_l10n_latam_check_bank_id', store=True, readonly=False,
     )
     l10n_latam_check_issuer_vat = fields.Char(
         string='Check Issuer VAT',
-        compute='_compute_l10n_latam_check_issuer_vat', store=True, readonly=False,
+        # compute='_compute_l10n_latam_check_issuer_vat', store=True, readonly=False,
     )
     l10n_latam_check_payment_date = fields.Date(
         string='Check Cash-In Date',
         help="Date from when you can cash in the check, turn the check into cash",
         readonly=False,
     )
-    currency_id = fields.Many2one(related="payment_id.currency_id")
     amount = fields.Monetary()
-    #TODO Statee
+    state = fields.Selection([
+            ('on_hand', 'on hand')
+        ],
+        compute='_compute_check_info', store=True,
+    )
 
-    @api.depends('payment_register_id.payment_method_line_id.code', 'payment_register_id.partner_id')
-    def _compute_l10n_latam_check_bank_id(self):
-        new_third_party_checks = self.filtered(lambda x: x.payment_register_id.payment_method_line_id.code == 'new_third_party_checks')
-        for rec in new_third_party_checks:
-            rec.l10n_latam_check_bank_id = rec.payment_register_id.partner_id.bank_ids[:1].bank_id
-        (self - new_third_party_checks).l10n_latam_check_bank_id = False
+    @api.depends('payment_ids.state')
+    def _compute_check_info(self):
+        for rec in self:
+            last_operation = rec.payment_ids.filtered(lambda x: x.state == 'posted').sorted(key=lambda payment: (payment.date, payment.id))[-1]
+            first_operation = rec.payment_ids.filtered(lambda x: x.state == 'posted').sorted(key=lambda payment: (payment.date, payment.id))[:1]
+            if not last_operation:
+                rec.l10n_latam_check_current_journal_id = False
+                continue
+            if last_operation.is_internal_transfer and last_operation.payment_type == 'outbound':
+                rec.l10n_latam_check_current_journal_id = last_operation.paired_internal_transfer_payment_id.journal_id
+            elif last_operation.payment_type == 'inbound':
+                rec.l10n_latam_check_current_journal_id = last_operation.journal_id
+            else:
+                rec.l10n_latam_check_current_journal_id = False
+            if first_operation.payment_method_code in ['in_third_party_checks', 'new_third_party_checks', 'own_checks']:
+                rec.partner_id = first_operation.partner_id.id
+            else:
+                rec.partner_id = False
 
-    @api.depends('payment_register_id.payment_method_line_id.code', 'payment_register_id.partner_id')
-    def _compute_l10n_latam_check_issuer_vat(self):
-        new_third_party_checks = self.filtered(lambda x: x.payment_register_id.payment_method_line_id.code == 'new_third_party_checks')
-        for rec in new_third_party_checks:
-            rec.l10n_latam_check_issuer_vat = rec.payment_register_id.partner_id.vat
-        (self - new_third_party_checks).l10n_latam_check_issuer_vat = False
+            rec.state = False
+
+    def button_open_check_operations(self):
+        ''' Redirect the user to the invoice(s) paid by this payment.
+        :return:    An action on account.move.
+        '''
+        self.ensure_one()
+
+        operations = (self.payment_ids.filtered(lambda x: x.state == 'posted'))
+        action = {
+            'name': _("Check Operations"),
+            'type': 'ir.actions.act_window',
+            'res_model': 'account.payment',
+            'views': [
+                # (self.env.ref('l10n_latam_check.view_account_third_party_check_operations_tree').id, 'tree'),
+                (self.env.ref('account.view_account_payment_tree').id, 'tree'),
+
+                (False, 'form')],
+            'context': {'create': False},
+            'domain': [('id', 'in', operations.ids)],
+        }
+        return action
+
+    # @api.depends('payment_register_id.payment_method_line_id.code', 'payment_register_id.partner_id')
+    # def _compute_l10n_latam_check_bank_id(self):
+    #     new_third_party_checks = self.filtered(lambda x: x.payment_register_id.payment_method_line_id.code == 'new_third_party_checks')
+    #     for rec in new_third_party_checks:
+    #         rec.l10n_latam_check_bank_id = rec.payment_register_id.partner_id.bank_ids[:1].bank_id
+    #     (self - new_third_party_checks).l10n_latam_check_bank_id = False
+
+    # @api.depends('payment_register_id.payment_method_line_id.code', 'payment_register_id.partner_id')
+    # def _compute_l10n_latam_check_issuer_vat(self):
+    #     new_third_party_checks = self.filtered(lambda x: x.payment_register_id.payment_method_line_id.code == 'new_third_party_checks')
+    #     for rec in new_third_party_checks:
+    #         rec.l10n_latam_check_issuer_vat = rec.payment_register_id.partner_id.vat
+    #     (self - new_third_party_checks).l10n_latam_check_issuer_vat = False
 
 
     # @api.onchange('l10n_latam_check_issuer_vat')
