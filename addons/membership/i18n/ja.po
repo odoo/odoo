@@ -5,6 +5,7 @@
 # Translators:
 # Wil Odoo, 2023
 # Ryoko Tsuda <ryoko@quartile.co>, 2023
+# Junko Augias, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2023\n"
+"Last-Translator: Junko Augias, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -103,13 +104,13 @@ msgstr "会員資格の購入"
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_membership_invoice_view
 msgid "Cancel"
-msgstr "キャンセル"
+msgstr "取消"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_res_partner__membership_cancel
 #: model:ir.model.fields,field_description:membership.field_res_users__membership_cancel
 msgid "Cancel Membership Date"
-msgstr "会員のキャンセル日"
+msgstr "会員退会日"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__date_cancel
@@ -318,11 +319,11 @@ msgid ""
 msgstr ""
 "メンバーシップの状態を示します。\n"
 "- 非会員：いかなる会員資格も申請していないパートナー。\n"
-"- キャンセル済会員：メンバーシップをキャンセルした会員。\n"
+"- 退会済会員：メンバーシップを取消した会員。\n"
 "- 古い会員：会員期限が切れた会員。\n"
 "- 入会待ち会員：メンバーシップを申請し、請求書を作成する会員。\n"
 "- 請求済会員：請求書が作成された会員。\n"
-"- 支払い会員：会費を支払った会員。"
+"- 支払済会員：会費を支払った会員。"
 
 #. module: membership
 #: model:ir.model.fields,help:membership.field_membership_membership_line__state
@@ -335,13 +336,13 @@ msgid ""
 "-Invoiced Member: A member whose invoice has been created.\n"
 "-Paid Member: A member who has paid the membership amount."
 msgstr ""
-"メンバーシップのステータスを示します。\n"
-"-メンバーではない：どのメンバーシップにも申し込まなかったメンバー。\n"
-"- キャンセルされたメンバー：メンバーシップをキャンセルしたメンバー。\n"
-"- 古いメンバー：メンバーシップ日付が期限切れになったメンバー。\n"
-"- 待っているメンバー：メンバーシップおよび作成されようとしている送り状申し込んだメンバー。\n"
-"- 送り状を送られたメンバー：送り状が作成されたメンバー。\n"
-"- 支払われたメンバー：メンバーシップ料を支払ったメンバー。"
+"メンバーシップの状態を示します。\n"
+"- 非会員：いかなる会員資格も申請していないパートナー。\n"
+"- 退会済会員：メンバーシップを取消した会員。\n"
+"- 古い会員：会員期限が切れた会員。\n"
+"- 入会待ち会員：メンバーシップを申請し、請求書を作成する会員。\n"
+"- 請求済会員：請求書が作成された会員。\n"
+"- 支払済会員：会費を支払った会員。"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__date

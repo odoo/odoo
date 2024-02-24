@@ -4,9 +4,9 @@
 # 
 # Translators:
 # Martin Trigaux, 2023
-# Larissa Manderfeld, 2024
 # Wil Odoo, 2024
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2024
+# Larissa Manderfeld, 2024
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-29 10:44+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2024\n"
+"Last-Translator: Larissa Manderfeld, 2024\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,7 +37,7 @@ msgid ""
 msgstr ""
 "\n"
 "                <p class=\"o_view_nocontent_smiling_face\">\n"
-"                    No se han encontrado objetivos. ¡Creemos uno!\n"
+"                    No se han encontrado hitos. ¡Creemos uno!\n"
 "                </p><p>\n"
 "                    Lleve un seguimiento de los principales puntos de progreso a alcanzar para lograr el éxito.\n"
 "                </p>\n"
@@ -190,8 +190,7 @@ msgstr "- alcanzado el"
 #, python-format
 msgid "<b>Drag &amp; drop</b> the card to change your task from stage."
 msgstr ""
-"<b>Arrastra y suelta</b> la tarjeta para cambiar tu tarea desde el "
-"escenario."
+"<b>Arrastre y suelte</b> la tarjeta para cambiar su tarea desde la etapa."
 
 #. module: project
 #. odoo-javascript
@@ -377,7 +376,7 @@ msgid ""
 msgstr ""
 "<div>\n"
 "    Estimado <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br>\n"
-"    Tenemos el placer de comunicarle que ha concluido con éxito el proyecto \"<strong t-out=\"object.name or ''\">Renovaciones</strong>\".\n"
+"    Tenemos el placer de comunicarle que hemos finalizado con éxito el proyecto \"<strong t-out=\"object.name or ''\">Renovaciones</strong>\".\n"
 "    <t t-if=\"user.signature\">\n"
 "        <br>\n"
 "        <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
@@ -442,9 +441,9 @@ msgid ""
 "<i class=\"fa fa-warning\" title=\"Customer disabled on projects\"/><b> "
 "Customer Ratings</b> are disabled on the following project(s) : <br/>"
 msgstr ""
-"<i class=\"fa fa-warning\" title=\"Cliente deshabilitado en proyectos\"/><b>"
-" Calificaciones de los clientes</b> están deshabilitados en los siguientes "
-"proyectos : <br/>"
+"<i class=\"fa fa-warning\" title=\"Customer disabled on projects\"/><b> Las "
+"valoraciones de los clientes</b> están deshabilitadas para los siguientes "
+"proyectos: <br/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -651,7 +650,7 @@ msgstr "Una tarea solo puede tener una etapa personal por usuario."
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Accept Emails From"
-msgstr "Aceptar los correos electrónicos  de"
+msgstr "Aceptar correos electrónicos de"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__access_instruction_message
@@ -744,7 +743,7 @@ msgstr "Agregar un nuevo plan"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 msgid "Add a note"
-msgstr "Agregar nota"
+msgstr "Agregar una nota"
 
 #. module: project
 #. odoo-javascript
@@ -755,13 +754,13 @@ msgid ""
 "Add columns to organize your tasks into <b>stages</b> <i>e.g. New - In "
 "Progress - Done</i>."
 msgstr ""
-"Agregue columnas para organizar sus tareas en <b>etapas,</b> <i>por ejemplo,"
-" Nuevo - En curso - Hecho</i> ."
+"Agregue columnas para organizar sus tareas en <b>etapas</b>, <i>por ejemplo,"
+" Nuevo - En progreso - Hecho</i> ."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 msgid "Add contacts to share the project..."
-msgstr "Agregar contactos para compartir el proyecto...."
+msgstr "Agregue contactos para compartir el proyecto...."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -771,14 +770,14 @@ msgstr "Agregue detalles sobre esta tarea..."
 #. module: project
 #: model:ir.model.fields,help:project.field_project_share_wizard__note
 msgid "Add extra content to display in the email"
-msgstr "Agregar contenido adicional para mostrar en el correo electrónico"
+msgstr "Agregue contenido adicional para mostrar en el correo electrónico"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Add your task once it is ready."
-msgstr "Agregue su tarea una vez que esté lista."
+msgstr "Agregue su tarea cuando esté lista."
 
 #. module: project
 #: model:res.groups,name:project.group_project_manager
@@ -800,12 +799,12 @@ msgstr "Alias"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_contact
 msgid "Alias Contact Security"
-msgstr "Alias del contacto de seguridad"
+msgstr "Seguridad de contacto del alias"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_domain_id
 msgid "Alias Domain"
-msgstr "Alias del dominio"
+msgstr "Dominio de alias"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_domain
@@ -820,7 +819,7 @@ msgstr "Correo electrónico del alias"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_name
 msgid "Alias Name"
-msgstr "Alias"
+msgstr "Nombre del alias"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_status
@@ -835,7 +834,7 @@ msgstr "Estado del alias evaluado en el último mensaje recibido."
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_model_id
 msgid "Aliased Model"
-msgstr "Modelo con seudónimo"
+msgstr "Modelo con alias"
 
 #. module: project
 #. odoo-python
@@ -891,10 +890,10 @@ msgid ""
 "This analytic account can be changed on each task individually if necessary.\n"
 "An analytic account is required in order to use timesheets."
 msgstr ""
-"La cuenta analítica a la que están vinculados este proyecto, sus tareas y sus partes de horas. \n"
+"La cuenta analítica a la que están vinculados este proyecto, sus tareas y sus hojas de asistencia. \n"
 "Lleve el seguimiento de los costes e ingresos de su proyecto al establecer esta cuenta analítica en sus documentos relacionados (por ejemplo, pedidos de venta, facturas, pedidos de compra, facturas de proveedor, gastos, etc.).\n"
 "Esta cuenta analítica se puede cambiar en cada tarea de forma individual si es necesario.\n"
-"Se necesita una cuenta analítica para usar partes de horas."
+"Se necesita una cuenta analítica para usar hojas de asistencia."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__analytic_account_id
@@ -903,7 +902,7 @@ msgid ""
 "Track the costs and revenues of your task by setting its analytic account on your related documents (e.g. sales orders, invoices, purchase orders, vendor bills, expenses etc.).\n"
 "By default, the analytic account of the project is set. However, it can be changed on each task individually if necessary."
 msgstr ""
-"La cuenta analítica a la que están vinculados este proyecto, sus tareas y sus partes de horas. \n"
+"La cuenta analítica a la que están vinculados este proyecto, sus tareas y sus hojas de asistencia. \n"
 "Lleve el seguimiento de los costes e ingresos de su proyecto al establecer esta cuenta analítica en sus documentos relacionados (por ejemplo, pedidos de venta, facturas, pedidos de compra, facturas de proveedor, gastos, etc.).\n"
 "Por defecto, se establece la cuenta analítica de este proyecto. Sin embargo, puede ser cambiada de manera individual en cada tarea si fuera necesario."
 
@@ -1019,7 +1018,7 @@ msgstr "Tareas asignadas"
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_search_project
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_tree_project
 msgid "Assigned to"
-msgstr "Asignada a"
+msgstr "Asignado a"
 
 #. module: project
 #. odoo-python
@@ -1056,7 +1055,7 @@ msgstr "Fecha de asignación"
 #: model:ir.model.fields.selection,name:project.selection__project_update__status__at_risk
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 msgid "At Risk"
-msgstr "En Riesgo"
+msgstr "En riesgo"
 
 #. module: project
 #. odoo-javascript
@@ -1154,7 +1153,7 @@ msgstr "Valoración promedio: Satisfecho"
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Backlog"
-msgstr "Reserva"
+msgstr "Backlog"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__analytic_account_balance
@@ -1222,7 +1221,7 @@ msgstr "Diagrama de quemado"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__can_be_marked_as_done
 msgid "Can Be Marked As Done"
-msgstr "Puede marcarse como realizado"
+msgstr "Puede marcarse como Hecho"
 
 #. module: project
 #. odoo-javascript
@@ -1456,7 +1455,7 @@ msgstr "Convertir en tareas/subtareas "
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Copywriting"
-msgstr "Redacción de textos publicitarios"
+msgstr "Redacción"
 
 #. module: project
 #. odoo-javascript
@@ -1643,7 +1642,7 @@ msgstr "Correo electrónico del cliente"
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Customer Feedback"
-msgstr "Opinión de los Clientes"
+msgstr "Opinión de los clientes"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__access_url
@@ -1854,8 +1853,8 @@ msgid ""
 "Deliver your services automatically when a milestone is reached by linking "
 "it to a sales order item."
 msgstr ""
-"Ofrezca sus servicios automáticamente cada vez que se alcance un objetivo, "
-"se puede hacer vinculándolo a un artículo de la orden de venta."
+"Ofrezca sus servicios automáticamente cada vez que se alcance un hito, se "
+"puede hacer vinculándolo a un artículo de la orden de venta."
 
 #. module: project
 #. odoo-javascript
@@ -2297,14 +2296,14 @@ msgid ""
 " in the chatter of the tasks."
 msgstr ""
 "Gestione la recopilación de ideas dentro de las tareas de su nuevo proyecto "
-"y hable acerca de ellas en el chatter."
+"y hable acerca de ellas en el chatter de tareas."
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Handoff"
-msgstr "Manos libres"
+msgstr "Transferencia"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -2315,7 +2314,7 @@ msgstr "Cara feliz"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__has_late_and_unreached_milestone
 msgid "Has Late And Unreached Milestone"
-msgstr "Tiene un objetivo atrasado y sin alcanzar"
+msgstr "Tiene un hito atrasado y no alcanzado"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__has_message
@@ -2600,7 +2599,7 @@ msgstr "Es un seguidor"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__is_milestone_exceeded
 msgid "Is Milestone Exceeded"
-msgstr "¿Ha alcanzado su objetivo?"
+msgstr "¿Ha alcanzado su hito?"
 
 #. module: project
 #. odoo-javascript
@@ -2723,7 +2722,7 @@ msgstr "Actividades tardías"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Late Milestones"
-msgstr "Objetivos atrasados"
+msgstr "Hitos atrasados"
 
 #. module: project
 #. odoo-python
@@ -2816,7 +2815,7 @@ msgstr "Detección de entradas basada en partes locales"
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Logo Design"
-msgstr "Diseño de Logotipo"
+msgstr "Diseño de logotipo"
 
 #. module: project
 #. odoo-javascript
@@ -2844,8 +2843,8 @@ msgid ""
 "Manage the lifecycle of your project using the kanban view. Add newly acquired projects,\n"
 "      assign them and use the"
 msgstr ""
-"Gestione el ciclo de vida de su proyecto mediante la vista kanban. Añada proyectos recién adquiridos,\n"
-"      asígnelos y utilice el"
+"Administre el ciclo de vida de su proyecto usando la vista kanban. Agregue proyectos recién adquiridos,\n"
+"      asígnelos y use"
 
 #. module: project
 #. odoo-javascript
@@ -2959,7 +2958,7 @@ msgstr "Hitos"
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Mixing"
-msgstr "Mixto"
+msgstr "Mezcla"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_unit__month
@@ -3195,7 +3194,7 @@ msgstr "No hay valoraciones de clientes todavía"
 #: model_terms:ir.actions.act_window,help:project.action_project_task_burndown_chart_report
 #: model_terms:ir.actions.act_window,help:project.action_project_task_user_tree
 msgid "No data yet!"
-msgstr "No hay información aún"
+msgstr "¡Todavía no hay información!"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all
@@ -3409,17 +3408,17 @@ msgstr "Tareas sobrepasadas"
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Page Ideas"
-msgstr "Ideas para Páginas"
+msgstr "Ideas para páginas"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_parent_model_id
 msgid "Parent Model"
-msgstr "Modelo padre"
+msgstr "Modelo principal"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_parent_thread_id
 msgid "Parent Record Thread ID"
-msgstr "ID del hilo del registro padre"
+msgstr "ID del hilo del registro principal"
 
 #. module: project
 #. odoo-python
@@ -3428,7 +3427,7 @@ msgstr "ID del hilo del registro padre"
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__parent_id
 #, python-format
 msgid "Parent Task"
-msgstr "Tarea padre"
+msgstr "Tarea principal"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_parent_model_id
@@ -3437,8 +3436,8 @@ msgid ""
 " necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
-"Modelo padre que contiene el alias. El modelo que contiene la referencia "
-"alias no es necesariamente el modelo dado por alias_model_id (example: "
+"Modelo principal que contiene el alias. El modelo que contiene la referencia"
+" del alias no es necesariamente el modelo dado por alias_model_id (example: "
 "project (parent_model) and task (model))"
 
 #. module: project
@@ -3505,7 +3504,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__rating_percentage_satisfaction
 msgid "Percentage of happy ratings"
-msgstr "Porcentaje de valoraciones positivas"
+msgstr "Porcentaje de calificaciones positivas"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__personal_stage_type_id
@@ -3565,7 +3564,7 @@ msgid ""
 msgstr ""
 "Política para publicar un mensaje en el documento utilizando el servidor de correo.\n"
 "- todo el mundo: todos pueden publicar\n"
-"- socios: sólo socios autenticados\n"
+"- contacto: sólo contactos autenticados\n"
 "- seguidores: sólo seguidores del documento relacionado o miembros de los siguientes canales\n"
 
 #. module: project
@@ -3925,7 +3924,7 @@ msgstr "Publicado el"
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Publishing"
-msgstr "Publicando"
+msgstr "Edición"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__quarterly
@@ -3953,7 +3952,7 @@ msgstr "Calificación"
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__rating_last_value
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_graph
 msgid "Rating (/5)"
-msgstr "Valoración (/5)"
+msgstr "Calificación (/5)"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_avg_text
@@ -3963,12 +3962,12 @@ msgstr "Texto de calificación promedio"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__rating_template_id
 msgid "Rating Email Template"
-msgstr "Plantilla de email de calificación"
+msgstr "Plantilla del correo de calificación"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_status_period
 msgid "Rating Frequency"
-msgstr "Frecuencia de valoración"
+msgstr "Frecuencia de calificación"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_last_feedback
@@ -4007,12 +4006,12 @@ msgstr "Texto de calificación"
 #: code:addons/project/static/src/views/project_rating_pivot/project_rating_pivot_view.js:0
 #, python-format
 msgid "Rating Value (/5)"
-msgstr "Valor de calificación (/ 5)"
+msgstr "Valor de calificación (/5)"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_count
 msgid "Rating count"
-msgstr "Cuenta de calificación"
+msgstr "Número de calificaciones"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.rating_rating_action_task
@@ -4022,7 +4021,7 @@ msgstr "Cuenta de calificación"
 #: model:ir.model.fields,field_description:project.field_project_task__rating_ids
 #: model:ir.model.fields,field_description:project.field_project_update__rating_ids
 msgid "Ratings"
-msgstr "Valoraciones"
+msgstr "Calificaciones"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__is_reached
@@ -4141,7 +4140,7 @@ msgstr "Investigación y desarrollo"
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Research Project"
-msgstr "Proyecto de Investigación"
+msgstr "Proyecto de investigación"
 
 #. module: project
 #. odoo-javascript
@@ -4155,7 +4154,7 @@ msgstr "Investigando"
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Resources Allocation"
-msgstr "Asignación de Recursos"
+msgstr "Asignación de recursos"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__activity_user_id
@@ -4190,14 +4189,14 @@ msgstr "Cara triste"
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Schedule your activity once it is ready."
-msgstr "Programe su actividad una vez que esté lista."
+msgstr "Programe su actividad cuando esté lista."
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Script"
-msgstr "Script"
+msgstr "Guion"
 
 #. module: project
 #. odoo-python
@@ -4249,7 +4248,7 @@ msgstr "Buscar en mensajes"
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in Milestone"
-msgstr "Buscar en objetivo"
+msgstr "Buscar en hito"
 
 #. module: project
 #. odoo-python
@@ -4410,7 +4409,7 @@ msgstr "Compartir con formato de solo lectura"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__is_favorite
 msgid "Show Project on Dashboard"
-msgstr "Mostrar el proyecto en el tablero"
+msgstr "Mostrar proyecto en el tablero"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
@@ -4451,7 +4450,7 @@ msgstr "Especificaciones"
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Sprint Backlog"
-msgstr "Sprint Backlog"
+msgstr "Backlog de sprint"
 
 #. module: project
 #. odoo-javascript
@@ -4494,7 +4493,7 @@ msgstr "Etapa cambiada"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__user_id
 msgid "Stage Owner"
-msgstr "Dueño de la etapa"
+msgstr "Propietario de la etapa"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_stage
@@ -4899,12 +4898,12 @@ msgstr "La fecha final debe ser en el futuro"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "The following milestone has been added:"
-msgstr "Se ha añadido el siguiente hito:"
+msgstr "Se ha agregado el siguiente hito:"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "The following milestones have been added:"
-msgstr "Se han añadido los siguientes hitos:"
+msgstr "Se han agregado los siguientes hitos:"
 
 #. module: project
 #. odoo-python
@@ -4931,9 +4930,8 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
-"El nombre de este seudónimo de correo electrónico. Por ejemplo, "
-"\"trabajos\",  si lo que quiere es obtener los correos para "
-"<trabajos@example.odoo.com>"
+"El nombre de este alias de correo electrónico. Por ejemplo, \"trabajos\",  "
+"si lo que quiere es obtener los correos para <trabajos@example.odoo.com>"
 
 #. module: project
 #. odoo-python
@@ -5195,7 +5193,7 @@ msgstr "A facturar"
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "To Print"
-msgstr "Para Imprimir"
+msgstr "A imprimir"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_sharing_project_task_action_sub_task
@@ -5361,7 +5359,7 @@ msgstr "No asignado"
 #: code:addons/project/models/project_project.py:0
 #, python-format
 msgid "Unknown Analytic Account"
-msgstr "Cuenta Analítica Desconocida"
+msgstr "Cuenta analítica desconocida"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
@@ -5396,12 +5394,12 @@ msgstr "Uso"
 #. module: project
 #: model:res.groups,name:project.group_project_milestone
 msgid "Use Milestones"
-msgstr "Usar objetivos"
+msgstr "Usar hitos"
 
 #. module: project
 #: model:res.groups,name:project.group_project_rating
 msgid "Use Rating on Project"
-msgstr "Use la Calificación en el Proyecto"
+msgstr "Usar calificación en el proyecto"
 
 #. module: project
 #: model:res.groups,name:project.group_project_recurring_tasks
@@ -5428,7 +5426,7 @@ msgstr "Usar tareas como"
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Use This For My Project"
-msgstr "Use esto para mi proyecto"
+msgstr "Usar esto para mi proyecto"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_tags_action
@@ -5807,7 +5805,7 @@ msgid ""
 "      moved to the \"Refused\" column."
 msgstr ""
 "y cuál\n"
-"      pasará a la columna de \"Rechazado\"."
+"      pasarán a la columna de \"Rechazado\"."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_kanban
@@ -5838,14 +5836,14 @@ msgstr "comentarios"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_form
 msgid "e.g. Monthly review"
-msgstr "p. ej., valoración mensual"
+msgstr "p. ej. calificación mensual"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
 #: model_terms:ir.ui.view,arch_db:project.quick_create_project_form
 msgid "e.g. Office Party"
-msgstr "e.g. Fiesta en la oficina"
+msgstr "p. ej. Fiesta en la oficina"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -5857,12 +5855,12 @@ msgstr "p. ej., lanzamiento de producto"
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_quick_create_task_form
 #: model_terms:ir.ui.view,arch_db:project.quick_create_task_form
 msgid "e.g. Send Invitations"
-msgstr "Por ejemplo, enviar invitaciones"
+msgstr "p. ej. enviar invitaciones"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "e.g. Tasks"
-msgstr "por ejemplo, tareas"
+msgstr "p. ej. tareas"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.personal_task_type_edit
@@ -5872,7 +5870,7 @@ msgstr "por ejemplo, tareas"
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 #: model_terms:ir.ui.view,arch_db:project.task_type_tree
 msgid "e.g. To Do"
-msgstr "por ejemplo, actividades pendientes"
+msgstr "p. ej. actividades pendientes"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -5883,12 +5881,12 @@ msgstr "p. ej. dominio.com"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
 msgid "e.g. office-party"
-msgstr "p.ej. fiesta de oficina"
+msgstr "p. ej. fiesta de oficina"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_milestone_view_form
 msgid "e.g: Product Launch"
-msgstr "p. ej., lanzamiento de producto"
+msgstr "p. ej. lanzamiento de producto"
 
 #. module: project
 #. odoo-javascript
@@ -5967,8 +5965,8 @@ msgstr ""
 msgid ""
 "state to inform your colleagues that a task is approved for the next stage."
 msgstr ""
-"para informarle a sus compañeros que una tarea está aprobada para la "
-"siguiente etapa."
+"para informar a sus colegas que una tarea está aprobada para la siguiente "
+"etapa."
 
 #. module: project
 #. odoo-javascript

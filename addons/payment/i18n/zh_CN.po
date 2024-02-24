@@ -36,7 +36,7 @@ msgstr " 数据已获取"
 msgid ""
 "<h3>Please make a payment to: </h3><ul><li>Bank: %s</li><li>Account Number: "
 "%s</li><li>Account Holder: %s</li></ul>"
-msgstr "<h3>请付款至：</h3><ul><li>银行：%s</li><li> 账号：%s</li><li>账户持有人：%s</li></ul>"
+msgstr "<h3>请支付至：</h3><ul><li>银行：%s</li><li> 账号：%s</li><li>账户持有人：%s</li></ul>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_form
@@ -48,8 +48,8 @@ msgid ""
 msgstr ""
 "<i class=\"fa fa-exclamation-triangle\"/> 这些属性是为\n"
 "                                供应商及其与\n"
-"                                Odoo 就付款方式进行整合而设置。任何更改都可能导致错误\n"
-"                                并应首先在测试数据库中进行测试。"
+"                                ERP 就付款方式进行集成而设置。任何更改都可能导致错误\n"
+"                                并应首先在测试数据库中进行测试."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.portal_breadcrumb
@@ -502,7 +502,7 @@ msgid ""
 msgstr ""
 "当交货完成时，从 ERP 获取金额。\n"
 "如果您想在确定您可以向客户发货时才从客户的卡上扣款，就可以使用这个方法。\n"
-"您确定您能把货物运给他们时才使用."
+"您确定您能把物资运给他们时才使用."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__child_transaction_ids
@@ -1437,7 +1437,7 @@ msgstr "退款"
 msgid ""
 "Refund is a feature allowing to refund customers directly from the payment "
 "in Odoo."
-msgstr "退款是一项允许从 ERP 付款中直接向客户退款的功能。"
+msgstr "退款是一项允许从 ERP 支付中直接向客户退款的功能."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
@@ -2102,6 +2102,15 @@ msgstr "电汇"
 #: model:payment.provider,name:payment.payment_provider_xendit
 msgid "Xendit"
 msgstr "Xendit"
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_provider.py:0
+#, python-format
+msgid ""
+"You cannot change the company of a payment provider with existing "
+"transactions."
+msgstr ""
 
 #. module: payment
 #. odoo-python

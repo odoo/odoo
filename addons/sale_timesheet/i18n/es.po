@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
-# Martin Trigaux, 2024
+# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2024
 # Larissa Manderfeld, 2024
 # 
 msgid ""
@@ -277,7 +277,7 @@ msgstr "Facturación basada en objetivos"
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__timesheet_invoice_type__billable_time
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
 msgid "Billed on Timesheets"
-msgstr "Facturado en partes de horas"
+msgstr "Facturado en hojas de asistencia"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
@@ -610,7 +610,7 @@ msgstr "Facturación"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_advance_payment_inv__invoicing_timesheet_enabled
 msgid "Invoicing Timesheet Enabled"
-msgstr "Habilitada facturación parte de horas"
+msgstr "Habilitada facturación hoja de asistencia"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__is_cost_changed
@@ -677,7 +677,7 @@ msgid ""
 "Create a task and track hours: Create a task on the sales order validation and track the work hours."
 msgstr ""
 "Establezca manualmente las cantidades en la orden: la factura se basa en la cantidad entregada manualmente, sin crear una cuenta analítica.\n"
-"Partes de horas en el contrato: la factura se basa en las horas registradas en la hoja de tiempo relacionada.\n"
+"Hojas de asistencia en el contrato: la factura se basa en las horas registradas en la hoja de tiempo relacionada.\n"
 "Cree una tarea y realice un seguimiento de las horas: cree una tarea en la validación de la orden de venta y realice un seguimiento de las horas de trabajo."
 
 #. module: sale_timesheet
@@ -729,7 +729,7 @@ msgstr "Sin actividades disponibles ¡creemos una nueva!"
 #. module: sale_timesheet
 #: model_terms:ir.actions.act_window,help:sale_timesheet.timesheet_action_billing_report
 msgid "No data yet!"
-msgstr "No hay información aún"
+msgstr "¡Todavía no hay información!"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__non_billable
@@ -791,10 +791,10 @@ msgid ""
 "yet invoiced (and validated, if applicable) will be invoiced without "
 "distinction."
 msgstr ""
-"Solo se facturarán los partes de horas aún no facturados (y validados, si "
-"corresponde) de este período. Si no se indica el plazo, todos los partes de "
-"horas aún no facturados (y validados, si corresponde) se facturarán sin "
-"distinción."
+"Solo se facturarán los hojas de asistencia aún no facturados (y validados, "
+"si corresponde) de este periodo. Si no se indica el plazo, todos los hojas "
+"de asistencia aún no facturados (y validados, si corresponde) se facturarán "
+"sin distinción."
 
 #. module: sale_timesheet
 #. odoo-python
@@ -811,7 +811,7 @@ msgstr "Referencia del pedido"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
 msgid "Hours Ordered,"
-msgstr ""
+msgstr "horas pedidas,"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_product_product__service_upsell_threshold
@@ -847,7 +847,7 @@ msgid ""
 "timesheets on tasks."
 msgstr ""
 "Producto del artículo de la orden de venta. Debe ser un servicio facturado "
-"en función de los partes de horas de las tareas."
+"en función de los hojas de asistencia de las tareas."
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_project
@@ -937,7 +937,7 @@ msgstr "Horas restantes en la orden de venta"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
 msgid "Hours Remaining)"
-msgstr ""
+msgstr "horas restantes)"
 
 #. module: sale_timesheet
 #: model_terms:ir.actions.act_window,help:sale_timesheet.timesheet_action_billing_report
@@ -1221,8 +1221,8 @@ msgid ""
 "The sales order cannot be created because some timesheets of this project "
 "are already linked to another sales order."
 msgstr ""
-"El pedido de cliente no se puede crear porque algunos partes de horas de "
-"este proyecto ya están vinculados a otro pedido de cliente."
+"El pedido de cliente no se puede crear porque algunos hojas de asistencia de"
+" este proyecto ya están vinculados a otro pedido de cliente."
 
 #. module: sale_timesheet
 #. odoo-python
@@ -1282,7 +1282,7 @@ msgstr "Servicios por tiempo"
 #: model:ir.actions.act_window,name:sale_timesheet.timesheet_action_plan_pivot
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_hr_timesheet_line_graph_employee_per_date
 msgid "Timesheet"
-msgstr "Parte de horas"
+msgstr "Hoja de asistencia"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheets_analysis_report_graph_invoice_type
@@ -1290,7 +1290,7 @@ msgstr "Parte de horas"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_hr_timesheet_line_graph_employee_per_date
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_hr_timesheet_line_pivot_billing_rate
 msgid "Timesheet Costs"
-msgstr "Coste de los parte de horas"
+msgstr "Costes de hojas de asistencia"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_bank_statement_line__timesheet_encode_uom_id
@@ -1298,13 +1298,13 @@ msgstr "Coste de los parte de horas"
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_payment__timesheet_encode_uom_id
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__timesheet_encode_uom_id
 msgid "Timesheet Encoding Unit"
-msgstr "Unidad de codificación de parte de horas"
+msgstr "Unidad de codificación de hoja de asistencia"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__timesheet_product_id
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__timesheet_product_id
 msgid "Timesheet Product"
-msgstr "Producto de Parte de horas"
+msgstr "Producto de hojas de asistencia"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_report_search_sale_timesheet
@@ -1324,12 +1324,12 @@ msgstr "Ingresos de la hoja de asistencia"
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_payment__timesheet_total_duration
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__timesheet_total_duration
 msgid "Timesheet Total Duration"
-msgstr "Duración total del parte de horas"
+msgstr "Duración total de la hoja de asistencia"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__timesheet_count
 msgid "Timesheet activities"
-msgstr "Actividades del parte de horas"
+msgstr "Actividades de la hoja de asistencia"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -1348,7 +1348,7 @@ msgstr "Actividades del parte de horas"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_hr_timesheet_line_pivot_billing_rate
 #, python-format
 msgid "Timesheets"
-msgstr "Partes de horas"
+msgstr "Hojas de asistencia"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -1398,7 +1398,7 @@ msgstr "Informe de análisis de hoja de asistencia"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.sale_advance_payment_inv_timesheet_view_form
 msgid "Timesheets Period"
-msgstr "Período de partes de horas"
+msgstr "Periodo de hojas de asistencia"
 
 #. module: sale_timesheet
 #: model:ir.actions.act_window,name:sale_timesheet.timesheet_action_billing_report
@@ -1415,7 +1415,7 @@ msgstr "Hojas de asistencia de"
 #: code:addons/sale_timesheet/models/project.py:0
 #, python-format
 msgid "Timesheets of %s"
-msgstr "Partes de horas de %s"
+msgstr "Hojas de asistencia de %s"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__product_template__service_type__timesheet

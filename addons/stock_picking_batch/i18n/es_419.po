@@ -5,6 +5,7 @@
 # Translators:
 # Iran Villalobos López, 2023
 # Wil Odoo, 2024
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:32+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -75,7 +76,7 @@ msgid ""
 "A transfer will not be automatically added to batches that will exceed this number of lines if the transfer is added to it.\n"
 "Leave this value as '0' if no line limit."
 msgstr ""
-"Si el lote excede el número de líneas, no se agregará el traslado de forma automática\n"
+"Si el lote excede el número de líneas, no se agregará el traslado de forma automática.\n"
 "Deje este valor como \"0\" si no hay límite de líneas."
 
 #. module: stock_picking_batch
@@ -123,7 +124,7 @@ msgstr "Agregar operaciones"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_to_batch_form
 msgid "Add pickings to"
-msgstr "Agregar recolecciones a"
+msgstr "Agregar recolecciones de pedidos a"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_add_to_wave_form
@@ -138,7 +139,7 @@ msgstr "Agregar"
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_move_line_tree_detailed_wave
 #, python-format
 msgid "Add to Wave"
-msgstr "Agregar a recolección por olas"
+msgstr "Agregar a preparaciones de pedidos por olas"
 
 #. module: stock_picking_batch
 #: model:ir.actions.act_window,name:stock_picking_batch.stock_picking_to_batch_action_stock_picking
@@ -148,7 +149,7 @@ msgstr "Agregar a lote"
 #. module: stock_picking_batch
 #: model:ir.actions.act_window,name:stock_picking_batch.stock_add_to_wave_action_stock_picking
 msgid "Add to wave"
-msgstr "Agregar a recolección por olas"
+msgstr "Agregar a preparación de pedidos por olas"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
@@ -158,7 +159,7 @@ msgstr "Asignación"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__allowed_picking_ids
 msgid "Allowed Picking"
-msgstr "Recolección permitida"
+msgstr "Recolección de pedidos permitida"
 
 #. module: stock_picking_batch
 #. odoo-python
@@ -207,7 +208,8 @@ msgstr "Agrupar de forma automática lotes por ubicación de origen."
 msgid ""
 "Automatically put pickings into batches as they are confirmed when possible."
 msgstr ""
-"Poner recolecciones en lotes de forma automática cada que se confirmen."
+"Poner recolecciones de pedidos en lotes de forma automática cada que se "
+"confirmen."
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
@@ -286,7 +288,7 @@ msgstr "Cancelado"
 #: code:addons/stock_picking_batch/wizard/stock_add_to_wave.py:0
 #, python-format
 msgid "Cannot create wave transfers"
-msgstr "No se pueden crear traslados con recolección por olas"
+msgstr "No se pueden crear traslados con preparación de pedidos por olas"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
@@ -328,12 +330,12 @@ msgstr "Contacto"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__count_picking_batch
 msgid "Count Picking Batch"
-msgstr "Número de recolecciones por lote"
+msgstr "Número de recolecciones de pedido por lote"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__count_picking_wave
 msgid "Count Picking Wave"
-msgstr "Número de recolecciones por olas"
+msgstr "Número de preparaciones de pedido por olas"
 
 #. module: stock_picking_batch
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
@@ -343,7 +345,7 @@ msgstr "Crear un nuevo traslado por lote"
 #. module: stock_picking_batch
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.action_picking_tree_wave
 msgid "Create a new wave transfer"
-msgstr "Crear un nuevo traslado con recolección por olas"
+msgstr "Crear un nuevo traslado con preparación de pedidos por olas"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__create_uid
@@ -488,7 +490,7 @@ msgstr "Es un seguidor"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
 msgid "John Doe"
-msgstr "John Doe"
+msgstr "Juan Pérez"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__write_uid

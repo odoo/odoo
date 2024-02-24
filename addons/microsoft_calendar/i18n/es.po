@@ -70,8 +70,8 @@ msgid ""
 "An administrator needs to configure Outlook Synchronization before you can "
 "use it!"
 msgstr ""
-"¡Un administrador necesita configurar la sincronización de Outlook antes de "
-"que puedas usarlo!"
+"Un administrador necesita configurar la sincronización de Outlook antes de "
+"poder usarla."
 
 #. module: microsoft_calendar
 #. odoo-python
@@ -83,20 +83,20 @@ msgid ""
 "secret on the Microsoft Azure portal or try to stop and restart your "
 "calendar synchronisation."
 msgstr ""
-"Un error ocurrio mientras se generaba el token. Su código de autorización "
-"puede ser inválido o estar caducado [%s]. Debe comprobar su ID de cliente y "
-"su secreto en el portal de Microsoft Azure o intentar detener y reiniciar la"
-" sincronización del calendario."
+"Ocurrió un error al generar el token. Puede que su código de autorización no"
+" sea válido o haya vencido [%s]. Verifique su ID de cliente y su secreto en "
+"el portal de Microsoft Azure o intente detener y reiniciar la sincronización"
+" del calendario."
 
 #. module: microsoft_calendar
 #: model:ir.model,name:microsoft_calendar.model_calendar_attendee
 msgid "Calendar Attendee Information"
-msgstr "Información del Calendario de Asistentes"
+msgstr "Información del calendario de asistentes"
 
 #. module: microsoft_calendar
 #: model:ir.model,name:microsoft_calendar.model_calendar_event
 msgid "Calendar Event"
-msgstr "Calendario de eventos"
+msgstr "Evento del calendario"
 
 #. module: microsoft_calendar
 #: model_terms:ir.ui.view,arch_db:microsoft_calendar.microsoft_calendar_reset_account_view_form
@@ -111,7 +111,7 @@ msgstr "ID de cliente"
 #. module: microsoft_calendar
 #: model_terms:ir.ui.view,arch_db:microsoft_calendar.res_config_settings_view_form
 msgid "Client Secret"
-msgstr "Palabra secreta de cliente"
+msgstr "Secreto de cliente"
 
 #. module: microsoft_calendar
 #: model:ir.model,name:microsoft_calendar.model_res_config_settings
@@ -322,32 +322,32 @@ msgstr "Datos de la cuenta del calendario de Microsoft"
 #: model:ir.actions.act_window,name:microsoft_calendar.microsoft_calendar_reset_account_action
 #: model:ir.model,name:microsoft_calendar.model_microsoft_calendar_account_reset
 msgid "Microsoft Calendar Account Reset"
-msgstr "Restablecimiento de la cuenta de Microsoft Calendar."
+msgstr "Restablecimiento de la cuenta del calendario de Microsoft"
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_event__microsoft_id
 msgid "Microsoft Calendar Event Id"
-msgstr "ID de evento de Microsoft Calendar."
+msgstr "ID del evento del calendario de Microsoft"
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_sync__microsoft_id
 msgid "Microsoft Calendar Id"
-msgstr "ID de Microsoft Calendar"
+msgstr "ID del calendario de Microsoft"
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_recurrence__microsoft_id
 msgid "Microsoft Calendar Recurrence Id"
-msgstr "ID de recurrencia de Microsoft Calendar"
+msgstr "ID de recurrencia del calendario de Microsoft"
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_res_config_settings__cal_microsoft_client_id
 msgid "Microsoft Client_id"
-msgstr "Microsoft Client_id"
+msgstr "Client_id de Microsoft"
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_res_config_settings__cal_microsoft_client_secret
 msgid "Microsoft Client_key"
-msgstr "Microsoft Client_key"
+msgstr "Client_key de Microsoft"
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_credentials__calendar_sync_token
@@ -414,7 +414,7 @@ msgstr "Calendario de Outlook"
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_credentials__synchronization_stopped
 #: model:ir.model.fields,field_description:microsoft_calendar.field_res_users__microsoft_synchronization_stopped
 msgid "Outlook Synchronization stopped"
-msgstr "Sincronización de Outlook detenida."
+msgstr "Sincronización de Outlook detenida"
 
 #. module: microsoft_calendar
 #. odoo-python
@@ -471,17 +471,17 @@ msgstr "Aceptada"
 #. module: microsoft_calendar
 #: model:ir.model,name:microsoft_calendar.model_microsoft_calendar_sync
 msgid "Synchronize a record with Microsoft Calendar"
-msgstr "SIncronize un registro con Microsoft Calendar"
+msgstr "Sincronizar un registro con el calendario de Microsoft"
 
 #. module: microsoft_calendar
 #: model:ir.model.fields.selection,name:microsoft_calendar.selection__microsoft_calendar_account_reset__sync_policy__all
 msgid "Synchronize all existing events"
-msgstr "Sincroniza todos los eventos existentes"
+msgstr "Sincronizar todos los eventos existentes"
 
 #. module: microsoft_calendar
 #: model:ir.model.fields.selection,name:microsoft_calendar.selection__microsoft_calendar_account_reset__sync_policy__new
 msgid "Synchronize only new events"
-msgstr "Sincroniza únicamente los eventos nuevos"
+msgstr "Sincronizar únicamente los eventos nuevos"
 
 #. module: microsoft_calendar
 #. odoo-javascript
@@ -499,14 +499,15 @@ msgstr ""
 #: code:addons/microsoft_calendar/models/res_users.py:0
 #, python-format
 msgid "The account for the Outlook Calendar service is not configured."
-msgstr "La cuenta para el servicio de Outlook Calendar no está configurada."
+msgstr ""
+"La cuenta para el servicio del calendario de Outlook no está configurada."
 
 #. module: microsoft_calendar
 #. odoo-javascript
 #: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.js:0
 #, python-format
 msgid "The synchronization with Outlook calendar was successfully stopped."
-msgstr "La sincronización con Outlook Calendar ha sido detenida con éxito."
+msgstr "La sincronización con el calendario de Outlook se detuvo con éxito."
 
 #. module: microsoft_calendar
 #: model:ir.model.constraint,message:microsoft_calendar.constraint_res_users_microsoft_token_uniq
@@ -555,7 +556,7 @@ msgid ""
 "You are about to stop the synchronization of your calendar with Outlook. Are"
 " you sure you want to continue?"
 msgstr ""
-"Esta a punto de detener la sincronización de su calendario con Outlook. "
+"Está a punto de detener la sincronización de su calendario con Outlook. "
 "¿Está seguro de que desea continuar?"
 
 #. module: microsoft_calendar

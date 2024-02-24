@@ -2089,7 +2089,7 @@ msgstr "Daglige sessioner holder salg fra dit Point of Sale."
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_dashboard
 msgid "Dashboard"
-msgstr "Dashboard"
+msgstr "Kontrolpanel"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2731,7 +2731,7 @@ msgstr "Fleksible prislister"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Flexible Taxes"
-msgstr ""
+msgstr "Fleksible skatter"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_follower_ids
@@ -4065,7 +4065,7 @@ msgstr "Ok"
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
 #, python-format
 msgid "Odoo Point of Sale"
-msgstr ""
+msgstr "Odoo Point of Sale"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.office_combo_product_template
@@ -4115,6 +4115,7 @@ msgstr ""
 #, python-format
 msgid "Only administrators can edit receipt headers and footers"
 msgstr ""
+"Kun administratorer kan redigere overskrifter og sidefødder på kvitteringer"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__only_round_cash_method
@@ -4262,7 +4263,7 @@ msgstr "Operation type"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Operation types show up in the Inventory dashboard."
-msgstr "Operations typer vises på Inventar instrumentbrættet."
+msgstr "Operations typer vises på Inventar kontrolpanel."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6611,7 +6612,7 @@ msgstr "Start dato"
 #: code:addons/point_of_sale/static/src/app/generic_components/order_widget/order_widget.js:0
 #, python-format
 msgid "Start adding products"
-msgstr ""
+msgstr "Begynd at tilføje produkter"
 
 #. module: point_of_sale
 #. odoo-python
@@ -7019,6 +7020,9 @@ msgid ""
 "The fiscal position used in the original order is not loaded. Make sure it "
 "is loaded by adding it in the pos configuration."
 msgstr ""
+"Den bogføringsgruppe, der blev brugt i den oprindelige ordre, er ikke "
+"indlæst. Sørg for, at den er indlæst ved at tilføje den i pos-"
+"konfigurationen."
 
 #. module: point_of_sale
 #. odoo-python
@@ -7145,6 +7149,8 @@ msgid ""
 "The pricelist used if no customer is selected or if the customer has no Sale"
 " Pricelist configured if any."
 msgstr ""
+"Prislisten der anvendes hvis ingen kunde er valgt, eller hvis kunden ikke "
+"har nogen salgs prisliste konfigurere."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7247,7 +7253,7 @@ msgstr ""
 "Sessionen er allerede blevet lukket af en anden bruger. Alle salg, der er "
 "gennemført i mellemtiden, er blevet gemt i en redningssession, som til "
 "enhver tid kan gennemgås og bogføres til Regnskab fra Point of Sale "
-"dashboard."
+"kontrolpanel."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -7904,7 +7910,7 @@ msgstr "Enhedspris"
 #: code:addons/point_of_sale/static/src/app/barcode/error_popup/barcode_error_popup.xml:0
 #, python-format
 msgid "Unknown Barcode:"
-msgstr ""
+msgstr "Ukendt stregkode:"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7979,7 +7985,7 @@ msgstr "Brug stregkoder til at scanne produkter, kunde kort, osv."
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Use fiscal positions to get different taxes by order"
-msgstr ""
+msgstr "Brug bogføringsgrupper til at få forskellige skatter efter ordre"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -8248,14 +8254,14 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_order.py:0
 #, python-format
 msgid "You cannot invoice orders belonging to different companies."
-msgstr ""
+msgstr "Du kan ikke fakturere ordrer tilhørende forskellige firmaer."
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/save_button/save_button.js:0
 #, python-format
 msgid "You cannot save an empty order"
-msgstr ""
+msgstr "Du kan ikke gemme en tom ordre"
 
 #. module: point_of_sale
 #. odoo-python
@@ -8265,13 +8271,15 @@ msgid ""
 "You cannot share open orders with configuration that does not use the same "
 "currency."
 msgstr ""
+"Du kan ikke dele åbne ordrer med en konfiguration, der ikke bruger samme "
+"valuta."
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 #, python-format
 msgid "You cannot use the same journal on multiples cash payment methods."
-msgstr ""
+msgstr "Du kan ikke bruge den samme kladde på flere kontantbetalingsmetoder."
 
 #. module: point_of_sale
 #. odoo-python
@@ -8281,6 +8289,8 @@ msgid ""
 "You don't have the access rights to get the point of sale closing control "
 "data."
 msgstr ""
+"Du har ikke adgangsrettigheder til at få kontroldata for point of sales "
+"lukning."
 
 #. module: point_of_sale
 #. odoo-python
@@ -8290,6 +8300,8 @@ msgid ""
 "You have enabled the \"Identify Customer\" option for %s payment method,but "
 "the order %s does not contain a customer."
 msgstr ""
+"Du har aktiveret muligheden \"Identificer kunde\" for %s betalingsmetode, "
+"men ordren %s indeholder ikke en kunde."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8312,7 +8324,7 @@ msgstr ""
 #: code:addons/point_of_sale/models/product.py:0
 #, python-format
 msgid "You must first remove this product from the %s combo"
-msgstr ""
+msgstr "Du skal først fjerne dette produkt fra %s kombinationen"
 
 #. module: point_of_sale
 #. odoo-python
@@ -8351,14 +8363,14 @@ msgstr "Du skal tildele en kasse til din ekspedition"
 #: code:addons/point_of_sale/static/src/app/errors/popups/offline_error_popup.js:0
 #, python-format
 msgid "You're offline"
-msgstr ""
+msgstr "Du er offline"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/customer_display/customer_display_template.xml:0
 #, python-format
 msgid "Your Order"
-msgstr ""
+msgstr "Din bestilling"
 
 #. module: point_of_sale
 #. odoo-python
@@ -8377,6 +8389,8 @@ msgid ""
 "Your address is missing or incomplete. <br/>\n"
 "                                Please make sure to"
 msgstr ""
+"Din adresse mangler eller er ufuldstændig. <br/>\n"
+"                                Sørg venligst for at"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8388,7 +8402,7 @@ msgstr "tilgængelig,"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
 msgid "before continuing."
-msgstr ""
+msgstr "før du fortsætter."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8401,21 +8415,21 @@ msgstr "Tilhører en anden ekspedition:"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_template_form_view
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_combo_tree
 msgid "combos"
-msgstr ""
+msgstr "kombinationer"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_list/product_list.xml:0
 #, python-format
 msgid "create your own"
-msgstr ""
+msgstr "opret din egen"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_list/product_list.xml:0
 #, python-format
 msgid "demo data"
-msgstr ""
+msgstr "demo data"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8428,7 +8442,7 @@ msgstr "rabat"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_combo_form
 msgid "e.g. Burger Menu"
-msgstr ""
+msgstr "f.eks. Burger Menu"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_form
@@ -8459,12 +8473,12 @@ msgstr "f.eks. sodavand"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "ePos Printer"
-msgstr ""
+msgstr "ePos Printer"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
 msgid "fill all relevant information"
-msgstr ""
+msgstr "udfyld alle relevante oplysninger"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
@@ -8497,7 +8511,7 @@ msgstr "i"
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_list/product_list.xml:0
 #, python-format
 msgid "in this category."
-msgstr ""
+msgstr "i denne kategori."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8523,12 +8537,12 @@ msgstr "eller"
 #: code:addons/point_of_sale/static/src/app/navbar/closing_popup/closing_popup.xml:0
 #, python-format
 msgid "orders:"
-msgstr ""
+msgstr "ordrer:"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "outstanding rescue session"
-msgstr ""
+msgstr "fremragende redningssession"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8540,7 +8554,7 @@ msgstr "betalte ordrer"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_request_with_code
 msgid "qx9h1"
-msgstr ""
+msgstr "qx9h1"
 
 #. module: point_of_sale
 #. odoo-python
@@ -8554,14 +8568,14 @@ msgstr "Tilbage"
 #: code:addons/point_of_sale/static/src/app/store/models.js:0
 #, python-format
 msgid "the invoice"
-msgstr ""
+msgstr "fakturaen"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/store/models.js:0
 #, python-format
 msgid "the receipt"
-msgstr ""
+msgstr "kvitteringen"
 
 #. module: point_of_sale
 #. odoo-javascript
