@@ -1,0 +1,91 @@
+<odoo>
+    <record id="l10n_latam_account_payment_check_view_tree" model="ir.ui.view">
+        <field name="name">l10n_latam_account_payment_check.view.tree</field>
+        <field name="model">l10n_latam.account.payment.check</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="l10n_latam_check_current_journal_id"/>
+                <field name="l10n_latam_check_bank_id"/>
+                <field name="l10n_latam_check_issuer_vat"/>
+                <field name="l10n_latam_check_payment_date"/>
+                <field name="currency_id" column_invisible="True"/>
+                <field name="amount"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </tree>
+        </field>
+    </record>
+    <record id="l10n_latam_account_payment_check_view_form" model="ir.ui.view">
+        <field name="name">l10n_latam_account_payment_check.view.form</field>
+        <field name="model">l10n_latam.account.payment.check</field>
+        <field name="arch" type="xml">
+            <form string="">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button icon="fa-bars" type="object" name="button_open_check_operations">
+                            <span>Check Operations</span>
+                        </button>
+                    </div>
+                    <group>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                        <field name="name"/>
+                        <field name="l10n_latam_check_current_journal_id"/>
+                        <field name="l10n_latam_check_bank_id"/>
+                        <field name="l10n_latam_check_issuer_vat"/>
+                        <field name="l10n_latam_check_payment_date"/>
+                        <field name="currency_id"/>
+                        <field name="amount"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="view__l10n_latam_account_payment_check__calendar">
+        <field name="name">account.check.calendar</field>
+        <field name="model">l10n_latam.account.payment.check</field>
+        <field name="arch" type="xml">
+            <calendar mode="month" date_start="l10n_latam_check_payment_date" color="l10n_latam_check_current_journal_id">
+                <field name="amount"/>
+            </calendar>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="view_l10n_latam_account_payment_check_pivot">
+        <field name="name">account.check.pivot</field>
+        <field name="model">l10n_latam.account.payment.check</field>
+        <field name="arch" type="xml">
+            <pivot>
+                <field name="l10n_latam_check_payment_date" type="row" interval="month"/>
+                <field name="l10n_latam_check_payment_date" type="row" interval="week"/>
+                <field name="amount" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+
+    <record model="ir.actions.act_window" id="action_l10n_latam_own_check">
+        <field name="name">Own Checks</field>
+        <field name="res_model">l10n_latam.account.payment.check</field>
+        <field name="view_mode">tree,form,calendar,pivot</field>
+        <field name="view_id" ref="l10n_latam_account_payment_check_view_tree"/>
+        <!-- <field name="search_view_id" ref="view_account_payment_search"/>
+        <field name="domain">[('payment_method_code', '=', 'check_printing')]</field>
+        <field name="context">{'search_default_unmatched': True}</field> -->
+    </record>
+
+    <menuitem action="action_l10n_latam_own_check" id="menu_own_check" sequence="50" parent="account.menu_finance_payables"/>
+
+    <record model="ir.actions.act_window" id="action_l10n_latam_third_party_check">
+        <field name="name">Third Party Checks</field>
+        <field name="res_model">l10n_latam.account.payment.check</field>
+        <field name="view_mode">tree,form,calendar,pivot</field>
+        <field name="view_id" ref="l10n_latam_account_payment_check_view_tree"/>
+        <!-- <field name="search_view_id" ref="l10n_latam_check.view_account_payment_third_party_checks_search"/>
+        <field name="domain">[('payment_method_code', '=', 'new_third_party_checks')]</field>
+        <field name="context">{'search_default_checks_on_hand': 1}</field> -->
+    </record>
+
+    <menuitem action="action_l10n_latam_third_party_check" id="menu_third_party_check" sequence="40" parent="account.menu_finance_receivables"/>
+
+</odoo>
+
