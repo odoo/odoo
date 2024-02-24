@@ -5,9 +5,9 @@
 # Translators:
 # Martin Trigaux, 2023
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2023
+# Wil Odoo, 2024
 # Ryoko Tsuda <ryoko@quartile.co>, 2024
 # Junko Augias, 2024
-# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-29 10:45+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Junko Augias, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -55,7 +55,7 @@ msgstr "%(attribute)s: %(values)s"
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid "%(line_description)s (Canceled)"
-msgstr "%(line_description)s （キャンセル済）"
+msgstr "%(line_description)s （取消済）"
 
 #. module: sale
 #. odoo-python
@@ -704,7 +704,7 @@ msgstr ""
 "        <t t-if=\"object.origin\">\n"
 "            （参照番号：<t t-out=\"object.origin or ''\">S00052</t> ）\n"
 "        </t>\n"
-"        がキャンセルされました。そのため、このご注文に関して今後の請求は発生しません。\n"
+"        が取消されました。そのため、このご注文に関して今後の請求は発生しません。\n"
 "        払戻しが必要な場合は、なるべく早く処理させて頂きます。\n"
 "        <br><br>\n"
 "        ご質問がございましたら、お問合せ下さい。\n"
@@ -853,9 +853,9 @@ msgid ""
 "                            Draft invoices for this order will be cancelled. <br/>\n"
 "                        </span>"
 msgstr ""
-"<span>このオーダを本当にキャンセルしますか？<br/></span>\n"
+"<span>このオーダを本当に取消しますか？<br/></span>\n"
 "                        <span id=\"display_invoice_alert\" invisible=\"not display_invoice_alert\">\n"
-"                            このオーダの請求書ドラフトはキャンセルされます。 <br/>\n"
+"                            このオーダの請求書ドラフトは取消されます。 <br/>\n"
 "                        </span>"
 
 #. module: sale
@@ -996,7 +996,7 @@ msgstr ""
 #. module: sale
 #: model:res.groups,name:sale.group_warning_sale
 msgid "A warning can be set on a product or a customer (Sale)"
-msgstr "製品または取引先に警告設定可(販売)"
+msgstr "プロダクトまたは取引先に警告設定可(販売)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1264,12 +1264,12 @@ msgstr "販売オーダ明細に手動値引を適用するか、価格表から
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mass_cancel_orders_view_form
 msgid "Are you sure you want to cancel the"
-msgstr "以下を本当にキャンセルしますか？："
+msgstr "以下を本当に取消しますか？："
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mass_cancel_orders_view_form
 msgid "Are you sure you want to cancel the selected quotation?"
-msgstr "選択した見積書を本当にキャンセルしますか？"
+msgstr "選択した見積書を本当に取消しますか？"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -1398,25 +1398,25 @@ msgstr "プロダクトを編集できます"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "Cancel"
-msgstr "キャンセル"
+msgstr "取消"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Cancel %s"
-msgstr "キャンセル %s"
+msgstr "取消 %s"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_mass_cancel_orders
 msgid "Cancel multiple quotations"
-msgstr "複数の見積書をキャンセルする"
+msgstr "複数の見積書を取消する"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_mass_cancel_orders
 #: model_terms:ir.ui.view,arch_db:sale.mass_cancel_orders_view_form
 msgid "Cancel quotations"
-msgstr "見積書をキャンセル"
+msgstr "見積書を取消"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__state__cancel
@@ -4012,7 +4012,7 @@ msgstr "選択した支払い方法のオンボーディング販売"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_mass_cancel_orders__sale_order_ids
 msgid "Sale orders to cancel"
-msgstr "キャンセルする販売オーダ"
+msgstr "取消する販売オーダ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_packaging__sales
@@ -4084,7 +4084,7 @@ msgstr "販売オーダ"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_cancel
 msgid "Sales Order Cancel"
-msgstr "受注キャンセル"
+msgstr "受注取消"
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_order_confirmed
@@ -4193,7 +4193,7 @@ msgstr "販売価格"
 #. module: sale
 #: model:mail.template,name:sale.mail_template_sale_cancellation
 msgid "Sales: Order Cancellation"
-msgstr "販売：オーダキャンセル"
+msgstr "販売：オーダ取消"
 
 #. module: sale
 #: model:mail.template,name:sale.mail_template_sale_confirmation
@@ -4358,7 +4358,7 @@ msgstr ""
 #. module: sale
 #: model:mail.template,description:sale.mail_template_sale_cancellation
 msgid "Sent automatically to customers when you cancel an order"
-msgstr "オーダをキャンセルした際、顧客に自動的に送られる"
+msgstr "オーダを取消した際、顧客に自動的に送付"
 
 #. module: sale
 #: model:mail.template,description:sale.mail_template_sale_confirmation
@@ -4487,8 +4487,8 @@ msgid ""
 "Some confirmed sale orders are selected. Their related documents might be\n"
 "                        affected by the cancellation."
 msgstr ""
-"一部の確定した販売注オーダが選択されます。その関連文書が\n"
-"　　　　　　キャンセルに影響を受ける可能性があります。"
+"一部の確定した販売オーダが選択されます。その関連ドキュメントが\n"
+"　　　　　　取消に影響を受ける可能性があります。"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_bank_statement_line__source_id
@@ -4648,7 +4648,7 @@ msgid ""
 "canceling them or archiving the team instead."
 msgstr ""
 "チーム%(team_name)s には "
-"%(sale_order_count)s有効な販売オーダがあります。キャンセルまたはチームをアーカイブすることを検討して下さい。"
+"%(sale_order_count)s有効な販売オーダがあります。取消またはチームをアーカイブすることを検討して下さい。"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -5366,7 +5366,7 @@ msgstr "配送前に請求できます。"
 msgid ""
 "You can not delete a sent quotation or a confirmed sales order. You must "
 "first cancel it."
-msgstr "送信された見積または確認済みの受注を削除することはできません。最初にキャンセルする必要があります。"
+msgstr "送信された見積または確認済みの受注を削除することはできません。最初に取消する必要があります。"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_to_invoice
@@ -5547,5 +5547,5 @@ msgid ""
 "{{ object.company_id.name }} {{ object.type_name }} Cancelled (Ref {{ "
 "object.name or 'n/a' }})"
 msgstr ""
-"{{ object.company_id.name }} {{ object.type_name }} キャンセル済 (Ref {{ "
-"object.name or 'n/a' }})"
+"{{ object.company_id.name }} {{ object.type_name }} 取消済 (Ref {{ object.name "
+"or 'n/a' }})"

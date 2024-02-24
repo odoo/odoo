@@ -5,11 +5,11 @@
 # Translators:
 # 何彬 <vnsoft.he@gmail.com>, 2023
 # Chill Liao <chill421@qq.com>, 2023
-# Jeffery CHEN <jeffery9@gmail.com>, 2023
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2024
 # Wil Odoo, 2024
 # Chloe Wang, 2024
 # 湘子 南 <1360857908@qq.com>, 2024
+# Jeffery CHEN <jeffery9@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: 湘子 南 <1360857908@qq.com>, 2024\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -46,7 +46,7 @@ msgstr ""
 "            </p><p>\n"
 "                为防止垃圾邮件和回复循环，\n"
 "                ERP 会每隔<b>%(minutes)i</b>自动阻止超过<b>%(threshold)i</b>的电子邮件进入您的网关。 \n"
-"                如您需要频繁从一些地址接收更新信息，\n"
+"                如您需要非常频繁从一些地址接收更新信息，\n"
 "                您可以在下方添加它们，ERP 会对其放行.\n"
 "            </p>"
 
@@ -1243,7 +1243,7 @@ msgstr "分配给自己"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__plan_on_demand_user_id
 msgid "Assigned To"
-msgstr "分派给"
+msgstr "指派给"
 
 #. module: mail
 #. odoo-javascript
@@ -4394,7 +4394,7 @@ msgstr ""
 msgid ""
 "If you have setup a catch-all email domain redirected to the Odoo server, "
 "enter the domain name here."
-msgstr "如果您设置了电子邮件域名重定向到这个 ERP 服务器，请在这里输入域名."
+msgstr "如果您设置了电子邮件域名重定向到这个 ERP 服务器，请在这里输入域名称."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__use_twilio_rtc_servers
@@ -4855,7 +4855,7 @@ msgid ""
 "- auth: The auth value should be treated as a secret and not shared outside of Odoo"
 msgstr ""
 "它指的是通知使用的浏览器密钥：\n"
-"- p256dh：这是浏览器生成的订阅公开密钥。浏览器将\n"
+"- p256dh：这是浏览器生成的订阅公共密钥。浏览器将\n"
 "          私钥保密，并用于解密有效载荷\n"
 "- auth： 验证值应视为机密，不得在 ERP 以外共享."
 
@@ -6996,8 +6996,8 @@ msgid ""
 "- Handle by Emails: notifications are sent to your email address\n"
 "- Handle in Odoo: notifications appear in your Odoo Inbox"
 msgstr ""
-"处理聊天通知的规则:\n"
-"- 通过EMail处理: 通知会发送至您的EMail地址\n"
+"处理聊天通知的规则政策:\n"
+"- 通过EMail处理: 通知会发送至您的邮件地址\n"
 "- 系统内部处理: 通知会出现在 ERP 收件箱"
 
 #. module: mail
@@ -8928,7 +8928,7 @@ msgid ""
 " email that does not reply to an existing record will cause the creation of "
 "a new record of this model (e.g. a Project Task)"
 msgstr ""
-"相应于这个别名对应的模型(ERP 单据种类)。任何一封不属于对某个已存在的记录的到来邮件，将导致此模块中新记录的创建(例如，一个新的项目任务)."
+"相应于这个别名对应的模型(ERP 单据种类)。任何一封不属于对某个已存在的记录的到来电子邮件，将导致此模型中新记录的创建(例如，一个新的项目任务)."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_name
@@ -9102,7 +9102,7 @@ msgid ""
 "This option permanently removes any track of email after it's been sent, "
 "including from the Technical menu in the Settings, in order to preserve "
 "storage space of your Odoo database."
-msgstr "该选项在电邮发送后永久删除任何电邮追踪，包括从设置中的技术菜单删除，以保留 ERP 数据库的存储空间."
+msgstr "该选项在电邮发送后永久删除任何电子邮件跟踪，包括从设置中的技术菜单删除订单，以保留 ERP 数据库的储存空间."
 
 #. module: mail
 #. odoo-javascript

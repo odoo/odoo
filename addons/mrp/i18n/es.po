@@ -4,9 +4,9 @@
 # 
 # Translators:
 # Fernanda Alvarez, 2023
+# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
 # Pablo Rojas <rojaspablo88@gmail.com>, 2023
 # Wil Odoo, 2024
-# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2024
 # Larissa Manderfeld, 2024
 # 
 msgid ""
@@ -641,7 +641,7 @@ msgid ""
 "finished products as well. Without this option you only do: A + B = C. With "
 "the option: A + B = C + D."
 msgstr ""
-"Añadir subproductos a las listas de materiales. Esto se puede usar para "
+"Agregar subproductos a las listas de materiales. Esto se puede usar para "
 "obtener varios productos terminados al mismo tiempo. Sin esta opción, solo "
 "puedes hacer:  A + B = C. Con ella: A + B = C + D."
 
@@ -728,7 +728,7 @@ msgstr ""
 #: model:ir.model.fields,help:mrp.field_mrp_production__use_create_components_lots
 #: model:ir.model.fields,help:mrp.field_stock_picking_type__use_create_components_lots
 msgid "Allow to create new lot/serial numbers for the components"
-msgstr "Permitir crear nuevos números de lote / serie para los componentes"
+msgstr "Permitir crear nuevos números de lote/serie para los componentes"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__consumption__flexible
@@ -1981,7 +1981,7 @@ msgstr "Atrasos "
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_document_file_kanban_mrp
 msgid "Delete"
-msgstr "Suprimir"
+msgstr "Eliminar"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__delivery_count
@@ -2070,12 +2070,12 @@ msgstr "Mostrar el atajo de número de serie en los movimientos"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Displays the consumed Lot/Serial Numbers."
-msgstr "Muestra los números de lote o de serie consumidos."
+msgstr "Muestra los números de lote/serie consumidos."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Displays the produced Lot/Serial Numbers."
-msgstr "Muestra los números de lote o de serie producidos."
+msgstr "Muestra los números de lote/serie producidos."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_warn_insufficient_qty_unbuild_form_view
@@ -2311,7 +2311,7 @@ msgstr "Terminado"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__order_finished_lot_id
 msgid "Finished Lot/Serial Number"
-msgstr "Lote terminado / Número de Serie"
+msgstr "Número de lote/serie terminado"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__move_finished_ids
@@ -2867,9 +2867,9 @@ msgid ""
 "It is not possible to unplan one single Work Order. You should unplan the "
 "Manufacturing Order instead in order to unplan all the linked operations."
 msgstr ""
-"No es posible anular la planeación de una sola orden de trabajo. En su "
-"lugar, debe anular la planeación de la orden de fabricación para anular la "
-"todas las operaciones vinculadas."
+"No es posible anular la planificación de una sola orden de trabajo. En su "
+"lugar, debe anular la planificación de la orden de fabricación para anular "
+"la todas las operaciones vinculadas."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__is_planned
@@ -3630,7 +3630,7 @@ msgstr "Datos no disponibles"
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_routing_time
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workcenter_load_report_graph
 msgid "No data yet!"
-msgstr "No hay información aún"
+msgstr "¡Todavía no hay información!"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_production_action
@@ -3812,7 +3812,7 @@ msgid ""
 msgstr ""
 "Odoo abre una vista previa en PDF por defecto. Si usted desea imprimir instantáneamente,\n"
 "                                        instale la aplicación IoT en un ordenador que esté en la misma red local que\n"
-"                                        el operador del código de barras y configure el enrutamiento de los reportes."
+"                                        el operador del código de barras y configure el enrutamiento de los informes."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__oee
@@ -4113,7 +4113,7 @@ msgstr "Elegir antes de la ruta de fabricación"
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_picking_type
 msgid "Picking Type"
-msgstr "Tipo de albarán"
+msgstr "Tipo de recolección"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__picking_ids
@@ -4123,7 +4123,7 @@ msgstr "Albarán asociado a esta orden de fabricación"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__pbm_loc_id
 msgid "Picking before Manufacturing Location"
-msgstr "Ubicación de Albarán antes de Producción"
+msgstr "Ubicación de recolección antes de fabricación"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_production_components
@@ -5050,7 +5050,7 @@ msgstr "Secuencia"
 #: code:addons/mrp/models/stock_warehouse.py:0
 #, python-format
 msgid "Sequence picking before manufacturing"
-msgstr "Secuencia de albarán antes de producción"
+msgstr "Secuencia de recolección antes de fabricación"
 
 #. module: mrp
 #. odoo-python
@@ -5405,7 +5405,7 @@ msgstr "Disponibilidad de existencias"
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_move
 msgid "Stock Move"
-msgstr "Movimiento de existencias"
+msgstr "Movimiento de stock"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__move_dest_ids
@@ -5854,7 +5854,7 @@ msgstr "Esta producción se fusionó en %s"
 #, python-format
 msgid "This production order has been created from Replenishment Report."
 msgstr ""
-"Esta orden de producción se creó desde un reporte de reabastecimiento."
+"Esta orden de producción se creó desde un informe de reabastecimiento."
 
 #. module: mrp
 #. odoo-python

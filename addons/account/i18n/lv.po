@@ -6,12 +6,12 @@
 # JanisJanis <jbojars@gmail.com>, 2023
 # Anzelika Adejanova, 2023
 # Artjoms Ustinovs <artyom.ustinov2010@yandex.ru>, 2023
-# Arnis Putniņš <arnis@allegro.lv>, 2023
 # InfernalLV <karlisdreizis@gmail.com>, 2023
 # Konstantins Zabogonskis <inculin4ik@gmail.com>, 2023
 # Martin Trigaux, 2023
 # Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2024
 # ievaputnina <ievai.putninai@gmail.com>, 2024
+# Arnis Putniņš <arnis@allegro.lv>, 2024
 # Will Sensors, 2024
 # 
 msgid ""
@@ -1279,7 +1279,7 @@ msgstr "<strong>Kredītrēķina datums:</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Customer Code:</strong><br/>"
-msgstr "<strong>Klienta kods:</strong>"
+msgstr "<strong>Klienta kods:</strong><br/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1299,7 +1299,7 @@ msgstr "<strong>Apmaksas termiņš:</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Due Date:</strong><br/>"
-msgstr "<strong>Līdz:</strong>"
+msgstr "<strong>Līdz:</strong><br/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_statement
@@ -1325,7 +1325,7 @@ msgstr "<strong>Saņemts:</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Reference:</strong><br/>"
-msgstr "<strong>Atsauce:</strong>"
+msgstr "<strong>Atsauce:</strong><br/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1340,7 +1340,7 @@ msgstr "<strong>Atsauce:</strong><br/>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "<strong>Starting Balance</strong>"
-msgstr "<strong>Atvērtšanas bilance</strong>"
+msgstr "<strong>Atvēršanas bilance</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -2658,12 +2658,12 @@ msgid ""
 "                account). The annual accounts of a company are required by law\n"
 "                to disclose a certain amount of information."
 msgstr ""
-"Konts ir daļa no virsgrāmatas, kas ļauj jūsu uzņēmumam\n"
-"                reģistrēt visu veidu debeta un kredīta darījumus.\n"
-"                Uzņēmumi savus gada pārskatus iesniedz divās galvenajās daļās\n"
-"                bilance un peļņas un zaudējumu pārskats (peļņas un zaudējumu aprēķins)\n"
-"                konts). Uzņēmuma gada pārskati ir obligāti jāsagatavo saskaņā ar likumu\n"
-"                jāatklāj noteikts informācijas apjoms."
+"An account is part of a ledger allowing your company\n"
+"                to register all kinds of debit and credit transactions.\n"
+"                Companies present their annual accounts in two main parts: the\n"
+"                balance sheet and the income statement (profit and loss\n"
+"                account). The annual accounts of a company are required by law\n"
+"                to disclose a certain amount of information."
 
 #. module: account
 #. odoo-python
@@ -3258,8 +3258,8 @@ msgid ""
 "Bank Transactions are posted immediately after import or synchronization. Their counterparty is the bank suspense account.\n"
 "Reconciliation replaces the latter by the definitive account(s)."
 msgstr ""
-"Bankas darījumi tiek iegrāmatoti uzreiz pēc importēšanas vai sinhronizēšanas. To darījuma partneris ir bankas pagaidu konts.\n"
-"Saskaņošana to aizstāj ar galīgo(-ajiem) kontu(-iem)."
+"Bank Transactions are posted immediately after import or synchronization. Their counterparty is the bank suspense account.\n"
+"Reconciliation replaces the latter by the definitive account(s)."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__acc_type
@@ -11279,7 +11279,7 @@ msgstr "Lūdzu, norādiet e-pasta adresi"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 msgid "Please use the following communication for your payment:"
-msgstr "Maksājumam izmantojiet šādu saziņas līdzekli:"
+msgstr "Maksājumā lūdzam minēt:"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__access_url
@@ -14729,7 +14729,7 @@ msgid ""
 "^(?P<prefix1>.*?)(?P<seq>\\d*)(?P<suffix>\\D*?)$"
 msgstr ""
 "Sekvences regeksā jāietver vismaz seq grupēšanas atslēgas. Piemēram:\n"
-"p<prefix1>.*?)(?P<seq>\\d*)(?P<suffix>\\D*?)$"
+"^(?P1.*?)(?P2\\d*)(?P3\\D*?)$"
 
 #. module: account
 #. odoo-python
@@ -17795,8 +17795,7 @@ msgstr "{percent}% atpazīt {new_date}"
 msgid ""
 "{{ object.company_id.name }} Credit Note (Ref {{ object.name or 'n/a' }})"
 msgstr ""
-"{{ object.company_id.name }} Kredīta atzīme (Atsauce {{ object.name vai "
-"'n/a' }})"
+"{{ object.company_id.name }} Kredīta atzīme (Ref {{ object.name or 'n/a' }})"
 
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_invoice
@@ -17810,5 +17809,5 @@ msgid ""
 "{{ object.company_id.name }} Payment Receipt (Ref {{ object.name or 'n/a' "
 "}})"
 msgstr ""
-"{{ object.company_id.name }} Maksājuma kvīts (Atsauce {{ object.name vai "
-"'n/a' }})"
+"{{ object.company_id.name }} Maksājuma kvīts (Ref {{ object.name or 'n/a' "
+"}})"
