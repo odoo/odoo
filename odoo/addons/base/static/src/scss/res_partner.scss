@@ -14,3 +14,9 @@
         --gutter-x: 0;
     }
 }
+
+// This is an ugly workaround to prevent having ugly borders in the Password confirmation dialog
+// TODO: remove me in master
+.modal .o_form_view .o_form_sheet_bg.bg-primary {
+    --background-color: #{$o-view-background-color};
+}
