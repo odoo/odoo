@@ -73,6 +73,17 @@ class SaleOrderLine(models.Model):
                 if components and components != [line.product_id.id]:
                     line.display_qty_widget = True
 
+    def _get_relevant_bom(self, boms):
+        self.ensure_one()
+        relevant_bom = boms.filtered(
+            lambda b: b.type == "phantom"
+            and (
+                b.product_id == self.product_id
+                or (b.product_tmpl_id == self.product_id.product_tmpl_id and not b.product_id)
+            )
+        )
+        return relevant_bom
+
     def _compute_qty_delivered(self):
         super(SaleOrderLine, self)._compute_qty_delivered()
         for order_line in self:
@@ -84,9 +95,7 @@ class SaleOrderLine(models.Model):
                 # We fetch the BoMs of type kits linked to the order_line,
                 # the we keep only the one related to the finished produst.
                 # This bom shoud be the only one since bom_line_id was written on the moves
-                relevant_bom = boms.filtered(lambda b: b.type == 'phantom' and
-                        (b.product_id == order_line.product_id or
-                        (b.product_tmpl_id == order_line.product_id.product_tmpl_id and not b.product_id)))
+                relevant_bom = order_line._get_relevant_bom(boms)
                 if relevant_bom:
                     # In case of dropship, we use a 'all or nothing' policy since 'bom_line_id' was
                     # not written on a move coming from a PO: all moves (to customer) must be done
