@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~17.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-07 10:22+0000\n"
+"POT-Creation-Date: 2024-02-23 13:49+0000\n"
 "PO-Revision-Date: 2024-01-17 11:21+0000\n"
 "Last-Translator: Larissa Manderfeld, 2024\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
@@ -3611,11 +3611,6 @@ msgid "Newspaper Rack"
 msgstr "Zeitungsständer"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_calendar_event_id
-msgid "Next Activity Calendar Event"
-msgstr "Nächstes Aktivitätskalenderereignis"
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_date_deadline
 msgid "Next Activity Deadline"
 msgstr "Nächste Aktivitätsfrist"
@@ -3867,6 +3862,13 @@ msgid ""
 msgstr ""
 "Für diese Erstattungszeile ist nur eine negative Menge zulässig. Klicken Sie"
 " auf +/-, um die zu erstattende Menge zu ändern."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+msgid "Only administrators can edit receipt headers and footers"
+msgstr ""
+"Nur Administratoren können die Kopf- und Fußzeilen von Kassenbons bearbeiten"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__only_round_cash_method
@@ -6204,6 +6206,12 @@ msgstr "Startkategorie"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard__start_date
 msgid "Start Date"
 msgstr "Startdatum"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/generic_components/order_widget/order_widget.js:0
+msgid "Start adding products"
+msgstr "Produkte hinzufügen"
 
 #. module: point_of_sale
 #. odoo-python

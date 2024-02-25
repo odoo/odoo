@@ -4,14 +4,15 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Katerina Horylova, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~17.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-17 10:11+0000\n"
+"POT-Creation-Date: 2024-02-07 10:24+0000\n"
 "PO-Revision-Date: 2024-01-17 11:21+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Katerina Horylova, 2024\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,7 +28,6 @@ msgstr "Přístupový token"
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/const.py:0
-#, python-format
 msgid ""
 "Call your card issuer to activate your card or use another payment method. "
 "The phone number is on the back of your card."
@@ -36,28 +36,24 @@ msgstr ""
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/const.py:0
-#, python-format
 msgid "Check expiration date."
 msgstr ""
 
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/const.py:0
-#, python-format
 msgid "Check the card number."
 msgstr ""
 
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/const.py:0
-#, python-format
 msgid "Check the card security code."
 msgstr ""
 
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/const.py:0
-#, python-format
 msgid "Check the data."
 msgstr ""
 
@@ -75,7 +71,7 @@ msgstr "Nepodařilo se navázat spojení s rozhraním API."
 #. module: payment_mercado_pago
 #: model:ir.model.fields.selection,name:payment_mercado_pago.selection__payment_provider__code__mercado_pago
 msgid "Mercado Pago"
-msgstr ""
+msgstr "Mercado Pago"
 
 #. module: payment_mercado_pago
 #: model:ir.model.fields,field_description:payment_mercado_pago.field_payment_provider__mercado_pago_access_token
@@ -101,7 +97,6 @@ msgstr "Platební transakce"
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/const.py:0
-#, python-format
 msgid "Payment was not processed, use another card or contact issuer."
 msgstr ""
 
@@ -144,21 +139,28 @@ msgid ""
 msgstr ""
 
 #. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/models/payment_provider.py:0
+#, python-format
+msgid ""
+"The communication with the API failed. The response is empty. Please verify "
+"your access token."
+msgstr ""
+
+#. module: payment_mercado_pago
 #: model:ir.model.fields,help:payment_mercado_pago.field_payment_provider__code
 msgid "The technical code of this payment provider."
-msgstr ""
+msgstr "Technický kód tohoto poskytovatele plateb."
 
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/const.py:0
-#, python-format
 msgid "This payment method does not process payments in installments."
 msgstr ""
 
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/const.py:0
-#, python-format
 msgid ""
 "We are processing your payment. Don't worry, in less than 2 business days, "
 "we will notify you by e-mail if your payment has been credited."
@@ -167,7 +169,6 @@ msgstr ""
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/const.py:0
-#, python-format
 msgid ""
 "We are processing your payment. Don't worry, less than 2 business days we "
 "will notify you by e-mail if your payment has been credited or if we need "
@@ -177,7 +178,6 @@ msgstr ""
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/const.py:0
-#, python-format
 msgid ""
 "We were unable to process your payment, please check your card information."
 msgstr ""
@@ -186,14 +186,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment_mercado_pago/const.py:0
 #: code:addons/payment_mercado_pago/const.py:0
-#, python-format
 msgid "We were unable to process your payment, please use another card."
 msgstr ""
 
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/const.py:0
-#, python-format
 msgid ""
 "You have already made a payment for that value. If you need to pay again, "
 "use another card or another payment method."
@@ -202,7 +200,6 @@ msgstr ""
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/const.py:0
-#, python-format
 msgid ""
 "You have reached the limit of allowed attempts. Choose another card or other"
 " means of payment."
@@ -211,21 +208,18 @@ msgstr ""
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/const.py:0
-#, python-format
 msgid "You must authorize the payment with this card."
 msgstr ""
 
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/const.py:0
-#, python-format
 msgid "Your card has not enough funds."
 msgstr ""
 
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/const.py:0
-#, python-format
 msgid ""
 "Your payment has been credited. In your summary you will see the charge as a"
 " statement descriptor."

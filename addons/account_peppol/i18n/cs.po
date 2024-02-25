@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Katerina Horylova, 2024
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-07 10:23+0000\n"
 "PO-Revision-Date: 2024-01-17 11:21+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Katerina Horylova, 2024\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -74,6 +75,9 @@ msgid ""
 "deregister from that service, or request a migration key before trying "
 "again."
 msgstr ""
+"Účastník s těmito údaji již byl v síti zaregistrován. Pokud jste se již "
+"dříve zaregistrovali v jiné službě Peppol, zrušte prosím registraci v této "
+"službě nebo si před dalším pokusem vyžádejte migrační klíč."
 
 #. module: account_peppol
 #. odoo-python
@@ -221,7 +225,7 @@ msgstr "Potvrdit"
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 msgid "Connection error, please try again later."
-msgstr ""
+msgstr "Chyba připojení, zkuste to prosím později."
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_res_partner
@@ -613,7 +617,7 @@ msgstr "SMS ověřovací kód"
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.xml:0
 msgid "Send again"
-msgstr ""
+msgstr "Odeslat znovu"
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_account_move_send__checkbox_send_peppol
@@ -723,6 +727,8 @@ msgid ""
 "The recommended EAS code for Belgium is 0208. The Endpoint should be the "
 "Company Registry number."
 msgstr ""
+"Doporučený kód EAS pro Belgii je 0208. Koncovým bodem by mělo být číslo "
+"rejstříku společnosti."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -738,7 +744,7 @@ msgstr "Unikátní ID, kterým se identifikuje tento uživatel, běžně DIČ"
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 msgid "The verification code is not correct"
-msgstr ""
+msgstr "Ověřovací kód není správný"
 
 #. module: account_peppol
 #. odoo-python
@@ -750,13 +756,13 @@ msgstr "Ověřovací kód by měl obsahovat šest číslic."
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 msgid "This verification code has expired. Please request a new one."
-msgstr ""
+msgstr "Platnost tohoto ověřovacího kódu vypršela. Vyžádejte si prosím nový."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 msgid "Too many attempts to request an SMS code. Please try again later."
-msgstr ""
+msgstr "Příliš mnoho pokusů o vyžádání kódu SMS. Zkuste to prosím později."
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_res_company__peppol_endpoint
@@ -884,4 +890,4 @@ msgstr "Váš migrační klíč je:"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Your registration should be activated within a day."
-msgstr ""
+msgstr "Vaše registrace by měla být aktivována během jednoho dne."
