@@ -4,10 +4,10 @@
 # 
 # Translators:
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
-# Lucia Pacheco, 2023
 # Iran Villalobos López, 2023
+# Lucia Pacheco, 2023
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
-# Fernanda Alvarez, 2023
+# Fernanda Alvarez, 2024
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-17 08:00+0000\n"
 "PO-Revision-Date: 2023-03-23 10:39+0000\n"
-"Last-Translator: Fernanda Alvarez, 2023\n"
+"Last-Translator: Fernanda Alvarez, 2024\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47,7 +47,7 @@ msgstr ""
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__check_amount_in_words
 msgid "Amount in Words"
-msgstr "Cantidad en palabras"
+msgstr "Importe en letra"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -74,7 +74,7 @@ msgstr "Número del cheque"
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_journal_form_inherited
 msgid "Check Printing"
-msgstr "Impresión de los cheques"
+msgstr "Impresión de cheques"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_margin_right
@@ -97,13 +97,13 @@ msgstr "Margen superior del cheque"
 #: code:addons/account_check_printing/models/account_payment.py:0
 #, python-format
 msgid "Check numbers can only consist of digits"
-msgstr "Los números de cheque sólo pueden incluir dígitos"
+msgstr "Los números de cheque solo pueden incluir dígitos"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_manual_sequencing
 #: model:ir.model.fields,help:account_check_printing.field_account_payment__check_manual_sequencing
 msgid "Check this option if your pre-printed checks are not numbered."
-msgstr "Marque esta opción si sus cheques preimpresos no están numerados."
+msgstr "Seleccione esta opción si sus cheques preimpresos no están numerados."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.account_journal_dashboard_kanban_view_inherited
@@ -118,7 +118,7 @@ msgstr "Cheques"
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_sequence_id
 msgid "Checks numbering sequence."
-msgstr "La secuencia de numeración de los cheques"
+msgstr "Secuencia de numeración de los cheques."
 
 #. module: account_check_printing
 #. odoo-python
@@ -184,8 +184,8 @@ msgid ""
 "In order to print multiple checks at once, they must belong to the same bank"
 " journal."
 msgstr ""
-"Para imprimir varios cheques a la vez deben pertenecer al mismo diario "
-"bancario."
+"Los cheques deben pertenecer al mismo diario bancario para imprimir varios "
+"al mismo tiempo."
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_journal
@@ -295,7 +295,7 @@ msgstr "Introduzca el número del primer cheque preimpreso que va a imprimir."
 #: model:ir.model.fields,field_description:account_check_printing.field_account_move__preferred_payment_method_id
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__preferred_payment_method_id
 msgid "Preferred Payment Method"
-msgstr "Forma de pago preferida"
+msgstr "Método de pago preferido"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_partner__property_payment_method_id
@@ -305,10 +305,10 @@ msgid ""
 "vendor bills by preferred payment method to register payments in mass. Use "
 "cases: create bank files for batch wires, check runs."
 msgstr ""
-"Forma de pago preferida al pagar a este proveedor. Se utiliza para filtrar "
+"Método de pago preferido al pagar a este proveedor. Se utiliza para filtrar "
 "facturas de proveedores por método de pago preferido para registrar pagos en"
 " masa. Casos de uso: crear archivos bancarios para transferencias por lotes,"
-" ejecuciones de cheques."
+" impresión de cheques."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -464,5 +464,5 @@ msgid ""
 "You have to choose a check layout. For this, go in Invoicing/Accounting "
 "Settings, search for 'Checks layout' and set one."
 msgstr ""
-"Tiene que elegir un diseño de cheque. Para ello, vaya a Configuración de "
-"Facturación/Contabilidad, busque \"Diseño de cheques\" y seleccione uno."
+"Debe elegir un diseño de cheque. Vaya a los ajustes de Facturación o "
+"Contabilidad, busque \"Diseño de cheques\" y seleccione uno."
