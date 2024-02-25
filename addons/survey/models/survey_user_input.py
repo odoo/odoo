@@ -689,7 +689,7 @@ class SurveyUserInput(models.Model):
             survey_title = user_input.survey_id.title
             if user_input.partner_id:
                 body = _(
-                    '%(participant) just participated in "%(survey_title)s".',
+                    '%(participant)s just participated in "%(survey_title)s".',
                     participant=user_input.partner_id.display_name,
                     survey_title=survey_title,
                 )
