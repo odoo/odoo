@@ -50,7 +50,7 @@ msgstr ""
 #: code:addons/product/models/product_pricelist_item.py:0
 #, python-format
 msgid "%(percentage)s %% discount and %(price)s surcharge"
-msgstr "%(percentage)s %% remise et %(price)s surcharge"
+msgstr "%(percentage)s %% remise et supplément de %(price)s "
 
 #. module: product
 #. odoo-python
@@ -1931,7 +1931,7 @@ msgstr "Règles de prix"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__price_surcharge
 msgid "Price Surcharge"
-msgstr "Surcharge du prix"
+msgstr "Supplément"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__list_price
@@ -1986,7 +1986,7 @@ msgstr "Règle des listes des prix"
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_tree_view_from_product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
 msgid "Pricelist Rules"
-msgstr "Règles des listes de prix"
+msgstr "Règles de liste de prix"
 
 #. module: product
 #. odoo-javascript
@@ -2482,8 +2482,8 @@ msgid ""
 "To have prices that end in 9.99, set rounding 10, surcharge -0.01"
 msgstr ""
 "Fixe le prix comme un multiple de cette valeur.\n"
-"L'arrondi sera appliqué après la remise et avant la surcharge.\n"
-"Pour avoir un prix dont la fin est 9.99, mettre l'arrondi à 10 et la surcharge à -0.01"
+"L'arrondi sera appliqué après la remise et avant le supplément.\n"
+"Pour avoir un prix dont la fin est 9.99, mettre l'arrondi à 10 et le supplément à -0.01"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view

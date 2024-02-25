@@ -17,9 +17,9 @@
 # Francisco Santos, 2023
 # Gelo Joga, 2023
 # Larissa Manderfeld, 2024
-# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2024
 # Wil Odoo, 2024
 # Loida Vilaplana, 2024
+# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -27,7 +27,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Loida Vilaplana, 2024\n"
+"Last-Translator: Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2024\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2679,7 +2679,7 @@ msgstr "Mostrar Asignar Serie"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__display_clear_serial
 msgid "Display Clear Serial"
-msgstr ""
+msgstr "Mostrar \"Vaciar nº de serie\""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__display_complete
@@ -7204,7 +7204,7 @@ msgstr ""
 #: code:addons/stock/models/stock_rule.py:0
 #, python-format
 msgid "Rule %s belongs to %s while the route belongs to %s."
-msgstr ""
+msgstr "La regla %s pertenece a %s, mientras que la ruta pertenece a %s."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__rule_message
@@ -8471,6 +8471,9 @@ msgid ""
 "The requested operation cannot be processed because of a programming error "
 "setting the `reserved_qty` field instead of the `reserved_uom_qty`."
 msgstr ""
+"La operación solicitada no se puede procesar debido a que un error de "
+"programación establece el campo `reserved_qty` en lugar de "
+"`reserved_uom_qty`."
 
 #. module: stock
 #. odoo-python
@@ -9959,7 +9962,7 @@ msgstr "No puede ingresar cantidades negativas."
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "You can only delete draft or cancelled moves."
-msgstr ""
+msgstr "Solo puede eliminar movimientos en estado de borrador o cancelados."
 
 #. module: stock
 #. odoo-python
@@ -10546,6 +10549,8 @@ msgstr "para alcanzar un valor máximo de"
 #, python-format
 msgid "{0} can only provide {1} {2}, while the quantity to order is {3} {2}."
 msgstr ""
+"{0} solo puede proporcionar {1} {2}, cuando la cantidad a solicitar es {3} "
+"{2}."
 
 #. module: stock
 #: model:mail.template,report_name:stock.mail_template_data_delivery_confirmation
