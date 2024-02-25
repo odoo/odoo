@@ -917,13 +917,10 @@ msgstr "บัฟเฟอร์:"
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__limited_partners_loading
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_limited_partners_loading
 msgid ""
-"By default, 100 partners are loaded.\n"
+"By default, 10000 partners are loaded.\n"
 "When the session is open, we keep on loading all remaining partners in the background.\n"
 "In the meantime, you can use the 'Load Customers' button to load partners from database."
 msgstr ""
-"ตามค่าเริ่มต้น ระบบจะโหลดพันธมิตร 100 ราย\n"
-"เมื่อเปิดเซสชั่น เราจะโหลดพันธมิตรที่เหลือทั้งหมดในเบื้องหลังต่อไป\n"
-"ในระหว่างนี้ คุณสามารถใช้ปุ่ม 'โหลดลูกค้า' เพื่อโหลดพันธมิตรจากฐานข้อมูล"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_print_via_proxy
@@ -3676,6 +3673,12 @@ msgid ""
 msgstr ""
 "อนุญาตให้ใช้เฉพาะปริมาณติดลบสำหรับรายการการคืนเงินนี้ คลิก +/- "
 "เพื่อแก้ไขจำนวนที่ต้องการคืนเงิน"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_config.py:0
+#, python-format
+msgid "Only administrators can edit receipt headers and footers"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__only_round_cash_method
