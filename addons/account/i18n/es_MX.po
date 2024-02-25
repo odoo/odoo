@@ -10450,6 +10450,16 @@ msgid "Please define a payment method line on your payment."
 msgstr "Por favor, defina una línea de método de pago en su pago. "
 
 #. module: account
+#: code:addons/account/models/account_payment.py:0
+#, python-format
+msgid ""
+"The selected payment method is not available for this payment, please select"
+" the payment method again."
+msgstr ""
+"El método de pago seleccionado no está disponible para este pago, elija "
+"otro."
+
+#. module: account
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Please first define a fiscal country for company %s."
@@ -10655,7 +10665,8 @@ msgstr "Prepagos"
 msgid ""
 "Preset to create journal entries during a invoices and payments matching"
 msgstr ""
-"Preajuste para crear asientos durante el emparejamiento de facturas y pagos"
+"Preajuste para crear asientos contables durante la conciliación de facturas "
+"y pagos"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form

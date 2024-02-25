@@ -19,8 +19,8 @@
 # Tomas Bosek, 2022
 # Jakub Smolka, 2023
 # Tomáš Píšek, 2024
-# Katerina Horylova, 2024
 # Aleš Fiala <f.ales1@seznam.cz>, 2024
+# Katerina Horylova, 2024
 # 
 msgid ""
 msgstr ""
@@ -28,7 +28,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2024\n"
+"Last-Translator: Katerina Horylova, 2024\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -605,6 +605,8 @@ msgid ""
 "A collaborator cannot be selected more than once in the project sharing "
 "access. Please remove duplicate(s) and try again."
 msgstr ""
+"Spolupracovníka nelze v přístupu ke sdílení projektu vybrat více než jednou."
+" Odstraňte prosím duplikát(y) a zkuste to znovu."
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -613,6 +615,8 @@ msgid ""
 "A personal stage cannot be linked to a project because it is only visible to"
 " its corresponding user."
 msgstr ""
+"Osobní fázi nelze propojit s projektem, protože je viditelná pouze pro "
+"příslušného uživatele."
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_task_user_rel_project_personal_stage_unique
@@ -1177,6 +1181,8 @@ msgstr ""
 msgid ""
 "Choose a task <b>name</b> <i>(e.g. Website Design, Purchase Goods...)</i>"
 msgstr ""
+"Vyberte název úkolu <b></b> <i>(např. Návrh webových stránek, Nákup "
+"zboží...)</i>"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__partner_city
@@ -1618,6 +1624,21 @@ msgid ""
 "\n"
 "In any case, an internal user with no project access rights can still access a task, provided that they are given the corresponding URL (and that they are part of the followers if the project is private)."
 msgstr ""
+"Lidé, pro které bude tento projekt a jeho úkoly viditelný.\n"
+"\n"
+"- Pozvaní interní uživatelé: při sledování projektu získají interní uživatelé přístup ke všem jeho úkolům bez rozdílu. V opačném případě získají přístup pouze ke konkrétním úkolům, které sledují.\n"
+" Uživatel s úrovní přístupových práv projekt > administrátor má k tomuto projektu a jeho úkolům přístup i v případě, že není výslovně součástí sledovaných.\n"
+"\n"
+"- Všichni interní uživatelé: Všichni interní uživatelé mají přístup k projektu a všem jeho úkolům bez rozlišení.\n"
+"\n"
+"- Pozvaní uživatelé portálu a všichni interní uživatelé: K projektu a všem jeho úkolům mají přístup všichni interní uživatelé bez rozdílu.\n"
+"When following a project, portal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following.\n"
+"\n"
+"Při sledování projektu získají uživatelé portálu přístup ke všem jeho úkolům bez rozlišení. V opačném případě získají přístup pouze ke konkrétním úkolům, které sledují.\n"
+"Když je projekt sdílen v režimu pouze pro čtení, jsou uživatelé portálu přesměrováni na svůj portál. Mohou si úkoly prohlížet, ale ne upravovat.\n"
+"Když je projekt sdílen v režimu úprav, je uživatel portálu přesměrován na zobrazení kanbanu a seznamu úkolů. Může upravovat vybraný počet polí úkolů.\n"
+"\n"
+"Interní uživatel bez přístupových práv k projektu může v každém případě k úkolu přistupovat, pokud je mu poskytnuta příslušná adresa URL (a pokud je projekt soukromý, je součástí sledujících)."
 
 #. module: project
 #: model:ir.actions.server,name:project.unlink_project_action
@@ -2623,6 +2644,8 @@ msgid ""
 "Let's go back to the <b>kanban view</b> to have an overview of your next "
 "tasks."
 msgstr ""
+"Vraťme se zpět do zobrazení <b>kanbanu</b>, abychom měli přehled o dalších "
+"úkolech."
 
 #. module: project
 #. openerp-web
@@ -4547,7 +4570,7 @@ msgstr "Úloha:"
 #. module: project
 #: model:mail.template,name:project.rating_project_request_email_template
 msgid "Task: Rating Request"
-msgstr ""
+msgstr "Úkol: Požadavek na hodnocení"
 
 #. module: project
 #: model:mail.template,name:project.mail_template_data_project_task
@@ -4872,6 +4895,8 @@ msgid ""
 "To get things done, use activities and status on tasks.<br>\n"
 "                Chat in real time or by email to collaborate efficiently."
 msgstr ""
+"Chcete-li věci dokončit, používejte aktivity a stav úkolů..<br>\n"
+"                Chatujte v reálném čase nebo e-mailem a efektivně spolupracujte."
 
 #. module: project
 #. openerp-web
@@ -5318,7 +5343,7 @@ msgstr "Byl jste přiřazen k"
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "You have not write access of %s field."
-msgstr ""
+msgstr "Nemáte přístup k zápisu pole %s."
 
 #. module: project
 #: code:addons/project/models/project.py:0

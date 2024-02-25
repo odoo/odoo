@@ -801,13 +801,10 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__limited_partners_loading
 msgid ""
-"By default, 100 partners are loaded.\n"
+"By default, 10000 partners are loaded.\n"
 "When the session is open, we keep on loading all remaining partners in the background.\n"
 "In the meantime, you can use the 'Load Customers' button to load partners from database."
 msgstr ""
-"به طور پیش فرض، 100 شریک بارگیری می شوند.\n"
-"وقتی جلسه باز است، ما به بارگیری همه شرکای باقی مانده در پس‌زمینه ادامه می‌دهیم.\n"
-"در عین حال، می‌توانید از دکمه «بارگیری مشتریان» برای بارگیری شرکا از پایگاه داده استفاده کنید."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_print_via_proxy
@@ -3601,6 +3598,12 @@ msgid ""
 msgstr ""
 "فقط مقدار منفی برای این سطر بازپرداخت مجاز است. برای تغییر مقدار بازپرداخت "
 "روی +/- کلیک کنید."
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_config.py:0
+#, python-format
+msgid "Only administrators can edit receipt headers and footers"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__only_round_cash_method

@@ -820,13 +820,10 @@ msgstr "Buffer:"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__limited_partners_loading
 msgid ""
-"By default, 100 partners are loaded.\n"
+"By default, 10000 partners are loaded.\n"
 "When the session is open, we keep on loading all remaining partners in the background.\n"
 "In the meantime, you can use the 'Load Customers' button to load partners from database."
 msgstr ""
-"Varsayılan olarak, 100 iş ortağı yüklenir.\n"
-"Oturum açık olduğunda, kalan tüm iş ortaklarını arka planda yüklemeye devam ederiz.\n"
-"Bu arada, iş ortaklarını veritabanından yüklemek için 'Müşterileri Yükle' düğmesini kullanabilirsiniz."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_print_via_proxy
@@ -3634,6 +3631,12 @@ msgid ""
 msgstr ""
 "Bu iade satırı için yalnızca negatif bir miktara izin verilir. İade edilecek"
 " miktarı değiştirmek için +/- üzerine tıklayın."
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_config.py:0
+#, python-format
+msgid "Only administrators can edit receipt headers and footers"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__only_round_cash_method
