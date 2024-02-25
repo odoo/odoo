@@ -9,8 +9,8 @@
 # Luca Carlo, 2023
 # Sebastiano Picchi, 2023
 # Martin Trigaux, 2023
-# Sergio Zanchetta <primes2h@gmail.com>, 2023
 # Marianna Ciofani, 2024
+# Sergio Zanchetta <primes2h@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Marianna Ciofani, 2024\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2024\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -796,12 +796,12 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "<span class=\"d-block w-75 py-2\">Button Color</span>"
-msgstr "<span class=\"d-block w-75 py-2\">Pulsante colore</span>"
+msgstr "<span class=\"d-block w-75 py-2\">Colore pulsante</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "<span class=\"d-block w-75 py-2\">Header Color</span>"
-msgstr "<span class=\"d-block w-75 py-2\">Header colore</span>"
+msgstr "<span class=\"d-block w-75 py-2\">Colore intestazione</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -1254,7 +1254,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_blacklist_action
 msgid "Add an email address to the blacklist"
-msgstr "Aggiungi un indirizzo e-mail alla blacklist"
+msgstr "Aggiungi un indirizzo e-mail alla lista nera"
 
 #. module: mail
 #. odoo-javascript
@@ -1575,8 +1575,8 @@ msgid ""
 "Are you sure you want to reset these email templates to their original "
 "configuration? Changes and translations will be lost."
 msgstr ""
-"Sei sicuro di voler ripristinare questi modelli email alla loro "
-"configurazione originale? Cambiamenti e traduzioni saranno persi."
+"Ripristinare veramente questi modelli e-mail alla loro configurazione "
+"originale? Modifiche e traduzioni andranno perse."
 
 #. module: mail
 #. odoo-python
@@ -2050,7 +2050,7 @@ msgstr "Webcam disattivata"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__can_cancel
 msgid "Can Cancel"
-msgstr "Può eliminare"
+msgstr "Può annullare"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__can_edit_body
@@ -2061,7 +2061,7 @@ msgstr "Può modificare corpo"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__can_resend
 msgid "Can Resend"
-msgstr "Può inviare di nuovo"
+msgstr "Può reinviare"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__can_write
@@ -2229,8 +2229,8 @@ msgid ""
 "Channel \"%(channel_name)s\" only accepts members of group "
 "\"%(group_name)s\". Forbidden for: %(guest_names)s"
 msgstr ""
-"Il canale \"%(channel_name)s\" accetta solo membri del gruppo "
-"\"%(group_name)s\". Vietato per: %(guest_names)s"
+"Il canale \"%(channel_name)s\" accetta solo iscritti al gruppo "
+"\"%(group_name)s\". È vietato per: %(guest_names)s"
 
 #. module: mail
 #. odoo-python
@@ -2240,8 +2240,8 @@ msgid ""
 "Channel \"%(channel_name)s\" only accepts members of group "
 "\"%(group_name)s\". Forbidden for: %(partner_names)s"
 msgstr ""
-"Il canale \"%(channel_name)s\" accetta solo membri del gruppo "
-"\"%(group_name)s\". Vietato per: %(partner_names)s"
+"Il canale \"%(channel_name)s\" accetta solo iscritti al gruppo "
+"\"%(group_name)s\". È vietato per: %(partner_names)s"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_rtc_session__channel_member_id
@@ -2276,7 +2276,7 @@ msgstr "Canali"
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_channel_member_action
 msgid "Channels/Member"
-msgstr "Canali/membri"
+msgstr "Canali/Iscritto"
 
 #. module: mail
 #: model:ir.ui.menu,name:mail.mail_channel_member_menu
@@ -4514,7 +4514,7 @@ msgid ""
 "ID of the parent record holding the alias (example: project holding the task"
 " creation alias)"
 msgstr ""
-"ID del record primario contenente l’alias (esempio: progetto che contiene "
+"ID del record principale contenente l’alias (esempio: progetto che contiene "
 "l’alias di creazione del lavoro)"
 
 #. module: mail
@@ -4879,8 +4879,8 @@ msgstr ""
 msgid ""
 "Invalid value when creating a channel with members, only 4 or 6 are allowed."
 msgstr ""
-"Valore non valido quando si crea un canale con membri, solo 4 o 6 sono "
-"ammessi."
+"Valore non valido quando viene creato un canale con iscritti, ammesso solo 4"
+" o 6."
 
 #. module: mail
 #. odoo-python
@@ -4888,7 +4888,9 @@ msgstr ""
 #, python-format
 msgid ""
 "Invalid value when creating a channel with memberships, only 0 is allowed."
-msgstr "Valore non valido. Creando un canale con membri, solo 0 è permesso."
+msgstr ""
+"Valore non valido quando viene creato un canale con iscrizioni, ammesso solo"
+" 0."
 
 #. module: mail
 #. odoo-javascript
@@ -5100,7 +5102,7 @@ msgstr "Ufficio postale giapponese"
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "Japanese symbol for beginner"
-msgstr "simbolo giapponese per principianti"
+msgstr "Simbolo giapponese per principiante"
 
 #. module: mail
 #. odoo-javascript
@@ -5997,7 +5999,7 @@ msgstr "Messaggio"
 #: code:addons/mail/static/src/models/composer.js:0
 #, python-format
 msgid "Message #%s..."
-msgstr "Messaggio #%s..."
+msgstr "Messaggio n. %s..."
 
 #. module: mail
 #. odoo-javascript
@@ -6223,7 +6225,7 @@ msgstr "Via lattea"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__mail_email_missing
 msgid "Missing email"
-msgstr "e-mail mancante"
+msgstr "E-mail mancante"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__failure_type__mail_email_missing
@@ -6704,7 +6706,7 @@ msgstr "E-mail di notifica"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_schedule__notification_parameters
 msgid "Notification Parameter"
-msgstr "Parametri notifica"
+msgstr "Parametro di notifica"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_notification__notification_type
@@ -6721,7 +6723,7 @@ msgstr "Notifica: elimina notifiche con più di 6 mesi"
 #: model:ir.actions.server,name:mail.ir_cron_send_scheduled_message_ir_actions_server
 #: model:ir.cron,cron_name:mail.ir_cron_send_scheduled_message
 msgid "Notification: Send scheduled message notifications"
-msgstr "Notifica: Invia notifiche per i messaggi pianificati"
+msgstr "Notifica: invia notifiche per messaggio programmato"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_notification_action
@@ -7326,12 +7328,12 @@ msgstr "Messaggio principale"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_parent_model_id
 msgid "Parent Model"
-msgstr "Modello primario"
+msgstr "Modello principale"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_parent_thread_id
 msgid "Parent Record Thread ID"
-msgstr "ID discussione record primario"
+msgstr "ID discussione record principale"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_parent_model_id
@@ -7340,9 +7342,9 @@ msgid ""
 " necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
-"Modello primario contenente l'alias. Il modello che contiene il riferimento "
-"alias non è necessariamente quello fornito da alias_model_id (esempio: "
-"progetto (parent_model) e lavoro (model))"
+"Modello principale contenente l'alias. Il modello che contiene il "
+"riferimento alias non è necessariamente quello fornito da alias_model_id "
+"(esempio: progetto (parent_model) e lavoro (model))"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__parent_id
@@ -9315,7 +9317,7 @@ msgstr "Prova e conferma"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__body_html
 msgid "Text Contents"
-msgstr "Contenuti testo"
+msgstr "Contenuti testuali"
 
 #. module: mail
 #. odoo-javascript
@@ -9482,7 +9484,7 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
-"Il nome dell’alias e-mail, es. “lavori” per intercettare le e-mail a "
+"Nome dell’alias e-mail, es. “lavori”, per intercettare le e-mail a "
 "<lavori@example.odoo.com>"
 
 #. module: mail
@@ -10835,21 +10837,21 @@ msgstr "&amp;nbsp;"
 #: code:addons/mail/static/src/components/call_demo_view/call_demo_view.xml:0
 #, python-format
 msgid "Your browser does not support videoconference"
-msgstr "Il tuo browser non supporta la videoconferenza"
+msgstr "Il browser non supporta la videoconferenza"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models/rtc.js:0
 #, python-format
 msgid "Your browser does not support voice activation"
-msgstr "Il tuo browser non supporta l'attivazione vocale"
+msgstr "Il browser non supporta l'attivazione vocale"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models/thread.js:0
 #, python-format
 msgid "Your browser does not support webRTC."
-msgstr "Il tuo browser non supporta webRTC."
+msgstr "Il browser non supporta webRTC."
 
 #. module: mail
 #. odoo-javascript
@@ -10994,7 +10996,7 @@ msgstr "addizione"
 #: code:addons/mail/models/mail_alias.py:0
 #, python-format
 msgid "addresses linked to registered partners"
-msgstr "indirizzi legati a partner registrati"
+msgstr "indirizzi collegati a partner registrati"
 
 #. module: mail
 #. odoo-javascript
@@ -11018,7 +11020,7 @@ msgstr "ingresso"
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "admission tickets"
-msgstr "biglietti d'ingresso"
+msgstr "biglietti di ingresso"
 
 #. module: mail
 #. odoo-javascript
@@ -25321,7 +25323,7 @@ msgstr "musica"
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "musical keyboard"
-msgstr "piano"
+msgstr "tastiera musicale"
 
 #. module: mail
 #. odoo-javascript
