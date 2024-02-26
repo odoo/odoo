@@ -147,8 +147,11 @@ class ProjectProject(models.Model):
             "res_model": "sale.order",
             'name': _("%(name)s's Sales Orders", name=self.name),
             "context": {"create": self.env.context.get('create_for_project_id', False), "show_sale": True},
+            'help': "<p class='o_view_nocontent_smiling_face'>%s</p><p>%s</p>" %
+            (_("No sales orders exist for this project."),
+                _("You can make a new quotation. Once confirmed, it turns into a sales order, allowing you to invoice and collect payment."))
         }
-        if len(all_sale_orders) <= 1:
+        if len(all_sale_orders) <= 1 and not self.env.context.get('do_not_create_if_no_so'):
             action_window.update({
                 "res_id": all_sale_orders.id,
                 "views": [[False, "form"]],
@@ -233,10 +236,14 @@ class ProjectProject(models.Model):
             'views': [[False, 'tree'], [False, 'form'], [False, 'kanban']],
             'domain': [('id', 'in', invoice_ids)],
             'context': {
-                'create': False,
-            }
+                'create': self.env.context.get('from_topbar_action', False),
+                'default_move_type': 'out_invoice',
+            },
+            'help': "<p class='o_view_nocontent_smiling_face'>%s</p><p>%s</p>" %
+            (_("No invoices have been created for this project yet."),
+                _("Once a sales order is confirmed, you will then be able to create an invoice and collect the payment."))
         }
-        if len(invoice_ids) == 1:
+        if len(invoice_ids) == 1 and not self.env.context.get('from_topbar_action', False):
             action['views'] = [[False, 'form']]
             action['res_id'] = invoice_ids[0]
         return action

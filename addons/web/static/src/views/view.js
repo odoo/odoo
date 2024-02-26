@@ -64,6 +64,10 @@ export function getDefaultConfig() {
         },
         viewSwitcherEntries: [],
         views: [],
+        topBarActions: [],
+        fromParentAction: false,
+        currentTopbarActionId: false,
+        parentActionId: false,
         Banner: OnboardingBanner,
     };
     return config;
@@ -262,7 +266,13 @@ export class View extends Component {
             // a loadViews is done to complete the missing information
             const result = await this.viewService.loadViews(
                 { context, resModel, views },
-                { actionId: this.env.config.actionId, loadActionMenus, loadIrFilters }
+                {
+                    actionId: this.env.config.actionId,
+                    topBarActionId: this.env.config.currentTopbarActionId,
+                    resId: context.active_id,
+                    loadActionMenus,
+                    loadIrFilters,
+                }
             );
             // Note: if props.views is different from views, the cached descriptions
             // will certainly not be reused! (but for the standard flow this will work as

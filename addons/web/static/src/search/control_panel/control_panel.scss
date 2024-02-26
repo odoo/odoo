@@ -53,6 +53,40 @@
     }
 }
 
+.o_topBar_line {
+    flex: 1 1 0%;
+    height: 1px;
+    background-color: #000;
+}
+
+.o_dragged_topBar_action {
+    transition: transform 0.5s;
+    transform: rotate(2deg);
+    opacity: 0.8;
+}
+  
+.o_topBar_actions {
+    opacity: 0;
+    max-height: 0;
+    align-self: center;
+    overflow: hidden;
+    transition: opacity 0.5s, max-height 1.0s ease;
+}
+
+.o_topBar_actions_buttons_wrapper {
+    max-width: 80%;
+}
+
+.o_topBar_actions.visible {
+    opacity: 1;
+    max-height: 500px;
+}
+
+.o_save_current_view {
+    color: $link-color;
+}
+
+
 @include media-breakpoint-down(md) {
     .o_rtl .o_control_panel .o_back_button:before {
         transform: rotate(180deg);

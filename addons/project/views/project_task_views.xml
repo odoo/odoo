@@ -202,6 +202,20 @@
             </field>
         </record>
 
+    <record id="project_topbar_action_tasks" model="ir.actions.topbar">
+        <field name="res_model">project.project</field>
+        <field name="sequence">10</field>
+        <field name="parent_action_id" ref="project.act_project_project_2_project_task_all"/>
+        <field name="action_id" ref="project.act_project_project_2_project_task_all"/>
+    </record>
+
+    <record id="project_topbar_action_project_updates" model="ir.actions.topbar">
+        <field name="res_model">project.project</field>
+        <field name="sequence">20</field>
+        <field name="parent_action_id" ref="project.act_project_project_2_project_task_all"/>
+        <field name="action_id" ref="project.project_update_all_action"/>
+    </record>
+
     <!-- Set pivot view and arrange in order -->
     <record id="project_task_kanban_action_view" model="ir.actions.act_window.view">
         <field name="sequence" eval="10"/>

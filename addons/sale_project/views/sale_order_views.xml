@@ -30,6 +30,17 @@
         </field>
     </record>
 
+    <record id="project_topbar_action_sales_orders" model="ir.actions.topbar">
+        <field name="res_model">project.project</field>
+        <field name="sequence">50</field>
+        <field name="name">Sales Orders</field>
+        <field name="parent_action_id" ref="project.act_project_project_2_project_task_all"/>
+        <field name="python_action">action_view_sos</field>
+        <field name="context">{"do_not_create_if_no_so": true, "create_for_project_id": true}</field>
+        <field name="groups_id" eval="[(4, ref('sales_team.group_sale_salesman'))]" />
+        <field name="domain">[('allow_billable', '=', True)]</field>
+    </record>
+
     <record id="model_sale_order_action_create_project" model="ir.actions.server">
         <field name="name">Create Project</field>
         <field name="model_id" ref="sale.model_sale_order"/>

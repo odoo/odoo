@@ -2578,7 +2578,7 @@ class Model(models.AbstractModel):
 
         if options.get('load_filters') and 'search' in result['views']:
             result['views']['search']['filters'] = self.env['ir.filters'].get_filters(
-                self._name, options.get('action_id')
+                self._name, options.get('action_id'), options.get('topbar_action_id'), options.get('res_id')
             )
 
         return result

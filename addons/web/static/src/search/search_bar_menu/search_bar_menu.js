@@ -60,6 +60,7 @@ export class SearchBarMenu extends Component {
         this.fields = sortBy(fields, "string");
         // Favorite
         this.dialogService = useService("dialog");
+        this.notificationService = useService("notification");
 
         useBus(this.env.searchModel, "update", this.render);
     }
@@ -126,11 +127,7 @@ export class SearchBarMenu extends Component {
      */
     validateField(fieldName, field) {
         const { groupable, type } = field;
-        return (
-            groupable &&
-            fieldName !== "id" &&
-            GROUPABLE_TYPES.includes(type)
-        );
+        return groupable && fieldName !== "id" && GROUPABLE_TYPES.includes(type);
     }
 
     /**
@@ -205,7 +202,7 @@ export class SearchBarMenu extends Component {
      * @param {number} itemId
      */
     openConfirmationDialog(itemId) {
-        const { userId } = this.favoriteItems.find((item) => item.id === itemId);
+        const { userId } = this.favoriteItems.find(({ id }) => id === itemId);
         const dialogProps = {
             title: _t("Warning"),
             body: userId

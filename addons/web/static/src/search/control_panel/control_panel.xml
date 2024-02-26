@@ -3,6 +3,26 @@
 
     <t t-name="web.ControlPanel">
         <div class="o_control_panel d-flex flex-column gap-3 gap-lg-1 px-3 pt-2 pb-3" t-ref="root" data-command-category="actions">
+            <div class="o_topBar_actions d-flex w-100 align-items-center justify-content-center gap-2 mb-2" t-att-class="{visible: state.topbarInfos.showTopBar}">
+                <div t-if="state.topbarInfos.showTopBar" class="d-none d-md-flex w-100 align-items-center justify-content-center gap-2">
+                    <div class="o_topBar_line" />
+                    <div class="d-none d-md-flex o_topBar_actions_buttons_wrapper gap-2 flex-wrap justify-content-center" >
+                        <t t-foreach="state.topbarInfos.topBarActions" t-as="action" t-key="action.id">
+                            <t t-if="_checkValueLocalStorage(action)">
+                                <button class="btn btn-secondary o_draggable"
+                                        t-attf-class="{{ state.topbarInfos.currentTopBarAction?.id === action.id ? 'active' : '' }}"
+                                        t-on-click="() => this.onTopBarActionClick(action)"
+                                        t-att-data-id="action.id"
+                                >
+                                    <span t-out="action.name"></span>
+                                </button>
+                            </t>
+                        </t>
+                        <t t-call="web.topBarActionsDropdown" />
+                    </div>
+                    <div class="o_topBar_line" />
+                </div>
+            </div>
             <div class="o_control_panel_main d-flex flex-wrap flex-lg-nowrap justify-content-between align-items-lg-start gap-3 flex-grow-1">
                 <div class="o_control_panel_breadcrumbs d-flex align-items-center gap-1 order-0 h-lg-100">
                     <div class="o_control_panel_main_buttons d-flex gap-1 d-empty-none d-print-none" t-ref="mainButtons" t-on-keydown="onMainButtonsKeydown">
@@ -42,9 +62,17 @@
                 </div>
 
                 <div class="o_control_panel_navigation d-flex flex-wrap flex-md-nowrap justify-content-end gap-3 gap-lg-1 gap-xl-3 order-1 order-lg-2 flex-grow-1">
+                    <div t-if="state.topbarInfos.showTopBar &amp;&amp; state.topbarInfos.topBarActions?.length" class="d-flex d-md-none">
+                        <t t-call="web.topBarActionsDropdown" />
+                    </div>
                     <div t-if="pagerProps and pagerProps.total > 0" class="o_cp_pager text-nowrap " role="search">
                         <Pager t-props="pagerProps"/>
                     </div>
+                    <button t-if="state.topbarInfos.topBarActions?.length" class="btn btn-secondary"
+                            t-attf-class="{{state.topbarInfos.showTopBar ? 'active' : ''}}"
+                            t-on-click="onClickShowTopBar">
+                        <i class="fa fa-eye" />
+                    </button>
                     <t t-if="env.config.viewSwitcherEntries?.length > 1">
                         <div class="o_cp_switch_buttons d-xl-none btn-group">
                             <Dropdown>
@@ -79,6 +107,48 @@
             </div>
         </div>
     </t>
+
+    <t t-name="web.topBarActionsDropdown">
+        <Dropdown>
+            <button t-if="!env.isSmall" class="btn btn-secondary o-dropdown-caret">
+                <i class="fa fa-plus"/>
+            </button>
+            <button t-if="env.isSmall" class="btn btn-secondary o-dropdown-caret">
+                <span t-out="state.topbarInfos.currentTopBarAction?.name || state.topbarInfos.topBarActions[0]?.name"></span>
+            </button>
+            <t t-set-slot="content">
+                <t t-foreach="state.topbarInfos.topBarActions" t-as="action" t-key="action.id">
+                    <DropdownItem 
+                        class="this.getDropdownClass(action)"
+                        onSelected="() => this.env.isSmall ? this.onTopBarActionClick(action) : this._setVisibility(action)"
+                        closingMode="'none'"
+                    >
+                        <div class="d-flex p-0 align-items-center justify-content-between">
+                            <span t-out="action.name"></span>
+                            <i t-if="action.is_deletable" class="ms-1 o_icon_right fa fa-trash-o" title="Delete item" t-on-click.stop="() => this.openConfirmationDialog(action)" />
+                        </div>
+                    </DropdownItem>
+                </t>
+                <AccordionItem class="'o_save_current_view'" description="'Save current view'">
+                    <div class="px-2 py-2">
+                        <input type="text"
+                            t-ref="newActionNameRef"
+                            class="o_input mb-2"
+                            t-model.trim="state.topbarInfos.newActionName"
+                            />
+                        <CheckBox value="state.topbarInfos.newActionIsShared" onChange.bind="_onShareCheckboxChange">
+                            <span data-tooltip="Make this topbar action available to other users">Shared</span>
+                        </CheckBox>
+                    </div>
+                    <div class="px-3 py-2">
+                        <button class="o_save_favorite btn btn-primary w-100" t-on-click="_saveNewAction">
+                            Save
+                        </button>
+                    </div>
+                </AccordionItem>
+            </t>
+        </Dropdown>
+    </t> 
 
     <t t-name="web.Breadcrumbs">
         <t t-set="currentBreadcrumbs" t-value="breadcrumbs.slice(-1)"/>

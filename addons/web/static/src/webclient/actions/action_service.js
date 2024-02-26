@@ -701,12 +701,21 @@ export function makeActionManager(env, router = _router) {
         delete action.context.no_breadcrumbs;
 
         let resId = viewProps.resId;
+        const topBarActions =
+            view.type === "form" ? [] : context.parentActionChildren || action.children_ids;
+        const fromParentAction = (view.type !== "form" && context.fromParentAction) || false;
+        const parentActionId = topBarActions?.[0]?.parent_action_id[0];
+        const currentTopbarActionId = context.currentTopbarActionId || false;
         return {
             props: viewProps,
             resId: () => resId,
             config: {
                 actionId: action.id,
                 actionType: "ir.actions.act_window",
+                topBarActions,
+                fromParentAction,
+                parentActionId,
+                currentTopbarActionId,
                 actionFlags: action.flags,
                 views: action.views,
                 viewSwitcherEntries,
@@ -1363,7 +1372,8 @@ export function makeActionManager(env, router = _router) {
         // in case an effect is returned from python and there is already an effect
         // attribute on the button, the priority is given to the button attribute
         const effect = params.effect ? evaluateExpr(params.effect) : action.effect;
-        const options = { onClose: params.onClose };
+        const { onClose, stackPosition, viewType } = params;
+        const options = { onClose, stackPosition, viewType };
         await doAction(action, options);
         if (params.close) {
             await _executeCloseAction();
