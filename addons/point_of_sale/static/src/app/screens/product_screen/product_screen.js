@@ -15,7 +15,7 @@ import { Orderline } from "@point_of_sale/app/generic_components/orderline/order
 import { OrderWidget } from "@point_of_sale/app/generic_components/order_widget/order_widget";
 import { OrderSummary } from "@point_of_sale/app/screens/product_screen/order_summary/order_summary";
 import { ProductInfoPopup } from "./product_info_popup/product_info_popup";
-import { fuzzyLookup } from "@web/core/utils/search";
+import { fuzzyLookup } from "@point_of_sale/utils";
 import { ProductCard } from "@point_of_sale/app/generic_components/product_card/product_card";
 import {
     ControlButtons,
@@ -23,6 +23,7 @@ import {
 } from "@point_of_sale/app/screens/product_screen/control_buttons/control_buttons";
 import { pick } from "@web/core/utils/objects";
 import { useScrollDirection } from "@point_of_sale/app/utils/useScrollDirection";
+import { unaccent } from "@web/core/utils/strings";
 
 export class ProductScreen extends Component {
     static template = "point_of_sale.ProductScreen";
@@ -351,10 +352,8 @@ export class ProductScreen extends Component {
             if (!product) {
                 return list;
             }
-            list = fuzzyLookup(
-                this.searchWord,
-                product,
-                (product) => product.display_name + product.description_sale
+            list = fuzzyLookup(unaccent(this.searchWord, false), product, (product) =>
+                unaccent(product.searchString, false)
             );
         } else if (this.pos.selectedCategory?.id) {
             list = this.getProductsByCategory(this.pos.selectedCategory.id);
@@ -366,9 +365,9 @@ export class ProductScreen extends Component {
             .filter((product) => !this.getProductListToNotDisplay().includes(product.id))
             .slice(0, 100);
 
-        return list.sort(function (a, b) {
-            return a.display_name.localeCompare(b.display_name);
-        });
+        return this.searchWord !== ""
+            ? list
+            : list.sort((a, b) => a.display_name.localeCompare(b.display_name));
     }
 
     getProductsByCategory(categoryId) {

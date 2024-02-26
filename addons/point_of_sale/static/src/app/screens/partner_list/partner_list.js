@@ -3,7 +3,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { user } from "@web/core/user";
-import { fuzzyLookup } from "@web/core/utils/search";
+import { fuzzyLookup } from "@point_of_sale/utils";
 import { Dialog } from "@web/core/dialog/dialog";
 import { PartnerLine } from "@point_of_sale/app/screens/partner_list/partner_line/partner_line";
 import { PartnerEditor } from "@point_of_sale/app/screens/partner_list/partner_editor/partner_editor";
@@ -11,6 +11,7 @@ import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { Input } from "@point_of_sale/app/generic_components/inputs/input/input";
 import { Component, useState } from "@odoo/owl";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
+import { unaccent } from "@web/core/utils/strings";
 
 export class PartnerList extends Component {
     static components = { PartnerEditor, PartnerLine, Dialog, Input };
@@ -90,35 +91,11 @@ export class PartnerList extends Component {
         return partners;
     }
 
-    partner_search_string(partner) {
-        var str = partner.name || "";
-        if (partner.barcode) {
-            str += "|" + partner.barcode;
-        }
-        if (partner.phone) {
-            str += "|" + partner.phone.split(" ").join("");
-        }
-        if (partner.mobile) {
-            str += "|" + partner.mobile.split(" ").join("");
-        }
-        if (partner.email) {
-            str += "|" + partner.email;
-        }
-        if (partner.vat) {
-            str += "|" + partner.vat;
-        }
-        if (partner.parent_name) {
-            str += "|" + partner.parent_name;
-        }
-        str = "" + partner.id + ":" + str.replace(":", "").replace(/\n/g, " ") + "\n";
-        return str;
-    }
-
     get_partners_searched() {
         return fuzzyLookup(
-            this.state.query.trim(),
+            unaccent(this.state.query.trim(), false),
             this.pos.models["res.partner"].getAll(),
-            (partner) => this.partner_search_string(partner)
+            (partner) => unaccent(partner.searchString, false)
         );
     }
 
