@@ -466,6 +466,27 @@ QUnit.test("Pivot formulas are migrated from 9 to 10", (assert) => {
     assert.strictEqual(migratedData.sheets[0].cells.A5.content, `=PIVOT.VALUE("1")`);
 });
 
+QUnit.test("Pivot formulas using pivot positions are migrated (11 to 12)", (assert) => {
+    const data = {
+        odooVersion: 9,
+        sheets: [
+            {
+                cells: {
+                    A1: { content: `=-PIVOT.VALUE("1","balance","account_id",ODOO.PIVOT.POSITION("1","account_id",12),"date:quarter","4/"&ODOO.FILTER.VALUE("Year"))` },
+                    A2: { content: `=PIVOT.HEADER("1","account_id",ODOO.PIVOT.POSITION("1","account_id",14))` },
+                    A3: { content: `=ODOO.PIVOT.POSITION("1","account_id",14)` },
+                    A4: { content: `=ODOO.PIVOT.POSITION("1",14)` },
+                },
+            },
+        ],
+    };
+    const migratedData = migrate(data);
+    assert.strictEqual(migratedData.sheets[0].cells.A1.content, `=-PIVOT.VALUE("1","balance","#account_id",12,"date:quarter","4/"&ODOO.FILTER.VALUE("Year"))`);
+    assert.strictEqual(migratedData.sheets[0].cells.A2.content, `=PIVOT.HEADER("1","#account_id",14)`);
+    assert.strictEqual(migratedData.sheets[0].cells.A3.content, `=ODOO.PIVOT.POSITION("1","account_id",14)`);
+    assert.strictEqual(migratedData.sheets[0].cells.A4.content,  `=ODOO.PIVOT.POSITION("1",14)`);
+});
+
 QUnit.test("Odoo version is exported", (assert) => {
     const model = new Model();
     assert.strictEqual(model.exportData().odooVersion, ODOO_VERSION);

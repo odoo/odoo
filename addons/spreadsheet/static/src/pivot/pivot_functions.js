@@ -7,7 +7,6 @@ import * as spreadsheet from "@odoo/o-spreadsheet";
 
 const { arg, toString } = spreadsheet.helpers;
 const { functionRegistry } = spreadsheet.registries;
-const { CellErrorType } = spreadsheet;
 
 /**
  * @typedef {import("@spreadsheet").CustomFunctionDescription} CustomFunctionDescription
@@ -32,23 +31,5 @@ const ODOO_FILTER_VALUE = /** @satisfies {CustomFunctionDescription} */ ({
     returns: ["STRING"],
 });
 
-const ODOO_PIVOT_POSITION = /** @satisfies {CustomFunctionDescription} */ ({
-    description: _t("Get the absolute ID of an element in the pivot"),
-    args: [
-        arg("pivot_id (string)", _t("ID of the pivot.")),
-        arg("field_name (string)", _t("Name of the field.")),
-        arg("position (number)", _t("Position in the pivot")),
-    ],
-    compute: function () {
-        return {
-            value: CellErrorType.GenericError,
-            message: _t(`[[FUNCTION_NAME]] cannot be called from the spreadsheet.`),
-        };
-    },
-    returns: ["STRING"],
-    hidden: true,
-});
-
 functionRegistry
-    .add("ODOO.FILTER.VALUE", ODOO_FILTER_VALUE)
-    .add("PIVOT.POSITION", ODOO_PIVOT_POSITION);
+    .add("ODOO.FILTER.VALUE", ODOO_FILTER_VALUE);
