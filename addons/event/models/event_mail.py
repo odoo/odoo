@@ -160,8 +160,7 @@ class EventMailScheduler(models.Model):
                 raise ValidationError(_('The template which is referenced should be coming from %(model_name)s model.', model_name=model))
 
     def execute(self):
-        for scheduler in self:
-            now = fields.Datetime.now()
+        for scheduler in self._filter_to_skip(keep_per_registration=True):
             if scheduler.interval_type == 'after_sub':
                 if self.env.context.get('event_mail_registration_ids'):
                     new_registrations = self.env['event.registration'].search([
@@ -181,21 +180,15 @@ class EventMailScheduler(models.Model):
                     'mail_done': total_sent >= (scheduler.event_id.seats_reserved + scheduler.event_id.seats_used),
                     'mail_count_done': total_sent,
                 })
-            else:
-                # before or after event -> one shot email
-                if scheduler.mail_done or scheduler.notification_type != 'mail':
-                    continue
+            elif scheduler.notification_type == 'mail':
                 # no template -> ill configured, skip and avoid crash
                 if not scheduler.template_ref:
                     continue
-                # do not send emails if the mailing was scheduled before the event but the event is over
-                if scheduler.scheduled_date <= now and (scheduler.interval_type != 'before_event' or scheduler.event_id.date_end > now):
-                    scheduler.event_id.mail_attendees(scheduler.template_ref.id)
-                    # Mail is sent to all attendees (unconfirmed as well), so count all attendees
-                    scheduler.update({
-                        'mail_done': True,
-                        'mail_count_done': len(scheduler.event_id.registration_ids.filtered(lambda r: r.state != 'cancel'))
-                    })
+                scheduler.event_id.mail_attendees(scheduler.template_ref.id)
+                scheduler.update({
+                    'mail_done': True,
+                    'mail_count_done': len(scheduler.event_id.registration_ids.filtered(lambda r: r.state != 'cancel')),
+                })
         return True
 
     def _create_missing_mail_registrations(self, registrations):
@@ -217,6 +210,27 @@ class EventMailScheduler(models.Model):
             self.interval_unit,
             self.interval_type,
             '%s,%i' % (self.template_ref._name, self.template_ref.id)
+        )
+
+    def _filter_to_skip(self, keep_type=None, keep_per_registration=False):
+        """ Filter schedulers to skip: already done or scheduled for later
+
+        :param str keep_type: if given, a 'notification_type' defined on the
+          scheduler e.g. 'mail' or 'sms' (with sms module);
+        """
+        now = fields.Datetime.now()
+        return self.filtered(
+            lambda scheduler:
+                not scheduler.mail_done
+                and (keep_type is None or scheduler.notification_type == keep_type)  # optional notification type filter
+                and (keep_per_registration or scheduler.interval_type != 'after_sub')  # keep registration based only if asked
+                and (
+                    scheduler.interval_type == 'after_sub'
+                    or (
+                        scheduler.scheduled_date <= now
+                        and (scheduler.interval_type == 'after_event' or scheduler.event_id.date_end > now)
+                    )
+                )
         )
 
     @api.model
