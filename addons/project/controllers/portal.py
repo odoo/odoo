@@ -200,7 +200,7 @@ class ProjectCustomerPortal(CustomerPortal):
         try:
             project_sudo = self._document_check_access('project.project', project_id)
             task_sudo = request.env['project.task'].search([('project_id', '=', project_id), ('id', '=', task_id)]).sudo()
-            task_domain = [('id', 'child_of', task_id), ('id', '!=', task_id)]
+            task_domain = [('parent_id', '=', task_id)]
             searchbar_filters = self._get_my_tasks_searchbar_filters([('id', '=', task_sudo.project_id.id)], task_domain)
 
             if not filterby:

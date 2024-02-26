@@ -268,7 +268,7 @@
         <field name="res_model">project.task</field>
         <field name="view_mode">tree,kanban,form</field>
         <field name="search_view_id" ref="project.project_sharing_project_task_view_search"/>
-        <field name="domain">[('id', 'child_of', active_id), ('id', '!=', active_id)]</field>
+        <field name="domain">[('parent_id', '=', active_id)]</field>
         <field name="context">{'default_parent_id': active_id}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">

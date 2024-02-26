@@ -1549,7 +1549,7 @@ class Task(models.Model):
 
     def action_project_sharing_open_subtasks(self):
         self.ensure_one()
-        subtasks = self.env['project.task'].search([('id', 'child_of', self.id), ('id', '!=', self.id)])
+        subtasks = self.env['project.task'].search([('parent_id', '=', self.id)])
         if subtasks.project_id == self.project_id:
             action = self.env['ir.actions.act_window']._for_xml_id('project.project_sharing_project_task_action_sub_task')
             if len(subtasks) == 1:
