@@ -32,7 +32,12 @@ export class AvatarCardPopover extends Component {
         return this.user.phone;
     }
 
+    get userId() {
+        return this.user.id;
+    }
+
     onSendClick() {
-        this.openChat(this.user.id);
+        this.openChat(this.userId);
+        this.props.close();
     }
 }
