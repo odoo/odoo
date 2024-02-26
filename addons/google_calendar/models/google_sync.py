@@ -323,6 +323,16 @@ class GoogleSync(models.AbstractModel):
         # they will be synchronized eventually with the cron running few times a day
         return self.with_context(active_test=False).search(domain, limit=200)
 
+    def _check_any_records_to_sync(self):
+        """ Returns True if there are pending records to be synchronized from Odoo to Google, False otherwise. """
+        is_active_clause = (self._active_name, '=', True) if self._active_name else expression.TRUE_LEAF
+        domain = expression.AND([self._get_sync_domain(), [
+            '|',
+                '&', ('google_id', '=', False), is_active_clause,
+                ('need_sync', '=', True),
+        ]])
+        return self.search_count(domain, limit=1) > 0
+
     def _write_from_google(self, gevent, vals):
         self.write(vals)
 
