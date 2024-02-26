@@ -698,8 +698,10 @@ class IrQWeb(models.AbstractModel):
         # Reference to the last node being compiled. It is mainly used for debugging and displaying error messages.
         compile_context['_qweb_error_path_xml'] = None
 
-        if not compile_context.get('nsmap'):
-            compile_context['nsmap'] = {}
+        compile_context['nsmap'] = {
+            ns_prefix: str(ns_definition)
+            for ns_prefix, ns_definition in compile_context.get('nsmap', {}).items()
+        }
 
         # The options dictionary includes cache key elements and template
         # references. It will be attached to the generated function. This
