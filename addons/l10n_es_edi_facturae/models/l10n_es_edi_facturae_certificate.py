@@ -3,12 +3,11 @@ from base64 import b64decode, b64encode, encodebytes
 from copy import deepcopy
 from hashlib import sha1
 
-from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes, serialization
-from cryptography.hazmat.primitives.serialization import pkcs12
 from lxml import etree
 
 from odoo import _, api, fields, models
+from odoo.addons.account.tools.certificate import load_key_and_certificates
 from odoo.addons.l10n_es_edi_facturae import xml_utils
 from odoo.exceptions import UserError
 from odoo.tools import cleanup_xml_node
@@ -34,8 +33,7 @@ class Certificate(models.Model):
         """
         self.ensure_one()
         content, password = b64decode(self.with_context(bin_size=False).content), self.password.encode() if self.password else None
-        private_key, certificate, *_dummy = pkcs12.load_key_and_certificates(content, password, backend=default_backend())
-        return private_key, certificate
+        return load_key_and_certificates(content, password)
 
     # -------------------------------------------------------------------------
     # LOW-LEVEL METHODS
@@ -75,8 +73,7 @@ class Certificate(models.Model):
         root = deepcopy(edi_data)
         cert_private, cert_public = self._decode_certificate()
         public_key_numbers = cert_public.public_key().public_numbers()
-        rdns_pattern = re.compile(r'(?<=\()([A-Z]{1,2}=.*)(?=\))')
-        issuer = ', '.join(sorted(match.group() for match in (rdns_pattern.search(str(element)) for element in cert_public.issuer.rdns) if match))
+        issuer = ', '.join(sorted(element.rfc4514_string() for element in cert_public.issuer.rdns if re.match(r'[A-Z]{1,2}', element.rfc4514_string())))
 
         # Identifiers
         document_id = f"Document-{sha1(etree.tostring(edi_data)).hexdigest()}"
