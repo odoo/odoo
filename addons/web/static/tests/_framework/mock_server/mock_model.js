@@ -1387,20 +1387,22 @@ export class Model extends Array {
     }
 
     /**
-     * @param {number} id
-     * @param {Partial<ModelRecord>} values
-     * @param {KwArgs} [kwargs={}]
+     * @param {MaybeIterable<number>} idOrIds
+     * @param {Partial<ModelRecord>} defaultValues
+     * @param {KwArgs<{ default: Partial<ModelRecord> }>} [kwargs={}]
      */
-    copy(id, values, kwargs = {}) {
-        const copyId = this._getNextId();
-        const originalRecord = this.find((record) => record.id === id);
-        this.push({
-            ...originalRecord,
-            ...values,
-            id: copyId,
-            display_name: `${originalRecord.display_name} (copy)`,
+    copy(idOrIds, defaultValues, kwargs = {}) {
+        return ensureArray(idOrIds).map((id) => {
+            const copyId = this._getNextId();
+            const originalRecord = this.find((record) => record.id === id);
+            this.push({
+                ...originalRecord,
+                ...(defaultValues || kwargs.default),
+                id: copyId,
+                display_name: `${originalRecord.display_name} (copy)`,
+            });
+            return copyId;
         });
-        return copyId;
     }
 
     /**
