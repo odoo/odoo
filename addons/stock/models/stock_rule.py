@@ -204,6 +204,7 @@ class StockRule(models.Model):
             'origin': move_to_copy.origin or move_to_copy.picking_id.name or "/",
             'location_id': move_to_copy.location_dest_id.id,
             'location_dest_id': self.location_id.id,
+            'rule_id': self.id,
             'date': new_date,
             'company_id': company_id,
             'picking_id': False,
