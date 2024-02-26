@@ -40,28 +40,26 @@ class EventMailScheduler(models.Model):
         sms_mails.template_model_id = sms_model
         super(EventMailScheduler, self - sms_mails)._compute_template_model_id()
 
-    def execute(self):
-        for scheduler in self:
-            now = fields.Datetime.now()
-            if scheduler.interval_type != 'after_sub' and scheduler.notification_type == 'sms':
-                # before or after event -> one shot email
-                if scheduler.mail_done:
-                    continue
-                # no template -> ill configured, skip and avoid crash
-                if not scheduler.template_ref:
-                    continue
-                # Do not send SMS if the communication was scheduled before the event but the event is over
-                if scheduler.scheduled_date <= now and (scheduler.interval_type != 'before_event' or scheduler.event_id.date_end > now):
-                    scheduler.event_id.registration_ids.filtered(lambda registration: registration.state != 'cancel')._message_sms_schedule_mass(
-                        template=scheduler.template_ref,
-                        mass_keep_log=True
-                    )
-                    scheduler.update({
-                        'mail_done': True,
-                        'mail_count_done': len(scheduler.event_id.registration_ids.filtered(lambda r: r.state != 'cancel'))
-                    })
+    def _execute(self):
+        oneshot_sms = self.filtered(
+            lambda scheduler: scheduler.notification_type == "sms" and scheduler.interval_type in {"before_event", "after_event"}
+        )
+        for scheduler in oneshot_sms:
+            # no template -> ill configured, skip and avoid crash
+            if not scheduler.template_ref:
+                continue
+            scheduler.event_id.registration_ids.filtered(
+                lambda registration: registration.state != 'cancel'
+            )._message_sms_schedule_mass(
+                template=scheduler.template_ref,
+                mass_keep_log=True
+            )
+            scheduler.update({
+                'mail_done': True,
+                'mail_count_done': len(scheduler.event_id.registration_ids.filtered(lambda r: r.state != 'cancel')),
+            })
 
-        return super(EventMailScheduler, self).execute()
+        return super(EventMailScheduler, self - oneshot_sms)._execute()
 
     @api.onchange('notification_type')
     def set_template_ref_model(self):
