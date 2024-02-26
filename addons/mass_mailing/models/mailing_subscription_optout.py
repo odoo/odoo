@@ -12,4 +12,4 @@ class MailingSubscriptionReason(models.Model):
 
     name = fields.Char(string='Reason', translate=True)
     sequence = fields.Integer(string='Sequence', default=10)
-    is_feedback = fields.Boolean(string='Allow Feedback')
+    is_feedback = fields.Boolean(string='Ask For Feedback')
