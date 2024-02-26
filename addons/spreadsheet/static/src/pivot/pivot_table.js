@@ -1,8 +1,5 @@
 /** @odoo-module */
 // @ts-check
-
-import { HEADER_STYLE, TOP_LEVEL_STYLE, MEASURE_STYLE } from "@spreadsheet/helpers/constants";
-
 /**
  * @typedef {import("@spreadsheet").SPTableColumn} SPTableColumn
  * @typedef {import("@spreadsheet").SPTableRow} SPTableRow
@@ -210,17 +207,14 @@ export class SpreadsheetPivotTable {
     _getPivotCell(col, row, includeTotal = true) {
         const colHeadersHeight = this.getNumberOfHeaderRows();
         if (col === 0 && row === colHeadersHeight - 1) {
-            return { content: this._rowTitle, isHeader: true, style: HEADER_STYLE };
+            return { content: this._rowTitle, isHeader: true };
         } else if (row <= colHeadersHeight - 1) {
             const domain = this._getColHeaderDomain(col, row);
-            const style = row === colHeadersHeight - 1 ? MEASURE_STYLE : TOP_LEVEL_STYLE;
-            return { domain, isHeader: true, style };
+            return { domain, isHeader: true };
         } else if (col === 0) {
             const rowIndex = row - colHeadersHeight;
             const domain = this._getRowDomain(rowIndex);
-            const indent = this._rows[rowIndex].indent;
-            const style = indent <= 1 ? TOP_LEVEL_STYLE : indent === 2 ? HEADER_STYLE : undefined;
-            return { domain, isHeader: true, style };
+            return { domain, isHeader: true };
         } else {
             const rowIndex = row - colHeadersHeight;
             if (!includeTotal && this._isTotalRow(rowIndex)) {

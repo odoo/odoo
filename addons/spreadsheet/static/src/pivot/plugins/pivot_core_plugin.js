@@ -16,6 +16,7 @@ import { CommandResult } from "../../o_spreadsheet/cancelled_reason";
 import { _t } from "@web/core/l10n/translation";
 import { deepCopy } from "@web/core/utils/objects";
 import { OdooCorePlugin } from "@spreadsheet/plugins";
+import { PIVOT_TABLE_CONFIG } from "@spreadsheet/helpers/constants";
 
 const { isDefined, deepEquals } = helpers;
 
@@ -243,7 +244,21 @@ export class PivotCorePlugin extends OdooCorePlugin {
             }
         }
 
-        this._addBorders(sheetId, position, table);
+        const pivotZone = {
+            top: position.row,
+            bottom: position.row + pivotCells[0].length - 1,
+            left: position.col,
+            right: position.col + pivotCells.length - 1,
+        };
+        const numberOfHeaders = table.getColHeaders().length - 1; // -1 to not include measures in the table headers
+        const cmdContent = {
+            sheetId,
+            ranges: [this.getters.getRangeDataFromZone(sheetId, pivotZone)],
+            config: { ...PIVOT_TABLE_CONFIG, numberOfHeaders },
+        };
+        if (this.canDispatch("CREATE_TABLE", cmdContent).isSuccessful) {
+            this.dispatch("CREATE_TABLE", cmdContent);
+        }
     }
 
     /**
@@ -280,45 +295,6 @@ export class PivotCorePlugin extends OdooCorePlugin {
 
     /**
      * @param {string} sheetId
-     * @param {{ col: number, row: number }} position
-     * @param {SpreadsheetPivotTable} table
-     */
-    _addBorders(sheetId, { col, row }, table) {
-        const colHeight = table.getNumberOfHeaderRows();
-        const colWidth = table.getNumberOfDataColumns();
-        const totalRow = row + colHeight + table.getRowHeaders().length - 1;
-        const headerAndMeasureZone = {
-            top: row,
-            bottom: row + colHeight - 1,
-            left: col,
-            right: col + colWidth,
-        };
-        this.dispatch("SET_ZONE_BORDERS", {
-            sheetId,
-            target: [
-                headerAndMeasureZone,
-                {
-                    left: col,
-                    right: col + colWidth,
-                    top: totalRow,
-                    bottom: totalRow,
-                },
-                {
-                    left: col,
-                    right: col + colWidth,
-                    top: row,
-                    bottom: totalRow,
-                },
-            ],
-            border: {
-                position: "external",
-                color: "#2D7E84",
-            },
-        });
-    }
-
-    /**
-     * @param {string} sheetId
      * @param {string} pivotId
      * @param {{ col: number, row: number }} position
      * @param {SPTableCell} pivotCell
@@ -334,7 +310,6 @@ export class PivotCorePlugin extends OdooCorePlugin {
             col,
             row,
             content: pivotCell.content || (args ? makePivotFormula(formula, args) : undefined),
-            style: pivotCell.style,
         });
     }
 

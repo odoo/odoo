@@ -5,9 +5,18 @@ import { _t } from "@web/core/l10n/translation";
 
 export const DEFAULT_LINES_NUMBER = 20;
 
-export const HEADER_STYLE = { fillColor: "#E6F2F3" };
 export const TOP_LEVEL_STYLE = { bold: true, fillColor: "#E6F2F3" };
-export const MEASURE_STYLE = { fillColor: "#E6F2F3", textColor: "#756f6f" };
+
+export const PIVOT_TABLE_CONFIG = {
+    hasFilters: false,
+    totalRow: false,
+    firstColumn: true,
+    lastColumn: false,
+    numberOfHeaders: 1,
+    bandedRows: true,
+    bandedColumns: false,
+    styleId: "TableStyleMedium5",
+};
 
 export const UNTITLED_SPREADSHEET_NAME = _t("Untitled spreadsheet");
 
