@@ -22,7 +22,7 @@ const WithUserChatter = (T) =>
         }
 
         get displayAvatarCard() {
-            return !this.env.isSmall && this.relation === "res.users";
+            return this.relation === "res.users";
         }
 
         getAvatarCardProps() {
