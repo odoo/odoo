@@ -12,7 +12,7 @@
                         <field name="company_id" groups="base.group_multi_company" icon="fa-building" enable_counters="1"/>
                         <field name="department_id" icon="fa-users" enable_counters="1"/>
                     </searchpanel>
-                    <field name="parent_id" string="Manager"/>
+                    <field name="parent_id" string="Manager" domain="[('company_id', 'in', allowed_company_ids)]"/>
                     <field name="job_title"/>
                     <separator/>
                     <filter name="my_team" string="My Team" domain="[('parent_id.user_id', '=', uid)]"/>
