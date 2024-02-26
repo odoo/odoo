@@ -185,7 +185,10 @@ export class Record extends DataPoint {
         if (this.model._closeUrgentSaveNotification) {
             this.model._closeUrgentSaveNotification();
         }
-        return this.model.mutex.exec(() => this._discard());
+        return this.model.mutex.exec(() => {
+            this.model._discardLocalChanges();
+            this._discard();
+        });
     }
 
     duplicate() {

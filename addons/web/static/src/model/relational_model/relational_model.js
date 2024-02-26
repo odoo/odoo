@@ -220,6 +220,10 @@ export class RelationalModel extends Model {
         return Promise.all([...proms, this.mutex.getUnlockedDef()]);
     }
 
+    _discardLocalChanges() {
+        this.bus.trigger("DISCARD_LOCAL_CHANGES");
+    }
+
     /**
      *
      * @param {Config} config

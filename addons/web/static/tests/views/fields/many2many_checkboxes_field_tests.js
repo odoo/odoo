@@ -3,10 +3,12 @@
 import { browser } from "@web/core/browser/browser";
 import {
     click,
+    clickDiscard,
     clickSave,
     editInput,
     getFixture,
     getNodesTextContent,
+    mockTimeout,
     nextTick,
     patchWithCleanup,
 } from "@web/../tests/helpers/utils";
@@ -594,5 +596,48 @@ QUnit.module("Fields", (hooks) => {
         // save
         await clickSave(target);
         assert.verifySteps(["get_views", "web_read", "name_search", "web_save"]);
+    });
+
+    QUnit.test("Many2ManyCheckBoxesField: change, discard and leave", async function (assert) {
+        const { advanceTime } = mockTimeout();
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <group>
+                        <field name="int_field"/>
+                        <field name="timmy" widget="many2many_checkboxes" />
+                    </group>
+                </form>`,
+        });
+
+        assert.containsOnce(target, ".o_form_view");
+        assert.containsNone(target, ".o_field_many2many_checkboxes .form-check-input:checked");
+
+        // sanity check first: tick a checkbox, wait for the status indicator to appear (there's a
+        // 500ms delay before the field notifies the model of the change) and save
+        await click(target.querySelectorAll(".o_field_many2many_checkboxes .form-check-input")[0]);
+        assert.containsOnce(target, ".o_field_many2many_checkboxes .form-check-input:checked");
+        assert.containsOnce(target, ".o_form_status_indicator_buttons.invisible");
+        await advanceTime(500);
+        assert.containsOnce(target, ".o_form_status_indicator_buttons:not(.invisible)");
+        await clickSave(target);
+        assert.containsOnce(target, ".o_form_status_indicator_buttons.invisible");
+        assert.containsOnce(target, ".o_field_many2many_checkboxes .form-check-input:checked");
+
+        // do the same, but discard before the 500ms delay
+        await editInput(target, ".o_field_widget[name=int_field] input", 14); // to be able to discard
+        assert.containsOnce(target, ".o_form_status_indicator_buttons:not(.invisible)");
+        await click(target.querySelectorAll(".o_field_many2many_checkboxes .form-check-input")[1]);
+        assert.containsN(target, ".o_field_many2many_checkboxes .form-check-input:checked", 2);
+        await clickDiscard(target);
+        assert.containsOnce(target, ".o_field_many2many_checkboxes .form-check-input:checked");
+        assert.containsOnce(target, ".o_form_status_indicator_buttons.invisible");
+        await advanceTime(500);
+        assert.containsOnce(target, ".o_field_many2many_checkboxes .form-check-input:checked");
+        assert.containsOnce(target, ".o_form_status_indicator_buttons.invisible");
     });
 });
