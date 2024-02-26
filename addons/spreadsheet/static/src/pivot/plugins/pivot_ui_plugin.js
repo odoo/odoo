@@ -22,7 +22,9 @@ export class PivotUIPlugin extends OdooUIPlugin {
     ]);
     constructor(config) {
         super(config);
-        this.dataSources = config.custom.dataSources;
+        /** @type {Record<string, Pivot} */
+        this.pivots = {};
+        this.custom = config.custom;
     }
 
     beforeHandle(cmd) {
@@ -189,7 +191,7 @@ export class PivotUIPlugin extends OdooUIPlugin {
      */
     getPivot(pivotId) {
         const dataSourceId = this.getPivotDataSourceId(pivotId);
-        return this.dataSources.get(dataSourceId);
+        return this.pivots[dataSourceId];
     }
 
     getPivotDataSourceId(pivotId) {
@@ -229,12 +231,9 @@ export class PivotUIPlugin extends OdooUIPlugin {
     _setupPivot(pivotId, { recreate } = { recreate: false }) {
         const dataSourceId = this.getPivotDataSourceId(pivotId);
         const definition = this.getters.getPivotDefinition(pivotId);
-        if (recreate || !this.dataSources.contains(dataSourceId)) {
+        if (recreate || !(dataSourceId in this.pivots)) {
             const cls = pivotRegistry.get(definition.type);
-            this.dataSources.add(dataSourceId, cls, {
-                definition,
-                getters: this.getters,
-            });
+            this.pivots[dataSourceId] = new cls(this.custom, { definition, getters: this.getters });
         }
     }
 

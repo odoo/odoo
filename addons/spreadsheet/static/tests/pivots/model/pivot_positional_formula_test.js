@@ -3,10 +3,8 @@
 import { setCellContent } from "@spreadsheet/../tests/utils/commands";
 import { getCellValue, getEvaluatedCell } from "@spreadsheet/../tests/utils/getters";
 import { createSpreadsheetWithPivot } from "@spreadsheet/../tests/utils/pivot";
-import {
-    createModelWithDataSource,
-    waitForDataSourcesLoaded,
-} from "@spreadsheet/../tests/utils/model";
+import { createModelWithDataSource } from "@spreadsheet/../tests/utils/model";
+import { waitForDataLoaded } from "@spreadsheet/helpers/model";
 
 QUnit.module("spreadsheet > positional pivot formula", {}, () => {
     QUnit.test("Can have positional args in pivot formula", async function (assert) {
@@ -134,7 +132,7 @@ QUnit.module("spreadsheet > positional pivot formula", {}, () => {
         setCellContent(model, "C2", `=ODOO.PIVOT(1,"probability","#bar",2,"#foo",2)`);
         setCellContent(model, "D1", `=ODOO.PIVOT(1,"probability","#bar",1)`);
         setCellContent(model, "D2", `=ODOO.PIVOT(1,"probability","#bar",2)`);
-        await waitForDataSourcesLoaded(model);
+        await waitForDataLoaded(model);
         assert.strictEqual(getCellValue(model, "A1"), "No");
         assert.strictEqual(getCellValue(model, "A2"), "Yes");
         assert.strictEqual(getCellValue(model, "B1"), "");
@@ -172,7 +170,7 @@ QUnit.module("spreadsheet > positional pivot formula", {}, () => {
         setCellContent(model, "C2", `=ODOO.PIVOT(1,"probability","#bar",2,"#foo",2)`);
         setCellContent(model, "D1", `=ODOO.PIVOT(1,"probability","#bar",1)`);
         setCellContent(model, "D2", `=ODOO.PIVOT(1,"probability","#bar",2)`);
-        await waitForDataSourcesLoaded(model);
+        await waitForDataLoaded(model);
         assert.strictEqual(getCellValue(model, "A1"), "Yes");
         assert.strictEqual(getCellValue(model, "A2"), "No");
         assert.strictEqual(getCellValue(model, "B1"), 11);
@@ -211,7 +209,7 @@ QUnit.module("spreadsheet > positional pivot formula", {}, () => {
         setCellContent(model, "C2", `=ODOO.PIVOT(1,"probability","#bar",2,"#foo",2)`);
         setCellContent(model, "D1", `=ODOO.PIVOT(1,"probability","#bar",1)`);
         setCellContent(model, "D2", `=ODOO.PIVOT(1,"probability","#bar",2)`);
-        await waitForDataSourcesLoaded(model);
+        await waitForDataLoaded(model);
         assert.strictEqual(getCellValue(model, "A1"), "Yes");
         assert.strictEqual(getCellValue(model, "A2"), "No");
         assert.strictEqual(getCellValue(model, "B1"), 11);
@@ -250,7 +248,7 @@ QUnit.module("spreadsheet > positional pivot formula", {}, () => {
         setCellContent(model, "C2", `=ODOO.PIVOT(1,"probability","#bar",2,"#foo",2)`);
         setCellContent(model, "D1", `=ODOO.PIVOT(1,"probability","#bar",1)`);
         setCellContent(model, "D2", `=ODOO.PIVOT(1,"probability","#bar",2)`);
-        await waitForDataSourcesLoaded(model);
+        await waitForDataLoaded(model);
         assert.strictEqual(getCellValue(model, "A1"), "No");
         assert.strictEqual(getCellValue(model, "A2"), "Yes");
         assert.strictEqual(getCellValue(model, "B1"), "");
@@ -286,7 +284,7 @@ QUnit.module("spreadsheet > positional pivot formula", {}, () => {
         setCellContent(model, "B11", `=ODOO.PIVOT(1,"probability","#product_id",2)`);
         setCellContent(model, "C10", `=ODOO.PIVOT(1,"foo","#product_id",1)`);
         setCellContent(model, "C11", `=ODOO.PIVOT(1,"foo","#product_id",2)`);
-        await waitForDataSourcesLoaded(model);
+        await waitForDataLoaded(model);
         assert.strictEqual(getCellValue(model, "A10"), "xphone");
         assert.strictEqual(getCellValue(model, "A11"), "xpad");
         assert.strictEqual(getCellValue(model, "B10"), 10);
@@ -320,7 +318,7 @@ QUnit.module("spreadsheet > positional pivot formula", {}, () => {
         setCellContent(model, "B11", `=ODOO.PIVOT(1,"probability","#product_id",2)`);
         setCellContent(model, "C10", `=ODOO.PIVOT(1,"foo","#product_id",1)`);
         setCellContent(model, "C11", `=ODOO.PIVOT(1,"foo","#product_id",2)`);
-        await waitForDataSourcesLoaded(model);
+        await waitForDataLoaded(model);
         assert.strictEqual(getCellValue(model, "A10"), "xpad");
         assert.strictEqual(getCellValue(model, "A11"), "xphone");
         assert.strictEqual(getCellValue(model, "B10"), 121);

@@ -59,8 +59,6 @@ export class PivotUIGlobalFilterPlugin extends OdooUIPlugin {
             handleEvent: this.handleEvent.bind(this),
         });
 
-        this.dataSources = config.custom.dataSources;
-
         globalFiltersFieldMatchers["pivot"] = {
             ...globalFiltersFieldMatchers["pivot"],
             waitForReady: () => this._getPivotsWaitForReady(),

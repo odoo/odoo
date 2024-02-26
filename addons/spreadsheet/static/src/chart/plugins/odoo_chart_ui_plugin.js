@@ -12,7 +12,11 @@ export class OdooChartUIPlugin extends OdooUIPlugin {
 
     constructor(config) {
         super(config);
-        this.dataSources = config.custom.dataSources;
+
+        this.custom = config.custom;
+
+        /** @type {Record<string, ChartDataSource>} */
+        this.charts = {};
 
         globalFiltersFieldMatchers["chart"] = {
             ...globalFiltersFieldMatchers["chart"],
@@ -127,7 +131,7 @@ export class OdooChartUIPlugin extends OdooUIPlugin {
      */
     getChartDataSource(chartId) {
         const dataSourceId = this._getOdooChartDataSourceId(chartId);
-        return this.dataSources.get(dataSourceId);
+        return this.charts[dataSourceId];
     }
 
     // -------------------------------------------------------------------------
@@ -170,7 +174,7 @@ export class OdooChartUIPlugin extends OdooUIPlugin {
      */
     _setupChartDataSource(chartId) {
         const dataSourceId = this._getOdooChartDataSourceId(chartId);
-        if (!this.dataSources.contains(dataSourceId)) {
+        if (!(dataSourceId in this.charts)) {
             this._resetChartDataSource(chartId);
         }
         this._setChartDataSource(chartId);
@@ -183,7 +187,7 @@ export class OdooChartUIPlugin extends OdooUIPlugin {
     _resetChartDataSource(chartId) {
         const definition = this.getters.getChart(chartId).getDefinitionForDataSource();
         const dataSourceId = this._getOdooChartDataSourceId(chartId);
-        this.dataSources.add(dataSourceId, ChartDataSource, definition);
+        this.charts[dataSourceId] = new ChartDataSource(this.custom, definition);
     }
 
     /**
