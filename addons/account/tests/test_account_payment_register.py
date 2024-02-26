@@ -1007,6 +1007,143 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
             },
         ])
 
+    def test_register_foreign_currency_on_payment_exchange_writeoff_account(self):
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'date': '2017-01-01',
+            'invoice_date': '2017-01-01',
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [Command.create({'product_id': self.product_a.id, 'price_unit': 1000.0, 'tax_ids': []})],
+        })
+        invoice.action_post()
+        # 1998 GOL = 999 USD
+        payment = self.env['account.payment.register']\
+            .with_context(active_model='account.move', active_ids=invoice.ids)\
+            .create({
+                'currency_id': self.currency_data['currency'].id,
+                'amount': 1998,
+                'payment_difference_handling': 'reconcile',
+                'writeoff_account_id': self.env.company.expense_currency_exchange_account_id.id,
+            })\
+            ._create_payments()
+
+        self.assertRecordValues(payment.line_ids.sorted('balance'), [
+            # Receivable line:
+            {
+                'debit': 0.0,
+                'credit': 1000.0,
+                'currency_id': self.currency_data['currency'].id,
+                'amount_currency': -1998.0,
+                'reconciled': True,
+            },
+            # Liquidity line:
+            {
+                'debit': 1000.0,
+                'credit': 0.0,
+                'currency_id': self.currency_data['currency'].id,
+                'amount_currency': 1998.0,
+                'reconciled': False,
+            },
+        ])
+
+    def test_register_foreign_currency_on_invoice_exchange_writeoff_account(self):
+        self.env.company.tax_exigibility = True
+        self.env.company.account_cash_basis_base_account_id = self.env['account.account'].create({
+            'code': 'cash.basis.base.account',
+            'name': 'cash_basis_base_account',
+            'account_type': 'income',
+        })
+
+        default_tax = self.company_data['default_tax_sale']
+        default_tax.cash_basis_transition_account_id = self.env['account.account'].create({
+            'code': 'cash.basis.transfer.account',
+            'name': 'cash_basis_transfer_account',
+            'account_type': 'income',
+            'reconcile': True,
+        })
+        default_tax.tax_exigibility = 'on_payment'
+
+        # 1150 GOL = 575 USD
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'date': '2017-01-01',
+            'invoice_date': '2017-01-01',
+            'partner_id': self.partner_a.id,
+            'currency_id': self.currency_data['currency'].id,
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_a.id,
+                'price_unit': 1000.0,
+                'tax_ids': [Command.set(default_tax.ids)],
+            })],
+        })
+        invoice.action_post()
+
+        # 1110 GOL = 370 USD
+        payment = self.env['account.payment.register']\
+            .with_context(active_model='account.move', active_ids=invoice.ids)\
+            .create({
+                'currency_id': self.env.company.currency_id.id,
+                'amount': 370.0,
+                'payment_date': '2016-01-01',
+                'payment_difference_handling': 'reconcile',
+                'writeoff_account_id': self.env.company.expense_currency_exchange_account_id.id,
+            })\
+            ._create_payments()
+
+        self.assertRecordValues(payment.line_ids.sorted('balance'), [
+            # Receivable line:
+            {
+                'balance': -370.0,
+                'currency_id': self.env.company.currency_id.id,
+                'amount_currency': -370.0,
+                'reconciled': True,
+            },
+            # Liquidity line:
+            {
+                'balance': 370.0,
+                'currency_id': self.env.company.currency_id.id,
+                'amount_currency': 370.0,
+                'reconciled': False,
+            },
+        ])
+        self.assertRecordValues(invoice.line_ids.matched_credit_ids, [
+            {
+                'amount': 370.0,
+                'debit_amount_currency': 1150.0,
+                'credit_amount_currency': 370.0,
+            },
+            {
+                'amount': 205.00,
+                'debit_amount_currency': 0.0,
+                'credit_amount_currency': 0.0,
+            },
+        ])
+
+        # Cash basis.
+        caba_move = self.env['account.move'].search([('tax_cash_basis_origin_move_id', '=', invoice.id)])
+        self.assertRecordValues(caba_move.line_ids.sorted('balance'), [
+            {
+                'balance': -321.74,
+                'currency_id': self.currency_data['currency'].id,
+                'amount_currency': -1000.0,
+            },
+            {
+                'balance': -48.26,
+                'currency_id': self.currency_data['currency'].id,
+                'amount_currency': -150.0,
+            },
+            {
+                'balance': 48.26,
+                'currency_id': self.currency_data['currency'].id,
+                'amount_currency': 150.0,
+            },
+            {
+                'balance': 321.74,
+                'currency_id': self.currency_data['currency'].id,
+                'amount_currency': 1000.0,
+            },
+        ])
+
     def test_suggested_default_partner_bank_inbound_payment(self):
         """ Test the suggested bank account on the wizard for inbound payment. """
         self.out_invoice_1.partner_bank_id = False

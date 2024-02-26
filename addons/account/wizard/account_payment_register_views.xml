@@ -29,6 +29,7 @@
                     <field name="available_partner_bank_ids" invisible="1"/>
                     <field name="company_currency_id" invisible="1"/>
                     <field name="hide_writeoff_section" invisible="1"/>
+                    <field name="writeoff_is_exchange_account" invisible="1"/>
                     <field name="untrusted_bank_ids" invisible="1"/>
 
                     <div role="alert" class="alert alert-info" invisible="not hide_writeoff_section">
@@ -77,8 +78,13 @@
                                            string="Post Difference In"
                                            options="{'no_create': True}"
                                            required="payment_difference_handling == 'reconcile' and not early_payment_discount_mode"/>
-                                    <label for="writeoff_label" class="oe_edit_only" string="Label"/>
-                                    <field name="writeoff_label" required="payment_difference_handling == 'reconcile'"/>
+                                    <label for="writeoff_label"
+                                           class="oe_edit_only"
+                                           string="Label"
+                                           invisible="writeoff_is_exchange_account"/>
+                                    <field name="writeoff_label"
+                                           required="payment_difference_handling == 'reconcile'"
+                                           invisible="writeoff_is_exchange_account"/>
                                 </div>
                             </div>
                         </group>
