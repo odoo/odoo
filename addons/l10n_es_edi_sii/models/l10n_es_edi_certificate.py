@@ -4,12 +4,12 @@
 from base64 import b64decode
 from pytz import timezone
 from datetime import datetime
-from cryptography.hazmat.backends import default_backend
-from cryptography.hazmat.primitives.serialization import Encoding, NoEncryption, PrivateFormat, pkcs12
+from cryptography.hazmat.primitives.serialization import Encoding, NoEncryption, PrivateFormat
 
 
 from odoo import _, api, fields, models, tools
 from odoo.exceptions import ValidationError
+from odoo.addons.account.tools.certificate import load_key_and_certificates
 
 
 class Certificate(models.Model):
@@ -43,10 +43,9 @@ class Certificate(models.Model):
         if not self.password:
             return None, None, None
 
-        private_key, certificate, _additional_certificates = pkcs12.load_key_and_certificates(
+        private_key, certificate = load_key_and_certificates(
             b64decode(self.content),
             self.password.encode(),
-            backend=default_backend(),
         )
 
         pem_certificate = certificate.public_bytes(Encoding.PEM)
