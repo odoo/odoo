@@ -65,11 +65,13 @@ class PhoneBlackList(models.Model):
     def _search(self, domain, offset=0, limit=None, order=None, access_rights_uid=None):
         """ Override _search in order to grep search on sanitized number field """
         def sanitize_number(arg):
-            if isinstance(arg, (list, tuple)) and arg[0] == 'number' and isinstance(arg[2], str):
-                number = arg[2]
-                sanitized = phone_validation.phone_sanitize_numbers_w_record([number], self.env.user)[number]['sanitized']
-                if sanitized:
-                    return (arg[0], arg[1], sanitized)
+            if isinstance(arg, (list, tuple)) and arg[0] == 'number':
+                if isinstance(arg[2], str):
+                    sanitized = phone_validation.phone_sanitize_numbers_w_record([arg[2]], self.env.user)[arg[2]]['sanitized']
+                    return arg[0], arg[1], sanitized or arg[2]
+                elif isinstance(arg[2], list) and all(isinstance(number, str) for number in arg[2]):
+                    sanitized = phone_validation.phone_sanitize_numbers_w_record(arg[2], self.env.user)
+                    return arg[0], arg[1], [values['sanitized'] or number for number, values in sanitized.items()]
             return arg
 
         domain = [sanitize_number(item) for item in domain]
