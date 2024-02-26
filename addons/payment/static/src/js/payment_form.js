@@ -348,7 +348,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
         }).catch(error => {
             if (error instanceof RPCError) {
                 this._displayErrorDialog(_t("Cannot save payment method"), error.data.message);
-                this._enableButton(); // The button has been disabled before initiating the flow.
+                this._enableButton(true); // The button has been disabled before initiating the flow.
             } else {
                 return Promise.reject(error);
             }
@@ -394,7 +394,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
         }).catch(error => {
             if (error instanceof RPCError) {
                 this._displayErrorDialog(_t("Payment processing failed"), error.data.message);
-                this._enableButton(); // The button has been disabled before initiating the flow.
+                this._enableButton(true); // The button has been disabled before initiating the flow.
             } else {
                 return Promise.reject(error);
             }
