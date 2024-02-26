@@ -173,7 +173,9 @@ export class AccountMoveUploadKanbanRenderer extends KanbanRenderer {
     };
     setup() {
         super.setup();
-        this.dropzoneState.visible = false;
+        this.dropzoneState = useState({
+            visible: false,
+        });
     }
 }
 

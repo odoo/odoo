@@ -84,4 +84,26 @@ QUnit.module("Widgets", (hooks) => {
         
     });
 
+    QUnit.module("AccountMoveUploadKanbanView");
+
+    QUnit.test("can render AccountMoveUploadKanbanView", async function (assert) {
+        serverData.views["partner,false,kanban"] = `
+            <kanban js_class="account_documents_kanban">
+                <templates>
+                    <t t-name="kanban-box">
+                        <div>
+                            <field name="display_name"/>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>`;
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+        });
+
+        assert.containsOnce(target, ".o_control_panel .o_button_upload_bill:visible");
+        assert.containsOnce(target, ".o_kanban_record:not(.o_kanban_ghost)");
+    });
 });
