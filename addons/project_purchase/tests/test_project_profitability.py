@@ -195,10 +195,44 @@ class TestProjectPurchaseProfitability(TestProjectProfitabilityCommon, TestPurch
                 },
             },
         )
-        self._create_invoice_for_po(purchase_order)
-        self.assertEqual(purchase_order.invoice_status, 'invoiced')
-        # now the bill has been posted so the section "purchase_order" should appear, its costs should be accounted in the "billed" part
+        # Create a vendor bill linked to the PO
+        purchase_order.action_create_invoice()
+        self.assertEqual(purchase_order.invoice_ids.state, 'draft')
+        # now the bill has been created and set to draft so the section "purchase_order" should appear, its costs should be accounted in the "to bill" part
         # of the purchase_order section, but should touch in the other_purchase_costs
+        self.assertDictEqual(
+            self.project._get_profitability_items(False)['costs'],
+            {
+                'data': [{
+                    'id': 'other_costs',
+                    'sequence': self.project._get_profitability_sequence_per_invoice_type()['other_costs'],
+                    'to_bill': 0.0,
+                    'billed': -150.0,
+                }, {
+                    'id': 'purchase_order',
+                    'sequence': self.project._get_profitability_sequence_per_invoice_type()['purchase_order'],
+                    'to_bill': -self.product_order.standard_price * analytic_contribution,
+                    'billed': 0.0,
+                }, {
+                    'id': 'other_purchase_costs',
+                    'sequence': self.project._get_profitability_sequence_per_invoice_type()['other_purchase_costs'],
+                    'to_bill': 0.0,
+                    'billed': -2 * (self.product_a.standard_price + self.product_b.standard_price) * analytic_contribution,
+                }],
+                'total': {
+                    'to_bill': -self.product_order.standard_price * analytic_contribution,
+                    'billed': -(2 * self.product_a.standard_price +
+                                2 * self.product_b.standard_price) * analytic_contribution - 150,
+                },
+            },
+        )
+        # Post the vendor bill linked to the PO
+        purchase_bill = purchase_order.invoice_ids
+        purchase_bill.invoice_date = datetime.today()
+        purchase_bill.action_post()
+        self.assertEqual(purchase_order.invoice_ids.state, 'posted')
+        # now the bill has been posted so the costs of the section "purchase_order" should be accounted in the "billed" part
+        # and the total should be updated accordingly
         self.assertDictEqual(
             self.project._get_profitability_items(False)['costs'],
             {
