@@ -356,7 +356,7 @@ class TestMailSchedule(EventCase, MockEmail, CronMixinCase):
             }),
         ]})
         self.env.invalidate_all()
-        # com 148, event 134
+        # com 148, event 99
         with self.assertQueryCount(153), \
              self.mock_datetime_and_now(reference_now + relativedelta(minutes=10)), \
              self.mock_mail_gateway():
@@ -367,12 +367,10 @@ class TestMailSchedule(EventCase, MockEmail, CronMixinCase):
                     'name': f'New Attendee {idx}',
                 } for idx in range(2)
             ])
-        # self.assertEqual(len(self._new_mails), 2)
-        # self.assertEqual(self.mail_mail_create_mocked.call_count, 2)
-        self.assertEqual(len(self._new_mails), 7,
-                         'EventMail: TODO: should be limited to new registrations')
-        self.assertEqual(self.mail_mail_create_mocked.call_count, 7,
-                         'EventMail: TODO: should create one mail / new registration')
+        self.assertEqual(len(self._new_mails), 2,
+                         'EventMail: should be limited to new registrations')
+        self.assertEqual(self.mail_mail_create_mocked.call_count, 2,
+                         'EventMail: should create one mail / new registration')
 
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
     @users('user_eventmanager')
