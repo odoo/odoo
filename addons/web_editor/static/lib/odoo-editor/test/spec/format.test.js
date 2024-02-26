@@ -775,6 +775,20 @@ describe('Format', () => {
                 contentAfter: '<p>[abc]</p>',
             });
         });
+        it('should apply font size in unbreakable span with class', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: `<h1><span class="oe_unbreakable">some [text]</span></h1>`,
+                stepFunction: setFontSize('18px'),
+                contentAfter: `<h1><span class="oe_unbreakable">some <span style="font-size: 18px;">[text]</span></span></h1>`,
+            });
+        });
+        it('should apply font size in unbreakable span without class', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: `<h1><span t="unbreakable">some [text]</span></h1>`,
+                stepFunction: setFontSize('18px'),
+                contentAfter: `<h1><span t="unbreakable">some <span style="font-size: 18px;">[text]</span></span></h1>`,
+            });
+        });
     });
 
     it('should add style to a span parent of an inline', async () => {
