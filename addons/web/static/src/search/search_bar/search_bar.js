@@ -283,10 +283,11 @@ export class SearchBar extends Component {
      */
     async computeSubItems(searchItem, query) {
         const field = this.fields[searchItem.fieldName];
+        const context = { ...this.env.searchModel.domainEvalContext, ...field.context };
         let domain = [];
         if (searchItem.domain) {
             try {
-                domain = new Domain(searchItem.domain).toList();
+                domain = new Domain(searchItem.domain).toList(context);
             } catch {
                 // Pass
             }
@@ -298,7 +299,7 @@ export class SearchBar extends Component {
 
         const options = await this.orm.call(relation, "name_search", [], {
             args: domain,
-            context: { ...this.env.searchModel.globalContext, ...field.context },
+            context,
             limit: 8,
             name: query.trim(),
         });
