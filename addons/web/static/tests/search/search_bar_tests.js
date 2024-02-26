@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import * as dsHelpers from "@web/../tests/core/domain_selector_tests";
+import { patchUserContextWithCleanup } from "@web/../tests/helpers/mock_services";
 import {
     click,
     getFixture,
@@ -1717,5 +1718,42 @@ QUnit.module("Search", (hooks) => {
         await click(target.querySelector(".modal footer button"));
         assert.deepEqual(getFacetTexts(target), ["Bar is in ( First record )"]);
         assert.verifySteps([`/web/domain/validate`]);
+    });
+
+    QUnit.test("select autocompleted many2one with allowed_company_ids domain", async function (assert) {
+        patchUserContextWithCleanup({
+            allowed_company_ids: [1, 5],
+        });
+
+        await makeWithSearch({
+            serverData,
+            resModel: "partner",
+            Component: SearchBar,
+            searchMenuTypes: [],
+            searchViewId: false,
+            searchViewArch: `
+                    <search>
+                        <field name="bar" domain="[('company', 'in', allowed_company_ids)]"/>
+                    </search>
+                `,
+        });
+
+        await editSearch(target, "rec");
+        await click(target, ".o_expand");
+        let items = [...target.querySelectorAll(`.o_searchview_input_container li`)].map(
+            (facet) => facet.innerText.trim()
+        );
+        assert.deepEqual(items, ["Search Bar for: rec", "Second record", "Third record"]);
+
+        patchUserContextWithCleanup({
+            allowed_company_ids: [1],
+        });
+
+        await editSearch(target, "rec");
+        await click(target, ".o_expand");
+        items = [...target.querySelectorAll(`.o_searchview_input_container li`)].map(
+            (facet) => facet.innerText.trim()
+        );
+        assert.deepEqual(items, ["Search Bar for: rec", "Second record"]);
     });
 });
