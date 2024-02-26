@@ -1,4 +1,5 @@
 /** @odoo-module **/
+import { loadAllImages } from "@point_of_sale/utils";
 
 export const printerService = {
     dependencies: ["renderer"],
@@ -36,6 +37,8 @@ export class PrinterService {
     }
     async print(component, props, options) {
         const el = await this.renderer.toHtml(component, props);
+        // Load all images before printing
+        await loadAllImages(el);
         return await this.printHtml(el, options);
     }
     is = () => Boolean(this.device?.printReceipt);
