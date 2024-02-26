@@ -24,6 +24,7 @@ import {
     models,
     onRpc,
     removeFacet,
+    serverState,
     toggleMenuItem,
     toggleSearchBarMenu,
     validateSearch,
@@ -38,6 +39,7 @@ import {
 import { mountWithSearch } from "./helpers";
 
 import { SearchBar } from "@web/search/search_bar/search_bar";
+import { browser } from "@web/core/browser/browser";
 
 class Partner extends models.Model {
     name = fields.Char();
@@ -1381,4 +1383,45 @@ test("clicking on the searchview icon trigger the search", async () => {
     await editSearch("a");
     await contains(`.o_searchview button`).click();
     expect(`.o_searchview_input_container .o_facet_values`).toHaveText("a");
+});
+
+test("select autocompleted many2one with allowed_company_ids domain", async () => {
+    // allowed_company_ids is initially set by the company_service
+    serverState.companies = [
+        ...serverState.companies,
+        // company_service only includes existing companies from cids
+        {
+            id: 5,
+            name: "Hierophant",
+        },
+    ];
+    browser.location.search = "cids=1,5";
+
+    await mountWithSearch(SearchBar, {
+        resModel: "partner",
+        searchMenuTypes: [],
+        searchViewId: false,
+        searchViewArch: `
+            <search>
+                <field name="bar" domain="[('company', 'in', allowed_company_ids)]"/>
+            </search>
+        `,
+    });
+
+    await editSearch("rec");
+    await contains(`.o_expand`).click();
+    expect(queryAllTexts(`.o_searchview_input_container li`)).toEqual([
+        "Search Bar for: rec",
+        "Second record",
+        "Third record",
+    ]);
+
+    serverState.userContext = { allowed_company_ids: [1] };
+
+    await editSearch("rec");
+    await contains(`.o_expand`).click();
+    expect(queryAllTexts(`.o_searchview_input_container li`)).toEqual([
+        "Search Bar for: rec",
+        "Second record",
+    ]);
 });
