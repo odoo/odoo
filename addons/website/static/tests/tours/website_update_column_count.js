@@ -62,12 +62,11 @@ wTourUtils.clickOnSnippet({
 {
     content: "Add a fake resized class on mobile to the 2nd item",
     trigger: `${columnsSnippetRow} > :nth-child(2)`,
-    run: ({ tip_widget }) => {
-        const secondItemEl = tip_widget.$anchor[0];
-        secondItemEl.classList.replace("col-4", "col-6");
+    run() {
+        this.anchor.classList.replace("col-4", "col-6");
         // As this is a hardcoded class replacement, a click is needed to
         // update the column count.
-        secondItemEl.previousElementSibling.click();
+        this.anchor.previousElementSibling.click();
     },
 }, {
     content: "Check that the counter shows 'Custom'",

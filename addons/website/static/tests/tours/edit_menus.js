@@ -128,7 +128,7 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
         content: "Click on the dialog Edit Menu button",
         trigger: '.oe_menu_editor .js_menu_label:contains("Modnar")',
         run: function () {
-            const liEl = this.$anchor[0].closest('[data-menu-id]');
+            const liEl = this.anchor.closest('[data-menu-id]');
             liEl.querySelector('button.js_edit_menu').click();
         },
     },
@@ -214,7 +214,7 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
         trigger: 'iframe #top_menu .nav-item:contains("Home") ul.show li a.dropdown-item:contains("Contact us")[href="/contactus"]',
         run: function () {
             // Scroll down.
-            this.$anchor[0].closest('body').querySelector('.o_footer_copyright_name')
+            this.anchor.closest("body").querySelector(".o_footer_copyright_name")
                 .scrollIntoView(true);
         },
     },
@@ -251,12 +251,12 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
         trigger: 'iframe #top_menu .o_mega_menu_toggle.show',
         run: function () {
             const marginTopOfMegaMenu = getComputedStyle(
-                this.$anchor[0].closest('.dropdown').querySelector('.o_mega_menu'))['margin-top'];
+                this.anchor.closest(".dropdown").querySelector(".o_mega_menu"))["margin-top"];
             if (marginTopOfMegaMenu !== '0px') {
                 console.error('The margin-top of the mega menu should be 0px');
             }
             // Scroll up.
-            this.$anchor[0].closest('body').querySelector('.s_media_list_item:nth-child(2)')
+            this.anchor.closest("body").querySelector(".s_media_list_item:nth-child(2)")
                 .scrollIntoView(true);
         }
     },
@@ -285,7 +285,7 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
         content: "Press the 'down arrow' key.",
         trigger: 'iframe #top_menu .nav-item:contains("Home") li:contains("Contact us")',
         run: function (actions) {
-            this.$anchor[0].dispatchEvent(new window.KeyboardEvent("keydown", { key: "ArrowDown" }));
+            this.anchor.dispatchEvent(new window.KeyboardEvent("keydown", { key: "ArrowDown" }));
         },
     },
 ]);

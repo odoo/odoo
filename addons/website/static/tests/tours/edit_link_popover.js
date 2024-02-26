@@ -171,7 +171,7 @@ wTourUtils.registerWebsitePreviewTour('edit_link_popover', {
         run: function (actions) {
             // Create range to simulate real double click, see pull request
             const range = document.createRange();
-            range.selectNodeContents(this.$anchor[0]);
+            range.selectNodeContents(this.anchor);
             const sel = window.getSelection();
             sel.removeAllRanges();
             sel.addRange(range);

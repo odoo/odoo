@@ -28,7 +28,9 @@ registry.category("web_tour.tours").add('totportal_tour_setup', {
     content: "Get secret from collapsed div",
     trigger: 'a:contains("Cannot scan it?")',
     run: async function(helpers) {
-        const secret = this.$anchor.closest('div').find('span[name="secret"]').text();
+        const secret = this.anchor
+            .closest("div")
+            .querySelector('span[name="secret"]').textContent;
         const token = await rpc('/totphook', {
             secret
         });

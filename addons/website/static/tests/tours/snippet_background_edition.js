@@ -218,7 +218,9 @@ wTourUtils.changeOption('ColoredLevelBackground', '[data-name="bg_image_toggle_o
 {
     trigger: `iframe .${snippets[0].id}.o_cc.o_cc1`,
     run: function () {
-        const parts = weUtils.backgroundImageCssToParts(this.$anchor.css('background-image'));
+        const parts = weUtils.backgroundImageCssToParts(
+            getComputedStyle(this.anchor)["background-image"]
+        );
         if (!parts.url || !parts.url.startsWith('url(')) {
             console.error('An image should have been added as background.');
         }
@@ -236,7 +238,9 @@ wTourUtils.changeOption('ColoredLevelBackground', '[data-name="bg_image_toggle_o
     change: gradients[0],
     finalSelector: `iframe .${snippets[0].id}.o_cc.o_cc1:not([style*="${gradients[1]}"])`,
     finalRun: function () {
-        const parts = weUtils.backgroundImageCssToParts(this.$anchor.css('background-image'));
+        const parts = weUtils.backgroundImageCssToParts(
+            getComputedStyle(this.anchor)["background-image"]
+        );
         if (!parts.url || !parts.url.startsWith('url(')) {
             console.error('The image should have been kept when changing the gradient');
         }
@@ -355,7 +359,9 @@ switchTo('gradient'),
     change: gradients[1],
     finalSelector: `iframe .${snippets[0].id}.o_cc.o_cc1:not(.bg-black-75)`,
     finalRun: function () {
-        const parts = weUtils.backgroundImageCssToParts(this.$anchor.css('background-image'));
+        const parts = weUtils.backgroundImageCssToParts(
+            getComputedStyle(this.anchor)["background-image"]
+        );
         if (!parts.url || !parts.url.startsWith('url(')) {
             console.error('The image should have been kept when re-adding the gradient');
         }

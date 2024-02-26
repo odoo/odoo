@@ -23,19 +23,15 @@ registry.category("web_tour.tours").add('project_test_tour', {
             actions.auto('.modal:visible .btn.btn-primary');
         },
     }, {
-        trigger: ".o_kanban_project_tasks .o_column_quick_create .input-group",
-        run: function (actions) {
-            actions.text("New", this.$anchor.find("input"));
-        },
+        trigger: ".o_kanban_project_tasks .o_column_quick_create .input-group input",
+        run: "text New",
     }, {
         trigger: ".o_kanban_project_tasks .o_column_quick_create .o_kanban_add",
         auto: true,
     }, {
-        trigger: ".o_kanban_project_tasks .o_column_quick_create .input-group",
+        trigger: ".o_kanban_project_tasks .o_column_quick_create .input-group input",
         extra_trigger: '.o_kanban_group',
-        run: function (actions) {
-            actions.text("Done", this.$anchor.find("input"));
-        },
+        run: "text Done",
     }, {
         trigger: ".o_kanban_project_tasks .o_column_quick_create .o_kanban_add",
         auto: true,

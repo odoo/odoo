@@ -22,7 +22,7 @@ function checkComputedFontSize(fontSizeClass, stage) {
         content: `Check that the computed font size for ${fontSizeClass} is correct`,
         trigger: `iframe #wrap .s_text_block .${fontSizeClass}`,
         run: function () {
-            const computedFontSize = parseInt(getComputedStyle(this.$anchor[0]).fontSize);
+            const computedFontSize = parseInt(getComputedStyle(this.anchor).fontSize);
             const expectedFontSize = classNameInfo.get(fontSizeClass)[stage];
             const gapBetweenSizes = Math.abs(computedFontSize - expectedFontSize);
             const gapTolerance = 7; // Because the font size is responsive.

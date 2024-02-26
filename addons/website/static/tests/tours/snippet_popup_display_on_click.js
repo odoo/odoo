@@ -20,11 +20,11 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_display_on_click", {
         content: "Click on the display 'On Click' option",
         trigger: "#oe_snippets we-button[data-name='onclick_opt']",
         in_modal: false,
-        run() {
+        run(helpers) {
             // Patch and ignore write on clipboard in tour as we don't have permissions
             const oldWriteText = browser.navigator.clipboard.writeText;
             browser.navigator.clipboard.writeText = () => { console.info('Copy in clipboard ignored!') };
-            this.$anchor[0].click();
+            helpers.click();
             browser.navigator.clipboard.writeText = oldWriteText;
         }
     },
@@ -32,7 +32,7 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_display_on_click", {
         content: "Check the copied anchor from the notification toast",
         trigger: ".o_notification_manager .o_notification_content",
         run() {
-            const notificationContent = this.$anchor[0].innerText;
+            const notificationContent = this.anchor.innerText;
             const anchor = notificationContent.substring(notificationContent.indexOf("#"));
 
             if (anchor !== "#Win-%2420") {
