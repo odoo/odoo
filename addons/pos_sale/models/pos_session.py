@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
-from odoo.osv.expression import OR
 
 
 class PosSession(models.Model):
@@ -12,5 +11,5 @@ class PosSession(models.Model):
 
     def _load_data_params(self, config_id):
         params = super()._load_data_params(config_id)
-        params['product.product']['fields'].extend(['invoice_policy', 'type'])
+        params['product.product']['fields'].extend(['invoice_policy', 'optional_product_ids', 'type'])
         return params

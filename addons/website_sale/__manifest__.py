@@ -26,6 +26,7 @@
         'views/delivery_carrier_views.xml',
         'views/digest_views.xml',
         'views/product_attribute_views.xml',
+        'views/product_configurator.xml',
         'views/product_document_views.xml',
         'views/product_image_views.xml',
         'views/product_pricelist_views.xml',
@@ -64,6 +65,11 @@
             'website_sale/static/src/scss/website_sale_delivery.scss',
             'website/static/lib/multirange/multirange_custom.scss',
             'sale/static/src/scss/sale_portal.scss',
+
+            'website_sale/static/src/js/sale_product_configurator_modal.js',
+            'website_sale/static/src/scss/product_configurator.scss',
+            'website_sale/static/src/scss/website_sale_options.scss',
+
             'website_sale/static/src/js/address.js',
             'website_sale/static/src/js/cart.js',
             'website_sale/static/src/js/checkout.js',
@@ -75,6 +81,7 @@
             'website_sale/static/src/xml/website_sale.xml',
             'website_sale/static/src/js/website_sale_offcanvas.js',
             'website_sale/static/src/js/website_sale_price_range_option.js',
+            'website_sale/static/src/js/website_sale_product_configurator.js',
             'website_sale/static/src/js/website_sale_utils.js',
             'website_sale/static/src/xml/website_sale_utils.xml',
             'website_sale/static/src/js/website_sale_recently_viewed.js',

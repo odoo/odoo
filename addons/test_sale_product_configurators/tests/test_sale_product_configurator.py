@@ -3,7 +3,7 @@
 from odoo.tests.common import HttpCase, tagged
 
 from odoo.addons.mail.tests.common import mail_new_test_user
-from odoo.addons.sale_product_configurator.tests.common import TestProductConfiguratorCommon
+from odoo.addons.sale.tests.product_configurator_common import TestProductConfiguratorCommon
 
 
 @tagged('post_install', '-at_install')

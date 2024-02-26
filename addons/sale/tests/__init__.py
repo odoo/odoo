@@ -9,6 +9,7 @@ from . import test_credit_limit
 from . import test_onboarding
 from . import test_onchange
 from . import test_payment_flow
+from . import test_product_configurator_data
 from . import test_reinvoice
 from . import test_sale_flow
 from . import test_sale_onboarding

@@ -373,7 +373,14 @@ class SaleOrder(models.Model):
             'warning': warning,
         }
 
-    def _cart_find_product_line(self, product_id, line_id=None, **kwargs):
+    def _cart_find_product_line(
+            self,
+            product_id,
+            line_id=None,
+            linked_line_id=False,
+            optional_product_ids=None,
+            **kwargs
+        ):
         """Find the cart line matching the given parameters.
 
         If a product_id is given, the line will match the product only if the
@@ -397,7 +404,14 @@ class SaleOrder(models.Model):
         if line_id:
             domain += [('id', '=', line_id)]
         else:
-            domain += [('product_custom_attribute_value_ids', '=', False)]
+            domain += [
+                ('product_custom_attribute_value_ids', '=', False),
+                ('linked_line_id', '=', linked_line_id)
+            ]
+            if optional_product_ids:
+                domain += [('option_line_ids.product_id', 'in', optional_product_ids)]
+            else:
+                domain += [('option_line_ids', '=', False)]
 
         return SaleOrderLine.search(domain)
 
