@@ -8,6 +8,7 @@ import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { Dialog } from "@web/core/dialog/dialog";
 import { useService } from "@web/core/utils/hooks";
 import { useAsyncLockedMethod } from "@point_of_sale/app/utils/hooks";
+import { loadImage } from "@point_of_sale/utils";
 
 export class PartnerEditor extends Component {
     static template = "point_of_sale.PartnerEditor";
@@ -129,7 +130,14 @@ export class PartnerEditor extends Component {
             });
         } else {
             const imageUrl = await getDataURLFromFile(file);
-            const loadedImage = await this._loadImage(imageUrl);
+            const loadedImage = await loadImage(imageUrl, {
+                onError: () => {
+                    this.dialog.add(AlertDialog, {
+                        title: _t("Loading Image Error"),
+                        body: _t("Encountered error when loading image. Please try again."),
+                    });
+                },
+            });
             if (loadedImage) {
                 const resizedImage = await this._resizeImage(loadedImage, 800, 600);
                 this.changes.image_1920 = resizedImage.toDataURL();
@@ -155,28 +163,6 @@ export class PartnerEditor extends Component {
         ctx.drawImage(img, 0, 0, width, height);
         return canvas;
     }
-    /**
-     * Loading image is converted to a Promise to allow await when
-     * loading an image. It resolves to the loaded image if successful,
-     * else, resolves to false.
-     *
-     * [Source](https://stackoverflow.com/questions/45788934/how-to-turn-this-callback-into-a-promise-using-async-await)
-     */
-    _loadImage(url) {
-        return new Promise((resolve) => {
-            const img = new Image();
-            img.addEventListener("load", () => resolve(img));
-            img.addEventListener("error", () => {
-                this.dialog.add(AlertDialog, {
-                    title: _t("Loading Image Error"),
-                    body: _t("Encountered error when loading image. Please try again."),
-                });
-                resolve(false);
-            });
-            img.src = url;
-        });
-    }
-
     isFieldCommercialAndPartnerIsChild(field) {
         return (
             this.pos.isChildPartner(this.props.partner) &&
