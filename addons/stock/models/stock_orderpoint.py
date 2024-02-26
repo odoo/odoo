@@ -374,7 +374,7 @@ class StockWarehouseOrderpoint(models.Model):
             quants[item[0]].append((item[1], item[2]))
 
         rounding = {product.id: product.uom_id.rounding for product in all_product_ids}
-        path = {loc: loc.parent_path for loc in self.env['stock.location'].search([('id', 'child_of', all_replenish_location_ids.ids)])}
+        path = {loc: loc.parent_path for loc in self.env['stock.location'].with_context(active_test=False).search([('id', 'child_of', all_replenish_location_ids.ids)])}
         for loc in all_replenish_location_ids:
             for product in all_product_ids:
                 qty_available = sum(q[1] for q in quants.get(product, [(0, 0)]) if q[0] and path[q[0]] in loc.parent_path)
