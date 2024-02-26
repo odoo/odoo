@@ -44,8 +44,13 @@ export class AvatarCardPopover extends Component {
         };
     }
 
+    get userId() {
+        return this.user.id;
+    }
+
     onSendClick() {
-        this.openChat(this.user.id);
+        this.openChat(this.userId);
+        this.props.close();
     }
 
     async onClickViewProfile() {
