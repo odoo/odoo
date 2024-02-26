@@ -178,7 +178,6 @@
                             <field name="allow_milestones" invisible="1"/>
                             <field name="milestone_id"
                                 placeholder="e.g. Product Launch"
-                                context="{'default_project_id': project_id}"
                                 invisible="not allow_milestones"
                                 readonly="1"
                                 options="{'no_open': True}"/>
@@ -228,7 +227,8 @@
                                     <field name="allow_milestones" column_invisible="True"/>
                                     <field name="milestone_id"
                                         optional="hide"
-                                        context="{'default_project_id': project_id}"
+                                        options="{'no_open': True}"
+                                        readonly="1"
                                         column_invisible="not parent.allow_milestones"
                                         invisible="not allow_milestones"/>
                                     <field name="company_id" column_invisible="True"/>
