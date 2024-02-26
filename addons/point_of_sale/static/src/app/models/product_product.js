@@ -181,5 +181,13 @@ export class ProductProduct extends Base {
             ""
         );
     }
+
+    get searchString() {
+        const fields = ["display_name", "description_sale", "barcode"];
+        return fields
+            .map((field) => this[field] || "")
+            .filter(Boolean)
+            .join(" ");
+    }
 }
 registry.category("pos_available_models").add(ProductProduct.pythonModel, ProductProduct);
