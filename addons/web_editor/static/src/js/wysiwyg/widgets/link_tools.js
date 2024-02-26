@@ -52,7 +52,8 @@ export class LinkTools extends Link {
 
     setup() {
         super.setup(...arguments);
-        onWillUpdateProps((newProps) => {
+        onWillUpdateProps(async (newProps) => {
+            await this.mountedPromise;
             this.$link = newProps.link ? $(newProps.link) : this.link;
             this._setSelectOptionFromLink();
             this._updateOptionsUI();
