@@ -185,7 +185,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
         content: "Select text",
         trigger: 'iframe #wrap .s_text_image p:contains(odoo.com)',
         run() {
-            setSelection(...boundariesIn(this.$anchor[0]), false);
+            setSelection(...boundariesIn(this.anchor), false);
         }
     },
     {
@@ -268,7 +268,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
             // update the link for some reason... to investigate.
             /*
             // Simulating text input.
-            const link = this.$anchor[0];
+            const link = this.anchor;
             actions.text("callmemaybe.com/shops");
             // Trick the editor into keyboardType === 'PHYSICAL' and delete the
             // last character "s" and end with "callmemaybe.com/shop"
@@ -310,7 +310,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
             // inconsistently. Trying to fix the test actually made it so
             // http:// is still there at this point... make it consistent and
             // then remove http:// here again.
-            if (this.$anchor[0].value !== 'http://callmemaybe.com/shop') {
+            if (this.anchor.value !== 'http://callmemaybe.com/shop') {
                 throw new Error("Tour step failed");
             }
         }

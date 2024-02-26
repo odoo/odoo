@@ -18,8 +18,8 @@ wTourUtils.registerWebsitePreviewTour('snippet_countdown', {
         content: "Hover an option which has a preview",
         trigger: '[data-select-class="o_half_screen_height"]',
         run: function (actions) {
-            this.$anchor.trigger('mouseover');
-            this.$anchor.trigger('mouseenter');
+            this.anchor.dispatchEvent(new MouseEvent("mouseover", { bubbles: true }));
+            this.anchor.dispatchEvent(new MouseEvent("mouseenter"));
         },
     },
     {

@@ -376,13 +376,10 @@ export function compileStepAuto(stepIndex, step, options) {
                 }
 
                 const consumeEvent = step.consumeEvent || getConsumeEventType(stepEl, step.run);
-                // When in auto mode, we are not waiting for an event to be consumed, so the
-                // anchor is just the step element.
-                const $anchorEl = $(stepEl);
 
                 if (showPointerDuration > 0) {
                     // Useful in watch mode.
-                    pointer.pointTo($anchorEl.get(0), step);
+                    pointer.pointTo(stepEl, step);
                     await new Promise((r) => browser.setTimeout(r, showPointerDuration));
                     pointer.hide();
                 }
@@ -390,15 +387,15 @@ export function compileStepAuto(stepIndex, step, options) {
                 // TODO: Delegate the following routine to the `ACTION_HELPERS` in the macro module.
                 const actionHelper = new RunningTourActionHelper({
                     consume_event: consumeEvent,
-                    $anchor: $anchorEl,
+                    anchor: stepEl,
                 });
 
                 let result;
                 if (typeof step.run === "function") {
                     const willUnload = await callWithUnloadCheck(async () => {
                         await tryToDoAction(() =>
-                            // `this.$anchor` is expected in many `step.run`.
-                            step.run.call({ $anchor: $anchorEl }, actionHelper)
+                            // `this.anchor` is expected in many `step.run`.
+                            step.run.call({ anchor: stepEl }, actionHelper)
                         );
                     });
                     result = willUnload && "will unload";

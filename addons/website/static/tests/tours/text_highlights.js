@@ -45,11 +45,11 @@ wTourUtils.registerWebsitePreviewTour("text_highlights", {
             firstLine.textContent = "Text content line A";
             const secondLine = document.createElement("i");
             secondLine.textContent = "Text content line B";
-            this.$anchor[0].replaceChildren(firstLine, document.createElement("br"), secondLine);
+            this.anchor.replaceChildren(firstLine, document.createElement("br"), secondLine);
             // Select the whole content.            
             const range = iframeDOC.createRange();
             const selection = iframeDOC.getSelection();
-            range.selectNodeContents(this.$anchor[0]);
+            range.selectNodeContents(this.anchor);
             selection.removeAllRanges();
             selection.addRange(range);
         },

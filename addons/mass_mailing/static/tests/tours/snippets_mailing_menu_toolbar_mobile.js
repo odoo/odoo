@@ -20,7 +20,7 @@ registry.category("web_tour.tours").add('snippets_mailing_menu_toolbar_mobile', 
         content: "Check templates available in theme selector",
         trigger: 'iframe .o_mail_theme_selector_new',
         run: function () {
-            if (this.$anchor[0].querySelector('#empty')) {
+            if (this.anchor.querySelector("#empty")) {
                 console.error('The empty template should not be visible on mobile.');
             }
         },
@@ -30,7 +30,7 @@ registry.category("web_tour.tours").add('snippets_mailing_menu_toolbar_mobile', 
         content: "Make sure the toolbar isn't floating",
         trigger: 'iframe',
         run: function () {
-            const iframeDocument = this.$anchor[0].contentDocument;
+            const iframeDocument = this.anchor.contentDocument;
             if (iframeDocument.querySelector('#toolbar.oe-floating')) {
                 console.error('There should not be a floating toolbar in the iframe');
             }
@@ -51,7 +51,7 @@ registry.category("web_tour.tours").add('snippets_mailing_menu_toolbar_mobile', 
         content: "Make sure the snippets menu is hidden",
         trigger: 'iframe',
         run: function () {
-            const iframeDocument = this.$anchor[0].contentDocument;
+            const iframeDocument = this.anchor.contentDocument;
             if (!iframeDocument.querySelector('#oe_snippets.d-none')) {
                 console.error('The snippet menu should be hidden');
             }

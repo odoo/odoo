@@ -42,7 +42,7 @@ wTourUtils.registerWebsitePreviewTour('website_text_edition', {
         content: "Check that paragraph now uses the main color *class*",
         trigger: 'iframe .s_text_block p',
         run: function (actions) {
-            const fontEl = this.$anchor[0].querySelector('font');
+            const fontEl = this.anchor.querySelector("font");
             if (!fontEl) {
                 console.error("A background color should have been applied");
                 return;

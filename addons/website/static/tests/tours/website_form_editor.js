@@ -565,8 +565,12 @@
         {
             content: "Verify that the selects have been cleaned",
             trigger: "iframe .s_website_form",
-            run: ({ tip_widget }) => {
-                if (tip_widget.$anchor[0].querySelector(".s_website_form_field .row:has(select) #editable_select")) {
+            run() {
+                if (
+                    this.anchor.querySelector(
+                        ".s_website_form_field .row:has(select) #editable_select"
+                    )
+                ) {
                     console.error("The form was not properly cleaned and still has some editable elements.");
                 }
             }
@@ -636,7 +640,9 @@
                 // The next steps will be about removing non essential required
                 // fields. For the robustness of the test, check that amount
                 // of field stays the same.
-                const requiredFields = this.$anchor.closest('[data-snippet]').find('.s_website_form_required');
+                const requiredFields = document.querySelectorAll(
+                    "[data-snippet] .s_website_form_required"
+                );
                 if (requiredFields.length !== NB_NON_ESSENTIAL_REQUIRED_FIELDS_IN_DEFAULT_FORM) {
                     console.error('The amount of required fields seems to have changed');
                 }
@@ -681,7 +687,7 @@
                 // The next steps will be about removing non essential required
                 // fields. For the robustness of the test, check that amount
                 // of field stays the same.
-                const essentialFields = this.$anchor.find('.s_website_form_model_required');
+                const essentialFields = this.anchor.querySelectorAll(".s_website_form_model_required");
                 if (essentialFields.length !== ESSENTIAL_FIELDS_VALID_DATA_FOR_DEFAULT_FORM.length) {
                     console.error('The amount of model-required fields seems to have changed');
                 }

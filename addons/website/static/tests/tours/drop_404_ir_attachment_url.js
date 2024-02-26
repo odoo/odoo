@@ -19,7 +19,7 @@ wTourUtils.registerWebsitePreviewTour('drop_404_ir_attachment_url', {
         trigger: 'iframe .s_404_snippet img',
         extra_trigger: '.snippet-option-ReplaceMedia',
         run: function () {
-            const imgEl = this.$anchor[0];
+            const imgEl = this.anchor;
             if (!imgEl.complete
                     || imgEl.naturalWidth !== 0
                     || imgEl.naturalHeight !== 0) {
@@ -33,7 +33,7 @@ wTourUtils.registerWebsitePreviewTour('drop_404_ir_attachment_url', {
         content: 'Once the shape is applied, check the image has now a size (placeholder image)',
         trigger: 'iframe .s_404_snippet img[src^="data:"]',
         run: function () {
-            const imgEl = this.$anchor[0];
+            const imgEl = this.anchor;
             if (!imgEl.complete
                     || imgEl.naturalWidth === 0
                     || imgEl.naturalHeight === 0) {

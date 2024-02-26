@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { queryAll } from "@odoo/hoot-dom";
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add('configurator_flow', {
@@ -79,19 +80,21 @@ registry.category("web_tour.tours").add('configurator_flow', {
         content: "check menu and footer links are correct",
         trigger: 'body:not(.editor_enable)', // edit mode left
         run: function () {
-            const $iframe = this.$anchor.find('iframe.o_iframe:not(.o_ignore_in_tour)');
             for (const menu of ['Home', 'Events', 'Courses', 'Pricing', 'News', 'Success Stories', 'Contact us']) {
-                if (!$iframe.contents().find(`#top_menu a:contains(${menu})`).length) {
+                const check = queryAll(`:iframe #top_menu a:contains(${menu})`).length;
+                if (!check) {
                     console.error(`Missing ${menu} menu. It should have been created by the configurator.`);
                 }
             }
             for (const url of ['/', '/event', '/slides', '/pricing', '/blog/', '/blog/', '/contactus']) {
-                if (!$iframe.contents().find(`#top_menu a[href^='${url}']`).length) {
+                const check = queryAll(`:iframe #top_menu a[href^='${url}']`).length;
+                if (!check) {
                     console.error(`Missing ${url} menu URL. It should have been created by the configurator.`);
                 }
             }
             for (const link of ['Privacy Policy', 'Contact us']) {
-                if (!$iframe.contents().find(`#footer ul a:contains(${link})`).length) {
+                const check = queryAll(`:iframe #footer ul a:contains(${link})`).length;
+                if (!check) {
                     console.error(`Missing ${link} footer link. It should have been created by the configurator.`);
                 }
             }

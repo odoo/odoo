@@ -11,7 +11,7 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_test_page_tour
         {
             trigger: messagesContain("Hello! I'm a bot!"),
             async run() {
-                const chatWindowContainer = this.$anchor.closest(".o-mail-ChatWindowContainer")[0];
+                const chatWindowContainer = this.anchor.closest(".o-mail-ChatWindowContainer");
                 await contains(".o-mail-ChatWindow", {
                     text: "Testing Bot",
                     count: 1,
@@ -38,7 +38,7 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_test_page_tour
         {
             trigger: messagesContain("Hello! I'm a bot!"),
             async run() {
-                const chatWindowContainer = this.$anchor.closest(".o-mail-ChatWindowContainer")[0];
+                const chatWindowContainer = this.anchor.closest(".o-mail-ChatWindowContainer");
                 await contains(".o-mail-ChatWindow", {
                     text: "Testing Bot",
                     count: 1,

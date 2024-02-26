@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { queryAll } from "@odoo/hoot-dom";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 
@@ -98,7 +99,7 @@ registry.category("web_tour.tours").add('apikeys_tour_teardown', {
     content: "Check that there's no more keys",
     trigger: '.o_notebook',
     run: function() {
-        if (this.$anchor.find('[name=api_key_ids]:visible').length) {
+        if (queryAll("[name=api_key_ids]:visible", { root: this.anchor }).length) {
             throw new Error("Expected API keys to be hidden (because empty), but it's not");
         };
     }

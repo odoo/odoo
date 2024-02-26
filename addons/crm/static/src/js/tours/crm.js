@@ -30,7 +30,7 @@ registry.category("web_tour.tours").add('crm_tour', {
     content: markup(_t('<b>Write a few letters</b> to look for a company, or create a new one.')),
     position: "top",
     run: function (actions) {
-        actions.text("Brandon Freeman", this.$anchor.find("input"));
+        actions.text("Brandon Freeman", this.anchor.querySelector("input"));
     },
 }, {
     trigger: ".ui-menu-item > a",

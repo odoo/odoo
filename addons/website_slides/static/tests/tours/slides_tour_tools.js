@@ -46,9 +46,6 @@ var addVideoToSection = function (sectionName, saveAsDraft, backend = false) {
 }, {
     content: 'eLearning: click outside to trigger onchange',
     trigger: (backend ? 'iframe ' : '' ) + 'div.o_w_slide_upload_modal_container',
-    run: ({ tip_widget }) => {
-		tip_widget.$anchor[0].click();
-	},
 }];
 	if (saveAsDraft) {
 		base_steps = [].concat(base_steps, [{

@@ -18,8 +18,8 @@ registry.category("web_tour.tours").add("website_livechat_login_after_chat_start
         {
             trigger: ".o-mail-Composer-input",
             run: function () {
-                this.$anchor[0].dispatchEvent(
-                    new KeyboardEvent("keydown", { key: "Enter", which: 13, bubbles: true })
+                this.anchor.dispatchEvent(
+                    new KeyboardEvent("keydown", { key: "Enter", bubbles: true })
                 );
             },
         },
@@ -78,8 +78,8 @@ registry.category("web_tour.tours").add("website_livechat_logout_after_chat_star
         {
             trigger: ".o-mail-Composer-input",
             run: function () {
-                this.$anchor[0].dispatchEvent(
-                    new KeyboardEvent("keydown", { key: "Enter", which: 13, bubbles: true })
+                this.anchor.dispatchEvent(
+                    new KeyboardEvent("keydown", { key: "Enter", bubbles: true })
                 );
             },
         },

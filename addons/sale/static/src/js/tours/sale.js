@@ -83,13 +83,11 @@ registry.category("web_tour.tours").add("sale_quote_tour", {
         rainbowManMessage: () => markup(_t("<b>Congratulations</b>, your first quotation is sent!<br>Check your email to validate the quote.")),
         sequence: 30,
         steps: () => [{
-        trigger: ".o_field_res_partner_many2one[name='partner_id']",
+        trigger: ".o_field_res_partner_many2one[name='partner_id'] input",
         extra_trigger: ".o_sale_order",
         content: _t("Write a company name to create one, or see suggestions."),
         position: "right",
-        run: function (actions) {
-            actions.text("Agrolait", this.$anchor.find("input"));
-        },
+        run: "text Agrolait",
     }, {
         trigger: ".ui-menu-item > a:contains('Agrolait')",
         auto: true,
@@ -104,8 +102,8 @@ registry.category("web_tour.tours").add("sale_quote_tour", {
         content: _t("Select a product, or create a new one on the fly."),
         position: "right",
         run: function (actions) {
-            var $input = this.$anchor.find("input");
-            actions.text("DESK0001", $input.length === 0 ? this.$anchor : $input);
+            const input = this.anchor.querySelector("input");
+            actions.text("DESK0001", input || this.anchor);
             var $descriptionElement = $(".o_form_editable textarea[name='name']");
             // when description changes, we know the product has been created
             $descriptionElement.change(function () {

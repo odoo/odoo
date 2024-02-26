@@ -17,7 +17,7 @@ registry.category("web_tour.tours").add("test_company_switch_access_error", {
             run() {
                 assertEqual(
                     JSON.stringify(
-                        Array.from(this.$anchor[0].querySelectorAll(".o_data_cell")).map(
+                        Array.from(this.anchor.querySelectorAll(".o_data_cell")).map(
                             (n) => n.innerText
                         )
                     ),
@@ -47,7 +47,7 @@ registry.category("web_tour.tours").add("test_company_switch_access_error", {
             async run() {
                 assertEqual(
                     JSON.stringify(
-                        Array.from(this.$anchor[0].querySelectorAll(".o_data_cell")).map(
+                        Array.from(this.anchor.querySelectorAll(".o_data_cell")).map(
                             (n) => n.innerText
                         )
                     ),

@@ -122,20 +122,20 @@ wTourUtils.dragNDrop({
     run: function (actionHelper) {
         actionHelper.text('translated Parseltongue text');
         const { Wysiwyg } = odoo.loader.modules.get('@web_editor/js/wysiwyg/wysiwyg');
-        Wysiwyg.setRange(this.$anchor.contents()[0], 22);
-        this.$anchor.trigger($.Event("keyup", {key: '_'}));
-        this.$anchor.trigger('input');
+        Wysiwyg.setRange(this.anchor.childNodes[0], 22);
+        this.anchor.dispatchEvent(new KeyboardEvent("keyup", { bubbles: true, key: "_" }));
+        this.anchor.dispatchEvent(new InputEvent("input", { bubbles: true }));
     },
 }, {
     content: "translate text with special char",
     trigger: 'iframe #wrap input + p span:first',
     run: function (actionHelper) {
         actionHelper.click();
-        this.$anchor.prepend('&lt;{translated}&gt;');
+        this.anchor.textContent = '<{translated}>' + this.anchor.textContent;
         const { Wysiwyg } = odoo.loader.modules.get('@web_editor/js/wysiwyg/wysiwyg');
-        Wysiwyg.setRange(this.$anchor.contents()[0], 0);
-        this.$anchor.trigger($.Event("keyup", {key: '_'}));
-        this.$anchor.trigger('input');
+        Wysiwyg.setRange(this.anchor.childNodes[0], 0);
+        this.anchor.dispatchEvent(new KeyboardEvent("keyup", { bubbles: true, key: "_" }));
+        this.anchor.dispatchEvent(new InputEvent("input", { bubbles: true }));
     },
 }, {
     content: "click on input",
@@ -195,7 +195,7 @@ wTourUtils.dragNDrop({
     trigger: 'iframe #wrap p',
     run: function (actionHelper) {
         actionHelper.click();
-        var el = this.$anchor[0];
+        var el = this.anchor;
         var mousedown = document.createEvent('MouseEvents');
         mousedown.initMouseEvent('mousedown', true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, el);
         el.dispatchEvent(mousedown);
@@ -238,7 +238,7 @@ wTourUtils.dragNDrop({
     content: "Check that the editor is not showing translated content (1)",
     trigger: '.ace_text-layer .ace_line:contains("an HTML")',
     run: function (actions) {
-        var lineEscapedText = $(this.$anchor.text()).last().text();
+        const lineEscapedText = $(this.anchor.textContent).last().text();
         if (lineEscapedText !== "&lt;b&gt;&lt;/b&gt; is an HTML&nbsp;tag &amp; is empty") {
             console.error('The HTML editor should display the correct untranslated content');
             $('iframe:not(.o_ignore_in_tour)').contents().find('body').addClass('rte_translator_error');

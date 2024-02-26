@@ -75,7 +75,7 @@ wTourUtils.changeOption('ConditionalVisibility', 'we-toggler'),
     trigger: 'iframe #wrap',
     allowInvisible: true,
     run: function (actions) {
-        const style = window.getComputedStyle(this.$anchor[0].getElementsByClassName('s_text_image')[0]);
+        const style = window.getComputedStyle(this.anchor.getElementsByClassName('s_text_image')[0]);
         if (style.display !== 'none') {
             console.error('error This item should be invisible and only visible if utm_medium === email');
         }
@@ -86,7 +86,7 @@ wTourUtils.changeOption('ConditionalVisibility', 'we-toggler'),
     content: 'Check if the element is visible as it should always be visible in edit view',
     trigger: 'iframe #wrap .s_text_image',
     run: function (actions) {
-        const style = window.getComputedStyle((this.$anchor[0]));
+        const style = window.getComputedStyle((this.anchor));
         if (style.display === 'none') {
             console.error('error This item should now be visible because utm_medium === email');
         }

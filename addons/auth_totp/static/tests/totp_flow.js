@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { queryAll } from "@odoo/hoot-dom";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
@@ -53,10 +54,10 @@ function closeProfileDialog({content, totp_state}) {
     return [{
         content,
         trigger,
-        run() {
-            const $modal = this.$anchor.parents('.o_dialog');
-            if ($modal.length) {
-                $modal.find('button[name=preference_cancel]').click()
+        run(helpers) {
+            const modal = document.querySelector(".o_dialog");
+            if (modal) {
+                modal.querySelector("button[name=preference_cancel]").click();
             }
         }
     }, {
@@ -65,7 +66,7 @@ function closeProfileDialog({content, totp_state}) {
             while (document.querySelector('.o_dialog')) {
                 await Promise.resolve();
             }
-            this.$anchor.addClass('dialog-closed');
+            this.anchor.classList.add("dialog-closed");
         },
     }, {
         trigger: 'body.dialog-closed',
@@ -95,15 +96,19 @@ registry.category("web_tour.tours").add('totp_tour_setup', {
     content: "Get secret from collapsed div",
     trigger: 'a:contains("Cannot scan it?")',
     async run(helpers) {
-        const $secret = this.$anchor.closest('div').find('[name=secret] span:first-child');
-        const $copyBtn = $secret.find('button');
-        $copyBtn.remove();
+        const secret = this.anchor
+            .closest("div")
+            .querySelector("[name=secret] span:first-child");
+        const copyBtn = secret.querySelector("button");
+        if (copyBtn) {
+            copyBtn.remove();
+        }
         const token = await rpc('/totphook', {
-            secret: $secret.text()
+            secret: secret.textContent
         });
         helpers.text(token, '[name=code] input');
         helpers.click('button.btn-primary:contains(Activate)');
-        $('body').addClass('got-token')
+        document.querySelector("body").classList.add("got-token");
     }
 }, {
     content: 'wait for rpc',
@@ -303,12 +308,12 @@ registry.category("web_tour.tours").add('totp_admin_disables', {
     content: "Find Demo User",
     trigger: 'td.o_data_cell:contains("demo")',
     run(helpers) {
-        const $titles = this.$anchor.closest('table').find('tr:first th');
-        for (let i=0; i<$titles.length; ++i) {
-            columns[$titles[i].getAttribute('data-name')] = i;
-        }
-        const $row = this.$anchor.closest('tr');
-        const sel = $row.find('.o_list_record_selector input[type=checkbox]');
+        const titles = queryAll("tr:first th", { root: this.anchor.closest("table") });
+        titles.forEach((el, i) => {
+            columns[el.getAttribute('data-name')] = i;
+        })
+        const row = this.anchor.closest('tr');
+        const sel = row.querySelector('.o_list_record_selector input[type=checkbox]');
         helpers.click(sel);
     }
 }, {

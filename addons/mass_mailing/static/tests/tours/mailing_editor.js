@@ -25,7 +25,7 @@ registry.category("web_tour.tours").add('mailing_editor', {
     content: 'drag the "Title" snippet from the design panel and drop it in the editor',
     trigger: '[name="body_arch"] #oe_snippets [name="Title"] .oe_snippet_thumbnail',
     run: function (actions) {
-        actions.drag_and_drop_native('[name="body_arch"] iframe .o_editable', this.$anchor);
+        actions.drag_and_drop_native('[name="body_arch"] iframe .o_editable');
     }
 }, {
     content: 'wait for the snippet menu to finish the drop process',

@@ -5,11 +5,11 @@ import wTourUtils from "@website/js/tours/tour_utils";
 const toggleMegaMenu = (stepOptions) => Object.assign({}, {
     content: "Toggles the mega menu.",
     trigger: 'iframe #top_menu .nav-item a.o_mega_menu_toggle',
-    run: function () {
+    run(helpers) {
         // If the mega menu is displayed inside the extra menu items, it should
         // already be displayed.
-        if (!this.$anchor[0].closest('.o_extra_menu_items')) {
-            this.$anchor[0].dispatchEvent(new Event('click'))
+        if (!this.anchor.closest(".o_extra_menu_items")) {
+            helpers.click();
         }
     },
 }, stepOptions);
@@ -75,7 +75,9 @@ wTourUtils.registerWebsitePreviewTour('edit_megamenu', {
         content: "Press enter.",
         trigger: 'iframe .o_mega_menu h4',
         run: function (actions) {
-            this.$anchor[0].dispatchEvent(new window.InputEvent('input', {bubbles: true, inputType: 'insertParagraph'}));
+            this.anchor.dispatchEvent(
+                new window.InputEvent("input", { bubbles: true, inputType: "insertParagraph" })
+            );
         },
     },
     {
@@ -90,7 +92,9 @@ wTourUtils.registerWebsitePreviewTour('edit_megamenu', {
         content: "Press the 'down arrow' key.",
         trigger: 'iframe .o_mega_menu h4',
         run: function (actions) {
-            this.$anchor[0].dispatchEvent(new window.KeyboardEvent("keydown", { key: "ArrowDown" }));
+            this.anchor.dispatchEvent(
+                new window.KeyboardEvent("keydown", { key: "ArrowDown" })
+            );
         },
     },
     ...wTourUtils.clickOnSave(),
@@ -166,7 +170,7 @@ wTourUtils.registerWebsitePreviewTour('edit_megamenu_big_icons_subtitles', {
             actions.click();
             const iframeDocument = document.querySelector('.o_iframe').contentDocument;
             const range = iframeDocument.createRange();
-            range.selectNodeContents(this.$anchor[0]);
+            range.selectNodeContents(this.anchor);
             const sel = iframeDocument.getSelection();
             sel.removeAllRanges();
             sel.addRange(range);

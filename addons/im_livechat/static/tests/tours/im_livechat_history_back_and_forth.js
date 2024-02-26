@@ -9,7 +9,7 @@ registry.category("web_tour.tours").add("im_livechat_history_back_and_forth_tour
             trigger: "body",
             // Open Command Palette
             run() {
-                this.$anchor[0].dispatchEvent(
+                this.anchor.dispatchEvent(
                     new KeyboardEvent("keydown", { key: "K", ctrlKey: true, bubbles: true })
                 );
             },

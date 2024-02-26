@@ -230,7 +230,7 @@ export class RunningTourActionHelper {
     }
     _get_action_values(element) {
         var $e = getJQueryElementFromSelector(element);
-        var $element = element ? getFirstVisibleElement($e) : this.tip_widget.$anchor;
+        var $element = element ? getFirstVisibleElement($e) : $(this.tip_widget.anchor);
         if ($element.length === 0) {
             $element = $e.first();
         }
@@ -563,14 +563,14 @@ export const stepUtils = {
             trigger: ".o_searchview_input",
             extra_trigger: ".dropdown-menu.o_searchview_autocomplete",
             position: "bottom",
-            run: (action) => {
+            run() {
                 const keyEventEnter = new KeyboardEvent("keydown", {
                     bubbles: true,
                     cancelable: true,
                     key: "Enter",
                     code: "Enter",
                 });
-                action.tip_widget.$anchor[0].dispatchEvent(keyEventEnter);
+                this.anchor.dispatchEvent(keyEventEnter);
             },
             debugHelp: this._getHelpMessage("simulateEnterKeyboardInSearchModal"),
         };

@@ -38,24 +38,24 @@ registry.category("web_tour.tours").add('autocomplete_tour', {
     content: 'Check Street & number have been set',
     trigger: 'input[name="street"]',
     run: function () {
-        if (this.$anchor.val() !== '42 A fictional Street') {
-            fail('Street value is not correct : ' + this.$anchor.val())
+        if (this.anchor.value !== '42 A fictional Street') {
+            fail('Street value is not correct : ' + this.anchor.value)
         }
     }
 }, {
     content: 'Check City is not empty anymore',
     trigger: 'input[name="city"]',
     run: function () {
-        if (this.$anchor.val() !== 'A Fictional City') {
-            fail('Street value is not correct : ' + this.$anchor.val())
+        if (this.anchor.value !== 'A Fictional City') {
+            fail('Street value is not correct : ' + this.anchor.value)
         }
     }
 }, {
     content: 'Check Zip code is not empty anymore',
     trigger: 'input[name="zip"]',
     run: function () {
-        if (this.$anchor.val() !== '12345') {
-            fail('Street value is not correct : ' + this.$anchor.val())
+        if (this.anchor.value !== '12345') {
+            fail('Street value is not correct : ' + this.anchor.value)
         }
     }
 }]});

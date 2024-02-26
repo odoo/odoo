@@ -19,7 +19,7 @@ function changeDescriptionContentAndSave(newContent) {
     return [ {
         trigger: descriptionField,
         run: async function(actions) {
-            const textTriggerElement = this.$anchor.find(descriptionField).get(0);
+            const textTriggerElement = this.anchor.querySelector(descriptionField);
             actions.text(newText, textTriggerElement);
             await new Promise((r) => setTimeout(r, 300));
         },
@@ -106,7 +106,7 @@ registry.category("web_tour.tours").add("project_task_history_tour", {
         content: "Verify that the description contains the right text after the restore",
         trigger: `${descriptionField}`,
         run: function () {
-            const p = this.$anchor.get(0)?.innerText;
+            const p = this.anchor?.innerText;
             const expected = `${baseDescriptionContent} 1`;
             if (p !== expected) {
                 throw new Error(`Expect description to be ${expected}, got ${p}`);

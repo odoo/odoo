@@ -25,7 +25,7 @@ registry.category("web_tour.tours").add("discuss_channel_tour", {
             auto: true,
             run: function (actions) {
                 var t = new Date().getTime();
-                actions.text("SomeChannel_" + t, this.$anchor);
+                actions.text("SomeChannel_" + t);
             },
         },
         {
@@ -48,7 +48,7 @@ registry.category("web_tour.tours").add("discuss_channel_tour", {
             width: 350,
             run: function (actions) {
                 var t = new Date().getTime();
-                actions.text("SomeText_" + t, this.$anchor);
+                actions.text("SomeText_" + t);
             },
         },
         {

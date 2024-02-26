@@ -55,7 +55,7 @@ registry.category("web_tour.tours").add('crm_forecast', {
         content: "move to the next month",
         run: function (actions) {
             const undefined_groups = $('.o_column_title:contains("None")').length;
-            actions.drag_and_drop_native(`.o_opportunity_kanban .o_kanban_group:eq(${1 + undefined_groups})`, this.$anchor);
+            actions.drag_and_drop_native(`.o_opportunity_kanban .o_kanban_group:eq(${1 + undefined_groups})`);
         },
     }, {
         trigger: ".o_kanban_record .o_kanban_record_title:contains('Test Opportunity 1')",
@@ -65,8 +65,16 @@ registry.category("web_tour.tours").add('crm_forecast', {
         trigger: ".o_field_widget[name=date_deadline] input",
         content: "complete expected closing",
         run: function (actions) {
-            actions.text(`text ${today.plus({months: 5}).startOf('month').minus({days: 1}).toFormat("MM/dd/yyyy")}`, this.$anchor);
-            this.$anchor[0].dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key: "Escape" }));
+            actions.text(
+                `text ${today
+                    .plus({ months: 5 })
+                    .startOf("month")
+                    .minus({ days: 1 })
+                    .toFormat("MM/dd/yyyy")}`
+            );
+            this.anchor.dispatchEvent(
+                new KeyboardEvent("keydown", { bubbles: true, key: "Escape" })
+            );
         },
     }, {
         trigger: ".o_field_widget[name=probability] input",

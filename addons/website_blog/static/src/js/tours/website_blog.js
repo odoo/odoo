@@ -70,7 +70,7 @@
         position: "top",
         run: function (actions) {
             actions.auto();
-            actions.text("Blog content", this.$anchor.find("p"));
+            actions.text("Blog content", this.anchor.querySelector("p"));
         },
     },
     ...wTourUtils.clickOnSave(),

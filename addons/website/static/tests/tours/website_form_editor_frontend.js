@@ -128,7 +128,7 @@ registry.category("web_tour.tours").add("website_form_editor_tour_submit", {
         content: "Check if conditional field is visible, it shouldn't.",
         trigger: "body",
         run: function () {
-            const style = window.getComputedStyle(this.$anchor[0].getElementsByClassName('s_website_form_field_hidden_if')[0]);
+            const style = window.getComputedStyle(this.anchor.getElementsByClassName('s_website_form_field_hidden_if')[0]);
             if (style.display !== 'none') {
                 console.error('error This field should be invisible when the name is not odoo');
             }
