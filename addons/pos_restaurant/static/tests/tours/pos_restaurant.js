@@ -236,6 +236,19 @@ function checkMergeTableIsCancelHelpers() {
     ];
 }
 
+function isTableMergeHelpers(tableNumber) {
+    return {
+        content: `Verify table ${tableNumber} is merge`,
+        trigger: `div.table div.label:contains('${tableNumber}')`,
+        isCheck: true,
+        run: () => {
+            if ($(`div.table div.label:contains('${tableNumber}')`).length < 2) {
+                throw new TourError("Table isn't merge");
+            }
+        },
+    };
+}
+
 registry.category("web_tour.tours").add("MergeTableTour", {
     test: true,
     url: "/pos/ui",
@@ -261,10 +274,7 @@ registry.category("web_tour.tours").add("MergeTableTour", {
                 content: `select linked table`,
                 trigger: 'div.isLinked div.label:contains("4")',
             },
-            {
-                content: `unlink in edit plan if unlink possible`,
-                trigger: '.edit-buttons button:contains("Unlink")',
-            },
+            FloorScreen.clickEditButton("Unlink"),
             Chrome.clickMenuOption("Edit Plan"),
             ...checkMergeTableIsCancelHelpers(),
             ...mergeTableHelpers("5", "4"),
@@ -276,44 +286,20 @@ registry.category("web_tour.tours").add("MergeTableTour", {
                     window.location.reload();
                 },
             },
-            {
-                content: `Verify table 4 and 5 is merge`,
-                trigger: 'div.table div.label:contains("4")',
-                isCheck: true,
-                run: () => {
-                    if ($("div.table div.label:contains('4')").length < 2) {
-                        throw new TourError("Table isn't merge");
-                    }
-                },
-            },
+            isTableMergeHelpers("4"),
             Chrome.clickMenuOption("Edit Plan"),
             {
                 content: `select linked table`,
                 trigger: 'div.isLinked div.label:contains("4")',
             },
-            {
-                content: `unlink in edit plan if unlink possible`,
-                trigger: '.edit-buttons button:contains("Unlink")',
-            },
+            FloorScreen.clickEditButton("Unlink"),
             Chrome.clickMenuOption("Edit Plan"),
             ...checkMergeTableIsCancelHelpers(),
             Chrome.clickMenuOption("Edit Plan"),
             FloorScreen.clickTable("4"),
             FloorScreen.ctrlClickTable("5"),
-            {
-                content: `link in edit plan if link possible`,
-                trigger: '.edit-buttons button:contains("Link")',
-            },
+            FloorScreen.clickEditButton("Link"),
             Chrome.clickMenuOption("Edit Plan"),
-            {
-                content: `Verify table 4 and 5 is merge`,
-                trigger: 'div.table div.label:contains("4")',
-                isCheck: true,
-                run: () => {
-                    if ($("div.table div.label:contains('4')").length < 2) {
-                        throw new TourError("Table isn't merge");
-                    }
-                },
-            },
+            isTableMergeHelpers("4"),
         ].flat(),
 });
