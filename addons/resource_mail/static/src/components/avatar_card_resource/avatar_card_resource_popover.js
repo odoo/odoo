@@ -61,7 +61,7 @@ export class AvatarCardResourcePopover extends AvatarCardPopover {
         return false;
     }
 
-    onSendClick() {
-        this.openChat(this.record.user_id[0]);
+    get userId() {
+        return this.record.user_id[0];
     }
 }
