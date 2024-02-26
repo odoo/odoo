@@ -734,6 +734,8 @@ class ProductTemplate(models.Model):
         if category:
             domains.append([('public_categ_ids', 'child_of', unslug(category)[1])])
         if tags:
+            if isinstance(tags, str):
+                tags = tags.split(',')
             domains.append([('product_variant_ids.all_product_tag_ids', 'in', tags)])
         if min_price:
             domains.append([('list_price', '>=', min_price)])
