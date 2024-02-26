@@ -10,7 +10,7 @@ import {
 } from "@web/../tests/helpers/mock_services";
 
 import { CommandResult } from "@spreadsheet/o_spreadsheet/cancelled_reason";
-import { createModelWithDataSource, waitForDataSourcesLoaded } from "../utils/model";
+import { createModelWithDataSource } from "../utils/model";
 import { addGlobalFilter, selectCell, setCellContent } from "../utils/commands";
 import {
     getCell,
@@ -27,6 +27,7 @@ import { getBasicServerData } from "../utils/data";
 import { THIS_YEAR_GLOBAL_FILTER } from "@spreadsheet/../tests/utils/global_filter";
 
 import * as spreadsheet from "@odoo/o-spreadsheet";
+import { waitForDataLoaded } from "@spreadsheet/helpers/model";
 const { DEFAULT_LOCALE } = spreadsheet.constants;
 
 QUnit.module("spreadsheet > list plugin", {}, () => {
@@ -88,7 +89,7 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
         const { model } = await createSpreadsheetWithList();
         setCellContent(model, "A1", `=ODOO.LIST(1,1,"active")`);
         assert.strictEqual(getCellValue(model, "A1"), "Loading...");
-        await waitForDataSourcesLoaded(model); // Await for batching collection of missing fields
+        await waitForDataLoaded(model); // Await for batching collection of missing fields
         assert.strictEqual(getCellValue(model, "A1"), true);
     });
 
@@ -108,7 +109,7 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
             columns: ["foo", "probability", "bar", "date", "create_date", "product_id", "pognon"],
             linesNumber: 2,
         });
-        await waitForDataSourcesLoaded(model);
+        await waitForDataLoaded(model);
         assert.strictEqual(getCell(model, "A2").format, undefined);
         assert.strictEqual(getCell(model, "B2").format, undefined);
         assert.strictEqual(getCell(model, "C2").format, undefined);
@@ -133,7 +134,7 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
             columns: ["date", "create_date"],
             linesNumber: 2,
         });
-        await waitForDataSourcesLoaded(model);
+        await waitForDataLoaded(model);
         assert.strictEqual(getEvaluatedCell(model, "A2").format, "m/d/yyyy");
         assert.strictEqual(getEvaluatedCell(model, "B2").format, "m/d/yyyy hh:mm:ss a");
 
@@ -151,7 +152,7 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
         });
         setCellContent(model, "A1", `=ODOO.LIST(1,1,"foo")`);
         setCellContent(model, "A2", `=ODOO.LIST(1,1,"jsonField")`);
-        await waitForDataSourcesLoaded(model);
+        await waitForDataLoaded(model);
         assert.strictEqual(getEvaluatedCell(model, "A1").value, 12);
         assert.strictEqual(getEvaluatedCell(model, "A2").value, "#ERROR");
         assert.strictEqual(
@@ -357,7 +358,7 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
                 }
             },
         });
-        await waitForDataSourcesLoaded(model);
+        await waitForDataLoaded(model);
         assert.verifySteps(["web_search_read"]);
     });
 
@@ -425,16 +426,16 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
             domain: [["foo", "in", [55]]],
         });
         assert.deepEqual(model.getters.getListDefinition(listId).domain, [["foo", "in", [55]]]);
-        await waitForDataSourcesLoaded(model);
+        await waitForDataLoaded(model);
         assert.strictEqual(getCellValue(model, "B2"), "");
         model.dispatch("REQUEST_UNDO");
-        await waitForDataSourcesLoaded(model);
+        await waitForDataLoaded(model);
         assert.deepEqual(model.getters.getListDefinition(listId).domain, []);
-        await waitForDataSourcesLoaded(model);
+        await waitForDataLoaded(model);
         assert.strictEqual(getCellValue(model, "B2"), "TRUE");
         model.dispatch("REQUEST_REDO");
         assert.deepEqual(model.getters.getListDefinition(listId).domain, [["foo", "in", [55]]]);
-        await waitForDataSourcesLoaded(model);
+        await waitForDataLoaded(model);
         assert.strictEqual(getCellValue(model, "B2"), "");
     });
 
@@ -571,7 +572,7 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
             setCellContent(model, "A1", `=ODOO.LIST("1", "42", "foo")`);
             assert.strictEqual(ds.maxPosition, 42);
             assert.strictEqual(ds.maxPositionFetched, 1);
-            await waitForDataSourcesLoaded(model);
+            await waitForDataLoaded(model);
             assert.strictEqual(ds.maxPosition, 42);
             assert.strictEqual(ds.maxPositionFetched, 42);
         }
@@ -626,7 +627,7 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
             });
             let headerCell;
             let cell;
-            await waitForDataSourcesLoaded(model);
+            await waitForDataLoaded(model);
             headerCell = getEvaluatedCell(model, "A3");
             cell = getEvaluatedCell(model, "C3");
 
@@ -635,7 +636,7 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
 
             hasAccessRights = false;
             model.dispatch("REFRESH_ODOO_LIST", { listId: "1" });
-            await waitForDataSourcesLoaded(model);
+            await waitForDataLoaded(model);
             headerCell = getEvaluatedCell(model, "A3");
             cell = getEvaluatedCell(model, "C3");
 

@@ -1,12 +1,12 @@
 /** @odoo-module */
 // @ts-check
 
-import { DataSources } from "@spreadsheet/data_sources/data_sources";
 import { parse, helpers, iterateAstNodes } from "@odoo/o-spreadsheet";
 import { migrate } from "@spreadsheet/o_spreadsheet/migration";
 import { isLoadingError } from "@spreadsheet/o_spreadsheet/errors";
 import { loadBundle } from "@web/core/assets";
 import { OdooSpreadsheetModel } from "@spreadsheet/model";
+import { OdooDataProvider } from "@spreadsheet/data_sources/odoo_data_provider";
 
 const { formatValue, isDefined, toCartesian } = helpers;
 
@@ -22,9 +22,36 @@ export async function fetchSpreadsheetModel(env, resModel, resId) {
 }
 
 export function createSpreadsheetModel({ env, data, revisions }) {
-    const dataSources = new DataSources(env);
-    const model = new OdooSpreadsheetModel(migrate(data), { custom: { dataSources } }, revisions);
+    const odooDataProvider = new OdooDataProvider(env);
+    const model = new OdooSpreadsheetModel(
+        migrate(data),
+        { custom: { odooDataProvider } },
+        revisions
+    );
     return model;
+}
+
+/**
+ * @param {OdooSpreadsheetModel} model
+ */
+export async function waitForOdooSources(model) {
+    const promises = model.getters
+        .getOdooChartIds()
+        .map((chartId) => model.getters.getChartDataSource(chartId).load());
+    promises.push(
+        ...model.getters
+            .getPivotIds()
+            .filter((pivotId) => model.getters.getPivotDefinition(pivotId).type === "ODOO")
+            .map((pivotId) => model.getters.getPivot(pivotId))
+            .map((pivot) => pivot.load())
+    );
+    promises.push(
+        ...model.getters
+            .getListIds()
+            .map((listId) => model.getters.getListDataSource(listId))
+            .map((list) => list.load())
+    );
+    await Promise.all(promises);
 }
 
 /**
@@ -33,17 +60,20 @@ export function createSpreadsheetModel({ env, data, revisions }) {
  * @returns {Promise<void>}
  */
 export async function waitForDataLoaded(model) {
-    const dataSources = model.config.custom.dataSources;
-    await dataSources.waitForAllLoaded();
-    return new Promise((resolve, reject) => {
+    await waitForOdooSources(model);
+    const odooDataProvider = model.config.custom.odooDataProvider;
+    if (!odooDataProvider) {
+        return;
+    }
+    await new Promise((resolve, reject) => {
         function check() {
             model.dispatch("EVALUATE_CELLS");
             if (isLoaded(model)) {
-                dataSources.removeEventListener("data-source-updated", check);
+                odooDataProvider.removeEventListener("data-source-updated", check);
                 resolve();
             }
         }
-        dataSources.addEventListener("data-source-updated", check);
+        odooDataProvider.addEventListener("data-source-updated", check);
         check();
     });
 }

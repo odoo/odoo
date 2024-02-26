@@ -70,7 +70,7 @@ export class OdooPivot extends OdooViewsDataSource {
             },
             {
                 orm: this._orm,
-                metadataRepository: this._metadataRepository,
+                metadataRepository: this.metadataRepository,
             }
         );
         await this._model.load(this._searchParams);
@@ -211,7 +211,7 @@ export class OdooPivot extends OdooViewsDataSource {
             },
             {
                 orm: this._orm,
-                metadataRepository: this._metadataRepository,
+                metadataRepository: this.metadataRepository,
             }
         );
 

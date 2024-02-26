@@ -5,7 +5,8 @@ import { nextTick } from "@web/../tests/helpers/utils";
 
 import { OdooPivot } from "@spreadsheet/pivot/pivot_data_source";
 import { getBasicServerData, getBasicPivotArch } from "./data";
-import { createModelWithDataSource, waitForDataSourcesLoaded } from "./model";
+import { createModelWithDataSource } from "./model";
+import { waitForDataLoaded } from "@spreadsheet/helpers/model";
 
 /** @typedef {import("@spreadsheet/o_spreadsheet/o_spreadsheet").Model} Model */
 
@@ -74,6 +75,6 @@ export async function createSpreadsheetWithPivot(params = {}) {
     await insertPivotInSpreadsheet(model, pivotId, { arch });
     const env = model.config.custom.env;
     env.model = model;
-    await waitForDataSourcesLoaded(model);
+    await waitForDataLoaded(model);
     return { model, env, pivotId };
 }
