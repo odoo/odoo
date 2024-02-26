@@ -1,13 +1,11 @@
 /** @odoo-module */
 import { setCellContent } from "@spreadsheet/../tests/utils/commands";
-import {
-    createModelWithDataSource,
-    waitForDataSourcesLoaded,
-} from "@spreadsheet/../tests/utils/model";
+import { createModelWithDataSource } from "@spreadsheet/../tests/utils/model";
 import { getEvaluatedCell } from "@spreadsheet/../tests/utils/getters";
 import "@spreadsheet_account/index";
 
 import * as spreadsheet from "@odoo/o-spreadsheet";
+import { waitForDataLoaded } from "@spreadsheet/helpers/model";
 const { DEFAULT_LOCALE } = spreadsheet.constants;
 
 QUnit.module("spreadsheet_account > fiscal year", {}, () => {
@@ -30,7 +28,7 @@ QUnit.module("spreadsheet_account > fiscal year", {}, () => {
         });
         setCellContent(model, "A1", `=ODOO.FISCALYEAR.START("11/11/2020")`);
         setCellContent(model, "A2", `=ODOO.FISCALYEAR.END("11/11/2020")`);
-        await waitForDataSourcesLoaded(model);
+        await waitForDataLoaded(model);
         assert.verifySteps(["get_fiscal_dates"]);
         assert.equal(getEvaluatedCell(model, "A1").formattedValue, "1/1/2020");
         assert.equal(getEvaluatedCell(model, "A2").formattedValue, "12/31/2020");
@@ -55,7 +53,7 @@ QUnit.module("spreadsheet_account > fiscal year", {}, () => {
         });
         setCellContent(model, "A1", `=ODOO.FISCALYEAR.START("11/11/2020", 1)`);
         setCellContent(model, "A2", `=ODOO.FISCALYEAR.END("11/11/2020", 1)`);
-        await waitForDataSourcesLoaded(model);
+        await waitForDataLoaded(model);
         assert.verifySteps(["get_fiscal_dates"]);
         assert.equal(getEvaluatedCell(model, "A1").formattedValue, "1/1/2020");
         assert.equal(getEvaluatedCell(model, "A2").formattedValue, "12/31/2020");
@@ -80,7 +78,7 @@ QUnit.module("spreadsheet_account > fiscal year", {}, () => {
         });
         setCellContent(model, "A1", `=ODOO.FISCALYEAR.START("11/11/2020", 100)`);
         setCellContent(model, "A2", `=ODOO.FISCALYEAR.END("11/11/2020", 100)`);
-        await waitForDataSourcesLoaded(model);
+        await waitForDataLoaded(model);
         assert.verifySteps(["get_fiscal_dates"]);
         assert.equal(
             getEvaluatedCell(model, "A1").message,
@@ -116,7 +114,7 @@ QUnit.module("spreadsheet_account > fiscal year", {}, () => {
         });
         setCellContent(model, "A1", `=ODOO.FISCALYEAR.START("11/11/2020", 1)`);
         setCellContent(model, "A2", `=ODOO.FISCALYEAR.END("11/11/2020", 1)`);
-        await waitForDataSourcesLoaded(model);
+        await waitForDataLoaded(model);
 
         assert.equal(getEvaluatedCell(model, "A1").format, "m/d/yyyy");
         assert.equal(getEvaluatedCell(model, "A2").format, "m/d/yyyy");

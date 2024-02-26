@@ -3,11 +3,9 @@
 import { selectCell, setCellContent } from "@spreadsheet/../tests/utils/commands";
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import { getAccountingData } from "../accounting_test_data";
-import {
-    createModelWithDataSource,
-    waitForDataSourcesLoaded,
-} from "@spreadsheet/../tests/utils/model";
+import { createModelWithDataSource } from "@spreadsheet/../tests/utils/model";
 import { registry } from "@web/core/registry";
+import { waitForDataLoaded } from "@spreadsheet/helpers/model";
 
 const { cellMenuRegistry } = spreadsheet.registries;
 
@@ -70,7 +68,7 @@ QUnit.module("spreadsheet_account > Accounting Drill down", { beforeEach }, () =
         setCellContent(model, "A4", `=ODOO.BALANCE("100", 2020, , , )`);
         // Does not affect non formula cells
         setCellContent(model, "A5", `5`);
-        await waitForDataSourcesLoaded(model);
+        await waitForDataLoaded(model);
         selectCell(model, "A1");
         const root = cellMenuRegistry
             .getMenuItems()

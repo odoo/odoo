@@ -6,13 +6,14 @@ import { OdooLineChart } from "@spreadsheet/chart/odoo_chart/odoo_line_chart";
 import { nextTick } from "@web/../tests/helpers/utils";
 import { createSpreadsheetWithChart, insertChartInSpreadsheet } from "../../utils/chart";
 import { insertListInSpreadsheet } from "../../utils/list";
-import { createModelWithDataSource, waitForDataSourcesLoaded } from "../../utils/model";
+import { createModelWithDataSource } from "../../utils/model";
 import { addGlobalFilter } from "../../utils/commands";
 import { THIS_YEAR_GLOBAL_FILTER } from "../../utils/global_filter";
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import { makeServerError } from "@web/../tests/helpers/mock_server";
 import { user } from "@web/core/user";
 import { getBasicServerData } from "../../utils/data";
+import { waitForDataLoaded } from "@spreadsheet/helpers/model";
 
 const { toZone } = spreadsheet.helpers;
 
@@ -476,14 +477,14 @@ QUnit.module("spreadsheet > odoo chart plugin", {}, () => {
             });
             const chartId = model.getters.getFigures(model.getters.getActiveSheetId())[0].id;
             const chartDataSource = model.getters.getChartDataSource(chartId);
-            await waitForDataSourcesLoaded(model);
+            await waitForDataLoaded(model);
             const data = chartDataSource.getData();
             assert.equal(data.datasets.length, 1);
             assert.equal(data.labels.length, 2);
 
             hasAccessRights = false;
             chartDataSource.load({ reload: true });
-            await waitForDataSourcesLoaded(model);
+            await waitForDataLoaded(model);
             assert.deepEqual(chartDataSource.getData(), { datasets: [], labels: [] });
         }
     );
@@ -493,7 +494,7 @@ QUnit.module("spreadsheet > odoo chart plugin", {}, () => {
         const sheetId = model.getters.getActiveSheetId();
         const chartId = model.getters.getChartIds(sheetId)[0];
         const definition = model.getters.getChartDefinition(chartId);
-        await waitForDataSourcesLoaded(model);
+        await waitForDataLoaded(model);
         assert.deepEqual(
             model.getters.getChartRuntime(chartId).chartJsConfig.data.datasets[0].data,
             [1, 3]
@@ -562,8 +563,7 @@ QUnit.module("spreadsheet > odoo chart plugin", {}, () => {
         });
         const sheetId = model.getters.getActiveSheetId();
         const chartId = model.getters.getChartIds(sheetId)[0];
-        await waitForDataSourcesLoaded(model);
-
+        await waitForDataLoaded(model);
         assert.deepEqual(
             model.getters.getChartRuntime(chartId).chartJsConfig.data.datasets[0].data,
             [15, 19, 24]

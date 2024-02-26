@@ -3,10 +3,7 @@
 import { nextTick, patchDate } from "@web/../tests/helpers/utils";
 import { CommandResult } from "@spreadsheet/o_spreadsheet/cancelled_reason";
 import { Model, DispatchResult, helpers, tokenize } from "@odoo/o-spreadsheet";
-import {
-    createModelWithDataSource,
-    waitForDataSourcesLoaded,
-} from "@spreadsheet/../tests/utils/model";
+import { createModelWithDataSource } from "@spreadsheet/../tests/utils/model";
 import { getBasicPivotArch } from "@spreadsheet/../tests/utils/data";
 import { createSpreadsheetWithPivotAndList } from "@spreadsheet/../tests/utils/pivot_list";
 import {
@@ -49,6 +46,7 @@ import { migrate } from "@spreadsheet/o_spreadsheet/migration";
 import { toRangeData } from "../utils/zones";
 import { PivotUIGlobalFilterPlugin } from "@spreadsheet/pivot/index";
 import { getEvaluatedCell } from "../utils/getters";
+import { waitForDataLoaded } from "@spreadsheet/helpers/model";
 const { DateTime } = luxon;
 const { toZone } = helpers;
 
@@ -1217,7 +1215,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
                     }
                 },
             });
-            await waitForDataSourcesLoaded(model);
+            await waitForDataLoaded(model);
             assert.verifySteps([
                 "partner/read_group",
                 "partner/read_group",
@@ -1270,7 +1268,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
                     }
                 },
             });
-            await waitForDataSourcesLoaded(model);
+            await waitForDataLoaded(model);
             assert.verifySteps(["partner/read_group"]);
             assert.equal(getCellValue(model, "A1"), "");
         }
@@ -1306,7 +1304,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
                 }
             },
         });
-        await waitForDataSourcesLoaded(model);
+        await waitForDataLoaded(model);
         assert.verifySteps([
             "partner/read_group",
             "partner/read_group",

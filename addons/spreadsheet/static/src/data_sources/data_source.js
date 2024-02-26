@@ -7,6 +7,10 @@ import { KeepLast } from "@web/core/utils/concurrency";
 import { EvaluationError } from "@odoo/o-spreadsheet";
 
 /**
+ * @typedef {import("./odoo_data_provider").OdooDataProvider} OdooDataProvider
+ */
+
+/**
  * DataSource is an abstract class that contains the logic of fetching and
  * maintaining access to data that have to be loaded.
  *
@@ -17,13 +21,13 @@ import { EvaluationError } from "@odoo/o-spreadsheet";
  * particular data.
  */
 export class LoadableDataSource {
-    constructor(params) {
-        this._orm = params.orm;
-        this._metadataRepository = params.metadataRepository;
-        /** @type {import("@spreadsheet/data_sources/server_data").ServerData} */
-        this.serverData = params.serverData;
-        this._notifyWhenPromiseResolves = params.notifyWhenPromiseResolves;
-        this._cancelPromise = params.cancelPromise;
+    /**
+     * @param {Object} param0
+     * @param {OdooDataProvider} param0.odooDataProvider
+     */
+    constructor({ odooDataProvider }) {
+        /** @protected */
+        this.odooDataProvider = odooDataProvider;
 
         /**
          * Last time that this dataSource has been updated
@@ -40,6 +44,18 @@ export class LoadableDataSource {
         this._loadErrorMessage = "";
     }
 
+    get _orm() {
+        return this.odooDataProvider.orm;
+    }
+
+    get metadataRepository() {
+        return this.odooDataProvider.metadataRepository;
+    }
+
+    get serverData() {
+        return this.odooDataProvider.serverData;
+    }
+
     /**
      * Load data in the model
      * @param {object} [params] Params for fetching data
@@ -49,7 +65,7 @@ export class LoadableDataSource {
      */
     async load(params) {
         if (params && params.reload) {
-            this._cancelPromise(this._loadPromise);
+            this.odooDataProvider.cancelPromise(this._loadPromise);
             this._loadPromise = undefined;
         }
         if (!this._loadPromise) {
@@ -66,7 +82,7 @@ export class LoadableDataSource {
                     this._lastUpdate = Date.now();
                     this._isFullyLoaded = true;
                 });
-            await this._notifyWhenPromiseResolves(this._loadPromise);
+            await this.odooDataProvider.notifyWhenPromiseResolves(this._loadPromise);
         }
         return this._loadPromise;
     }

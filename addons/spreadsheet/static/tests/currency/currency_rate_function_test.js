@@ -2,10 +2,8 @@
 
 import { setCellContent } from "@spreadsheet/../tests/utils/commands";
 import { getCellValue, getEvaluatedCell } from "@spreadsheet/../tests/utils/getters";
-import {
-    createModelWithDataSource,
-    waitForDataSourcesLoaded,
-} from "@spreadsheet/../tests/utils/model";
+import { createModelWithDataSource } from "@spreadsheet/../tests/utils/model";
+import { waitForDataLoaded } from "@spreadsheet/helpers/model";
 
 QUnit.module("spreadsheet > ODOO.CURRENCY.RATE function");
 
@@ -24,7 +22,7 @@ QUnit.test("Basic exchange formula", async (assert) => {
     });
     setCellContent(model, "A1", `=ODOO.CURRENCY.RATE("EUR","USD")`);
     assert.strictEqual(getCellValue(model, "A1"), "Loading...");
-    await waitForDataSourcesLoaded(model);
+    await waitForDataLoaded(model);
     assert.strictEqual(getCellValue(model, "A1"), 0.9);
     assert.verifySteps(["rate fetched"]);
 });
@@ -46,7 +44,7 @@ QUnit.test("rate formula at a given date(time)", async (assert) => {
     });
     setCellContent(model, "A1", `=ODOO.CURRENCY.RATE("EUR","USD", "12-31-2020")`);
     setCellContent(model, "A2", `=ODOO.CURRENCY.RATE("EUR","USD", "11-30-2020 00:00:00")`);
-    await waitForDataSourcesLoaded(model);
+    await waitForDataLoaded(model);
     assert.verifySteps(["rate fetched"]);
 });
 
@@ -59,7 +57,7 @@ QUnit.test("invalid date", async (assert) => {
         },
     });
     setCellContent(model, "A1", `=ODOO.CURRENCY.RATE("EUR","USD", "hello")`);
-    await waitForDataSourcesLoaded(model);
+    await waitForDataLoaded(model);
     assert.strictEqual(getCellValue(model, "A1"), "#ERROR");
     assert.strictEqual(
         getEvaluatedCell(model, "A1").message,
@@ -77,7 +75,7 @@ QUnit.test("Currency rate throw with unknown currency", async (assert) => {
         },
     });
     setCellContent(model, "A1", `=ODOO.CURRENCY.RATE("INVALID","USD")`);
-    await waitForDataSourcesLoaded(model);
+    await waitForDataLoaded(model);
     assert.strictEqual(getEvaluatedCell(model, "A1").message, "Currency rate unavailable.");
 });
 
@@ -92,10 +90,10 @@ QUnit.test("Currency rates are only loaded once", async (assert) => {
         },
     });
     setCellContent(model, "A1", `=ODOO.CURRENCY.RATE("EUR","USD")`);
-    await waitForDataSourcesLoaded(model);
+    await waitForDataLoaded(model);
     assert.verifySteps(["FETCH"]);
     setCellContent(model, "A2", `=ODOO.CURRENCY.RATE("EUR","USD")`);
-    await waitForDataSourcesLoaded(model);
+    await waitForDataLoaded(model);
     assert.verifySteps([]);
 });
 
@@ -115,6 +113,6 @@ QUnit.test("Currency rates are loaded once by clock", async (assert) => {
     });
     setCellContent(model, "A1", `=ODOO.CURRENCY.RATE("EUR","USD")`);
     setCellContent(model, "A2", `=ODOO.CURRENCY.RATE("EUR","SEK")`);
-    await waitForDataSourcesLoaded(model);
+    await waitForDataLoaded(model);
     assert.verifySteps(["FETCH:2"]);
 });

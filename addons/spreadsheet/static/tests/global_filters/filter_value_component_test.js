@@ -8,6 +8,7 @@ import { editInput, editSelect, getFixture, mount } from "@web/../tests/helpers/
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { registry } from "@web/core/registry";
 import { nameService } from "@web/core/name_service";
+import { OdooDataProvider } from "@spreadsheet/data_sources/odoo_data_provider";
 
 function beforeEach() {
     registry.category("services").add("name", nameService);
@@ -19,27 +20,28 @@ QUnit.module("FilterValue component", { beforeEach });
  *
  * @param {{ model: Model, filter: object}} props
  */
-async function mountFilterValueComponent(props) {
+async function mountFilterValueComponent(env, props) {
     const fixture = getFixture();
-    const env = await makeTestEnv();
     await mount(FilterValue, fixture, { props, env });
 }
 
 QUnit.test("basic text filter", async function (assert) {
-    const model = new Model();
+    const env = await makeTestEnv();
+    const model = new Model({}, { custom: { odooDataProvider: new OdooDataProvider(env) } });
     await addGlobalFilter(model, {
         id: "42",
         type: "text",
         label: "Text Filter",
     });
-    await mountFilterValueComponent({ model, filter: model.getters.getGlobalFilter("42") });
+    await mountFilterValueComponent(env, { model, filter: model.getters.getGlobalFilter("42") });
     const fixture = getFixture();
     await editInput(fixture, "input", "foo");
     assert.strictEqual(model.getters.getGlobalFilterValue("42"), "foo", "value is set");
 });
 
 QUnit.test("text filter with range", async function (assert) {
-    const model = new Model();
+    const env = await makeTestEnv();
+    const model = new Model({}, { custom: { odooDataProvider: new OdooDataProvider(env) } });
     const sheetId = model.getters.getActiveSheetId();
     await addGlobalFilter(model, {
         id: "42",
@@ -50,7 +52,7 @@ QUnit.test("text filter with range", async function (assert) {
     setCellContent(model, "A1", "foo");
     setCellContent(model, "A2", "0");
     setCellFormat(model, "A2", "0.00");
-    await mountFilterValueComponent({ model, filter: model.getters.getGlobalFilter("42") });
+    await mountFilterValueComponent(env, { model, filter: model.getters.getGlobalFilter("42") });
     const fixture = getFixture();
     const select = fixture.querySelector("select");
     const options = [...fixture.querySelectorAll("option")];

@@ -10,7 +10,7 @@ import {
 import { nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { getDashboardServerData } from "../utils/data";
 
-import { waitForDataSourcesLoaded } from "@spreadsheet/../tests/utils/model";
+import { waitForDataLoaded } from "@spreadsheet/helpers/model";
 import { getCellValue } from "@spreadsheet/../tests/utils/getters";
 import { RPCError } from "@web/core/network/rpc";
 
@@ -251,7 +251,7 @@ QUnit.test("async formulas are correctly evaluated", async (assert) => {
     loader.getDashboard(dashboardId);
     await nextTick();
     const { model } = loader.getDashboard(dashboardId);
-    await waitForDataSourcesLoaded(model);
+    await waitForDataLoaded(model);
     assert.strictEqual(await getCellValue(model, "A1"), 0.9);
 });
 

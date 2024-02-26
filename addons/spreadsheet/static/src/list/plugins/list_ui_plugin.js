@@ -29,7 +29,10 @@ export class ListUIPlugin extends OdooUIPlugin {
         /** @type {string} */
         this.env = config.custom.env;
 
-        this.dataSources = config.custom.dataSources;
+        /** @type {Record<string, ListDataSource>} */
+        this.lists = {};
+
+        this.custom = config.custom;
 
         globalFiltersFieldMatchers["list"] = {
             ...globalFiltersFieldMatchers["list"],
@@ -93,7 +96,7 @@ export class ListUIPlugin extends OdooUIPlugin {
             case "UPDATE_ODOO_LIST_DOMAIN": {
                 const listDefinition = this.getters.getListModelDefinition(cmd.listId);
                 const dataSourceId = this._getListDataSourceId(cmd.listId);
-                this.dataSources.add(dataSourceId, ListDataSource, listDefinition);
+                this.lists[dataSourceId] = new ListDataSource(this.custom, listDefinition);
                 break;
             }
             case "DELETE_SHEET":
@@ -135,7 +138,7 @@ export class ListUIPlugin extends OdooUIPlugin {
 
                     const listDefinition = this.getters.getListModelDefinition(cmd.listId);
                     const dataSourceId = this._getListDataSourceId(cmd.listId);
-                    this.dataSources.add(dataSourceId, ListDataSource, listDefinition);
+                    this.lists[dataSourceId] = new ListDataSource(this.custom, listDefinition);
                 }
                 break;
             }
@@ -149,11 +152,8 @@ export class ListUIPlugin extends OdooUIPlugin {
     _setupListDataSource(listId, limit, definition) {
         const dataSourceId = this._getListDataSourceId(listId);
         definition = definition || this.getters.getListModelDefinition(listId);
-        if (!this.dataSources.contains(dataSourceId)) {
-            this.dataSources.add(dataSourceId, ListDataSource, {
-                ...definition,
-                limit,
-            });
+        if (!(dataSourceId in this.lists)) {
+            this.lists[dataSourceId] = new ListDataSource(this.custom, { ...definition, limit });
         }
     }
 
@@ -233,10 +233,10 @@ export class ListUIPlugin extends OdooUIPlugin {
             return;
         }
         const dataSourceId = this._getListDataSourceId(listId);
-        if (!this.dataSources.get(dataSourceId)) {
+        if (!this.lists[dataSourceId]) {
             this._setupListDataSource(listId, 0);
         }
-        this.dataSources.get(dataSourceId).increaseMaxPosition(position);
+        this.lists[dataSourceId].increaseMaxPosition(position);
     }
 
     _getUnusedLists() {
@@ -328,7 +328,7 @@ export class ListUIPlugin extends OdooUIPlugin {
      */
     getListDataSource(id) {
         const dataSourceId = this._getListDataSourceId(id);
-        return this.dataSources.get(dataSourceId);
+        return this.lists[dataSourceId];
     }
 
     /**
@@ -336,9 +336,9 @@ export class ListUIPlugin extends OdooUIPlugin {
      * @returns {Promise<import("@spreadsheet/list/list_data_source").ListDataSource>}
      */
     async getAsyncListDataSource(id) {
-        const dataSourceId = this._getListDataSourceId(id);
-        await this.dataSources.load(dataSourceId);
-        return this.getListDataSource(id);
+        const dataSource = this.getListDataSource(id);
+        await dataSource.load();
+        return dataSource;
     }
 
     /**

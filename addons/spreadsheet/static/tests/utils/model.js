@@ -7,10 +7,9 @@ import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { nextTick } from "@web/../tests/helpers/utils";
 
 import { Model } from "@odoo/o-spreadsheet";
-import { DataSources } from "@spreadsheet/data_sources/data_sources";
 import { getBasicServerData } from "./data";
 import { nameService } from "@web/core/name_service";
-import { waitForDataLoaded } from "@spreadsheet/helpers/model";
+import { OdooDataProvider } from "@spreadsheet/data_sources/odoo_data_provider";
 
 /**
  * @typedef {import("@spreadsheet/../tests/utils/data").ServerData} ServerData
@@ -18,7 +17,7 @@ import { waitForDataLoaded } from "@spreadsheet/helpers/model";
  */
 
 export function setupDataSourceEvaluation(model) {
-    model.config.custom.dataSources.addEventListener("data-source-updated", () => {
+    model.config.custom.odooDataProvider.addEventListener("data-source-updated", () => {
         const sheetId = model.getters.getActiveSheetId();
         model.dispatch("EVALUATE_CELLS", { sheetId });
     });
@@ -48,20 +47,11 @@ export async function createModelWithDataSource(params = {}) {
         ...config,
         custom: {
             env,
-            dataSources: new DataSources(env),
+            odooDataProvider: new OdooDataProvider(env),
             ...config?.custom,
         },
     });
     setupDataSourceEvaluation(model);
     await nextTick(); // initial async formulas loading
     return model;
-}
-
-/**
- * @param {Model} model
- */
-export async function waitForDataSourcesLoaded(model) {
-    if (model.config.custom.dataSources) {
-        await waitForDataLoaded(model);
-    }
 }

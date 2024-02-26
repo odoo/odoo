@@ -1,7 +1,8 @@
 /** @odoo-module */
 
+import { waitForDataLoaded } from "@spreadsheet/helpers/model";
 import { generateListDefinition } from "./data";
-import { createModelWithDataSource, waitForDataSourcesLoaded } from "./model";
+import { createModelWithDataSource } from "./model";
 
 /** @typedef {import("@spreadsheet/o_spreadsheet/o_spreadsheet").Model} Model */
 
@@ -60,6 +61,6 @@ export async function createSpreadsheetWithList(params = {}) {
 
     const env = model.config.custom.env;
     env.model = model;
-    await waitForDataSourcesLoaded(model);
+    await waitForDataLoaded(model);
     return { model, env };
 }

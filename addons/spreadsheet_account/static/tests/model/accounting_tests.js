@@ -1,10 +1,7 @@
 /** @odoo-module */
 
 import { setCellContent } from "@spreadsheet/../tests/utils/commands";
-import {
-    createModelWithDataSource,
-    waitForDataSourcesLoaded,
-} from "@spreadsheet/../tests/utils/model";
+import { createModelWithDataSource } from "@spreadsheet/../tests/utils/model";
 import { parseAccountingDate } from "../../src/accounting_functions";
 import { getCellValue, getEvaluatedCell } from "@spreadsheet/../tests/utils/getters";
 import { getAccountingData } from "../accounting_test_data";
@@ -13,6 +10,7 @@ import { sprintf } from "@web/core/utils/strings";
 import { makeServerError } from "@web/../tests/helpers/mock_server";
 
 import * as spreadsheet from "@odoo/o-spreadsheet";
+import { waitForDataLoaded } from "@spreadsheet/helpers/model";
 const { DEFAULT_LOCALE: locale } = spreadsheet.constants;
 
 let serverData;
@@ -35,7 +33,7 @@ QUnit.module("spreadsheet_account > Accounting", { beforeEach }, () => {
         setCellContent(model, "A1", `=ODOO.CREDIT("100", "2022")`);
         setCellContent(model, "A2", `=ODOO.DEBIT("100", "2022")`);
         setCellContent(model, "A3", `=ODOO.BALANCE("100", "2022")`);
-        await waitForDataSourcesLoaded(model);
+        await waitForDataLoaded(model);
         assert.equal(getCellValue(model, "A1"), 16);
         assert.equal(getCellValue(model, "A2"), 42);
         assert.equal(getCellValue(model, "A3"), 26);
@@ -47,7 +45,7 @@ QUnit.module("spreadsheet_account > Accounting", { beforeEach }, () => {
         setCellContent(model, "A1", `=ODOO.CREDIT("100", "2022")`);
         setCellContent(model, "A2", `=ODOO.DEBIT("100", "2022")`);
         setCellContent(model, "A3", `=ODOO.BALANCE("100", "2022")`);
-        await waitForDataSourcesLoaded(model);
+        await waitForDataLoaded(model);
         assert.strictEqual(getEvaluatedCell(model, "A1").format, "#,##0.00[$€]");
         assert.strictEqual(getEvaluatedCell(model, "A2").format, "#,##0.00[$€]");
         assert.strictEqual(getEvaluatedCell(model, "A3").format, "#,##0.00[$€]");
@@ -62,7 +60,7 @@ QUnit.module("spreadsheet_account > Accounting", { beforeEach }, () => {
             },
         });
         setCellContent(model, "A1", `=ODOO.CREDIT("100", "2022", 0, 123456)`);
-        await waitForDataSourcesLoaded(model);
+        await waitForDataLoaded(model);
         assert.strictEqual(
             getEvaluatedCell(model, "A1").message,
             "Currency not available for this company."
@@ -78,7 +76,7 @@ QUnit.module("spreadsheet_account > Accounting", { beforeEach }, () => {
         setCellContent(model, "A5", `=ODOO.BALANCE("100", 1900)`); // this should be ok
         setCellContent(model, "A6", `=ODOO.BALANCE("100", 1900, -1)`);
         setCellContent(model, "A7", `=ODOO.DEBIT("100", 1899)`);
-        await waitForDataSourcesLoaded(model);
+        await waitForDataLoaded(model);
         const errorMessage = `'%s' is not a valid period. Supported formats are "21/12/2022", "Q1/2022", "12/2022", and "2022".`;
         assert.equal(getEvaluatedCell(model, "A1").message, "0 is not a valid year.");
         assert.equal(getEvaluatedCell(model, "A2").message, "0 is not a valid year.");
@@ -110,7 +108,7 @@ QUnit.module("spreadsheet_account > Accounting", { beforeEach }, () => {
         setCellContent(model, "B2", `=ODOO.DEBIT("100 , 200", "2022")`);
         setCellContent(model, "B3", `=ODOO.BALANCE("100 , 200", "2022")`);
 
-        await waitForDataSourcesLoaded(model);
+        await waitForDataLoaded(model);
         assert.equal(getCellValue(model, "A1"), 26);
         assert.equal(getCellValue(model, "A2"), 142);
         assert.equal(getCellValue(model, "A3"), 116);
@@ -130,7 +128,7 @@ QUnit.module("spreadsheet_account > Accounting", { beforeEach }, () => {
             },
         });
         setCellContent(model, "A1", `=ODOO.CREDIT("100", "2022")`);
-        await waitForDataSourcesLoaded(model);
+        await waitForDataLoaded(model);
         const cell = getEvaluatedCell(model, "A1");
         assert.equal(cell.value, "#ERROR");
         assert.equal(cell.message, "a nasty error");
@@ -157,7 +155,7 @@ QUnit.module("spreadsheet_account > Accounting", { beforeEach }, () => {
         setCellContent(model, "A7", `=ODOO.DEBIT("5", "05/04/2021", 1)`);
         setCellContent(model, "A8", `=ODOO.BALANCE("5", "2022",,,FALSE)`);
         setCellContent(model, "A9", `=ODOO.BALANCE("100", "05/05/2022",,,TRUE)`);
-        await waitForDataSourcesLoaded(model);
+        await waitForDataLoaded(model);
 
         assert.verifySteps([
             JSON.stringify(
@@ -242,7 +240,7 @@ QUnit.module("spreadsheet_account > Accounting", { beforeEach }, () => {
         setCellContent(model, "A1", `=ODOO.BALANCE("100,200", "2022")`);
         setCellContent(model, "A2", `=ODOO.CREDIT("100,200", "2022")`);
         setCellContent(model, "A3", `=ODOO.DEBIT("100,200","2022")`);
-        await waitForDataSourcesLoaded(model);
+        await waitForDataLoaded(model);
 
         assert.verifySteps([
             "spreadsheet_fetch_debit_credit",
@@ -274,7 +272,7 @@ QUnit.module("spreadsheet_account > Accounting", { beforeEach }, () => {
         setCellContent(model, "A2", `=ODOO.BALANCE(A1, 2022)`);
         assert.equal(getCellValue(model, "A1"), "Loading...");
         assert.equal(getCellValue(model, "A2"), "Loading...");
-        await waitForDataSourcesLoaded(model);
+        await waitForDataLoaded(model);
         assert.equal(getCellValue(model, "A1"), "100104,200104");
         assert.equal(getCellValue(model, "A2"), 0);
         assert.verifySteps([
@@ -313,7 +311,7 @@ QUnit.module("spreadsheet_account > Accounting", { beforeEach }, () => {
         // Because cells are evaluated given their order in the sheet,
         // A1's request is done first, meaning it's also resolved first, which add A2 to the next batch (synchronously)
         // Only then A3 is resolved. => A2 is batched while A3 is pending
-        await waitForDataSourcesLoaded(model);
+        await waitForDataLoaded(model);
         assert.equal(getCellValue(model, "A1"), "100104,200104");
         assert.equal(getCellValue(model, "A2"), 0);
         assert.equal(getCellValue(model, "A3"), 0);

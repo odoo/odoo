@@ -145,7 +145,7 @@ export class ListDataSource extends OdooViewsDataSource {
         const field = this.getField(fieldName);
         if (!field) {
             throw new EvaluationError(
-                _t("The field %s does not exist or you do not have access to that field", fieldName),
+                _t("The field %s does not exist or you do not have access to that field", fieldName)
             );
         }
         if (!(fieldName in record)) {
