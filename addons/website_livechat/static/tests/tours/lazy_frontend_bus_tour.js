@@ -29,8 +29,8 @@ registry.category("web_tour.tours").add("website_livechat.lazy_frontend_bus", {
                 if (odoo.__WOWL_DEBUG__.root.env.services.bus_service.isActive) {
                     throw new Error("Bus service should not start for temporary live chat");
                 }
-                this.$anchor[0].dispatchEvent(
-                    new KeyboardEvent("keydown", { key: "Enter", which: 13, bubbles: true })
+                this.anchor.dispatchEvent(
+                    new KeyboardEvent("keydown", { key: "Enter", bubbles: true })
                 );
             },
         },

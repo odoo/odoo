@@ -34,13 +34,11 @@ registry.category("web_tour.tours").add("purchase_tour", {
             position: "bottom",
         },
         {
-            trigger: ".o_form_editable .o_field_many2one[name='partner_id']",
+            trigger: ".o_form_editable .o_field_many2one[name='partner_id'] input",
             extra_trigger: ".o_purchase_order",
             content: _t("Search a vendor name, or create one on the fly."),
             position: "bottom",
-            run: function (actions) {
-                actions.text("Agrolait", this.$anchor.find("input"));
-            },
+            run: "text Agrolait",
         },
         {
             trigger: ".ui-menu-item > a",
@@ -59,8 +57,8 @@ registry.category("web_tour.tours").add("purchase_tour", {
             content: _t("Select a product, or create a new one on the fly."),
             position: "right",
             run: function (actions) {
-                var $input = this.$anchor.find("input");
-                actions.text("DESK0001", $input.length === 0 ? this.$anchor : $input);
+                const input = this.anchor.querySelector("input");
+                actions.text("DESK0001", input || this.anchor);
                 var $descriptionElement = $('.o_form_editable textarea[name="name"]');
                 // when description changes, we know the product has been created
                 $descriptionElement.change(function () {

@@ -4,6 +4,7 @@ import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
 import { markup } from "@odoo/owl";
+import { queryText } from "@odoo/hoot-dom";
 
 registry.category("web_tour.tours").add('sale_timesheet_tour', {
     test: true,
@@ -109,8 +110,8 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
     trigger: 'input[name="so_line"]',
     content: 'Check the so_line field to display the column on the list view.',
     run: function (actions) {
-        if (!this.$anchor.prop('checked')) {
-            actions.click(this.$anchor);
+        if (!this.anchor.checked) {
+            actions.click();
         }
     },
 }, {
@@ -123,17 +124,17 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
     trigger: 'div[name="order_line"]',
     content: 'Check if the quantity delivered is equal to 1 hour.',
     run: function () {
-        const $header = this.$anchor.find('thead > tr');
-        if (!$header || $header.length === 0)
+        const header = this.anchor.querySelectorAll("thead > tr");
+        if (!header || header.length === 0)
             console.error('No Sales Order Item is found in the Sales Order.');
-        const tr = $header[0];
+        const tr = [...header][0];
         let index = -1;
         for (let i = 0; i < tr.children.length; i++) {
             const th = tr.children.item(i);
             if (th.dataset && th.dataset.name === 'qty_delivered')
                 index = i;
         }
-        const qtyDelivered = this.$anchor.find(`tbody > tr:first-child > td.o_data_cell:eq(${index})`).text();
+        const qtyDelivered = queryText(`tbody > tr:first-child > td.o_data_cell:eq(${index})`, { root: this.anchor });
         if (qtyDelivered !== "1.00")
             console.error('The quantity delivered on this Sales Order Item should be equal to 1.00 hour. qtyDelivered = ' + qtyDelivered);
     },
@@ -154,8 +155,8 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
     trigger: 'div[name="allow_billable"] input',
     content: 'Check the allow_billable',
     run: function (actions) {
-        if (!this.$anchor.prop('checked')) {
-            actions.click(this.$anchor);
+        if (!this.anchor.checked) {
+            actions.click();
         }
     }
 }, {

@@ -41,12 +41,12 @@ registry.category("web_tour.tours").add('category_page_and_products_snippet_use'
             // Note: this could be more robust to not rely on demo data and
             // make sure that the newest products are not by chance all of
             // the second category (used for the test) and ... but should be ok.
-            const productGridEl = this.$anchor[0].closest('#products_grid');
+            const productGridEl = this.anchor.closest("#products_grid");
             const regex = new RegExp(`^/shop/[\\w-/]+-(\\d+)\\?category=${PRODUCT_CATEGORY_ID}$`);
             const allPageProductIDs = [...productGridEl.querySelectorAll('.oe_product_image_link')]
                 .map(el => el.getAttribute('href').match(regex)[1]);
 
-            const $shownProductLinks = this.$anchor.find('.o_carousel_product_img_link');
+            const $shownProductLinks = this.anchor.querySelectorAll(".o_carousel_product_img_link");
             const regex2 = new RegExp(`^/shop/[\\w-/]+-(\\d+)(?:#attr=\\d*)?$`);
             for (const shownProductLinkEl of $shownProductLinks) {
                 const productID = shownProductLinkEl.getAttribute('href').match(regex2)[1];

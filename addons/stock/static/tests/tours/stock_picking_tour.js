@@ -27,8 +27,8 @@ registry.category("web_tour.tours").add('test_detailed_op_no_save_1', { test: tr
         trigger: 'input[name="picked"]',
         content: 'Check the picked field to display the column on the list view.',
         run: function (actions) {
-            if (!this.$anchor.prop('checked')) {
-                actions.click(this.$anchor);
+            if (!this.anchor.checked) {
+                actions.click();
             }
         },
     },
@@ -36,8 +36,8 @@ registry.category("web_tour.tours").add('test_detailed_op_no_save_1', { test: tr
     {
         trigger: ".o_field_widget[name=picked] input",
         run: function (actions) {
-            if (!this.$anchor.prop('checked')) {
-                actions.click(this.$anchor);
+            if (!this.anchor.checked) {
+                actions.click();
             }
         }
     },
@@ -84,8 +84,8 @@ registry.category("web_tour.tours").add('test_generate_serial_1', { test: true, 
         trigger: 'input[name="picked"]',
         content: 'Check the picked field to display the column on the list view.',
         run: function (actions) {
-            if (!this.$anchor.prop('checked')) {
-                actions.click(this.$anchor);
+            if (!this.anchor.checked) {
+                actions.click();
             }
         },
     },
@@ -93,8 +93,8 @@ registry.category("web_tour.tours").add('test_generate_serial_1', { test: true, 
     {
         trigger: ".o_field_widget[name=picked] input",
         run: function (actions) {
-            if (!this.$anchor.prop('checked')) {
-                actions.click(this.$anchor);
+            if (!this.anchor.checked) {
+                actions.click();
             }
         }
     },

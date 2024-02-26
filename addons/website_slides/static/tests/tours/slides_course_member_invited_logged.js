@@ -14,7 +14,7 @@ registry.category('web_tour.tours').add('invite_check_channel_preview_as_logged'
     trigger: '.o_wslides_slides_list_slide:contains("Home Gardening")',
     content: 'Check that other slides are not accessible',
     run: function () {
-        if (this.$anchor[0].querySelector('.o_wslides_js_slides_list_slide_link')) {
+        if (this.anchor.querySelector(".o_wslides_js_slides_list_slide_link")) {
             throw new Error('Invited attendee should not see non-preview slides');
         }
     }

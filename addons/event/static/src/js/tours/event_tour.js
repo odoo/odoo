@@ -35,9 +35,13 @@ registry.category("web_tour.tours").add('event_tour', {
     trigger: '.o_event_form_view div[name="date_begin"]',
     content: _t("Open date range picker. Pick a Start date for your event"),
     run: function () {
-        this.$anchor.find('input[data-field="date_begin"]').val('09/30/2020 08:00:00').change();
-        this.$anchor.find('input[data-field="date_end"]').val('10/02/2020 23:00:00').change();
-        this.$anchor.find('input[data-field="date_end"]').click();
+        const el1 = this.anchor.querySelector('input[data-field="date_begin"]');
+        el1.value = '09/30/2020 08:00:00';
+        el1.dispatchEvent(new Event("change"));
+        const el2 = this.anchor.querySelector('input[data-field="date_end"]');
+        el2.value = '10/02/2020 23:00:00';
+        el2.dispatchEvent(new Event("change"));
+        el1.click();
     },
 }, {
     content: _t("Apply change."),

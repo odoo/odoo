@@ -80,7 +80,7 @@ wTourUtils.registerWebsitePreviewTour('website_no_dirty_page', {
         trigger: 'iframe .s_text_image .btn',
         run: function (actions) {
             actions.click();
-            const el = this.$anchor[0];
+            const el = this.anchor;
             const sel = el.ownerDocument.getSelection();
             sel.collapse(el, 0);
             el.focus();
