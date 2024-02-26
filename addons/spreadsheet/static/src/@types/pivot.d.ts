@@ -11,20 +11,31 @@ declare module "@spreadsheet" {
         order: string;
     }
 
-
     export interface Pivot<T> {
         definition: T;
         getMeasure: (name: string) => PivotMeasure;
         computePivotHeaderValue(domain: Array<string | number>): string | boolean | number;
         getLastPivotGroupValue(domain: Array<string | number>): string | boolean | number;
         getTableStructure(): SpreadsheetPivotTable;
-        getPivotCellValue(measure: string, domain: Array<string | number>): string | boolean | number;
+        getPivotCellValue(
+            measure: string,
+            domain: Array<string | number>
+        ): string | boolean | number;
         getPivotFieldFormat(name: string): string;
         getPivotMeasureFormat(name: string): string | undefined;
         assertIsValid({ throwOnError }: { throwOnError: boolean }): boolean;
     }
 
-    export type Aggregator = "array_agg" | "count" | "count_distinct" | "bool_and" | "bool_or" | "max" | "min" | "avg" | "sum";
+    export type Aggregator =
+        | "array_agg"
+        | "count"
+        | "count_distinct"
+        | "bool_and"
+        | "bool_or"
+        | "max"
+        | "min"
+        | "avg"
+        | "sum";
     export type Granularity = "day" | "week" | "month" | "quarter" | "year";
 
     export interface PivotDimensionDefinition {
@@ -51,11 +62,11 @@ declare module "@spreadsheet" {
     }
 
     export interface CommonPivotDefinition {
-      columns: PivotDimensionDefinition[];
-      rows: PivotDimensionDefinition[];
-      measures: string[];
-      name: string;
-      sortedColumn: SortedColumn | null;
+        columns: PivotDimensionDefinition[];
+        rows: PivotDimensionDefinition[];
+        measures: string[];
+        name: string;
+        sortedColumn: SortedColumn | null;
     }
 
     export interface OdooPivotDefinition extends CommonPivotDefinition {
@@ -72,15 +83,15 @@ declare module "@spreadsheet" {
     }
 
     export interface GFLocalPivot {
-      id: string;
-      fieldMatching: Record<string, any>;
+        id: string;
+        fieldMatching: Record<string, any>;
     }
 
     export type PivotDefinition = OdooPivotDefinition | SpreadsheetPivotDefinition;
 
     export type CorePivotDefinition = PivotDefinition & {
         formulaId: string;
-    }
+    };
 
     export interface Field {
         name: string;
@@ -137,7 +148,6 @@ declare module "@spreadsheet" {
         isHeader: boolean;
         domain?: string[];
         content?: string;
-        style?: object;
         measure?: string;
     }
 
@@ -160,7 +170,7 @@ declare module "@spreadsheet" {
     }
 
     export interface PivotModelServices {
-        serverData: ServerData
+        serverData: ServerData;
         orm: ORM;
     }
 }

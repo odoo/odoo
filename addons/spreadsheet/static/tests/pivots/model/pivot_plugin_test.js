@@ -6,10 +6,12 @@ import {
     getCellFormula,
     getCellValue,
     getEvaluatedCell,
-    getBorders,
 } from "@spreadsheet/../tests/utils/getters";
-import { createSpreadsheetWithPivot } from "@spreadsheet/../tests/utils/pivot";
-import { getBasicPivotArch, getBasicServerData } from "@spreadsheet/../tests/utils/data";
+import {
+    createSpreadsheetWithPivot,
+    getZoneOfInsertedDataSource,
+} from "@spreadsheet/../tests/utils/pivot";
+import { getBasicServerData } from "@spreadsheet/../tests/utils/data";
 import { CommandResult } from "@spreadsheet/o_spreadsheet/cancelled_reason";
 import { addGlobalFilter, setCellContent } from "@spreadsheet/../tests/utils/commands";
 import { createModelWithDataSource } from "@spreadsheet/../tests/utils/model";
@@ -23,6 +25,7 @@ import { session } from "@web/session";
 import { makeServerError } from "@web/../tests/helpers/mock_server";
 import { Model } from "@odoo/o-spreadsheet";
 import { THIS_YEAR_GLOBAL_FILTER } from "@spreadsheet/../tests/utils/global_filter";
+import { PIVOT_TABLE_CONFIG } from "@spreadsheet/helpers/constants";
 
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import { waitForDataLoaded } from "@spreadsheet/helpers/model";
@@ -945,36 +948,38 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
         assert.strictEqual(getEvaluatedCell(model, "B1").format, "dd/mm/yyyy");
     });
 
+    QUnit.test("Inserted pivot is inserted with a table", async function (assert) {
+        const { model } = await createSpreadsheetWithPivot();
+        const [pivotId] = model.getters.getPivotIds();
+        const sheetId = model.getters.getActiveSheetId();
+        const pivotZone = getZoneOfInsertedDataSource(model, "pivot", pivotId);
+        const tables = model.getters.getTables(sheetId);
+
+        assert.equal(tables.length, 1);
+        assert.deepEqual(tables[0].range.zone, pivotZone);
+        assert.deepEqual(tables[0].config, { ...PIVOT_TABLE_CONFIG, numberOfHeaders: 1 });
+    });
+
     QUnit.test(
-        "Pivot header zone and total row will have correct borders",
+        "The table has the correct number of headers when inserting a pivot",
         async function (assert) {
             const { model } = await createSpreadsheetWithPivot({
-                arch: getBasicPivotArch(),
+                arch: /* xml */ `
+                    <pivot>
+                        <field name="date" interval="year" type="col"/>
+                        <field name="date" interval="month" type="col"/>
+                        <field name="date" interval="day" type="col"/>
+                        <field name="probability" type="row"/>
+                        <field name="foo" type="measure"/>
+                    </pivot>`,
             });
-            const leftBorder = { left: { style: "thin", color: "#2D7E84" } };
-            const rightBorder = { right: { style: "thin", color: "#2D7E84" } };
-            const topBorder = { top: { style: "thin", color: "#2D7E84" } };
-            const bottomBorder = { bottom: { style: "thin", color: "#2D7E84" } };
-            assert.deepEqual(getBorders(model, "A1"), { ...leftBorder, ...topBorder });
-            assert.deepEqual(getBorders(model, "A2"), { ...leftBorder, ...bottomBorder });
-            assert.deepEqual(getBorders(model, "A3"), { ...leftBorder, ...topBorder });
-            assert.deepEqual(getBorders(model, "B1"), topBorder);
-            assert.deepEqual(getBorders(model, "B2"), bottomBorder);
-            assert.deepEqual(getBorders(model, "C3"), topBorder);
-            assert.deepEqual(getBorders(model, "F1"), { ...rightBorder, ...topBorder });
-            assert.deepEqual(getBorders(model, "F2"), { ...rightBorder, ...bottomBorder });
-            assert.deepEqual(getBorders(model, "F3"), { ...rightBorder, ...topBorder });
-            assert.deepEqual(getBorders(model, "A5"), {
-                ...leftBorder,
-                ...bottomBorder,
-                ...topBorder,
-            });
-            assert.deepEqual(getBorders(model, "B5"), { ...topBorder, ...bottomBorder });
-            assert.deepEqual(getBorders(model, "F5"), {
-                ...rightBorder,
-                ...bottomBorder,
-                ...topBorder,
-            });
+            const [pivotId] = model.getters.getPivotIds();
+            const sheetId = model.getters.getActiveSheetId();
+            const pivotZone = getZoneOfInsertedDataSource(model, "pivot", pivotId);
+            const tables = model.getters.getTables(sheetId);
+
+            assert.deepEqual(tables[0].range.zone, pivotZone);
+            assert.equal(tables[0].config.numberOfHeaders, 3);
         }
     );
 
