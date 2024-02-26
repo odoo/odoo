@@ -139,6 +139,9 @@ class EventLeadRule(models.Model):
 
         :return leads: newly-created leads. Updated leads are not returned.
         """
+        if not self:  # save searches and groupbys
+            return self.env['crm.lead']
+
         # order by ID, ensure first created wins
         registrations = registrations.sorted('id')
 
