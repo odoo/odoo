@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 
 
 class EventTypeMail(models.Model):
@@ -41,11 +41,8 @@ class EventMailScheduler(models.Model):
         super(EventMailScheduler, self - sms_mails)._compute_template_model_id()
 
     def execute(self):
-        oneshot_sms = self._filter_to_skip(keep_type='sms')
+        oneshot_sms = self._filter_to_skip(keep_type='sms')._filter_template_ref(notification_type="sms")
         for scheduler in oneshot_sms:
-            # no template -> ill configured, skip and avoid crash
-            if not scheduler.template_ref:
-                continue
             scheduler.event_id.registration_ids.filtered(
                 lambda registration: registration.state != 'cancel'
             )._message_sms_schedule_mass(
@@ -58,6 +55,11 @@ class EventMailScheduler(models.Model):
             })
 
         return super(EventMailScheduler, self - oneshot_sms).execute()
+
+    def _filter_template_ref_type_info(self, notification_type):
+        if notification_type == "sms":
+            return "sms.template", _("SMS template")
+        return super()._filter_template_ref_type_info(notification_type)
 
     @api.onchange('notification_type')
     def set_template_ref_model(self):
@@ -73,11 +75,16 @@ class EventMailRegistration(models.Model):
 
     def execute(self):
         todo = self._filter_to_skip(keep_type='sms')
-        for scheduler, reg_mails in todo.grouped('scheduler_id').items():
+
+        # Exclude schedulers linked to invalid/unusable templates
+        valid_schedulers = todo.scheduler_id._filter_template_ref(notification_type="sms")
+        valid = todo.filtered(lambda r: r.scheduler_id in valid_schedulers)
+
+        for scheduler, reg_mails in valid.grouped('scheduler_id').items():
             reg_mails.registration_id._message_sms_schedule_mass(
                 template=scheduler.template_ref,
                 mass_keep_log=True,
             )
-        todo.write({'mail_sent': True})
+        valid.write({'mail_sent': True})
 
-        return super(EventMailRegistration, self).execute()
+        return super().execute()

@@ -160,7 +160,9 @@ class EventMailScheduler(models.Model):
                 raise ValidationError(_('The template which is referenced should be coming from %(model_name)s model.', model_name=model))
 
     def execute(self):
-        for scheduler in self._filter_to_skip(keep_per_registration=True):
+        todo = self._filter_to_skip(keep_per_registration=True)
+        valid_mail_schedulers = todo.filtered(lambda s: s.notification_type == "mail")._filter_template_ref(notification_type="mail")
+        for scheduler in todo:
             if scheduler.interval_type == 'after_sub':
                 if self.env.context.get('event_mail_registration_ids'):
                     new_registrations = self.env['event.registration'].search([
@@ -180,10 +182,7 @@ class EventMailScheduler(models.Model):
                     'mail_done': total_sent >= (scheduler.event_id.seats_reserved + scheduler.event_id.seats_used),
                     'mail_count_done': total_sent,
                 })
-            elif scheduler.notification_type == 'mail':
-                # no template -> ill configured, skip and avoid crash
-                if not scheduler.template_ref:
-                    continue
+            elif scheduler.notification_type == 'mail' and scheduler in valid_mail_schedulers:
                 scheduler.event_id.mail_attendees(scheduler.template_ref.id)
                 scheduler.update({
                     'mail_done': True,
@@ -211,6 +210,40 @@ class EventMailScheduler(models.Model):
             self.interval_type,
             '%s,%i' % (self.template_ref._name, self.template_ref.id)
         )
+
+    def _filter_template_ref(self, notification_type="mail"):
+        """ Check for valid template reference: existing, working template """
+        tpl_model, tpl_description = self._filter_template_ref_type_info(notification_type)
+
+        schedulers = self.filtered(lambda s: s.notification_type == notification_type)
+        if not schedulers:
+            return self.browse()
+
+        invalid = self.browse()
+        template_ids = set()
+        for scheduler in schedulers:
+            if scheduler.template_ref._name != tpl_model:
+                invalid += scheduler
+            else:
+                template_ids.add(scheduler.template_ref.id)
+        existing_templates = self.env[tpl_model].browse(template_ids).exists()
+        missing = schedulers.filtered(lambda s: s not in invalid and s.template_ref not in existing_templates)
+        for scheduler in missing:
+            _logger.warning(
+                "Cannot process scheduler %s (event %s - ID %s) as it refers to non-existent %s (ID %s)",
+                scheduler.id, scheduler.event_id.name, scheduler.event_id.id,
+                tpl_description, scheduler.template_ref.id
+            )
+        for scheduler in invalid:
+            _logger.warning(
+                "Cannot process scheduler %s (event %s - ID %s) as it refers to invalid template %s (ID %s) (%s instead of %s)",
+                scheduler.id, scheduler.event_id.name, scheduler.event_id.id,
+                scheduler.template_ref.name, scheduler.template_ref.id,
+                scheduler.template_ref._name, tpl_description)
+        return self - missing - invalid
+
+    def _filter_template_ref_type_info(self, notification_type):
+        return "mail.template", _("mail template")
 
     def _filter_to_skip(self, keep_type=None, keep_per_registration=False):
         """ Filter schedulers to skip: already done or scheduled for later
@@ -313,18 +346,11 @@ class EventMailRegistration(models.Model):
     def execute(self):
         todo = self._filter_to_skip(keep_type='mail')
 
-        done = self.browse()
-        for scheduler, reg_mails in todo.grouped('scheduler_id').items():
-            template = None
-            try:
-                template = scheduler.template_ref.exists()
-            except MissingError:
-                pass
+        # Exclude schedulers linked to invalid/unusable templates
+        valid_schedulers = todo.scheduler_id._filter_template_ref(notification_type="mail")
+        valid = todo.filtered(lambda r: r.scheduler_id in valid_schedulers)
 
-            if not template:
-                _logger.warning("Cannot process ticket %s, because Mail Scheduler %s has reference to non-existent template", reg_mails.registration_id, scheduler)
-                continue
-
+        for scheduler, reg_mails in valid.grouped('scheduler_id').items():
             organizer = scheduler.event_id.organizer_id
             company = self.env.company
             author = self.env.ref('base.user_root').partner_id
@@ -338,11 +364,10 @@ class EventMailRegistration(models.Model):
             email_values = {
                 'author_id': author.id,
             }
-            if not template.email_from:
+            if not scheduler.template_ref.email_from:
                 email_values['email_from'] = author.email_formatted
-            template.send_mail_batch(reg_mails.registration_id.ids, email_values=email_values)
-            done += reg_mails
-        done.write({'mail_sent': True})
+            scheduler.template_ref.send_mail_batch(reg_mails.registration_id.ids, email_values=email_values)
+        valid.write({'mail_sent': True})
 
     def _filter_to_skip(self, keep_type=None):
         """ Filter mail registrations to skip: already done, registrations

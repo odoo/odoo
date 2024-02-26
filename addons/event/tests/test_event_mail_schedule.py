@@ -320,6 +320,23 @@ class TestMailSchedule(EventCase, MockEmail, CronMixinCase):
                 'subject': f"Reminder for {test_event.name}: today",
             })
 
+    @mute_logger('odoo.addons.event.models.event_mail')
+    @users('user_eventmanager')
+    def test_event_mail_schedule_fail_registration_template_removed(self):
+        """ Test flow where scheduler fails due to template being removed. """
+        # make on subscription scheduler crash, remove linked template
+        self.template_subscription.sudo().unlink()
+        with self.mock_mail_gateway():
+            registration = self.env['event.registration'].create({
+                "email": "test@email.com",
+                "event_id": self.test_event.id,
+                "name": "Mitchell Admin",
+                "phone": "(255)-595-8393",
+            })
+        self.assertTrue(registration.exists(), "Registration record should exist after creation.")
+        after_sub_scheduler = self.test_event.event_mail_ids.filtered(lambda s: s.interval_type == 'after_sub' and s.interval_unit == 'now')
+        self.assertFalse(after_sub_scheduler.mail_done)
+
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
     @users('user_eventmanager')
     def test_event_mail_schedule_on_subscription(self):
