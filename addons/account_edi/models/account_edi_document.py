@@ -140,6 +140,23 @@ class AccountEdiDocument(models.Model):
                         'error': False,
                         'blocking_level': False,
                     })
+<<<<<<< HEAD
+||||||| parent of f722e8580103 (temp)
+                    if move.is_invoice(include_receipts=True):
+                        reconciled_lines = move.line_ids.filtered(lambda line: line.account_id.account_type in ('asset_receivable', 'liability_payable'))
+                        reconciled_amls = reconciled_lines.mapped('matched_debit_ids.debit_move_id') \
+                                          | reconciled_lines.mapped('matched_credit_ids.credit_move_id')
+                        reconciled_amls\
+                            .filtered(lambda x: x.move_id.payment_id or x.move_id.statement_line_id)\
+                            .move_id\
+                            ._update_payments_edi_documents()
+=======
+                    if move.is_invoice(include_receipts=True):
+                        reconciled_lines = move.line_ids.filtered(lambda line: line.account_id.account_type in ('asset_receivable', 'liability_payable'))
+                        reconciled_amls = reconciled_lines.mapped('matched_debit_ids.debit_move_id') \
+                                          | reconciled_lines.mapped('matched_credit_ids.credit_move_id')
+                        reconciled_amls.move_id._update_payments_edi_documents()
+>>>>>>> f722e8580103 (temp)
                 else:
                     document.write({
                         'error': move_result.get('error', False),

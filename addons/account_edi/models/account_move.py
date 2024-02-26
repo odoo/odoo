@@ -223,6 +223,82 @@ class AccountMove(models.Model):
             grouping_key_generator=grouping_key_generator,
         )
 
+<<<<<<< HEAD
+||||||| parent of f722e8580103 (temp)
+    def _update_payments_edi_documents(self):
+        ''' Update the edi documents linked to the current journal entries. These journal entries must be linked to an
+        account.payment of an account.bank.statement.line. This additional method is needed because the payment flow is
+        not the same as the invoice one. Indeed, the edi documents must be updated when the reconciliation with some
+        invoices is changing.
+        '''
+        edi_document_vals_list = []
+        to_remove = self.env['account.edi.document']
+        for payment in self:
+            edi_formats = payment._get_reconciled_invoices().journal_id.edi_format_ids | payment.edi_document_ids.edi_format_id
+            for edi_format in edi_formats:
+                existing_edi_document = payment.edi_document_ids.filtered(lambda x: x.edi_format_id == edi_format)
+                move_applicability = edi_format._get_move_applicability(payment)
+
+                if move_applicability:
+                    if existing_edi_document:
+                        existing_edi_document.write({
+                            'state': 'to_send',
+                            'error': False,
+                            'blocking_level': False,
+                        })
+                    else:
+                        edi_document_vals_list.append({
+                            'edi_format_id': edi_format.id,
+                            'move_id': payment.id,
+                            'state': 'to_send',
+                        })
+                elif existing_edi_document:
+                    to_remove |= existing_edi_document
+
+        to_remove.unlink()
+        self.env['account.edi.document'].create(edi_document_vals_list)
+        self.edi_document_ids._process_documents_no_web_services()
+
+=======
+    def _update_payments_edi_documents(self):
+        ''' Update the edi documents linked to the current journal entries. These journal entries must be linked to an
+        account.payment of an account.bank.statement.line. This additional method is needed because the payment flow is
+        not the same as the invoice one. Indeed, the edi documents must be created when the payment is fully reconciled
+        with invoices.
+        '''
+        payments = self.filtered(lambda move: move.payment_id or move.statement_line_id)
+        edi_document_vals_list = []
+        to_remove = self.env['account.edi.document']
+        for payment in payments:
+            edi_formats = payment._get_reconciled_invoices().journal_id.edi_format_ids | payment.edi_document_ids.edi_format_id
+            for edi_format in edi_formats:
+                # Only recreate document when cancelled before.
+                existing_edi_document = payment.edi_document_ids.filtered(lambda x: x.edi_format_id == edi_format)
+                if existing_edi_document.state == 'sent':
+                    continue
+                move_applicability = edi_format._get_move_applicability(payment)
+
+                if move_applicability:
+                    if existing_edi_document:
+                        existing_edi_document.write({
+                            'state': 'to_send',
+                            'error': False,
+                            'blocking_level': False,
+                        })
+                    else:
+                        edi_document_vals_list.append({
+                            'edi_format_id': edi_format.id,
+                            'move_id': payment.id,
+                            'state': 'to_send',
+                        })
+                elif existing_edi_document:
+                    to_remove |= existing_edi_document
+
+        to_remove.unlink()
+        self.env['account.edi.document'].create(edi_document_vals_list)
+        self.edi_document_ids._process_documents_no_web_services()
+
+>>>>>>> f722e8580103 (temp)
     def _is_ready_to_be_sent(self):
         # OVERRIDE
         # Prevent a mail to be sent to the customer if the EDI document is not sent.
@@ -406,3 +482,59 @@ class AccountMove(models.Model):
     def _get_edi_doc_attachments_to_export(self):
         # EXTENDS 'account'
         return super()._get_edi_doc_attachments_to_export() + self.edi_document_ids.attachment_id
+<<<<<<< HEAD
+||||||| parent of f722e8580103 (temp)
+
+
+class AccountMoveLine(models.Model):
+    _inherit = 'account.move.line'
+
+    ####################################################
+    # Export Electronic Document
+    ####################################################
+
+    def _reconcile_pre_hook(self):
+        # EXTENDS 'account'
+        # In some countries, the payments must be sent to the government under some condition. One of them could be
+        # there is at least one reconciled invoice to the payment. Then, we need to update the state of the edi
+        # documents during the reconciliation.
+        results = super()._reconcile_pre_hook()
+        all_lines = self + self.matched_debit_ids.debit_move_id + self.matched_credit_ids.credit_move_id
+        results['edi_payments'] = all_lines.move_id\
+            .filtered(lambda move: move.payment_id or move.statement_line_id)
+        results['edi_invoices_per_payment_before'] = {
+            pay: pay._get_reconciled_invoices()
+            for pay in results['edi_payments']
+        }
+        return results
+
+    def _reconcile_post_hook(self, data):
+        # EXTENDS 'account'
+        super()._reconcile_post_hook(data)
+        payments = data['edi_payments']
+
+        changed_payments = self.env['account.move']
+        for payment in payments:
+            amls = payment.line_ids.filtered(lambda x: x.account_id.account_type == 'asset_receivable')
+            if all(amls.mapped('reconciled')):
+                matched_invoices = payment._get_reconciled_invoices()
+                if all(inv.edi_state == 'sent' for inv in matched_invoices):
+                    changed_payments |= payment
+        changed_payments._update_payments_edi_documents()
+=======
+
+
+class AccountMoveLine(models.Model):
+    _inherit = 'account.move.line'
+
+    ####################################################
+    # Export Electronic Document
+    ####################################################
+
+    def _reconcile_post_hook(self, data):
+        # EXTENDS 'account'
+        results = super()._reconcile_post_hook(data)
+        all_lines = self + self.matched_debit_ids.debit_move_id + self.matched_credit_ids.credit_move_id
+        all_lines.move_id._update_payments_edi_documents()
+        return results
+>>>>>>> f722e8580103 (temp)
