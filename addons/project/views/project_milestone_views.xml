@@ -56,7 +56,7 @@
                         title="View Tasks"
                         string="View Tasks"
                         class="btn btn-link float-end"
-                        invisible="task_count == 0"
+                        invisible="task_count == 0 or context.get('is_sharing_milestone_field')"
                         groups="project.group_project_milestone"/>
             </tree>
         </field>

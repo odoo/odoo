@@ -158,7 +158,7 @@
                             <field name="allow_milestones" invisible="1"/>
                             <field name="milestone_id"
                                 placeholder="e.g. Product Launch"
-                                context="{'default_project_id': project_id}"
+                                context="{'default_project_id': project_id, 'is_sharing_milestone_field': True}"
                                 invisible="not allow_milestones"
                                 options="{'no_open': True, 'no_create': True, 'no_edit': True}"/>
                             <field name="user_ids" invisible="1" />
@@ -192,7 +192,7 @@
                                     <field name="allow_milestones" column_invisible="True"/>
                                     <field name="milestone_id"
                                         optional="hide"
-                                        context="{'default_project_id': project_id}"
+                                        context="{'default_project_id': project_id, 'is_sharing_milestone_field': True}"
                                         column_invisible="not parent.allow_milestones"
                                         invisible="not allow_milestones"/>
                                     <field name="company_id" column_invisible="True"/>
