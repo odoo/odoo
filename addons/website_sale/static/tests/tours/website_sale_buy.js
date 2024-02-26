@@ -28,7 +28,10 @@ registry.category("web_tour.tours").add('shop_buy_product', {
             extra_trigger: 'label:contains(Steel) input:checked',
             trigger: '#product_detail form[action^="/shop/cart/update"] #add_to_cart',
         },
-            tourUtils.goToCart(),
+        {
+            content: "click in modal on 'Proceed to checkout' button",
+            trigger: 'button:contains("Proceed to Checkout")',
+        },
         {
             content: "add suggested",
             trigger: '.js_cart_lines:has(a:contains("Storage Box")) a:contains("Add to cart")',

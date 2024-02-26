@@ -756,4 +756,17 @@
             <field name="user_id" ref="base.user_demo"/>
         </record>
 
+        <record id="sale.product_product_1_product_template" model="product.template">
+            <field name="website_sequence">9980</field>
+            <field name="is_published" eval="True"/>
+        </record>
+
+        <record id="product.product_product_4_product_template" model="product.template">
+            <field name="optional_product_ids" eval="[Command.set([
+                    ref('product.product_product_11_product_template'),
+                    ref('website_sale.product_product_1_product_template'),
+                ])]"
+            />
+        </record>
+
 </odoo>
