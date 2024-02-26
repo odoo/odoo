@@ -15,5 +15,8 @@
 }
 
 .o_avatar_card {
-    width: 380px;
+    max-width: 380px;
+    @media screen  and (max-width: 480px) {
+        max-width: 90vw;
+    }
 }
