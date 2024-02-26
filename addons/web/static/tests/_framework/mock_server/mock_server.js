@@ -95,6 +95,24 @@ const authenticateUser = (user) => {
 };
 
 /**
+ * @param {unknown} error
+ */
+const ensureError = (error) => (error instanceof Error ? error : new Error(error));
+
+const getCurrentParams = createJobScopedGetter(
+    /**
+     * @param {ServerParams} previous
+     */
+    (previous) => ({
+        ...previous,
+        actions: deepCopy(previous?.actions || {}),
+        menus: deepCopy(previous?.menus || []),
+        models: [...(previous?.models || [])], // own instance getters, no need to deep copy
+        routes: [...(previous?.routes || [])], // functions, no need to deep copy
+    })
+);
+
+/**
  * @param {string} modelName
  */
 const modelNotFoundError = (modelName, consequence) => {
@@ -156,14 +174,6 @@ class MockServerBaseEnvironment {
         this.server = server;
     }
 }
-
-const getCurrentParams = createJobScopedGetter((previous) => ({
-    ...previous,
-    actions: deepCopy(previous?.actions || {}),
-    menus: deepCopy(previous?.menus || []),
-    models: [...(previous?.models || [])], // own instance getters, no need to deep copy
-    routes: [...(previous?.routes || [])], // functions, no need to deep copy
-}));
 
 const DEFAULT_MENU = {
     id: 99999,
@@ -838,7 +848,11 @@ export class MockServer {
         let result;
         // Check own routes
         for (const fn of [...(this.ormListeners[params.method] || []), ...this.ormListeners["*"]]) {
-            result ??= await fn.call(this, route, params);
+            try {
+                result ??= await fn.call(this, route, params);
+            } catch (error) {
+                return ensureError(error);
+            }
             if (result !== undefined && result !== null) {
                 break;
             }
@@ -847,7 +861,7 @@ export class MockServer {
         try {
             result ??= await this.callOrm(params);
         } catch (error) {
-            return error;
+            return ensureError(error);
         }
         return result;
     }
