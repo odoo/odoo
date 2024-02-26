@@ -1119,8 +1119,12 @@ export const formatSelection = (editor, formatName, {applyStyle, formatProps} = 
         // Remove the format on all inline ancestors until a block or an element
         // with a class that is not related to font size (in case the formatting
         // comes from the class).
-        while (parentNode && (!isBlock(parentNode) && (parentNode.classList.length === 0 ||
-                [...parentNode.classList].every(cls => FONT_SIZE_CLASSES.includes(cls))))) {
+        while (
+            parentNode && !isBlock(parentNode) &&
+            !isUnbreakable(parentNode) && !isUnbreakable(currentNode) &&
+            (parentNode.classList.length === 0 ||
+                [...parentNode.classList].every(cls => FONT_SIZE_CLASSES.includes(cls)))
+        ) {
             const isUselessZws = parentNode.tagName === 'SPAN' &&
                 parentNode.hasAttribute('data-oe-zws-empty-inline') &&
                 parentNode.getAttributeNames().length === 1;
