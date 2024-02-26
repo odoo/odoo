@@ -65,13 +65,19 @@ class PhoneBlackList(models.Model):
         if args:
             new_args = []
             for arg in args:
-                if isinstance(arg, (list, tuple)) and arg[0] == 'number' and isinstance(arg[2], str):
-                    number = arg[2]
-                    sanitized = phone_validation.phone_sanitize_numbers_w_record([number], self.env.user)[number]['sanitized']
-                    if sanitized:
-                        new_args.append([arg[0], arg[1], sanitized])
+                if isinstance(arg, (list, tuple)) and arg[0] == 'number':
+                    if isinstance(arg[2], str):
+                        number = arg[2]
+                        sanitized = phone_validation.phone_sanitize_numbers_w_record([number], self.env.user)[number]['sanitized']
+                        search_term = sanitized or number
+                    elif isinstance(arg[2], list) and all(isinstance(number, str) for number in arg[2]):
+                        search_term = [
+                            phone_validation.phone_sanitize_numbers_w_record([number], self.env.user)[number]['sanitized'] or number
+                            for number in arg[2]
+                        ]
                     else:
-                        new_args.append(arg)
+                        search_term = arg[2]
+                    new_args.append([arg[0], arg[1], search_term])
                 else:
                     new_args.append(arg)
         else:
