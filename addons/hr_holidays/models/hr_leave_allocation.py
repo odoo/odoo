@@ -74,7 +74,15 @@ class HolidaysAllocation(models.Model):
         help='Duration in days. Reference field to use when necessary.')
     number_of_days_display = fields.Float(
         'Duration (days)', compute='_compute_number_of_days_display',
+<<<<<<< HEAD
         help="For an Accrual Allocation, this field contains the theorical amount of time given to the employee, due to a previous start date, on the first run of the plan. This can be manually edited.")
+||||||| parent of adbe78fb1bd3 (temp)
+        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]},
+        help="If Accrual Allocation: Number of days allocated in addition to the ones you will get via the accrual' system.")
+=======
+        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]},
+        help="If Accrual Allocation: Days given by the accrual system.")
+>>>>>>> adbe78fb1bd3 (temp)
     number_of_hours_display = fields.Float(
         'Duration (hours)', compute='_compute_number_of_hours_display',
         help="For an Accrual Allocation, this field contains the theorical amount of time given to the employee, due to a previous start date, on the first run of the plan. This can be manually edited.")
