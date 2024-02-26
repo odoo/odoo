@@ -31,9 +31,11 @@ QUnit.module("spreadsheet data source", {}, () => {
                 }
             }
             const dataSource = new TestDataSource({
-                notify: () => assert.step("notify"),
-                notifyWhenPromiseResolves: () => assert.step("notify-from-promise"),
-                cancelPromise: () => assert.step("cancel-promise"),
+                odooDataProvider: {
+                    notify: () => assert.step("notify"),
+                    notifyWhenPromiseResolves: () => assert.step("notify-from-promise"),
+                    cancelPromise: () => assert.step("cancel-promise"),
+                },
             });
             dataSource.load();
             assert.verifySteps(["notify-from-promise"]);
@@ -62,12 +64,14 @@ QUnit.module("spreadsheet data source", {}, () => {
         }
 
         const dataSource = new TestDataSource({
-            notify: () => assert.step("notify"),
-            notifyWhenPromiseResolves: () => assert.step("notify-from-promise"),
-            cancelPromise: () => assert.step("cancel-promise"),
-            orm: {
-                call: () => {
-                    throw makeServerError({ description: "Ya done!" });
+            odooDataProvider: {
+                notify: () => assert.step("notify"),
+                notifyWhenPromiseResolves: () => assert.step("notify-from-promise"),
+                cancelPromise: () => assert.step("cancel-promise"),
+                orm: {
+                    call: () => {
+                        throw makeServerError({ description: "Ya done!" });
+                    },
                 },
             },
         });

@@ -28,13 +28,13 @@ export class CurrencyPlugin extends OdooUIPlugin {
         /** @type {string | undefined} */
         this.currentCompanyCurrencyFormat = config.defaultCurrencyFormat;
         /** @type {import("@spreadsheet/data_sources/server_data").ServerData} */
-        this._serverData = config.custom.dataSources?.serverData;
+        this._serverData = config.custom.odooDataProvider?.serverData;
     }
 
     get serverData() {
         if (!this._serverData) {
             throw new Error(
-                "'serverData' is not defined, please make sure a 'DataSources' instance is provided to the model."
+                "'serverData' is not defined, please make sure a 'OdooDataProvider' instance is provided to the model."
             );
         }
         return this._serverData;

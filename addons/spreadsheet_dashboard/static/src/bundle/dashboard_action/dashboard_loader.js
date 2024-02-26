@@ -1,9 +1,9 @@
 /** @odoo-module */
 
-import { DataSources } from "@spreadsheet/data_sources/data_sources";
 import { migrate } from "@spreadsheet/o_spreadsheet/migration";
 import { Model } from "@odoo/o-spreadsheet";
 import { createDefaultCurrencyFormat } from "@spreadsheet/currency/helpers";
+import { OdooDataProvider } from "@spreadsheet/data_sources/odoo_data_provider";
 
 /**
  * @type {{
@@ -200,21 +200,23 @@ export class DashboardLoader {
      * @returns {Model}
      */
     _createSpreadsheetModel(snapshot, revisions = [], defaultCurrency) {
-        const dataSources = new DataSources(this.env);
+        const odooDataProvider = new OdooDataProvider(this.env);
         const defaultCurrencyFormat = defaultCurrency
             ? createDefaultCurrencyFormat(defaultCurrency)
             : undefined;
         const model = new Model(
             migrate(snapshot),
             {
-                custom: { env: this.env, orm: this.orm, dataSources },
+                custom: { env: this.env, orm: this.orm, odooDataProvider },
                 mode: "dashboard",
                 defaultCurrencyFormat,
             },
             revisions
         );
         this._activateFirstSheet(model);
-        dataSources.addEventListener("data-source-updated", () => model.dispatch("EVALUATE_CELLS"));
+        odooDataProvider.addEventListener("data-source-updated", () =>
+            model.dispatch("EVALUATE_CELLS")
+        );
         return model;
     }
 }
