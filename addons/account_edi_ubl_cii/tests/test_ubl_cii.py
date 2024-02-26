@@ -4,6 +4,7 @@
 from lxml import etree
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
+from odoo import Command
 
 
 @tagged('post_install', '-at_install')
@@ -56,3 +57,24 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon):
         )
 
         self.assertRecordValues(new_invoice.invoice_line_ids, line_vals)
+
+    def test_export_with_invalid_char(self):
+        """
+        Ensure no 'lxml.etree.XMLSyntaxError: PCDATA invalid Char value' exception is raised when parsing
+        the XML document (while calling xml_utils.cleanup_xml_node on the xml content).
+        """
+        invoice = self.env['account.move'].create({
+            'partner_id': self.company_data_2['company'].partner_id.id,
+            'move_type': 'out_invoice',
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_a,
+                'name': "Hèj Hervé!  is an invalid char (here is another one: ).",
+            })],
+        })
+        invoice.action_post()
+        self.assertTrue(invoice.edi_document_ids.attachment_id)
+        root = etree.fromstring(invoice.edi_document_ids.attachment_id.raw)
+        self.assertEqual(
+            root.findtext(".//{*}SpecifiedTradeProduct/{*}Name"),
+            "Hèj Hervé!  is an invalid char (here is another one: )."
+        )

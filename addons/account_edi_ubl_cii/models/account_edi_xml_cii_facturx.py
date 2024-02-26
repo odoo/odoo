@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import models, _
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, float_repr, is_html_empty, html2plaintext, cleanup_xml_node
-from lxml import etree
 
 from datetime import datetime
 
@@ -182,6 +181,7 @@ class AccountEdiXmlCII(models.AbstractModel):
                 and invoice.purchase_order_reference else invoice.ref or invoice.name,
             'contract_reference': invoice.contract_reference if 'contract_reference' in invoice._fields
                 and invoice.contract_reference else '',
+            'main_template': 'account_edi_ubl_cii.account_invoice_facturx_export_22',
         }
 
         # data used for IncludedSupplyChainTradeLineItem / SpecifiedLineTradeSettlement
@@ -234,12 +234,6 @@ class AccountEdiXmlCII(models.AbstractModel):
         template_values['tax_total_amount'] = balance_sign * tax_details['tax_amount_currency']
 
         return template_values
-
-    def _export_invoice(self, invoice):
-        vals = self._export_invoice_vals(invoice)
-        errors = [constraint for constraint in self._export_invoice_constraints(invoice, vals).values() if constraint]
-        xml_content = self.env['ir.qweb']._render('account_edi_ubl_cii.account_invoice_facturx_export_22', vals)
-        return etree.tostring(cleanup_xml_node(xml_content), xml_declaration=True, encoding='UTF-8'), set(errors)
 
     # -------------------------------------------------------------------------
     # IMPORT

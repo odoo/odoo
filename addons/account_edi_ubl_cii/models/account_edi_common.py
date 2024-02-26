@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
+from lxml import etree
+
+import unicodedata
 
 from odoo import _, models
 from odoo.addons.base.models.res_bank import sanitize_account_number
-from odoo.tools import float_repr
+from odoo.tools import cleanup_xml_node, float_repr
 from odoo.tests.common import Form
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.float_utils import float_round
@@ -209,6 +212,17 @@ class AccountEdiCommon(models.AbstractModel):
                 **tax_unece_codes,
             })
         return res
+
+    def _export_invoice(self, invoice):
+        vals = self._export_invoice_vals(invoice)
+        errors = [constraint for constraint in self._export_invoice_constraints(invoice, vals).values() if constraint]
+        raw_xml = self.env['ir.qweb']._render(vals['main_template'], vals)
+        try:
+            xml = cleanup_xml_node(raw_xml)
+        except etree.XMLSyntaxError:
+            # remove the control characters before converting to etree._Element
+            xml = cleanup_xml_node("".join(char for char in raw_xml if unicodedata.category(char)[0] != "C"))
+        return etree.tostring(xml, xml_declaration=True, encoding='UTF-8'), set(errors)
 
     # -------------------------------------------------------------------------
     # CONSTRAINTS

@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
-
-from lxml import etree
-
 from odoo import models, _
-from odoo.tools import html2plaintext, cleanup_xml_node
+from odoo.tools import html2plaintext
 
 
 class AccountEdiXmlUBL20(models.AbstractModel):
@@ -477,12 +474,6 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             'ubl20_invoice_date_required': self._check_required_fields(invoice, 'invoice_date'),
         })
         return constraints
-
-    def _export_invoice(self, invoice):
-        vals = self._export_invoice_vals(invoice)
-        errors = [constraint for constraint in self._export_invoice_constraints(invoice, vals).values() if constraint]
-        xml_content = self.env['ir.qweb']._render(vals['main_template'], vals)
-        return etree.tostring(cleanup_xml_node(xml_content), xml_declaration=True, encoding='UTF-8'), set(errors)
 
     # -------------------------------------------------------------------------
     # IMPORT
