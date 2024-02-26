@@ -52,7 +52,6 @@ PROJECT_TASK_READABLE_FIELDS = {
     'recurrence_id',
     'recurring_count',
     'duration_tracking',
-    'message_is_follower',
     'display_follow_button',
 }
 
