@@ -189,6 +189,7 @@
             'web_editor/static/src/js/backend/**/*',
             'web_editor/static/src/xml/backend.xml',
 
+            'mail/static/src/views/fields/**/*',
             'mail/static/src/scss/variables/*.scss',
             'mail/static/src/chatter/web/form_renderer.scss',
 
