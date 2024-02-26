@@ -214,6 +214,11 @@
                     left: 0;
                 }
 
+                &:not(.o_kanban_image_full) {
+                    max-height: 140px;
+                    height: calc(100% + var(--KanbanRecord-padding-v) * 2);
+                    align-self: center;
+                }
                 &.o_kanban_image_full {
                     background-size: contain;
                     > img {
