@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 
 
 class EventTypeMail(models.Model):
@@ -45,9 +45,7 @@ class EventMailScheduler(models.Model):
             lambda scheduler: scheduler.notification_type == "sms" and scheduler.interval_type in {"before_event", "after_event"}
         )
         for scheduler in oneshot_sms:
-            # no template -> ill configured, skip and avoid crash
-            if not scheduler.template_ref:
-                continue
+            # at this point template validity should already be checked by caller
             scheduler.event_id.registration_ids.filtered(
                 lambda registration: registration.state != 'cancel'
             )._message_sms_schedule_mass(
@@ -60,6 +58,11 @@ class EventMailScheduler(models.Model):
             })
 
         return super(EventMailScheduler, self - oneshot_sms)._execute()
+
+    def _get_template_ref_type_info(self):
+        info = super()._get_template_ref_type_info()
+        info["sms"] = ("sms.template", "SMS template")
+        return info
 
     @api.onchange('notification_type')
     def set_template_ref_model(self):
@@ -83,5 +86,4 @@ class EventMailRegistration(models.Model):
                 mass_keep_log=True,
             )
         todo.write({'mail_sent': True})
-
         return super(EventMailRegistration, self - todo)._execute_on_registrations()

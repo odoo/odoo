@@ -8,9 +8,10 @@ from odoo.addons.event.tests.common import EventCase
 from odoo.addons.phone_validation.tools import phone_validation
 from odoo.addons.sms.tests.common import SMSCase
 from odoo.tests import tagged, users
+from odoo.tools import mute_logger
 
 
-@tagged('event_mail')
+@tagged('event_mail', 'post_install', '-at_install')
 class TestSMSSchedule(EventCase, SMSCase):
 
     @classmethod
@@ -109,3 +110,20 @@ class TestSMSSchedule(EventCase, SMSCase):
                 content='%s reminder' % test_event.organizer_id.name)
         self.assertTrue(before_scheduler.mail_done)
         self.assertEqual(before_scheduler.mail_count_done, 3)
+
+    @mute_logger('odoo.addons.event.models.event_mail')
+    @users('user_eventmanager')
+    def test_sms_schedule_fail_registration_template_removed(self):
+        """ Test flow where scheduler fails due to template being removed. """
+        # make on subscription scheduler crash, remove linked template
+        self.sms_template_sub.sudo().unlink()
+        with self.mockSMSGateway():
+            registration = self.env['event.registration'].create({
+                "email": "test@email.com",
+                "event_id": self.test_event.id,
+                "name": "Mitchell Admin",
+                "phone": "(255)-595-8393",
+            })
+        self.assertTrue(registration.exists(), "Registration record should exist after creation.")
+        after_sub_scheduler = self.test_event.event_mail_ids.filtered(lambda s: s.interval_type == 'after_sub' and s.interval_unit == 'now')
+        self.assertFalse(after_sub_scheduler.mail_done)
