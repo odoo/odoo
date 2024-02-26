@@ -486,7 +486,7 @@ class Task(models.Model):
                 ], ['dependent_ids'], ['__count'])
             }
             for task in tasks_with_dependency:
-                task.depend_on_count = depend_on_count.get(task.id, 0)
+                task.depend_on_count = depend_on_count.get(task._origin.id or task.id, 0)
 
     @api.depends('dependent_ids')
     def _compute_dependent_tasks_count(self):
