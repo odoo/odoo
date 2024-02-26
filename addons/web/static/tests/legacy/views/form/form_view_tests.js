@@ -14322,8 +14322,13 @@ QUnit.module("Views", (hooks) => {
         const table = target.querySelector("table");
         const group = target.querySelector(".o_inner_group:last-child");
 
+        // Testing not overflowing on render
         assert.equal(group.clientWidth, group.scrollWidth);
+
+        // Testing that the table will overflow if no value is calculated
         table.style.tableLayout = "auto";
+        // Allow overflowing over the inner group for testing purpose
+        group.querySelectorAll(".o_cell").forEach((el) => (el.style.minWidth = "min-content"));
         assert.ok(group.clientWidth < group.scrollWidth);
     });
 
