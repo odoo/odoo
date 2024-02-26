@@ -181,7 +181,7 @@ class PosSession(models.Model):
                 'fields': ['id', 'name', 'groups_id', 'partner_id'],
             },
             'res.partner': {
-                'domain': [('id', 'in', config_id.get_limited_partners_loading())],
+                'domain': [('id', 'in', config_id.get_limited_partners_loading() + [self.env.user.partner_id.id])],
                 'fields': [
                     'id',
                     'name', 'street', 'city', 'state_id', 'country_id', 'vat', 'lang', 'phone', 'zip', 'mobile', 'email',
