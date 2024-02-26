@@ -6756,6 +6756,56 @@ QUnit.module("Views", (hooks) => {
         assert.doesNotHaveClass(target.querySelector(".o_pager_limit"), "disabled");
     });
 
+    QUnit.test("pager, grouped listview record deletion should update pager offset", async function (assert) {
+        assert.expect(7);
+
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: '<tree limit="1"><field name="foo"/><field name="bar"/></tree>',
+            groupBy: ["foo"],
+        });
+
+        assert.containsN(target, ".o_group_header", 3, "should have 3 groups");
+        assert.containsOnce(
+            target,
+            ".o_group_header:first-of-type .o_group_name",
+            "first group should have a name"
+        );
+        assert.containsNone(
+            target,
+            ".o_group_header:first-of-type .o_pager",
+            "pager shouldn't be present until unfolded"
+        );
+
+        // unfold
+        await click(target.querySelector(".o_group_header:first-of-type"));
+        assert.containsOnce(
+            target,
+            ".o_group_header:first-of-type .o_group_name .o_pager",
+            "first group should have a pager"
+        );
+        assert.strictEqual(
+            target.querySelector(".o_group_header:first-of-type .o_pager_value").innerText,
+            "1"
+        );
+        assert.strictEqual(
+            target.querySelector(".o_group_header:first-of-type .o_pager_limit").innerText,
+            "2"
+        );
+
+        // pager next
+        await click(target, ".o_group_header:first-of-type .o_pager_next");
+        await click(target.querySelector(".o_group_header:first-of-type"));
+
+        // deleting a record
+        serverData.models.foo.records.pop();
+
+        await click(target.querySelector(".o_group_header:first-of-type"));
+        assert.containsOnce(target, ".o_data_row .o_list_record_selector");
+    });
+
     QUnit.test("pager, grouped, with groups count limit reached", async function (assert) {
         patchWithCleanup(RelationalModel, { DEFAULT_COUNT_LIMIT: 3 });
         serverData.models.foo.records.push({ id: 398, foo: "ozfijz" }); // to have 4 groups

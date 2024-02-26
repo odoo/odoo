@@ -633,6 +633,10 @@ export class RelationalModel extends Model {
         let data;
         if (reload) {
             data = await this._loadData(tmpConfig);
+            if (data.records?.length === 0 && tmpConfig.offset) {
+                tmpConfig.offset = Math.max(tmpConfig.offset - tmpConfig.limit, 0)
+                data = await this._loadData(tmpConfig);
+            }
         }
         Object.assign(config, tmpConfig);
         if (data && commit) {

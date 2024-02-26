@@ -23,6 +23,7 @@ import {
     getPagerValue,
     getVisibleButtons,
     pagerNext,
+    pagerPrevious,
     toggleSearchBarMenu,
     validateSearch,
     toggleMenuItem,
@@ -1558,6 +1559,47 @@ QUnit.module("Views", (hooks) => {
             assert.verifySteps(["open-dialog"]);
             assert.deepEqual(getPagerValue(target), [1, 3]);
             assert.strictEqual(getPagerLimit(target), 3);
+        }
+    );
+
+    QUnit.test(
+        "Kanban, ungrouped, pager limit and offset should be updated after record deletion",
+         async (assert) => {
+            assert.expect(6);
+
+            await makeView({
+                type: "kanban",
+                resModel: "partner",
+                serverData,
+                arch: `<kanban limit="3">
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            });
+
+            assert.deepEqual(getPagerValue(target), [1, 3]);
+            assert.strictEqual(getPagerLimit(target), 4);
+            assert.containsN(target, 'div[role=article].o_kanban_record', 3);
+
+            // move to next page
+            await pagerNext(target);
+
+            assert.deepEqual(getPagerValue(target), [4, 4]);
+            assert.containsN(target, 'div[role=article].o_kanban_record', 1);
+
+            // move to previous page
+            await pagerPrevious(target);
+
+            //deleting the record
+            serverData.models.partner.records.pop();
+
+            await pagerNext(target);
+            assert.containsN(target, 'div[role=article].o_kanban_record', 3);
         }
     );
 
