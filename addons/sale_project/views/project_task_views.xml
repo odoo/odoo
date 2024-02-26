@@ -248,6 +248,7 @@
         <field name="arch" type="xml">
             <field name="partner_id" position="after">
                 <field name="allow_billable" column_invisible="True"/>
+                <field name="sale_line_id" optional="hide" options="{'no_open': True}" readonly="1"/>
             </field>
             <field name="partner_id" position="attributes">
                 <attribute name="column_invisible">context.get('hide_partner')</attribute>
@@ -261,10 +262,12 @@
         <field name="model">project.task</field>
         <field name="inherit_id" ref="project.project_task_view_tree_base"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='partner_id']" position="after">
+            <field name="sale_line_id" position="attributes">
+                <attribute name="groups">!sales_team.group_sale_salesman</attribute>
+            </field>
+            <field name="sale_line_id" position="before">
                 <field name="sale_line_id" optional="hide" groups="sales_team.group_sale_salesman" options="{'no_create': True}"/>
-                <field name="sale_line_id" optional="hide" options="{'no_open': True}" readonly="1" groups="!sales_team.group_sale_salesman"/>
-            </xpath>
+            </field>
         </field>
     </record>
 

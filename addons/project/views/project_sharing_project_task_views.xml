@@ -240,9 +240,9 @@
                                 <tree editable="bottom" decoration-muted="state in ['1_done','1_canceled']">
                                     <field name="project_id" column_invisible="True"/>
                                     <field name="display_in_project" column_invisible="True"/>
-                                    <field name="state" column_invisible="True"/>
                                     <field name="sequence" widget="handle"/>
-                                    <field name="priority" widget="priority" optional="show" nolabel="1" width="20px"/>
+                                    <field name="id" optional="hide"/>
+                                    <field name="priority" widget="priority" nolabel="1" width="20px"/>
                                     <field name="state" widget="project_task_state_selection" nolabel="1" width="20px"/>
                                     <field name="subtask_count" column_invisible="1"/>
                                     <field name="closed_subtask_count" column_invisible="1"/>
@@ -278,7 +278,8 @@
                                 <tree editable="bottom" decoration-muted="state in ['1_done','1_canceled']">
                                     <field name="project_id" column_invisible="True"/>
                                     <field name="sequence" widget="handle"/>
-                                    <field name="priority" widget="priority" optional="show" nolabel="1" width="20px" readonly="1"/>
+                                    <field name="id" optional="hide"/>
+                                    <field name="priority" widget="priority" nolabel="1" width="20px" readonly="1"/>
                                     <field name="state" widget="project_task_state_selection" nolabel="1" width="20px" readonly="1"/>
                                     <field name="subtask_count" column_invisible="1"/>
                                     <field name="closed_subtask_count" column_invisible="1"/>
