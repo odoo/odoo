@@ -69,6 +69,10 @@ class SaleOrderLine(models.Model):
             ('line_note', "Note"),
         ],
         default=False)
+    is_configurable_product = fields.Boolean(
+        string="Is the product configurable?",
+        related='product_template_id.has_configurable_attributes',
+        depends=['product_id'])
     is_downpayment = fields.Boolean(
         string="Is a down payment",
         help="Down payments are made when creating invoices from a sales order."
@@ -95,6 +99,9 @@ class SaleOrderLine(models.Model):
         domain=[('sale_ok', '=', True)])
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id', depends=['product_id'])
 
+    product_template_attribute_value_ids = fields.Many2many(
+        related='product_id.product_template_attribute_value_ids',
+        depends=['product_id'])
     product_custom_attribute_value_ids = fields.One2many(
         comodel_name='product.attribute.custom.value', inverse_name='sale_order_line_id',
         string="Custom Values",

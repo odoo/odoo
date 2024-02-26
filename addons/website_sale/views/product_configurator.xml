@@ -2,7 +2,7 @@
 <odoo>
     <template id="optional_products_modal" name="Optional Products">
         <main class="modal-body">
-            <t t-call="website_sale_product_configurator.configure_optional_products" />
+            <t t-call="website_sale.configure_optional_products" />
         </main>
     </template>
 
@@ -91,7 +91,7 @@
                     </div>
                 </td>
                 <td class="text-center td-qty">
-                    <t t-call="website_sale_product_configurator.product_quantity_config"/>
+                    <t t-call="website_sale.product_quantity_config"/>
                 </td>
                 <td class="text-center td-price" name="price">
                     <div t-attf-class="text-danger oe_default_price oe_striked_price {{'' if combination_info['has_discounted_price'] else 'd-none'}}"
@@ -116,7 +116,7 @@
             </tr>
             <t t-if="product.optional_product_ids and mode != 'edit'">
                 <tr class="o_select_options"><td colspan="4"><h4>Available Options:</h4></td></tr>
-                <t t-call="website_sale_product_configurator.optional_product_items">
+                <t t-call="website_sale.optional_product_items">
                     <t t-set="parent_combination" t-value="combination"/>
                 </t>
             </t>
@@ -148,7 +148,7 @@
                         <t t-call="website_sale.variants"/>
                     </td>
                     <td class="text-center td-qty d-none">
-                        <t t-call='website_sale_product_configurator.product_quantity_config' />
+                        <t t-call='website_sale.product_quantity_config' />
                     </td>
                     <td class="text-center td-price">
                         <div t-attf-class="text-danger oe_default_price oe_optional oe_striked_price {{'' if combination_info['has_discounted_price'] else 'd-none'}}"

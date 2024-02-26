@@ -2,7 +2,7 @@
 
 import publicWidget from "@web/legacy/js/public/public_widget";
 import wSaleUtils from "@website_sale/js/website_sale_utils";
-import { OptionalProductsModal } from "@website_sale_product_configurator/js/sale_product_configurator_modal";
+import { OptionalProductsModal } from "@website_sale/js/sale_product_configurator_modal";
 import "@website_sale/js/website_sale";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";

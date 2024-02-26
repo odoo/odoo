@@ -4,8 +4,6 @@ import { patch } from "@web/core/utils/patch";
 import { SaleOrderLineProductField } from '@sale/js/sale_product_field';
 import { ProductMatrixDialog } from "@product_matrix/js/product_matrix_dialog";
 import { useService } from "@web/core/utils/hooks";
-import "@sale_product_configurator/js/sale_product_field";
-
 
 patch(SaleOrderLineProductField.prototype, {
 

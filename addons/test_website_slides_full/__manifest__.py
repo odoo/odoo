@@ -10,7 +10,6 @@ It will install the e-learning, survey and e-commerce apps and make a complete
 certification flow including purchase, certification, failure and success.
 """,
     'depends': [
-        'website_sale_product_configurator',
         'website_sale_slides',
         'website_slides_forum',
         'website_slides_survey',

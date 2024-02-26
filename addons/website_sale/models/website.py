@@ -50,6 +50,7 @@ class Website(models.Model):
         selection=[
             ('stay', "Stay on Product Page"),
             ('go_to_cart', "Go to cart"),
+            ('force_dialog', "Let the user decide (dialog)"),
         ],
         default='stay',
     )

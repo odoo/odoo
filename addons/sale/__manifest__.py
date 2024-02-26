@@ -51,6 +51,7 @@ This module contains all the common features of Sales Management and eCommerce.
         'views/payment_views.xml',
         'views/product_document_views.xml',
         'views/product_packaging_views.xml',
+        'views/product_template_views.xml',
         'views/product_views.xml',
         'views/res_partner_views.xml',
         'views/sale_order_line_views.xml',
@@ -67,6 +68,11 @@ This module contains all the common features of Sales Management and eCommerce.
     'assets': {
         'web.assets_backend': [
             'sale/static/src/scss/sale_onboarding.scss',
+            'sale/static/src/js/badge_extra_price/*',
+            'sale/static/src/js/product/*',
+            'sale/static/src/js/product_configurator_dialog/*',
+            'sale/static/src/js/product_list/*',
+            'sale/static/src/js/product_template_attribute_line/*',
             'sale/static/src/js/sale_progressbar_field.js',
             'sale/static/src/js/tours/sale.js',
             'sale/static/src/js/sale_product_field.js',

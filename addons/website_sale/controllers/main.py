@@ -642,6 +642,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'keep': keep,
             'categories': ProductCategory.search([('parent_id', '=', False)]),
             'main_object': product,
+            'optional_product_ids': [
+                p.with_context(active_id=p.id) for p in product.optional_product_ids
+            ],
             'product': product,
             'view_track': view_track,
         }
