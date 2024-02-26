@@ -5,7 +5,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from unittest.mock import patch
 
-from odoo.addons.google_calendar.utils.google_calendar import GoogleCalendarService
+from odoo.addons.google_calendar.utils.google_calendar import GoogleEvent, GoogleCalendarService
 from odoo.addons.google_account.models.google_service import GoogleService
 from odoo.addons.google_calendar.models.res_users import User
 from odoo.addons.google_calendar.tests.test_sync_common import TestSyncGoogle, patch_api
@@ -842,4 +842,54 @@ class TestSyncOdoo2Google(TestSyncGoogle):
             'attendees': [{'email': 'odoobot@example.com', 'responseStatus': 'accepted'}],
             'extendedProperties': {'shared': {'%s_odoo_id' % self.env.cr.dbname: event.id}},
             'transparency': 'opaque',
+        })
+
+    @patch_api
+    @patch.object(User, '_sync_request')
+    def test_event_sync_after_pause_period(self, mock_sync_request):
+        """ Ensure that an event created during the paused synchronization period gets synchronized after resuming it. """
+        # Pause the synchronization and creates the local event.
+        self.organizer_user.google_synchronization_stopped = False
+        self.organizer_user.sudo().pause_google_synchronization()
+        record = self.env['calendar.event'].with_user(self.organizer_user).create({
+            'name': "Event",
+            'start': datetime(2023, 1, 15, 8, 0),
+            'stop': datetime(2023, 1, 15, 18, 0),
+            'partner_ids': [(4, self.organizer_user.partner_id.id), (4, self.attendee_user.partner_id.id)]
+        })
+
+        # Define mock return values for the '_sync_request' method.
+        mock_sync_request.return_value = {
+            'events': GoogleEvent([]),
+            'default_reminders': (),
+            'full_sync': False,
+        }
+
+        # With the synchronization paused, manually call the synchronization to simulate the page refresh.
+        self.organizer_user.sudo()._sync_google_calendar(self.google_service)
+        self.assertFalse(self.organizer_user.google_synchronization_stopped, "Synchronization should not be stopped, only paused.")
+        self.assertEqual(self.organizer_user._get_google_sync_status(), "sync_paused", "Synchronization must be paused since it wasn't resumed yet.")
+        self.assertTrue(record.need_sync, "Record must have its 'need_sync' variable as true for it to be synchronized when the synchronization is resumed.")
+        self.assertGoogleEventNotInserted()
+
+        # Unpause the synchronization and call the calendar synchronization. Ensure the event was inserted in Google side.
+        self.organizer_user.sudo().unpause_google_synchronization()
+        self.organizer_user.with_user(self.organizer_user).sudo()._sync_google_calendar(self.google_service)
+        self.assertGoogleEventInserted({
+            'id': False,
+            'start': {'dateTime': '2023-01-15T08:00:00+00:00', 'date': None},
+            'end': {'dateTime': '2023-01-15T18:00:00+00:00', 'date': None},
+            'summary': 'Event',
+            'description': '',
+            'location': '',
+            'visibility': 'public',
+            'guestsCanModify': True,
+            'transparency': 'opaque',
+            'reminders': {'overrides': [], 'useDefault': False},
+            'organizer': {'email': self.organizer_user.email, 'self': True},
+            'attendees': [
+                            {'email': self.attendee_user.email, 'responseStatus': 'needsAction'},
+                            {'email': self.organizer_user.email, 'responseStatus': 'accepted'}
+                         ],
+            'extendedProperties': {'shared': {'%s_odoo_id' % self.env.cr.dbname: record.id}},
         })
