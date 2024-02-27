@@ -533,7 +533,7 @@ class Survey(http.Controller):
             answer, comment = self._extract_comment_from_answers(question, post.get(str(question.id)))
             errors.update(question.validate_question(answer, comment))
             if not errors.get(question.id):
-                answer_sudo._save_lines(question, answer, comment, overwrite_existing=survey_sudo.users_can_go_back)
+                answer_sudo._save_lines(question, answer, comment, overwrite_existing=survey_sudo.users_can_go_back or question.save_as_nickname or question.save_as_email)
 
         if errors and not (answer_sudo.survey_time_limit_reached or answer_sudo.question_time_limit_reached):
             return {}, {'error': 'validation', 'fields': errors}
