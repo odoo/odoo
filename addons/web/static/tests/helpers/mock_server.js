@@ -1327,6 +1327,9 @@ export class MockServer {
         for (const group of groups) {
             const records = this.getRecords(modelName, group.__domain || []);
             let groupByValue = group[groupBy]; // always technical value here
+            if (Array.isArray(groupByValue)) {
+                groupByValue = groupByValue[1];
+            }
 
             // special case for bool values: rpc call response with capitalized strings
             if (!(groupByValue in data)) {
