@@ -160,9 +160,21 @@ const _buildImgElementCache = {};
 async function _buildImgElement(src) {
     if (!(src in _buildImgElementCache)) {
         _buildImgElementCache[src] = (async () => {
+            let text;
             if (src.split('.').pop() === 'svg') {
-                const response = await window.fetch(src);
-                const text = await response.text();
+                try {
+                    const response = await window.fetch(src);
+                    text = await response.text();
+                } catch {
+                    // In some tours, the tour finishes before the fetch is done
+                    // and when a tour is finished, the python side will ask the
+                    // browser to stop loading resources. This causes the fetch
+                    // to fail and throw an error which crashes the test even
+                    // though it completed successfully.
+                    // So return an empty SVG to ensure everything completes
+                    // correctly.
+                    text = "<svg></svg>";
+                }
                 const parser = new window.DOMParser();
                 const xmlDoc = parser.parseFromString(text, 'text/xml');
                 return xmlDoc.getElementsByTagName('svg')[0];
