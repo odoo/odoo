@@ -245,22 +245,43 @@ function applyBinaryOp(ast, context) {
 }
 
 const DICT = {
-    get(dict) {
-        return (...args) => {
-            const { key, defValue } = parseArgs(args, ["key", "defValue"]);
-            if (key in dict) {
-                return dict[key];
-            } else if (defValue) {
-                return defValue;
-            }
-            return null;
-        };
+    get(...args) {
+        const { key, defValue } = parseArgs(args, ["key", "defValue"]);
+        if (key in this) {
+            return this[key];
+        } else if (defValue) {
+            return defValue;
+        }
+        return null;
     },
 };
 
 // -----------------------------------------------------------------------------
 // Evaluate function
 // -----------------------------------------------------------------------------
+
+/**
+ * @param {Function} _class the class whose methods we want
+ * @returns {Function[]} an array containing the methods defined on the class,
+ *  including the constructor
+ */
+function methods(_class) {
+    return Object.getOwnPropertyNames(_class.prototype).map((prop) => _class.prototype[prop]);
+}
+
+const allowedFns = new Set([
+    BUILTINS.time.strftime,
+    BUILTINS.bool,
+    BUILTINS.context_today,
+    BUILTINS.datetime.datetime.now,
+    BUILTINS.datetime.datetime.combine,
+    BUILTINS.datetime.date.today,
+    ...methods(BUILTINS.relativedelta),
+    ...Object.values(BUILTINS.datetime).flatMap((obj) => methods(obj)),
+    ...Object.values(DICT),
+]);
+
+const unboundFn = Symbol("unbound function");
 
 /**
  * @param {AST} ast
@@ -280,10 +301,7 @@ export function evaluate(ast, context = {}) {
         },
     });
 
-    /**
-     * @param {AST} ast
-     */
-    function _evaluate(ast) {
+    function _innerEvaluate(ast) {
         switch (ast.type) {
             case 0 /* Number */:
             case 1 /* String */:
@@ -355,18 +373,35 @@ export function evaluate(ast, context = {}) {
             }
             case 15 /* ObjLookup */: {
                 const left = _evaluate(ast.obj);
+                let result;
                 if (dicts.has(left) || Object.isPrototypeOf.call(PY_DICT, left)) {
                     // this is a dictionary => need to apply dict methods
-                    return DICT[ast.key](left);
+                    result = DICT[ast.key];
+                } else {
+                    result = left[ast.key];
                 }
-                const result = left[ast.key];
-                if (typeof result === "function" && !isConstructor(result)) {
-                    return result.bind(left);
+                if (typeof result === "function") {
+                    if (!isConstructor(result)) {
+                        const bound = result.bind(left);
+                        bound[unboundFn] = result;
+                        return bound;
+                    }
                 }
                 return result;
             }
         }
         throw new EvaluationError(`AST of type ${ast.type} cannot be evaluated`);
+    }
+
+    /**
+     * @param {AST} ast
+     */
+    function _evaluate(ast) {
+        const val = _innerEvaluate(ast);
+        if (typeof val === "function" && !allowedFns.has(val) && !allowedFns.has(val[unboundFn])) {
+            throw new Error("Invalid Function Call");
+        }
+        return val;
     }
     return _evaluate(ast);
 }
