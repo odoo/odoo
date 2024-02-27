@@ -25,7 +25,7 @@ class FleetVehicleLogServices(models.Model):
     def _compute_amount(self):
         for log_service in self:
             if log_service.account_move_line_id:
-                log_service.amount = log_service.account_move_line_id.price_subtotal
+                log_service.amount = log_service.account_move_line_id.debit
 
     def action_open_account_move(self):
         self.ensure_one()
