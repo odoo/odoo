@@ -36,6 +36,20 @@ class WebsiteDesign(models.Model):
     # btn-border-width is not customizable via the theme option but there are themes that use it.
     # Shouldn't we delete it ?
 
+    input_padding_y = fields.Char(string='Input Padding Y', default='6px')
+    input_padding_x = fields.Char(string='Input Padding X', default='12px')
+    input_font_size = fields.Char(string='Input Font Size', default='16px')
+    input_padding_y_sm = fields.Char(string='Input Padding Y SM', default='4px')
+    input_padding_x_sm = fields.Char(string='Input Padding X SM', default='8px')
+    input_font_size_sm = fields.Char(string='Input Font Size SM', default='12px')
+    input_padding_y_lg = fields.Char(string='Input Padding Y LG', default='8px')
+    input_padding_x_lg = fields.Char(string='Input Padding X LG', default='16px')
+    input_font_size_lg = fields.Char(string='Input Font Size LG', default='20px')
+    input_border_width = fields.Char(string='Input Border Width', default='1px')
+    input_border_radius = fields.Char(string='Input Border Radius', default='6.4px')
+    input_border_radius_sm = fields.Char(string='Input Border Radius SM', default='4.8px')
+    input_border_radius_lg = fields.Char(string='Input Border Radius LG', default='9.6px')
+
     body_line_height = fields.Char(string='Body Line Height', default='1.5')
     # Logo height requires two fields because it can be computed based on the
     # base font size or forced to a specific value.
