@@ -1027,6 +1027,34 @@ class TestCompute(common.TransactionCase):
         obj.message_post(author_id=ext_partner.id, subtype_xmlid="mail.mt_comment")
         self.assertTrue(obj.active)
 
+    def test_multiple_mail_triggers(self):
+        lead_model = self.env["ir.model"]._get("base.automation.lead.test")
+        with self.assertRaises(ValidationError):
+            create_automation(self, trigger="on_message_sent", model_id=lead_model.id)
+
+        lead_thread_model = self.env["ir.model"]._get("base.automation.lead.thread.test")
+
+        create_automation(self, trigger="on_message_sent", model_id=lead_thread_model.id, _actions={
+            "state": "object_write",
+            "update_path": "active",
+            "update_boolean_value": "false"
+        })
+        create_automation(self, trigger="on_message_sent", model_id=lead_thread_model.id, _actions={
+            "state": "object_write",
+            "evaluation_type": "equation",
+            "update_path": "name",
+            "value": "record.name + '!'"
+        })
+
+        ext_partner = self.env["res.partner"].create({"name": "ext", "email": "email@server.com"})
+        internal_partner = self.env["res.users"].browse(2).partner_id
+
+        obj = self.env["base.automation.lead.thread.test"].create({"name": "test"})
+        obj.message_subscribe([ext_partner.id, internal_partner.id])
+
+        obj.message_post(author_id=internal_partner.id, message_type="comment", subtype_xmlid="mail.mt_comment")
+        self.assertFalse(obj.active)
+        self.assertEqual(obj.name, "test!")
 
 @common.tagged("post_install", "-at_install")
 class TestHttp(common.HttpCase):
