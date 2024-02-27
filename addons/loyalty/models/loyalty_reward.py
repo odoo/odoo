@@ -148,7 +148,10 @@ class LoyaltyReward(models.Model):
     @api.depends('reward_product_id', 'reward_product_tag_id', 'reward_type')
     def _compute_multi_product(self):
         for reward in self:
-            products = list(set([reward.reward_product_id.id] + reward.reward_product_tag_id.product_ids.ids))
+            products = list(set(
+                [reward.reward_product_id.id] if reward.reward_product_id else []
+                + reward.reward_product_tag_id.product_ids.ids
+            ))
             reward.multi_product = reward.reward_type == 'product' and len(products) > 1
             reward.reward_product_ids = reward.reward_type == 'product' and products or self.env['product.product']
 

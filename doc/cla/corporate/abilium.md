@@ -1,4 +1,4 @@
-Switzerland, 2023-09-25
+Switzerland, 2024-02-27
 
 Abilium GmbH agrees to the terms of the Odoo Corporate Contributor License
 Agreement v1.0.
@@ -13,3 +13,4 @@ Severin Zumbrunn severin.zumbrunn@abilium.com  https://github.com/szumbrunn
 List of contributors:
 
 Severin Zumbrunn sz@tune-x.ch https://github.com/szumbrunn
+Leyla Karahan leyla.karahan@wiss-edu.ch https://github.com/LeyKara
