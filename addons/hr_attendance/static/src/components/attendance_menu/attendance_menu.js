@@ -9,6 +9,7 @@ import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { useDebounced } from "@web/core/utils/timing";
+import { isIosApp } from "@web/core/browser/feature_detection";
 const { DateTime } = luxon;
 
 export class ActivityMenu extends Component {
@@ -51,7 +52,7 @@ export class ActivityMenu extends Component {
     }
 
     async signInOut() {
-        if(navigator.geolocation){
+        if (!isIosApp()) { // iOS app lacks permissions to call `getCurrentPosition`
             navigator.geolocation.getCurrentPosition(
                 async ({coords: {latitude, longitude}}) => {
                     await rpc("/hr_attendance/systray_check_in_out", {
@@ -65,8 +66,7 @@ export class ActivityMenu extends Component {
                     await this.searchReadEmployee()
                 }
             )
-        }
-        else{
+        } else {
             await rpc("/hr_attendance/systray_check_in_out")
             await this.searchReadEmployee()
         }
