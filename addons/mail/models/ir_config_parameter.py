@@ -19,9 +19,13 @@ class IrConfigParameter(models.Model):
         iteration. For each iteration an SMTP server is opened and closed. Used
         in 'send' (useful in conjunction with auto_commit=True in order to avoid
         repeating batches in case of failure). 1000 by default;
+      * 'mail.mail_force_send_limit': used in both MailThread._notify_thread_by_email()
+        and MailComposer._action_send_mail_mass_mail() to force the cron queue
+        usage and avoid force sending too much emails in a given transaction.
+        100 by default;
       * 'mail.batch_size': used in MailComposer._action_send_mail_mass_mail()
-        to generate batch of MailMail based on res_ids. 500 by default
-        (see MailComposer._batch_size);
+        and in MailThread._notify_thread_by_email() to generate batch of
+        MailMail based on res_ids or recipients. 500 by default;
 
     Mail Gateway
       * 'mail.gateway.loop.minutes' and 'mail.gateway.loop.threshold': block
