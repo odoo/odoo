@@ -2155,7 +2155,7 @@ class IrModelData(models.Model):
                     for module, name, model, res_id, create_date, write_date in result:
                         # small optimisation: during install a lot of xmlid are created/updated.
                         # Instead of clearing the cache, set the correct value in the cache to avoid a bunch of query
-                        self._xmlid_lookup.cache.add_value(self, f"{module}.{name}", cache_value=(model, res_id))
+                        self._xmlid_lookup.__cache__.add_value(self, f"{module}.{name}", cache_value=(model, res_id))
                         if create_date != write_date:
                             # something was updated, notify other workers
                             # it is possible that create_date and write_date
