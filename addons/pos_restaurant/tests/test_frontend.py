@@ -2,40 +2,18 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import odoo.tests
-from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.point_of_sale.tests.common_setup_methods import setup_pos_combo_items
 from odoo.addons.point_of_sale.tests.common import archive_products
-from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.addons.base.tests.common import HttpCaseWithUserDemo
+from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
 
 
 @odoo.tests.tagged('post_install', '-at_install')
-class TestFrontend(AccountTestInvoicingCommon, HttpCaseWithUserDemo):
-
-    def _get_url(self):
-        return f"/pos/ui?config_id={self.pos_config.id}"
-
-    def start_pos_tour(self, tour_name, login="pos_user", **kwargs):
-        self.start_tour(self._get_url(), tour_name, login=login, **kwargs)
+class TestFrontend(TestPointOfSaleHttpCommon):
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.user_demo.groups_id += cls.env.ref('point_of_sale.group_pos_manager') + cls.env.ref('account.group_account_invoice')
-
-        user_admin = cls.env.ref('base.user_admin')
-        (cls.user_demo + user_admin).write({
-            'company_id': cls.env.company.id,
-            'company_ids': [(4, cls.env.company.id)],
-        })
-        cls.env = cls.env(user=user_admin)
         archive_products(cls.env)
-        account_obj = cls.env['account.account']
-
-        account_receivable = account_obj.create({'code': 'X1012',
-                                                 'name': 'Account Receivable - Test',
-                                                 'account_type': 'asset_receivable',
-                                                 'reconcile': True})
 
         drinks_category = cls.env['pos.category'].create({'name': 'Drinks'})
 
@@ -47,27 +25,18 @@ class TestFrontend(AccountTestInvoicingCommon, HttpCaseWithUserDemo):
         })
 
         main_company = cls.env.company
-
-        cls.env['pos.payment.method'].create({
-            'name': 'Bank',
-            'journal_id': cls.company_data['default_journal_bank'].id,
-            'receivable_account_id': cls.company_data['default_account_receivable'].id,
-            'company_id': cls.env.company.id,
-        })
-        second_cash_journal = cls.env['account.journal'].create({
+        test_sale_journal_2 = cls.env['account.journal'].create({
+            'name': 'Sales Journal - Test2',
+            'code': 'TSJ2',
+            'type': 'sale',
+            'company_id': main_company.id
+            })
+        cash_journal_2 = cls.env['account.journal'].create({
             'name': 'Cash 2',
             'type': 'cash',
-            'company_id': main_company.id
+            'company_id': main_company.id,
         })
-
-        cls.env['pos.payment.method'].create({
-            'name': 'Cash 2',
-            'split_transactions': False,
-            'receivable_account_id': account_receivable.id,
-            'journal_id': second_cash_journal.id,
-        })
-
-        pos_config = cls.env['pos.config'].create({
+        cls.pos_config = cls.env['pos.config'].create({
             'name': 'Bar Prout',
             'module_pos_restaurant': True,
             'iface_splitbill': True,
@@ -77,89 +46,76 @@ class TestFrontend(AccountTestInvoicingCommon, HttpCaseWithUserDemo):
             'printer_ids': [(4, printer.id)],
             'iface_tipproduct': False,
             'company_id': cls.env.company.id,
+            'journal_id': test_sale_journal_2.id,
+            'invoice_journal_id': test_sale_journal_2.id,
+            'payment_method_ids': [
+                (4, cls.bank_payment_method.id),
+                (0, 0, {
+                    'name': 'Cash',
+                    'split_transactions': False,
+                    'receivable_account_id': cls.account_receivable.id,
+                    'journal_id': cash_journal_2.id,
+                })
+            ],
         })
-        pos_config.floor_ids.unlink()
+        cls.main_pos_config = cls.pos_config
+
+        cls.pos_config.floor_ids.unlink()
 
         main_floor = cls.env['restaurant.floor'].create({
             'name': 'Main Floor',
-            'pos_config_ids': [(4, pos_config.id)],
+            'pos_config_ids': [(4, cls.pos_config.id)],
+        })
+        second_floor = cls.env['restaurant.floor'].create({
+            'name': 'Second Floor',
+            'pos_config_ids': [(4, cls.pos_config.id)],
         })
 
-        cls.main_floor_table_5 = cls.env['restaurant.table'].create({
+        cls.main_floor_table_5 = cls.env['restaurant.table'].create([{
             'name': '5',
             'floor_id': main_floor.id,
             'seats': 4,
             'position_h': 100,
             'position_v': 100,
-        })
-        cls.env['restaurant.table'].create({
+        }])
+        cls.env['restaurant.table'].create([{
             'name': '4',
             'floor_id': main_floor.id,
             'seats': 4,
             'shape': 'square',
             'position_h': 150,
             'position_v': 100,
-        })
-        cls.env['restaurant.table'].create({
+        },
+        {
             'name': '2',
             'floor_id': main_floor.id,
             'seats': 4,
             'position_h': 250,
             'position_v': 100,
-        })
+        },
+        {
 
-        second_floor = cls.env['restaurant.floor'].create({
-            'name': 'Second Floor',
-            'pos_config_ids': [(4, pos_config.id)],
-        })
-
-        cls.env['restaurant.table'].create({
             'name': '1',
             'floor_id': second_floor.id,
             'seats': 4,
             'shape': 'square',
             'position_h': 100,
             'position_v': 150,
-        })
-        cls.env['restaurant.table'].create({
+        },
+        {
             'name': '3',
             'floor_id': second_floor.id,
             'seats': 4,
             'position_h': 100,
             'position_v': 250,
-        })
+        }])
 
         cls.env['ir.property']._set_default(
             'property_account_receivable_id',
             'res.partner',
-            account_receivable,
+            cls.account_receivable,
             main_company,
         )
-
-        test_sale_journal = cls.env['account.journal'].create({
-            'name': 'Sales Journal - Test',
-            'code': 'TSJ',
-            'type': 'sale',
-            'company_id': main_company.id
-            })
-
-        cash_journal = cls.env['account.journal'].create({
-            'name': 'Cash Test',
-            'code': 'TCJ',
-            'type': 'cash',
-            'company_id': main_company.id
-            })
-
-        pos_config.write({
-            'journal_id': test_sale_journal.id,
-            'invoice_journal_id': test_sale_journal.id,
-            'payment_method_ids': [(0, 0, {
-                'name': 'Cash',
-                'split_transactions': False,
-                'receivable_account_id': account_receivable.id,
-                'journal_id': cash_journal.id,
-            })],
-        })
 
         cls.env['product.product'].create({
             'available_in_pos': True,
@@ -241,37 +197,26 @@ class TestFrontend(AccountTestInvoicingCommon, HttpCaseWithUserDemo):
         })
 
         pricelist = cls.env['product.pricelist'].create({'name': 'Restaurant Pricelist'})
-        pos_config.write({'pricelist_id': pricelist.id})
-
-        cls.pos_config = pos_config
-
-        cls.pos_admin = mail_new_test_user(
-            cls.env,
-            groups="base.group_user,point_of_sale.group_pos_manager",
-            email="pos_admin@test.com",
-            login="pos_admin",
-            name="A powerful PoS man!",
-            tz="Europe/Brussels",
-        )
+        cls.pos_config.write({'pricelist_id': pricelist.id})
 
     def test_01_pos_restaurant(self):
 
-        self.pos_config.with_user(self.pos_admin).open_ui()
+        self.pos_config.with_user(self.pos_user).open_ui()
 
-        self.start_pos_tour('pos_restaurant_sync', login="pos_admin")
+        self.start_pos_tour('pos_restaurant_sync')
 
         self.assertEqual(1, self.env['pos.order'].search_count([('amount_total', '=', 4.4), ('state', '=', 'draft')]))
         self.assertEqual(1, self.env['pos.order'].search_count([('amount_total', '=', 4.4), ('state', '=', 'paid')]))
 
-        self.start_pos_tour('pos_restaurant_sync_second_login', login="pos_admin")
+        self.start_pos_tour('pos_restaurant_sync_second_login')
 
         self.assertEqual(0, self.env['pos.order'].search_count([('amount_total', '=', 4.4), ('state', '=', 'draft')]))
         self.assertEqual(1, self.env['pos.order'].search_count([('amount_total', '=', 2.2), ('state', '=', 'draft')]))
         self.assertEqual(2, self.env['pos.order'].search_count([('amount_total', '=', 4.4), ('state', '=', 'paid')]))
 
     def test_02_others(self):
-        self.pos_config.with_user(self.pos_admin).open_ui()
-        self.start_pos_tour('SplitBillScreenTour', login="pos_admin")
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('SplitBillScreenTour')
         self.start_pos_tour('FloorScreenTour', login="pos_admin")
 
     def test_02_others_bis(self):
@@ -279,13 +224,13 @@ class TestFrontend(AccountTestInvoicingCommon, HttpCaseWithUserDemo):
         self.start_pos_tour('ControlButtonsTour', login="pos_admin")
 
     def test_04_ticket_screen(self):
-        self.pos_config.with_user(self.pos_admin).open_ui()
-        self.start_pos_tour('PosResTicketScreenTour', login="pos_admin")
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('PosResTicketScreenTour')
 
     def test_05_tip_screen(self):
         self.pos_config.write({'set_tip_after_payment': True, 'iface_tipproduct': True, 'tip_product_id': self.env.ref('point_of_sale.product_product_tip')})
-        self.pos_config.with_user(self.pos_admin).open_ui()
-        self.start_pos_tour('PosResTipScreenTour', login="pos_admin")
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('PosResTipScreenTour')
 
         order1 = self.env['pos.order'].search([('pos_reference', 'ilike', '%-0001')], limit=1, order='id desc')
         order2 = self.env['pos.order'].search([('pos_reference', 'ilike', '%-0002')], limit=1, order='id desc')
@@ -300,36 +245,36 @@ class TestFrontend(AccountTestInvoicingCommon, HttpCaseWithUserDemo):
         self.assertTrue(order5.is_tipped and order5.tip_amount == 0.00)
 
     def test_06_split_bill_screen(self):
-        self.pos_config.with_user(self.pos_admin).open_ui()
-        self.start_pos_tour('SplitBillScreenTour2', login="pos_admin")
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('SplitBillScreenTour2')
 
     def test_07_split_bill_screen(self):
-        self.pos_config.with_user(self.pos_admin).open_ui()
-        self.start_pos_tour('SplitBillScreenTour3', login="pos_admin")
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('SplitBillScreenTour3')
 
     def test_08_refund_stay_current_table(self):
-        self.pos_config.with_user(self.pos_admin).open_ui()
-        self.start_pos_tour('RefundStayCurrentTableTour', login="pos_admin")
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('RefundStayCurrentTableTour')
 
     def test_09_combo_split_bill(self):
         setup_pos_combo_items(self)
         self.office_combo.write({'lst_price': 40})
-        self.pos_config.with_user(self.pos_admin).open_ui()
-        self.start_tour(f"/pos/ui?config_id={self.pos_config.id}", 'SplitBillScreenTour4PosCombo', login="pos_admin")
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('SplitBillScreenTour4PosCombo')
 
     def test_10_save_last_preparation_changes(self):
         self.pos_config.write({'printer_ids': False})
-        self.pos_config.with_user(self.pos_admin).open_ui()
-        self.start_pos_tour('SaveLastPreparationChangesTour', login="pos_admin")
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('SaveLastPreparationChangesTour')
         self.assertTrue(self.pos_config.current_session_id.order_ids.last_order_preparation_change, "There should be a last order preparation change")
         self.assertTrue("Coca" in self.pos_config.current_session_id.order_ids.last_order_preparation_change, "The last order preparation change should contain 'Coca'")
 
     def test_11_bill_screen_qrcode(self):
         self.pos_config.write({'printer_ids': False})
         self.pos_config.company_id.point_of_sale_use_ticket_qr_code = True
-        self.pos_config.with_user(self.pos_admin).open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'BillScreenTour', login="pos_admin")
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('BillScreenTour')
 
     def test_12_merge_table(self):
-        self.pos_config.with_user(self.pos_admin).open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'MergeTableTour', login="pos_admin")
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('MergeTableTour', login="pos_admin")
