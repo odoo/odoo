@@ -395,7 +395,7 @@ class PosConfig(models.Model):
         for image in images:
             encoded_images.append({
                 'id': image.id,
-                'data': image.datas.decode('utf-8'),
+                'data': image.sudo().datas.decode('utf-8'),
             })
         return encoded_images
 
