@@ -1219,7 +1219,6 @@ class SaleOrderLine(models.Model):
                 'quantity': self.product_uom_qty,
                 'price': self.price_unit,
                 'readOnly': self.order_id._is_readonly() or (self.product_id.sale_line_warn == "block"),
-                'warning': self.product_id.sale_line_warn_msg,
             }
             if self.product_id.sale_line_warn_msg:
                 res['warning'] = self.product_id.sale_line_warn_msg
