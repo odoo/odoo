@@ -148,7 +148,8 @@ export function getImageSrcFromRecordInfo(record, model, field, idOrIds, placeho
         return placeholder;
     } else {
         // Else: fetches the image related to the given id.
-        return imageUrl(model, id, field, { unique: record.data.write_date });
+        const unique = isCurrentRecord && record.data.write_date;
+        return imageUrl(model, id, field, { unique });
     }
 }
 
