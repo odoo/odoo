@@ -1001,12 +1001,6 @@ class SaleOrderLine(models.Model):
                     precision_digits=precision
                 ) != 0
             )._update_line_quantity(values)
-            if len(self) == 1 and float_compare(
-                self.product_uom_qty,
-                values['product_uom_qty'],
-                precision_digits=precision
-            ) == 0:
-                values.pop('product_uom_qty')
 
         # Prevent writing on a locked SO.
         protected_fields = self._get_protected_fields()
