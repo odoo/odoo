@@ -925,9 +925,14 @@ class Module(models.Model):
 
     def _update_category(self, category='Uncategorized'):
         current_category = self.category_id
+        seen = set()
         current_category_path = []
         while current_category:
             current_category_path.insert(0, current_category.name)
+            seen.add(current_category.id)
+            if current_category.parent_id.id in seen:
+                current_category.parent_id = False
+                _logger.warning('category %r ancestry loop has been detected and fixed', current_category)
             current_category = current_category.parent_id
 
         categs = category.split('/')
