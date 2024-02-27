@@ -23,6 +23,24 @@
             </field>
         </record>
 
+        <record id="hr_timesheet_line_portal_tree" model="ir.ui.view">
+            <field name="name">portal.hr_timesheet.account.analytic.line.tree</field>
+            <field name="model">account.analytic.line</field>
+            <field name="inherit_id" ref="hr_timesheet_line_tree"/>
+            <field name="mode">primary</field>
+            <field name="priority">10</field>
+            <field name="arch" type="xml">
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="edit">0</attribute>
+                    <attribute name="create">0</attribute>
+                    <attribute name="delete">0</attribute>
+                </xpath>
+                <xpath expr="//field[@name='task_id']" position="attributes">
+                    <attribute name="options">{'no_create_edit': True, 'no_open': True}</attribute>
+                </xpath>
+            </field>
+        </record>
+
         <record id="timesheet_view_tree_user" model="ir.ui.view">
             <field name="name">account.analytic.line.view.tree.with.user</field>
             <field name="model">account.analytic.line</field>
@@ -194,6 +212,31 @@
             </field>
         </record>
 
+        <record id="timesheet_view_form_portal_user" model="ir.ui.view">
+            <field name="name">account.analytic.line.form</field>
+            <field name="model">account.analytic.line</field>
+            <field name="inherit_id" ref="hr_timesheet.timesheet_view_form_user"/>
+            <field name="mode">primary</field>
+            <field name="priority">10</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='employee_id']" position="attributes">
+                    <attribute name="required">1</attribute>
+                    <attribute name="widget">many2one_avatar_employee</attribute>
+                    <attribute name="context">{'active_test': True}</attribute>
+                    <attribute name="options">{'no_open': True}</attribute>
+                    <attribute name="readonly">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='project_id']" position="attributes">
+                    <attribute name="options">{'no_create_edit': True, 'no_open': True}</attribute>
+                    <attribute name="readonly">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='task_id']" position="attributes">
+                    <attribute name="options">{'no_create_edit': True, 'no_open': True}</attribute>
+                    <attribute name="readonly">1</attribute>
+                </xpath>
+            </field>
+        </record>
+
         <record id="hr_timesheet_line_my_timesheet_search" model="ir.ui.view">
             <field name="name">view.search.my.timesheet.menu</field>
             <field name="model">account.analytic.line</field>
@@ -261,6 +304,19 @@
             </field>
         </record>
 
+        <record id="view_kanban_account_analytic_line_portal_user" model="ir.ui.view">
+            <field name="name">portal.account.analytic.line.kanban</field>
+            <field name="model">account.analytic.line</field>
+            <field name="inherit_id" ref="hr_timesheet.view_kanban_account_analytic_line"/>
+            <field name="mode">primary</field>
+            <field name="priority">10</field>
+            <field name="arch" type="xml">
+                <xpath expr="//img[hasclass('o_image_40_cover')]" position="replace"/>
+                <xpath expr="//div[hasclass('o_kanban_record_headings')]" position="attributes">
+                    <attribute name="class">o_kanban_record_headings pe-2</attribute>
+                </xpath>
+            </field>
+        </record>
         <!--
             Actions
         -->
