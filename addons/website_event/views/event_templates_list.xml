@@ -328,7 +328,7 @@
                     <!-- Body -->
                     <main t-attf-class="card-body position-relative d-flex flex-column justify-content-between gap-2 #{opt_events_list_columns and 'col-12 py-3' or 'col-8 col-lg-9 px-4'} #{not opt_events_list_cards and opt_events_list_columns and 'px-0'} #{not opt_events_list_cards and not opt_events_list_columns and 'py-0'}">
                         <div>
-                            <div class="d-flex flex-wrap gap-2">
+                            <div class="d-flex flex-wrap gap-1 small">
                                 <t t-foreach="event.tag_ids.filtered(lambda tag: tag.category_id.website_id == website or not tag.category_id.website_id)" t-as="tag">
                                     <span t-if="tag.color"
                                         t-attf-class="badge mt-3 mt-sm-0 rounded-pill px-2 p-1 #{'o_tag_color_%s' % tag.color if tag.color else 'text-bg-light'}">
