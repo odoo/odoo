@@ -231,8 +231,8 @@ export class MockServer {
     /** @type {Record<string, [RegExp, string[], RouteCallback]>} */
     routes = {};
     started = false;
-    /** @type {Record<string, OrmCallback[]>} */
-    ormListeners = { "*": [] };
+    /** @type {[string, OrmCallback][]>} */
+    ormListeners = [];
 
     // WebSocket connections
     /** @type {import("@odoo/hoot-mock").ServerWebSocket[]} */
@@ -394,6 +394,20 @@ export class MockServer {
         }
 
         return this;
+    }
+
+    /**
+     * @param {string} method
+     */
+    findOrmListeners(method) {
+        /** @type {OrmCallback[]} */
+        const callbacks = [];
+        for (const [listenerMethod, callback] of this.ormListeners) {
+            if (listenerMethod === method || listenerMethod === "*") {
+                callbacks.unshift(callback);
+            }
+        }
+        return callbacks;
     }
 
     /**
@@ -716,10 +730,7 @@ export class MockServer {
         } else if (!method) {
             method = "*";
         }
-        if (!this.ormListeners[method]) {
-            this.ormListeners[method] = [];
-        }
-        this.ormListeners[method].push(callback);
+        this.ormListeners.push([method, callback]);
     }
 
     /**
@@ -847,7 +858,7 @@ export class MockServer {
 
         let result;
         // Check own routes
-        for (const fn of [...(this.ormListeners[params.method] || []), ...this.ormListeners["*"]]) {
+        for (const fn of this.findOrmListeners(params.method)) {
             try {
                 result ??= await fn.call(this, route, params);
             } catch (error) {
