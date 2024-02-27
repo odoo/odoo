@@ -654,72 +654,31 @@
         <t t-foreach="company_ids" t-as="company" t-translation="off">
             <t t-set="forced_vat" t-value="False"/>
             <t t-set="font" t-value="company.font or 'Lato'" />
-            <t t-set="primary" t-value="company.primary_color or 'black'" />
-            <t t-set="secondary" t-value="company.secondary_color or 'black'" />
+            <t t-set="primary" t-value="company.primary_color or '#212529'" />
+            <t t-set="secondary" t-value="company.secondary_color or '#212529'" />
             <t t-set="layout" t-value="company.external_report_layout_id.key or 'web.external_layout_standard'" />
                 .o_company_<t t-esc='company.id'/>_layout {
-                font-family: <t t-esc="font" />;
-            <t t-if="layout == 'web.external_layout_striped'">
-                &amp;.o_report_layout_striped {
-                   strong {
-                        color: <t t-esc='secondary'/>;
-                    }
+                    font-family: <t t-esc="font" />;
+
                     h2 {
                         color: <t t-esc='primary'/>;
                     }
-                    thead tr th {
-                        color: <t t-esc='secondary'/>;
-                    }
-                }
-                .row > div > table,
-                div#total table, .totals_taxes_company_currency table {
-                    &amp;:first-child,
-                    &amp;:last-child,
-                    &amp;.o_subtotal,
-                    &amp;.o_total {
-                        strong {
-                            color: <t t-esc='primary'/>;
-                        }
-                    }
-                }
-            </t>
-            <t t-elif="layout == 'web.external_layout_boxed'">
-                &amp;.o_report_layout_boxed {
-                    #total strong {
-                        color: <t t-esc='primary'/>;
-                    }
-                    .totals_taxes_company_currency strong{
-                        color: <t t-esc='primary'/>;
-                    }
+
                     #informations strong {
                         color: <t t-esc='secondary'/>;
                     }
-                    h2 span {
+
+                    .o_total strong {
                         color: <t t-esc='primary'/>;
                     }
-                    table {
-                        thead {
-                            tr th {
-                                color: <t t-esc='secondary'/>;
-                            }
-                        }
-                        tbody tr td {
-                            &amp;.o_line_section td {
-                                    background-color: rgba(<t t-esc='primary'/>, 0.7);
-                                }
-                            &amp;.is-subtotal,
-                                td.o_price_total {
-                                    background-color: rgba(<t t-esc='secondary'/>, 0.1);
-                                }
-                        }
+
+                    .o_company_tagline {
+                        color: <t t-esc='primary'/>
                     }
-                }
-                .row > div > table,
-                div#total table, .totals_taxes_company_currency table {
-                    tr {
-                        &amp;.o_total td {
-                            background-color: rgba(<t t-esc='primary'/>, 0.9);
-                        }
+            <t t-if="layout == 'web.external_layout_boxed'">
+                &amp;.o_report_layout_boxed {
+                    .o_totals_taxes_company_currency .o_total td {
+                        background-color: rgba(<t t-esc='primary'/>, 0.9);
                     }
                 }
             </t>
@@ -735,49 +694,16 @@
                     }
                 }
                 &amp;.o_report_layout_bold {
-                    h1, h2, h3 {
-                        color: <t t-esc='primary'/>;
-                    }
-                    strong {
-                        color: <t t-esc='secondary'/>;
-                    }
                     table {
                        thead {
-                           color: <t t-esc='secondary'/>;
-                           tr th {
-                                border-top: 3px solid <t t-esc='secondary'/> !important;
+                           th {
+                                border-top: 3px solid <t t-esc='secondary'/>;
                             }
                         }
                         tbody {
                             tr:last-child td {
                                 border-bottom: 3px solid <t t-esc='secondary'/>;
                             }
-                        }
-                    }
-                    #total, .totals_taxes_company_currency {
-                        strong {
-                            color: <t t-esc='secondary'/>;
-                        }
-                    }
-                }
-            </t>
-            <t t-elif="layout == 'web.external_layout_standard'">
-                &amp;.o_report_layout_standard {
-                    h2 {
-                        color: <t t-esc='primary'/>;
-                    }
-                    #informations strong {
-                        color: <t t-esc='secondary'/>;
-                    }
-                    #total strong{
-                        color: <t t-esc='primary'/>;
-                    }
-                    .totals_taxes_company_currency strong{
-                        color: <t t-esc='primary'/>;
-                    }
-                    table {
-                        thead {
-                            color: <t t-esc='secondary'/>;
                         }
                     }
                 }
