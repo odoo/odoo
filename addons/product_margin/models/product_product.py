@@ -5,6 +5,7 @@ import itertools
 import time
 
 from odoo import api, fields, models
+from odoo.tools.sql import SQL
 
 
 class ProductProduct(models.Model):
@@ -47,20 +48,28 @@ class ProductProduct(models.Model):
     expected_margin_rate = fields.Float(compute='_compute_product_margin_fields_values', string='Expected Margin (%)',
         help="Expected margin * 100 / Expected Sale")
 
+    _SPECIAL_SUM_AGGREGATES = {f"{name}:sum" for name in (
+        'turnover', 'sale_avg_price', 'sale_num_invoiced', 'purchase_num_invoiced',
+        'sales_gap', 'purchase_gap', 'total_cost', 'sale_expected', 'normal_cost',
+        'total_margin', 'expected_margin', 'total_margin_rate', 'expected_margin_rate',
+    )}
+
+    def _read_group_select(self, aggregate_spec, query):
+        # the purpose of this override is to flag the aggregates above as such:
+        # field._description_aggregator() should simply not fail
+        if aggregate_spec in self._SPECIAL_SUM_AGGREGATES:
+            return SQL()
+        return super()._read_group_select(aggregate_spec, query)
+
     @api.model
     def _read_group(self, domain, groupby=(), aggregates=(), having=(), offset=0, limit=None, order=None):
         """
             Inherit _read_group to calculate the sum of the non-stored fields, as it is not automatically done anymore through the XML.
         """
-        fields_list = ['turnover', 'sale_avg_price', 'sale_purchase_price', 'sale_num_invoiced', 'purchase_num_invoiced',
-                       'sales_gap', 'purchase_gap', 'total_cost', 'sale_expected', 'normal_cost', 'total_margin',
-                       'expected_margin', 'total_margin_rate', 'expected_margin_rate']
-        SPECIAL = {f'{field_name}:sum' for field_name in fields_list} # Only sum is allowed
-
-        if SPECIAL.isdisjoint(aggregates):
+        if self._SPECIAL_SUM_AGGREGATES.isdisjoint(aggregates):
             return super()._read_group(domain, groupby, aggregates, having, offset, limit, order)
 
-        base_aggregates = [*(agg for agg in aggregates if agg not in SPECIAL), 'id:recordset']
+        base_aggregates = [*(agg for agg in aggregates if agg not in self._SPECIAL_SUM_AGGREGATES), 'id:recordset']
         base_result = super()._read_group(domain, groupby, base_aggregates, having, offset, limit, order)
 
         # Force the compute with all records
@@ -71,7 +80,7 @@ class ProductProduct(models.Model):
         result = []
         for *other, records in base_result:
             for index, spec in enumerate(itertools.chain(groupby, aggregates)):
-                if spec in SPECIAL:
+                if spec in self._SPECIAL_SUM_AGGREGATES:
                     field_name = spec.split(':')[0]
                     other.insert(index, sum(records.mapped(field_name)))
             result.append(tuple(other))
