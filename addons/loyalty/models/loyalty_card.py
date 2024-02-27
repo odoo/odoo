@@ -52,7 +52,7 @@ class LoyaltyCard(models.Model):
     @api.depends('points', 'point_name')
     def _compute_points_display(self):
         for card in self:
-            card.points_display = self._format_points(card.points)
+            card.points_display = card._format_points(card.points)
 
     def _format_points(self, points):
         self.ensure_one()
