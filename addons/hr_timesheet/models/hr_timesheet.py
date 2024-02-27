@@ -85,9 +85,14 @@ class AccountAnalyticLine(models.Model):
         return False
 
     def _compute_readonly_timesheet(self):
-        readonly_timesheets = self.filtered(lambda timesheet: timesheet._is_readonly())
-        readonly_timesheets.readonly_timesheet = True
-        (self - readonly_timesheets).readonly_timesheet = False
+        # Since the mrp_module gives write access to portal user on timesheet, we check that the user is an internal one before giving the write access.
+        # It is not supposed to be needed, since portal user are not supposed to have access to the views using this field, but better be safe than sorry
+        if not self.env.user.has_group('base.group_user'):
+            self.readonly_timesheet = True
+        else:
+            readonly_timesheets = self.filtered(lambda timesheet: timesheet._is_readonly())
+            readonly_timesheets.readonly_timesheet = True
+            (self - readonly_timesheets).readonly_timesheet = False
 
     def _compute_encoding_uom_id(self):
         for analytic_line in self:
