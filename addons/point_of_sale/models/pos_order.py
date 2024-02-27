@@ -953,8 +953,8 @@ class PosOrder(models.Model):
         if len(data['lines']) != len(existing_order.lines):
             return False
 
-        received_lines = sorted([(l[2]['product_id'], l[2]['qty'], l[2]['price_unit']) for l in data['lines']])
-        existing_lines = sorted([(l.product_id.id, l.qty, l.price_unit) for l in existing_order.lines])
+        received_lines = sorted([(l[2]['product_id'], l[2]['price_unit']) for l in data['lines']])
+        existing_lines = sorted([(l.product_id.id, l.price_unit) for l in existing_order.lines])
 
         if received_lines != existing_lines:
             return False
