@@ -27,7 +27,8 @@ export class DiscussCoreCommon {
             this.store.updateBusSubscription();
             this.busService.subscribe("discuss.channel/joined", async (payload) => {
                 const { channel, invited_by_user_id: invitedByUserId } = payload;
-                const thread = await this.store.Thread.getOrFetch(channel);
+                const thread = this.store.Thread.insert(channel);
+                await thread.fetchChannelInfo();
                 if (invitedByUserId && invitedByUserId !== this.store.self?.user?.id) {
                     this.notificationService.add(
                         _t("You have been invited to #%s", thread.displayName),
