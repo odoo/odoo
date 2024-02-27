@@ -25,6 +25,9 @@
             .card-header {
                 height: 200px;
             }
+            .card-footer {
+                color: color-contrast($card-bg);
+            }
         }
         .opt_events_list_rows {
             .card-header {
@@ -48,7 +51,7 @@
             border-radius: 50%;
             text-align: center;
             background-color: $o-wevent-bg-color-base;
-            color: $o-wevent-color;
+            color: $o-wevent-bg-color-base-contrast;
 
             .o_wevent_event_day {
                 @include font-size(1.125rem);
@@ -62,12 +65,6 @@
             }
             &.left{
                 left: $card-spacer-x;
-            }
-        }
-        a {
-            .card-body {
-                background-color: $o-wevent-bg-color-base !important;
-                color: $o-wevent-color;
             }
         }
     }
