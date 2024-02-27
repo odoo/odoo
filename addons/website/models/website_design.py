@@ -50,6 +50,10 @@ class WebsiteDesign(models.Model):
     input_border_radius_sm = fields.Char(string='Input Border Radius SM', default='4.8px')
     input_border_radius_lg = fields.Char(string='Input Border Radius LG', default='9.6px')
 
+    headings_line_height = fields.Char(string='Headings Line Height', default='1.2')
+    headings_margin_top = fields.Char(string='Headings Margin Top', default='0')
+    headings_margin_bottom = fields.Char(string='Headings Margin Bottom', default='0.5rem')
+
     body_line_height = fields.Char(string='Body Line Height', default='1.5')
     # Logo height requires two fields because it can be computed based on the
     # base font size or forced to a specific value.
