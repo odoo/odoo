@@ -89,6 +89,7 @@ export class ImageSelector extends FileSelector {
         this.MIN_ROW_HEIGHT = 128;
 
         this.fileMimetypes = IMAGE_MIMETYPES.join(',');
+        this.imageData = this.props.media ? weUtils.getImageData(this.props.media) : {};
     }
 
     get canLoadMore() {
@@ -145,7 +146,7 @@ export class ImageSelector extends FileSelector {
             // We might get a few more optimized image than necessary if the
             // original image has multiple optimized images but it's not a
             // big deal.
-            const originalId = this.props.media && this.props.media.dataset.originalId;
+            const originalId = this.imageData.originalId;
             if (originalId) {
                 subDomain.push(originalId);
             }
@@ -194,8 +195,8 @@ export class ImageSelector extends FileSelector {
     }
 
     isInitialMedia(attachment) {
-        if (this.props.media.dataset.originalSrc) {
-            return this.props.media.dataset.originalSrc === attachment.image_src;
+        if (this.imageData.originalSrc) {
+            return this.imageData.originalSrc === attachment.image_src;
         }
         return this.props.media.getAttribute('src') === attachment.image_src;
     }

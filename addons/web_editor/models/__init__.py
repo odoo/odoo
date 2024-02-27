@@ -13,3 +13,5 @@ from . import html_field_history_mixin
 from . import assets
 
 from . import test_models
+
+from . import image_data
