@@ -1,5 +1,6 @@
 import { EventBus, reactive } from "@odoo/owl";
 
+import { config as transitionConfig } from "@web/core/transition";
 import { session } from "@web/session";
 import { MacroedTour } from "./macroed_tour";
 import { tourState } from "./tour_state";
@@ -39,15 +40,15 @@ export class TourRunner {
             ...options
         };
         tourState.set(tourName, "currentIndex", 0);
-        tourState.set(tourName, "stepDelay", options.stepDelay);
-        tourState.set(tourName, "keepWatchBrowser", options.keepWatchBrowser);
-        tourState.set(tourName, "showPointerDuration", options.showPointerDuration);
-        tourState.set(tourName, "mode", options.mode);
+        tourState.set(tourName, "stepDelay", runOptions.stepDelay);
+        tourState.set(tourName, "keepWatchBrowser", runOptions.keepWatchBrowser);
+        tourState.set(tourName, "showPointerDuration", runOptions.showPointerDuration);
+        tourState.set(tourName, "mode", runOptions.mode);
         tourState.set(tourName, "sequence", tour.sequence);
         const pointer = this.createPointer(tourName, {
             bounce: !(options.mode === "auto" && options.keepWatchBrowser),
         });
-        options.pointer = pointer;
+        runOptions.pointer = pointer;
         tour.resetRun(runOptions)
         const willUnload = callWithUnloadCheck(() => {
             if (tour.url && tour.url !== options.startUrl && options.redirect) {
@@ -62,7 +63,7 @@ export class TourRunner {
                 this.observeShadows(tour.shadowSelectors);
             }
             pointer.start();
-            activateMacro(tour, options.mode);
+            this.activateMacro(tour, runOptions.mode);
         }
     }
 

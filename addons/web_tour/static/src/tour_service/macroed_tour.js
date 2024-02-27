@@ -288,10 +288,10 @@ export class MacroedTour {
     resetRun(params = {}) {
         Object.assign(this.options, params);
         this.#tourSteps = null;
-        this.computeSteps();
         if ("startIndex" in params) {
             this.#startIndex = params.startIndex || 0;
         }
+        this.computeSteps();
         this.mode = params.mode || this.mode || "auto";
     }
 
@@ -319,9 +319,9 @@ export class MacroedTour {
                         this.#tourTimeout = setTimeout(() => {
                             // The logged text shows the relative position of the failed step.
                             // Useful for finding the failed step.
-                            console.warn(describeFailedStepDetailed(step, tour));
+                            //console.warn(describeFailedStepDetailed(step, tour));
                             // console.error notifies the test runner that the tour failed.
-                            console.error(describeFailedStepSimple(step, tour));
+                            //console.error(describeFailedStepSimple(step, tour));
                         }, (step.timeout || 10000) + stepDelay);
                     }
                     await new Promise((resolve) => browser.setTimeout(resolve, stepDelay));
