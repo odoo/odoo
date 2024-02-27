@@ -602,6 +602,9 @@ export class Record extends DataPoint {
             }
             if (field.type === "one2many" || field.type === "many2many") {
                 const commands = value._getCommands({ withReadonly });
+                if (!this.isNew && !commands.length && !withReadonly) {
+                    continue;
+                }
                 result[fieldName] = commands;
             } else {
                 result[fieldName] = this._formatServerValue(field.type, value);
