@@ -66,6 +66,8 @@ class WebsiteDesign(models.Model):
     forced_logo_height = fields.Char(string='Forced Logo Height', default='null')
     font__size__base = fields.Char(string='Font Size Base', default='1rem')
 
+    sidebar__width = fields.Char(string='Sidebar Width', default='18.75rem')
+
     def write(self, vals):
         res = super().write(vals)
         for record in self:
