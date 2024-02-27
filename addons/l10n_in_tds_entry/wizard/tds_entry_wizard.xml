@@ -11,6 +11,7 @@
         <field name="model">tds.entry.wizard</field>
         <field name="arch" type="xml">
             <form>
+                <field name="move_id" invisible="1"/>
                 <field name="currency_id" invisible="1"/>
                 <group>
                     <group id="header_left_group">
@@ -23,7 +24,7 @@
                         <field name="journal_id"/>
                         <field name="reference"/>
                         <field name="l10n_in_pan"/>
-                        <field name="pan_type"/>
+                        <field name="company_type" string="Pan Type" invisible="not l10n_in_pan"/>
                     </group>
                 </group>
                     <footer>

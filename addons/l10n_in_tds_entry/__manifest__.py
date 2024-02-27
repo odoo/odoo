@@ -1,11 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'TDS - India',
+    'name': 'TDS Entry- India',
     'category': 'Accounting',
     'description': """Streamlines TDS entry management.""",
     'summary': """
-        Tax deducted at source - India
+        Tax deducted at source entry management - India
     """,
     'countries': ['in'],
     'version': '1.0',
@@ -15,9 +15,8 @@
     'auto_install': ['l10n_in'],
     'depends': ['l10n_in'],
     'data': [
-        'wizard/tds_entry_wizard.xml',
         'security/ir.model.access.csv',
-        'views/account_move_line_views.xml',
+        'wizard/tds_entry_wizard.xml',
         'views/account_move_views.xml',
     ],
     'assets': {

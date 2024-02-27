@@ -11,10 +11,6 @@ class AccountMove(models.Model):
 
     def _compute_payments_widget_reconciled_info(self):
         super()._compute_payments_widget_reconciled_info()
-        for move in self:
-            if move.invoice_payments_widget:
-                for reconciled_val in move.invoice_payments_widget.get('content', []):
-                    reconciled_move_id = reconciled_val.get('move_id')
-                    reconciled_move = reconciled_move_id and self.browse(reconciled_move_id) or False
-                    if reconciled_move and reconciled_move.l10n_in_is_tds:
-                        reconciled_val['l10n_in_is_tds'] = True
+        for move in self.filtered(lambda x: x.invoice_payments_widget):
+            for reconciled_val in move.invoice_payments_widget.get('content', []):
+                reconciled_val['l10n_in_is_tds'] = self.browse(reconciled_val.get('move_id', [])).l10n_in_is_tds
