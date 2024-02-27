@@ -364,11 +364,16 @@ class Web_Editor(http.Controller):
             # For original attachments: find the media that generated it.
             if attachment.res_model == 'web_editor.media':
                 media = Media.search([('id', '=', attachment.res_id)])
-            if media:
-                # The media will automatically delete its attachment.
-                media_to_remove += media
+            # Hide from the media dialog, but keep the media & attachments.
+            if kwargs.get('keep_on_website', None):
+                if media:
+                    media.hidden = True
             else:
-                attachments_to_remove += attachment
+                if media:
+                    # The media will automatically delete its attachment.
+                    media_to_remove += media
+                else:
+                    attachments_to_remove += attachment
 
         if media_to_remove:
             media_to_remove.unlink()
@@ -474,8 +479,11 @@ class Web_Editor(http.Controller):
                 'res_field': None if attachment_data.get('type') == 'url' else 'media_content'
             })
             existing_attachment = get_existing_attachment(IrAttachment, existing_attachment_data)
-            media = Media.search([('id', '=', existing_attachment.res_id)]) \
-                if existing_attachment else Media.create(attachment_data)
+            if existing_attachment:
+                media = Media.search([('id', '=', existing_attachment.res_id)])
+                media.hidden = False
+            else:
+                media = Media.create(attachment_data)
         return media
 
     def _attachment_create(self, name='', data=False, url=False, res_id=False, res_model='ir.ui.view'):

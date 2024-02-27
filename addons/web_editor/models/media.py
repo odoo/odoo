@@ -21,6 +21,7 @@ class Media(models.Model):
     media_content = fields.Binary('Media content', required=True)
     url = fields.Char('Url', index='btree_not_null', size=1024)
     public = fields.Boolean('Is public document')
+    hidden = fields.Boolean('Is hidden from media dialog', default=False)
 
     @api.model_create_multi
     def create(self, vals):

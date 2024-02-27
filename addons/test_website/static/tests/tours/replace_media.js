@@ -53,6 +53,11 @@ wTourUtils.registerWebsitePreviewTour('test_replace_media', {
         trigger: "#oe_snippets we-button[data-replace-media]",
     },
     {
+        content: "Hidden media not present",
+        trigger: ".o_select_media_dialog:not(:has(img[title='hidden.svg']))",
+        isCheck: true,
+    },
+    {
         content: "select svg",
         trigger: ".o_select_media_dialog img[title='sample.svg']",
     },

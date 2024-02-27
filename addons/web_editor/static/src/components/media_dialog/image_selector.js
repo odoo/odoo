@@ -349,4 +349,31 @@ export class ImageSelector extends FileSelector {
             console.error('CORS is misconfigured on the API server, image will be treated as non-dynamic.');
         }
     }
+
+    /**
+     * Retrieves the IDs of an original attachment and all its copies, as well
+     * as basic information about the media (res_model / res_id).
+     *
+     * @param {integer} attachmentId
+     * @param {boolean} [fetchMedia=false] - whether to fetch the media related
+     * to the original attachment.
+     * @returns {Object} attachments - ids of the source attachment and copies
+     * and basic info of the media record (if `fetchMedia === true`).
+     * @returns {Array<number>} attachments.attachmentsIds
+     * @returns {Object|undefined} attachments.originalMedia - `{res_model,
+     * res_id}`
+     */
+    async getOriginalAndCopies(attachmentId, fetchMedia = false) {
+        const idsDomain = ["|", ["original_id", "=", attachmentId], ["id", "=", attachmentId]];
+        let media, attachmentsIds;
+        if (!fetchMedia) {
+            attachmentsIds = await this.orm.search("ir.attachment", idsDomain);
+        } else {
+            const attachments = await this.orm.searchRead("ir.attachment", idsDomain, ["res_id"]);
+            attachmentsIds = attachments.map((attach) => attach.id);
+            const mediaId = attachments.find((att) => att.id === attachmentId).res_id;
+            media = (await this.orm.read("web_editor.media", [mediaId], ["res_model", "res_id"]))[0];
+        }
+        return { attachmentsIds, originalMedia: media };
+    }
 }
