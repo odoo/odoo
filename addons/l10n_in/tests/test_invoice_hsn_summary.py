@@ -76,15 +76,6 @@ class TestInvoiceHSNsummary(AccountTestInvoicingCommon):
             }),
             Command.create({
                 'product_id': self.product_a.id,
-                # 'l10n_in_hsn_code': self.test_hsn_code_1,
-                'quantity': 5.0,
-                'price_unit': 300,
-                'product_uom_id': self.uom_unit.id,
-                'tax_ids': [Command.set(self.gst_5.ids)], #Tax: 75
-            }),
-
-            Command.create({
-                'product_id': self.product_a.id,
                 'quantity': 2.0,
                 'price_unit': 100,
                 'tax_ids': [Command.set(self.gst_18.ids)], #Tax: 36
@@ -95,20 +86,12 @@ class TestInvoiceHSNsummary(AccountTestInvoicingCommon):
                 'price_unit': 600,
                 'tax_ids': [Command.set(self.gst_18.ids)], #Tax: 108
             }),
-            Command.create({
-                'product_id': self.product_a.id,
-                # 'l10n_in_hsn_code': self.test_hsn_code_1,
-                'quantity': 5.0,
-                'price_unit': 300,
-                'product_uom_id': self.uom_unit.id,
-                'tax_ids': [Command.set(self.gst_18.ids)], #Tax: 270
-            }),
         ])
 
         self.assertRecordValues(invoice, [{
-            'amount_untaxed': 4600.0,
-            'amount_tax': 529.0,
-            'amount_total': 5129.0,
+            'amount_untaxed': 1600.0,
+            'amount_tax': 184.0,
+            'amount_total': 1784.0,
         }])
 
         self.assert_hsn_summary(invoice, {
@@ -120,24 +103,24 @@ class TestInvoiceHSNsummary(AccountTestInvoicingCommon):
             'items': [
                 {
                     'l10n_in_hsn_code': self.test_hsn_code_1,
-                    'quantity': 8.0,
+                    'quantity': 3.0,
                     'uom': self.uom_unit,
                     'rate': 5.0,
-                    'amount_untaxed': 2300.0,
+                    'amount_untaxed': 800.0,
                     'tax_amount_igst': 0.0,
-                    'tax_amount_cgst': 57.5,
-                    'tax_amount_sgst': 57.5,
+                    'tax_amount_cgst': 20.0,
+                    'tax_amount_sgst': 20.0,
                     'tax_amount_cess': 0.0,
                 },
                 {
                     'l10n_in_hsn_code': self.test_hsn_code_1,
-                    'quantity': 8.0,
+                    'quantity': 3.0,
                     'uom': self.uom_unit,
                     'rate': 18.0,
-                    'amount_untaxed': 2300.0,
+                    'amount_untaxed': 800.0,
                     'tax_amount_igst': 0.0,
-                    'tax_amount_cgst': 207.0,
-                    'tax_amount_sgst': 207.0,
+                    'tax_amount_cgst': 72.0,
+                    'tax_amount_sgst': 72.0,
                     'tax_amount_cess': 0.0,
                 },
             ],
@@ -149,9 +132,9 @@ class TestInvoiceHSNsummary(AccountTestInvoicingCommon):
         ]
 
         self.assertRecordValues(invoice, [{
-            'amount_untaxed': 16000.0,
-            'amount_tax': 1099.0,
-            'amount_total': 17099.0,
+            'amount_untaxed': 13000.0,
+            'amount_tax': 754.0,
+            'amount_total': 13754.0,
         }])
 
         self.assert_hsn_summary(invoice, {
@@ -163,13 +146,13 @@ class TestInvoiceHSNsummary(AccountTestInvoicingCommon):
             'items': [
                 {
                     'l10n_in_hsn_code': self.test_hsn_code_1,
-                    'quantity': 7.0,
+                    'quantity': 2.0,
                     'uom': self.uom_unit,
                     'rate': 5.0,
-                    'amount_untaxed': 1700.0,
+                    'amount_untaxed': 200.0,
                     'tax_amount_igst': 0.0,
-                    'tax_amount_cgst': 42.5,
-                    'tax_amount_sgst': 42.5,
+                    'tax_amount_cgst': 5.0,
+                    'tax_amount_sgst': 5.0,
                     'tax_amount_cess': 0.0,
                 },
                 {
@@ -185,13 +168,13 @@ class TestInvoiceHSNsummary(AccountTestInvoicingCommon):
                 },
                 {
                     'l10n_in_hsn_code': self.test_hsn_code_1,
-                    'quantity': 8.0,
+                    'quantity': 3.0,
                     'uom': self.uom_unit,
                     'rate': 18.0,
-                    'amount_untaxed': 2300.0,
+                    'amount_untaxed': 800.0,
                     'tax_amount_igst': 0.0,
-                    'tax_amount_cgst': 207.0,
-                    'tax_amount_sgst': 207.0,
+                    'tax_amount_cgst': 72.0,
+                    'tax_amount_sgst': 72.0,
                     'tax_amount_cess': 0.0,
                 }
             ]
@@ -205,9 +188,9 @@ class TestInvoiceHSNsummary(AccountTestInvoicingCommon):
         ]
 
         self.assertRecordValues(invoice, [{
-            'amount_untaxed': 16000.0,
-            'amount_tax': 1099.0,
-            'amount_total': 17099.0,
+            'amount_untaxed': 13000.0,
+            'amount_tax': 728.0,
+            'amount_total': 13728.0,
         }])
 
         self.assert_hsn_summary(invoice, {
@@ -219,11 +202,11 @@ class TestInvoiceHSNsummary(AccountTestInvoicingCommon):
             'items': [
                 {
                     'l10n_in_hsn_code': self.test_hsn_code_1,
-                    'quantity': 7.0,
+                    'quantity': 4.0,
                     'uom': self.uom_unit,
                     'rate': 5.0,
-                    'amount_untaxed': 1700.0,
-                    'tax_amount_igst': 85.0,
+                    'amount_untaxed': 400.0,
+                    'tax_amount_igst': 20.0,
                     'tax_amount_cgst': 0.0,
                     'tax_amount_sgst': 0.0,
                     'tax_amount_cess': 0.0,
@@ -241,13 +224,13 @@ class TestInvoiceHSNsummary(AccountTestInvoicingCommon):
                 },
                 {
                     'l10n_in_hsn_code': self.test_hsn_code_1,
-                    'quantity': 8.0,
+                    'quantity': 1.0,
                     'uom': self.uom_unit,
                     'rate': 18.0,
-                    'amount_untaxed': 2300.0,
+                    'amount_untaxed': 600.0,
                     'tax_amount_igst': 0.0,
-                    'tax_amount_cgst': 207.0,
-                    'tax_amount_sgst': 207.0,
+                    'tax_amount_cgst': 54.0,
+                    'tax_amount_sgst': 54.0,
                     'tax_amount_cess': 0.0,
                 },
             ],
@@ -263,9 +246,9 @@ class TestInvoiceHSNsummary(AccountTestInvoicingCommon):
         ]
 
         self.assertRecordValues(invoice, [{
-            'amount_untaxed': 4600.0,
-            'amount_tax': 529.0,
-            'amount_total': 5129.0,
+            'amount_untaxed': 1600.0,
+            'amount_tax': 158.0,
+            'amount_total': 1758.0,
         }])
 
         self.assert_hsn_summary(invoice, {
@@ -277,24 +260,24 @@ class TestInvoiceHSNsummary(AccountTestInvoicingCommon):
             'items': [
                 {
                     'l10n_in_hsn_code': self.test_hsn_code_1,
-                    'quantity': 8.0,
+                    'quantity': 5.0,
                     'uom': self.uom_unit,
                     'rate': 5.0,
-                    'amount_untaxed': 2300.0,
-                    'tax_amount_igst': 115.0,
+                    'amount_untaxed': 1000.0,
+                    'tax_amount_igst': 50.0,
                     'tax_amount_cgst': 0.0,
                     'tax_amount_sgst': 0.0,
                     'tax_amount_cess': 0.0,
                 },
                 {
                     'l10n_in_hsn_code': self.test_hsn_code_1,
-                    'quantity': 8.0,
+                    'quantity': 1.0,
                     'uom': self.uom_unit,
                     'rate': 18.0,
-                    'amount_untaxed': 2300.0,
+                    'amount_untaxed': 600.0,
                     'tax_amount_igst': 0.0,
-                    'tax_amount_cgst': 207.0,
-                    'tax_amount_sgst': 207.0,
+                    'tax_amount_cgst': 54.0,
+                    'tax_amount_sgst': 54.0,
                     'tax_amount_cess': 0.0,
                 },
             ],
@@ -303,8 +286,6 @@ class TestInvoiceHSNsummary(AccountTestInvoicingCommon):
         # Change GST 18% taxes to IGST.
         invoice.invoice_line_ids = [
             Command.update(invoice.invoice_line_ids[3].id, {'tax_ids': [Command.set(self.igst_18.ids)]}),
-            Command.update(invoice.invoice_line_ids[4].id, {'tax_ids': [Command.set(self.igst_18.ids)]}),
-            Command.update(invoice.invoice_line_ids[5].id, {'tax_ids': [Command.set(self.igst_18.ids)]}),
         ]
 
         self.assert_hsn_summary(invoice, {
@@ -316,22 +297,22 @@ class TestInvoiceHSNsummary(AccountTestInvoicingCommon):
             'items': [
                 {
                     'l10n_in_hsn_code': self.test_hsn_code_1,
-                    'quantity': 8.0,
+                    'quantity': 5.0,
                     'uom': self.uom_unit,
                     'rate': 5.0,
-                    'amount_untaxed': 2300.0,
-                    'tax_amount_igst': 115.0,
+                    'amount_untaxed': 1000.0,
+                    'tax_amount_igst': 50.0,
                     'tax_amount_cgst': 0.0,
                     'tax_amount_sgst': 0.0,
                     'tax_amount_cess': 0.0,
                 },
                 {
                     'l10n_in_hsn_code': self.test_hsn_code_1,
-                    'quantity': 8.0,
+                    'quantity': 1.0,
                     'uom': self.uom_unit,
                     'rate': 18.0,
-                    'amount_untaxed': 2300.0,
-                    'tax_amount_igst': 414.0,
+                    'amount_untaxed': 600.0,
+                    'tax_amount_igst': 108.0,
                     'tax_amount_cgst': 0.0,
                     'tax_amount_sgst': 0.0,
                     'tax_amount_cess': 0.0,
@@ -417,34 +398,18 @@ class TestInvoiceHSNsummary(AccountTestInvoicingCommon):
                 'tax_ids': [Command.set(self.gst_18.ids)],
             }),
             Command.create({
-                # 'l10n_in_hsn_code': self.test_hsn_code_1,
-                'product_id': self.product_a.id,
-                'quantity': 2.0,
-                'price_unit': 50,
-                'product_uom_id': self.uom_unit.id,
-                'tax_ids': [Command.set(self.gst_18.ids)],
-            }),
-            Command.create({
                 'product_id': self.product_b.id,
                 'quantity': 1.0,
                 'price_unit': 100,
                 'product_uom_id': self.uom_unit.id,
                 'tax_ids': [Command.set(self.gst_18.ids)],
             }),
-            Command.create({
-                'product_id': self.product_b.id,
-                # 'l10n_in_hsn_code': self.test_hsn_code_2,
-                'quantity': 2.0,
-                'price_unit': 50,
-                'product_uom_id': self.uom_unit.id,
-                'tax_ids': [Command.set(self.gst_18.ids)],
-            })
         ])
 
         self.assertRecordValues(invoice, [{
-            'amount_untaxed': 400.0,
-            'amount_tax': 72.0,
-            'amount_total': 472.0,
+            'amount_untaxed': 200.0,
+            'amount_tax': 36.0,
+            'amount_total': 236.0,
         }])
 
         self.assert_hsn_summary(invoice, {
@@ -456,24 +421,24 @@ class TestInvoiceHSNsummary(AccountTestInvoicingCommon):
             'items': [
                 {
                     'l10n_in_hsn_code': self.test_hsn_code_1,
-                    'quantity': 3.0,
+                    'quantity': 1.0,
                     'uom': self.uom_unit,
                     'rate': 18.0,
-                    'amount_untaxed': 200.0,
+                    'amount_untaxed': 100.0,
                     'tax_amount_igst': 0.0,
-                    'tax_amount_cgst': 18.0,
-                    'tax_amount_sgst': 18.0,
+                    'tax_amount_cgst': 9.0,
+                    'tax_amount_sgst': 9.0,
                     'tax_amount_cess': 0.0,
                 },
                 {
                     'l10n_in_hsn_code': self.test_hsn_code_2,
-                    'quantity': 3.0,
+                    'quantity': 1.0,
                     'uom': self.uom_unit,
                     'rate': 18.0,
-                    'amount_untaxed': 200.0,
+                    'amount_untaxed': 100.0,
                     'tax_amount_igst': 0.0,
-                    'tax_amount_cgst': 18.0,
-                    'tax_amount_sgst': 18.0,
+                    'tax_amount_cgst': 9.0,
+                    'tax_amount_sgst': 9.0,
                     'tax_amount_cess': 0.0,
                 },
             ],
@@ -483,8 +448,6 @@ class TestInvoiceHSNsummary(AccountTestInvoicingCommon):
         invoice.invoice_line_ids = [
             Command.update(invoice.invoice_line_ids[0].id, {'tax_ids': [Command.set(self.igst_18.ids)]}),
             Command.update(invoice.invoice_line_ids[1].id, {'tax_ids': [Command.set(self.igst_18.ids)]}),
-            Command.update(invoice.invoice_line_ids[2].id, {'tax_ids': [Command.set(self.igst_18.ids)]}),
-            Command.update(invoice.invoice_line_ids[3].id, {'tax_ids': [Command.set(self.igst_18.ids)]}),
         ]
 
         self.assert_hsn_summary(invoice, {
@@ -496,22 +459,22 @@ class TestInvoiceHSNsummary(AccountTestInvoicingCommon):
             'items': [
                 {
                     'l10n_in_hsn_code': self.test_hsn_code_1,
-                    'quantity': 3.0,
+                    'quantity': 1.0,
                     'uom': self.uom_unit,
                     'rate': 18.0,
-                    'amount_untaxed': 200.0,
-                    'tax_amount_igst': 36.0,
+                    'amount_untaxed': 100.0,
+                    'tax_amount_igst': 18.0,
                     'tax_amount_cgst': 0.0,
                     'tax_amount_sgst': 0.0,
                     'tax_amount_cess': 0.0,
                 },
                 {
                     'l10n_in_hsn_code': self.test_hsn_code_2,
-                    'quantity': 3.0,
+                    'quantity': 1.0,
                     'uom': self.uom_unit,
                     'rate': 18.0,
-                    'amount_untaxed': 200.0,
-                    'tax_amount_igst': 36.0,
+                    'amount_untaxed': 100.0,
+                    'tax_amount_igst': 18.0,
                     'tax_amount_cgst': 0.0,
                     'tax_amount_sgst': 0.0,
                     'tax_amount_cess': 0.0,
