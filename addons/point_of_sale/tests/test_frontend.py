@@ -8,7 +8,6 @@ from odoo import Command
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 from odoo.tests import loaded_demo_data, tagged
 from odoo.addons.account.tests.common import AccountTestInvoicingHttpCommon
-from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.point_of_sale.tests.common_setup_methods import setup_pos_combo_items
 from datetime import date, timedelta
 from odoo.addons.point_of_sale.tests.common import archive_products
@@ -40,32 +39,38 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
         account_obj = env['account.account']
         main_company = cls._get_main_company()
 
-        account_receivable = account_obj.create({'code': 'X1012',
+        cls.account_receivable = account_obj.create({'code': 'X1012',
                                                  'name': 'Account Receivable - Test',
                                                  'account_type': 'asset_receivable',
                                                  'reconcile': True})
-        env.company.account_default_pos_receivable_account_id = account_receivable
-        env['ir.property']._set_default('property_account_receivable_id', 'res.partner', account_receivable, main_company)
+        env.company.account_default_pos_receivable_account_id = cls.account_receivable
+        env['ir.property']._set_default('property_account_receivable_id', 'res.partner', cls.account_receivable, main_company)
         # Pricelists are set below, do not take demo data into account
         env['ir.property'].sudo().search([('name', '=', 'property_product_pricelist')]).unlink()
 
-        # Create users
-        cls.pos_user = mail_new_test_user(
-            cls.env,
-            email="pos_user@test.com",
-            groups="base.group_user,point_of_sale.group_pos_user",
-            login="pos_user",
-            name="A simple PoS man!",
-            tz="Europe/Brussels",
-        )
-        cls.pos_admin = mail_new_test_user(
-            cls.env,
-            groups="base.group_user,point_of_sale.group_pos_manager",
-            email="pos_admin@test.com",
-            login="pos_admin",
-            name="A powerful PoS man!",
-            tz="Europe/Brussels",
-        )
+        # Create user.
+        cls.pos_user = cls.env['res.users'].create({
+            'name': 'A simple PoS man!',
+            'login': 'pos_user',
+            'password': 'pos_user',
+            'groups_id': [
+                (4, cls.env.ref('base.group_user').id),
+                (4, cls.env.ref('point_of_sale.group_pos_user').id),
+            ],
+            'tz': 'US/Eastern',
+        })
+        cls.pos_admin = cls.env['res.users'].create({
+            'name': 'A powerful PoS man!',
+            'login': 'pos_admin',
+            'password': 'pos_admin',
+            'groups_id': [
+                (4, cls.env.ref('point_of_sale.group_pos_manager').id),
+            ],
+            'tz': 'US/Eastern',
+        })
+
+        cls.pos_user.partner_id.email = 'pos_user@test.com'
+        cls.pos_admin.partner_id.email = 'pos_admin@test.com'
 
         cls.bank_journal = journal_obj.create({
             'name': 'Bank Test',
@@ -75,7 +80,7 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
             'sequence': 10,
         })
 
-        env['pos.payment.method'].create({
+        cls.bank_payment_method = env['pos.payment.method'].create({
             'name': 'Bank',
             'journal_id': cls.bank_journal.id,
         })
@@ -499,7 +504,7 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
             'invoice_journal_id': test_sale_journal.id,
             'payment_method_ids': [(0, 0, { 'name': 'Cash',
                                             'journal_id': cash_journal.id,
-                                            'receivable_account_id': account_receivable.id,
+                                            'receivable_account_id': cls.account_receivable.id,
             })],
             'use_pricelist': True,
             'pricelist_id': public_pricelist.id,
