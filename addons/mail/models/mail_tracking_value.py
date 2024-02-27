@@ -16,7 +16,6 @@ class MailTracking(models.Model):
         'ir.model.fields', required=False, readonly=True,
         index=True, ondelete='set null')
     field_info = fields.Json('Removed field information')
-    field_groups = fields.Char(compute='_compute_field_groups')
 
     old_value_integer = fields.Integer('Old Value Integer', readonly=True)
     old_value_float = fields.Float('Old Value Float', readonly=True)
@@ -35,14 +34,19 @@ class MailTracking(models.Model):
 
     mail_message_id = fields.Many2one('mail.message', 'Message ID', required=True, index=True, ondelete='cascade')
 
-    @api.depends('mail_message_id', 'field_id')
-    def _compute_field_groups(self):
-        for tracking in self:
+    def _filter_tracked_field_access(self, env):
+        """ Return the subset of ``self`` for which the user in ``env`` has
+        access to the corresponding field.
+        """
+        def has_field_access(tracking):
             field = None
             if tracking.field_id:
-                model = self.env[tracking.field_id.model]
-                field = model._fields.get(tracking.field_id.name)
-            tracking.field_groups = field.groups if field else 'base.group_system'
+                field = env[tracking.field_id.model]._fields.get(tracking.field_id.name)
+            if not field:
+                return env.is_system()
+            return not field.groups or env.is_superuser() or self.with_env(env).user_has_groups(field.groups)
+
+        return self.filtered(has_field_access)
 
     @api.model
     def _create_tracking_values(self, initial_value, new_value, col_name, col_info, record):

@@ -3439,9 +3439,7 @@ class MailThread(models.AbstractModel):
         if check_tracking:
             tracking_values = self.env['mail.tracking.value'].sudo().search(
                 [('mail_message_id', '=', message.id)]
-            ).filtered(
-                lambda track: not track.field_groups or self.env.is_superuser() or self.user_has_groups(track.field_groups)
-            )
+            )._filter_tracked_field_access(self.env)
             if tracking_values and hasattr(record_wlang, '_track_filter_for_display'):
                 tracking_values = record_wlang._track_filter_for_display(tracking_values)
             tracking = [
@@ -4064,7 +4062,12 @@ class MailThread(models.AbstractModel):
         if message.subtype_id and message.subtype_id.description:
             tracking_message = return_line + message.subtype_id.description + return_line
 
-        for value in message.sudo().tracking_value_ids.filtered(lambda tracking: not tracking.field_groups):
+        def _free_access(tracking):
+            model = self.env[tracking.mail_message_id.model]
+            field = model._fields.get(tracking.field_id.name)
+            return field and not field.groups
+
+        for value in message.sudo().tracking_value_ids.filtered(_free_access):
             if value.field_id.ttype == 'boolean':
                 old_value = str(bool(value.old_value_integer))
                 new_value = str(bool(value.new_value_integer))
