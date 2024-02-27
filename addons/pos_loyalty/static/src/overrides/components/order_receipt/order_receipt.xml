@@ -25,6 +25,8 @@
                     </t>
                     <br />
                 </div>
+            </t>
+            <t t-if="props.data.partner">
                 <br/>
                 <div>Customer <span t-esc='props.data.partner.name' class='pos-receipt-right-align'/></div>
             </t>
