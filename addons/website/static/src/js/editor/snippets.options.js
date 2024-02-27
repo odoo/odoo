@@ -644,9 +644,68 @@ const GPSPicker = InputUserValueWidget.extend({
         }
     },
 });
+
+const DESIGN_OPTION_CACHE = {
+    /**
+     * Fetches the website.design.option records, store them in a cache and
+     * returns the requested website.design.option record.
+     *
+     * @param {string} name - The name of the design option to retrieve.
+     * @param {Object} orm - The ORM service.
+     * @returns {Array<Object>} - The design.option records that match the name.
+     */
+    async getDesignOption(name, orm) {
+        if (this[name]) {
+            return this[name];
+        }
+        const designOptions = await orm.searchRead(
+            "website.design.option",
+            [],
+            ["name", "value", "display_name"],
+        );
+        for (const option of designOptions) {
+            if (!this[option.name]) {
+                this[option.name] = [];
+            }
+            this[option.name].push(option);
+        }
+        return this[name];
+    }
+};
+
+const DesignOptionSelector = SelectUserValueWidget.extend({
+    /**
+     * @override
+     */
+    init() {
+        this.orm = this.bindService("orm");
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    async start() {
+        await this._super.bind(this)(...arguments);
+        const possibleValues = await DESIGN_OPTION_CACHE.getDesignOption(
+            this.el.dataset.variable,
+            this.orm,
+        );
+        const textMode = this.el.dataset.textMode || "string";
+        for (const option of possibleValues) {
+            const button = document.createElement("we-button");
+            button.setAttribute(textMode, option.display_name);
+            button.dataset.customizeWebsiteVariable = option.id;
+            button.dataset.name = `${option.name}_${option.value}_opt`;
+            this.menuEl.appendChild(button);
+        }
+    },
+});
+
+
 options.userValueWidgetsRegistry['we-urlpicker'] = UrlPickerUserValueWidget;
 options.userValueWidgetsRegistry['we-fontfamilypicker'] = FontFamilyPickerUserValueWidget;
 options.userValueWidgetsRegistry['we-gpspicker'] = GPSPicker;
+options.userValueWidgetsRegistry['we-designoptionselector'] = DesignOptionSelector;
 
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
@@ -701,12 +760,6 @@ options.Class.include({
     customizeWebsiteColor: async function (previewMode, widgetValue, params) {
         await this._customizeWebsite(previewMode, widgetValue, params, 'color');
     },
-    /**
-     * @see this.selectClass for parameters
-     */
-    async customizeWebsiteAssets(previewMode, widgetValue, params) {
-        await this._customizeWebsite(previewMode, widgetValue, params, 'assets');
-    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -741,15 +794,17 @@ options.Class.include({
             }
             case 'customizeWebsiteVariable': {
                 const data = await this.options.wysiwyg.getWebsiteDesignData();
+                if (Array.isArray(data[params.variable])) {
+                    // It's a reference to website.design.option. We return the
+                    // id of the record.
+                    return data[params.variable][0]
+                }
                 return data[params.variable];
             }
             case 'customizeWebsiteColor': {
                 const ownerDocument = this.$target[0].ownerDocument;
                 const style = ownerDocument.defaultView.getComputedStyle(ownerDocument.documentElement);
                 return weUtils.getCSSVariableValue(params.color, style);
-            }
-            case 'customizeWebsiteAssets': {
-                return this._getEnabledCustomizeValues(params.possibleValues, false);
             }
         }
         return this._super(...arguments);
@@ -765,7 +820,7 @@ options.Class.include({
 
         switch (type) {
             case 'views':
-                await this._customizeWebsiteData(widgetValue, params, true);
+                await this._customizeWebsiteViews(widgetValue, params);
                 break;
             case 'variable':
                 await this._customizeWebsiteVariable(widgetValue, params);
@@ -782,9 +837,6 @@ options.Class.include({
                 break;
             case 'color':
                 await this._customizeWebsiteColor(widgetValue, params);
-                break;
-            case 'assets':
-                await this._customizeWebsiteData(widgetValue, params, false);
                 break;
             default:
                 if (params.customCustomization) {
@@ -866,14 +918,13 @@ options.Class.include({
     /**
      * @private
      */
-    async _customizeWebsiteData(value, params, isViewData) {
+    async _customizeWebsiteViews(value, params) {
         const allDataKeys = this._getDataKeysFromPossibleValues(params.possibleValues);
         const enableDataKeys = value.split(/\s*,\s*/);
         const disableDataKeys = allDataKeys.filter(value => !enableDataKeys.includes(value));
         const resetViewArch = !!params.resetViewArch;
 
-        return rpc('/website/theme_customize_data', {
-            'is_view_data': isViewData,
+        return rpc('/website/theme_customize_views', {
             'enable': enableDataKeys,
             'disable': disableDataKeys,
             'reset_view_arch': resetViewArch,

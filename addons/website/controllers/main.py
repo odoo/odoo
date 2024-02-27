@@ -805,36 +805,14 @@ class Website(Home):
     # Themes
     # ------------------------------------------------------
 
-    def _get_customize_data(self, keys, is_view_data):
-        model = 'ir.ui.view' if is_view_data else 'ir.asset'
-        Model = request.env[model].with_context(active_test=False)
-        domain = expression.AND([[("key", "in", keys)], request.website.website_domain()])
-        return Model.search(domain).filter_duplicate()
-
     @http.route(['/website/theme_customize_data_get'], type='json', auth='user', website=True)
     def theme_customize_data_get(self, keys, is_view_data):
-        records = self._get_customize_data(keys, is_view_data)
+        records = request.env['website'].get_customize_data(keys, is_view_data)
         return records.filtered('active').mapped('key')
 
-    @http.route(['/website/theme_customize_data'], type='json', auth='user', website=True)
-    def theme_customize_data(self, is_view_data, enable=None, disable=None, reset_view_arch=False):
-        """
-        Enables and/or disables views/assets according to list of keys.
-
-        :param is_view_data: True = "ir.ui.view", False = "ir.asset"
-        :param enable: list of views/assets keys to enable
-        :param disable: list of views/assets keys to disable
-        :param reset_view_arch: restore the default template after disabling
-        """
-        if disable:
-            records = self._get_customize_data(disable, is_view_data).filtered('active')
-            if reset_view_arch:
-                records.reset_arch(mode='hard')
-            records.write({'active': False})
-
-        if enable:
-            records = self._get_customize_data(enable, is_view_data)
-            records.filtered(lambda x: not x.active).write({'active': True})
+    @http.route(['/website/theme_customize_views'], type='json', auth='user', website=True)
+    def theme_customize_views(self, enable=None, disable=None, reset_view_arch=False):
+        request.env['website'].theme_customize_data(True, enable, disable, reset_view_arch)
 
     @http.route(['/website/theme_customize_bundle_reload'], type='json', auth='user', website=True)
     def theme_customize_bundle_reload(self):

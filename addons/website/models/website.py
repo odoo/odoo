@@ -345,6 +345,23 @@ class Website(models.Model):
         """
         return get_base_domain(url, True) == get_base_domain(self.domain, True)
 
+    def get_customize_data(self, keys, is_view_data):
+        model = 'ir.ui.view' if is_view_data else 'ir.asset'
+        Model = self.env[model].with_context(active_test=False)
+        domain = AND([[("key", "in", keys)], self.env['website'].get_current_website().website_domain()])
+        return Model.search(domain).filter_duplicate()
+
+    def theme_customize_data(self, is_view_data, enable=None, disable=None, reset_view_arch=False):
+        if disable:
+            records = self.get_customize_data(disable, is_view_data).filtered('active')
+            if reset_view_arch:
+                records.reset_arch(mode='hard')
+            records.write({'active': False})
+
+        if enable:
+            records = self.get_customize_data(enable, is_view_data)
+            records.filtered(lambda x: not x.active).write({'active': True})
+
     # ----------------------------------------------------------
     # Configurator
     # ----------------------------------------------------------

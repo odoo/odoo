@@ -113,6 +113,8 @@
         'views/ir_model_views.xml',
         'views/res_partner_views.xml',
         'views/neutralize_views.xml',
+        # Data that does ref to the views:
+        'data/website_design.xml',
         'wizard/base_language_install_views.xml',
         'wizard/website_robots.xml',
     ],
