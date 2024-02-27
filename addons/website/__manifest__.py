@@ -256,7 +256,6 @@
             'website/static/src/snippets/s_map/options.js',
             'website/static/src/snippets/s_dynamic_snippet/options.js',
             'website/static/src/snippets/s_dynamic_snippet_carousel/options.js',
-            'website/static/src/snippets/s_embed_code/options.js',
             'website/static/src/snippets/s_website_controller_page_listing_layout/options.js',
             'website/static/src/snippets/s_website_form/options.js',
             'website/static/src/js/form_editor_registry.js',
@@ -283,6 +282,7 @@
             ('include', 'web_editor.assets_legacy_wysiwyg'),
             ('include', 'website.assets_wysiwyg'),
             'website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js',
+            'website/static/src/snippets/s_embed_code/options.js',
         ],
         'web_editor.assets_media_dialog': [
             'website/static/src/components/media_dialog/image_selector.js',
