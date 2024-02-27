@@ -921,6 +921,10 @@ export class Wysiwyg extends Component {
             clearTimeout(timeout);
         }
         document.removeEventListener('scroll', this._onScroll, true);
+
+        // Remove the "image.data" entries from the registry
+        const imageData = registry.category("image.data").getEntries();
+        imageData.forEach((imageDataEntry) => registry.category("image.data").remove(imageDataEntry[0]));
     }
     /**
      * @override
@@ -1139,7 +1143,7 @@ export class Wysiwyg extends Component {
      */
     savePendingImages($editable = this.$editable) {
         const defs = Array.from($editable).map(async (editableEl) => {
-            const { resModel, resId } = this._getRecordInfo(editableEl);
+            const { resModel, resId, resField, type } = this._getRecordInfo(editableEl);
             // When saving a webp, o_b64_image_to_save is turned into
             // o_modified_image_to_save by _saveB64Image to request the saving
             // of the pre-converted webp resizes and all the equivalent jpgs.
@@ -1151,7 +1155,7 @@ export class Wysiwyg extends Component {
                     // the correct "resModel" and "resId" parameters.
                     return;
                 }
-                await this._saveB64Image(el, resModel, resId);
+                await this._saveB64Image(el, resModel, resId, resField, type);
             });
             const modifiedProms = [...editableEl.querySelectorAll('.o_modified_image_to_save')].map(async el => {
                 const dirtyEditable = el.closest(".o_dirty");
@@ -1161,7 +1165,7 @@ export class Wysiwyg extends Component {
                     // with the correct "resModel" and "resId" parameters.
                     return;
                 }
-                await this._saveModifiedImage(el, resModel, resId);
+                await this._saveModifiedImage(el, resModel, resId, resField, type);
             });
             return Promise.all([...b64Proms, ...modifiedProms]);
         });
@@ -1673,12 +1677,12 @@ export class Wysiwyg extends Component {
         const restoreSelection = preserveCursor(this.odooEditor.document);
 
         const editable = OdooEditorLib.closestElement(params.node || range.startContainer, '.o_editable') || this.odooEditor.editable;
-        const { resModel, resId, field, type } = this._getRecordInfo(editable);
+        const { resModel, resId, resField, type } = this._getRecordInfo(editable);
 
         this.env.services.dialog.add(params.MediaDialog || MediaDialog, {
             resModel,
             resId,
-            useMediaLibrary: !!(field && (resModel === 'ir.ui.view' && field === 'arch' || type === 'html')),
+            useMediaLibrary: !!(resField && (resModel === 'ir.ui.view' && resField === 'arch' || type === 'html')),
             media: params.node,
             save: this._onMediaDialogSave.bind(this, {
                 node: params.node,
@@ -3488,8 +3492,11 @@ export class Wysiwyg extends Component {
      * @param {Element} el
      * @param {string} resModel
      * @param {number} resId
+     * @param {string} resField
+     * @param {string} type
      */
-    async _saveB64Image(el, resModel, resId) {
+    async _saveB64Image(el, resModel, resId, resField, type) {
+        const imageOptions = weUtils.getImageData(el);
         el.classList.remove('o_b64_image_to_save');
         const imageData = el.getAttribute('src').split('base64,')[1];
         if (!imageData) {
@@ -3501,7 +3508,7 @@ export class Wysiwyg extends Component {
         const attachment = await this._serviceRpc(
             '/web_editor/attachment/add_data',
             {
-                name: el.dataset.fileName || '',
+                name: imageOptions.file_name || '',
                 data: imageData,
                 is_image: true,
                 res_model: resModel,
@@ -3510,10 +3517,11 @@ export class Wysiwyg extends Component {
         );
         if (attachment.mimetype === 'image/webp') {
             el.classList.add('o_modified_image_to_save');
-            el.dataset.originalId = attachment.id;
-            el.dataset.mimetype = attachment.mimetype;
-            el.dataset.fileName = attachment.name;
-            this._saveModifiedImage(el, resModel, resId);
+            imageOptions.original_id = attachment.id;
+            imageOptions.mimetype = attachment.mimetype;
+            imageOptions.file_name = attachment.name;
+            weUtils.updateImageDataRegistry(el.getAttribute("src"), imageOptions);
+            this._saveModifiedImage(el, resModel, resId, resField, type);
         } else {
             let src = attachment.image_src;
             if (!attachment.public) {
@@ -3537,15 +3545,20 @@ export class Wysiwyg extends Component {
      * @param {Element} el
      * @param {string} resModel
      * @param {number} resId
+     * @param {string} resField
+     * @param {string} type
      */
-    async _saveModifiedImage(el, resModel, resId) {
+    async _saveModifiedImage(el, resModel, resId, resField, type) {
         const isBackground = !el.matches('img');
+        const imgSrc = isBackground ? weUtils.getBgImageURL(el) : el.getAttribute("src");
+        const imageData = registry.category("image.data").get(imgSrc, {});
+
         // Modifying an image always creates a copy of the original, even if
         // it was modified previously, as the other modified image may be used
         // elsewhere if the snippet was duplicated or was saved as a custom one.
         let altData = undefined;
         const isImageField = !!el.closest("[data-oe-type=image]");
-        if (el.dataset.mimetype === 'image/webp' && isImageField) {
+        if (imageData.mimetype === 'image/webp' && isImageField) {
             // Generate alternate sizes and format for reports.
             altData = {};
             const image = document.createElement('img');
@@ -3571,14 +3584,17 @@ export class Wysiwyg extends Component {
             }
         }
         const newAttachmentSrc = await this._serviceRpc(
-            `/web_editor/modify_image/${encodeURIComponent(el.dataset.originalId)}`,
+            `/web_editor/modify_image/${encodeURIComponent(imageData.original_id)}`,
             {
                 res_model: resModel,
                 res_id: parseInt(resId),
+                res_field: resField,
                 data: (isBackground ? el.dataset.bgSrc : el.getAttribute('src')).split(',')[1],
                 alt_data: altData,
-                mimetype: (isBackground ? el.dataset.mimetype : el.getAttribute('src').split(":")[1].split(";")[0]),
-                name: (el.dataset.fileName ? el.dataset.fileName : null),
+                mimetype: (isBackground ? imageData.mimetype : el.getAttribute('src').split(":")[1].split(";")[0]),
+                name: (imageData.file_name ? imageData.file_name : null),
+                saved_image_data: imageData,
+                res_type: type,
             },
         );
         el.classList.remove('o_modified_image_to_save');

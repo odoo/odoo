@@ -4059,11 +4059,7 @@ const SnippetOptionWidget = publicWidget.Widget.extend({
                 } else if (methodName === 'selectDataAttribute') {
                     attrValue = this.$target[0].dataset[attrName];
                 }
-                attrValue = (attrValue || '').trim();
-                if (params.saveUnit && !params.withUnit) {
-                    attrValue = attrValue.split(/\s+/g).map(v => v + params.saveUnit).join(' ');
-                }
-                return attrValue || params.attributeDefaultValue || '';
+                return this._processUnitAndDefaultValue(attrValue, params);
             }
             case 'selectStyle': {
                 let usedCC = undefined;
@@ -4208,6 +4204,23 @@ const SnippetOptionWidget = publicWidget.Widget.extend({
         value = `${value}`.trim(); // Force to a trimmed string
         value = normalizeCSSColor(value); // If is a css color, normalize it
         return value;
+    },
+    /**
+     * Processes the value of an option depending on the unit or the default
+     * value of this option.
+     *
+     * @param {string} value - The value of the option.
+     * @param {Object} params - The option parameters.
+     * @returns {string} the value (with unit if needed) if it exists or the
+     * default value of the option or an empty string if the option has no value
+     * and no default value.
+     */
+    _processUnitAndDefaultValue(value, params) {
+        value = (value || '').trim();
+        if (params.saveUnit && !params.withUnit) {
+            value = value.split(/\s+/g).map(v => v + params.saveUnit).join(' ');
+        }
+        return value || params.attributeDefaultValue || '';
     },
     /**
      * @private
@@ -6209,6 +6222,7 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
      */
     async willStart() {
         const _super = this._super.bind(this);
+        this.imageData = {};
         await this._initializeImage();
         return _super(...arguments);
     },
@@ -6258,15 +6272,14 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
      */
     selectFormat(previewMode, widgetValue, params) {
         const values = widgetValue.split(' ');
-        const image = this._getImg();
-        image.dataset.resizeWidth = values[0];
-        if (image.dataset.shape) {
+        this.imageData.resize_width = values[0];
+        if (this.imageData.shape) {
             // If the image has a shape, modify its originalMimetype attribute.
-            image.dataset.originalMimetype = values[1];
+            this.imageData.original_mimetype = values[1];
         } else {
             // If the image does not have a shape, modify its mimetype
             // attribute.
-            image.dataset.mimetype = values[1];
+            this.imageData.mimetype = values[1];
         }
         return this._applyOptions();
     },
@@ -6277,18 +6290,17 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         if (previewMode) {
             return;
         }
-        this._getImg().dataset.quality = widgetValue;
+        this.imageData.quality = widgetValue;
         return this._applyOptions();
     },
     /**
      * @see this.selectClass for parameters
      */
     glFilter(previewMode, widgetValue, params) {
-        const dataset = this._getImg().dataset;
         if (widgetValue) {
-            dataset.glFilter = widgetValue;
+            this.imageData.gl_filter = widgetValue;
         } else {
-            delete dataset.glFilter;
+            delete this.imageData.gl_filter;
         }
         return this._applyOptions();
     },
@@ -6296,14 +6308,26 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
      * @see this.selectClass for parameters
      */
     customFilter(previewMode, widgetValue, params) {
-        const img = this._getImg();
-        const {filterOptions} = img.dataset;
+        const {filter_options} = this.imageData;
         const {filterProperty} = params;
         if (filterProperty === 'filterColor') {
             widgetValue = normalizeColor(widgetValue);
         }
-        const newOptions = Object.assign(JSON.parse(filterOptions || "{}"), {[filterProperty]: widgetValue});
-        img.dataset.filterOptions = JSON.stringify(newOptions);
+        const newOptions = Object.assign(JSON.parse(filter_options || "{}"), {[filterProperty]: widgetValue});
+        this.imageData.filter_options = JSON.stringify(newOptions);
+        return this._applyOptions();
+    },
+    /**
+     * Method which allows to select a value and set it on the associated image
+     * data. The name of the option is given by the optionName parameter.
+     *
+     * @param {boolean} previewMode - @see this.selectClass
+     * @param {string} widgetValue
+     * @param {Object} params
+     */
+    async selectImageOption(previewMode, widgetValue, params) {
+        const value = this._selectOptionHelper(widgetValue, params);
+        this.imageData[params.optionName] = value;
         return this._applyOptions();
     },
 
@@ -6339,16 +6363,19 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
             case 'selectFormat':
                 return img.naturalWidth + ' ' + this._getImageMimetype(img);
             case 'setFilter':
-                return img.dataset.filter;
+                return this.imageData.filter;
             case 'glFilter':
-                return img.dataset.glFilter || "";
+                return this.imageData.gl_filter || "";
             case 'setQuality':
-                return img.dataset.quality || 75;
+                return 'quality' in this.imageData ? this.imageData.quality : 75;
             case 'customFilter': {
                 const {filterProperty} = params;
-                const options = JSON.parse(img.dataset.filterOptions || "{}");
+                const options = JSON.parse(this.imageData.filter_options || "{}");
                 const defaultValue = filterProperty === 'blend' ? 'normal' : 0;
                 return options[filterProperty] || defaultValue;
+            }
+            case 'selectImageOption': {
+                return this._processUnitAndDefaultValue(this.imageData[params.optionName], params);
             }
         }
         return _super(...arguments);
@@ -6388,8 +6415,8 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
             return [];
         }
         const img = this._getImg();
-        const original = await loadImage(this.originalSrc);
-        const maxWidth = img.dataset.width ? img.naturalWidth : original.naturalWidth;
+        const original = await this._loadImage(this.originalSrc);
+        const maxWidth = this.imageData.width ? img.naturalWidth : original.naturalWidth;
         const optimizedWidth = Math.min(maxWidth, this._computeMaxDisplayWidth());
         this.optimizedWidth = optimizedWidth;
         const widths = {
@@ -6401,7 +6428,7 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         };
         widths[img.naturalWidth] = [_t("%spx", img.naturalWidth), 'image/webp'];
         widths[optimizedWidth] = [_t("%spx (Suggested)", optimizedWidth), 'image/webp'];
-        const mimetypeBeforeConversion = img.dataset.mimetypeBeforeConversion;
+        const mimetypeBeforeConversion = this.imageData.mimetype_before_conversion;
         widths[maxWidth] = [_t("%spx (Original)", maxWidth), mimetypeBeforeConversion];
         if (mimetypeBeforeConversion !== "image/webp") {
             // Avoid a key collision by subtracting 0.1 - putting the webp
@@ -6432,16 +6459,16 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         }
         // Do not apply modifications if there is no original src, since it is
         // needed for it.
-        if (!img.dataset.originalSrc) {
-            delete img.dataset.mimetype;
+        if (!this.imageData.original_src) {
+            delete this.imageData.mimetype;
             return;
         }
-        const dataURL = await applyModifications(img, {mimetype: this._getImageMimetype(img)});
+        const dataURL = await applyModifications(this.imageData, {mimetype: this._getImageMimetype(img)});
         this._filesize = getDataURLBinarySize(dataURL) / 1024;
 
         if (update) {
             img.classList.add('o_modified_image_to_save');
-            const loadedImg = await loadImage(dataURL, img);
+            const loadedImg = await this._loadImage(dataURL, img);
             this._applyImage(loadedImg);
             // Also apply to carousel thumbnail if applicable.
             weUtils.forwardToThumbnail(img);
@@ -6450,21 +6477,41 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         return img;
     },
     /**
+     * Loads a src into an HTMLImageElement and updates the "image.data"
+     * registry with the 'new image src'-'image data' entry if imgEl is set.
+     *
+     * @private
+     * @param {String} src - The source of the image to load.
+     * @param {HTMLImageElement} imgEl - The image whose source must be changed.
+     */
+    async _loadImage(src, imgEl = undefined) {
+        if (imgEl) {
+            const loadedImgEl = await loadImage(src, imgEl);
+            // Update the registry as the image src changes
+            weUtils.updateImageDataRegistry(loadedImgEl.getAttribute("src"), this.imageData);
+            return loadedImgEl;
+        } else {
+            return loadImage(src);
+        }
+    },
+    /**
      * Loads the image's attachment info.
      *
      * @private
      */
     async _loadImageInfo(attachmentSrc = '') {
         const img = this._getImg();
-        await loadImageInfo(img, attachmentSrc);
-        if (!img.dataset.originalId) {
+        const editableEl = this.$target[0].closest(".o_editable");
+        await loadImageInfo(img, this.options.wysiwyg._getRecordInfo(editableEl), attachmentSrc);
+        this.imageData = weUtils.getImageData(img, this.imageShape);
+        if (!this.imageData.original_id) {
             this.originalId = null;
             this.originalSrc = null;
             return;
         }
-        this.originalId = img.dataset.originalId;
-        this.originalSrc = img.dataset.originalSrc;
-        this.mimetypeBeforeConversion = img.dataset.mimetypeBeforeConversion;
+        this.originalId = this.imageData.original_id;
+        this.originalSrc = this.imageData.original_src;
+        this.mimetypeBeforeConversion = this.imageData.mimetype_before_conversion;
     },
     /**
      * Sets the image's width to its suggested size.
@@ -6474,17 +6521,28 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
     async _autoOptimizeImage() {
         await this._loadImageInfo();
         await this._rerenderXML();
-        const img = this._getImg();
-        if (!['image/gif', 'image/svg+xml'].includes(img.dataset.mimetype)) {
+        if (!['image/gif', 'image/svg+xml'].includes(this.imageData.mimetype)) {
             // Convert to recommended format and width.
-            img.dataset.mimetype = 'image/webp';
-            img.dataset.resizeWidth = this.optimizedWidth;
-        } else if (img.dataset.shape && img.dataset.originalMimetype !== "image/gif") {
-            img.dataset.originalMimetype = "image/webp";
-            img.dataset.resizeWidth = this.optimizedWidth;
+            this.imageData.mimetype = "image/webp";
+            this.imageData.resize_width = this.optimizedWidth;
+        } else if (this.imageData.shape && this.imageData.original_mimetype !== "image/gif") {
+            this.imageData.original_mimetype = "image/webp";
+            this.imageData.resize_width = this.optimizedWidth;
         }
         await this._applyOptions();
         await this.updateUI();
+    },
+    /**
+     * Handles option value change.
+     *
+     * @private
+     * @see this._selectValueHelper for parameters
+     */
+    _selectOptionHelper(value, params) {
+        if (!params.optionName) {
+            throw new Error("Option name missing");
+        }
+        return this._selectValueHelper(value, params);
     },
     /**
      * Returns the image that is currently being modified.
@@ -6516,7 +6574,7 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
      * @returns {String} The right mimetype used to apply options on image.
      */
     _getImageMimetype(img) {
-        return img.dataset.mimetype;
+        return this.imageData.mimetype;
     },
     /**
      * @private
@@ -6647,7 +6705,8 @@ registry.ImageTools = ImageHandlerOption.extend({
         } else {
             await imageCropWrapper.component.cropSquare(false);
             if (isGif(this._getImageMimetype(img))) {
-                img.dataset[img.dataset.shape ? "originalMimetype" : "mimetype"] = "image/png";
+                this.imageData[this.imageData.shape ? "original_mimetype" : "mimetype"] = "image/png";
+                weUtils.updateImageDataRegistry(img.getAttribute("src"), this.imageData);
             }
         }
         await this._reapplyCurrentShape();
@@ -6680,7 +6739,8 @@ registry.ImageTools = ImageHandlerOption.extend({
         await new Promise(resolve => {
             this.$target.one('image_cropper_destroyed', async () => {
                 if (isGif(this._getImageMimetype(img))) {
-                    img.dataset[img.dataset.shape ? 'originalMimetype' : 'mimetype'] = 'image/png';
+                    this.imageData[this.imageData.shape ? 'original_mimetype' : 'mimetype'] = 'image/png';
+                    weUtils.updateImageDataRegistry(img.getAttribute("src"), this.imageData);
                 }
                 await this._reapplyCurrentShape();
                 resolve();
@@ -6800,7 +6860,8 @@ registry.ImageTools = ImageHandlerOption.extend({
             await imageCropWrapper.component.cropSquare(previewMode);
             if (previewMode === false) {
                 if (isGif(this._getImageMimetype(img))) {
-                    img.dataset[img.dataset.shape ? "originalMimetype" : "mimetype"] = "image/png";
+                    this.imageData[this.imageData.shape ? "original_mimetype" : "mimetype"] = "image/png";
+                    weUtils.updateImageDataRegistry(img.getAttribute("src"), this.imageData);
                 }
                 this.isImageCropped = true;
             }
@@ -6832,24 +6893,23 @@ registry.ImageTools = ImageHandlerOption.extend({
         }
         if (widgetValue) {
             await this._loadShape(widgetValue);
-            if (previewMode === 'reset' && img.dataset.shapeColors) {
+            if (previewMode === 'reset' && this.imageData.shape_colors) {
                 // When we reset the shape we need to reapply the colors the
                 // user had selected.
-                await this._applyShapeAndColors(false, img.dataset.shapeColors.split(';'));
+                await this._applyShapeAndColors(false, this.imageData.shape_colors.split(";"));
             } else {
                 // If the preview mode === false we want to save the colors
                 // as the user chose their shape
-                await this._applyShapeAndColors(saveData);
-                if (saveData && img.dataset.mimetype !== 'image/svg+xml') {
-                    img.dataset.originalMimetype = img.dataset.mimetype;
-                    img.dataset.mimetype = 'image/svg+xml';
+                if (saveData && this.imageData.mimetype !== "image/svg+xml") {
+                    this.imageData.original_mimetype = this.imageData.mimetype;
+                    this.imageData.mimetype = "image/svg+xml";
                 }
                 // When the user selects a shape, we remove the data attributes
                 // that are not compatible with this shape.
                 if (saveData) {
                     if (!this._isTransformableShape()) {
-                        delete img.dataset.shapeFlip;
-                        delete img.dataset.shapeRotate;
+                        delete this.imageData.shape_flip;
+                        delete this.imageData.shape_rotate;
                     }
                     if (!this._canHaveHoverEffect()) {
                         delete img.dataset.hoverEffect;
@@ -6859,25 +6919,27 @@ registry.ImageTools = ImageHandlerOption.extend({
                         img.classList.remove("o_animate_on_hover");
                     }
                     if (!this._isAnimatedShape()) {
-                        delete img.dataset.shapeAnimationSpeed;
+                        delete this.imageData.shape_animation_speed;
                     }
                 }
+                // No modifications of 'this.imageData' can be done after
+                // '_applyShapeAndColors()' as they will not be taken into
+                // account in the update of the 'image.data' registry.
+                await this._applyShapeAndColors(saveData);
             }
         } else {
             // Re-applying the modifications and deleting the shapes
-            img.src = await applyModifications(img, {mimetype: this._getImageMimetype(img)});
-            delete img.dataset.shape;
-            delete img.dataset.shapeColors;
-            delete img.dataset.fileName;
-            delete img.dataset.shapeFlip;
-            delete img.dataset.shapeRotate;
-            delete img.dataset.shapeAnimationSpeed;
+            delete this.imageData.shape;
+            delete this.imageData.shape_colors;
+            delete this.imageData.file_name;
+            delete this.imageData.shape_flip;
+            delete this.imageData.shape_rotate;
+            delete this.imageData.shape_animation_speed;
             if (saveData) {
-                img.dataset.mimetype = img.dataset.originalMimetype;
-                delete img.dataset.originalMimetype;
+                this.imageData.mimetype = this.imageData.original_mimetype;
+                delete this.imageData.original_mimetype;
             }
-            // Also apply to carousel thumbnail if applicable.
-            weUtils.forwardToThumbnail(img);
+            await this._applyOptions();
         }
         img.classList.add('o_modified_image_to_save');
         // Remove the image clone, if any.
@@ -6896,7 +6958,7 @@ registry.ImageTools = ImageHandlerOption.extend({
     async setImgShapeColor(previewMode, widgetValue, params) {
         const img = this._getImg();
         const newColorId = parseInt(params.colorId);
-        const oldColors = img.dataset.shapeColors.split(';');
+        const oldColors = this.imageData.shape_colors.split(';');
         const newColors = oldColors.slice(0);
         newColors[newColorId] = this._getCSSColorValue(widgetValue === '' ? `o-color-${(newColorId + 1)}` : widgetValue);
         await this._applyShapeAndColors(true, newColors);
@@ -6982,11 +7044,20 @@ registry.ImageTools = ImageHandlerOption.extend({
         }
     },
     /**
+     * @override
+     */
+    async selectImageOption(previewMode, widgetValue, params) {
+        await this._super(...arguments);
+        if (params.optionName === "shape_animation_speed") {
+            await this._reapplyCurrentShape();
+        }
+    },
+    /**
      * @see this.selectClass for parameters
      */
     async selectDataAttribute(previewMode, widgetValue, params) {
         await this._super(...arguments);
-        if (["shapeAnimationSpeed", "hoverEffectIntensity", "hoverEffectStrokeWidth"].includes(params.attributeName)) {
+        if (["hoverEffectIntensity", "hoverEffectStrokeWidth"].includes(params.attributeName)) {
             await this._reapplyCurrentShape();
         }
     },
@@ -7019,8 +7090,7 @@ registry.ImageTools = ImageHandlerOption.extend({
             this.trigger_up("snippet_edition_request", {exec: () => {
                 // Add the "square" shape to the image if it has no shape
                 // because the "hover effects" need a shape to work.
-                const imgEl = this._getImg();
-                const shapeName = imgEl.dataset.shape?.split("/")[2];
+                const shapeName = this.imageData.shape?.split("/")[2];
                 if (!shapeName) {
                     const shapeImgSquareWidget = this._requestUserValueWidgets("shape_img_square_opt")[0];
                     shapeImgSquareWidget.enable();
@@ -7086,18 +7156,18 @@ registry.ImageTools = ImageHandlerOption.extend({
      */
     async _applyOptions() {
         const img = await this._super(...arguments);
-        if (img && img.dataset.shape) {
-            await this._loadShape(img.dataset.shape);
+        if (img && this.imageData.shape) {
+            await this._loadShape(this.imageData.shape);
             if (/^data:/.test(img.src)) {
                 // Reapplying the shape
-                await this._applyShapeAndColors(true, (img.dataset.shapeColors && img.dataset.shapeColors.split(';')));
+                await this._applyShapeAndColors(true, (this.imageData.shape_colors && this.imageData.shape_colors.split(';')));
             }
         }
         return img;
     },
     /**
-     * Loads the shape into cache if not already and sets it in the dataset of
-     * the img
+     * Loads the shape into cache if not already and sets it in the data of the
+     * img.
      *
      * @param {string} shapeName identifier of the shape
      */
@@ -7109,11 +7179,11 @@ registry.ImageTools = ImageHandlerOption.extend({
             shape = await (await fetch(shapeURL)).text();
             this.shapeCache[fileName] = shape;
         }
-        this._getImg().dataset.shape = shapeName;
+        this.imageData.shape = shapeName;
     },
 
     /**
-     * Applies the shape in img.dataset.shape and replaces the previous hex
+     * Applies the shape in this.imageData.shape and replaces the previous hex
      * color values with new ones or current theme
      * ones then calls _writeShape()
      *
@@ -7124,7 +7194,7 @@ registry.ImageTools = ImageHandlerOption.extend({
      */
     async _applyShapeAndColors(save, newColors) {
         const img = this._getImg();
-        let shape = this.shapeCache[img.dataset.shape.split('/')[2]];
+        let shape = this.shapeCache[this.imageData.shape.split('/')[2]];
 
         // Map the default palette colors to an array if the shape includes them
         // If they do not map a NULL, this way we know if a default color is in
@@ -7136,10 +7206,10 @@ registry.ImageTools = ImageHandlerOption.extend({
             newColors = oldColors.map((color, i) => color !== null ? this._getCSSColorValue(`o-color-${(i + 1)}`) : null);
         }
         newColors.forEach((color, i) => shape = shape.replace(new RegExp(oldColors[i], 'g'), this._getCSSColorValue(color)));
-        await this._writeShape(shape);
         if (save) {
-            img.dataset.shapeColors = newColors.join(';');
+            this.imageData.shape_colors = newColors.join(';');
         }
+        await this._writeShape(shape);
         // Also apply to carousel thumbnail if applicable.
         weUtils.forwardToThumbnail(img);
     },
@@ -7225,7 +7295,7 @@ registry.ImageTools = ImageHandlerOption.extend({
             img.insertAdjacentElement("afterend", clonedImgEl);
             this.options.wysiwyg.odooEditor.observerActive("addClonedImgForHoverEffectPreview");
         }
-        const loadedImg = await loadImage(dataURL, img);
+        const loadedImg = await this._loadImage(dataURL, img);
         if (hasHoverEffect) {
             this.options.wysiwyg.odooEditor.observerUnactive("removeClonedImgForHoverEffectPreview");
             clonedImgEl.remove();
@@ -7249,7 +7319,7 @@ registry.ImageTools = ImageHandlerOption.extend({
         const initialImageWidth = img.naturalWidth;
 
         // Apply the right animation speed if there is an animated shape.
-        const shapeAnimationSpeed = Number(img.dataset.shapeAnimationSpeed) || 0;
+        const shapeAnimationSpeed = Number(this.imageData.shape_animation_speed) || 0;
         if (shapeAnimationSpeed) {
             svgText = this._replaceAnimationDuration(shapeAnimationSpeed, svgText);
         }
@@ -7257,8 +7327,8 @@ registry.ImageTools = ImageHandlerOption.extend({
         const svg = new DOMParser().parseFromString(svgText, 'image/svg+xml').documentElement;
 
         // Modifies the SVG according to the "flip" or/and "rotate" options.
-        const shapeFlip = img.dataset.shapeFlip || "";
-        const shapeRotate = img.dataset.shapeRotate || 0;
+        const shapeFlip = this.imageData.shape_flip || "";
+        const shapeRotate = this.imageData.shape_rotate || 0;
         if ((shapeFlip || shapeRotate) && this._isTransformableShape()) {
             let shapeTransformValues = [];
             if (shapeFlip) { // Possible values => "x", "y", "xy"
@@ -7290,7 +7360,7 @@ registry.ImageTools = ImageHandlerOption.extend({
             imgAspectRatio: svg.dataset.imgAspectRatio || null,
             svgAspectRatio: svgAspectRatio,
         };
-        const imgDataURL = await applyModifications(img, options);
+        const imgDataURL = await applyModifications(this.imageData, options);
         svg.removeChild(svg.querySelector('#preview'));
         svg.querySelectorAll("image").forEach(image => {
             image.setAttribute("xlink:href", imgDataURL);
@@ -7298,14 +7368,14 @@ registry.ImageTools = ImageHandlerOption.extend({
         // Force natural width & height (note: loading the original image is
         // needed for Safari where natural width & height of SVG does not return
         // the correct values).
-        const originalImage = await loadImage(imgDataURL);
+        const originalImage = await this._loadImage(imgDataURL);
         // If the svg forces the size of the shape we still want to have the resized
         // width
         if (!svg.dataset.forcedSize) {
             svg.setAttribute('width', originalImage.naturalWidth);
             svg.setAttribute('height', originalImage.naturalHeight);
         } else {
-            const imageWidth = Math.trunc(img.dataset.resizeWidth || img.dataset.width || initialImageWidth);
+            const imageWidth = Math.trunc(this.imageData.resize_width || this.imageData.width || initialImageWidth);
             const newHeight = imageWidth / svgAspectRatio;
             svg.setAttribute('width', imageWidth);
             svg.setAttribute('height', newHeight);
@@ -7315,8 +7385,8 @@ registry.ImageTools = ImageHandlerOption.extend({
             type: 'image/svg+xml',
         });
         const dataURL = await createDataURL(blob);
-        const imgFilename = (img.dataset.originalSrc.split('/').pop()).split('.')[0];
-        img.dataset.fileName = `${imgFilename}.svg`;
+        const imgFilename = (this.imageData.original_src.split('/').pop()).split('.')[0];
+        this.imageData.file_name = `${imgFilename}.svg`;
         return dataURL;
     },
     /**
@@ -7373,13 +7443,12 @@ registry.ImageTools = ImageHandlerOption.extend({
      */
     async _computeWidgetVisibility(widgetName, params) {
         if (widgetName.startsWith('img-shape-color')) {
-            const img = this._getImg();
-            const shapeName = img.dataset.shape;
-            const shapeColors = img.dataset.shapeColors;
+            const shapeName = this.imageData.shape;
+            const shapeColors = this.imageData.shape_colors;
             if (!shapeName || !shapeColors) {
                 return false;
             }
-            const colors = img.dataset.shapeColors.split(';');
+            const colors = this.imageData.shape_colors.split(';');
             return colors[parseInt(params.colorId)];
         }
         if (widgetName === "shape_anim_speed_opt") {
@@ -7455,19 +7524,16 @@ registry.ImageTools = ImageHandlerOption.extend({
                 return this._isCropped() ? 'true' : '';
             }
             case 'setImgShape': {
-                return this._getImg().dataset.shape || '';
+                return this.imageData.shape || '';
             }
             case 'setImgShapeColor': {
-                const img = this._getImg();
-                return (img.dataset.shapeColors && img.dataset.shapeColors.split(';')[parseInt(params.colorId)]) || '';
+                return (this.imageData.shape_colors && this.imageData.shape_colors.split(';')[parseInt(params.colorId)]) || '';
             }
             case 'setImgShapeFlipX': {
-                const imgEl = this._getImg();
-                return imgEl.dataset.shapeFlip?.includes("x") || "";
+                return this.imageData.shape_flip?.includes("x") || "";
             }
             case 'setImgShapeFlipY': {
-                const imgEl = this._getImg();
-                return imgEl.dataset.shapeFlip?.includes("y") || "";
+                return this.imageData.shape_flip?.includes("y") || "";
             }
             case 'setHoverEffectColor': {
                 const imgEl = this._getImg();
@@ -7507,8 +7573,8 @@ registry.ImageTools = ImageHandlerOption.extend({
      * @override
      */
     _getImageMimetype(img) {
-        if (img.dataset.shape && img.dataset.originalMimetype) {
-            return img.dataset.originalMimetype;
+        if (this.imageData.shape && this.imageData.original_mimetype) {
+            return this.imageData.original_mimetype;
         }
         return this._super(...arguments);
     },
@@ -7563,13 +7629,20 @@ registry.ImageTools = ImageHandlerOption.extend({
         }
 
         let match = img.src.match(/\/web_editor\/image_shape\/(\w+\.\w+)/);
+        // Can not check for `this.imageData.shape` as `this._loadImageInfo`
+        // has not been executed yet so the image data are not yet recovered.
         if (img.dataset.shape && match) {
+            this.imageShape = {};
+            for (const option in img.dataset) {
+                if (weUtils.isDatasetImageOption(option)) {
+                    this.imageShape[option] = img.dataset[option];
+                }
+            }
             match = match[1];
             if (match.endsWith("_perspective")) {
                 // As an image might already have been modified with a
                 // perspective for some customized snippets in themes. We need
-                // to find the original image to set the 'data-original-src'
-                // attribute.
+                // to find the original image to set the `originalSrc` data.
                 match = match.slice(0, -12);
             }
             return this._loadImageInfo(`/web/image/${encodeURIComponent(match)}`);
@@ -7583,42 +7656,43 @@ registry.ImageTools = ImageHandlerOption.extend({
     async _loadImageInfo() {
         await this._super(...arguments);
         const img = this._getImg();
-        if (img.dataset.shape) {
-            if (img.dataset.mimetype !== "image/svg+xml") {
-                img.dataset.originalMimetype = img.dataset.mimetype;
+        if (this.imageData.shape) {
+            if (this.imageData.mimetype !== "image/svg+xml") {
+                this.imageData.original_mimetype = this.imageData.mimetype;
             }
             if (!this._isImageSupportedForProcessing(img)) {
-                delete img.dataset.shape;
-                delete img.dataset.shapeColors;
-                delete img.dataset.fileName;
-                delete img.dataset.originalMimetype;
-                delete img.dataset.shapeFlip;
-                delete img.dataset.shapeRotate;
+                delete this.imageData.shape;
+                delete this.imageData.shape_colors;
+                delete this.imageData.file_name;
+                delete this.imageData.original_mimetype;
+                delete this.imageData.shape_flip;
+                delete this.imageData.shape_rotate;
                 delete img.dataset.hoverEffect;
                 delete img.dataset.hoverEffectColor;
                 delete img.dataset.hoverEffectStrokeWidth;
                 delete img.dataset.hoverEffectIntensity;
                 img.classList.remove("o_animate_on_hover");
-                delete img.dataset.shapeAnimationSpeed;
+                delete this.imageData.shape_animation_speed;
+                weUtils.updateImageDataRegistry(img.getAttribute("src"), this.imageData);
                 return;
             }
-            if (img.dataset.mimetype !== "image/svg+xml") {
+            if (this.imageData.mimetype !== "image/svg+xml") {
                 // Image data-mimetype should be changed to SVG since
                 // loadImageInfo() will set the original attachment mimetype on
                 // it.
-                img.dataset.mimetype = "image/svg+xml";
+                this.imageData.mimetype = "image/svg+xml";
             }
+            weUtils.updateImageDataRegistry(img.getAttribute("src"), this.imageData);
         }
     },
     /**
      * @private
      */
     async _reapplyCurrentShape() {
-        const img = this._getImg();
-        if (img.dataset.shape) {
-            await this._loadShape(img.dataset.shape);
-            await this._applyShapeAndColors(true, (img.dataset.shapeColors && img.dataset.shapeColors.split(';')));
-            img.classList.add("o_modified_image_to_save");
+        if (this.imageData.shape) {
+            await this._loadShape(this.imageData.shape);
+            await this._applyShapeAndColors(true, (this.imageData.shape_colors && this.imageData.shape_colors.split(';')));
+            this._getImg().classList.add("o_modified_image_to_save");
         }
     },
     /**
@@ -7637,18 +7711,17 @@ registry.ImageTools = ImageHandlerOption.extend({
      * @param {string} flipValue image shape flip value
      */
     async _setImgShapeFlip(flipValue) {
-        const imgEl = this._getImg();
-        const currentFlipValue = imgEl.dataset.shapeFlip || "";
+        const currentFlipValue = this.imageData.shape_flip || "";
         const newFlipValue = currentFlipValue.includes(flipValue)
             ? currentFlipValue.replace(flipValue, "")
             : currentFlipValue + flipValue;
         if (newFlipValue) {
-            imgEl.dataset.shapeFlip = newFlipValue === "yx" ? "xy" : newFlipValue;
+            this.imageData.shape_flip = newFlipValue === "yx" ? "xy" : newFlipValue;
         } else {
-            delete imgEl.dataset.shapeFlip;
+            delete this.imageData.shape_flip;
         }
-        await this._applyShapeAndColors(true, imgEl.dataset.shapeColors?.split(";"));
-        imgEl.classList.add("o_modified_image_to_save");
+        await this._applyShapeAndColors(true, this.imageData.shape_colors?.split(";"));
+        this._getImg().classList.add("o_modified_image_to_save");
     },
     /**
      * Rotates the image shape 90 degrees.
@@ -7657,16 +7730,15 @@ registry.ImageTools = ImageHandlerOption.extend({
      * @param {integer} rotation rotation value
      */
     async _setImgShapeRotate(rotation) {
-        const imgEl = this._getImg();
-        const currentRotateValue = parseInt(imgEl.dataset.shapeRotate) || 0;
+        const currentRotateValue = parseInt(this.imageData.shape_rotate) || 0;
         const newRotateValue = (currentRotateValue + rotation + 360) % 360;
         if (newRotateValue) {
-            imgEl.dataset.shapeRotate = newRotateValue;
+            this.imageData.shape_rotate = newRotateValue;
         } else {
-            delete imgEl.dataset.shapeRotate;
+            delete this.imageData.shape_rotate;
         }
-        await this._applyShapeAndColors(true, imgEl.dataset.shapeColors?.split(";"));
-        imgEl.classList.add("o_modified_image_to_save");
+        await this._applyShapeAndColors(true, this.imageData.shape_colors?.split(";"));
+        this._getImg().classList.add("o_modified_image_to_save");
     },
     /**
      * Checks if the shape is in the "devices" category.
@@ -7675,12 +7747,11 @@ registry.ImageTools = ImageHandlerOption.extend({
      * @returns {boolean}
      */
     _isDeviceShape() {
-        const imgEl = this._getImg();
-        const shapeName = imgEl.dataset.shape;
+        const shapeName = this.imageData.shape;
         if (!shapeName) {
             return false;
         }
-        const shapeCategory = imgEl.dataset.shape.split("/")[1];
+        const shapeCategory = this.imageData.shape.split("/")[1];
         return shapeCategory === "devices";
     },
     /**
@@ -7843,7 +7914,7 @@ registry.ImageTools = ImageHandlerOption.extend({
      */
     async _disableHoverEffect() {
         const imgEl = this._getImg();
-        const shapeName = imgEl.dataset.shape?.split("/")[2];
+        const shapeName = this.imageData.shape?.split("/")[2];
         delete imgEl.dataset.hoverEffect;
         delete imgEl.dataset.hoverEffectColor;
         delete imgEl.dataset.hoverEffectStrokeWidth;
@@ -7888,7 +7959,7 @@ registry.ImageTools = ImageHandlerOption.extend({
      */
     _isImageSupportedForShapes() {
         const imgEl = this._getImg();
-        return imgEl.dataset.originalId && this._isImageSupportedForProcessing(imgEl);
+        return this.imageData.original_id && this._isImageSupportedForProcessing(imgEl);
     },
 
     //--------------------------------------------------------------------------

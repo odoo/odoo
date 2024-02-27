@@ -1,4 +1,6 @@
+import { updateImageDataRegistry } from "@html_editor/utils/image";
 import { rpc } from "@web/core/network/rpc";
+import { registry } from "@web/core/registry";
 import { pick } from "@web/core/utils/objects";
 import { getAffineApproximation, getProjective } from "./perspective_utils";
 
@@ -170,7 +172,7 @@ const glFilters = {
         ]);
     },
 
-    custom: (filter, cv, filterOptions) => {
+    custom: (filter, cv, filter_options) => {
         const options = Object.assign(
             {
                 blend: "normal",
@@ -182,7 +184,7 @@ const glFilters = {
                 brightness: "0",
                 sepia: "0",
             },
-            JSON.parse(filterOptions || "{}")
+            JSON.parse(filter_options || "{}")
         );
         const filters = [];
         if (options.filterColor) {
@@ -201,52 +203,52 @@ const glFilters = {
 };
 
 /**
- * Applies data-attributes modifications to an img tag and returns a dataURL
+ * Applies image data modifications to an img tag and returns a dataURL
  * containing the result. This function does not modify the original image.
  *
- * @param {HTMLImageElement} img the image to which modifications are applied
+ * @param {Object} imageData data (stored in the db) to apply to the image.
  * @param {Cropper} cropper the cropper instance
  * @returns {string} dataURL of the image with the applied modifications
  */
-export async function applyModifications(img, cropper, dataOptions = {}) {
+export async function applyModifications(imageData = {}, cropper, dataOptions = {}) {
     const data = Object.assign(
         {
-            glFilter: "",
+            gl_filter: "",
             filter: "#0000",
             quality: "75",
             forceModification: false,
         },
-        img.dataset,
+        imageData,
         dataOptions
     );
     let {
         width,
         height,
-        resizeWidth,
+        resize_width,
         quality,
         filter,
         mimetype,
-        originalSrc,
-        glFilter,
-        filterOptions,
+        original_src,
+        gl_filter,
+        filter_options,
         forceModification,
         perspective,
         svgAspectRatio,
         imgAspectRatio,
     } = data;
-    [width, height, resizeWidth] = [width, height, resizeWidth].map((s) => parseFloat(s));
+    [width, height, resize_width] = [width, height, resize_width].map((s) => parseFloat(s));
     quality = parseInt(quality);
 
     // Skip modifications (required to add shapes on animated GIFs).
     if (isGif(mimetype) && !forceModification) {
-        return await _loadImageDataURL(originalSrc);
+        return await _loadImageDataURL(original_src);
     }
 
     // Crop
     const container = document.createElement("div");
-    const original = await loadImage(originalSrc);
+    const original = await loadImage(original_src);
     // loadImage may have ended up loading a different src (see: LOAD_IMAGE_404)
-    originalSrc = original.getAttribute("src");
+    original_src = original.getAttribute("src");
     container.appendChild(original);
     let croppedImg = cropper.getCroppedCanvas(width, height);
 
@@ -262,7 +264,7 @@ export async function applyModifications(img, cropper, dataOptions = {}) {
 
     // Width
     const result = document.createElement("canvas");
-    result.width = resizeWidth || croppedImg.width;
+    result.width = resize_width || croppedImg.width;
     result.height = perspective
         ? result.width / svgAspectRatio
         : (croppedImg.height * result.width) / croppedImg.width;
@@ -355,13 +357,13 @@ export async function applyModifications(img, cropper, dataOptions = {}) {
     }
 
     // GL filter
-    if (glFilter) {
+    if (gl_filter) {
         const glf = new window.WebGLImageFilter();
         const cv = document.createElement("canvas");
         cv.width = result.width;
         cv.height = result.height;
         applyAll = _applyAll.bind(null, result);
-        glFilters[glFilter](glf, cv, filterOptions);
+        glFilters[gl_filter](glf, cv, filter_options);
         const filtered = glf.apply(result);
         ctx.drawImage(
             filtered,
@@ -383,15 +385,15 @@ export async function applyModifications(img, cropper, dataOptions = {}) {
     // Quality
     const dataURL = result.toDataURL(mimetype, quality / 100);
     const newSize = getDataURLBinarySize(dataURL);
-    const originalSize = _getImageSizeFromCache(originalSrc);
+    const originalSize = _getImageSizeFromCache(original_src);
     const isChanged =
         !!perspective ||
-        !!glFilter ||
+        !!gl_filter ||
         original.width !== result.width ||
         original.height !== result.height ||
         original.width !== croppedImg.width ||
         original.height !== croppedImg.height;
-    return isChanged || originalSize >= newSize ? dataURL : await _loadImageDataURL(originalSrc);
+    return isChanged || originalSize >= newSize ? dataURL : await _loadImageDataURL(original_src);
 }
 
 /**
@@ -519,18 +521,19 @@ export async function activateCropper(image, aspectRatio, dataset) {
 }
 
 /**
- * Marks an <img> with its attachment data (originalId, originalSrc, mimetype)
+ * Loads the image data (filter, shape, mimetype etc...).
  *
- * @param {HTMLImageElement} img the image whose attachment data should be found
+ * @param {HTMLImageElement} img the image whose data should be found.
+ * @param {Object} recordInfo information linked to the closest editable element
+ * of the image.
  * @param {string} [attachmentSrc=''] specifies the URL of the corresponding
  * attachment if it can't be found in the 'src' attribute.
  */
-export async function loadImageInfo(img, attachmentSrc = "") {
-    const src = attachmentSrc || img.getAttribute("src");
-    // If there is a marked originalSrc, the data is already loaded.
-    // If the image does not have the "mimetypeBeforeConversion" attribute, it
-    // has to be added.
-    if ((img.dataset.originalSrc && img.dataset.mimetypeBeforeConversion) || !src) {
+export async function loadImageInfo(img, recordInfo, attachmentSrc = "") {
+    const imgSrc = img.getAttribute("src");
+    const src = attachmentSrc || imgSrc;
+    if (!src || registry.category("image.data").get(src, undefined)) {
+        // The image data have already been loaded
         return;
     }
     // In order to be robust to absolute, relative and protocol relative URLs,
@@ -546,8 +549,13 @@ export async function loadImageInfo(img, attachmentSrc = "") {
 
     const srcUrl = new URL(src, docHref);
     const relativeSrc = srcUrl.pathname;
-
-    const { original } = await rpc("/html_editor/get_image_info", { src: relativeSrc });
+    const imageData = await rpc("/web_editor/get_image_info", {
+        res_model: recordInfo.resModel,
+        res_id: recordInfo.resId,
+        res_field: recordInfo.resField,
+        res_type: recordInfo.type,
+        src: relativeSrc,
+    });
     // If src was an absolute "external" URL, we consider unlikely that its
     // relative part matches something from the DB and even if it does, nothing
     // bad happens, besides using this random image as the original when using
@@ -557,22 +565,8 @@ export async function loadImageInfo(img, attachmentSrc = "") {
     // setup their website domain. That means they can have an absolute URL that
     // looks like "https://mycompany.odoo.com/web/image/123" that leads to a
     // "local" image even if the domain name is now "mycompany.be".
-    //
-    // The "redirect" check is for when it is a redirect image attachment due to
-    // an external URL upload.
-    if (
-        original &&
-        original.image_src &&
-        !/\/web\/image\/\d+-redirect\//.test(original.image_src)
-    ) {
-        if (!img.dataset.mimetype) {
-            // The mimetype has to be added only if it is not already present as
-            // we want to avoid to reset a mimetype set by the user.
-            img.dataset.mimetype = original.mimetype;
-        }
-        img.dataset.originalId = original.id;
-        img.dataset.originalSrc = original.image_src;
-        img.dataset.mimetypeBeforeConversion = original.mimetype;
+    if (imageData) {
+        updateImageDataRegistry(imgSrc, imageData);
     }
 }
 

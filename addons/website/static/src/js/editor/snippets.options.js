@@ -3181,19 +3181,22 @@ options.registry.CoverProperties = options.Class.extend({
             if (previewMode === false) {
                 const imgEl = document.createElement("img");
                 imgEl.src = widgetValue;
-                await loadImageInfo(imgEl);
-                if (imgEl.dataset.mimetype && ![
+                const editableEl = this.$image[0].closest(".o_editable");
+                await loadImageInfo(imgEl, this.options.wysiwyg._getRecordInfo(editableEl));
+                this.imageData = weUtils.getImageData(imgEl);
+                if (this.imageData.mimetype && ![
                     "image/gif",
                     "image/svg+xml",
                     "image/webp",
-                ].includes(imgEl.dataset.mimetype)) {
+                ].includes(this.imageData.mimetype)) {
                     // Convert to webp but keep original width.
-                    imgEl.dataset.mimetype = "image/webp";
-                    const base64src = await applyModifications(imgEl, {
-                        mimetype: "image/webp",
-                    });
+                    this.imageData.mimetype = "image/webp";
+                    const base64src = await applyModifications(this.imageData);
                     widgetValue = base64src;
                     this.$image[0].classList.add("o_b64_image_to_save");
+                    // Update the registry as the image is modified ad its src
+                    // will change.
+                    weUtils.updateImageDataRegistry(widgetValue, this.imageData);
                 }
             }
             this.$image.css('background-image', `url('${widgetValue}')`);

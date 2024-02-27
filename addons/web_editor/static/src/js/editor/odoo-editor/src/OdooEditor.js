@@ -88,6 +88,7 @@ import {
 import { editorCommands } from './commands/commands.js';
 import { Powerbox } from './powerbox/Powerbox.js';
 import { TablePicker } from './tablepicker/TablePicker.js';
+import weUtils from "@web_editor/js/common/utils";
 
 export * from './utils/utils.js';
 import { UNBREAKABLE_ROLLBACK_CODE, UNREMOVABLE_ROLLBACK_CODE } from './utils/constants.js';
@@ -4929,9 +4930,9 @@ export class OdooEditor extends EventTarget {
             if (this.options.dropImageAsAttachment) {
                 imageNode.classList.add('o_b64_image_to_save');
             }
-            imageNode.dataset.fileName = imageFile.name;
             promises.push(getImageUrl(imageFile).then(url => {
                 imageNode.src = url;
+                weUtils.updateImageDataRegistry(url, {"fileName": imageFile.name});
                 return imageNode;
             }));
         }

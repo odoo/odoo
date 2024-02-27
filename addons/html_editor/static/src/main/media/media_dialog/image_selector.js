@@ -3,6 +3,7 @@ import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { DEFAULT_PALETTE } from "@html_editor/utils/color";
+import { getImageData } from "@html_editor/utils/image";
 import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
 import { Attachment, FileSelector, IMAGE_EXTENSIONS, IMAGE_MIMETYPES } from "./file_selector";
 
@@ -92,6 +93,7 @@ export class ImageSelector extends FileSelector {
         this.MIN_ROW_HEIGHT = 128;
 
         this.fileMimetypes = IMAGE_MIMETYPES.join(",");
+        this.imageData = this.props.media ? getImageData(this.props.media) : {};
     }
 
     get canLoadMore() {
@@ -153,7 +155,7 @@ export class ImageSelector extends FileSelector {
             // We might get a few more optimized image than necessary if the
             // original image has multiple optimized images but it's not a
             // big deal.
-            const originalId = this.props.media && this.props.media.dataset.originalId;
+            const originalId = this.imageData.original_id;
             if (originalId) {
                 subDomain.push(originalId);
             }
@@ -186,8 +188,8 @@ export class ImageSelector extends FileSelector {
     }
 
     isInitialMedia(attachment) {
-        if (this.props.media.dataset.originalSrc) {
-            return this.props.media.dataset.originalSrc === attachment.image_src;
+        if (this.imageData.original_src) {
+            return this.imageData.original_src === attachment.image_src;
         }
         return this.props.media.getAttribute("src") === attachment.image_src;
     }

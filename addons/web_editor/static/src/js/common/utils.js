@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { registry } from "@web/core/registry";
 import {SIZES, MEDIAS_BREAKPOINTS} from "@web/core/ui/ui_service";
 import {
     normalizeCSSColor,
@@ -89,9 +90,16 @@ const DEFAULT_PALETTE = {
  * Set of all the data attributes relative to the background images.
  */
 const BACKGROUND_IMAGE_ATTRIBUTES = new Set([
-    "originalId", "originalSrc", "mimetype", "resizeWidth", "glFilter", "quality", "bgSrc",
-    "filterOptions",
-    "mimetypeBeforeConversion",
+    "original_id", "original_src", "mimetype", "resize_width", "gl_filter", "quality", "bg_src",
+    "filter_options",
+    "mimetype_before_conversion",
+]);
+/**
+ * Set of the image options to keep on the DOM.
+ */
+const DATASET_IMAGE_OPTIONS = new Set([
+    "shape", "shape_animation_speed", "shape_colors", "shape_flip", "shape_rotate", "file_name",
+    "original_mimetype",
 ]);
 
 /**
@@ -441,6 +449,14 @@ function _isBackgroundImageAttribute(attribute) {
     return BACKGROUND_IMAGE_ATTRIBUTES.has(attribute);
 }
 /**
+ * Checks if an option is in the DATASET_IMAGE_OPTIONS set.
+ *
+ * @param {string} option The option that has to be checked.
+ */
+function _isDatasetImageOption(option) {
+    return DATASET_IMAGE_OPTIONS.has(option);
+}
+/**
  * Checks if an element supposedly marked with the o_editable_media class should
  * in fact be editable (checks if its environment looks like a non editable
  * environment whose media should be editable).
@@ -505,6 +521,61 @@ function _forwardToThumbnail(imgEl) {
         }
     }
 }
+/**
+ * Updates the "image.data" registry thanks to imgSrc (key) and a copy of
+ * imageData (value).
+ *
+ * @param {string} imgSrc - the source of the image whose data must be updated
+ * on the "image.data" registry.
+ * @param {Object} imageData - the data whose copy must be updated on the
+ * registry.
+ */
+function _updateImageDataRegistry(imgSrc, imageData) {
+    const imageDataCopy = Object.assign({}, imageData);
+    registry.category("image.data").add(imgSrc, imageDataCopy, { force: true });
+}
+/**
+ * Returns a proxy of the data associated to imgEl. If a data present in
+ * 'DATASET_IMAGE_OPTIONS' is updated on the proxy, it updates the dataset of
+ * the image accordingly.
+ *
+ * @param {HTMLImageElement} imgEl
+ * @param {Object} preImageData - default data.
+ * @returns {Object} A proxy of the data associated to imgEl.
+ */
+function _getImageData(imgEl, preImageData = {}) {
+    const imgSrc = imgEl.getAttribute("src");
+    const imageData = registry.category("image.data").get(imgSrc, {});
+
+    const handlerImageData = {
+        set(obj, optionName, optionValue) {
+            if (_isDatasetImageOption(optionName)) {
+                // If a "data-attribute option" is modified, also modify the
+                // option in the dataset.
+                imgEl.dataset[_convertSnakeToCamelString(optionName)] = optionValue;
+            }
+            return Reflect.set(...arguments);
+        },
+        deleteProperty(imageData, optionName) {
+            if (_isDatasetImageOption(optionName)) {
+                // If a "data-attribute option" is removed, remove it also from
+                // the dataset.
+                delete imgEl.dataset[_convertSnakeToCamelString(optionName)];
+            }
+            return Reflect.deleteProperty(...arguments);
+        },
+    };
+    return new Proxy(Object.assign({}, preImageData, imageData), handlerImageData);
+}
+/**
+ * Converts a snake case string to camel case.
+ *
+ * @param {string} snakeString - the snake case string to convert to camel case.
+ * @returns {string} The camel case version of snakeString.
+ */
+function _convertSnakeToCamelString(snakeString) {
+    return snakeString.replace(/(_[a-z])/g, (group) => group.replace("_", "").toUpperCase());
+}
 
 export default {
     COLOR_PALETTE_COMPATIBILITY_COLOR_NAMES: COLOR_PALETTE_COMPATIBILITY_COLOR_NAMES,
@@ -535,4 +606,7 @@ export default {
     isMobileView: _isMobileView,
     getLinkLabel: _getLinkLabel,
     forwardToThumbnail: _forwardToThumbnail,
+    isDatasetImageOption: _isDatasetImageOption,
+    getImageData: _getImageData,
+    updateImageDataRegistry: _updateImageDataRegistry,
 };

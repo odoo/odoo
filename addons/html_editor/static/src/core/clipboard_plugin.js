@@ -4,6 +4,7 @@ import { closestBlock, isBlock } from "../utils/blocks";
 import { unwrapContents } from "../utils/dom";
 import { ancestors, childNodes, closestElement } from "../utils/dom_traversal";
 import { parseHTML } from "../utils/html";
+import { updateImageDataRegistry } from "../utils/image";
 
 /**
  * @typedef { import("./selection_plugin").EditorSelection } EditorSelection
@@ -602,10 +603,10 @@ export class ClipboardPlugin extends Plugin {
             if (this.config.dropImageAsAttachment) {
                 imageNode.classList.add("o_b64_image_to_save");
             }
-            imageNode.dataset.fileName = imageFile.name;
             promises.push(
                 getImageUrl(imageFile).then((url) => {
                     imageNode.src = url;
+                    updateImageDataRegistry(url, {"file_name": imageFile.name});
                     return imageNode;
                 })
             );
