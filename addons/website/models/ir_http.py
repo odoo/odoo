@@ -90,7 +90,7 @@ class Http(models.AbstractModel):
         website_id = request.website_routing
         logger.debug("_generate_routing_rules for website: %s", website_id)
         rewrites = self._get_rewrites(website_id)
-        self._rewrite_len.cache.add_value(self, website_id, cache_value=len(rewrites))
+        self._rewrite_len.__cache__.add_value(self, website_id, cache_value=len(rewrites))
 
         for url, endpoint in super()._generate_routing_rules(modules, converters):
             if url in rewrites:
