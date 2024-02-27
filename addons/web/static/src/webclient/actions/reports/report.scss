@@ -1,6 +1,6 @@
 $o-default-report-font: 'Lato' !default;
-$o-default-report-primary-color: rgb(0, 0, 0) !default;
-$o-default-report-secondary-color: rgb(0, 0, 0) !default;
+$o-default-report-primary-color: $o-gray-900 !default;
+$o-default-report-secondary-color: $o-default-report-primary-color !default;
 
 html, body {
     height: 100%;
@@ -8,7 +8,7 @@ html, body {
 }
 
 body {
-    color: #000 !important;
+    color: $o-default-report-primary-color;
     word-wrap: break-word;
     font-family: $o-default-report-font;
     line-height: 1.5;
