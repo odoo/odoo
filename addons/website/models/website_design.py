@@ -10,6 +10,10 @@ class WebsiteDesign(models.Model):
 
     # DESIGN VARIABLES
 
+    layout = fields.Many2one('website.design.option', string='Layout', default=lambda self: self.env.ref('website.design_option_layout_full'))
+    footer__effect = fields.Many2one('website.design.option', string='Footer Effect', default=lambda self: self.env.ref('website.design_option_footereffect_none'))
+    btn__ripple = fields.Many2one('website.design.option', string='Button Ripple', default=lambda self: self.env.ref('website.design_option_btnripple_false'))
+
     paragraph__margin__top = fields.Char(string='Paragraph Margin Top', default='0')
     paragraph__margin__bottom = fields.Char(string='Paragraph Margin Bottom', default='16px')
 
@@ -69,9 +73,38 @@ class WebsiteDesign(models.Model):
     sidebar__width = fields.Char(string='Sidebar Width', default='18.75rem')
 
     def write(self, vals):
+        for key in vals:
+            if self._fields[key].comodel_name == 'website.design.option' and isinstance(vals[key], str):
+                vals[key] = self.env['website.design.option'].browse(int(vals[key]))
         res = super().write(vals)
         for record in self:
-            record._customize_design_variables(vals)
+            record._customize_design_variables(vals.copy())
+
+        def handle_design_options(self, vals, attribute):
+            for key in vals:
+                if self._fields[key].comodel_name != 'website.design.option':
+                    continue
+
+                items_to_activate = self.with_context(active_test=False).mapped(key).mapped(attribute).mapped('key') or []
+                unactive_design_options = self.env['website.design.option'].search([
+                    ('name', '=', vals[key].name),
+                    ('value', '!=', vals[key].value),
+                ])
+                items_to_deactivate = []
+                for unactive_design_option in unactive_design_options:
+                    items_to_deactivate.extend(unactive_design_option.with_context(active_test=False).mapped(attribute).mapped('key') or [])
+                items_to_deactivate = list(set(items_to_deactivate) - set(items_to_activate))
+                if len(items_to_activate) or len(items_to_deactivate):
+                    # Force the website in context to ensure the COW.
+                    self.env['website'].with_context(website_id=self.env['website'].get_current_website().id)\
+                        .theme_customize_data(attribute == 'views_to_activate', items_to_activate, items_to_deactivate)
+
+        # Update the views for design.option records.
+        handle_design_options(self, vals, 'views_to_activate')
+
+        # Update the assets for design.option records.
+        handle_design_options(self, vals, 'assets_to_activate')
+
         return res
 
     @api.model_create_multi
@@ -98,8 +131,9 @@ class WebsiteDesign(models.Model):
 
     def _filter_design_variables(self, vals):
         """
-        Removes the keys in vals that are not design variables and replaces __
-        by - in the keys to match the SCSS variable names.
+        Removes the keys in vals that are not design variables, replaces `__`
+        by `-` in the keys to match the SCSS variable names and compute the
+        values for field that are design options.
 
         :param vals: dict of design variables to filter.
         :return: dict with only the keys that are design ones.
@@ -108,6 +142,9 @@ class WebsiteDesign(models.Model):
         for key in vals:
             if key in NOT_DESIGN_FIELDS:
                 continue
+            if self._fields[key].comodel_name == 'website.design.option':
+                # Compute the value of the design option.
+                vals[key] = vals[key].value
             # As python variable names cannot contains dashes, we replace them
             # by double underscores.
             res[key.replace('__', '-')] = vals[key]

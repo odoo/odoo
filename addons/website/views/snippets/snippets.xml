@@ -1161,17 +1161,7 @@
                         data-null-value="'NULL'"
                         data-with-combinations="customizeWebsiteColor"
                         data-with-gradients="true"/>
-        <we-select string="Slideout Effect" data-variable="footer-effect" data-reload="/">
-            <we-button string="Regular"
-                       data-customize-website-views=""
-                       data-customize-website-variable=""/>
-            <we-button string="Slide Hover"
-                       data-customize-website-views="website.template_footer_slideout"
-                       data-customize-website-variable="'slideout_slide_hover'"/>
-            <we-button string="Shadow"
-                       data-customize-website-views="website.template_footer_slideout"
-                       data-customize-website-variable="'slideout_shadow'"/>
-        </we-select>
+        <we-designoptionselector string="Slideout Effect" data-variable="footer__effect" data-reload="/"/>
         <we-checkbox string="Copyright"
                 data-name="footer_copyright_opt"
                 data-customize-website-views="website.footer_no_copyright|"
@@ -1712,12 +1702,7 @@
         <we-row string="Language">
             <we-button data-add-language="" data-no-preview="true" class="o_we_bg_brand_primary">Add a Language</we-button>
         </we-row>
-        <we-select string="Page Layout" data-variable="layout">
-            <we-button data-customize-website-variable="'full'" data-name="layout_full_opt">Full</we-button>
-            <we-button data-customize-website-variable="'boxed'">Boxed</we-button>
-            <we-button data-customize-website-variable="'framed'">Framed</we-button>
-            <we-button data-customize-website-variable="'postcard'">Postcard</we-button>
-        </we-select>
+        <we-designoptionselector string="Page Layout" data-variable="layout"/>
         <we-row string="Background" class="o_we_sublevel_1" data-no-preview="true">
             <we-colorpicker data-dependencies="!layout_full_opt"
                             data-customize-website-color=""
@@ -1897,10 +1882,7 @@
             <we-input string="Small" class="o_we_sublevel_1" data-customize-website-variable="" data-variable="btn__border__radius__sm" data-unit="px" data-save-unit="rem"/>
             <we-input string="Large" class="o_we_sublevel_1" data-customize-website-variable="" data-variable="btn__border__radius__lg" data-unit="px" data-save-unit="rem"/>
         </we-collapse>
-        <we-select string="On Click Effect" data-variable="btn-ripple">
-            <we-button data-customize-website-variable="false">None</we-button>
-            <we-button data-customize-website-variable="true" data-customize-website-assets="website.ripple_effect_scss, website.ripple_effect_js">Ripple</we-button>
-        </we-select>
+        <we-designoptionselector string="On Click Effect" data-variable="btn__ripple"/>
     </div>
     <div data-js="OptionsTab" data-selector="theme-link" data-no-check="true">
         <we-select string="Link Style" data-variable="link-underline">

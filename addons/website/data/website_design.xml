@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Layout Options -->
+        <record id="design_option_layout_full" model="website.design.option">
+            <field name="name">layout</field>
+            <field name="display_name">Full</field>
+            <field name="value">full</field>
+        </record>
+        <record id="design_option_layout_boxed" model="website.design.option">
+            <field name="name">layout</field>
+            <field name="display_name">Boxed</field>
+            <field name="value">boxed</field>
+        </record>
+        <record id="design_option_layout_framed" model="website.design.option">
+            <field name="name">layout</field>
+            <field name="display_name">Framed</field>
+            <field name="value">framed</field>
+        </record>
+        <record id="design_option_layout_postcard" model="website.design.option">
+            <field name="name">layout</field>
+            <field name="display_name">Postcard</field>
+            <field name="value">postcard</field>
+        </record>
+        <!-- Footer Effect Options -->
+        <record id="design_option_footereffect_none" model="website.design.option">
+            <field name="name">footer__effect</field>
+            <field name="display_name">Regular</field>
+        </record>
+        <record id="design_option_footereffect_slide" model="website.design.option">
+            <field name="name">footer__effect</field>
+            <field name="display_name">Slide Hover</field>
+            <field name="value">slideout_slide_hover</field>
+            <field name="views_to_activate" eval="[(6, 0, [ref('website.template_footer_slideout')])]"/>
+        </record>
+        <record id="design_option_footereffect_shadow" model="website.design.option">
+            <field name="name">footer__effect</field>
+            <field name="display_name">Shadow</field>
+            <field name="value">slideout_shadow</field>
+            <field name="views_to_activate" eval="[(6, 0, [ref('website.template_footer_slideout')])]"/>
+        </record>
+        <!-- Button ripple Options -->
+        <record id="design_option_btnripple_false" model="website.design.option">
+            <field name="name">btn__ripple</field>
+            <field name="display_name">None</field>
+            <field name="value">false</field>
+        </record>
+        <record id="design_option_btnripple_true" model="website.design.option">
+            <field name="name">btn__ripple</field>
+            <field name="display_name">Ripple</field>
+            <field name="value">true</field>
+            <field name="assets_to_activate" eval="[(6, 0, [ref('website.ripple_effect_scss'), ref('website.ripple_effect_js')])]"/>
+        </record>
+    </data>
+</odoo>
