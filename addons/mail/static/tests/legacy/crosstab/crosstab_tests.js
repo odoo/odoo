@@ -7,7 +7,7 @@ import { waitUntilSubscribe } from "@bus/../tests/helpers/websocket_event_deferr
 
 import { start } from "@mail/../tests/helpers/test_utils";
 
-import { patchWithCleanup, triggerHotkey } from "@web/../tests/helpers/utils";
+import { patchDate, patchWithCleanup, triggerHotkey } from "@web/../tests/helpers/utils";
 import { assertSteps, click, contains, insertText, step } from "@web/../tests/utils";
 
 QUnit.module("crosstab");
@@ -97,6 +97,10 @@ QUnit.test("Channel subscription is renewed when channel is added from invite", 
         { name: "R&D" },
         { name: "Sales", channel_member_ids: [] },
     ]);
+    // Patch the date to consider those channels as already known by the server
+    // when the client starts.
+    const later = luxon.DateTime.now().plus({ seconds: 2 });
+    patchDate(later.year, later.month, later.day, later.hour, later.minute, later.second);
     const { env, openDiscuss } = await start();
     patchWithCleanup(env.services["bus_service"], {
         forceUpdateChannels() {
@@ -105,7 +109,6 @@ QUnit.test("Channel subscription is renewed when channel is added from invite", 
     });
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarChannel");
-    await assertSteps(["update-channels"]);
     env.services.orm.call("discuss.channel", "add_members", [[channelId]], {
         partner_ids: [pyEnv.currentPartnerId],
     });
