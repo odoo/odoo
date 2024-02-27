@@ -1821,7 +1821,7 @@
             <we-input string="Line Height"
                       title="Heading 1"
                       data-customize-website-variable="null"
-                      data-variable="headings-line-height"
+                      data-variable="headings__line__height"
                       data-fake-unit="× "/>
             <t t-foreach="[2, 3, 4, 5, 6]" t-as="depth">
                 <we-input t-attf-string="#{heading_label} #{depth}" class="o_we_sublevel_1"
@@ -1838,8 +1838,8 @@
         </we-collapse>
         <we-collapse>
             <we-row string="Margins" title="Heading 1">
-                <we-input title="Top" data-customize-website-variable="" data-variable="headings-margin-top" data-unit="px" data-save-unit="px"/>
-                <we-input title="Bottom" data-customize-website-variable="" data-variable="headings-margin-bottom" data-unit="px" data-save-unit="px"/>
+                <we-input title="Top" data-customize-website-variable="" data-variable="headings__margin__top" data-unit="px" data-save-unit="px"/>
+                <we-input title="Bottom" data-customize-website-variable="" data-variable="headings__margin__bottom" data-unit="px" data-save-unit="px"/>
             </we-row>
             <t t-foreach="[2, 3, 4, 5, 6]" t-as="depth">
                 <we-row t-attf-string="#{heading_label} #{depth}" class="o_we_sublevel_1">
