@@ -8,14 +8,16 @@ import { createSpreadsheetWithPivot } from "../utils/pivot";
 import { createModelWithDataSource } from "@spreadsheet/../tests/utils/model";
 import { THIS_YEAR_GLOBAL_FILTER } from "@spreadsheet/../tests/utils/global_filter";
 import { addGlobalFilter } from "@spreadsheet/../tests/utils/commands";
+import { pivotRegistry } from "@spreadsheet/pivot/plugins/pivot_registry";
+import { OdooPivot } from "@spreadsheet/pivot/pivot_data_source";
 
 QUnit.module("freezing spreadsheet", {}, function () {
     QUnit.test("odoo pivot functions are replaced with their value", async function (assert) {
         const { model } = await createSpreadsheetWithPivot();
-        assert.strictEqual(getCell(model, "A3").content, '=ODOO.PIVOT.HEADER(1,"bar","false")');
+        assert.strictEqual(getCell(model, "A3").content, '=PIVOT.HEADER(1,"bar","false")');
         assert.strictEqual(
             getCell(model, "C3").content,
-            '=ODOO.PIVOT(1,"probability","bar","false","foo",2)'
+            '=PIVOT.VALUE(1,"probability","bar","false","foo",2)'
         );
         assert.strictEqual(getEvaluatedCell(model, "A3").value, "No");
         assert.strictEqual(getEvaluatedCell(model, "C3").value, 15);
@@ -26,12 +28,46 @@ QUnit.module("freezing spreadsheet", {}, function () {
         assert.strictEqual(data.formats[cells.C3.format], "#,##0.00");
     });
 
+    QUnit.test("Pivot with a type different of ODOO is not converted", async function (assert) {
+        // Add a pivot with a type different of ODOO
+        pivotRegistry.add("NEW_KIND_OF_PIVOT", OdooPivot);
+        const spreadsheetData = {
+            pivots: {
+                1: {
+                    type: "NEW_KIND_OF_PIVOT",
+                    name: "Name",
+                    model: "partner",
+                    measures: ["probability"],
+                    formulaId: "1",
+                    colGroupBys: ["foo"],
+                    rowGroupBys: ["bar"],
+                    sortedColumn: null,
+                },
+            },
+        };
+        const model = await createModelWithDataSource({ spreadsheetData });
+        setCellContent(model, "A1", `=PIVOT.VALUE(1, "probability")`);
+        setCellContent(model, "A2", `=PIVOT.HEADER(1, "measure", "probability")`);
+        const data = await freezeOdooData(model);
+        const cells = data.sheets[0].cells;
+        assert.strictEqual(
+            cells.A1.content,
+            `=PIVOT.VALUE(1, "probability")`,
+            "the content is not replaced with the value"
+        );
+        assert.strictEqual(
+            cells.A2.content,
+            `=PIVOT.HEADER(1, "measure", "probability")`,
+            "the content is not replaced with the value"
+        );
+    });
+
     QUnit.test("values are not exported formatted", async function (assert) {
         const { model } = await createSpreadsheetWithPivot();
-        assert.strictEqual(getCell(model, "A3").content, '=ODOO.PIVOT.HEADER(1,"bar","false")');
+        assert.strictEqual(getCell(model, "A3").content, '=PIVOT.HEADER(1,"bar","false")');
         assert.strictEqual(
             getCell(model, "C3").content,
-            '=ODOO.PIVOT(1,"probability","bar","false","foo",2)'
+            '=PIVOT.VALUE(1,"probability","bar","false","foo",2)'
         );
         setCellFormat(model, "C3", "mmmm yyyy");
         setCellContent(model, "C4", "=C3+31");
@@ -49,26 +85,23 @@ QUnit.module("freezing spreadsheet", {}, function () {
 
     QUnit.test("invalid expression with pivot function", async function (assert) {
         const { model } = await createSpreadsheetWithPivot();
-        setCellContent(model, "A1", "=ODOO.PIVOT(1)+"); // invalid expression
+        setCellContent(model, "A1", "=PIVOT.VALUE(1)+"); // invalid expression
         assert.strictEqual(getEvaluatedCell(model, "A1").value, "#BAD_EXPR");
         const data = await freezeOdooData(model);
         const cells = data.sheets[0].cells;
         assert.strictEqual(
             cells.A1.content,
-            "=ODOO.PIVOT(1)+",
+            "=PIVOT.VALUE(1)+",
             "the content is left as is when the expression is invalid"
         );
     });
 
     QUnit.test("odoo pivot functions detection is not case sensitive", async function (assert) {
         const { model } = await createSpreadsheetWithPivot();
-        setCellContent(model, "A1", '=odoo.pivot(1,"probability")');
-        setCellContent(model, "A2", '=ODOO.pivot(1,"probability")');
+        setCellContent(model, "A1", '=pivot.value(1,"probability")');
         const data = await freezeOdooData(model);
         const A1 = data.sheets[0].cells.A1;
-        const A2 = data.sheets[0].cells.A2;
         assert.strictEqual(A1.content, "131", "the content is replaced with the value");
-        assert.strictEqual(A2.content, "131", "the content is replaced with the value");
     });
 
     QUnit.test("computed format is exported", async function (assert) {
@@ -79,7 +112,7 @@ QUnit.module("freezing spreadsheet", {}, function () {
               </pivot>
             `,
         });
-        setCellContent(model, "A1", '=ODOO.PIVOT(1,"pognon")');
+        setCellContent(model, "A1", '=PIVOT.VALUE(1,"pognon")');
         assert.strictEqual(getCell(model, "A1").format, undefined);
         assert.strictEqual(getEvaluatedCell(model, "A1").format, "#,##0.00[$€]");
         const data = await freezeOdooData(model);

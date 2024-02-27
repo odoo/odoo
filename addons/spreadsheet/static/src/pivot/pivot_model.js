@@ -34,7 +34,7 @@ function throwUnsupportedFieldError(field) {
 
 /**
  * Parses the value defining a pivot group in a PIVOT formula
- * e.g. given the following formula PIVOT("1", "stage_id", "42", "status", "won"),
+ * e.g. given the following formula PIVOT.VALUE("1", "stage_id", "42", "status", "won"),
  * the two group values are "42" and "won".
  * @param {object} field
  * @param {number | boolean | string} groupValue
@@ -179,14 +179,14 @@ export class OdooPivotModel extends PivotModel {
 
     /**
      * Get the value of the last group by of the function arguments
-     * e.g. in `ODOO.PIVOT.HEADER(1, "stage_id", "42", "status", "won")`
+     * e.g. in `PIVOT.HEADER(1, "stage_id", "42", "status", "won")`
      *      the last group value is "won".
      *
      * It can also handle positional arguments.
-     * e.g. in `ODOO.PIVOT.HEADER(1, "#stage_id", 1, "#user_id", 1)`
+     * e.g. in `PIVOT.HEADER(1, "#stage_id", 1, "#user_id", 1)`
      *      the last group value is the id of the first user of the first stage.
      *
-     * @param {(string | number)[]} domainArgs ODOO.PIVOT.HEADER arguments
+     * @param {(string | number)[]} domainArgs PIVOT.HEADER arguments
      */
     getLastPivotGroupValue(domainArgs) {
         const groupFieldString = domainArgs.at(-2);

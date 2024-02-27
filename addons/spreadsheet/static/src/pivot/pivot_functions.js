@@ -264,7 +264,7 @@ function getPivotCellValueAndFormat(pivotId, pivotCell) {
 
 functionRegistry
     .add("ODOO.FILTER.VALUE", ODOO_FILTER_VALUE)
-    .add("ODOO.PIVOT", ODOO_PIVOT)
-    .add("ODOO.PIVOT.HEADER", ODOO_PIVOT_HEADER)
-    .add("ODOO.PIVOT.POSITION", ODOO_PIVOT_POSITION)
-    .add("ODOO.PIVOT.TABLE", ODOO_PIVOT_TABLE);
+    .add("PIVOT.VALUE", ODOO_PIVOT)
+    .add("PIVOT.HEADER", ODOO_PIVOT_HEADER)
+    .add("PIVOT.POSITION", ODOO_PIVOT_POSITION)
+    .add("PIVOT", ODOO_PIVOT_TABLE);

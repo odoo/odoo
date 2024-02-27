@@ -90,11 +90,12 @@ export async function freezeOdooData(model) {
             if (containsOdooFunction(cell.content)) {
                 const { col, row } = toCartesian(xc);
                 const sheetId = sheet.id;
-                const evaluatedCell = model.getters.getEvaluatedCell({
-                    sheetId,
-                    col,
-                    row,
-                });
+                const position = { sheetId, col, row };
+                const pivotId = model.getters.getPivotIdFromPosition(position);
+                if (pivotId && model.getters.getPivotDefinition(pivotId).type !== "ODOO") {
+                    continue;
+                }
+                const evaluatedCell = model.getters.getEvaluatedCell(position);
                 cell.content = evaluatedCell.value.toString();
                 if (evaluatedCell.format) {
                     cell.format = getItemId(evaluatedCell.format, data.formats);
@@ -163,7 +164,9 @@ function containsOdooFunction(content) {
     if (
         !content ||
         !content.startsWith("=") ||
-        (!content.toUpperCase().includes("ODOO.") && !content.toUpperCase().includes("_T"))
+        (!content.toUpperCase().includes("ODOO.") &&
+            !content.toUpperCase().includes("_T") &&
+            !content.toUpperCase().includes("PIVOT"))
     ) {
         return false;
     }
@@ -173,7 +176,8 @@ function containsOdooFunction(content) {
             (ast) =>
                 ast.type === "FUNCALL" &&
                 (ast.value.toUpperCase().startsWith("ODOO.") ||
-                    ast.value.toUpperCase().startsWith("_T"))
+                    ast.value.toUpperCase().startsWith("_T") ||
+                    ast.value.toUpperCase().startsWith("PIVOT"))
         );
     } catch {
         return false;

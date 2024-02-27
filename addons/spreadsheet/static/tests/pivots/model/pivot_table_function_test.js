@@ -7,7 +7,7 @@ import { createSpreadsheetWithPivot } from "../../utils/pivot";
 
 let model;
 
-QUnit.module("ODOO.PIVOT.TABLE", {
+QUnit.module("PIVOT", {
     async beforeEach(assert) {
         ({ model } = await createSpreadsheetWithPivot({
             arch: /* xml */ `
@@ -21,8 +21,8 @@ QUnit.module("ODOO.PIVOT.TABLE", {
     },
 });
 
-QUnit.test("full ODOO.PIVOT.TABLE() values", async function (assert) {
-    setCellContent(model, "A1", `=ODOO.PIVOT.TABLE("1")`, "42");
+QUnit.test("full PIVOT() values", async function (assert) {
+    setCellContent(model, "A1", `=PIVOT("1")`, "42");
     // prettier-ignore
     assert.deepEqual(getEvaluatedGrid(model, "A1:D7", "42"), [
         ["(#1) Partner Pivot",    "xphone",       "xpad",         "Total"],
@@ -35,8 +35,8 @@ QUnit.test("full ODOO.PIVOT.TABLE() values", async function (assert) {
     ]);
 });
 
-QUnit.test("full ODOO.PIVOT.TABLE() formats", async function (assert) {
-    setCellContent(model, "A1", `=ODOO.PIVOT.TABLE("1")`, "42");
+QUnit.test("full PIVOT() formats", async function (assert) {
+    setCellContent(model, "A1", `=PIVOT("1")`, "42");
     // prettier-ignore
     assert.deepEqual(getEvaluatedFormatGrid(model, "A1:D7", "42"), [
         [undefined, undefined,  undefined,  undefined],
@@ -49,8 +49,8 @@ QUnit.test("full ODOO.PIVOT.TABLE() formats", async function (assert) {
     ]);
 });
 
-QUnit.test("ODOO.PIVOT.TABLE(row_count=1)", async function (assert) {
-    setCellContent(model, "A1", `=ODOO.PIVOT.TABLE("1", 1)`, "42");
+QUnit.test("PIVOT(row_count=1)", async function (assert) {
+    setCellContent(model, "A1", `=PIVOT("1", 1)`, "42");
     // prettier-ignore
     assert.deepEqual(getEvaluatedGrid(model, "A1:D4", "42"), [
         ["(#1) Partner Pivot",  "xphone",       "xpad",         "Total"],
@@ -60,8 +60,8 @@ QUnit.test("ODOO.PIVOT.TABLE(row_count=1)", async function (assert) {
     ]);
 });
 
-QUnit.test("ODOO.PIVOT.TABLE(row_count=0)", async function (assert) {
-    setCellContent(model, "A1", `=ODOO.PIVOT.TABLE("1", 0)`, "42");
+QUnit.test("PIVOT(row_count=0)", async function (assert) {
+    setCellContent(model, "A1", `=PIVOT("1", 0)`, "42");
     // prettier-ignore
     assert.deepEqual(getEvaluatedGrid(model, "A1:D3", "42"), [
         ["(#1) Partner Pivot",  "xphone",       "xpad",         "Total"],
@@ -70,8 +70,8 @@ QUnit.test("ODOO.PIVOT.TABLE(row_count=0)", async function (assert) {
     ]);
 });
 
-QUnit.test("ODOO.PIVOT.TABLE(negative row_count)", async function (assert) {
-    setCellContent(model, "A1", `=ODOO.PIVOT.TABLE("1", -1)`, "42");
+QUnit.test("PIVOT(negative row_count)", async function (assert) {
+    setCellContent(model, "A1", `=PIVOT("1", -1)`, "42");
     assert.strictEqual(getEvaluatedCell(model, "A1", "42").value, "#ERROR");
     assert.strictEqual(
         getEvaluatedCell(model, "A1", "42").message,
@@ -79,8 +79,8 @@ QUnit.test("ODOO.PIVOT.TABLE(negative row_count)", async function (assert) {
     );
 });
 
-QUnit.test("ODOO.PIVOT.TABLE(include_column_titles=FALSE)", async function (assert) {
-    setCellContent(model, "A1", `=ODOO.PIVOT.TABLE("1",,,FALSE)`, "42");
+QUnit.test("PIVOT(include_column_titles=FALSE)", async function (assert) {
+    setCellContent(model, "A1", `=PIVOT("1",,,FALSE)`, "42");
     // prettier-ignore
     assert.deepEqual(getEvaluatedGrid(model, "A1:D5", "42"), [
         [1,         "",             11,             11],
@@ -91,28 +91,25 @@ QUnit.test("ODOO.PIVOT.TABLE(include_column_titles=FALSE)", async function (asse
     ]);
 });
 
-QUnit.test(
-    "ODOO.PIVOT.TABLE(include_total=FALSE) with no groupbys applied",
-    async function (assert) {
-        const { model } = await createSpreadsheetWithPivot({
-            arch: /* xml */ `
+QUnit.test("PIVOT(include_total=FALSE) with no groupbys applied", async function (assert) {
+    const { model } = await createSpreadsheetWithPivot({
+        arch: /* xml */ `
         <pivot>
             <field name="probability" type="measure"/>
         </pivot>`,
-        });
-        model.dispatch("CREATE_SHEET", { sheetId: "42" });
-        setCellContent(model, "A1", `=ODOO.PIVOT.TABLE("1",,FALSE)`, "42");
-        // prettier-ignore
-        assert.deepEqual(getEvaluatedGrid(model, "A1:B3", "42"), [
+    });
+    model.dispatch("CREATE_SHEET", { sheetId: "42" });
+    setCellContent(model, "A1", `=PIVOT("1",,FALSE)`, "42");
+    // prettier-ignore
+    assert.deepEqual(getEvaluatedGrid(model, "A1:B3", "42"), [
             ["(#1) Partner Pivot",  "Total"],
             ["",                    "Probability"],
             ["Total",               131],
         ]);
-    }
-);
+});
 
 QUnit.test(
-    "ODOO.PIVOT.TABLE(include_total=FALSE) with multiple measures and no groupbys applied",
+    "PIVOT(include_total=FALSE) with multiple measures and no groupbys applied",
     async function (assert) {
         const { model } = await createSpreadsheetWithPivot({
             arch: /* xml */ `
@@ -122,7 +119,7 @@ QUnit.test(
         </pivot>`,
         });
         model.dispatch("CREATE_SHEET", { sheetId: "42" });
-        setCellContent(model, "A1", `=ODOO.PIVOT.TABLE("1",,FALSE)`, "42");
+        setCellContent(model, "A1", `=PIVOT("1",,FALSE)`, "42");
         // prettier-ignore
         assert.deepEqual(getEvaluatedGrid(model, "A1:C3", "42"), [
             ["(#1) Partner Pivot",  "Total",        ""],
@@ -132,20 +129,18 @@ QUnit.test(
     }
 );
 
-QUnit.test(
-    "ODOO.PIVOT.TABLE(include_total=FALSE) with only row groupby applied",
-    async function (assert) {
-        const { model } = await createSpreadsheetWithPivot({
-            arch: /* xml */ `
+QUnit.test("PIVOT(include_total=FALSE) with only row groupby applied", async function (assert) {
+    const { model } = await createSpreadsheetWithPivot({
+        arch: /* xml */ `
         <pivot>
                 <field name="foo" type="row"/>
                 <field name="probability" type="measure"/>
             </pivot>`,
-        });
-        model.dispatch("CREATE_SHEET", { sheetId: "42" });
-        setCellContent(model, "A1", `=ODOO.PIVOT.TABLE("1",,FALSE)`, "42");
-        // prettier-ignore
-        assert.deepEqual(getEvaluatedGrid(model, "A1:C7", "42"), [
+    });
+    model.dispatch("CREATE_SHEET", { sheetId: "42" });
+    setCellContent(model, "A1", `=PIVOT("1",,FALSE)`, "42");
+    // prettier-ignore
+    assert.deepEqual(getEvaluatedGrid(model, "A1:C7", "42"), [
             ["(#1) Partner Pivot",  "Total",        null],
             ["",                    "Probability",  null],
             [1,                     11,             null],
@@ -154,11 +149,10 @@ QUnit.test(
             [17,                    95,             null],
             [null,                  null,           null],
         ]);
-    }
-);
+});
 
 QUnit.test(
-    "ODOO.PIVOT.TABLE(include_total=FALSE) with multiple measures and only row groupby applied",
+    "PIVOT(include_total=FALSE) with multiple measures and only row groupby applied",
     async function (assert) {
         const { model } = await createSpreadsheetWithPivot({
             arch: /* xml */ `
@@ -169,7 +163,7 @@ QUnit.test(
             </pivot>`,
         });
         model.dispatch("CREATE_SHEET", { sheetId: "42" });
-        setCellContent(model, "A1", `=ODOO.PIVOT.TABLE("1",,FALSE)`, "42");
+        setCellContent(model, "A1", `=PIVOT("1",,FALSE)`, "42");
         // prettier-ignore
         assert.deepEqual(getEvaluatedGrid(model, "A1:D5", "42"), [
             ["(#1) Partner Pivot",      "Total",            "",        null],
@@ -181,47 +175,41 @@ QUnit.test(
     }
 );
 
-QUnit.test(
-    "ODOO.PIVOT.TABLE(include_total=FALSE) with only col groupby applied",
-    async function (assert) {
-        const { model } = await createSpreadsheetWithPivot({
-            arch: /* xml */ `
+QUnit.test("PIVOT(include_total=FALSE) with only col groupby applied", async function (assert) {
+    const { model } = await createSpreadsheetWithPivot({
+        arch: /* xml */ `
         <pivot>
             <field name="product_id" type="col"/>
             <field name="probability" type="measure"/>
         </pivot>`,
-        });
-        model.dispatch("CREATE_SHEET", { sheetId: "42" });
-        setCellContent(model, "A1", `=ODOO.PIVOT.TABLE("1",,FALSE)`, "42");
-        // prettier-ignore
-        assert.deepEqual(getEvaluatedGrid(model, "A1:D4", "42"), [
+    });
+    model.dispatch("CREATE_SHEET", { sheetId: "42" });
+    setCellContent(model, "A1", `=PIVOT("1",,FALSE)`, "42");
+    // prettier-ignore
+    assert.deepEqual(getEvaluatedGrid(model, "A1:D4", "42"), [
             ["(#1) Partner Pivot",     "xphone",          "xpad",            null],
             ["",                       "Probability",     "Probability",     null],
             ["Total",                  10,                121,               null],
             [null,                     null,              null,              null],
         ]);
-    }
-);
+});
 
-QUnit.test(
-    "ODOO.PIVOT.TABLE(include_total=FALSE, include_column_titles=FALSE)",
-    async function (assert) {
-        setCellContent(model, "A1", `=ODOO.PIVOT.TABLE("1",,FALSE,FALSE)`, "42");
-        // prettier-ignore
-        assert.deepEqual(getEvaluatedGrid(model, "A1:D5", "42"), [
+QUnit.test("PIVOT(include_total=FALSE, include_column_titles=FALSE)", async function (assert) {
+    setCellContent(model, "A1", `=PIVOT("1",,FALSE,FALSE)`, "42");
+    // prettier-ignore
+    assert.deepEqual(getEvaluatedGrid(model, "A1:D5", "42"), [
             [1,         "",             11,             null],
             [2,         "",             15,             null],
             [12,        10,             "",             null],
             [17,        "",             95,             null],
             [null,      null,           null,           null],
         ]);
-    }
-);
+});
 
 QUnit.test(
-    "ODOO.PIVOT.TABLE(row_count=1, include_total=FALSE, include_column_titles=FALSE)",
+    "PIVOT(row_count=1, include_total=FALSE, include_column_titles=FALSE)",
     async function (assert) {
-        setCellContent(model, "A1", `=ODOO.PIVOT.TABLE("1",1,FALSE,FALSE)`, "42");
+        setCellContent(model, "A1", `=PIVOT("1",1,FALSE,FALSE)`, "42");
         // prettier-ignore
         assert.deepEqual(getEvaluatedGrid(model, "A1:D2", "42"), [
             [1,         "",             11,             null],
@@ -231,9 +219,9 @@ QUnit.test(
 );
 
 QUnit.test(
-    "ODOO.PIVOT.TABLE(row_count=0, include_total=FALSE, include_column_titles=FALSE)",
+    "PIVOT(row_count=0, include_total=FALSE, include_column_titles=FALSE)",
     async function (assert) {
-        setCellContent(model, "A1", `=ODOO.PIVOT.TABLE("1",0,FALSE,FALSE)`, "42");
+        setCellContent(model, "A1", `=PIVOT("1",0,FALSE,FALSE)`, "42");
         // prettier-ignore
         assert.deepEqual(getEvaluatedGrid(model, "A1:D1", "42"), [
             ["(#1) Partner Pivot", null, null, null],
@@ -242,9 +230,9 @@ QUnit.test(
 );
 
 QUnit.test(
-    "ODOO.PIVOT.TABLE(row_count=0, include_total=TRUE, include_column_titles=FALSE)",
+    "PIVOT(row_count=0, include_total=TRUE, include_column_titles=FALSE)",
     async function (assert) {
-        setCellContent(model, "A1", `=ODOO.PIVOT.TABLE("1",0,TRUE,FALSE)`, "42");
+        setCellContent(model, "A1", `=PIVOT("1",0,TRUE,FALSE)`, "42");
         // prettier-ignore
         assert.deepEqual(getEvaluatedGrid(model, "A1:D1", "42"), [
             ["(#1) Partner Pivot", null, null, null],
@@ -252,7 +240,7 @@ QUnit.test(
     }
 );
 
-QUnit.test("ODOO.PIVOT.TABLE with multiple row groups", async function (assert) {
+QUnit.test("PIVOT with multiple row groups", async function (assert) {
     const { model } = await createSpreadsheetWithPivot({
         arch: /* xml */ `
             <pivot>
@@ -279,8 +267,8 @@ QUnit.test("ODOO.PIVOT.TABLE with multiple row groups", async function (assert) 
         ["Total",       10,             121,              131],
     ]);
     model.dispatch("CREATE_SHEET", { sheetId: "42" });
-    setCellContent(model, "A1", `=ODOO.PIVOT.TABLE("1")`, "42");
-    // values from the ODOO.PIVOT.TABLE function
+    setCellContent(model, "A1", `=PIVOT("1")`, "42");
+    // values from the PIVOT function
     // prettier-ignore
     assert.deepEqual(getEvaluatedGrid(model, "A1:D11", "42"), [
         ["(#1) Partner Pivot",  "xphone",       "xpad",         "Total"],
@@ -295,8 +283,8 @@ QUnit.test("ODOO.PIVOT.TABLE with multiple row groups", async function (assert) 
         [3,                     "",             95,             95],
         ["Total",               10,             121,              131],
     ]);
-    setCellContent(model, "A1", `=ODOO.PIVOT.TABLE("1",,FALSE)`, "42");
-    // values from the ODOO.PIVOT.TABLE function without any group totals
+    setCellContent(model, "A1", `=PIVOT("1",,FALSE)`, "42");
+    // values from the PIVOT function without any group totals
     // prettier-ignore
     assert.deepEqual(getEvaluatedGrid(model, "A1:D11", "42"), [
         ["(#1) Partner Pivot", "xphone",       "xpad",         null],
@@ -314,7 +302,7 @@ QUnit.test("ODOO.PIVOT.TABLE with multiple row groups", async function (assert) 
 });
 
 QUnit.test("edit pivot groups", async function (assert) {
-    setCellContent(model, "A1", `=ODOO.PIVOT.TABLE("1")`, "42");
+    setCellContent(model, "A1", `=PIVOT("1")`, "42");
     const originalGrid = getEvaluatedGrid(model, "A1:D7", "42");
     // prettier-ignore
     assert.deepEqual(originalGrid, [
@@ -347,9 +335,9 @@ QUnit.test("edit pivot groups", async function (assert) {
     assert.deepEqual(getEvaluatedGrid(model, "A1:D7", "42"), originalGrid);
 });
 
-QUnit.test("Renaming the pivot reevaluates the ODOO.PIVOT.TABLE function", async function (assert) {
+QUnit.test("Renaming the pivot reevaluates the PIVOT function", async function (assert) {
     const pivotId = model.getters.getPivotIds()[0];
-    setCellContent(model, "A1", `=ODOO.PIVOT.TABLE("1")`, "42");
+    setCellContent(model, "A1", `=PIVOT("1")`, "42");
     assert.equal(getEvaluatedCell(model, "A1", "42").value, "(#1) Partner Pivot");
     model.dispatch("RENAME_PIVOT", {
         pivotId,

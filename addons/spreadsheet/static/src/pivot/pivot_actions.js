@@ -57,7 +57,7 @@ export const SEE_RECORDS_PIVOT_VISIBLE = (position, env) => {
 /**
  * Check if the cell is a pivot formula and if there is a filter matching the
  * pivot domain args.
- * e.g. =ODOO.PIVOT("1", "measure", "country_id", 1) matches a filter on
+ * e.g. =PIVOT.VALUE("1", "measure", "country_id", 1) matches a filter on
  * country_id.
  *
  * @returns {boolean}
@@ -77,9 +77,9 @@ export function SET_FILTER_MATCHING_CONDITION(position, env) {
     const pivotFunction = getFirstPivotFunction(cell.compiledFormula.tokens).functionName;
     return (
         SEE_RECORDS_PIVOT_VISIBLE(position, env) &&
-        (pivotFunction === "ODOO.PIVOT" ||
-            pivotFunction === "ODOO.PIVOT.HEADER" ||
-            pivotFunction === "ODOO.PIVOT.TABLE") &&
+        (pivotFunction === "PIVOT.VALUE" ||
+            pivotFunction === "PIVOT.HEADER" ||
+            pivotFunction === "PIVOT") &&
         matchingFilters.length > 0
     );
 }

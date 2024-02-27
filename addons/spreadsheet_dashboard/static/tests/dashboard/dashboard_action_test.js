@@ -149,7 +149,7 @@ QUnit.test(
             sheets: [
                 {
                     id: "sheet1",
-                    cells: { A1: { content: `=PIVOT("1", "probability")` } },
+                    cells: { A1: { content: `=PIVOT.VALUE("1", "probability")` } },
                 },
             ],
             pivots: {

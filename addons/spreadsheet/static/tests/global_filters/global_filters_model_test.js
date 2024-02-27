@@ -353,7 +353,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
                 {
                     id: "sheet1",
                     cells: {
-                        A1: { content: `=PIVOT("1", "probability")` },
+                        A1: { content: `=PIVOT.VALUE("1", "probability")` },
                     },
                 },
             ],
@@ -1182,7 +1182,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
                     {
                         id: "sheet1",
                         cells: {
-                            A1: { content: `=ODOO.PIVOT("1", "probability")` },
+                            A1: { content: `=PIVOT.VALUE("1", "probability")` },
                         },
                     },
                 ],
@@ -1234,7 +1234,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
                     {
                         id: "sheet1",
                         cells: {
-                            A1: { content: `=ODOO.PIVOT("1", "probability")` },
+                            A1: { content: `=PIVOT.VALUE("1", "probability")` },
                         },
                     },
                 ],
@@ -1280,7 +1280,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
                 {
                     id: "sheet1",
                     cells: {
-                        A1: { content: `=ODOO.PIVOT("1", "probability")` },
+                        A1: { content: `=PIVOT.VALUE("1", "probability")` },
                     },
                 },
             ],
@@ -1362,7 +1362,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
                 },
             });
             assert.verifySteps([]);
-            setCellContent(model, "A1", `=ODOO.PIVOT("1", "probability")`);
+            setCellContent(model, "A1", `=PIVOT.VALUE("1", "probability")`);
             assert.equal(getCellValue(model, "A1"), "Loading...");
             await nextTick();
             assert.equal(getCellValue(model, "A1"), "");
@@ -1411,7 +1411,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
             });
 
             assert.verifySteps([]);
-            setCellContent(model, "A1", `=ODOO.PIVOT("1", "probability")`);
+            setCellContent(model, "A1", `=PIVOT.VALUE("1", "probability")`);
             assert.equal(getCellValue(model, "A1"), "Loading...");
             await nextTick();
             assert.equal(getCellValue(model, "A1"), "");
@@ -1970,24 +1970,24 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
             );
             const relationalFilters1 = getFiltersMatchingPivot(
                 model,
-                '=ODOO.PIVOT.HEADER(1,"product_id",37)'
+                '=PIVOT.HEADER(1,"product_id",37)'
             );
             assert.deepEqual(relationalFilters1, [{ filterId: "42", value: [37] }]);
             const relationalFilters2 = getFiltersMatchingPivot(
                 model,
-                '=ODOO.PIVOT.HEADER(1,"product_id","41")'
+                '=PIVOT.HEADER(1,"product_id","41")'
             );
             assert.deepEqual(relationalFilters2, [{ filterId: "42", value: [41] }]);
             const dateFilters1 = getFiltersMatchingPivot(
                 model,
-                '=ODOO.PIVOT.HEADER(1,"date:month","08/2016")'
+                '=PIVOT.HEADER(1,"date:month","08/2016")'
             );
             assert.deepEqual(dateFilters1, [
                 { filterId: "43", value: { yearOffset: -6, period: "august" } },
             ]);
             const dateFilters2 = getFiltersMatchingPivot(
                 model,
-                '=ODOO.PIVOT.HEADER(1,"date:year","2016")'
+                '=PIVOT.HEADER(1,"date:year","2016")'
             );
             assert.deepEqual(dateFilters2, [{ filterId: "43", value: { yearOffset: -6 } }]);
         }
@@ -2039,7 +2039,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
             );
             const filters = getFiltersMatchingPivot(
                 model,
-                '=ODOO.PIVOT.HEADER(1,"date:month","08/2016","product_id","41")'
+                '=PIVOT.HEADER(1,"date:month","08/2016","product_id","41")'
             );
             assert.deepEqual(filters, [{ filterId: "42", value: [41] }]);
         }
@@ -2055,7 +2055,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
                     <field name="__count" type="measure"/>
                 </pivot>`,
             });
-            setCellContent(model, "B3", '=ODOO.PIVOT(1, "__count", "#product_id", 1)');
+            setCellContent(model, "B3", '=PIVOT.VALUE(1, "__count", "#product_id", 1)');
             await addGlobalFilter(
                 model,
                 {
@@ -2085,7 +2085,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
                         <field name="probability" type="measure"/>
                     </pivot>`,
             });
-            setCellContent(model, "B3", '=ODOO.PIVOT(1, "probability", "#product_id", 1)');
+            setCellContent(model, "B3", '=PIVOT.VALUE(1, "probability", "#product_id", 1)');
             await addGlobalFilter(
                 model,
                 {
@@ -2135,7 +2135,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
                         <field name="probability" type="measure"/>
                     </pivot>`,
             });
-            setCellContent(model, "B3", '=ODOO.PIVOT(1, "probability")');
+            setCellContent(model, "B3", '=PIVOT.VALUE(1, "probability")');
             await addGlobalFilter(
                 model,
                 {
@@ -2160,7 +2160,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
                         <field name="probability" type="measure"/>
                     </pivot>`,
             });
-            setCellContent(model, "B3", '=ODOO.PIVOT(1, "probability", "#product_id", 1)');
+            setCellContent(model, "B3", '=PIVOT.VALUE(1, "probability", "#product_id", 1)');
             await addGlobalFilter(model, {
                 id: "42",
                 type: "relation",

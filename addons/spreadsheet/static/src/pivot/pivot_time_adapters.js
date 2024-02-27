@@ -63,9 +63,9 @@ export function pivotTimeAdapter(groupAggregate) {
  *
  * Limitations:
  * If a period value is provided as a **string** to a function, it will interpreted as being in the default locale.
- * e.g. in `ODOO.PIVOT(1, "amount", "create_date", "1/5/2023")`, the day is interpreted as being the 5th of January 2023,
+ * e.g. in `PIVOT.VALUE(1, "amount", "create_date", "1/5/2023")`, the day is interpreted as being the 5th of January 2023,
  * even if the spreadsheet locale is set to French and such a date is usually interpreted as the 1st of May 2023.
- * The reason is ODOO.PIVOT functions are currently generated without being aware of the spreadsheet locale.
+ * The reason is PIVOT functions are currently generated without being aware of the spreadsheet locale.
  *
  * @template T
  * @typedef {Object} PivotTimeAdapter
