@@ -24,7 +24,6 @@ import {
     loadImage,
     loadImageInfo,
     applyModifications,
-    removeOnImageChangeAttrs,
     isImageSupportedForProcessing,
     isImageSupportedForStyle,
     createDataURL,
@@ -7990,7 +7989,7 @@ registry.BackgroundImage = SnippetOptionWidget.extend({
         this._setBackground(widgetValue);
 
         if (previewMode !== 'reset') {
-            removeOnImageChangeAttrs.forEach(attr => delete this.$target[0].dataset[attr]);
+            weUtils.removeOnImageChangeAttrs.forEach(attr => delete this.$target[0].dataset[attr]);
             this.$target.trigger('background_changed', [previewMode]);
         }
     },
