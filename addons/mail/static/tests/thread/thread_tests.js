@@ -213,6 +213,34 @@ QUnit.test("thread is still scrolling after scrolling up then to bottom", async 
     await contains(".o-mail-Thread", { scroll: "bottom" });
 });
 
+QUnit.test("Can mention other channels in a group-restricted channel", async () => {
+    const pyEnv = await startServer();
+    const groupId = pyEnv["res.groups"].create({
+        name: "Mario Group",
+    });
+    const [channelId1] = pyEnv["discuss.channel"].create([
+        {
+            channel_type: "channel",
+            group_public_id: groupId,
+            name: "Marios",
+        },
+        {
+            channel_type: "channel",
+            group_public_id: false,
+            name: "Link and Zelda",
+        },
+    ]);
+    const { openDiscuss } = await start();
+    openDiscuss(channelId1);
+    await insertText(".o-mail-Composer-input", "#");
+    await contains(".o-mail-Composer-suggestion", { text: "#Marios" });
+    await contains(".o-mail-Composer-suggestion", { text: "#Link and Zelda" });
+    await click(".o-mail-Composer-suggestion", { text: "#Link and Zelda" });
+    await contains(".o-mail-Composer-input", { value: "#Link and Zelda " });
+    await click(".o-mail-Composer-send:enabled");
+    await contains(".o-mail-Message-body .o_channel_redirect", { text: "#Link and Zelda" });
+});
+
 QUnit.test("mention a channel with space in the name", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General good boy" });
