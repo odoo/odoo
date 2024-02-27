@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo.tests import tagged
+from odoo.tests import Form, tagged
 
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 
@@ -89,3 +89,22 @@ class TestAllocations(TestHrHolidaysCommon):
 
         num_of_allocations = self.env['hr.leave.allocation'].search_count([('employee_id', '=', self.employee.id), ('multi_employee', '=', False)])
         self.assertEqual(num_of_allocations, 1)
+
+    def test_allocation_request(self):
+        self.leave_type.write({
+            'name': 'Custom Time Off Test',
+            'allocation_validation_type': 'officer'
+        })
+
+        employee_allocation = self.env['hr.leave.allocation'].create({
+            'holiday_type': 'employee',
+            'employee_id': self.employee.id,
+            'holiday_status_id': self.leave_type.id,
+            'allocation_type': 'regular',
+        })
+
+        with Form(employee_allocation.with_context(is_employee_allocation=True), 'hr_holidays.hr_leave_allocation_view_form_dashboard') as allocation:
+            allocation.number_of_days_display = 10
+            employee_allocation = allocation.save()
+
+        self.assertEqual(employee_allocation.private_name, "Custom Time Off Test allocation request (10.0 day)")
