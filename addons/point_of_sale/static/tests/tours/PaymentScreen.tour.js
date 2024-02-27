@@ -275,3 +275,24 @@ registry.category("web_tour.tours").add("PaymentScreenTotalDueWithOverPayment", 
             PaymentScreen.totalDueIs("1.95"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("PaymentScreenRoundingDownMultiplePayment", {
+    test: true,
+    steps: () =>
+        [
+            ProductScreen.clickHomeCategory(),
+            ProductScreen.addOrderline("Product Test", "1"),
+            ProductScreen.clickPayButton(),
+
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.pressNumpad("5 5"),
+
+            PaymentScreen.clickPaymentMethod("Cash"),
+
+            PaymentScreen.remainingIs("0.0"),
+            PaymentScreen.changeIs("0.0"),
+
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.receiptIsThere(),
+        ].flat(),
+});
