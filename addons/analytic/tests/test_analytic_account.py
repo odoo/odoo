@@ -69,6 +69,15 @@ class TestAnalyticAccount(TransactionCase):
             'analytic_distribution': {cls.analytic_account_2.id: 100}
         })
 
+    def test_aggregates(self):
+        self.env.user.groups_id += self.env.ref('account.group_account_readonly')
+        model = self.env['account.analytic.account']
+        self.assertEqual(
+            model.fields_get(['balance', 'debit', 'credit'], ['aggregator']),
+            dict.fromkeys(['balance', 'debit', 'credit'], {'aggregator': 'sum'}),
+            "Fields 'balance', 'debit', 'credit' must be flagged as aggregatable.",
+        )
+
     def test_get_plans_without_options(self):
         """ Test that the plans with the good appliability are returned without if no options are given """
         kwargs = {}
