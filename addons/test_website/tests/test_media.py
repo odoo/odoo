@@ -11,7 +11,8 @@ class TestMedia(odoo.tests.HttpCase):
     @mute_logger('odoo.addons.http_routing.models.ir_http', 'odoo.http')
     def test_01_replace_media(self):
         SVG = b'<svg xmlns="http://www.w3.org/2000/svg"></svg>'
-        self.env['html_editor.media'].create({
+        Media = self.env['html_editor.media']
+        Media.create({
             'name': 'sample.svg',
             'public': True,
             'mimetype': 'image/svg+xml',
@@ -19,6 +20,14 @@ class TestMedia(odoo.tests.HttpCase):
             'res_model': 'ir.ui.view',
             'media_type': 'image',
         })
+        hidden_media = Media.create({
+            'name': 'hidden.svg',
+            'public': True,
+            'raw': SVG,
+            'res_model': 'ir.ui.view',
+            'media_type': 'image',
+        })
+        hidden_media.hidden = True
         self.start_tour("/", 'test_replace_media', login="admin")
 
     def test_02_image_link(self):

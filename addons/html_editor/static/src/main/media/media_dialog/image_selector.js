@@ -395,4 +395,25 @@ export class ImageSelector extends FileSelector {
             );
         }
     }
+
+    /**
+     * Retrieves a media record, its attachment's ID and all the IDs of the
+     * copies of that attachment.
+     *
+     * @param {integer} mediaId
+     * @returns {Object} attachments - res_model {String}, res_id {String},
+     * attachment_id {Integer}, and ids of the source attachment and copies
+     * {Array<number>}.
+     */
+    async getOriginalAndCopies(mediaId) {
+        const media = (await this.orm.searchRead(
+            "html_editor.media",
+            [["id", "=", mediaId]],
+            ["attachment_id", "res_model", "res_id"]
+        ))[0];
+        const idsDomain = ["|", ["original_id", "=", media.attachment_id[0]], ["id", "=", media.attachment_id[0]]];
+        const attachmentsIds = await this.orm.search("ir.attachment", idsDomain);
+
+        return { ...media, attachmentsIds };
+    }
 }

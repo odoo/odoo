@@ -59,6 +59,10 @@ registerWebsitePreviewTour('test_replace_media', {
         run: "click",
     },
     {
+        content: "Hidden media not present",
+        trigger: ".o_select_media_dialog:not(:has(img[title='hidden.svg']))",
+    },
+    {
         content: "select svg",
         trigger: ".o_select_media_dialog img[title='sample.svg']",
         run: "click",

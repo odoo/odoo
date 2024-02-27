@@ -42,6 +42,7 @@
                         id="attachment.id"
                         isRemovable="true"
                         onRemoved="(attachmentId) => this.onRemoved(attachmentId)"
+                        getOriginalAndCopies="(mediaId) => this.getOriginalAndCopies(mediaId)"
                         selected="this.selectedAttachmentIds.includes(attachment.id)"
                         src="attachment.thumbnail_src or attachment.image_src"
                         name="attachment.name"

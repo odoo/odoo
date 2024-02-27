@@ -310,6 +310,8 @@ class HTML_Editor(http.Controller):
                     ('res_id', '=', 0 if res_model == 'ir.ui.view' else res_id),
                     ('res_model', '=', res_model),
                 ])
+                if media:
+                    media.hidden = False
             if not media:
                 media = Media.create(attachment_data)
         return media

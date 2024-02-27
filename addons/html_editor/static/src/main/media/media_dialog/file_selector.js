@@ -250,6 +250,7 @@ export class FileSelector extends Component {
 
     get mediaDomain() {
         return [
+            "&", ["hidden", "=", false],
             "|", ["public", "=", true],
                  "&", ["res_model", "in", [false, this.props.resModel]],
                       ["res_id", "in", [0, this.props.resId]],

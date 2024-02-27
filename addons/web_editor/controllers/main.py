@@ -277,11 +277,16 @@ class Web_Editor(http.Controller):
             # For original attachments: find the media that generated it.
             if attachment.res_model == 'html_editor.media':
                 media = Media.search([('id', '=', attachment.res_id)])
-            if media:
-                # The media will automatically delete its attachment.
-                media_to_remove += media
+            # Hide from the media dialog, but keep the media & attachments.
+            if kwargs.get('keep_on_website', None):
+                if media:
+                    media.hidden = True
             else:
-                attachments_to_remove += attachment
+                if media:
+                    # The media will automatically delete its attachment.
+                    media_to_remove += media
+                else:
+                    attachments_to_remove += attachment
 
         if media_to_remove:
             media_to_remove.unlink()
