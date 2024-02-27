@@ -263,11 +263,6 @@ async function getNextApp() {
             await ensureAppsMenu();
             apps = document.querySelectorAll(".o-dropdown--menu .o_app");
         }
-        if (apps.length === 0) {
-            throw new Error(
-                "No app found, it's possible that we are not on the home menu/app menu"
-            );
-        }
     }
     const appName = apps[state.appIndex]?.dataset?.menuXmlid;
     state.appIndex++;
