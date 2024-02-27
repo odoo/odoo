@@ -234,7 +234,6 @@
                                                 <field name="label">balance</field>
                                                 <field name="engine">aggregation</field>
                                                 <field name="formula">aeat_mod_303_14.aeat_mod_303_14_sale_balance - aeat_mod_303_14.aeat_mod_303_14_purchase_balance</field>
-                                                <field name="date_scope">normal</field>
                                             </record>
                                             <record id="mod_303_casilla_14_aeat_mod_303_14_sale_balance" model="account.report.expression">
                                                 <field name="label">aeat_mod_303_14_sale_balance</field>
@@ -864,7 +863,6 @@
                                 <field name="label">balance</field>
                                 <field name="engine">external</field>
                                 <field name="formula">sum</field>
-                                <field name="date_scope">normal</field>
                                 <field name="subformula">editable;rounding=2</field>
                             </record>
                         </field>
@@ -877,7 +875,6 @@
                                 <field name="label">balance</field>
                                 <field name="engine">external</field>
                                 <field name="formula">sum</field>
-                                <field name="date_scope">normal</field>
                                 <field name="subformula">editable;rounding=2</field>
                             </record>
                         </field>
@@ -890,7 +887,6 @@
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">aeat_mod_303_69.balance - aeat_mod_303_70.balance + aeat_mod_303_109.balance</field>
-                                <field name="date_scope">normal</field>
                             </record>
                         </field>
                     </record>
