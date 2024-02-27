@@ -164,24 +164,7 @@ class EventMailScheduler(models.Model):
         valid_mail_schedulers = todo.filtered(lambda s: s.notification_type == "mail")._filter_template_ref(notification_type="mail")
         for scheduler in todo:
             if scheduler.interval_type == 'after_sub':
-                if self.env.context.get('event_mail_registration_ids'):
-                    new_registrations = self.env['event.registration'].search([
-                        ('id', 'in', self.env.context['event_mail_registration_ids']),
-                        ('event_id', '=', scheduler.event_id.id),
-                    ]) - scheduler.mail_registration_ids.registration_id
-                else:
-                    new_registrations = scheduler.event_id.registration_ids.filtered_domain(
-                        [('state', 'not in', ('cancel', 'draft'))]
-                    ) - scheduler.mail_registration_ids.registration_id
-                scheduler._create_missing_mail_registrations(new_registrations)
-
-                # execute scheduler on registrations
-                scheduler.mail_registration_ids.execute()
-                total_sent = len(scheduler.mail_registration_ids.filtered(lambda reg: reg.mail_sent))
-                scheduler.update({
-                    'mail_done': total_sent >= (scheduler.event_id.seats_reserved + scheduler.event_id.seats_used),
-                    'mail_count_done': total_sent,
-                })
+                scheduler._execute_after_subscription()
             elif scheduler.notification_type == 'mail' and scheduler in valid_mail_schedulers:
                 scheduler.event_id.mail_attendees(scheduler.template_ref.id)
                 scheduler.update({
@@ -190,13 +173,51 @@ class EventMailScheduler(models.Model):
                 })
         return True
 
+    def _execute_after_subscription(self, registration_limit=1000):
+        """ 'after_sub' scheduler management. It currently does two main things
+          * generate missing 'event.mail.registrations' which are scheduled
+            communication linked to registrations;
+          * launch registration-based communication, splitting in batches as
+            it may imply a lot of computation. When having more than given
+            limit to handle, schedule another call of cron to avoid having to
+            wait another cron interval check;
+        """
+        # fillup on subscription lines
+        if self.env.context.get('event_mail_registration_ids'):
+            new_registrations = self.env['event.registration'].search([
+                ('id', 'in', self.env.context['event_mail_registration_ids']),
+                ('event_id', '=', self.event_id.id),
+            ])
+        else:
+            new_registrations = self.event_id.registration_ids.filtered_domain(
+                [('state', 'not in', ('cancel', 'draft'))]
+            )
+        self._create_missing_mail_registrations(new_registrations)
+
+        # execute scheduler on registrations: limit number of registrations
+        # globally; if we have more next cron will handle them
+        todo = self.mail_registration_ids._filter_to_skip()
+        relaunch = len(todo) > registration_limit
+        todo[:registration_limit].execute()
+        total_sent = len(self.mail_registration_ids.filtered(lambda reg: reg.mail_sent))
+        self.update({
+            'mail_done': total_sent >= (self.event_id.seats_reserved + self.event_id.seats_used),
+            'mail_count_done': total_sent,
+        })
+        if relaunch:
+            self.env.ref('event.event_mail_scheduler')._trigger()
+
     def _create_missing_mail_registrations(self, registrations):
         new = []
         for scheduler in self:
-            new += [{
-                'registration_id': registration.id,
-                'scheduler_id': scheduler.id,
-            } for registration in registrations]
+            new += [
+                {
+                    'registration_id': registration.id,
+                    'scheduler_id': scheduler.id,
+                }
+                for registration in registrations
+                if registration not in scheduler.mail_registration_ids.registration_id
+            ]
         if new:
             return self.env['event.mail.registration'].create(new)
         return self.env['event.mail.registration']
