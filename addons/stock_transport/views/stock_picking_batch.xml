@@ -1,0 +1,192 @@
+<odoo>
+  <data>
+    <record id="stock_picking_batch_pivot" model="ir.ui.view">
+        <field name="name">stock.picking.batch.pivot</field>
+        <field name="model">stock.picking.batch</field>
+        <field name="arch" type="xml">
+            <pivot string="Batch Transfer" sample="1">
+                <field name="scheduled_date" type="row"/>
+                <field name="vehicle_id" type="col"/>
+                <field name="used_weight_percentage" invisible="1"/>
+                <field name="used_volume_percentage" invisible="1"/>
+                <field name="batch_max_pickings" invisible="1"/>
+                <field name="batch_max_lines" invisible="1"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="stock_picking_batch_graph" model="ir.ui.view">
+        <field name="name">stock.picking.batch.graph</field>
+        <field name="model">stock.picking.batch</field>
+        <field name="arch" type="xml">
+            <graph string="Graph View" sample="1">
+                <field name="scheduled_date" type="row" interval="day"/>
+                <field name="vehicle_category_id" type="row"/>
+                <field name="batch_max_pickings"/>
+                <field name="batch_max_lines"/>
+                <field name="used_weight_percentage" invisible="1"/>
+                <field name="used_volume_percentage" invisible="1"/>
+                <field name="max_weight" invisible="1"/>
+                <field name="max_volume" invisible="1"/>
+            </graph>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="stock_picking_batch_calendar">
+            <field name="name">stock.picking.batch.calendar</field>
+            <field name="model">stock.picking.batch</field>
+            <field name="priority" eval="2"/>
+            <field name="arch" type="xml">
+                <calendar string="Calendar View" date_start="scheduled_date" event_limit="5" quick_create="0">
+                    <field name="scheduled_date"/>
+                </calendar>
+            </field>
+    </record>
+
+    <record id="stock_picking_batch_form_stock_transport" model="ir.ui.view">
+        <field name="name">stock.picking.batch.form.inherit.stock.transport</field>
+        <field name="model">stock.picking.batch</field>
+        <field name="inherit_id" ref="stock_picking_batch.stock_picking_batch_form"/>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//header/button[@name='action_cancel']" position="before">
+                    <button name="action_map_delivery_batch" string="Map" type="object" class="btn btn-secondary" invisible="state != 'in_progress'"/>
+                </xpath>
+                <xpath expr="//header" position="before">
+                    <!-- Used in scheduled_date (Invisible fields end_date)-->
+                    <field name="end_date" invisible="1"/><!-- Invisible fields end_date-->
+                </xpath>
+                <xpath expr="//sheet/group" position="replace">
+                    <group>
+                        <group>
+                            <field name="user_id" readonly="state not in ['draft', 'in_progress']"/>
+                            <field name="picking_type_id" readonly="state != 'draft'"/>
+                            <field name="scheduled_date" widget="daterange" options="{'end_date_field': 'end_date'}" /><!-- Invisible fields end_date used here-->
+                            <field name="batch_properties"/>
+                        </group>
+                        <group>
+                            <field name="dock_id"/>
+                            <field name="vehicle_id" placeholder="Third Party Provider"/>
+                            <field name="vehicle_category_id" placeholder="semi-truck"/>
+                            <label for='used_weight_percentage' invisible="not vehicle_category_id"/>
+                                <div class='d-flex flex-row gap-4' invisible="not vehicle_category_id">
+                                    <div class='d-flex flex-row gap-1'>
+                                        <field name='max_picking_weight'/>
+                                        <span>kg</span>
+                                    </div>
+                                    <field name='used_weight_percentage' widget='progressbar' />
+                                </div>
+
+                            <label for='used_volume_percentage' invisible="not vehicle_category_id"/>
+                                <div class='d-flex flex-row gap-4' invisible="not vehicle_category_id">
+                                    <div class='d-flex flex-row gap-1'>
+                                        <field name='max_picking_volume'/>
+                                        <span>m³</span>
+                                    </div>
+                                    <field name='used_volume_percentage' widget='progressbar'/>
+                                </div>
+                        </group>
+                    </group>
+                </xpath>
+            </data>
+        </field>
+    </record>
+
+    <record id="stock_picking_batch_tree_stock_transport" model="ir.ui.view">
+        <field name="name">stock.picking.batch.tree.inherit.stock.transport</field>
+        <field name="model">stock.picking.batch</field>
+        <field name="inherit_id" ref="stock_picking_batch.stock_picking_batch_tree"/>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="field[@name='company_id'][2]" position="attributes">
+                    <attribute name="optional">hide</attribute>
+                </xpath>
+                <xpath expr="field[@name='user_id']" position="attributes">
+                    <attribute name="optional">show</attribute>
+                </xpath>
+                <xpath expr="field[@name='user_id']" position="after">
+                    <field name="vehicle_category_id" optional="hide"/>
+                    <field name="max_weight" string="Weight" optional="hide"/>
+                    <field name="max_volume" string="Volume" optional="hide"/>
+                    <field name="used_volume_percentage" string="Volume %" optional="hide"/>
+                    <field name="used_weight_percentage" string="Weight %" optional="hide"/>
+                </xpath>
+            </data>
+        </field>
+    </record>
+
+    <record id="stock_picking_batch_filter_stock_transport" model="ir.ui.view">
+        <field name="name">stock.picking.batch.filter.inherit.stock.transport</field>
+        <field name="model">stock.picking.batch</field>
+        <field name="inherit_id" ref="stock_picking_batch.stock_picking_batch_filter"/>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//field[@name='user_id']" position="after">
+                    <field name="vehicle_id"/>
+                    <field name="dock_id"/>
+                    <field name="driver_id"/>
+                </xpath>
+                <xpath expr="//filter[@name='state']" position="after">
+                    <filter name="vehicle_category_id" string="Vehicle Category" domain="[]" context="{'group_by':'vehicle_category_id'}"/>
+                    <filter name="scheduled_date" string="Scheduled Date" domain="[]" context="{'group_by':'scheduled_date'}"/>
+                    <filter name="picking_type_id" string="Operation Type" domain="[]" context="{'group_by':'picking_type_id'}"/>
+                </xpath>
+                <xpath expr="//filter[@name='done']" position="after">
+                    <filter name="vehicle_id" string="Own Fleet" domain="[('vehicle_id', '!=', False)]"/>
+                    <filter name="vehicle_id" string="Third Party Carrier" domain="[('vehicle_id', '=', False), ('vehicle_category_id', '!=', False)]"/>
+                </xpath>
+                <xpath expr="//filter[@name='my_transfers']" position="after">
+                    <filter name="scheduled_date" date="scheduled_date" string="Scheduled Date"/>
+                    <filter string="Today" name="filter_today" domain="[('scheduled_date', '&gt;=', datetime.datetime.combine(context_today(),
+                        datetime.time(0,0,0))), ('scheduled_date', '&lt;=', datetime.datetime.combine(context_today(), datetime.time(23,59,59)))]"/>
+                    <filter string="Tomorrow" name="filter_tomorrow" domain="[('scheduled_date','&gt;=', (context_today() + relativedelta(days=1)).strftime('%Y-%m-%d'))]" />
+                    <filter string="Next 7 Days" name="filter_next_7_days" domain="[('scheduled_date','&gt;=', (context_today() + relativedelta(days=7)).strftime('%Y-%m-%d'))]"/>
+                </xpath>
+            </data>
+        </field>
+    </record>
+
+    <record id="stock_picking_batch_kanban_stock_transport" model="ir.ui.view">
+        <field name="name">stock.picking.batch.kanban.inherit.stock.transport</field>
+        <field name="model">stock.picking.batch</field>
+        <field name="inherit_id" ref="stock_picking_batch.stock_picking_batch_kanban"/>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//templates/t/div/div[2]" position="replace">
+                    <div class="o_kanban_record_bottom">
+                        <div class="col">
+                            <div><field name="dock_id"/></div>
+                            <field name="vehicle_details" class="text-muted"/>
+                            <div class="col">
+                                <field name="state" widget="state_selection" class="ms-auto float-start" style="padding-top: 4px; margin-right: 6px"/>
+                                <field name="scheduled_date" readonly="state in ['cancel', 'done']"/>
+                            </div>
+                        </div>
+                        <div class="oe_kanban_bottom_right">
+                            <field name="user_id" widget="many2one_avatar_user" readonly="state not in ['draft', 'in_progress']"/>
+                        </div>
+                    </div>
+                </xpath>
+            </data>
+        </field>
+    </record>
+
+    <record id="stock_picking_batch.stock_picking_batch_action" model="ir.actions.act_window">
+        <field name="view_mode">tree,kanban,form,graph,gantt,pivot,calendar</field>
+        <field name="context">{
+            'pivot_measures': ['__count__', 'max_picking_weight', 'max_picking_volume'],
+         }</field>
+    </record>
+
+    <record id="vpicktree_inherit_stock_picking_batch_stock_transport" model="ir.ui.view">
+        <field name="name">stock.picking.tree.inherit.stock.transport</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock_picking_batch.vpicktree_inherit_stock_picking_batch"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='batch_id']" position="replace">
+            </xpath>
+        </field>
+    </record>
+
+   </data>
+</odoo>

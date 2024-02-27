@@ -1,0 +1,23 @@
+<odoo>
+    <data>
+        <record id="stock_picking_tree_inherit_stock_transport" model="ir.ui.view">
+            <field name="name">stock.picking.tree.inherit.stock.transport</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.vpicktree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='company_id']" position="after">
+                    <field name="sequence" widget="handle"/>
+                </xpath>
+                <xpath expr="//field[@name='origin']" position="replace">
+                    <field name="partner_id" string="Partner"/>
+                    <field name="zip_code"/>
+                    <field name="max_weight" sum="Total Max Weight (Kg)" string="Max Weight (Kg)" optional="hide"/>
+                    <field name="max_volume" sum="Total Max Volume (m³)"  string="Max Volume (m³)" optional="hide"/>
+                </xpath>
+                <xpath expr="//field[@name='company_id'][2]" position="attributes">
+                    <attribute name="optional">hide</attribute>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
