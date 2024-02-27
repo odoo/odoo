@@ -20,7 +20,8 @@ class PosMakePayment(models.TransientModel):
         active_id = self.env.context.get('active_id')
         if active_id:
             order = self.env['pos.order'].browse(active_id)
-            return order.amount_total - order.amount_paid
+            amount_total = -order.refunded_order_ids.amount_paid or order.amount_total
+            return amount_total - order.amount_paid
         return False
 
     def _default_payment_method(self):
