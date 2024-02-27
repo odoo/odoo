@@ -10631,12 +10631,12 @@ QUnit.module("Views", (hooks) => {
         });
         assert.containsOnce(
             target,
-            'img[data-src*="/web/image"][data-src$="&id=1&unique="]',
+            'img[data-src*="/web/image"][data-src$="&id=1"]',
             "image url should contain id of set partner_id"
         );
         assert.containsOnce(
             target,
-            'img[data-src*="/web/image"][data-src$="&id=&unique="]',
+            'img[data-src*="/web/image"][data-src$="&id="]',
             "image url should contain an empty id if partner_id is not set"
         );
     });
@@ -14311,7 +14311,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_kanban_group", 2);
 
         await createColumn();
-        
+
         // We don't use the editInput helper as it would trigger a change event automatically.
         // We need to wait for the enter key to trigger the event.
         const input = target.querySelector(".o_column_quick_create input");
