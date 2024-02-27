@@ -21,9 +21,9 @@ registry.category("web_tour.tours").add('account_tax_group', {
         trigger: 'a:contains("Bills")',
     },
     {
-        extra_trigger: '.o_breadcrumb .text-truncate:contains("Bills")',
         content: "Create new bill",
         trigger: '.o_control_panel_main_buttons .d-none .o_list_button_add',
+        extra_trigger: '.o_breadcrumb .text-truncate:contains("Bills")',
     },
     // Set a vendor
     {
@@ -43,10 +43,6 @@ registry.category("web_tour.tours").add('account_tax_group', {
     {
         content: "Select input",
         trigger: 'div[name="invoice_line_ids"] .o_selected_row .o_list_many2one[name="product_id"] input',
-    },
-    {
-        content: "Type item",
-        trigger: 'div[name="invoice_line_ids"] .o_selected_row .o_list_many2one[name="product_id"] input',
         run: "text Account Tax Group Product",
     },
     {
@@ -54,10 +50,6 @@ registry.category("web_tour.tours").add('account_tax_group', {
         trigger: '.ui-menu-item-wrapper:contains("Account Tax Group Product")',
     },
     // Save account.move
-    {
-        content: "Save the account move",
-        trigger: '.o_form_button_save',
-    },
     ...stepUtils.saveForm(),
     // Edit tax group amount
     {
@@ -97,11 +89,12 @@ registry.category("web_tour.tours").add('account_tax_group', {
             );
         },
     },
-    // Save form
+    // Check new tax group value
     {
-        content: "Save the account move",
-        trigger: '.o_form_button_save',
+        content: "Check new value of tax group",
+        trigger: '.o_tax_group_amount_value:contains("120")',
     },
+    // Save form
     ...stepUtils.saveForm(),
     // Check new tax group value
     {
