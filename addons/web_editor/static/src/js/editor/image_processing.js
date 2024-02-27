@@ -2,23 +2,9 @@
 
 import { rpc } from "@web/core/network/rpc";
 import { pick } from "@web/core/utils/objects";
+import { cropperDataFields } from "@web_editor/js/common/utils";
 import {getAffineApproximation, getProjective} from "@web_editor/js/editor/perspective_utils";
 
-// Fields returned by cropperjs 'getData' method, also need to be passed when
-// initializing the cropper to reuse the previous crop.
-export const cropperDataFields = ['x', 'y', 'width', 'height', 'rotate', 'scaleX', 'scaleY'];
-const modifierFields = [
-    'filter',
-    'quality',
-    'mimetype',
-    'glFilter',
-    'originalId',
-    'originalSrc',
-    'resizeWidth',
-    'aspectRatio',
-    "bgSrc",
-    "mimetypeBeforeConversion",
-];
 export const isGif = (mimetype) => mimetype === 'image/gif';
 
 // webgl color filters
@@ -599,15 +585,11 @@ export function getDataURLBinarySize(dataURL) {
     return dataURL.split(',')[1].length / 4 * 3;
 }
 
-export const removeOnImageChangeAttrs = [...cropperDataFields, ...modifierFields];
-
 export default {
     applyModifications,
-    cropperDataFields,
     activateCropper,
     loadImageInfo,
     loadImage,
-    removeOnImageChangeAttrs,
     isImageSupportedForProcessing,
     isImageSupportedForStyle,
     createDataURL,
