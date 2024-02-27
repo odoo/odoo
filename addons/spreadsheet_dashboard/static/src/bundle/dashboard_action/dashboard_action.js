@@ -78,7 +78,7 @@ export class SpreadsheetDashboardAction extends Component {
         });
         useSpreadsheetPrint(() => this.state.activeDashboard?.model);
         /** @type {{ activeDashboard: import("./dashboard_loader").Dashboard}} */
-        this.state = useState({ activeDashboard: undefined });
+        this.state = useState({ activeDashboard: undefined, sidebarExpanded: true });
     }
 
     /**
@@ -137,6 +137,16 @@ export class SpreadsheetDashboardAction extends Component {
             },
         ]);
         return url;
+    }
+
+    toggleSidebar() {
+        this.state.sidebarExpanded = !this.state.sidebarExpanded;
+    }
+
+    get activeDashboardGroupName() {
+        return this.getDashboardGroups().find((group) =>
+            group.dashboards.some((d) => d.id === this.activeDashboardId)
+        )?.name;
     }
 }
 
