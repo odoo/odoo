@@ -7,6 +7,19 @@ from odoo.tests import tagged
 @tagged('post_install', '-at_install')
 class TestProductMargin(AccountTestInvoicingCommon):
 
+    def test_aggregates(self):
+        model = self.env['product.product']
+        field_names = [
+            'turnover', 'sale_avg_price', 'sale_num_invoiced', 'purchase_num_invoiced',
+            'sales_gap', 'purchase_gap', 'total_cost', 'sale_expected', 'normal_cost',
+            'total_margin', 'expected_margin', 'total_margin_rate', 'expected_margin_rate',
+        ]
+        self.assertEqual(
+            model.fields_get(field_names, ['aggregator']),
+            dict.fromkeys(field_names, {'aggregator': 'sum'}),
+            f"Fields {', '.join(map(repr, field_names))} must be flagged as aggregatable.",
+        )
+
     def test_product_margin(self):
         ''' In order to test the product_margin module '''
 
