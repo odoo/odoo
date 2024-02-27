@@ -9,10 +9,11 @@ from collections import namedtuple
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
-from odoo import api, fields, models, tools
+from odoo import api, fields, models
+from odoo.osv import expression
 from odoo.tools import exception_to_unicode
 from odoo.tools.translate import _
-from odoo.exceptions import MissingError, ValidationError
+from odoo.exceptions import ValidationError
 
 
 _logger = logging.getLogger(__name__)
@@ -186,7 +187,7 @@ class EventMailScheduler(models.Model):
                 })
         return True
 
-    def _execute_after_subscription(self):
+    def _execute_after_subscription(self, registration_limit=None):
         """ 'after_sub' scheduler management. It currently does two main things
           * generate missing 'event.mail.registrations' which are scheduled
             communication linked to registrations;
@@ -196,24 +197,37 @@ class EventMailScheduler(models.Model):
             wait another cron interval check;
         """
         self.ensure_one()
+        # fillup on subscription lines
         if self.env.context.get('event_mail_registration_ids'):
             new_registrations = self.env['event.registration'].search([
                 ('id', 'in', self.env.context['event_mail_registration_ids']),
                 ('event_id', '=', self.event_id.id),
-            ]) - self.mail_registration_ids.registration_id
+                ("state", "not in", ("cancel", "draft")),
+            ])
         else:
-            new_registrations = self.event_id.registration_ids.filtered_domain(
-                [('state', 'not in', ('cancel', 'draft'))]
-            ) - self.mail_registration_ids.registration_id
+            new_registrations = self.even["event.registration"].search([
+                ("state", "not in", ("cancel", "draft")),
+                ("id", "not in", self.mail_registration_ids.registration_id.ids)
+            ])
         self._create_missing_mail_registrations(new_registrations)
 
-        # execute scheduler on registrations
-        self.mail_registration_ids.execute()
+        # execute scheduler on registrations: limit number of registrations
+        # globally; if we have more next cron will handle them
+        skip_domain = self.env["event.mail.registration"]._get_skip_domain()
+        todo = self.env["event.mail.registration"].search(
+            expression.AND([("scheduler_id", "=", self.id)], [skip_domain]),
+            limit=(registration_limit or 10000) +1,
+        )
+        todo[:(registration_limit or 10000)]._execute_on_registrations()
         total_sent = len(self.mail_registration_ids.filtered(lambda reg: reg.mail_sent))
         self.update({
             'mail_done': total_sent >= (self.event_id.seats_reserved + self.event_id.seats_used),
             'mail_count_done': total_sent,
         })
+
+        relaunch = len(todo) > (registration_limit or 10000)
+        if relaunch:
+            self.env.ref('event.event_mail_scheduler')._trigger()
 
     def _create_missing_mail_registrations(self, registrations):
         new = []
@@ -363,9 +377,14 @@ class EventMailRegistration(models.Model):
 
     def execute(self):
         todo = self.filtered_domain(self._get_skip_domain())
+        toremove = todo.filtered(
+            lambda mail: mail.registration_id.state in ("cancel", "draft")
+        )
+        if toremove:
+            toremove.unlink()
         # Exclude schedulers linked to invalid/unusable templates
-        valid_schedulers = todo.scheduler_id._filter_template_ref()
-        valid = todo.filtered(lambda r: r.scheduler_id in valid_schedulers)
+        valid_schedulers = (todo - toremove).scheduler_id._filter_template_ref()
+        valid = (todo - toremove).filtered(lambda r: r.scheduler_id in valid_schedulers)
         valid._execute_on_registrations()
 
     def _execute_on_registrations(self):
@@ -404,7 +423,6 @@ class EventMailRegistration(models.Model):
         a valid registration, and scheduled in the past. """
         return [
             ("mail_sent", "=", False),
-            ("registration_id.state", "in", ("open", "done")),
             ("scheduled_date", "!=", False),
             ("scheduled_date", "<=", fields.Datetime.now()),
         ]

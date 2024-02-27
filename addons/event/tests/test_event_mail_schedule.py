@@ -8,6 +8,7 @@ from unittest.mock import patch
 
 from odoo import Command, exceptions
 from odoo.addons.base.tests.test_ir_cron import CronMixinCase
+from odoo.addons.event.models.event_mail import EventMailScheduler
 from odoo.addons.event.tests.common import EventCase
 from odoo.addons.mail.tests.common import MockEmail
 from odoo.tests import tagged, users
@@ -482,6 +483,52 @@ class TestMailSchedule(EventCase, MockEmail, CronMixinCase):
                 'email_from': self.user_eventmanager.company_id.email_formatted,
                 'subject': f'Confirmation for {test_event.name}',
             })
+
+    @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
+    @users('user_eventmanager')
+    def test_event_mail_schedule_on_subscription_limit(self):
+        """ Schedule should not run on all available attendees, as it may have
+        a big waiting list. Better do it by chunks, which is what is tested. """
+        test_event = self.test_event.with_env(self.env)
+        after_sub_scheduler = test_event.event_mail_ids.filtered(lambda s: s.interval_type == 'after_sub' and s.interval_unit == 'now')
+        cron = self.env.ref('event.event_mail_scheduler')
+
+        original_exec = EventMailScheduler._execute_after_subscription
+        def _patched_execute_after_subscription(self, *args, **kwargs):
+            return original_exec(self, registration_limit=3)
+
+        email_total = 0
+        for registration_count in [2, 3, 5]:
+            with patch.object(EventMailScheduler, '_execute_after_subscription',
+                              autospec=True, wraps=EventMailScheduler,
+                              side_effect=_patched_execute_after_subscription
+                             ) as _mock_execute_after_subscription, \
+                 self.mock_datetime_and_now(test_event.date_begin), \
+                 self.capture_triggers(cron.id) as capt, \
+                 self.mock_mail_gateway():
+                _new = self.env['event.registration'].create([
+                    {
+                        'email': f'new.attendee.{idx}@test.example.com',
+                        'event_id': test_event.id,
+                        'name': f'New Attendee {idx}',
+                    } for idx in range(registration_count)
+                ])
+            email_count = 3 if registration_count >= 3 else registration_count
+            email_total += email_count  # as registrations are created under same event
+            self.assertEqual(len(self._new_mails), email_count,
+                             'EventMail: should be limited by "registration_limit" parameter for scaling')
+            self.assertEqual(self.mail_mail_create_mocked.call_count, 1,
+                             'EventMail: should create mails in batch for new registrations')
+            # more than 'registration_limit': trigger a new call to continue emailing registrations
+            if registration_count > 3:
+                capt.records.ensure_one()
+                self.assertEqual(capt.records.call_at, test_event.date_begin)
+                self.assertEqual(after_sub_scheduler.mail_count_done, email_total)
+                self.assertFalse(after_sub_scheduler.mail_done)
+            else:
+                self.assertFalse(capt.records)
+                self.assertEqual(after_sub_scheduler.mail_count_done, email_total)
+                self.assertTrue(after_sub_scheduler.mail_done)
 
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
     def test_unique_event_mail_ids(self):
