@@ -1383,7 +1383,7 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
                 if (dependencyEl.nodeName === 'SELECT') {
                     for (const option of dependencyEl.querySelectorAll('option')) {
                         const button = document.createElement('we-button');
-                        button.textContent = option.value || `<${_t("no value")}>`;
+                        button.textContent = option.textContent || `<${_t("no value")}>`;
                         button.dataset.selectDataAttribute = option.value;
                         selectOptEl.append(button);
                     }
