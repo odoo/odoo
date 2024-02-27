@@ -245,6 +245,7 @@ export class HtmlField extends Component {
             },
             fieldId: this.props.id,
             editorPlugins: [...(wysiwygOptions.editorPlugins || []), QWebPlugin, this.MoveNodePlugin],
+            record: this.props.record,
         };
     }
     /**
