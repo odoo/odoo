@@ -810,6 +810,28 @@ class BaseAutomation(models.Model):
 
             return base_automation_onchange
 
+        def make_message_post():
+            def _message_post(self, *args, **kwargs):
+                message = _message_post.origin(self, *args, **kwargs)
+                # Don't execute automations for a message emitted during
+                # the run of automations for a real message
+                # Don't execute if we know already that a message is only internal
+                message_sudo = message.sudo().with_context(active_test=False)
+                if "__action_done"  in self.env.context or message_sudo.is_internal or message_sudo.subtype_id.internal:
+                    return message
+                if message_sudo.message_type in ('notification', 'auto_comment', 'user_notification'):
+                    return message
+
+                # always execute actions when the author is a customer
+                mail_trigger = "on_message_received" if message_sudo.author_id.partner_share else "on_message_sent"
+                automations = self.env['base.automation']._get_actions(self, [mail_trigger])
+                for automation in automations.with_context(old_values=None):
+                    records = automation._filter_pre(self)
+                    automation._process(records)
+
+                return message
+            return _message_post
+
         patched_models = defaultdict(set)
 
         def patch(model, name, method):
@@ -853,27 +875,7 @@ class BaseAutomation(models.Model):
                     self.env.registry.clear_cache('templates')
 
             if automation_rule.model_id.is_mail_thread and automation_rule.trigger in MAIL_TRIGGERS:
-                def _message_post(self, *args, **kwargs):
-                    message = _message_post.origin(self, *args, **kwargs)
-                    # Don't execute automations for a message emitted during
-                    # the run of automations for a real message
-                    # Don't execute if we know already that a message is only internal
-                    message_sudo = message.sudo().with_context(active_test=False)
-                    if "__action_done"  in self.env.context or message_sudo.is_internal or message_sudo.subtype_id.internal:
-                        return message
-                    if message_sudo.message_type in ('notification', 'auto_comment', 'user_notification'):
-                        return message
-
-                    # always execute actions when the author is a customer
-                    mail_trigger = "on_message_received" if message_sudo.author_id.partner_share else "on_message_sent"
-                    automations = self.env['base.automation']._get_actions(self, [mail_trigger])
-                    for automation in automations.with_context(old_values=None):
-                        records = automation._filter_pre(self)
-                        automation._process(records)
-
-                    return message
-
-                patch(Model, "message_post", _message_post)
+                patch(Model, "message_post", make_message_post())
 
     def _unregister_hook(self):
         """ Remove the patches installed by _register_hook() """
