@@ -1348,7 +1348,7 @@ QUnit.module("test_mail", {}, function () {
         });
 
         await contains(
-            `.o_activity_record img[data-src='${getOrigin()}/web/image/partner/2/image?unique=1659688620000']`
+            `.o_activity_record img[data-src='${getOrigin()}/web/image/partner/2/image']`
         );
     });
 
