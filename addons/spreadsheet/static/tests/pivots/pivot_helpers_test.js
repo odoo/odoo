@@ -12,12 +12,12 @@ function stringArg(value) {
 
 QUnit.module("spreadsheet > pivot_helpers", {}, () => {
     QUnit.test("Basic formula extractor", async function (assert) {
-        const formula = `=ODOO.PIVOT("1", "test") + ODOO.LIST("2", "hello", "bla")`;
+        const formula = `=PIVOT.VALUE("1", "test") + ODOO.LIST("2", "hello", "bla")`;
         const tokens = tokenize(formula);
         let functionName;
         let args;
         ({ functionName, args } = getFirstPivotFunction(tokens));
-        assert.strictEqual(functionName, "ODOO.PIVOT");
+        assert.strictEqual(functionName, "PIVOT.VALUE");
         assert.strictEqual(args.length, 2);
         assert.deepEqual(args[0], stringArg("1"));
         assert.deepEqual(args[1], stringArg("test"));
@@ -30,10 +30,10 @@ QUnit.module("spreadsheet > pivot_helpers", {}, () => {
     });
 
     QUnit.test("Extraction with two PIVOT formulas", async function (assert) {
-        const formula = `=ODOO.PIVOT("1", "test") + ODOO.PIVOT("2", "hello", "bla")`;
+        const formula = `=PIVOT.VALUE("1", "test") + PIVOT.VALUE("2", "hello", "bla")`;
         const tokens = tokenize(formula);
         const { functionName, args } = getFirstPivotFunction(tokens);
-        assert.strictEqual(functionName, "ODOO.PIVOT");
+        assert.strictEqual(functionName, "PIVOT.VALUE");
         assert.strictEqual(args.length, 2);
         assert.deepEqual(args[0], stringArg("1"));
         assert.deepEqual(args[1], stringArg("test"));
@@ -41,7 +41,7 @@ QUnit.module("spreadsheet > pivot_helpers", {}, () => {
     });
 
     QUnit.test("Number of formulas", async function (assert) {
-        const formula = `=ODOO.PIVOT("1", "test") + ODOO.PIVOT("2", "hello", "bla") + ODOO.LIST("1", "bla")`;
+        const formula = `=PIVOT.VALUE("1", "test") + PIVOT.VALUE("2", "hello", "bla") + ODOO.LIST("1", "bla")`;
         assert.strictEqual(getNumberOfPivotFormulas(tokenize(formula)), 2);
         assert.strictEqual(getNumberOfListFormulas(tokenize(formula)), 1);
         assert.strictEqual(getNumberOfPivotFormulas(tokenize("=1+1")), 0);

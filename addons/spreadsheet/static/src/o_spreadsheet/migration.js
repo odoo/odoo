@@ -5,15 +5,21 @@ import { OdooCorePlugin } from "@spreadsheet/plugins";
 const { load, tokenize, parse, convertAstNodes, astToFormula } = spreadsheet;
 const { corePluginRegistry } = spreadsheet.registries;
 
-export const ODOO_VERSION = 9;
+export const ODOO_VERSION = 10;
 
-const MAP = {
+const MAP_V1 = {
     PIVOT: "ODOO.PIVOT",
     "PIVOT.HEADER": "ODOO.PIVOT.HEADER",
     "PIVOT.POSITION": "ODOO.PIVOT.POSITION",
     "FILTER.VALUE": "ODOO.FILTER.VALUE",
     LIST: "ODOO.LIST",
     "LIST.HEADER": "ODOO.LIST.HEADER",
+};
+
+const MAP_FN_NAMES_V10 = {
+    "ODOO.PIVOT": "PIVOT.VALUE",
+    "ODOO.PIVOT.HEADER": "PIVOT.HEADER",
+    "ODOO.PIVOT.TABLE": "PIVOT",
 };
 
 const dmyRegex = /^([0|1|2|3][1-9])\/(0[1-9]|1[0-2])\/(\d{4})$/i;
@@ -48,22 +54,21 @@ export function migrate(data) {
     if (version < 9) {
         _data = migrate8to9(_data);
     }
+    if (version < 10) {
+        _data = migrate9to10(_data);
+    }
     return _data;
 }
 
-function tokensToString(tokens) {
-    return tokens.reduce((acc, token) => acc + token.value, "");
-}
-
-function migrate0to1(data) {
+function renameFunctions(data, map) {
     for (const sheet of data.sheets) {
         for (const xc in sheet.cells || []) {
             const cell = sheet.cells[xc];
             if (cell.content && cell.content.startsWith("=")) {
                 const tokens = tokenize(cell.content);
                 for (const token of tokens) {
-                    if (token.type === "SYMBOL" && token.value.toUpperCase() in MAP) {
-                        token.value = MAP[token.value.toUpperCase()];
+                    if (token.type === "SYMBOL" && token.value.toUpperCase() in map) {
+                        token.value = map[token.value.toUpperCase()];
                     }
                 }
                 cell.content = tokensToString(tokens);
@@ -71,6 +76,14 @@ function migrate0to1(data) {
         }
     }
     return data;
+}
+
+function tokensToString(tokens) {
+    return tokens.reduce((acc, token) => acc + token.value, "");
+}
+
+function migrate0to1(data) {
+    return renameFunctions(data, MAP_V1);
 }
 
 function migrate1to2(data) {
@@ -287,6 +300,10 @@ function migrate8to9(data) {
         }
     }
     return data;
+}
+
+function migrate9to10(data) {
+    return renameFunctions(data, MAP_FN_NAMES_V10);
 }
 
 export class OdooVersion extends OdooCorePlugin {

@@ -204,7 +204,7 @@ export class PivotCorePlugin extends OdooCorePlugin {
     /**
      * Check if the fields in the domain part of
      * a pivot function are valid according to the pivot definition.
-     * e.g. =ODOO.PIVOT(1,"revenue","country_id",...,"create_date:month",...,"source_id",...)
+     * e.g. =PIVOT.VALUE(1,"revenue","country_id",...,"create_date:month",...,"source_id",...)
      * @param {string} pivotId
      * @param {string[]} domainArgs
      * @returns {boolean}
@@ -360,7 +360,7 @@ export class PivotCorePlugin extends OdooCorePlugin {
      * @param {SPTableCell} pivotCell
      */
     _addPivotFormula(sheetId, pivotId, { col, row }, pivotCell) {
-        const formula = pivotCell.isHeader ? "ODOO.PIVOT.HEADER" : "ODOO.PIVOT";
+        const formula = pivotCell.isHeader ? "PIVOT.HEADER" : "PIVOT.VALUE";
         const args = pivotCell.domain
             ? [pivotId, pivotCell.measure, ...pivotCell.domain].filter(isDefined)
             : undefined;
