@@ -1,7 +1,4 @@
 # -*- coding: utf-8 -*-
-from unittest.mock import Mock
-
-import odoo
 from odoo import SUPERUSER_ID, Command
 from odoo.exceptions import AccessError
 from odoo.tests import TransactionCase
@@ -172,12 +169,6 @@ class TestIRRuleFeedback(Feedback):
             'val': 0,
         }).with_user(cls.user)
 
-    def debug_mode(self):
-        odoo.http._request_stack.push(Mock(db=self.env.cr.dbname, env=self.env, debug=True))
-        self.addCleanup(odoo.http._request_stack.pop)
-        self.env.flush_all()
-        self.env.invalidate_all()
-
     def _make_rule(self, name, domain, global_=False, attr='write'):
         res = self.env['ir.rule'].create({
             'name': name,
@@ -206,8 +197,7 @@ Sorry, %s (id=%s) doesn't have 'write' access to:
 If you really, really need access, perhaps you can win over your friendly administrator with a batch of freshly baked cookies."""
         % (self.user.name, self.user.id, self.record._description, self.record._name))
         # debug mode
-        self.debug_mode()
-        with self.assertRaises(AccessError) as ctx:
+        with self.debug_mode(), self.assertRaises(AccessError) as ctx:
             self.record.write({'val': 1})
         self.assertEqual(
             ctx.exception.args[0],
@@ -223,7 +213,7 @@ If you really, really need access, perhaps you can win over your friendly admini
         % (self.user.name, self.user.id, self.record._description, self.record.display_name, self.record._name, self.record.id))
 
         ChildModel = self.env['test_access_right.inherits']
-        with self.assertRaises(AccessError) as ctx:
+        with self.debug_mode(), self.assertRaises(AccessError) as ctx:
             ChildModel.with_user(self.user).create({'some_id': self.record.id, 'val': 2})
         self.assertEqual(
             ctx.exception.args[0],
@@ -241,8 +231,7 @@ If you really, really need access, perhaps you can win over your friendly admini
     def test_locals(self):
         self._make_rule('rule 0', '[("val", "=", 42)]')
         self._make_rule('rule 1', '[("val", "=", 78)]')
-        self.debug_mode()
-        with self.assertRaises(AccessError) as ctx:
+        with self.debug_mode(), self.assertRaises(AccessError) as ctx:
             self.record.write({'val': 1})
         self.assertEqual(
             ctx.exception.args[0],
@@ -261,8 +250,7 @@ If you really, really need access, perhaps you can win over your friendly admini
     def test_globals_all(self):
         self._make_rule('rule 0', '[("val", "=", 42)]', global_=True)
         self._make_rule('rule 1', '[("val", "=", 78)]', global_=True)
-        self.debug_mode()
-        with self.assertRaises(AccessError) as ctx:
+        with self.debug_mode(), self.assertRaises(AccessError) as ctx:
             self.record.write({'val': 1})
         self.assertEqual(
             ctx.exception.args[0],
@@ -284,8 +272,7 @@ If you really, really need access, perhaps you can win over your friendly admini
         """
         self._make_rule('rule 0', '[("val", "=", 42)]', global_=True)
         self._make_rule('rule 1', '[(1, "=", 1)]', global_=True)
-        self.debug_mode()
-        with self.assertRaises(AccessError) as ctx:
+        with self.debug_mode(), self.assertRaises(AccessError) as ctx:
             self.record.write({'val': 1})
         self.assertEqual(
             ctx.exception.args[0],
@@ -305,8 +292,7 @@ If you really, really need access, perhaps you can win over your friendly admini
         self._make_rule('rule 1', '[(1, "=", 1)]', global_=True)
         self._make_rule('rule 2', '[(0, "=", 1)]')
         self._make_rule('rule 3', '[("val", "=", 55)]')
-        self.debug_mode()
-        with self.assertRaises(AccessError) as ctx:
+        with self.debug_mode(), self.assertRaises(AccessError) as ctx:
             self.record.write({'val': 1})
         self.assertEqual(
             ctx.exception.args[0],
@@ -330,8 +316,7 @@ If you really, really need access, perhaps you can win over your friendly admini
         """
         self._make_rule('rule 0', "[('company_id', '=', user.company_id.id)]")
         self._make_rule('rule 1', '[("val", "=", 0)]', global_=True)
-        self.debug_mode()
-        with self.assertRaises(AccessError) as ctx:
+        with self.debug_mode(), self.assertRaises(AccessError) as ctx:
             self.record.write({'val': 1})
         self.assertEqual(
             ctx.exception.args[0],
@@ -364,8 +349,7 @@ If you really, really need access, perhaps you can win over your friendly admini
         self.record.sudo().company_id = self.env['res.company'].create({'name': 'Brosse Inc.'})
         self.user.sudo().company_ids = [Command.link(self.record.company_id.id)]
         child_record = ChildModel.create({'parent_id': self.record.id}).with_user(self.user)
-        self.debug_mode()
-        with self.assertRaises(AccessError) as ctx:
+        with self.debug_mode(), self.assertRaises(AccessError) as ctx:
             _ = child_record.parent_id
         self.assertEqual(
             ctx.exception.args[0],
@@ -389,8 +373,7 @@ If you really, really need access, perhaps you can win over your friendly admini
         self.record.sudo().company_id = self.env['res.company'].create({'name': 'Brosse Inc.'})
         self.user.sudo().company_ids = [Command.link(self.record.company_id.id)]
         self._make_rule('rule 0', "[('company_id', '=', user.company_id.id)]", attr='read')
-        self.debug_mode()
-        with self.assertRaises(AccessError) as ctx:
+        with self.debug_mode(), self.assertRaises(AccessError) as ctx:
             _ = self.record.val
         self.assertEqual(
             ctx.exception.args[0],
@@ -429,9 +412,10 @@ class TestFieldGroupFeedback(Feedback):
 
     @mute_logger('odoo.models')
     def test_read(self):
-        self.env.ref('base.group_no_one').write(
-            {'users': [Command.link(self.user.id)]})
-        with self.assertRaises(AccessError) as ctx:
+        self.user.write({
+            'groups_id': [Command.set([self.env.ref('base.group_user').id])],
+        })
+        with self.debug_mode(), self.assertRaises(AccessError) as ctx:
             _ = self.record.forbidden
 
         self.assertEqual(
@@ -446,7 +430,7 @@ Fields:
     % self.user.id
         )
 
-        with self.assertRaises(AccessError) as ctx:
+        with self.debug_mode(), self.assertRaises(AccessError) as ctx:
             _ = self.record.forbidden3
 
         self.assertEqual(
@@ -462,10 +446,10 @@ Fields:
 
     @mute_logger('odoo.models')
     def test_write(self):
-        self.env.ref('base.group_no_one').write(
-            {'users': [Command.link(self.user.id)]})
-
-        with self.assertRaises(AccessError) as ctx:
+        self.user.write({
+            'groups_id': [Command.set([self.env.ref('base.group_user').id])],
+        })
+        with self.debug_mode(), self.assertRaises(AccessError) as ctx:
             self.record.write({'forbidden': 1, 'forbidden2': 2})
 
         self.assertEqual(
