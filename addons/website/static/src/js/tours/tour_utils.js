@@ -310,6 +310,26 @@ function goToTheme(position = "bottom") {
     };
 }
 
+/**
+ * Waits between each step until modal is not transitioning (no show nor hide
+ * is in progress).
+ * @param {Array} steps to protect from modal transitions
+ * @returns {Array} steps with additional steps waiting for modal transitions
+ */
+function noBusyModal(steps) {
+    const waitStep = {
+        content: "Wait for modal transition",
+        trigger: ":iframe body:not(.o_modal_busy)",
+        isCheck: true,
+    };
+    const result = [waitStep];
+    for (const step of steps) {
+        result.push(step);
+        result.push(waitStep);
+    }
+    return result;
+}
+
 function selectHeader(position = "bottom") {
     return {
         trigger: `:iframe header#top`,
@@ -539,6 +559,7 @@ export default {
     getClientActionUrl,
     goBackToBlocks,
     goToTheme,
+    noBusyModal,
     registerBackendAndFrontendTour,
     registerThemeHomepageTour,
     registerWebsitePreviewTour,

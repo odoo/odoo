@@ -30,7 +30,7 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_animations", {
     test: true,
     url: "/",
     edition: true,
-}, () => [
+}, () => wTourUtils.noBusyModal([
     wTourUtils.dragNDrop(snippets[1]), // Media List
     wTourUtils.dragNDrop(snippets[1]), // Media List
     wTourUtils.dragNDrop(snippets[2]), // Columns
@@ -87,6 +87,15 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_animations", {
     },
     wTourUtils.clickOnElement("3rd columns", ":iframe .s_popup .s_three_columns .row > :last-child"),
     ...setOnScrollAnim(),
+    {
+        content: "Wait end of scroll",
+        trigger: "body",
+        run: () => {
+            return new Promise(resolve => {
+                setTimeout(resolve, 501); // Pending scrollTo takes 500ms
+            });
+        },
+    },
     {
         content: "Verify the animation delay of the animated element in the popup at the beginning",
         trigger: ":iframe .s_popup .modal",
@@ -189,4 +198,4 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_animations", {
             }
         },
     },
-]);
+]));

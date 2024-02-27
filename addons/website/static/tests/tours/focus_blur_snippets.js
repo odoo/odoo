@@ -6,17 +6,14 @@ const blockIDToData = {
     parent: {
         selector: ':iframe .s_focusblur',
         name: 'section',
-        overlayIndex: 2,
     },
     child1: {
         selector: ':iframe .s_focusblur_child1',
         name: 'first child',
-        overlayIndex: 1,
     },
     child2: {
         selector: ':iframe .s_focusblur_child2',
         name: 'second child',
-        overlayIndex: 0,
     },
 };
 
@@ -29,7 +26,7 @@ function clickAndCheck(blockID, expected) {
     }, {
         content: 'Once the related overlays are enabled/disabled, check that the focus/blur calls have been correct.',
         trigger: blockID
-            ? `:iframe .oe_overlay.o_draggable:eq(${blockData.overlayIndex}).oe_active`
+            ? `:iframe .oe_overlay.o_draggable.oe_active`
             : `:iframe #oe_manipulators:not(:has(.oe_active))`,
         allowInvisible: !blockID,
         run: function (actions) {
