@@ -16,6 +16,8 @@ class TestPoSStock(TestPoSCommon):
         self.product1 = self.create_product('Product 1', self.categ_anglo, 10.0, 5.0)
         self.product2 = self.create_product('Product 2', self.categ_anglo, 20.0, 10.0)
         self.product3 = self.create_product('Product 3', self.categ_basic, 30.0, 15.0)
+        self.product4 = self.create_product('Product 4', self.categ_anglo, 10.0, 5.0)
+        self.product4.type = 'consu'
         # start inventory with 10 items for each product
         self.adjust_inventory([self.product1, self.product2, self.product3], [10, 10, 10])
 
@@ -53,14 +55,16 @@ class TestPoSStock(TestPoSCommon):
         |         | product2 |   6 |       120.0 |       78.0 |  -> 6 items at cost of 13.0, remains 2 items at cost of 13.0
         |         | product3 |   6 |       180.0 |        0.0 |
         +---------+----------+-----+-------------+------------+
+        | order 4 | product4 |   6 |        60.0 |        0.0 |  -> consumable product cost = 0
+        +---------+----------+-----+-------------+------------+
 
         Expected Result
         ===============
         +---------------------+---------+
         | account             | balance |
         +---------------------+---------+
-        | sale_account        | -1010.0 |
-        | pos_receivable-cash |  1010.0 |
+        | sale_account        | -1070.0 |
+        | pos_receivable-cash |  1070.0 |
         | expense_account     |   327.0 |
         | output_account      |  -327.0 |
         +---------------------+---------+
@@ -70,10 +74,10 @@ class TestPoSStock(TestPoSCommon):
 
         def _before_closing_cb():
             # check values before closing the session
-            self.assertEqual(3, self.pos_session.order_count)
+            self.assertEqual(4, self.pos_session.order_count)
             orders_total = sum(order.amount_total for order in self.pos_session.order_ids)
             self.assertAlmostEqual(orders_total, self.pos_session.total_payments_amount, msg='Total order amount should be equal to the total payment amount.')
-            self.assertAlmostEqual(orders_total, 1010.0, msg='The orders\'s total amount should equal the computed.')
+            self.assertAlmostEqual(orders_total, 1070.0, msg='The orders\'s total amount should equal the computed.')
 
             # check product qty_available after syncing the order
             self.assertEqual(self.product1.qty_available, 9)
@@ -91,23 +95,24 @@ class TestPoSStock(TestPoSCommon):
                 {'pos_order_lines_ui_args': [(self.product1, 10), (self.product2, 10)], 'uid': '00100-010-0001'},
                 {'pos_order_lines_ui_args': [(self.product2, 7), (self.product3, 7)], 'uid': '00100-010-0002'},
                 {'pos_order_lines_ui_args': [(self.product1, 6), (self.product2, 6), (self.product3, 6)], 'uid': '00100-010-0003'},
+                {'pos_order_lines_ui_args': [(self.product4, 6)], 'uid': '00100-010-0004'},
             ],
             'before_closing_cb': _before_closing_cb,
             'journal_entries_before_closing': {},
             'journal_entries_after_closing': {
                 'session_journal_entry': {
                     'line_ids': [
-                        {'account_id': self.sales_account.id, 'partner_id': False, 'debit': 0, 'credit': 1010.0, 'reconciled': False},
+                        {'account_id': self.sales_account.id, 'partner_id': False, 'debit': 0, 'credit': 1070.0, 'reconciled': False},
                         {'account_id': self.expense_account.id, 'partner_id': False, 'debit': 327, 'credit': 0, 'reconciled': False},
-                        {'account_id': self.cash_pm1.receivable_account_id.id, 'partner_id': False, 'debit': 1010.0, 'credit': 0, 'reconciled': True},
+                        {'account_id': self.cash_pm1.receivable_account_id.id, 'partner_id': False, 'debit': 1070.0, 'credit': 0, 'reconciled': True},
                         {'account_id': self.output_account.id, 'partner_id': False, 'debit': 0, 'credit': 327, 'reconciled': True},
                     ],
                 },
                 'cash_statement': [
-                    ((1010.0, ), {
+                    ((1070.0, ), {
                         'line_ids': [
-                            {'account_id': self.cash_pm1.journal_id.default_account_id.id, 'partner_id': False, 'debit': 1010.0, 'credit': 0, 'reconciled': False},
-                            {'account_id': self.cash_pm1.receivable_account_id.id, 'partner_id': False, 'debit': 0, 'credit': 1010.0, 'reconciled': True},
+                            {'account_id': self.cash_pm1.journal_id.default_account_id.id, 'partner_id': False, 'debit': 1070.0, 'credit': 0, 'reconciled': False},
+                            {'account_id': self.cash_pm1.receivable_account_id.id, 'partner_id': False, 'debit': 0, 'credit': 1070.0, 'reconciled': True},
                         ]
                     }),
                 ],
