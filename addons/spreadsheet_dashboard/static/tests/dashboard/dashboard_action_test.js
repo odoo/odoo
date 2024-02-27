@@ -61,6 +61,20 @@ QUnit.test("display the active spreadsheet", async (assert) => {
     assert.containsOnce(getFixture(), ".o-spreadsheet", "It should display the spreadsheet");
 });
 
+QUnit.test("Fold/unfold the search panel", async function (assert) {
+    await createSpreadsheetDashboard();
+    const fixture = getFixture();
+    await click(fixture.querySelector(".o_spreadsheet_dashboard_search_panel button"));
+    assert.containsNone(fixture, ".o_spreadsheet_dashboard_search_panel");
+    assert.strictEqual(
+        fixture.querySelector(".o_search_panel_sidebar").textContent,
+        "Container 1 / Dashboard CRM 1"
+    );
+    await click(fixture.querySelector(".o_search_panel_sidebar button"));
+    assert.containsNone(fixture, ".o_search_panel_sidebar");
+    assert.containsOnce(fixture, ".o_spreadsheet_dashboard_search_panel");
+});
+
 QUnit.test("load action with specific dashboard", async (assert) => {
     await createSpreadsheetDashboard({ spreadsheetId: 3 });
     const active = getFixture().querySelector(".o_search_panel li.active");
