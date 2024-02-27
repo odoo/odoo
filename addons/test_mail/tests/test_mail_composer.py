@@ -473,7 +473,7 @@ class TestComposerForm(TestMailComposer):
         self.assertEqual(composer_form.email_from, self.template.email_from,
                          'MailComposer: mass mode should have template raw email_from if template')
         self.assertEqual(composer_form.email_layout_xmlid, 'mail.test_layout')
-        self.assertTrue(composer_form.force_send, 'MailComposer: mass mode sends emails right away')
+        self.assertFalse(composer_form.force_send, 'MailComposer: mass mode with domain uses email queue')
         self.assertEqual(composer_form.mail_server_id, self.mail_server_domain)
         self.assertEqual(composer_form.model, self.test_records._name)
         self.assertFalse(composer_form.record_alias_domain_id, 'MailComposer: mass mode should have void alias domain')
@@ -2276,6 +2276,9 @@ class TestComposerResultsMass(TestMailComposer):
         cls.user_employee.write({
             'groups_id': [(4, cls.env.ref('base.group_partner_manager').id)],
         })
+        cls.template.write({
+            "scheduled_date": False,
+        })
 
     @users('employee')
     @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
@@ -2504,6 +2507,49 @@ class TestComposerResultsMass(TestMailComposer):
                 )
 
     @users('employee')
+    def test_mail_composer_scalability(self):
+        """ Test scalability (big batch of emails) and related configuration """
+        batch_records, _partners = self._create_records_for_batch(
+            'mail.test.ticket.mc', 10,
+        )
+        for (batch_size, send_limit), (exp_mail_create_count, exp_force_send, exp_state) in zip(
+            [
+                (False, False),  # unset
+                (8, 0),  # 0 = always use queue
+                (8, False),  # send limit defaults to 100, so force_send is set
+                (0, 8),  # render: defaults to 500 hence 1 iteration in test
+            ],
+            [
+                (1, True, "sent"),
+                (2, False, "outgoing"),
+                (2, True, "sent"),
+                (1, False, "outgoing"),
+            ]
+        ):
+            with self.subTest(batch_size=batch_size, send_limit=send_limit):
+                self.env['ir.config_parameter'].sudo().set_param(
+                    "mail.batch_size", batch_size
+                )
+                self.env['ir.config_parameter'].sudo().set_param(
+                    "mail.mail.force.send.limit", send_limit
+                )
+                composer_form = Form(self.env['mail.compose.message'].with_context(
+                    self._get_web_context(batch_records, add_web=True,
+                                          default_auto_delete=False,
+                                          default_template_id=self.template.id)
+                ))
+                composer = composer_form.save()
+                self.assertFalse(composer.auto_delete)
+                self.assertEqual(composer.force_send, exp_force_send)
+                with self.mock_mail_gateway(mail_unlink_sent=True):
+                    composer._action_send_mail()
+
+                self.assertEqual(self.mail_mail_create_mocked.call_count, exp_mail_create_count)
+                self.assertTrue(
+                    all(mail.state == exp_state for mail in self._new_mails)
+                )
+
+    @users('employee')
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_mail_composer_wtpl(self):
         self.template.auto_delete = False  # keep sent emails to check content
@@ -2605,6 +2651,7 @@ class TestComposerResultsMass(TestMailComposer):
                 }
                 if use_domain:
                     ctx['default_res_domain'] = [('id', 'in', self.test_records.ids)]
+                    ctx['default_force_send'] = True  # otherwise domain = email queue
                 else:
                     ctx['default_res_ids'] = self.test_records.ids
                 if email_layout_xmlid:
@@ -2855,10 +2902,10 @@ class TestComposerResultsMass(TestMailComposer):
 
         # should create emails in a single batch
         self.assertEqual(self.build_email_mocked.call_count, 2, 'One build email per outgoing email')
-        self.assertEqual(self.mail_mail_create_mocked.call_count, 2, 'Emails are anyway created in a singleton loop')
+        self.assertEqual(self.mail_mail_create_mocked.call_count, 1, 'Emails are created in batch')
         # global outgoing
         self.assertEqual(len(self._new_mails), 2, 'Should have created 1 mail.mail per record based on active_ids')
-        self.assertEqual(len(self._mails), 2, 'Should have sent 1 email per record based on  on active_ids')
+        self.assertEqual(len(self._mails), 2, 'Should have sent 1 email per record based on active_ids')
 
         for record in self.test_records:
             # template is sent directly using customer field, even if author is partner_employee
@@ -3123,6 +3170,7 @@ class TestComposerResultsMass(TestMailComposer):
 
         composer_form = Form(self.env['mail.compose.message'].with_context(
             default_composition_mode='mass_mail',
+            default_force_send=True,  # otherwise res_domain = email queue
             default_model=self.test_records._name,
             default_res_domain=[('id', 'in', self.test_records.ids)],
             default_res_domain_user_id=self.user_employee_2.id,
