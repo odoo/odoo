@@ -42,7 +42,7 @@ from datetime import datetime
 from functools import lru_cache
 from itertools import zip_longest as izip_longest
 from passlib.context import CryptContext
-from unittest.mock import patch, _patch
+from unittest.mock import patch, _patch, Mock
 from xmlrpc import client as xmlrpclib
 
 import requests
@@ -57,7 +57,7 @@ from odoo.exceptions import AccessError
 from odoo.modules.registry import Registry
 from odoo.service import security
 from odoo.sql_db import BaseCursor, Cursor
-from odoo.tools import float_compare, single_email_re, profiler, lower_logging, SQL
+from odoo.tools import float_compare, single_email_re, profiler, lower_logging, SQL, DotDict
 from odoo.tools.misc import find_in_path, mute_logger
 
 from . import case
@@ -404,20 +404,24 @@ class BaseCase(case.TestCase, metaclass=MetaCase):
 
     @contextmanager
     def debug_mode(self):
-        """ Enable the effects of group 'base.group_no_one'; mainly useful with :class:`Form`. """
-        origin_user_has_groups = BaseModel.user_has_groups
-
-        def user_has_groups(self, groups):
-            group_set = set(groups.split(','))
-            if '!base.group_no_one' in group_set:
-                return False
-            elif 'base.group_no_one' in group_set:
-                group_set.remove('base.group_no_one')
-                return not group_set or origin_user_has_groups(self, ','.join(group_set))
-            return origin_user_has_groups(self, groups)
-
-        with patch('odoo.models.BaseModel.user_has_groups', user_has_groups):
+        """ Enable the effects of debug mode (in particular for group ``base.group_no_one``). """
+        request = Mock(
+            httprequest=Mock(host='localhost'),
+            db=self.env.cr.dbname,
+            env=self.env,
+            session=DotDict(odoo.http.get_default_session(), debug='1'),
+        )
+        try:
+            self.env.flush_all()
+            self.env.invalidate_all()
+            odoo.http._request_stack.push(request)
             yield
+            self.env.flush_all()
+            self.env.invalidate_all()
+        finally:
+            popped_request = odoo.http._request_stack.pop()
+            if popped_request is not request:
+                raise Exception('Wrong request stack cleanup.')
 
     @contextmanager
     def _assertRaises(self, exception, *, msg=None):
