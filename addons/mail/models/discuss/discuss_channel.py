@@ -597,13 +597,15 @@ class Channel(models.Model):
         payload = {
             "Thread": {
                 "id": self.id,
-                "is_pinned": True,
                 "last_interest_dt": fields.Datetime.now(),
                 "model": "discuss.channel",
             },
         }
         bus_notifications = [
             (self, "mail.record/insert", payload),
+            ((self, "members"), "mail.record/insert", {
+                "Thread": {"id": self.id, "is_pinned": True, "model": "discuss.channel"}
+            }),
             (self, "discuss.channel/new_message", {"id": self.id, "message": message_format}),
         ]
         # sudo: bus.bus - sending on safe channel (discuss.channel)

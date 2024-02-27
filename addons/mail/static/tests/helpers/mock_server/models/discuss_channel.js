@@ -295,7 +295,10 @@ patch(MockServer.prototype, {
                 })
             );
             this.pyEnv["bus.bus"]._sendone(partner, "discuss.channel/joined", {
-                channel: this._mockDiscussChannel__channel_basic_info([channel.id]),
+                channel: {
+                    ...this._mockDiscussChannel__channel_basic_info([channel.id]),
+                    is_pinned: true,
+                },
                 invited_by_user_id: this.pyEnv.currentUserId,
             });
         }
@@ -414,6 +417,9 @@ patch(MockServer.prototype, {
     _mockDiscussChannelChannelFetched(ids) {
         const channels = this.getRecords("discuss.channel", [["id", "in", ids]]);
         for (const channel of channels) {
+            if (!["chat", "whatsapp"].includes(channel.channel_type)) {
+                continue;
+            }
             const channelMessages = this.getRecords("mail.message", [
                 ["model", "=", "discuss.channel"],
                 ["res_id", "=", channel.id],
