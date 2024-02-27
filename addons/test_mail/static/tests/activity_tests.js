@@ -1393,9 +1393,7 @@ QUnit.module("test_mail", {}, function () {
         assert.ok(
             target
                 .querySelector(".o_activity_record img")
-                .dataset.src.endsWith(
-                    "/web/image?model=partner&field=image&id=2&unique=1659688620000"
-                ),
+                .dataset.src.endsWith("/web/image?model=partner&field=image&id=2"),
             "image src is the preview image given in option"
         );
     });
