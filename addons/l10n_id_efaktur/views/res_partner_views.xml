@@ -6,13 +6,13 @@
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
-                <field name="vat" position="after">
+                <xpath expr="//group/group" position="inside">
                     <field name="l10n_id_pkp" attrs="{'invisible': [('country_id', '!=', False), ('country_code', '!=', 'ID')]}"/>
-                </field>
+                    <field name="l10n_id_kode_transaksi" attrs="{'invisible': [('l10n_id_pkp', '!=', True)]}"/>
+                </xpath>
                 <page name="accounting" position="inside">
                     <group string="Indonesian Taxes"  attrs="{'invisible': [('l10n_id_pkp', '!=', True)]}">
                         <group>
-                            <field name="l10n_id_kode_transaksi"/>
                             <field name="l10n_id_nik"/>
                         </group>
                         <group>
