@@ -15,6 +15,13 @@
             <xpath expr="//field[@name='vat']" position="after">
                 <field name="l10n_in_pan" placeholder="e.g. ABCTY1234D" attrs="{'invisible': [('fiscal_country_codes', 'not ilike', 'IN')]}" />
             </xpath>
+            <xpath expr="//sheet" position="before">
+                <field name="display_pan_warning" invisible="1"/>
+                <div class="alert alert-warning" role="alert"
+                        attrs="{'invisible': [('display_pan_warning', '=', False)]}">
+                        PAN number is not same as the 3rd to 12th characters of the GST number.
+                </div>
+            </xpath>
         </field>
     </record>
 </odoo>
