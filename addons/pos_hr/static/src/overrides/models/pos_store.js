@@ -74,7 +74,7 @@ patch(PosStore.prototype, {
         }
         await this.data.call("pos.session", "log_partner_message", [
             this.session.id,
-            this.cashier.work_contact_id,
+            this.cashier.work_contact_id?.id,
             action,
             message,
         ]);
