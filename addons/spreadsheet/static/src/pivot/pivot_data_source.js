@@ -84,10 +84,10 @@ export class OdooPivot extends OdooViewsDataSource {
     }
 
     /**
-     * High level method computing the result of ODOO.PIVOT.HEADER functions.
-     * - regular function 'ODOO.PIVOT.HEADER(1,"stage_id",2,"user_id",6)'
-     * - measure header 'ODOO.PIVOT.HEADER(1,"stage_id",2,"user_id",6,"measure","expected_revenue")
-     * - positional header 'ODOO.PIVOT.HEADER(1,"#stage_id",1,"#user_id",1)'
+     * High level method computing the result of PIVOT.HEADER functions.
+     * - regular function 'PIVOT.HEADER(1,"stage_id",2,"user_id",6)'
+     * - measure header 'PIVOT.HEADER(1,"stage_id",2,"user_id",6,"measure","expected_revenue")
+     * - positional header 'PIVOT.HEADER(1,"#stage_id",1,"#user_id",1)'
      *
      * @param {(string | number)[]} domainArgs arguments of the function (except the first one which is the pivot id)
      * @returns {string | number | boolean}

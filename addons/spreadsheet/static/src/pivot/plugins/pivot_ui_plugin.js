@@ -134,13 +134,13 @@ export class PivotUIPlugin extends OdooUIPlugin {
      * Returns the domain args of a pivot formula from a position.
      * For all those formulas:
      *
-     * =ODOO.PIVOT(1,"expected_revenue","stage_id",2,"city","Brussels")
-     * =ODOO.PIVOT.HEADER(1,"stage_id",2,"city","Brussels")
-     * =ODOO.PIVOT.HEADER(1,"stage_id",2,"city","Brussels","measure","expected_revenue")
+     * =PIVOT.VALUE(1,"expected_revenue","stage_id",2,"city","Brussels")
+     * =PIVOT.HEADER(1,"stage_id",2,"city","Brussels")
+     * =PIVOT.HEADER(1,"stage_id",2,"city","Brussels","measure","expected_revenue")
      *
      * the result is the same: ["stage_id", 2, "city", "Brussels"]
      *
-     * If the cell is the result of ODOO.PIVOT.TABLE, the result is the domain of the cell
+     * If the cell is the result of PIVOT, the result is the domain of the cell
      * as if it was the individual pivot formula
      *
      * @param {{ col: number, row: number, sheetId: string }} position
@@ -159,7 +159,7 @@ export class PivotUIPlugin extends OdooUIPlugin {
         const { args, functionName } = this.getters.getFirstPivotFunction(
             cell.compiledFormula.tokens
         );
-        if (functionName === "ODOO.PIVOT.TABLE") {
+        if (functionName === "PIVOT") {
             const formulaId = args[0];
             const pivotId = this.getters.getPivotId(formulaId);
             const dataSource = this.getPivot(pivotId);
@@ -180,7 +180,7 @@ export class PivotUIPlugin extends OdooUIPlugin {
             }
             return domain;
         }
-        const domain = args.slice(functionName === "ODOO.PIVOT" ? 2 : 1);
+        const domain = args.slice(functionName === "PIVOT.VALUE" ? 2 : 1);
         if (domain.at(-2) === "measure") {
             return domain.slice(0, -2);
         }

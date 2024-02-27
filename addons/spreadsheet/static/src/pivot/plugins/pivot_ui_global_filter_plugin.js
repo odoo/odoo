@@ -75,7 +75,7 @@ export class PivotUIGlobalFilterPlugin extends OdooUIPlugin {
                 const sheetId = this.getters.getActiveSheetId();
                 const { col, row } = event.anchor.cell;
                 const cell = this.getters.getCell({ sheetId, col, row });
-                if (cell !== undefined && cell.content.startsWith("=ODOO.PIVOT.HEADER(")) {
+                if (cell !== undefined && cell.content.startsWith("=PIVOT.HEADER(")) {
                     const filters = this._getFiltersMatchingPivot(cell.compiledFormula.tokens);
                     this.dispatch("SET_MANY_GLOBAL_FILTER_VALUE", { filters });
                 }
