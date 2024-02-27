@@ -526,7 +526,6 @@ class AccountReportExpression(models.Model):
             ('from_fiscalyear', 'From the start of the fiscal year'),
             ('to_beginning_of_fiscalyear', 'At the beginning of the fiscal year'),
             ('to_beginning_of_period', 'At the beginning of the period'),
-            ('normal', 'According to each type of account'),
             ('strict_range', 'Strictly on the given dates'),
             ('previous_tax_period', "From previous tax period")
         ],
