@@ -36,6 +36,13 @@ function _createFilterDomain(fieldName, bars, value) {
     return filterDomain;
 }
 
+function _groupsToAggregateValues(groups, groupBy) {
+    const groupByFieldName = groupBy.split(":")[0];
+    return groups.map((r) => {
+        return { ...r, [groupByFieldName]: r[groupBy] };
+    });
+}
+
 class ProgressBarState {
     constructor(progressAttributes, model, aggregateFields, activeBars = {}) {
         this.progressAttributes = progressAttributes;
@@ -191,7 +198,7 @@ class ProgressBarState {
             bars,
             activeBar.value
         );
-        const { context, groupBy, resModel } = this.model.root;
+        const { context, groupBy, resModel, firstGroupBy } = this.model.root;
         const kwargs = { context };
         const fieldNames = this._aggregateFields.map((f) => f.name);
         const fields = [...fieldNames, group.groupByField.name];
@@ -202,10 +209,12 @@ class ProgressBarState {
             .webReadGroup(resModel, domain, fields, groupBy, kwargs)
             .then((res) => {
                 if (res.length) {
-                    const resGroup = _findGroup(res.groups, group.groupByField, group.__rawValue);
+                    const groupByField = group.groupByField;
+                    const aggregateValues = _groupsToAggregateValues(res.groups, firstGroupBy);
+                    const resGroup = _findGroup(aggregateValues, groupByField, group.__rawValue);
                     activeBar.aggregates = {
                         ...resGroup,
-                        [group.groupByField.name]: group.__rawValue,
+                        [groupByField.name]: group.__rawValue,
                     };
                 }
             });
@@ -245,9 +254,7 @@ class ProgressBarState {
             groupBy,
             kwargs
         );
-        this._aggregateValues = res.groups.map((r) => {
-            return { ...r, [firstGroupByName]: r[firstGroupBy] };
-        });
+        this._aggregateValues = _groupsToAggregateValues(res.groups, firstGroupBy);
     }
 
     async _updateProgressBar() {
