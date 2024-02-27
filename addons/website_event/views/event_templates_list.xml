@@ -141,7 +141,7 @@
         <div class="dropdown d-none d-lg-block">
             <a href="#" role="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" title="Filter by Date">
                 <t t-if="current_date" t-out="current_date"/>
-                <t t-else="">Upcoming Events</t>
+                <t t-else="">Upcoming</t>
             </a>
             <div class="dropdown-menu">
                 <t t-foreach="dates" t-as="date">
