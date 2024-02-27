@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="stock_batch_dock_tree_view_stock_transport" model="ir.ui.view">
+            <field name="name">stock.batch.dock.tree.view</field>
+            <field name="model">stock.batch.dock</field>
+            <field name="arch" type="xml">
+                <tree string="Docks" editable="bottom">
+                    <field name="name"/>
+                    <field name="operation_type_ids" widget="many2many_tags" placeholder="empty for all..."/>
+                    <field name="color" widget="color_picker"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="stock_batch_dock_form_view_stock_transport" model="ir.ui.view">
+            <field name="name">stock.batch.dock.form.view</field>
+            <field name="model">stock.batch.dock</field>
+            <field name="arch" type="xml">
+                <form string="Stock Batch Dock">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="operation_type_ids" widget="many2many_tags" placeholder="empty for all..."/>
+                            <field name="color" widget="color_picker"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="stock_batch_dock_action" model="ir.actions.act_window">
+            <field name="name">Stock Batch Dock</field>
+            <field name="res_model">stock.batch.dock</field>
+            <field name="view_mode">tree,form,kanban</field>
+        </record>
+
+        <menuitem id="batch_dock" name="Stock Batch Dock"
+              parent="stock.menu_warehouse_config" sequence="333"
+              action="stock_batch_dock_action"/>
+    </data>
+</odoo>
