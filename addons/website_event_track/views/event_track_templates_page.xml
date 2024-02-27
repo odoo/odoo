@@ -81,7 +81,7 @@
                     <div class="d-flex flex-wrap gap-1">
                         <t t-foreach="track.tag_ids" t-as="tag">
                             <span t-if="tag.color"
-                                t-att-class="'badge o_tag_color_hovered_%s' % (tag.color)"
+                                t-att-class="'badge o_tag_color_%s' % (tag.color)"
                                 t-out="tag.name"/>
                         </t>
                     </div>
