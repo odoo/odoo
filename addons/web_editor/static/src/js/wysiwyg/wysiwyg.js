@@ -255,6 +255,7 @@ export class Wysiwyg extends Component {
             const isDifferentRecord =
                 JSON.stringify(lastRecordInfo) !== JSON.stringify(newRecordInfo) ||
                 JSON.stringify(lastCollaborationChannel) !== JSON.stringify(newCollaborationChannel);
+            const isDiscardedRecord = !isDifferentRecord && newProps.options.record && !newProps.options.record.dirty;
 
             if (
                 (
@@ -264,7 +265,7 @@ export class Wysiwyg extends Component {
                     isDifferentRecord
                 )
             {
-                if (isDifferentRecord) {
+                if (isDifferentRecord || isDiscardedRecord) {
                     this.resetEditor(newValue, newProps.options);
                 } else {
                     this.setValue(newValue);
