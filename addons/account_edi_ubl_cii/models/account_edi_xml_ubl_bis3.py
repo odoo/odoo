@@ -423,18 +423,5 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
                 'no_r_001': _(
                     "The VAT number of the supplier does not seem to be valid. It should be of the form: NO179728982MVA."
                 ) if not mva.is_valid(vat) or len(vat) != 14 or vat[:2] != 'NO' or vat[-3:] != 'MVA' else "",
-
-                'no_supplier_bronnoysund': _(
-                    "The supplier %s must have a Bronnoysund company registry.",
-                    vals['supplier'].display_name
-                ) if 'l10n_no_bronnoysund_number' not in vals['supplier']._fields or not vals['supplier'].l10n_no_bronnoysund_number else "",
             })
-        if vals['customer'].country_id.code == 'NO':
-            constraints.update({
-                'no_customer_bronnoysund': _(
-                    "The supplier %s must have a Bronnoysund company registry.",
-                    vals['customer'].display_name
-                ) if 'l10n_no_bronnoysund_number' not in vals['customer']._fields or not vals['customer'].l10n_no_bronnoysund_number else "",
-            })
-
         return constraints
