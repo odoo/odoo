@@ -175,3 +175,35 @@ class TestReturnPicking(TestStockCommon):
         return_picking = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
         return_picking.button_validate()
         self.assertEqual(return_picking.move_ids[0].partner_id.id, receipt.partner_id.id)
+
+    def test_return_wizard_with_partial_delivery(self):
+        """
+        Create a picking for 10 units, deliver 6, and do not backorder the remaining 4.
+        Then, attempt to return the quantity that was delivered. The return should be created with the correct quantity.
+        """
+        delivery_picking = self.PickingObj.create({
+            'picking_type_id': self.picking_type_out,
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location,
+        })
+        out_move = self.MoveObj.create({
+            'name': "OUT move",
+            'product_id':self.productA.id,
+            'product_uom_qty': 10,
+            'picking_id': delivery_picking.id,
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location,
+        })
+        delivery_picking.action_confirm()
+        out_move.quantity = 6
+        # No backorder
+        res_dict = delivery_picking.with_context(picking_ids_not_to_backorder=delivery_picking.id).button_validate()
+
+        self.env['stock.backorder.confirmation'].with_context(res_dict['context']).process()
+        self.assertEqual(delivery_picking.state, 'done', "Pickings should be set as done")
+        # Create return
+        stock_return_picking_form = Form(self.env['stock.return.picking']
+            .with_context(active_ids=delivery_picking.ids, active_id=delivery_picking.ids[0],
+            active_model='stock.picking'))
+        stock_return_picking = stock_return_picking_form.save()
+        self.assertEqual(stock_return_picking.product_return_moves.quantity, 6)
