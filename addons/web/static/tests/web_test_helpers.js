@@ -28,11 +28,7 @@ import { defineModels } from "./_framework/mock_server/mock_server";
  * @typedef {import("./_framework/mock_server/mock_server").RouteCallback<T>} RouteCallback
  */
 
-export {
-    destroyComponent,
-    findComponent,
-    mountWithCleanup,
-} from "./_framework/component_test_helpers";
+export { findComponent, mountWithCleanup } from "./_framework/component_test_helpers";
 export { contains } from "./_framework/dom_test_helpers";
 export {
     clearRegistry,
