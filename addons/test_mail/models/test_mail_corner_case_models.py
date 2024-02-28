@@ -116,6 +116,13 @@ class MailTestTrackAllO2m(models.Model):
     mail_track_all_id = fields.Many2one('mail.test.track.all')
 
 
+class MailTestTrackAllPropertiesParent(models.Model):
+    _description = 'Properties Parent'
+    _name = "mail.test.track.all.properties.parent"
+
+    definition_properties = fields.PropertiesDefinition()
+
+
 class MailTestTrackAll(models.Model):
     _description = 'Test tracking on all field types'
     _name = "mail.test.track.all"
@@ -140,6 +147,8 @@ class MailTestTrackAll(models.Model):
         'mail.test.track.all.o2m', 'mail_track_all_id',
         string='One2Many',
         tracking=11)
+    properties_parent_id = fields.Many2one('mail.test.track.all.properties.parent', tracking=True)
+    properties = fields.Properties('Properties', definition='properties_parent_id.definition_properties')
     selection_field = fields.Selection(
         string='Selection',
         selection=[('first', 'FIRST'), ('second', 'SECOND')],

@@ -119,6 +119,7 @@ class TestTracking(MailCommon):
                     'currencyId': False,
                     'floatPrecision': None,
                     'fieldType': field_type,
+                    'isPropertyField': False,
                 },
                 'newValue': new_user.display_name,
                 'oldValue': original_user.display_name,
@@ -442,6 +443,33 @@ class TestTrackingInternals(MailCommon):
             'phone': '0456001122',
         })
 
+        cls.properties_linked_records = cls.env['mail.test.ticket'].create([{'name': f'Record {i}'} for i in range(3)])
+        cls.properties_parent_1, cls.properties_parent_2 = cls.env['mail.test.track.all.properties.parent'].create([{
+            'definition_properties': [
+                {'name': 'property_char', 'string': 'Property Char', 'type': 'char', 'default': 'char value'},
+                {'name': 'separator', 'type': 'separator'},
+                {'name': 'property_int', 'string': 'Property Int', 'type': 'integer', 'default': 1337},
+                {'name': 'property_m2o', 'string': 'Property M2O', 'type': 'many2one',
+                 'default': (cls.properties_linked_records[0].id, cls.properties_linked_records[0].display_name), 'comodel': 'mail.test.ticket'},
+            ],
+        }, {
+            'definition_properties': [
+                {'name': 'property_m2m', 'string': 'Property M2M', 'type': 'many2many',
+                 'default': [(rec.id, rec.display_name) for rec in cls.properties_linked_records], 'comodel': 'mail.test.ticket'},
+                {'name': 'property_separator', 'string': 'Separator', 'type': 'separator'},
+                {'name': 'property_tags', 'string': 'Property Tags', 'type': 'tags',
+                 'default': ['aa', 'bb'], 'tags': [('aa', 'AA', 7), ('bb', 'BB', 2), ('cc', 'CC', 3)]},
+                {'name': 'property_datetime', 'string': 'Property Datetime', 'type': 'datetime', 'default': '2024-01-02 12:59:01'},
+                {'name': 'property_date', 'string': 'Property Date', 'type': 'date', 'default': '2024-01-03'},
+            ],
+        }])
+        cls.properties_record_1, cls.properties_record_2 = cls.env['mail.test.track.all'].create([{
+            'properties_parent_id': cls.properties_parent_1.id,
+        }, {
+            'properties_parent_id': cls.properties_parent_2.id,
+
+        }])
+
     @users('employee')
     def test_mail_track_2many(self):
         """ Check result of tracking one2many and many2many fields. Current
@@ -639,6 +667,67 @@ class TestTrackingInternals(MailCommon):
             ('company_currency', 'many2one', self.user_employee.company_id.currency_id, self.company_2.currency_id)
         ])
 
+    def test_mail_track_properties(self):
+        """Test that the old properties values are logged when the parent changes."""
+        record = self.properties_record_2
+        # change the parent, it will change the properties values
+        record.properties_parent_id = self.properties_parent_1
+        self.flush_tracking()
+        formatted_values = [t._tracking_value_format()[0] for t in record.mapped("message_ids.tracking_value_ids")]
+        self.assertEqual(len(formatted_values), 5)
+        self.assertFalse(formatted_values[0]['fieldInfo']['isPropertyField'])
+        self.assertTrue(all(not f['newValue'] for f in formatted_values[1:]))
+        self.assertTrue(all(f['fieldInfo']['isPropertyField'] for f in formatted_values[1:]))
+        self.assertEqual(formatted_values[0]['fieldInfo']['changedField'], 'Properties Parent')
+        self.assertEqual(formatted_values[1]['fieldInfo']['changedField'], 'Properties: Property Date')
+        self.assertEqual(formatted_values[1]['oldValue'], '2024-01-03')
+        self.assertEqual(formatted_values[2]['fieldInfo']['changedField'], 'Properties: Property Datetime')
+        self.assertEqual(formatted_values[2]['oldValue'], '2024-01-02 12:59:01Z')
+        self.assertEqual(formatted_values[3]['fieldInfo']['changedField'], 'Properties: Property Tags')
+        self.assertEqual(formatted_values[3]['oldValue'], 'AA, BB')
+        self.assertEqual(formatted_values[4]['fieldInfo']['changedField'], 'Properties: Property M2M')
+        self.assertEqual(formatted_values[4]['oldValue'], 'Record 0, Record 1, Record 2')
+
+        record = self.properties_record_1
+        record.properties_parent_id = self.properties_parent_2
+        self.flush_tracking()
+        formatted_values = [t._tracking_value_format()[0] for t in record.mapped("message_ids.tracking_value_ids")]
+        self.assertEqual(len(formatted_values), 4)
+        self.assertFalse(formatted_values[0]['fieldInfo']['isPropertyField'])
+        self.assertTrue(all(not f['newValue'] for f in formatted_values[1:]))
+        self.assertTrue(all(f['fieldInfo']['isPropertyField'] for f in formatted_values[1:]))
+        self.assertEqual(formatted_values[0]['fieldInfo']['changedField'], 'Properties Parent')
+        self.assertEqual(formatted_values[1]['fieldInfo']['changedField'], 'Properties: Property M2O')
+        self.assertEqual(formatted_values[1]['oldValue'], 'Record 0')
+        self.assertEqual(formatted_values[2]['fieldInfo']['changedField'], 'Properties: Property Int')
+        self.assertEqual(formatted_values[2]['oldValue'], 1337)
+        self.assertEqual(formatted_values[3]['fieldInfo']['changedField'], 'Properties: Property Char')
+        self.assertEqual(formatted_values[3]['oldValue'], 'char value')
+
+        # changing the parent and then changing again
+        # to the original one to not create tracking values
+        with self.mock_mail_gateway():
+            record.properties_parent_id = self.properties_parent_1
+            record.properties_parent_id = self.properties_parent_2
+            self.flush_tracking()
+        self.assertFalse(self._new_mails)
+
+        # do not create tracking if the value was false
+        record.properties = {
+            'property_m2m': False,
+            'property_tags': ['aa'],
+            'property_datetime': False,
+            'property_date': False,
+        }
+        self.flush_tracking()
+        record.message_ids.unlink()
+        record.properties_parent_id = self.properties_parent_1
+        self.flush_tracking()
+        self.assertEqual(len(record.mapped("message_ids.tracking_value_ids")), 2,
+            "Only the parent and the tags property should have been tracked")
+        self.assertEqual(record._mail_track_get_field_sequence("properties"), 100,
+            "Properties field should have the same sequence as their parent")
+
     @users('employee')
     def test_mail_track_selection_invalid(self):
         """ Check that initial invalid selection values are allowed when tracking """
@@ -693,6 +782,7 @@ class TestTrackingInternals(MailCommon):
                 'currencyId': False,
                 'fieldType': 'char',
                 'floatPrecision': None,
+                'isPropertyField': False,
             },
             'newValue': 'X',
             'oldValue': False,
@@ -822,6 +912,7 @@ class TestTrackingInternals(MailCommon):
                         'currencyId': False,
                         'fieldType': 'char',
                         'floatPrecision': None,
+                        'isPropertyField': False,
                     },
                     'newValue': 'secret',
                     'oldValue': False,
@@ -833,6 +924,7 @@ class TestTrackingInternals(MailCommon):
                         'currencyId': False,
                         'fieldType': 'integer',
                         'floatPrecision': None,
+                        'isPropertyField': False,
                     },
                     'newValue': 35,
                     'oldValue': 30,
@@ -844,6 +936,7 @@ class TestTrackingInternals(MailCommon):
                         'currencyId': False,
                         'fieldType': 'char',
                         'floatPrecision': None,
+                        'isPropertyField': False,
                     },
                     'newValue': False,
                     'oldValue': False,
@@ -1008,6 +1101,7 @@ class TestTrackingInternals(MailCommon):
                         'fieldType': field_info[1],
                         'floatPrecision': None,
                         'currencyId': False,
+                        'isPropertyField': False,
                     },
                     'newValue': values[1],
                     'oldValue': values[0],
@@ -1034,6 +1128,7 @@ class TestTrackingInternals(MailCommon):
                     'fieldInfo': {
                         'changedField': field_info[2],
                         'fieldType': field_info[1],
+                        'isPropertyField': False,
                         'currencyId': False,
                         'floatPrecision': None,
                     },

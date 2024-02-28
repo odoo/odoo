@@ -198,8 +198,32 @@ class Base(models.AbstractModel):
         for col_name, _sequence in fields_track_info:
             if col_name not in initial_values:
                 continue
-            initial_value, new_value = initial_values[col_name], self[col_name]
+            initial_value = initial_values[col_name]
+            new_value = (
+                # get the properties definition with the value
+                # (not just the dict with the value)
+                field.convert_to_read(self[col_name], self)
+                if (field := self._fields[col_name]).type == 'properties'
+                else self[col_name]
+            )
             if new_value == initial_value or (not new_value and not initial_value):  # because browse null != False
+                continue
+
+            if self._fields[col_name].type == "properties":
+                definition_record_field = self._fields[col_name].definition_record
+                if self[definition_record_field] == initial_values[definition_record_field]:
+                    # track the change only if the parent changed
+                    continue
+
+                updated.add(col_name)
+                tracking_value_ids.extend(
+                    [0, 0, self.env['mail.tracking.value']._create_tracking_values_property(
+                        property_, col_name, tracked_fields[col_name], self,
+                    )]
+                    # Show the properties in the same order as in the definition
+                    for property_ in initial_value[::-1]
+                    if property_['type'] not in ('separator', 'html') and property_.get('value')
+                )
                 continue
 
             updated.add(col_name)
@@ -214,7 +238,8 @@ class Base(models.AbstractModel):
 
     def _mail_track_order_fields(self, tracked_fields):
         """ Order tracking, based on sequence found on field definition. When
-        having several identical sequences, field name is used. """
+        having several identical sequences, properties are added after,
+        and then field name is used. """
         fields_track_info = [
             (col_name, self._mail_track_get_field_sequence(col_name))
             for col_name in tracked_fields.keys()
@@ -223,7 +248,11 @@ class Base(models.AbstractModel):
         # order by name). Model order being id DESC (aka: first insert -> last
         # displayed) insert should be done by descending sequence then descending
         # name.
-        fields_track_info.sort(key=lambda item: (item[1], item[0]), reverse=True)
+        fields_track_info.sort(key=lambda item: (
+            item[1],
+            tracked_fields[item[0]]['type'] != 'properties',
+            item[0],
+        ), reverse=True)
         return fields_track_info
 
     def _mail_track_get_field_sequence(self, fname):
@@ -232,13 +261,19 @@ class Base(models.AbstractModel):
         are still supported; old naming 'track_sequence' also. """
         if fname not in self._fields:
             return 100
-        sequence = getattr(
-            self._fields[fname], 'tracking',
-            getattr(self._fields[fname], 'track_sequence', 100)
-        )
-        if sequence is True:
-            sequence = 100
-        return sequence
+
+        def get_field_sequence(fname):
+            return getattr(
+                self._fields[fname], 'tracking',
+                getattr(self._fields[fname], 'track_sequence', True)
+            )
+
+        sequence = get_field_sequence(fname)
+        if self._fields[fname].type == 'properties' and sequence is True:
+            # default properties sequence is after the definition record
+            parent_sequence = get_field_sequence(self._fields[fname].definition_record)
+            return 100 if parent_sequence is True else parent_sequence
+        return 100 if sequence is True else sequence
 
     def _message_add_default_recipients(self):
         """ Generic implementation for finding default recipient to mail on
