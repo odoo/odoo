@@ -3,6 +3,7 @@
 <data>
     <template id="survey_page_statistics" name="Survey: result statistics page">
         <t t-call="survey.layout">
+            <t t-set="statistics_page" t-value="True"/>
             <t t-call="survey.survey_button_form_view" />
             <t t-set="page_record_limit" t-value="10"/><!-- Change this record_limit to change number of record  per page-->
             <div class="container o_survey_result">

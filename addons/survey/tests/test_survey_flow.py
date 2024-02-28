@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import re
+
 from odoo.addons.survey.tests import common
 from odoo.tests import tagged
 from odoo.tests.common import HttpCase
@@ -79,6 +81,15 @@ class TestSurveyFlow(common.TestSurveyCommon, HttpCase):
         answer_token = answers.access_token
         self.assertTrue(answer_token)
         self.assertAnswer(answers, 'new', self.env['survey.question'])
+
+        # -> check if the meta data for link previews have been correctly set
+        for method in ('og', 'twitter'):  # Opengraph and twitter cards
+            title_re = re.compile(f'(?<="{method}:title" content=")(.*)(?=")')
+            self.assertEqual(title_re.search(r.text).group(), survey.title)
+            image_re = re.compile(f'(?<="{method}:image" content=")(.*)(?=")')
+            # check that preview image url returns an image
+            r_image = self.url_open(image_re.search(r.text).group())
+            self.assertEqual(r_image.headers['Content-Type'], "image/png")
 
         # Customer begins survey with first page
         r = self._access_page(survey, answer_token)

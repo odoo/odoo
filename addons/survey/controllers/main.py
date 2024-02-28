@@ -11,10 +11,11 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import fields, http, SUPERUSER_ID, _
 from odoo.exceptions import UserError
-from odoo.http import request, content_disposition
+from odoo.http import request, content_disposition, Stream
 from odoo.osv import expression
-from odoo.tools import format_datetime, format_date, is_html_empty
+from odoo.tools import binary_to_image, format_datetime, format_date, format_decimalized_number, image_apply_opt, is_html_empty
 from odoo.addons.base.models.ir_qweb import keep_query
+from odoo.addons.survey.tools.preview_image import generate_survey_preview_image, get_image
 
 _logger = logging.getLogger(__name__)
 
@@ -453,6 +454,38 @@ class Survey(http.Controller):
         return request.env['ir.binary']._get_image_stream_from(
             suggested_answer, 'value_image'
         ).get_response()
+
+    @http.route('/survey/<string:survey_token>/preview_picture', type='http', auth='public')
+    def survey_get_preview_picture(self, survey_token, results=False):
+        """ Route used by meta tags for the link preview picture. """
+        survey_sudo, __ = self._fetch_from_access_token(survey_token, False)
+        if not survey_sudo:
+            raise werkzeug.exceptions.NotFound()
+
+        if survey_sudo.certification:
+            tag_description = _("Certification results") if results else _("Certification")
+            tag_name = "trophy"
+        else:
+            tag_description = _("Survey results") if results else _("Survey")
+            tag_name = "survey"
+
+        background_image = get_image(survey_sudo.background_image) or False
+
+        preview_image = generate_survey_preview_image(
+            background_image=background_image,
+            kpis=(
+                (_("Registered"), format_decimalized_number(survey_sudo.answer_count)),
+                (_("Completed"), format_decimalized_number(survey_sudo.answer_done_count)),
+                (_("Success Rate"), f"{survey_sudo.success_ratio}%"),
+            ),
+            secondary_image=(get_image(survey_sudo.user_id.image_128)
+                             or binary_to_image(request.env['avatar.mixin']._avatar_get_placeholder())),
+            secondary_text=f"{survey_sudo.user_id.name} - {survey_sudo.create_date.strftime('%b %Y')}",
+            tag_description=tag_description,
+            tag_path=f"survey/static/src/img/{tag_name}-{'light' if background_image else 'brand'}.png",
+            title=survey_sudo.title,
+        )
+        return Stream(type="data", data=image_apply_opt(preview_image, "png"), mimetype='image/png').get_response()
 
     # ----------------------------------------------------------------
     # JSON ROUTES to begin / continue survey (ajax navigation) + Tools

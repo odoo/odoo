@@ -3,6 +3,22 @@
 <data>
     <!-- Main survey layout -->
     <template id="survey.layout" name="Survey Layout" inherit_id="web.frontend_layout" primary="True">
+        <xpath expr="//head/meta[last()]" position="after">
+            <t t-if="survey">
+                <!-- Remove seo_object to not define og and twitter tags twice when wesbite is installed -->
+                <t t-set="seo_object" t-value="False"/>
+                <meta property="og:title" t-att-content="survey.title"/>
+                <meta property="og:description" t-att-content="survey.description.striptags() if survey.description else ''"/>
+                <meta property="og:site_name" t-att-content="request.env.company.name"/>
+                <meta property="og:image" t-attf-content="#{request.httprequest.host_url}survey/#{survey.access_token}/preview_picture#{'?results=1' if statistics_page else ''"/>
+                <meta property="og:image:width" content="1200"/>
+                <meta property="og:image:height" content="630"/>
+                <meta name="twitter:card" content="summary_large_image"/>
+                <meta name="twitter:title" t-att-content="survey.title"/>
+                <meta name="twitter:description" t-att-content="survey.description.striptags() if survey.description else ''"/>
+                <meta name="twitter:image" t-attf-content="#{request.httprequest.host_url}survey/#{survey.access_token}/preview_picture#{'?results=1' if statistics_page else ''"/>
+            </t>
+        </xpath>
         <xpath expr="//div[@id='wrapwrap']" position="before">
             <!--TODO DBE Fix me : If one day, there is a survey_livechat bridge module, put this in that module-->
             <t t-set="no_livechat" t-value="True"/>
