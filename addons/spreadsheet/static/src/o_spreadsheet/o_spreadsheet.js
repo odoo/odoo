@@ -17872,7 +17872,7 @@
                 : this.props.ranges
                     ? this.props.ranges.map((xc, id) => ({
                         xc,
-                        id,
+                        id: id + 1,
                         isFocused: false,
                     }))
                     : [];
@@ -28792,7 +28792,7 @@
         },
         {
             description: "Change Border description structure",
-            from: 12,
+            from: 12.5,
             to: 13,
             applyMigration(data) {
                 for (const borderId in data.borders) {
@@ -38632,9 +38632,9 @@
                     break;
                 case "FOCUS_RANGE":
                 case "CHANGE_RANGE":
-                    if (cmd.id !== this.focusedInputId) {
-                        const input = this.inputs[cmd.id];
-                        const range = input.ranges.find((range) => range.id === cmd.rangeId);
+                    const input = this.inputs[cmd.id];
+                    const range = input.ranges.find((range) => range.id === cmd.rangeId);
+                    if (range) {
                         const sheetId = this.getters.getActiveSheetId();
                         const zone = this.getters.getRangeFromSheetXC(sheetId, range?.xc || "A1").zone;
                         this.selection.capture(input, { cell: { col: zone.left, row: zone.top }, zone }, { handleEvent: input.handleEvent.bind(input) });
@@ -48032,9 +48032,9 @@
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.3.26';
-    __info__.date = '2024-02-16T15:03:25.060Z';
-    __info__.hash = 'ab9abb6';
+    __info__.version = '16.3.27';
+    __info__.date = '2024-02-28T12:46:22.090Z';
+    __info__.hash = '7dc9484';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
