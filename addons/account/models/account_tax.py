@@ -268,17 +268,16 @@ class AccountTax(models.Model):
     def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
         context = self._context or {}
 
-        if not context.get('skip_search_override'):
-            if context.get('move_type'):
-                if context.get('move_type') in ('out_invoice', 'out_refund'):
-                    args += [('type_tax_use', '=', 'sale')]
-                elif context.get('move_type') in ('in_invoice', 'in_refund'):
-                    args += [('type_tax_use', '=', 'purchase')]
+        if context.get('move_type'):
+            if context.get('move_type') in ('out_invoice', 'out_refund'):
+                args += [('type_tax_use', '=', 'sale')]
+            elif context.get('move_type') in ('in_invoice', 'in_refund'):
+                args += [('type_tax_use', '=', 'purchase')]
 
-            if context.get('journal_id'):
-                journal = self.env['account.journal'].browse(context.get('journal_id'))
-                if journal.type in ('sale', 'purchase'):
-                    args += [('type_tax_use', '=', journal.type)]
+        if context.get('journal_id'):
+            journal = self.env['account.journal'].browse(context.get('journal_id'))
+            if journal.type in ('sale', 'purchase'):
+                args += [('type_tax_use', '=', journal.type)]
 
         return super(AccountTax, self)._search(args, offset, limit, order, count=count, access_rights_uid=access_rights_uid)
 
@@ -368,7 +367,7 @@ class AccountTax(models.Model):
         # mapping each child tax to its parent group
         all_taxes = self.env['account.tax']
         groups_map = {}
-        for tax in self.with_context(skip_search_override=True).sorted():
+        for tax in self.sorted(key=lambda r: (r.sequence, r._origin.id)):
             if tax.amount_type == 'group':
                 flattened_children = tax.children_tax_ids.flatten_taxes_hierarchy()
                 all_taxes += flattened_children
