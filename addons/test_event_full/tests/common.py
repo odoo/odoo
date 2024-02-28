@@ -2,6 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime, timedelta, time
+from unittest.mock import patch
+
 
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo, HttpCaseWithUserPortal
 from odoo.addons.event_crm.tests.common import EventCrmCase
@@ -226,14 +228,16 @@ class TestEventFullCommon(EventCrmCase, TestSalesCommon, MockVisitor):
             'is_published': True,
         }
 
-        cls.test_event = cls.env['event.event'].create({
-            'name': 'Test Event',
-            'date_begin': datetime.now() + timedelta(days=1),
-            'date_end': datetime.now() + timedelta(days=5),
-            'date_tz': 'Europe/Brussels',
-            'event_type_id': cls.test_event_type.id,
-            'is_published': True,
-        })
+        with patch.object(cls.env.cr, 'now', lambda: datetime(2021, 12, 1)):
+            cls.test_event = cls.env['event.event'].create({
+                'name': 'Test Event',
+                'date_begin': datetime.now() + timedelta(days=1),
+                'date_end': datetime.now() + timedelta(days=5),
+                'date_tz': 'Europe/Brussels',
+                'event_type_id': cls.test_event_type.id,
+                'is_published': True,
+            })
+
         # update post-synchronize data
         ticket_1 = cls.test_event.event_ticket_ids.filtered(lambda t: t.name == 'Ticket1')
         ticket_2 = cls.test_event.event_ticket_ids.filtered(lambda t: t.name == 'Ticket2')

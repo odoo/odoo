@@ -77,8 +77,7 @@ class TestEventEvent(TestEventFullCommon):
     @freeze_time('2021-12-01 11:00:00')
     @users('event_user')
     def test_event_seats_and_schedulers(self):
-        now = datetime.now()  # used to force create_date, as sql is not wrapped by freeze gun
-        self.env.cr._now = now
+        self.env.cr._now = datetime.now()
 
         test_event = self.env['event.event'].browse(self.test_event.ids)
         ticket_1 = test_event.event_ticket_ids.filtered(lambda ticket: ticket.name == 'Ticket1')
@@ -95,7 +94,7 @@ class TestEventEvent(TestEventFullCommon):
         # make 9 registrations (let 1 on ticket)
         with self.mock_mail_gateway():
             self.env['event.registration'].create([
-                {'create_date': now,
+                {
                  'email': 'test.customer.%02d@test.example.com' % x,
                  'phone': '04560011%02d' % x,
                  'event_id': test_event.id,
@@ -104,6 +103,7 @@ class TestEventEvent(TestEventFullCommon):
                 }
                 for x in range(0, 9)
             ])
+            self.env.ref('event.event_mail_scheduler').sudo().method_direct_trigger()
         # generated emails from scheduler
         self.assertEqual(len(self._new_mails), 9)
         # event and ticket seats update
@@ -115,7 +115,7 @@ class TestEventEvent(TestEventFullCommon):
         # prevent registration due to ticket limit
         with self.assertRaises(exceptions.ValidationError):
             self.env['event.registration'].create([
-                {'create_date': now,
+                {
                  'email': 'additional.customer.%02d@test.example.com' % x,
                  'phone': '04560011%02d' % x,
                  'event_id': test_event.id,
@@ -128,7 +128,7 @@ class TestEventEvent(TestEventFullCommon):
         # make 20 registrations (on free ticket)
         with self.mock_mail_gateway():
             self.env['event.registration'].create([
-                {'create_date': now,
+                {
                  'email': 'other.customer.%02d@test.example.com' % x,
                  'phone': '04560011%02d' % x,
                  'event_id': test_event.id,
@@ -146,7 +146,7 @@ class TestEventEvent(TestEventFullCommon):
         # prevent registration due to event limit
         with self.assertRaises(exceptions.ValidationError):
             self.env['event.registration'].create([
-                {'create_date': now,
+                {
                  'email': 'additional.customer.%02d@test.example.com' % x,
                  'phone': '04560011%02d' % x,
                  'event_id': test_event.id,
