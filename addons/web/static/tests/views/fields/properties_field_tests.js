@@ -11,6 +11,7 @@ import {
     nextTick,
     patchWithCleanup,
     triggerEvent,
+    patchDate,
 } from "@web/../tests/helpers/utils";
 import { toggleActionMenu } from "@web/../tests/search/helpers";
 import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
@@ -39,6 +40,7 @@ async function changeType(target, propertyType) {
         char: 1,
         integer: 3,
         float: 4,
+        date: 5,
         datetime: 6,
         selection: 7,
         tags: 8,
@@ -513,7 +515,7 @@ QUnit.module("Fields", (hooks) => {
         assert.containsOnce(
             target,
             ".o_cp_action_menus span:contains(Add Properties)",
-            "The add button must be in the cog menu",
+            "The add button must be in the cog menu"
         );
 
         // Create a new property
@@ -1861,6 +1863,65 @@ QUnit.module("Fields", (hooks) => {
             await closePopover(target);
             assert.strictEqual(property.querySelector(".o_property_field_value input").value, "");
         }
+    });
+
+    QUnit.test("properties: default value date", async function (assert) {
+        async function mockRPC(route, { method, model, kwargs }) {
+            if (["check_access_rights", "check_access_rule"].includes(method)) {
+                return true;
+            }
+        }
+
+        patchDate(2022, 0, 3, 8, 0, 0);
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="company_id"/>
+                            <field name="properties"/>
+                        </group>
+                    </sheet>
+                </form>`,
+            mockRPC,
+            actionMenus: {},
+        });
+
+        const field = target.querySelector(".o_field_properties");
+        assert.ok(field, "The field must be in the view");
+
+        // add a new date property
+        await toggleActionMenu(target);
+        await click(target, ".o_cp_action_menus span .fa-cogs");
+        await nextTick();
+        let popover = target.querySelector(".o_property_field_popover");
+        assert.ok(popover, "Should have opened the definition popover");
+        await changeType(target, "date");
+        const type = popover.querySelector(".o_field_property_definition_type input");
+        assert.strictEqual(type.value, "Date", "Should have changed the property type");
+        // choose a default value and check that it is propagated on the property field
+        await click(target, ".o_field_property_definition_value .o_datetime_input");
+        assert.containsOnce(target, ".o_date_picker");
+        await click(getPickerCell("3").at(0));
+        await closePopover(target);
+        assert.strictEqual(
+            target.querySelector(".o_datetime_input").value,
+            "01/03/2022",
+            "The default date value should have been propagated"
+        );
+        // save the form and check that the default value is not reset
+        await click(target, ".o_form_button_save");
+        await click(target, ".o_property_field:nth-last-child(2) .o_field_property_open_popover");
+        popover = target.querySelector(".o_property_field_popover");
+        assert.strictEqual(
+            popover.querySelector(".o_field_property_definition_value input").value,
+            "01/03/2022"
+        );
     });
 
     /**
