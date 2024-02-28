@@ -48,7 +48,7 @@ export class ChannelMember extends Record {
     }
 
     get memberSince() {
-        return deserializeDateTime(this.create_date);
+        return this.create_date ? deserializeDateTime(this.create_date) : undefined;
     }
 }
 
