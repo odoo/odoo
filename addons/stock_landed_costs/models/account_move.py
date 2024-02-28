@@ -74,5 +74,5 @@ class AccountMoveLine(models.Model):
         layers = super()._get_stock_valuation_layers(move)
         return layers.filtered(lambda svl: not svl.stock_landed_cost_id)
 
-    def _can_use_stock_accounts(self):
-        return super()._can_use_stock_accounts() or (self.product_id.type == 'service' and self.product_id.landed_cost_ok)
+    def _eligible_for_cogs(self):
+        return super()._eligible_for_cogs() or (self.product_id.type == 'service' and self.product_id.landed_cost_ok)
