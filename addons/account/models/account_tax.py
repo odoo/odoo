@@ -387,7 +387,13 @@ class AccountTax(models.Model):
         # mapping each child tax to its parent group
         all_taxes = self.env['account.tax']
         groups_map = {}
+<<<<<<< HEAD
         for tax in self.sorted(key=lambda r: r.sequence):
+||||||| parent of 42678dd46826 (temp)
+        for tax in self.with_context(skip_search_override=True).sorted():
+=======
+        for tax in self.sorted(key=lambda r: (r.sequence, r._origin.id)):
+>>>>>>> 42678dd46826 (temp)
             if tax.amount_type == 'group':
                 flattened_children = tax.children_tax_ids.flatten_taxes_hierarchy()
                 all_taxes += flattened_children
