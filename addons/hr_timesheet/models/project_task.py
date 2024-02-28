@@ -185,14 +185,16 @@ class Task(models.Model):
         return self.timesheet_ids
 
     def _get_timesheet_report_data(self):
-        subtask_ids_per_task_id = self._get_subtask_ids_per_task_id()
-        subtasks = self.browse(set.union(set(), *subtask_ids_per_task_id.values()))
+        subtasks = self._get_all_subtasks()
         timesheets_read_group = self.env['account.analytic.line']._read_group(
             [('task_id', 'in', (self | subtasks).ids)],
             ['task_id'],
             ['id:recordset'],
         )
         timesheets_per_task = dict(timesheets_read_group)
+        subtask_ids_per_task_id = defaultdict(list)
+        for subtask in subtasks:
+            subtask_ids_per_task_id[subtask.parent_id.id].append(subtask.id)
         return {
             'subtask_ids_per_task_id': subtask_ids_per_task_id,
             'timesheets_per_task': timesheets_per_task,
