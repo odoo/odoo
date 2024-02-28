@@ -1,6 +1,8 @@
+import functools
 import typing
 
 
+@functools.total_ordering
 class NewId:
     """ Pseudo-ids for new records, encapsulating an optional origin id (actual
         record id) and an optional reference (any value).
@@ -23,6 +25,15 @@ class NewId:
 
     def __hash__(self):
         return self.__hash
+
+    def __lt__(self, other):
+        if isinstance(other, NewId):
+            other = other.origin
+            if other is None:
+                return other > self.origin if self.origin else False
+        if isinstance(other, int):
+            return bool(self.origin) and self.origin < other
+        return NotImplemented
 
     def __repr__(self):
         return (

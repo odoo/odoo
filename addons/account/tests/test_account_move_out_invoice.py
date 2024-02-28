@@ -2694,7 +2694,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         })
         invoice.action_post()
 
-        self.assertRecordValues(invoice.line_ids.sorted('tax_line_id'), [
+        self.assertRecordValues(invoice.line_ids.sorted(lambda l: bool(l.tax_line_id)), [
             # Product line
             {'tax_line_id': False,          'tax_ids': taxes.ids,       'tax_tag_ids': (tags[0] + tags[4]).ids},
             # Receivable line
@@ -2706,7 +2706,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
 
         refund = invoice._reverse_moves(cancel=True)
 
-        self.assertRecordValues(refund.line_ids.sorted('tax_line_id'), [
+        self.assertRecordValues(refund.line_ids.sorted(lambda l: bool(l.tax_line_id)), [
             # Product line
             {'tax_line_id': False,          'tax_ids': taxes.ids,       'tax_tag_ids': (tags[2] + tags[6]).ids},
             # Receivable line
@@ -4671,7 +4671,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         })
         invoice.action_post()
 
-        self.assertRecordValues(invoice.line_ids.sorted('tax_line_id'), [
+        self.assertRecordValues(invoice.line_ids.sorted(lambda l: bool(l.tax_line_id)), [
             # Product line
             {'tax_line_id': False, 'tax_tag_ids': (tags_a[0] + tags_b[0]).ids},
             # Receivable line

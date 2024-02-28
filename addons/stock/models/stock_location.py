@@ -320,10 +320,10 @@ class StockLocation(models.Model):
                                                        (not rule.category_id or rule.category_id in categs) and
                                                        (not rule.package_type_ids or package_type in rule.package_type_ids))
 
-        putaway_rules = putaway_rules.sorted(lambda rule: (rule.package_type_ids,
-                                                           rule.product_id,
-                                                           rule.category_id == categs[:1],  # same categ, not a parent
-                                                           rule.category_id),
+        putaway_rules = putaway_rules.sorted(lambda rule: (bool(rule.package_type_ids),
+                                                           bool(rule.product_id),
+                                                           bool(rule.category_id == categs[:1]),  # same categ, not a parent
+                                                           bool(rule.category_id)),
                                              reverse=True)
 
         putaway_location = None

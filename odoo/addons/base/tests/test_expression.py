@@ -541,7 +541,7 @@ class TestExpression(SavepointCaseWithUserDemo, TransactionExpressionCase):
         assert parents and leaves, "did we test something?"
 
         # check `in` condition containing False or/and an id
-        leaves_with_parent = leaves.sorted('parent_id', reverse=True) # Prioritize leaves with parents
+        leaves_with_parent = leaves.sorted('parent_id.id')  # Prioritize leaves with parents
         leaves_or_parent = self._search(categories, [('child_ids', 'in', [leaves_with_parent[0].id, False])])
         self.assertEqual(leaves_or_parent, leaves | leaves_with_parent[0].parent_id)
 
