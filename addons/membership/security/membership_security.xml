@@ -10,9 +10,4 @@
         <field name="model_id" ref="model_membership_membership_line" />
         <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
     </record>
-    <record id="rule_membership_invoice_multi_company" model="ir.rule">
-        <field name="name">Membership Invoice multi-company</field>
-        <field name="model_id" ref="model_membership_invoice" />
-        <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
-    </record>
 </odoo>
