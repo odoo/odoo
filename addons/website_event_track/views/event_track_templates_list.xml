@@ -52,7 +52,7 @@
                     </a>
                 </div>
             </div>
-            <div class="o_wevent_search d-flex w-100 w-lg-auto">
+            <div class="o_wevent_search o_wevent_event_track_search_box d-flex w-100 w-lg-auto">
                 <t t-call="website_event.events_search_box">
                     <t t-set="_searches" t-value="searches"/>
                     <t t-set="action" t-value="'/event/%s/track' % (slug(event))"/>
