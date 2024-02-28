@@ -1,0 +1,51 @@
+// ------------------------------------------------------------------
+// Layout
+// ------------------------------------------------------------------
+
+.o_ChatWindow {
+    overflow: auto;
+    z-index: $zindex-dropdown;
+
+    &:not(.o-isDeviceSmall) {
+        width: $o-mail-thread-window-width;
+
+        &.o-folded {
+            height: $o-mail-chat-window-header-height;
+        }
+
+        &:not(.o-folded) {
+            height: 460px;
+        }
+    }
+
+}
+
+.o_ChatWindow_channelInvitationForm {
+    min-height: 450px; // allow flex shrink smaller than content (but not too small)
+}
+
+// ------------------------------------------------------------------
+// Style
+// ------------------------------------------------------------------
+
+.o_ChatWindow {
+    background-color: $o-mail-thread-window-bg;
+    box-shadow: -5px -5px 10px rgba(#000000, 0.09);
+    outline: none;
+
+    &.o-focused:not(.o-isDeviceSmall) {
+        box-shadow: -5px -5px 10px rgba(#000000, 0.18);
+    }
+
+    .o_Composer {
+        border: 0;
+    }
+}
+
+.o_ChatWindow_newMessageFormInput {
+    outline: none;
+}
+
+.o_ChatWindow_thread .o_ThreadView_messageList {
+    font-size: 1rem;
+}

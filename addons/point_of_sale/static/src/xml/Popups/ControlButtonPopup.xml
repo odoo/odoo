@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="ControlButtonPopup" owl="1">
+            <Draggable>
+                <div class="popup popup-control-buttons">
+                    <!-- When one of the buttons is clicked, close this popup. -->
+                    <div class="control-buttons" t-on-click="cancel">
+                        <t t-foreach="controlButtons" t-as="cb" t-key="cb.name">
+                            <t t-component="cb.component" t-key="cb.name"/>
+                        </t>
+                    </div>
+                    <footer class="footer">
+                        <div class="button cancel" t-on-click="cancel">
+                            <t t-esc="props.cancelText" />
+                        </div>
+                    </footer>
+                </div>
+            </Draggable>
+    </t>
+
+</templates>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="account_journal_dashboard_kanban_view_inherited" model="ir.ui.view">
+            <field name="name">account.journal.dashboard.kanban.inherited</field>
+            <field name="model">account.journal</field>
+            <field name="inherit_id" ref="account.account_journal_dashboard_kanban_view" />
+            <field name="arch" type="xml">
+                <xpath expr="//t[@t-name='JournalBodyBankCash']//div[hasclass('o_kanban_primary_right')]" position="inside">
+                    <div t-if="journal_type == 'bank' and dashboard.num_checks_to_print != 0">
+                        <div class="row">
+                            <div class="col-12">
+                                <a type="object" name="action_checks_to_print">
+                                    <t t-esc="dashboard.num_checks_to_print"/>
+                                    <span>&amp;nbsp;</span>
+                                    <t t-if="dashboard.num_checks_to_print == 1">Check to print</t>
+                                    <t t-if="dashboard.num_checks_to_print != 1">Checks to print</t>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_account_journal_form_inherited" model="ir.ui.view">
+            <field name="name">account.journal.form.inherited</field>
+            <field name="model">account.journal</field>
+            <field name="inherit_id" ref="account.view_account_journal_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//page[@id='outbound_payment_settings']//group[@name='outgoing_payment']" position="inside">
+                    <group string="Check Printing"
+                           attrs="{'invisible': ['|', '!', ('selected_payment_method_codes', 'ilike', ',check_printing,'), ('type', '!=', 'bank')]}">
+                        <field name="check_sequence_id" invisible="1"/>
+                        <field name="check_manual_sequencing"
+                        />
+                        <field name="check_next_number"
+                               attrs="{'invisible': [('check_manual_sequencing', '=', False)]}"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+</odoo>

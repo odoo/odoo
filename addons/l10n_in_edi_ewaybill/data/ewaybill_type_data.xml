@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Document Type -->
+    <record id="type_tax_invoice_sub_type_supply" model="l10n.in.ewaybill.type">
+        <field name="name">Tax Invoice</field>
+        <field name="code">INV</field>
+        <field name="sub_type">Supply</field>
+        <field name="sub_type_code">1</field>
+        <field name="allowed_supply_type">both</field>
+        <field name="active" eval="True"/>
+    </record>
+
+    <record id="type_tax_invoice_sub_type_export" model="l10n.in.ewaybill.type">
+        <field name="name">Tax Invoice</field>
+        <field name="code">INV</field>
+        <field name="sub_type">Export</field>
+        <field name="sub_type_code">3</field>
+        <field name="allowed_supply_type">out</field>
+        <field name="active" eval="True"/>
+    </record>
+
+    <record id="type_tax_invoice_sub_type_skd_ckd_lots" model="l10n.in.ewaybill.type">
+        <field name="name">Tax Invoice</field>
+        <field name="code">INV</field>
+        <field name="sub_type">SKD/CKD/Lots</field>
+        <field name="sub_type_code">9</field>
+        <field name="allowed_supply_type">both</field>
+        <field name="active" eval="True"/>
+    </record>
+
+    <record id="type_bill_of_supply_sub_type_supply" model="l10n.in.ewaybill.type">
+        <field name="name">Bill of Supply</field>
+        <field name="code">BIL</field>
+        <field name="sub_type">Supply</field>
+        <field name="sub_type_code">1</field>
+        <field name="allowed_supply_type">both</field>
+        <field name="active" eval="True"/>
+    </record>
+
+    <record id="type_bill_of_supply_sub_type_export" model="l10n.in.ewaybill.type">
+        <field name="name">Bill of Supply</field>
+        <field name="code">BIL</field>
+        <field name="sub_type">Export</field>
+        <field name="sub_type_code">3</field>
+        <field name="allowed_supply_type">out</field>
+        <field name="active" eval="True"/>
+    </record>
+
+    <record id="type_bill_of_supply_sub_type_skd_ckd_lots" model="l10n.in.ewaybill.type">
+        <field name="name">Bill of Supply</field>
+        <field name="code">BIL</field>
+        <field name="sub_type">SKD/CKD/Lots</field>
+        <field name="sub_type_code">9</field>
+        <field name="allowed_supply_type">both</field>
+        <field name="active" eval="True"/>
+    </record>
+
+    <record id="type_bill_of_entry_sub_type_import" model="l10n.in.ewaybill.type">
+        <field name="name">Bill of Entry</field>
+        <field name="code">BOE</field>
+        <field name="sub_type">Import</field>
+        <field name="sub_type_code">2</field>
+        <field name="allowed_supply_type">in</field>
+        <field name="active" eval="True"/>
+    </record>
+    <record id="type_bill_of_entry_sub_skd_ckd_lots" model="l10n.in.ewaybill.type">
+        <field name="name">Bill of Entry</field>
+        <field name="code">BOE</field>
+        <field name="sub_type">SKD/CKD/Lots</field>
+        <field name="sub_type_code">9</field>
+        <field name="allowed_supply_type">in</field>
+        <field name="active" eval="True"/>
+    </record>
+
+</odoo>

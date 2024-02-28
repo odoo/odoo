@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.AttachmentViewer" owl="1">
+        <t t-if="attachmentViewer">
+            <div class="o_AttachmentViewer flex-column align-items-center d-flex w-100 h-100" t-attf-class="{{ className }}" t-on-click="attachmentViewer.onClick" t-on-keydown="_onKeydown" tabindex="0" t-ref="root">
+                <div class="o_AttachmentViewer_header d-flex w-100 bg-black-75 text-400" t-on-click="attachmentViewer.onClickHeader">
+                    <t t-if="attachmentViewer.attachmentViewerViewable.isViewable">
+                        <div class="o_AttachmentViewer_headerItem o_AttachmentViewer_icon d-flex align-items-center ms-4 me-2">
+                            <t t-if="attachmentViewer.attachmentViewerViewable.isImage">
+                                <i class="fa fa-picture-o" role="img" title="Image"/>
+                            </t>
+                            <t t-if="attachmentViewer.attachmentViewerViewable.isPdf">
+                                <i class="fa fa-file-text" role="img" title="PDF file"/>
+                            </t>
+                            <t t-if="attachmentViewer.attachmentViewerViewable.isText">
+                                <i class="fa fa-file-text" role="img" title="Text file"/>
+                            </t>
+                            <t t-if="attachmentViewer.attachmentViewerViewable.isVideo">
+                                <i class="fa fa-video-camera" role="img" title="Video"/>
+                            </t>
+                        </div>
+                    </t>
+                    <div class="o_AttachmentViewer_headerItem o_AttachmentViewer_name d-flex align-items-center mx-2">
+                        <span class="o_AttachmentViewer_nameText text-truncate" t-esc="attachmentViewer.attachmentViewerViewable.displayName"/>
+                    </div>
+                    <div class="flex-grow-1"/>
+                    <div class="o_AttachmentViewer_buttonDownload o_AttachmentViewer_headerItem o_AttachmentViewer_headerItemButton d-flex align-items-center px-3 cursor-pointer" t-on-click="attachmentViewer.onClickDownload" role="button" title="Download">
+                        <i class="o_AttachmentViewer_headerItemButtonIcon fa fa-download fa-fw" t-att-class="{ 'o-hasLabel me-2': messaging.device.sizeClass > messaging.device.sizeClasses.MD }" role="img"/>
+                        <t t-if="messaging.device.sizeClass > messaging.device.sizeClasses.MD">
+                            <span>Download</span>
+                        </t>
+                    </div>
+                    <div class="o_AttachmentViewer_headerItem o_AttachmentViewer_headerItemButton o_AttachmentViewer_headerItemButtonClose d-flex align-items-center mb-0 px-3 h4 text-reset cursor-pointer" t-on-click="attachmentViewer.onClickClose" role="button" title="Close (Esc)" aria-label="Close">
+                        <i class="fa fa-fw fa-times" role="img"/>
+                    </div>
+                </div>
+                <div class="o_AttachmentViewer_main position-absolute top-0 bottom-0 start-0 end-0 align-items-center justify-content-center d-flex" t-att-class="{ 'o_with_img overflow-hidden': attachmentViewer.attachmentViewerViewable.isImage }" t-on-mousemove="_onMousemoveView">
+                    <t t-if="attachmentViewer.attachmentViewerViewable.isImage">
+                        <div class="o_AttachmentViewer_zoomer position-absolute align-items-center justify-content-center d-flex w-100 h-100" t-ref="zoomer">
+                            <t t-if="attachmentViewer.isImageLoading">
+                                <div class="o_AttachmentViewer_loading position-absolute">
+                                    <i class="fa fa-3x fa-circle-o-notch fa-fw fa-spin text-white" role="img" title="Loading"/>
+                                </div>
+                            </t>
+                            <img class="o_AttachmentViewer_view o_AttachmentViewer_viewImage mw-100 mh-100 transition-base" t-on-click="attachmentViewer.onClickImage" t-on-mousedown="_onMousedownImage" t-on-wheel="_onWheelImage" t-on-load="attachmentViewer.onLoadImage" t-att-src="attachmentViewer.attachmentViewerViewable.imageUrl" t-att-style="attachmentViewer.imageStyle" draggable="false" alt="Viewer" t-key="'image_' + attachmentViewer.attachmentViewerViewable.localId" t-ref="image_{{ attachmentViewer.attachmentViewerViewable.localId }}"/>
+                        </div>
+                    </t>
+                    <t t-if="attachmentViewer.attachmentViewerViewable.isPdf">
+                        <iframe class="o_AttachmentViewer_view o_AttachmentViewer_viewIframe o_AttachmentViewer_viewPdf w-75 h-100 border-0" t-ref="iframeViewerPdf" t-att-class="{ 'w-100': messaging.device.isSmall }" t-att-src="attachmentViewer.attachmentViewerViewable.defaultSource"/>
+                    </t>
+                    <t t-if="attachmentViewer.attachmentViewerViewable.isText">
+                        <iframe class="o_AttachmentViewer_view o_AttachmentViewer_viewIframe o_AttachmentViewer_isText o_text w-75 h-100 border-0" t-att-src="attachmentViewer.attachmentViewerViewable.defaultSource"/>
+                    </t>
+                    <t t-if="attachmentViewer.attachmentViewerViewable.isUrlYoutube">
+                        <iframe allow="autoplay; encrypted-media" class="o_AttachmentViewer_view o_AttachmentViewer_viewIframe o_AttachmentViewer_youtube w-75 h-100 border-0" t-att-src="attachmentViewer.attachmentViewerViewable.defaultSource" height="315" width="560"/>
+                    </t>
+                    <t t-if="attachmentViewer.attachmentViewerViewable.isVideo">
+                        <video class="o_AttachmentViewer_view o_AttachmentViewer_viewVideo w-75 h-75" t-att-class="{ 'w-100 h-100': messaging.device.isSmall }" t-on-click="attachmentViewer.onClickVideo" controls="controls">
+                            <source t-att-data-type="attachmentViewer.attachmentViewerViewable.mimetype" t-att-src="attachmentViewer.attachmentViewerViewable.defaultSource"/>
+                        </video>
+                    </t>
+                </div>
+                <t t-if="attachmentViewer.attachmentViewerViewable.isImage">
+                    <div class="o_AttachmentViewer_toolbar position-absolute bottom-0 d-flex" role="toolbar">
+                        <div class="o_AttachmentViewer_toolbarButton p-3 rounded-0" t-on-click="_onClickZoomIn" title="Zoom In (+)" role="button">
+                            <i class="fa fa-fw fa-plus" role="img"/>
+                        </div>
+                        <div class="o_AttachmentViewer_toolbarButton p-3 rounded-0" t-att-class="{ 'o_disabled opacity-50': attachmentViewer.scale === 1 }" t-on-click="_onClickZoomReset" role="button" title="Reset Zoom (0)">
+                            <i class="fa fa-fw fa-search" role="img"/>
+                        </div>
+                        <div class="o_AttachmentViewer_toolbarButton p-3 rounded-0" t-att-class="{ 'o_disabled opacity-50': attachmentViewer.scale === MIN_SCALE }" t-on-click="_onClickZoomOut" title="Zoom Out (-)" role="button">
+                            <i class="fa fa-fw fa-minus" role="img"/>
+                        </div>
+                        <div class="o_AttachmentViewer_toolbarButton p-3 rounded-0" t-on-click="attachmentViewer.onClickRotate" title="Rotate (r)" role="button">
+                            <i class="fa fa-fw fa-repeat" role="img"/>
+                        </div>
+                        <div class="o_AttachmentViewer_toolbarButton p-3 rounded-0" t-on-click="attachmentViewer.onClickPrint" title="Print" role="button">
+                            <i class="fa fa-fw fa-print" role="img"/>
+                        </div>
+                        <div class="o_AttachmentViewer_buttonDownload o_AttachmentViewer_toolbarButton p-3 rounded-0 cursor-pointer" t-on-click="attachmentViewer.onClickDownload" title="Download" role="button">
+                            <i class="fa fa-download fa-fw" role="img"/>
+                        </div>
+                    </div>
+                </t>
+                <t t-if="attachmentViewer.attachmentViewerViewables.length > 1">
+                    <div class="o_AttachmentViewer_buttonNavigation o_AttachmentViewer_buttonNavigationPrevious o_AttachmentViewer_buttonNavigationPreviousIcon position-absolute top-0 bottom-0 start-0 align-items-center justify-content-center d-flex my-auto ms-3 rounded-circle" t-on-click="attachmentViewer.onClickPrevious" title="Previous (Left-Arrow)" role="button">
+                        <span class="fa fa-chevron-left" role="img"/>
+                    </div>
+                    <div class="o_AttachmentViewer_buttonNavigation o_AttachmentViewer_buttonNavigationNext o_AttachmentViewer_buttonNavigationNextIcon position-absolute top-0 bottom-0 end-0 align-items-center justify-content-center d-flex my-auto me-3 rounded-circle" t-on-click="attachmentViewer.onClickNext" title="Next (Right-Arrow)" role="button">
+                        <span class="fa fa-chevron-right" role="img"/>
+                    </div>
+                </t>
+            </div>
+        </t>
+    </t>
+
+</templates>

@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<odoo><data>
+    <!-- mail.channel.member -->
+    <record id="mail_channel_member_view_tree" model="ir.ui.view">
+        <field name="name">mail.channel.member.tree</field>
+        <field name="model">mail.channel.member</field>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <tree string="Channels">
+                <field name="display_name"/>
+                <field name="channel_id"/>
+                <field name="seen_message_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="mail_channel_member_view_form" model="ir.ui.view">
+        <field name="name">mail.channel.member.form</field>
+        <field name="model">mail.channel.member</field>
+        <field name="arch" type="xml">
+            <form string="Channel">
+                <sheet>
+                    <group>
+                        <field name="partner_id"/>
+                        <field name="guest_id"/>
+                        <field name="channel_id"/>
+                        <field name="custom_channel_name"/>
+                        <field name="fetched_message_id"/>
+                        <field name="seen_message_id"/>
+                        <field name="message_unread_counter"/>
+                        <field name="fold_state"/>
+                        <field name="is_minimized"/>
+                        <field name="is_pinned"/>
+                        <field name="last_interest_dt"/>
+                        <field name="last_seen_dt"/>
+                        <field name="rtc_inviting_session_id"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="mail_channel_member_action" model="ir.actions.act_window">
+        <field name="name">Channels/Member</field>
+        <field name="res_model">mail.channel.member</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+</data></odoo>

@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_mz_tax_report" model="account.report">
+        <field name="name">Tax report</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.mz"/>
+        <field name="filter_fiscal_position" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="l10n_mz_tax_report_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="l10n_mz_tax_report_frame_5" model="account.report.line">
+                <field name="name">Frame 5 - CALCULATION OF THE TAX REGARDING THE PERIOD TO WHICH THE DECLARATION REFERS</field>
+                <field name="children_ids">
+                    <record id="l10n_mz_tax_report_line_1" model="account.report.line">
+                        <field name="name">1. Transfer of goods and/or rendering of services carried out by the taxable person and respective tax assessed</field>
+                        <field name="children_ids">
+                            <record id="l10n_mz_tax_report_field_1" model="account.report.line">
+                                <field name="name">Field 1 - Transfer of goods and/or rendering of services carried out by the taxable person</field>
+                                <field name="code">MZ_TR_F_1</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_mz_tax_report_1_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">1</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_mz_tax_report_field_2" model="account.report.line">
+                                <field name="name">Field 2 - Tax assessed</field>
+                                <field name="code">MZ_TR_F_2</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_mz_tax_report_2_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">2</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_mz_tax_report_exempt" model="account.report.line">
+                        <field name="name">Exempt</field>
+                        <field name="children_ids">
+                            <record id="l10n_mz_tax_report_field_3" model="account.report.line">
+                                <field name="name">Field 3 -  Operations of paragraph 1, subparagraph b, of Article 18 of the VAT law</field>
+                                <field name="code">MZ_TR_F_3</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_mz_tax_report_3_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">3</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_mz_tax_report_field_4" model="account.report.line">
+                                <field name="name">Field 4 - Operations that do not confer the right to deduction</field>
+                                <field name="code">MZ_TR_F_4</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_mz_tax_report_4_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">4</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_mz_tax_report_line_2" model="account.report.line">
+                        <field name="name">Deductible tax relating to transfers of goods and provision of services made to the declarant taxable person</field>
+                        <field name="children_ids">
+                            <record id="l10n_mz_tax_report_field_5" model="account.report.line">
+                                <field name="name">Field 5 - Deductible tax on tangible and intangible assets</field>
+                                <field name="code">MZ_TR_F_5</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_mz_tax_report_5_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">5</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_mz_tax_report_field_6" model="account.report.line">
+                                <field name="name">Field 6 - Deductible tax on Inventories</field>
+                                <field name="code">MZ_TR_F_6</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_mz_tax_report_6_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">6</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_mz_tax_report_field_7" model="account.report.line">
+                                <field name="name">Field 7 - Deductible tax on Other goods and services</field>
+                                <field name="code">MZ_TR_F_7</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_mz_tax_report_7_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">7</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_mz_tax_report_line_3" model="account.report.line">
+                        <field name="name">3. Deductible tax incurred on imports of goods carried out by the taxable person (Field 08)</field>
+                        <field name="code">MZ_TR_F_8</field>
+                        <field name="expression_ids">
+                            <record id="l10n_mz_tax_report_8_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">8</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_mz_tax_report_line_4" model="account.report.line">
+                        <field name="name">4. Monthly or annual adjustments, with the exception of those communicated by the Tax Administration</field>
+                        <field name="children_ids">
+                            <record id="l10n_mz_tax_report_field_9" model="account.report.line">
+                                <field name="name">Field 9 - Adjustments in favor of taxable person</field>
+                                <field name="code">MZ_TR_F_9</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_mz_tax_report_9_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">9</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_mz_tax_report_field_10" model="account.report.line">
+                                <field name="name">Field 10 - Adjustments in favor of the state</field>
+                                <field name="code">MZ_TR_F_10</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_mz_tax_report_10_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">10</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_mz_tax_report_line_sum" model="account.report.line">
+                        <field name="name">Settlement Amount</field>
+                        <field name="children_ids">
+                            <record id="l10n_mz_tax_report_field_11" model="account.report.line">
+                                <field name="name">Field 11 - Tax base Total</field>
+                                <field name="aggregation_formula">MZ_TR_F_1.balance + MZ_TR_F_3.balance + MZ_TR_F_4.balance</field>
+                            </record>
+                            <record id="l10n_mz_tax_report_field_12" model="account.report.line">
+                                <field name="name">Field 12 - Total tax in favor of the taxable person</field>
+                                <field name="code">MZ_TR_F_12</field>
+                                <field name="aggregation_formula">MZ_TR_F_5.balance + MZ_TR_F_6.balance + MZ_TR_F_7.balance + MZ_TR_F_8.balance + MZ_TR_F_9.balance</field>
+                            </record>
+                            <record id="l10n_mz_tax_report_field_13" model="account.report.line">
+                                <field name="name">Field 13 - Total tax in favor of the state</field>
+                                <field name="code">MZ_TR_F_13</field>
+                                <field name="aggregation_formula">MZ_TR_F_2.balance + MZ_TR_F_10.balance</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_mz_tax_report_line_final" model="account.report.line">
+                        <field name="name">Value before the use of the excess to be reported and other credits relating to previous periods</field>
+                        <field name="children_ids">
+                            <record id="l10n_mz_tax_report_field_14" model="account.report.line">
+                                <field name="name">Field 14 - If the value entered in field 13 is greater than that in field 12, enter the difference in field 14 (13-12)</field>
+                                <field name="code">MZ_TR_F_14</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_mz_tax_report_14_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">MZ_TR_F_13.balance - MZ_TR_F_12.balance</field>
+                                        <field name="subformula">if_above(MZN(0))</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_mz_tax_report_field_15" model="account.report.line">
+                                <field name="name">Field 15 - If the value entered in field 12 is greater than that in field 13, enter the difference in field 15 (12-13)</field>
+                                <field name="code">MZ_TR_F_15</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_mz_tax_report_15_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">MZ_TR_F_12.balance - MZ_TR_F_13.balance</field>
+                                        <field name="subformula">if_above(MZN(0))</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_mz_tax_report_line_credits" model="account.report.line">
+                        <field name="name"> Use of credits from previous periods. Important: values ​​can only be entered in fields 16 and 17 if this declaration is presented within the legal deadline.</field>
+                        <field name="children_ids">
+                            <record id="l10n_mz_tax_report_field_16" model="account.report.line">
+                                <field name="name">Field 16 - Excess to be reported from the previous period</field>
+                                <field name="code">MZ_TR_F_16</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_mz_tax_report_16_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=0</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_mz_tax_report_field_17" model="account.report.line">
+                                <field name="name">Field 17 - Credits communicated by the services</field>
+                                <field name="code">MZ_TR_F_17</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_mz_tax_report_17_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=0</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_mz_tax_report_frame_6" model="account.report.line">
+                <field name="name">Frame 6 - Tax to be delivered to the state (This table should only be completed if field 14 of table 05 has been completed)</field>
+                <field name="children_ids">
+                    <record id="l10n_mz_tax_report_field_18" model="account.report.line">
+                        <field name="name">Field 18 - Payable VAT</field>
+                        <field name="code">MZ_TR_F_18</field>
+                        <field name="expression_ids">
+                            <record id="l10n_mz_tax_report_18_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">MZ_TR_F_14.balance - MZ_TR_F_16.balance - MZ_TR_F_17.balance</field>
+                                <field name="subformula">if_above(MZN(0))</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_mz_tax_report_field_19" model="account.report.line">
+                        <field name="name">Field 19 - Late payment fine</field>
+                        <field name="code">MZ_TR_F_19</field>
+                        <field name="expression_ids">
+                            <record id="l10n_mz_tax_report_19_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable;rounding=0</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_mz_tax_report_field_20" model="account.report.line">
+                        <field name="name">Field 20 - Total payable</field>
+                        <field name="code">MZ_TR_F_20</field>
+                        <field name="aggregation_formula">MZ_TR_F_18.balance + MZ_TR_F_19.balance</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_mz_tax_report_frame_7" model="account.report.line">
+                <field name="name">Frame 7 - Tax to be recovered by taxable person</field>
+                <field name="children_ids">
+                    <record id="l10n_mz_tax_report_field_21" model="account.report.line">
+                        <field name="name">Field 21 - Tax credit</field>
+                        <field name="code">MZ_TR_F_21</field>
+                        <field name="expression_ids">
+                            <record id="l10n_mz_tax_report_21_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">MZ_TR_F_15.balance + MZ_TR_F_16.balance + MZ_TR_F_17.balance - MZ_TR_F_14.balance</field>
+                                <field name="subformula">if_above(MZN(0))</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_mz_tax_report_field_22" model="account.report.line">
+                        <field name="name">Field 22 - Report for the following period (If this declaration is submitted within the deadline)</field>
+                        <field name="code">MZ_TR_F_22</field>
+                        <field name="expression_ids">
+                            <record id="l10n_mz_tax_report_22_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable;rounding=0</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_mz_tax_report_field_23" model="account.report.line">
+                        <field name="name">Field 23 - Refund request (If this declaration is submitted after the deadline)</field>
+                        <field name="code">MZ_TR_F_23</field>
+                        <field name="expression_ids">
+                            <record id="l10n_mz_tax_report_23_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable;rounding=0</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

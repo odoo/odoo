@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="website.slide.share.modal">
+        <div>
+            <t t-call="website.slide.share.socialmedia"/>
+        </div>
+    </t>
+
+    <t t-name="website.slide.share.socialmedia">
+        <div class="row">
+            <div class="col-12">
+                <h5 class="mt-0 mb-2">Share Link</h5>
+                <div class="input-group">
+                    <input type="text" class="form-control o_wslides_js_share_link text-center" t-att-value="widget.slide.websiteShareUrl" readonly="readonly" onClick="this.select();" />
+                    <button class="btn btn-sm btn-primary o_clipboard_button" >
+                        <i class="fa fa-clipboard"/> Copy Link
+                    </button>
+                </div>
+            </div>
+            <div class="col-12 mt-4">
+                <h5 class="mt-0 mb-2">Share on Social Media</h5>
+                <div class="btn-group" role="group">
+                    <div class="s_share">
+                        <a t-attf-href="https://www.facebook.com/sharer/sharer.php?u=#{widget.slide.websiteShareUrl}"
+                            class="btn border bg-white o_wslides_js_social_share" social-key="facebook"
+                            aria-label="Share on Facebook" title="Share on Facebook">
+                            <i class="fa fa-facebook-square fa-fw"/>
+                        </a>
+                        <a t-attf-href="https://twitter.com/intent/tweet?text=#{widget.slide.name}&amp;url=#{widget.slide.websiteShareUrl}"
+                            class="btn border bg-white o_wslides_js_social_share"  social-key="twitter"
+                            aria-label="Share on Twitter" title="Share on Twitter">
+                            <i class="fa fa-twitter fa-fw"/>
+                        </a>
+                        <a t-attf-href="http://www.linkedin.com/sharing/share-offsite/?url=#{widget.slide.websiteShareUrl}"
+                            class="btn border bg-white o_wslides_js_social_share" social-key="linkedin"
+                            aria-label="Share on LinkedIn" title="Share on LinkedIn">
+                            <i class="fa fa-linkedin fa-fw"/>
+                        </a>
+                        <a t-attf-href="https://wa.me/?text=#{window.location.href}" social-key="whatsapp"
+                            class="btn border bg-white o_wslides_js_social_share"
+                            aria-label="Share on Whatsapp" title="Share on Whatsapp">
+                            <i class="fa fa-whatsapp fa-fw"/>
+                        </a>
+                        <a t-attf-href="http://pinterest.com/pin/create/button/?url=#{window.location.href}" social-key="pinterest"
+                            class=" btn border bg-white o_wslides_js_social_share"
+                            aria-label="Share on Pinterest" title="Share on Pinterest">
+                            <i class="fa fa-pinterest fa-fw"/>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12">
+                <t t-call="website.slide.share.email"/>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="website.slide.share.email">
+        <h5 class="mt-4">Share by Email</h5>
+        <div t-if="!widget.session.is_website_user">
+            <form class="o_wslides_js_share_email" role="form">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="friend1@email.com, friend2@email.com"/>
+                    <button class="btn btn-primary" type="button"
+                        data-loading-text="Sending..."
+                        t-attf-data-slide-id="#{widget.slide.id}">
+                        <i class="fa fa-envelope-o"/> Send Email
+                    </button>
+                </div>
+                <div class="alert alert-info d-none" role="alert"><strong>Sharing is caring!</strong> Email(s) sent. </div>
+            </form>
+        </div>
+        <div t-if="widget.session.is_website_user" class="alert alert-info d-inline-block">
+            <p class="mb-0">Please <a t-attf-href="/web?redirect=#{window.location.href}" class="fw-bold"> login </a> to share this <t t-esc="widget.slide.category"/> by email.</p>
+        </div>
+    </t>
+
+</templates>
+

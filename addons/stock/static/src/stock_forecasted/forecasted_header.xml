@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="stock.ForecastedHeader" owl="1">
+        <div class="d-flex flex-wrap pb-2 justify-content-between o_report_replenishment_header">
+            <div class="o_product_name">
+                <h3>
+                    <t t-if="props.docs.product_templates">
+                        <t t-foreach="props.docs.product_templates" t-as="product_template" t-key='product_template.id'>
+                            <a href="#"
+                            t-on-click.prevent="() => this.props.openView('product.template', 'form', product_template.id)"
+                            t-out="product_template.display_name"/>
+                        </t>
+                    </t>
+                    <t t-elif="props.docs.product_variants">
+                        <t t-foreach="props.docs.product_variants" t-as="product_variant" t-key="product_variant.id">
+                            <a href="#"
+                            t-on-click.prevent="() => this.props.openView('product.product', 'form', product_variant.id)"
+                            t-out="product_variant.display_name"/>
+                        </t>
+                    </t>
+                </h3>
+                <h6 t-if="props.docs.product_templates and props.docs.product_variants and props.docs.product_templates.length != props.docs.product_variants.length"
+                    name="product_variants">
+                    <t t-foreach="props.docs.product_variants" t-as="product_variant" t-key="product_variant.id">
+                        <a href="#"
+                        t-on-click.prevent="() => this.props.openView('product.product', 'form', product_variant.id)">
+                            [<t t-out="product_variant.combination_name"/>]
+                        </a>
+                    </t>
+                </h6>
+            </div>
+            <div class="row">
+                <div class="col-md-auto text-center">
+                    <div class="h3">
+                        <a href="#"
+                            t-on-click.prevent="() => this._onClickInventory()"
+                           t-out="_formatFloat(this.props.docs.quantity_on_hand)"/>
+                    </div>
+                    <div>On Hand</div>
+                </div>
+                <div class="h3 col-md-auto text-center">+</div>
+                <div t-attf-class="col-md-auto text-center #{props.docs.incoming_qty}">
+                    <div class="h3">
+                        <t t-out="_formatFloat(this.props.docs.incoming_qty)"/>
+                    </div>
+                    <div>Incoming</div>
+                </div>
+                <div class="h3 col-md-auto text-center">-</div>
+                <div t-attf-class="col-md-auto text-center #{props.docs.outgoing_qty}">
+                    <div class="h3">
+                        <t t-out="_formatFloat(this.props.docs.outgoing_qty)"/>
+                    </div>
+                    <div>Outgoing</div>
+                </div>
+                <div class="h3 col-md-auto text-center">=</div>
+                <div t-attf-class="col-md-auto text-center #{props.docs.virtual_available &lt; 0 and 'text-danger'}" name="forecasted_value">
+                    <div class="h3">
+                        <span t-out="_formatFloat(this.props.docs.virtual_available)"/>
+                        <span t-out="' ' + props.docs.uom" groups="uom.group_uom"/>
+                    </div>
+                    <div>Forecasted</div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

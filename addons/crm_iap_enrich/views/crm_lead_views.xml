@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="crm_lead_view_form" model="ir.ui.view">
+        <field name="name">crm.lead.view.form.inherit.iap.lead.enrich</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_lead_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='%(crm.action_crm_lead2opportunity_partner)d']" position="after">
+                <field name="show_enrich_button" invisible="1"/>
+                <button string="Enrich" name="iap_enrich" type="object" class="btn btn-secondary" data-hotkey="g"
+                title="Enrich lead with company data"
+                attrs="{'invisible':['|',('show_enrich_button', '!=', True),('type','=','opportunity')]}"/>
+                <button string="Enrich" name="iap_enrich" type="object" class="btn btn-secondary" data-hotkey="g"
+                title="Enrich opportunity with company data"
+                attrs="{'invisible':['|',('show_enrich_button', '!=', True),('type','=','lead')]}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
+

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="event_question_view_form" model="ir.ui.view">
+        <field name="name">event.question.view.form</field>
+        <field name="model">event.question</field>
+        <field name="arch" type="xml">
+            <form string="Question">
+                <sheet>
+                    <h1 class="d-flex"><field name="title" placeholder='e.g. "Do you have any diet restrictions?"' class="flex-grow-1"/></h1>
+                    <group>
+                        <group>
+                            <field name="is_mandatory_answer"/>
+                            <field name="question_type" widget="radio" options="{'horizontal': true}"/>
+                        </group>
+                        <group>
+                            <field name="once_per_order"/>
+                        </group>
+                    </group>
+                    <notebook attrs="{'invisible': [('question_type', '!=', 'simple_choice')]}">
+                        <page string="Answers" name="answers">
+                            <field name="answer_ids">
+                                <tree editable="bottom">
+                                    <!-- 'display_name' is necessary for the many2many_tags to work on the event view -->
+                                    <field name="display_name" invisible="1" />
+                                    <field name="sequence" widget="handle" />
+                                    <field name="name"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

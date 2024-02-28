@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="snippet_options" inherit_id="website.snippet_options" name="Wishlist Snippet Options">
+    <xpath expr="." position="inside">
+        <div data-selector="#wrapwrap > header"
+            data-no-check="true"
+            groups="website.group_website_designer">
+            <we-checkbox string="Show Empty Wishlist"
+                         data-customize-website-views="website_sale_wishlist.header_hide_empty_wishlist_link|"
+                         data-no-preview="true"
+                         data-reload="/"/>
+        </div>
+    </xpath>
+    <xpath expr="//we-button[hasclass('o_we_add_to_cart_btn')]" position="after">
+        <we-button title="Wishlist" class="fa fa-fw fa-heart"
+                   data-customize-website-views="website_sale_wishlist.add_to_wishlist"
+                   data-no-preview="true"
+                   data-reload="/"/>
+    </xpath>
+    <xpath expr="//we-button[hasclass('o_we_buy_now_btn')]" position="after">
+        <we-button title="Wishlist"
+                   data-customize-website-views="website_sale_wishlist.product_add_to_wishlist"
+                   data-no-preview="true"
+                   data-reload="/">
+            <i class="fa fa-fw fa-heart"/>
+            Wishlist
+        </we-button>
+    </xpath>
+</template>
+
+</odoo>

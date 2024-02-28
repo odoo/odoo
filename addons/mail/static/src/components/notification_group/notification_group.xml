@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.NotificationGroup" owl="1">
+        <t t-if="notificationGroupView">
+            <div class="o_NotificationListItem o_NotificationGroup d-flex flex-shrink-0 align-items-center p-1 cursor-pointer" t-attf-class="{{ className }}" t-on-click="notificationGroupView.onClick" t-ref="root">
+                <div class="o_NotificationListItem_sidebar o_NotificationGroup_sidebar m-1">
+                    <div class="o_NotificationListItem_imageContainer o_NotificationGroup_imageContainer o_NotificationGroup_sidebarItem position-relative">
+                        <img class="o_NotificationListItem_image o_NotificationGroup_image w-100 h-100 rounded-circle" t-att-src="notificationGroupView.imageSrc" alt="Message delivery failure image"/>
+                    </div>
+                </div>
+                <div class="o_NotificationListItem_content o_NotificationGroup_content d-flex flex-column flex-grow-1 align-self-start m-2">
+                    <div class="o_NotificationGroup_header o_NotificationListItem_header d-flex">
+                        <span class="o_NotificationListItem_name o_NotificationGroup_name text-truncate fw-bold" t-att-class="{ 'o-mobile fs-5': messaging.device.isSmall }">
+                            <t t-esc="notificationGroupView.notificationGroup.res_model_name"/>
+                        </span>
+                        <t t-if="notificationGroupView.notificationGroup.notifications.length > 1">
+                            <span class="o_NotificationListItem_counter o_NotificationGroup_counter mx-1 fw-bold">
+                                (<t t-esc="notificationGroupView.notificationGroup.notifications.length"/>)
+                            </span>
+                        </t>
+                        <span class="flex-grow-1"/>
+                        <t t-if="notificationGroupView.notificationGroup.date">
+                            <small class="o_NotificationListItem_date o_NotificationGroup_date flex-shrink-0 text-500">
+                                <t t-esc="notificationGroupView.notificationGroup.date.fromNow()"/>
+                            </small>
+                        </t>
+                    </div>
+                    <div class="o_NotificationGroup_core d-flex align-items-baseline">
+                        <span class="o_NotificationListItem_coreItem o_NotificationListItem_inlineText o_NotificationGroup_coreItem o_NotificationGroup_inlineText me-2 text-truncate">
+                            <t t-if="notificationGroupView.notificationGroup.notification_type === 'email'">
+                                An error occurred when sending an email.
+                            </t>
+                        </span>
+                        <span class="flex-grow-1"/>
+                        <span class="o_NotificationListItem_coreItem o_NotificationListItem_markAsRead o_NotificationGroup_coreItem o_NotificationGroup_markAsRead fa fa-check d-flex flex-shrink-0 ms-2 text-600 opacity-50 opacity-100-hover" title="Discard message delivery failures" t-on-click="notificationGroupView.onClickMarkAsRead" t-ref="markAsRead"/>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </t>
+
+</templates>

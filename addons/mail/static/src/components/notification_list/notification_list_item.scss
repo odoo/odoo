@@ -1,0 +1,60 @@
+$o-mail-notification-list-item-background-color: $o-view-background-color !default;
+$o-mail-notification-list-item-hover-background-color:
+    darken($o-mail-notification-list-item-background-color, 7%) !default;
+
+$o-mail-notification-list-item-muted-background-color: $gray-100 !default;
+$o-mail-notification-list-item-muted-hover-background-color:
+    darken($o-mail-notification-list-item-muted-background-color, 7%) !default;
+
+.o_NotificationListItem {
+    -webkit-user-select: none;
+    user-select: none;
+    background-color: $o-mail-notification-list-item-background-color;
+
+    &:hover {
+        background-color: $o-mail-notification-list-item-hover-background-color;
+
+        .o_NotificationListItem_personaImStatusIcon {
+            color: $o-mail-notification-list-item-hover-background-color;
+        }
+    }
+
+    &.o-muted {
+        background-color: $o-mail-notification-list-item-muted-background-color;
+
+        &:hover {
+            background-color: $o-mail-notification-list-item-muted-hover-background-color;
+
+            .o_NotificationListItem_personaImStatusIcon {
+                color: $o-mail-notification-list-item-muted-hover-background-color;
+            }
+        }
+    }
+}
+
+.o_NotificationListItem_content {
+    min-width: 0; // needed for flex to work correctly
+}
+
+.o_NotificationListItem_image {
+    object-fit: cover;
+}
+
+.o_NotificationListItem_imageContainer {
+    width: 40px;
+    height: 40px;
+}
+
+.o_NotificationListItem_inlineText {
+    &.o-empty::before {
+        content: '\00a0'; // keep line-height as if it had content
+    }
+}
+
+.o_NotificationListItem_personaImStatusIcon {
+    color: $o-mail-notification-list-item-background-color;
+
+    &.o-muted {
+        color: $o-mail-notification-list-item-muted-background-color;
+    }
+}

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+         <record id="product_margin_form_view" model="ir.ui.view">
+            <field name="name">product.margin.form</field>
+            <field name="model">product.margin</field>
+            <field name="arch" type="xml">
+                <form string="Properties categories">
+                    <group col="4" string="General Information">
+                        <field name="from_date" />
+                        <field name="to_date" />
+                        <field name="invoice_state" />
+                    </group>
+                    <footer>
+                        <button name="action_open_window" string="Open Margins" type="object" class="btn-primary" data-hotkey="q"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="product_margin_act_window" model="ir.actions.act_window">
+            <field name="name">Product Margins</field>
+            <field name="res_model">product.margin</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+</odoo>

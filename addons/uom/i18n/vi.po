@@ -1,0 +1,493 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* uom
+# 
+# Translators:
+# Martin Trigaux, 2022
+# Thi Huong Nguyen, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0beta\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-09-23 08:03+0000\n"
+"PO-Revision-Date: 2022-09-22 05:55+0000\n"
+"Last-Translator: Thi Huong Nguyen, 2023\n"
+"Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: vi\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: uom
+#: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
+msgid ""
+"<span class=\"oe_grey oe_inline\">\n"
+"                                    e.g: 1*(reference unit)=ratio*(this unit)\n"
+"                                </span>"
+msgstr ""
+
+#. module: uom
+#: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
+msgid ""
+"<span class=\"oe_grey oe_inline\">\n"
+"                                    e.g: 1*(this unit)=ratio*(reference unit)\n"
+"                                </span>"
+msgstr ""
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_uom__active
+msgid "Active"
+msgstr "Đang hoạt động"
+
+#. module: uom
+#: model_terms:ir.actions.act_window,help:uom.product_uom_form_action
+msgid "Add a new unit of measure"
+msgstr "Add a new unit of measure"
+
+#. module: uom
+#: model_terms:ir.actions.act_window,help:uom.product_uom_categ_form_action
+msgid "Add a new unit of measure category"
+msgstr "Add a new unit of measure category"
+
+#. module: uom
+#: model_terms:ir.ui.view,arch_db:uom.uom_uom_view_search
+msgid "Archived"
+msgstr "Đã lưu"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_uom__factor_inv
+msgid "Bigger Ratio"
+msgstr "Tỷ lệ lớn hơn"
+
+#. module: uom
+#: model:ir.model.fields.selection,name:uom.selection__uom_uom__uom_type__bigger
+msgid "Bigger than the reference Unit of Measure"
+msgstr "Lớn hơn đơn vị đo lường gốc"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_uom__category_id
+#: model_terms:ir.ui.view,arch_db:uom.uom_uom_view_search
+msgid "Category"
+msgstr "Danh mục"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_uom__color
+msgid "Color"
+msgstr "Màu sắc"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_uom__ratio
+msgid "Combined Ratio"
+msgstr ""
+
+#. module: uom
+#: model:ir.model.fields,help:uom.field_uom_uom__category_id
+msgid ""
+"Conversion between Units of Measure can only occur if they belong to the "
+"same category. The conversion will be made based on the ratios."
+msgstr ""
+"Việc chuyển đổi qua lại giữa các đơn vị đo lường chỉ có thể xảy ra nếu chúng"
+" thuộc cùng một nhóm. Việc chuyển đổi sẽ dựa trên tỉ lệ."
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_category__create_uid
+#: model:ir.model.fields,field_description:uom.field_uom_uom__create_uid
+msgid "Created by"
+msgstr "Được tạo bởi"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_category__create_date
+#: model:ir.model.fields,field_description:uom.field_uom_uom__create_date
+msgid "Created on"
+msgstr "Được tạo vào"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_day
+msgid "Days"
+msgstr "Ngày"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_category__display_name
+#: model:ir.model.fields,field_description:uom.field_uom_uom__display_name
+msgid "Display Name"
+msgstr "Tên hiển thị"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_dozen
+msgid "Dozens"
+msgstr "Dozens"
+
+#. module: uom
+#: model_terms:ir.ui.view,arch_db:uom.uom_uom_view_search
+msgid "Group By"
+msgstr "Nhóm theo"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_hour
+msgid "Hours"
+msgstr "Giờ"
+
+#. module: uom
+#: model:ir.model.fields,help:uom.field_uom_uom__factor_inv
+msgid ""
+"How many times this Unit of Measure is bigger than the reference Unit of "
+"Measure in this category: 1 * (this unit) = ratio * (reference unit)"
+msgstr ""
+"Số Đơn vị Đo lường này lớn hơn Đơn vị Đo lường trong đơn vị này bao nhiêu "
+"lần: 1 * (đơn vị này) = tỷ lệ * (đơn vị tham chiếu)"
+
+#. module: uom
+#: model:ir.model.fields,help:uom.field_uom_uom__factor
+msgid ""
+"How much bigger or smaller this unit is compared to the reference Unit of "
+"Measure for this category: 1 * (reference unit) = ratio * (this unit)"
+msgstr ""
+"Đơn vị này lớn hơn hoặc nhỏ hơn bao nhiêu so với Đơn vị đo lường tham chiếu "
+"cho danh mục này: 1 * (đơn vị tham chiếu) = tỷ lệ * (đơn vị này)"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_category__id
+#: model:ir.model.fields,field_description:uom.field_uom_uom__id
+msgid "ID"
+msgstr "ID"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_category____last_update
+#: model:ir.model.fields,field_description:uom.field_uom_uom____last_update
+msgid "Last Modified on"
+msgstr "Sửa lần cuối vào"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_category__write_uid
+#: model:ir.model.fields,field_description:uom.field_uom_uom__write_uid
+msgid "Last Updated by"
+msgstr "Last Updated by"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_category__write_date
+#: model:ir.model.fields,field_description:uom.field_uom_uom__write_date
+msgid "Last Updated on"
+msgstr "Cập nhật lần cuối vào"
+
+#. module: uom
+#: model:uom.category,name:uom.uom_categ_length
+msgid "Length / Distance"
+msgstr "Chiều dài / Khoảng cách"
+
+#. module: uom
+#: model:res.groups,name:uom.group_uom
+msgid "Manage Multiple Units of Measure"
+msgstr "Quản lý Đa đơn vị Đo lường"
+
+#. module: uom
+#: model:ir.model,name:uom.model_uom_uom
+msgid "Product Unit of Measure"
+msgstr "Đơn vị tính của sản phẩm"
+
+#. module: uom
+#: model:ir.model,name:uom.model_uom_category
+msgid "Product UoM Categories"
+msgstr "Nhóm Đơn vị Đo lường Sản phẩm"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_uom__factor
+#: model_terms:ir.ui.view,arch_db:uom.product_uom_categ_form_view
+msgid "Ratio"
+msgstr "Tỷ lệ"
+
+#. module: uom
+#: model:ir.model.fields.selection,name:uom.selection__uom_uom__uom_type__reference
+msgid "Reference Unit of Measure for this category"
+msgstr "Đơn vị gốc của nhóm này"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_category__reference_uom_id
+msgid "Reference UoM"
+msgstr ""
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_uom__rounding
+msgid "Rounding Precision"
+msgstr "Làm tròn chính xác"
+
+#. module: uom
+#: model_terms:ir.ui.view,arch_db:uom.uom_uom_view_search
+msgid "Search UOM"
+msgstr "Search UOM"
+
+#. module: uom
+#: model_terms:ir.ui.view,arch_db:uom.uom_categ_view_search
+msgid "Search UoM Category"
+msgstr ""
+
+#. module: uom
+#: model:ir.model.fields.selection,name:uom.selection__uom_uom__uom_type__smaller
+msgid "Smaller than the reference Unit of Measure"
+msgstr "Nhỏ hơn đơn vị gốc của nhóm này"
+
+#. module: uom
+#: code:addons/uom/models/uom_uom.py:0
+#, python-format
+msgid ""
+"Some critical fields have been modified on %s.\n"
+"Note that existing data WON'T be updated by this change.\n"
+"\n"
+"As units of measure impact the whole system, this may cause critical issues.\n"
+"E.g. modifying the rounding could disturb your inventory balance.\n"
+"\n"
+"Therefore, changing core units of measure in a running database is not recommended."
+msgstr ""
+
+#. module: uom
+#: model:uom.category,name:uom.uom_categ_surface
+msgid "Surface"
+msgstr ""
+
+#. module: uom
+#: model:ir.model.fields,help:uom.field_uom_uom__rounding
+msgid ""
+"The computed quantity will be a multiple of this value. Use 1.0 for a Unit "
+"of Measure that cannot be further split, such as a piece."
+msgstr ""
+"Số lượng được tính toán sẽ là bội số (số chia hết) của giá trị này. Sử dụng "
+"1.0 cho một đơn vị đo lường mà không thể được chia nhỏ nữa, ví du như đơn vị"
+" là một miếng (một mảnh)."
+
+#. module: uom
+#: model:ir.model.constraint,message:uom.constraint_uom_uom_factor_gt_zero
+msgid "The conversion ratio for a unit of measure cannot be 0!"
+msgstr "Tỷ lệ chuyển đổi cho một đơn vị đo lương không thể = 0!"
+
+#. module: uom
+#: code:addons/uom/models/uom_uom.py:0
+#, python-format
+msgid ""
+"The following units of measure are used by the system and cannot be deleted: %s\n"
+"You can archive them instead."
+msgstr ""
+
+#. module: uom
+#: model:ir.model.constraint,message:uom.constraint_uom_uom_factor_reference_is_one
+msgid "The reference unit must have a conversion factor equal to 1."
+msgstr "The reference unit must have a conversion factor equal to 1."
+
+#. module: uom
+#: model:ir.model.constraint,message:uom.constraint_uom_uom_rounding_gt_zero
+msgid "The rounding precision must be strictly positive."
+msgstr "The rounding precision must be strictly positive."
+
+#. module: uom
+#: code:addons/uom/models/uom_uom.py:0
+#, python-format
+msgid ""
+"The unit of measure %s defined on the order line doesn't belong to the same "
+"category as the unit of measure %s defined on the product. Please correct "
+"the unit of measure defined on the order line or on the product, they should"
+" belong to the same category."
+msgstr ""
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_uom__uom_type
+msgid "Type"
+msgstr "Loại"
+
+#. module: uom
+#: model:ir.model.fields,help:uom.field_uom_uom__active
+msgid ""
+"Uncheck the active field to disable a unit of measure without deleting it."
+msgstr "Bỏ chọn trường Kích hoạt để vô hiệu hóa đơn vị đo mà không xóa nó"
+
+#. module: uom
+#: model:uom.category,name:uom.product_uom_categ_unit
+msgid "Unit"
+msgstr "Đơn vị"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_uom__name
+msgid "Unit of Measure"
+msgstr "Đơn vị tính"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_category__name
+msgid "Unit of Measure Category"
+msgstr "Unit of Measure Category"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_unit
+msgid "Units"
+msgstr "Đơn vị"
+
+#. module: uom
+#: model:ir.actions.act_window,name:uom.product_uom_form_action
+#: model_terms:ir.ui.view,arch_db:uom.product_uom_categ_form_view
+#: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
+#: model_terms:ir.ui.view,arch_db:uom.product_uom_tree_view
+msgid "Units of Measure"
+msgstr "Đơn vị tính"
+
+#. module: uom
+#: model:ir.actions.act_window,name:uom.product_uom_categ_form_action
+msgid "Units of Measure Categories"
+msgstr "Danh mục đơn vị"
+
+#. module: uom
+#: model_terms:ir.ui.view,arch_db:uom.product_uom_categ_form_view
+#: model_terms:ir.ui.view,arch_db:uom.product_uom_categ_tree_view
+msgid "Units of Measure categories"
+msgstr "Nhóm Đơn vị Đo lường"
+
+#. module: uom
+#: model_terms:ir.actions.act_window,help:uom.product_uom_categ_form_action
+msgid ""
+"Units of measure belonging to the same category can be\n"
+"            converted between each others. For example, in the category\n"
+"            <i>'Time'</i>, you will have the following units of measure:\n"
+"            Hours, Days."
+msgstr ""
+"Các đơn vị đo lường trong cùng một nhóm có thể được chuyển đối qua\n"
+"            lại lẫn nhau. Ví dụ, trong nhóm <i>'Thời gian'</i>, bạn sẽ có            các đơn vị đo lường như: giờ, ngày, phút.\n"
+
+#. module: uom
+#: code:addons/uom/models/uom_uom.py:0
+#, python-format
+msgid "UoM category %s must have at least one reference unit of measure."
+msgstr ""
+
+#. module: uom
+#: code:addons/uom/models/uom_uom.py:0
+#, python-format
+msgid "UoM category %s should have a reference unit of measure."
+msgstr ""
+
+#. module: uom
+#: code:addons/uom/models/uom_uom.py:0
+#, python-format
+msgid "UoM category %s should only have one reference unit of measure."
+msgstr "UoM category %s should only have one reference unit of measure."
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_category__uom_ids
+msgid "Uom"
+msgstr ""
+
+#. module: uom
+#: model:uom.category,name:uom.product_uom_categ_vol
+msgid "Volume"
+msgstr "Thể tích"
+
+#. module: uom
+#: code:addons/uom/models/uom_uom.py:0
+#, python-format
+msgid "Warning for %s"
+msgstr "Cảnh báo cho %s"
+
+#. module: uom
+#: model:uom.category,name:uom.product_uom_categ_kgm
+msgid "Weight"
+msgstr "Khối lượng"
+
+#. module: uom
+#: model:uom.category,name:uom.uom_categ_wtime
+msgid "Working Time"
+msgstr "Thời gian làm việc"
+
+#. module: uom
+#: model_terms:ir.actions.act_window,help:uom.product_uom_form_action
+msgid ""
+"You must define a conversion rate between several Units of\n"
+"            Measure within the same category."
+msgstr ""
+"Bạn phải định nghĩa một tỉ lệ chuyển đổi giữa các Đơn vị\n"
+"            Đo lường trong cùng một Nhóm"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_cm
+msgid "cm"
+msgstr "cm"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_floz
+msgid "fl oz (US)"
+msgstr "fl oz (US)"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_foot
+msgid "ft"
+msgstr "ft"
+
+#. module: uom
+#: model:uom.uom,name:uom.uom_square_foot
+msgid "ft²"
+msgstr ""
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_cubic_foot
+msgid "ft³"
+msgstr "ft³"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_gal
+msgid "gal (US)"
+msgstr "gal (US)"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_inch
+msgid "in"
+msgstr "trong"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_cubic_inch
+msgid "in³"
+msgstr "in³"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_kgm
+msgid "kg"
+msgstr "kg"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_km
+msgid "km"
+msgstr "km"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_lb
+msgid "lb"
+msgstr "lb"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_mile
+msgid "mi"
+msgstr "mi"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_millimeter
+msgid "mm"
+msgstr ""
+
+#. module: uom
+#: model:uom.uom,name:uom.uom_square_meter
+msgid "m²"
+msgstr ""
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_cubic_meter
+msgid "m³"
+msgstr "m³"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_oz
+msgid "oz"
+msgstr "oz"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_qt
+msgid "qt (US)"
+msgstr "qt (US)"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_yard
+msgid "yd"
+msgstr ""

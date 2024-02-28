@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Set the JS widget -->
+    <record id="uom.product_uom_day" model="uom.uom">
+        <field name="timesheet_widget">float_toggle</field>
+    </record>
+
+    <function model="account.analytic.line" name="_ensure_uom_hours"/>
+
+    <record id="uom.product_uom_hour" model="uom.uom">
+        <field name="timesheet_widget">float_time</field>
+    </record>
+
+    <!-- Force Analytic account creation for projects allowing timesheet (default is True) -->
+    <function
+        model="project.project"
+        name="_init_data_analytic_account"
+        eval="[]"/>
+
+    <record id="internal_project_default_stage" model="project.task.type">
+        <field name="sequence">1</field>
+        <field name="name">Internal</field>
+    </record>
+
+</odoo>

@@ -1,0 +1,191 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payment_authorize
+# 
+# Translators:
+# Martin Trigaux, 2019
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2019
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~12.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"PO-Revision-Date: 2019-08-26 09:12+0000\n"
+"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2019\n"
+"Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: payment_authorize
+#: code:addons/payment_authorize/controllers/main.py:0
+#, python-format
+msgid ""
+" If you don't have any account, ask your salesperson to grant you a portal "
+"access. "
+msgstr ""
+
+#. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_client_key
+msgid "API Client Key"
+msgstr ""
+
+#. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_login
+msgid "API Login Id"
+msgstr "API 登陸 Id"
+
+#. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_signature_key
+msgid "API Signature Key"
+msgstr ""
+
+#. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_transaction_key
+msgid "API Transaction Key"
+msgstr "API 事務密匙"
+
+#. module: payment_authorize
+#: model:ir.model.fields.selection,name:payment_authorize.selection__payment_acquirer__provider__authorize
+msgid "Authorize.Net"
+msgstr "Authorize.Net"
+
+#. module: payment_authorize
+#: code:addons/payment_authorize/models/authorize_request.py:0
+#, python-format
+msgid ""
+"Authorize.net Error:\n"
+"Code: %s\n"
+"Message: %s"
+msgstr ""
+
+#. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_token__authorize_profile
+msgid "Authorize.net Profile ID"
+msgstr "Authorize.net 個人資料 ID"
+
+#. module: payment_authorize
+#: code:addons/payment_authorize/models/payment.py:0
+#, python-format
+msgid ""
+"Authorize: received data with missing reference (%s) or trans_id (%s) or "
+"fingerprint (%s)"
+msgstr "Authorize：收到的數據缺少參考 (%s) 或 trans_id (%s) 或指紋 (%s)"
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.acquirer_form_authorize
+msgid "Generate Client Key"
+msgstr ""
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.acquirer_form_authorize
+msgid "How to get paid with Authorize.Net"
+msgstr "如何使用 Authorize.Net 付款"
+
+#. module: payment_authorize
+#: code:addons/payment_authorize/models/payment.py:0
+#, python-format
+msgid ""
+"Invalid token found: the Authorize profile is missing.Please make sure the "
+"token has a valid acquirer reference."
+msgstr "找到無效金鑰：缺少授權配置文件。請確保金鑰具有有效的收單方引用。"
+
+#. module: payment_authorize
+#: model:ir.model,name:payment_authorize.model_payment_acquirer
+msgid "Payment Acquirer"
+msgstr "付款收單方"
+
+#. module: payment_authorize
+#: model:ir.model,name:payment_authorize.model_payment_token
+msgid "Payment Token"
+msgstr "付款指示物"
+
+#. module: payment_authorize
+#: model:ir.model,name:payment_authorize.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "付款交易"
+
+#. module: payment_authorize
+#: code:addons/payment_authorize/controllers/main.py:0
+#, python-format
+msgid "Please complete your profile. "
+msgstr "請完善您的個人資料。"
+
+#. module: payment_authorize
+#: code:addons/payment_authorize/controllers/main.py:0
+#, python-format
+msgid "Please sign in to complete the payment."
+msgstr ""
+
+#. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__provider
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_token__provider
+msgid "Provider"
+msgstr "服務商"
+
+#. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_token__save_token
+msgid "Save Cards"
+msgstr "保存卡"
+
+#. module: payment_authorize
+#. openerp-web
+#: code:addons/payment_authorize/static/src/js/payment_form.js:0
+#: code:addons/payment_authorize/static/src/js/payment_form.js:0
+#, python-format
+msgid "Server Error"
+msgstr "伺服器錯誤"
+
+#. module: payment_authorize
+#: code:addons/payment_authorize/models/payment.py:0
+#, python-format
+msgid "The Customer Profile creation in Authorize.NET failed."
+msgstr "Authorize.NET 中的客戶個人資料創建失敗。"
+
+#. module: payment_authorize
+#: code:addons/payment_authorize/controllers/main.py:0
+#, python-format
+msgid ""
+"The transaction cannot be processed because some contact details are missing"
+" or invalid: "
+msgstr "無法處理事務，因為缺少或無效的某些聯繫人信息："
+
+#. module: payment_authorize
+#: model:ir.model.fields,help:payment_authorize.field_payment_token__authorize_profile
+msgid ""
+"This contains the unique reference for this partner/payment token "
+"combination in the Authorize.net backend"
+msgstr "這會將此業務夥伴/付款指示物組合的唯一參考包括在 Authorize.net 後台中"
+
+#. module: payment_authorize
+#: model:ir.model.fields,help:payment_authorize.field_payment_token__save_token
+msgid ""
+"This option allows customers to save their credit card as a payment token "
+"and to reuse it for a later purchase. If you manage subscriptions (recurring"
+" invoicing), you need it to automatically charge the customer when you issue"
+" an invoice."
+msgstr "該選項允許將客戶信用卡的支付授權信令用於後續支付來調用。如果您管一下您的訂閱信息（循環發票），則需要在發出發票時自動向客戶收取費用。"
+
+#. module: payment_authorize
+#: code:addons/payment_authorize/models/payment.py:0
+#, python-format
+msgid ""
+"Unable to fetch Client Key, make sure the API Login and Transaction Key are "
+"correct."
+msgstr ""
+
+#. module: payment_authorize
+#: code:addons/payment_authorize/models/payment.py:0
+#, python-format
+msgid "Warning"
+msgstr "警告"
+
+#. module: payment_authorize
+#. openerp-web
+#: code:addons/payment_authorize/static/src/js/payment_form.js:0
+#, python-format
+msgid "We are not able to add your payment method at the moment."
+msgstr "目前我們無法添加您的付款方式。"

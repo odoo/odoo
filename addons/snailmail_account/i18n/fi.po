@@ -1,0 +1,193 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* snailmail_account
+# 
+# Translators:
+# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2022
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2022
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2022
+# Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2022
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"PO-Revision-Date: 2022-09-22 05:55+0000\n"
+"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
+"Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: fi\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: snailmail_account
+#: code:addons/snailmail_account/wizard/account_invoice_send.py:0
+#, python-format
+msgid "%s of the selected invoice(s) had an invalid address and were not sent"
+msgstr ""
+"%s valitulla laskulla (valituilla laskuilla) oli virheellinen osoite, eikä "
+"niitä lähetetty"
+
+#. module: snailmail_account
+#: model_terms:ir.ui.view,arch_db:snailmail_account.account_invoice_send_inherit_account_wizard_form
+msgid ""
+"<i class=\"fa fa-info-circle\" role=\"img\" aria-label=\"Warning\" title=\"Make sure you have enough Stamps on your account.\"/>\n"
+"                                )"
+msgstr ""
+"<i class=\"fa fa-info-circle\" role=\"img\" aria-label=\"Warning\" title=\"Varmista, että tililläsi on riittävästi postimerkkejä.\"/>\n"
+"                                )"
+
+#. module: snailmail_account
+#: model_terms:ir.ui.view,arch_db:snailmail_account.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\"/>"
+msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Tähän asetetut arvot ovat "
+"yrityskohtaisia.\"/>"
+
+#. module: snailmail_account
+#: model_terms:ir.ui.view,arch_db:snailmail_account.account_invoice_send_inherit_account_wizard_form
+msgid ""
+"<span class=\"text-danger\">\n"
+"                                    Some customer addresses are incomplete.\n"
+"                                </span>"
+msgstr ""
+"<span class=\"text-danger\">\n"
+"                                    Jotkin asiakkaiden osoitteet ovat puutteellisia.\n"
+"                                </span>"
+
+#. module: snailmail_account
+#: model_terms:ir.ui.view,arch_db:snailmail_account.account_invoice_send_inherit_account_wizard_form
+msgid ""
+"<span class=\"text-muted\" attrs=\"{'invisible': [('invalid_addresses', '!=', 0)]}\"> to: </span>\n"
+"                                <span class=\"text-danger\" attrs=\"{'invisible': [('invalid_addresses', '=', 0)]}\"> The customer's address is incomplete: </span>"
+msgstr ""
+"<span class=\"text-muted\" attrs=\"{'invisible': [('invalid_addresses', '!=', 0)]}\"> vastaanottaja: </span>\n"
+"                                <span class=\"text-danger\" attrs=\"{'invisible': [('invalid_addresses', '=', 0)]}\"> Asiakkaan osoite on puutteellinen: </span>"
+
+#. module: snailmail_account
+#: model:ir.model,name:snailmail_account.model_account_invoice_send
+msgid "Account Invoice Send"
+msgstr "Tilin laskun lähettäminen"
+
+#. module: snailmail_account
+#: model:ir.model,name:snailmail_account.model_res_company
+msgid "Companies"
+msgstr "Yritykset"
+
+#. module: snailmail_account
+#: model:ir.model,name:snailmail_account.model_res_config_settings
+msgid "Config Settings"
+msgstr "Asetukset"
+
+#. module: snailmail_account
+#: model_terms:ir.ui.view,arch_db:snailmail_account.account_invoice_send_inherit_account_wizard_form
+msgid "Contacts"
+msgstr "Yhteystiedot"
+
+#. module: snailmail_account
+#: model:ir.model.fields,field_description:snailmail_account.field_snailmail_confirm_invoice__create_uid
+msgid "Created by"
+msgstr "Luonut"
+
+#. module: snailmail_account
+#: model:ir.model.fields,field_description:snailmail_account.field_snailmail_confirm_invoice__create_date
+msgid "Created on"
+msgstr "Luotu"
+
+#. module: snailmail_account
+#: model:ir.model.fields,field_description:snailmail_account.field_snailmail_confirm_invoice__display_name
+msgid "Display Name"
+msgstr "Näyttönimi"
+
+#. module: snailmail_account
+#: model:ir.model.fields,field_description:snailmail_account.field_snailmail_confirm_invoice__id
+msgid "ID"
+msgstr "ID"
+
+#. module: snailmail_account
+#: code:addons/snailmail_account/wizard/account_invoice_send.py:0
+#: code:addons/snailmail_account/wizard/account_invoice_send.py:0
+#: model:ir.model.fields,field_description:snailmail_account.field_account_invoice_send__invalid_partner_ids
+#, python-format
+msgid "Invalid Addresses"
+msgstr "Virheelliset osoitteet"
+
+#. module: snailmail_account
+#: model:ir.model.fields,field_description:snailmail_account.field_account_invoice_send__invalid_addresses
+msgid "Invalid Addresses Count"
+msgstr "Virheellisten osoitteiden määrä"
+
+#. module: snailmail_account
+#: model:ir.model.fields,field_description:snailmail_account.field_account_invoice_send__invalid_invoices
+msgid "Invalid Invoices Count"
+msgstr "Virheellisten laskujen määrä"
+
+#. module: snailmail_account
+#: code:addons/snailmail_account/wizard/account_invoice_send.py:0
+#, python-format
+msgid "Invoice"
+msgstr "Lasku"
+
+#. module: snailmail_account
+#: model:ir.model.fields,field_description:snailmail_account.field_snailmail_confirm_invoice__invoice_send_id
+msgid "Invoice Send"
+msgstr "Laskun lähettäminen"
+
+#. module: snailmail_account
+#: model:ir.model.fields,field_description:snailmail_account.field_snailmail_confirm_invoice____last_update
+msgid "Last Modified on"
+msgstr "Viimeksi muokattu"
+
+#. module: snailmail_account
+#: model:ir.model.fields,field_description:snailmail_account.field_snailmail_confirm_invoice__write_uid
+msgid "Last Updated by"
+msgstr "Viimeksi päivittänyt"
+
+#. module: snailmail_account
+#: model:ir.model.fields,field_description:snailmail_account.field_snailmail_confirm_invoice__write_date
+msgid "Last Updated on"
+msgstr "Viimeksi päivitetty"
+
+#. module: snailmail_account
+#: model:ir.model.fields,field_description:snailmail_account.field_snailmail_confirm_invoice__model_name
+msgid "Model Name"
+msgstr "Mallin nimi"
+
+#. module: snailmail_account
+#: model:ir.model.fields,field_description:snailmail_account.field_account_invoice_send__partner_id
+msgid "Partner"
+msgstr "Kumppani"
+
+#. module: snailmail_account
+#: model:ir.model.fields,help:snailmail_account.field_account_invoice_send__snailmail_is_letter
+msgid "Print and post the invoice by snailmail"
+msgstr "Tulosta ja lähetä lasku postitse etanapostitse"
+
+#. module: snailmail_account
+#: model:ir.model.fields,field_description:snailmail_account.field_account_invoice_send__snailmail_is_letter
+#: model:ir.model.fields,field_description:snailmail_account.field_res_company__invoice_is_snailmail
+#: model:ir.model.fields,field_description:snailmail_account.field_res_config_settings__invoice_is_snailmail
+msgid "Send by Post"
+msgstr "Lähetä postitse"
+
+#. module: snailmail_account
+#: model:ir.model,name:snailmail_account.model_snailmail_confirm_invoice
+msgid "Snailmail Confirm Invoice"
+msgstr "Vahvista etanapostin lasku"
+
+#. module: snailmail_account
+#: model:ir.model.fields,field_description:snailmail_account.field_account_invoice_send__snailmail_cost
+msgid "Stamp(s)"
+msgstr "Postimerkit"
+
+#. module: snailmail_account
+#: code:addons/snailmail_account/wizard/account_invoice_send.py:0
+#, python-format
+msgid "You cannot send an invoice which has no partner assigned."
+msgstr "Et voi lähettää laskua, jolle ei ole määritetty kumppania."

@@ -1,0 +1,121 @@
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  border: 0;
+}
+
+.o_datepicker {
+    position: relative;
+
+    .o_datepicker_input {
+        width: 100%;
+        cursor: pointer;
+    }
+
+    .o_datepicker_button {
+        @include o-position-absolute(2px, 4px);
+        pointer-events: none; // let click events go through the underlying input
+        &:after {
+            @include o-caret-down($caret-width: 4px);
+        }
+    }
+
+    .o_datepicker_warning {
+        top: 0;
+        right: 20px;
+    }
+}
+
+
+// The 'div.dropdown-menu' part is needed to override default bootstrap rule as
+// this file is unfortunately placed in common assets.
+div.dropdown-menu.bootstrap-datetimepicker-widget {
+    min-width: 0;
+    padding: 0;
+    border: 1px solid $dropdown-border-color;
+    overflow: visible; // Needed until dropdown-menu will be 'hoverflow:hidden'
+
+    // Need to put datetimepicker widget above everything else
+    z-index: $zindex-modal + 1;
+
+    // Also fix the dropdown width
+    width: 22rem;
+}
+
+.bootstrap-datetimepicker-widget .datepicker table {
+    --datepicker-color: #{map-get($grays, '900')};
+    --datepicker__thead-bg: #{map-get($grays, '100')};
+
+    th, td {
+        border-radius: 0;
+        border-bottom-width: $border-width;
+        width: percentage(1/8);
+        height: 30px;
+        line-height: 30px;
+        color: var(--datepicker-color);
+
+        &.prev, &.next, &.old, &.new {
+            @include o-hover-opacity(.5);
+        }
+    }
+
+    thead tr:nth-child(1) th {
+        border-top: 0;
+    }
+
+    thead tr:nth-child(2) th {
+        height: 20px;
+        line-height: 20px;
+    }
+
+    thead tr:nth-child(2) th, td.cw {
+        background-color: var(--datepicker__thead-bg);
+        font-size: $font-size-sm;
+        font-weight: $font-weight-bold;
+        color: $o-main-text-color;
+    }
+
+    td {
+        font-size: ($font-size-base + $font-size-sm) * .5;
+
+        &.today:not(.active):before {
+            border-bottom-color: $o-brand-primary;
+        }
+
+        &.active {
+            border-bottom-color: $bs-datetimepicker-active-color;
+            color: $bs-datetimepicker-active-color;
+        }
+    }
+}
+
+.bootstrap-datetimepicker-widget {
+    .picker-switch {
+        font-size: $font-size-lg;
+    }
+
+    .accordion-toggle {
+        span.fa {
+            margin: 0;
+            border-radius: 0;
+            color: $o-main-text-color;
+            border-top: 1px solid var(--datepicker-border-color, #{$border-color});
+            box-shadow: 0 1px 0 var(--datepicker-border-color, #{$border-color}); // overlaps with main box border
+
+            &.primary {
+                color: $o-brand-primary;
+            }
+        }
+    }
+    
+    .timepicker-picker {
+        /*rtl:ignore*/
+        direction: ltr;
+    }
+}

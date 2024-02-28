@@ -1,0 +1,191 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* snailmail_account
+# 
+# Translators:
+# Martin Trigaux, 2022
+# Cécile Collart <cco@odoo.com>, 2022
+# Jolien De Paepe, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"PO-Revision-Date: 2022-09-22 05:55+0000\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
+"Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: fr\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: snailmail_account
+#: code:addons/snailmail_account/wizard/account_invoice_send.py:0
+#, python-format
+msgid "%s of the selected invoice(s) had an invalid address and were not sent"
+msgstr ""
+"%s des factures sélectionnées ont une adresse invalide et n'ont pas été "
+"envoyées"
+
+#. module: snailmail_account
+#: model_terms:ir.ui.view,arch_db:snailmail_account.account_invoice_send_inherit_account_wizard_form
+msgid ""
+"<i class=\"fa fa-info-circle\" role=\"img\" aria-label=\"Warning\" title=\"Make sure you have enough Stamps on your account.\"/>\n"
+"                                )"
+msgstr ""
+"<i class=\"fa fa-info-circle\" role=\"img\" aria-label=\"Attention\" title=\"Assurez-vous d'avoir suffisamment de timbres sur votre compte.\"/>\n"
+"                                )"
+
+#. module: snailmail_account
+#: model_terms:ir.ui.view,arch_db:snailmail_account.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\"/>"
+msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Les valeurs définies ici sont"
+" spécifiques à l'entreprise.\"/>"
+
+#. module: snailmail_account
+#: model_terms:ir.ui.view,arch_db:snailmail_account.account_invoice_send_inherit_account_wizard_form
+msgid ""
+"<span class=\"text-danger\">\n"
+"                                    Some customer addresses are incomplete.\n"
+"                                </span>"
+msgstr ""
+"<span class=\"text-danger\">\n"
+"                                    Certaines adresses de client sont incomplètes.\n"
+"                                </span>"
+
+#. module: snailmail_account
+#: model_terms:ir.ui.view,arch_db:snailmail_account.account_invoice_send_inherit_account_wizard_form
+msgid ""
+"<span class=\"text-muted\" attrs=\"{'invisible': [('invalid_addresses', '!=', 0)]}\"> to: </span>\n"
+"                                <span class=\"text-danger\" attrs=\"{'invisible': [('invalid_addresses', '=', 0)]}\"> The customer's address is incomplete: </span>"
+msgstr ""
+"<span class=\"text-muted\" attrs=\"{'invisible': [('invalid_addresses', '!=', 0)]}\"> à : </span>\n"
+"                                <span class=\"text-danger\" attrs=\"{'invisible': [('invalid_addresses', '=', 0)]}\"> L'adresse du client est incomplète : </span>"
+
+#. module: snailmail_account
+#: model:ir.model,name:snailmail_account.model_account_invoice_send
+msgid "Account Invoice Send"
+msgstr "Envoyer la facture du compte"
+
+#. module: snailmail_account
+#: model:ir.model,name:snailmail_account.model_res_company
+msgid "Companies"
+msgstr "Sociétés"
+
+#. module: snailmail_account
+#: model:ir.model,name:snailmail_account.model_res_config_settings
+msgid "Config Settings"
+msgstr "Paramètres de configuration"
+
+#. module: snailmail_account
+#: model_terms:ir.ui.view,arch_db:snailmail_account.account_invoice_send_inherit_account_wizard_form
+msgid "Contacts"
+msgstr "Contacts"
+
+#. module: snailmail_account
+#: model:ir.model.fields,field_description:snailmail_account.field_snailmail_confirm_invoice__create_uid
+msgid "Created by"
+msgstr "Créé par"
+
+#. module: snailmail_account
+#: model:ir.model.fields,field_description:snailmail_account.field_snailmail_confirm_invoice__create_date
+msgid "Created on"
+msgstr "Créé le"
+
+#. module: snailmail_account
+#: model:ir.model.fields,field_description:snailmail_account.field_snailmail_confirm_invoice__display_name
+msgid "Display Name"
+msgstr "Nom d'affichage"
+
+#. module: snailmail_account
+#: model:ir.model.fields,field_description:snailmail_account.field_snailmail_confirm_invoice__id
+msgid "ID"
+msgstr "ID"
+
+#. module: snailmail_account
+#: code:addons/snailmail_account/wizard/account_invoice_send.py:0
+#: code:addons/snailmail_account/wizard/account_invoice_send.py:0
+#: model:ir.model.fields,field_description:snailmail_account.field_account_invoice_send__invalid_partner_ids
+#, python-format
+msgid "Invalid Addresses"
+msgstr "Adresses invalides"
+
+#. module: snailmail_account
+#: model:ir.model.fields,field_description:snailmail_account.field_account_invoice_send__invalid_addresses
+msgid "Invalid Addresses Count"
+msgstr "Nombre d'adresses invalides"
+
+#. module: snailmail_account
+#: model:ir.model.fields,field_description:snailmail_account.field_account_invoice_send__invalid_invoices
+msgid "Invalid Invoices Count"
+msgstr "Nombre de factures invalides"
+
+#. module: snailmail_account
+#: code:addons/snailmail_account/wizard/account_invoice_send.py:0
+#, python-format
+msgid "Invoice"
+msgstr "Facture"
+
+#. module: snailmail_account
+#: model:ir.model.fields,field_description:snailmail_account.field_snailmail_confirm_invoice__invoice_send_id
+msgid "Invoice Send"
+msgstr "Envoyer la facture"
+
+#. module: snailmail_account
+#: model:ir.model.fields,field_description:snailmail_account.field_snailmail_confirm_invoice____last_update
+msgid "Last Modified on"
+msgstr "Dernière modification le"
+
+#. module: snailmail_account
+#: model:ir.model.fields,field_description:snailmail_account.field_snailmail_confirm_invoice__write_uid
+msgid "Last Updated by"
+msgstr "Dernière mise à jour par"
+
+#. module: snailmail_account
+#: model:ir.model.fields,field_description:snailmail_account.field_snailmail_confirm_invoice__write_date
+msgid "Last Updated on"
+msgstr "Dernière mise à jour le"
+
+#. module: snailmail_account
+#: model:ir.model.fields,field_description:snailmail_account.field_snailmail_confirm_invoice__model_name
+msgid "Model Name"
+msgstr "Nom de modèle"
+
+#. module: snailmail_account
+#: model:ir.model.fields,field_description:snailmail_account.field_account_invoice_send__partner_id
+msgid "Partner"
+msgstr "Partenaire"
+
+#. module: snailmail_account
+#: model:ir.model.fields,help:snailmail_account.field_account_invoice_send__snailmail_is_letter
+msgid "Print and post the invoice by snailmail"
+msgstr "Imprimer et envoyer la facture par courrier postal"
+
+#. module: snailmail_account
+#: model:ir.model.fields,field_description:snailmail_account.field_account_invoice_send__snailmail_is_letter
+#: model:ir.model.fields,field_description:snailmail_account.field_res_company__invoice_is_snailmail
+#: model:ir.model.fields,field_description:snailmail_account.field_res_config_settings__invoice_is_snailmail
+msgid "Send by Post"
+msgstr "Envoyer par la poste"
+
+#. module: snailmail_account
+#: model:ir.model,name:snailmail_account.model_snailmail_confirm_invoice
+msgid "Snailmail Confirm Invoice"
+msgstr "Confirmer la facture par courrier postal"
+
+#. module: snailmail_account
+#: model:ir.model.fields,field_description:snailmail_account.field_account_invoice_send__snailmail_cost
+msgid "Stamp(s)"
+msgstr "Timbre(s)"
+
+#. module: snailmail_account
+#: code:addons/snailmail_account/wizard/account_invoice_send.py:0
+#, python-format
+msgid "You cannot send an invoice which has no partner assigned."
+msgstr ""
+"Vous ne pouvez pas envoyer une facture qui n'a pas de partenaire assigné."

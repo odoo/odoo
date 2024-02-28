@@ -1,0 +1,68 @@
+// ------------------------------------------------------------------
+// Layout
+// ------------------------------------------------------------------
+
+.o_FormRenderer_chatterContainer {
+    --ChatterTopbar-border: #{$border-width solid $border-color};
+    --ChatterTopbar-padding-v: #{map-get($spacers, 2)};
+
+    @include media-breakpoint-down(md) {
+        --ChatterTopbar-padding-left: #{$o-horizontal-padding};
+        --ChatterTopbar-padding-right: #{$o-horizontal-padding};
+    }
+
+    &.o-aside {
+        --Chatter-max-width: #{$o-form-view-sheet-max-width};
+        --ChatterTopbar-padding-left: #{$o-horizontal-padding};
+        --ChatterTopbar-padding-right: #{$o-horizontal-padding};
+
+        flex-shrink: 0;
+        flex-grow: 1;
+        border-left: $border-width solid;
+        padding: map-get($spacers, 0);
+        max-width: var(--Chatter-max-width);
+        width: $o-chatter-min-width;
+
+        .o_Message.o-not-discussion {
+            border-width: $border-width 0;
+        }
+
+        .o_ChatterContainer {
+            width: auto;
+        }
+    }
+
+    &.o-isInFormSheetBg {
+        background-color: $white;
+        width: auto;
+        border-top: 1px solid $border-color;
+    }
+
+    &:not(.o-aside):not(.o-full-width) .o_ChatterContainer {
+        @include make-container-max-widths();
+
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+// ------------------------------------------------------------------
+// Style
+// ------------------------------------------------------------------
+
+.o_FormRenderer_chatterContainer.o-aside {
+    border-left-color: $border-color;
+}
+
+
+.o_FormRenderer_chatterContainer {
+    display: flex;
+    margin: 0 auto;
+    padding-bottom: map-get($spacers, 5);
+    width: 100%;
+}
+
+// FIX to hide chatter in dialogs when they are opened from an action returned by python code
+.modal .modal-dialog .o_form_view .o_FormRenderer_chatterContainer {
+    display: none;
+}

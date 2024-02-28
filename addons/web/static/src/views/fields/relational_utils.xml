@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="web.X2ManyFieldDialog" owl="1">
+    <Dialog title="title" withBodyPadding="false" modalRef="modalRef" contentClass="'o_form_view'">
+        <FormRenderer record="record" fields="archInfo.fields" archInfo="archInfo"/>
+        <t t-set-slot="footer">
+            <t t-if="footerArchInfo">
+                <FormRenderer record="record" archInfo="footerArchInfo"/>
+            </t>
+            <t t-else="">
+                <t t-if="record.isInEdition">
+                    <t t-if="canCreate">
+                        <button class="btn btn-primary o_form_button_save" t-on-click="save" data-hotkey="c">Save &amp; Close</button>
+                        <button class="btn btn-primary o_form_button_save_new" t-on-click="saveAndNew" data-hotkey="n">Save &amp; New</button>
+                    </t>
+                    <t t-else="">
+                        <button class="btn btn-primary o_form_button_save" t-on-click="save" data-hotkey="c">Save</button>
+                    </t>
+                    <button class="btn btn-secondary o_form_button_cancel" t-on-click="discard" data-hotkey="j">Discard</button>
+
+                    <t t-if="props.delete">
+                        <button class="btn btn-secondary o_btn_remove" t-on-click="remove" data-hotkey="k">
+                            <t t-if="props.deleteButtonLabel" t-out="props.deleteButtonLabel"/>
+                            <t t-else="">Remove</t>
+                        </button>
+                    </t>
+                </t>
+                <t t-else="">
+                    <button class="btn btn-primary o_form_button_cancel" t-on-click="() => this.props.close()" data-hotkey="j">Close</button>
+                </t>
+            </t>
+        </t>
+    </Dialog>
+</t>
+
+<t t-name="web.Many2XAutocomplete" owl="1" >
+    <div class="o_input_dropdown" t-ref="autocomplete_container">
+        <input t-if="env.isSmall"
+            type="text"
+            t-att-id="props.id"
+            class="o_input"
+            readonly=""
+            autocomplete="off"
+            t-att-placeholder="props.placeholder"
+            t-att-value="props.value"
+            t-on-click="onSearchMore"
+            t-on-barcode-search="onBarcodeSearch"
+        />
+        <AutoComplete t-else=""
+            value="props.value"
+            id="props.id"
+            placeholder="props.placeholder"
+            sources="sources"
+            autoSelect="props.autoSelect"
+            onSelect.bind="onSelect"
+            onInput.bind="onInput"
+            onChange.bind="onChange"
+        />
+        <a role="button" class="o_dropdown_button" draggable="false" />
+    </div>
+</t>
+
+</templates>

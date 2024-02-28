@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="portal_my_home_productions" name="Productions" customize_show="True" inherit_id="portal.portal_my_home" priority="20">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+            <t t-call="portal.portal_docs_entry">
+                <t t-set="title">Productions</t>
+                <t t-set="url" t-value="'/my/productions'"/>
+                <t t-set="placeholder_count" t-value="'production_count'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="portal_my_home_menu_production" name="Portal layout : production menu entries" inherit_id="portal.portal_breadcrumbs" priority="25">
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+            <li t-if="page_name == 'production' or production" t-attf-class="breadcrumb-item #{'active' if not pickings else ''}">
+                <t>Productions</t>
+            </li>
+        </xpath>
+    </template>
+
+    <template id="portal_my_productions" name="My Productions">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">Productions</t>
+            </t>
+
+            <t t-if="not pickings">
+                <p>There are currently no productions for your account.</p>
+            </t>
+
+            <t t-if="pickings" t-call="portal.portal_table">
+                <thead>
+                    <tr class="active">
+                        <th>Order</th>
+                        <th class="text-end">Source Document</th>
+                        <th class="text-end">Scheduled Date</th>
+                        <th class="text-end">Deadline Date</th>
+                        <th class="text-end">State</th>
+                    </tr>
+                </thead>
+                <t t-foreach="pickings" t-as="picking">
+                    <tr>
+                        <td><a t-attf-href="/my/productions/#{picking.id}?{{ keep_query() }}"><span t-field="picking.name"/></a></td>
+                        <td class="text-end"><span t-field="picking.origin"/></td>
+                        <td class="text-end"><span t-field="picking.scheduled_date" t-options='{"widget": "date"}'/></td>
+                        <td class="text-end"><span t-field="picking.date_deadline" t-options='{"widget": "date"}'/></td>
+                        <td class="text-end"><span t-field="picking.state"/></td>
+                    </tr>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <template id="subcontracting_portal" name="Subcontracting View in Portal">
+        <t t-call="portal.frontend_layout">
+            <t t-set="no_footer" t-value="true"/>
+            <t t-call="mrp_subcontracting.subcontracting"/>
+        </t>
+    </template>
+
+    <template id="subcontracting" name="Subcontracting Portal View">
+        <iframe width="100%" height="100%" frameborder="0" t-attf-src="/my/productions/{{ picking_id }}/subcontracting_portal"/>
+    </template>
+
+    <template id="subcontracting_portal_embed" name="Subcontracting Portal">
+        <t t-call="web.layout">
+            <t t-set="head_subcontracting_portal">
+                <script type="text/javascript">
+                    odoo.__session_info__ = <t t-out="json.dumps(session_info)"/>;
+                </script>
+                <base target="_parent"/>
+                <t t-call-assets="web.assets_common" t-js="false"/>
+                <t t-call-assets="web.assets_backend" t-js="false"/>
+                <t t-call-assets="web.assets_common" t-css="false"/>
+                <t t-call-assets="mrp_subcontracting.webclient" t-css="false"/>
+                <t t-call="web.conditional_assets_tests"/>
+            </t>
+            <t t-set="head" t-value="head_subcontracting_portal + (head or '')"/>
+            <t t-set="body_classname" t-value="'o_web_client o_subcontracting_portal'"/>
+        </t>
+    </template>
+
+</odoo>

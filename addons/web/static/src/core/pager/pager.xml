@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.Pager" owl="1">
+        <nav class="o_pager align-items-center d-flex gap-2" aria-label="Pager">
+            <span class="o_pager_counter" t-on-click.stop="">
+                <t t-if="state.isEditing">
+                    <input type="text" class="o_pager_value o_input d-inline-block w-auto text-end mb-n1" size="7" t-ref="autofocus" t-att-value="value" t-on-blur="onInputBlur" t-on-change="onInputChange" t-on-keydown.stop="onInputKeydown" />
+                </t>
+                <t t-else="">
+                    <span class="o_pager_value d-inline-block border-bottom border-transparent mb-n1" t-esc="value" t-on-click="onValueClick" />
+                </t>
+                <span> / </span>
+                <t t-if="props.updateTotal">
+                    <span class="o_pager_limit o_pager_limit_fetch" t-att-class="{ 'disabled': state.isDisabled }" t-on-click.stop="updateTotal"><t t-esc="props.total"/>+</span>
+                </t>
+                <t t-else="">
+                    <span class="o_pager_limit" t-esc="props.total"/>
+                </t>
+            </span>
+            <span class="btn-group" aria-atomic="true">
+                <!-- accesskeys not wanted in X2Many widgets -->
+                <button type="button" class="fa fa-chevron-left btn btn-secondary o_pager_previous px-2 rounded-start" aria-label="Previous" data-tooltip="Previous" tabindex="-1" t-att-data-hotkey="props.withAccessKey ? 'p' : false" t-att-disabled="state.isDisabled or isSinglePage" t-on-click.stop="() => this.navigate(-1)" />
+                <button type="button" class="fa fa-chevron-right btn btn-secondary o_pager_next px-2 rounded-end" aria-label="Next" data-tooltip="Next" tabindex="-1" t-att-data-hotkey="props.withAccessKey ? 'n' : false" t-att-disabled="state.isDisabled or isSinglePage" t-on-click.stop="() => this.navigate(1)" />
+            </span>
+        </nav>
+    </t>
+
+</templates>

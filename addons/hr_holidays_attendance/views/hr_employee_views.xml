@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="hr_employee_view_form_inherit" model="ir.ui.view">
+        <field name="name">hr.holidays.attendance.employee.view.form.inherit</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="priority" eval="120"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button
+                    name="%(hr_leave_allocation_overtime_manager_action)d"
+                    string="Deduct Extra Hours"
+                    type="action"
+                    groups="hr_holidays.group_hr_holidays_user"
+                    context="{'default_employee_id': id, 'deduct_extra_hours': True}"
+                    attrs="{'invisible': [('total_overtime', '&lt;=', 1)]}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- TODO: remove in master -->
+    <record id="hr_employee_view_form" model="ir.ui.view">
+        <field name="name">hr.employee.holidays.attendance.inherit</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr_attendance.view_employee_form_inherit_hr_attendance"/>
+        <field name="priority" eval="125" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='hr_presence_status']" position="attributes">
+                <attribute name="attrs">
+                    {'invisible': False}
+                </attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,93 @@
+.s_dynamic {
+    .s_events_event_title {
+        font-weight: $headings-font-weight;
+        line-height: 1;
+    }
+
+    .s_events_event_subtitle {
+        font-size: $font-size-base;
+    }
+
+    &.s_event_event_picture {
+        .s_events_event {
+            margin: 0;
+            min-height: 150px;
+
+            figcaption {
+                position: relative;
+                justify-content: center;
+                pointer-events: auto;
+            }
+
+            .s_events_event_cover {
+                min-height: 100%;
+
+                .o_record_cover_container {
+                    top: 0;
+                }
+            }
+
+            .s_events_event_title {
+                @include font-size($h3-font-size);
+                margin-bottom: 0.5em;
+            }
+        }
+
+        .row {
+            align-items: stretch;
+            .s_events_event_subtitle {
+                margin: 0;
+            }
+        }
+    }
+
+    &.s_event_event_card {
+        .card {
+            height: 100%;
+
+            .s_events_event_cover {
+                height: 150px;
+
+                .o_record_cover_container {
+                    background-color: transparent !important;
+
+                    .o_record_cover_image {
+                        @extend .card-img-top;
+                        height: inherit;
+                    }
+                }
+
+                .s_events_event_date {
+                    top: $card-spacer-x;
+                    right: $card-spacer-x;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    width: map-get($display-font-sizes, 4);
+                    height: map-get($display-font-sizes, 4);
+                    border-radius: 50%;
+                    text-align: center;
+
+                    .s_events_event_month {
+                        font-size: $font-size-sm;
+                        font-weight: $font-weight-bold;
+                        text-transform: uppercase;
+                    }
+                    .s_events_event_day {
+                        font-size: $font-size-lg;
+                        font-weight: $font-weight-light;
+                    }
+                }
+            }
+
+            a {
+                color: color-contrast($o-brand-primary);
+
+                &:hover {
+                    text-decoration: none;
+                }
+            }
+
+        }
+    }
+}

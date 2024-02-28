@@ -1,0 +1,83 @@
+/* static stars */
+$o-w-rating-star-color: #FACC2E;
+.o_website_rating_static{
+    color: $o-w-rating-star-color;
+}
+
+.o_website_rating_card_container {
+
+    .o_message_counter {
+        color: map-get($grays, '700');
+    }
+
+    /* progress bars */
+    table.o_website_rating_table {
+        width: 100%;
+        overflow: visible;
+
+        .o_website_rating_table_star_num {
+            min-width: 50px;
+            white-space: nowrap;
+        }
+        .o_website_rating_table_progress{
+            min-width: 120px;
+            > .progress {
+                margin-bottom: 2px;
+                margin-left: 5px;
+                margin-right: 5px;
+            }
+            .o_rating_progressbar{
+                background-color: $o-w-rating-star-color;
+            }
+        }
+        .o_website_rating_table_percent {
+            text-align: right;
+            padding-left: 5px;
+            font-size: $font-size-sm;
+        }
+        .o_website_rating_table_reset {
+            .o_website_rating_selection_reset {
+                color: $red;
+            }
+        }
+        .o_website_rating_table_row:not(o_website_rating_table_row_selected) {
+            cursor: pointer;
+        }
+    }
+}
+
+/* Star Widget */
+.o_rating_star_card{
+    margin-bottom: 5px;
+    .stars {
+        display: inline-flex;
+        color: #FACC2E;
+        margin-right: 15px;
+    }
+
+    .stars i {
+        padding-right: 1px;
+        padding-left: 1px;
+        text-align: center;
+    }
+
+    .stars.enabled{
+        cursor: pointer;
+    }
+
+    .rate_text{
+        display: inline-block;
+    }
+}
+
+/* Rating Popup Composer */
+.o_rating_popup_composer {
+
+    .o_rating_clickable {
+        cursor: pointer;
+    }
+
+    .o_portal_chatter_avatar {
+        margin-right: 10px;
+    }
+}

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+
+    <t t-name="im_livechat.legacy.im_livechat.FeedBack">
+        <div class="o_livechat_rating text-center">
+            <div class="o_livechat_rating_box">
+                <div class="o_livechat_rating_feedback_text">
+                    Did we correctly answer your question ?
+                </div>
+                <div class="o_livechat_rating_choices">
+                    <img t-att-src="widget.server_origin + '/rating/static/src/img/rating_5.png'" alt="Good" data-value="5"/>
+                    <img t-att-src="widget.server_origin + '/rating/static/src/img/rating_3.png'" alt="OK" data-value="3"/>
+                    <img t-att-src="widget.server_origin + '/rating/static/src/img/rating_1.png'" alt="Bad" data-value="1" />
+                </div>
+            </div>
+            <div class="o_livechat_rating_reason">
+                <textarea id="reason" placeholder="Explain your note"></textarea>
+                <div class="o_livechat_rating_reason_button">
+                    <button type="button" class="btn btn-primary btn-sm o_rating_submit_button">Send</button>
+                </div>
+            </div>
+            <div class="o_livechat_email text-start">
+                <strong class="o_livechat_email_sentLabel" style="display: none;">Conversation Sent</strong>
+                <span class="o_livechat_email_receiveCopyLabel text-muted">Receive a copy of this conversation</span>
+                <div class="o_livechat_email_receiveCopyForm input-group">
+                    <input id="o_email" type="text" class="form-control" placeholder="mail@example.com"/>
+                    <button type="button" class="o_email_chat_button btn btn-primary rounded-0">
+                        <i class="fa fa-paper-plane"/>
+                    </button>
+                </div>
+            </div>
+            <div class="alert alert-danger px-0 o_livechat_email_error" style="display: none;" role="alert">
+                Oops! Something went wrong.<br />Please check your internet connection.<br />
+                <a href="#" class="alert-link">Try again</a>
+            </div>
+            <div class="o_livechat_no_feedback text-muted">
+                <span>Close conversation</span>
+            </div>
+        </div>
+    </t>
+</templates>

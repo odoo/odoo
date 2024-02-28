@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t  t-name="hr.WorkPermitUpload" t-inherit="web.FieldBinaryFile" t-inherit-mode="primary">
+        <xpath expr="//button[@title='Select']" position="attributes">
+            <attribute name="class" remove="btn-primary" add="btn-secondary" separator=" "/>
+        </xpath>
+    </t>
+</templates>

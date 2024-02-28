@@ -1,0 +1,444 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.sale</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="10"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('settings')]" position="inside">
+                <div class="app_settings_block o_not_app"
+                    string="Sales"
+                    data-string="Sales"
+                    data-key="sale_management"
+                    groups="sales_team.group_sale_manager">
+                    <h2>Product Catalog</h2>
+                    <div class="row mt16 o_settings_container" name="catalog_setting_container">
+                        <div class="col-12 col-lg-6 o_setting_box" id="variant_options">
+                            <div class="o_setting_left_pane">
+                                <field name="group_product_variant"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="group_product_variant"/>
+                                <a href="https://www.odoo.com/documentation/16.0/applications/sales/sales/products_prices/products/variants.html" title="Documentation" class="o_doc_link" target="_blank"></a>
+                                <div class="text-muted">
+                                    Sell variants of a product using attributes (size, color, etc.)
+                                </div>
+                                <div class="content-group" attrs="{'invisible': [('group_product_variant','=',False)]}">
+                                    <div class="mt8">
+                                        <button name="%(product.attribute_action)d" icon="fa-arrow-right" type="action" string="Attributes" class="btn-link"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box" id="product_matrix">
+                            <div class="o_setting_left_pane">
+                                <field name="module_sale_product_matrix"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="module_sale_product_matrix" string="Variant Grid Entry"/>
+                                <div class="text-muted">
+                                    Add several variants to an order from a grid
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box" id="uom_settings">
+                            <div class="o_setting_left_pane">
+                                <field name="group_uom"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="group_uom"/>
+                                <div class="text-muted">
+                                    Sell and purchase products in different units of measure
+                                </div>
+                                <div class="content-group" attrs="{'invisible': [('group_uom','=',False)]}">
+                                    <div class="mt8">
+                                        <button name="%(uom.product_uom_categ_form_action)d" icon="fa-arrow-right" type="action" string="Units of Measure" class="btn-link"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box"
+                            id="email_template"
+                            title="Sending an email is useful if you need to share specific information or content about a product (instructions, rules, links, media, etc.). Create and set the email template from the product detail form (in Sales tab).">
+                            <div class="o_setting_left_pane">
+                                <field name="module_product_email_template"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="module_product_email_template" string="Deliver Content by Email"/>
+                                <div class="text-muted">
+                                    Send a product-specific email once the invoice is validated
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box"
+                            id="stock_packaging"
+                            title="Ability to select a package type in sales orders and to force a quantity that is a multiple of the number of units per package.">
+                            <div class="o_setting_left_pane">
+                                <field name="group_stock_packaging"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="group_stock_packaging"/>
+                                <div class="text-muted">
+                                    Sell products by multiple of unit # per package
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h2>Pricing</h2>
+                    <div class="row mt16 o_settings_container" id="pricing_setting_container">
+                      <div class="col-12 col-lg-6 o_setting_box"
+                           id="discount_sale_order_lines"
+                           title="Apply manual discounts on sales order lines or display discounts computed from pricelists (option to activate in the pricelist configuration).">
+                           <div class="o_setting_left_pane">
+                               <field name="group_discount_per_so_line"/>
+                           </div>
+                           <div class="o_setting_right_pane">
+                               <label for="group_discount_per_so_line"/>
+                               <div class="text-muted">
+                                   Grant discounts on sales order lines
+                               </div>
+                           </div>
+                       </div>
+                        <div class="col-12 col-lg-6 o_setting_box"
+                            id="coupon_settings"
+                            title="Boost your sales with multiple kinds of programs: Coupons, Promotions, Gift Card, Loyalty. Specific conditions can be set (products, customers, minimum purchase amount, period). Rewards can be discounts (% or amount) or free products.">
+                            <div class="o_setting_left_pane">
+                                <field name="module_loyalty"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="module_loyalty" string="Discounts, Loyalty &amp; Gift Card"/>
+                                <div class="text-muted" id="sale_coupon">
+                                    Manage Promotions, coupons, loyalty cards, Gift cards &amp; eWallet
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box" id="pricelist_configuration">
+                            <div class="o_setting_left_pane">
+                                <field name="group_product_pricelist"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="group_product_pricelist"/>
+                                <a href="https://www.odoo.com/documentation/16.0/applications/sales/sales/products_prices/prices/pricing.html" title="Documentation" class="o_doc_link" target="_blank"></a>
+                                <div class="text-muted">
+                                    Set multiple prices per product, automated discounts, etc.
+                                </div>
+                                <div class="content-group" attrs="{'invisible': [('group_product_pricelist' ,'=', False)]}">
+                                    <div class="mt16">
+                                        <field name="group_sale_pricelist" invisible="1"/>
+                                        <field name="product_pricelist_setting" widget="radio" class="o_light_label"/>
+                                    </div>
+                                    <div class="mt8">
+                                        <button name="%(product.product_pricelist_action2)d" icon="fa-arrow-right" type="action" string="Pricelists" groups="product.group_product_pricelist" class="btn-link"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box"
+                            id="auth_signup_documents"
+                            title=" To send invitations in B2B mode, open a contact or select several ones in list view and click on 'Portal Access Management' option in the dropdown menu *Action*.">
+                            <div class="o_setting_left_pane">
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="auth_signup_uninvited"/>
+                                <div class="text-muted">
+                                    Let your customers log in to see their documents
+                                </div>
+                                <div class="mt8">
+                                    <field name="auth_signup_uninvited" class="o_light_label" widget="radio" options="{'horizontal': true}" required="True"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box"
+                            id="show_margins"
+                            title="The margin is computed as the sum of product sales prices minus the cost set in their detail form.">
+                            <div class="o_setting_left_pane">
+                                <field name="module_sale_margin"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="module_sale_margin"/>
+                                <div class="text-muted">
+                                    Show margins on orders
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h2>Quotations &amp; Orders</h2>
+                    <div class="row mt16 o_settings_container" name="quotation_order_setting_container">
+                        <div class="col-12 col-lg-6 o_setting_box" id="sale_config_online_confirmation_sign">
+                            <div class="o_setting_left_pane">
+                                <field name="portal_confirmation_sign"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="portal_confirmation_sign"/>
+                                <a href="https://www.odoo.com/documentation/16.0/applications/sales/sales/send_quotations/get_signature_to_validate.html" title="Documentation" class="me-2 o_doc_link" target="_blank"></a>
+                                <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company"/>
+                                <div class="text-muted">
+                                    Request an online signature to confirm orders
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box" id="sale_config_online_confirmation_pay">
+                            <div class="o_setting_left_pane">
+                                <field name="portal_confirmation_pay"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="portal_confirmation_pay"/>
+                                <a href="https://www.odoo.com/documentation/16.0/applications/sales/sales/send_quotations/get_paid_to_validate.html" title="Documentation" class="me-2 o_doc_link" target="_blank"></a>
+                                <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company"/>
+                                <div class="text-muted">
+                                    Request an online payment to confirm orders
+                                </div>
+                                <div class="mt8" attrs="{'invisible': [('portal_confirmation_pay', '=', False)]}">
+                                    <button name='%(payment.action_payment_provider)d' icon="fa-arrow-right" type="action" string="Payment Providers" class="btn-link"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box" id="quotation_validity_days">
+                            <div class="o_setting_left_pane">
+                                <field name="use_quotation_validity_days"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="use_quotation_validity_days"/>
+                                <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
+                                <div class="text-muted">
+                                    Set a default validity on your quotations
+                                </div>
+                                <div class="content-group"  attrs="{'invisible': [('use_quotation_validity_days','=',False)]}">
+                                    <div class="mt16">
+                                        <span class="col-lg-3">Default Limit: <field name="quotation_validity_days" attrs="{'required': [('use_quotation_validity_days', '=', True)]}"/> days</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box" id="order_warnings">
+                            <div class="o_setting_left_pane">
+                                <field name="group_warning_sale"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="group_warning_sale" string="Sale Warnings"/>
+                                <div class="text-muted">
+                                    Get warnings in orders for products or customers
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box" id="no_edit_order">
+                            <div class="o_setting_left_pane">
+                                <field name="group_auto_done_setting"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="group_auto_done_setting"/>
+                                <div class="text-muted">
+                                    No longer edit orders once confirmed
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box" id="proforma_configuration">
+                            <div class="o_setting_left_pane">
+                                <field name="group_proforma_sales"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="group_proforma_sales"/>
+                                <div class="text-muted">
+                                    Allows you to send Pro-Forma Invoice to your customers
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h2 class="mt32">Shipping</h2>
+                    <div class="row mt16 o_settings_container" name="shipping_setting_container">
+                        <div class="col-12 col-lg-6 o_setting_box" id="delivery">
+                            <div class="o_setting_left_pane">
+                                <field name="module_delivery"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="module_delivery"/>
+                                <div class="text-muted" id="delivery_carrier">
+                                    Compute shipping costs on orders
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box" id="ups">
+                            <div class="o_setting_left_pane">
+                                <field name="module_delivery_ups" widget="upgrade_boolean"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="module_delivery_ups"/>
+                                <div class="text-muted">
+                                    Compute shipping costs and ship with UPS
+                                </div>
+                                <div class="content-group">
+                                    <div id="sale_delivery_ups"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box" id="shipping_costs_dhl">
+                            <div class="o_setting_left_pane">
+                                <field name="module_delivery_dhl" widget="upgrade_boolean"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="module_delivery_dhl"/>
+                                <div class="text-muted">
+                                    Compute shipping costs and ship with DHL
+                                </div>
+                                <div class="content-group">
+                                    <div id="sale_delivery_dhl"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box" id="shipping_costs_fedex">
+                            <div class="o_setting_left_pane">
+                                <field name="module_delivery_fedex" widget="upgrade_boolean"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="module_delivery_fedex"/>
+                                <div class="text-muted">
+                                    Compute shipping costs and ship with FedEx
+                                </div>
+                                <div class="content-group">
+                                    <div id="sale_delivery_fedex"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box" id="shipping_costs_usps">
+                            <div class="o_setting_left_pane">
+                                <field name="module_delivery_usps" widget="upgrade_boolean"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="module_delivery_usps"/>
+                                <div class="text-muted">
+                                    Compute shipping costs and ship with USPS
+                                </div>
+                                <div class="content-group">
+                                    <div id="sale_delivery_usps"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box" id="shipping_costs_bpost">
+                            <div class="o_setting_left_pane">
+                                <field name="module_delivery_bpost" widget="upgrade_boolean"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="module_delivery_bpost"/>
+                                <div class="text-muted">
+                                    Compute shipping costs and ship with bpost
+                                </div>
+                                <div class="content-group">
+                                    <div id="sale_delivery_bpost"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box" id="shipping_costs_easypost">
+                            <div class="o_setting_left_pane">
+                                <field name="module_delivery_easypost" widget="upgrade_boolean"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="module_delivery_easypost"/>
+                                <div class="text-muted">
+                                    Compute shipping costs and ship with Easypost
+                                </div>
+                                <div class="content-group">
+                                    <div id="sale_delivery_easypost"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box" id="shipping_costs_sendcloud">
+                            <div class="o_setting_left_pane">
+                                <field name="module_delivery_sendcloud" widget="upgrade_boolean"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="module_delivery_sendcloud"/>
+                                <div class="text-muted">
+                                    Compute shipping costs and ship with Sendcloud
+                                </div>
+                                <div class="content-group">
+                                    <div id="sale_delivery_sendcloud"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h2>Invoicing</h2>
+                    <div class="row mt16 o_settings_container" name="invoicing_setting_container">
+                        <div id="sales_settings_invoicing_policy"
+                             class="col-12 col-lg-6 o_setting_box"
+                             title="This default value is applied to any new product created. This can be changed in the product detail form.">
+                            <div class="o_setting_right_pane">
+                                <label for="default_invoice_policy"/>
+                                <a href="https://www.odoo.com/documentation/16.0/applications/sales/sales/invoicing/invoicing_policy.html" title="Documentation" class="o_doc_link" target="_blank"></a>
+                                <div class="text-muted">
+                                    Quantities to invoice from sales orders
+                                </div>
+                                <div class="content-group">
+                                    <div class="mt16">
+                                        <field name="default_invoice_policy" class="o_light_label" widget="radio"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-md-6 o_setting_box"
+                             id="automatic_invoicing"
+                             attrs="{'invisible': ['|', ('default_invoice_policy', '!=', 'order'), ('portal_confirmation_pay', '=', False)]}">
+                            <div class="o_setting_left_pane">
+                                <field name="automatic_invoice"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="automatic_invoice"/>
+                                <div class="text-muted">
+                                    Generate the invoice automatically when the online payment is confirmed
+                                </div>
+                                <div  attrs="{'invisible': [('automatic_invoice','=',False)]}" groups="base.group_no_one">
+                                    <label for="invoice_mail_template_id" class="o_light_label"/>
+                                    <field name="invoice_mail_template_id" class="oe_inline" options="{'no_create': True}"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box" id="down_payments">
+                            <div class="o_setting_left_pane"/>
+                            <div class="o_setting_right_pane">
+                                <span class="o_form_label">Down Payments</span>
+                                <a href="https://www.odoo.com/documentation/16.0/applications/sales/sales/invoicing/down_payment.html" title="Documentation" class="o_doc_link" target="_blank"></a>
+                                <div class="text-muted">
+                                    Product used for down payments
+                                </div>
+                                <div class="text-muted">
+                                    <field name="deposit_default_product_id" context="{'default_detailed_type': 'service'}"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h2 class="mt32">Connectors</h2>
+                    <div class="row mt16 o_settings_container" id="connectors_setting_container">
+                        <div class="col-12 col-lg-6 o_setting_box" id="amazon_connector">
+                            <div class="o_setting_left_pane">
+                                <field name="module_sale_amazon" widget="upgrade_boolean"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="module_sale_amazon"/>
+                                <a href="https://www.odoo.com/documentation/16.0/applications/sales/sales/amazon_connector/setup.html" title="Documentation" class="o_doc_link" target="_blank"></a>
+                                <div class="text-muted">
+                                    Import Amazon orders and sync deliveries
+                                </div>
+                                <div class="content-group"
+                                     name="amazon_connector"
+                                     attrs="{'invisible': [('module_sale_amazon', '=', False)]}"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="sale_ebay"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_sale_config_settings" model="ir.actions.act_window">
+        <field name="name">Settings</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_id" ref="res_config_settings_view_form"/>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="context">{'module' : 'sale_management', 'bin_size': False}</field>
+    </record>
+
+</odoo>

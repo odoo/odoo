@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-name="web.MobileSwitchCompanyMenu" owl="1">
+    <div class="o_burger_menu_companies p-3 bg-100">
+        <div class="o_burger_menu_user_title h6 mb-3">Companies</div>
+        <t t-foreach="Object.values(companyService.availableCompanies)" t-as="company" t-key="company.id">
+            <t t-set="id" t-value="company.id"/>
+            <t t-set="displayName" t-value="company.name"/>
+            <t t-set="isCompanySelected" t-value="selectedCompanies.includes(id)"/>
+            <t t-set="checkIcon" t-value="isCompanySelected ? 'fa-check-square text-primary' : 'fa-square-o'"/>
+            <t t-set="isCompanyCurrent" t-value="companyService.currentCompany.id === id"/>
+            <div class="d-flex menu_companies_item" t-att-data-company-id="id">
+                <div class="border-end toggle_company" t-att-class="{'border-primary' : isCompanyCurrent}" t-on-click="() => this.toggleCompany(id)">
+                    <span class="btn border-0 p-2">
+                        <i t-attf-class="fa fa-fw fs-2 m-0 {{checkIcon}}"/>
+                    </span>
+                </div>
+                <div class="flex-grow-1 p-2 ms-1 log_into text-muted" t-att-class="{'alert-primary': isCompanyCurrent}" t-on-click="() => this.logIntoCompany(id)">
+                    <span t-esc="displayName" class="company_label" t-att-class="isCompanyCurrent ? 'text-900 fw-bold' : ''"/>
+                    <small t-if="isCompanyCurrent" class="ms-1">(current)</small>
+                </div>
+            </div>
+        </t>
+    </div>
+</t>
+
+</templates>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.DiscussSidebarCategoryItem" owl="1">
+        <t t-if="categoryItem">
+            <t t-set="o_DiscussSidebarCategoryItem_hoverItem" t-value="'btn p-0 text-start text-700 opacity-100-hover opacity-75'"/>
+            <button class="o_DiscussSidebarCategoryItem btn d-flex align-items-center w-100 px-0 py-2 border-0 rounded-0 fw-normal text-reset"
+                t-att-class="{
+                    'bg-100': !categoryItem.isActive,
+                    'o-active bg-200': categoryItem.isActive,
+                    'o-unread': categoryItem.isUnread,
+                }" t-attf-class="{{ className }}" t-on-click="categoryItem.onClick" t-att-data-channel-id="categoryItem.channel.id" t-att-data-channel-name="categoryItem.channel.displayName"
+                t-ref="root"
+            >
+                <div class="o_DiscussSidebarCategoryItem_item o_DiscussSidebarCategoryItem_avatar ms-4">
+                    <div class="o_DiscussSidebarCategoryItem_imageContainer position-relative d-flex">
+                        <img class="o_DiscussSidebarCategoryItem_image w-100 h-100 rounded-circle" t-att-src="categoryItem.avatarUrl" alt="Thread Image"/>
+                        <t t-if="categoryItem.hasThreadIcon">
+                            <ThreadIcon className="'o_DiscussSidebarCategoryItem_threadIcon position-absolute bottom-0 end-0 d-flex align-items-center justify-content-center rounded-circle bg-100'" thread="categoryItem.thread"/>
+                        </t>
+                    </div>
+                </div>
+                <span class="o_DiscussSidebarCategoryItem_item o_DiscussSidebarCategoryItem_name ms-3 me-2 text-truncate" t-att-class="{ 'o-item-unread fw-bolder': categoryItem.isUnread }">
+                    <t t-esc="categoryItem.thread.displayName"/>
+                </span>
+                <div class="o_DiscussSidebarCategoryItem_item flex-grow-1"/>
+                <div t-attf-class="o_DiscussSidebarCategoryItem_item o_DiscussSidebarCategoryItem_commands ms-1 {{ categoryItem.thread and categoryItem.thread.rtcSessions.length ? 'me-1' : 'me-3' }}">
+                    <t t-if="categoryItem.hasSettingsCommand">
+                        <div t-attf-class="o_DiscussSidebarCategoryItem_command o_DiscussSidebarCategoryItem_commandSettings fa fa-cog {{ o_DiscussSidebarCategoryItem_hoverItem }}" t-on-click="categoryItem.onClickCommandSettings" title="Channel settings" role="img"/>
+                    </t>
+                    <t t-if="categoryItem.hasLeaveCommand">
+                        <div t-attf-class="o_DiscussSidebarCategoryItem_command o_DiscussSidebarCategoryItem_commandLeave fa fa-times {{ o_DiscussSidebarCategoryItem_hoverItem }} ms-1" t-on-click="categoryItem.onClickCommandLeave" title="Leave this channel" role="img"/>
+                    </t>
+                    <t t-if="categoryItem.hasUnpinCommand">
+                        <div t-attf-class="o_DiscussSidebarCategoryItem_command o_DiscussSidebarCategoryItem_commandUnpin fa fa-times {{ o_DiscussSidebarCategoryItem_hoverItem }} ms-1" t-on-click="categoryItem.onClickCommandUnpin" title="Unpin Conversation" role="img"/>
+                    </t>
+                </div>
+                <t t-if="categoryItem.thread and categoryItem.thread.rtcSessions.length">
+                    <div class="o_DiscussSidebarCategoryItem_item o_DiscussSidebarCategoryItem_callIndicator fa fa-volume-up ms-1 me-3" t-att-class="{ 'o-isCalling text-danger': categoryItem.thread.rtc }"/>
+                </t>
+                <t t-if="categoryItem.counter > 0">
+                    <div class="o_DiscussSidebarCategoryItem_counter o_DiscussSidebarCategoryItem_item badge rounded-pill text-bg-primary ms-1 me-3">
+                        <t t-esc="categoryItem.counter"/>
+                    </div>
+                </t>
+            </button>
+        </t>
+    </t>
+</templates>

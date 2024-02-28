@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Fiscal Position Tax Templates (post-2024 rates change) -->
+        <record id="fiscal_position_tax_template_1_2024" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_import"/>
+            <field name="tax_src_id" ref="vat_purchase_26"/>
+            <field name="tax_dest_id" ref="vat_O_import"/>
+        </record>
+
+        <record id="fiscal_position_tax_template_2_2024" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_import"/>
+            <field name="tax_src_id" ref="vat_purchase_26_invest"/>
+            <field name="tax_dest_id" ref="vat_O_import"/>
+        </record>
+
+        <record id="fiscal_position_tax_template_3_2024" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_import"/>
+            <field name="tax_src_id" ref="vat_purchase_38"/>
+            <field name="tax_dest_id" ref="vat_O_import"/>
+        </record>
+
+        <record id="fiscal_position_tax_template_4_2024" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_import"/>
+            <field name="tax_src_id" ref="vat_purchase_38_invest"/>
+            <field name="tax_dest_id" ref="vat_O_import"/>
+        </record>
+
+        <record id="fiscal_position_tax_template_5_2024" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_import"/>
+            <field name="tax_src_id" ref="vat_purchase_81_reverse"/>
+            <field name="tax_dest_id" ref="vat_O_import"/>
+        </record>
+
+        <record id="fiscal_position_tax_template_6_2024" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_import"/>
+            <field name="tax_src_id" ref="vat_purchase_81_invest"/>
+            <field name="tax_dest_id" ref="vat_O_import"/>
+        </record>
+
+        <record id="fiscal_position_tax_template_7_2024" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_import"/>
+            <field name="tax_src_id" ref="vat_sale_26"/>
+            <field name="tax_dest_id" ref="vat_XO"/>
+        </record>
+
+        <record id="fiscal_position_tax_template_8_2024" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_import"/>
+            <field name="tax_src_id" ref="vat_sale_38"/>
+            <field name="tax_dest_id" ref="vat_XO"/>
+        </record>
+
+        <record id="fiscal_position_tax_template_9_2024" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_import"/>
+            <field name="tax_src_id" ref="vat_sale_81"/>
+            <field name="tax_dest_id" ref="vat_XO"/>
+        </record>
+    </data>
+</odoo>

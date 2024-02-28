@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="tax_report" model="account.report">
+        <field name="name">Tax Report</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.hu"/>
+        <field name="filter_fiscal_position" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="tax_report_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="tax_report_alap" model="account.report.line">
+                <field name="name">Tax base</field>
+                <field name="aggregation_formula">BASE_PAYABLE.balance + BASE_RECOVERABLE.balance</field>
+                <field name="children_ids">
+                    <record id="tax_report_base_pay" model="account.report.line">
+                        <field name="name">Payable</field>
+                        <field name="code">BASE_PAYABLE</field>
+                        <field name="aggregation_formula">BASE_PAY_EXPORTS.balance + BASE_PAY_INTRA.balance + BASE_PAY_EXEMPT_PROPERTY.balance + BASE_PAY_EXEMPT_TAX.balance + BASE_PAY_EXEMPT.balance + BASE_PAY_27.balance + BASE_PAY_18.balance + BASE_PAY_5.balance</field>
+                        <field name="children_ids">
+                            <record id="tax_report_alap_fiz_export" model="account.report.line">
+                                <field name="name">Exports</field>
+                                <field name="code">BASE_PAY_EXPORTS</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_alap_fiz_export_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">base_pay_exports</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_alap_fiz_eu" model="account.report.line">
+                                <field name="name">Intra-community</field>
+                                <field name="code">BASE_PAY_INTRA</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_alap_fiz_eu_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">base_pay_intra</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_alap_fiz_targyi" model="account.report.line">
+                                <field name="name">Exempt from property tax</field>
+                                <field name="code">BASE_PAY_EXEMPT_PROPERTY</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_alap_fiz_targyi_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">base_pay_exempt_property</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_alap_fiz_alanyi" model="account.report.line">
+                                <field name="name">Exempt from tax</field>
+                                <field name="code">BASE_PAY_EXEMPT_TAX</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_alap_fiz_alanyi_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">base_pay_exempt_tax</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_alap_fiz_koron_kivuli" model="account.report.line">
+                                <field name="name">Exempt</field>
+                                <field name="code">BASE_PAY_EXEMPT</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_alap_fiz_koron_kivuli_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">base_pay_exempt</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_alap_fiz_afa_27" model="account.report.line">
+                                <field name="name">27% VAT</field>
+                                <field name="code">BASE_PAY_27</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_alap_fiz_afa_27_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">base_pay_27</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_alap_fiz_afa_18" model="account.report.line">
+                                <field name="name">18% VAT</field>
+                                <field name="code">BASE_PAY_18</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_alap_fiz_afa_18_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">base_pay_18</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_alap_fiz_afa_5" model="account.report.line">
+                                <field name="name">5% VAT</field>
+                                <field name="code">BASE_PAY_5</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_alap_fiz_afa_5_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">base_pay_5</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_base_rec" model="account.report.line">
+                        <field name="name">Recoverable</field>
+                        <field name="code">BASE_RECOVERABLE</field>
+                        <field name="aggregation_formula">BASE_REC_IMPORT.balance + BASE_REC_INTRA.balance + BASE_REC_REVERSE.balance + BASE_REC_EXEMPT_MATERIAL.balance + BASE_REC_EXEMPT_TAX.balance + BASE_REC_EXEMPT.balance + BASE_REC_27.balance + BASE_REC_18.balance + BASE_REC_5.balance + BASE_REC_COMPENSATION.balance</field>
+                        <field name="children_ids">
+                            <record id="tax_report_alap_import" model="account.report.line">
+                                <field name="name">Import</field>
+                                <field name="code">BASE_REC_IMPORT</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_alap_import_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">base_rec_import</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_alap_viss" model="account.report.line">
+                                <field name="name">Intra-community</field>
+                                <field name="code">BASE_REC_INTRA</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_alap_viss_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">base_rec_intra</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_alap_forditott" model="account.report.line">
+                                <field name="name">Reverse</field>
+                                <field name="code">BASE_REC_REVERSE</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_alap_forditott_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">base_rec_reverse</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_alap_viss_targyi" model="account.report.line">
+                                <field name="name">Exempt from material tax</field>
+                                <field name="code">BASE_REC_EXEMPT_MATERIAL</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_alap_viss_targyi_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">base_rec_exempt_material</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_alap_viss_alanyi" model="account.report.line">
+                                <field name="name">Exempt from tax</field>
+                                <field name="code">BASE_REC_EXEMPT_TAX</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_alap_viss_alanyi_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">base_rec_exempt_tax</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_alap_viss_koron_kivuli" model="account.report.line">
+                                <field name="name">Exempt</field>
+                                <field name="code">BASE_REC_EXEMPT</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_alap_viss_koron_kivuli_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">base_rec_exempt</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_alap_viss_27" model="account.report.line">
+                                <field name="name">27% VAT</field>
+                                <field name="code">BASE_REC_27</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_alap_viss_27_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">base_rec_27</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_alap_viss_18" model="account.report.line">
+                                <field name="name">18% VAT</field>
+                                <field name="code">BASE_REC_18</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_alap_viss_18_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">base_rec_18</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_alap_viss_5" model="account.report.line">
+                                <field name="name">5% VAT</field>
+                                <field name="code">BASE_REC_5</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_alap_viss_5_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">base_rec_5</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_alap_komp" model="account.report.line">
+                                <field name="name">Compensation Surcharge</field>
+                                <field name="code">BASE_REC_COMPENSATION</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_alap_komp_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">base_rec_compensation</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_fizetndo" model="account.report.line">
+                <field name="name">VAT payable/recoverable</field>
+                <field name="aggregation_formula">VAT_PAYABLE.balance + VAT_RECOVERABLE.balance</field>
+                <field name="children_ids">
+                    <record id="tax_report_vat_pay" model="account.report.line">
+                        <field name="name">Payable</field>
+                        <field name="code">VAT_PAYABLE</field>
+                        <field name="aggregation_formula">VAT_PAY_27.balance + VAT_PAY_18.balance + VAT_PAY_5.balance</field>
+                        <field name="children_ids">
+                            <record id="tax_report_fizetndo_27" model="account.report.line">
+                                <field name="name">27% VAT</field>
+                                <field name="code">VAT_PAY_27</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_fizetndo_27_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">vat_pay_27</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_fizetndo_18" model="account.report.line">
+                                <field name="name">18% VAT</field>
+                                <field name="code">VAT_PAY_18</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_fizetndo_18_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">vat_pay_18</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_fizetndo_5" model="account.report.line">
+                                <field name="name">5% VAT</field>
+                                <field name="code">VAT_PAY_5</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_fizetndo_5_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">vat_pay_5</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_vat_rec" model="account.report.line">
+                        <field name="name">Recoverable</field>
+                        <field name="code">VAT_RECOVERABLE</field>
+                        <field name="aggregation_formula">VAT_REC_27.balance + VAT_REC_18.balance + VAT_REC_5.balance + VAT_REC_COMPENSATION.balance</field>
+                        <field name="children_ids">
+                            <record id="tax_report_fizetndo_viss_27" model="account.report.line">
+                                <field name="name">27% VAT</field>
+                                <field name="code">VAT_REC_27</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_fizetndo_viss_27_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">vat_rec_27</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_fizetndo_viss_18" model="account.report.line">
+                                <field name="name">18% VAT</field>
+                                <field name="code">VAT_REC_18</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_fizetndo_viss_18_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">vat_rec_18</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_fizetndo_viss_5" model="account.report.line">
+                                <field name="name">5% VAT</field>
+                                <field name="code">VAT_REC_5</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_fizetndo_viss_5_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">vat_rec_5</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_fizetndo_viss_komp" model="account.report.line">
+                                <field name="name">Compensation Surcharge</field>
+                                <field name="code">VAT_REC_COMPENSATION</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_fizetndo_viss_komp_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">vat_rec_compensation</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

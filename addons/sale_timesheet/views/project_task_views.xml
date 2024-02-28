@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="project_project_view_form" model="ir.ui.view">
+        <field name="name">project.project.form.inherit</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="hr_timesheet.project_invoice_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='settings']" position="after">
+                <page name="billing_employee_rate" string="Invoicing" attrs="{'invisible': ['|', ('allow_billable', '=', False), ('partner_id', '=', False)]}">
+                    <group>
+                        <group>
+                            <field name="display_create_order" invisible="1"/>
+                            <field name="pricing_type" invisible="1" widget="radio"/>
+                            <field name="timesheet_product_id" string="Default Service" invisible="1" context="{'default_detailed_type': 'service', 'default_service_policy': 'delivered_timesheet', 'default_service_type': 'timesheet'}"/>
+                            <field name="sale_order_id" invisible="1" options="{'no_create': True, 'no_edit': True, 'delete': False, 'no_open': True}"/>
+                            <field name="sale_line_id" groups="!sales_team.group_sale_salesman" options="{'no_create': True, 'no_edit': True, 'delete': False, 'no_open': True}"/>
+                            <field name="sale_line_id" groups="sales_team.group_sale_salesman" options="{'no_create': True, 'no_edit': True, 'delete': False}"/>
+                        </group>
+                    </group>
+                    <field name="sale_line_employee_ids">
+                        <tree editable="bottom">
+                            <field name="company_id" invisible="1"/>
+                            <field name="partner_id" invisible="1"/>
+                            <field name="employee_id" options="{'no_create': True}"/>
+                            <field name="sale_line_id" attrs="{'required': True}" options="{'no_create': True}"/>
+                            <field name="price_unit" widget="monetary" force_save="1" options="{'currency_field': 'currency_id'}"/>
+                            <field name="display_cost" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="is_cost_changed" invisible="1"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="cost_currency_id" invisible="1"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="project_project_view_form_simplified_inherit" model="ir.ui.view">
+        <field name="name">project.project.view.form.simplified.inherit</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="hr_timesheet.project_project_view_form_simplified_inherit_timesheet"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('o_setting_box')]" position="before">
+                <div class="col-lg-6 o_setting_box">
+                    <div class="o_setting_left_pane">
+                        <field name="company_id" invisible="1"/>
+                        <field name="allow_billable"/>
+                    </div>
+                    <div class="o_setting_right_pane">
+                        <label for="allow_billable"/>
+                        <div class="text-muted" id="allow_billable_setting">
+                            Invoice your time and material to customers
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="project_project_view_kanban_inherit_sale_timesheet" model="ir.ui.view">
+        <field name="name">project.project.kanban.inherit.sale.timesheet</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="hr_timesheet.view_project_kanban_inherited"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='allow_timesheets']" position="after">
+                <field name="allow_billable"/>
+                <field name="warning_employee_rate" invisible="1"/>
+                <field name="sale_order_id" invisible="1"/>
+                <field name="pricing_type" invisible="1"/>
+            </xpath>
+            <xpath expr="//div[hasclass('o_kanban_manage_reporting')]" position="inside">
+                <div role="menuitem" t-if="record.rating_active.raw_value" groups="project.group_project_manager">
+                   <a name="action_view_all_rating" type="object">
+                    Customer Ratings
+                    </a>
+                </div> 
+            </xpath>
+        </field>
+    </record>
+
+    <!-- We do a separate inheritance from the base view for the SO button to give the buttons a deterministic order using priorities -->
+    <record id="project_project_view_kanban_inherit_sale_timesheet_so_button" model="ir.ui.view">
+        <field name="name">project.project.kanban.inherit.sale.timesheet.so.button</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.view_project_kanban"/>
+        <field name="priority">30</field>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('o_kanban_manage_view')]" position="inside">
+                <div t-if="record.allow_billable.raw_value and record.sale_order_id.raw_value and record.pricing_type.raw_value != 'task_rate'"
+                    role="menuitem"
+                    groups="sales_team.group_sale_salesman_all_leads">
+                    <a name="action_view_sos" type="object">Sales Orders</a>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+        <record id="view_sale_service_inherit_form2" model="ir.ui.view">
+            <field name="name">sale.service.form.view.inherit</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="hr_timesheet.view_task_form2_inherited"/>
+            <field name="arch" type="xml">
+                <xpath expr="//header" position="inside">
+                    <field name="allow_billable" invisible="1"/>
+                </xpath>
+                <xpath expr="//field[@name='child_ids']/tree//field[@name='remaining_hours']" position="after">
+                    <field name="remaining_hours_so" widget="timesheet_uom" optional="hide" groups="base.group_user"/>
+                </xpath>
+                <xpath expr="//field[@name='depend_on_ids']/tree//field[@name='remaining_hours']" position="after">
+                    <field name="remaining_hours_so" widget="timesheet_uom" optional="hide" groups="base.group_user"/>
+                </xpath>
+
+            </field>
+        </record>
+
+        <record id="view_task_tree2_inherited" model="ir.ui.view">
+            <field name="name">project.task.tree.inherited</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="hr_timesheet.view_task_tree2_inherited" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='remaining_hours']" position="after">
+                    <field name="remaining_hours_so" widget="timesheet_uom" optional="hide"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="project_task_view_form_inherit_sale_timesheet" model="ir.ui.view">
+            <field name="name">project.task.form.inherit.timesheet</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="project.view_task_form2"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='timesheet_ids']/tree" position="attributes">
+                    <!-- <field name="timesheet_ids"/> is already inside a block groups="hr_timesheet.group_hr_timesheet_user"  -->
+                    <attribute name="decoration-muted">timesheet_invoice_id != False</attribute>
+                </xpath>
+                <xpath expr="//field[@name='user_ids']" position="after">
+                    <field name="is_project_map_empty" invisible="1" groups="hr_timesheet.group_hr_timesheet_user"/>
+                    <field name="has_multi_sol" invisible="1" groups="hr_timesheet.group_hr_timesheet_user"/>
+                </xpath>
+                 <xpath expr="//field[@name='partner_phone']" position="after">
+                    <field name="pricing_type" invisible="1" groups="hr_timesheet.group_hr_timesheet_user"/>
+                </xpath>
+                <xpath expr="//field[@name='timesheet_ids']" position="attributes">
+                    <!-- <field name="timesheet_ids"/> is already inside a block groups="hr_timesheet.group_hr_timesheet_user"  -->
+                    <attribute name="widget">so_line_one2many</attribute>
+                </xpath>
+                <xpath expr="//field[@name='timesheet_ids']/tree" position="inside">
+                    <!-- <field name="timesheet_ids"/> is already inside a block groups="hr_timesheet.group_hr_timesheet_user"  -->
+                    <field name="is_so_line_edited" invisible="1" />
+                </xpath>
+                <xpath expr="//field[@name='timesheet_ids']/tree/field[@name='unit_amount']" position="before">
+                    <!-- <field name="timesheet_ids"/> is already inside a block groups="hr_timesheet.group_hr_timesheet_user"  -->
+                    <field name="timesheet_invoice_id" invisible="1"/>
+                    <field name="so_line" widget="so_line_field" groups="!sales_team.group_sale_salesman"
+                        attrs="{'column_invisible': [('parent.allow_billable', '=', False)]}"
+                        context="{'with_remaining_hours': True, 'with_price_unit': True}" options="{'no_create': True, 'no_open': True}"
+                        domain="[('is_service', '=', True), ('order_partner_id', 'child_of', parent.commercial_partner_id), ('is_expense', '=', False), ('state', 'in', ['sale', 'done'])]"
+                        optional="hide"/>
+                    <field name="so_line" widget="so_line_field" groups="sales_team.group_sale_salesman"
+                        attrs="{'column_invisible': [('parent.allow_billable', '=', False)]}"
+                        context="{'with_remaining_hours': True, 'with_price_unit': True}" options="{'no_create': True}"
+                        domain="[('is_service', '=', True), ('order_partner_id', 'child_of', parent.commercial_partner_id), ('is_expense', '=', False), ('state', 'in', ['sale', 'done'])]"
+                        optional="hide"/>
+                </xpath>
+                <xpath expr="//field[@name='remaining_hours']" position="after">
+                    <t groups="hr_timesheet.group_hr_timesheet_user">
+                        <field name="sale_order_id" invisible="1"/>
+                        <field name="remaining_hours_available" invisible="1"/>
+                        <span id="remaining_hours_so_label" attrs="{'invisible': ['|', '|', '|', '|', ('allow_billable', '=', False), ('sale_order_id', '=', False), ('partner_id', '=', False), ('sale_line_id', '=', False), ('remaining_hours_available', '=', False)]}" class="o_td_label float-start">
+                            <label class="fw-bold" for="remaining_hours_so" string="Remaining Hours on SO"
+                                attrs="{'invisible': ['|', ('encode_uom_in_days', '=', True), ('remaining_hours_so', '&lt;', 0)]}"/>
+                            <label class="fw-bold" for="remaining_hours_so" string="Remaining Days on SO"
+                                attrs="{'invisible': ['|', ('encode_uom_in_days', '=', False), ('remaining_hours_so', '&lt;', 0)]}"/>
+                            <label class="fw-bold text-danger" for="remaining_hours_so" string="Remaining Hours on SO"
+                                attrs="{'invisible': ['|', ('encode_uom_in_days', '=', True), ('remaining_hours_so', '&gt;=', 0)]}"/>
+                            <label class="fw-bold text-danger" for="remaining_hours_so" string="Remaining Days on SO"
+                                attrs="{'invisible': ['|', ('encode_uom_in_days', '=', False), ('remaining_hours_so', '&gt;=', 0)]}"/>
+                        </span>
+                        <field name="remaining_hours_so" nolabel="1" widget="timesheet_uom" attrs="{'invisible': ['|', '|', '|', '|', ('allow_billable', '=', False), ('sale_order_id', '=', False), ('partner_id', '=', False), ('sale_line_id', '=', False), ('remaining_hours_available', '=', False)]}" decoration-danger="remaining_hours_so &lt; 0"></field>
+                    </t>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_task_form2_inherit_sale_timesheet" model="ir.ui.view">
+            <field name="name">view.task.form2.inherit</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="sale_project.view_sale_project_inherit_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='sale_line_id'][2]" position="attributes">
+                    <attribute name="context">{'create': False, 'edit': False, 'delete': False, 'with_price_unit': True, 'with_remaining_hours': True}</attribute>
+                    <!-- To do: move allow_billable field in sale_project and add attrs directly on field in master -->
+                    <attribute name="attrs">
+                        {'invisible': [('allow_billable', '=', False)]}
+                    </attribute>
+                </xpath>
+            </field>
+        </record>
+</odoo>

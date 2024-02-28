@@ -1,0 +1,13 @@
+.o-section-slide {
+    max-height: 0;
+    transition: max-height 0.35s ease;
+
+    &.o-section-slide-enter,
+    &.o-section-slide-leave {
+        overflow: hidden !important;
+    }
+    &.o-section-slide-enter-active {
+        max-height: 20rem; // fixed value is required to properly trigger transition
+        overflow: auto;
+    }
+}

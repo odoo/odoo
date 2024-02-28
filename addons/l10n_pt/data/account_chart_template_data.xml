@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    <!-- Chart template -->
+
+    <record id="pt_chart_template" model="account.chart.template">
+        <field name="property_account_receivable_id" ref="chart_2111"/>
+        <field name="property_account_payable_id" ref="chart_2211"/>
+        <field name="property_account_expense_id" ref="chart_311"/>
+        <field name="property_account_income_id" ref="chart_711"/>
+        <field name="property_account_income_categ_id" ref="chart_711"/>
+        <field name="property_account_expense_categ_id" ref="chart_311"/>
+        <field name="income_currency_exchange_account_id" ref="chart_7861"/>
+        <field name="expense_currency_exchange_account_id" ref="chart_692"/>
+        <field name="default_pos_receivable_account_id" ref="chart_2117"/>
+        <field name="account_journal_early_pay_discount_loss_account_id" ref="chart_682"/>
+        <field name="account_journal_early_pay_discount_gain_account_id" ref="chart_728"/>
+        <field name="property_tax_payable_account_id" ref="chart_2436"/>
+        <field name="property_tax_receivable_account_id" ref="chart_2437"/>
+    </record>
+
+    </data>
+</odoo>

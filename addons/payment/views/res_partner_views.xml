@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <!-- Add credit card to res.partner -->
+    <record id="view_partners_form_payment_defaultcreditcard" model="ir.ui.view">
+        <field name="name">view.res.partner.form.payment.defaultcreditcard</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="priority" eval="15"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button type="action" class="oe_stat_button"
+                        icon="fa-credit-card-alt"
+                        name="%(payment.action_payment_token)d"
+                        context="{'search_default_partner_id': active_id, 'create': False, 'edit': False}"
+                        attrs="{'invisible': [('payment_token_count', '=', 0)]}">
+                    <div class="o_form_field o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="payment_token_count" widget="statinfo" nolabel="1"/>
+                        </span>
+                        <span class="o_stat_text">Saved Payment Methods</span>
+                    </div>
+                </button>
+            </div>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,61 @@
+.o_kanban_view .o_event_kanban_view {
+    .o_kanban_record > div {
+        min-height: 140px;
+    }
+    .o_kanban_content {
+        .o_event_fontsize_09 {
+            font-size: .9rem;
+        }
+
+        .o_event_fontsize_11 {
+            font-size: 1.1rem;
+        }
+
+        .o_event_fontsize_20 {
+            font-size: 2rem;
+        }
+    }
+}
+
+.o_kanban_view .o_event_attendee_kanban_view {
+    @media (max-width: 768px) {
+        .o_event_registration_kanban {
+            min-height: 80px;
+        }
+    }
+    .oe_kanban_card_ribbon {
+        min-height: 95px;
+        .ribbon {
+            &::before, &::after {
+                display: none;
+            }
+            span {
+                padding: 5px;
+                font-size: small;
+                z-index: 0;
+            }
+        }
+        .ribbon-top-right {
+            margin-top: -1px;
+            span {
+                left: 7px;
+                right: 30px;
+                height: 25px;
+                top: 18px;
+            }
+        }
+        // Used for "Group By"
+        div.row {
+            min-height: 95px;
+        }
+    }
+}
+
+.o_event_registration_view_tree {
+    .o_list_button > .o_btn_cancel_registration {
+        color: $danger;
+        &:hover {
+            color: darken($danger, $link-shade-percentage);
+        }
+    }
+}

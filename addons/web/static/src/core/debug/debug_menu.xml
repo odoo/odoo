@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.DebugMenu" owl="1">
+        <Dropdown class="'o_debug_manager'"
+          beforeOpen="getElements"
+          position="'bottom-end'"
+          togglerClass="`o-dropdown--narrow ${env.inDialog?'btn btn-link':''}`"
+        >
+            <t t-set-slot="toggler">
+                <i class="fa fa-bug" role="img" aria-label="Open developer tools"/>
+            </t>
+            <t t-foreach="elements" t-as="element" t-key="element_index">
+                <DropdownItem
+                    t-if="element.type == 'item'"
+                    onSelected="element.callback"
+                    href="element.href"
+                >
+                    <t t-esc="element.description"/>
+                </DropdownItem>
+                <div t-if="element.type == 'separator'" role="separator" class="dropdown-divider"/>
+                <t t-if="element.type == 'component'" t-component="element.Component" t-props="element.props"/>
+            </t>
+        </Dropdown>
+    </t>
+
+</templates>

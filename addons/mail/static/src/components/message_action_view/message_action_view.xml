@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <t t-name="mail.MessageActionView" owl="1">
+        <i
+            class="o_MessageActionView cursor-pointer"
+            t-att-class="messageActionView.classNames"
+            t-att-tabindex="messageActionView.tabindex"
+            t-att-title="messageActionView.title"
+            t-att-aria-pressed="messageActionView.ariaPressedState"
+            t-att-aria-label="messageActionView.title"
+            role="button"
+            t-on-click="messageActionView.onClick"
+            t-ref="action"
+        />
+    </t>
+</templates>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="payment_link_wizard_view_form" model="ir.ui.view">
+        <field name="name">payment.link.wizard.form</field>
+        <field name="model">payment.link.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Generate Payment Link">
+                <div class="alert alert-warning fw-bold"
+                     role="alert"
+                     attrs="{'invisible': [('partner_email', '!=', False)]}">
+                     This partner has no email, which may cause issues with some payment providers.
+                     Setting an email for this partner is advised.
+                </div>
+                <group>
+                    <group>
+                        <field name="res_id" invisible="1"/>
+                        <field name="res_model" invisible="1"/>
+                        <field name="partner_id" invisible="1"/>
+                        <field name="partner_email" invisible="1"/>
+                        <field name="amount_max" invisible="1"/>
+                        <field name="available_provider_ids" invisible="1"/>
+                        <field name="has_multiple_providers" invisible="1"/>
+                        <field name="description"/>
+                        <field name="amount"/>
+                        <field name="currency_id" invisible="1"/>
+                        <field name="payment_provider_selection"
+                            attrs="{'invisible':[('has_multiple_providers', '=', False)]}"/>
+                    </group>
+                </group>
+                <group>
+                    <field name="link" readonly="1" widget="CopyClipboardChar"/>
+                </group>
+                <footer>
+                    <button string="Close" class="btn-primary" special="cancel" data-hotkey="z"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

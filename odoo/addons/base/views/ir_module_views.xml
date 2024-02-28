@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Modules Categories -->
+        <record id="view_module_category_form" model="ir.ui.view">
+            <field name="name">ir.module.category.form</field>
+            <field name="model">ir.module.category</field>
+            <field name="arch" type="xml">
+                <form string="Module Category">
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="parent_id"/>
+                        <field name="sequence"/>
+                    </group>
+                    <field name="description"/>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_module_category_tree" model="ir.ui.view">
+            <field name="name">ir.module.category.tree</field>
+            <field name="model">ir.module.category</field>
+            <field name="field_parent">child_ids</field>
+            <field name="arch" type="xml">
+                <tree string="Module Category">
+                    <field name="name"/>
+                    <field name="module_nr"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Click on a category -->
+        <record id="view_module_filter" model="ir.ui.view">
+            <field name="name">ir.module.module.list.select</field>
+            <field name="model">ir.module.module</field>
+            <field name="arch" type="xml">
+                <search string="Search modules">
+                    <field name="name" filter_domain="['|', '|', ('summary', 'ilike', self), ('shortdesc', 'ilike', self), ('name',
+                        'ilike', self)]" string="Module"/>
+                    <filter name="app" string="Apps" domain="[('application', '=', True)]"/>
+                    <filter name="extra" string="Extra" domain="[('application', '=', False)]"/>
+                    <separator/>
+                    <filter name="installed" string="Installed" domain="[('state', 'in', ['installed', 'to upgrade', 'to remove'])]"/>
+                    <filter name="not_installed" string="Not Installed" domain="[('state', 'in', ['uninstalled', 'uninstallable', 'to install'])]"/>
+                    <field name="category_id"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Author" name="author" domain="[]" context="{'group_by':'author'}"/>
+                        <filter string="Category" name="category" domain="[]" context="{'group_by':'category_id'}"/>
+                        <filter string="Status" name="state" domain="[]" context="{'group_by':'state'}"/>
+                    </group>
+                    <searchpanel>
+                        <field name="category_id" string="Categories" enable_counters="1"/>
+                    </searchpanel>
+               </search>
+            </field>
+        </record>
+
+        <!-- Modules -->
+        <record id="module_form" model="ir.ui.view">
+            <field name="name">ir.module.module.form</field>
+            <field name="model">ir.module.module</field>
+            <field name="arch" type="xml">
+                <form create="0" edit="0" string="Module" class="o_module_form">
+                    <link rel="stylesheet" href="/base/static/src/css/description.css"></link>
+                    <sheet>
+                    <field name="icon_image" widget="image" class="oe_avatar"/>
+                    <div class="oe_title mb32">
+                        <h1><field name="shortdesc" placeholder="Module Name"/></h1>
+                        <h3 class="oe_fade">
+                            By <field name="author" class="oe_inline" placeholder="Author Name"/>
+                        </h3>
+                        <div>
+                            <field name="state" invisible="1"/>
+                            <field name="to_buy" invisible="1"/>
+                            <field name="has_iap" invisible="1"/>
+                            <button name="button_immediate_install" string="Activate" attrs="{'invisible': ['|', ('to_buy','=',True), ('state','!=', 'uninstalled')]}" type="object" class="btn btn-primary me-1" groups="base.group_system"/>
+                            <a href="https://odoo.com/pricing?utm_source=db&amp;utm_medium=module#hosting=on_premise" target="_blank" class="btn btn-primary me-1"
+                               attrs="{'invisible': ['|', ('to_buy','=',False), ('state', 'not in', ('uninstalled', 'uninstallable'))]}" role="button">Upgrade</a>
+                            <button name="button_immediate_upgrade" states="installed" string="Upgrade" type="object" class="btn btn-primary me-1" groups="base.group_system"/>
+                            <button name="button_uninstall_wizard" states="installed" string="Uninstall" type="object"  class="btn btn-secondary me-1" groups="base.group_system"/>
+                            <button name="button_uninstall_cancel" states="to remove" string="Cancel Uninstall" type="object" class="btn btn-secondary me-1" groups="base.group_system"/>
+                            <button name="button_upgrade_cancel" states="to upgrade" string="Cancel Upgrade" type="object" class="btn btn-secondary me-1" groups="base.group_system"/>
+                            <button name="button_install_cancel" states="to install" string="Cancel Install" type="object" class="btn btn-secondary me-1" groups="base.group_system"/>
+                        </div>
+                        <h6 class="text-muted mt-2" attrs="{'invisible': [('has_iap', '=', False)]}">Contains In-App Purchases</h6>
+                    </div>
+                    <div class="clearfix"/>
+                    <notebook groups="base.group_no_one">
+                        <page string="Information" name="information">
+                            <group>
+                                <group>
+                                    <field name="website" widget="url" attrs="{'invisible':[('website','=',False)]}"/>
+                                    <field name="category_id" options="{'no_open': True, 'no_create': True}"/>
+                                    <field name="summary"/>
+                                </group>
+                                <group>
+                                    <field name="name"/>
+                                    <field name="license"/>
+                                    <field name="installed_version"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Technical Data" name="technical_data">
+                            <group col="4">
+                                <field name="demo"/>
+                                <field name="application"/>
+                                <field name="state"/>
+                            </group>
+                            <group string="Created Views" attrs="{'invisible':[('state','!=','installed')]}"/>
+                            <p class="oe_grey" attrs="{'invisible': ['|',('views_by_module','not in',[None,False]),('state','!=','installed')]}"> -This module does not create views.</p>
+                            <field name="views_by_module"/>
+                            <group string="Dependencies"/>
+                            <p class="oe_grey" attrs="{'invisible': [('dependencies_id','not in',[None,False])]}"> -This module does not depends on any other module.</p>
+                            <field name="dependencies_id">
+                                <tree string="Dependencies">
+                                    <field name="name"/>
+                                    <field name="state"/>
+                                </tree>
+                            </field>
+                            <group string="Exclusions"/>
+                            <p class="oe_grey" attrs="{'invisible': [('exclusion_ids','not in',[None,False])]}"> -This module does not exclude any other module.</p>
+                            <field name="exclusion_ids">
+                                <tree string="Exclusions">
+                                    <field name="name"/>
+                                    <field name="state"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Installed Features" name="installed_features" attrs="{'invisible':[('state','!=','installed')]}">
+                            <group string="Created Menus"/>
+                            <p class="oe_grey" attrs="{'invisible': [('menus_by_module','not in',[None,False])]}"> -This module does not create menu.</p>
+                            <field name="menus_by_module"/>
+                            <group string="Defined Reports"/>
+                            <p class="oe_grey" attrs="{'invisible': [('reports_by_module','not in',[None,False])]}"> -This module does not create report.</p>
+                            <field name="reports_by_module"/>
+                        </page>
+                    </notebook>
+                    <field name="description_html" class='oe_styling_v8'/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="module_tree" model="ir.ui.view">
+            <field name="name">ir.module.module.tree</field>
+            <field name="model">ir.module.module</field>
+            <field name="arch" type="xml">
+                <tree create="false" string="Apps" decoration-info="state == 'uninstalled'" decoration-muted="state == 'uninstallable'">
+                    <header>
+                        <button name="button_immediate_install" type="object" string="Install" groups="base.group_system"/>
+                    </header>
+                    <field name="shortdesc"/>
+                    <field name="name" groups="base.group_no_one"/>
+                    <field name="author"/>
+                    <field name="website"/>
+                    <field name="installed_version"/>
+                    <field name="state" widget="badge"
+                        decoration-muted="state == 'uninstallable'"
+                        decoration-info="state  == 'uninstalled'"
+                        decoration-success="state == 'installed'"/>
+                    <field name="category_id" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="module_view_kanban">
+            <field name="name">Apps Kanban</field>
+            <field name="model">ir.module.module</field>
+            <field name="arch" type="xml">
+                <kanban create="false" class="o_modules_kanban">
+                  <field name="icon"/>
+                  <field name="to_buy"/>
+                  <field name="name"/>
+                  <field name="state"/>
+                  <field name="summary"/>
+                  <field name="website"/>
+                  <field name="application"/>
+                  <templates>
+                    <t t-name="kanban-box">
+                      <div class="oe_module_vignette">
+                        <t t-set="installed" t-value="record.state.raw_value == 'installed'"/>
+                        <div class="o_dropdown_kanban dropdown" tabindex="-1">
+                            <a class="dropdown-toggle o-no-caret btn" data-bs-toggle="dropdown" data-bs-offset="0,-2" href="#" role="button" aria-label="Dropdown menu" title="Dropdown menu">
+                                <span class="fa fa-ellipsis-v"/>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-end" role="menu" aria-labelledby="dLabel">
+                                <a type="edit" class="dropdown-item">Module Info</a>
+                                <a t-if="record.website.raw_value" role="menuitem" class="dropdown-item o-hidden-ios" t-att-href="record.website.raw_value" target="_blank">Learn More</a>
+                                <a t-if="installed" name="button_immediate_upgrade" type="object" role="menuitem" class="dropdown-item" groups="base.group_system">Upgrade</a>
+                                <a t-if="installed" name="button_uninstall_wizard" type="object" role="menuitem" class="dropdown-item" groups="base.group_system">Uninstall</a>
+                            </div>
+                        </div>
+                        <img t-attf-src="#{record.icon.value}" class="oe_module_icon" alt="Icon"/>
+                        <div class="oe_module_desc" t-att-title="record.shortdesc.value">
+                          <h4 class="o_kanban_record_title">
+                            <field name="shortdesc"/>&amp;nbsp;
+                          </h4>
+                          <p class="oe_module_name">
+                            <field groups="!base.group_no_one" name="summary"/>
+                            <code groups="base.group_no_one"><field name="name"/></code>
+                          </p>
+                          <div class="oe_module_action d-flex flex-wrap justify-content-between">
+                            <button type="object" class="btn btn-primary btn-sm" name="button_immediate_install" states="uninstalled" t-if="! record.to_buy.raw_value" groups="base.group_system">Activate</button>
+                            <div t-if="installed" class="d-flex align-items-center text-muted float-start">Installed</div>
+                            <a t-att-href="record.website.raw_value" target="_blank" attrs="{'invisible':[('website', 'in', (False, ''))]}" class="btn btn-sm btn-secondary float-end o-hidden-ios" role="button">Learn More</a>
+                            <a type="edit" class="btn btn-secondary btn-sm float-end" role="button" attrs="{'invisible': [('website', '&lt;&gt;', '')]}">Module Info</a>
+                            <a href="https://odoo.com/pricing?utm_source=db&amp;utm_medium=module#hosting=on_premise" target="_blank" class="btn btn-info btn-sm" states="uninstalled,uninstallable" t-if="record.to_buy.raw_value" role="button" groups="base.group_system">Upgrade</a>
+                            <button states="to remove" type="object" class="btn btn-sm btn-primary" name="button_uninstall_cancel" groups="base.group_system">Cancel Uninstall</button>
+                            <button states="to install" type="object" class="btn btn-sm btn-primary" name="button_install_cancel" groups="base.group_system">Cancel Install</button>
+                          </div>
+                        </div>
+                      </div>
+                    </t>
+                  </templates>
+                </kanban>
+            </field>
+        </record>
+        <record id="open_module_tree" model="ir.actions.act_window">
+            <field name="name">Apps</field>
+            <field name="res_model">ir.module.module</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="context">{'search_default_app':1}</field>
+            <field name="search_view_id" ref="view_module_filter"/>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_empty_folder">
+                No module found!
+              </p><p>
+                You should try other search criteria.
+              </p>
+            </field>
+        </record>
+
+        <!--top menu -->
+        <menuitem id="menu_apps" name="Apps" parent="menu_management" sequence="5"/>
+
+        <!--submenu -->
+        <menuitem id="menu_module_tree" parent="menu_apps" name="Main Apps" sequence="5" action="open_module_tree" />
+
+        <menuitem id="theme_store" parent="menu_apps" name="Theme Store" sequence="15"/>
+
+        <!--link to stores-->
+        <record model='ir.actions.act_url' id='action_third_party'>
+            <field name='name'>Third-Party Apps</field>
+            <field name='url'>https://apps.odoo.com/apps/modules</field>
+        </record>
+        <menuitem id="menu_third_party" parent="menu_apps" name="Third-Party Apps" sequence="20" action="action_third_party"/>
+
+        <record model='ir.actions.act_url' id='action_theme_store'>
+            <field name='name'>Theme Store</field>
+            <field name='url'>https://apps.odoo.com/apps/themes</field>
+        </record>
+        <menuitem id="menu_theme_store" parent="menu_apps" name="Theme Store" sequence="10" action="action_theme_store"/>
+
+
+        <!-- Apps modules -->
+        <record model="ir.actions.client" id="modules_act_cl">
+            <field name="name">App Store</field>
+            <field name="tag">apps</field>
+        </record>
+        <menuitem id="module_mi" parent="base.menu_management" sequence="10" action="modules_act_cl" groups="base.group_no_one"/>
+
+        <record model="ir.actions.client" id="modules_updates_act_cl">
+            <field name="name">Updates</field>
+            <field name="tag">apps.updates</field>
+            <field name="params">{}</field>
+        </record>
+        <menuitem id="menu_module_updates" parent="base.menu_management" sequence="20" action="modules_updates_act_cl" groups="base.group_no_one"/>
+
+    </data>
+</odoo>

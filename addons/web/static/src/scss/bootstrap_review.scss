@@ -1,0 +1,340 @@
+///
+/// This file regroups the CSS rules made to fix/extend bootstrap in all places
+/// where it is used in Odoo (backend / frontend / reports / ...)
+///
+
+.alert {
+    // Alerts are block elements with relative positioning.
+    // They would go over floating elements, which is never what we want.
+    clear: both;
+}
+
+// Extend bootstrap to create background and text utilities for gray colors too
+// Note: the card-body rule below needs those grays utilities to be defined
+// before so that the related o-bg-color text-muted rules work.
+@each $color, $value in $grays {
+    @include bg-variant(".bg-#{$color}", $value);
+    @include text-emphasis-variant(".text-#{$color}", $value);
+}
+
+// Restore text-X from BS4 that use text-emphasis-variant
+@each $color, $value in $theme-colors {
+    @include text-emphasis-variant(".text-#{$color}", $value);
+}
+
+
+.card-body {
+    // BS4 colored cards do not have a very popular design. This will reset them
+    // to a BS3-like one: only the header and footer are colored and the body
+    // will use the color of a default card background with a light opacity.
+    // Limitation: bg-* utilities cannot be used on card-body elements anymore.
+    @include o-bg-color(rgba($card-bg, $o-card-body-bg-opacity));
+
+    &:first-child {
+        @include border-top-radius($card-inner-border-radius);
+    }
+    &:last-child {
+        @include border-bottom-radius($card-inner-border-radius);
+    }
+
+    &.row {
+        // The 'row' class should not be used on a 'card-body' element but if
+        // it is done, our custom bg color would overflow the card. As a fix
+        // for those cases (normally only one at the time this fix is made),
+        // remove the background color.
+        // TODO remove me in master.
+        background-color: transparent !important;
+    }
+
+    .table-striped > tbody > tr:nth-of-type(odd) > * {
+        // As the 'card-body' colors are established using '$card-bg' and
+        // '$o-card-body-bg-opacity', we shouldn't let elements inside
+        // '.table-striped' take their color from the body as they currently do.
+        // This leads to even lines having a color that contrasts with
+        // '$card-bg', and odd lines contrasting with '$body-bg'. This becomes
+        // problematic when one is light and the other is dark.
+        color: inherit;
+    }
+}
+.accordion {
+    .collapsing, .collapse.show {
+        > .card-body:first-child {
+            // Above background color would overflow on the card-header border
+            // without this
+            margin-top: $card-border-width;
+        }
+    }
+}
+
+.toast-header {
+    background-clip: border-box;
+}
+.toast-body {
+    // Same as card-body, see explanation above
+    @include o-bg-color(opacify($toast-background-color, 0.08));
+}
+
+// Modify modals so that their scrollable element is the modal-body (except in
+// mobile).
+// TODO: should be replaced by .modal-dialog-scrollable class
+@include media-breakpoint-up(sm) {
+    :not(.s_popup) > .modal {
+        .modal-dialog {
+            height: 100%;
+            padding: $modal-dialog-margin-y-sm-up 0;
+            margin: 0 auto;
+        }
+        .modal-content {
+            max-height: 100%;
+        }
+        .modal-header, .modal-footer {
+            flex: 0 0 auto;
+        }
+        .modal-body {
+            overflow: auto;
+            min-height: 0;
+        }
+    }
+}
+
+// Do not display the backdrop element added by bootstrap in the body and add a
+// background on the modal to keep the same effect. The bootstrap backdrop was
+// probably useful for compatibility with <IE9 but is no longer needed. This
+// also avoids z-index issues because modals could be opened in an element
+// (e.g. the website #wrapwrap) whose stacking context is different of the body
+// one (where the backdrop is opened). This would make the backdrop appears on
+// top of the modal.
+.modal-backdrop {
+    display: none;
+}
+.modal:not([data-bs-backdrop="false"]) {
+    background-color: rgba($modal-backdrop-bg, $modal-backdrop-opacity);
+}
+
+// Force field label pointer to cursor
+.form-check, .form-select {
+    @include o-field-pointer();
+}
+
+// Disable RTL for the dropdown position
+.dropdown-menu {
+    &[x-placement^="top"],
+    &[x-placement^="right"],
+    &[x-placement^="bottom"],
+    &[x-placement^="left"] {
+        /*rtl:ignore*/
+        right: auto;
+    }
+}
+
+// Disable RTL for the popover position
+.popover {
+    right: auto#{"/*rtl:ignore*/"};
+}
+
+// Review $link-decoration behavior
+@if $link-decoration and $link-decoration != none {
+    .btn:not(.btn-link), .nav-link, .dropdown-item, .page-link, .breadcrumb-item > a, .badge, .fa {
+        &, &:hover, &:focus {
+            text-decoration: none;
+        }
+    }
+}
+
+// Generating bootstrap color buttons was disabled (see import_bootstrap.scss).
+// We do it ourself here with a tweak: we introduce btn-fill-* (working as the
+// normal btn-* classes (in opposition to btn-outline-* classes). We then map
+// the btn-* classes to either btn-fill-* or btn-outline-* classes depending on
+// the configuration. We also allow to define a border-color different than the
+// background color.
+$o-btn-bg-colors: () !default;
+$o-btn-border-colors: () !default;
+@each $color, $value in $theme-colors {
+    $-bg-color: map-get($o-btn-bg-colors, $color) or $value;
+    $-border-color: map-get($o-btn-border-colors, $color) or $-bg-color;
+    .btn-fill-#{$color} {
+        @include button-variant($-bg-color, $-border-color);
+    }
+}
+@each $color, $value in $theme-colors {
+    $-bg-color: map-get($o-btn-bg-colors, $color) or $value;
+    $-border-color: map-get($o-btn-border-colors, $color) or $-bg-color;
+    .btn-outline-#{$color} {
+        @include button-outline-variant($-border-color);
+    }
+}
+$o-btn-outline-defaults: () !default;
+@each $color, $value in $theme-colors {
+    .btn-#{$color} {
+        @if index($o-btn-outline-defaults, $color) {
+            @extend .btn-outline-#{$color};
+        } @else {
+            @extend .btn-fill-#{$color};
+        }
+    }
+}
+
+// Compensate navbar brand padding if no visible border
+@if alpha($navbar-dark-toggler-border-color) < 0.001 {
+    .navbar-dark .navbar-toggler {
+        padding-left: 0;
+        padding-right: 0;
+    }
+}
+@if alpha($navbar-light-toggler-border-color) < 0.001 {
+    .navbar-light .navbar-toggler {
+        padding-left: 0;
+        padding-right: 0;
+    }
+}
+
+// Review bootstrap navbar to work with different nav styles
+$o-navbar-nav-pills-link-padding-x: $nav-link-padding-x !default;
+$o-navbar-nav-pills-link-border-radius: $nav-pills-border-radius !default;
+.navbar-nav.nav-pills .nav-link {
+    // The rules is needed so that the padding is not reset to 0 in mobile.
+    // Also use default nav-link paddings instead of navbar ones.
+    padding-right: $o-navbar-nav-pills-link-padding-x;
+    padding-left: $o-navbar-nav-pills-link-padding-x;
+
+    @if $o-navbar-nav-pills-link-border-radius != $nav-pills-border-radius {
+        @include border-radius($o-navbar-nav-pills-link-border-radius);
+    }
+}
+
+.carousel-control-next .visually-hidden {
+    left: 50%; // Avoid horizontal scrollbar in Chrome
+}
+
+// Modal
+.modal-content {
+    // If the text color of the body (used for the text color in modals) is not
+    // visible due to insufficient contrast with the modal background, we adjust
+    // the text color in the modal using the following code. For example, if the
+    // user sets a black background for its website and the text color of the
+    // body is white, the text will not be visible on modals with a white
+    // background.
+
+    @if $modal-content-color == null {
+        color: adjust-color-to-background($body-color, $modal-content-bg);
+
+        .table-striped > tbody > tr:nth-of-type(odd) > * {
+            // When the website background is dark (resulting in light-colored
+            // body text), the text color of the odd rows of striped tables
+            // matches the body text color. Consequently, it becomes invisible
+            // on the light background of a modal. To address this, we inherit
+            // the text color from 'modal-content,' which is also tied to the
+            // body text color but adapts appropriately within modals (see
+            // above).
+            color: inherit;
+        }
+        // This prevents these elements from taking their colors from the body
+        // inside a modal.
+        // We need to exclude 'oe_structure' that are areas containing editable
+        // snippets. Indeed, this code was added in a stable version, and we are
+        // doing everything not to alter the content edited by users. For
+        // example in Website, without this 'not', the 's_website_form' snippets
+        // with a black background in modals and on websites with a black
+        // background would have their input background changing from black to
+        // white.
+        // TODO: In Master, find a more consistent way to define the background
+        // color of 's_website_form' snippet inputs inside a modal.
+        &:where(:not(.oe_structure)) {
+            @if ($input-bg == $body-bg) and ($input-color == $body-color) {
+                .form-control {
+                    background-color: $modal-content-bg;
+                    color: inherit;
+                }
+            }
+            @if ($form-select-bg == $body-bg) and ($form-select-color == $body-color) {
+                .form-select {
+                    background-color: $modal-content-bg;
+                    color: inherit;
+                }
+            }
+            @if $form-check-input-bg == $body-bg {
+                .form-check-input:not(:checked) {
+                    background-color: $modal-content-bg;
+                }
+            }
+        }
+    }
+    .text-muted {
+        color: adjust-color-to-background($text-muted, $modal-content-bg, mute-color($color-contrast-light), mute-color($color-contrast-dark)) !important;
+    }
+}
+
+// Popover
+.popover {
+    // The popover can have a different background color than that of the body.
+    // Here, we adjust the text color of the popover in case the body color
+    // (used by default for the text color of popovers) is not visible inside a
+    // popover due to a lack of contrast (e.g. on a website with a dark
+    // background).
+    @if $popover-header-color == null {
+        .popover-header {
+            color: adjust-color-to-background($body-color, $popover-header-bg);
+        }
+    }
+    @if $popover-body-color == $body-color {
+        .popover-body {
+            color: adjust-color-to-background($body-color, $popover-bg);
+        }
+    }
+}
+
+$-color-for-gray-200-bg: adjust-color-to-background($body-color, $gray-200);
+// Input group text (e.g. Date time picker)
+.input-group-text {
+    // Adapt only if the variables have their default values.
+    @if ($input-group-addon-bg == $gray-200) and ($input-group-addon-color == $body-color) {
+        color: $-color-for-gray-200-bg;
+    }
+}
+// File upload button
+.form-control::file-selector-button {
+    @if ($form-file-button-bg == $gray-200) and ($form-file-button-color == $body-color) {
+        color: $-color-for-gray-200-bg;
+    }
+}
+
+// offcanvas
+.offcanvas {
+    @if $offcanvas-color == null {
+        color: adjust-color-to-background($body-color, $offcanvas-bg-color);
+
+        @if $form-check-input-bg == $body-bg {
+            .form-check-input:where(:not(:checked)) {
+                background-color: $offcanvas-bg-color;
+            }
+        }
+        @if $form-range-thumb-bg == $body-bg {
+            .form-range{
+                &::-webkit-slider-thumb {
+                    &:where(:not(:active)) {
+                        background-color: $offcanvas-bg-color;
+                    }
+                }
+                &::-moz-range-thumb {
+                    &:where(:not(:active)) {
+                        background-color: $offcanvas-bg-color;
+                    }
+                }
+            }
+        }
+    }
+}
+
+// Button within input-group (e.g., "search bar")
+.input-group {
+    .btn:first-child, .btn:last-child {
+        @include border-radius($input-border-radius, 0);
+    }
+}
+
+// Dropdown
+.dropdown .dropdown-menu {
+    .text-muted {
+        color: adjust-color-to-background($text-muted, $dropdown-bg, mute-color($color-contrast-light), mute-color($color-contrast-dark)) !important;
+    }
+}

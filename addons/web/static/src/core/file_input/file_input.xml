@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.FileInput" owl="1">
+        <span class="o_file_input" t-att-class="{ 'd-none': props.hidden }" aria-atomic="true">
+            <span t-if="!props.hidden" class="o_file_input_trigger" t-on-click.prevent="onTriggerClicked">
+                <t t-slot="default">
+                    <button class="btn btn-primary">Choose File</button>
+                </t>
+            </span>
+            <input type="file"
+                name="ufile"
+                class="o_input_file d-none"
+                t-att-multiple="props.multiUpload"
+                t-att-accept="props.acceptedFileExtensions"
+                t-ref="file-input"
+                t-on-change="onFileInputChange"
+            />
+        </span>
+    </t>
+
+</templates>

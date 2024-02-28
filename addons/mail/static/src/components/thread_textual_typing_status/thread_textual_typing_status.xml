@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.ThreadTextualTypingStatus" owl="1">
+        <t t-if="thread">
+            <div class="o_ThreadTextualTypingStatus d-flex" t-attf-class="{{ className }}" t-ref="root">
+                <t t-if="thread.orderedOtherTypingMembers.length > 0">
+                    <ThreadTypingIcon animation="'pulse'" size="'medium'"/>
+                    <span class="o_ThreadTextualTypingStatus_separator ms-1"/>
+                    <span class="text-truncate" t-esc="thread.typingStatusText"/>
+                </t>
+            </div>
+        </t>
+    </t>
+
+</templates>

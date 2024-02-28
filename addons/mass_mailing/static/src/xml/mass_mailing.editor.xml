@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="mass_mailing.web_editor_toolbar" t-extend="web_editor.toolbar">
+        <t t-jquery="div.btn-group.dropdown" t-operation="attributes">
+            <attribute name="class" value="btn-group dropup"/>
+        </t>
+        <t t-jquery="div.dropdown:not(.btn-group)" t-operation="attributes">
+            <attribute name="class" value="dropup"/>
+        </t>
+    </t>
+</templates>

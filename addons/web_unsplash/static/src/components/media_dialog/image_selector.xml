@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+<t t-name="web_unsplash.UnsplashError" owl="1">
+    <div class="alert alert-info w-100">
+        <h4><t t-esc="props.title"/></h4>
+        <p><t t-esc="props.subtitle"/></p>
+        <UnsplashCredentials t-if="props.showCredentials" submitCredentials="props.submitCredentials" hasCredentialsError="props.hasCredentialsError"/>
+    </div>
+</t>
+
+<t t-name="web_unsplash.UnsplashCredentials" owl="1">
+    <div class="d-flex align-items-center flex-wrap">
+        <a href="https://www.odoo.com/documentation/16.0/applications/websites/website/optimize/unsplash.html#generate-an-unsplash-access-key"
+           class="mx-2" target="_blank">Get an Access key</a>
+        and paste it here:
+        <input type="text"
+            class="o_input form-control w-auto mx-2"
+            id="accessKeyInput"
+            placeholder="Paste your access key here"
+            t-model="state.key"
+            t-on-input="() => this.state.hasKeyError = false"
+            t-att-class="{ 'is-invalid': state.hasKeyError }"/>
+        and paste
+        <a href="https://www.odoo.com/documentation/16.0/applications/websites/website/optimize/unsplash.html#generate-an-unsplash-application-id"
+           class="mx-2" target="_blank">Application ID</a>
+        here:
+        <div class="input-group d-flex justify-content-end align-items-center w-auto mx-2">
+            <input type="text"
+                class="o_input form-control w-auto"
+                placeholder="Paste your application ID here"
+                t-model="state.appId"
+                t-on-input="() => this.state.hasAppIdError = false"
+                t-att-class="{ 'is-invalid': state.hasAppIdError }"/>
+            <button type="button" class="btn btn-primary btn-block w-auto p-auto save_unsplash" t-on-click="() => this.submitCredentials()">Apply</button>
+        </div>
+    </div>
+</t>
+
+<t t-name="web_unsplash.ImagesListTemplate" t-inherit="web_editor.ImagesListTemplate" t-inherit-mode="extension">
+    <xpath expr="//t[@id='o_we_media_library_images']" position="after">
+        <t t-if="['all', 'unsplash'].includes(state.searchService)">
+            <t t-foreach="state.unsplashRecords" t-as="record" t-key="record.id">
+                <AutoResizeImage src="record.url"
+                    author="record.user.name"
+                    authorLink="record.user.links.html"
+                    name="record.user.name"
+                    title="record.user.name"
+                    altDescription="record.alt_description"
+                    selected="this.selectedRecordIds.includes(record.id)"
+                    onImageClick="() => this.onClickRecord(record)"
+                    minRowHeight="MIN_ROW_HEIGHT"
+                    onLoaded="(imgEl) => this.onImageLoaded(imgEl, record)"/>
+            </t>
+        </t>
+    </xpath>
+</t>
+
+<t t-inherit="web_editor.FileSelector" t-inherit-mode="extension">
+    <xpath expr="//div[@name='load_more_attachments']" position="after">
+        <div t-if="state.unsplashError" class="d-flex mt-2 unsplash_error">
+            <UnsplashError
+                title="errorTitle"
+                subtitle="errorSubtitle"
+                showCredentials="['key_not_found', 401].includes(state.unsplashError)"
+                submitCredentials="(key, appId)  => this.submitCredentials(key, appId)"
+                hasCredentialsError="state.unsplashError === 401"/>
+        </div>
+    </xpath>
+</t>
+
+<t t-inherit="web_editor.FileSelectorControlPanel" t-inherit-mode="extension">
+    <xpath expr="//option[@value='media-library']" position="after">
+        <option t-if="props.useUnsplash" t-att-selected="props.searchService === 'unsplash'" value="unsplash">Photos (via Unsplash)</option>
+    </xpath>
+</t>
+
+<t t-inherit="web_editor.FileSelector" t-inherit-mode="extension">
+    <xpath expr="//FileSelectorControlPanel" position="attributes">
+        <attribute name="useUnsplash">state.useUnsplash</attribute>
+    </xpath>
+</t>
+</templates>

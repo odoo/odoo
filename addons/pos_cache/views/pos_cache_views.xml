@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record id="view_pos_config_kanban" model="ir.ui.view">
+            <field name="name">pos.config.kanban.view.inherit.pos_cache</field>
+            <field name="model">pos.config</field>
+            <field name="inherit_id" ref="point_of_sale.view_pos_config_kanban" />
+            <field name="arch" type="xml">
+                <xpath expr="//div[hasclass('o_kanban_card_manage_settings')]" position="inside">
+                    <field name='oldest_cache_time' invisible="1" />
+                    <div role="menuitem" class="col-12" style="border-left: none;" attrs="{'invisible': [('oldest_cache_time', '=', False)]}">
+                        <a name='delete_cache' type="object" >Invalidate cache</a>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

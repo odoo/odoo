@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.FileUploader" owl="1">
+        <t t-if="state.isUploading">Uploading...</t>
+        <span t-else="" t-on-click.prevent="onSelectFileButtonClick" style="display:contents">
+            <t t-slot="toggler"/>
+        </span>
+        <t t-slot="default"/>
+        <input
+            type="file"
+            t-att-name="props.inputName"
+            t-ref="fileInput"
+            t-attf-class="o_input_file o_hidden {{ props.fileUploadClass or '' }}"
+            t-att-multiple="props.multiUpload ? 'multiple' : false" t-att-accept="props.acceptedFileExtensions or '*'"
+            t-on-change="onFileChange"
+        />
+    </t>
+
+</templates>

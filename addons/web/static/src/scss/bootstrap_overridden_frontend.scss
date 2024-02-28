@@ -1,0 +1,80 @@
+// Color system
+//
+// Note: all of these variables use BS default values, will be eventually
+// overridden by website and are declared here just to allow components
+// customization (eg. form-range)
+
+// gray-color-variables
+$white: #fff !default;
+$gray-400: #ced4da !default;
+
+// color-variables
+$blue: #0d6efd !default;
+
+// theme-color-variables
+$primary: $blue !default;
+
+// The contrast ratio to reach against white, to determine if color changes from "light" to "dark". Acceptable values for WCAG 2.0 are 3, 4.5 and 7.
+// See https://www.w3.org/TR/WCAG20/#visual-audio-contrast-contrast
+$min-contrast-ratio: $o-frontend-min-contrast-ratio !default;
+
+// Body
+
+$body-bg: $white !default; // BS Default
+
+// Components
+//
+// Define common padding and border radius sizes and more.
+
+$border-width: 1px !default; // BS Default
+
+// Fonts
+//
+// Font, line-height, and color for body text, headings, and more.
+
+$font-family-sans-serif: o-add-unicode-support-font($o-system-fonts) !default;
+
+$font-size-base: (14 / 16) * 1rem !default;
+
+// Inherit color for blockquote-footer, use text-muted on top of it if you want
+// a muted one. This is defined here to be consistent in the whole frontend, as
+// when used with background classes, it should not be forced to a gray color.
+$blockquote-small-color: inherit !default;
+
+// Link
+$link-decoration: none !default;
+
+// Forms
+
+$input-transition: background-color .05s ease-in-out, border-color .05s ease-in-out, box-shadow .05s ease-in-out !default;
+
+$form-check-input-border: $border-width solid $gray-400 !default;
+$form-check-input-border-radius: 0 !default;
+
+$form-range-track-height: .1rem !default;
+$form-range-thumb-border: $border-width solid $primary !default;
+$form-range-thumb-bg: $body-bg !default;
+$form-range-thumb-active-bg: $primary !default;
+
+// Figures
+
+// Inherit color for figure-caption, use text-muted on top of it if you want
+// a muted one. This is defined here to be consistent in the whole frontend, as
+// when used with background classes, it should not be forced to a gray color.
+$figure-caption-color: inherit !default;
+
+// Accordion
+
+$accordion-border-width: 0 !default;
+$accordion-button-color: inherit !default;
+$accordion-button-active-bg: inherit !default;
+$accordion-button-active-color:  inherit !default;
+$accordion-icon-color: $accordion-button-color !default;
+$accordion-icon-width: 1rem !default;
+$accordion-icon-transform: rotate(0deg) !default;
+$accordion-button-icon: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='#{$accordion-icon-color}'><path transform='#{rotate(90, 8, 8)}' fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/></svg>") !default;
+
+// Offcanvas
+
+$offcanvas-border-width: 0 !default;
+$offcanvas-backdrop-opacity: .3 !default;

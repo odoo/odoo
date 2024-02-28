@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="l10n_ua_psbo_chart_template" model="account.chart.template">
+        <field name="name">План рахунків ПСБО</field>
+        <field name="cash_account_code_prefix">301</field>
+        <field name="bank_account_code_prefix">311</field>
+        <field name="transfer_account_code_prefix">333</field>
+        <field name="code_digits">6</field>
+        <field name="currency_id" ref="base.UAH"/>
+        <field name="country_id" ref="base.ua"/>
+        <field name="use_storno_accounting" eval="True"/>
+    </record>
+
+    <record id="l10n_ua_ias_chart_template" model="account.chart.template">
+        <field name="name">План рахунків МСФЗ</field>
+        <field name="bank_account_code_prefix">1112</field>
+        <field name="cash_account_code_prefix">1111</field>
+        <field name="transfer_account_code_prefix">1119</field>
+        <field name="code_digits">6</field>
+        <field name="currency_id" ref="base.UAH"/>
+        <field name="country_id" ref="base.ua"/>
+        <field name="use_storno_accounting" eval="True"/>
+    </record>
+</odoo>

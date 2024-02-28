@@ -1,0 +1,157 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* website_sale_picking
+# 
+# Translators:
+# Martin Trigaux, 2022
+# Hongu Cosmin <cosmin513@gmail.com>, 2022
+# Dorin Hongu <dhongu@gmail.com>, 2023
+# Cozmin Candea <office@terrabit.ro>, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-02-06 13:32+0000\n"
+"PO-Revision-Date: 2022-09-22 05:57+0000\n"
+"Last-Translator: Cozmin Candea <office@terrabit.ro>, 2023\n"
+"Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ro\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+
+#. module: website_sale_picking
+#: model_terms:payment.provider,pending_msg:website_sale_picking.payment_provider_onsite
+msgid ""
+"<i>Your order has been saved.</i> Please come to the store to pay for your "
+"products"
+msgstr ""
+"<i>Comanda dumneavoastră a fost salvată.</i> Vă rugăm să veniți la magazin "
+"pentru a plăti produsele dumneavoastră"
+
+#. module: website_sale_picking
+#: model_terms:ir.ui.view,arch_db:website_sale_picking.payment_confirmation_status
+msgid "<span class=\"text-muted\"> (On site picking)</span>"
+msgstr "<span class=\"text-muted\"> (preluare din magazin)</span>"
+
+#. module: website_sale_picking
+#: model:ir.model,name:website_sale_picking.model_res_config_settings
+msgid "Config Settings"
+msgstr "Setări de configurare"
+
+#. module: website_sale_picking
+#: model:ir.model.fields,field_description:website_sale_picking.field_payment_provider__custom_mode
+msgid "Custom Mode"
+msgstr "Mod personalizat"
+
+#. module: website_sale_picking
+#: model_terms:ir.ui.view,arch_db:website_sale_picking.res_config_settings_view_form
+msgid "Customize Pickup Sites"
+msgstr "Personalizați locurile de preluare"
+
+#. module: website_sale_picking
+#. odoo-javascript
+#: code:addons/website_sale_picking/static/src/js/checkout_form.js:0
+#, python-format
+msgid ""
+"If you believe that it is an error, please contact the website "
+"administrator."
+msgstr ""
+"Dacă credeți că este o eroare, vă rugăm să contactați administratorul "
+"sitului web."
+
+#. module: website_sale_picking
+#. odoo-javascript
+#: code:addons/website_sale_picking/static/src/js/checkout_form.js:0
+#, python-format
+msgid "No suitable payment option could be found."
+msgstr "Nu a fost găsită nicio opțiune de plată potrivită."
+
+#. module: website_sale_picking
+#: model:ir.model.fields.selection,name:website_sale_picking.selection__payment_provider__custom_mode__onsite
+msgid "On Site"
+msgstr "Pe loc"
+
+#. module: website_sale_picking
+#: model:product.template,name:website_sale_picking.onsite_delivery_product_product_template
+msgid "On site picking"
+msgstr "Preluare din magazin"
+
+#. module: website_sale_picking
+#: model:payment.provider,name:website_sale_picking.payment_provider_onsite
+#: model_terms:product.template,description:website_sale_picking.onsite_delivery_product_product_template
+msgid "Pay in store when picking the product"
+msgstr "Plătiți în magazin la preluarea produsului"
+
+#. module: website_sale_picking
+#: model:ir.model,name:website_sale_picking.model_payment_provider
+msgid "Payment Provider"
+msgstr "Furnizor de plată"
+
+#. module: website_sale_picking
+#: model:ir.model.fields,field_description:website_sale_picking.field_res_config_settings__picking_site_ids
+#: model:ir.model.fields,field_description:website_sale_picking.field_website__picking_site_ids
+#: model_terms:ir.ui.view,arch_db:website_sale_picking.res_config_settings_view_form
+msgid "Picking sites"
+msgstr "Locuri de preluare"
+
+#. module: website_sale_picking
+#: model:ir.model.fields.selection,name:website_sale_picking.selection__delivery_carrier__delivery_type__onsite
+msgid "Pickup in store"
+msgstr "Preluare din magazin"
+
+#. module: website_sale_picking
+#: model:ir.model.fields,field_description:website_sale_picking.field_delivery_carrier__delivery_type
+msgid "Provider"
+msgstr "Furnizor"
+
+#. module: website_sale_picking
+#: model:ir.model,name:website_sale_picking.model_delivery_carrier
+msgid "Shipping Methods"
+msgstr "Metode de expediere"
+
+#. module: website_sale_picking
+#. odoo-python
+#: code:addons/website_sale_picking/models/delivery_carrier.py:0
+#, python-format
+msgid "The picking site and warehouse must share the same company"
+msgstr "Locul de preluare și depozitul trebuie să aibă aceeași companie"
+
+#. module: website_sale_picking
+#: model:ir.model.fields,field_description:website_sale_picking.field_delivery_carrier__warehouse_id
+msgid "Warehouse"
+msgstr "Depozit"
+
+#. module: website_sale_picking
+#: model:ir.model,name:website_sale_picking.model_website
+msgid "Website"
+msgstr "Pagină web"
+
+#. module: website_sale_picking
+#. odoo-python
+#: code:addons/website_sale_picking/controllers/main.py:0
+#, python-format
+msgid "You cannot pay onsite if the delivery is not onsite"
+msgstr "Nu puteți plăti pe loc dacă livrarea nu este pe loc"
+
+#. module: website_sale_picking
+#: model_terms:payment.provider,auth_msg:website_sale_picking.payment_provider_onsite
+msgid "Your payment has been authorized."
+msgstr "Plata dvs. a fost autorizată."
+
+#. module: website_sale_picking
+#: model_terms:payment.provider,cancel_msg:website_sale_picking.payment_provider_onsite
+msgid "Your payment has been cancelled."
+msgstr "Plata dvs. a fost anulată."
+
+#. module: website_sale_picking
+#: model_terms:payment.provider,done_msg:website_sale_picking.payment_provider_onsite
+msgid "Your payment has been successfully processed. Thank you!"
+msgstr "Plata dvs. a fost procesată cu succes. Mulțumesc!"
+
+#. module: website_sale_picking
+#: model:delivery.carrier,name:website_sale_picking.default_onsite_carrier
+msgid "[On Site Pick] My Shop 1"
+msgstr "[Preluare din magazin] Magazinul meu 1"

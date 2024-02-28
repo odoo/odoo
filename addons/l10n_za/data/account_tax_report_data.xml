@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="tax_report" model="account.report">
+        <field name="name">Tax Report</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.za"/>
+        <field name="filter_fiscal_position" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="tax_report_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="total_vat_payable" model="account.report.line">
+                <field name="name">[20] VAT PAYABLE/REFUNDABLE (Total A - Total B)</field>
+                <field name="aggregation_formula">TotalA.balance - TotalB.balance</field>
+                <field name="children_ids">
+                    <record id="total_output_tax" model="account.report.line">
+                        <field name="name">[13] Total A: TOTAL OUTPUT TAX (4 + 4A + 9 + 11 + 12)</field>
+                        <field name="code">TotalA</field>
+                        <field name="aggregation_formula">VAT4.balance + VAT4A.balance + (SEC6.balance * 0.6 + SEC7.balance) + VAT11.balance + VAT12.balance</field>
+                        <field name="children_ids">
+                            <record id="standard_rate_exclude_capital_goods_service" model="account.report.line">
+                                <field name="name">[1] Standard Rate (Excluding Capital goods and/or services and accomodation)</field>
+                                <field name="code">VAT1</field>
+                                <field name="expression_ids">
+                                    <record id="standard_rate_exclude_capital_goods_service_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">[1] Standard Rate (Excluding Capital goods and/or services and accomodation)</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="vat_on_standard_rate_exclude_capital_goods_service" model="account.report.line">
+                                <field name="name">[4] x 15/ (100 + 15)</field>
+                                <field name="code">VAT4</field>
+                                <field name="expression_ids">
+                                    <record id="vat_on_standard_rate_exclude_capital_goods_service_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">[4] x 15/ (100 + 15)</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="standard_rate_only_capital_goods_service" model="account.report.line">
+                                <field name="name">[1A] Standard Rate (Only Capital goods and/or services)</field>
+                                <field name="code">VAT1A</field>
+                                <field name="expression_ids">
+                                    <record id="standard_rate_only_capital_goods_service_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">[1A] Standard Rate (Only Capital goods and/or services)</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="vat_on_standard_rate_only_capital_goods_service" model="account.report.line">
+                                <field name="name">[4A] x 15/ (100 + 15)</field>
+                                <field name="code">VAT4A</field>
+                                <field name="expression_ids">
+                                    <record id="vat_on_standard_rate_only_capital_goods_service_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">[4A] x 15/ (100 + 15)</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="zero_rate_exclude_goods_exported" model="account.report.line">
+                                <field name="name">[2] Zero Rate (excluding goods exported)</field>
+                                <field name="code">VAT2</field>
+                                <field name="expression_ids">
+                                    <record id="zero_rate_exclude_goods_exported_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">[2] Zero Rate (excluding goods exported)</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="zero_rate_only_goods_exported" model="account.report.line">
+                                <field name="name">[2A] Zero Rate (Only goods exported)</field>
+                                <field name="code">VAT2A</field>
+                                <field name="expression_ids">
+                                    <record id="zero_rate_only_goods_exported_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">[2A] Zero Rate (Only goods exported)</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="exempt_and_non_supplies" model="account.report.line">
+                                <field name="name">[3] Exempt and Non supplies</field>
+                                <field name="code">VAT3</field>
+                                <field name="expression_ids">
+                                    <record id="exempt_and_non_supplies_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">[3] Exempt and Non supplies</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="accomodation_exceeding_28_days" model="account.report.line">
+                                <field name="name">[5] Accomodation exceeding 28 days</field>
+                                <field name="code">VAT5</field>
+                                <field name="expression_ids">
+                                    <record id="accomodation_exceeding_28_days_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">[5] Accomodation exceeding 28 days</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="accomodation_exceeding_28_days_60_percent" model="account.report.line">
+                                <field name="name">[6] x 60%</field>
+                                <field name="aggregation_formula">VAT5.balance * 0.6</field>
+                            </record>
+                            <record id="accomodation_under_28_days" model="account.report.line">
+                                <field name="name">[7] Accomodation under 28 days</field>
+                                <field name="code">VAT7</field>
+                                <field name="expression_ids">
+                                    <record id="accomodation_under_28_days_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">[7] Accomodation under 28 days</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="accomodation_28_days" model="account.report.line">
+                                <field name="name">[8] Total (6 + 7)</field>
+                                <field name="aggregation_formula">(VAT5.balance * 0.6) + VAT7.balance</field>
+                            </record>
+                            <record id="vat_on_accomodation_28_days" model="account.report.line">
+                                <field name="name">[9] x 15 / (100 ??) </field>
+                                <field name="aggregation_formula">SEC6.balance * 0.6 + SEC7.balance </field>
+                                <field name="children_ids">
+                                    <record id="vat_on_accomodation_exceeding_28_days" model="account.report.line">
+                                        <field name="name">VAT on Accomodation exceeding 28 days</field>
+                                        <field name="code">SEC6</field>
+                                        <field name="expression_ids">
+                                            <record id="vat_on_accomodation_exceeding_28_days_tag" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">VAT on Accomodation exceeding 28 days</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="vat_on_accomodation_under_28_days" model="account.report.line">
+                                        <field name="name">VAT on Accomodation under 28 days</field>
+                                        <field name="code">SEC7</field>
+                                        <field name="expression_ids">
+                                            <record id="vat_on_accomodation_under_28_days_tag" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">VAT on Accomodation under 28 days</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="vat_plus_base_of_second_hand_goods_export" model="account.report.line">
+                                <field name="name">[10] Change in use and export of second-hand goods</field>
+                                <field name="aggregation_formula">VAT10a.balance + VAT11.balance</field>
+                                <field name="children_ids">
+                                    <record id="second_hand_goods_export" model="account.report.line">
+                                        <field name="name">[10] Base Amount: Change in use and export of second-hand goods</field>
+                                        <field name="code">VAT10a</field>
+                                        <field name="expression_ids">
+                                            <record id="second_hand_goods_export_tag" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">[10] Change in use and export of second-hand goods</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="vat_on_second_hand_goods_export" model="account.report.line">
+                                <field name="name">[11] x 15 / (100 + 15)</field>
+                                <field name="code">VAT11</field>
+                                <field name="expression_ids">
+                                    <record id="vat_on_second_hand_goods_export_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">[11] x 15 / (100 + 15)</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="other_imported_services" model="account.report.line">
+                                <field name="name">[12] Other and imported services</field>
+                                <field name="code">VAT12</field>
+                                <field name="expression_ids">
+                                    <record id="other_imported_services_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">[12] Other and imported services</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="total_input_tax" model="account.report.line">
+                        <field name="name">[19] Total B: TOTAL INPUT TAX (14 + 14A + 15 + 15A + 16 + 17 + 18)</field>
+                        <field name="code">TotalB</field>
+                        <field name="aggregation_formula">VAT14.balance + VAT14A.balance + VAT15.balance + VAT15A.balance + VAT16.balance + VAT17.balance + VAT18.balance</field>
+                        <field name="children_ids">
+                            <record id="capital_goods_services_supplied" model="account.report.line">
+                                <field name="name">[14] Capital Goods and/or services supplied to you</field>
+                                <field name="code">VAT14</field>
+                                <field name="expression_ids">
+                                    <record id="capital_goods_services_supplied_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">[14] Capital Goods and/or services supplied to you</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="capital_goods_imported" model="account.report.line">
+                                <field name="name">[14A] Capital Goods imported by you</field>
+                                <field name="code">VAT14A</field>
+                                <field name="expression_ids">
+                                    <record id="capital_goods_imported_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">[14A] Capital Goods imported by you</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="other_goods_services_supplied" model="account.report.line">
+                                <field name="name">[15] Other goods and/or services supplied to you (not Capital Goods)</field>
+                                <field name="code">VAT15</field>
+                                <field name="expression_ids">
+                                    <record id="other_goods_services_supplied_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">[15] Other goods and/or services supplied to you (not Capital Goods)</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="other_goods_imported" model="account.report.line">
+                                <field name="name">[15A] Other goods imported by you (not Capital Goods)</field>
+                                <field name="code">VAT15A</field>
+                                <field name="expression_ids">
+                                    <record id="other_goods_imported_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">[15A] Other goods imported by you (not Capital Goods)</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="change_in_use" model="account.report.line">
+                                <field name="name">[16] Change in Use</field>
+                                <field name="code">VAT16</field>
+                                <field name="expression_ids">
+                                    <record id="change_in_use_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">[16] Change in Use</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="bad_debts" model="account.report.line">
+                                <field name="name">[17] Bad Debts</field>
+                                <field name="code">VAT17</field>
+                                <field name="expression_ids">
+                                    <record id="bad_debts_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">[17] Bad Debts</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="others" model="account.report.line">
+                                <field name="name">[18] Other</field>
+                                <field name="code">VAT18</field>
+                                <field name="expression_ids">
+                                    <record id="others_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">[18] Other</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

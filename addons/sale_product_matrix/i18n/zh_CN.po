@@ -1,0 +1,128 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_product_matrix
+# 
+# Translators:
+# Martin Trigaux, 2022
+# Raymond Yu <cl_yu@hotmail.com>, 2022
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0beta\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-10-04 09:25+0000\n"
+"PO-Revision-Date: 2022-09-22 05:55+0000\n"
+"Last-Translator: Raymond Yu <cl_yu@hotmail.com>, 2022\n"
+"Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: sale_product_matrix
+#: model:ir.model.fields,field_description:sale_product_matrix.field_product_product__product_add_mode
+#: model:ir.model.fields,field_description:sale_product_matrix.field_product_template__product_add_mode
+#: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order_line__product_add_mode
+msgid "Add product mode"
+msgstr "添加产品模式"
+
+#. module: sale_product_matrix
+#. openerp-web
+#: code:addons/sale_product_matrix/static/src/js/sale_product_field.js:0
+#, python-format
+msgid "Choose Product Variants"
+msgstr "选择产品变体"
+
+#. module: sale_product_matrix
+#. openerp-web
+#: code:addons/sale_product_matrix/static/src/js/sale_product_field.js:0
+#, python-format
+msgid "Close"
+msgstr "关闭"
+
+#. module: sale_product_matrix
+#: model:ir.model.fields,help:sale_product_matrix.field_product_product__product_add_mode
+#: model:ir.model.fields,help:sale_product_matrix.field_product_template__product_add_mode
+#: model:ir.model.fields,help:sale_product_matrix.field_sale_order_line__product_add_mode
+msgid ""
+"Configurator: choose attribute values to add the matching product variant to the order.\n"
+"Grid: add several variants at once from the grid of attribute values"
+msgstr ""
+"配置器：选择属性值以将匹配的产品变型添加到订单中。\n"
+"网格：从属性值的网格中一次添加多个变体"
+
+#. module: sale_product_matrix
+#. openerp-web
+#: code:addons/sale_product_matrix/static/src/js/sale_product_field.js:0
+#, python-format
+msgid "Confirm"
+msgstr "确认"
+
+#. module: sale_product_matrix
+#: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order__grid_product_tmpl_id
+msgid "Grid Product Tmpl"
+msgstr "产品模板网格"
+
+#. module: sale_product_matrix
+#: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order__grid_update
+msgid "Grid Update"
+msgstr "网格更新"
+
+#. module: sale_product_matrix
+#: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order__grid
+msgid "Matrix local storage"
+msgstr "矩阵本地存储"
+
+#. module: sale_product_matrix
+#: model:ir.model.fields.selection,name:sale_product_matrix.selection__product_template__product_add_mode__matrix
+msgid "Order Grid Entry"
+msgstr "订单网格入口"
+
+#. module: sale_product_matrix
+#: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order__report_grids
+msgid "Print Variant Grids"
+msgstr "打印变体网格"
+
+#. module: sale_product_matrix
+#: model:ir.model,name:sale_product_matrix.model_product_template
+msgid "Product"
+msgstr "产品"
+
+#. module: sale_product_matrix
+#: model:ir.model.fields.selection,name:sale_product_matrix.selection__product_template__product_add_mode__configurator
+msgid "Product Configurator"
+msgstr "产品配置器"
+
+#. module: sale_product_matrix
+#: model:ir.model,name:sale_product_matrix.model_sale_order
+msgid "Sales Order"
+msgstr "销售订单"
+
+#. module: sale_product_matrix
+#: model:ir.model,name:sale_product_matrix.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "销售订单行"
+
+#. module: sale_product_matrix
+#: model_terms:ir.ui.view,arch_db:sale_product_matrix.product_template_grid_view_form
+msgid "Sales Variant Selection"
+msgstr "销售变体选择"
+
+#. module: sale_product_matrix
+#: model:ir.model.fields,help:sale_product_matrix.field_sale_order__grid
+msgid ""
+"Technical local storage of grid. \n"
+"If grid_update, will be loaded on the SO.\n"
+"If not, represents the matrix to open."
+msgstr ""
+"网格的技术性本地储存。\n"
+"如果grid_update，将被加载到SO上。\n"
+"如果不是，则代表要打开的矩阵。"
+
+#. module: sale_product_matrix
+#: code:addons/sale_product_matrix/models/sale_order.py:0
+#, python-format
+msgid ""
+"You cannot change the quantity of a product present in multiple sale lines."
+msgstr "您不能更改多个销售线中存在的产品数量。"

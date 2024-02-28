@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="onboarding_panel">
+        <t t-call="onboarding.onboarding_container">
+            <t t-foreach="steps" t-as="step">
+                <t t-call="base.onboarding_step">
+                    <t t-set="title" t-value="step.title"/>
+                    <t t-set="description" t-value="step.description"/>
+                    <t t-set="done_icon" t-value="step.done_icon"/>
+                    <t t-set="btn_text" t-value="step.button_text"/>
+                    <t t-set="done_text" t-value="step.done_text"/>
+                    <!-- Model/method used by JS implementation of banners for each step-->
+                    <t t-set="method" t-value="step.panel_step_open_action_name"/>
+                    <t t-set="model">onboarding.onboarding.step</t>
+                    <!-- to mimic first implementation of onboarding, the 'state' queried holds
+                    a rendering state for all steps. See _get_and_update_onboarding_state -->
+                    <t t-set="state" t-value="state.get(step.id)"/>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <template id="onboarding_container" inherit_id="base.onboarding_container">
+        <xpath expr="//div[hasclass('o_onboarding_completed_message')]" position="replace"/>
+    </template>
+</odoo>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.RainbowMan" owl="1">
+        <div class="o_reward position-absolute top-0 bottom-0 start-0 end-0 w-100 h-100" t-att-class="{ o_reward_fading: state.isFading }" t-on-animationend="onAnimationEnd">
+            <svg class="o_reward_rainbow_man position-absolute top-0 bottom-0 start-0 end-0 m-auto overflow-visible" viewBox="0 0 400 400">
+                <defs>
+                    <radialGradient id="o_reward_gradient_bg" cx="200" cy="200" r="200" gradientUnits="userSpaceOnUse">
+                        <stop offset="0.3" stop-color="#edeff4"/>
+                        <stop offset="1" stop-color="#edeff4" stop-opacity="0"/>
+                    </radialGradient>
+                    <symbol id="o_reward_star">
+                        <path d="M33 15.9C26.3558 13.6951 21.1575 8.4597 19 1.8 19 1.2477 18.5523.8 18 .8 17.4477.8 17 1.2477 17 1.8 14.6431 8.6938 9.0262 13.9736 2 15.9 1.3649 15.9.85 16.4149.85 17.05.85 17.6851 1.3649 18.2 2 18.2 8.6215 20.3845 13.8155 25.5785 16 32.2 16 32.7523 16.4477 33.2 17 33.2 17.5523 33.2 18 32.7523 18 32.2 20.3569 25.3062 25.9738 20.0264 33 18.1 33.6351 18.1 34.15 17.5851 34.15 16.95 34.15 16.3149 33.6351 15.8 33 15.8" fill="#FFFFFF"/>
+                    </symbol>
+                    <symbol id="o_reward_thumb">
+                        <path d="M10 52C6 51 3 48 3 44 2 42 3 39 5 38 3 36 2 34 2 32 2 29 3 27 5 26 3 24 2 21 2 19 2 15 7 12 10 12L23 12C23 11 23 11 23 11L23 10C23 8 24 6 25 4 27 2 29 2 31 2 33 2 35 2 36 4 38 5 39 7 39 10L39 38C39 41 37 45 35 47 32 50 28 51 25 52L10 52 10 52Z" fill="#FBFBFC"/>
+                        <polygon fill="#ECF1FF" points="25 11 25 51 5 52 5 12"/>
+                        <path d="M31 0C28 0 26 1 24 3 22 5 21 7 21 10L10 10C8 10 6 11 4 12 2 14 1 16 1 19 1 21 1 24 2 26 1 27 1 29 1 32 1 34 1 36 2 38 1 40 0 42 1 45 1 50 5 53 10 54L25 54C29 54 33 52 36 49 39 46 41 42 41 38L41 10C41 4 36 0 31 0M31 4C34 4 37 6 37 10L37 38C37 41 35 44 33 46 31 48 28 49 25 50L10 50C7 49 5 47 5 44 4 41 6 38 9 37L9 37C6 37 5 35 5 32 5 28 6 26 9 26L9 26C6 26 5 22 5 19 5 16 8 14 11 14L23 14C24 14 25 12 25 11L25 10C25 7 28 4 31 4" fill="#A1ACBA"/>
+                    </symbol>
+                </defs>
+                <rect width="400" height="400" fill="url(#o_reward_gradient_bg)"/>
+                <g transform="translate(47 45) scale(0.9)" class="o_reward_rainbow">
+                    <path d="M270,170a100,100,0,0,0-200,0" class="o_reward_rainbow_line" stroke="#FF9E80" stroke-linecap="round" stroke-width="21" fill="none" stroke-dasharray="600 600" stroke-dashoffset="-600"/>
+                    <path d="M290,170a120,120,0,0,0-240,0" class="o_reward_rainbow_line" stroke="#FFE57F" stroke-linecap="round" stroke-width="21" fill="none" stroke-dasharray="600 600" stroke-dashoffset="-600"/>
+                    <path d="M310,170a140,140,0,0,0-280,0" class="o_reward_rainbow_line" stroke="#80D8FF" stroke-linecap="round" stroke-width="21" fill="none" stroke-dasharray="600 600" stroke-dashoffset="-600"/>
+                    <path d="M330,170a160,160,0,0,0-320,0" class="o_reward_rainbow_line" stroke="#C794BA" stroke-linecap="round" stroke-width="21" fill="none" stroke-dasharray="600 600" stroke-dashoffset="-600"/>
+                </g>
+                <g transform="translate(80 125)">
+                    <use href="#o_reward_star" transform-origin="center" class="o_reward_box o_reward_star_01"/>
+                </g>
+                <g transform="translate(140 75)">
+                    <use href="#o_reward_star" transform-origin="center" class="o_reward_box o_reward_star_02"/>
+                </g>
+                <g transform="translate(230 90)">
+                    <use href="#o_reward_star" transform-origin="center" class="o_reward_box o_reward_star_03"/>
+                </g>
+                <g transform="translate(275 120)">
+                    <use href="#o_reward_star" transform-origin="center" class="o_reward_box o_reward_star_04"/>
+                </g>
+                <g class="o_reward_face_group o_reward_box" transform-origin="center top">
+                    <g class="o_reward_shadow_container o_reward_box">
+                        <ellipse class="o_reward_shadow o_reward_box" cx="200" cy="105%" rx="100" ry="6" fill="#000" opacity="0.25" transform-origin="center"/>
+                    </g>
+                    <g class="o_reward_face_wrap o_reward_box" transform-origin="center">
+                        <image class="o_reward_face" x="132" y="125" width="136" height="136" t-attf-href="{{props.imgUrl}}"/>
+                    </g>
+                    <g transform="translate(258 174)">
+                        <use href="#o_reward_thumb" class="o_reward_box o_reward_thumbup" transform-origin="center"/>
+                    </g>
+                </g>
+            </svg>
+            <div class="o_reward_rainbow_man o_reward_msg_container position-absolute top-0 bottom-0 start-0 end-0 m-auto">
+                <div class="o_reward_face_group h-100 w-75 mx-auto">
+                    <svg viewBox="0 0 42 60" preserveAspectRatio="xMinYMax meet" width="37" height="65%" class="overflow-visible position-relative ms-5">
+                        <g class="o_reward_box">
+                            <use href="#o_reward_thumb" x="-60%" y="0" transform="rotate(-90) scale(1 -1)" transform-origin="center"/>
+                        </g>
+                    </svg>
+                    <div class="o_reward_msg mx-4">
+                        <div class="o_reward_msg_card">
+                            <div class="o_reward_msg_content text-muted px-3 py-4 bg-white d-inline-block border border-light border-top-0">
+                                <t t-if="!props.Component">
+                                    <t t-out="props.message"/>
+                                </t>
+                                <t t-else="" t-component="props.Component" t-props="props.props"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record model="ir.ui.view" id="view_purchase_order_pivot">
+            <field name="name">product.month.pivot</field>
+            <field name="model">purchase.report</field>
+            <field name="arch" type="xml">
+                <pivot string="Purchase Analysis" display_quantity="1" sample="1">
+                    <field name="category_id" type="row"/>
+                    <field name="order_id" type="measure"/>
+                    <field name="untaxed_total" type="measure"/>
+                    <field name="price_total" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_purchase_order_graph">
+            <field name="name">product.month.graph</field>
+            <field name="model">purchase.report</field>
+            <field name="arch" type="xml">
+                <graph string="Purchase Analysis" type="line" sample="1">
+                    <field name="date_approve" interval="day"/>
+                    <field name="untaxed_total" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+        <record id="purchase_report_view_tree" model="ir.ui.view">
+            <field name="name">purchase.report.view.tree</field>
+            <field name="model">purchase.report</field>
+            <field name="arch" type="xml">
+                <tree string="Purchase Analysis">
+                    <field name="date_order" widget="date"/>
+                    <field name="order_id" optional="show"/>
+                    <field name="partner_id" optional="show"/>
+                    <field name="product_id" optional="show"/>
+                    <field name="category_id" optional="show"/>
+                    <field name="user_id" optional="show" widget="many2one_avatar_user"/>
+                    <field name="company_id" optional="show" groups="base.group_multi_company"/>
+                    <field name="qty_ordered" optional="hide" sum="Sum of Qty Ordered"/>
+                    <field name="qty_received" optional="hide" sum="Sum of Qty Received"/>
+                    <field name="qty_billed" optional="hide" sum="Sum of Qty Billed"/>
+                    <field name="currency_id" optional="show" invisible="1"/>
+                    <field name="untaxed_total" optional="hide" widget="monetary" sum="Sum of Untaxed Total"/>
+                    <field name="price_total" optional="show" widget="monetary" sum="Sum of Total"/>
+                    <field name="state" optional="show"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_purchase_order_search" model="ir.ui.view">
+        <field name="name">report.purchase.order.search</field>
+        <field name="model">purchase.report</field>
+        <field name="arch" type="xml">
+            <search string="Purchase Orders">
+                <filter string="Requests for Quotation" name="quotes" domain="[('state','in',('draft','sent'))]"/>
+                <filter string="Purchase Orders" name="orders" domain="[('state','!=','draft'), ('state','!=','sent'), ('state','!=','cancel')]"/>
+                <filter string="Confirmation Date Last Year" name="later_than_a_year_ago" domain="[('date_approve', '&gt;=', ((context_today()-relativedelta(years=1)).strftime('%Y-%m-%d')))]"/>
+                <filter name="filter_date_order" date="date_order"/>
+                <filter name="filter_date_approve" date="date_approve" default_period="this_month"/>
+                <field name="partner_id"/>
+                <field name="product_id"/>
+                <group expand="0" string="Extended Filters">
+                    <field name="user_id"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="date_order"/>
+                    <field name="date_approve"/>
+                    <field name="category_id" filter_domain="[('category_id', 'child_of', self)]"/>
+                </group>
+                <group expand="1" string="Group By">
+                    <filter string="Vendor" name="group_partner_id" context="{'group_by':'partner_id'}"/>
+                    <filter string="Vendor Country" name="country_id" context="{'group_by':'country_id'}"/>
+                    <filter string="Purchase Representative" name="user_id" context="{'group_by':'user_id'}"/>
+                    <filter string="Product" name="group_product_id" context="{'group_by':'product_id'}"/>
+                    <filter string="Product Category" name="group_category_id" context="{'group_by':'category_id'}"/>
+                    <filter string="Status" name="status" context="{'group_by':'state'}"/>
+                    <filter string="Company" name="company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                    <separator/>
+                    <filter string="Order Date" name="order_month" context="{'group_by': 'date_order:month'}"/>
+                    <filter string="Confirmation Date" name="group_date_approve_month" context="{'group_by': 'date_approve:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_purchase_order_report_all" model="ir.actions.act_window">
+        <field name="name">Purchase Analysis</field>
+        <field name="res_model">purchase.report</field>
+        <field name="view_mode">graph,pivot</field>
+        <field name="view_id"></field>  <!-- force empty -->
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No Purchase Analysis
+            </p><p>
+                This analysis allows you to easily check and analyse your company purchase history and performance.
+                You can track your negotiation performance, the delivery performance of your vendors, etc
+            </p>
+        </field>
+        <field name="target">current</field>
+    </record>
+
+    <menuitem id="purchase_report_main" name="Reporting" parent="purchase.menu_purchase_root" sequence="99" groups="purchase.group_purchase_manager"/>
+    <menuitem id="purchase_report" name="Purchase" parent="purchase.purchase_report_main" sequence="99" groups="purchase.group_purchase_manager" action="action_purchase_order_report_all"/>
+
+</odoo>

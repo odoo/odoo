@@ -1,0 +1,297 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* product_images
+# 
+# Translators:
+# Friederike Fasterling-Nesselbosch, 2022
+# Martin Trigaux, 2023
+# Larissa Manderfeld, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"PO-Revision-Date: 2022-09-22 05:54+0000\n"
+"Last-Translator: Larissa Manderfeld, 2023\n"
+"Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: de\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: product_images
+#: code:addons/product_images/wizard/product_fetch_image_wizard.py:0
+#, python-format
+msgid ""
+"%(matching_images_count)s matching images have been found for "
+"%(product_count)s products."
+msgstr ""
+"%(matching_images_count)s passende Bilder wurden für %(product_count)s "
+"Produkte gefunden."
+
+#. module: product_images
+#: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
+msgid ""
+"<span attrs=\"{'invisible': [('nb_products_selected', '&lt;=', 10000)]}\">\n"
+"                            As only 10,000 products can be processed per day, the remaining will be\n"
+"                            done tomorrow.\n"
+"                        </span>"
+msgstr ""
+"<span attrs=\"{'invisible': [('nb_products_selected', '&lt;=', 10000)]}\">\n"
+"                            Da nur 10.000 Produkte am Tag bearbeitet werden können, wird der Rest\n"
+"                            morgen erledigt.\n"
+"                        </span>"
+
+#. module: product_images
+#: code:addons/product_images/wizard/product_fetch_image_wizard.py:0
+#, python-format
+msgid ""
+"A task to process products in the background is already running. Please try "
+"againlater."
+msgstr ""
+"Es läuft bereits eine Aufgabe zur Bearbeitung von Produkten im Hintergrund. "
+"Bitte versuchen Sie es später noch einmal."
+
+#. module: product_images
+#: model_terms:ir.ui.view,arch_db:product_images.res_config_settings_view_form
+msgid "API Key"
+msgstr "API-Schlüssel"
+
+#. module: product_images
+#: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#. module: product_images
+#: model:ir.model,name:product_images.model_res_config_settings
+msgid "Config Settings"
+msgstr "Konfigurationseinstellungen"
+
+#. module: product_images
+#: model:ir.model.fields,field_description:product_images.field_product_fetch_image_wizard__create_uid
+msgid "Created by"
+msgstr "Erstellt von"
+
+#. module: product_images
+#: model:ir.model.fields,field_description:product_images.field_product_fetch_image_wizard__create_date
+msgid "Created on"
+msgstr "Erstellt am"
+
+#. module: product_images
+#: model:ir.model.fields,field_description:product_images.field_product_fetch_image_wizard__display_name
+msgid "Display Name"
+msgstr "Anzeigename"
+
+#. module: product_images
+#: model:ir.model,name:product_images.model_product_fetch_image_wizard
+msgid ""
+"Fetch product images from Google Images based on the product's barcode "
+"number."
+msgstr ""
+"Abruf von Produktbildern aus Google Images auf der Grundlage der Barcode-"
+"Nummer des Produkts."
+
+#. module: product_images
+#: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
+msgid "Get Pictures"
+msgstr "Bilder erhalten"
+
+#. module: product_images
+#: model:ir.actions.act_window,name:product_images.product_product_action_get_pic_with_barcode
+#: model:ir.actions.act_window,name:product_images.product_template_action_get_pic_with_barcode
+msgid "Get Pictures from Google Images"
+msgstr "Bilder von Google Bilder erhalten"
+
+#. module: product_images
+#: model:ir.model.fields,field_description:product_images.field_res_config_settings__google_custom_search_key
+msgid "Google Custom Search API Key"
+msgstr "API-Schlüssel von Google Custom Search"
+
+#. module: product_images
+#: model:ir.model.fields,field_description:product_images.field_product_fetch_image_wizard__id
+msgid "ID"
+msgstr "ID"
+
+#. module: product_images
+#: model:ir.model.fields,field_description:product_images.field_product_product__image_fetch_pending
+msgid "Image Fetch Pending"
+msgstr "Bildabruf ausstehend"
+
+#. module: product_images
+#: model:ir.model.fields,field_description:product_images.field_product_fetch_image_wizard____last_update
+msgid "Last Modified on"
+msgstr "Letzte Änderung am"
+
+#. module: product_images
+#: model:ir.model.fields,field_description:product_images.field_product_fetch_image_wizard__write_uid
+msgid "Last Updated by"
+msgstr "Zuletzt aktualisiert von"
+
+#. module: product_images
+#: model:ir.model.fields,field_description:product_images.field_product_fetch_image_wizard__write_date
+msgid "Last Updated on"
+msgstr "Zuletzt aktualisiert am"
+
+#. module: product_images
+#: model:ir.model.fields,field_description:product_images.field_product_fetch_image_wizard__nb_products_unable_to_process
+msgid "Number of product unprocessable"
+msgstr "Anzahl der Produkte, die nicht verarbeitet werden können"
+
+#. module: product_images
+#: model:ir.model.fields,field_description:product_images.field_product_fetch_image_wizard__nb_products_to_process
+msgid "Number of products to process"
+msgstr "Anzahl der zu verarbeitenden Produkte"
+
+#. module: product_images
+#: model:ir.model.fields,field_description:product_images.field_product_fetch_image_wizard__nb_products_selected
+msgid "Number of selected products"
+msgstr "Anzahl der ausgewählten Produkte"
+
+#. module: product_images
+#: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
+msgid ""
+"Please note that some images might not be royalty-free. You should not\n"
+"                        publish these on your website."
+msgstr ""
+"Bitte beachten Sie, dass einige Bilder möglicherweise nicht lizenzfrei sind. Sie sollten diese nicht\n"
+"auf Ihrer Website veröffentlichen."
+
+#. module: product_images
+#: model:ir.actions.server,name:product_images.ir_cron_fetch_image_ir_actions_server
+#: model:ir.cron,cron_name:product_images.ir_cron_fetch_image
+#: model:ir.cron,name:product_images.ir_cron_fetch_image
+msgid "Product Images: Get product images from Google"
+msgstr "Produktbilder: Produktbilder von Google abrufen"
+
+#. module: product_images
+#: model:ir.model,name:product_images.model_product_product
+msgid "Product Variant"
+msgstr "Produktvariante"
+
+#. module: product_images
+#: code:addons/product_images/wizard/product_fetch_image_wizard.py:0
+#, python-format
+msgid "Product images"
+msgstr "Produktbilder"
+
+#. module: product_images
+#: model:ir.model.fields,field_description:product_images.field_product_fetch_image_wizard__products_to_process
+msgid "Products To Process"
+msgstr "Zu verarbeitende Produkte"
+
+#. module: product_images
+#: code:addons/product_images/wizard/product_fetch_image_wizard.py:0
+#, python-format
+msgid ""
+"Products are processed in the background. Images will be updated "
+"progressively."
+msgstr ""
+"Die Produkte werden im Hintergrund verarbeitet. Bilder werden nach und nach "
+"aktualisiert."
+
+#. module: product_images
+#: model_terms:ir.ui.view,arch_db:product_images.res_config_settings_view_form
+msgid "Search Engine ID"
+msgstr "Suchmaschinen-ID"
+
+#. module: product_images
+#: code:addons/product_images/wizard/product_fetch_image_wizard.py:0
+#, python-format
+msgid "The API Key and Search Engine ID must be set in the General Settings."
+msgstr ""
+"Der API-Schlüssel und die Suchmaschinen-ID müssen in den Allgemeinen "
+"Einstellungen festgelegt werden."
+
+#. module: product_images
+#: code:addons/product_images/wizard/product_fetch_image_wizard.py:0
+#, python-format
+msgid ""
+"The Custom Search API is not enabled in your Google project. Please visit "
+"your Google Cloud Platform project page and enable it, then retry. If you "
+"enabled this API recently, please wait a few minutes and retry."
+msgstr ""
+"Die benutzerdefinierte Such-API ist in Ihrem Google-Projekt nicht aktiviert."
+" Bitte besuchen Sie Ihre Google-Cloud-Platform-Projektseite, aktivieren Sie "
+"sie und versuchen Sie es dann erneut. Wenn Sie diese API vor kurzem "
+"aktiviert haben, warten Sie bitte ein paar Minuten und versuchen Sie es "
+"erneut."
+
+#. module: product_images
+#: model:ir.model.fields,field_description:product_images.field_res_config_settings__google_pse_id
+msgid "The identifier of the Google Programmable Search Engine"
+msgstr "Die Kennung der Google Programmable Search Engine"
+
+#. module: product_images
+#: model:ir.model.fields,help:product_images.field_product_fetch_image_wizard__products_to_process
+msgid ""
+"The list of selected products that meet the criteria (have a barcode and no "
+"image)"
+msgstr ""
+"Die Liste der ausgewählten Produkte, die die Kriterien erfüllen (haben einen"
+" Barcode und kein Bild)"
+
+#. module: product_images
+#: code:addons/product_images/wizard/product_fetch_image_wizard.py:0
+#: code:addons/product_images/wizard/product_fetch_image_wizard.py:0
+#, python-format
+msgid ""
+"The scheduled action \"Product Images: Get product images from Google\" has "
+"been deleted. Please contact your administrator to have the action restored "
+"or to reinstall the module \"product_images\"."
+msgstr ""
+"Die geplante Aktion „Produktbilder: Produktbilder von Google abrufen“ wurde "
+"gelöscht. Bitte kontaktieren Sie Ihren Administrator, um die Aktion "
+"wiederherzustellen oder das Modul „product_images“ neu zu installieren."
+
+#. module: product_images
+#: code:addons/product_images/models/ir_cron_trigger.py:0
+#, python-format
+msgid "This action is already scheduled. Please try again later."
+msgstr ""
+"Diese Aktion wurde bereits geplant. Bitte versuchen Sie es später erneut."
+
+#. module: product_images
+#: model:ir.model,name:product_images.model_ir_cron_trigger
+msgid "Triggered actions"
+msgstr "Ausgelöste Aktionen"
+
+#. module: product_images
+#: model:ir.model.fields,help:product_images.field_product_product__image_fetch_pending
+msgid "Whether an image must be fetched for this product. Handled by a cron."
+msgstr ""
+"Ob für dieses Produkt ein Bild abgerufen werden muss. Wird von einem Cron "
+"verwaltet."
+
+#. module: product_images
+#: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
+msgid "You selected"
+msgstr "Sie haben"
+
+#. module: product_images
+#: code:addons/product_images/wizard/product_fetch_image_wizard.py:0
+#, python-format
+msgid "Your API Key or your Search Engine ID is incorrect."
+msgstr "Ihr API-Schlüssel oder Ihre Suchmaschinen-ID ist falsch."
+
+#. module: product_images
+#: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
+msgid "of which will be processed."
+msgstr "verarbeitet werden."
+
+#. module: product_images
+#: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
+msgid ""
+"products will not be\n"
+"                            processed because they either already have an image or their barcode\n"
+"                            number is not set."
+msgstr ""
+"Produkte werden nicht\n"
+"verarbeitet, weil sie entweder bereits ein Bild haben oder ihre Barcodenummer\n"
+"nicht festgelegt ist."
+
+#. module: product_images
+#: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
+msgid "products,"
+msgstr "Produkte ausgewählt, wovon"

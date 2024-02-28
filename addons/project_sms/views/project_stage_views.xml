@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="project_project_stage_view_tree_inherit_project_sms" model="ir.ui.view">
+        <field name="name">project.project.stage.view.tree.inherit.project.sms</field>
+        <field name="model">project.project.stage</field>
+        <field name="inherit_id" ref="project.project_project_stage_view_tree"/>
+        <field name="arch" type="xml">
+            <field name="mail_template_id" position="after">
+                <field name="sms_template_id" optional="hide" context="{'default_model': 'project.project'}"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="project_project_stage_view_form_inherit_project_sms" model="ir.ui.view">
+        <field name="name">project.project.stage.view.form.inherit.project.sms</field>
+        <field name="model">project.project.stage</field>
+        <field name="inherit_id" ref="project.project_project_stage_view_form"/>
+        <field name="arch" type="xml">
+            <field name="mail_template_id" position="after">
+                <field name="sms_template_id" context="{'default_model': 'project.project'}" options="{'no_quick_create': True}"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="project_project_stage_view_search_inherit_project_sms" model="ir.ui.view">
+        <field name="name">project.project.stage.view.search.inherit.project.sms</field>
+        <field name="model">project.project.stage</field>
+        <field name="inherit_id" ref="project.project_project_stage_view_search"/>
+        <field name="arch" type="xml">
+            <field name="mail_template_id" position="after">
+                <field name="sms_template_id" domain="[('model', '=', 'project.project')]"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

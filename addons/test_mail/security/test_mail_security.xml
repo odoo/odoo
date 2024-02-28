@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="mail_test_multi_company_rule" model="ir.rule">
+        <field name="name">Mail Test Multi Company</field>
+        <field name="model_id" ref="test_mail.model_mail_test_multi_company"/>
+        <field eval="True" name="global"/>
+        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="mail_test_multi_company_read_rule" model="ir.rule">
+        <field name="name">MC Readonly Rule</field>
+        <field name="model_id" ref="test_mail.model_mail_test_multi_company_read"/>
+        <field name="perm_read" eval="False"/>
+        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+        <field name="global" eval="True"/>
+    </record>
+
+    <record id="mail_test_multi_company_with_activity_rule" model="ir.rule">
+        <field name="name">Mail Test Multi Company With Activity</field>
+        <field name="model_id" ref="test_mail.model_mail_test_multi_company_with_activity"/>
+        <field eval="True" name="global"/>
+        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <!-- TICKET-LIKE -->
+    <record id="mail_test_ticket_rule_portal" model="ir.rule">
+        <field name="name">Portal Mail Test Ticket</field>
+        <field name="model_id" ref="test_mail.model_mail_test_ticket"/>
+        <field name="domain_force">[('message_partner_ids', 'in', [user.partner_id.id])]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+    </record>
+
+    <!-- MULTI COMPANY TICKET LIKE -->
+    <record id="mail_test_ticket_mc_rule" model="ir.rule">
+        <field name="name">Mail Test Ticket Multi Company</field>
+        <field name="model_id" ref="test_mail.model_mail_test_ticket_mc"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+    </record>
+    <record id="mail_test_ticket_mc_rule_portal" model="ir.rule">
+        <field name="name">Portal Mail Test Ticket Multi Company</field>
+        <field name="model_id" ref="test_mail.model_mail_test_ticket_mc"/>
+        <field name="domain_force">[('message_partner_ids', 'in', [user.partner_id.id])]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+    </record>
+
+    <!-- PROJECT-LIKE -->
+    <record id="mail_test_container_rule_portal" model="ir.rule">
+        <field name="name">Portal Mail Test Container</field>
+        <field name="model_id" ref="test_mail.model_mail_test_container"/>
+        <field name="domain_force">[('message_partner_ids', 'in', [user.partner_id.id])]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+    </record>
+
+    <!-- MULTI COMPANY PROJECT LIKE -->
+    <record id="mail_test_container_mc_rule" model="ir.rule">
+        <field name="name">Mail Test Container Multi Company</field>
+        <field name="model_id" ref="test_mail.model_mail_test_container_mc"/>
+        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+        <field name="global" eval="True"/>
+    </record>
+    <record id="mail_test_container_mc_rule_portal" model="ir.rule">
+        <field name="name">Portal Mail Test Container Multi Company</field>
+        <field name="model_id" ref="test_mail.model_mail_test_container_mc"/>
+        <field name="domain_force">[('message_partner_ids', 'in', [user.partner_id.id])]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+    </record>
+
+</odoo>

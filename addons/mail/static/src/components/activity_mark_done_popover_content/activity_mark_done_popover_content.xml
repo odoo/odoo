@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.ActivityMarkDonePopoverContent" owl="1">
+        <t t-if="activityMarkDonePopoverContentView">
+            <div class="o_ActivityMarkDonePopoverContent" t-attf-class="{{ className }}" t-on-keydown="activityMarkDonePopoverContentView.onKeydown" t-ref="root">
+                <h6 t-if="activityMarkDonePopoverContentView.hasHeader" class="o_ActivityMarkDonePopoverContent_header p-2 fw-bolder bg-200 border-bottom" t-esc="activityMarkDonePopoverContentView.headerText"/>
+                <div class="o_ActivityMarkDonePopoverContent_content py-2 px-3">
+                    <textarea class="form-control o_ActivityMarkDonePopoverContent_feedback" rows="3" placeholder="Write Feedback" t-on-blur="activityMarkDonePopoverContentView.onBlur" t-ref="feedbackTextarea"/>
+                    <div class="o_ActivityMarkDonePopoverContent_buttons mt-2">
+                        <button type="button" class="o_ActivityMarkDonePopoverContent_doneScheduleNextButton btn btn-sm btn-primary" t-on-click="activityMarkDonePopoverContentView.onClickDoneAndScheduleNext">
+                            Done &amp; Schedule Next
+                        </button>
+                        <t t-if="activityMarkDonePopoverContentView.activity.chaining_type === 'suggest'">
+                            <button type="button" class="o_ActivityMarkDonePopoverContent_doneButton btn btn-sm btn-primary mx-2" t-on-click="activityMarkDonePopoverContentView.onClickDone">
+                                Done
+                            </button>
+                        </t>
+                        <button type="button" class="o_ActivityMarkDonePopoverContent_discardButton btn btn-sm btn-link" t-on-click="activityMarkDonePopoverContentView.onClickDiscard">
+                            Discard
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </t>
+
+</templates>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sale_order_view_form_inherit_sale_loyalty" model="ir.ui.view">
+        <field name="name">sale.order.view.form.inherit.sale.loyalty</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='note_group']" position="before">
+                <div class="oe_right">
+                    <button name="%(sale_loyalty.sale_loyalty_coupon_wizard_action)d" class="btn btn-secondary"
+                        string="Coupon Code" type="action" groups="base.group_user" states="draft,sent,sale"/>
+                    <button name="action_open_reward_wizard" class="btn btn-secondary"
+                        string="Promotions" type="object" groups="base.group_user" states="draft,sent,sale"
+                        help="Update current promotional lines and select new rewards if applicable."/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

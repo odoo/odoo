@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.MobileMessagingNavbar" owl="1">
+        <t t-if="mobileMessagingNavbarView">
+            <div class="o_MobileMessagingNavbar d-flex flex-shrink-0 border-top bg-view shadow-lg" t-attf-class="{{ className }}" t-ref="root">
+                <t t-foreach="mobileMessagingNavbarView.tabs" t-as="tab" t-key="tab.id">
+                    <div class="o_MobileMessagingNavbar_tab d-flex flex-column align-items-center flex-grow-1 p-2" t-att-class="{ 'o-active text-primary': mobileMessagingNavbarView.activeTabId === tab.id, 'border-start': tab_index !== 0 }" t-on-click="ev => mobileMessagingNavbarView.onClick(tab.id, ev)" t-att-data-tab-id="tab.id">
+                        <t t-if="tab.icon">
+                            <span class="o_MobileMessagingNavbar_tabIcon fs-4" t-att-class="tab.icon"/>
+                        </t>
+                        <span class="o_MobileMessagingNavbar_tabLabel small"><t t-esc="tab.label"/></span>
+                    </div>
+                </t>
+            </div>
+        </t>
+    </t>
+
+</templates>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.ChannelMember" owl="1">
+        <div class="o_ChannelMember d-flex align-items-center mx-2 p-2" t-att-class="{'cursor-pointer': channelMemberView.hasOpenChat}" t-attf-class="{{ className }}" t-att-data-partner-id="channelMemberView.channelMember.persona.partner and channelMemberView.channelMember.persona.partner.id" t-att-title="channelMemberView.memberTitleText" t-on-click="channelMemberView.onClickMember" t-ref="root">
+            <div class="o_ChannelMember_avatarContainer position-relative flex-shrink-0">
+                <img class="o_ChannelMember_avatar rounded-circle w-100 h-100" t-att-src="channelMemberView.channelMember.avatarUrl" alt="Avatar"/>
+
+                <t t-if="channelMemberView.personaImStatusIconView">
+                    <PersonaImStatusIcon
+                        className="'o_ChannelMember_personaImStatusIcon position-absolute bottom-0 end-0 d-flex align-items-center justify-content-center text-light'"
+                        classNameObj="{
+                            'o-isDeviceSmall': messaging.device.isSmall,
+                            'small': !messaging.device.isSmall,
+                        }"
+                        hasOpenChat="channelMemberView.hasOpenChat"
+                        record="channelMemberView.personaImStatusIconView"
+                    />
+                </t>
+            </div>
+            <span class="o_ChannelMember_name ms-2 flex-column-1 text-truncate">
+                <t t-esc="channelMemberView.channelMember.channel.thread.getMemberName(channelMemberView.channelMember.persona)"/>
+            </span>
+        </div>
+    </t>
+
+</templates>

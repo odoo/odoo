@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo><data>
+
+    <record id="event_booth_configurator_view_form" model="ir.ui.view">
+        <field name="name">event.booth.configurator.view.form</field>
+        <field name="model">event.booth.configurator</field>
+        <field name="arch" type="xml">
+            <form js_class="event_booth_configurator_form">
+                <group>
+                    <field name="product_id" invisible="1"/>
+                    <field name="event_id" options="{'no_open': True, 'no_create': True}"
+                           domain="[
+                                ('event_booth_ids.product_id', '=', product_id),
+                                ('is_finished', '=', False)
+                           ]"/>
+                    <field name="event_booth_category_available_ids" invisible="1"/>
+                    <field name="event_booth_category_id" options="{'no_open': True, 'no_create': True}"
+                           attrs="{'invisible': [('event_id', '=', False)]}"
+                           domain="[('id', 'in', event_booth_category_available_ids)]"/>
+                    <field name="event_booth_ids" options="{'no_open': True, 'no_create': True}"
+                           widget="many2many_checkboxes" attrs="{'invisible': [('event_booth_category_id', '=', False)]}"
+                           domain="[
+                                ('event_id', '=', event_id),
+                                ('booth_category_id', '=', event_booth_category_id),
+                                ('product_id', '=', product_id),
+                                ('state', '=', 'available')
+                           ]"/>
+                </group>
+                <footer>
+                    <button string="Ok" class="btn-primary" special="save"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="event_booth_configurator_action" model="ir.actions.act_window">
+        <field name="name">Select an event booth</field>
+        <field name="res_model">event.booth.configurator</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</data></odoo>

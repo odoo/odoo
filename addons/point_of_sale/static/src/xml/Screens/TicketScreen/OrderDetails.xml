@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="OrderDetails" owl="1">
+        <div class="order-container">
+            <div t-ref="scrollable" class="order-scroller touch-scrollable">
+                <div class="order">
+                    <t t-if="!props.order">
+                        <div class="order-empty">
+                            <i class="fa fa-shopping-cart" role="img" aria-label="Shopping cart"
+                               title="Shopping cart" />
+                            <h1>Select an order</h1>
+                        </div>
+                    </t>
+                    <t t-elif="orderlines.length === 0">
+                        <div class="order-empty">
+                            <i class="fa fa-shopping-cart" role="img" aria-label="Shopping cart"
+                               title="Shopping cart" />
+                            <h1>Order is empty</h1>
+                        </div>
+                    </t>
+                    <t t-else="">
+                        <div class="header-note" t-att-class="{ highlight: props.highlightHeaderNote }">
+                            Select the product(s) to refund and set the quantity
+                        </div>
+                        <ul class="orderlines">
+                            <t t-foreach="orderlines" t-as="orderline" t-key="orderline.id">
+                                <OrderlineDetails line="orderline" isSelected="orderline.id == props.selectedOrderlineId" />
+                            </t>
+                        </ul>
+                        <!-- Not using OrderSummary because we don't need it's overrides in this view. -->
+                        <div class="summary clearfix">
+                            <div class="line">
+                                <div class="entry total">
+                                    <span class="badge">Total: </span>
+                                    <span class="value">
+                                        <t t-esc="total" />
+                                    </span>
+                                    <div t-if="tax" class="subentry">
+                                        Taxes:
+                                        <span class="value">
+                                            <t t-esc="tax" />
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

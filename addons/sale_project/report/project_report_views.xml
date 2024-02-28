@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_task_project_user_search_inherited" model="ir.ui.view">
+            <field name="name">report.project.task.user.search.inherited</field>
+            <field name="model">report.project.task.user</field>
+            <field name="inherit_id" ref="project.view_task_project_user_search" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="sale_order_id"/>
+                </xpath>
+                <xpath expr="//filter[@name='Customer']" position="after">
+                    <filter string="Sales Order Item" name="sale_line_id" context="{'group_by': 'sale_line_id'}"/>
+                </xpath>
+             </field>
+        </record>
+    </data>
+</odoo>

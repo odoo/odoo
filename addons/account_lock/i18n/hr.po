@@ -1,0 +1,89 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_lock
+# 
+# Translators:
+# Bole <bole@dajmi5.com>, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"PO-Revision-Date: 2022-09-22 05:44+0000\n"
+"Last-Translator: Bole <bole@dajmi5.com>, 2023\n"
+"Language-Team: Croatian (https://app.transifex.com/odoo/teams/41243/hr/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: hr\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+
+#. module: account_lock
+#: code:addons/account_lock/models/res_company.py:0
+#, python-format
+msgid ""
+"Any new All Users Lock Date must be posterior (or equal) to the previous "
+"one."
+msgstr ""
+"Svaki noviji datum zaključavanja za sve korisnike mora biti nakon (ili "
+"jednak) prethodnom."
+
+#. module: account_lock
+#: model:ir.model,name:account_lock.model_res_company
+msgid "Companies"
+msgstr "Tvrtke"
+
+#. module: account_lock
+#: code:addons/account_lock/models/res_company.py:0
+#, python-format
+msgid "The lock date for accountants is irreversible and can't be removed."
+msgstr ""
+"Datum zaključavanja za računovođe je nepromjenjiv i nije ga moguće maknuti."
+
+#. module: account_lock
+#: code:addons/account_lock/models/res_company.py:0
+#, python-format
+msgid "The new tax lock date must be set after the previous lock date."
+msgstr ""
+"Novi datum zaključavanja poreza mora biti nakon prethodno postavljenog."
+
+#. module: account_lock
+#: code:addons/account_lock/models/res_company.py:0
+#, python-format
+msgid "The tax lock date is irreversible and can't be removed."
+msgstr "Datum zaključavanja je ireverzibilan i nije ga moguće ukloniti."
+
+#. module: account_lock
+#: code:addons/account_lock/models/res_company.py:0
+#, python-format
+msgid ""
+"You cannot lock a period that has not yet ended. Therefore, the All Users "
+"Lock Date must be anterior (or equal) to the last day of the previous month."
+msgstr ""
+"Nije moguće zaključati period koji još nije završio. Također, svi datumi "
+"zaključavanja za korisnike moraju biti nakon (ili jednaki ) zadnjeg danu "
+"prethodnog mjeseca."
+
+#. module: account_lock
+#: code:addons/account_lock/models/res_company.py:0
+#, python-format
+msgid ""
+"You cannot lock a period that has not yet ended. Therefore, the tax lock "
+"date must be anterior (or equal) to the last day of the previous month."
+msgstr ""
+"Nije moguće zaključati period koji još nije završio. Također, svi datumi "
+"zaključavanja za korisnike moraju biti nakon (ili jednaki ) zadnjeg danu "
+"prethodnog mjeseca."
+
+#. module: account_lock
+#: code:addons/account_lock/models/res_company.py:0
+#, python-format
+msgid ""
+"You cannot set stricter restrictions on accountants than on users. "
+"Therefore, the All Users Lock Date must be anterior (or equal) to the "
+"Invoice/Bills Lock Date."
+msgstr ""
+"Nije moguće postaviti jača ograničenja na računovođe naspram običnog "
+"korisnika. Zato, Datum zaključavanja za sve korisnike mora biti prije ili "
+"jednak Datumu zaključavanja računa"

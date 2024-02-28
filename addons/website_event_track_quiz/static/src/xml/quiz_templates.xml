@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="quiz.main">
+        <div class="h-100 w-100 overflow-auto px-2 py-2">
+            <div class="container">
+                <div t-foreach="widget.quiz.questions" t-as="question"
+                     t-attf-class="o_quiz_js_quiz_question mt-3 mb-4 #{widget.track.completed ? 'completed-disabled' : ''}"
+                     t-att-data-question-id="question.id" t-att-data-title="question.question">
+                    <div class="h4">
+                        <small class="text-muted"><span t-out="question_index+1"/>. </small> <span t-out="question.question"/>
+                    </div>
+                    <div class="list-group">
+                        <t t-foreach="question.answer_ids" t-as="answer">
+                            <a t-att-data-answer-id="answer.id" href="#"
+                                t-att-data-text="answer.text_value"
+                                t-attf-class="o_quiz_quiz_answer list-group-item d-flex align-items-center list-group-item-action #{widget.track.completed  &amp;&amp; answer.is_correct ? 'list-group-item-success' : '' }">
+
+                                <label class="my-0 d-flex align-items-center justify-content-center me-2">
+                                    <input type="radio"
+                                        t-att-name="question.id"
+                                        t-att-value="answer.id"
+                                        class="d-none"/>
+                                    <i t-att-class="'fa fa-circle text-400' + (!(widget.track.completed &amp;&amp; answer.is_correct) ? '' : ' d-none')"></i>
+                                    <i class="fa fa-times-circle text-danger d-none"></i>
+                                    <i t-att-class="'fa fa-check-circle text-success' + (widget.track.completed &amp;&amp; answer.is_correct ? '' :  ' d-none')"></i>
+                                </label>
+                                <span t-out="answer.text_value"/>
+                            </a>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="quiz.badge">
+        <span class="badge text-bg-warning ms-2">
+            <span>+ <t t-out="answer.awarded_points"/></span>
+            <span t-if="answer.awarded_points == 1">Point</span>
+            <span t-else="">Points</span>
+        </span>
+    </t>
+
+    <t t-name="quiz.comment">
+        <t t-if="answer.is_correct">
+            <div class="o_quiz_quiz_answer_info list-group-item list-group-item-success">
+                <i class="fa fa-info-circle"/>
+                Correct.
+                <t t-if="answer.comment">
+                    <br/>
+                    <t t-out="answer.comment"/>
+                </t>
+            </div>
+        </t>
+        <t t-else="">
+            <div class="o_quiz_quiz_answer_info list-group-item list-group-item-danger">
+                <i class="fa fa-info-circle"/>
+                Incorrect. <t t-if="answer.correct_answer">The correct answer was: <t t-out="answer.correct_answer"/></t>
+                <t t-if="answer.comment">
+                    <br/>
+                    <t t-out="answer.comment"/>
+                </t>
+            </div>
+        </t>
+    </t>
+
+    <t t-name="quiz.validation">
+        <div id="validation" class="d-md-flex">
+            <div class="flex-grow-1">
+                <button t-if="!widget.track.completed" role="button" title="Check answers" aria-label="Check answers"
+                    class="btn btn-primary text-uppercase fw-bold o_quiz_js_quiz_submit">
+                    Check your answers
+                </button>
+                <t t-else="">
+                    <div t-if="widget.quiz.quizPointsGained > 0" class="alert alert-warning me-md-3">
+                        Congratulations, you scored a total of <span t-out="widget.quiz.quizPointsGained" class="fw-bold"/>
+                        <span t-if="widget.quiz.quizPointsGained == 1">point!</span>
+                        <span t-else="">points!</span>
+                    </div>
+                    <div t-else="" class="alert alert-warning me-md-3">
+                        Oopsie, you did not score any point on this quiz.
+                    </div>
+                </t>
+            </div>
+            <div class="o_quiz_js_quiz_actions mt-3 mt-md-0">
+                <button t-if="widget.track.isEventUser or widget.track.repeatable"
+                    class="btn border o_quiz_js_quiz_reset">
+                    Reset
+                </button>
+            </div>
+        </div>
+    </t>
+
+</templates>

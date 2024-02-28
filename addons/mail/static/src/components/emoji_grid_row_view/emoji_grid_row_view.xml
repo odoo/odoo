@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.EmojiGridRowView" owl="1">
+        <div class="o_EmojiGridRowView">
+            <EmojiGridSectionView t-if="emojiGridRowView.sectionView" record="emojiGridRowView.sectionView"/>
+            <t t-else="">
+                <t t-foreach="emojiGridRowView.items" t-as="item" t-key="item">
+                    <EmojiGridItemView className="'o_EmojiGridRowView_item'" record="item"/>
+                </t>
+            </t>
+        </div>
+    </t>
+</templates>

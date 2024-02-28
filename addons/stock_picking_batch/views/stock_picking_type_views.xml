@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_picking_type_form_inherit" model="ir.ui.view">
+        <field name="name">stock.picking.type.form.inherit</field>
+        <field name="model">stock.picking.type</field>
+        <field name="inherit_id" ref="stock.view_picking_type_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='second']" position="after">
+                <group name="batch" attrs="{'invisible': [('code', 'not in', ('incoming', 'outgoing', 'internal'))]}">
+                    <group string="Batch Transfers">
+                        <field name="auto_batch"/>
+                        <span class="o_form_label fw-bold" attrs="{'invisible':[('auto_batch', '=', False)]}">Group by</span>
+                        <div name="batch_contact" class="o_row" attrs="{'invisible':[('auto_batch', '=', False)]}">
+                            <field name="batch_group_by_partner"/>
+                            <label for="batch_group_by_partner" string="Contact"/>
+                        </div>
+                        <span attrs="{'invisible':[('auto_batch', '=', False)]}"/>
+                        <div name="batch_destination" class="o_row" attrs="{'invisible':[('auto_batch', '=', False)]}">
+                            <field name="batch_group_by_destination"/>
+                            <label for="batch_group_by_destination"/>
+                        </div>
+                        <span attrs="{'invisible':['|', ('auto_batch', '=', False), ('default_location_src_id', '=', False)]}" groups="stock.group_stock_multi_locations"/>
+                        <div name="batch_source_location" class="o_row" attrs="{'invisible':['|', ('auto_batch', '=', False), ('default_location_src_id', '=', False)]}" groups="stock.group_stock_multi_locations">
+                            <field name="batch_group_by_src_loc"/>
+                            <label for="batch_group_by_src_loc"/>
+                        </div>
+                        <span attrs="{'invisible':['|', ('auto_batch', '=', False), ('default_location_dest_id', '=', False)]}" groups="stock.group_stock_multi_locations"/>
+                        <div name="batch_dest_subloc" class="o_row" attrs="{'invisible':['|', ('auto_batch', '=', False), ('default_location_dest_id', '=', False)]}" groups="stock.group_stock_multi_locations">
+                            <field name="batch_group_by_dest_loc"/>
+                            <label for="batch_group_by_dest_loc"/>
+                        </div>
+                        <field name="batch_max_lines" attrs="{'invisible': [('auto_batch', '=', False)]}"/>
+                        <field name="batch_max_pickings" attrs="{'invisible': [('auto_batch', '=', False)]}"/>
+                        <field name="batch_auto_confirm" attrs="{'invisible': [('auto_batch', '=', False)]}"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

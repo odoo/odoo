@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="web.PropertiesField" owl="1">
+        <div t-ref="properties" class="row align-items-start">
+            <t t-foreach="groupedPropertiesList" t-as="propertiesListGroup" t-key="propertiesListGroup_index">
+                <div class="o_inner_group grid col-lg-6">
+                    <div
+                        t-foreach="propertiesListGroup"
+                        t-as="propertyConfiguration"
+                        t-key="propertyConfiguration.name"
+                        class="o_property_field d-sm-contents mb-3"
+                        t-att-property-name="propertyConfiguration.name">
+                        <t t-set="domId" t-value="generateUniqueDomID()"/>
+                        <label
+                            t-attf-class="o_field_property_label o_form_label text-break {{state.movedPropertyName === propertyConfiguration.name ? 'o_property_field_highlight' : ''}} d-flex align-items-center"
+                            t-att-for="domId">
+                            <b
+                                t-if="propertyConfiguration.string &amp;&amp; propertyConfiguration.string.length"
+                                t-out="propertyConfiguration.string"
+                                class="text-900"/>
+                            <i
+                                t-else="" class="o_field_property_empty_label">
+                                New Property
+                            </i>
+                            <i
+                                t-if="state.canChangeDefinition &amp;&amp; !props.readonly"
+                                class="o_field_property_open_popover fa fa-pencil ms-2"
+                                t-on-click="(event) => this.onPropertyEdit(event, propertyConfiguration.name)"/>
+                        </label>
+                        <div class="o_property_field_value">
+                            <PropertyValue
+                                id="domId"
+                                canChangeDefinition="state.canChangeDefinition"
+                                checkDefinitionWriteAccess.bind="checkDefinitionWriteAccess ? checkDefinitionWriteAccess : () => {}"
+                                comodel="propertyConfiguration.comodel || ''"
+                                context="context"
+                                domain="propertyConfiguration.domain || '[]'"
+                                readonly="props.readonly"
+                                selection="propertyConfiguration.selection"
+                                string="propertyConfiguration.string"
+                                tags="propertyConfiguration.tags"
+                                type="propertyConfiguration.type"
+                                value="propertyConfiguration.value"
+                                onChange.bind="(value) => this.onPropertyValueChange(propertyConfiguration.name, value)"
+                                onTagsChange.bind="(newTags, newValue) => this.onTagsChange(propertyConfiguration.name, newTags, newValue)"
+                            />
+                        </div>
+                    </div>
+                    <div 
+                        t-if="propertiesList.length % props.columns === propertiesListGroup_index"
+                        t-attf-class="o_field_property_add {{props.columns !== 1 ? 'g-col-2' : ''}}">
+                        <button
+                            t-if="!props.readonly &amp;&amp; state.canChangeDefinition"
+                            class="btn btn-light text-muted text-break m-0"
+                            t-on-click="onPropertyCreate">
+                            <i class="fa fa-plus"/>
+                            Add a Property
+                        </button>
+                    </div>
+                </div>
+            </t>
+
+        </div>
+    </t>
+</templates>

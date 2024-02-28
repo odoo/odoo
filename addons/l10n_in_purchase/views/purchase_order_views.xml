@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_purchase_order_form_inherit_l10n_in_purchase" model="ir.ui.view">
+        <field name="name">purchase.order.form.inherit.l10n.in.purchase</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="country_code" invisible="1"/>
+                <field name="l10n_in_gst_treatment" attrs="{'invisible': [('country_code', '!=', 'IN')], 'required': [('country_code', '=', 'IN')]}"/>
+            </xpath>
+            <xpath expr="//group[@name='other_info']//field[@name='user_id']" position="after">
+                <field name="l10n_in_journal_id" options="{'no_create': True}" domain="[('company_id', '=', company_id), ('type', '=', 'purchase')]" attrs="{'invisible': [('country_code', '!=', 'IN')]}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

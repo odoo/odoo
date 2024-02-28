@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="account_invoice_it_FatturaPA_export_withholding" inherit_id="l10n_it_edi.account_invoice_it_FatturaPA_export">
+        <xpath expr="//DatiGeneraliDocumento/Numero" position="after">
+            <t t-if="withholding_values" t-foreach="withholding_values" t-as="withholding">
+                <DatiRitenuta>
+                    <TipoRitenuta t-esc="format_alphanumeric(withholding.tax.l10n_it_withholding_type)"/>
+                    <ImportoRitenuta t-esc="format_monetary(withholding.tax_amount, currency)"/>
+                    <AliquotaRitenuta t-esc="format_numbers(abs(withholding.tax.amount))"/>
+                    <CausalePagamento t-esc="format_alphanumeric(withholding.tax.l10n_it_withholding_reason)"/>
+                </DatiRitenuta>
+            </t>
+        </xpath>
+        <xpath expr="//DatiGeneraliDocumento/ImportoTotaleDocumento" position="before">
+            <t t-if="pension_fund_values" t-foreach="pension_fund_values" t-as="pension_fund">
+                <DatiCassaPrevidenziale>
+                    <TipoCassa t-esc="format_alphanumeric(pension_fund.tax.l10n_it_pension_fund_type)"/>
+                    <AlCassa t-esc="format_numbers(pension_fund.tax.amount)"/>
+                    <ImportoContributoCassa t-esc="format_monetary(pension_fund.tax_amount, currency)"/>
+                    <ImponibileCassa t-esc="format_monetary(pension_fund.base_amount, currency)"/>
+                    <AliquotaIVA t-esc="format_numbers(pension_fund.vat_tax.amount or 0.0)"/>
+                    <Ritenuta t-if="pension_fund.withholding_tax and pension_fund.withholding_tax.sequence > pension_fund.tax.sequence">SI</Ritenuta>
+                    <Natura t-if="pension_fund.vat_tax.l10n_it_has_exoneration" t-esc="format_alphanumeric(pension_fund.vat_tax.l10n_it_kind_exoneration)"/>
+                    <RiferimentoAmministrazione t-if="pension_fund.tax.description" t-esc="format_alphanumeric(pension_fund.tax.description)[:20]"/>
+                </DatiCassaPrevidenziale>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="account_invoice_line_it_FatturaPA_withholding" inherit_id="l10n_it_edi.account_invoice_line_it_FatturaPA">
+        <xpath expr="//AliquotaIVA" position="after">
+            <t t-if="line.tax_ids._l10n_it_filter_kind('withholding')">
+                <Ritenuta>SI</Ritenuta>
+            </t>
+        </xpath>
+        <xpath expr="//DettaglioLinee" position="inside">
+            <t t-if="enasarco_values and enasarco_values[line.id]">
+                <AltriDatiGestionali>
+                    <TipoDato>CASSA-PREV</TipoDato>
+                    <RiferimentoTesto t-esc="format_alphanumeric('TC07 - ENASARCO (' + format_numbers(abs(enasarco_values[line.id]['amount'])).rstrip('.0') + '%)')"/>
+                    <RiferimentoNumero t-esc="format_monetary(enasarco_values[line.id]['tax_amount'], currency)"/>
+                </AltriDatiGestionali>
+            </t>
+        </xpath>
+    </template>
+</odoo>

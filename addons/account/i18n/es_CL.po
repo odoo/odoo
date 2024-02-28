@@ -1,0 +1,912 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account
+#
+# Translators:
+# Martin Trigaux <mat@odoo.com>, 2017
+# Daniel Santibáñez Polanco <dansanti@gmail.com>, 2017
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-02-02 10:33+0000\n"
+"PO-Revision-Date: 2017-11-16 08:08+0000\n"
+"Last-Translator: Daniel Santibáñez Polanco <dansanti@gmail.com>, 2017\n"
+"Language-Team: Spanish (Chile) (https://www.transifex.com/odoo/teams/41243/"
+"es_CL/)\n"
+"Language: es_CL\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.bill_preview
+#: model_terms:ir.ui.view,arch_db:account.document_tax_totals
+msgid "<strong>Total</strong>"
+msgstr "<strong>Total</strong>"
+
+#. module: account
+#: model:ir.model,name:account.model_account_analytic_account
+msgid "Analytic Account"
+msgstr "Cuenta analítica"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
+#: model_terms:ir.ui.view,arch_db:account.account_invoice_onboarding_sale_tax_form
+#: model_terms:ir.ui.view,arch_db:account.account_invoice_send_wizard_form
+#: model_terms:ir.ui.view,arch_db:account.account_resequence_view
+#: model_terms:ir.ui.view,arch_db:account.account_unreconcile_view
+#: model_terms:ir.ui.view,arch_db:account.setup_bank_account_wizard
+#: model_terms:ir.ui.view,arch_db:account.setup_financial_year_opening_form
+#: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
+#: model_terms:ir.ui.view,arch_db:account.view_account_accrued_orders_wizard
+#: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
+#: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
+#: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid "Cancel"
+msgstr "Cancelar"
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_invoice_report__state__cancel
+#: model:ir.model.fields.selection,name:account.selection__account_move__state__cancel
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
+msgid "Cancelled"
+msgstr "Cancelado"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__commercial_partner_id
+#: model:ir.model.fields,field_description:account.field_account_move__commercial_partner_id
+#: model:ir.model.fields,field_description:account.field_account_payment__commercial_partner_id
+msgid "Commercial Entity"
+msgstr "Entidad comercial"
+
+#. module: account
+#: model:ir.model,name:account.model_res_company
+msgid "Companies"
+msgstr "Compañías"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_account__company_id
+#: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__company_id
+#: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__company_id
+#: model:ir.model.fields,field_description:account.field_account_bank_statement__company_id
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__company_id
+#: model:ir.model.fields,field_description:account.field_account_cash_rounding__company_id
+#: model:ir.model.fields,field_description:account.field_account_financial_year_op__company_id
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position__company_id
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_account__company_id
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax__company_id
+#: model:ir.model.fields,field_description:account.field_account_group__company_id
+#: model:ir.model.fields,field_description:account.field_account_invoice_report__company_id
+#: model:ir.model.fields,field_description:account.field_account_journal__company_id
+#: model:ir.model.fields,field_description:account.field_account_journal_group__company_id
+#: model:ir.model.fields,field_description:account.field_account_move__company_id
+#: model:ir.model.fields,field_description:account.field_account_move_line__company_id
+#: model:ir.model.fields,field_description:account.field_account_move_reversal__company_id
+#: model:ir.model.fields,field_description:account.field_account_partial_reconcile__company_id
+#: model:ir.model.fields,field_description:account.field_account_payment__company_id
+#: model:ir.model.fields,field_description:account.field_account_payment_method_line__company_id
+#: model:ir.model.fields,field_description:account.field_account_payment_register__company_id
+#: model:ir.model.fields,field_description:account.field_account_payment_term__company_id
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model__company_id
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__company_id
+#: model:ir.model.fields,field_description:account.field_account_report_external_value__company_id
+#: model:ir.model.fields,field_description:account.field_account_root__company_id
+#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__company_id
+#: model:ir.model.fields,field_description:account.field_account_tax__company_id
+#: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__company_id
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
+#: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
+#: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
+#: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
+msgid "Company"
+msgstr "Compañía"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_account__create_uid
+#: model:ir.model.fields,field_description:account.field_account_account_tag__create_uid
+#: model:ir.model.fields,field_description:account.field_account_account_template__create_uid
+#: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__create_uid
+#: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__create_uid
+#: model:ir.model.fields,field_description:account.field_account_bank_statement__create_uid
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__create_uid
+#: model:ir.model.fields,field_description:account.field_account_cash_rounding__create_uid
+#: model:ir.model.fields,field_description:account.field_account_chart_template__create_uid
+#: model:ir.model.fields,field_description:account.field_account_financial_year_op__create_uid
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position__create_uid
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_account__create_uid
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_template__create_uid
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax__create_uid
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax_template__create_uid
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_template__create_uid
+#: model:ir.model.fields,field_description:account.field_account_full_reconcile__create_uid
+#: model:ir.model.fields,field_description:account.field_account_group__create_uid
+#: model:ir.model.fields,field_description:account.field_account_group_template__create_uid
+#: model:ir.model.fields,field_description:account.field_account_incoterms__create_uid
+#: model:ir.model.fields,field_description:account.field_account_invoice_send__create_uid
+#: model:ir.model.fields,field_description:account.field_account_journal__create_uid
+#: model:ir.model.fields,field_description:account.field_account_journal_group__create_uid
+#: model:ir.model.fields,field_description:account.field_account_move__create_uid
+#: model:ir.model.fields,field_description:account.field_account_move_line__create_uid
+#: model:ir.model.fields,field_description:account.field_account_move_reversal__create_uid
+#: model:ir.model.fields,field_description:account.field_account_partial_reconcile__create_uid
+#: model:ir.model.fields,field_description:account.field_account_payment__create_uid
+#: model:ir.model.fields,field_description:account.field_account_payment_method__create_uid
+#: model:ir.model.fields,field_description:account.field_account_payment_method_line__create_uid
+#: model:ir.model.fields,field_description:account.field_account_payment_register__create_uid
+#: model:ir.model.fields,field_description:account.field_account_payment_term__create_uid
+#: model:ir.model.fields,field_description:account.field_account_payment_term_line__create_uid
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model__create_uid
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__create_uid
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_line_template__create_uid
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_partner_mapping__create_uid
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__create_uid
+#: model:ir.model.fields,field_description:account.field_account_report__create_uid
+#: model:ir.model.fields,field_description:account.field_account_report_column__create_uid
+#: model:ir.model.fields,field_description:account.field_account_report_expression__create_uid
+#: model:ir.model.fields,field_description:account.field_account_report_external_value__create_uid
+#: model:ir.model.fields,field_description:account.field_account_report_line__create_uid
+#: model:ir.model.fields,field_description:account.field_account_resequence_wizard__create_uid
+#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__create_uid
+#: model:ir.model.fields,field_description:account.field_account_tax__create_uid
+#: model:ir.model.fields,field_description:account.field_account_tax_group__create_uid
+#: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__create_uid
+#: model:ir.model.fields,field_description:account.field_account_tax_repartition_line_template__create_uid
+#: model:ir.model.fields,field_description:account.field_account_tax_template__create_uid
+#: model:ir.model.fields,field_description:account.field_account_tour_upload_bill__create_uid
+#: model:ir.model.fields,field_description:account.field_account_tour_upload_bill_email_confirm__create_uid
+#: model:ir.model.fields,field_description:account.field_account_unreconcile__create_uid
+#: model:ir.model.fields,field_description:account.field_validate_account_move__create_uid
+msgid "Created by"
+msgstr "Creado por"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_account__create_date
+#: model:ir.model.fields,field_description:account.field_account_account_tag__create_date
+#: model:ir.model.fields,field_description:account.field_account_account_template__create_date
+#: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__create_date
+#: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__create_date
+#: model:ir.model.fields,field_description:account.field_account_bank_statement__create_date
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__create_date
+#: model:ir.model.fields,field_description:account.field_account_cash_rounding__create_date
+#: model:ir.model.fields,field_description:account.field_account_chart_template__create_date
+#: model:ir.model.fields,field_description:account.field_account_financial_year_op__create_date
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position__create_date
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_account__create_date
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_template__create_date
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax__create_date
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax_template__create_date
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_template__create_date
+#: model:ir.model.fields,field_description:account.field_account_full_reconcile__create_date
+#: model:ir.model.fields,field_description:account.field_account_group__create_date
+#: model:ir.model.fields,field_description:account.field_account_group_template__create_date
+#: model:ir.model.fields,field_description:account.field_account_incoterms__create_date
+#: model:ir.model.fields,field_description:account.field_account_invoice_send__create_date
+#: model:ir.model.fields,field_description:account.field_account_journal__create_date
+#: model:ir.model.fields,field_description:account.field_account_journal_group__create_date
+#: model:ir.model.fields,field_description:account.field_account_move__create_date
+#: model:ir.model.fields,field_description:account.field_account_move_line__create_date
+#: model:ir.model.fields,field_description:account.field_account_move_reversal__create_date
+#: model:ir.model.fields,field_description:account.field_account_partial_reconcile__create_date
+#: model:ir.model.fields,field_description:account.field_account_payment__create_date
+#: model:ir.model.fields,field_description:account.field_account_payment_method__create_date
+#: model:ir.model.fields,field_description:account.field_account_payment_method_line__create_date
+#: model:ir.model.fields,field_description:account.field_account_payment_register__create_date
+#: model:ir.model.fields,field_description:account.field_account_payment_term__create_date
+#: model:ir.model.fields,field_description:account.field_account_payment_term_line__create_date
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model__create_date
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__create_date
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_line_template__create_date
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_partner_mapping__create_date
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__create_date
+#: model:ir.model.fields,field_description:account.field_account_report__create_date
+#: model:ir.model.fields,field_description:account.field_account_report_column__create_date
+#: model:ir.model.fields,field_description:account.field_account_report_expression__create_date
+#: model:ir.model.fields,field_description:account.field_account_report_external_value__create_date
+#: model:ir.model.fields,field_description:account.field_account_report_line__create_date
+#: model:ir.model.fields,field_description:account.field_account_resequence_wizard__create_date
+#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__create_date
+#: model:ir.model.fields,field_description:account.field_account_tax__create_date
+#: model:ir.model.fields,field_description:account.field_account_tax_group__create_date
+#: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__create_date
+#: model:ir.model.fields,field_description:account.field_account_tax_repartition_line_template__create_date
+#: model:ir.model.fields,field_description:account.field_account_tax_template__create_date
+#: model:ir.model.fields,field_description:account.field_account_tour_upload_bill__create_date
+#: model:ir.model.fields,field_description:account.field_account_tour_upload_bill_email_confirm__create_date
+#: model:ir.model.fields,field_description:account.field_account_unreconcile__create_date
+#: model:ir.model.fields,field_description:account.field_validate_account_move__create_date
+msgid "Created on"
+msgstr "Creado en"
+
+#. module: account
+#: model:ir.model,name:account.model_res_currency
+#: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__company_currency_id
+#: model:ir.model.fields,field_description:account.field_account_bank_statement__currency_id
+#: model:ir.model.fields,field_description:account.field_account_chart_template__currency_id
+#: model:ir.model.fields,field_description:account.field_account_invoice_report__currency_id
+#: model:ir.model.fields,field_description:account.field_account_journal__currency_id
+#: model:ir.model.fields,field_description:account.field_account_move__currency_id
+#: model:ir.model.fields,field_description:account.field_account_move_line__currency_id
+#: model:ir.model.fields,field_description:account.field_account_move_reversal__currency_id
+#: model:ir.model.fields,field_description:account.field_account_payment__currency_id
+#: model:ir.model.fields,field_description:account.field_account_payment_register__currency_id
+#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__currency_id
+#: model:ir.model.fields,field_description:account.field_res_config_settings__currency_id
+#: model:ir.model.fields,field_description:account.field_res_partner__currency_id
+#: model:ir.model.fields,field_description:account.field_res_partner_bank__currency_id
+#: model:ir.model.fields,field_description:account.field_res_users__currency_id
+#: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
+#: model_terms:ir.ui.view,arch_db:account.view_move_line_form
+#: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
+msgid "Currency"
+msgstr "Moneda"
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_payment__partner_type__customer
+#: model:ir.model.fields.selection,name:account.selection__account_payment_register__partner_type__customer
+#: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
+#: model_terms:ir.ui.view,arch_db:account.view_account_payment_tree
+#: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid "Customer"
+msgstr "Cliente"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_product_product__taxes_id
+#: model:ir.model.fields,field_description:account.field_product_template__taxes_id
+msgid "Customer Taxes"
+msgstr "Impuestos de cliente"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid "Description"
+msgstr "Descripción"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__discount
+msgid "Discount (%)"
+msgstr "Descuento (%)"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_account__display_name
+#: model:ir.model.fields,field_description:account.field_account_account_tag__display_name
+#: model:ir.model.fields,field_description:account.field_account_account_template__display_name
+#: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__display_name
+#: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__display_name
+#: model:ir.model.fields,field_description:account.field_account_bank_statement__display_name
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__display_name
+#: model:ir.model.fields,field_description:account.field_account_cash_rounding__display_name
+#: model:ir.model.fields,field_description:account.field_account_chart_template__display_name
+#: model:ir.model.fields,field_description:account.field_account_financial_year_op__display_name
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position__display_name
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_account__display_name
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_template__display_name
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax__display_name
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax_template__display_name
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_template__display_name
+#: model:ir.model.fields,field_description:account.field_account_full_reconcile__display_name
+#: model:ir.model.fields,field_description:account.field_account_group__display_name
+#: model:ir.model.fields,field_description:account.field_account_group_template__display_name
+#: model:ir.model.fields,field_description:account.field_account_incoterms__display_name
+#: model:ir.model.fields,field_description:account.field_account_invoice_report__display_name
+#: model:ir.model.fields,field_description:account.field_account_invoice_send__display_name
+#: model:ir.model.fields,field_description:account.field_account_journal__display_name
+#: model:ir.model.fields,field_description:account.field_account_journal_group__display_name
+#: model:ir.model.fields,field_description:account.field_account_move__display_name
+#: model:ir.model.fields,field_description:account.field_account_move_line__display_name
+#: model:ir.model.fields,field_description:account.field_account_move_reversal__display_name
+#: model:ir.model.fields,field_description:account.field_account_partial_reconcile__display_name
+#: model:ir.model.fields,field_description:account.field_account_payment__display_name
+#: model:ir.model.fields,field_description:account.field_account_payment_method__display_name
+#: model:ir.model.fields,field_description:account.field_account_payment_method_line__display_name
+#: model:ir.model.fields,field_description:account.field_account_payment_register__display_name
+#: model:ir.model.fields,field_description:account.field_account_payment_term__display_name
+#: model:ir.model.fields,field_description:account.field_account_payment_term_line__display_name
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model__display_name
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__display_name
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_line_template__display_name
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_partner_mapping__display_name
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__display_name
+#: model:ir.model.fields,field_description:account.field_account_report__display_name
+#: model:ir.model.fields,field_description:account.field_account_report_column__display_name
+#: model:ir.model.fields,field_description:account.field_account_report_expression__display_name
+#: model:ir.model.fields,field_description:account.field_account_report_external_value__display_name
+#: model:ir.model.fields,field_description:account.field_account_report_line__display_name
+#: model:ir.model.fields,field_description:account.field_account_resequence_wizard__display_name
+#: model:ir.model.fields,field_description:account.field_account_root__display_name
+#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__display_name
+#: model:ir.model.fields,field_description:account.field_account_tax__display_name
+#: model:ir.model.fields,field_description:account.field_account_tax_group__display_name
+#: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__display_name
+#: model:ir.model.fields,field_description:account.field_account_tax_repartition_line_template__display_name
+#: model:ir.model.fields,field_description:account.field_account_tax_template__display_name
+#: model:ir.model.fields,field_description:account.field_account_tour_upload_bill__display_name
+#: model:ir.model.fields,field_description:account.field_account_tour_upload_bill_email_confirm__display_name
+#: model:ir.model.fields,field_description:account.field_account_unreconcile__display_name
+#: model:ir.model.fields,field_description:account.field_validate_account_move__display_name
+msgid "Display Name"
+msgstr "Nombre mostrado"
+
+#. module: account
+#: model:ir.model,name:account.model_account_fiscal_position
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__fiscal_position_id
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position__name
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_account__position_id
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax__position_id
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax_template__position_id
+#: model:ir.model.fields,field_description:account.field_account_invoice_report__fiscal_position_id
+#: model:ir.model.fields,field_description:account.field_account_move__fiscal_position_id
+#: model:ir.model.fields,field_description:account.field_account_payment__fiscal_position_id
+#: model:ir.model.fields,field_description:account.field_res_company__fiscal_position_ids
+#: model:ir.model.fields,field_description:account.field_res_partner__property_account_position_id
+#: model:ir.model.fields,field_description:account.field_res_users__property_account_position_id
+#: model_terms:ir.ui.view,arch_db:account.view_account_position_filter
+#: model_terms:ir.ui.view,arch_db:account.view_account_position_form
+#: model_terms:ir.ui.view,arch_db:account.view_account_position_template_search
+#: model_terms:ir.ui.view,arch_db:account.view_account_position_template_tree
+#: model_terms:ir.ui.view,arch_db:account.view_account_position_tree
+msgid "Fiscal Position"
+msgstr "Posición fiscal"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_report_line__groupby
+#: model_terms:ir.ui.view,arch_db:account.account_tax_group_view_search
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
+#: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
+#: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
+#: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
+#: model_terms:ir.ui.view,arch_db:account.view_account_search
+#: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
+#: model_terms:ir.ui.view,arch_db:account.view_bank_statement_search
+msgid "Group By"
+msgstr "Agrupar por"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_account__id
+#: model:ir.model.fields,field_description:account.field_account_account_tag__id
+#: model:ir.model.fields,field_description:account.field_account_account_template__id
+#: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__id
+#: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__id
+#: model:ir.model.fields,field_description:account.field_account_bank_statement__id
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__id
+#: model:ir.model.fields,field_description:account.field_account_cash_rounding__id
+#: model:ir.model.fields,field_description:account.field_account_chart_template__id
+#: model:ir.model.fields,field_description:account.field_account_financial_year_op__id
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position__id
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_account__id
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_template__id
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax__id
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax_template__id
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_template__id
+#: model:ir.model.fields,field_description:account.field_account_full_reconcile__id
+#: model:ir.model.fields,field_description:account.field_account_group__id
+#: model:ir.model.fields,field_description:account.field_account_group_template__id
+#: model:ir.model.fields,field_description:account.field_account_incoterms__id
+#: model:ir.model.fields,field_description:account.field_account_invoice_report__id
+#: model:ir.model.fields,field_description:account.field_account_invoice_send__id
+#: model:ir.model.fields,field_description:account.field_account_journal__id
+#: model:ir.model.fields,field_description:account.field_account_journal_group__id
+#: model:ir.model.fields,field_description:account.field_account_move__id
+#: model:ir.model.fields,field_description:account.field_account_move_line__id
+#: model:ir.model.fields,field_description:account.field_account_move_reversal__id
+#: model:ir.model.fields,field_description:account.field_account_partial_reconcile__id
+#: model:ir.model.fields,field_description:account.field_account_payment__id
+#: model:ir.model.fields,field_description:account.field_account_payment_method__id
+#: model:ir.model.fields,field_description:account.field_account_payment_method_line__id
+#: model:ir.model.fields,field_description:account.field_account_payment_register__id
+#: model:ir.model.fields,field_description:account.field_account_payment_term__id
+#: model:ir.model.fields,field_description:account.field_account_payment_term_line__id
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model__id
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__id
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_line_template__id
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_partner_mapping__id
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__id
+#: model:ir.model.fields,field_description:account.field_account_report__id
+#: model:ir.model.fields,field_description:account.field_account_report_column__id
+#: model:ir.model.fields,field_description:account.field_account_report_expression__id
+#: model:ir.model.fields,field_description:account.field_account_report_external_value__id
+#: model:ir.model.fields,field_description:account.field_account_report_line__id
+#: model:ir.model.fields,field_description:account.field_account_resequence_wizard__id
+#: model:ir.model.fields,field_description:account.field_account_root__id
+#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__id
+#: model:ir.model.fields,field_description:account.field_account_tax__id
+#: model:ir.model.fields,field_description:account.field_account_tax_group__id
+#: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__id
+#: model:ir.model.fields,field_description:account.field_account_tax_repartition_line_template__id
+#: model:ir.model.fields,field_description:account.field_account_tax_template__id
+#: model:ir.model.fields,field_description:account.field_account_tour_upload_bill__id
+#: model:ir.model.fields,field_description:account.field_account_tour_upload_bill_email_confirm__id
+#: model:ir.model.fields,field_description:account.field_account_unreconcile__id
+#: model:ir.model.fields,field_description:account.field_validate_account_move__id
+msgid "ID"
+msgstr "ID (identificación)"
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_tax_group__preceding_subtotal
+msgid ""
+"If set, this value will be used on documents as the label of a subtotal "
+"excluding this tax group before displaying it. If not set, the tax group "
+"will be displayed after the 'Untaxed amount' subtotal."
+msgstr ""
+"Si se establece, este valor se utilizará como la etiqueta de un subtotal sin "
+"incluir este grupo de impuestos antes de mostrarlo. Si no se establece, el "
+"grupo de impuestos se mostrará después del subtotal \"total neto\"."
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_product_category__property_account_income_categ_id
+#: model:ir.model.fields,field_description:account.field_product_product__property_account_income_id
+#: model:ir.model.fields,field_description:account.field_product_template__property_account_income_id
+msgid "Income Account"
+msgstr "Cuenta de ingresos"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#: model:ir.model.fields,field_description:account.field_res_partner__invoice_warn
+#: model:ir.model.fields,field_description:account.field_res_users__invoice_warn
+#: model:ir.model.fields.selection,name:account.selection__account_analytic_applicability__business_domain__invoice
+#: model:ir.model.fields.selection,name:account.selection__account_payment__reconciled_invoices_type__invoice
+#: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line__document_type__invoice
+#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+#, python-format
+msgid "Invoice"
+msgstr "Factura"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid "Invoice Lines"
+msgstr "Líneas de factura"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_report__state
+msgid "Invoice Status"
+msgstr "Estado de facturación"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
+msgid "Invoiced"
+msgstr "Facturado"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/controllers/portal.py:0
+#: model:ir.actions.act_window,name:account.action_move_out_invoice_type
+#: model:ir.actions.report,name:account.account_invoices
+#: model:ir.model.fields,field_description:account.field_account_invoice_send__invoice_ids
+#: model:ir.model.fields,field_description:account.field_res_partner__invoice_ids
+#: model:ir.model.fields,field_description:account.field_res_users__invoice_ids
+#: model:ir.ui.menu,name:account.menu_action_move_out_invoice_type
+#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+#: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
+#: model_terms:ir.ui.view,arch_db:account.view_account_payment_graph
+#: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
+#, python-format
+msgid "Invoices"
+msgstr "Facturas"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.action_account_invoice_report_all
+#: model:ir.actions.act_window,name:account.action_account_invoice_report_all_supp
+#: model_terms:ir.ui.view,arch_db:account.account_invoice_report_view_tree
+#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_graph
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_pivot
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
+msgid "Invoices Analysis"
+msgstr "Análisis de facturas"
+
+#. module: account
+#: model:ir.model,name:account.model_account_invoice_report
+msgid "Invoices Statistics"
+msgstr "Estadísticas de facturas"
+
+#. module: account
+#: model:ir.ui.menu,name:account.account_invoicing_menu
+#: model:ir.ui.menu,name:account.menu_finance
+#: model_terms:ir.ui.view,arch_db:account.digest_digest_view_form
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
+msgid "Invoicing"
+msgstr "Facturando"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_account____last_update
+#: model:ir.model.fields,field_description:account.field_account_account_tag____last_update
+#: model:ir.model.fields,field_description:account.field_account_account_template____last_update
+#: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard____last_update
+#: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard____last_update
+#: model:ir.model.fields,field_description:account.field_account_bank_statement____last_update
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line____last_update
+#: model:ir.model.fields,field_description:account.field_account_cash_rounding____last_update
+#: model:ir.model.fields,field_description:account.field_account_chart_template____last_update
+#: model:ir.model.fields,field_description:account.field_account_financial_year_op____last_update
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position____last_update
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_account____last_update
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_template____last_update
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax____last_update
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax_template____last_update
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_template____last_update
+#: model:ir.model.fields,field_description:account.field_account_full_reconcile____last_update
+#: model:ir.model.fields,field_description:account.field_account_group____last_update
+#: model:ir.model.fields,field_description:account.field_account_group_template____last_update
+#: model:ir.model.fields,field_description:account.field_account_incoterms____last_update
+#: model:ir.model.fields,field_description:account.field_account_invoice_report____last_update
+#: model:ir.model.fields,field_description:account.field_account_invoice_send____last_update
+#: model:ir.model.fields,field_description:account.field_account_journal____last_update
+#: model:ir.model.fields,field_description:account.field_account_journal_group____last_update
+#: model:ir.model.fields,field_description:account.field_account_move____last_update
+#: model:ir.model.fields,field_description:account.field_account_move_line____last_update
+#: model:ir.model.fields,field_description:account.field_account_move_reversal____last_update
+#: model:ir.model.fields,field_description:account.field_account_partial_reconcile____last_update
+#: model:ir.model.fields,field_description:account.field_account_payment____last_update
+#: model:ir.model.fields,field_description:account.field_account_payment_method____last_update
+#: model:ir.model.fields,field_description:account.field_account_payment_method_line____last_update
+#: model:ir.model.fields,field_description:account.field_account_payment_register____last_update
+#: model:ir.model.fields,field_description:account.field_account_payment_term____last_update
+#: model:ir.model.fields,field_description:account.field_account_payment_term_line____last_update
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model____last_update
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_line____last_update
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_line_template____last_update
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_partner_mapping____last_update
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_template____last_update
+#: model:ir.model.fields,field_description:account.field_account_report____last_update
+#: model:ir.model.fields,field_description:account.field_account_report_column____last_update
+#: model:ir.model.fields,field_description:account.field_account_report_expression____last_update
+#: model:ir.model.fields,field_description:account.field_account_report_external_value____last_update
+#: model:ir.model.fields,field_description:account.field_account_report_line____last_update
+#: model:ir.model.fields,field_description:account.field_account_resequence_wizard____last_update
+#: model:ir.model.fields,field_description:account.field_account_root____last_update
+#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config____last_update
+#: model:ir.model.fields,field_description:account.field_account_tax____last_update
+#: model:ir.model.fields,field_description:account.field_account_tax_group____last_update
+#: model:ir.model.fields,field_description:account.field_account_tax_repartition_line____last_update
+#: model:ir.model.fields,field_description:account.field_account_tax_repartition_line_template____last_update
+#: model:ir.model.fields,field_description:account.field_account_tax_template____last_update
+#: model:ir.model.fields,field_description:account.field_account_tour_upload_bill____last_update
+#: model:ir.model.fields,field_description:account.field_account_tour_upload_bill_email_confirm____last_update
+#: model:ir.model.fields,field_description:account.field_account_unreconcile____last_update
+#: model:ir.model.fields,field_description:account.field_validate_account_move____last_update
+msgid "Last Modified on"
+msgstr "Última modificación en"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_account__write_uid
+#: model:ir.model.fields,field_description:account.field_account_account_tag__write_uid
+#: model:ir.model.fields,field_description:account.field_account_account_template__write_uid
+#: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__write_uid
+#: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__write_uid
+#: model:ir.model.fields,field_description:account.field_account_bank_statement__write_uid
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__write_uid
+#: model:ir.model.fields,field_description:account.field_account_cash_rounding__write_uid
+#: model:ir.model.fields,field_description:account.field_account_chart_template__write_uid
+#: model:ir.model.fields,field_description:account.field_account_financial_year_op__write_uid
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position__write_uid
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_account__write_uid
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_template__write_uid
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax__write_uid
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax_template__write_uid
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_template__write_uid
+#: model:ir.model.fields,field_description:account.field_account_full_reconcile__write_uid
+#: model:ir.model.fields,field_description:account.field_account_group__write_uid
+#: model:ir.model.fields,field_description:account.field_account_group_template__write_uid
+#: model:ir.model.fields,field_description:account.field_account_incoterms__write_uid
+#: model:ir.model.fields,field_description:account.field_account_invoice_send__write_uid
+#: model:ir.model.fields,field_description:account.field_account_journal__write_uid
+#: model:ir.model.fields,field_description:account.field_account_journal_group__write_uid
+#: model:ir.model.fields,field_description:account.field_account_move__write_uid
+#: model:ir.model.fields,field_description:account.field_account_move_line__write_uid
+#: model:ir.model.fields,field_description:account.field_account_move_reversal__write_uid
+#: model:ir.model.fields,field_description:account.field_account_partial_reconcile__write_uid
+#: model:ir.model.fields,field_description:account.field_account_payment__write_uid
+#: model:ir.model.fields,field_description:account.field_account_payment_method__write_uid
+#: model:ir.model.fields,field_description:account.field_account_payment_method_line__write_uid
+#: model:ir.model.fields,field_description:account.field_account_payment_register__write_uid
+#: model:ir.model.fields,field_description:account.field_account_payment_term__write_uid
+#: model:ir.model.fields,field_description:account.field_account_payment_term_line__write_uid
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model__write_uid
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__write_uid
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_line_template__write_uid
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_partner_mapping__write_uid
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__write_uid
+#: model:ir.model.fields,field_description:account.field_account_report__write_uid
+#: model:ir.model.fields,field_description:account.field_account_report_column__write_uid
+#: model:ir.model.fields,field_description:account.field_account_report_expression__write_uid
+#: model:ir.model.fields,field_description:account.field_account_report_external_value__write_uid
+#: model:ir.model.fields,field_description:account.field_account_report_line__write_uid
+#: model:ir.model.fields,field_description:account.field_account_resequence_wizard__write_uid
+#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__write_uid
+#: model:ir.model.fields,field_description:account.field_account_tax__write_uid
+#: model:ir.model.fields,field_description:account.field_account_tax_group__write_uid
+#: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__write_uid
+#: model:ir.model.fields,field_description:account.field_account_tax_repartition_line_template__write_uid
+#: model:ir.model.fields,field_description:account.field_account_tax_template__write_uid
+#: model:ir.model.fields,field_description:account.field_account_tour_upload_bill__write_uid
+#: model:ir.model.fields,field_description:account.field_account_tour_upload_bill_email_confirm__write_uid
+#: model:ir.model.fields,field_description:account.field_account_unreconcile__write_uid
+#: model:ir.model.fields,field_description:account.field_validate_account_move__write_uid
+msgid "Last Updated by"
+msgstr "Última actualización de"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_account__write_date
+#: model:ir.model.fields,field_description:account.field_account_account_tag__write_date
+#: model:ir.model.fields,field_description:account.field_account_account_template__write_date
+#: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__write_date
+#: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__write_date
+#: model:ir.model.fields,field_description:account.field_account_bank_statement__write_date
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__write_date
+#: model:ir.model.fields,field_description:account.field_account_cash_rounding__write_date
+#: model:ir.model.fields,field_description:account.field_account_chart_template__write_date
+#: model:ir.model.fields,field_description:account.field_account_financial_year_op__write_date
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position__write_date
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_account__write_date
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_template__write_date
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax__write_date
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax_template__write_date
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_template__write_date
+#: model:ir.model.fields,field_description:account.field_account_full_reconcile__write_date
+#: model:ir.model.fields,field_description:account.field_account_group__write_date
+#: model:ir.model.fields,field_description:account.field_account_group_template__write_date
+#: model:ir.model.fields,field_description:account.field_account_incoterms__write_date
+#: model:ir.model.fields,field_description:account.field_account_invoice_send__write_date
+#: model:ir.model.fields,field_description:account.field_account_journal__write_date
+#: model:ir.model.fields,field_description:account.field_account_journal_group__write_date
+#: model:ir.model.fields,field_description:account.field_account_move__write_date
+#: model:ir.model.fields,field_description:account.field_account_move_line__write_date
+#: model:ir.model.fields,field_description:account.field_account_move_reversal__write_date
+#: model:ir.model.fields,field_description:account.field_account_partial_reconcile__write_date
+#: model:ir.model.fields,field_description:account.field_account_payment__write_date
+#: model:ir.model.fields,field_description:account.field_account_payment_method__write_date
+#: model:ir.model.fields,field_description:account.field_account_payment_method_line__write_date
+#: model:ir.model.fields,field_description:account.field_account_payment_register__write_date
+#: model:ir.model.fields,field_description:account.field_account_payment_term__write_date
+#: model:ir.model.fields,field_description:account.field_account_payment_term_line__write_date
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model__write_date
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__write_date
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_line_template__write_date
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_partner_mapping__write_date
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__write_date
+#: model:ir.model.fields,field_description:account.field_account_report__write_date
+#: model:ir.model.fields,field_description:account.field_account_report_column__write_date
+#: model:ir.model.fields,field_description:account.field_account_report_expression__write_date
+#: model:ir.model.fields,field_description:account.field_account_report_external_value__write_date
+#: model:ir.model.fields,field_description:account.field_account_report_line__write_date
+#: model:ir.model.fields,field_description:account.field_account_resequence_wizard__write_date
+#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__write_date
+#: model:ir.model.fields,field_description:account.field_account_tax__write_date
+#: model:ir.model.fields,field_description:account.field_account_tax_group__write_date
+#: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__write_date
+#: model:ir.model.fields,field_description:account.field_account_tax_repartition_line_template__write_date
+#: model:ir.model.fields,field_description:account.field_account_tax_template__write_date
+#: model:ir.model.fields,field_description:account.field_account_tour_upload_bill__write_date
+#: model:ir.model.fields,field_description:account.field_account_tour_upload_bill_email_confirm__write_date
+#: model:ir.model.fields,field_description:account.field_account_unreconcile__write_date
+#: model:ir.model.fields,field_description:account.field_validate_account_move__write_date
+msgid "Last Updated on"
+msgstr "Última actualización en"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_automatic_entry_wizard.py:0
+#: model:ir.model.fields,field_description:account.field_account_analytic_line__partner_id
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__partner_id
+#: model:ir.model.fields,field_description:account.field_account_invoice_report__partner_id
+#: model:ir.model.fields,field_description:account.field_account_move__partner_id
+#: model:ir.model.fields,field_description:account.field_account_move_line__partner_id
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_partner_mapping__partner_id
+#: model_terms:ir.ui.view,arch_db:account.view_account_analytic_line_filter_inherit_account
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
+#: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
+#: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
+#: model_terms:ir.ui.view,arch_db:account.view_account_various_payment_tree
+#, python-format
+msgid "Partner"
+msgstr "Empresa"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_send__is_print
+#: model:ir.model.fields,field_description:account.field_res_config_settings__invoice_is_print
+#: model_terms:ir.ui.view,arch_db:account.account_invoice_send_wizard_form
+#: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
+msgid "Print"
+msgstr "Imprimir"
+
+#. module: account
+#: model:ir.model,name:account.model_product_template
+#: model:ir.model.fields,field_description:account.field_account_analytic_distribution_model__product_id
+#: model:ir.model.fields,field_description:account.field_account_analytic_line__product_id
+#: model:ir.model.fields,field_description:account.field_account_invoice_report__product_id
+#: model:ir.model.fields,field_description:account.field_account_move_line__product_id
+#: model:ir.model.fields.selection,name:account.selection__account_move_line__display_type__product
+#: model_terms:ir.ui.view,arch_db:account.view_account_analytic_line_filter_inherit_account
+#: model_terms:ir.ui.view,arch_db:account.view_move_line_form
+msgid "Product"
+msgstr "Producto"
+
+#. module: account
+#: model:ir.model,name:account.model_product_category
+#: model:ir.model.fields,field_description:account.field_account_analytic_applicability__product_categ_id
+#: model:ir.model.fields,field_description:account.field_account_analytic_distribution_model__product_categ_id
+#: model:ir.model.fields,field_description:account.field_account_invoice_report__product_categ_id
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
+msgid "Product Category"
+msgstr "Categoría de producto"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.product_product_action_purchasable
+#: model:ir.actions.act_window,name:account.product_product_action_sellable
+#: model:ir.model.fields.selection,name:account.selection__account_account_tag__applicability__products
+#: model:ir.ui.menu,name:account.product_product_menu_purchasable
+#: model:ir.ui.menu,name:account.product_product_menu_sellable
+#: model_terms:ir.ui.view,arch_db:account.product_template_view_tree
+msgid "Products"
+msgstr "Productos"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__quantity
+msgid "Quantity"
+msgstr "Cantidad"
+
+#. module: account
+#: model:ir.ui.menu,name:account.account_report_folder
+#: model:ir.ui.menu,name:account.menu_finance_reports
+msgid "Reporting"
+msgstr "Informes"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
+#: model_terms:ir.ui.view,arch_db:account.view_account_tax_template_search
+msgid "Sale"
+msgstr "Venta"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.action_account_moves_journal_sales
+#: model:ir.model.fields.selection,name:account.selection__account_journal__type__sale
+#: model:ir.model.fields.selection,name:account.selection__account_tax__type_tax_use__sale
+#: model:ir.model.fields.selection,name:account.selection__account_tax_template__type_tax_use__sale
+#: model_terms:ir.ui.view,arch_db:account.view_account_journal_search
+#: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
+#: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
+msgid "Sales"
+msgstr "Ventas"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_user_id
+#: model:ir.model.fields,field_description:account.field_account_invoice_report__invoice_user_id
+#: model:ir.model.fields,field_description:account.field_account_move__invoice_user_id
+#: model:ir.model.fields,field_description:account.field_account_payment__invoice_user_id
+#: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
+#: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
+msgid "Salesperson"
+msgstr "Vendedor"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__sequence
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position__sequence
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_template__sequence
+#: model:ir.model.fields,field_description:account.field_account_journal__sequence
+#: model:ir.model.fields,field_description:account.field_account_journal_group__sequence
+#: model:ir.model.fields,field_description:account.field_account_move_line__sequence
+#: model:ir.model.fields,field_description:account.field_account_payment_method_line__sequence
+#: model:ir.model.fields,field_description:account.field_account_payment_term__sequence
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model__sequence
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__sequence
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_line_template__sequence
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__sequence
+#: model:ir.model.fields,field_description:account.field_account_report_column__sequence
+#: model:ir.model.fields,field_description:account.field_account_report_line__sequence
+#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__sequence
+#: model:ir.model.fields,field_description:account.field_account_tax__sequence
+#: model:ir.model.fields,field_description:account.field_account_tax_group__sequence
+#: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__sequence
+#: model:ir.model.fields,field_description:account.field_account_tax_template__sequence
+msgid "Sequence"
+msgstr "Secuencia"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid "Source Document"
+msgstr "Documento origen"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/controllers/portal.py:0
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__state
+#: model:ir.model.fields,field_description:account.field_account_move__state
+#: model:ir.model.fields,field_description:account.field_account_move_line__parent_state
+#: model:ir.model.fields,field_description:account.field_account_payment__state
+#: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
+#: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
+#: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
+#, python-format
+msgid "Status"
+msgstr "Estado"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__price_subtotal
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid "Subtotal"
+msgstr "Subtotal"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_account.py:0
+#: code:addons/account/models/company.py:0
+#: model:account.tax.group,name:account.tax_group_taxes
+#: model:ir.actions.act_window,name:account.action_tax_form
+#: model:ir.model.fields,field_description:account.field_account_move_line__tax_ids
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__tax_ids
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_line_template__tax_ids
+#: model:ir.model.fields.selection,name:account.selection__account_account_tag__applicability__taxes
+#: model:ir.ui.menu,name:account.menu_action_tax_form
+#: model_terms:ir.ui.view,arch_db:account.onboarding_sale_tax_step
+#: model_terms:ir.ui.view,arch_db:account.onboarding_taxes_step
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
+#: model_terms:ir.ui.view,arch_db:account.view_move_line_form
+#, python-format
+msgid "Taxes"
+msgstr "Impuestos"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
+msgid "To Invoice"
+msgstr "Para facturar"
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/tax_totals/tax_totals.xml:0
+#: code:addons/account/static/src/xml/legacy_tax_totals.xml:0
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__amount_total
+#: model:ir.model.fields,field_description:account.field_account_move__amount_total
+#: model:ir.model.fields,field_description:account.field_account_move_line__price_total
+#: model:ir.model.fields,field_description:account.field_account_payment__amount_total
+#: model_terms:ir.ui.view,arch_db:account.account_invoice_report_view_tree
+#: model_terms:ir.ui.view,arch_db:account.view_account_payment_tree
+#: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+#: model_terms:ir.ui.view,arch_db:account.view_move_tree
+#, python-format
+msgid "Total"
+msgstr "Total"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__price_unit
+msgid "Unit Price"
+msgstr "Precio un."
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_report__product_uom_id
+#: model:ir.model.fields,field_description:account.field_account_move_line__product_uom_id
+msgid "Unit of Measure"
+msgstr "Unidad de medida"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/account_tax.py:0
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__amount_untaxed
+#: model:ir.model.fields,field_description:account.field_account_move__amount_untaxed
+#: model:ir.model.fields,field_description:account.field_account_payment__amount_untaxed
+#, python-format
+msgid "Untaxed Amount"
+msgstr "Total neto"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__amount_untaxed_signed
+#: model:ir.model.fields,field_description:account.field_account_move__amount_untaxed_signed
+#: model:ir.model.fields,field_description:account.field_account_payment__amount_untaxed_signed
+msgid "Untaxed Amount Signed"
+msgstr "Total neto firmado"

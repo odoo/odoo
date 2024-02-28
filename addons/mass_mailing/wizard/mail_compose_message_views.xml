@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <!-- Add mass mail campaign to the mail.compose.message form view -->
+        <record model="ir.ui.view" id="email_compose_form_mass_mailing">
+            <field name="name">mail.compose.message.form.mass_mailing</field>
+            <field name="model">mail.compose.message</field>
+            <field name="inherit_id" ref="mail.email_compose_message_wizard_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='notify']" position="after">
+                    <field name="campaign_id" groups="mass_mailing.group_mass_mailing_campaign"
+                        attrs="{'invisible': [('composition_mode', '!=', 'mass_mail')]}"/>
+                    <field name="mass_mailing_name"
+                        attrs="{'invisible': [('composition_mode', '!=', 'mass_mail')]}"/>
+                </xpath>
+                <xpath expr="//button[@name='action_send_mail'][not(hasclass('o_mail_send'))]" position="attributes">
+                    <!-- 'Log' button -->
+                    <attribute name="attrs">
+                        {'invisible': [
+                            '|',
+                                ('is_log', '=', False),
+                                '&amp;',
+                                    ('mass_mailing_name', '!=', ''),
+                                    ('mass_mailing_name', '!=', False)
+                        ]}
+                    </attribute>
+                </xpath>
+                <xpath expr="//button[hasclass('o_mail_send')]" position="attributes">
+                    <!-- 'Send' button -->
+                    <attribute name="attrs">
+                        {'invisible': [
+                            '|',
+                                ('is_log', '=', True),
+                                '&amp;',
+                                    ('mass_mailing_name', '!=', ''),
+                                    ('mass_mailing_name', '!=', False)
+                        ]}
+                    </attribute>
+                </xpath>
+                <xpath expr="//button[@name='action_send_mail']" position="after">
+                    <button string="Send Mass Mailing" name="action_send_mail" type="object" class="btn-primary o_mail_send"
+                        attrs="{'invisible': ['|', ('mass_mailing_name', '==', ''), ('mass_mailing_name', '==', False)]}" data-hotkey="q"/>
+                </xpath>
+            </field>
+        </record>
+
+</odoo>

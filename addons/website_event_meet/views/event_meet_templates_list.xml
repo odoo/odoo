@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="event_meet" name="Meeting Rooms">
+    <t t-call="website_event.layout">
+        <div class="o_wevent_online o_wemeet_index">
+            <!-- Drag/Drop Area -->
+            <div id="oe_structure_website_event_location_1" class="oe_structure"/>
+            <!-- Content -->
+            <div class="o_wemeet_container container">
+                <div class="row mb-5 mx-0">
+                    <t t-call="website_event_meet.community_main"/>
+                    <t t-call="website_event_meet.community_aside"/>
+                </div>
+            </div>
+            <!-- Drag/Drop Area -->
+            <div id="oe_structure_website_event_location_2" class="oe_structure mb-5"/>
+        </div>
+    </t>
+</template>
+
+<!-- ============================================================ -->
+<!-- CONTENT: MAIN TEMPLATES -->
+<!-- ============================================================ -->
+
+<!-- Meeting Rooms Main Display -->
+<template id="community_main" name="Meeting Rooms: Main Display">
+    <div class="col-12 col-md-8 ps-0 pe-0 pe-md-3 mt-3">
+        <h2 class="d-flex flex-row justify-content-between">
+            <span>Join a room</span>
+            <div class="dropdown">
+                <a class="dropdown-toggle o-no-caret btn btn-outline-secondary py-0 px-1" title="Languages Menu"
+                    aria-label="Dropdown menu" data-bs-display="static" data-bs-toggle="dropdown" href="#" role="button">
+                    <span t-out="current_lang.name if current_lang else 'All Languages'"/> ▼</a>
+                <div class="dropdown-menu" role="menu">
+                    <a class="dropdown-item" role="menuitem" t-attf-href="/event/#{slug(event)}/community">All Languages
+                       </a>
+                    <a class="dropdown-item" role="menuitem" t-as="language" t-attf-href="/event/#{slug(event)}/community?lang=#{language.id}" t-out="language.name" t-foreach="available_languages"/>
+                </div>
+            </div>
+        </h2>
+        <hr class="mt-2 mb-3"/>
+        <p class="mt-">Choose a topic that interests you and start talking with the community. <br/> Don't forget to setup your camera and microphone.</p>
+        <div class="d-flex flex-column justify-content-start align-items-start">
+            <t t-as="meeting_room" t-call="website_event_meet.meeting_room_card" t-foreach="meeting_rooms">
+                <t t-set="meeting_room" t-value="meeting_room"/>
+                <t t-set="opened" t-value="int(meeting_room.id == open_room_id)"/>
+            </t>
+            <div t-if="not meeting_rooms" class="m-auto text-center text-muted">
+                <h3 class="mt8">No Room Open</h3>
+                <div groups="event.group_event_user">
+                    <a target="_blank" t-att-href="'/web?#action=website_event_meet.action_meeting_room_from_event&amp;active_id=%s' % event.id">
+                        <p>Create one to get conversations going</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template id="meeting_room_card" name="Meeting Room Card">
+    <div class="modal o_join_later_modal fixed-top" t-attf-id="o_join_later_modal_#{meeting_room.id}" tabindex="-1" role="dialog" style="top: 0">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="mt-4 col-12 alert alert-warning text-center" role="alert">
+                    <nav class="navbar navbar-default">
+                        <div class="container-fluid">
+                            <div class="navbar-header">
+                                <div class="o_wevent_meeting_room_card_menu"></div>
+                            </div>
+                        </div>
+                    </nav>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <t t-if="not event.is_done">
+                        <span>This room is not open right now!</span><br />
+                        Join us here on the
+                        <strong itemprop="startDate" t-field="event.date_begin" t-options="{'tz_name': event.date_tz, 'format': 'medium'}"/>
+                        <strong>(<t t-out="event.date_tz"/>)</strong>
+                        to have a chat with us!
+                    </t>
+                    <t t-else="">
+                        Event <span t-out="event.name" class="fw-bold"/> is over.
+                        <br/>
+                        <span>Join us next time to chat about <b t-out="meeting_room.name"/>!</span>
+                    </t>
+                </div>
+
+                <div class="modal-body row">
+                    <div class="col-3">
+                        <div class="w-100" t-attf-style="background-image: #{json.loads(event.cover_properties).get('background-image')}; min-height: 5rem; background-size: cover;"/>
+                    </div>
+                    <div class="col">
+                        <h5 t-out="meeting_room.name"/>
+                        <div class="text-muted mb-2"><i class="fa fa-globe"/> <span t-out="meeting_room.room_lang_id.name"/></div>
+                        <span t-if="meeting_room.summary" t-field="meeting_room.summary"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action to do when clicking on the card -->
+    <t t-if="event.is_ongoing or is_event_user">
+        <!--During the event or if event manager-->
+        <t t-set="meeting_room_href" t-value="'/event/' + slug(event) + '/meeting_room/' + slug(meeting_room)"/>
+    </t>
+    <t t-elif="not event.is_ongoing and not event.is_participating">
+        <!--Pre-event, if not registered yet-->
+        <t t-set="meeting_room_href" t-value="'/event/' + slug(event) + '/register?from_room_id=%i' % meeting_room.id"/>
+    </t>
+    <t t-else="">
+        <!--Pre-event, if registered but event not stared yet-->
+        <t t-set="meeting_room_href" t-value="'#'"/>
+        <t t-set="meeting_room_data_toggle" t-value="'modal'"/>
+        <t t-set="meeting_room_data_target" t-value="'#o_join_later_modal_%i' % meeting_room.id"/>
+    </t>
+
+    <a t-if="is_event_user or not meeting_room.room_is_full"
+        class="card o_wevent_meeting_room_card w-100 my-2 d-block text-decoration-none rounded-0"
+        t-att-data-meeting-room-id="meeting_room.id"
+        t-att-data-open-room="opened"
+        t-att-data-is-event-manager="int(is_event_user)"
+        t-att-href="meeting_room_href"
+        t-att-data-bs-toggle="meeting_room_data_toggle"
+        t-att-data-bs-target="meeting_room_data_target">
+        <div class="text-decoration-none w-100 h-100 p-3" t-att-data-publish="meeting_room.website_published and 'on' or 'off'">
+            <div class="o_wevent_meeting_room_corner_ribbon" t-if="meeting_room.room_is_full">Full</div>
+            <div class="d-flex flex-column">
+                <div class="d-flex flex-row">
+                    <h4 t-att-class="'text-break text-uppercase %s' % ('w-75' if meeting_room.website_published else 'w-50')" t-out="meeting_room.name"/>
+                    <div t-if="not meeting_room.is_published" class="w-25">
+                        <span class="badge text-bg-danger">Unpublished</span>
+                    </div>
+                </div>
+                <span class="text-muted" t-field="meeting_room.summary"/>
+                <div class="d-flex flex-row justify-content-between align-items-center">
+                    <span class="h6 m-0">
+                        <span t-out="meeting_room.room_participant_count"/>&amp;nbsp;
+                        <span t-if="meeting_room.target_audience" class="text-uppercase" t-field="meeting_room.target_audience"/>
+                        <span t-else="" class="text-uppercase">participant(s)</span>
+                    </span>
+                    <div class="d-inline border py-1 px-2 text-bg-secondary" t-out="meeting_room.room_lang_id.name"/>
+                </div>
+            </div>
+        </div>
+        <div t-if="is_event_user" class="position-absolute o_wevent_meeting_room_manager_menu d-flex justify-content-end flex-column flex-md-row">
+            <button t-attf-class="o_wevent_meeting_room_is_pinned btn #{'o_wevent_meeting_room_pinned' if meeting_room.is_pinned else ''}">
+                <i class="fa fa-thumb-tack"/>
+            </button>
+            <div class="dropdown dropstart">
+                <button class="btn" data-bs-toggle="dropdown"><i class="fa fa-ellipsis-v px-1"/></button>
+                <div class="dropdown-menu">
+                    <button class="dropdown-item btn o_wevent_meeting_room_duplicate" type="button">Duplicate</button>
+                    <button class="dropdown-item btn o_wevent_meeting_room_delete" type="button">Close</button>
+                </div>
+            </div>
+        </div>
+    </a>
+</template>
+
+<!-- ============================================================ -->
+<!-- ASIDE: CREATE A ROOM -->
+<!-- ============================================================ -->
+
+<template id="community_aside" name="Community: Aside">
+    <div class="col-md-4 p-0 mt-3 o_wevent_community_aside">
+        <div class="d-none d-md-block mb-3" t-if="event.meeting_room_allow_creation">
+            <h2>Start a topic</h2>
+            <hr class="mt-2 mb-3"/>
+            <p>Want to create your own discussion room ?</p>
+            <a href="#" role="button"
+                class="btn btn-primary o_wevent_create_room_button"
+                t-if="event.is_ongoing or event.start_today or is_event_user"
+                t-att-data-event-id="event.id"
+                t-att-data-default-lang-code="default_lang_code">
+                <span>Create a Room</span>
+            </a>
+            <div t-else="" class="d-flex flex-column">
+                <button disabled="disabled" class="btn btn-primary align-self-start">Create a Room</button>
+                Room creation will be available when event starts at 
+                <span>
+                    <span class="fw-bold" t-field="event.with_context(tz=event.date_tz).date_begin"
+                        t-options="{'format': 'medium'}"/>
+                    <span class="small">(<t t-out="event.date_tz"/>)</span>
+                </span>
+            </div>
+        </div>
+    </div>
+</template>
+
+</odoo>

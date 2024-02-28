@@ -1,0 +1,515 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_loyalty
+# 
+# Translators:
+# Jan Prokop, 2022
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2022
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2022
+# SAKodoo <sak@odoo.com>, 2022
+# Martin Trigaux, 2022
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-02-02 10:34+0000\n"
+"PO-Revision-Date: 2022-09-22 05:54+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
+"Language-Team: Slovak (https://app.transifex.com/odoo/teams/41243/sk/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: sk\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
+
+#. module: sale_loyalty
+#: model:ir.model.fields,help:sale_loyalty.field_sale_order_line__reward_identifier_code
+msgid ""
+"\n"
+"        Technical field used to link multiple reward lines from the same reward together.\n"
+"    "
+msgstr ""
+
+#. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+#, python-format
+msgid " - On product with the following taxes: %(taxes)s"
+msgstr ""
+
+#. module: sale_loyalty
+#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_purchased_gift_card
+msgid "<span class=\"fa fa-clipboard\"/> Copy"
+msgstr ""
+
+#. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+#, python-format
+msgid "A better global discount is already applied."
+msgstr ""
+
+#. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+#, python-format
+msgid ""
+"A minimum of %(amount)s %(currency)s should be purchased to get the reward"
+msgstr ""
+
+#. module: sale_loyalty
+#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_coupon_wizard_view_form
+#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_reward_wizard_view_form
+msgid "Apply"
+msgstr "Použiť"
+
+#. module: sale_loyalty
+#: model:ir.actions.act_window,name:sale_loyalty.sale_loyalty_reward_wizard_action
+msgid "Available Rewards"
+msgstr ""
+
+#. module: sale_loyalty
+#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_reward_wizard_view_form
+msgid "Choose a product:"
+msgstr ""
+
+#. module: sale_loyalty
+#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_reward_wizard_view_form
+msgid "Choose your reward:"
+msgstr ""
+
+#. module: sale_loyalty
+#: model_terms:ir.ui.view,arch_db:sale_loyalty.used_gift_card
+msgid "Code:"
+msgstr "Kód:"
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_coupon_points__coupon_id
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_line__coupon_id
+msgid "Coupon"
+msgstr "Kupón"
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_coupon_wizard__coupon_code
+#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_view_form_inherit_sale_loyalty
+msgid "Coupon Code"
+msgstr "Kód kupónu"
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_order__coupon_point_ids
+msgid "Coupon Point"
+msgstr ""
+
+#. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/wizard/sale_loyalty_reward_wizard.py:0
+#, python-format
+msgid "Coupon not found while trying to add the following reward: %s"
+msgstr ""
+
+#. module: sale_loyalty
+#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_reward_wizard_view_form
+msgid "Coupons & Loyalty"
+msgstr ""
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_coupon_wizard__create_uid
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard__create_uid
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_coupon_points__create_uid
+msgid "Created by"
+msgstr "Vytvoril"
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_coupon_wizard__create_date
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard__create_date
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_coupon_points__create_date
+msgid "Created on"
+msgstr "Vytvorené"
+
+#. module: sale_loyalty
+#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_coupon_wizard_view_form
+#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_reward_wizard_view_form
+msgid "Discard"
+msgstr "Zrušiť"
+
+#. module: sale_loyalty
+#: model:ir.ui.menu,name:sale_loyalty.menu_discount_loyalty_type_config
+msgid "Discount & Loyalty"
+msgstr ""
+
+#. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+#, python-format
+msgid "Discount: %(desc)s%(tax_str)s"
+msgstr ""
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_coupon_wizard__display_name
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard__display_name
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_coupon_points__display_name
+msgid "Display Name"
+msgstr "Zobrazovaný názov"
+
+#. module: sale_loyalty
+#: model:ir.actions.act_window,name:sale_loyalty.sale_loyalty_coupon_wizard_action
+msgid "Enter Promotion or Coupon Code"
+msgstr ""
+
+#. module: sale_loyalty
+#: model_terms:ir.ui.view,arch_db:sale_loyalty.used_gift_card
+msgid "Expired Date:"
+msgstr ""
+
+#. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+#, python-format
+msgid "Free Product - %(product)s"
+msgstr ""
+
+#. module: sale_loyalty
+#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_purchased_gift_card
+msgid "Gift #"
+msgstr ""
+
+#. module: sale_loyalty
+#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_purchased_gift_card
+msgid "Gift Card Code"
+msgstr ""
+
+#. module: sale_loyalty
+#: model:ir.ui.menu,name:sale_loyalty.menu_gift_ewallet_type_config
+msgid "Gift cards & eWallet"
+msgstr ""
+
+#. module: sale_loyalty
+#: model:ir.model.fields,help:sale_loyalty.field_sale_order_line__points_cost
+msgid "How much point this reward cost on the loyalty card."
+msgstr ""
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_coupon_wizard__id
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard__id
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_coupon_points__id
+msgid "ID"
+msgstr "ID"
+
+#. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+#, python-format
+msgid "Invalid product to claim."
+msgstr ""
+
+#. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/wizard/sale_loyalty_coupon_wizard.py:0
+#, python-format
+msgid "Invalid sales order."
+msgstr ""
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_line__is_reward_line
+msgid "Is a program reward line"
+msgstr ""
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_coupon_wizard____last_update
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard____last_update
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_coupon_points____last_update
+msgid "Last Modified on"
+msgstr "Posledná úprava"
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_coupon_wizard__write_uid
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard__write_uid
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_coupon_points__write_uid
+msgid "Last Updated by"
+msgstr "Naposledy upravoval"
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_coupon_wizard__write_date
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard__write_date
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_coupon_points__write_date
+msgid "Last Updated on"
+msgstr "Naposledy upravované"
+
+#. module: sale_loyalty
+#: model:ir.model,name:sale_loyalty.model_loyalty_card
+msgid "Loyalty Coupon"
+msgstr ""
+
+#. module: sale_loyalty
+#: model:ir.model,name:sale_loyalty.model_loyalty_program
+msgid "Loyalty Program"
+msgstr "Vernostný program"
+
+#. module: sale_loyalty
+#: model:ir.model,name:sale_loyalty.model_loyalty_reward
+msgid "Loyalty Reward"
+msgstr "Vernostná odmena"
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_order__applied_coupon_ids
+msgid "Manually Applied Coupons"
+msgstr ""
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_order__code_enabled_rule_ids
+msgid "Manually Triggered Rules"
+msgstr ""
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard__multi_product_reward
+msgid "Multi Product"
+msgstr ""
+
+#. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+#, python-format
+msgid ""
+"No card found for this loyalty program and no points will be given with this"
+" order."
+msgstr ""
+
+#. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/wizard/sale_loyalty_reward_wizard.py:0
+#, python-format
+msgid "No reward selected."
+msgstr ""
+
+#. module: sale_loyalty
+#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_reward_wizard_view_form
+msgid "No rewards available for this customer!"
+msgstr ""
+
+#. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+#, python-format
+msgid "One or more rewards on the sale order is invalid. Please check them."
+msgstr ""
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_coupon_wizard__order_id
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard__order_id
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_coupon_points__order_id
+msgid "Order"
+msgstr "Poradie"
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_program__order_count
+msgid "Order Count"
+msgstr "Počet objednávok"
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_card__order_id
+msgid "Order Reference"
+msgstr "Referencia objednávky"
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_coupon_points__points
+msgid "Points"
+msgstr "Body"
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_line__points_cost
+msgid "Points Cost"
+msgstr ""
+
+#. module: sale_loyalty
+#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_view_form_inherit_sale_loyalty
+msgid "Promotions"
+msgstr ""
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard__reward_ids
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_line__reward_id
+msgid "Reward"
+msgstr "Odmena"
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_order__reward_amount
+msgid "Reward Amount"
+msgstr ""
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_line__reward_identifier_code
+msgid "Reward Identifier Code"
+msgstr ""
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard__reward_product_ids
+msgid "Reward Products"
+msgstr ""
+
+#. module: sale_loyalty
+#: model:ir.model,name:sale_loyalty.model_sale_loyalty_coupon_wizard
+msgid "Sale Loyalty - Apply Coupon Wizard"
+msgstr ""
+
+#. module: sale_loyalty
+#: model:ir.model,name:sale_loyalty.model_sale_loyalty_reward_wizard
+msgid "Sale Loyalty - Reward Selection Wizard"
+msgstr ""
+
+#. module: sale_loyalty
+#: model:ir.model,name:sale_loyalty.model_sale_order_coupon_points
+msgid ""
+"Sale Order Coupon Points - Keeps track of how a sale order impacts a coupon"
+msgstr ""
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_program__sale_ok
+msgid "Sales"
+msgstr "Predaj"
+
+#. module: sale_loyalty
+#: model:ir.model,name:sale_loyalty.model_sale_order
+msgid "Sales Order"
+msgstr "Objednávka "
+
+#. module: sale_loyalty
+#: model:ir.model,name:sale_loyalty.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Položka objednávok"
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard__selected_product_id
+msgid "Selected Product"
+msgstr ""
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard__selected_reward_id
+msgid "Selected Reward"
+msgstr ""
+
+#. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+#, python-format
+msgid "TEMPORARY DISCOUNT LINE"
+msgstr ""
+
+#. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+#, python-format
+msgid "The coupon can only be claimed on future orders."
+msgstr ""
+
+#. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+#, python-format
+msgid "The coupon does not have enough points for the selected reward."
+msgstr ""
+
+#. module: sale_loyalty
+#: model:ir.model.constraint,message:sale_loyalty.constraint_sale_order_coupon_points_order_coupon_unique
+msgid "The coupon points entry already exists."
+msgstr ""
+
+#. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+#, python-format
+msgid "The program is not available for this order."
+msgstr ""
+
+#. module: sale_loyalty
+#: model:ir.model.fields,help:sale_loyalty.field_loyalty_card__order_id
+msgid "The sales order from which coupon is generated"
+msgstr ""
+
+#. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+#, python-format
+msgid "There is nothing to discount"
+msgstr ""
+
+#. module: sale_loyalty
+#: model:ir.model.fields,help:sale_loyalty.field_sale_loyalty_reward_wizard__reward_product_ids
+msgid "These are the products that can be claimed with this rule."
+msgstr ""
+
+#. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+#, python-format
+msgid "This code is expired (%s)."
+msgstr ""
+
+#. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+#: code:addons/sale_loyalty/models/sale_order.py:0
+#, python-format
+msgid "This code is invalid (%s)."
+msgstr ""
+
+#. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+#, python-format
+msgid "This coupon has already been used."
+msgstr ""
+
+#. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+#, python-format
+msgid "This coupon is expired."
+msgstr ""
+
+#. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+#, python-format
+msgid "This program is already applied to this order."
+msgstr ""
+
+#. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+#, python-format
+msgid "This program is not available for public users."
+msgstr ""
+
+#. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+#, python-format
+msgid "This program requires a code to be applied."
+msgstr ""
+
+#. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+#, python-format
+msgid "This promo code is already applied."
+msgstr ""
+
+#. module: sale_loyalty
+#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_view_form_inherit_sale_loyalty
+msgid "Update current promotional lines and select new rewards if applicable."
+msgstr ""
+
+#. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+#, python-format
+msgid "You don't have the required product quantities on your sales order."
+msgstr ""
+
+#. module: sale_loyalty
+#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_purchased_gift_card
+msgid ""
+"You will find below your gift cards code. An email has been sent with it. "
+"You can use it starting right now."
+msgstr ""

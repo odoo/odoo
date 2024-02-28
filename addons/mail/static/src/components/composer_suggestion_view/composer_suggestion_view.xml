@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.ComposerSuggestionView" owl="1">
+        <t t-if="composerSuggestionView">
+            <a class="o_ComposerSuggestionView dropdown-item d-flex w-100 py-2 px-4" t-att-class="{ 'active bg-300': composerSuggestionView.composerSuggestionListViewOwnerAsActiveSuggestionView }" t-attf-class="{{ className }}" href="#" t-att-title="composerSuggestionView.title" role="menuitem" t-on-click="composerSuggestionView.onClick" t-ref="root">
+                <t t-if="composerSuggestionView.suggestable.cannedResponse">
+                    <strong class="o_ComposerSuggestionView_part1 flex-shrink-0 mw-100 pe-2 text-truncate"><t t-esc="composerSuggestionView.suggestable.cannedResponse.source"/></strong>
+                    <em class="o_ComposerSuggestionView_part2 text-600 text-truncate"><t t-esc="composerSuggestionView.suggestable.cannedResponse.substitution"/></em>
+                </t>
+                <t t-if="composerSuggestionView.suggestable.thread">
+                    <strong class="o_ComposerSuggestionView_part1 flex-shrink-0 mw-100 pe-2 text-truncate"><t t-esc="composerSuggestionView.suggestable.thread.name"/></strong>
+                </t>
+                <t t-if="composerSuggestionView.suggestable.channelCommand">
+                    <strong class="o_ComposerSuggestionView_part1 flex-shrink-0 mw-100 pe-2 text-truncate"><t t-esc="composerSuggestionView.suggestable.channelCommand.name"/></strong>
+                    <em class="o_ComposerSuggestionView_part2 text-600 text-truncate"><t t-esc="composerSuggestionView.suggestable.channelCommand.help"/></em>
+                </t>
+                <t t-if="composerSuggestionView.suggestable.partner">
+                    <t t-if="composerSuggestionView.personaImStatusIconView">
+                        <PersonaImStatusIcon
+                            className="'o_ComposerSuggestionView_personaImStatusIcon flex-shrink-0 me-1'"
+                            hasBackground="false"
+                            record="composerSuggestionView.personaImStatusIconView"
+                        />
+                    </t>
+                    <strong class="o_ComposerSuggestionView_part1 flex-shrink-0 mw-100 pe-2 text-truncate"><t t-esc="composerSuggestionView.suggestable.partner.nameOrDisplayName"/></strong>
+                    <t t-if="composerSuggestionView.suggestable.partner.email">
+                        <em class="o_ComposerSuggestionView_part2 text-600 text-truncate">(<t t-esc="composerSuggestionView.suggestable.partner.email"/>)</em>
+                    </t>
+                </t>
+            </a>
+        </t>
+    </t>
+
+</templates>

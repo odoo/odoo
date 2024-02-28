@@ -1,0 +1,127 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_recruitment_skills
+# 
+# Translators:
+# Uros Kalajdzic <ukalajdzic@gmail.com>, 2022
+# Martin Trigaux, 2022
+# Dragan Vukosavljevic <dragan.vukosavljevic@gmail.com>, 2022
+# Milan Bojovic <mbojovic@outlook.com>, 2023
+# コフスタジオ, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0beta\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-09-27 15:13+0000\n"
+"PO-Revision-Date: 2022-09-22 05:52+0000\n"
+"Last-Translator: コフスタジオ, 2024\n"
+"Language-Team: Serbian (https://app.transifex.com/odoo/teams/41243/sr/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: sr\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#. module: hr_recruitment_skills
+#: model:ir.model,name:hr_recruitment_skills.model_hr_applicant
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant_skill__applicant_id
+msgid "Applicant"
+msgstr "Kandidat/kinja"
+
+#. module: hr_recruitment_skills
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant_skill__create_uid
+msgid "Created by"
+msgstr "Kreirao"
+
+#. module: hr_recruitment_skills
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant_skill__create_date
+msgid "Created on"
+msgstr "Kreirano"
+
+#. module: hr_recruitment_skills
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant_skill__display_name
+msgid "Display Name"
+msgstr "Naziv za prikaz"
+
+#. module: hr_recruitment_skills
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant_skill__id
+msgid "ID"
+msgstr "ID"
+
+#. module: hr_recruitment_skills
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant__is_interviewer
+msgid "Is Interviewer"
+msgstr "Je ispitivač"
+
+#. module: hr_recruitment_skills
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant_skill____last_update
+msgid "Last Modified on"
+msgstr "Poslednja izmena dana"
+
+#. module: hr_recruitment_skills
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant_skill__write_uid
+msgid "Last Updated by"
+msgstr "Poslednje izmenio/la"
+
+#. module: hr_recruitment_skills
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant_skill__write_date
+msgid "Last Updated on"
+msgstr "Poslednje ažuriranje dana"
+
+#. module: hr_recruitment_skills
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant_skill__level_progress
+msgid "Progress"
+msgstr "Napredak"
+
+#. module: hr_recruitment_skills
+#: model:ir.model.fields,help:hr_recruitment_skills.field_hr_applicant_skill__level_progress
+msgid "Progress from zero knowledge (0%) to fully mastered (100%)."
+msgstr "Napredak od nula znanja (0%) do potpuno savladanog (100%)."
+
+#. module: hr_recruitment_skills
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant__skill_ids
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant_skill__skill_id
+msgid "Skill"
+msgstr "Veština"
+
+#. module: hr_recruitment_skills
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant_skill__skill_level_id
+msgid "Skill Level"
+msgstr "Nivo veštine"
+
+#. module: hr_recruitment_skills
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant_skill__skill_type_id
+msgid "Skill Type"
+msgstr "Vrsta veštine"
+
+#. module: hr_recruitment_skills
+#: model:ir.model,name:hr_recruitment_skills.model_hr_applicant_skill
+msgid "Skill level for an applicant"
+msgstr "Nivo veštine za kandidata"
+
+#. module: hr_recruitment_skills
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant__applicant_skill_ids
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_skills.hr_applicant_skill_view_form
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_skills.hr_applicant_view_form
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_skills.hr_applicant_view_search
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_skills.hr_applicant_view_search_bis
+msgid "Skills"
+msgstr "Veštine"
+
+#. module: hr_recruitment_skills
+#: code:addons/hr_recruitment_skills/models/hr_applicant_skill.py:0
+#, python-format
+msgid "The skill %(name)s and skill type %(type)s doesn't match"
+msgstr "Veština %(name)s i tip veštine %(type)s se ne podudaraju"
+
+#. module: hr_recruitment_skills
+#: code:addons/hr_recruitment_skills/models/hr_applicant_skill.py:0
+#, python-format
+msgid "The skill level %(level)s is not valid for skill type: %(type)s"
+msgstr "Nivo veštine %(level)s nije validan za tip veštine: %(type)s"
+
+#. module: hr_recruitment_skills
+#: model:ir.model.constraint,message:hr_recruitment_skills.constraint_hr_applicant_skill__unique_skill
+msgid "Two levels for the same skill is not allowed"
+msgstr "Dva nivoa za istu veštinu nije dozvoljeno."

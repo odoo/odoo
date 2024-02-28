@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="view_company_form">
+        <field name="name">res.company.form.inherit</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="model">res.company</field>
+        <field name="arch" type="xml">
+            <field name="vat" position="after">
+                <field name="l10n_ar_afip_responsibility_type_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('country_code', '!=', 'AR')]}"/>
+                <label for="l10n_ar_gross_income_number" string="Gross Income" attrs="{'invisible': [('country_code', '!=', 'AR')]}"/>
+                <div attrs="{'invisible': [('country_code', '!=', 'AR')]}" name="gross_income">
+                    <field name="l10n_ar_gross_income_type" class="oe_inline"/>
+                    <field name="l10n_ar_gross_income_number" placeholder="Number..." class="oe_inline" attrs="{'invisible': [('l10n_ar_gross_income_type', 'in', [False, 'exempt'])], 'required': [('l10n_ar_gross_income_type', 'not in', [False, 'exempt'])]}"/>
+                </div>
+                <field name="l10n_ar_afip_start_date" attrs="{'invisible': [('country_code', '!=', 'AR')]}"/>
+            </field>
+        </field>
+    </record>
+</odoo>

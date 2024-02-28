@@ -1,0 +1,6 @@
+.pos .screen .content-cell{
+    height: 100%;
+}
+.pos .subwindow .subwindow-container{
+     height: 100%;
+}

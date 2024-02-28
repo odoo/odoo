@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-inherit="mail.NotificationGroup" t-inherit-mode="extension">
+        <xpath expr="//*[hasclass('o_NotificationGroup_inlineText')]" position="inside">
+            <t t-if="notificationGroupView.notificationGroup.notification_type === 'sms'">
+                An error occurred when sending an SMS.
+            </t>
+        </xpath>
+    </t>
+
+</templates>

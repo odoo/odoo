@@ -1,0 +1,833 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* crm_iap_mine
+# 
+# Translators:
+# Cozmin Candea <office@terrabit.ro>, 2022
+# Foldi Robert <foldirobert@nexterp.ro>, 2022
+# Dorin Hongu <dhongu@gmail.com>, 2022
+# Martin Trigaux, 2022
+# Hongu Cosmin <cosmin513@gmail.com>, 2022
+# Claudia Baisan, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-05-23 08:23+0000\n"
+"PO-Revision-Date: 2022-09-22 05:45+0000\n"
+"Last-Translator: Claudia Baisan, 2023\n"
+"Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ro\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+
+#. module: crm_iap_mine
+#. odoo-python
+#: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
+#, python-format
+msgid "%d credits will be consumed to find %d companies."
+msgstr "%d creditele vor fi consumate pentru a găsi %d companiile."
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.enrich_company
+msgid "<b>Contacts</b>"
+msgstr "<b>Contacte</b>"
+
+#. module: crm_iap_mine
+#: model:mail.template,body_html:crm_iap_mine.lead_generation_no_credits
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p>Dear,</p>\n"
+"    <p>There are no more credits on your IAP Lead Generation account.<br>\n"
+"    You can charge your IAP Lead Generation account in the settings of the CRM app.<br></p>\n"
+"    <p>Best regards,</p>\n"
+"    <p>Odoo S.A.</p>\n"
+"</div>"
+msgstr ""
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
+msgid ""
+"<span attrs=\"{'invisible': [('error_type', '!=', 'no_result')]}\">Your "
+"request did not return any result (no credits were used). Try removing some "
+"filters.</span>"
+msgstr ""
+"<span attrs=\"{'invisible': [('error_type', '!=', 'no_result')]}\">Cererea "
+"dvs. nu a returnat niciun rezultat (nu au fost utilizate credite). Încercați"
+" să eliminați unele filtre.</span>"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
+msgid "<span class=\"col-md-6\">Extra contacts per Company</span>"
+msgstr ""
+"<span class=\"col-md-6\">Contacte suplimentare pentru fiecare "
+"companie</span>"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
+msgid "<span class=\"o_stat_text\">Leads</span>"
+msgstr "<span class=\"o_stat_text\">Oportunități</span>"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
+msgid "<span class=\"o_stat_text\">Opportunities</span>"
+msgstr "<span class=\"o_stat_text\">Oportunități</span>"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_238
+msgid "Automobiles & Components"
+msgstr "Automobile și componente"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__available_state_ids
+msgid "Available State"
+msgstr "Status disponibil"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_69_157
+msgid "Banks & Insurance"
+msgstr "Bănci și asigurări"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
+msgid "Buy credits."
+msgstr "Cumpărați credite."
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_1
+msgid "CEO"
+msgstr "CEO"
+
+#. module: crm_iap_mine
+#: model:ir.model,name:crm_iap_mine.model_crm_iap_lead_industry
+msgid "CRM IAP Lead Industry"
+msgstr "Industria Pistelor CRM IAP"
+
+#. module: crm_iap_mine
+#: model:ir.model,name:crm_iap_mine.model_crm_iap_lead_mining_request
+msgid "CRM Lead Mining Request"
+msgstr "Cerere de extragere a pistelor CRM"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
+msgid "Cancel"
+msgstr "Anulează"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_162
+msgid "Capital Goods"
+msgstr "Bunuri capitale"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_industry__color
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_role__color
+msgid "Color Index"
+msgstr "Index Culori"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_163
+msgid "Commercial & Professional Services"
+msgstr "Servicii comerciale și profesionale"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__search_type__companies
+msgid "Companies"
+msgstr "Companii"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__search_type__people
+msgid "Companies and their Contacts"
+msgstr "Companiile și contactele acestora"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__company_size_max
+msgid "Company Size Max"
+msgstr "Dimensiunea companiei Max"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_167
+msgid "Construction Materials"
+msgstr "Materiale de construcție"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_30_155
+msgid "Consumer Discretionary"
+msgstr "Discreționar de consum"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_239
+msgid "Consumer Durables & Apparel"
+msgstr "Articole durabile și de uz personal pentru consumatori"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_150_151
+msgid "Consumer Services"
+msgstr "Servicii pentru consumatori"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_33
+msgid "Consumer Staples"
+msgstr "Capse de consum"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__country_ids
+msgid "Countries"
+msgstr "Țări"
+
+#. module: crm_iap_mine
+#. odoo-python
+#: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
+#, python-format
+msgid "Create a Lead Mining Request"
+msgstr "Creați o cerere de extragere a pistelor"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_helpers__create_uid
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_industry__create_uid
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__create_uid
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_role__create_uid
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_seniority__create_uid
+msgid "Created by"
+msgstr "Creat de"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_helpers__create_date
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_industry__create_date
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__create_date
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_role__create_date
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_seniority__create_date
+msgid "Created on"
+msgstr "Creat în"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
+msgid "Default Tags"
+msgstr "Etichete implicite"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__display_lead_label
+msgid "Display Lead Label"
+msgstr "Afișați eticheta pistei"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_helpers__display_name
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_industry__display_name
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__display_name
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_role__display_name
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_seniority__display_name
+msgid "Display Name"
+msgstr "Nume afișat"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_158_159
+msgid "Diversified Financials & Financial Services"
+msgstr "Finanțe diversificate și servicii financiare"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__state__done
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_search
+msgid "Done"
+msgstr "Efectuat"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__state__draft
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_search
+msgid "Draft"
+msgstr "Ciornă"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.enrich_company
+msgid "Email"
+msgstr "Email"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_138_156
+msgid "Energy & Utilities "
+msgstr "Energie și utilități"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__state__error
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_search
+msgid "Error"
+msgstr "Eroare"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__error_type
+msgid "Error Type"
+msgstr "Tip de eroare"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__contact_filter_type
+msgid "Filter on"
+msgstr "Filtrați"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__filter_on_size
+msgid "Filter on Size"
+msgstr "Filtrează dimensiunea"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_153_154
+msgid "Food, Beverage & Tobacco"
+msgstr "Alimente, băuturi & tutun"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
+msgid "From"
+msgstr "De la"
+
+#. module: crm_iap_mine
+#. odoo-python
+#. odoo-javascript
+#: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
+#: code:addons/crm_iap_mine/static/src/views/generate_leads_views.xml:0
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
+#, python-format
+msgid "Generate Leads"
+msgstr "Generare Piste"
+
+#. module: crm_iap_mine
+#. odoo-python
+#: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
+#, python-format
+msgid "Generate new leads based on their country, industry, size, etc."
+msgstr ""
+"Generați noi piste în funcție de țara lor, industrie, dimensiune, etc."
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__lead_ids
+msgid "Generated Lead / Opportunity"
+msgstr "Piste/ Opportunități Generate"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_search
+msgid "Group By"
+msgstr "Grupează după"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_160
+msgid "Health Care Equipment & Services"
+msgstr "Echipamente & servicii pentru îngrijirea sănătății"
+
+#. module: crm_iap_mine
+#: model:ir.model,name:crm_iap_mine.model_crm_iap_lead_helpers
+msgid "Helper methods for crm_iap_mine modules"
+msgstr "Metode de ajutor pentru modulele crm_iap_mine"
+
+#. module: crm_iap_mine
+#: model:mail.template,name:crm_iap_mine.lead_generation_no_credits
+#: model:mail.template,subject:crm_iap_mine.lead_generation_no_credits
+msgid "IAP Lead Generation Notification"
+msgstr "Notificare generare piste IAP"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_helpers__id
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_industry__id
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__id
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_role__id
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_seniority__id
+msgid "ID"
+msgstr "ID"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_168
+msgid "Independent Power and Renewable Electricity Producers"
+msgstr "Producători independenți de energie electrică și regenerabilă"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__industry_ids
+msgid "Industries"
+msgstr "Industrii"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_industry__name
+msgid "Industry"
+msgstr "Industrie"
+
+#. module: crm_iap_mine
+#: model:ir.model.constraint,message:crm_iap_mine.constraint_crm_iap_lead_industry_name_uniq
+msgid "Industry name already exists!"
+msgstr "Numele industriei există deja!"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__error_type__credits
+msgid "Insufficient Credits"
+msgstr "Credite insuficiente"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_helpers____last_update
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_industry____last_update
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request____last_update
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_role____last_update
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_seniority____last_update
+msgid "Last Modified on"
+msgstr "Ultima modificare la"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_helpers__write_uid
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_industry__write_uid
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__write_uid
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_role__write_uid
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_seniority__write_uid
+msgid "Last Updated by"
+msgstr "Ultima actualizare făcută de"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_helpers__write_date
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_industry__write_date
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__write_date
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_role__write_date
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_seniority__write_date
+msgid "Last Updated on"
+msgstr "Ultima actualizare pe"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__lead_contacts_credits
+msgid "Lead Contacts Credits"
+msgstr "Credite contacte piste"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__lead_credits
+msgid "Lead Credits"
+msgstr "Credite piste"
+
+#. module: crm_iap_mine
+#: model:ir.ui.menu,name:crm_iap_mine.crm_menu_lead_generation
+msgid "Lead Generation"
+msgstr "Generare Pistă"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_lead__lead_mining_request_id
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_search
+msgid "Lead Mining Request"
+msgstr "Cerere de extragere pistă"
+
+#. module: crm_iap_mine
+#: model:ir.actions.act_window,name:crm_iap_mine.crm_iap_lead_mining_request_action
+#: model:ir.ui.menu,name:crm_iap_mine.crm_iap_lead_mining_request_menu_action
+msgid "Lead Mining Requests"
+msgstr "Cereri de extragere pistă"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__lead_total_credits
+msgid "Lead Total Credits"
+msgstr "Credite total pistă"
+
+#. module: crm_iap_mine
+#: model:ir.model,name:crm_iap_mine.model_crm_lead
+msgid "Lead/Opportunity"
+msgstr "Pista/Oportunitate"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__lead_type__lead
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_search
+msgid "Leads"
+msgstr "Piste"
+
+#. module: crm_iap_mine
+#. odoo-javascript
+#: code:addons/crm_iap_mine/static/src/js/tours/crm_iap_lead.js:0
+#, python-format
+msgid ""
+"Looking for more opportunities ?<br>Try the <b>Lead Generation</b> tool."
+msgstr ""
+"Căutați mai multe oportunități?<br>Încercați <b>Instrumentul de generare "
+"pistă</b>."
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_148
+msgid "Materials"
+msgstr "Materiale"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_86
+msgid "Media"
+msgstr "Media"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_seniority__name
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.enrich_company
+msgid "Name"
+msgstr "Nume"
+
+#. module: crm_iap_mine
+#: model:ir.model.constraint,message:crm_iap_mine.constraint_crm_iap_lead_seniority_name_uniq
+msgid "Name already exists!"
+msgstr "Numele există deja!"
+
+#. module: crm_iap_mine
+#. odoo-python
+#: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
+#: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
+#: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
+#: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
+#, python-format
+msgid "New"
+msgstr "Nou(ă)"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__error_type__no_result
+msgid "No Result"
+msgstr "Niciun rezultat"
+
+#. module: crm_iap_mine
+#. odoo-javascript
+#: code:addons/crm_iap_mine/static/src/js/tours/crm_iap_lead.js:0
+#, python-format
+msgid "Now, just let the magic happen!"
+msgstr "Acum, lasă magia să se întâmple!"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__contact_number
+msgid "Number of Contacts"
+msgstr "Număr de contacte"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__lead_count
+msgid "Number of Generated Leads"
+msgstr "Număr de piste generate"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__lead_number
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_tree
+msgid "Number of Leads"
+msgstr "Număr de piste"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__lead_type__opportunity
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_search
+msgid "Opportunities"
+msgstr "Oportunități"
+
+#. module: crm_iap_mine
+#. odoo-python
+#: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
+#, python-format
+msgid "Opportunity created by Odoo Lead Generation"
+msgstr "Oportunitate creată de Instrumentul de generare pistă Odoo"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__role_ids
+msgid "Other Roles"
+msgstr "Alte roluri"
+
+#. module: crm_iap_mine
+#: model:ir.model,name:crm_iap_mine.model_crm_iap_lead_role
+msgid "People Role"
+msgstr "Rolul oamenilor"
+
+#. module: crm_iap_mine
+#: model:ir.model,name:crm_iap_mine.model_crm_iap_lead_seniority
+msgid "People Seniority"
+msgstr "Vechimea oamenilor"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_161
+msgid "Pharmaceuticals, Biotechnology & Life Sciences"
+msgstr "Produse farmaceutice, biotehnologie & științe ale vieții"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.enrich_company
+msgid "Phone"
+msgstr "Telefon"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__preferred_role_id
+msgid "Preferred Role"
+msgstr "Rol preferat"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_114
+msgid "Real Estate"
+msgstr "Proprietate imobiliara"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__name
+msgid "Request Number"
+msgstr "Numărul cererii"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_152
+msgid "Retailing"
+msgstr "Vânzare cu amănunt"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
+msgid "Retry"
+msgstr "Reîncearcă"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_industry__reveal_ids
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_role__reveal_id
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_seniority__reveal_id
+msgid "Reveal"
+msgstr "A dezvălui"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__contact_filter_type__role
+msgid "Role"
+msgstr "Rol"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_role__name
+msgid "Role Name"
+msgstr "Nume Rol"
+
+#. module: crm_iap_mine
+#: model:ir.model.constraint,message:crm_iap_mine.constraint_crm_iap_lead_role_name_uniq
+msgid "Role name already exists!"
+msgstr "Numele rolului există deja!"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__team_id
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_search
+msgid "Sales Team"
+msgstr "Echipa de vânzări"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__user_id
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_search
+msgid "Salesperson"
+msgstr "Agent de vânzări"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__seniority_id
+#: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__contact_filter_type__seniority
+msgid "Seniority"
+msgstr "Vechime în muncă"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_industry__sequence
+msgid "Sequence"
+msgstr "Secvență"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__company_size_min
+msgid "Size"
+msgstr "Dimensiune"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_165
+msgid "Software & Services"
+msgstr "Software & servicii"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__state_ids
+msgid "States"
+msgstr "Stări"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__state
+msgid "Status"
+msgstr "Stare"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
+msgid "Submit"
+msgstr "Trimite"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__tag_ids
+msgid "Tags"
+msgstr "Etichete"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__search_type
+msgid "Target"
+msgstr "Țintă"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_166
+msgid "Technology Hardware & Equipment"
+msgstr "Tehnologie Hardware & echipamente"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_149
+msgid "Telecommunication Services"
+msgstr "Servicii de telecomunicații"
+
+#. module: crm_iap_mine
+#. odoo-python
+#: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
+#, python-format
+msgid "This makes a total of %d credits for this request."
+msgstr "Acest lucru face un total de %d credite pentru această solicitare."
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_136
+msgid "Transportation"
+msgstr "Transport"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__lead_type
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_search
+msgid "Type"
+msgstr "Tip"
+
+#. module: crm_iap_mine
+#. odoo-python
+#: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
+#, python-format
+msgid ""
+"Up to %d additional credits will be consumed to identify %d contacts per "
+"company."
+msgstr ""
+"Se vor consuma până la %d credite suplimentare pentru a identifica %d "
+"contactele pe companie."
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
+msgid "What do you need ?"
+msgstr "De ce ai nevoie ?"
+
+#. module: crm_iap_mine
+#. odoo-javascript
+#: code:addons/crm_iap_mine/static/src/js/tours/crm_iap_lead.js:0
+#, python-format
+msgid "Which Industry do you want to target?"
+msgstr "Ce industrie doriți să vizați?"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
+msgid "You do not have enough credits to submit this request."
+msgstr "Nu aveți suficiente credite pentru a trimite această solicitare."
+
+#. module: crm_iap_mine
+#. odoo-python
+#: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
+#, python-format
+msgid "Your request could not be executed: %s"
+msgstr "Solicitarea dvs. nu a putut fi executată: %s"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_2
+msgid "communications"
+msgstr "comunicații"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_3
+msgid "consulting"
+msgstr "consultanță"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_4
+msgid "customer_service"
+msgstr "servicii_client"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.seniority,name:crm_iap_mine.crm_iap_mine_seniority_1
+msgid "director"
+msgstr "director"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_5
+msgid "education"
+msgstr "educație"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
+msgid "employees"
+msgstr "angajați"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_6
+msgid "engineering"
+msgstr "Inginerie"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.seniority,name:crm_iap_mine.crm_iap_mine_seniority_2
+msgid "executive"
+msgstr "executiv"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_7
+msgid "finance"
+msgstr "finanța"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_8
+msgid "founder"
+msgstr "fondator"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_9
+msgid "health_professional"
+msgstr "health_professional"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_10
+msgid "human_resources"
+msgstr "human_resources"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_11
+msgid "information_technology"
+msgstr "information_technology"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_12
+msgid "legal"
+msgstr "legal"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.seniority,name:crm_iap_mine.crm_iap_mine_seniority_3
+msgid "manager"
+msgstr "manager"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_13
+msgid "marketing"
+msgstr "marketing"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_14
+msgid "operations"
+msgstr "operații"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_15
+msgid "owner"
+msgstr "proprietar"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_16
+msgid "president"
+msgstr "președinte"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_17
+msgid "product"
+msgstr "produs"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_18
+msgid "public_relations"
+msgstr "public_relations"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_19
+msgid "real_estate"
+msgstr "real_estate"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_20
+msgid "recruiting"
+msgstr "recrutare"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_21
+msgid "research"
+msgstr "cercetare"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_22
+msgid "sale"
+msgstr "vânzare"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
+msgid "to"
+msgstr "la"

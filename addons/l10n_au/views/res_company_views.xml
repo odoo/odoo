@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_company_form" model="ir.ui.view">
+        <field name="name">res.company.form.inherit.l10n_au</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='vat']" position="attributes">
+                <attribute name="nolabel">1</attribute>
+            </xpath>
+            <field name="vat" position="before">
+                <label for="vat" attrs="{'invisible':[('country_code', '=', 'AU')]}" />
+                <label for="vat" string="ABN" attrs="{'invisible':[('country_code', '!=', 'AU')]}" />
+            </field>
+            <xpath expr="//field[@name='company_registry']" position="attributes">
+                <attribute name="nolabel">1</attribute>
+            </xpath>
+            <field name="company_registry" position="before">
+                <label for="company_registry" attrs="{'invisible':[('country_code', '=', 'AU')]}" />
+                <label for="company_registry" string="ACN" attrs="{'invisible':[('country_code', '!=', 'AU')]}" />
+            </field>
+        </field>
+    </record>
+
+</odoo>

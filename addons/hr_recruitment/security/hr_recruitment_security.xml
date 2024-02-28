@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record model="ir.module.category" id="base.module_category_human_resources_recruitment">
+        <field name="description">The user interacting with the application as interviewer don't need any specific access. They'll have access thanks to their interviewer assignation.</field>
+        <field name="sequence">11</field>
+    </record>
+
+    <record id="hr_applicant_comp_rule" model="ir.rule">
+        <field name="name">Applicant multi company rule</field>
+        <field name="model_id" ref="model_hr_applicant"/>
+        <field eval="True" name="global"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="group_hr_recruitment_interviewer" model="res.groups">
+        <field name="name">Recruitment Interviewer</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <record id="group_hr_recruitment_user" model="res.groups">
+        <field name="name">Officer : Manage all applicants</field>
+        <field name="category_id" ref="base.module_category_human_resources_recruitment"/>
+        <field name="implied_ids" eval="[(4, ref('hr.group_hr_user'))]"/>
+    </record>
+
+    <record id="group_hr_recruitment_manager" model="res.groups">
+        <field name="name">Administrator</field>
+        <field name="category_id" ref="base.module_category_human_resources_recruitment"/>
+        <field name="implied_ids" eval="[(4, ref('group_hr_recruitment_user'))]"/>
+        <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+    </record>
+
+    <record id="base.default_user" model="res.users">
+        <field name="groups_id" eval="[(4,ref('hr_recruitment.group_hr_recruitment_manager'))]"/>
+    </record>
+
+    <record id="group_applicant_cv_display" model="res.groups">
+        <field name="name">Display CV on application form</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
+    <record id="base.group_user" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('hr_recruitment.group_applicant_cv_display'))]"/>
+    </record>
+
+    <!-- Interviewer Access Rules -->
+    <record id="hr_applicant_interviewer_rule" model="ir.rule">
+        <field name="name">Applicant Interviewer</field>
+        <field name="model_id" ref="model_hr_applicant"/>
+        <field name="domain_force">[
+            '|',
+                ('job_id.interviewer_ids', 'in', user.id),
+                ('interviewer_ids', 'in', user.id),
+        ]</field>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+        <field name="groups" eval="[(4, ref('hr_recruitment.group_hr_recruitment_interviewer'))]"/>
+    </record>
+
+    <record id="mail_message_interviewer_rule" model="ir.rule">
+        <field name="name">Interviewer: No Applicant Chatter</field>
+        <field name="model_id" ref="mail.model_mail_message"/>
+        <field name="domain_force">[
+            '|',
+                ('model', '!=', 'hr.applicant'),
+                '&amp;',
+                    ('model', '=', 'hr.applicant'),
+                    ('mail_activity_type_id', '!=', False)
+        ]</field>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+        <field name="groups" eval="[(4, ref('hr_recruitment.group_hr_recruitment_interviewer'))]"/>
+    </record>
+</odoo>

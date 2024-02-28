@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="tax_report" model="account.report">
+        <field name="name">Tax Report</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.gr"/>
+        <field name="filter_fiscal_position" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="tax_report_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="account_tax_report_line_311" model="account.report.line">
+                <field name="name">311 Σύνολο Εκροών</field>
+                <field name="code">GRTAX_311</field>
+                <field name="expression_ids">
+                    <record id="account_tax_report_line_311_formula" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">external</field>
+                        <field name="formula">sum</field>
+                        <field name="subformula">editable;rounding=2</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_tax_report_line_307" model="account.report.line">
+                        <field name="name">307 Σύνολο φορολ. Εκροών</field>
+                        <field name="aggregation_formula">GRTAX_303.balance</field>
+                        <field name="children_ids">
+                            <record id="account_tax_report_line_303" model="account.report.line">
+                                <field name="name">303 Πωλήσεις 19-23%f</field>
+                                <field name="code">GRTAX_303</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_303_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">303 Πωλήσεις 19-23%</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_tax_report_line_358" model="account.report.line">
+                <field name="name">358 Σύνολο φορολ. Εισροών</field>
+                <field name="code">GRTAX_358</field>
+                <field name="aggregation_formula">GRTAX_353.balance + GRTAX_357.balance</field>
+                <field name="children_ids">
+                    <record id="account_tax_report_line_353" model="account.report.line">
+                        <field name="name">353 Αγορές ΦΠΑ 19-23%</field>
+                        <field name="code">GRTAX_353</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_353_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">353 Αγορές ΦΠΑ 19-23%</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_357" model="account.report.line">
+                        <field name="name">357 Δαπάνες/Έξοδα φορολ.</field>
+                        <field name="code">GRTAX_357</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_357_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">357 Δαπάνες/Έξοδα φορολ.</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_tax_report_line_501-511" model="account.report.line">
+                <field name="name">501-511 Υπόλοιπο ΦΠΑ</field>
+                <field name="expression_ids">
+                    <record id="account_tax_report_line_501-511_formula" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">external</field>
+                        <field name="formula">sum</field>
+                        <field name="subformula">editable;rounding=2</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_tax_report_line_337" model="account.report.line">
+                        <field name="name">337 ΦΠΑ Πωλήσεων</field>
+                        <field name="aggregation_formula">GRTAX_333.balance</field>
+                        <field name="children_ids">
+                            <record id="account_tax_report_line_333" model="account.report.line">
+                                <field name="name">333 ΦΠΑ 19-23%</field>
+                                <field name="code">GRTAX_333</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_333_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">333 ΦΠΑ 19-23%</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_420" model="account.report.line">
+                        <field name="name">420 ΦΠΑ Αγορών</field>
+                        <field name="aggregation_formula">GRTAX_373.balance+GRTAX_377.balance</field>
+                        <field name="children_ids">
+                            <record id="account_tax_report_line_378" model="account.report.line">
+                                <field name="name">378 Σύνολο Φορ. Αγορών</field>
+                                <field name="aggregation_formula">GRTAX_373.balance+GRTAX_377.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_tax_report_line_373" model="account.report.line">
+                                        <field name="name">373 ΦΠΑ Αγορών 19-23%</field>
+                                        <field name="code">GRTAX_373</field>
+                                        <field name="expression_ids">
+                                            <record id="account_tax_report_line_373_tag" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">373 ΦΠΑ Αγορών 19-23%</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_tax_report_line_377" model="account.report.line">
+                                        <field name="name">377 ΦΠΑ Δαπανών</field>
+                                        <field name="code">GRTAX_377</field>
+                                        <field name="expression_ids">
+                                            <record id="account_tax_report_line_377_tag" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">377 ΦΠΑ Δαπανών</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

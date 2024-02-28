@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="portal_my_task" inherit_id="project.portal_my_task" name="Portal: My Task with Timesheets">
+        <xpath expr="//li[@id='task-nav']" position="before">
+            <li t-if="timesheets and allow_timesheets" class="list-group-item d-grid flex-grow-1" id='nav-report'>
+                <div class="o_download_pdf d-flex gap-1">
+                    <a class="btn btn-secondary flex-fill o_download_btn" t-att-href="task.get_portal_url(report_type='pdf', download=True)" title="Download"><i class="fa fa-download"/> Download</a>
+                    <a class="btn btn-secondary flex-fill o_print_btn o_project_timesheet_print" t-att-href="task.get_portal_url(report_type='pdf')" href="#" title="Print" target="_blank"><i class="fa fa-print"/> Print</a>
+                </div>
+            </li>
+        </xpath>
+        <xpath expr="//li[@id='nav-header']" position="after">
+            <li t-if="timesheets and allow_timesheets" class="nav-item">
+                <a class="nav-link ps-3" href="#task_timesheets">
+                    Timesheets
+                </a>
+            </li>
+        </xpath>
+        <xpath expr="//div[@id='card_body']" position="inside">
+            <div class="container" t-if="timesheets and allow_timesheets">
+                <hr class="mt-4 mb-1"/>
+                <h5 id="task_timesheets" class="mt-2 mb-2" data-anchor="true">Timesheets</h5>
+                <t t-call="hr_timesheet.portal_timesheet_table"/>
+            </div>
+        </xpath>
+        <xpath expr="//div[@name='portal_my_task_planned_hours']" position="after">
+            <div t-if="task.planned_hours > 0"><strong>Progress:</strong> <span t-field="task.progress"/>%</div>
+        </xpath>
+        <xpath expr="//div[@name='portal_my_task_planned_hours']/t" position="replace">
+            <t t-call="hr_timesheet.portal_my_task_planned_hours_template"></t>
+        </xpath>
+    </template>
+
+    <template id="portal_my_task_planned_hours_template">
+        <t t-if="is_uom_day and timesheets._convert_hours_to_days(task.planned_hours) > 0">
+            <strong>Allocated Days:</strong> <span t-esc="timesheets._convert_hours_to_days(task.planned_hours)" t-options='{"widget": "timesheet_uom"}'/>
+        </t>
+        <t t-if="not is_uom_day and task.planned_hours > 0" t-call="project.portal_my_task_planned_hours_template"></t>
+    </template>
+
+    <template id="portal_tasks_list_inherit" inherit_id="project.portal_tasks_list" name="Portal: My Tasks with Timesheets">
+        <xpath expr="//t[@t-foreach='tasks']/tr" position="before">
+            <t t-set="timesheet_ids" t-value="task.sudo().timesheet_ids"/>
+            <t t-set="is_uom_day" t-value="timesheet_ids._is_timesheet_encode_uom_day()"/>
+        </xpath>
+        <xpath expr="//thead/tr/t[@t-set='number_of_header']" position="attributes">
+            <attribute name="t-value">9</attribute>
+        </xpath>
+        <xpath expr="//thead/tr/th[@name='project_portal_milestones']" position="after">
+            <th t-if="is_uom_day" class="text-end">Days Spent</th>
+            <th t-else="" class="text-end">Hours Spent</th>
+        </xpath>
+        <xpath expr="//tbody/t/tr/td[@name='project_portal_milestones']" position="after">
+            <td class="text-end">
+                <t t-if="is_uom_day">
+                    <t t-out="timesheet_ids._convert_hours_to_days(task.effective_hours)"/>
+                    <span t-if="task.planned_hours > 0"> / <t t-out="timesheet_ids._convert_hours_to_days(task.planned_hours)"/></span>
+                </t>
+                <t t-else="">
+                    <span t-field="task.effective_hours" t-options='{"widget": "float_time"}'/>
+                    <t t-if="task.planned_hours > 0">
+                        /
+                        <span t-field="task.planned_hours" t-options='{"widget": "float_time"}'/>
+                    </t>
+                </t>
+            </td>
+        </xpath>
+    </template>
+
+    <template id="portal_timesheet_table" name="Portal Timesheet Table">
+        <table class="o_portal_my_doc_table table table-sm">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Employee</th>
+                <th>Description</th>
+                <th t-if="is_uom_day" class="text-end">Days Spent</th>
+                <th t-else="" class="text-end">Hours Spent</th>
+              </tr>
+            </thead>
+            <tr t-foreach="timesheets" t-as="timesheet">
+                <td><t t-esc="timesheet.date" t-options='{"widget": "date"}'/></td>
+                <td t-attf-title="#{timesheet.employee_id.name}"><t t-esc="timesheet.employee_id.name"/></td>
+                <td><t t-esc="timesheet.name"/></td>
+                <td class="text-end">
+                    <span t-if="is_uom_day" t-esc="timesheet._get_timesheet_time_day()" t-options='{"widget": "timesheet_uom"}'/>
+                    <span t-else="" t-field="timesheet.unit_amount" t-options='{"widget": "float_time"}'/>
+                </td>
+            </tr>
+            <tfoot>
+                <tr>
+                    <th colspan="3"></th>
+                    <th class="text-end">
+                        <t t-set="timesheets_amount" t-value="round(sum(timesheets.mapped('unit_amount')), 2) or 0.0"></t>
+                        <div t-if="is_uom_day"><strong>Days Spent:</strong> <span t-esc="timesheets._convert_hours_to_days(timesheets_amount)" t-options='{"widget": "timesheet_uom"}'/></div>
+                        <div t-else=""><strong>Hours Spent:</strong> <span t-esc="timesheets_amount" t-options='{"widget": "float_time"}'/></div>
+                        <t t-set="timesheets_by_subtask_amount" t-value="round(sum(sum(timesheet_by_subtask.mapped('unit_amount') or 0.0) for timesheet_by_subtask in timesheets_by_subtask.values()), 2) or 0.0"></t>
+                        <div t-if="timesheets_by_subtask">
+                            <div t-if="is_uom_day">Days recorded on sub-tasks: <span t-esc="timesheets._convert_hours_to_days(timesheets_by_subtask_amount)" t-options='{"widget": "timesheet_uom"}'/></div>
+                            <div t-else="">Hours recorded on sub-tasks: <span t-esc="timesheets_by_subtask_amount" t-options='{"widget": "float_time"}'/></div>
+                        </div>
+                        <t t-set="planned_time" t-value="task.planned_hours"></t>
+                        <div t-if="planned_time > 0" name="planned_time" t-attf-class="{{task.remaining_hours &lt; 0 and 'text-danger' or ''}}">
+                            <div t-if="is_uom_day">Remaining Days: <span t-esc="timesheets._convert_hours_to_days(planned_time - timesheets_amount - timesheets_by_subtask_amount)" t-options='{"widget": "timesheet_uom"}'/></div>
+                            <div t-else="">Remaining Hours: <span t-esc="planned_time - timesheets_amount - timesheets_by_subtask_amount" t-options='{"widget": "float_time"}'/></div>
+                        </div>
+                    </th>
+                </tr>
+            </tfoot>
+        </table>
+    </template>
+
+</odoo>

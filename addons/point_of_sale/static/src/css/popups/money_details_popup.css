@@ -1,0 +1,36 @@
+.pos .popup.money-details {
+    width: 350px;
+    max-height: 440px;
+}
+
+.pos .money-details.invisible {
+    display: none;
+}
+
+.pos .money-details .body {
+    max-height: 350px;
+}
+
+.pos .money-details .money-details-title {
+    text-align: left;
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+.pos .money-details .money-details-info {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    overflow: auto;
+    max-height: 280px;
+    padding: 0 15px;
+}
+
+.pos .money-details .money-details-value {
+    display: flex;
+    margin: 10px 0;
+}
+
+.pos .money-details .total-section {
+    font-weight: bold;
+}

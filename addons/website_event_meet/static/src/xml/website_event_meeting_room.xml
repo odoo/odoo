@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="event_meet_create_room_modal">
+        <div class="modal fade o_wevent_create_meeting_room_modal" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content border-0">
+                    <main class="modal-body p-3">
+                        <form t-attf-action="/event/#{eventId}/meeting_room_create"
+                            id="o_wevent_create_meeting_room_form"
+                            class="text-dark"
+                            method="POST">
+                            <h2>Launch a new topic</h2>
+                            <p>Be sure you are ready to spend at least 10 minutes in the room if you want to initiate a new topic.</p>
+                            <div class="row m-2">
+                                <label class="col-4 mt-2 text-start">Room Topic</label>
+                                <input class="form-control col-8" maxlength="50" name="name" placeholder="e.g. Finance" required="1"/>
+                            </div>
+                            <div class="row m-2">
+                                <label class="col-4 mt-2 text-start">Short Summary</label>
+                                <input class="form-control col-8" maxlength="200" name="summary" placeholder="e.g. Let's talk about Corporate Finance" required="1"/>
+                            </div>
+                            <div class="row m-2">
+                                <label class="col-4 mt-2 text-start">Target People</label>
+                                <input class="form-control col-8" maxlength="30" name="audience" placeholder="e.g. Accountants"/>
+                            </div>
+                            <div class="row m-2">
+                                <label class="col-4 mt-2 text-start">Language</label>
+                                <select class="o_wevent_create_meeting_room_lang form-select col-8" name="lang_code" required="1">
+                                    <option t-foreach="langs" t-as="language" t-att-value="language[0]" t-out="language[1]"
+                                        t-att-selected="language[0] == defaultLangCode and 'selected' or None"/>
+                                </select>
+                            </div>
+                            <div class="row m-2">
+                                <label class="col-4 mt-2 text-start">Capacity</label>
+                                <select class="form-select col-8" name="capacity" required="1">
+                                    <option value="4">4</option>
+                                    <option selected="selected" value="8">8</option>
+                                    <option value="12">12</option>
+                                    <option value="16">16</option>
+                                    <option value="20">20</option>
+                                </select>
+                            </div>
+                            <input name="event" t-att-value="event" type="hidden"/>
+                            <input name="csrf_token" t-att-value="csrf_token" type="hidden"/>
+                        </form>
+                    </main>
+                    <footer class="modal-footer justify-content-start">
+                        <button class="btn btn-primary" form="o_wevent_create_meeting_room_form" type="submit">Create</button>
+                        <button class="btn bg-white text-primary" role="button" data-bs-dismiss="modal">Discard</button>
+                    </footer>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

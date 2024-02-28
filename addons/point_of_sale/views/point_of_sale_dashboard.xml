@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_pos_session_filtered" model="ir.actions.act_window">
+        <field name="name">Sessions</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">pos.session</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_pos_session_search" />
+        <field name="context">{
+            'search_default_config_id': [active_id],
+            'default_config_id': active_id}
+        </field>
+    </record>
+
+    <record id="action_pos_order_filtered" model="ir.actions.act_window">
+        <field name="name">Orders</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">pos.order</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_pos_order_search"/>
+        <field name="context">{
+            'search_default_config_id': [active_id],
+            'default_config_id': active_id}
+        </field>
+    </record>
+
+    <record id="action_report_pos_order_all_filtered" model="ir.actions.act_window">
+        <field name="name">Orders Analysis</field>
+        <field name="res_model">report.pos.order</field>
+        <field name="view_mode">graph,pivot</field>
+        <field name="search_view_id" ref="view_report_pos_order_search"/>
+        <field name="context">{
+            'search_default_config_id': [active_id],
+            'default_config_id': active_id}
+        </field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No data yet!
+            </p><p>
+                Create a new POS order
+            </p>
+        </field>
+    </record>
+
+    <!-- Dashboard -->
+
+    <record id="view_pos_config_kanban" model="ir.ui.view">
+        <field name="name">pos.config.kanban.view</field>
+        <field name="model">pos.config</field>
+        <field name="arch" type="xml">
+            <kanban create="false" class="o_kanban_dashboard o_pos_kanban">
+                <field name="current_user_id" invisible="1" />
+                <field name="cash_control" invisible="1"/>
+                <field name="name"/>
+                <field name="current_session_id"/>
+                <field name="current_session_state"/>
+                <field name="last_session_closing_date"/>
+                <field name="pos_session_username"/>
+                <field name="pos_session_state"/>
+                <field name="pos_session_duration"/>
+                <field name="currency_id"/>
+                <field name="number_of_opened_session"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div>
+                            <div class="o_kanban_card_header">
+                                <div class="o_kanban_card_header_title mb16">
+                                    <div class="o_primary">
+                                        <t t-esc="record.name.value"/>
+                                    </div>
+                                    <t t-if="!record.current_session_id.raw_value &amp;&amp; record.pos_session_username.value">
+                                        <div class="badge text-bg-info o_kanban_inline_block">Opened by <t t-esc="record.pos_session_username.value"/></div>
+                                    </t>
+                                    <t t-if="record.pos_session_state.raw_value == 'opening_control'">
+                                        <div class="badge text-bg-info o_kanban_inline_block">Opening Control</div>
+                                    </t>
+                                    <t t-if="record.pos_session_state.raw_value == 'closing_control'">
+                                        <div class="badge text-bg-info o_kanban_inline_block">Closing Control</div>
+                                    </t>
+                                    <t t-if="record.pos_session_state.raw_value == 'opened' and record.pos_session_duration.raw_value > 1">
+                                        <div t-attf-class="badge bg-#{record.pos_session_duration.raw_value > 3 and 'danger' or 'warning'} o_kanban_inline_block"
+                                             title="The session has been opened for an unusually long period. Please consider closing.">
+                                             To Close
+                                        </div>
+                                    </t>
+                                </div>
+                                <div class="o_kanban_manage_button_section">
+                                    <a class="o_kanban_manage_toggle_button" href="#"><i class="fa fa-ellipsis-v" role="img" aria-label="Manage" title="Manage"/></a>
+                                </div>
+                            </div>
+                            <div class="container o_kanban_card_content">
+                                <div class="row">
+                                    <div class="col-6 o_kanban_primary_left">
+                                        <button t-if="record.current_session_state.raw_value != 'closing_control'" class="btn btn-primary" name="open_ui" type="object">
+                                            <t t-if="record.current_session_state.raw_value === 'opened'">Continue selling</t>
+                                            <t t-elif="!record.current_session_id.raw_value &amp;&amp; !record.pos_session_username.value">New Session</t>
+                                            <t t-elif="record.current_session_state.raw_value === 'opening_control'">Open Session</t>
+                                        </button>
+
+                                        <button t-else="" class="btn btn-secondary" name="open_existing_session_cb" type="object">Close</button>
+
+                                    </div>
+                                    <div class="col-6 o_kanban_primary_right">
+
+                                        <div t-if="record.last_session_closing_date.value" class="row">
+                                            <div class="col-6">
+                                                <span>Last Closing Date</span>
+                                            </div>
+                                            <div class="col-6">
+                                                <span><t t-esc="record.last_session_closing_date.value"/></span>
+                                            </div>
+                                        </div>
+
+                                        <div t-if="record.last_session_closing_date.value" attrs='{"invisible": [("cash_control","=",False)]}' class="row">
+                                            <div class="col-6">
+                                                <span>Last Closing Cash Balance</span>
+                                            </div>
+                                            <div class="col-6">
+                                                <span><field name="last_session_closing_cash" widget="monetary"/></span>
+                                            </div>
+                                        </div>
+
+                                        <button t-if="record.number_of_opened_session.value &gt; 1" class="btn btn-link" style="padding-left:0; text-decoration: underline" name="open_opened_session_list" type="object">
+                                            There are <t t-esc="record.number_of_opened_session.value"/> open sessions
+                                        </button>
+                                    </div>
+                                </div>
+                                <div style="text-align:right;">
+                                    <field name="current_user_id" widget="many2one_avatar_user"/>
+                                </div>
+
+                            </div><div class="container o_kanban_card_manage_pane dropdown-menu" role="menu">
+                                <div class="row">
+                                    <div class="col-6 o_kanban_card_manage_section o_kanban_manage_view">
+                                        <div role="menuitem" class="o_kanban_card_manage_title">
+                                            <span>View</span>
+                                        </div>
+                                        <div role="menuitem">
+                                            <a name="%(action_pos_order_filtered)d" type="action">Orders</a>
+                                        </div>
+                                        <div role="menuitem">
+                                            <a name="%(action_pos_session_filtered)d" type="action">Sessions</a>
+                                        </div>
+                                    </div>
+                                    <div class="col-6 o_kanban_card_manage_section o_kanban_manage_new">
+                                        <div role="menuitem" class="o_kanban_card_manage_title">
+                                            <span>Reporting</span>
+                                        </div>
+                                        <div role="menuitem">
+                                            <a name="%(action_report_pos_order_all_filtered)d" type="action">Orders</a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div t-if="widget.editable" class="o_kanban_card_manage_settings row" groups="point_of_sale.group_pos_manager">
+                                    <div role="menuitem" class="col-12">
+                                        <a name="action_pos_config_modal_edit" type="object">Edit</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="product_template_only_form_view_inherit_l10n_eg_eta_edi" model="ir.ui.view">
+            <field name="name">product.template.form.l10n_eg_eta_edi</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_only_form_view"/>
+            <field name="arch" type="xml">
+                <page name="invoicing" position="inside">
+                    <group name="l10n_eg_eta_edi" string="Egyptian Electronic Invoicing" attrs="{'invisible': [('product_variant_count', '>', 1)]}">
+                        <field name="l10n_eg_eta_code" help="ETA Field for GS1/EGS product codes. Please use the barcode field to store GS1/EGS ETA code if possible"/>
+                    </group>
+                </page>
+            </field>
+        </record>
+
+        <record id="product_normal_form_view_inherit_l10n_eg_eta_edi" model="ir.ui.view">
+            <field name="name">product.product.form.l10n_eg_eta_edi</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view" />
+            <field name="arch" type="xml">
+                <page name="invoicing" position="inside">
+                    <group name="l10n_eg_eta_edi" string="Egyptian Electronic Invoicing">
+                        <field name="l10n_eg_eta_code" help="ETA Field for GS1/EGS product codes. Please use the barcode field to store GS1/EGS ETA code if possible"/>
+                    </group>
+                </page>
+            </field>
+        </record>
+
+    </data>
+</odoo>

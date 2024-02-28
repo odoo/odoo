@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.ActivityListViewItem" owl="1">
+        <div class="o_ActivityListViewItem d-flex flex-column border-bottom py-2">
+            <div class="o_ActivityListViewItem_container d-flex align-items-baseline ms-3 me-1">
+                <i t-if="activityListViewItem.activity.icon" class="fa small me-2" t-attf-class="{{ activityListViewItem.activity.icon }}" role="img"/>
+                <t t-if="activityListViewItem.activity.summary">
+                    <b class="text-900 me-2 text-truncate flex-grow-1 flex-basis-0" t-esc="activityListViewItem.activity.summary"/>
+                </t>
+                <t t-if="!activityListViewItem.activity.summary and activityListViewItem.activity.type">
+                    <b class="text-900 me-2 text-truncate flex-grow-1" t-esc="activityListViewItem.activity.type.displayName"/>
+                </t>
+                <button t-if="activityListViewItem.hasEditButton" class="o_ActivityListViewItem_editButton btn btn-sm btn-link" t-on-click="activityListViewItem.onClickEditActivityButton">
+                    <i class="fa fa-pencil"/>
+                </button>
+                <t t-if="activityListViewItem.activity.canWrite">
+                    <button t-if="activityListViewItem.fileUploader" class="o_ActivityListViewItem_actionLink btn btn-link shadow-none fs-4 fa fa-upload" title="Upload file" aria-label="Upload File" t-on-click="activityListViewItem.onClickUploadDocument"/>
+                    <button t-if="activityListViewItem.hasMarkDoneButton" class="o_ActivityListViewItem_actionLink o_ActivityListViewItem_markAsDone btn btn-link shadow-none fs-4 fa fa-check-circle" title="Mark as done" aria-label="Mark as done" t-on-click="activityListViewItem.onClickMarkAsDone" t-ref="markDoneButton"/>
+                </t>
+            </div>
+            <div t-if="activityListViewItem.activity.state !== 'today'" class="d-flex align-items-baseline flex-wrap mx-3">
+                <i class="fa fa-clock-o me-2 text-muted" role="img" aria-label="Deadline" title="Deadline"/>
+                <t t-if="!activityListViewItem.activity.isCurrentPartnerAssignee and activityListViewItem.activity.assignee">
+                    <small class="text-truncate" t-esc="activityListViewItem.activity.assignee.displayName"/>
+                    <small class="mx-1">-</small>
+                </t>
+                <small t-att-title="activityListViewItem.activity.dateDeadline" t-esc="activityListViewItem.delayLabel"/>
+            </div>
+            <ActivityMarkDonePopoverContent t-if="activityListViewItem.markDoneView" record="activityListViewItem.markDoneView"/>
+            <div t-if="activityListViewItem.mailTemplateViews.length > 0" class="mx-3 mt-2">
+                <MailTemplate
+                    t-foreach="activityListViewItem.mailTemplateViews" t-as="mailTemplateView" t-key="mailTemplateView"
+                    record="mailTemplateView"
+                />
+            </div>
+        </div>
+    </t>
+</templates>

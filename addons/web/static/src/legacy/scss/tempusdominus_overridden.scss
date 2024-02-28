@@ -1,0 +1,11 @@
+// Override Tempusdominus variables
+$bs-datetimepicker-active-bg: $o-brand-odoo;
+$bs-datetimepicker-active-color: $white;
+$bs-datetimepicker-text-shadow: 0 1px 0 rgba(0, 0, 0, 0.25);
+$bs-datetimepicker-secondary-border-color: $dropdown-border-color;
+
+// TODO remove sr-only when TempusDominus is upgraded to 6+
+.sr-only {
+    @include visually-hidden();
+}
+

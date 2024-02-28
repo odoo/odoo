@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.StatInfoField" owl="1">
+        <span class="o_stat_info o_stat_value" t-esc="formattedValue"/>
+        <span t-if="!props.noLabel" class="o_stat_text" t-esc="label"/>
+    </t>
+
+</templates>

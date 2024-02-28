@@ -1,0 +1,633 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="snippets" groups="base.group_user">
+    <div class="o_we_website_top_actions">
+        <div class="o_we_external_history_buttons d-flex">
+            <button type="button" data-action="undo" class="btn btn-secondary fa fa-undo" disabled="true"/>
+            <button type="button" data-action="redo" class="btn btn-secondary fa fa-repeat" disabled="true"/>
+        </div>
+        <form class="ms-auto d-flex">
+            <!-- Uncomment the following line when the mobile preview will be available. -->
+            <!-- <button type="button" class="btn btn-secondary fa fa-mobile" name="mobile" data-action="mobilePreview"/> -->
+            <button type="button" class="btn btn-secondary" data-action="cancel" title="Discard record" accesskey="j">Discard</button>
+            <button type="button" class="btn btn-primary" data-action="save" title="Save record" accesskey="s">Save</button>
+        </form>
+    </div>
+    <div id="snippets_menu">
+        <button type="button" tabindex="1" class="o_we_add_snippet_btn active text-uppercase" accesskey="1">
+            <span>Blocks</span>
+        </button>
+        <button type="button" tabindex="2" class="o_we_customize_snippet_btn text-uppercase">
+            <span>Customize</span>
+        </button>
+    </div>
+
+    <div class="o_snippet_search_filter">
+        <input type="text" class="o_snippet_search_filter_input" placeholder="Search for a block (e.g. numbers, image wall, ...)"/>
+        <i role="button" class="fa fa-times o_snippet_search_filter_reset d-none"/>
+    </div>
+
+    <div id="o_scroll">
+        <div id="snippet_custom" class="o_panel d-none">
+            <div class="o_panel_header">Custom</div>
+            <div id="snippet_custom_body" class="o_panel_body"/>
+        </div>
+        <t id="default_snippets">
+            <div id="snippet_structure" class="o_panel">
+                <div class="o_panel_header">First Panel</div>
+                <div class="o_panel_body">
+                    <t t-snippet="web_editor.s_hr" string="Separator" t-thumbnail="/web_editor/static/src/img/snippets_thumbs/s_hr.svg"/>
+                </div>
+            </div>
+        </t>
+    </div>
+
+    <div id="snippet_options" class="d-none">
+        <t t-call="web_editor.snippet_options"/>
+    </div>
+</template>
+
+<template id="snippet_options_image_optimization_widgets">
+    <t t-set="filter_label">Filter</t>
+    <we-select t-att-string="filter_label" t-att-class="indent and 'o_we_sublevel_2'">
+        <we-button data-gl-filter="">None</we-button>
+        <we-button data-gl-filter="blur">Blur</we-button>
+        <we-button data-gl-filter="1977">1977</we-button>
+        <we-button data-gl-filter="aden">Aden</we-button>
+        <we-button data-gl-filter="brannan">Brannan</we-button>
+        <we-button data-gl-filter="earlybird">EarlyBird</we-button>
+        <we-button data-gl-filter="inkwell">Inkwell</we-button>
+        <we-button data-gl-filter="maven">Maven</we-button>
+        <we-button data-gl-filter="toaster">Toaster</we-button>
+        <we-button data-gl-filter="walden">Walden</we-button>
+        <we-button data-gl-filter="valencia">Valencia</we-button>
+        <we-button data-gl-filter="xpro">Xpro</we-button>
+        <we-button data-gl-filter="custom" data-name="custom_glfilter_opt">Custom</we-button>
+    </we-select>
+    <t t-set="color_label">Color</t>
+    <t t-set="saturation_label">Saturation</t>
+    <t t-set="contrast_label">Contrast</t>
+    <t t-set="brightness_label">Brightness</t>
+    <t t-set="sepia_label">Sepia</t>
+    <t t-set="blur_label">Blur</t>
+    <we-row t-att-string="color_label" t-att-class="indent and 'o_we_sublevel_3' or 'o_we_sublevel_1'">
+        <we-select data-filter-property="blend" data-dependencies="custom_glfilter_opt">
+            <we-button data-custom-filter="normal">Normal</we-button>
+            <we-button data-custom-filter="overlay">overlay</we-button>
+            <we-button data-custom-filter="screen">screen</we-button>
+            <we-button data-custom-filter="multiply">multiply</we-button>
+            <we-button data-custom-filter="lighter">add</we-button>
+            <we-button data-custom-filter="exclusion">exclusion</we-button>
+            <we-button data-custom-filter="darken">darken</we-button>
+            <we-button data-custom-filter="lighten">lighten</we-button>
+        </we-select>
+        <we-colorpicker data-dependencies="custom_glfilter_opt" data-custom-filter="" data-filter-property="filterColor" data-excluded="common, theme"/>
+    </we-row>
+    <we-range t-att-string="saturation_label"
+            t-att-class="indent and 'o_we_sublevel_3' or 'o_we_sublevel_1'"
+            data-dependencies="custom_glfilter_opt"
+            data-custom-filter=""
+            data-filter-property="saturation"
+            data-min="-100"
+            data-step="10"/>
+    <we-range t-att-string="contrast_label"
+            t-att-class="indent and 'o_we_sublevel_3' or 'o_we_sublevel_1'"
+            data-dependencies="custom_glfilter_opt"
+            data-custom-filter=""
+            data-filter-property="contrast"
+            data-min="-100"
+            data-step="10"/>
+    <we-range t-att-string="brightness_label"
+            t-att-class="indent and 'o_we_sublevel_3' or 'o_we_sublevel_1'"
+            data-dependencies="custom_glfilter_opt"
+            data-custom-filter=""
+            data-filter-property="brightness"
+            data-min="-100"
+            data-step="10"/>
+    <we-range t-att-string="sepia_label"
+            t-att-class="indent and 'o_we_sublevel_3' or 'o_we_sublevel_1'"
+            data-dependencies="custom_glfilter_opt"
+            data-custom-filter=""
+            data-filter-property="sepia"
+            data-step="5"/>
+    <we-range t-att-string="blur_label"
+            t-att-class="indent and 'o_we_sublevel_3' or 'o_we_sublevel_1'"
+            data-dependencies="custom_glfilter_opt"
+            data-custom-filter=""
+            data-filter-property="blur"
+            data-max="2000"
+            data-step="100"/>
+
+    <t t-set="width_label">Width</t>
+    <we-select t-att-string="width_label"
+               t-att-class="indent and 'o_we_sublevel_2'"
+               data-name="width_select_opt"/>
+
+    <t t-set="quality_label">Quality</t>
+    <we-range t-att-string="quality_label"
+              t-att-class="indent and 'o_we_sublevel_2'"
+              data-set-quality=""/>
+</template>
+
+<template id="snippet_options_background_color_widget">
+    <we-colorpicker title="Color"
+                    data-name="bg_color_opt"
+                    t-att-data-select-color-combination="'' if with_color_combinations else None"
+                    data-select-style=""
+                    data-css-property="background-color"
+                    data-color-prefix="bg-"
+                    t-att-data-with-combinations="with_color_combinations and 'selectColorCombination' or None"
+                    t-att-data-with-gradients="with_gradients and 'true' or None"
+                    t-att-data-css-compatible="css_compatible and 'true' or None"/>
+</template>
+
+<template id="snippet_options_background_options">
+    <div t-att-data-js="with_colors and with_color_combinations and 'ColoredLevelBackground' or 'BackgroundToggler'"
+         t-att-data-selector="selector"
+         t-att-data-exclude="exclude"
+         t-att-data-target="target">
+        <we-row t-if="with_colors or with_images" string="Background" class="o_we_full_row">
+            <t t-if="with_colors" t-call="web_editor.snippet_options_background_color_widget"/>
+            <t t-if="with_images">
+                <we-button title="Image" class="ms-auto fa fa-fw fa-camera"
+                           data-name="bg_image_toggle_opt"
+                           t-att-data-dependencies="images_dependencies"
+                           data-toggle-bg-image="true"
+                           data-no-preview="true">
+                </we-button>
+                <t t-if="with_shapes">
+                    <we-button title="Shape"
+                            data-toggle-bg-shape="true"
+                            t-att-data-dependencies="images_dependencies"
+                            data-no-preview="true"
+                            data-img="/web_editor/static/src/img/snippets_options/bg_shape.svg"/>
+                </t>
+            </t>
+        </we-row>
+    </div>
+    <t t-if="with_images">
+        <div data-js="BackgroundImage"
+             t-att-data-selector="selector"
+             t-att-data-exclude="exclude"
+             t-att-data-target="target">
+            <we-row string="Image" class="o_we_sublevel_1">
+                <we-imagepicker title="Edit image"
+                                data-background=""
+                                data-name="bg_image_opt"
+                                data-dependencies="bg_image_opt"/>
+            </we-row>
+            <we-row string="Main Color" class="o_we_sublevel_2" title="Main Color" data-name="main_color_opt">
+                <we-colorpicker data-dynamic-color="true" data-color-name="c1"/>
+                <we-colorpicker data-dynamic-color="true" data-color-name="c2"/>
+                <we-colorpicker data-dynamic-color="true" data-color-name="c3"/>
+                <we-colorpicker data-dynamic-color="true" data-color-name="c4"/>
+                <we-colorpicker data-dynamic-color="true" data-color-name="c5"/>
+            </we-row>
+        </div>
+
+        <div data-js="BackgroundPosition"
+             t-att-data-selector="selector"
+             t-att-data-exclude="exclude"
+             t-att-data-target="target">
+            <we-row string="Position" class="o_we_sublevel_2">
+                <we-select data-no-preview="true">
+                    <we-button data-background-type="cover">Cover</we-button>
+                    <we-button data-background-type="repeat-pattern" data-name="background_repeat_opt">Repeat pattern</we-button>
+                </we-select>
+                <we-button class="fa fa-fw fa-crosshairs" title="Background Position" data-background-position-overlay="true" data-no-preview="true"/>
+            </we-row>
+            <we-multi data-css-property="background-size" data-dependencies="background_repeat_opt">
+                <we-input string="Width" class="o_we_sublevel_3" data-select-style="auto" placeholder="auto" data-unit="px"/>
+                <we-input string="Height" class="o_we_sublevel_3" data-select-style="auto" placeholder="auto" data-unit="px"/>
+            </we-multi>
+        </div>
+
+        <div data-js="BackgroundOptimize"
+             t-att-data-selector="selector"
+             t-att-data-exclude="exclude"
+             t-att-data-target="target">
+            <t t-call="web_editor.snippet_options_image_optimization_widgets">
+                <t t-set="indent" t-value="True"/>
+            </t>
+        </div>
+
+        <!-- Color filter -->
+        <div t-att-data-js="with_colors and with_color_combinations and 'ColoredLevelBackground' or 'BackgroundToggler'"
+             t-att-data-selector="selector"
+             t-att-data-exclude="exclude"
+             t-att-data-target="target">
+            <t t-set="color_filter_dependencies" t-valuef="bg_image_toggle_opt"/>
+            <we-colorpicker string="Color filter"
+                            class="o_we_sublevel_2"
+                            t-att-data-dependencies="color_filter_dependencies"
+                            data-name="bg_filter_opt"
+                            data-select-filter-color=""
+                            data-color-prefix="bg-"
+                            data-opacity="0.5"
+                            data-with-gradients="1"
+                            data-selected-tab="gradients"
+                            data-excluded="theme, common"
+            />
+        </div>
+
+        <div data-js="BackgroundShape"
+             t-att-data-selector="selector"
+             t-att-data-exclude="exclude"
+             t-att-data-target="target">
+            <we-row string="Shape" class="o_we_sublevel_1">
+                <we-select-pager class="o_we_shape_menu" data-dependencies="!shape_none_opt" data-name="bg_shape_opt">
+                    <we-select-page string="Origins">
+                        <we-button data-shape="web_editor/Origins/02_001" data-select-label="Origins 01"/>
+                        <we-button data-shape="web_editor/Origins/04_001" data-select-label="Origins 02"/>
+                        <we-button data-shape="web_editor/Origins/05" data-select-label="Origins 03"/>
+                        <we-button data-shape="web_editor/Origins/06_001" data-select-label="Origins 04"/>
+                        <we-button data-shape="web_editor/Origins/07_002" data-select-label="Origins 05"/>
+                        <we-button data-shape="web_editor/Origins/08" data-select-label="Origins 06"/>
+                        <we-button data-shape="web_editor/Origins/09_001" data-select-label="Origins 07"/>
+                        <we-button data-shape="web_editor/Origins/11_001" data-select-label="Origins 08"/>
+                        <we-button data-shape="web_editor/Origins/14_001" data-select-label="Origins 09"/>
+                        <we-button data-shape="web_editor/Origins/16" data-select-label="Origins 10" data-animated="true"/>
+                        <we-button data-shape="web_editor/Origins/17" data-select-label="Origins 11" data-animated="true"/>
+                        <we-button data-shape="web_editor/Origins/18" data-select-label="Origins 12" data-animated="true"/>
+                    </we-select-page>
+                    <we-select-page string="Blocks &amp; Rainy">
+                        <we-button data-shape="web_editor/Blocks/02_001" data-select-label="Blocks 01"/>
+                        <we-button data-shape="web_editor/Blocks/01_001" data-select-label="Blocks 02"/>
+                        <we-button data-shape="web_editor/Blocks/03" data-select-label="Blocks 03"/>
+                        <we-button data-shape="web_editor/Blocks/04" data-select-label="Blocks 04"/>
+                        <we-button data-shape="web_editor/Rainy/01_001" data-select-label="Rainy 01" data-animated="true"/>
+                        <we-button data-shape="web_editor/Rainy/02_001" data-select-label="Rainy 02" data-animated="true"/>
+                        <we-button data-shape="web_editor/Rainy/06" data-select-label="Rainy 03"/>
+                        <we-button data-shape="web_editor/Rainy/07" data-select-label="Rainy 04"/>
+                        <we-button data-shape="web_editor/Rainy/10" data-select-label="Rainy 05" data-animated="true"/>
+                        <we-button data-shape="web_editor/Rainy/04" data-select-label="Rainy 06"/>
+                        <we-button data-shape="web_editor/Rainy/05_001" data-select-label="Rainy 07"/>
+                        <we-button data-shape="web_editor/Rainy/03_001" data-select-label="Rainy 08" data-animated="true"/>
+                        <we-button data-shape="web_editor/Rainy/08_001" data-select-label="Rainy 09" data-animated="true"/>
+                        <we-button data-shape="web_editor/Rainy/09_001" data-select-label="Rainy 10"/>
+                    </we-select-page>
+                    <we-select-page string="Wavy">
+                        <we-button data-shape="web_editor/Wavy/01_001" data-select-label="Wavy 01"/>
+                        <we-button data-shape="web_editor/Wavy/02_001" data-select-label="Wavy 02"/>
+                        <we-button data-shape="web_editor/Wavy/03" data-select-label="Wavy 03"/>
+                        <we-button data-shape="web_editor/Wavy/10" data-select-label="Wavy 04"/>
+                        <we-button data-shape="web_editor/Wavy/24" data-select-label="Wavy 05" data-animated="true"/>
+                        <we-button data-shape="web_editor/Wavy/25" data-select-label="Wavy 06" data-animated="true"/>
+                        <we-button data-shape="web_editor/Wavy/26" data-select-label="Wavy 07" data-animated="true"/>
+                        <we-button data-shape="web_editor/Wavy/27" data-select-label="Wavy 08" data-animated="true"/>
+                        <we-button data-shape="web_editor/Wavy/04" data-select-label="Wavy 09"/>
+                        <we-button data-shape="web_editor/Wavy/05" data-select-label="Wavy 10"/>
+                        <we-button data-shape="web_editor/Wavy/06_001" data-select-label="Wavy 11"/>
+                        <we-button data-shape="web_editor/Wavy/07" data-select-label="Wavy 12"/>
+                        <we-button data-shape="web_editor/Wavy/08" data-select-label="Wavy 13"/>
+                        <we-button data-shape="web_editor/Wavy/09" data-select-label="Wavy 14"/>
+                        <we-button data-shape="web_editor/Wavy/11" data-select-label="Wavy 15"/>
+                        <we-button data-shape="web_editor/Wavy/12_001" data-select-label="Wavy 16"/>
+                        <we-button data-shape="web_editor/Wavy/28" data-select-label="Wavy 17" data-animated="true"/>
+                        <we-button data-shape="web_editor/Wavy/13_001" data-select-label="Wavy 18"/>
+                        <we-button data-shape="web_editor/Wavy/14" data-select-label="Wavy 19"/>
+                        <we-button data-shape="web_editor/Wavy/15" data-select-label="Wavy 20"/>
+                        <we-button data-shape="web_editor/Wavy/16" data-select-label="Wavy 21"/>
+                        <we-button data-shape="web_editor/Wavy/17" data-select-label="Wavy 22"/>
+                        <we-button data-shape="web_editor/Wavy/18" data-select-label="Wavy 23"/>
+                        <we-button data-shape="web_editor/Wavy/19" data-select-label="Wavy 24"/>
+                        <we-button data-shape="web_editor/Wavy/20" data-select-label="Wavy 25"/>
+                        <we-button data-shape="web_editor/Wavy/21" data-select-label="Wavy 26"/>
+                        <we-button data-shape="web_editor/Wavy/22" data-select-label="Wavy 27"/>
+                        <we-button data-shape="web_editor/Wavy/23" data-select-label="Wavy 28"/>
+                    </we-select-page>
+                    <we-select-page string="Blobs">
+                        <we-button data-shape="web_editor/Blobs/01_001" data-select-label="Blobs 01" data-animated="true"/>
+                        <we-button data-shape="web_editor/Blobs/02" data-select-label="Blobs 02"/>
+                        <we-button data-shape="web_editor/Blobs/03" data-select-label="Blobs 03"/>
+                        <we-button data-shape="web_editor/Blobs/04" data-select-label="Blobs 04"/>
+                        <we-button data-shape="web_editor/Blobs/05" data-select-label="Blobs 05"/>
+                        <we-button data-shape="web_editor/Blobs/06" data-select-label="Blobs 06"/>
+                        <we-button data-shape="web_editor/Blobs/07" data-select-label="Blobs 07"/>
+                        <we-button data-shape="web_editor/Blobs/08" data-select-label="Blobs 08"/>
+                        <we-button data-shape="web_editor/Blobs/09" data-select-label="Blobs 09"/>
+                        <we-button data-shape="web_editor/Blobs/10_001" data-select-label="Blobs 10"/>
+                        <we-button data-shape="web_editor/Blobs/11" data-select-label="Blobs 11"/>
+                        <we-button data-shape="web_editor/Blobs/12" data-select-label="Blobs 12"/>
+                    </we-select-page>
+                    <we-select-page string="Bold">
+                        <we-button data-shape="web_editor/Bold/01" data-select-label="Bold 01"/>
+                        <we-button data-shape="web_editor/Bold/02" data-select-label="Bold 02"/>
+                        <we-button data-shape="web_editor/Bold/03" data-select-label="Bold 03"/>
+                        <we-button data-shape="web_editor/Bold/04" data-select-label="Bold 04"/>
+                        <we-button data-shape="web_editor/Bold/05_001" data-select-label="Bold 05"/>
+                        <we-button data-shape="web_editor/Bold/06_001" data-select-label="Bold 06"/>
+                        <we-button data-shape="web_editor/Bold/07_001" data-select-label="Bold 07"/>
+                        <we-button data-shape="web_editor/Bold/08" data-select-label="Bold 08"/>
+                        <we-button data-shape="web_editor/Bold/09" data-select-label="Bold 09"/>
+                        <we-button data-shape="web_editor/Bold/10_001" data-select-label="Bold 10"/>
+                        <we-button data-shape="web_editor/Bold/11_001" data-select-label="Bold 11"/>
+                        <we-button data-shape="web_editor/Bold/12_001" data-select-label="Bold 12"/>
+                    </we-select-page>
+                    <we-select-page string="Airy &amp; Zigs">
+                        <we-button data-shape="web_editor/Airy/01" data-select-label="Airy 01"/>
+                        <we-button data-shape="web_editor/Airy/02" data-select-label="Airy 02"/>
+                        <we-button data-shape="web_editor/Airy/03_001" data-select-label="Airy 03" data-animated="true"/>
+                        <we-button data-shape="web_editor/Airy/04_001" data-select-label="Airy 04" data-animated="true"/>
+                        <we-button data-shape="web_editor/Airy/05_001" data-select-label="Airy 05" data-animated="true"/>
+                        <we-button data-shape="web_editor/Airy/06" data-select-label="Airy 06"/>
+                        <we-button data-shape="web_editor/Airy/07" data-select-label="Airy 07"/>
+                        <we-button data-shape="web_editor/Airy/08" data-select-label="Airy 08"/>
+                        <we-button data-shape="web_editor/Airy/09" data-select-label="Airy 09"/>
+                        <we-button data-shape="web_editor/Airy/10" data-select-label="Airy 10"/>
+                        <we-button data-shape="web_editor/Airy/11" data-select-label="Airy 11"/>
+                        <we-button data-shape="web_editor/Airy/12_001" data-select-label="Airy 12" data-animated="true"/>
+                        <we-button data-shape="web_editor/Airy/13_001" data-select-label="Airy 13" data-animated="true"/>
+                        <we-button data-shape="web_editor/Airy/14" data-select-label="Airy 14"/>
+                        <we-button data-shape="web_editor/Zigs/01_001" data-select-label="Zigs 01" data-animated="true"/>
+                        <we-button data-shape="web_editor/Zigs/02_001" data-select-label="Zigs 02" data-animated="true"/>
+                        <we-button data-shape="web_editor/Zigs/03" data-select-label="Zigs 03"/>
+                        <we-button data-shape="web_editor/Zigs/04" data-select-label="Zigs 04"/>
+                        <we-button data-shape="web_editor/Zigs/05" data-select-label="Zigs 05"/>
+                        <we-button data-shape="web_editor/Zigs/06" data-select-label="Zigs 06"/>
+                    </we-select-page>
+                    <we-select-page string="Floating shapes">
+                        <we-button data-shape="web_editor/Floats/01" data-select-label="Float 01" data-animated="true"/>
+                        <we-button data-shape="web_editor/Floats/02" data-select-label="Float 02" data-animated="true"/>
+                        <we-button data-shape="web_editor/Floats/03" data-select-label="Float 03" data-animated="true"/>
+                        <we-button data-shape="web_editor/Floats/04" data-select-label="Float 04" data-animated="true"/>
+                        <we-button data-shape="web_editor/Floats/05" data-select-label="Float 05" data-animated="true"/>
+                        <we-button data-shape="web_editor/Floats/06" data-select-label="Float 06" data-animated="true"/>
+                        <we-button data-shape="web_editor/Floats/07" data-select-label="Float 07" data-animated="true"/>
+                        <we-button data-shape="web_editor/Floats/08" data-select-label="Float 08" data-animated="true"/>
+                        <we-button data-shape="web_editor/Floats/09" data-select-label="Float 09" data-animated="true"/>
+                        <we-button data-shape="web_editor/Floats/10" data-select-label="Float 10" data-animated="true"/>
+                        <we-button data-shape="web_editor/Floats/11" data-select-label="Float 11" data-animated="true"/>
+                        <we-button data-shape="web_editor/Floats/12" data-select-label="Float 12" data-animated="true"/>
+                        <we-button data-shape="web_editor/Floats/13" data-select-label="Float 13" data-animated="true"/>
+                        <we-button data-shape="web_editor/Floats/14" data-select-label="Float 14" data-animated="true"/>
+                    </we-select-page>
+                </we-select-pager>
+                <we-button data-shape="" data-name="shape_none_opt" data-dependencies="!shape_none_opt" data-no-preview="true" class="fa fa-fw fa-times"/>
+            </we-row>
+            <we-row string="Flip" class="o_we_sublevel_2">
+                <we-button class="fa fa-fw fa-arrows-h" data-flip-x="true" data-no-preview="true" data-dependencies="!shape_none_opt"/>
+                <we-button class="fa fa-fw fa-arrows-v" data-flip-y="true" data-no-preview="true" data-dependencies="!shape_none_opt"/>
+            </we-row>
+            <we-row string="Colors" class="o_we_sublevel_2" data-name="colors">
+                <we-colorpicker data-select-style="" data-css-property="background-color" data-color-prefix="bg-" data-apply-to="> .o_we_shape"/>
+            </we-row>
+        </div>
+    </t>
+</template>
+
+<!-- options (data-selector, data-drop-in, data-drop-near, data-js to link js object ) -->
+<template id="snippet_options">
+    <!-- t-field -->
+    <div data-js='many2one'
+         data-selector="[data-oe-many2one-model]:not([data-oe-readonly])"
+         data-no-check="true"/>
+
+    <div data-selector=".s_hr"
+         data-drop-near="p, h1, h2, h3, blockquote, .s_hr"/>
+
+    <div data-js="VersionControl"
+         data-selector="[data-snippet]"/>
+
+    <!-- Replace a media -->
+    <!-- TODO probably review this system once the new editor is merged to not duplicate the selector, etc -->
+    <div data-js="ReplaceMedia"
+         data-selector="img, .media_iframe_video, span.fa, i.fa"
+         data-exclude="[data-oe-xpath], a[href^='/website/social/'] > i.fa, a[class*='s_share_'] > i.fa">
+        <we-row string="Media">
+            <we-button class="o_we_bg_brand_primary" data-replace-media="true" data-no-preview="true">Replace</we-button>
+            <we-button class="fa fa-link"
+                data-name="media_link_opt"
+                data-set-link="true" data-no-preview="true"
+                title="Redirect the user elsewhere when he clicks on the media."/>
+        </we-row>
+        <we-input string="Your URL"
+            class="o_we_sublevel_1 o_we_large"
+            data-name="media_url_opt" data-dependencies="media_link_opt"
+            data-set-url="" data-no-preview="true"
+            placeholder="www.example.com"
+            data-request-focus="true"/>
+        <we-checkbox string="Open in new window"
+            class="o_we_sublevel_1"
+            data-dependencies="media_url_opt"
+            data-set-new-window="true" data-no-preview="true"/>
+    </div>
+
+    <div data-js="FontawesomeTools" data-selector="span.fa, i.fa" data-exclude="[data-oe-xpath]">
+        <we-colorpicker string="Color"
+                title="Color"
+                data-select-style=""
+                data-css-property="color"
+                data-color-prefix="text-"/>
+
+        <we-colorpicker string="Background Color"
+                title="Background Color"
+                data-select-style=""
+                data-css-property="background-color"
+                data-color-prefix="bg-"/>
+
+        <we-button-group string="Size">
+            <we-button data-select-class="" title="Size 1x">1x</we-button>
+            <we-button data-select-class="fa-2x" title="Size 2x">2x</we-button>
+            <we-button data-select-class="fa-3x" title="Size 3x">3x</we-button>
+            <we-button data-select-class="fa-4x" title="Size 4x">4x</we-button>
+            <we-button data-select-class="fa-5x" title="Size 5x">5x</we-button>
+
+            <!-- Hidden buttons which allows to automatically remove other fa
+                 sizing class we do not suggest.
+                 TODO: implement a param to add those extra classes to remove
+                 via selectClass (also fixes the fact that nothing is selected
+                 if fa-1x is actually used on the icon in this case) -->
+            <we-button data-select-class="fa-1x" data-dependencies="fake"/>
+            <we-button data-select-class="fa-lg" data-dependencies="fake"/>
+        </we-button-group>
+    </div>
+
+    <div data-selector="img" data-exclude="[data-oe-type='image'] > img, [data-oe-xpath]">
+        <we-input string="Description" class="o_we_large"
+            data-select-attribute="" data-attribute-name="alt"
+            placeholder="Alt tag"
+            title="'Alt tag' specifies an alternate text for an image, if the image cannot be displayed (slow connection, missing image, screen reader ...)."/>
+        <we-input string="Tooltip" class="o_we_large"
+            data-select-attribute="" data-attribute-name="title"
+            placeholder="Title tag"
+            title="'Title tag' is shown as a tooltip when you hover the picture."/>
+    </div>
+
+    <t t-set="no_animations" t-value="False"/>
+    <div data-js="ImageTools"
+         data-selector="img">
+        <div class="o_we_image_shape">
+            <we-row string="Shape" class="o_we_full_row">
+                <we-select-pager data-name="shape_img_opt" class="o_we_select_grid o_we_fake_transparent_background">
+                    <!-- This page only contains animated shapes by default. If
+                    using xpath to add non-animated shapes, also use xpath to
+                    remove the t-if on the page. This is why individual options
+                    also have that t-if.  -->
+                    <we-select-page class="o_we_basic_shapes" string="Basics" t-if="not no_animations">
+                        <we-button t-if="not no_animations" data-set-img-shape="web_editor/basic/bsc_square_1" data-select-label="Square 1" data-animated="true"/>
+                        <we-button t-if="not no_animations" data-set-img-shape="web_editor/basic/bsc_square_2" data-select-label="Square 2" data-animated="true"/>
+                        <we-button t-if="not no_animations" data-set-img-shape="web_editor/basic/bsc_square_3" data-select-label="Square 3" data-animated="true"/>
+                        <we-button t-if="not no_animations" data-set-img-shape="web_editor/basic/bsc_square_4" data-select-label="Square 4" data-animated="true"/>
+                        <we-button t-if="not no_animations" data-set-img-shape="web_editor/basic/bsc_square_5" data-select-label="Square 5" data-animated="true"/>
+                        <we-button t-if="not no_animations" data-set-img-shape="web_editor/basic/bsc_square_6" data-select-label="Square 6" data-animated="true"/>
+                        <we-button t-if="not no_animations" data-set-img-shape="web_editor/basic/bsc_square_rounded_1" data-select-label="Square Rounded 1" data-animated="true"/>
+                        <we-button t-if="not no_animations" data-set-img-shape="web_editor/basic/bsc_square_rounded_2" data-select-label="Square Rounded 2" data-animated="true"/>
+                        <we-button t-if="not no_animations" data-set-img-shape="web_editor/basic/bsc_organic_1" data-select-label="Organic Soft" data-animated="true"/>
+                        <we-button t-if="not no_animations" data-set-img-shape="web_editor/basic/bsc_organic_2" data-select-label="Organic Medium" data-animated="true"/>
+                        <we-button t-if="not no_animations" data-set-img-shape="web_editor/basic/bsc_organic_3" data-select-label="Organic Hard" data-animated="true"/>
+                    </we-select-page>
+                    <we-select-page string="Solids">
+                        <we-button data-set-img-shape="web_editor/solid/blob_1_solid_rd" data-select-label="Blob Solid 1" />
+                        <we-button data-set-img-shape="web_editor/solid/blob_2_solid_str" data-select-label="Blob Solid 2" />
+                        <we-button data-set-img-shape="web_editor/solid/blob_3_solid_rd" data-select-label="Blob Solid 3" />
+                        <we-button data-set-img-shape="web_editor/solid/oval_1_solid_rd" data-select-label="Oval Solid"/>
+                        <we-button t-if="not no_animations" data-set-img-shape="web_editor/solid/sld_blob_4" data-select-label="Blob Solid 4" data-animated="true"/>
+                        <we-button t-if="not no_animations" data-set-img-shape="web_editor/solid/sld_blob_shadow_1" data-select-label="Blob Shadow 1" data-animated="true"/>
+                        <we-button t-if="not no_animations" data-set-img-shape="web_editor/solid/sld_blob_shadow_2" data-select-label="Blob Shadow 2" data-animated="true"/>
+                        <we-button t-if="not no_animations" data-set-img-shape="web_editor/solid/sld_square_1" data-select-label="Square 1" data-animated="true"/>
+                        <we-button t-if="not no_animations" data-set-img-shape="web_editor/solid/sld_square_2" data-select-label="Square 2" data-animated="true"/>
+                        <we-button t-if="not no_animations" data-set-img-shape="web_editor/solid/sld_square_organic_1" data-select-label="Square - Organic" data-animated="true"/>
+                    </we-select-page>
+                    <we-select-page string="Patterns">
+                        <we-button t-if="not no_animations" data-set-img-shape="web_editor/pattern/organic_2_pattern_dot" data-select-label="Organic Dot" data-animated="true"/>
+                        <we-button data-set-img-shape="web_editor/pattern/organic_3_pattern_cross" data-select-label="Organic Cross" />
+                        <we-button data-set-img-shape="web_editor/pattern/organic_4_pattern_caps" data-select-label="Organic Caps" />
+                        <we-button t-if="not no_animations" data-set-img-shape="web_editor/pattern/pattern_labyrinth" data-select-label="Labyrinth" data-animated="true"/>
+                        <we-button t-if="not no_animations" data-set-img-shape="web_editor/pattern/pattern_points_1" data-select-label="Points" data-animated="true"/>
+                        <we-button t-if="not no_animations" data-set-img-shape="web_editor/pattern/pattern_waves_1" data-select-label="Waves 1" data-animated="true"/>
+                        <we-button t-if="not no_animations" data-set-img-shape="web_editor/pattern/pattern_waves_2" data-select-label="Waves 2" data-animated="true"/>
+                        <we-button t-if="not no_animations" data-set-img-shape="web_editor/pattern/pattern_waves_3" data-select-label="Waves 3" data-animated="true"/>
+                        <we-button t-if="not no_animations" data-set-img-shape="web_editor/pattern/pattern_waves_4" data-select-label="Waves 4" data-animated="true"/>
+                    </we-select-page>
+                    <we-select-page string="Lines">
+                        <we-button data-set-img-shape="web_editor/line/oval_3_pattern_line" data-select-label="Oval Line" />
+                        <we-button data-set-img-shape="web_editor/line/organic_1_line" data-select-label="Organic Line" />
+                        <we-button data-set-img-shape="web_editor/line/oval_2_line" data-select-label="Oval Line 2" />
+                        <we-button t-if="not no_animations" data-set-img-shape="web_editor/line/little_lines_1" data-select-label="Little lines 1" data-animated="true"/>
+                        <we-button t-if="not no_animations" data-set-img-shape="web_editor/line/little_lines_2" data-select-label="Little lines 2" data-animated="true"/>
+                        <we-button t-if="not no_animations" data-set-img-shape="web_editor/line/little_lines_3" data-select-label="Little lines 2" data-animated="true"/>
+                        <we-button t-if="not no_animations" data-set-img-shape="web_editor/line/line_square_1" data-select-label="Square" data-animated="true"/>
+                        <we-button t-if="not no_animations" data-set-img-shape="web_editor/line/line_triangle" data-select-label="Triangles" data-animated="true"/>
+                        <we-button t-if="not no_animations" data-set-img-shape="web_editor/line/line_star" data-select-label="Star" data-animated="true"/>
+                        <we-button t-if="not no_animations" data-set-img-shape="web_editor/line/line_sun" data-select-label="Sun" data-animated="true"/>
+                    </we-select-page>
+                    <we-select-page string="Floats" t-if="not no_animations">
+                        <we-button data-set-img-shape="web_editor/float/flt_primary_1" data-select-label="Primary shapes 1" data-animated="true"/>
+                        <we-button data-set-img-shape="web_editor/float/flt_primary_2" data-select-label="Primary shapes 2" data-animated="true"/>
+                        <we-button data-set-img-shape="web_editor/float/flt_primary_3" data-select-label="Primary shapes 3" data-animated="true"/>
+                        <we-button data-set-img-shape="web_editor/float/flt_planets_1" data-select-label="Planets 1" data-animated="true"/>
+                        <we-button data-set-img-shape="web_editor/float/flt_planets_2" data-select-label="Planets 2" data-animated="true"/>
+                        <we-button data-set-img-shape="web_editor/float/flt_square_1" data-select-label="Square 1" data-animated="true"/>
+                        <we-button data-set-img-shape="web_editor/float/flt_square_2" data-select-label="Square 2" data-animated="true"/>
+                        <we-button data-set-img-shape="web_editor/float/flt_square_3" data-select-label="Square 3" data-animated="true"/>
+                        <we-button data-set-img-shape="web_editor/float/flt_square_4" data-select-label="Square 4" data-animated="true"/>
+                    </we-select-page>
+                    <we-select-page string="Specials" t-if="not no_animations">
+                        <we-button data-set-img-shape="web_editor/special/spl_speed_1" data-select-label="Speed" data-animated="true"/>
+                        <we-button data-set-img-shape="web_editor/special/spl_rain_1" data-select-label="Rain" data-animated="true"/>
+                        <we-button data-set-img-shape="web_editor/special/spl_snow_1" data-select-label="Snow" data-animated="true"/>
+                        <we-button data-set-img-shape="web_editor/special/spl_flag_1" data-select-label="Flag" data-animated="true"/>
+                        <we-button data-set-img-shape="web_editor/special/spl_filter_1" data-select-label="Filter" data-animated="true"/>
+                        <we-button data-set-img-shape="web_editor/special/spl_organics_1" data-select-label="Organics" data-animated="true"/>
+                        <we-button data-set-img-shape="web_editor/special/spl_circuit_1" data-select-label="Circuit" data-animated="true"/>
+                    </we-select-page>
+                    <we-select-page string="Devices">
+                        <we-button data-set-img-shape="web_editor/devices/iphone_front_portrait" data-select-label="iPhone #1" data-img-size="375 x 812"/>
+                        <we-button data-set-img-shape="web_editor/devices/iphone_3d_portrait_01" data-select-label="iPhone #2" data-img-size="375 x 812"/>
+                        <we-button data-set-img-shape="web_editor/devices/iphone_3d_portrait_02" data-select-label="iPhone #3" data-img-size="375 x 812"/>
+                        <we-button data-set-img-shape="web_editor/devices/iphone_front_landscape" data-select-label="iPhone #4" data-img-size="812 x 375"/>
+                        <we-button data-set-img-shape="web_editor/devices/iphone_3d_landscape_01" data-select-label="iPhone #5" data-img-size="812 x 375"/>
+                        <we-button data-set-img-shape="web_editor/devices/iphone_3d_landscape_02" data-select-label="iPhone #6" data-img-size="812 x 375"/>
+                        <we-button data-set-img-shape="web_editor/devices/galaxy_front_portrait" data-select-label="Galaxy S #1" data-img-size="360 x 800"/>
+                        <we-button data-set-img-shape="web_editor/devices/galaxy_3d_portrait_01" data-select-label="Galaxy S #2" data-img-size="360 x 800"/>
+                        <we-button data-set-img-shape="web_editor/devices/galaxy_3d_portrait_02" data-select-label="Galaxy S #3" data-img-size="360 x 800"/>
+                        <we-button data-set-img-shape="web_editor/devices/galaxy_front_landscape" data-select-label="Galaxy S #4" data-img-size="800 x 360"/>
+                        <we-button data-set-img-shape="web_editor/devices/galaxy_3d_landscape_01" data-select-label="Galaxy S #5" data-img-size="800 x 360"/>
+                        <we-button data-set-img-shape="web_editor/devices/galaxy_3d_landscape_02" data-select-label="Galaxy S #6" data-img-size="800 x 360"/>
+                        <we-button data-set-img-shape="web_editor/devices/ipad_front_portrait" data-select-label="iPad #1" data-img-size="768 x 1024"/>
+                        <we-button data-set-img-shape="web_editor/devices/ipad_3d_portrait_01" data-select-label="iPad #2" data-img-size="768 x 1024"/>
+                        <we-button data-set-img-shape="web_editor/devices/ipad_3d_portrait_02" data-select-label="iPad #3" data-img-size="768 x 1024"/>
+                        <we-button data-set-img-shape="web_editor/devices/ipad_front_landscape" data-select-label="iPad #4" data-img-size="1024 x 768"/>
+                        <we-button data-set-img-shape="web_editor/devices/ipad_3d_landscape_01" data-select-label="iPad #5" data-img-size="1024 x 768"/>
+                        <we-button data-set-img-shape="web_editor/devices/ipad_3d_landscape_02" data-select-label="iPad #6" data-img-size="1024 x 768"/>
+                        <we-button data-set-img-shape="web_editor/devices/imac_front" data-select-label="iMac #1" data-img-size="1280 x 720"/>
+                        <we-button data-set-img-shape="web_editor/devices/imac_3d_01" data-select-label="iMac #2" data-img-size="1280 x 720"/>
+                        <we-button data-set-img-shape="web_editor/devices/imac_3d_02" data-select-label="iMac #3" data-img-size="1280 x 720"/>
+                        <we-button data-set-img-shape="web_editor/devices/macbook_front" data-select-label="MacBook #1" data-img-size="1280 x 800"/>
+                        <we-button data-set-img-shape="web_editor/devices/macbook_3d_01" data-select-label="MacBook #2" data-img-size="1280 x 800"/>
+                        <we-button data-set-img-shape="web_editor/devices/macbook_3d_02" data-select-label="MacBook #3" data-img-size="1280 x 800"/>
+                        <we-button data-set-img-shape="web_editor/devices/browser_01" data-select-label="Browser #1"/>
+                        <we-button data-set-img-shape="web_editor/devices/browser_02" data-select-label="Browser #2"/>
+                        <we-button data-set-img-shape="web_editor/devices/browser_03" data-select-label="Browser #3"/>
+                    </we-select-page>
+                </we-select-pager>
+                <we-button data-set-img-shape="" data-no-preview="true" data-label="None" data-dependencies="shape_img_opt" class="o_we_image_shape_remove fa fa-fw fa-times"/>
+            </we-row>
+            <we-row string="Colors" class="o_we_sublevel_1">
+                <we-colorpicker data-set-img-shape-color="true" data-dependencies="shape_img_opt" data-name="img-shape-color-0" data-color-id="0" />
+                <we-colorpicker data-set-img-shape-color="true" data-dependencies="shape_img_opt" data-name="img-shape-color-1" data-color-id="1" />
+                <we-colorpicker data-set-img-shape-color="true" data-dependencies="shape_img_opt" data-name="img-shape-color-2" data-color-id="2" />
+                <we-colorpicker data-set-img-shape-color="true" data-dependencies="shape_img_opt" data-name="img-shape-color-3" data-color-id="3" />
+                <we-colorpicker data-set-img-shape-color="true" data-dependencies="shape_img_opt" data-name="img-shape-color-4" data-color-id="4" />
+            </we-row>
+        </div>
+
+        <t t-call="web_editor.snippet_options_image_optimization_widgets"/>
+
+        <we-row string="Transform">
+            <we-button class="fa fa-fw fa-crop" data-crop="true" data-no-preview="true" title="Crop Image"/>
+            <we-button class="ms-0 border-start-0" data-reset-crop="" data-no-preview="true" title="Reset crop">
+                Reset
+            </we-button>
+            <we-button class="fa fa-fw fa-object-ungroup" data-name="image_transform_opt" data-transform="true" data-no-preview="true" title="Transform the picture"/>
+            <we-button class="ms-0 border-start-0" data-reset-transform="" data-no-preview="true" title="Reset transformation">
+                Reset
+            </we-button>
+        </we-row>
+
+        <we-button-group string="Width" data-css-property="width">
+            <we-button data-select-style="" title="Resize Default">Default</we-button>
+            <we-button data-select-style="25%" title="Resize Quarter">25%</we-button>
+            <we-button data-select-style="50%" title="Resize Half">50%</we-button>
+            <we-button data-select-style="100%" title="Resize Full">100%</we-button>
+        </we-button-group>
+    </div>
+
+    <div data-selector="span.fa, i.fa, img" data-exclude="[data-oe-type='image'] > img, [data-oe-xpath]" class="o_we_image_options">
+        <we-select string="Alignment" data-state-to-first-class="true">
+            <we-button data-select-class="" title="Unalign">None</we-button>
+            <we-button data-select-class="me-auto float-start" title="Align Left">Left</we-button>
+            <we-button data-select-class="mx-auto d-block" title="Align Center">Center</we-button>
+            <we-button data-select-class="ms-auto float-end" title="Align Right">Right</we-button>
+        </we-select>
+
+        <we-row string="Style">
+            <we-button class="fa fa-fw fa-square" data-select-class="rounded" title="Shape: Rounded"/>
+            <we-button class="fa fa-fw fa-circle-o" data-select-class="rounded-circle" title="Shape: Circle"/>
+            <we-button class="fa fa-fw fa-sun-o" data-select-class="shadow" title="Shadow"/>
+            <we-button class="fa fa-fw fa-picture-o" data-select-class="img-thumbnail" title="Shape: Thumbnail"/>
+        </we-row>
+
+        <we-input string="Padding" data-select-style="" data-unit="px" data-css-property="padding"/>
+    </div>
+
+    <div data-js="DynamicSvg" data-selector="img">
+        <we-row string="Dynamic Colors" data-name="colors">
+            <we-colorpicker data-color="true" data-color-name="c1"/>
+            <we-colorpicker data-color="true" data-color-name="c2"/>
+            <we-colorpicker data-color="true" data-color-name="c3"/>
+            <we-colorpicker data-color="true" data-color-name="c4"/>
+            <we-colorpicker data-color="true" data-color-name="c5"/>
+        </we-row>
+    </div>
+</template>
+
+<!-- default block -->
+<template id="s_hr" name="Separator">
+    <div class="s_hr pt32 pb32">
+        <hr class="s_hr_1px s_hr_solid w-100 mx-auto"/>
+    </div>
+</template>
+
+</odoo>

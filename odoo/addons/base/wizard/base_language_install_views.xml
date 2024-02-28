@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="base.language_install_view_form_lang_switch" model="ir.ui.view">
+            <field name="name">Switch to language</field>
+            <field name="model">base.language.install</field>
+            <field name="priority">100</field>
+            <field name="arch" type="xml">
+                <form string="Switch to language">
+                    <div>
+                        <strong>
+                            <field name="first_lang_id" readonly="True" options="{'no_open': True}" />
+                        </strong>
+                        has been successfully installed.
+                            Users can choose their favorite language in their preferences.
+                    </div>
+                    <footer>
+                        <button name="reload" string="Close" type="object" class="btn-primary" data-hotkey="q"/>
+                        <button name="switch_lang" type="object" class="btn-primary ms-1" data-hotkey="w">
+                            Switch to <field name="first_lang_id" readonly="True" options="{'no_open': True}"/> &amp; Close
+                        </button>
+                    </footer>
+                </form>
+           </field>
+        </record>
+
+        <record id="view_base_language_install" model="ir.ui.view">
+            <field name="name">Load a Translation</field>
+            <field name="model">base.language.install</field>
+            <field name="arch" type="xml">
+                <form string="Load a Translation">
+                    <group>
+                        <field name="lang_ids" widget="many2many_tags"
+                            context="{'active_test': False}" options="{'no_quick_create': True, 'no_create_edit': True}"/>
+                        <field name="overwrite" groups="base.group_no_one"/>
+                    </group>
+                    <footer>
+                        <button name="lang_install" string="Add" type="object" class="btn-primary"/>
+                        <button special="cancel" data-hotkey="z" string="Cancel" class="btn-secondary"/>
+                    </footer>
+                </form>
+           </field>
+        </record>
+
+        <record id="action_view_base_language_install" model="ir.actions.act_window">
+            <field name="name">Add Languages</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">base.language.install</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+    </data>
+</odoo>

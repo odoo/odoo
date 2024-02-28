@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="project_sharing_inherit_project_task_view_form" model="ir.ui.view">
+        <field name="name">project.sharing.project.task.view.form.inherit</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.project_sharing_project_task_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='child_ids']/tree/field[@name='portal_user_names']" position="after">
+                <field name="planned_hours" widget="timesheet_uom_no_toggle" sum="Initially Planned Hours" optional="hide"/>
+                <field name="effective_hours" widget="timesheet_uom" sum="Effective Hours" optional="hide"/>
+                <field name="subtask_effective_hours" string="Sub-tasks Hours Spent" widget="timesheet_uom" sum="Sub-tasks Hours Spent" optional="hide"/>
+                <field name="total_hours_spent" string="Total Hours" widget="timesheet_uom" sum="Total Hours" optional="hide"/>
+                <field name="remaining_hours" widget="timesheet_uom" sum="Remaining Hours" optional="hide" decoration-danger="progress &gt;= 100" decoration-warning="progress &gt;= 80 and progress &lt; 100"/>
+                <field name="progress" widget="progressbar" optional="hide"/>
+            </xpath>
+            <xpath expr="//notebook/page[@name='description_page']" position="after">
+                <field name="analytic_account_active" invisible="1"/>
+                <field name="allow_timesheets" invisible="1"/>
+                <field name="encode_uom_in_days" invisible="1"/>
+                <field name="subtask_count" invisible="1"/>
+                <page string="Timesheets" id="timesheets_tab" attrs="{'invisible': [('allow_timesheets', '=', False)]}">
+                    <group>
+                        <group>
+                            <div colspan="2">
+                                <label for="planned_hours" string="Allocated Hours" class="me-2" attrs="{'invisible': [('encode_uom_in_days', '=', True)]}"/>
+                                <label for="planned_hours" string="Allocated Days" class="me-2" attrs="{'invisible': [('encode_uom_in_days', '=', False)]}"/>
+                                <field name="planned_hours" class="o_field_float_time oe_inline ms-2" widget="timesheet_uom_no_toggle"/>
+                                <span attrs="{'invisible': ['|', ('allow_subtasks', '=', False), ('subtask_count', '=', 0)]}">
+                                    (incl. <field name="subtask_planned_hours" nolabel="1" groups="project.group_subtask_project" widget="timesheet_uom_no_toggle" class="oe_inline"/> on
+                                    <span class="fw-bold text-dark"> Sub-tasks</span>)
+                                </span>
+                            </div>
+                        </group>
+                        <group>
+                            <field name="progress" widget="progressbar"/>
+                        </group>
+                    </group>
+                    <field name="timesheet_ids" mode="tree,kanban"
+                          attrs="{'invisible': [('analytic_account_active', '=', False)]}">
+                        <tree string="Timesheet Activities" default_order="date" no_open="1" create="false" delete="0">
+                            <field name="date"/>
+                            <field name="employee_id"/>
+                            <field name="name"/>
+                            <field name="unit_amount" widget="timesheet_uom" decoration-danger="unit_amount &gt; 24"/>
+                        </tree>
+                        <kanban class="o_kanban_mobile">
+                            <field name="date"/>
+                            <field name="employee_id"/>
+                            <field name="name"/>
+                            <field name="unit_amount" decoration-danger="unit_amount &gt; 24"/>
+                            <field name="project_id"/>
+                            <templates>
+                                <t t-name="kanban-box">
+                                    <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <strong><span><t t-esc="record.employee_id.value"/></span></strong>
+                                            </div>
+                                            <div class="col-6 float-end text-end">
+                                                <strong><t t-esc="record.date.value"/></strong>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-6 text-muted">
+                                                <span><t t-esc="record.name.value"/></span>
+                                            </div>
+                                            <div class="col-6">
+                                                <span class="float-end text-end">
+                                                    <field name="unit_amount" widget="float_time"/>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </t>
+                            </templates>
+                        </kanban>
+                    </field>
+                    <group attrs="{'invisible': [('analytic_account_active', '=', False)]}">
+                        <group class="oe_subtotal_footer oe_right" name="project_hours">
+                            <span class="o_td_label float-start">
+                                <label class="fw-bold" for="effective_hours" string="Hours Spent" attrs="{'invisible': [('encode_uom_in_days', '=', True)]}"/>
+                                <label class="fw-bold" for="effective_hours" string="Days Spent" attrs="{'invisible': [('encode_uom_in_days', '=', False)]}"/>
+                            </span>
+                            <field name="effective_hours" widget="timesheet_uom" nolabel="1"/>
+                            <!-- remove o_form_subtask_button class from master-->
+                            <button name="action_view_subtask_timesheet" type="object" class="o_form_subtask_button ps-0 border-0 oe_inline oe_link mb-2 o_td_label float-start" attrs="{'invisible' : ['|', ('allow_subtasks', '=', False), ('subtask_effective_hours', '=', 0.0)]}">
+                                <span class="text-nowrap" attrs="{'invisible' : [('encode_uom_in_days', '=', True)]}">Hours Spent on Sub-tasks:</span>
+                                <span class="text-nowrap" attrs="{'invisible' : [('encode_uom_in_days', '=', False)]}">Days Spent on Sub-tasks:</span>
+                            </button>
+                            <field name="subtask_effective_hours" class="mt-2" widget="timesheet_uom"
+                                  attrs="{'invisible' : ['|', ('allow_subtasks', '=', False), ('subtask_effective_hours', '=', 0.0)]}" nolabel="1"/>
+                            <span id="total_hours_spent_label" attrs="{'invisible': ['|', ('allow_subtasks', '=', False), ('subtask_effective_hours', '=', 0.0)]}" class="o_td_label float-start">
+                                <label class="fw-bold" for="total_hours_spent" string="Total Hours"
+                                      attrs="{'invisible': [('encode_uom_in_days', '=', True)]}"/>
+                                <label class="fw-bold" for="total_hours_spent" string="Total Days"
+                                      attrs="{'invisible': [('encode_uom_in_days', '=', False)]}"/>
+                            </span>
+                            <field name="total_hours_spent" widget="timesheet_uom" class="oe_subtotal_footer_separator" nolabel="1"
+                                  attrs="{'invisible' : ['|', ('allow_subtasks', '=', False), ('subtask_effective_hours', '=', 0.0)]}" />
+                            <span class="o_td_label float-start">
+                                <label class="fw-bold" for="remaining_hours" string="Remaining Hours"
+                                       attrs="{'invisible': ['|', '|', ('planned_hours', '=', 0.0), ('encode_uom_in_days', '=', True), ('remaining_hours', '&lt;', 0)]}"/>
+                                <label class="fw-bold" for="remaining_hours" string="Remaining Days"
+                                       attrs="{'invisible': ['|', '|', ('planned_hours', '=', 0.0), ('encode_uom_in_days', '=', False), ('remaining_hours', '&lt;', 0)]}"/>
+                                <label class="fw-bold text-danger" for="remaining_hours" string="Remaining Hours"
+                                       attrs="{'invisible': ['|', '|', ('planned_hours', '=', 0.0), ('encode_uom_in_days', '=', True), ('remaining_hours', '&gt;=', 0)]}"/>
+                                <label class="fw-bold text-danger" for="remaining_hours" string="Remaining Days"
+                                       attrs="{'invisible': ['|', '|', ('planned_hours', '=', 0.0), ('encode_uom_in_days', '=', False), ('remaining_hours', '&gt;=', 0)]}"/>
+                            </span>
+                            <field name="remaining_hours" widget="timesheet_uom" class="oe_subtotal_footer_separator"
+                                  attrs="{'invisible' : [('planned_hours', '=', 0.0)]}" nolabel="1"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="project_sharing_kanban_inherit_project_task_view_kanban" model="ir.ui.view">
+        <field name="name">project.sharing.project.task.timesheet.kanban.inherited</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.project_sharing_project_task_view_kanban"/>
+        <field name="arch" type="xml">
+            <templates position="before">
+                <field name="progress" />
+                <field name="remaining_hours" />
+                <field name="planned_hours" />
+                <field name="allow_timesheets"/>
+                <field name="encode_uom_in_days" invisible="1"/>
+            </templates>
+            <div class="oe_kanban_bottom_left" position="inside">
+                <t name="planned_hours" t-if="record.planned_hours.raw_value &gt; 0 and record.allow_timesheets.raw_value">
+                    <t t-set="badge" t-value="'border border-success'"/>
+                    <t t-set="badge" t-value="'border border-warning'" t-if="record.progress.raw_value &gt;= 80 and record.progress.raw_value &lt;= 100"/>
+                    <t t-set="badge" t-value="'border border-danger'" t-if="record.remaining_hours.raw_value &lt; 0"/>
+                    <t t-set="title" t-value="'Remaining days'" t-if="record.encode_uom_in_days.raw_value"/>
+                    <t t-set="title" t-value="'Remaining hours'" t-else=""/>
+                    <div t-attf-class="oe_kanban_align badge {{ badge }}" t-att-title="title">
+                        <field name="remaining_hours" widget="timesheet_uom" />
+                    </div>
+                </t>
+            </div>
+        </field>
+    </record>
+
+    <record id="project_sharing_inherit_project_task_view_tree" model="ir.ui.view">
+        <field name="name">project.task.tree.inherited</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.project_sharing_project_task_view_tree" />
+        <field name="arch" type="xml">
+            <field name="portal_user_names" position="after">
+                <field name="allow_subtasks" invisible="1"/>
+                <field name="allow_timesheets" invisible="1"/>
+                <field name="planned_hours" widget="timesheet_uom_no_toggle" sum="Initially Planned Hours" optional="hide" attrs="{'column_invisible': [('allow_timesheets', '=', False)]}"/>
+                <field name="effective_hours" widget="timesheet_uom" sum="Effective Hours" optional="hide" attrs="{'column_invisible': [('allow_timesheets', '=', False)]}"/>
+                <field name="subtask_effective_hours" widget="timesheet_uom" attrs="{'column_invisible' : ['|', ('allow_subtasks', '=', False), ('allow_timesheets', '=', False)]}" optional="hide"/>
+                <field name="total_hours_spent" widget="timesheet_uom" attrs="{'column_invisible' : ['|', ('allow_subtasks', '=', False), ('allow_timesheets', '=', False)]}" optional="hide"/>
+                <field name="remaining_hours" widget="timesheet_uom" sum="Remaining Hours" optional="hide" decoration-danger="progress &gt;= 100" decoration-warning="progress &gt;= 80 and progress &lt; 100" attrs="{'column_invisible': [('allow_timesheets', '=', False)]}"/>
+                <field name="progress" widget="progressbar" attrs="{'column_invisible': [('allow_timesheets', '=', False)]}" optional="hide"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="project_sharing_project_task_view_search_inherit_timesheet" model="ir.ui.view">
+        <field name="name">project.sharing.project.task.view.search.inherit.timesheet</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.project_sharing_project_task_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='late']" position='after'>
+                <filter string="Tasks in Overtime" name="overtime" domain="[('overtime', '&gt;', 0)]"/>
+                <filter string="Tasks Soon in Overtime" name="remaining_hours_percentage" domain="[('remaining_hours_percentage', '&lt;=', 0.2)]"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

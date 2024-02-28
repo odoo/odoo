@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="mail.CallSidebarView" owl="1">
+    <t t-if="callSidebarView">
+        <div class="o_CallSidebarView d-flex align-items-center h-100 flex-column">
+            <t t-foreach="callSidebarView.sidebarTiles" t-as="tile" t-key="tile.localId">
+                <CallParticipantCard
+                    className="'o_CallSidebarView_participantCard w-100'"
+                    record="tile.participantCard"
+                />
+            </t>
+        </div>
+    </t>
+</t>
+
+</templates>

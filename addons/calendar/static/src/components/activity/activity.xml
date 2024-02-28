@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-inherit="mail.Activity" t-inherit-mode="extension">
+        <xpath expr="//button[hasclass('o_Activity_editButton')]" position="attributes">
+            <attribute name="t-if">!activityView.activity.calendar_event_id</attribute>
+        </xpath>
+        <xpath expr="//button[hasclass('o_Activity_editButton')]" position="after">
+            <t t-if="activityView.activity.calendar_event_id">
+                <button class="o_Activity_toolButton o_Activity_editButton btn btn-link pt-0" t-on-click="activityView.onClickEdit">
+                    <i class="fa fa-calendar"/> Reschedule
+                </button>
+            </t>
+        </xpath>
+    </t>
+
+</templates>

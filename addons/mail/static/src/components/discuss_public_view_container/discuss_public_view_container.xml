@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.DiscussPublicViewContainer" owl="1">
+        <div class="o_DiscussPublicViewContainer position-absolute h-100 w-100">
+            <DiscussPublicView t-if="discussPublicView" record="discussPublicView"/>
+            <div t-else="" class="h-100 d-flex justify-content-center align-items-center">
+                <i class="o_DiscussPublicViewContainer_spinner fa fa-circle-o-notch fa-spin mx-2" title="Please wait..."/>
+            </div>
+        </div>
+    </t>
+</templates>

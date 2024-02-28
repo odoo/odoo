@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.EmojiPickerHeaderActionListView" owl="1">
+        <div class="o_EmojiPickerHeaderActionListView d-flex" t-attf-class="{{ className }}" t-ref="root">
+            <EmojiPickerHeaderActionView t-foreach="emojiPickerHeaderActionListView.actionViews" t-as="actionView" t-key="actionView" record="actionView"/>
+        </div>
+    </t>
+
+</templates>

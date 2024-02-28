@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data>
+     <record id="website_visitor_view_form" model="ir.ui.view">
+        <field name="name">website.visitor.view.form.inherit.website.mass.mailing.sms</field>
+        <field name="model">website.visitor</field>
+        <field name="inherit_id" ref="website.website_visitor_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_send_sms" type="object" class="btn btn-primary"
+                        attrs="{'invisible': [('mobile', '=', False)]}" string="Send SMS"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="website_visitor_view_kanban" model="ir.ui.view">
+        <field name="name">website.visitor.view.kanban.inherit.website.sms</field>
+        <field name="model">website.visitor</field>
+        <field name="inherit_id" ref="website.website_visitor_view_kanban"/>
+        <field name="arch" type="xml">
+            <field name="page_ids" position="after">
+                <field name="mobile" widget="phone"/>
+            </field>
+            <xpath expr="//div[hasclass('w_visitor_kanban_actions')]" position="inside">
+                <button name="action_send_sms" type="object" class="btn btn-secondary"
+                        attrs="{'invisible': [('mobile', '=', False)]}">SMS
+                </button>
+            </xpath>
+            <xpath expr="//div[hasclass('w_visitor_kanban_actions_ungrouped')]" position="inside">
+                <button name="action_send_sms" type="object" class="btn btn-secondary border"
+                        attrs="{'invisible': [('mobile', '=', False)]}">SMS
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+     <record id="website_visitor_view_tree" model="ir.ui.view">
+        <field name="name">website.visitor.view.tree.inherit.website.sms</field>
+        <field name="model">website.visitor</field>
+        <field name="inherit_id" ref="website.website_visitor_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='is_connected']" position="before">
+                <field name="mobile" invisible="1"/>
+            </xpath>
+            <xpath expr="//button[@name='action_send_mail']" position="after">
+                <button name="action_send_sms" type="object" icon="fa-mobile"
+                        attrs="{'invisible': [('mobile', '=', False)]}" string="SMS"/>
+            </xpath>
+        </field>
+    </record>
+</data></odoo>

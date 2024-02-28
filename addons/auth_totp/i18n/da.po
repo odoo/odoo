@@ -1,0 +1,426 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* auth_totp
+# 
+# Translators:
+# Mads Søndergaard, 2022
+# Mads Søndergaard, 2022
+# Martin Trigaux, 2022
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0beta\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-10-10 10:22+0000\n"
+"PO-Revision-Date: 2022-09-22 05:45+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
+"Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: da\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: auth_totp
+#: code:addons/auth_totp/controllers/home.py:0
+#, python-format
+msgid "%(browser)s on %(platform)s"
+msgstr "%(browser)s på %(platform)s"
+
+#. module: auth_totp
+#: model:ir.model,name:auth_totp.model_auth_totp_wizard
+msgid "2-Factor Setup Wizard"
+msgstr "2-trins Opsætningsguide"
+
+#. module: auth_totp
+#: code:addons/auth_totp/wizard/auth_totp_wizard.py:0
+#, python-format
+msgid "2-Factor authentication is now enabled."
+msgstr "2-trins autentificering er nu aktiveret."
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
+msgid ""
+"<i title=\"Documentation\" class=\"fa fa-fw o_button_icon fa-info-circle\"/>\n"
+"                                    Learn More"
+msgstr ""
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
+msgid ""
+"<i title=\"Documentation\" class=\"fa fa-fw o_button_icon fa-info-circle\"/>\n"
+"                            Learn More"
+msgstr ""
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
+msgid ""
+"<span attrs=\"{'invisible': [('totp_enabled', '=', False)]}\" class=\"text-"
+"muted\">This account is protected!</span>"
+msgstr ""
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
+msgid ""
+"<span attrs=\"{'invisible': [('totp_enabled', '=', False)]}\" class=\"text-"
+"muted\">Your account is protected!</span>"
+msgstr ""
+"<span attrs=\"{'invisible': [('totp_enabled', '=', False)]}\" class=\"text-"
+"muted\">Din konto er beskyttet!</span>"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
+msgid ""
+"<span class=\"d-md-none d-block\">Or install an authenticator app</span>\n"
+"                                        <span class=\"d-none d-md-block\">Install an authenticator app on your mobile device</span>"
+msgstr ""
+"<span class=\"d-md-none d-block\">Eller installer en autentificerings applikation</span>\n"
+"                                        <span class=\"d-none d-md-block\">Installer en autentificerings applikation på din mobile enhed</span>"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
+msgid ""
+"<span class=\"d-none d-md-block\">When requested to do so, scan the barcode below</span>\n"
+"                                    <span class=\"d-block d-md-none\">When requested to do so, copy the key below</span>"
+msgstr ""
+"<span class=\"d-none d-md-block\">Når der anmodes om det, scan da stregkoden nedenfor</span>\n"
+"                                    <span class=\"d-block d-md-none\">Når der anmodes om det, kopier da nøglen nedenfor</span>"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
+msgid ""
+"<span class=\"text-muted\">Popular ones include Authy, Google Authenticator "
+"or the Microsoft Authenticator.</span>"
+msgstr ""
+"<span class=\"text-muted\">Populære applikationer er Authy, Google "
+"Authenticato, eller Microsoft Authenticator applikationerne.</span>"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
+msgid "Account Security"
+msgstr "Konto sikkerhed"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
+msgid "Activate"
+msgstr "Aktivér"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
+msgid "Added On"
+msgstr "Tilføjet Den"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
+msgid ""
+"Are you sure? The user may be asked to enter two-factor codes again on those"
+" devices"
+msgstr ""
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
+msgid ""
+"Are you sure? You may be asked to enter two-factor codes again on those "
+"devices"
+msgstr ""
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
+msgid "Authentication Code"
+msgstr "Autentificeringskode"
+
+#. module: auth_totp
+#: model:ir.model,name:auth_totp.model_auth_totp_device
+msgid "Authentication Device"
+msgstr "Autentificeringsenhed"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
+msgid "Authenticator App Setup"
+msgstr "Autentificering Applikation Opsætning"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
+msgid "Cancel"
+msgstr "Annullér"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
+msgid "Cannot scan it?"
+msgstr "Kan den ikke scannes?"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
+msgid "Click on this link to open your authenticator app"
+msgstr "Klik på dette link for at åbne din autentificerings applikation"
+
+#. module: auth_totp
+#: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__create_uid
+msgid "Created by"
+msgstr "Oprettet af"
+
+#. module: auth_totp
+#: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__create_date
+msgid "Created on"
+msgstr "Oprettet den"
+
+#. module: auth_totp
+#: model:ir.model.fields,field_description:auth_totp.field_auth_totp_device__create_date
+msgid "Creation Date"
+msgstr "Oprettelsesdato"
+
+#. module: auth_totp
+#: model:ir.model.fields,field_description:auth_totp.field_auth_totp_device__name
+msgid "Description"
+msgstr "Beskrivelse"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
+msgid "Device"
+msgstr "Enhed"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
+msgid "Disable 2FA"
+msgstr "Deaktiver 2FA"
+
+#. module: auth_totp
+#: model:ir.actions.server,name:auth_totp.action_disable_totp
+msgid "Disable two-factor authentication"
+msgstr "Deaktiver to-trins autentificering"
+
+#. module: auth_totp
+#: model:ir.model.fields,field_description:auth_totp.field_auth_totp_device__display_name
+#: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__display_name
+msgid "Display Name"
+msgstr "Vis navn"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
+msgid "Don't ask again on this device"
+msgstr "Spørg ikke igen på denne enhed"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
+msgid "Enable 2FA"
+msgstr "Aktiver 2FA"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
+msgid "Enter your six-digit code below"
+msgstr "Angiv din seks-cifrede kode nedenfor"
+
+#. module: auth_totp
+#: model:ir.model,name:auth_totp.model_ir_http
+msgid "HTTP Routing"
+msgstr "HTTP Routing"
+
+#. module: auth_totp
+#: model:ir.model.fields,field_description:auth_totp.field_auth_totp_device__id
+#: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__id
+msgid "ID"
+msgstr "ID"
+
+#. module: auth_totp
+#: code:addons/auth_totp/controllers/home.py:0
+#, python-format
+msgid "Invalid authentication code format."
+msgstr "Ugyldig autentificering kode format."
+
+#. module: auth_totp
+#: model:ir.model.fields,field_description:auth_totp.field_auth_totp_device____last_update
+#: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard____last_update
+msgid "Last Modified on"
+msgstr "Sidst ændret den"
+
+#. module: auth_totp
+#: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__write_uid
+msgid "Last Updated by"
+msgstr "Sidst opdateret af"
+
+#. module: auth_totp
+#: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__write_date
+msgid "Last Updated on"
+msgstr "Sidst opdateret den"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
+msgid "Learn More"
+msgstr "Lær mere"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
+msgid "Log in"
+msgstr "Log ind"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
+msgid "Look for an \"Add an account\" button"
+msgstr "Se efter en \"Tilføj en konto\" knap"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
+msgid "On Apple Store"
+msgstr "På Apple Store"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
+msgid "On Google Play"
+msgstr "På Google Play"
+
+#. module: auth_totp
+#: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__qrcode
+msgid "Qrcode"
+msgstr "Qrkode"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
+msgid "Revoke"
+msgstr "Tilbagekald"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
+msgid "Revoke All"
+msgstr "Tilbagekald Alle"
+
+#. module: auth_totp
+#: model:ir.model.fields,field_description:auth_totp.field_auth_totp_device__scope
+msgid "Scope"
+msgstr "Anvendelsesområde"
+
+#. module: auth_totp
+#: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__secret
+msgid "Secret"
+msgstr "Hemmelighed"
+
+#. module: auth_totp
+#: code:addons/auth_totp/wizard/auth_totp_wizard.py:0
+#, python-format
+msgid "The verification code should only contain numbers"
+msgstr "Bekræftelses koden bør kun indeholde tal"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
+msgid ""
+"To login, enter below the six-digit authentication code provided by your Authenticator app.\n"
+"                        <br/>"
+msgstr ""
+"For at logge ind, skal du nedenfor angive den seks-cifrede autentificeringskode tildelt via Autentificerings applikationen.\n"
+"                       <br/>"
+
+#. module: auth_totp
+#: model:ir.model.fields,field_description:auth_totp.field_res_users__totp_secret
+msgid "Totp Secret"
+msgstr "Totp Hemmelig"
+
+#. module: auth_totp
+#: model:ir.model.fields,field_description:auth_totp.field_res_users__totp_trusted_device_ids
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
+msgid "Trusted Devices"
+msgstr "Betroede Enheder"
+
+#. module: auth_totp
+#: code:addons/auth_totp/models/res_users.py:0
+#, python-format
+msgid "Two-Factor Authentication Activation"
+msgstr "To-trins Autentificering Aktivering"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
+msgid "Two-factor Authentication"
+msgstr "To-faktor Autentificering"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
+msgid ""
+"Two-factor Authentication (\"2FA\") is a system of double authentication.\n"
+"                                The first one is done with your password and the second one with a code you get from a dedicated mobile app.\n"
+"                                Popular ones include Authy, Google Authenticator or the Microsoft Authenticator."
+msgstr ""
+"To-trins autentificering (\"2FA\") er et dobbelt-autentificerings system.\n"
+"                          Det første trin udføres med dit kodeord, og det andet men kode du modtager via en dedikeret mobil applikation.\n"
+"                          Populære applikationer er Authy, Google Authenticato, eller Microsoft Authenticator applikationerne."
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
+msgid ""
+"Two-factor Authentication (\"2FA\") is a system of double authentication.\n"
+"                        The first one is done with your password and the second one with a code you get from a dedicated mobile app.\n"
+"                        Popular ones include Authy, Google Authenticator or the Microsoft Authenticator."
+msgstr ""
+
+#. module: auth_totp
+#: model:ir.model.fields,field_description:auth_totp.field_res_users__totp_enabled
+msgid "Two-factor authentication"
+msgstr "To-faktor autentificering"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.res_users_view_search
+msgid "Two-factor authentication Disabled"
+msgstr "To-trins autentificering Deaktiveret"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.res_users_view_search
+msgid "Two-factor authentication Enabled"
+msgstr "To-trins autentificering Aktiveret"
+
+#. module: auth_totp
+#: code:addons/auth_totp/models/res_users.py:0
+#, python-format
+msgid "Two-factor authentication already enabled"
+msgstr "To-faktor autentificering allerede aktiveret"
+
+#. module: auth_totp
+#: code:addons/auth_totp/models/res_users.py:0
+#, python-format
+msgid "Two-factor authentication can only be enabled for yourself"
+msgstr "To-faktor autentificering kan kun aktiveres for dig selv"
+
+#. module: auth_totp
+#: code:addons/auth_totp/models/res_users.py:0
+#, python-format
+msgid "Two-factor authentication disabled for the following user(s): %s"
+msgstr "To-trins autentificering deaktiveret for følgende bruger(e): %s"
+
+#. module: auth_totp
+#: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__url
+msgid "Url"
+msgstr "Adresse"
+
+#. module: auth_totp
+#: model:ir.model,name:auth_totp.model_res_users
+#: model:ir.model.fields,field_description:auth_totp.field_auth_totp_device__user_id
+#: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__user_id
+msgid "User"
+msgstr "Bruger"
+
+#. module: auth_totp
+#: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__code
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
+msgid "Verification Code"
+msgstr "Bekræftelses kode"
+
+#. module: auth_totp
+#: code:addons/auth_totp/models/res_users.py:0
+#: code:addons/auth_totp/wizard/auth_totp_wizard.py:0
+#, python-format
+msgid "Verification failed, please double-check the 6-digit code"
+msgstr "Bekræftelse slog fejl, vær venlig at tjekke den 6-cifrede kode"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
+msgid "e.g. 123456"
+msgstr "f.eks. 123456"

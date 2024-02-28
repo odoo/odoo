@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="res_config_settings_view_form" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.hr.expense</field>
+            <field name="model">res.config.settings</field>
+            <field name="priority" eval="85"/>
+            <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[hasclass('settings')]" position="inside">
+                    <div class="app_settings_block" data-string="Expenses" string="Expenses" data-key="hr_expense" groups="hr_expense.group_hr_expense_manager">
+                        <h2>Expenses</h2>
+                        <div class="row mt16 o_settings_container" name="expenses_setting_container">
+                            <div class="col-xs-12 col-md-6 o_setting_box"
+                                id="create_expense_setting"
+                                title="Send an email to this email alias with the receipt in attachment to create an expense in one click. If the first word of the mail subject contains the category's internal reference or the category name, the corresponding category will automatically be set. Type the expense amount in the mail subject to set it on the expense too.">
+                                <div class="o_setting_left_pane">
+                                    <field name="use_mailgateway"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label string="Incoming Emails" for="use_mailgateway"/>
+                                    <div class="text-muted">
+                                        Create expenses from incoming emails
+                                    </div>
+                                    <div class="content-group" attrs="{'invisible': ['|', ('use_mailgateway', '=',  False), ('alias_domain', 'in', ['localhost', '', False])]}">
+                                        <div class="mt16" dir="ltr">
+                                            <label for="expense_alias_prefix" string="Alias" class="o_light_label"/>
+                                            <field name="expense_alias_prefix" class="oe_inline ps-2"/>
+                                            <span>@</span>
+                                            <field name="alias_domain" class="oe_inline" readonly="1" force_save="1"/>
+                                        </div>
+                                    </div>
+                                    <div class="content-group" attrs="{'invisible': ['|', ('use_mailgateway', '=',  False), ('alias_domain', 'not in', ['localhost', '', False])]}">
+                                        <div class="mt16">
+                                            <button type="action" name="base_setup.action_general_configuration" icon="fa-arrow-right" string="Setup your domain alias" class="btn-link"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-12 o_setting_box" id="hr_payroll_accountant">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_hr_payroll_expense" widget="upgrade_boolean"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="module_hr_payroll_expense" string="Reimburse in Payslip"/>
+                                    <div class="text-muted">
+                                        Reimburse expenses in payslips
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-md-6 o_setting_box" title="use OCR to fill data from a picture of the bill">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_hr_expense_extract" widget="upgrade_boolean"/>
+                                </div>
+                                <div class="o_setting_right_pane" id="expense_extract_settings">
+                                    <label string="Expense Digitalization (OCR)" for="module_hr_expense_extract"/>
+                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific."/>
+                                    <div class="text-muted">
+                                        Digitalize your receipts with OCR and Artificial Intelligence
+                                    </div>
+                                </div>   
+                            </div>
+                        </div>
+                        <h2>Default Journals</h2>
+                        <div class="row mt16 o_settings_container">
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane"></div>
+                                <div class="o_setting_right_pane">
+                                    <span class="o_form_label">Employee Expense Journal</span>
+                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." role="img" aria-label="Values set here are company-specific." groups="base.group_multi_company"/>
+                                    <div class="text-muted">
+                                        Default accounting journal for expenses paid by employees.
+                                    </div>
+                                    <div class="row mt8">
+                                        <field name="expense_journal_id"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane"></div>
+                                <div class="o_setting_right_pane">
+                                    <span class="o_form_label">Company Expense Journal</span>
+                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." role="img" aria-label="Values set here are company-specific." groups="base.group_multi_company"/>
+                                    <div class="text-muted">
+                                        Default accounting journal for expenses paid by the company.
+                                    </div>
+                                    <div class="row mt8">
+                                        <field name="company_expense_journal_id"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="action_hr_expense_configuration" model="ir.actions.act_window">
+            <field name="name">Settings</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.config.settings</field>
+            <field name="view_mode">form</field>
+            <field name="target">inline</field>
+            <field name="context">{'module' : 'hr_expense', 'bin_size': False}</field>
+        </record>
+
+        <menuitem id="menu_hr_expense_global_settings" name="Settings"
+            parent="menu_hr_expense_configuration" sequence="0" action="action_hr_expense_configuration" groups="base.group_system"/>
+    </data>
+</odoo>

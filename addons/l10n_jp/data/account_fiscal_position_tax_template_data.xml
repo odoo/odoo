@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Inclusive -->
+    <record id="l10n_jp_fiscal_position_tax_inclusive_sale_10" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="l10n_jp_fiscal_position_tax_inclusive" />
+        <field name="tax_src_id" ref="l10n_jp_tax_sale_exc_10"/>
+        <field name="tax_dest_id" ref="l10n_jp_tax_sale_incl_10"/>
+    </record>
+    <record id="l10n_jp_fiscal_position_tax_inclusive_purchase_10" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="l10n_jp_fiscal_position_tax_inclusive" />
+        <field name="tax_src_id" ref="l10n_jp_tax_purchase_exc_10"/>
+        <field name="tax_dest_id" ref="l10n_jp_tax_purchase_incl_10"/>
+    </record>
+    <record id="l10n_jp_fiscal_position_tax_inclusive_sale_8" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="l10n_jp_fiscal_position_tax_inclusive" />
+        <field name="tax_src_id" ref="l10n_jp_tax_sale_exc_8"/>
+        <field name="tax_dest_id" ref="l10n_jp_tax_sale_incl_8"/>
+    </record>
+    <record id="l10n_jp_fiscal_position_tax_inclusive_purchase_8" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="l10n_jp_fiscal_position_tax_inclusive" />
+        <field name="tax_src_id" ref="l10n_jp_tax_purchase_exc_8"/>
+        <field name="tax_dest_id" ref="l10n_jp_tax_purchase_incl_8"/>
+    </record>
+
+    <!-- Exclusive -->
+    <record id="l10n_jp_fiscal_position_tax_exclusive_sale_10" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="l10n_jp_fiscal_position_tax_exclusive" />
+        <field name="tax_src_id" ref="l10n_jp_tax_sale_incl_10"/>
+        <field name="tax_dest_id" ref="l10n_jp_tax_sale_exc_10"/>
+    </record>
+    <record id="l10n_jp_fiscal_position_tax_exclusive_purchase_10" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="l10n_jp_fiscal_position_tax_exclusive" />
+        <field name="tax_src_id" ref="l10n_jp_tax_purchase_incl_10"/>
+        <field name="tax_dest_id" ref="l10n_jp_tax_purchase_exc_10"/>
+    </record>
+    <record id="l10n_jp_fiscal_position_tax_exclusive_sale_8" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="l10n_jp_fiscal_position_tax_exclusive" />
+        <field name="tax_src_id" ref="l10n_jp_tax_sale_incl_8"/>
+        <field name="tax_dest_id" ref="l10n_jp_tax_sale_exc_8"/>
+    </record>
+    <record id="l10n_jp_fiscal_position_tax_exclusive_purchase_8" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="l10n_jp_fiscal_position_tax_exclusive" />
+        <field name="tax_src_id" ref="l10n_jp_tax_purchase_incl_8"/>
+        <field name="tax_dest_id" ref="l10n_jp_tax_purchase_exc_8"/>
+    </record>
+
+    <!-- Exepmt -->
+    <record id="l10n_jp_fiscal_position_tax_exempt_sale_exc_10" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="l10n_jp_fiscal_position_tax_exempt" />
+        <field name="tax_src_id" ref="l10n_jp_tax_sale_exc_10"/>
+        <field name="tax_dest_id" ref="l10n_jp_tax_sale_exempt"/>
+    </record>
+    <record id="l10n_jp_fiscal_position_tax_exempt_sale_incl_10" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="l10n_jp_fiscal_position_tax_exempt" />
+        <field name="tax_src_id" ref="l10n_jp_tax_sale_incl_10"/>
+        <field name="tax_dest_id" ref="l10n_jp_tax_sale_exempt"/>
+    </record>
+    <record id="l10n_jp_fiscal_position_tax_exempt_purchase_exc_10" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="l10n_jp_fiscal_position_tax_exempt" />
+        <field name="tax_src_id" ref="l10n_jp_tax_purchase_exc_10"/>
+        <field name="tax_dest_id" ref="l10n_jp_tax_purchase_imp"/>
+    </record>
+    <record id="l10n_jp_fiscal_position_tax_exempt_purchase_incl_10" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="l10n_jp_fiscal_position_tax_exempt" />
+        <field name="tax_src_id" ref="l10n_jp_tax_purchase_incl_10"/>
+        <field name="tax_dest_id" ref="l10n_jp_tax_purchase_imp"/>
+    </record>
+    <record id="l10n_jp_fiscal_position_tax_exempt_sale_exc_8" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="l10n_jp_fiscal_position_tax_exempt" />
+        <field name="tax_src_id" ref="l10n_jp_tax_sale_exc_8"/>
+        <field name="tax_dest_id" ref="l10n_jp_tax_sale_exempt"/>
+    </record>
+    <record id="l10n_jp_fiscal_position_tax_exempt_sale_incl_8" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="l10n_jp_fiscal_position_tax_exempt" />
+        <field name="tax_src_id" ref="l10n_jp_tax_sale_incl_8"/>
+        <field name="tax_dest_id" ref="l10n_jp_tax_sale_exempt"/>
+    </record>
+    <record id="l10n_jp_fiscal_position_tax_exempt_purchase_exc_8" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="l10n_jp_fiscal_position_tax_exempt" />
+        <field name="tax_src_id" ref="l10n_jp_tax_purchase_exc_8"/>
+        <field name="tax_dest_id" ref="l10n_jp_tax_purchase_imp"/>
+    </record>
+    <record id="l10n_jp_fiscal_position_tax_exempt_purchase_incl_8" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="l10n_jp_fiscal_position_tax_exempt" />
+        <field name="tax_src_id" ref="l10n_jp_tax_purchase_incl_8"/>
+        <field name="tax_dest_id" ref="l10n_jp_tax_purchase_imp"/>
+    </record>
+
+    <!-- Reduction -->
+    <record id="l10n_jp_fiscal_position_tax_reduction_sale_exc" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="l10n_jp_fiscal_position_tax_reduction" />
+        <field name="tax_src_id" ref="l10n_jp_tax_sale_exc_10"/>
+        <field name="tax_dest_id" ref="l10n_jp_tax_sale_exc_8"/>
+    </record>
+    <record id="l10n_jp_fiscal_position_tax_reduction_sale_incl" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="l10n_jp_fiscal_position_tax_reduction" />
+        <field name="tax_src_id" ref="l10n_jp_tax_sale_incl_10"/>
+        <field name="tax_dest_id" ref="l10n_jp_tax_sale_incl_8"/>
+    </record>
+    <record id="l10n_jp_fiscal_position_tax_reduction_purchase_exc" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="l10n_jp_fiscal_position_tax_reduction" />
+        <field name="tax_src_id" ref="l10n_jp_tax_purchase_exc_10"/>
+        <field name="tax_dest_id" ref="l10n_jp_tax_purchase_exc_8"/>
+    </record>
+    <record id="l10n_jp_fiscal_position_tax_reduction_purchase_incl" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="l10n_jp_fiscal_position_tax_reduction" />
+        <field name="tax_src_id" ref="l10n_jp_tax_purchase_incl_10"/>
+        <field name="tax_dest_id" ref="l10n_jp_tax_purchase_incl_8"/>
+    </record>
+
+</odoo>

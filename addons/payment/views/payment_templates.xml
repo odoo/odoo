@@ -1,0 +1,460 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Checkout form -->
+    <template id="checkout" name="Payment Checkout">
+        <!-- Variables description:
+            - 'providers' - The payment providers compatible with the current transaction
+            - 'tokens' - The payment tokens of the current partner and payment providers
+            - 'default_token_id' - The id of the token that should be pre-selected. Optional
+            - 'fees_by_provider' - The dict of transaction fees for each provider. Optional
+            - 'show_tokenize_input' - Whether the option to save the payment method is shown
+            - 'reference_prefix' - The custom prefix to compute the full transaction reference
+            - 'amount' - The amount to pay. Optional (sale_subscription)
+            - 'currency' - The currency of the transaction, as a `res.currency` record
+            - 'partner_id' - The id of the partner on behalf of whom the payment should be made
+            - 'access_token' - The access token used to authenticate the partner.
+            - 'transaction_route' - The route used to create a transaction when the user clicks Pay
+            - 'landing_route' - The route the user is redirected to after the transaction
+            - 'footer_template_id' - The template id for the submit button. Optional
+        -->
+        <form name="o_payment_checkout"
+              class="o_payment_form mt-3 clearfix"
+              t-att-data-reference-prefix="reference_prefix"
+              t-att-data-amount="amount"
+              t-att-data-currency-id="currency and currency.id"
+              t-att-data-partner-id="partner_id"
+              t-att-data-access-token="access_token"
+              t-att-data-transaction-route="transaction_route"
+              t-att-data-landing-route="landing_route"
+              t-att-data-allow-token-selection="True">
+
+            <t t-set="provider_count" t-value="len(providers) if providers else 0"/>
+            <t t-set="token_count" t-value="len(tokens) if tokens else 0"/>
+            <!-- Check the radio button of the default token, if set, or of the first provider if
+                 it is the only payment option -->
+            <t t-set="default_payment_option_id"
+               t-value="default_token_id if default_token_id and token_count > 0
+                        else providers[0].id if provider_count == 1 and token_count == 0
+                        else None"/>
+            <t t-set="fees_by_provider" t-value="fees_by_provider or dict()"/>
+            <t t-set="footer_template_id"
+               t-value="footer_template_id or 'payment.footer'"/>
+
+            <div class="card">
+                <!-- === Providers === -->
+                <t t-foreach="providers" t-as="provider">
+                    <div name="o_payment_option_card" class="card-body o_payment_option_card">
+                        <label>
+                            <!-- === Radio button === -->
+                            <!-- Only shown if linked to the only payment option -->
+                            <input name="o_payment_radio"
+                                   type="radio"
+                                   t-att-checked="provider.id == default_payment_option_id"
+                                   t-att-class="'' if provider_count + token_count > 1 else 'd-none'"
+                                   t-att-data-payment-option-id="provider.id"
+                                   t-att-data-provider="provider.code"
+                                   data-payment-option-type="provider"/>
+                            <!-- === Provider name === -->
+                            <span class="payment_option_name">
+                                <b t-esc="provider.display_as or provider.name"/>
+                            </span>
+                            <!-- === "Test Mode" badge === -->
+                            <span t-if="provider.state == 'test'"
+                                  class="badge rounded-pill text-bg-warning ms-1">
+                                Test Mode
+                            </span>
+                            <!-- === "Unpublished" badge === -->
+                            <span t-if="not provider.is_published"
+                                  class="badge rounded-pill text-bg-danger ms-1">
+                                Unpublished
+                            </span>
+                            <!-- === Extra fees badge === -->
+                            <t t-if="fees_by_provider.get(provider)">
+                                <span class="badge rounded-pill text-bg-secondary ms-1">
+                                    + <t t-esc="fees_by_provider.get(provider)"
+                                         t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+                                    Fees
+                                </span>
+                            </t>
+                        </label>
+                        <!-- === Payment icon list === -->
+                        <t t-call="payment.icon_list"/>
+                        <!-- === Help message === -->
+                        <div t-if="not is_html_empty(provider.pre_msg)"
+                             t-out="provider.pre_msg"
+                             class="text-muted ms-3"/>
+                    </div>
+                    <!-- === Provider inline form === -->
+                    <div t-attf-id="o_payment_provider_inline_form_{{provider.id}}"
+                         name="o_payment_inline_form"
+                         class="card-footer px-3 d-none">
+                        <t t-if="provider.sudo()._should_build_inline_form(is_validation=False)">
+                            <t t-set="inline_form_xml_id"
+                               t-value="provider.sudo().inline_form_view_id.xml_id"/>
+                            <!-- === Inline form content (filled by provider) === -->
+                            <div t-if="inline_form_xml_id" class="clearfix">
+                                <t t-call="{{inline_form_xml_id}}">
+                                    <t t-set="provider_id" t-value="provider.id"/>
+                                </t>
+                            </div>
+                        </t>
+                        <!-- === "Save my payment details" checkbox === -->
+                        <label t-if="show_tokenize_input[provider.id]">
+                            <input name="o_payment_save_as_token" type="checkbox"/>
+                            Save my payment details
+                        </label>
+                    </div>
+                </t>
+                <!-- === Tokens === -->
+                <t t-foreach="tokens" t-as="token">
+                    <div name="o_payment_option_card" class="card-body o_payment_option_card">
+                        <label>
+                            <!-- === Radio button === -->
+                            <input name="o_payment_radio"
+                                   type="radio"
+                                   t-att-checked="token.id == default_payment_option_id"
+                                   t-att-data-payment-option-id="token.id"
+                                   t-att-data-provider="token.provider_code"
+                                   data-payment-option-type="token"/>
+                            <!-- === Token name === -->
+                            <span class="payment_option_name" t-esc="token.display_name"/>
+                            <!-- === "V" check mark === -->
+                            <t t-call="payment.verified_token_checkmark"/>
+                            <!-- === "Fees" badge === -->
+                            <span t-if="fees_by_provider.get(token.provider_id)"
+                                  class="badge rounded-pill text-bg-secondary ms-1">
+                                    + <t t-esc="fees_by_provider.get(token.provider_id)"
+                                         t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+                                    Fees
+                            </span>
+                            <!-- === "Unpublished" badge === -->
+                            <span t-if="not token.provider_id.is_published" class="badge rounded-pill text-bg-danger ms-1">
+                                Unpublished
+                            </span>
+                        </label>
+                    </div>
+                    <!-- === Token inline form === -->
+                    <div t-attf-id="o_payment_token_inline_form_{{token.id}}"
+                         name="o_payment_inline_form"
+                         class="card-footer d-none">
+                        <t t-set="token_inline_form_xml_id"
+                           t-value="token.sudo().provider_id.token_inline_form_view_id.xml_id"/>
+                        <!-- === Inline form content (filled by provider) === -->
+                        <div t-if="token_inline_form_xml_id" class="clearfix">
+                            <t t-call="{{token_inline_form_xml_id}}">
+                                <t t-set="token" t-value="token"/>
+                            </t>
+                        </div>
+                    </div>
+                </t>
+            </div>
+            <!-- === "Pay" button === -->
+            <t t-call="{{footer_template_id}}">
+                <t t-set="label">Pay</t>
+                <t t-set="icon_class" t-value="'fa-lock'"/>
+            </t>
+        </form>
+    </template>
+
+    <!-- Manage (token create and deletion) form -->
+    <template id="manage" name="Payment Manage">
+        <!-- Variables description:
+            - 'providers' - The payment providers supporting tokenization
+            - 'tokens' - The set of payment tokens of the current partner
+            - 'default_token_id' - The id of the token that should be pre-selected. Optional
+            - 'reference_prefix' - The custom prefix to compute the full transaction reference
+            - 'partner_id' - The id of the partner managing the tokens
+            - 'access_token' - The access token used to authenticate the partner.
+            - 'transaction_route' - The route used to create a validation transaction
+            - 'assign_token_route' - The route to call to assign a token to a record. If set, it
+                                     enables the token assignation mechanisms: creation of a new
+                                     token through a refunded transaction and assignation of an
+                                     existing token
+            - 'landing_route' - The route the user is redirected to at then end of the flow
+            - 'footer_template_id' - The template id for the submit button. Optional
+        -->
+        <form name="o_payment_manage"
+              class="o_payment_form mt-3 clearfix"
+              t-att-data-reference-prefix="reference_prefix"
+              t-att-data-partner-id="partner_id"
+              t-att-data-access-token="access_token"
+              t-att-data-transaction-route="transaction_route"
+              t-att-data-assign-token-route="assign_token_route"
+              t-att-data-landing-route="landing_route"
+              t-att-data-allow-token-selection="bool(assign_token_route)">
+            <t t-set="provider_count" t-value="len(providers) if providers else 0"/>
+            <t t-set="token_count" t-value="len(tokens) if tokens else 0"/>
+            <t t-set="no_selectable_token" t-value="token_count == 0 or not assign_token_route"/>
+            <t t-set="default_payment_option_id"
+               t-value="default_token_id if default_token_id and token_count > 0
+                        else providers[0].id if provider_count == 1 and no_selectable_token
+                        else None"/>
+            <t t-set="footer_template_id"
+               t-value="footer_template_id or 'payment.footer'"/>
+            <div class="card">
+                <!-- === Providers === -->
+                <t t-foreach="providers" t-as="provider">
+                    <div name="o_payment_option_card" class="card-body o_payment_option_card">
+                        <label>
+                            <!-- === Radio button === -->
+                            <!-- Only shown if linked to the only payment option -->
+                            <input name="o_payment_radio"
+                                   type="radio"
+                                   t-att-checked="provider.id == default_payment_option_id"
+                                   t-att-class="'' if provider_count + token_count > 1 else 'd-none'"
+                                   t-att-data-payment-option-id="provider.id"
+                                   t-att-data-provider="provider.code"
+                                   data-payment-option-type="provider"/>
+                            <!-- === Provider name === -->
+                            <span class="payment_option_name">
+                                <b t-esc="provider.display_as or provider.name"/>
+                            </span>
+                            <!-- === "Test Mode" badge === -->
+                            <span t-if="provider.state == 'test'"
+                                  class="badge rounded-pill text-bg-warning"
+                                  style="margin-left:5px">
+                                Test Mode
+                            </span>
+                            <!-- === "Unpublished" badge === -->
+                            <span t-if="not provider.is_published" class="badge rounded-pill text-bg-danger">
+                                Unpublished
+                            </span>
+                        </label>
+                        <!-- === Payment icon list === -->
+                        <t t-call="payment.icon_list"/>
+                        <!-- === Help message === -->
+                        <div t-if="not is_html_empty(provider.pre_msg)"
+                             t-out="provider.pre_msg"
+                             class="text-muted ms-3"/>
+                    </div>
+                    <!-- === Provider inline form === -->
+                    <t t-if="provider.sudo()._should_build_inline_form(is_validation=True)">
+                        <div t-attf-id="o_payment_provider_inline_form_{{provider.id}}"
+                             name="o_payment_inline_form"
+                             class="card-footer d-none">
+                            <t t-set="inline_form_xml_id"
+                               t-value="provider.sudo().inline_form_view_id.xml_id"/>
+                            <!-- === Inline form content (filled by provider) === -->
+                            <div t-if="inline_form_xml_id" class="clearfix">
+                                <t t-call="{{inline_form_xml_id}}">
+                                    <t t-set="provider_id" t-value="provider.id"/>
+                                </t>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+                <!-- === Tokens === -->
+                <t t-foreach="tokens" t-as="token">
+                    <div name="o_payment_option_card" class="card-body o_payment_option_card">
+                        <label>
+                            <!-- === Radio button === -->
+                            <!-- Only shown if 'assign_token_route' is set -->
+                            <input name="o_payment_radio"
+                                   type="radio"
+                                   t-att-checked="token.id == default_payment_option_id"
+                                   t-att-class="'' if bool(assign_token_route) else 'd-none'"
+                                   t-att-data-payment-option-id="token.id"
+                                   t-att-data-provider="token.provider_code"
+                                   data-payment-option-type="token"/>
+                            <!-- === Token name === -->
+                            <span class="payment_option_name" t-esc="token.display_name"/>
+                            <!-- === "V" check mark === -->
+                            <t t-call="payment.verified_token_checkmark"/>
+                            <!-- === "Unpublished" badge === -->
+                            <span t-if="not token.provider_id.is_published and token.env.user._is_internal()"
+                                  class="badge rounded-pill text-bg-danger ms-1">
+                                Unpublished
+                            </span>
+                        </label>
+                        <!-- === "Delete" token button === -->
+                        <button name="o_payment_delete_token"
+                                class="btn btn-primary btn-sm float-end">
+                            <i class="fa fa-trash"/> Delete
+                        </button>
+                    </div>
+                    <!-- === Token inline form === -->
+                    <div t-attf-id="o_payment_token_inline_form_{{token.id}}"
+                         name="o_payment_inline_form"
+                         class="card-footer d-none">
+                        <t t-set="token_inline_form_xml_id"
+                           t-value="token.sudo().provider_id.token_inline_form_view_id.xml_id"/>
+                        <!-- === Inline form content (filled by provider) === -->
+                        <div t-if="token_inline_form_xml_id" class="clearfix">
+                            <t t-call="{{token_inline_form_xml_id}}">
+                                <t t-set="token" t-value="token"/>
+                            </t>
+                        </div>
+                    </div>
+                </t>
+            </div>
+            <!-- === "Save Payment Method" button === -->
+            <t t-call="{{footer_template_id}}">
+                <t t-set="label">Save Payment Method</t>
+                <t t-set="icon_class" t-value="'fa-plus-circle'"/>
+            </t>
+        </form>
+    </template>
+
+    <!-- Express Checkout form -->
+    <template id="express_checkout" name="Payment Express Checkout">
+        <!-- Variables description:
+            - 'providers' - The payment providers compatible with the current transaction.
+            - 'reference_prefix' - The custom prefix to compute the full transaction reference.
+            - 'amount' - The amount to pay.
+            - 'minor_amount' - The amount to pay in the minor units of its currency.
+            - 'currency' - The currency of the transaction, as a `res.currency` record.
+            - 'merchant_name' - The merchant name.
+            - 'access_token' - The access token used to authenticate the partner.
+            - 'shipping_info_required' - Whether the shipping information is required or not.
+            - 'transaction_route' - The route used to create a transaction when the user clicks Pay.
+            - 'shipping_address_update_route' - The route where available carriers are computed
+                                                based on the (partial) shipping information
+                                                available. Optional
+            - 'express_checkout_route' - The route where the billing and shipping information are
+                                         sent.
+            - 'landing_route' - The route the user is redirected to after the transaction.
+        -->
+        <form name="o_payment_express_checkout_form" class="container"
+              t-att-data-reference-prefix="reference_prefix"
+              t-att-data-amount="amount"
+              t-att-data-minor-amount="minor_amount"
+              t-att-data-currency-id="currency and currency.id"
+              t-att-data-currency-name="currency.name.lower()"
+              t-att-data-merchant-name="merchant_name"
+              t-att-data-partner-id="partner_id"
+              t-att-data-access-token="payment_access_token"
+              t-att-data-shipping-info-required="shipping_info_required"
+              t-att-data-transaction-route="transaction_route"
+              t-att-data-shipping-address-update-route="shipping_address_update_route"
+              t-att-data-express-checkout-route="express_checkout_route"
+              t-att-data-landing-route="landing_route">
+            <t t-foreach="providers_sudo" t-as="provider_sudo">
+                <t t-set="express_checkout_form_xml_id"
+                   t-value="provider_sudo.express_checkout_form_view_id.xml_id"/>
+                <t t-if="express_checkout_form_xml_id">
+                    <t t-call="{{express_checkout_form_xml_id}}">
+                        <t t-set="provider_sudo" t-value="provider_sudo"/>
+                    </t>
+                </t>
+            </t>
+        </form>
+    </template>
+
+    <!-- Expandable payment icon list -->
+    <template id="icon_list" name="Payment Icon List">
+        <ul class="payment_icon_list float-end list-inline" data-max-icons="3">
+            <t t-set="icon_index" t-value="0"/>
+            <t t-set="MAX_ICONS" t-value="3"/>
+            <!-- === Icons === -->
+            <!-- Only shown if in the first 3 icons -->
+            <t t-foreach="provider.payment_icon_ids.filtered(lambda r: r.image_payment_form)" t-as="icon">
+                <li t-attf-class="list-inline-item{{'' if (icon_index &lt; MAX_ICONS) else ' d-none'}}">
+                    <span t-esc="icon.image_payment_form"
+                          t-options="{'widget': 'image', 'alt-field': 'name'}"
+                          data-bs-toggle="tooltip"
+                          t-att-title="icon.name"/>
+                </li>
+                <t t-set="icon_index" t-value="icon_index + 1"/>
+            </t>
+            <t t-if="icon_index >= MAX_ICONS">
+                <!-- === "show more" button === -->
+                <!-- Only displayed if too many payment icons -->
+                <li style="display:block;" class="list-inline-item">
+                    <span class="float-end more_option text-info">
+                        <a name="o_payment_icon_more"
+                           data-bs-toggle="tooltip"
+                           t-att-title="', '.join([icon.name for icon in provider.payment_icon_ids[MAX_ICONS:]])">
+                            show more
+                        </a>
+                    </span>
+                </li>
+                <!-- === "show less" button === -->
+                <!-- Only displayed when "show more" is clicked -->
+                <li style="display:block;" class="list-inline-item d-none">
+                    <span class="float-end more_option text-info">
+                        <a name="o_payment_icon_less">show less</a>
+                    </span>
+                </li>
+            </t>
+        </ul>
+    </template>
+
+    <!-- Verified token checkmark -->
+    <template id="verified_token_checkmark" name="Payment Verified Token Checkmark">
+        <t t-if="0" name="payment_demo_hook"/>
+        <t t-else="">
+            <i t-if="token.verified" class="fa fa-check text-success"
+                title="This payment method has been verified by our system."
+                role="img"
+                aria-label="Ok"/>
+            <i t-else="" class="fa fa-check text-muted"
+                title="This payment method has not been verified by our system."
+                role="img"
+                aria-label="Not verified"/>
+        </t>
+    </template>
+
+    <!-- Generic footer for payment forms -->
+    <template id="footer" name="Payment Footer">
+        <!-- Variables description:
+            - 'label' - The label for the submit button
+            - 'icon_class' - The Font Awesome icon class (e.g. 'fa-lock') for the submit button
+        -->
+        <div class="float-end mt-2">
+            <button name="o_payment_submit_button"
+                    type="submit"
+                    class="btn btn-primary btn-lg mb8 mt8"
+                    disabled="true"
+                    t-att-data-icon-class="icon_class">
+                <i t-attf-class="fa {{icon_class}}"/> <t t-esc="label"/>
+            </button>
+        </div>
+    </template>
+
+    <!-- Transaction status in portal -->
+    <template id="transaction_status">
+        <!-- Variables description:
+            - 'tx' - The transaction whose status must be displayed
+        -->
+        <t t-if="tx.state == 'draft'">
+            <t t-set="alert_style">info</t>
+            <t t-set="status_message">
+                <p>Your payment has not been processed yet.</p>
+            </t>
+        </t>
+        <t t-elif="tx.state == 'pending'">
+            <t t-set="alert_style">warning</t>
+            <t t-set="status_message" t-value="tx.provider_id.sudo().pending_msg"/>
+        </t>
+        <t t-elif="tx.state == 'authorized'">
+            <t t-set="alert_style">success</t>
+            <t t-set="status_message" t-value="tx.provider_id.sudo().auth_msg"/>
+        </t>
+        <t t-elif="tx.state == 'done'">
+            <t t-set="alert_style">success</t>
+            <t t-set="status_message" t-value="tx.provider_id.sudo().done_msg"/>
+        </t>
+        <t t-elif="tx.state == 'cancel'">
+            <t t-set="alert_style">danger</t>
+            <t t-set="status_message" t-value="tx.provider_id.sudo().cancel_msg"/>
+        </t>
+        <t t-elif="tx.state == 'error'">
+            <t t-set="alert_style">danger</t>
+            <t t-set="status_message">
+                <p>An error occurred during the processing of your payment.</p>
+            </t>
+        </t>
+
+        <t t-if="is_html_empty(status_message)" t-set="status_message" t-value="''"/>
+
+        <div t-if="status_message or tx.state_message"
+             id="o_payment_status_alert"
+             t-attf-class="alert alert-{{alert_style}} alert-dismissible">
+            <button class="btn-close" data-bs-dismiss="alert" title="Dismiss"/>
+            <t t-if="status_message" t-out="status_message"/>
+            <t t-if="tx.state_message" t-out="tx.state_message"/>
+        </div>
+    </template>
+
+</odoo>

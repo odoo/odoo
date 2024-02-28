@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="cache-control" content="no-cache" />
+        <meta http-equiv="pragma" content="no-cache" />
+        <title>{{ title or "Odoo's IoT Box" }}</title>
+        <script type="text/javascript" src="/web/static/lib/jquery/jquery.js"></script>
+        <style>
+            body {
+                width: 600px;
+                margin: 30px auto;
+                font-family: sans-serif;
+                text-align: justify;
+                color: #6B6B6B;
+                background-color: #f1f1f1;
+            }
+            .text-green {
+                color: #28a745;
+            }
+            .text-red {
+                color: #dc3545;
+            }
+            .text-blue {
+                color: #007bff;
+            }
+            .text-center {
+                text-align: center;
+            }
+            .float-end {
+                float: right;
+            }
+            .btn {
+                display: inline-block;
+                padding: 8px 15px;
+                border: 1px solid #dadada;
+                border-radius: 3px;
+                font-weight: bold;
+                font-size: 0.8rem;
+                background: #fff;
+                color: #00a09d;
+                cursor: pointer;
+            }
+            .btn-sm {
+                padding: 4px 8px;
+                font-size: 1.0rem;
+                font-weight: normal;
+            }
+            .btn:hover {
+                background-color: #f1f1f1;
+            }
+            a {
+                text-decoration: none;
+                color: #00a09d;
+            }
+            a:hover {
+                color: #006d6b;
+            }
+            .container {
+                padding: 10px 20px;
+                background: #ffffff;
+                border-radius: 8px;
+                box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.17);
+            }
+            .breadcrumb {
+                margin-bottom: 10px;
+                font-size: 0.9rem;
+            }
+            input[type="text"], input[type="password"] {
+                padding: 6px 12px;
+                font-size: 1rem;
+                border: 1px solid #ccc;
+                border-radius: 3px;
+                color: inherit;
+            }
+            input::placeholder {
+                color: #ccc;
+                opacity: 1; /* Firefox */
+            }
+            select {
+                padding: 6px 12px;
+                font-size: 1rem;
+                border: 1px solid #ccc;
+                border-radius: 3px;
+                color: inherit;
+                background: #ffffff;
+                width: 100%;
+            }
+            .o_hide {
+                display: none;
+            }
+            .font-small {
+                font-size: 0.8rem;
+            }
+            .footer {
+                margin-top: 12px;
+                text-align: right;
+            }
+            .footer a {
+                margin-left: 8px;
+            }
+            .loading-block {
+                position: absolute;
+                background-color: #0a060661;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                z-index: 9999;
+            }
+            .loading-message-block {
+                text-align: center;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                -webkit-transform: translate(-50%, -50%);
+                transform: translate(-50%, -50%);
+            }
+            .loading-message {
+                font-size: 14px;
+                line-height: 20px;
+                color:white
+            }
+            @keyframes spin {
+                from {transform:rotate(0deg);}
+                to {transform:rotate(360deg);}
+            }
+        </style>
+        {% block head %}{% endblock %}
+    </head>
+    <body>
+        {%if breadcrumb %}
+            <div class="breadcrumb"><a href="/">Home</a> / <span>{{ breadcrumb }}</span></div>
+        {% endif %}
+        <div class="container">
+            {% block content %}{% endblock %}
+            <p class="error-message text-red" style="text-align: right;" />
+        </div>
+        <div class="footer">
+            <a href='https://www.odoo.com/help'>Help</a>
+            <a href='https://www.odoo.com/documentation/16.0/applications/productivity/iot.html'>Documentation</a>
+        </div>
+    </body>
+</html>

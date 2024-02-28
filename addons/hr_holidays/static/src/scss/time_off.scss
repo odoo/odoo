@@ -1,0 +1,50 @@
+.o_hr_leave_form {
+    .o_form_sheet {
+        padding: 0!important;
+        overflow: hidden;
+        .ribbon-top-right {
+            top: 16px;
+            right: -8px;
+        }
+    }
+    .o_hr_leave_content {
+        margin: 0;
+        .o_group {
+            margin: 0;
+        }
+        .o_hr_leave_title, .o_hr_leave_subtitle {
+            line-height: 1.2;
+            font-weight: 500;
+            margin-bottom: 8px;
+            * {
+                margin-bottom: 0;
+            }
+        }
+        .o_hr_leave_title {
+            font-size: 1.8rem;
+        }
+        .o_hr_leave_subtitle {
+            font-size: 1.2rem;
+        }
+        .o_hr_leave_column {
+            padding: 16px;
+        }
+        .col_right {
+            background-color: map-get($grays, '200');
+            padding-top: 28px;
+        }
+        .o_hr_leave_date {
+            display: flex;
+            flex-direction: row;
+            @include media-breakpoint-down(lg) {
+                flex-direction: column;
+            }
+            @include media-breakpoint-down(md) {
+                flex-direction: row;
+            }
+        }
+        .o_leave_stats {
+            margin-bottom: 16px;
+        }
+    }
+}

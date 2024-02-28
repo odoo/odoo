@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="redirect_form">
+        <form t-att-action="api_url" method="post">
+            <input type="hidden" name="reference" t-att-value="reference"/>
+        </form>
+    </template>
+
+    <template id="custom_transaction_status" inherit_id="payment.transaction_status">
+        <xpath expr="//div[@id='o_payment_status_alert']" position="inside">
+            <t t-if="tx.provider_id.sudo().code == 'custom'">
+                <div>
+                    <strong>Communication: </strong><span t-esc="tx._get_communication()"/>
+                </div>
+                <div t-if="tx.provider_id.sudo().qr_code">
+                    <t t-set="qr_code" t-value="tx.company_id.sudo().partner_id.bank_ids[:1].build_qr_code_base64(tx.amount, tx._get_communication(), None, tx.currency_id, tx.partner_id)"/>
+                    <div t-if="qr_code" class="mt-2">
+                        <h3>Or scan me with your banking app.</h3>
+                        <img class="border border-dark rounded" t-att-src="qr_code"/>
+                    </div>
+                </div>
+            </t>
+        </xpath>
+    </template>
+
+</odoo>

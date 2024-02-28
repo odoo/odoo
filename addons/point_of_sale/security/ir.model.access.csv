@@ -1,0 +1,57 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_pos_order,pos.order,model_pos_order,group_pos_user,1,1,1,1
+access_pos_order_line,pos.order.line,model_pos_order_line,group_pos_user,1,1,1,1
+access_pos_pack_operation_lot,pos.pack.operation.lot,model_pos_pack_operation_lot,group_pos_user,1,1,1,1
+access_stock_picking_pos_user,stock.picking pos_user,stock.model_stock_picking,group_pos_user,1,1,1,1
+access_stock_warehouse_pos_user,stock.warehouse pos_user,stock.model_stock_warehouse,group_pos_user,1,0,0,0
+access_pos_order_stock_worker,pos.order stock_worker,model_pos_order,stock.group_stock_user,1,0,0,0
+access_stock_move_pos_user,stock.move pos_user,stock.model_stock_move,group_pos_user,1,1,1,1
+access_report_pos_order,report.pos.order,model_report_pos_order,group_pos_user,1,1,1,1
+access_account_journal_pos_user,account.journal pos_user,account.model_account_journal,group_pos_user,1,0,0,0
+access_account_payment_method_pos_user,account.payment.method pos_user,account.model_account_payment_method,group_pos_manager,1,0,0,0
+access_account_payment_method_line_pos_user,account.payment.method.line pos_user,account.model_account_payment_method_line,group_pos_manager,1,0,0,0
+access_account_bank_statement,account.bank.statement,account.model_account_bank_statement,group_pos_user,1,1,1,0
+access_account_bank_statement_manager,account.bank.statement manager,account.model_account_bank_statement,group_pos_manager,1,1,1,1
+access_account_bank_statement_line,account.bank.statement.line,account.model_account_bank_statement_line,group_pos_user,1,1,1,0
+access_account_move,account.move,account.model_account_move,group_pos_user,1,0,0,0
+access_account_move_line,account.move.line,account.model_account_move_line,group_pos_user,1,0,0,0
+access_product_product,product.product,product.model_product_product,group_pos_user,1,0,0,0
+access_product_template_pos_user,product.template pos user,product.model_product_template,group_pos_user,1,0,0,0
+access_product_product_pos_manager,product.product.pos manager,product.model_product_product,group_pos_manager,1,1,1,1
+access_product_template_pos_manager,product.template pos manager,product.model_product_template,group_pos_manager,1,1,1,1
+access_product_attribute_pos_manager,product.attribute,product.model_product_attribute,group_pos_manager,1,1,1,1
+access_product_attribute_value_pos_manager,product.attribute value,product.model_product_attribute_value,group_pos_manager,1,1,1,1
+access_product_attribute_custom_value_pos_manager,product.attribute.custom value manager,product.model_product_attribute_custom_value,group_pos_manager,1,1,1,1
+access_product_product_attribute_pos_manager,product.template.attribute value,product.model_product_template_attribute_value,group_pos_manager,1,1,1,1
+access_product_template_attribute_exclusion_pos_manager,product.template.attribute exclusion,product.model_product_template_attribute_exclusion,group_pos_manager,1,1,1,1
+access_product_template_attribute_line_pos_manager,product.template.attribute line,product.model_product_template_attribute_line,group_pos_manager,1,1,1,1
+access_account_bank_statement_line_manager,account.bank.statement.line manager,account.model_account_bank_statement_line,group_pos_manager,1,1,1,1
+access_product_product_supplierinfo_user,product.supplierinfo user,product.model_product_supplierinfo,group_pos_user,1,0,0,0
+access_product_product_packaging_user,product.packaging user,product.model_product_packaging,group_pos_user,1,0,0,0
+access_stock_warehouse_manager,stock.warehouse manager,stock.model_stock_warehouse,group_pos_manager,1,0,0,0
+access_stock_location_manager,stock.location manager,stock.model_stock_location,group_pos_manager,1,0,0,0
+access_uom_uom_manager,uom.uom manager,uom.model_uom_uom,group_pos_manager,1,1,1,1
+access_product_category_manager,product.category manager,product.model_product_category,group_pos_manager,1,1,1,1
+access_product_pricelist_manager,product.pricelist manager,product.model_product_pricelist,group_pos_manager,1,1,1,1
+access_product_pricelist_user,product.pricelist user,product.model_product_pricelist,group_pos_user,1,0,0,0
+access_product_tag_pos_manager,product.tag.pos.manager,product.model_product_tag,group_pos_manager,1,1,1,1
+access_pos_session_user,pos.session user,model_pos_session,group_pos_user,1,1,1,0
+access_pos_config_user,pos.config user,model_pos_config,group_pos_user,1,1,0,0
+access_pos_config_system_user,pos.config system,model_pos_config,base.group_system,1,1,0,0
+access_pos_config_manager,pos.config manager,model_pos_config,group_pos_manager,1,1,1,1
+access_product_category_pos_manager,pos.category manager,model_pos_category,group_pos_manager,1,1,1,1
+access_product_category_pos_user,pos.category user,model_pos_category,group_pos_user,1,0,0,0
+access_barcode_nomenclature_pos_user,barcode.nomenclature.pos.user,barcodes.model_barcode_nomenclature,group_pos_user,1,0,0,0
+access_barcode_nomenclature_pos_manager,barcode.nomenclature.pos.manager,barcodes.model_barcode_nomenclature,group_pos_manager,1,1,1,1
+access_barcode_rule_pos_user,barcode.rule.pos.user,barcodes.model_barcode_rule,group_pos_user,1,0,0,0
+access_barcode_rule_pos_manager,barcode.rule.pos.manager,barcodes.model_barcode_rule,group_pos_manager,1,1,1,1
+access_decimal_precision_user,decimal.precision,base.model_decimal_precision,group_pos_user,1,0,0,0
+access_pos_payment_user,pos.payment user,model_pos_payment,group_pos_user,1,1,1,1
+access_pos_payment_method_user,pos.payment.method user,model_pos_payment_method,group_pos_user,1,0,0,0
+access_pos_payment_method_manager,pos.payment.method manager,model_pos_payment_method,group_pos_manager,1,1,1,1
+access_pos_details_wizard,access.pos.details.wizard,model_pos_details_wizard,point_of_sale.group_pos_manager,1,1,1,0
+access_pos_make_payment,access.pos.make.payment,model_pos_make_payment,point_of_sale.group_pos_manager,1,1,1,0
+access_pos_close_session_wizard,access.pos.close.session.wizard,model_pos_close_session_wizard,point_of_sale.group_pos_user,1,1,1,0
+access_account_cash_rounding_pos_user,account.cash.rounding pos_user,account.model_account_cash_rounding,group_pos_user,1,0,0,0
+access_pos_bill,pos.bill pos_user,model_pos_bill,group_pos_user,1,1,1,1
+access_pos_session_check_product_wizard,access.pos.session.check.product.wizard,model_pos_session_check_product_wizard,group_pos_user,1,1,1,0

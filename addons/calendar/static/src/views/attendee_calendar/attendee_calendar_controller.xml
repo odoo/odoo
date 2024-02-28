@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="calendar.AttendeeCalendarController" t-inherit="web.CalendarController" t-inherit-mode="primary" owl="1">
+        <DatePicker position="after">
+            <div id="calendar_sync_wrapper" t-if="isSystemUser">
+                <div id="calendar_sync_title" class="o_calendar_sync text-center">
+                    <span class="text-primary fs-6">Synchronize with:</span>
+                </div>
+                <div id="calendar_sync" class="container inline btn-group justify-content-evenly align-items-center">
+                    <div id="google_calendar_sync" class="o_calendar_sync" t-if="isSystemUser">
+                        <button type="button" id="google_sync_activate" class="btn btn-muted" t-on-click="() => this.configureCalendarProviderSync('google')">
+                            <b><i class='fa fa-plug'/> Google</b>
+                        </button>
+                    </div>
+                    <div id="microsoft_calendar_sync" class="o_calendar_sync" t-if="isSystemUser">
+                        <button type="button" id="microsoft_sync_activate" class="btn btn-muted" t-on-click="() => this.configureCalendarProviderSync('microsoft')">
+                            <b><i class='fa fa-plug'/> Outlook</b>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </DatePicker>
+    </t>
+
+    <t t-name="calendar.AttendeeCalendarController.controlButtons" t-inherit="web.CalendarController.controlButtons" owl="1">
+        <xpath expr="//span[hasclass('o_calendar_navigation_buttons')]" position="before">
+            <span class="o_calendar_create_buttons">
+                <button class="btn btn-primary o-calendar-button-new me-1" t-on-click="onClickAddButton">New</button>
+            </span>
+        </xpath>
+    </t>
+</templates>

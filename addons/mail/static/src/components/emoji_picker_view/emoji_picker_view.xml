@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.EmojiPickerView" owl="1">
+        <div class="o_EmojiPickerView d-flex flex-column" t-attf-class="{{ className }}" t-ref="root">
+            <EmojiPickerHeaderView record="emojiPickerView.headerView"/>
+            <EmojiSearchBarView record="emojiPickerView.emojiSearchBarView"/>
+            <EmojiGridView record="emojiPickerView.emojiGridView"/>
+        </div>
+    </t>
+
+</templates>

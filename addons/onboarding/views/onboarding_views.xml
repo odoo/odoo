@@ -1,0 +1,102 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="onboarding_onboarding_view_tree" model="ir.ui.view">
+        <field name="name">onboarding.onboarding.view.tree</field>
+        <field name="model">onboarding.onboarding</field>
+        <field name="arch" type="xml">
+            <tree string="Onboardings">
+                <header>
+                    <button name="action_toggle_visibility" type="object" string="Toggle visibility"/>
+                </header>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="current_onboarding_state"/>
+                <field name="is_onboarding_closed"/>
+                <field name="is_per_company" optional="hide"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="onboarding_onboarding_view_form" model="ir.ui.view">
+        <field name="name">onboarding.onboarding.view.form</field>
+        <field name="model">onboarding.onboarding</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <field name="current_progress_id" invisible="1"/>
+                    <button name="action_toggle_visibility" type="object" string="Toggle visibility"
+                            attrs="{'invisible': [('current_progress_id', '=', False)]}"/>
+                </header>
+                <sheet>
+                    <group col="2">
+                        <field name="name"/>
+                        <field name="route_name"/>
+                        <field name="is_per_company"/>
+                        <field name="is_onboarding_closed"/>
+                    </group>
+                    <notebook>
+                        <page name="Onboarding steps">
+                            <field name="step_ids"/>
+                        </page>
+                        <page name="Panel Rendering">
+                            <group>
+                                <field name="panel_background_color" string="Background color"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="onboarding_onboarding_step_view_tree" model="ir.ui.view">
+        <field name="name">onboarding.onboarding.step.view.tree</field>
+        <field name="model">onboarding.onboarding.step</field>
+        <field name="arch" type="xml">
+            <tree string="Onboarding Steps">
+                <field name="sequence" widget="handle"/>
+                <field name="title"/>
+                <field name="onboarding_id" optional="hide"/>
+                <field name="current_step_state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="onboarding_onboarding_step_view_form" model="ir.ui.view">
+        <field name="name">onboarding.onboarding.step.view.form</field>
+        <field name="model">onboarding.onboarding.step</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="title"/>
+                        <field name="onboarding_id"/>
+                        <field name="panel_step_open_action_name"/>
+                    </group>
+                    <notebook>
+                        <page name="Step rendering">
+                            <group>
+                                <field name="description"/>
+                                <field name="button_text"/>
+                                <field name="done_text"/>
+                                <field name="done_icon"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_view_onboarding_onboarding" model="ir.actions.act_window">
+        <field name="name">Onboardings</field>
+        <field name="res_model">onboarding.onboarding</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="action_view_onboarding_step" model="ir.actions.act_window">
+        <field name="name">Onboarding Steps</field>
+        <field name="res_model">onboarding.onboarding.step</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>
