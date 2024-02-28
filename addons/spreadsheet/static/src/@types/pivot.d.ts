@@ -106,7 +106,7 @@ declare module "@spreadsheet" {
         isHeader: boolean;
         domain?: string[];
         content?: string;
-        style?: object;
+        type?: "TOP_LEVEL_ROW_HEADER" | "COLUMN_HEADER" | "INDENTED_ROW_HEADER" | "MEASURE" | "TOP_LEFT_CELL";
         measure?: string;
     }
 

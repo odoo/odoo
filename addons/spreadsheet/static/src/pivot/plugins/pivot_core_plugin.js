@@ -16,8 +16,29 @@ import { CommandResult } from "../../o_spreadsheet/cancelled_reason";
 import { _t } from "@web/core/l10n/translation";
 import { deepCopy } from "@web/core/utils/objects";
 import { OdooCorePlugin } from "@spreadsheet/plugins";
+import { HEADER_STYLE, MEASURE_STYLE, TOP_LEVEL_STYLE } from "@spreadsheet/helpers/constants";
 
 const { isDefined } = helpers;
+
+/**
+ * Get the style to apply to a cell according to its type
+ *
+ * @param {SPTableCell["type"]} type
+ * @returns {Object | undefined}
+ */
+function getPivotStyle(type) {
+    switch (type) {
+        case "TOP_LEVEL_ROW_HEADER":
+        case "COLUMN_HEADER":
+            return TOP_LEVEL_STYLE;
+        case "INDENTED_ROW_HEADER":
+        case "TOP_LEFT_CELL":
+            return HEADER_STYLE;
+        case "MEASURE":
+            return MEASURE_STYLE;
+    }
+    return undefined;
+}
 
 export class PivotCorePlugin extends OdooCorePlugin {
     static getters = /** @type {const} */ ([
@@ -354,13 +375,13 @@ export class PivotCorePlugin extends OdooCorePlugin {
         const args = pivotCell.domain
             ? [pivotId, pivotCell.measure, ...pivotCell.domain].filter(isDefined)
             : undefined;
-
+        const style = getPivotStyle(pivotCell.type);
         this.dispatch("UPDATE_CELL", {
             sheetId,
             col,
             row,
             content: pivotCell.content || (args ? makePivotFormula(formula, args) : undefined),
-            style: pivotCell.style,
+            style,
         });
     }
 
