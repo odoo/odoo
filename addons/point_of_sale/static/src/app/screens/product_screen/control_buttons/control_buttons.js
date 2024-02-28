@@ -130,6 +130,9 @@ export class ControlButtons extends Component {
             this.pos.add_new_order();
         }
     }
+    get internalNoteLabel() {
+        return _t("Internal Note");
+    }
 }
 
 export class ControlButtonsPopup extends Component {

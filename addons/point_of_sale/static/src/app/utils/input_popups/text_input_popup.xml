@@ -3,9 +3,15 @@
 
     <t t-name="point_of_sale.TextInputPopup">
         <Dialog title="props.title">
-            <textarea rows="props.rows" class="form-control form-control-lg w-75 mx-auto" type="text" t-model="state.inputValue" t-ref="input" t-att-placeholder="props.placeholder"/>
+            <t t-foreach="props.buttons" t-as="button" t-key="button_index">
+                <button t-on-click="() => this.buttonClick(button)" type="button" t-attf-class="btn me-2 mb-2 toggle-button {{button.isSelected? 'btn-primary' : 'btn-secondary'}}" >
+                    <t t-esc="button.label"/>
+                </button>
+            </t>
+            <textarea t-att-rows="props.rows" class="form-control form-control-lg mx-auto" type="text" t-model="state.inputValue" t-ref="input" t-att-placeholder="props.placeholder"/>
             <t t-set-slot="footer">
-                <button class="btn btn-primary o-default-button" t-on-click="confirm">Ok</button>
+                <button class="btn btn-primary o-default-button" t-on-click="confirm">Apply</button>
+                <button class="btn btn-secondary o-default-button" t-on-click="close">Discard</button>
             </t>
         </Dialog>
     </t>

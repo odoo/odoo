@@ -71,7 +71,6 @@ class TestFrontend(AccountTestInvoicingCommon, HttpCaseWithUserDemo):
             'module_pos_restaurant': True,
             'iface_splitbill': True,
             'iface_printbill': True,
-            'iface_orderline_notes': True,
             'start_category': True,
             'is_order_printer': True,
             'printer_ids': [(4, printer.id)],

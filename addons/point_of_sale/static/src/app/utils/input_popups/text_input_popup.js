@@ -8,6 +8,7 @@ export class TextInputPopup extends Component {
     static components = { Dialog };
     static props = {
         title: String,
+        buttons: { type: Array, optional: true },
         startingValue: { type: String, optional: true },
         placeholder: { type: String, optional: true },
         rows: { type: Number, optional: true },
@@ -18,6 +19,7 @@ export class TextInputPopup extends Component {
         startingValue: "",
         placeholder: "",
         rows: 1,
+        buttons: [],
     };
 
     setup() {
@@ -31,5 +33,21 @@ export class TextInputPopup extends Component {
     confirm() {
         this.props.getPayload(this.state.inputValue);
         this.props.close();
+    }
+
+    close() {
+        this.props.close();
+    }
+
+    buttonClick(button) {
+        const lines = this.state.inputValue.split("\n").filter((line) => line !== "");
+        if (lines.includes(button.label)) {
+            this.state.inputValue = lines.filter((line) => line !== button.label).join("\n");
+            button.isSelected = false;
+        } else {
+            this.state.inputValue = lines.join("\n");
+            this.state.inputValue += (lines.length > 0 ? "\n" : "") + button.label;
+            button.isSelected = true;
+        }
     }
 }
