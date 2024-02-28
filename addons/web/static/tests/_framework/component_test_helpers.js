@@ -1,9 +1,13 @@
 import { mountOnFixture } from "@odoo/hoot";
-import { App, Component, xml } from "@odoo/owl";
+import { App } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { getTemplate } from "@web/core/templates";
 import { getMockEnv, makeMockEnv } from "./env_test_helpers";
+
+/**
+ * @typedef {import("@odoo/owl").Component} Component
+ */
 
 //-----------------------------------------------------------------------------
 // Exports
@@ -53,13 +57,6 @@ export async function mountWithCleanup(ComponentClass, options) {
         props: options?.props || {},
         translateFn: _t,
     };
-
-    if (typeof ComponentClass === "string") {
-        ComponentClass = class TestComponent extends Component {
-            static props = {};
-            static template = xml`${ComponentClass}`;
-        };
-    }
 
     /** @type {InstanceType<C>} */
     const component = await mountOnFixture(ComponentClass, config, options?.target);
