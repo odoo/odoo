@@ -65,6 +65,7 @@ const {
     MutationObserver,
     Number,
     Object,
+    parseFloat,
     Promise,
     Reflect,
     RegExp,
@@ -192,7 +193,7 @@ const isNodeDisplayed = (node) => {
     if (!isInDOM(element)) {
         return false;
     }
-    if (isRootElement(element) || element.offsetParent) {
+    if (isRootElement(element) || element.offsetParent || element.closest("svg")) {
         return true;
     }
     // `position=fixed` elements in Chrome do not have an `offsetParent`
@@ -340,19 +341,19 @@ const matchesQueryPart = (query, width, height) => {
                 break;
             }
             case "max-height": {
-                result = height <= parseInt(value);
+                result = height <= parseFloat(value);
                 break;
             }
             case "max-width": {
-                result = width <= parseInt(value);
+                result = width <= parseFloat(value);
                 break;
             }
             case "min-height": {
-                result = height >= parseInt(value);
+                result = height >= parseFloat(value);
                 break;
             }
             case "min-width": {
-                result = width >= parseInt(value);
+                result = width >= parseFloat(value);
                 break;
             }
             case "orientation": {
@@ -866,7 +867,7 @@ export function getFocusableElements(parent) {
 export function getHeight(dimensions) {
     if (dimensions) {
         for (const prop of ["h", "height"]) {
-            const value = parseInt(dimensions[prop]);
+            const value = parseFloat(dimensions[prop]);
             if (!Number.isNaN(value)) {
                 return value;
             }
@@ -1026,7 +1027,7 @@ export function getStyle(node) {
 export function getWidth(dimensions) {
     if (dimensions) {
         for (const prop of ["w", "width"]) {
-            const value = parseInt(dimensions[prop]);
+            const value = parseFloat(dimensions[prop]);
             if (!Number.isNaN(value)) {
                 return value;
             }
@@ -1050,7 +1051,7 @@ export function getWindow(node) {
 export function getX(position) {
     if (position) {
         for (const prop of ["x", "left", "clientX", "pageX", "screenX"]) {
-            const value = parseInt(position[prop]);
+            const value = parseFloat(position[prop]);
             if (!Number.isNaN(value)) {
                 return value;
             }
@@ -1066,7 +1067,7 @@ export function getX(position) {
 export function getY(position) {
     if (position) {
         for (const prop of ["y", "top", "clientY", "pageY", "screenY"]) {
-            const value = parseInt(position[prop]);
+            const value = parseFloat(position[prop]);
             if (!Number.isNaN(value)) {
                 return value;
             }
@@ -1202,7 +1203,7 @@ export function isInDOM(target) {
             return true;
         }
         target = target.parentNode;
-        if (target.host) {
+        if (target?.host) {
             target = target.host.parentNode;
         }
     }
