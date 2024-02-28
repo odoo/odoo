@@ -4,7 +4,8 @@ import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 import { start } from "@mail/../tests/helpers/test_utils";
 import { contains } from "@web/../tests/utils";
 import { patchUserWithCleanup } from "@web/../tests/helpers/mock_services";
-import { patchWithCleanup, click } from "@web/../tests/helpers/utils";
+import { patchWithCleanup, click, selectDropdownItem } from "@web/../tests/helpers/utils";
+import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { patchAvatarCardPopover } from "@hr/components/avatar_card/avatar_card_popover_patch";
 import { AvatarCardPopover } from "@mail/discuss/web/avatar_card/avatar_card_popover";
 import { getOrigin } from "@web/core/utils/urls";
@@ -294,6 +295,59 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
             document.querySelector(".o_m2o_avatar > img").getAttribute("data-src"),
             `/web/image/hr.employee.public/${employeeId}/avatar_128`
         );
+    });
+
+    QUnit.test("many2one_avatar_employee without hr.group_hr_user", async function (assert) {
+        assert.expect(2);
+
+        setupViewRegistries();
+        patchUserWithCleanup({ hasGroup: (group) => group !== "hr.group_hr_user" });
+
+        await makeView({
+            type: "form",
+            resModel: "m2x.avatar.employee",
+            serverData: {
+                models: {
+                    "m2x.avatar.employee": {
+                        fields: {
+                            employee_id: {
+                                string: "employee", type: "one2many", relation: "hr.employee"
+                            },
+                        },
+                        records: [],
+                    },
+                    "hr.employee": {
+                        fields: {
+                            display_name: { string: "Displayed name", type: "char" },
+                        },
+                        records: [
+                            { display_name: "babar" },
+                        ],
+                    },
+                    "hr.employee.public": {
+                        fields: {
+                            display_name: { string: "Displayed name", type: "char" },
+                        },
+                        records: [
+                            { display_name: "babar" },
+                        ],
+                    },
+                },
+                views: {
+                    "hr.employee.public,false,list": `<tree><field name="display_name"/></tree>`,
+                    "hr.employee.public,false,search": `<search></search>`,
+                    "hr.employee,false,list": `<tree><field name="display_name"/></tree>`,
+                    "hr.employee,false,search": `<search></search>`,
+                }
+            },
+            arch: `<form><field name="employee_id" widget="many2one_avatar_employee"/></form>`,
+            mockRPC: function (_, { model, method }) {
+                if (method === "name_search" || method === "web_search_read") {
+                    assert.strictEqual(model, "hr.employee.public");
+                }
+            }
+        });
+        await selectDropdownItem(document, "employee_id", "Search More...");
     });
 
     QUnit.test("many2many_avatar_employee widget in form view", async function (assert) {
