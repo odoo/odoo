@@ -4,7 +4,10 @@ import { animationFrame } from "@odoo/hoot-mock";
 import { Component, xml } from "@odoo/owl";
 
 import { contains, defineModels, mountWithCleanup, onRpc } from "@web/../tests/web_test_helpers";
-import { Partner, Product } from "@web/../tests/_framework/condition_tree_editor_test_helpers";
+import {
+    Partner,
+    Product,
+} from "@web/../tests/core/tree_editor/condition_tree_editor_test_helpers";
 import { makeDialogMockEnv } from "@web/../tests/_framework/env_test_helpers";
 
 import { DomainSelectorDialog } from "@web/core/domain_selector_dialog/domain_selector_dialog";

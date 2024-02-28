@@ -12,7 +12,7 @@ import {
     Partner,
     Product,
     getTreeEditorContent,
-} from "@web/../tests/_framework/condition_tree_editor_test_helpers";
+} from "@web/../tests/core/tree_editor/condition_tree_editor_test_helpers";
 
 import { ExpressionEditorDialog } from "@web/core/expression_editor_dialog/expression_editor_dialog";
 
