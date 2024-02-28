@@ -76,7 +76,7 @@ class StockMove(models.Model):
         self.ensure_one()
         res = OrderedSet()
         for move_line in self.move_line_ids:
-            if move_line.owner_id and move_line.owner_id != move_line.company_id.partner_id:
+            if move_line._should_exclude_for_valuation():
                 continue
             if not move_line.location_id._should_be_valued() and move_line.location_dest_id._should_be_valued():
                 res.add(move_line.id)
@@ -104,7 +104,7 @@ class StockMove(models.Model):
         """
         res = self.env['stock.move.line']
         for move_line in self.move_line_ids:
-            if move_line.owner_id and move_line.owner_id != move_line.company_id.partner_id:
+            if move_line._should_exclude_for_valuation():
                 continue
             if move_line.location_id._should_be_valued() and not move_line.location_dest_id._should_be_valued():
                 res |= move_line
