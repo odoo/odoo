@@ -55,10 +55,10 @@
 <template id="s_tabs_options" inherit_id="website.snippet_options">
     <xpath expr="." position="inside">
         <div data-js="NavTabs" data-selector="section.s_tabs">
-            <we-button data-add-item="" data-item=".tab-pane.active" data-no-preview="true" class="o_we_text_success ms-0" title="Add Tab" aria-label="Add Tab">
+            <we-button data-add-item="" data-item=".tab-content:first > .tab-pane.active" data-no-preview="true" class="o_we_text_success ms-0" title="Add Tab" aria-label="Add Tab">
                 <i class="fa fa-fw fa-plus"/>
             </we-button>
-            <we-button data-remove-item="" data-item=".tab-pane.active" data-name="remove_tab_opt" data-no-preview="true" class="o_we_text_danger me-3" title="Remove Tab" aria-label="Remove Tab">
+            <we-button data-remove-item="" data-item=".tab-content:first > .tab-pane.active" data-name="remove_tab_opt" data-no-preview="true" class="o_we_text_danger me-3" title="Remove Tab" aria-label="Remove Tab">
                 <i class="fa fa-fw fa-minus"/>
             </we-button>
         </div>
