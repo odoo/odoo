@@ -12,6 +12,8 @@ class PosSession(models.Model):
         params['product.product']['fields'] += ['l10n_in_hsn_code']
         params['account.account.tag'] = self._get_account_account_tag_params()
         params['account.tax.repartition.line']['fields'] += ['tag_ids']
+        params['account.tax.group'] = self._get_account_tax_group_params()
+        params['account.tax']['fields'] += ['tax_group_id']
         return params
 
     def load_data(self, models_to_load, only_data=False):
@@ -23,6 +25,12 @@ class PosSession(models.Model):
         return {
             'domain': self._get_account_account_tag_domain(),
             'fields': ['id', 'name', 'applicability'],
+        }
+
+    def _get_account_tax_group_params(self):
+        return {
+            'domain': [],
+            'fields': ['id', 'name']
         }
 
     def _get_account_account_tag_domain(self):
