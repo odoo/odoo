@@ -20668,7 +20668,7 @@
                 : this.props.ranges()
                     ? this.props.ranges().map((xc, id) => ({
                         xc,
-                        id,
+                        id: id + 1,
                         isFocused: false,
                     }))
                     : [];
@@ -30909,29 +30909,12 @@
             from: 12,
             to: 12.5,
             applyMigration(data) {
-                for (let sheet of data.sheets || []) {
-                    let knownDataFilterZones = [];
-                    for (let filterTable of sheet.filterTables || []) {
-                        const zone = toZone(filterTable.range);
-                        // See commit message for the details
-                        const intersectZoneIndex = knownDataFilterZones.findIndex((knownZone) => overlap(knownZone, zone));
-                        if (intersectZoneIndex !== -1) {
-                            knownDataFilterZones[intersectZoneIndex] = zone;
-                        }
-                        else {
-                            knownDataFilterZones.push(zone);
-                        }
-                    }
-                    sheet.filterTables = knownDataFilterZones.map((zone) => ({
-                        range: zoneToXc(zone),
-                    }));
-                }
-                return data;
+                return fixOverlappingFilters(data);
             },
         },
         {
             description: "Change Border description structure",
-            from: 12,
+            from: 12.5,
             to: 13,
             applyMigration(data) {
                 for (const borderId in data.borders) {
@@ -30960,6 +30943,14 @@
                     data.settings.locale = DEFAULT_LOCALE;
                 }
                 return data;
+            },
+        },
+        {
+            description: "Fix datafilter duplication (post saas-16.4)",
+            from: 14,
+            to: 14.5,
+            applyMigration(data) {
+                return fixOverlappingFilters(data);
             },
         },
     ];
@@ -31118,6 +31109,26 @@
             }
         }
         return messages;
+    }
+    function fixOverlappingFilters(data) {
+        for (let sheet of data.sheets || []) {
+            let knownDataFilterZones = [];
+            for (let filterTable of sheet.filterTables || []) {
+                const zone = toZone(filterTable.range);
+                // See commit message of https://github.com/odoo/o-spreadsheet/pull/3632 of more details
+                const intersectZoneIndex = knownDataFilterZones.findIndex((knownZone) => overlap(knownZone, zone));
+                if (intersectZoneIndex !== -1) {
+                    knownDataFilterZones[intersectZoneIndex] = zone;
+                }
+                else {
+                    knownDataFilterZones.push(zone);
+                }
+            }
+            sheet.filterTables = knownDataFilterZones.map((zone) => ({
+                range: zoneToXc(zone),
+            }));
+        }
+        return data;
     }
     // -----------------------------------------------------------------------------
     // Helpers
@@ -41047,14 +41058,12 @@
                     break;
                 case "FOCUS_RANGE":
                 case "CHANGE_RANGE":
-                    if (cmd.id !== this.focusedInputId) {
-                        const input = this.inputs[cmd.id];
-                        const range = input.ranges.find((range) => range.id === cmd.rangeId);
-                        if (this.isRangeValid(range?.xc || "A1")) {
-                            const sheetId = this.getters.getActiveSheetId();
-                            const zone = this.getters.getRangeFromSheetXC(sheetId, range?.xc || "A1").zone;
-                            this.selection.capture(input, { cell: { col: zone.left, row: zone.top }, zone }, { handleEvent: input.handleEvent.bind(input) });
-                        }
+                    const input = this.inputs[cmd.id];
+                    const range = input.ranges.find((range) => range.id === cmd.rangeId);
+                    if (range) {
+                        const sheetId = this.getters.getActiveSheetId();
+                        const zone = this.getters.getRangeFromSheetXC(sheetId, range?.xc || "A1").zone;
+                        this.selection.capture(input, { cell: { col: zone.left, row: zone.top }, zone }, { handleEvent: input.handleEvent.bind(input) });
                         this.focusedInputId = cmd.id;
                     }
                     break;
@@ -51706,9 +51715,9 @@
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.4.23';
-    __info__.date = '2024-02-16T15:04:29.705Z';
-    __info__.hash = 'cb5db1a';
+    __info__.version = '16.4.24';
+    __info__.date = '2024-02-28T12:47:21.498Z';
+    __info__.hash = '90c74d1';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
