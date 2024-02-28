@@ -186,6 +186,8 @@ export const CLIPBOARD_WHITELISTS = {
 // Commands that don't require a DOM selection but take an argument instead.
 const SELECTIONLESS_COMMANDS = ['addRow', 'addColumn', 'removeRow', 'removeColumn', 'resetSize'];
 
+const FORMATTING_COMMANDS = ['applyColor', 'bold', 'italic', 'underline', 'strikeThrough', 'setFontSize']
+
 function defaultOptions(defaultObject, object) {
     const newObject = Object.assign({}, defaultObject, object);
     for (const [key, value] of Object.entries(object)) {
@@ -2459,11 +2461,9 @@ export class OdooEditor extends EventTarget {
         if (sel.anchorNode && isProtected(sel.anchorNode)) {
             return;
         }
-        if (
-            !(SELECTIONLESS_COMMANDS.includes(method) && args.length) && (
-                !this.editable.contains(sel.anchorNode) ||
-                (sel.anchorNode !== sel.focusNode && !this.editable.contains(sel.focusNode))
-            )
+        if (!(SELECTIONLESS_COMMANDS.includes(method) && args.length) &&
+            !this.isSelectionInEditable(sel) &&
+            !(closestElement(sel.anchorNode, "*[t-field],*[t-out],*[t-esc]") && FORMATTING_COMMANDS.includes(method))
         ) {
             // Do not apply commands out of the editable area.
             return false;
@@ -3901,7 +3901,7 @@ export class OdooEditor extends EventTarget {
         // inserting the printed representation of the character.
         if (/^.$/u.test(ev.key) && !ev.ctrlKey && !ev.metaKey && (isMacOS() || !ev.altKey)) {
             const selection = this.document.getSelection();
-            if (selection && !selection.isCollapsed) {
+            if (selection && !selection.isCollapsed && this.isSelectionInEditable(selection)) {
                 this.deleteRange(selection);
             }
         }
