@@ -120,6 +120,24 @@ class MailMail(models.Model):
     def _search_body_content(self, operator, value):
         return [('body_html', operator, value)]
 
+    @api.model
+    def fields_get(self, *args, **kwargs):
+        # related selection will fetch translations from DB
+        # selections added in stable won't be in DB -> add them on the related model if not already added
+        message_type_field = self.env['mail.message']._fields['message_type']
+        if 'auto_comment' not in {value for value, name in message_type_field.get_description(self.env)['selection']}:
+            self._fields_get_message_type_update_selection(message_type_field.selection)
+        return super().fields_get(*args, **kwargs)
+
+    def _fields_get_message_type_update_selection(self, selection):
+        """Update the field selection for message type on mail.message to match the runtime values.
+
+        DO NOT USE it is only there for a stable fix and should not be used for any reason other than hotfixing.
+        """
+        self.env['ir.model.fields'].invalidate_model(['selection_ids'])
+        self.env['ir.model.fields.selection'].sudo()._update_selection('mail.message', 'message_type', selection)
+        self.env.registry.clear_caches()
+
     @api.model_create_multi
     def create(self, values_list):
         # notification field: if not set, set if mail comes from an existing mail.message
