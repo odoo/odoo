@@ -142,7 +142,7 @@ class ResPartner(models.Model):
             try:
                 vies_result = check_vies(vat)
             except Exception:
-                _logger.exception("Failed VIES VAT check.")
+                _logger.warning("Failed VIES VAT check.", exc_info=True)
             if vies_result:
                 name = vies_result['name']
                 if vies_result['valid'] and name != '---':
