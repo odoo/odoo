@@ -544,7 +544,14 @@ class MailThread(models.AbstractModel):
             values = initial_values.setdefault(record.id, {})
             if values is not None:
                 for fname in fnames:
-                    values.setdefault(fname, record[fname])
+                    value = (
+                        # get the properties definition with the value
+                        # (not just the dict with the value)
+                        field.convert_to_read(record[fname], record)
+                        if (field := record._fields[fname]).type == 'properties'
+                        else record[fname]
+                    )
+                    values.setdefault(fname, value)
 
     def _track_discard(self):
         """ Prevent any tracking of fields on ``self``. """
@@ -620,6 +627,13 @@ class MailThread(models.AbstractModel):
             name
             for name, field in self._fields.items()
             if getattr(field, 'tracking', None)
+        }
+        # track the properties changes ONLY if the parent changed
+        model_fields |= {
+            fname for fname, f in self._fields.items()
+            if f.type == "properties"
+            and f.definition_record in model_fields
+            and getattr(f, "tracking", None) is not False
         }
 
         return model_fields and set(self.fields_get(model_fields, attributes=()))
