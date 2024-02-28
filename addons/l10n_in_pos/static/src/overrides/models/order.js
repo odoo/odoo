@@ -12,6 +12,9 @@ patch(Order.prototype, {
         }
         if (this.pos.company.country_id?.code === 'IN') {
             result.l10n_in_hsn_summary = this._prepareL10nInHsnSummary()
+            result.tax_details.forEach((tax) => {
+                tax.tax.letter = tax.tax.tax_group_id.name
+            })
         }
         return result;
     },
