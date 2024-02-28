@@ -75,12 +75,3 @@ export async function mountWithCleanup(ComponentClass, options) {
 
     return component;
 }
-
-/**
- * Destroys the app of the given component.
- *
- * @param {import("@odoo/owl").Component} component
- */
-export function destroyComponent(component) {
-    component.__owl__.app.destroy();
-}
