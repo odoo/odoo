@@ -16886,7 +16886,7 @@
                 : this.props.ranges
                     ? this.props.ranges.map((xc, id) => ({
                         xc,
-                        id,
+                        id: id + 1,
                         isFocused: false,
                     }))
                     : [];
@@ -36193,9 +36193,9 @@
                     break;
                 case "FOCUS_RANGE":
                 case "CHANGE_RANGE":
-                    if (cmd.id !== this.focusedInputId) {
-                        const input = this.inputs[cmd.id];
-                        const range = input.ranges.find((range) => range.id === cmd.rangeId);
+                    const input = this.inputs[cmd.id];
+                    const range = input.ranges.find((range) => range.id === cmd.rangeId);
+                    if (range) {
                         const sheetId = this.getters.getActiveSheetId();
                         const zone = this.getters.getRangeFromSheetXC(sheetId, (range === null || range === void 0 ? void 0 : range.xc) || "A1").zone;
                         this.selection.capture(input, { cell: { col: zone.left, row: zone.top }, zone }, { handleEvent: input.handleEvent.bind(input) });
@@ -45790,9 +45790,9 @@
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.2.32';
-    __info__.date = '2024-02-16T15:02:28.982Z';
-    __info__.hash = 'd5e57e6';
+    __info__.version = '16.2.33';
+    __info__.date = '2024-02-28T12:45:24.486Z';
+    __info__.hash = '52d01b2';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
